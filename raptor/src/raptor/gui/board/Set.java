@@ -22,8 +22,6 @@ public class Set {
 	public static final int BQ = 11;
 	public static final int BK = 12;
 
-	private static final long serialVersionUID = 11;
-
 	private Image[] initialImages = null;
 
 	private Device device = null;
