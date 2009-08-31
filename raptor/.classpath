@@ -7,6 +7,5 @@
 	<classpathentry kind="lib" path="lib/common/commons-lang-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/common/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/common/log4j-1.2.15.jar"/>
-	<classpathentry kind="lib" path="lib/win32/swt.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
