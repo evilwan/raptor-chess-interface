@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
 
+import raptor.service.PreferenceService;
+
 public class Board extends Composite {
 	static final String DRAG_INITIATOR = "DRAG_INITIATOR";
 	Set set;
@@ -439,8 +441,12 @@ public class Board extends Composite {
 		Shell shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 
-		Background background = new Background(display, "Paper");
-		Set set = new Set(display, "WCN");
+		PreferenceService prefService = PreferenceService.getInstance();
+
+		Background background = new Background(display, prefService.getConfig()
+				.getString(PreferenceService.BACKGROUND_KEY));
+		Set set = new Set(display, prefService.getConfig().getString(
+				PreferenceService.SET_KEY));
 
 		Board board = new Board(shell, SWT.VIRTUAL | SWT.BORDER);
 		board.setSquareBackground(background);
