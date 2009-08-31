@@ -1,6 +1,12 @@
 package raptor.gui.board;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.ObjectStreamException;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
@@ -8,6 +14,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 
 public class Set {
+	private static final String SET_DIR = "resources/common/set/";
+
 	public static final int EMPTY = 0;
 	public static final int WP = 1;
 	public static final int WB = 2;
@@ -33,6 +41,27 @@ public class Set {
 		this.device = device;
 		this.setName = setName;
 		initImages();
+	}
+
+	public static String[] getChessSetNames() {
+		List<String> result = new LinkedList<String>();
+
+		File file = new File(SET_DIR);
+		File[] files = file.listFiles(new FilenameFilter() {
+
+			public boolean accept(File arg0, String arg1) {
+				return arg1.startsWith("SET.") && arg1.indexOf("WBISHOP") != -1;
+			}
+
+		});
+
+		for (int i = 0; i < files.length; i++) {
+			StringTokenizer tok = new StringTokenizer(files[i].getName(), ".");
+			tok.nextToken();
+			result.add(tok.nextToken());
+		}
+		Collections.sort(result);
+		return (String[]) result.toArray(new String[0]);
 	}
 
 	public boolean equals(Object o) {
@@ -142,8 +171,7 @@ public class Set {
 
 	private Image getInitialChessPieceImage(String location) {
 		try {
-			ImageData ideaData = new ImageData("resources/common/set/"
-					+ location);
+			ImageData ideaData = new ImageData(SET_DIR + location);
 			int transPixel = ideaData.palette.getPixel(new RGB(255, 255, 0));
 			ideaData.transparentPixel = transPixel;
 			return new Image(device, ideaData);
