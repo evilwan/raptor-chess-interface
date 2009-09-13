@@ -13,6 +13,10 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
 
+import raptor.game.Game;
+import raptor.game.GameConstants;
+import raptor.game.util.GameUtils;
+
 public class Set {
 	private static final String SET_DIR = "resources/common/set/";
 
@@ -35,6 +39,44 @@ public class Set {
 	private Device device = null;
 
 	private String setName;
+
+	public static int getSetPieceFromGamePiece(int square, Game game) {
+		long squareBB = GameUtils.getBitmap(square);
+		int gamePiece = game.getPiece(square);
+
+		switch (gamePiece) {
+		case GameConstants.EMPTY:
+			return EMPTY;
+		case WP:
+		case BP:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BP
+					: WP;
+		case WN:
+		case BN:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BN
+					: WN;
+		case WB:
+		case BB:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BB
+					: WB;
+		case WR:
+		case BR:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BR
+					: WR;
+		case WQ:
+		case BQ:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BQ
+					: WQ;
+		case WK:
+		case BK:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BK
+					: WK;
+		default:
+			throw new IllegalArgumentException("Invalid gamePiece" + gamePiece);
+
+		}
+
+	}
 
 	public Set(Device device, String setName) {
 		super();
@@ -66,14 +108,14 @@ public class Set {
 
 	public boolean equals(Object o) {
 		if (o != null) {
-			return getDescription().equals(((Set) o).getDescription());
+			return getName().equals(((Set) o).getName());
 		} else {
 			return false;
 		}
 	}
 
 	public int hashCode() {
-		return getDescription().hashCode();
+		return getName().hashCode();
 	}
 
 	Object readResolve() throws ObjectStreamException {
@@ -102,7 +144,7 @@ public class Set {
 
 	}
 
-	public String getDescription() {
+	public String getName() {
 		return setName;
 	}
 
@@ -151,6 +193,10 @@ public class Set {
 			throw new IllegalArgumentException("Invalid piece " + chessPiece);
 		}
 		}
+	}
+
+	public Image getIcon(int type) {
+		return getScaledImage(type, 35, 35);
 	}
 
 	public Image getScaledImage(int type, int width, int height) {
