@@ -1,5 +1,9 @@
 package raptor.gui.board;
 
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -8,16 +12,23 @@ import org.eclipse.swt.dnd.DragSource;
 import org.eclipse.swt.dnd.DragSourceAdapter;
 import org.eclipse.swt.dnd.DragSourceEffect;
 import org.eclipse.swt.dnd.DragSourceEvent;
+import org.eclipse.swt.dnd.DragSourceListener;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetAdapter;
 import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DropTargetListener;
 import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
@@ -26,34 +37,191 @@ import org.eclipse.swt.widgets.Shell;
 import raptor.game.Game;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
+import raptor.gui.board.ChessBoardWindow.ChessBoard.ChessBoardSquare;
 import raptor.service.GameService;
 import raptor.service.PreferenceService;
 import raptor.service.SWTService;
-import raptor.service.SoundService;
 
 public class ChessBoardWindow {
 	Log LOG = LogFactory.getLog(ChessBoardWindow.class);
 	static final String DRAG_INITIATOR = "DRAG_INITIATOR";
+	static final String CLICK_INITIATOR = "CLICK_INITIATOR";
 
 	boolean isWhiteOnTop = false;
 	boolean isShowingCoordinates = true;
-	boolean dragSuccessful = false;
-	boolean forceLayout = false;
+	long lastDropTime;
 	int storedPiece = Set.EMPTY;
 	ChessBoard board = null;
 	Image dragIcon = null;
 	String gameId;
 	Shell shell = null;
+	List<ChessBoardListener> chessBoardListeners = new ArrayList<ChessBoardListener>(
+			3);
 
-	class ChessBoard extends Composite {
+	public void addChessBoardListener(ChessBoardListener listener) {
+		chessBoardListeners.add(listener);
+	}
+
+	public void removeChessBoardListener(ChessBoardListener listener) {
+		chessBoardListeners.remove(listener);
+	}
+
+	public static interface ChessBoardListener {
+		public void onRightClick(String gameId, int square);
+
+		public void onMiddleClick(String gameId, int square);
+
+		public void moveInitiated(String gameId, int square, boolean isDnd);
+
+		public void moveMade(String gameId, int fromSquare, int toSquare);
+
+		public void moveCancelled(String gameId, int fromSquare, boolean isDnd);
+	};
+
+	public void fireOnMiddleClick(int square) {
+		for (ChessBoardListener listener : chessBoardListeners) {
+			listener.onMiddleClick(gameId, square);
+		}
+	}
+
+	public void fireOnRightClick(int square) {
+		for (ChessBoardListener listener : chessBoardListeners) {
+			listener.onRightClick(gameId, square);
+		}
+	}
+
+	public void fireMoveInitiated(int square, boolean isDnd) {
+		for (ChessBoardListener listener : chessBoardListeners) {
+			listener.moveInitiated(gameId, square, isDnd);
+		}
+	}
+
+	public void fireMoveMade(int fromSquare, int toSquare) {
+		for (ChessBoardListener listener : chessBoardListeners) {
+			listener.moveMade(gameId, fromSquare, toSquare);
+		}
+	}
+
+	public void fireMoveCancelled(int fromSquare, boolean isDnd) {
+		for (ChessBoardListener listener : chessBoardListeners) {
+			listener.moveCancelled(gameId, fromSquare, isDnd);
+		}
+	}
+
+	class ChessBoard extends Canvas {
 		class ChessBoardSquare extends Composite {
+			Image backgroundImage;
+			Image pieceImage;
 			int id;
+			boolean isHighlighted;
 			boolean isLight;
 			int piece;
-			Label label;
-			DropTarget target;
-			DragSource source;
-			FillLayout layout = new FillLayout();
+			boolean isSelected = false;
+			DropTarget target = new DropTarget(this, DND.DROP_MOVE);
+			DragSource source = new DragSource(this, DND.DROP_MOVE);
+			DragSourceEffect dragSourceEffect = new DragSourceEffect(this) {
+				public void dragStart(DragSourceEvent event) {
+					if (piece == Set.EMPTY) {
+
+					} else {
+						dragIcon = event.image = getSet().getIcon(piece);
+					}
+				}
+			};
+			DragSourceListener dragSourceListener = new DragSourceAdapter() {
+				public void dragStart(DragSourceEvent event) {
+					if (piece == Set.EMPTY) {
+						event.doit = false;
+					} else {
+						event.doit = true;
+						event.detail = DND.DROP_MOVE;
+						ChessBoard.this.setData(DRAG_INITIATOR,
+								ChessBoardSquare.this);
+						fireMoveInitiated(ChessBoardSquare.this.id, true);
+					}
+				}
+
+				public void dragSetData(DragSourceEvent event) {
+					event.data = "" + piece;
+				}
+
+				public void dragFinished(DragSourceEvent event) {
+					if (!event.doit) {
+						fireMoveCancelled(ChessBoardSquare.this.id, true);
+					}
+					dragIcon.dispose();
+					lastDropTime = System.currentTimeMillis();
+					ChessBoard.this.setData(CLICK_INITIATOR, null);
+					ChessBoard.this.setData(DRAG_INITIATOR, null);
+				}
+			};
+			DropTargetListener dropTargetListener = new DropTargetAdapter() {
+				public void dragEnter(DropTargetEvent event) {
+				}
+
+				public void dragOperationChanged(DropTargetEvent event) {
+				}
+
+				public void dragOver(DropTargetEvent event) {
+				}
+
+				public void drop(DropTargetEvent event) {
+					if (event.detail != DND.DROP_NONE) {
+						ChessBoardSquare start = (ChessBoardSquare) ChessBoard.this
+								.getData(DRAG_INITIATOR);
+						fireMoveMade(start.id, ChessBoardSquare.this.id);
+					}
+				}
+
+			};
+
+			MouseListener mouseListener = new MouseListener() {
+				public void mouseDoubleClick(MouseEvent e) {
+				}
+
+				public void mouseDown(MouseEvent e) {
+					if (e.button == 3) {
+						fireOnRightClick(id);
+					}
+				}
+
+				public void mouseUp(MouseEvent e) {
+					if (e.button == 2) {
+						fireOnMiddleClick(id);
+					} else if (e.button == 1
+							&& System.currentTimeMillis() - lastDropTime > 100) {
+						ChessBoardSquare initiator = (ChessBoardSquare) ChessBoard.this
+								.getData(CLICK_INITIATOR);
+
+						if (initiator == null) {// Start of move
+							ChessBoard.this.setData(CLICK_INITIATOR,
+									ChessBoardSquare.this);
+							fireMoveInitiated(id, false);
+						} else {
+							if (ChessBoardSquare.this == initiator) {// Clicked
+								// on
+								// same
+								// square
+								// twice.
+								fireMoveCancelled(initiator.id, false);
+								ChessBoard.this.setData(CLICK_INITIATOR, null);
+							} else if (Set.arePiecesSameColor(piece,
+									initiator.piece)) {// Clicked on same piece
+								// type twice.
+								fireMoveCancelled(initiator.id, false);
+								fireMoveInitiated(ChessBoardSquare.this.id,
+										false);
+								ChessBoard.this.setData(CLICK_INITIATOR,
+										ChessBoardSquare.this);
+							} else {// A valid move
+								fireMoveMade(initiator.id,
+										ChessBoardSquare.this.id);
+								ChessBoard.this.setData(CLICK_INITIATOR, null);
+							}
+						}
+					}
+				}
+			};
 
 			ControlListener controlListener = new ControlListener() {
 
@@ -61,112 +229,96 @@ public class ChessBoardWindow {
 				}
 
 				public void controlResized(ControlEvent e) {
-					if (label.getBackgroundImage() != null) {
-						label.getBackgroundImage().dispose();
-					}
-					label.setBackgroundImage(getSquareBackground()
-							.getScaledImage(isLight, getSize().x, getSize().y));
+					forceLayout();
+				}
+			};
 
-					if (label.getImage() != null) {
-						label.getImage().dispose();
+			PaintListener paintListener = new PaintListener() {
+				public void paintControl(PaintEvent e) {
+					Point size = getSize();
+					if (backgroundImage == null
+							|| backgroundImage.getBounds().width != getSize().x
+							&& backgroundImage.getBounds().height != getSize().y) {
+						if (backgroundImage != null) {
+							backgroundImage.dispose();
+						}
+						backgroundImage = getSquareBackground().getScaledImage(
+								isLight, size.x, size.y);
 					}
-					label.setImage(getSet().getScaledImage(piece, getSize().x ,
-							getSize().y ));
-					label.setAlignment(SWT.CENTER);
+
+					e.gc.drawImage(backgroundImage, 0, 0);
+
+					int highlightBorderWidth = (int) (size.x * PreferenceService
+							.getInstance()
+							.getConfig()
+							.getDouble(
+									PreferenceService.BOARD_HIGHLIGHT_WIDTH_AKEY,
+									.05));
+					if (isHighlighted) {
+						for (int i = 0; i < highlightBorderWidth; i++) {
+							e.gc.drawRectangle(i, i, size.x - 1 - i * 2, size.x
+									- 1 - i * 2);
+						}
+					}
+
+					double imageSquareSideAdjustment = PreferenceService
+							.getInstance()
+							.getConfig()
+							.getDouble(
+									PreferenceService.PIECE_SIZE_ADJUSTMENT_KEY,
+									.03);
+					int imageSide = (int) ((size.x - highlightBorderWidth * 2) * (1.0 - imageSquareSideAdjustment));
+					if (imageSide % 2 != 0) {
+						imageSide = imageSide - 1;
+					}
+
+					if (pieceImage == null && piece != Set.EMPTY) {
+						pieceImage = getSet().getScaledImage(piece, imageSide,
+								imageSide);
+					}
+
+					if (pieceImage != null) {
+						int pieceImageX = (size.x - imageSide) / 2;
+						int pieceImageY = (size.y - imageSide) / 2;
+
+						System.out.println("Drawing image in square " + id);
+						e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
+					}
 				}
 			};
 
 			public ChessBoardSquare(int id, boolean isLight) {
 				super(ChessBoard.this, 0);
 				this.id = id;
-				addControlListener(controlListener);
-				label = new Label(this, SWT.CENTER | SWT.VERTICAL);
-				//label.setAlignment();
-				setLayout(layout);
-				
-				
 				this.isLight = isLight;
-
-				source = new DragSource(label, DND.DROP_MOVE);
-				source.setDragSourceEffect(new DragSourceEffect(label) {
-					public void dragStart(DragSourceEvent event) {
-						if (piece == Set.EMPTY) {
-
-						} else {
-							dragIcon = event.image = getSet().getIcon(piece);
-						}
-					}
-				});
+				addPaintListener(paintListener);
+				addControlListener(controlListener);
+				addMouseListener(mouseListener);
 
 				source
 						.setTransfer(new Transfer[] { org.eclipse.swt.dnd.TextTransfer
 								.getInstance() });
-				source.addDragListener(new DragSourceAdapter() {
-					public void dragStart(DragSourceEvent event) {
-						if (piece == Set.EMPTY) {
-							event.doit = false;
-						} else {
-							event.doit = true;
-							event.detail = DND.DROP_MOVE;
-							ChessBoard.this.setData(DRAG_INITIATOR,
-									ChessBoardSquare.this);
+				source.setDragSourceEffect(dragSourceEffect);
+				source.addDragListener(dragSourceListener);
 
-							dragSuccessful = false;
-							storedPiece = piece;
-							setPiece(Set.EMPTY);
-						}
-					}
-
-					public void dragSetData(DragSourceEvent event) {
-						event.data = "" + piece;
-					}
-
-					public void dragFinished(DragSourceEvent event) {
-						if (event.doit && dragSuccessful) {
-							setPiece(Set.EMPTY);
-						} else {
-							setPiece(storedPiece);
-						}
-						dragIcon.dispose();
-					}
-				});
-
-				target = new DropTarget(label, DND.DROP_MOVE);
 				target
 						.setTransfer(new Transfer[] { TextTransfer
 								.getInstance() });
-				target.addDropListener(new DropTargetAdapter() {
-					public void dragEnter(DropTargetEvent event) {
-					}
-
-					public void dragOperationChanged(DropTargetEvent event) {
-					}
-
-					public void dragOver(DropTargetEvent event) {
-					}
-
-					public void drop(DropTargetEvent event) {
-						if (event.detail != DND.DROP_NONE) {
-							ChessBoardSquare start = (ChessBoardSquare) ChessBoard.this
-									.getData(DRAG_INITIATOR);
-							Move move = makeMove(start.id,
-									ChessBoardSquare.this.id);
-							if (move != null) {
-								setPiece(storedPiece);
-								ChessBoard.this.setData(DRAG_INITIATOR, null);
-								dragSuccessful = true;
-							} else {
-								dragSuccessful = false;
-							}
-						}
-					}
-				});
+				target.addDropListener(dropTargetListener);
 			}
 
 			public void dispose() {
-				label.getImage().dispose();
-				label.getBackground().dispose();
+				if (backgroundImage != null) {
+					backgroundImage.dispose();
+				}
+				if (pieceImage != null) {
+					pieceImage.dispose();
+				}
+				removePaintListener(paintListener);
 				removeControlListener(controlListener);
+				removeMouseListener(mouseListener);
+				source.removeDragListener(dragSourceListener);
+				target.removeDropListener(dropTargetListener);
 				source.dispose();
 				target.dispose();
 				super.dispose();
@@ -177,11 +329,11 @@ public class ChessBoardWindow {
 			}
 
 			public boolean isLight() {
-				return isLight;
+				return isHighlighted;
 			}
 
 			public void setLight(boolean isLight) {
-				this.isLight = isLight;
+				this.isHighlighted = isLight;
 			}
 
 			public int getPiece() {
@@ -189,43 +341,41 @@ public class ChessBoardWindow {
 			}
 
 			public void setPiece(int piece) {
-				if (forceLayout) {
+				if (this.piece != piece) {
 					this.piece = piece;
-					if (label.getImage() != null) {
-						label.getImage().dispose();
+					if (pieceImage != null) {
+						pieceImage.dispose();
+						pieceImage = null;
 					}
-					
-					label.setImage(getSet().getScaledImage(piece, getSize().x ,
-							getSize().y ));
-					label.setAlignment(SWT.CENTER);
-					
-					layout();
-				} else if (this.piece != piece) {
-					this.piece = piece;
-					if (label.getImage() != null) {
-						label.getImage().dispose();
-					}
-					if (getSize() != null) {
-						label.setImage(getSet().getScaledImage(piece,
-								getSize().x, getSize().y ));
-						label.setAlignment(SWT.CENTER);
-					}
+					redraw();
+				}
+			}
 
-
-					layout();
+			public void forceLayout() {
+				if (backgroundImage != null) {
+					backgroundImage.dispose();
+					backgroundImage = null;
+				}
+				if (pieceImage != null) {
+					pieceImage.dispose();
+					pieceImage = null;
 				}
 			}
 
 			public void highlight() {
-
+				if (!isHighlighted) {
+					System.out.println("Highlighting " + id);
+					isHighlighted = true;
+					redraw();
+				}
 			}
 
 			public void unhighlight() {
-
-			}
-
-			public Label getLabel() {
-				return label;
+				if (isHighlighted) {
+					System.out.println("unhighlight " + id);
+					isHighlighted = false;
+					redraw();
+				}
 			}
 		}
 
@@ -247,6 +397,9 @@ public class ChessBoardWindow {
 
 				if (isShowingCoordinates) {
 					squareSide = width > height ? height / 8 : width / 8;
+					if (squareSide % 2 != 0) {
+						squareSide -= 1;
+					}
 
 					int charWidth = 20;
 					int charHeight = 20;
@@ -277,6 +430,10 @@ public class ChessBoardWindow {
 
 				} else {
 					squareSide = width > height ? height / 8 : width / 8;
+					if (squareSide % 2 != 0) {
+						squareSide -= 1;
+					}
+
 					x = 0;
 					xInit = 0;
 					y = 0;
@@ -406,11 +563,10 @@ public class ChessBoardWindow {
 		setShowingCoordinates(PreferenceService.getInstance().getConfig()
 				.getBoolean(PreferenceService.SHOW_COORDINATES_KEY, true));
 
-		forceLayout = true;
-		updateFromGame();
-		forceLayout = false;
-		if (shell.isVisible()) {
-			board.layout();
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				board.squares[i][j].forceLayout();
+			}
 		}
 	}
 
@@ -440,6 +596,22 @@ public class ChessBoardWindow {
 		}
 	}
 
+	public void unhighlightAllSquares() {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				board.squares[i][j].unhighlight();
+			}
+		}
+	}
+
+	public void highlightAllSquares() {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				board.squares[i][j].highlight();
+			}
+		}
+	}
+
 	public void updateFromGame() {
 		Game game = getGame();
 		for (int i = 0; i < 8; i++) {
@@ -448,6 +620,12 @@ public class ChessBoardWindow {
 						GameUtils.rankFileToSquare(i, j), game));
 			}
 		}
+	}
+
+	public ChessBoardSquare getSquare(int square) {
+		int rank = square / 8;
+		int file = square % 8;
+		return board.squares[rank][file];
 	}
 
 	public String getGameId() {
@@ -475,22 +653,6 @@ public class ChessBoardWindow {
 		return game;
 	}
 
-	private Move makeMove(int startSquare, int endSquare) {
-		Game game = getGame();
-		try {
-			Move move = game.makeMove(startSquare, endSquare);
-			GameService.getInstance().notifyUserMove(game.getId(), move);
-			LOG.info(game.getId() + " " + move.getLan());
-			return move;
-
-		} catch (IllegalArgumentException iae) {
-			LOG.warn("Illegal move encountered " + startSquare + " "
-					+ endSquare, iae);
-			SoundService.getInstance().play(SoundService.GAME_PLAY_ILLEGAL);
-			return null;
-		}
-	}
-
 	public ChessBoardWindow(String gameId) {
 		this.gameId = gameId;
 		shell = SWTService.getInstance().createShell();
@@ -498,6 +660,7 @@ public class ChessBoardWindow {
 
 		board = new ChessBoard(shell, SWT.VIRTUAL | SWT.BORDER);
 		board.init();
+		updateFromGame();
 		updateFromPrefs();
 
 		shell.open();
@@ -509,10 +672,71 @@ public class ChessBoardWindow {
 
 	public static void main(String[] args) {
 
-		Game game = GameUtils.createStartingPosition();
+		final Game game = GameUtils.createStartingPosition();
 		game.setId("1");
 		GameService.getInstance().addGame(game);
-		ChessBoardWindow window = new ChessBoardWindow("1");
+		final ChessBoardWindow window = new ChessBoardWindow("1");
+		window.addChessBoardListener(new ChessBoardListener() {
+			
+			private SecureRandom random = new SecureRandom();
+
+			public void moveCancelled(String gameId, int fromSquare,
+					boolean isDnd) {
+				System.out.println("moveCancelled" + gameId + " " + fromSquare
+						+ " " + isDnd);
+				window.unhighlightAllSquares();
+				window.updateFromGame();
+			}
+
+			public void moveInitiated(String gameId, int square, boolean isDnd) {
+				System.out.println("moveInitiated" + gameId + " " + square
+						+ " " + isDnd);
+
+				window.unhighlightAllSquares();
+				window.getSquare(square).highlight();
+				if (isDnd) {
+					window.getSquare(square).setPiece(Set.EMPTY);
+				}
+			}
+
+			public void moveMade(String gameId, int fromSquare, int toSquare) {
+				System.out.println("Move made " + gameId + " " + fromSquare
+						+ " " + toSquare);
+				window.unhighlightAllSquares();
+				try {
+					Move move = game.makeMove(fromSquare, toSquare);
+				    window.getSquare(move.getFrom()).highlight();
+				    window.getSquare(move.getTo()).highlight();
+				} catch (IllegalArgumentException iae) {
+					System.out.println("Move was illegal");
+				}
+				window.updateFromGame();
+			}
+
+			public void onMiddleClick(String gameId, int square) {
+				System.out.println("On middle click " + gameId + " " + square);
+				Move[] moves = game.getLegalMoves().asArray();
+				List<Move> foundMoves = new ArrayList<Move>(5);
+				for (Move move : moves) {
+					if (move.getTo() == square) {
+						foundMoves.add(move);
+					}
+				}
+				
+				if (foundMoves.size() > 0) {
+					Move move = foundMoves.get(random.nextInt(foundMoves.size()));
+					game.move(move);
+				    window.unhighlightAllSquares();
+				    window.getSquare(move.getFrom()).highlight();
+				    window.getSquare(move.getTo()).highlight();
+				    window.updateFromGame();
+				}
+			}
+
+			public void onRightClick(String gameId, int square) {
+				System.out.println("On right click " + gameId + " " + square);
+			}
+		});
 		SWTService.getInstance().start();
 	}
 }

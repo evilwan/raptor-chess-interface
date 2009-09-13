@@ -10,6 +10,7 @@ public class PreferenceService {
 
 	public static final String COMMON_PROPERTIES = "resources/common/common.properties";
 
+	public static final String BOARD_HIGHLIGHT_WIDTH_AKEY = "board-highlight-width";
 	public static final String PIECE_SIZE_ADJUSTMENT_KEY = "board-piece-size-adjustment";
 	public static final String SHOW_COORDINATES_KEY = "board-show-coordinates";
 	public static final String SQUARE_HIGHLIGHT_COLOR_KEY = "board-square-highlight-color";
