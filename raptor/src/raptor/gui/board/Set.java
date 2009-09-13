@@ -8,16 +8,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.eclipse.swt.graphics.Device;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Display;
 
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.util.GameUtils;
 
 public class Set {
+	private static final Log LOG = LogFactory.getLog(Set.class);
 	private static final String SET_DIR = "resources/common/set/";
 
 	public static final int EMPTY = 0;
@@ -34,23 +38,30 @@ public class Set {
 	public static final int BQ = 11;
 	public static final int BK = 12;
 
+	ImageRegistry imageRegistry = new ImageRegistry();
+
 	private Image[] initialImages = null;
 
-	private Device device = null;
-
 	private String setName;
-	
+
+	public void dispose() {
+		imageRegistry.dispose();
+		for (int i = 0; i < initialImages.length; i++) {
+			initialImages[i].dispose();
+		}
+	}
+
 	public static boolean isWhitePiece(int setPieceType) {
 		return setPieceType > 0 && setPieceType < 7;
 	}
-	
+
 	public static boolean isBlackPiece(int setPieceType) {
 		return setPieceType > 7 && setPieceType < 13;
 	}
-	
-	public static boolean arePiecesSameColor(int piece1,int piece2) {
-		return (isWhitePiece(piece1) && isWhitePiece(piece2)) ||
-		       (isBlackPiece(piece1) && isBlackPiece(piece2));
+
+	public static boolean arePiecesSameColor(int piece1, int piece2) {
+		return (isWhitePiece(piece1) && isWhitePiece(piece2))
+				|| (isBlackPiece(piece1) && isBlackPiece(piece2));
 	}
 
 	public static int getSetPieceFromGamePiece(int square, Game game) {
@@ -91,9 +102,8 @@ public class Set {
 
 	}
 
-	public Set(Device device, String setName) {
+	public Set(String setName) {
 		super();
-		this.device = device;
 		this.setName = setName;
 		initImages();
 	}
@@ -219,12 +229,22 @@ public class Set {
 			height = 10;
 		}
 
-		Image image = getChessPieceImage(type);
-		if (image != null) {
-			return new Image(device, image.getImageData().scaledTo(width,
-					height));
+		String key = getName() + "_" + type + "_" + width + "x" + height;
+		Image image = imageRegistry.get(key);
+
+		if (image == null) {
+			Image stockImage = getChessPieceImage(type);
+			if (stockImage != null) {
+				Image result = new Image(Display.getCurrent(), stockImage
+						.getImageData().scaledTo(width, height));
+				imageRegistry.put(key, result);
+				return result;
+			} else {
+				LOG.error("Could not find stock image for set " + getName() + " " + type);
+				throw new IllegalStateException("Could not find stock image for set " + getName() + " " + type);
+			}
 		} else {
-			return null;
+			return image;
 		}
 	}
 
@@ -233,7 +253,7 @@ public class Set {
 			ImageData ideaData = new ImageData(SET_DIR + location);
 			int transPixel = ideaData.palette.getPixel(new RGB(255, 255, 0));
 			ideaData.transparentPixel = transPixel;
-			return new Image(device, ideaData);
+			return new Image(Display.getCurrent(), ideaData);
 		} catch (Exception ioe) {
 			throw new IllegalArgumentException("Error loading image "
 					+ location, ioe);
