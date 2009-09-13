@@ -1,12 +1,12 @@
 package raptor.gui.board;
 
-import java.awt.Button;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -27,16 +27,17 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.Shell;
 
 import raptor.game.Game;
 import raptor.game.Move;
@@ -52,7 +53,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 			@Override
 			protected Point computeSize(Composite composite, int hint,
 					int hint2, boolean flushCache) {
-				return new Point(600,400);
+				return new Point(600, 400);
 			}
 
 			@Override
@@ -69,8 +70,12 @@ public class ChessBoardWindow extends ApplicationWindow {
 						squareSide -= 1;
 					}
 
-					int charWidth = 20;
-					int charHeight = 20;
+					GC gc = new GC(ChessBoard.this);
+					gc.setFont(board.rankLabels[0].getFont());
+					gc.getFontMetrics().getAscent();
+					int charWidth = gc.getFontMetrics().getAverageCharWidth() + 5;
+					int charHeight = gc.getFontMetrics().getAscent() + 10;
+					gc.dispose();
 
 					squareSide -= Math.round(charWidth / 8.0);
 
@@ -273,7 +278,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 					int highlightBorderWidth = (int) (size.x * PreferenceService
 							.getInstance()
-							.getConfig()
+							.getStore()
 							.getDouble(
 									PreferenceService.BOARD_HIGHLIGHT_BORDER_WIDTH_KEY));
 					if (isHighlighted) {
@@ -285,7 +290,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 					double imageSquareSideAdjustment = PreferenceService
 							.getInstance()
-							.getConfig()
+							.getStore()
 							.getDouble(
 									PreferenceService.BOARD_PIECE_SIZE_ADJUSTMENT_KEY);
 					int imageSide = (int) ((size.x - highlightBorderWidth * 2) * (1.0 - imageSquareSideAdjustment));
@@ -310,7 +315,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 			public ChessBoardSquare(int id, boolean isLight) {
 				super(ChessBoard.this, 0);
-				setSize(50,50);
+				setSize(50, 50);
 				this.id = id;
 				this.isLight = isLight;
 				addPaintListener(paintListener);
@@ -558,6 +563,14 @@ public class ChessBoardWindow extends ApplicationWindow {
 			}
 		});
 
+		window.getToolBarManager2().add(new Action("Flip",SWT.BORDER) {
+			@Override
+			public void run() {
+				super.run();
+				window.setWhiteOnTop(!window.isWhiteOnTop);
+			}
+		});
+
 		window.setBlockOnOpen(true);
 		window.open();
 		Display.getCurrent().dispose();
@@ -582,17 +595,23 @@ public class ChessBoardWindow extends ApplicationWindow {
 	public ChessBoardWindow(String gameId) {
 		super(null);
 		this.gameId = gameId;
+		addToolBar(SWT.VERTICAL);
 	}
 
 	@Override
 	protected Control createContents(Composite parent) {
-		parent.setLayout(new FillLayout());
-		board = new ChessBoard(parent, SWT.VIRTUAL | SWT.BORDER);
+		FillLayout fillLayout = new FillLayout();
+		fillLayout.marginHeight = 10;
+		fillLayout.marginWidth = 10;
+		// parent.setLayout(fillLayout);
+		board = new ChessBoard(parent, 0);
 		board.init();
 		board.setSize(600, 400);
 		updateFromGame();
 		updateFromPrefs();
+
 		parent.pack();
+
 		return parent;
 	}
 
@@ -718,13 +737,40 @@ public class ChessBoardWindow extends ApplicationWindow {
 	}
 
 	public void updateFromPrefs() {
-		setShowingCoordinates(PreferenceService.getInstance().getConfig()
-				.getBoolean(PreferenceService.BOARD_SHOW_COORDINATES_KEY));
+		setShowingCoordinates(PreferenceService.getInstance().getStore()
+				.getBoolean(PreferenceService.BOARD_IS_SHOW_COORDINATES_KEY));
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
+				board.squares[i][j].setForeground(PreferenceService
+						.getInstance().getColor(
+								PreferenceService.BOARD_HIGHLIGHT_COLOR_KEY));
 				board.squares[i][j].forceLayout();
 			}
 		}
+
+		for (Label label : board.rankLabels) {
+			label.setFont(PreferenceService.getInstance().getFont(
+					PreferenceService.BOARD_COORDINATES_FONT));
+			label.setForeground(PreferenceService.getInstance().getColor(
+					PreferenceService.BOARD_COORDINATES_COLOR));
+			label.setBackground(PreferenceService.getInstance().getColor(
+					PreferenceService.BOARD_BACKGROUND_COLOR_KEY));
+		}
+
+		for (Label label : board.fileLabels) {
+			label.setFont(PreferenceService.getInstance().getFont(
+					PreferenceService.BOARD_COORDINATES_FONT));
+			label.setForeground(PreferenceService.getInstance().getColor(
+					PreferenceService.BOARD_COORDINATES_COLOR));
+			label.setBackground(PreferenceService.getInstance().getColor(
+					PreferenceService.BOARD_BACKGROUND_COLOR_KEY));
+		}
+
+		getShell().setBackground(
+				PreferenceService.getInstance().getColor(
+						PreferenceService.BOARD_BACKGROUND_COLOR_KEY));
+		board.setBackground(PreferenceService.getInstance().getColor(
+				PreferenceService.BOARD_BACKGROUND_COLOR_KEY));
 	}
 }
