@@ -39,6 +39,19 @@ public class Set {
 	private Device device = null;
 
 	private String setName;
+	
+	public static boolean isWhitePiece(int setPieceType) {
+		return setPieceType > 0 && setPieceType < 7;
+	}
+	
+	public static boolean isBlackPiece(int setPieceType) {
+		return setPieceType > 7 && setPieceType < 13;
+	}
+	
+	public static boolean arePiecesSameColor(int piece1,int piece2) {
+		return (isWhitePiece(piece1) && isWhitePiece(piece2)) ||
+		       (isBlackPiece(piece1) && isBlackPiece(piece2));
+	}
 
 	public static int getSetPieceFromGamePiece(int square, Game game) {
 		long squareBB = GameUtils.getBitmap(square);
