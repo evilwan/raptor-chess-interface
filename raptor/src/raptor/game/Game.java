@@ -19,8 +19,8 @@ import static raptor.game.util.GameUtils.rankFileToSquare;
 
 import java.util.Arrays;
 
+import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
-
 
 public class Game implements GameConstants {
 
@@ -35,9 +35,12 @@ public class Game implements GameConstants {
 	public static final int CRAZY_HOUSE = 8;
 	public static final int BUGHOUSE = 9;
 
-	public static final int ACTIVE_STATE = 0;
-	public static final int INACTIVE_STATE = 1;
-	public static final int EXAMINING_STATE = 2;
+	public static final int ACTIVE_STATE = 2;
+	public static final int INACTIVE_STATE = 4;
+	public static final int EXAMINING_STATE = 8;
+	public static final int PLAYING_STATE = 16;
+	public static final int UNTIMED_STTE = 32;
+	public static final int DROPPABLE_STATE = 64;
 
 	public static final int IN_PROGRESS_RESULT = 0;
 	public static final int WHTIE_WON_RESULT = 1;
@@ -45,7 +48,7 @@ public class Game implements GameConstants {
 	public static final int DRAW_RESULT = 3;
 	public static final int UNDETERMINED_RESULT = 4;
 
-	protected int id;
+	protected String id;
 	protected int state;
 	protected int result;
 	protected int type;
@@ -81,15 +84,15 @@ public class Game implements GameConstants {
 	protected int fiftyMoveCount;
 	protected int[][] pieceCounts = new int[2][7];
 	protected int[][] dropCounts = new int[2][7];
-	protected int zobristPositionHash;
-	protected int zobristGameHash;
+	protected long zobristPositionHash;
+	protected long zobristGameHash;
 	protected int[] moveRepHash = new int[MOVE_REP_CACHE_SIZE];
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -238,7 +241,7 @@ public class Game implements GameConstants {
 	}
 
 	public int getRepHash() {
-		return zobristPositionHash & MOVE_REP_CACHE_SIZE_MINUS_1;
+		return (int) (zobristPositionHash & MOVE_REP_CACHE_SIZE_MINUS_1);
 	}
 
 	public int getRepCount() {
@@ -253,19 +256,19 @@ public class Game implements GameConstants {
 		moveRepHash[getRepHash()]--;
 	}
 
-	public int getZobristGameHash() {
+	public long getZobristGameHash() {
 		return zobristGameHash;
 	}
 
-	public void setZobristGameHash(int hash) {
+	public void setZobristGameHash(long hash) {
 		zobristGameHash = hash;
 	}
 
-	public int getZobristPositionHash() {
+	public long getZobristPositionHash() {
 		return zobristPositionHash;
 	}
 
-	public void setZobristPositionHash(int hash) {
+	public void setZobristPositionHash(long hash) {
 		zobristPositionHash = hash;
 	}
 
@@ -670,6 +673,28 @@ public class Game implements GameConstants {
 
 		if (move == null) {
 			throw new IllegalArgumentException("Invalid move: " + lan + " \n"
+					+ toString());
+		} else {
+			forceMove(move);
+		}
+
+		return move;
+	}
+	
+	public Move makeMove(int startSquare,int endSquare) throws IllegalArgumentException {
+		Move move = null;
+
+		Move[] legals = getLegalMoves().asArray();
+
+		for (int i = 0; move == null && i < legals.length; i++) {
+			Move candidate = legals[i];
+			if (candidate.getFrom() == startSquare && candidate.getTo() == endSquare) {
+				move = candidate;
+			}
+		}
+
+		if (move == null) {
+			throw new IllegalArgumentException("Invalid move: " + startSquare + " " + endSquare + " \n"
 					+ toString());
 		} else {
 			forceMove(move);
