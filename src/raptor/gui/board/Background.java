@@ -5,10 +5,11 @@ import java.io.FilenameFilter;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringTokenizer;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Display;
 
 public class Background {
 	public static final String BACKGROUND_DIR = "resources/common/background/";
@@ -17,12 +18,18 @@ public class Background {
 	private Image darkSquareImage;
 
 	private Image lightSquareImage;
-	private Device device;
 
-	public Background(Device device, String name) {
+	private ImageRegistry imageRegistry = new ImageRegistry();
+
+	public Background(String name) {
 		this.name = name;
-		this.device = device;
 		initImages();
+	}
+	
+	public void dispose() {
+		imageRegistry.dispose();
+		darkSquareImage.dispose();
+		lightSquareImage.dispose();
 	}
 
 	public static String[] getBackgrounds() {
@@ -65,8 +72,8 @@ public class Background {
 		String darkImage = "SQUARE." + name + ".DARK." + suffix;
 		String lightImage = "SQUARE." + name + ".LIGHT." + suffix;
 
-		darkSquareImage = new Image(device, BACKGROUND_DIR + darkImage);
-		lightSquareImage = new Image(device, BACKGROUND_DIR + lightImage);
+		darkSquareImage = new Image(Display.getCurrent(), BACKGROUND_DIR + darkImage);
+		lightSquareImage = new Image(Display.getCurrent(), BACKGROUND_DIR + lightImage);
 	}
 
 	public Image getScaledImage(boolean isLight, int width, int height) {
@@ -75,10 +82,20 @@ public class Background {
 			width = 10;
 			height = 10;
 		}
-
-		Image source = isLight ? lightSquareImage : darkSquareImage;
-
-		return new Image(device, source.getImageData().scaledTo(width, height));
+		
+		String key = getName() + "_" + isLight + "_" + width + "x" + height;
+		
+		Image result = imageRegistry.get(key);
+		
+		if (result == null) {
+			Image source = isLight ? lightSquareImage : darkSquareImage;
+			result =  new Image(Display.getCurrent(), source.getImageData().scaledTo(width, height));
+			imageRegistry.put(key, result);
+			return result;
+		}
+		else {
+			return result;
+		}
 	}
 
 }
