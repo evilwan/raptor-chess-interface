@@ -18,40 +18,40 @@ public class ChatEvent {
 	protected String message;
 	protected long time;
 
-	public String getSource() {
-		return source;
-	}
-
-	public void setSource(String source) {
-		this.source = source;
-	}
-
 	public int getGameId() {
 		return gameId;
-	}
-
-	public void setGameId(int gameId) {
-		this.gameId = gameId;
 	}
 
 	public String getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public String getSource() {
+		return source;
 	}
 
 	public long getTime() {
 		return time;
 	}
 
-	public void setTime(long time) {
-		this.time = time;
-	}
-
 	public int getType() {
 		return type;
+	}
+
+	public void setGameId(int gameId) {
+		this.gameId = gameId;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public void setSource(String source) {
+		this.source = source;
+	}
+
+	public void setTime(long time) {
+		this.time = time;
 	}
 
 	public void setType(int type) {

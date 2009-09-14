@@ -3,12 +3,22 @@ package raptor.service;
 public class UserService {
 
 	private static final UserService instance = new UserService();
-	private boolean isGuest;
-	private String name;
-	private String partner;
 
 	public static UserService getInstance() {
 		return instance;
+	}
+
+	private boolean isGuest;
+	private String name;
+
+	private String partner;
+
+	public String getName() {
+		return name;
+	}
+
+	public String getPartner() {
+		return partner;
 	}
 
 	public boolean isGuest() {
@@ -19,16 +29,8 @@ public class UserService {
 		this.isGuest = isGuest;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public String getPartner() {
-		return partner;
 	}
 
 	public void setPartner(String partner) {

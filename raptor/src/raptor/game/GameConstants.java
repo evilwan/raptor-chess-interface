@@ -3,7 +3,6 @@ package raptor.game;
 public interface GameConstants {
 	public static final int MOVE_REP_CACHE_SIZE = (1 << 12);
 	public static final int MOVE_REP_CACHE_SIZE_MINUS_1 = MOVE_REP_CACHE_SIZE - 1;
-	
 
 	public static final int MAX_HALF_MOVES_IN_GAME = 500;
 	public static final int MAX_LEGAL_MOVES = 500;
@@ -180,7 +179,7 @@ public interface GameConstants {
 	public static final long RANK8 = A8 | B8 | C8 | D8 | E8 | F8 | G8 | H8;
 
 	public static final long RANK8_OR_RANK1 = RANK1 | RANK8;
-	
+
 	public static final long NOT_RANK1 = ~RANK1;
 	public static final long NOT_RANK2 = ~RANK2;
 	public static final long NOT_RANK3 = ~RANK3;
@@ -205,7 +204,8 @@ public interface GameConstants {
 	public static final long NOT_CFILE = ~CFILE;
 	public static final long NOT_DFILE = ~DFILE;
 	public static final long NOT_EFILE = ~EFILE;
-	public static final long NOT_FFILE = ~FFILE;	public static final long NOT_GFILE = ~GFILE;
+	public static final long NOT_FFILE = ~FFILE;
+	public static final long NOT_GFILE = ~GFILE;
 	public static final long NOT_HFILE = ~HFILE;
 
 	// Piece constants.
@@ -216,13 +216,13 @@ public interface GameConstants {
 	public static final int ROOK = 4;
 	public static final int QUEEN = 5;
 	public static final int KING = 6;
-	public static final int PROMOTED_MASK   = 8;
+	public static final int PROMOTED_MASK = 8;
 	public static final int NOT_PROMOTED_MASK = 7;
 	public static final int PROMOTED_BISHOP = BISHOP | PROMOTED_MASK;
 	public static final int PROMOTED_KNIGHT = KNIGHT | PROMOTED_MASK;
-	public static final int PROMOTED_ROOK   = ROOK | PROMOTED_MASK;
-	public static final int PROMOTED_QUEEN  = QUEEN | PROMOTED_MASK;
-	
+	public static final int PROMOTED_ROOK = ROOK | PROMOTED_MASK;
+	public static final int PROMOTED_QUEEN = QUEEN | PROMOTED_MASK;
+
 	// Color constants.
 	public static final int WHITE = 0;
 	public static final int BLACK = 1;

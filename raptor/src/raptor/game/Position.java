@@ -15,20 +15,22 @@ public class Position {
 						game.pieceBB.length);
 		colorToMove = game.getColorToMove();
 	}
-	
-	public int hashCode() {
-		return hashcode;
-	}
-	
+
+	@Override
 	public boolean equals(Object o) {
 		Position position = (Position) o;
 		boolean result = colorToMove == position.colorToMove;
-		
+
 		for (int i = 0; result && i < pieceBB.length; i++) {
 			for (int j = 0; result && j < pieceBB[i].length; j++) {
 				result = pieceBB[i][j] == position.pieceBB[i][j];
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public int hashCode() {
+		return hashcode;
 	}
 }

@@ -55,76 +55,24 @@ public class Move implements GameConstants {
 		this.moveCharacteristic = (byte) moveCharacteristic;
 	}
 
-	public int getFrom() {
-		return from;
-	}
-
-	public void setFrom(int from) {
-		this.from = (byte) from;
-	}
-
-	public int getTo() {
-		return to;
-	}
-
-	public void setTo(int to) {
-		this.to = (byte) to;
-	}
-
-	public int getPiece() {
-		return piece;
-	}
-
-	public void setPiece(int piece) {
-		this.piece = (byte) piece;
-	}
-
 	public int getCapture() {
 		return capture;
-	}
-
-	public void setCapture(int capture) {
-		this.capture = (byte) capture;
-	}
-
-	public int getPiecePromotedTo() {
-		return piecePromotedTo;
-	}
-
-	public void setPiecePromotedTo(int piecePromotedTo) {
-		this.piecePromotedTo = (byte) piecePromotedTo;
-	}
-
-	public int getEpSquare() {
-		return epSquare;
-	}
-
-	public void setEpSquare(int epSquare) {
-		this.epSquare = (byte) epSquare;
-	}
-
-	public int getColor() {
-		return color;
-	}
-
-	public void setColor(int color) {
-		this.color = (byte) color;
 	}
 
 	public int getCaptureColor() {
 		return GameUtils.getOppositeColor(getColor());
 	}
 
-	public boolean isWhitesMove() {
-		return color == GameConstants.WHITE;
+	public int getColor() {
+		return color;
 	}
 
-	public boolean isPromotion() {
-		return piecePromotedTo != GameConstants.EMPTY;
+	public int getEpSquare() {
+		return epSquare;
 	}
 
-	public boolean isCapture() {
-		return capture != GameConstants.EMPTY;
+	public int getFrom() {
+		return from;
 	}
 
 	public String getLan() {
@@ -148,30 +96,83 @@ public class Move implements GameConstants {
 												: "");
 	}
 
-	public int getMoveCharacteristic() {
-		return moveCharacteristic;
-	}
-
-	public void setMoveCharacteristic(int moveCharacteristic) {
-		this.moveCharacteristic = (byte) moveCharacteristic;
-	}
-
 	public int getLastCastleState() {
 		return lastCastleState;
 	}
 
-	public void setLastCastleState(int lastCastleState) {
-		this.lastCastleState = (byte) lastCastleState;
+	public int getMoveCharacteristic() {
+		return moveCharacteristic;
+	}
+
+	public int getPiece() {
+		return piece;
+	}
+
+	public int getPiecePromotedTo() {
+		return piecePromotedTo;
 	}
 
 	public int getPrevious50MoveCount() {
 		return previous50MoveCount;
 	}
 
+	public int getTo() {
+		return to;
+	}
+
+	public boolean isCapture() {
+		return capture != GameConstants.EMPTY;
+	}
+
+	public boolean isPromotion() {
+		return piecePromotedTo != GameConstants.EMPTY;
+	}
+
+	public boolean isWhitesMove() {
+		return color == GameConstants.WHITE;
+	}
+
+	public void setCapture(int capture) {
+		this.capture = (byte) capture;
+	}
+
+	public void setColor(int color) {
+		this.color = (byte) color;
+	}
+
+	public void setEpSquare(int epSquare) {
+		this.epSquare = (byte) epSquare;
+	}
+
+	public void setFrom(int from) {
+		this.from = (byte) from;
+	}
+
+	public void setLastCastleState(int lastCastleState) {
+		this.lastCastleState = (byte) lastCastleState;
+	}
+
+	public void setMoveCharacteristic(int moveCharacteristic) {
+		this.moveCharacteristic = (byte) moveCharacteristic;
+	}
+
+	public void setPiece(int piece) {
+		this.piece = (byte) piece;
+	}
+
+	public void setPiecePromotedTo(int piecePromotedTo) {
+		this.piecePromotedTo = (byte) piecePromotedTo;
+	}
+
 	public void setPrevious50MoveCount(int previous50MoveCount) {
 		this.previous50MoveCount = (byte) previous50MoveCount;
 	}
 
+	public void setTo(int to) {
+		this.to = (byte) to;
+	}
+
+	@Override
 	public String toString() {
 		return getLan();
 	}

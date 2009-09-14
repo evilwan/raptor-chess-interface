@@ -10,6 +10,16 @@ import org.eclipse.swt.widgets.Display;
  */
 public class PreferencesDialog {
 	/**
+	 * The application entry point
+	 * 
+	 * @param args
+	 *            the command line arguments
+	 */
+	public static void main(String[] args) {
+		new PreferencesDialog().run();
+	}
+
+	/**
 	 * Runs the application
 	 */
 	public void run() {
@@ -31,15 +41,5 @@ public class PreferencesDialog {
 
 		// Open the dialog
 		dlg.open();
-	}
-
-	/**
-	 * The application entry point
-	 * 
-	 * @param args
-	 *            the command line arguments
-	 */
-	public static void main(String[] args) {
-		new PreferencesDialog().run();
 	}
 }

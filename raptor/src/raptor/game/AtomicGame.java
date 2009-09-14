@@ -1,5 +1,5 @@
 package raptor.game;
 
-public class AtomicGame extends Game{
+public class AtomicGame extends Game {
 
 }

@@ -20,17 +20,6 @@ public class Background {
 	public static final String BACKGROUND_DIR = "resources/common/square/";
 	public static final int LIGHT_IMAGE_INDEX = 0;
 	public static final int DARK_IMAGE_INDEX = 1;
-	private String name;
-
-	private ImageRegistry imageRegistry = new ImageRegistry();
-
-	public Background(String name) {
-		this.name = name;
-	}
-
-	public void dispose() {
-		imageRegistry.dispose();
-	}
 
 	public static String[] getBackgrounds() {
 		List<String> result = new LinkedList<String>();
@@ -52,24 +41,7 @@ public class Background {
 		}
 
 		Collections.sort(result);
-		return (String[]) result.toArray(new String[0]);
-	}
-
-	public boolean equals(Object o) {
-		if (o != null) {
-			return getName().equals(((Background) o).getName());
-		} else {
-			return false;
-		}
-
-	}
-
-	public int hashCode() {
-		return getName().hashCode();
-	}
-
-	public String getName() {
-		return name;
+		return result.toArray(new String[0]);
 	}
 
 	public static Image[] getImageMolds(String name) {
@@ -114,6 +86,28 @@ public class Background {
 		return new Image[] { lightImage, darkImage };
 	}
 
+	private String name;
+
+	private ImageRegistry imageRegistry = new ImageRegistry();
+
+	public Background(String name) {
+		this.name = name;
+	}
+
+	public void dispose() {
+		imageRegistry.dispose();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o != null) {
+			return getName().equals(((Background) o).getName());
+		} else {
+			return false;
+		}
+
+	}
+
 	public Image getImageMold(boolean isLight) {
 		String imageKey = name + "_" + (isLight ? "light" : "dark") + "_stock";
 		Image image = SWTService.getInstance().getImageRegistry().get(imageKey);
@@ -122,6 +116,10 @@ public class Background {
 					: getImageMolds(name)[DARK_IMAGE_INDEX];
 		}
 		return image;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public Image getScaledImage(boolean isLight, int width, int height) {
@@ -143,6 +141,11 @@ public class Background {
 		} else {
 			return result;
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return getName().hashCode();
 	}
 
 }

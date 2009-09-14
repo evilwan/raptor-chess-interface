@@ -1,9 +1,8 @@
 package raptor.game.util;
 
+import static raptor.game.util.GameUtils.createFromFen;
 import raptor.game.Game;
 import raptor.game.Move;
-
-import static raptor.game.util.GameUtils.*;
 
 public class Benchmark {
 	// manyLegal2MoveTest: mean(nps): 794466 stdv 56010 removing bitboard ops.
@@ -63,24 +62,16 @@ public class Benchmark {
 				+ stdv(trials) + " " + counter);
 	}
 
-	public static long stdv(long[] samples) {
-		long mean = mean(samples);
-
-		long accum = 0;
-
-		for (long sample : samples) {
-			accum += (long) Math.pow(sample - mean, 2);
-		}
-
-		return (long) Math.sqrt(accum / samples.length);
-	}
-
 	public static long mean(long[] samples) {
 		long total = 0;
 		for (long sample : samples) {
 			total += sample;
 		}
 		return total / samples.length;
+	}
+
+	public static long moveWalk(Game game) {
+		return moveWalk(game, 0, 3);
 	}
 
 	private static long moveWalk(Game game, int depth, int maxDepth) {
@@ -123,7 +114,15 @@ public class Benchmark {
 		return result;
 	}
 
-	public static long moveWalk(Game game) {
-		return moveWalk(game, 0, 3);
+	public static long stdv(long[] samples) {
+		long mean = mean(samples);
+
+		long accum = 0;
+
+		for (long sample : samples) {
+			accum += (long) Math.pow(sample - mean, 2);
+		}
+
+		return (long) Math.sqrt(accum / samples.length);
 	}
 }
