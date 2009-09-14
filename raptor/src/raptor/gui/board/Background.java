@@ -5,31 +5,31 @@ import java.io.FilenameFilter;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.graphics.Device;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
+import raptor.service.SWTService;
+
 public class Background {
-	public static final String BACKGROUND_DIR = "resources/common/background/";
+	private static final Log LOG = LogFactory.getLog(Background.class);
+	public static final String BACKGROUND_DIR = "resources/common/square/";
+	public static final int LIGHT_IMAGE_INDEX = 0;
+	public static final int DARK_IMAGE_INDEX = 1;
 	private String name;
-
-	private Image darkSquareImage;
-
-	private Image lightSquareImage;
 
 	private ImageRegistry imageRegistry = new ImageRegistry();
 
 	public Background(String name) {
 		this.name = name;
-		initImages();
 	}
-	
+
 	public void dispose() {
 		imageRegistry.dispose();
-		darkSquareImage.dispose();
-		lightSquareImage.dispose();
 	}
 
 	public static String[] getBackgrounds() {
@@ -39,12 +39,17 @@ public class Background {
 		File[] files = file.listFiles(new FilenameFilter() {
 
 			public boolean accept(File arg0, String arg1) {
-				// TODO Auto-generated method stub
-				return arg1.startsWith("SQUARE.")
-						&& arg1.indexOf("LIGHT") != -1;
+				File file = new File(arg0.getAbsolutePath() + "/" + arg1);
+				return file.isDirectory() && !file.getName().startsWith(".");
 			}
 
 		});
+
+		for (int i = 0; i < files.length; i++) {
+			String name = files[i].getName();
+			StringTokenizer tok = new StringTokenizer(files[i].getName(), ".");
+			result.add(tok.nextToken());
+		}
 
 		Collections.sort(result);
 		return (String[]) result.toArray(new String[0]);
@@ -67,13 +72,56 @@ public class Background {
 		return name;
 	}
 
-	private void initImages() {
-		String suffix = "BMP";
-		String darkImage = "SQUARE." + name + ".DARK." + suffix;
-		String lightImage = "SQUARE." + name + ".LIGHT." + suffix;
+	public static Image[] getImageMolds(String name) {
+		LOG.info("Loading background stock" + name);
+		long startTine = System.currentTimeMillis();
 
-		darkSquareImage = new Image(Display.getCurrent(), BACKGROUND_DIR + darkImage);
-		lightSquareImage = new Image(Display.getCurrent(), BACKGROUND_DIR + lightImage);
+		String prefix = BACKGROUND_DIR + name + "/";
+		String[] fileNames = new File(prefix).list(new FilenameFilter() {
+			public boolean accept(File arg0, String arg1) {
+				return arg1.indexOf(".") > 1;
+			}
+
+		});
+		String suffix = fileNames[0].substring(fileNames[0].lastIndexOf('.'),
+				fileNames[0].length());
+
+		String darkImageFileName = prefix + "dark" + suffix;
+		String darkImageKey = name + "_dark_stock";
+
+		String lightImageFileName = prefix + "light" + suffix;
+		String lightImageKey = name + "_light_stock";
+
+		Image darkImage = SWTService.getInstance().getImageRegistry().get(
+				darkImageKey);
+		Image lightImage = SWTService.getInstance().getImageRegistry().get(
+				lightImageKey);
+
+		if (darkImage == null) {
+			darkImage = new Image(Display.getCurrent(), darkImageFileName);
+			SWTService.getInstance().getImageRegistry().put(darkImageKey,
+					darkImage);
+		}
+		if (lightImage == null) {
+			lightImage = new Image(Display.getCurrent(), lightImageFileName);
+			SWTService.getInstance().getImageRegistry().put(lightImageKey,
+					lightImage);
+		}
+
+		LOG.info("Loaded background stock " + name + " "
+				+ (System.currentTimeMillis() - startTine) + "ms");
+
+		return new Image[] { lightImage, darkImage };
+	}
+
+	public Image getImageMold(boolean isLight) {
+		String imageKey = name + "_" + (isLight ? "light" : "dark") + "_stock";
+		Image image = SWTService.getInstance().getImageRegistry().get(imageKey);
+		if (image == null) {
+			image = isLight ? getImageMolds(name)[LIGHT_IMAGE_INDEX]
+					: getImageMolds(name)[DARK_IMAGE_INDEX];
+		}
+		return image;
 	}
 
 	public Image getScaledImage(boolean isLight, int width, int height) {
@@ -82,18 +130,17 @@ public class Background {
 			width = 10;
 			height = 10;
 		}
-		
+
 		String key = getName() + "_" + isLight + "_" + width + "x" + height;
-		
+
 		Image result = imageRegistry.get(key);
-		
+
 		if (result == null) {
-			Image source = isLight ? lightSquareImage : darkSquareImage;
-			result =  new Image(Display.getCurrent(), source.getImageData().scaledTo(width, height));
+			result = new Image(Display.getCurrent(), getImageMold(isLight)
+					.getImageData().scaledTo(width, height));
 			imageRegistry.put(key, result);
 			return result;
-		}
-		else {
+		} else {
 			return result;
 		}
 	}

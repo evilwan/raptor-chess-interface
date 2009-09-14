@@ -2,7 +2,6 @@ package raptor.gui.board;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.ObjectStreamException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,10 +18,11 @@ import org.eclipse.swt.widgets.Display;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.util.GameUtils;
+import raptor.service.SWTService;
 
 public class Set {
 	private static final Log LOG = LogFactory.getLog(Set.class);
-	private static final String SET_DIR = "resources/common/set/";
+	public static final String SET_DIR = "resources/common/set/";
 
 	public static final int EMPTY = 0;
 	public static final int WP = 1;
@@ -38,17 +38,15 @@ public class Set {
 	public static final int BQ = 11;
 	public static final int BK = 12;
 
-	ImageRegistry imageRegistry = new ImageRegistry();
+	public static final String[] PIECE_TO_NAME = { "", "wp", "wb", "wn", "wr",
+			"wq", "wk", "bp", "bb", "bn", "br", "bq", "bk" };
 
-	private Image[] initialImages = null;
+	ImageRegistry imageRegistry = new ImageRegistry();
 
 	private String setName;
 
 	public void dispose() {
 		imageRegistry.dispose();
-		for (int i = 0; i < initialImages.length; i++) {
-			initialImages[i].dispose();
-		}
 	}
 
 	public static boolean isWhitePiece(int setPieceType) {
@@ -105,7 +103,6 @@ public class Set {
 	public Set(String setName) {
 		super();
 		this.setName = setName;
-		initImages();
 	}
 
 	public static String[] getChessSetNames() {
@@ -115,16 +112,18 @@ public class Set {
 		File[] files = file.listFiles(new FilenameFilter() {
 
 			public boolean accept(File arg0, String arg1) {
-				return arg1.startsWith("SET.") && arg1.indexOf("WBISHOP") != -1;
+				File file = new File(arg0.getAbsolutePath() + "/" + arg1);
+				return file.isDirectory() && !file.getName().startsWith(".");
 			}
 
 		});
 
 		for (int i = 0; i < files.length; i++) {
+			String name = files[i].getName();
 			StringTokenizer tok = new StringTokenizer(files[i].getName(), ".");
-			tok.nextToken();
 			result.add(tok.nextToken());
 		}
+
 		Collections.sort(result);
 		return (String[]) result.toArray(new String[0]);
 	}
@@ -141,80 +140,53 @@ public class Set {
 		return getName().hashCode();
 	}
 
-	Object readResolve() throws ObjectStreamException {
-		initImages();
-		return this;
-	}
-
-	private void initImages() {
-		final String piecePrefix = "SET." + setName + ".";
-
-		String suffix = "BMP";
-
-		initialImages = new Image[] {
-				getInitialChessPieceImage(piecePrefix + "BBISHOP." + suffix),
-				getInitialChessPieceImage(piecePrefix + "BKNIGHT." + suffix),
-				getInitialChessPieceImage(piecePrefix + "BQUEEN." + suffix),
-				getInitialChessPieceImage(piecePrefix + "BPAWN." + suffix),
-				getInitialChessPieceImage(piecePrefix + "BKING." + suffix),
-				getInitialChessPieceImage(piecePrefix + "BROOK." + suffix),
-				getInitialChessPieceImage(piecePrefix + "WBISHOP." + suffix),
-				getInitialChessPieceImage(piecePrefix + "WKNIGHT." + suffix),
-				getInitialChessPieceImage(piecePrefix + "WQUEEN." + suffix),
-				getInitialChessPieceImage(piecePrefix + "WPAWN." + suffix),
-				getInitialChessPieceImage(piecePrefix + "WKING." + suffix),
-				getInitialChessPieceImage(piecePrefix + "WROOK." + suffix) };
-
-	}
-
 	public String getName() {
 		return setName;
 	}
 
-	public Image getChessPieceImage(int chessPiece) {
-		switch (chessPiece) {
-		case BB: {
-			return initialImages[0];
+	public static Image[] getImageMolds(String setName) {
+		LOG.info("getting chess set image samples " + setName);
+		long startTine = System.currentTimeMillis();
+
+		String prefix = SET_DIR + setName + "/";
+		String[] fileNames = new File(prefix).list(new FilenameFilter() {
+			public boolean accept(File arg0, String arg1) {
+				return arg1.indexOf(".") > 1;
+			}
+		});
+		String suffix = fileNames[0].substring(fileNames[0].lastIndexOf('.'),
+				fileNames[0].length());
+
+		Image[] images = new Image[PIECE_TO_NAME.length];
+
+		for (int i = 1; i < PIECE_TO_NAME.length; i++) {
+			String fileName = prefix + PIECE_TO_NAME[i] + suffix;
+			String imageKey = setName + "_" + i + "_stock";
+			Image image = SWTService.getInstance().getImageRegistry().get(
+					imageKey);
+			if (image == null) {
+				image = loadImage(fileName);
+				SWTService.getInstance().getImageRegistry()
+						.put(imageKey, image);
+			}
+			images[i] = image;
 		}
-		case BK: {
-			return initialImages[4];
-		}
-		case BN: {
-			return initialImages[1];
-		}
-		case BP: {
-			return initialImages[3];
-		}
-		case BQ: {
-			return initialImages[2];
-		}
-		case BR: {
-			return initialImages[5];
-		}
-		case WB: {
-			return initialImages[6];
-		}
-		case WK: {
-			return initialImages[10];
-		}
-		case WN: {
-			return initialImages[7];
-		}
-		case WP: {
-			return initialImages[9];
-		}
-		case WQ: {
-			return initialImages[8];
-		}
-		case WR: {
-			return initialImages[11];
-		}
-		case EMPTY: {
+		LOG.info("Retrieved chess set image samples " + setName + " "
+				+ (System.currentTimeMillis() - startTine) + "ms");
+		return images;
+	}
+
+	public Image getImageMold(int type) {
+		if (type == EMPTY) {
 			return null;
-		}
-		default: {
-			throw new IllegalArgumentException("Invalid piece " + chessPiece);
-		}
+		} else {
+			String imageKey = setName + "_" + type + "_stock";
+			Image image = SWTService.getInstance().getImageRegistry().get(
+					imageKey);
+			if (image == null) {
+				return getImageMolds(setName)[type];
+			}
+			return image;
 		}
 	}
 
@@ -223,37 +195,49 @@ public class Set {
 	}
 
 	public Image getScaledImage(int type, int width, int height) {
-
-		if (width <= 0 || height <= 0) {
-			width = 10;
-			height = 10;
-		}
-
-		String key = getName() + "_" + type + "_" + width + "x" + height;
-		Image image = imageRegistry.get(key);
-
-		if (image == null) {
-			Image stockImage = getChessPieceImage(type);
-			if (stockImage != null) {
-				Image result = new Image(Display.getCurrent(), stockImage
-						.getImageData().scaledTo(width, height));
-				imageRegistry.put(key, result);
-				return result;
-			} else {
-				LOG.error("Could not find stock image for set " + getName() + " " + type);
-				throw new IllegalStateException("Could not find stock image for set " + getName() + " " + type);
-			}
+		if (type == EMPTY) {
+			return null;
 		} else {
-			return image;
+
+			if (width <= 0 || height <= 0) {
+				width = 10;
+				height = 10;
+			}
+
+			String key = getName() + "_" + type + "_" + width + "x" + height;
+			Image image = imageRegistry.get(key);
+
+			if (image == null) {
+				Image stockImage = getImageMold(type);
+				if (stockImage != null) {
+					Image result = new Image(Display.getCurrent(), stockImage
+							.getImageData().scaledTo(width, height));
+					imageRegistry.put(key, result);
+					return result;
+				} else {
+					LOG.error("Could not find stock image for set " + getName()
+							+ " " + type);
+					throw new IllegalStateException(
+							"Could not find stock image for set " + getName()
+									+ " " + type);
+				}
+			} else {
+				return image;
+			}
 		}
 	}
 
-	private Image getInitialChessPieceImage(String location) {
+	private static Image loadImage(String location) {
 		try {
-			ImageData ideaData = new ImageData(SET_DIR + location);
-			int transPixel = ideaData.palette.getPixel(new RGB(255, 255, 0));
-			ideaData.transparentPixel = transPixel;
-			return new Image(Display.getCurrent(), ideaData);
+			if (location.endsWith("bmp") || location.endsWith("BMP")) {
+				ImageData ideaData = new ImageData(location);
+				int transPixel = ideaData.palette
+						.getPixel(new RGB(255, 255, 0));
+				ideaData.transparentPixel = transPixel;
+				return new Image(Display.getCurrent(), ideaData);
+			} else {
+				return new Image(Display.getCurrent(), location);
+			}
 		} catch (Exception ioe) {
 			throw new IllegalArgumentException("Error loading image "
 					+ location, ioe);

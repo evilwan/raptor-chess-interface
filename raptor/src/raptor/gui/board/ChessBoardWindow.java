@@ -7,6 +7,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.DND;
@@ -34,7 +36,6 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
@@ -43,8 +44,9 @@ import raptor.game.Game;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
 import raptor.gui.board.ChessBoardWindow.ChessBoard.ChessBoardSquare;
+import raptor.pref.PreferencesDialog;
 import raptor.service.GameService;
-import raptor.service.PreferenceService;
+import raptor.service.SWTService;
 
 public class ChessBoardWindow extends ApplicationWindow {
 	class ChessBoard extends Canvas {
@@ -72,9 +74,10 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 					GC gc = new GC(ChessBoard.this);
 					gc.setFont(board.rankLabels[0].getFont());
-					gc.getFontMetrics().getAscent();
+					Point extent = gc.stringExtent("abcdefgh");
+
 					int charWidth = gc.getFontMetrics().getAverageCharWidth() + 5;
-					int charHeight = gc.getFontMetrics().getAscent() + 10;
+					int charHeight = gc.getFontMetrics().getAscent() + gc.getFontMetrics().getDescent() + 6;
 					gc.dispose();
 
 					squareSide -= Math.round(charWidth / 8.0);
@@ -115,7 +118,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 				if (!isWhiteOnTop) {
 					for (int i = 7; i > -1; i--) {
-						for (int j = 7; j > -1; j--) {
+						for (int j = 0; j < 8; j++) {
 							board.squares[i][j].setBounds(x, y, squareSide,
 									squareSide);
 
@@ -127,7 +130,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 					}
 				} else {
 					for (int i = 0; i < 8; i++) {
-						for (int j = 0; j < board.squares[i].length; j++) {
+						for (int j = 7; j > -1; j--) {
 							board.squares[i][j].setBounds(x, y, squareSide,
 									squareSide);
 
@@ -276,11 +279,11 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 					e.gc.drawImage(backgroundImage, 0, 0);
 
-					int highlightBorderWidth = (int) (size.x * PreferenceService
+					int highlightBorderWidth = (int) (size.x * SWTService
 							.getInstance()
 							.getStore()
 							.getDouble(
-									PreferenceService.BOARD_HIGHLIGHT_BORDER_WIDTH_KEY));
+									SWTService.BOARD_HIGHLIGHT_BORDER_WIDTH_KEY));
 					if (isHighlighted) {
 						for (int i = 0; i < highlightBorderWidth; i++) {
 							e.gc.drawRectangle(i, i, size.x - 1 - i * 2, size.x
@@ -288,11 +291,9 @@ public class ChessBoardWindow extends ApplicationWindow {
 						}
 					}
 
-					double imageSquareSideAdjustment = PreferenceService
-							.getInstance()
-							.getStore()
-							.getDouble(
-									PreferenceService.BOARD_PIECE_SIZE_ADJUSTMENT_KEY);
+					double imageSquareSideAdjustment = SWTService.getInstance()
+							.getStore().getDouble(
+									SWTService.BOARD_PIECE_SIZE_ADJUSTMENT_KEY);
 					int imageSide = (int) ((size.x - highlightBorderWidth * 2) * (1.0 - imageSquareSideAdjustment));
 					if (imageSide % 2 != 0) {
 						imageSide = imageSide - 1;
@@ -306,8 +307,6 @@ public class ChessBoardWindow extends ApplicationWindow {
 					if (pieceImage != null) {
 						int pieceImageX = (size.x - imageSide) / 2;
 						int pieceImageY = (size.y - imageSide) / 2;
-
-						System.out.println("Drawing image in square " + id);
 						e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
 					}
 				}
@@ -360,7 +359,6 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 			public void highlight() {
 				if (!isHighlighted) {
-					System.out.println("Highlighting " + id);
 					isHighlighted = true;
 					redraw();
 				}
@@ -376,6 +374,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 			public void setPiece(int piece) {
 				if (this.piece != piece) {
+					LOG.debug("Setting piece in square " + id + " " + piece);
 					this.piece = piece;
 					pieceImage = null;
 					redraw();
@@ -384,7 +383,6 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 			public void unhighlight() {
 				if (isHighlighted) {
-					System.out.println("unhighlight " + id);
 					isHighlighted = false;
 					redraw();
 				}
@@ -462,7 +460,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 		}
 
 		public void init() {
-			boolean isWhiteSquare = false;
+			boolean isWhiteSquare = true;
 			for (int i = 0; i < 8; i++) {
 				isWhiteSquare = !isWhiteSquare;
 				for (int j = 0; j < squares[i].length; j++) {
@@ -495,7 +493,6 @@ public class ChessBoardWindow extends ApplicationWindow {
 	}
 
 	public static void main(String[] args) {
-
 		final Game game = GameUtils.createStartingPosition();
 		game.setId("1");
 		GameService.getInstance().addGame(game);
@@ -506,15 +503,15 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 			public void moveCancelled(String gameId, int fromSquare,
 					boolean isDnd) {
-				System.out.println("moveCancelled" + gameId + " " + fromSquare
+				window.LOG.debug("moveCancelled" + gameId + " " + fromSquare
 						+ " " + isDnd);
 				window.unhighlightAllSquares();
 				window.updateFromGame();
 			}
 
 			public void moveInitiated(String gameId, int square, boolean isDnd) {
-				System.out.println("moveInitiated" + gameId + " " + square
-						+ " " + isDnd);
+				window.LOG.debug("moveInitiated" + gameId + " " + square + " "
+						+ isDnd);
 
 				window.unhighlightAllSquares();
 				window.getSquare(square).highlight();
@@ -524,21 +521,22 @@ public class ChessBoardWindow extends ApplicationWindow {
 			}
 
 			public void moveMade(String gameId, int fromSquare, int toSquare) {
-				System.out.println("Move made " + gameId + " " + fromSquare
-						+ " " + toSquare);
+				window.LOG.debug("Move made " + gameId + " " + fromSquare + " "
+						+ toSquare);
 				window.unhighlightAllSquares();
 				try {
 					Move move = game.makeMove(fromSquare, toSquare);
 					window.getSquare(move.getFrom()).highlight();
 					window.getSquare(move.getTo()).highlight();
 				} catch (IllegalArgumentException iae) {
-					System.out.println("Move was illegal");
+					window.LOG.info("Move was illegal " + fromSquare + " "
+							+ toSquare);
 				}
 				window.updateFromGame();
 			}
 
 			public void onMiddleClick(String gameId, int square) {
-				System.out.println("On middle click " + gameId + " " + square);
+				window.LOG.debug("On middle click " + gameId + " " + square);
 				Move[] moves = game.getLegalMoves().asArray();
 				List<Move> foundMoves = new ArrayList<Move>(5);
 				for (Move move : moves) {
@@ -559,15 +557,22 @@ public class ChessBoardWindow extends ApplicationWindow {
 			}
 
 			public void onRightClick(String gameId, int square) {
-				System.out.println("On right click " + gameId + " " + square);
+				window.LOG.debug("On right click " + gameId + " " + square);
 			}
 		});
 
-		window.getToolBarManager2().add(new Action("Flip",SWT.BORDER) {
+		window.getToolBarManager2().add(new Action("Flip", SWT.BORDER) {
 			@Override
 			public void run() {
 				super.run();
 				window.setWhiteOnTop(!window.isWhiteOnTop);
+			}
+		});
+		window.getToolBarManager2().add(new Action("Preferences", SWT.BORDER) {
+			@Override
+			public void run() {
+				PreferencesDialog dialog = new PreferencesDialog();
+				dialog.run();
 			}
 		});
 
@@ -592,10 +597,17 @@ public class ChessBoardWindow extends ApplicationWindow {
 	List<ChessBoardListener> chessBoardListeners = new ArrayList<ChessBoardListener>(
 			3);;
 
+	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
+		public void propertyChange(PropertyChangeEvent arg0) {
+			updateFromPrefs();
+			board.redraw();
+		}
+	};
+
 	public ChessBoardWindow(String gameId) {
 		super(null);
 		this.gameId = gameId;
-		addToolBar(SWT.VERTICAL);
+		addToolBar(SWT.HORIZONTAL);
 	}
 
 	@Override
@@ -610,6 +622,8 @@ public class ChessBoardWindow extends ApplicationWindow {
 		updateFromGame();
 		updateFromPrefs();
 
+		SWTService.getInstance().getStore().addPropertyChangeListener(
+				propertyChangeListener);
 		parent.pack();
 
 		return parent;
@@ -621,6 +635,10 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 	public void dispose() {
 		board.dispose();
+		SWTService.getInstance().getStore().removePropertyChangeListener(
+				propertyChangeListener);
+		chessBoardListeners.clear();
+		LOG.info("Disposed " + gameId);
 	}
 
 	public void fireMoveCancelled(int fromSquare, boolean isDnd) {
@@ -667,7 +685,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 	}
 
 	private Set getSet() {
-		return PreferenceService.getInstance().getChessSet();
+		return SWTService.getInstance().getChessSet();
 	}
 
 	public ChessBoardSquare getSquare(int square) {
@@ -677,15 +695,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 	}
 
 	private Background getSquareBackground() {
-		return PreferenceService.getInstance().getSquareBackground();
-	}
-
-	public void highlightAllSquares() {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				board.squares[i][j].highlight();
-			}
-		}
+		return SWTService.getInstance().getSquareBackground();
 	}
 
 	public boolean isShowingCoordinates() {
@@ -717,6 +727,12 @@ public class ChessBoardWindow extends ApplicationWindow {
 			board.layout();
 		}
 	}
+	
+	protected void initializeBounds(){
+		   getShell().setSize(800,600);
+		   getShell().setLocation(0,0);
+		}
+
 
 	public void unhighlightAllSquares() {
 		for (int i = 0; i < 8; i++) {
@@ -737,40 +753,58 @@ public class ChessBoardWindow extends ApplicationWindow {
 	}
 
 	public void updateFromPrefs() {
-		setShowingCoordinates(PreferenceService.getInstance().getStore()
-				.getBoolean(PreferenceService.BOARD_IS_SHOW_COORDINATES_KEY));
+		LOG.info("Updating prefs " + gameId);
+		long startTime = System.currentTimeMillis();
+		setShowingCoordinates(SWTService.getInstance().getStore().getBoolean(
+				SWTService.BOARD_IS_SHOW_COORDINATES_KEY));
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				board.squares[i][j].setForeground(PreferenceService
-						.getInstance().getColor(
-								PreferenceService.BOARD_HIGHLIGHT_COLOR_KEY));
+				board.squares[i][j].setForeground(SWTService.getInstance()
+						.getColor(SWTService.BOARD_HIGHLIGHT_COLOR_KEY));
 				board.squares[i][j].forceLayout();
 			}
 		}
 
 		for (Label label : board.rankLabels) {
-			label.setFont(PreferenceService.getInstance().getFont(
-					PreferenceService.BOARD_COORDINATES_FONT));
-			label.setForeground(PreferenceService.getInstance().getColor(
-					PreferenceService.BOARD_COORDINATES_COLOR));
-			label.setBackground(PreferenceService.getInstance().getColor(
-					PreferenceService.BOARD_BACKGROUND_COLOR_KEY));
+
+			if (isShowingCoordinates()) {
+
+				label.setFont(SWTService.getInstance().getFont(
+						SWTService.BOARD_COORDINATES_FONT));
+				label.setForeground(SWTService.getInstance().getColor(
+						SWTService.BOARD_COORDINATES_COLOR));
+				label.setBackground(SWTService.getInstance().getColor(
+						SWTService.BOARD_BACKGROUND_COLOR_KEY));
+				label.setVisible(true);
+			} else {
+				label.setVisible(false);
+			}
 		}
 
 		for (Label label : board.fileLabels) {
-			label.setFont(PreferenceService.getInstance().getFont(
-					PreferenceService.BOARD_COORDINATES_FONT));
-			label.setForeground(PreferenceService.getInstance().getColor(
-					PreferenceService.BOARD_COORDINATES_COLOR));
-			label.setBackground(PreferenceService.getInstance().getColor(
-					PreferenceService.BOARD_BACKGROUND_COLOR_KEY));
+
+			if (isShowingCoordinates()) {
+
+				label.setFont(SWTService.getInstance().getFont(
+						SWTService.BOARD_COORDINATES_FONT));
+				label.setForeground(SWTService.getInstance().getColor(
+						SWTService.BOARD_COORDINATES_COLOR));
+				label.setBackground(SWTService.getInstance().getColor(
+						SWTService.BOARD_BACKGROUND_COLOR_KEY));
+				label.setVisible(true);
+			} else {
+				label.setVisible(false);
+			}
 		}
 
 		getShell().setBackground(
-				PreferenceService.getInstance().getColor(
-						PreferenceService.BOARD_BACKGROUND_COLOR_KEY));
-		board.setBackground(PreferenceService.getInstance().getColor(
-				PreferenceService.BOARD_BACKGROUND_COLOR_KEY));
+				SWTService.getInstance().getColor(
+						SWTService.BOARD_BACKGROUND_COLOR_KEY));
+		board.setBackground(SWTService.getInstance().getColor(
+				SWTService.BOARD_BACKGROUND_COLOR_KEY));
+		LOG
+				.info("Updated prefs in "
+						+ (System.currentTimeMillis() - startTime));
 	}
 }
