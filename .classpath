@@ -12,5 +12,8 @@
 	<classpathentry kind="lib" path="lib/common/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar"/>
 	<classpathentry kind="lib" path="lib/common/org.eclipse.core.commands_3.4.0.I20080509-2000.jar"/>
 	<classpathentry kind="lib" path="lib/common/org.eclipse.osgi_3.4.3.R34x_v20081215-1030.jar"/>
+	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.swt_3.4.2.v3452b.jar"/>
+	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.swt.carbon.macosx_3.4.1.v3452b.jar"/>
+	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.ui.carbon_4.0.0.I20080610-1200.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
