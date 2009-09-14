@@ -35,7 +35,6 @@ public class Background {
 		});
 
 		for (int i = 0; i < files.length; i++) {
-			String name = files[i].getName();
 			StringTokenizer tok = new StringTokenizer(files[i].getName(), ".");
 			result.add(tok.nextToken());
 		}

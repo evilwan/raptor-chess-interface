@@ -66,7 +66,6 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		}
 		Composite setComposite = new Composite(needToLearnLayouts, SWT.BORDER
 				| SWT.BORDER_SOLID);
-		GridLayout gridLayout = new GridLayout(1, false);
 		ComboFieldEditor setFieldEditor = new ComboFieldEditor(
 				SWTService.BOARD_SET_KEY, "Chess Set", setNameValues,
 				setComposite) {
