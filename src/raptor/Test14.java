@@ -42,6 +42,7 @@ public class Test14 {
 			}
 		}
 		final Cursor cursor2 = new Cursor(display, sourceData, 10, 10);
+		@SuppressWarnings("unused")
 		final Image source = new Image(display, sourceData);
 		final Button b2 = new Button(shell, SWT.PUSH);
 		b2.setBounds(120, 50, 80, 20);

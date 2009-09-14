@@ -3,7 +3,6 @@ package raptor.pref;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.preference.PreferenceManager;
 import org.eclipse.jface.preference.PreferenceNode;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * This class demonstrates JFace preferences and field editors
@@ -23,8 +22,6 @@ public class PreferencesDialog {
 	 * Runs the application
 	 */
 	public void run() {
-		Display display = Display.getCurrent();
-
 		// Create the preference manager
 		PreferenceManager mgr = new PreferenceManager();
 

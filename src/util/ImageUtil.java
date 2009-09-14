@@ -46,7 +46,6 @@ public class ImageUtil {
 		// }
 
 		String backgroundName = "Wood3";
-		long startTine = System.currentTimeMillis();
 
 		String prefix = Background.BACKGROUND_DIR + backgroundName + "/";
 		String[] fileNames = new File(prefix).list(new FilenameFilter() {

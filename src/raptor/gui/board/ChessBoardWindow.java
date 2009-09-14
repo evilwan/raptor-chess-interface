@@ -74,8 +74,6 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 					GC gc = new GC(ChessBoard.this);
 					gc.setFont(board.rankLabels[0].getFont());
-					Point extent = gc.stringExtent("abcdefgh");
-
 					int charWidth = gc.getFontMetrics().getAverageCharWidth() + 5;
 					int charHeight = gc.getFontMetrics().getAscent()
 							+ gc.getFontMetrics().getDescent() + 6;
@@ -686,7 +684,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 		Game game = GameService.getInstance().getGame(gameId);
 		if (game == null) {
 			LOG.error("Could not find game with id " + gameId);
-			throw new IllegalStateException("Game not found " + game.getId());
+			throw new IllegalStateException("Game not found " + gameId);
 		}
 		return game;
 	}
