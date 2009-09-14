@@ -14,10 +14,6 @@ import raptor.service.SWTService;
 
 class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 
-	ImageComposite setWhiteImagesComposite = null;
-	ImageComposite setBlackImagesComposite = null;
-	ImageComposite backgroundImageComposite = null;
-
 	private static class ImageComposite extends Composite {
 		private Label[] imageLabels;
 
@@ -41,6 +37,11 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		}
 	}
 
+	ImageComposite setWhiteImagesComposite = null;
+	ImageComposite setBlackImagesComposite = null;
+
+	ImageComposite backgroundImageComposite = null;
+
 	public ChessBoardGraphicsPage() {
 		// Use the "grid" layout
 		super(GRID);
@@ -52,9 +53,9 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 
 		Composite parent = getFieldEditorParent();
-		
-		Composite needToLearnLayouts = new Composite(parent,SWT.NONE);
-		needToLearnLayouts.setLayout(new GridLayout(1,false));
+
+		Composite needToLearnLayouts = new Composite(parent, SWT.NONE);
+		needToLearnLayouts.setLayout(new GridLayout(1, false));
 
 		String[] sets = Set.getChessSetNames();
 		String[][] setNameValues = new String[sets.length][2];
@@ -65,7 +66,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		}
 		Composite setComposite = new Composite(needToLearnLayouts, SWT.BORDER
 				| SWT.BORDER_SOLID);
-		GridLayout gridLayout = new GridLayout(1,false);
+		GridLayout gridLayout = new GridLayout(1, false);
 		ComboFieldEditor setFieldEditor = new ComboFieldEditor(
 				SWTService.BOARD_SET_KEY, "Chess Set", setNameValues,
 				setComposite) {
@@ -94,9 +95,9 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 			backgroundNameValues[i][1] = backgrounds[i];
 		}
 
-		Composite backgroundComposite = new Composite(needToLearnLayouts, SWT.BORDER
-				| SWT.BORDER_SOLID);
-		GridLayout backgroundGridLayout = new GridLayout(1,false);
+		Composite backgroundComposite = new Composite(needToLearnLayouts,
+				SWT.BORDER | SWT.BORDER_SOLID);
+		GridLayout backgroundGridLayout = new GridLayout(1, false);
 
 		backgroundComposite.setLayout(backgroundGridLayout);
 		ComboFieldEditor backgroundFieldEditor = new ComboFieldEditor(
@@ -116,10 +117,15 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 
 	}
 
+	void updateBackgroundImages(String backgroundName) {
+		backgroundImageComposite.setImages(Background
+				.getImageMolds(backgroundName));
+	}
+
 	void updateSetImages(String setName) {
 		Image[] whiteImages = new Image[6];
 		Image[] blackImages = new Image[6];
-		Image[] stockImages = Set.getImageMolds(((String) setName));
+		Image[] stockImages = Set.getImageMolds((setName));
 
 		whiteImages[0] = stockImages[Set.WP];
 		whiteImages[1] = stockImages[Set.WN];
@@ -138,11 +144,6 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		setWhiteImagesComposite.setImages(whiteImages);
 		setBlackImagesComposite.setImages(blackImages);
 
-	}
-
-	void updateBackgroundImages(String backgroundName) {
-		backgroundImageComposite.setImages(Background
-				.getImageMolds(backgroundName));
 	}
 
 }

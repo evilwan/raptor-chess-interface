@@ -1,5 +1,5 @@
 package raptor.game;
 
-public class ZHGame extends Game{
+public class ZHGame extends Game {
 
 }

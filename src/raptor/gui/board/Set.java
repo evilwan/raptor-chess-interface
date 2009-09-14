@@ -41,25 +41,64 @@ public class Set {
 	public static final String[] PIECE_TO_NAME = { "", "wp", "wb", "wn", "wr",
 			"wq", "wk", "bp", "bb", "bn", "br", "bq", "bk" };
 
-	ImageRegistry imageRegistry = new ImageRegistry();
-
-	private String setName;
-
-	public void dispose() {
-		imageRegistry.dispose();
-	}
-
-	public static boolean isWhitePiece(int setPieceType) {
-		return setPieceType > 0 && setPieceType < 7;
-	}
-
-	public static boolean isBlackPiece(int setPieceType) {
-		return setPieceType > 7 && setPieceType < 13;
-	}
-
 	public static boolean arePiecesSameColor(int piece1, int piece2) {
 		return (isWhitePiece(piece1) && isWhitePiece(piece2))
 				|| (isBlackPiece(piece1) && isBlackPiece(piece2));
+	}
+
+	public static String[] getChessSetNames() {
+		List<String> result = new LinkedList<String>();
+
+		File file = new File(SET_DIR);
+		File[] files = file.listFiles(new FilenameFilter() {
+
+			public boolean accept(File arg0, String arg1) {
+				File file = new File(arg0.getAbsolutePath() + "/" + arg1);
+				return file.isDirectory() && !file.getName().startsWith(".");
+			}
+
+		});
+
+		for (int i = 0; i < files.length; i++) {
+			String name = files[i].getName();
+			StringTokenizer tok = new StringTokenizer(files[i].getName(), ".");
+			result.add(tok.nextToken());
+		}
+
+		Collections.sort(result);
+		return result.toArray(new String[0]);
+	}
+
+	public static Image[] getImageMolds(String setName) {
+		LOG.info("getting chess set image samples " + setName);
+		long startTine = System.currentTimeMillis();
+
+		String prefix = SET_DIR + setName + "/";
+		String[] fileNames = new File(prefix).list(new FilenameFilter() {
+			public boolean accept(File arg0, String arg1) {
+				return arg1.indexOf(".") > 1;
+			}
+		});
+		String suffix = fileNames[0].substring(fileNames[0].lastIndexOf('.'),
+				fileNames[0].length());
+
+		Image[] images = new Image[PIECE_TO_NAME.length];
+
+		for (int i = 1; i < PIECE_TO_NAME.length; i++) {
+			String fileName = prefix + PIECE_TO_NAME[i] + suffix;
+			String imageKey = setName + "_" + i + "_stock";
+			Image image = SWTService.getInstance().getImageRegistry().get(
+					imageKey);
+			if (image == null) {
+				image = loadImage(fileName);
+				SWTService.getInstance().getImageRegistry()
+						.put(imageKey, image);
+			}
+			images[i] = image;
+		}
+		LOG.info("Retrieved chess set image samples " + setName + " "
+				+ (System.currentTimeMillis() - startTine) + "ms");
+		return images;
 	}
 
 	public static int getSetPieceFromGamePiece(int square, Game game) {
@@ -100,34 +139,45 @@ public class Set {
 
 	}
 
+	public static boolean isBlackPiece(int setPieceType) {
+		return setPieceType > 7 && setPieceType < 13;
+	}
+
+	public static boolean isWhitePiece(int setPieceType) {
+		return setPieceType > 0 && setPieceType < 7;
+	}
+
+	private static Image loadImage(String location) {
+		try {
+			if (location.endsWith("bmp") || location.endsWith("BMP")) {
+				ImageData ideaData = new ImageData(location);
+				int transPixel = ideaData.palette
+						.getPixel(new RGB(255, 255, 0));
+				ideaData.transparentPixel = transPixel;
+				return new Image(Display.getCurrent(), ideaData);
+			} else {
+				return new Image(Display.getCurrent(), location);
+			}
+		} catch (Exception ioe) {
+			throw new IllegalArgumentException("Error loading image "
+					+ location, ioe);
+		}
+	}
+
+	ImageRegistry imageRegistry = new ImageRegistry();
+
+	private String setName;
+
 	public Set(String setName) {
 		super();
 		this.setName = setName;
 	}
 
-	public static String[] getChessSetNames() {
-		List<String> result = new LinkedList<String>();
-
-		File file = new File(SET_DIR);
-		File[] files = file.listFiles(new FilenameFilter() {
-
-			public boolean accept(File arg0, String arg1) {
-				File file = new File(arg0.getAbsolutePath() + "/" + arg1);
-				return file.isDirectory() && !file.getName().startsWith(".");
-			}
-
-		});
-
-		for (int i = 0; i < files.length; i++) {
-			String name = files[i].getName();
-			StringTokenizer tok = new StringTokenizer(files[i].getName(), ".");
-			result.add(tok.nextToken());
-		}
-
-		Collections.sort(result);
-		return (String[]) result.toArray(new String[0]);
+	public void dispose() {
+		imageRegistry.dispose();
 	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (o != null) {
 			return getName().equals(((Set) o).getName());
@@ -136,44 +186,8 @@ public class Set {
 		}
 	}
 
-	public int hashCode() {
-		return getName().hashCode();
-	}
-
-	public String getName() {
-		return setName;
-	}
-
-	public static Image[] getImageMolds(String setName) {
-		LOG.info("getting chess set image samples " + setName);
-		long startTine = System.currentTimeMillis();
-
-		String prefix = SET_DIR + setName + "/";
-		String[] fileNames = new File(prefix).list(new FilenameFilter() {
-			public boolean accept(File arg0, String arg1) {
-				return arg1.indexOf(".") > 1;
-			}
-		});
-		String suffix = fileNames[0].substring(fileNames[0].lastIndexOf('.'),
-				fileNames[0].length());
-
-		Image[] images = new Image[PIECE_TO_NAME.length];
-
-		for (int i = 1; i < PIECE_TO_NAME.length; i++) {
-			String fileName = prefix + PIECE_TO_NAME[i] + suffix;
-			String imageKey = setName + "_" + i + "_stock";
-			Image image = SWTService.getInstance().getImageRegistry().get(
-					imageKey);
-			if (image == null) {
-				image = loadImage(fileName);
-				SWTService.getInstance().getImageRegistry()
-						.put(imageKey, image);
-			}
-			images[i] = image;
-		}
-		LOG.info("Retrieved chess set image samples " + setName + " "
-				+ (System.currentTimeMillis() - startTine) + "ms");
-		return images;
+	public Image getIcon(int type) {
+		return getScaledImage(type, 35, 35);
 	}
 
 	public Image getImageMold(int type) {
@@ -190,8 +204,8 @@ public class Set {
 		}
 	}
 
-	public Image getIcon(int type) {
-		return getScaledImage(type, 35, 35);
+	public String getName() {
+		return setName;
 	}
 
 	public Image getScaledImage(int type, int width, int height) {
@@ -227,20 +241,8 @@ public class Set {
 		}
 	}
 
-	private static Image loadImage(String location) {
-		try {
-			if (location.endsWith("bmp") || location.endsWith("BMP")) {
-				ImageData ideaData = new ImageData(location);
-				int transPixel = ideaData.palette
-						.getPixel(new RGB(255, 255, 0));
-				ideaData.transparentPixel = transPixel;
-				return new Image(Display.getCurrent(), ideaData);
-			} else {
-				return new Image(Display.getCurrent(), location);
-			}
-		} catch (Exception ioe) {
-			throw new IllegalArgumentException("Error loading image "
-					+ location, ioe);
-		}
+	@Override
+	public int hashCode() {
+		return getName().hashCode();
 	}
 }

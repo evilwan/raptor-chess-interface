@@ -2,11 +2,11 @@ package raptor.service;
 
 public class ChatService {
 
-	private static final ChatService instance = new ChatService();
-
 	public static interface ChatServiceListener {
 		public void chatEventOccured(ChatEvent e);
 	}
+
+	private static final ChatService instance = new ChatService();
 
 	public static ChatService getInstance() {
 		return instance;
@@ -15,9 +15,9 @@ public class ChatService {
 	public void addChatServiceListener(ChatServiceListener listener) {
 	}
 
-	public void removeChatServiceListener(ChatServiceListener listener) {
-	}
-	
 	public void publishChatEvent(ChatEvent event) {
+	}
+
+	public void removeChatServiceListener(ChatServiceListener listener) {
 	}
 }

@@ -77,7 +77,8 @@ public class ChessBoardWindow extends ApplicationWindow {
 					Point extent = gc.stringExtent("abcdefgh");
 
 					int charWidth = gc.getFontMetrics().getAverageCharWidth() + 5;
-					int charHeight = gc.getFontMetrics().getAscent() + gc.getFontMetrics().getDescent() + 6;
+					int charHeight = gc.getFontMetrics().getAscent()
+							+ gc.getFontMetrics().getDescent() + 6;
 					gc.dispose();
 
 					squareSide -= Math.round(charWidth / 8.0);
@@ -98,7 +99,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 						int multiplier = (isWhiteOnTop ? 7 - i : i);
 						board.fileLabels[i].setLocation((int) (charHeight * .4
 								+ squareSide * multiplier + squareSide / 2),
-								(int) (squareSide * 8));
+								(squareSide * 8));
 						board.fileLabels[i].setSize(charWidth, charHeight);
 					}
 
@@ -155,6 +156,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 			DropTarget target = new DropTarget(this, DND.DROP_MOVE);
 			DragSource source = new DragSource(this, DND.DROP_MOVE);
 			DragSourceEffect dragSourceEffect = new DragSourceEffect(this) {
+				@Override
 				public void dragStart(DragSourceEvent event) {
 					if (piece == Set.EMPTY) {
 
@@ -164,6 +166,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 				}
 			};
 			DragSourceListener dragSourceListener = new DragSourceAdapter() {
+				@Override
 				public void dragFinished(DragSourceEvent event) {
 					if (!event.doit) {
 						fireMoveCancelled(ChessBoardSquare.this.id, true);
@@ -173,10 +176,12 @@ public class ChessBoardWindow extends ApplicationWindow {
 					ChessBoard.this.setData(DRAG_INITIATOR, null);
 				}
 
+				@Override
 				public void dragSetData(DragSourceEvent event) {
 					event.data = "" + piece;
 				}
 
+				@Override
 				public void dragStart(DragSourceEvent event) {
 					if (piece == Set.EMPTY) {
 						event.doit = false;
@@ -190,15 +195,19 @@ public class ChessBoardWindow extends ApplicationWindow {
 				}
 			};
 			DropTargetListener dropTargetListener = new DropTargetAdapter() {
+				@Override
 				public void dragEnter(DropTargetEvent event) {
 				}
 
+				@Override
 				public void dragOperationChanged(DropTargetEvent event) {
 				}
 
+				@Override
 				public void dragOver(DropTargetEvent event) {
 				}
 
+				@Override
 				public void drop(DropTargetEvent event) {
 					if (event.detail != DND.DROP_NONE) {
 						ChessBoardSquare start = (ChessBoardSquare) ChessBoard.this
@@ -333,6 +342,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 				target.addDropListener(dropTargetListener);
 			}
 
+			@Override
 			public void dispose() {
 				removePaintListener(paintListener);
 				removeControlListener(controlListener);
@@ -438,6 +448,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 			fileLabels[7].setText("h");
 		}
 
+		@Override
 		public void dispose() {
 			for (int i = 0; i < squares.length; i++) {
 				for (int j = 0; j < squares[i].length; j++) {
@@ -610,6 +621,10 @@ public class ChessBoardWindow extends ApplicationWindow {
 		addToolBar(SWT.HORIZONTAL);
 	}
 
+	public void addChessBoardListener(ChessBoardListener listener) {
+		chessBoardListeners.add(listener);
+	}
+
 	@Override
 	protected Control createContents(Composite parent) {
 		FillLayout fillLayout = new FillLayout();
@@ -627,10 +642,6 @@ public class ChessBoardWindow extends ApplicationWindow {
 		parent.pack();
 
 		return parent;
-	}
-
-	public void addChessBoardListener(ChessBoardListener listener) {
-		chessBoardListeners.add(listener);
 	}
 
 	public void dispose() {
@@ -698,6 +709,12 @@ public class ChessBoardWindow extends ApplicationWindow {
 		return SWTService.getInstance().getSquareBackground();
 	}
 
+	@Override
+	protected void initializeBounds() {
+		getShell().setSize(800, 600);
+		getShell().setLocation(0, 0);
+	}
+
 	public boolean isShowingCoordinates() {
 		return isShowingCoordinates;
 	}
@@ -727,12 +744,6 @@ public class ChessBoardWindow extends ApplicationWindow {
 			board.layout();
 		}
 	}
-	
-	protected void initializeBounds(){
-		   getShell().setSize(800,600);
-		   getShell().setLocation(0,0);
-		}
-
 
 	public void unhighlightAllSquares() {
 		for (int i = 0; i < 8; i++) {

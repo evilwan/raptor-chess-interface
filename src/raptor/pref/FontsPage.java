@@ -1,6 +1,5 @@
 package raptor.pref;
 
-import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FontFieldEditor;
 
@@ -31,8 +30,8 @@ public class FontsPage extends FieldEditorPreferencePage {
 				"Board Player Name Font:", getFieldEditorParent()));
 		addField(new FontFieldEditor(SWTService.BOARD_CLOCK_FONT,
 				"Clock Lag Color:", getFieldEditorParent()));
-		addField(new FontFieldEditor(SWTService.BOARD_LAG_FONT,
-				"Lag Font:", getFieldEditorParent()));
+		addField(new FontFieldEditor(SWTService.BOARD_LAG_FONT, "Lag Font:",
+				getFieldEditorParent()));
 
 		addField(new FontFieldEditor(SWTService.BOARD_PIECE_JAIL_FONT,
 				"Piece Jail Label Font:", getFieldEditorParent()));

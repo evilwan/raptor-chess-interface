@@ -63,6 +63,10 @@ public class SWTService {
 
 	private static final SWTService instance = new SWTService();
 
+	public static SWTService getInstance() {
+		return instance;
+	}
+
 	private PreferenceStore store = null;
 	private ImageRegistry imageRegistry = new ImageRegistry(Display
 			.getCurrent());
@@ -70,6 +74,7 @@ public class SWTService {
 	private ColorRegistry colorRegistry = new ColorRegistry(Display
 			.getCurrent());
 	private Set set;
+
 	private Background background;
 
 	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
@@ -127,16 +132,63 @@ public class SWTService {
 		LOG.info("Loaded preferences");
 	}
 
-	public static SWTService getInstance() {
-		return instance;
+	public Set getChessSet() {
+		if (set == null) {
+			set = new Set(getStore().getString(BOARD_SET_KEY));
+		}
+		return set;
+	}
+
+	public Color getColor(String key) {
+		try {
+			if (!colorRegistry.hasValueFor(key)) {
+				RGB rgb = PreferenceConverter.getColor(store, key);
+				colorRegistry.put(key, rgb);
+			}
+			return colorRegistry.get(key);
+		} catch (Throwable t) {
+			LOG.error("Error in getColor(" + key + ") Returning black.", t);
+			return new Color(Display.getCurrent(), new RGB(0, 0, 0));
+		}
+	}
+
+	public Font getFont(String key) {
+		try {
+			if (!fontRegistry.hasValueFor(key)) {
+				FontData[] fontData = PreferenceConverter.getFontDataArray(
+						store, key);
+				fontRegistry.put(key, fontData);
+			}
+			return fontRegistry.get(key);
+		} catch (Throwable t) {
+			LOG.error("Error in getFont(" + key + ") Returning default font.",
+					t);
+			return fontRegistry.defaultFont();
+		}
 	}
 
 	public ImageRegistry getImageRegistry() {
 		return imageRegistry;
 	}
 
-	public void setImageRegistry(ImageRegistry imageRegistry) {
-		this.imageRegistry = imageRegistry;
+	public Point getPoint(String key) {
+		return PreferenceConverter.getPoint(store, key);
+	}
+
+	public Rectangle getRectangle(String key) {
+		return PreferenceConverter.getRectangle(store, key);
+	}
+
+	public Background getSquareBackground() {
+		if (background == null) {
+			background = new Background(getStore().getString(
+					BOARD_BACKGROUND_KEY));
+		}
+		return background;
+	}
+
+	public PreferenceStore getStore() {
+		return store;
 	}
 
 	public void loadDefaults() {
@@ -183,61 +235,6 @@ public class SWTService {
 		LOG.info("Loaded defaults " + COMMON_PROPERTIES);
 	}
 
-	public PreferenceStore getStore() {
-		return store;
-	}
-
-	public Font getFont(String key) {
-		try {
-			if (!fontRegistry.hasValueFor(key)) {
-				FontData[] fontData = PreferenceConverter.getFontDataArray(
-						store, key);
-				fontRegistry.put(key, fontData);
-			}
-			return fontRegistry.get(key);
-		} catch (Throwable t) {
-			LOG.error("Error in getFont(" + key + ") Returning default font.",
-					t);
-			return fontRegistry.defaultFont();
-		}
-	}
-
-	public Color getColor(String key) {
-		try {
-			if (!colorRegistry.hasValueFor(key)) {
-				RGB rgb = PreferenceConverter.getColor(store, key);
-				colorRegistry.put(key, rgb);
-			}
-			return colorRegistry.get(key);
-		} catch (Throwable t) {
-			LOG.error("Error in getColor(" + key + ") Returning black.", t);
-			return new Color(Display.getCurrent(), new RGB(0, 0, 0));
-		}
-	}
-
-	public void setPoint(String key, Point point) {
-		PreferenceConverter.setValue(store, key, point);
-	}
-
-	public Point getPoint(String key) {
-		return PreferenceConverter.getPoint(store, key);
-	}
-
-	public Rectangle getRectangle(String key) {
-		return PreferenceConverter.getRectangle(store, key);
-	}
-
-	public void setRectangle(String key, Rectangle rectangle) {
-		PreferenceConverter.setValue(store, key, rectangle);
-	}
-
-	public Set getChessSet() {
-		if (set == null) {
-			set = new Set(getStore().getString(BOARD_SET_KEY));
-		}
-		return set;
-	}
-
 	public void setChessSet(Set set) {
 		if (this.set != null) {
 			this.set.dispose();
@@ -245,12 +242,16 @@ public class SWTService {
 		this.set = set;
 	}
 
-	public Background getSquareBackground() {
-		if (background == null) {
-			background = new Background(getStore().getString(
-					BOARD_BACKGROUND_KEY));
-		}
-		return background;
+	public void setImageRegistry(ImageRegistry imageRegistry) {
+		this.imageRegistry = imageRegistry;
+	}
+
+	public void setPoint(String key, Point point) {
+		PreferenceConverter.setValue(store, key, point);
+	}
+
+	public void setRectangle(String key, Rectangle rectangle) {
+		PreferenceConverter.setValue(store, key, rectangle);
 	}
 
 	public void setSquareBackground(Background background) {

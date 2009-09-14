@@ -11,34 +11,6 @@ public final class MoveList implements GameConstants {
 		moves[size++] = move;
 	}
 
-	@SuppressWarnings("unused")
-	private void dump(String message) {
-		System.err.println(message);
-		for (int i = 0; i < size; i++) {
-			System.err.println(moves[i]);
-		}
-	}
-
-	public Move removeLast() {
-		return moves[--size];
-	}
-
-	public String toString() {
-		return asList().toString();
-	}
-
-	public int getSize() {
-		return size;
-	}
-
-	public Move getLast() {
-		return moves[size - 1];
-	}
-
-	public Move get(int index) {
-		return moves[index];
-	}
-
 	public Move[] asArray() {
 		Move[] result = new Move[size];
 		System.arraycopy(moves, 0, result, 0, size);
@@ -51,5 +23,34 @@ public final class MoveList implements GameConstants {
 			result.add(moves[i]);
 		}
 		return result;
+	}
+
+	@SuppressWarnings("unused")
+	private void dump(String message) {
+		System.err.println(message);
+		for (int i = 0; i < size; i++) {
+			System.err.println(moves[i]);
+		}
+	}
+
+	public Move get(int index) {
+		return moves[index];
+	}
+
+	public Move getLast() {
+		return moves[size - 1];
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public Move removeLast() {
+		return moves[--size];
+	}
+
+	@Override
+	public String toString() {
+		return asList().toString();
 	}
 }

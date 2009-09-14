@@ -11,7 +11,6 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 
-
 public class MoveGenTest implements GameConstants {
 
 	public static void main(String args[]) {
@@ -59,6 +58,174 @@ public class MoveGenTest implements GameConstants {
 			"k5r1/8/8/8/8/8/PPPPPP1P/R3K2R w QK - 0 0|O-O-O",
 			"2r3k1/8/8/8/8/8/PP1PPPPP/R3K2R w QK - 0 0|O-O",
 			"2r3k1/8/8/8/8/8/PPPPrPPPP/R3K2R w QK - 0 0" };
+
+	public void asserts(boolean condition, String message) {
+		if (!condition) {
+			throw new AssertionError(message);
+		}
+	}
+
+	public void asserts(List<Move> listA, List<Move> listB, Game game) {
+		for (Move moveA : listA) {
+			int foundIndex = -1;
+			for (int i = 0; i < listB.size(); i++) {
+				if (listB.get(i).getLan().equals(moveA.getLan())) {
+					foundIndex = i;
+					break;
+				}
+			}
+			if (foundIndex == -1) {
+				throw new AssertionError("Could not find move "
+						+ moveA.getLan() + " in " + listB + "\n" + game);
+			} else {
+				listB.remove(foundIndex);
+			}
+		}
+
+		if (listB.size() != 0) {
+			throw new AssertionError(
+					"The following moves were not found in listA " + listB
+							+ "\n" + game);
+		}
+	}
+
+	public void assertsContains(List<Move> moveList, String lan) {
+		boolean found = false;
+
+		for (Move candidate : moveList) {
+			if (candidate.getLan().equals(lan)) {
+				found = true;
+				break;
+			}
+		}
+
+		asserts(found == true, "Could not find move " + lan + " in " + moveList);
+	}
+
+	public void assertsDoesntContains(List<Move> moveList, String lan) {
+		boolean found = false;
+
+		for (Move candidate : moveList) {
+			if (candidate.getLan().equals(lan)) {
+				found = true;
+				break;
+			}
+		}
+
+		asserts(found == false, "Found move " + lan + " in " + moveList);
+	}
+
+	public boolean contains(String string, String[] array) {
+		boolean result = false;
+		for (int i = 0; !result && i < array.length; i++) {
+			result = array[i].equals(string);
+		}
+		return result;
+	}
+
+	public void testBasicRepHashing() {
+		Game game = createStartingPosition();
+
+		long positionOnlyHash = game.getZobristPositionHash();
+		long gameHash = game.getZobristGameHash();
+
+		// System.out.println("Position hash: " + positionOnlyHash);
+		// System.out.println("Game hash: " + gameHash);
+
+		Move g1f3 = new Move(SQUARE_G1, SQUARE_F3, KNIGHT, WHITE, EMPTY);
+		game.forceMove(g1f3);
+		game.rollback();
+
+		asserts(game.getZobristPositionHash() == positionOnlyHash,
+				"Position Hashes were not equal");
+		asserts(game.getZobristGameHash() == gameHash,
+				"Game Hashes were not equal");
+	}
+
+	public void testInCheck() {
+		for (String fen : IN_CHECK_TESTS) {
+			Game game = createFromFen(fen);
+			asserts(game.isInCheck(game.getColorToMove()),
+					"User is in check in position:\n " + game);
+		}
+	}
+
+	public void testLegalMoves() {
+		for (String test : LEGAL_MOVE_TESTS) {
+			String[] split = test.split("\\|");
+
+			Game game = createFromFen(split[0]);
+
+			Move[] moves = game.getPseudoLegalMoves().asArray();
+			for (Move move : moves) {
+				if (game.move(move)) {
+					game.rollback();
+				}
+			}
+
+			if (split.length == 1) {
+				asserts(game.getLegalMoves().asArray().length == 0,
+						"Game contained legal mvoes in checkmate");
+			} else {
+
+				List<Move> expectedMoves = new ArrayList<Move>(split.length - 1);
+				for (int i = 1; i < split.length; i++) {
+					expectedMoves.add(game.makeLanMove(split[i]));
+					game.rollback();
+				}
+
+				asserts(expectedMoves, game.getLegalMoves().asList(), game);
+			}
+		}
+	}
+
+	public void testLegals() {
+		for (String test : PSEUDO_LEGAL_MOVE_TESTS) {
+			String[] split = test.split("\\|");
+			Game game = createFromFen(split[0]);
+
+			if (split.length == 1) {
+				asserts(game.getPseudoLegalMoves().asArray().length == 0,
+						"Game contained legal mvoes in checkmate\n" + game);
+			} else {
+				Move[] moveList = game.getLegalMoves().asArray();
+
+				asserts(moveList.length == split.length - 1,
+						"Invalid expected number of moves " + split.length
+								+ " " + moveList.length + " " + game);
+
+				for (Move move : moveList) {
+					boolean foundMove = false;
+					for (int i = 1; i < split.length; i++) {
+						if (move.getLan().equals(split[i])) {
+							foundMove = true;
+							split[i] = null;
+							break;
+						}
+					}
+
+					if (!foundMove) {
+						asserts(foundMove, "Could not find move: "
+								+ move.getLan() + " in the list of legals.\n"
+								+ game);
+					}
+				}
+
+				for (int i = 1; i < split.length; i++) {
+					asserts(split[i] == null,
+							"The following move was not returned as a legal: "
+									+ split[i] + " \n");
+				}
+			}
+		}
+	}
+
+	public void testNotCheckmate() {
+		for (String fen : NOT_CHECKMATE_TESTS) {
+			Game game = createFromFen(fen);
+			asserts(!game.isCheckmate(), "Position is not checkmate: \n" + game);
+		}
+	}
 
 	public void testOccupiedEmpty() {
 		Game game = createStartingPosition();
@@ -173,89 +340,6 @@ public class MoveGenTest implements GameConstants {
 				"Occupied is not the same.");
 	}
 
-	public void testThreeXRep() {
-		Game game = createStartingPosition();
-		game.makeLanMove("g1-h3");
-		asserts(game.getRepCount() == 1, "Invalid rep count "
-				+ game.getRepCount());
-		game.makeLanMove("g8-h6");
-		asserts(game.getRepCount() == 1, "Invalid rep count "
-				+ game.getRepCount());
-		game.makeLanMove("h3-g1");
-		asserts(game.getRepCount() == 1, "Invalid rep count "
-				+ game.getRepCount());
-		game.makeLanMove("h6-g8");
-		asserts(game.getRepCount() == 2, "Invalid rep count "
-				+ game.getRepCount());
-		game.makeLanMove("g1-h3");
-		asserts(game.getRepCount() == 2, "Invalid rep count "
-				+ game.getRepCount());
-		game.makeLanMove("g8-h6");
-		asserts(game.getRepCount() == 2, "Invalid rep count "
-				+ game.getRepCount());
-		game.makeLanMove("h3-g1");
-		asserts(game.getRepCount() == 2, "Invalid rep count "
-				+ game.getRepCount());
-		game.makeLanMove("h6-g8");
-		asserts(game.getRepCount() == 3, "Invalid rep count "
-				+ game.getRepCount());
-		game.makeLanMove("g1-h3");
-		asserts(game.getRepCount() == 3, "Invalid rep count"
-				+ game.getRepCount());
-	}
-
-	public void testBasicRepHashing() {
-		Game game = createStartingPosition();
-
-		long positionOnlyHash = game.getZobristPositionHash();
-		long gameHash = game.getZobristGameHash();
-
-		// System.out.println("Position hash: " + positionOnlyHash);
-		// System.out.println("Game hash: " + gameHash);
-
-		Move g1f3 = new Move(SQUARE_G1, SQUARE_F3, KNIGHT, WHITE, EMPTY);
-		game.forceMove(g1f3);
-		game.rollback();
-
-		asserts(game.getZobristPositionHash() == positionOnlyHash,
-				"Position Hashes were not equal");
-		asserts(game.getZobristGameHash() == gameHash,
-				"Game Hashes were not equal");
-	}
-
-	public void testRepHashing() {
-		Game game = createStartingPosition();
-		Random random = new Random();
-		long positionOnlyHash = game.getZobristPositionHash();
-		long gameHash = game.getZobristGameHash();
-
-		for (int i = 0; i < 60; i++) {
-			// System.out.println("Position hash: " + positionOnlyHash);
-			// System.out.println("Game hash: " + gameHash);
-
-			Move[] legals = game.getLegalMoves().asArray();
-			Move move = legals[random.nextInt(legals.length)];
-			game.move(move);
-			game.rollback();
-			asserts(game.getZobristPositionHash() == positionOnlyHash,
-					"Position Hashes were not equal");
-			asserts(game.getZobristGameHash() == gameHash,
-					"Game Hashes were not equal");
-
-			game.move(move);
-
-			positionOnlyHash = game.getZobristPositionHash();
-			gameHash = game.getZobristGameHash();
-		}
-	}
-
-	public void testPieceDisappearBug() {
-		Game game = createFromFen("r1q1k2r/3ppppp/1pn5/p3N3/3PPB2/5Q2/PPP2PPP/R4bK1 w kq - 0 0");
-		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
-		game.makeLanMove("a1xf1");
-		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
-	}
-
 	public void testPieceCounts() {
 		Game game = createStartingPosition();
 		asserts(game.getPieceCount(WHITE, PAWN) == 8, "Not 8 white pawns.");
@@ -311,6 +395,105 @@ public class MoveGenTest implements GameConstants {
 				+ game);
 	}
 
+	public void testPieceDisappearBug() {
+		Game game = createFromFen("r1q1k2r/3ppppp/1pn5/p3N3/3PPB2/5Q2/PPP2PPP/R4bK1 w kq - 0 0");
+		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
+		game.makeLanMove("a1xf1");
+		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
+	}
+
+	public void testPromotions() {
+		for (String test : PROMOTION_TEST) {
+			String[] split = test.split("\\|");
+			Game game = createFromFen(split[0]);
+			game.makeLanMove(split[1]);
+
+			List<Move> expectedMoves = new ArrayList<Move>(split.length - 2);
+
+			for (int i = 2; i < split.length; i++) {
+				expectedMoves.add(game.makeLanMove(split[i]));
+				game.rollback();
+			}
+
+			asserts(expectedMoves, game.getLegalMoves().asList(), game);
+		}
+
+		for (String test : PROMOTION_TEST) {
+			String[] split = test.split("\\|");
+			Game game = createFromFen(split[0]);
+			game.makeLanMove(split[1]);
+
+			List<Move> expectedMoves = new ArrayList<Move>(split.length - 2);
+
+			for (int i = 2; i < split.length; i++) {
+				expectedMoves.add(game.makeLanMove(split[i]));
+				game.rollback();
+				game.rollback();
+				Game game2 = createFromFen(split[0]);
+				asserts(game.getOccupiedBB() == game2.getOccupiedBB()
+						&& game.getEmptyBB() == game2.getEmptyBB(),
+						"Occupied/empty are not the same.");
+			}
+		}
+	}
+
+	public void testRepHashing() {
+		Game game = createStartingPosition();
+		Random random = new Random();
+		long positionOnlyHash = game.getZobristPositionHash();
+		long gameHash = game.getZobristGameHash();
+
+		for (int i = 0; i < 60; i++) {
+			// System.out.println("Position hash: " + positionOnlyHash);
+			// System.out.println("Game hash: " + gameHash);
+
+			Move[] legals = game.getLegalMoves().asArray();
+			Move move = legals[random.nextInt(legals.length)];
+			game.move(move);
+			game.rollback();
+			asserts(game.getZobristPositionHash() == positionOnlyHash,
+					"Position Hashes were not equal");
+			asserts(game.getZobristGameHash() == gameHash,
+					"Game Hashes were not equal");
+
+			game.move(move);
+
+			positionOnlyHash = game.getZobristPositionHash();
+			gameHash = game.getZobristGameHash();
+		}
+	}
+
+	public void testThreeXRep() {
+		Game game = createStartingPosition();
+		game.makeLanMove("g1-h3");
+		asserts(game.getRepCount() == 1, "Invalid rep count "
+				+ game.getRepCount());
+		game.makeLanMove("g8-h6");
+		asserts(game.getRepCount() == 1, "Invalid rep count "
+				+ game.getRepCount());
+		game.makeLanMove("h3-g1");
+		asserts(game.getRepCount() == 1, "Invalid rep count "
+				+ game.getRepCount());
+		game.makeLanMove("h6-g8");
+		asserts(game.getRepCount() == 2, "Invalid rep count "
+				+ game.getRepCount());
+		game.makeLanMove("g1-h3");
+		asserts(game.getRepCount() == 2, "Invalid rep count "
+				+ game.getRepCount());
+		game.makeLanMove("g8-h6");
+		asserts(game.getRepCount() == 2, "Invalid rep count "
+				+ game.getRepCount());
+		game.makeLanMove("h3-g1");
+		asserts(game.getRepCount() == 2, "Invalid rep count "
+				+ game.getRepCount());
+		game.makeLanMove("h6-g8");
+		asserts(game.getRepCount() == 3, "Invalid rep count "
+				+ game.getRepCount());
+		game.makeLanMove("g1-h3");
+		asserts(game.getRepCount() == 3, "Invalid rep count"
+				+ game.getRepCount());
+	}
+
 	public void testValidCastle() {
 		for (String test : VALID_CASTLE_TEST) {
 			String[] split = test.split("\\|");
@@ -353,190 +536,6 @@ public class MoveGenTest implements GameConstants {
 				assertsDoesntContains(moveList, "O-O-O");
 			}
 		}
-	}
-
-	public void testPromotions() {
-		for (String test : PROMOTION_TEST) {
-			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0]);
-			game.makeLanMove(split[1]);
-
-			List<Move> expectedMoves = new ArrayList<Move>(split.length - 2);
-
-			for (int i = 2; i < split.length; i++) {
-				expectedMoves.add(game.makeLanMove(split[i]));
-				game.rollback();
-			}
-
-			asserts(expectedMoves, game.getLegalMoves().asList(), game);
-		}
-
-		for (String test : PROMOTION_TEST) {
-			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0]);
-			game.makeLanMove(split[1]);
-
-			List<Move> expectedMoves = new ArrayList<Move>(split.length - 2);
-
-			for (int i = 2; i < split.length; i++) {
-				expectedMoves.add(game.makeLanMove(split[i]));
-				game.rollback();
-				game.rollback();
-				Game game2 = createFromFen(split[0]);
-				asserts(game.getOccupiedBB() == game2.getOccupiedBB()
-						&& game.getEmptyBB() == game2.getEmptyBB(),
-						"Occupied/empty are not the same.");
-			}
-		}
-	}
-
-	public void testNotCheckmate() {
-		for (String fen : NOT_CHECKMATE_TESTS) {
-			Game game = createFromFen(fen);
-			asserts(!game.isCheckmate(), "Position is not checkmate: \n" + game);
-		}
-	}
-
-	public void testInCheck() {
-		for (String fen : IN_CHECK_TESTS) {
-			Game game = createFromFen(fen);
-			asserts(game.isInCheck(game.getColorToMove()),
-					"User is in check in position:\n " + game);
-		}
-	}
-
-	public void testLegals() {
-		for (String test : PSEUDO_LEGAL_MOVE_TESTS) {
-			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0]);
-
-			if (split.length == 1) {
-				asserts(game.getPseudoLegalMoves().asArray().length == 0,
-						"Game contained legal mvoes in checkmate\n" + game);
-			} else {
-				Move[] moveList = game.getLegalMoves().asArray();
-
-				asserts(moveList.length == split.length - 1,
-						"Invalid expected number of moves " + split.length
-								+ " " + moveList.length + " " + game);
-
-				for (Move move : moveList) {
-					boolean foundMove = false;
-					for (int i = 1; i < split.length; i++) {
-						if (move.getLan().equals(split[i])) {
-							foundMove = true;
-							split[i] = null;
-							break;
-						}
-					}
-
-					if (!foundMove) {
-						asserts(foundMove, "Could not find move: "
-								+ move.getLan() + " in the list of legals.\n"
-								+ game);
-					}
-				}
-
-				for (int i = 1; i < split.length; i++) {
-					asserts(split[i] == null,
-							"The following move was not returned as a legal: "
-									+ split[i] + " \n");
-				}
-			}
-		}
-	}
-
-	public void testLegalMoves() {
-		for (String test : LEGAL_MOVE_TESTS) {
-			String[] split = test.split("\\|");
-
-			Game game = createFromFen(split[0]);
-
-			Move[] moves = game.getPseudoLegalMoves().asArray();
-			for (Move move : moves) {
-				if (game.move(move)) {
-					game.rollback();
-				}
-			}
-
-			if (split.length == 1) {
-				asserts(game.getLegalMoves().asArray().length == 0,
-						"Game contained legal mvoes in checkmate");
-			} else {
-
-				List<Move> expectedMoves = new ArrayList<Move>(split.length - 1);
-				for (int i = 1; i < split.length; i++) {
-					expectedMoves.add(game.makeLanMove(split[i]));
-					game.rollback();
-				}
-
-				asserts(expectedMoves, game.getLegalMoves().asList(), game);
-			}
-		}
-	}
-
-	public void assertsContains(List<Move> moveList, String lan) {
-		boolean found = false;
-
-		for (Move candidate : moveList) {
-			if (candidate.getLan().equals(lan)) {
-				found = true;
-				break;
-			}
-		}
-
-		asserts(found == true, "Could not find move " + lan + " in " + moveList);
-	}
-
-	public void assertsDoesntContains(List<Move> moveList, String lan) {
-		boolean found = false;
-
-		for (Move candidate : moveList) {
-			if (candidate.getLan().equals(lan)) {
-				found = true;
-				break;
-			}
-		}
-
-		asserts(found == false, "Found move " + lan + " in " + moveList);
-	}
-
-	public void asserts(List<Move> listA, List<Move> listB, Game game) {
-		for (Move moveA : listA) {
-			int foundIndex = -1;
-			for (int i = 0; i < listB.size(); i++) {
-				if (listB.get(i).getLan().equals(moveA.getLan())) {
-					foundIndex = i;
-					break;
-				}
-			}
-			if (foundIndex == -1) {
-				throw new AssertionError("Could not find move "
-						+ moveA.getLan() + " in " + listB + "\n" + game);
-			} else {
-				listB.remove(foundIndex);
-			}
-		}
-
-		if (listB.size() != 0) {
-			throw new AssertionError(
-					"The following moves were not found in listA " + listB
-							+ "\n" + game);
-		}
-	}
-
-	public void asserts(boolean condition, String message) {
-		if (!condition) {
-			throw new AssertionError(message);
-		}
-	}
-
-	public boolean contains(String string, String[] array) {
-		boolean result = false;
-		for (int i = 0; !result && i < array.length; i++) {
-			result = array[i].equals(string);
-		}
-		return result;
 	}
 
 }
