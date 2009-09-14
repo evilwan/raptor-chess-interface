@@ -67,7 +67,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		Composite setComposite = new Composite(needToLearnLayouts, SWT.BORDER
 				| SWT.BORDER_SOLID);
 		ComboFieldEditor setFieldEditor = new ComboFieldEditor(
-				SWTService.BOARD_SET_KEY, "Chess Set", setNameValues,
+				SWTService.BOARD_SET, "Chess Set", setNameValues,
 				setComposite) {
 
 			@Override
@@ -100,7 +100,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 
 		backgroundComposite.setLayout(backgroundGridLayout);
 		ComboFieldEditor backgroundFieldEditor = new ComboFieldEditor(
-				SWTService.BOARD_BACKGROUND_KEY, "Chess Board Square",
+				SWTService.BOARD_BACKGROUND, "Chess Board Square",
 				backgroundNameValues, backgroundComposite) {
 			@Override
 			protected void fireValueChanged(String property, Object oldValue,
@@ -112,7 +112,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		addField(backgroundFieldEditor);
 		backgroundImageComposite = new ImageComposite(backgroundComposite, 2);
 		updateBackgroundImages(SWTService.getInstance().getStore().getString(
-				SWTService.BOARD_BACKGROUND_KEY));
+				SWTService.BOARD_BACKGROUND));
 
 	}
 

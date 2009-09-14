@@ -32,28 +32,43 @@ public class SWTService {
 
 	// In order to update entries in the font and color registries, all font
 	// properties must end in font and all color properties must end in color.
-	public static final String BOARD_SET_KEY = "board-set";
-	public static final String BOARD_BACKGROUND_KEY = "board-background";
-	public static final String BOARD_BACKGROUND_COLOR_KEY = "board-background-color";
-	public static final String BOARD_IS_SHOW_COORDINATES_KEY = "board-show-coordinates";
-	public static final String BOARD_COORDINATES_COLOR = "board-coordinates-color";
-	public static final String BOARD_COORDINATES_FONT = "board-coordinates-font";
-	public static final String BOARD_PIECE_SIZE_ADJUSTMENT_KEY = "board-piece-size-adjustment-percentage";
-	public static final String BOARD_HIGHLIGHT_BORDER_WIDTH_KEY = "board-highlight-width-percentage";
-	public static final String BOARD_HIGHLIGHT_COLOR_KEY = "board-highlight-color";
-	public static final String BOARD_ACTIVE_CLOCK_COLOR = "board-active-clock-color";
-	public static final String BOARD_INACTIVE_CLOCK_COLOR = "board-inactive-clock-color";
-	public static final String BOARD_CLOCK_FONT = "board-clock-font";
-	public static final String BOARD_LAG_FONT = "board-lag-font";
-	public static final String BOARD_LAG_COLOR = "board-lag-color";
-	public static final String BOARD_PLAYER_NAME_FONT = "board-player-name-font";
-	public static final String BPARD_LAG_COLOR = "board-lag-color";
-	public static final String BOARD_PIECE_JAIL_FONT = "board-piece-jail-font";
-	public static final String BOARD_PIECE_JAIL_COLOR = "board-piece-jail-color";
+	public static final String BOARD_SET = "board-set";
+	public static final String BOARD_BACKGROUND = "board-background";
+	public static final String BOARD_IS_SHOW_COORDINATES = "board-show-coordinates";
+	public static final String BOARD_PIECE_SIZE_ADJUSTMENT = "board-piece-size-adjustment-percentage";
+	public static final String BOARD_HIGHLIGHT_BORDER_WIDTH = "board-highlight-width-percentage";
 	public static final String BOARD_IS_SHOWING_PIECE_JAIL = "board-is-showing-piece-jail";
 
-	public static final String[] colorKeys = { BOARD_BACKGROUND_COLOR_KEY,
-			BOARD_COORDINATES_COLOR, BOARD_HIGHLIGHT_COLOR_KEY,
+	public static final String BOARD_COORDINATES_COLOR = "board-coordinates-color";
+	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
+	public static final String BOARD_HIGHLIGHT_COLOR = "board-highlight-color";
+	public static final String BOARD_ACTIVE_CLOCK_COLOR = "board-active-clock-color";
+	public static final String BOARD_INACTIVE_CLOCK_COLOR = "board-inactive-clock-color";
+	public static final String BOARD_LAG_COLOR = "board-lag-color";
+	public static final String BOARD_PLAYER_NAME_COLOR = "board-player-name-color";
+	public static final String BOARD_PIECE_JAIL_COLOR = "board-piece-jail-color";
+
+	public static final String BOARD_COORDINATES_FONT = "board-coordinates-font";
+	public static final String BOARD_CLOCK_FONT = "board-clock-font";
+	public static final String BOARD_LAG_FONT = "board-lag-font";
+	public static final String BOARD_PLAYER_NAME_FONT = "board-player-name-font";
+	public static final String BOARD_PIECE_JAIL_FONT = "board-piece-jail-font";
+
+	public static final String CHAT_MAX_CONSOLE_CHARS = "chat-max-console-chars";
+
+	public static final String CHAT_OUTPUT_FONT = "chat-output-font";
+	public static final String CHAT_INPUT_FONT = "chat-input-font";
+	public static final String CHAT_LAG_FONT = "chat-lag-font";
+	
+	public static final String CHAT_OUTPUT_BACKGROUND_COLOR = "chat-output-background-color";
+	public static final String CHAT_INPUT_BACKGROUND_COLOR = "chat-input-background-color";
+	public static final String CHAT_OUTPUT_TEXT_COLOR = "chat-output-text-color";
+	public static final String CHAT_INPUT_DEFAULT_TEXT_COLOR = "chat-input-default-text-color";
+	public static final String CHAT_LINK_COLOR = "chat-link-color";
+
+
+	public static final String[] colorKeys = { BOARD_BACKGROUND_COLOR,
+			BOARD_COORDINATES_COLOR, BOARD_HIGHLIGHT_COLOR,
 			BOARD_ACTIVE_CLOCK_COLOR, BOARD_INACTIVE_CLOCK_COLOR,
 			BOARD_LAG_COLOR, BOARD_LAG_COLOR };
 
@@ -86,11 +101,11 @@ public class SWTService {
 			} else if (arg0.getProperty().endsWith("font")) {
 				fontRegistry.put(arg0.getProperty(), PreferenceConverter
 						.getFontDataArray(store, arg0.getProperty()));
-			} else if (arg0.getProperty().equals(BOARD_SET_KEY)) {
+			} else if (arg0.getProperty().equals(BOARD_SET)) {
 				LOG.info("Disposing chess set " + set.getName());
 				set.dispose();
 				set = new Set((String) arg0.getNewValue());
-			} else if (arg0.getProperty().equals(BOARD_BACKGROUND_KEY)) {
+			} else if (arg0.getProperty().equals(BOARD_BACKGROUND)) {
 				LOG.info("Disposing background set " + background.getName());
 				background.dispose();
 				background = new Background((String) arg0.getNewValue());
@@ -134,7 +149,7 @@ public class SWTService {
 
 	public Set getChessSet() {
 		if (set == null) {
-			set = new Set(getStore().getString(BOARD_SET_KEY));
+			set = new Set(getStore().getString(BOARD_SET));
 		}
 		return set;
 	}
@@ -182,7 +197,7 @@ public class SWTService {
 	public Background getSquareBackground() {
 		if (background == null) {
 			background = new Background(getStore().getString(
-					BOARD_BACKGROUND_KEY));
+					BOARD_BACKGROUND));
 		}
 		return background;
 	}
@@ -194,43 +209,66 @@ public class SWTService {
 	public void loadDefaults() {
 		String defaultFontName = fontRegistry.defaultFont().getFontData()[0]
 				.getName();
-		store.setDefault(BOARD_SET_KEY, "Fantasy");
-		store.setDefault(BOARD_BACKGROUND_KEY, "Wood2");
-		store.setDefault(BOARD_BACKGROUND_COLOR_KEY, StringConverter
-				.asString(new RGB(0, 0, 0)));
-		store.setDefault(BOARD_IS_SHOW_COORDINATES_KEY, true);
-		store.setDefault(BOARD_COORDINATES_COLOR, StringConverter
-				.asString(new RGB(128, 128, 128)));
+		
+		//Board
+		store.setDefault(BOARD_SET, "Fantasy");
+		store.setDefault(BOARD_BACKGROUND, "Wood2");
+		store.setDefault(BOARD_IS_SHOW_COORDINATES, true);
+		store.setDefault(BOARD_PIECE_SIZE_ADJUSTMENT, .03);
+		store.setDefault(BOARD_HIGHLIGHT_BORDER_WIDTH, .05);
+		store.setDefault(BOARD_IS_SHOWING_PIECE_JAIL, true);
+
+		PreferenceConverter.setDefault(store, BOARD_BACKGROUND_COLOR, new RGB(255,255,255));
+		PreferenceConverter.setDefault(store, BOARD_COORDINATES_COLOR, new RGB(0,0,0));
+		PreferenceConverter.setDefault(store, BOARD_HIGHLIGHT_COLOR, new RGB(0,255,255));
+		PreferenceConverter.setDefault(store, BOARD_ACTIVE_CLOCK_COLOR, new RGB(255,0,0));
+		PreferenceConverter.setDefault(store, BOARD_INACTIVE_CLOCK_COLOR, new RGB(128,128,128));
+		PreferenceConverter.setDefault(store, BOARD_LAG_COLOR, new RGB(128,128,128));
+		PreferenceConverter.setDefault(store, BOARD_PLAYER_NAME_COLOR, new RGB(0,0,0));
+		PreferenceConverter.setDefault(store, BOARD_PIECE_JAIL_COLOR, new RGB(0,255,0));
+	
+		PreferenceConverter.setDefault(store, BOARD_COORDINATES_FONT, new FontData[] { new FontData(
+				defaultFontName, 14, 0) });
+		PreferenceConverter.setDefault(store, BOARD_CLOCK_FONT, new FontData[] { new FontData(
+				defaultFontName, 24, SWT.BOLD) });
+		PreferenceConverter.setDefault(store, BOARD_LAG_FONT, new FontData[] { new FontData(
+				defaultFontName, 14, 0) });
+		PreferenceConverter.setDefault(store, BOARD_PLAYER_NAME_FONT, new FontData[] { new FontData(
+				defaultFontName, 14, 0) });
+		PreferenceConverter.setDefault(store, BOARD_PIECE_JAIL_FONT, new FontData[] { new FontData(
+				defaultFontName, 14, 0) });
+		
 		store.setDefault(BOARD_COORDINATES_FONT,
 				StringConverter.asString(new FontData[] { new FontData(
 						defaultFontName, 14, 0) }));
-		store.setDefault(BOARD_PIECE_SIZE_ADJUSTMENT_KEY, .03);
-		store.setDefault(BOARD_HIGHLIGHT_BORDER_WIDTH_KEY, .05);
-		store.setDefault(BOARD_HIGHLIGHT_COLOR_KEY, StringConverter
-				.asString(new RGB(0, 255, 255)));
-		store.setDefault(BOARD_ACTIVE_CLOCK_COLOR, StringConverter
-				.asString(new RGB(255, 0, 0)));
-		store.setDefault(BOARD_INACTIVE_CLOCK_COLOR, StringConverter
-				.asString(new RGB(128, 128, 128)));
 		store.setDefault(BOARD_CLOCK_FONT, StringConverter
 				.asString(new FontData[] { new FontData(defaultFontName, 24,
 						SWT.BOLD) }));
-		store.setDefault(BOARD_LAG_COLOR, StringConverter.asString(new RGB(128,
-				128, 128)));
 		store.setDefault(BOARD_LAG_FONT,
 				StringConverter.asString(new FontData[] { new FontData(
 						defaultFontName, 14, 0) }));
 		store.setDefault(BOARD_PLAYER_NAME_FONT,
 				StringConverter.asString(new FontData[] { new FontData(
 						defaultFontName, 14, 0) }));
-		store.setDefault(BPARD_LAG_COLOR, StringConverter.asString(new RGB(128,
-				128, 128)));
 		store.setDefault(BOARD_PIECE_JAIL_FONT,
 				StringConverter.asString(new FontData[] { new FontData(
 						defaultFontName, 14, 0) }));
-		store.setDefault(BOARD_PIECE_JAIL_COLOR, StringConverter
-				.asString(new RGB(0, 255, 0)));
-		store.setDefault(BOARD_IS_SHOWING_PIECE_JAIL, true);
+		
+		//Chat
+		store.setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
+		
+		PreferenceConverter.setDefault(store, CHAT_INPUT_FONT, new FontData[] { new FontData(
+				defaultFontName, 16, 0) });
+		PreferenceConverter.setDefault(store, CHAT_OUTPUT_FONT, new FontData[] { new FontData(
+				defaultFontName, 16, 0) });
+		PreferenceConverter.setDefault(store, CHAT_LAG_FONT, new FontData[] { new FontData(
+				defaultFontName, 12, 0) });
+		
+		PreferenceConverter.setDefault(store, CHAT_INPUT_BACKGROUND_COLOR, new RGB(0,0,0));
+		PreferenceConverter.setDefault(store, CHAT_INPUT_DEFAULT_TEXT_COLOR, new RGB(255,255,255));
+		PreferenceConverter.setDefault(store, CHAT_OUTPUT_BACKGROUND_COLOR, new RGB(255,255,255));
+		PreferenceConverter.setDefault(store, CHAT_OUTPUT_TEXT_COLOR, new RGB(0,0,0));
+		PreferenceConverter.setDefault(store, CHAT_LINK_COLOR, new RGB(0,0,255));
 
 		LOG.info("Loaded defaults " + COMMON_PROPERTIES);
 	}

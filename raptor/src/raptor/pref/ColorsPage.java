@@ -24,11 +24,11 @@ public class ColorsPage extends FieldEditorPreferencePage {
 	 * * Creates the field editors
 	 */
 	protected void createFieldEditors() {
-		addField(new ColorFieldEditor(SWTService.BOARD_BACKGROUND_COLOR_KEY,
+		addField(new ColorFieldEditor(SWTService.BOARD_BACKGROUND_COLOR,
 				"Board Window Background Color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(SWTService.BOARD_COORDINATES_COLOR,
 				"Board Coordinates Color:", getFieldEditorParent()));
-		addField(new ColorFieldEditor(SWTService.BOARD_HIGHLIGHT_COLOR_KEY,
+		addField(new ColorFieldEditor(SWTService.BOARD_HIGHLIGHT_COLOR,
 				"Board Highlight Color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(SWTService.BOARD_ACTIVE_CLOCK_COLOR,
 				"Clock Active Color:", getFieldEditorParent()));

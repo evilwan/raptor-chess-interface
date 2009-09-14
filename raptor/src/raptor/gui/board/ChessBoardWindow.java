@@ -290,7 +290,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 							.getInstance()
 							.getStore()
 							.getDouble(
-									SWTService.BOARD_HIGHLIGHT_BORDER_WIDTH_KEY));
+									SWTService.BOARD_HIGHLIGHT_BORDER_WIDTH));
 					if (isHighlighted) {
 						for (int i = 0; i < highlightBorderWidth; i++) {
 							e.gc.drawRectangle(i, i, size.x - 1 - i * 2, size.x
@@ -300,7 +300,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 					double imageSquareSideAdjustment = SWTService.getInstance()
 							.getStore().getDouble(
-									SWTService.BOARD_PIECE_SIZE_ADJUSTMENT_KEY);
+									SWTService.BOARD_PIECE_SIZE_ADJUSTMENT);
 					int imageSide = (int) ((size.x - highlightBorderWidth * 2) * (1.0 - imageSquareSideAdjustment));
 					if (imageSide % 2 != 0) {
 						imageSide = imageSide - 1;
@@ -625,13 +625,12 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 	@Override
 	protected Control createContents(Composite parent) {
-		FillLayout fillLayout = new FillLayout();
-		fillLayout.marginHeight = 10;
-		fillLayout.marginWidth = 10;
+//		FillLayout fillLayout = new FillLayout();
+//		fillLayout.marginHeight = 10;
+//		fillLayout.marginWidth = 10;
 		// parent.setLayout(fillLayout);
 		board = new ChessBoard(parent, 0);
 		board.init();
-		board.setSize(600, 400);
 		updateFromGame();
 		updateFromPrefs();
 
@@ -765,12 +764,12 @@ public class ChessBoardWindow extends ApplicationWindow {
 		LOG.info("Updating prefs " + gameId);
 		long startTime = System.currentTimeMillis();
 		setShowingCoordinates(SWTService.getInstance().getStore().getBoolean(
-				SWTService.BOARD_IS_SHOW_COORDINATES_KEY));
+				SWTService.BOARD_IS_SHOW_COORDINATES));
 
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board.squares[i][j].setForeground(SWTService.getInstance()
-						.getColor(SWTService.BOARD_HIGHLIGHT_COLOR_KEY));
+						.getColor(SWTService.BOARD_HIGHLIGHT_COLOR));
 				board.squares[i][j].forceLayout();
 			}
 		}
@@ -784,7 +783,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 				label.setForeground(SWTService.getInstance().getColor(
 						SWTService.BOARD_COORDINATES_COLOR));
 				label.setBackground(SWTService.getInstance().getColor(
-						SWTService.BOARD_BACKGROUND_COLOR_KEY));
+						SWTService.BOARD_BACKGROUND_COLOR));
 				label.setVisible(true);
 			} else {
 				label.setVisible(false);
@@ -800,7 +799,7 @@ public class ChessBoardWindow extends ApplicationWindow {
 				label.setForeground(SWTService.getInstance().getColor(
 						SWTService.BOARD_COORDINATES_COLOR));
 				label.setBackground(SWTService.getInstance().getColor(
-						SWTService.BOARD_BACKGROUND_COLOR_KEY));
+						SWTService.BOARD_BACKGROUND_COLOR));
 				label.setVisible(true);
 			} else {
 				label.setVisible(false);
@@ -809,9 +808,9 @@ public class ChessBoardWindow extends ApplicationWindow {
 
 		getShell().setBackground(
 				SWTService.getInstance().getColor(
-						SWTService.BOARD_BACKGROUND_COLOR_KEY));
+						SWTService.BOARD_BACKGROUND_COLOR));
 		board.setBackground(SWTService.getInstance().getColor(
-				SWTService.BOARD_BACKGROUND_COLOR_KEY));
+				SWTService.BOARD_BACKGROUND_COLOR));
 		LOG
 				.info("Updated prefs in "
 						+ (System.currentTimeMillis() - startTime));
