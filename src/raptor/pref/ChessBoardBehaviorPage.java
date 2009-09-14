@@ -16,7 +16,7 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		BooleanFieldEditor bfe = new BooleanFieldEditor(
-				SWTService.BOARD_IS_SHOW_COORDINATES_KEY, "Show Coordinates",
+				SWTService.BOARD_IS_SHOW_COORDINATES, "Show Coordinates",
 				getFieldEditorParent());
 		addField(bfe);
 
