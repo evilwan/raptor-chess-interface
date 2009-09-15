@@ -1,9 +1,9 @@
 package raptor;
 
-import raptor.gui.board.ChessBoardWindow;
+import raptor.gui.board.BoardWindow;
 
 public class App {
 	public static void main(String args[]) {
-		ChessBoardWindow.main(args);
+		BoardWindow.main(args);
 	}
 }
