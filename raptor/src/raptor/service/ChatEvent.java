@@ -11,6 +11,7 @@ public class ChatEvent {
 	public static final int CHAN_TELL = 6;
 	public static final int SAY = 7;
 	public static final int PARTNER_TELL = 8;
+	public static final int OUTBOUND = 9;
 
 	protected String source;
 	protected int type;
