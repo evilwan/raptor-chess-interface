@@ -55,6 +55,7 @@ public class SWTService {
 	public static final String BOARD_PIECE_JAIL_FONT = "board-piece-jail-font";
 
 	public static final String CHAT_MAX_CONSOLE_CHARS = "chat-max-console-chars";
+	public static final String CHAT_TIMESTAMP_CONSOLE = "chat-timestamp-console";
 
 	public static final String CHAT_OUTPUT_FONT = "chat-output-font";
 	public static final String CHAT_INPUT_FONT = "chat-input-font";
@@ -256,6 +257,7 @@ public class SWTService {
 		
 		//Chat
 		store.setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
+		store.setDefault(CHAT_TIMESTAMP_CONSOLE, false);
 		
 		PreferenceConverter.setDefault(store, CHAT_INPUT_FONT, new FontData[] { new FontData(
 				defaultFontName, 16, 0) });

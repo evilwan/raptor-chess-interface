@@ -148,15 +148,9 @@ public class Set {
 
 	private static Image loadImage(String location) {
 		try {
-			if (location.endsWith("bmp") || location.endsWith("BMP")) {
-				ImageData ideaData = new ImageData(location);
-				int transPixel = ideaData.palette
-						.getPixel(new RGB(255, 255, 0));
-				ideaData.transparentPixel = transPixel;
-				return new Image(Display.getCurrent(), ideaData);
-			} else {
-				return new Image(Display.getCurrent(), location);
-			}
+
+			return new Image(Display.getCurrent(), location);
+
 		} catch (Exception ioe) {
 			throw new IllegalArgumentException("Error loading image "
 					+ location, ioe);
