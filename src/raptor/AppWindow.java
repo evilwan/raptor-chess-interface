@@ -32,13 +32,13 @@ public class AppWindow extends ApplicationWindow {
 		game = GameUtils.createStartingPosition();
 		game.setId("1");
 		game.setType(Game.BLITZ);
-		game.setState(Game.ACTIVE_STATE);
+		game.setState(Game.ACTIVE_STATE & Game.IS_CLOCK_TICKING_STATE);
 		game.setWhiteName("AReallyLongName");
 		game.setWhiteRating("1934");
 		game.setBlackName("shorty");
 		game.setBlackRating("----");
-		game.setBlackTimeMillis(60000 * 3);
-		game.setWhiteTimeMillis(60000 * 3);
+		game.setBlackRemainingTimeMillis(60000 * 3);
+		game.setWhitRemainingeTimeMillis(60000 * 3);
 		game.setInitialBlackIncMillis(0);
 		game.setInitialBlackTimeMillis(60000 * 3);
 		game.setInitialWhiteIncMillis(0);
