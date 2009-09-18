@@ -619,7 +619,7 @@ public class ChessBoard extends Composite implements Constants {
 		combo.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button executeButton = new Button(composite, SWT.FLAT);
-		executeButton.setImage(getPreferences().getIcon("southwest"));
+		executeButton.setImage(getPreferences().getIcon("southWest"));
 		executeButton.setToolTipText("Executes the selected script.");
 		executeButton.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 

@@ -51,6 +51,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			if (RAPTOR_PROPERTIES.exists()) {
 				load(new FileInputStream(RAPTOR_PROPERTIES));
 			} else {
+				RAPTOR_PROPERTIES.getParentFile().mkdir();
 				RAPTOR_PROPERTIES.createNewFile();
 				save(new FileOutputStream(RAPTOR_PROPERTIES), "Last saved on "
 						+ new Date());
