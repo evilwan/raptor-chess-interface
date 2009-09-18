@@ -49,7 +49,7 @@ public class GameScript implements Comparable<GameScript> {
 				return arg0.getName().endsWith(".properties");
 			}
 		});
-
+        if(files != null) {
 		for (int i = 0; i < files.length; i++) {
 			String name = RaptorStringUtils.replaceAll(files[i].getName(),
 					".properties", "");
@@ -59,6 +59,10 @@ public class GameScript implements Comparable<GameScript> {
 		Collections.sort(result);
 
 		return result.toArray(new GameScript[0]);
+        }
+        else {
+        	return new GameScript[0];
+        }
 	}
 
 	public GameScript() {
