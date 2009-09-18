@@ -142,7 +142,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new FontData[] { new FontData(defaultFontName, 14, 0) });
 		PreferenceConverter.setDefault(this, BOARD_OPENING_DESC_FONT,
 				new FontData[] { new FontData(defaultFontName, 10, 0) });
-		PreferenceConverter.setDefault(this,BOARD_STATUS_FONT,
+		PreferenceConverter.setDefault(this, BOARD_STATUS_FONT,
 				new FontData[] { new FontData(defaultFontName, 10, 0) });
 		PreferenceConverter.setDefault(this, BOARD_GAME_DESCRIPTION_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
