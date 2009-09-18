@@ -32,6 +32,11 @@ public class PreferencesDialog {
 		mgr.addToRoot(new PreferenceNode("fonts", new FontsPage()));
 		mgr.addToRoot(new PreferenceNode("chessBoardBehavior",
 				new ChessBoardBehaviorPage()));
+		mgr.addToRoot(new PreferenceNode("fics", new FicsPage()));
+		mgr.addToRoot(new PreferenceNode("ficsConnection",
+				new FicsConnectionPage()));
+		mgr.addToRoot(new PreferenceNode("ficsGameScripts",
+				new FicsGameScriptsPage()));
 
 		// Create the preferences dialog
 		PreferenceDialog dlg = new PreferenceDialog(null, mgr);
