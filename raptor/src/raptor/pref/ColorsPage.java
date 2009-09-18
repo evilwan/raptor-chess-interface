@@ -37,7 +37,7 @@ public class ColorsPage extends FieldEditorPreferencePage implements
 				"Clock Inactive Color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(BOARD_LAG_COLOR, "Lag Color:",
 				getFieldEditorParent()));
-		addField(new ColorFieldEditor(BOARD_PIECE_JAIL_COLOR,
+		addField(new ColorFieldEditor(BOARD_PIECE_JAIL_LABEL_COLOR,
 				"Piece Jail Label Color:", getFieldEditorParent()));
 	}
 }

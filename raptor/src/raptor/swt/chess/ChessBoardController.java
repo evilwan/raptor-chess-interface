@@ -146,8 +146,6 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	protected abstract void adjustCoolbarToInitial();
 
-	
-
 	protected void adjustFromNavigationChange() {
 		adjustPieceJailFromGame(gameTraverser.getCurrnentGame());
 		adjustBoardToGame(gameTraverser.getCurrnentGame());
@@ -156,8 +154,10 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	protected void adjustPieceJailFromGame(Game game) {
 		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
-			int count = board.game.getPieceCount(WHITE, Utils
-					.setPieceFromColoredPiece(DROPPABLE_PIECES[i]));
+			int color = DROPPABLE_PIECE_COLOR[i];
+			int count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
+					- board.game.getPieceCount(color, Utils
+							.setPieceFromColoredPiece(DROPPABLE_PIECES[i]));
 
 			if (count == 0) {
 				board.pieceJailSquares[DROPPABLE_PIECES[i]]
@@ -169,6 +169,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 			board.pieceJailSquares[DROPPABLE_PIECES[i]]
 					.setText(pieceCountToString(count));
+			board.pieceJailSquares[DROPPABLE_PIECES[i]].redraw();
 		}
 	}
 
@@ -232,7 +233,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		adjustBoardToGame(board.game);
 		adjustGameStatusLabel();
 
-		redraw();
+		board.layout();
 
 		LOG.info("adjustToGameChange " + board.game.getId() + "  n "
 				+ (System.currentTimeMillis() - startTime));
@@ -244,8 +245,10 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 		adjustCoolbarToInitial();
 
-		board.blackNameRatingLabel.setText(board.game.getBlackName());
-		board.whiteNameRatingLabel.setText(board.game.getWhiteRating());
+		board.blackNameRatingLabel.setText(board.game.getBlackName() + " ("
+				+ board.game.getBlackRating() + ")");
+		board.whiteNameRatingLabel.setText(board.game.getWhiteName() + " ("
+				+ board.game.getWhiteRating() + ")");
 
 		whiteClockUpdater.setInitialTimeMillis(board.game
 				.getInitialWhiteTimeMillis());
@@ -289,8 +292,12 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	public void onFlip() {
+		LOG.debug("onFlip");
 		board.setWhiteOnTop(!board.isWhiteOnTop());
-		board.layout();
+		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
+		board.getBoardPanel().layout();
+		board.getBoardPanel().redraw();
+		LOG.debug("isWhiteOnTop = " + board.isWhiteOnTop);
 	}
 
 	public void onNavForward() {
@@ -337,9 +344,9 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	public abstract boolean isRematchable();
 
 	public abstract boolean isResignable();
-	
+
 	public abstract boolean isRevertable();
-	
+
 	public abstract boolean isCommitable();
 
 	public boolean isSureDraw() {
@@ -357,13 +364,13 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 				.getString(BOARD_CLOCK_LAG_FORMAT));
 		return dateFormat.format(new Date(lag));
 	}
-	
+
 	public void onNavCommit() {
-		
+
 	}
-	
-	public void onNavRevert(){
-		
+
+	public void onNavRevert() {
+
 	}
 
 	public void onNavLast() {
