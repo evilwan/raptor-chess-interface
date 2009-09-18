@@ -7,9 +7,6 @@ import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.CoolItem;
 
 import raptor.game.GameConstants;
 import raptor.game.Move;
@@ -47,8 +44,6 @@ public class FreeFormController extends ChessBoardController implements
 	@Override
 	protected void decorateCoolbar() {
 	}
-	
-	
 
 	@Override
 	public boolean isAutoDrawable() {

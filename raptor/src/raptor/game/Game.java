@@ -65,7 +65,7 @@ public class Game implements GameConstants {
 	protected long blackLagMillis;
 	protected String blackName;
 	protected String blackRating;
-	protected long blackTimeMillis;
+	protected long blackRemainingTimeMillis;
 
 	protected int[] board = new int[64];
 	protected int[] castling = new int[2];
@@ -101,7 +101,7 @@ public class Game implements GameConstants {
 	protected long whiteLagMillis;
 	protected String whiteName;
 	protected String whiteRating;
-	protected long whiteTimeMillis;
+	protected long whiteRemainingTimeMilis;
 	protected long zobristGameHash;
 
 	protected long zobristPositionHash;
@@ -128,8 +128,8 @@ public class Game implements GameConstants {
 		result.initialBlackTimeMillis = initialBlackTimeMillis;
 		result.initialWhiteIncMillis = initialWhiteIncMillis;
 		result.initialBlackIncMillis = initialBlackIncMillis;
-		result.whiteTimeMillis = whiteTimeMillis;
-		result.blackTimeMillis = blackTimeMillis;
+		result.whiteRemainingTimeMilis = whiteRemainingTimeMilis;
+		result.blackRemainingTimeMillis = blackRemainingTimeMillis;
 		result.whiteLagMillis = whiteLagMillis;
 		result.blackLagMillis = blackLagMillis;
 		result.startTime = startTime;
@@ -497,8 +497,8 @@ public class Game implements GameConstants {
 		return blackRating;
 	}
 
-	public long getBlackTimeMillis() {
-		return blackTimeMillis;
+	public long getBlackRemainingTimeMillis() {
+		return blackRemainingTimeMillis;
 	}
 
 	public int[] getBoard() {
@@ -702,8 +702,8 @@ public class Game implements GameConstants {
 		return whiteRating;
 	}
 
-	public long getWhiteTimeMillis() {
-		return whiteTimeMillis;
+	public long getWhiteRemainingTimeMillis() {
+		return whiteRemainingTimeMilis;
 	}
 
 	public long getZobristGameHash() {
@@ -1377,8 +1377,8 @@ public class Game implements GameConstants {
 		this.blackRating = blackRating;
 	}
 
-	public void setBlackTimeMillis(long blackTimeMillis) {
-		this.blackTimeMillis = blackTimeMillis;
+	public void setBlackRemainingTimeMillis(long blackTimeMillis) {
+		this.blackRemainingTimeMillis = blackTimeMillis;
 	}
 
 	public void setBoard(int[] board) {
@@ -1528,7 +1528,7 @@ public class Game implements GameConstants {
 				while (fromBB != 0) {
 					int fromSquare = bitscanForward(fromBB);
 					if ((GameUtils.getBitmap(move.getTo()) & 
-			                 GameUtils.pawnCapture(colorToMove, getPieceBB(colorToMove,PAWN), getColorBB(oppositeColorToMove))) != 0) {
+			                 GameUtils.pawnCapture(colorToMove, getBitmap(fromSquare), getColorBB(oppositeColorToMove))) != 0) {
 						movesFound++;
 					}
 					fromBB = bitscanClear(fromBB);
@@ -1573,7 +1573,7 @@ public class Game implements GameConstants {
 
 						switch (move.getPiece()) {
 						case KNIGHT:
-							resultBB = GameUtils.knightMove(move.getTo())
+							resultBB = GameUtils.knightMove(move.getFrom())
 									& toBB;
 							break;
 						case BISHOP:
@@ -1592,8 +1592,7 @@ public class Game implements GameConstants {
 									& getNotColorToMoveBB()
 									& toBB
 									& diagonalMove(fromSquare, getEmptyBB(),
-											getOccupiedBB())
-									& getNotColorToMoveBB();
+											getOccupiedBB());
 							break;
 						}
 
@@ -1655,8 +1654,8 @@ public class Game implements GameConstants {
 		this.whiteRating = whiteRating;
 	}
 
-	public void setWhiteTimeMillis(long whiteTimeMillis) {
-		this.whiteTimeMillis = whiteTimeMillis;
+	public void setWhitRemainingeTimeMillis(long whiteTimeMillis) {
+		this.whiteRemainingTimeMilis = whiteTimeMillis;
 	}
 
 	public void setZobristGameHash(long hash) {

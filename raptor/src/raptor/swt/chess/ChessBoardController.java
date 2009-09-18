@@ -1,25 +1,13 @@
 package raptor.swt.chess;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.game.Game;
 import raptor.game.GameConstants;
@@ -33,11 +21,11 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	public static final String FORWARD_NAV = "forward_nav";
 	public static final String NEXT_NAV = "next_nav";
 	public static final String FIRST_NAV = "first_nav";
+	public static final long TIMEZONE_OFFSET = -(Calendar.getInstance().get(Calendar.ZONE_OFFSET) + Calendar.getInstance().get(Calendar.DST_OFFSET));
 
 	class ClockLabelUpdater implements Runnable {
 		Label clockLabel;
-		long elapsedTimeMillis;
-		long initialTimeMillis;
+		long remainingTimeMillis;
 		boolean isRunning;
 		long valueToSubtractNextRun = 0;
 
@@ -45,27 +33,22 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			this.clockLabel = clockLabel;
 		}
 
-		public long getElapsedTimeMillis() {
-			return elapsedTimeMillis;
-		}
-
-		public long getInitialTimeMillis() {
-			return initialTimeMillis;
+		public long getRemainingTimeMillis() {
+			return remainingTimeMillis;
 		}
 
 		public void run() {
 			if (isRunning) {
 				valueToSubtractNextRun -= valueToSubtractNextRun;
-				clockLabel.setText(timeToString(initialTimeMillis,
-						elapsedTimeMillis));
+				clockLabel.setText(timeToString(remainingTimeMillis));
 
-				if (elapsedTimeMillis > 0) {
+				if (remainingTimeMillis > 0) {
 					long nextUpdate = 1000L;
 
-					if (elapsedTimeMillis >= board.preferences
+					if (remainingTimeMillis >= board.preferences
 							.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
 						nextUpdate = 60000L;
-					} else if (elapsedTimeMillis >= board.preferences
+					} else if (remainingTimeMillis >= board.preferences
 							.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
 						nextUpdate = 1000L;
 					} else {
@@ -79,27 +62,23 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			}
 		}
 
-		public void setElapsedTimeMillis(long elapsedTimeMillis) {
-			this.elapsedTimeMillis = elapsedTimeMillis;
-		}
-
-		public void setInitialTimeMillis(long initialTimeMillis) {
-			this.initialTimeMillis = initialTimeMillis;
+		public void setRemainingTimeMillis(long elapsedTimeMillis) {
+			this.remainingTimeMillis = elapsedTimeMillis;
 		}
 
 		public void start() {
 			isRunning = true;
-			if (elapsedTimeMillis > 0) {
+			if (remainingTimeMillis > 0) {
 				long nextUpdate = 1000L;
 
-				if (elapsedTimeMillis >= board.preferences
+				if (remainingTimeMillis >= board.preferences
 						.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-					nextUpdate = elapsedTimeMillis % 60000L;
-				} else if (elapsedTimeMillis >= board.preferences
+					nextUpdate = remainingTimeMillis % 60000L;
+				} else if (remainingTimeMillis >= board.preferences
 						.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
-					nextUpdate = elapsedTimeMillis % 1000L;
+					nextUpdate = remainingTimeMillis % 1000L;
 				} else {
-					nextUpdate = elapsedTimeMillis % 100L;
+					nextUpdate = remainingTimeMillis % 100L;
 				}
 				valueToSubtractNextRun = nextUpdate;
 				Display.getCurrent().timerExec((int) nextUpdate, this);
@@ -183,18 +162,23 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		isActive = (board.game.getState() & Game.ACTIVE_STATE) > 0;
 
 		board.whiteClockLabel.setText(timeToString(board.game
-				.getInitialWhiteTimeMillis(), board.game.getWhiteTimeMillis()));
+				.getWhiteRemainingTimeMillis()));
 		board.blackClockLabel.setText(timeToString(board.game
-				.getInitialBlackTimeMillis(), board.game.getBlackTimeMillis()));
+				.getBlackRemainingTimeMillis()));
 
-		whiteClockUpdater.setElapsedTimeMillis(board.game.getWhiteTimeMillis());
-		blackClockUpdater.setElapsedTimeMillis(board.game.getBlackTimeMillis());
+		whiteClockUpdater.setRemainingTimeMillis(board.game
+				.getWhiteRemainingTimeMillis());
+		blackClockUpdater.setRemainingTimeMillis(board.game
+				.getBlackRemainingTimeMillis());
 
 		if ((board.game.getState() & Game.ACTIVE_STATE) != 0
-				&& (board.game.getState() & Game.UNTIMED_STATE) != 0
+				&& (board.game.getState() & Game.UNTIMED_STATE) == 0
 				&& (board.game.getState() & Game.IS_CLOCK_TICKING_STATE) != 0) {
-			whiteClockUpdater.start();
-			blackClockUpdater.start();
+			if (board.game.getColorToMove() == WHITE) {
+				whiteClockUpdater.start();
+			} else {
+				blackClockUpdater.start();
+			}
 		}
 
 		if (isMoveListTraversable()) {
@@ -216,8 +200,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 		board.whiteLagLabel
 				.setText(lagToString(board.game.getWhiteLagMillis()));
-		board.blackLagLabel
-				.setText(lagToString(board.game.getBlackTimeMillis()));
+		board.blackLagLabel.setText(lagToString(board.game
+				.getBlackRemainingTimeMillis()));
 
 		board.currentPremovesLabel.setText("Premoves: EMPTY");
 		board.statusLabel
@@ -249,11 +233,6 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 				+ board.game.getBlackRating() + ")");
 		board.whiteNameRatingLabel.setText(board.game.getWhiteName() + " ("
 				+ board.game.getWhiteRating() + ")");
-
-		whiteClockUpdater.setInitialTimeMillis(board.game
-				.getInitialWhiteTimeMillis());
-		blackClockUpdater.setInitialTimeMillis(board.game
-				.getInitialBlackTimeMillis());
 
 		adjustToGameChange();
 		adjustGameDescriptionLabel();
@@ -362,7 +341,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat(board.preferences
 				.getString(BOARD_CLOCK_LAG_FORMAT));
-		return dateFormat.format(new Date(lag));
+		return dateFormat.format(new Date(lag + TIMEZONE_OFFSET));
 	}
 
 	public void onNavCommit() {
@@ -451,9 +430,9 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 				+ board.getStatusLabel().getText());
 	}
 
-	public String timeToString(long initialTimeMillis, long timeUsedMillis) {
+	public String timeToString(long timeRemaining) {
 
-		long timeLeft = initialTimeMillis - timeUsedMillis;
+		long timeLeft = timeRemaining;
 
 		if (timeLeft < 0) {
 			timeLeft = 0;
@@ -463,18 +442,18 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 				.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat(
 					board.preferences.getString(BOARD_CLOCK_FORMAT));
-			return dateFormat.format(new Date(timeLeft));
+			return dateFormat.format(new Date(timeLeft + TIMEZONE_OFFSET));
 
 		} else if (timeLeft >= board.preferences
 				.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat(
 					board.preferences.getString(BOARD_CLOCK_SECONDS_FORMAT));
-			return dateFormat.format(new Date(timeLeft));
+			return dateFormat.format(new Date(timeLeft + TIMEZONE_OFFSET));
 
 		} else {
 			SimpleDateFormat dateFormat = new SimpleDateFormat(
 					board.preferences.getString(BOARD_CLOCK_MILLIS_FORMAT));
-			return dateFormat.format(new Date(timeLeft));
+			return dateFormat.format(new Date(timeLeft + TIMEZONE_OFFSET));
 		}
 	}
 
