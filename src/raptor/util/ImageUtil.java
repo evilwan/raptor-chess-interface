@@ -1,4 +1,4 @@
-package util;
+package raptor.util;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -8,8 +8,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.RGB;
 
-import raptor.gui.board.Background;
-import raptor.gui.board.Set;
+import raptor.swt.chess.ChessSquareBackground;
+import raptor.swt.chess.ChessSet;
 
 public class ImageUtil {
 
@@ -23,7 +23,7 @@ public class ImageUtil {
 	public static void removeBlackness(String setName) {
 		long startTine = System.currentTimeMillis();
 
-		String prefix = Set.SET_DIR + setName + "/";
+		String prefix = ChessSet.SET_DIR + setName + "/";
 		System.out.println("Removing blackness from set " + setName);
 
 		String[] fileNames = new File(prefix).list(new FilenameFilter() {
@@ -34,10 +34,10 @@ public class ImageUtil {
 		String suffix = fileNames[0].substring(fileNames[0].lastIndexOf('.'),
 				fileNames[0].length());
 
-		ImageData[] images = new ImageData[Set.PIECE_TO_NAME.length];
+		ImageData[] images = new ImageData[ChessSet.PIECE_TO_NAME.length];
 
-		for (int j = 1; j < Set.PIECE_TO_NAME.length; j++) {
-			String fileName = prefix + Set.PIECE_TO_NAME[j] + suffix;
+		for (int j = 1; j < ChessSet.PIECE_TO_NAME.length; j++) {
+			String fileName = prefix + ChessSet.PIECE_TO_NAME[j] + suffix;
 
 			System.out.println("Operating on " + fileName);
 			for (int i = 1; i < 35; i++) {
@@ -52,7 +52,7 @@ public class ImageUtil {
 	}
 
 	public static void makeAllSets100x100PgnTransparent() {
-		File setsDir = new File(Set.SET_DIR);
+		File setsDir = new File(ChessSet.SET_DIR);
 		File[] dirs = setsDir.listFiles(new FilenameFilter() {
 			public boolean accept(File arg0, String arg1) {
 				return !arg1.startsWith(".")
@@ -64,7 +64,7 @@ public class ImageUtil {
 			String setName = dirs[i].getName();
 			long startTine = System.currentTimeMillis();
 
-			String prefix = Set.SET_DIR + setName + "/";
+			String prefix = ChessSet.SET_DIR + setName + "/";
 			System.out.println("Processing Chess Set" + prefix);
 
 			String[] fileNames = new File(prefix).list(new FilenameFilter() {
@@ -75,10 +75,10 @@ public class ImageUtil {
 			String suffix = fileNames[0].substring(fileNames[0]
 					.lastIndexOf('.'), fileNames[0].length());
 
-			ImageData[] images = new ImageData[Set.PIECE_TO_NAME.length];
+			ImageData[] images = new ImageData[ChessSet.PIECE_TO_NAME.length];
 
-			for (int j = 1; j < Set.PIECE_TO_NAME.length; j++) {
-				String fileName = prefix + Set.PIECE_TO_NAME[j] + suffix;
+			for (int j = 1; j < ChessSet.PIECE_TO_NAME.length; j++) {
+				String fileName = prefix + ChessSet.PIECE_TO_NAME[j] + suffix;
 				images[j] = new ImageData(fileName);
 
 				if (suffix.equalsIgnoreCase(".bmp")) {
@@ -97,11 +97,11 @@ public class ImageUtil {
 			if (!suffix.equalsIgnoreCase(".png")
 					|| (images[1].width != 100 && images[1].height != 100)) {
 				for (int j = 1; j < images.length; j++) {
-					File oldFile = new File(prefix + Set.PIECE_TO_NAME[j]
+					File oldFile = new File(prefix + ChessSet.PIECE_TO_NAME[j]
 							+ suffix);
 					oldFile.delete();
 
-					String fileName = prefix + "" + Set.PIECE_TO_NAME[j]
+					String fileName = prefix + "" + ChessSet.PIECE_TO_NAME[j]
 							+ ".png";
 					ImageLoader imageLoader = new ImageLoader();
 					imageLoader.data = new ImageData[] { images[j].scaledTo(
@@ -117,7 +117,7 @@ public class ImageUtil {
 	}
 
 	public static void makeAllSquares100x100Pgn() {
-		File backgroundDir = new File(Background.BACKGROUND_DIR);
+		File backgroundDir = new File(ChessSquareBackground.BACKGROUND_DIR);
 		File[] dirs = backgroundDir.listFiles(new FilenameFilter() {
 			public boolean accept(File arg0, String arg1) {
 				return !arg1.startsWith(".")
@@ -127,7 +127,7 @@ public class ImageUtil {
 		});
 
 		for (int i = 0; i < dirs.length; i++) {
-			String prefix = Background.BACKGROUND_DIR + dirs[i].getName() + "/";
+			String prefix = ChessSquareBackground.BACKGROUND_DIR + dirs[i].getName() + "/";
 			System.err.println("Processing Square Background " + prefix);
 
 			String[] fileNames = new File(prefix).list(new FilenameFilter() {

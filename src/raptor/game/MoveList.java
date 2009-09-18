@@ -4,8 +4,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MoveList implements GameConstants {
-	private Move[] moves = new Move[MAX_HALF_MOVES_IN_GAME];
+	private Move[] moves;
 	private int size = 0;
+	
+	public MoveList() {
+	   this(MAX_HALF_MOVES_IN_GAME);	
+	}
+	
+	public MoveList(int maxSize) {
+		moves = new Move[maxSize];
+	}
+	
+	public MoveList deepCopy() {
+		MoveList result = new MoveList();
+		for (int i = 0; i < moves.length; i++) {
+			result.moves[i] = moves[i];
+		}
+		return result;
+	}
 
 	public void append(Move move) {
 		moves[size++] = move;

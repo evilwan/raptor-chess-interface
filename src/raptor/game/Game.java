@@ -19,33 +19,37 @@ import static raptor.game.util.GameUtils.rankFileToSquare;
 
 import java.util.Arrays;
 
+import raptor.game.SanUtil.SanValidations;
+import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
 
 public class Game implements GameConstants {
 
-	public static final int BLITZ = 0;
-	public static final int LIGHTNING = 1;
-	public static final int STANDARD = 2;
-	public static final int WILD = 3;
-	public static final int FISCHER_RANDOM = 4;
-	public static final int SUCIDE = 5;
-	public static final int ATOMIC = 6;
-	public static final int LOSERS = 7;
-	public static final int CRAZY_HOUSE = 8;
-	public static final int BUGHOUSE = 9;
-
 	public static final int ACTIVE_STATE = 2;
-	public static final int INACTIVE_STATE = 4;
-	public static final int EXAMINING_STATE = 8;
-	public static final int PLAYING_STATE = 16;
-	public static final int UNTIMED_STTE = 32;
+	public static final int ATOMIC = 6;
+	public static final int BLACK_WON_RESULT = 2;
+	public static final int BLITZ = 0;
+	public static final int BUGHOUSE = 9;
+	public static final int CRAZY_HOUSE = 8;
+
+	public static final int DRAW_RESULT = 3;
 	public static final int DROPPABLE_STATE = 64;
+	public static final int EXAMINING_STATE = 8;
+	public static final int FISCHER_RANDOM = 4;
 
 	public static final int IN_PROGRESS_RESULT = 0;
-	public static final int WHTIE_WON_RESULT = 1;
-	public static final int BLACK_WON_RESULT = 2;
-	public static final int DRAW_RESULT = 3;
+	public static final int INACTIVE_STATE = 4;
+	public static final int IS_CLOCK_TICKING_STATE = 128;
+	public static final int LIGHTNING = 1;
+	public static final int LOSERS = 7;
+	public static final int PLAYING_STATE = 16;
+	public static final int STANDARD = 2;
+
+	public static final int SUCIDE = 5;
 	public static final int UNDETERMINED_RESULT = 4;
+	public static final int UNTIMED_STATE = 32;
+	public static final int WHTIE_WON_RESULT = 1;
+	public static final int WILD = 3;
 
 	/**
 	 * Currently places captures ahead of non captures.
@@ -58,46 +62,49 @@ public class Game implements GameConstants {
 		}
 	}
 
-	protected String id;
-	protected int state;
-	protected int result;
-
-	protected int type;
-	protected String whiteName;
-	protected String blackName;
-	protected String whiteRating;
-	protected String blackRating;
-	protected String typeDescription;
-	protected long initialTimeMillis;
-	protected long initialIncMillis;
-	protected long whiteTimeMillis;
-	protected long blackTimeMillis;
-	protected long whiteLagMillis;
 	protected long blackLagMillis;
-	protected long startTime;
-	protected String site;
-	protected String event;
+	protected String blackName;
+	protected String blackRating;
+	protected long blackTimeMillis;
 
-	protected String resultDescription;
-	protected MoveList moves = new MoveList();
-	protected int halfMoveCount;
-	protected long[] colorBB = new long[2];
-	protected long[][] pieceBB = new long[2][7];
 	protected int[] board = new int[64];
-	protected long occupiedBB;
-	protected long emptyBB;
-	protected long notColorToMoveBB;
 	protected int[] castling = new int[2];
-	protected int initialEpSquare = EMPTY_SQUARE;
-	protected int epSquare = EMPTY_SQUARE;
+	protected long[] colorBB = new long[2];
 	protected int colorToMove;
-	protected int fiftyMoveCount;
-	protected int[][] pieceCounts = new int[2][7];
 	protected int[][] dropCounts = new int[2][7];
-	protected long zobristPositionHash;
+	protected long emptyBB;
+	protected int epSquare = EMPTY_SQUARE;
+	protected String event;
+	protected int fiftyMoveCount;
+	protected String gameDescription;
+	protected int halfMoveCount;
+	protected String id;
+	protected long initialBlackIncMillis;
+	protected long initialBlackTimeMillis;
+	protected int initialEpSquare = EMPTY_SQUARE;
+	protected long initialWhiteIncMillis;
+	protected long initialWhiteTimeMillis;
+
+	protected boolean isSettingMoveSan = false;
+	protected int[] moveRepHash = new int[MOVE_REP_CACHE_SIZE];
+	protected MoveList moves = new MoveList();
+	protected long notColorToMoveBB;
+	protected long occupiedBB;
+	protected long[][] pieceBB = new long[2][7];
+	protected int[][] pieceCounts = new int[2][7];
+	protected int result;
+	protected String resultDescription;
+	protected String site;
+	protected long startTime;
+	protected int state;
+	protected int type;
+	protected long whiteLagMillis;
+	protected String whiteName;
+	protected String whiteRating;
+	protected long whiteTimeMillis;
 	protected long zobristGameHash;
 
-	protected int[] moveRepHash = new int[MOVE_REP_CACHE_SIZE];
+	protected long zobristPositionHash;
 
 	public boolean areBothKingsOnBoard() {
 		return getPieceBB(WHITE, KING) != 0L && getPieceBB(BLACK, KING) != 0L;
@@ -107,9 +114,66 @@ public class Game implements GameConstants {
 		moveRepHash[getRepHash()]--;
 	}
 
+	public Game deepCopy(boolean ignoreHashes) {
+		Game result = new Game();
+		result.id = id;
+		result.state = state;
+		result.type = type;
+		result.whiteName = whiteName;
+		result.blackName = blackName;
+		result.whiteRating = whiteRating;
+		result.blackRating = blackRating;
+		result.gameDescription = gameDescription;
+		result.initialWhiteTimeMillis = initialWhiteTimeMillis;
+		result.initialBlackTimeMillis = initialBlackTimeMillis;
+		result.initialWhiteIncMillis = initialWhiteIncMillis;
+		result.initialBlackIncMillis = initialBlackIncMillis;
+		result.whiteTimeMillis = whiteTimeMillis;
+		result.blackTimeMillis = blackTimeMillis;
+		result.whiteLagMillis = whiteLagMillis;
+		result.blackLagMillis = blackLagMillis;
+		result.startTime = startTime;
+		result.site = site;
+		result.event = event;
+		result.resultDescription = resultDescription;
+		result.moves = moves.deepCopy();
+		result.halfMoveCount = halfMoveCount;
+		System.arraycopy(colorBB, 0, result.colorBB, 0, result.colorBB.length);
+		for (int i = 0; i < pieceBB.length; i++) {
+			System.arraycopy(pieceBB[i], 0, result.pieceBB[i], 0,
+					pieceBB[i].length);
+		}
+		System.arraycopy(board, 0, result.board, 0, result.board.length);
+		result.occupiedBB = occupiedBB;
+		result.emptyBB = emptyBB;
+		result.notColorToMoveBB = notColorToMoveBB;
+		System.arraycopy(castling, 0, result.castling, 0, castling.length);
+		result.initialEpSquare = initialEpSquare;
+		result.epSquare = epSquare;
+		result.colorToMove = colorToMove;
+		result.fiftyMoveCount = fiftyMoveCount;
+		for (int i = 0; i < pieceCounts.length; i++) {
+			System.arraycopy(pieceCounts[i], 0, result.pieceCounts[i], 0,
+					pieceCounts[i].length);
+		}
+		for (int i = 0; i < dropCounts.length; i++) {
+			System.arraycopy(dropCounts[i], 0, result.dropCounts[i], 0,
+					dropCounts[i].length);
+		}
+		result.zobristPositionHash = zobristGameHash;
+		result.zobristGameHash = zobristGameHash;
+
+		if (!ignoreHashes) {
+			System.arraycopy(moveRepHash, 0, result.moveRepHash, 0,
+					moveRepHash.length);
+		}
+		return result;
+	}
+
 	public void forceMove(Move move) {
 		move.setLastCastleState(getCastling(getColorToMove()));
 
+		setSan(move);
 		switch (move.getMoveCharacteristic()) {
 		case Move.EN_PASSANT_CHARACTERISTIC:
 			makeEPMove(move);
@@ -485,6 +549,10 @@ public class Game implements GameConstants {
 		return fiftyMoveCount;
 	}
 
+	public String getGameDescription() {
+		return gameDescription;
+	}
+
 	public int getHalfMoveCount() {
 		return halfMoveCount;
 	}
@@ -493,16 +561,24 @@ public class Game implements GameConstants {
 		return id;
 	}
 
+	public long getInitialBlackIncMillis() {
+		return initialBlackIncMillis;
+	}
+
+	public long getInitialBlackTimeMillis() {
+		return initialBlackTimeMillis;
+	}
+
 	public int getInitialEpSquare() {
 		return initialEpSquare;
 	}
 
-	public long getInitialIncMillis() {
-		return initialIncMillis;
+	public long getInitialWhiteIncMillis() {
+		return initialWhiteIncMillis;
 	}
 
-	public long getInitialTimeMillis() {
-		return initialTimeMillis;
+	public long getInitialWhiteTimeMillis() {
+		return initialWhiteTimeMillis;
 	}
 
 	public PriorityMoveList getLegalMoves() {
@@ -614,10 +690,6 @@ public class Game implements GameConstants {
 		return type;
 	}
 
-	public String getTypeDescription() {
-		return typeDescription;
-	}
-
 	public long getWhiteLagMillis() {
 		return whiteLagMillis;
 	}
@@ -677,6 +749,10 @@ public class Game implements GameConstants {
 	public boolean isLegalPosition() {
 		return areBothKingsOnBoard()
 				&& !isInCheck(getOppositeColor(getColorToMove()));
+	}
+
+	public boolean isSettingMoveSan() {
+		return isSettingMoveSan;
 	}
 
 	public boolean isStalemate() {
@@ -741,6 +817,10 @@ public class Game implements GameConstants {
 		setEpSquare(EMPTY_SQUARE);
 	}
 
+	public Move makeDropMove(int piece, int destination) {
+		throw new IllegalArgumentException("Not supported in classical");
+	}
+
 	public void makeEPMove(Move move) {
 		long fromBB = getBitmap(move.getFrom());
 		long toBB = getBitmap(move.getTo());
@@ -768,7 +848,7 @@ public class Game implements GameConstants {
 		setEpSquare(EMPTY_SQUARE);
 	}
 
-	public Move makeLanMove(String lan) {
+	public Move makeLanMove(String lan) throws IllegalArgumentException {
 		Move move = null;
 
 		Move[] legals = getLegalMoves().asArray();
@@ -881,6 +961,239 @@ public class Game implements GameConstants {
 		}
 
 		setEpSquare(move.getEpSquare());
+	}
+
+	public Move makeSanMove(String shortAlgebraic)
+			throws IllegalArgumentException {
+		SanValidations validations = SanUtil.getValidations(shortAlgebraic);
+
+		// Examples:
+		// e4 (a pawn move to e4).
+		// e8=Q (a pawn promotion without a capture).
+		// de=Q (a pawn promotion from a capture).
+		// ed (e pawn captures d pawn).
+		// Ne3 (a Knight moving to e3).
+		// N5e3 (disambiguity for two knights which can move to e3, the 5th rank
+		// knight is the one that should move).
+		// Nfe3 (disambiguity for two knights which can move to e3, the knight
+		// on the f file is the one that should move).
+		// Nf1e3 (disambiguity for three knights which cam move to e3, the f1
+		// knight is the one that should move).
+
+		if (!validations.isValidStrict()) {
+			throw new IllegalArgumentException("Invalid short algebraic: "
+					+ shortAlgebraic);
+		}
+
+		Move[] pseudoLegals = getPseudoLegalMoves().asArray();
+
+		int candidatePromotedPiece = EMPTY;
+
+		Move result = null;
+
+		if (validations.isCastleKSideStrict()) {
+			for (Move move : pseudoLegals) {
+				if ((move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
+					result = move;
+					break;
+				}
+			}
+		} else if (validations.isCastleQSideStrict()) {
+			for (Move move : pseudoLegals) {
+				if ((move.getMoveCharacteristic() & Move.QUEENSIDE_CASTLING_CHARACTERISTIC) != 0) {
+					result = move;
+					break;
+				}
+			}
+		} else {
+			MoveList matches = new MoveList(10);
+			if (validations.isPromotion()) {
+				char pieceChar = validations.getStrictSan().charAt(
+						validations.getStrictSan().length() - 1);
+				candidatePromotedPiece = SanUtil.sanToPiece(pieceChar);
+			}
+
+			if (validations.isPawnMove()) {
+				int candidatePieceMoving = PAWN;
+				if (validations.isEpOrAmbigPxStrict()
+						|| validations.isEpOrAmbigPxPromotionStrict()) {
+
+					int end = GameUtils.rankFileToSquare(
+							GameConstants.RANK_FROM_SAN.indexOf(validations
+									.getStrictSan().charAt(2)),
+							GameConstants.FILE_FROM_SAN.indexOf(validations
+									.getStrictSan().charAt(1)));
+
+					int startRank = GameUtils.getRank(end)
+							+ (colorToMove == WHITE ? -1 : +1);
+
+					if (startRank > 7 || startRank < 0) {
+						throw new IllegalArgumentException(
+								"Invalid short algebraic: " + shortAlgebraic);
+					}
+
+					int start = GameUtils.rankFileToSquare(startRank,
+							validations.getStrictSan().charAt(0));
+
+					for (Move move : pseudoLegals) {
+						if (move.getPiece() == candidatePieceMoving
+								&& move.isCapture()
+								&& move.getFrom() == start
+								&& move.getTo() == end
+								&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+							matches.append(move);
+						}
+					}
+				} else {
+					// handle captures
+					if (validations.isPxStrict()
+							|| validations.isPxPPromotionStrict()) {
+						int startFile = GameConstants.FILE_FROM_SAN.indexOf(0);
+						int endFile = GameConstants.FILE_FROM_SAN.indexOf(1);
+
+						for (Move move : pseudoLegals) {
+							if (move.getPiece() == candidatePieceMoving
+									&& move.getFrom() == startFile
+									&& move.getTo() == endFile
+									&& move.isCapture()
+									&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+								matches.append(move);
+							}
+						}
+					}
+					// handle non captures.
+					else {
+						int end = GameUtils.rankFileToSquare(
+								GameConstants.RANK_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(1)),
+								GameConstants.FILE_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(0)));
+
+						for (Move move : pseudoLegals) {
+							if (move.getPiece() == candidatePieceMoving
+									&& !move.isCapture()
+									&& move.getTo() == end
+									&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+								matches.append(move);
+							}
+						}
+					}
+				}
+
+			} else {
+				int candidatePieceMoving = SanUtil.sanToPiece(validations
+						.getStrictSan().charAt(0));
+				int end = GameUtils.rankFileToSquare(
+						GameConstants.RANK_FROM_SAN
+								.indexOf(validations.getStrictSan()
+										.charAt(
+												validations.getStrictSan()
+														.length() - 1)),
+						GameConstants.FILE_FROM_SAN
+								.indexOf(validations.getStrictSan()
+										.charAt(
+												validations.getStrictSan()
+														.length() - 2)));
+
+				if (validations.isDisambigPieceRankStrict()) {
+					int startRank = RANK_FROM_SAN.indexOf(validations
+							.getStrictSan().charAt(1));
+					for (Move move : pseudoLegals) {
+						if (move.getPiece() == candidatePieceMoving
+								&& move.getTo() == end
+								&& GameUtils.getRank(move.getFrom()) == startRank) {
+							matches.append(move);
+						}
+					}
+				} else if (validations.isDisambigPieceFileStrict()) {
+					int startFile = FILE_FROM_SAN.indexOf(validations
+							.getStrictSan().charAt(1));
+					for (Move move : pseudoLegals) {
+						if (move.getPiece() == candidatePieceMoving
+								&& move.getTo() == end
+								&& GameUtils.getFile(move.getFrom()) == startFile) {
+							matches.append(move);
+						}
+					}
+				} else if (validations.isDisambigPieceRankFileStrict()) {
+					int startSquare = GameUtils.rankFileToSquare(
+							GameConstants.RANK_FROM_SAN.indexOf(validations
+									.getStrictSan().charAt(2)),
+							GameConstants.FILE_FROM_SAN.indexOf(validations
+									.getStrictSan().charAt(1)));
+					FILE_FROM_SAN.indexOf(validations.getStrictSan().charAt(1));
+					for (Move move : pseudoLegals) {
+						if (move.getPiece() == candidatePieceMoving
+								&& move.getTo() == end
+								&& move.getFrom() == startSquare) {
+							matches.append(move);
+						}
+					}
+				} else {
+					for (Move move : pseudoLegals) {
+						if (move.getPiece() == candidatePieceMoving
+								&& move.getTo() == end) {
+							matches.append(move);
+						}
+					}
+				}
+			}
+
+			if (matches.getSize() == 0) {
+				throw new IllegalArgumentException("Invalid move"
+						+ shortAlgebraic);
+			} else if (matches.getSize() == 1) {
+				result = matches.get(0);
+			} else {
+				// now do legality checking on whats left.
+				int kingSquare = GameUtils.bitscanForward(getPieceBB(
+						colorToMove, KING));
+				int cachedColorToMove = colorToMove;
+				int matchesCount = 0;
+
+				if (kingSquare != 0) { // Now trim illegals
+					for (int i = 0; i < matches.getSize(); i++) {
+						Move current = matches.get(i);
+						synchronized (this) {
+							try {
+								forceMove(current);
+								if (current.getPiece() == KING) {
+									int newKingCoordinates = GameUtils
+											.bitscanForward(getPieceBB(
+													cachedColorToMove, KING));
+									if (!isInCheck(cachedColorToMove, GameUtils
+											.getBitmap(newKingCoordinates))) {
+										result = current;
+										matchesCount++;
+									}
+								} else {
+									if (!isInCheck(cachedColorToMove,
+											kingSquare)) {
+										result = current;
+										matchesCount++;
+									}
+								}
+								rollback();
+							} catch (IllegalArgumentException ie) {
+							}
+						}
+					}
+				}
+
+				if (matchesCount == 0) {
+					throw new IllegalArgumentException("Invalid move"
+							+ shortAlgebraic);
+				} else if (matchesCount > 1) {
+					throw new IllegalArgumentException("Ambiguous move "
+							+ shortAlgebraic);
+
+				}
+			}
+		}
+
+		result.setSan(shortAlgebraic);
+		forceMove(result);
+		return result;
 	}
 
 	public boolean move(Move move) {
@@ -1118,6 +1431,10 @@ public class Game implements GameConstants {
 		this.fiftyMoveCount = fiftyMoveCount;
 	}
 
+	public void setGameDescription(String gameDescription) {
+		this.gameDescription = gameDescription;
+	}
+
 	public void setHalfMoveCount(int halfMoveCount) {
 		this.halfMoveCount = halfMoveCount;
 	}
@@ -1126,16 +1443,24 @@ public class Game implements GameConstants {
 		this.id = id;
 	}
 
+	public void setInitialBlackIncMillis(long initialBlackIncMillis) {
+		this.initialBlackIncMillis = initialBlackIncMillis;
+	}
+
+	public void setInitialBlackTimeMillis(long initialBlackTimeMillis) {
+		this.initialBlackTimeMillis = initialBlackTimeMillis;
+	}
+
 	public void setInitialEpSquare(int initialEpSquare) {
 		this.initialEpSquare = initialEpSquare;
 	}
 
-	public void setInitialIncMillis(long initialIncMillis) {
-		this.initialIncMillis = initialIncMillis;
+	public void setInitialWhiteIncMillis(long initialWhiteIncMillis) {
+		this.initialWhiteIncMillis = initialWhiteIncMillis;
 	}
 
-	public void setInitialTimeMillis(long initialTimeMillis) {
-		this.initialTimeMillis = initialTimeMillis;
+	public void setInitialWhiteTimeMillis(long initialWhiteTimeMillis) {
+		this.initialWhiteTimeMillis = initialWhiteTimeMillis;
 	}
 
 	public void setNotColorToMoveBB(long notColorToMoveBB) {
@@ -1166,6 +1491,142 @@ public class Game implements GameConstants {
 		this.resultDescription = resultDescription;
 	}
 
+	/**
+	 * Should be called before the move is made to update the san field.
+	 */
+	protected void setSan(Move move) {
+		if (isSettingMoveSan() && move.getSan() == null) {
+			// TO DO: possible add + or ++ for check/checkmate
+			String shortAlgebraic = null;
+			
+			if ( (move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
+				shortAlgebraic = "O-O";
+			} else if ( (move.getMoveCharacteristic() & Move.QUEENSIDE_CASTLING_CHARACTERISTIC) != 0) {
+				shortAlgebraic = "O-O-O";
+			} else if (move.getPiece() == PAWN && (move.getMoveCharacteristic() & Move.EN_PASSANT_CHARACTERISTIC) != 0) // e.p.
+			// is
+			// optional but
+			// the x is
+			// required.
+			// (pawn eps
+			// are never
+			// unambiguous)
+			{
+				shortAlgebraic = SanUtil.squareToFileSan(move.getFrom())  + "x"
+						+ SanUtil.squareToSan(move.getTo());
+			} else if (move.getPiece() == PAWN && move.isCapture()) // Possible
+			// formats ed
+			// ed5 edQ
+			// (pawn captures
+			// can be
+			// ambiguous)
+			{
+				int oppositeColorToMove = GameUtils.getOppositeColor(colorToMove);
+				long fromBB = getPieceBB(getColorToMove(), PAWN);
+
+				int movesFound = 0;
+				while (fromBB != 0) {
+					int fromSquare = bitscanForward(fromBB);
+					if ((GameUtils.getBitmap(move.getTo()) & 
+			                 GameUtils.pawnCapture(colorToMove, getPieceBB(colorToMove,PAWN), getColorBB(oppositeColorToMove))) != 0) {
+						movesFound++;
+					}
+					fromBB = bitscanClear(fromBB);
+				}
+
+				if (movesFound > 1) {
+					shortAlgebraic = SanUtil.squareToFileSan(move.getFrom())
+							+ "x"
+							+ SanUtil.squareToSan(move.getTo())
+							+ (move.isPromotion() ? "="
+									+ PIECE_TO_SAN.charAt(move.getPiecePromotedTo()) : "");
+				} else {
+					shortAlgebraic = SanUtil.squareToFileSan(move.getFrom())
+					+ "x"
+					+ SanUtil.squareToFileSan(move.getTo())
+					+ (move.isPromotion() ? "="
+							+ PIECE_TO_SAN.charAt(move.getPiecePromotedTo()) : "");
+				}
+			} else if (move.getPiece() == PAWN) // e4 (pawn moves are never
+			// ambiguous)
+			{
+				shortAlgebraic = SanUtil.squareToSan(move.getTo())
+						+ (move.isPromotion() ? "="
+								+ PIECE_TO_SAN.charAt(move.getPiecePromotedTo()) : "");
+			} else {
+			
+				shortAlgebraic = "" + PIECE_TO_SAN.charAt(move.getPiece());
+						
+				long fromBB = getPieceBB(getColorToMove(), PAWN);
+				long toBB = GameUtils.getBitmap(move.getTo());
+
+				int moveFromFile = GameUtils.getFile(move.getTo());
+				int moveFromRank = GameUtils.getRank(move.getTo());
+				
+				int sameFilesFound = 0;
+				int sameRanksFound = 0;
+				
+				if (move.getPiece() != KING) {
+					while (fromBB != 0) {
+						int fromSquare = bitscanForward(fromBB);
+						long resultBB = 0;
+
+						switch (move.getPiece()) {
+						case KNIGHT:
+							resultBB = GameUtils.knightMove(move.getTo())
+									& toBB;
+							break;
+						case BISHOP:
+							resultBB = diagonalMove(fromSquare, getEmptyBB(),
+									getOccupiedBB())
+									& getNotColorToMoveBB() & toBB;
+							break;
+						case ROOK:
+							resultBB = orthogonalMove(fromSquare, getEmptyBB(),
+									getOccupiedBB())
+									& getNotColorToMoveBB() & toBB;
+							break;
+						case QUEEN:
+							resultBB = orthogonalMove(fromSquare, getEmptyBB(),
+									getOccupiedBB())
+									& getNotColorToMoveBB()
+									& toBB
+									& diagonalMove(fromSquare, getEmptyBB(),
+											getOccupiedBB())
+									& getNotColorToMoveBB();
+							break;
+						}
+
+						if (resultBB != 0) {
+							int resultSquare = bitscanForward(resultBB);
+							if (GameUtils.getFile(resultSquare) == moveFromFile) {
+								sameFilesFound++;
+							}
+							if (GameUtils.getRank(resultSquare) == moveFromRank) {
+								sameRanksFound++;
+							}
+						}
+						fromBB = bitscanClear(fromBB);
+					}
+				}
+				
+				if (sameFilesFound > 1) {
+					shortAlgebraic += SanUtil.squareToFileSan(move.getFrom());
+				}
+				if (sameRanksFound > 1) {
+					shortAlgebraic += SanUtil.squareToRankSan(move.getFrom());
+				}
+				shortAlgebraic += (move.isCapture() ? "x" : "") + SanUtil.squareToSan(move.getTo());
+			}
+			
+			move.setSan(shortAlgebraic);
+		}
+	}
+
+	public void setSettingMoveSan(boolean isSettingMoveSan) {
+		this.isSettingMoveSan = isSettingMoveSan;
+	}
+
 	public void setSite(String site) {
 		this.site = site;
 	}
@@ -1180,10 +1641,6 @@ public class Game implements GameConstants {
 
 	public void setType(int type) {
 		this.type = type;
-	}
-
-	public void setTypeDescription(String typeDescription) {
-		this.typeDescription = typeDescription;
 	}
 
 	public void setWhiteLagMillis(long whiteLagMillis) {

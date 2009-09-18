@@ -382,6 +382,14 @@ public class GameUtils implements GameConstants {
 		}
 	}
 
+	public static int getFile(int square) {
+		return square % 8;
+	}
+
+	public static int getRank(int square) {
+		return square / 8;
+	}
+
 	public static final boolean isInBounds(int rank, int file) {
 		return rank >= 0 && rank <= 7 && file >= 0 && file <= 7;
 	}

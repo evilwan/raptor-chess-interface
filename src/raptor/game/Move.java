@@ -21,6 +21,8 @@ public class Move implements GameConstants {
 	protected byte moveCharacteristic;
 	protected byte lastCastleState;
 	protected byte previous50MoveCount;
+	
+	protected String san;
 
 	public Move(int from, int to, int piece, int color, int capture) {
 		super();
@@ -171,9 +173,17 @@ public class Move implements GameConstants {
 	public void setTo(int to) {
 		this.to = (byte) to;
 	}
+	
+	public String getSan() {
+		return san;
+	}
+
+	public void setSan(String san) {
+		this.san = san;
+	}
 
 	@Override
 	public String toString() {
-		return getLan();
+		return san != null ? san : getLan();
 	}
 }

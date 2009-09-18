@@ -8,9 +8,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import raptor.gui.board.Background;
-import raptor.gui.board.Set;
-import raptor.service.SWTService;
+import raptor.App;
+import raptor.swt.chess.ChessBoardResources;
+import raptor.swt.chess.Constants;
 
 class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 
@@ -45,7 +45,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 	public ChessBoardGraphicsPage() {
 		// Use the "grid" layout
 		super(GRID);
-		setPreferenceStore(SWTService.getInstance().getStore());
+		setPreferenceStore(App.getInstance().getPreferences());
 		setTitle("Chess Board Graphics");
 	}
 
@@ -57,7 +57,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		Composite needToLearnLayouts = new Composite(parent, SWT.NONE);
 		needToLearnLayouts.setLayout(new GridLayout(1, false));
 
-		String[] sets = Set.getChessSetNames();
+		String[] sets = ChessBoardResources.getChessSetNames();
 		String[][] setNameValues = new String[sets.length][2];
 
 		for (int i = 0; i < sets.length; i++) {
@@ -67,8 +67,8 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		Composite setComposite = new Composite(needToLearnLayouts, SWT.BORDER
 				| SWT.BORDER_SOLID);
 		ComboFieldEditor setFieldEditor = new ComboFieldEditor(
-				SWTService.BOARD_SET, "Chess Set", setNameValues,
-				setComposite) {
+				PreferenceKeys.BOARD_CHESS_SET_NAME, "Chess Set",
+				setNameValues, setComposite) {
 
 			@Override
 			protected void fireValueChanged(String property, Object oldValue,
@@ -85,9 +85,10 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		setCompositeII.setLayout(new GridLayout(1, false));
 		setWhiteImagesComposite = new ImageComposite(setCompositeII, 6);
 		setBlackImagesComposite = new ImageComposite(setCompositeII, 6);
-		updateSetImages(SWTService.getInstance().getChessSet().getName());
+		updateSetImages(App.getInstance().getPreferences().getString(
+				PreferenceKeys.BOARD_CHESS_SET_NAME));
 
-		String[] backgrounds = Background.getBackgrounds();
+		String[] backgrounds = ChessBoardResources.getSquareBackgroundNames();
 		String[][] backgroundNameValues = new String[backgrounds.length][2];
 		for (int i = 0; i < backgrounds.length; i++) {
 			backgroundNameValues[i][0] = backgrounds[i];
@@ -100,8 +101,8 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 
 		backgroundComposite.setLayout(backgroundGridLayout);
 		ComboFieldEditor backgroundFieldEditor = new ComboFieldEditor(
-				SWTService.BOARD_BACKGROUND, "Chess Board Square",
-				backgroundNameValues, backgroundComposite) {
+				PreferenceKeys.BOARD_SQUARE_BACKGROUND_NAME,
+				"Chess Board Square", backgroundNameValues, backgroundComposite) {
 			@Override
 			protected void fireValueChanged(String property, Object oldValue,
 					Object newValue) {
@@ -111,34 +112,49 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		};
 		addField(backgroundFieldEditor);
 		backgroundImageComposite = new ImageComposite(backgroundComposite, 2);
-		updateBackgroundImages(SWTService.getInstance().getStore().getString(
-				SWTService.BOARD_BACKGROUND));
+		updateBackgroundImages(App.getInstance().getPreferences().getString(
+				PreferenceKeys.BOARD_SQUARE_BACKGROUND_NAME));
 
 	}
 
 	void updateBackgroundImages(String backgroundName) {
-		backgroundImageComposite.setImages(Background
-				.getImageMolds(backgroundName));
+		backgroundImageComposite.setImages(new Image[] {
+				ChessBoardResources.getSquareBackgroundMold(backgroundName,
+						false),
+				ChessBoardResources.getSquareBackgroundMold(backgroundName,
+						true) });
 	}
 
 	void updateSetImages(String setName) {
 		Image[] whiteImages = new Image[6];
 		Image[] blackImages = new Image[6];
-		Image[] stockImages = Set.getImageMolds((setName));
+		;
 
-		whiteImages[0] = stockImages[Set.WP];
-		whiteImages[1] = stockImages[Set.WN];
-		whiteImages[2] = stockImages[Set.WB];
-		whiteImages[3] = stockImages[Set.WR];
-		whiteImages[4] = stockImages[Set.WQ];
-		whiteImages[5] = stockImages[Set.WK];
+		whiteImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.WP);
+		whiteImages[1] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.WN);
+		whiteImages[2] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.WB);
+		whiteImages[3] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.WR);
+		whiteImages[4] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.WQ);
+		whiteImages[5] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.WK);
 
-		blackImages[0] = stockImages[Set.BP];
-		blackImages[1] = stockImages[Set.BN];
-		blackImages[2] = stockImages[Set.BB];
-		blackImages[3] = stockImages[Set.BR];
-		blackImages[4] = stockImages[Set.BQ];
-		blackImages[5] = stockImages[Set.BK];
+		blackImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.BP);
+		blackImages[1] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.BN);
+		blackImages[2] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.BB);
+		blackImages[3] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.BR);
+		blackImages[4] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.BQ);
+		blackImages[5] = ChessBoardResources.getChessPieceImageMold(setName,
+				Constants.BK);
 
 		setWhiteImagesComposite.setImages(whiteImages);
 		setBlackImagesComposite.setImages(blackImages);
