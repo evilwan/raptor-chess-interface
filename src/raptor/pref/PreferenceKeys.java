@@ -23,7 +23,8 @@ public interface PreferenceKeys {
 	public static final String BOARD_INACTIVE_CLOCK_COLOR = "board-inactive-clock-color";
 	public static final String BOARD_LAG_COLOR = "board-lag-color";
 	public static final String BOARD_PLAYER_NAME_COLOR = "board-player-name-color";
-	public static final String BOARD_PIECE_JAIL_COLOR = "board-piece-jail-color";
+	public static final String BOARD_PIECE_JAIL_LABEL_COLOR = "board-piece-jail-label-color";
+	public static final String BOARD_PIECE_JAIL_BACKGROUND_COLOR = "board-piece-jail-background-color";
 	public static final String BOARD_OPENING_DESC_COLOR = "board-opening-desc-color";
 	public static final String BOARD_GAME_DESCRIPTION_COLOR = "board-game-description-color";
 	public static final String BOARD_PREMOVES_COLOR = "board-premoves-color";

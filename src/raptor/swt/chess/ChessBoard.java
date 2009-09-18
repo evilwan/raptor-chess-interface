@@ -56,6 +56,7 @@ public class ChessBoard extends Composite implements Constants {
 
 	protected Game game;
 	protected boolean isWhiteOnTop = false;
+	protected boolean isWhitePieceJailOnTop = true;
 
 	protected Label statusLabel;
 	protected ChessBoardLayout layout;
@@ -251,6 +252,8 @@ public class ChessBoard extends Composite implements Constants {
 				this, Constants.WR_PIECE_JAIL_SQUARE);
 		pieceJailSquares[Constants.WQ] = new LabeledChessSquare(boardPanel,
 				this, Constants.WQ_PIECE_JAIL_SQUARE);
+		pieceJailSquares[Constants.WK] = new LabeledChessSquare(boardPanel,
+				this, Constants.WK_PIECE_JAIL_SQUARE);
 
 		pieceJailSquares[Constants.BP] = new LabeledChessSquare(boardPanel,
 				this, Constants.BP_PIECE_JAIL_SQUARE);
@@ -262,6 +265,8 @@ public class ChessBoard extends Composite implements Constants {
 				this, Constants.BR_PIECE_JAIL_SQUARE);
 		pieceJailSquares[Constants.BQ] = new LabeledChessSquare(boardPanel,
 				this, Constants.BQ_PIECE_JAIL_SQUARE);
+		pieceJailSquares[Constants.BK] = new LabeledChessSquare(boardPanel,
+				this, Constants.WK_PIECE_JAIL_SQUARE);
 	}
 
 	// void initSquareLabels() {
@@ -377,6 +382,14 @@ public class ChessBoard extends Composite implements Constants {
 		this.isWhiteOnTop = isWhiteOnTop;
 	}
 
+	public void setWhitePieceJailOnTop(boolean isWhitePieceJailOnTop) {
+		this.isWhitePieceJailOnTop = isWhitePieceJailOnTop;
+	}
+
+	public boolean isWhitePieceJailOnTop() {
+		return this.isWhitePieceJailOnTop;
+	}
+
 	public void unhighlightAllSquares() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -411,6 +424,8 @@ public class ChessBoard extends Composite implements Constants {
 			if (pieceJailSquares[i] != null) {
 				pieceJailSquares[i].setForeground(preferences
 						.getColor(BOARD_HIGHLIGHT_COLOR));
+				pieceJailSquares[i].setBackground(preferences
+						.getColor(BOARD_PIECE_JAIL_BACKGROUND_COLOR));
 				pieceJailSquares[i].forceLayout();
 			}
 		}
@@ -538,38 +553,47 @@ public class ChessBoard extends Composite implements Constants {
 	public void addAutoPromoteRadioGroupToCoolbar() {
 
 		Composite composite = new Composite(getCoolbar(), SWT.NONE);
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.wrap = false;
-		rowLayout.pack = false;
-		rowLayout.justify = true;
-		rowLayout.type = SWT.HORIZONTAL;
-		rowLayout.marginLeft = 0;
-		rowLayout.marginTop = 5;
-		rowLayout.marginRight = 0;
-		rowLayout.marginBottom = 5;
-		rowLayout.spacing = 0;
-		composite.setLayout(rowLayout);
+		GridLayout gridLayout = new GridLayout(4, false);
+		gridLayout.marginLeft = 0;
+		gridLayout.marginTop = 0;
+		gridLayout.marginRight = 0;
+		gridLayout.marginBottom = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		composite.setLayout(gridLayout);
 
 		Button queenButton = new Button(composite, SWT.RADIO);
 		queenButton.setToolTipText("Set auto promote piece to a queen.");
-		queenButton.setImage(getResources().getChessPieceDragImage(WQ));
+		queenButton.setImage(getResources()
+				.getChessPieceIconImage("XBoard", BQ));
 		queenButton.setSelection(true);
 		getToolItemMap().put(AUTO_QUEEN, queenButton);
+		queenButton.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button knightButton = new Button(composite, SWT.RADIO);
 		knightButton.setToolTipText("Set auto promote piece to a knight.");
-		knightButton.setImage(getResources().getChessPieceDragImage(WN));
+		knightButton.setImage(getResources().getChessPieceIconImage("XBoard",
+				BN));
 		getToolItemMap().put(AUTO_KNIGHT, knightButton);
+		knightButton
+				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button rookButton = new Button(composite, SWT.RADIO);
 		rookButton.setToolTipText("Set auto promote piece to a rook.");
-		rookButton.setImage(getResources().getChessPieceDragImage(WR));
+		rookButton
+				.setImage(getResources().getChessPieceIconImage("XBoard", BR));
 		getToolItemMap().put(AUTO_ROOK, rookButton);
+		rookButton.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button bishopButton = new Button(composite, SWT.RADIO);
 		bishopButton.setToolTipText("Set auto promote piece to a bishop.");
-		bishopButton.setImage(getResources().getChessPieceDragImage(WB));
+		bishopButton.setImage(getResources().getChessPieceIconImage("XBoard",
+				BB));
 		getToolItemMap().put(AUTO_BISHOP, bishopButton);
+		bishopButton
+				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		CoolItem item = new CoolItem(getCoolbar(), SWT.NONE);
 		item.setControl(composite);
@@ -577,16 +601,27 @@ public class ChessBoard extends Composite implements Constants {
 
 	public void addScripterCoolbar() {
 		Composite composite = new Composite(getCoolbar(), SWT.NONE);
-		composite.setLayout(new GridLayout(2,false));
-		
+		GridLayout gridLayout = new GridLayout(2, false);
+		gridLayout.marginLeft = 0;
+		gridLayout.marginTop = 0;
+		gridLayout.marginRight = 0;
+		gridLayout.marginBottom = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		composite.setLayout(gridLayout);
+
 		Combo combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		combo.add("Resign");
 		combo.add("Draw");
 		combo.add("Match Winner");
+		combo.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button executeButton = new Button(composite, SWT.FLAT);
 		executeButton.setImage(getPreferences().getIcon("southwest"));
 		executeButton.setToolTipText("Executes the selected script.");
+		executeButton.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
 		CoolItem item = new CoolItem(getCoolbar(), SWT.NONE);
 		item.setControl(composite);
@@ -595,17 +630,16 @@ public class ChessBoard extends Composite implements Constants {
 	public void addGameActionButtonsToCoolbar() {
 		Composite composite = new Composite(getCoolbar(), SWT.NONE);
 
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.wrap = false;
-		rowLayout.pack = false;
-		rowLayout.justify = true;
-		rowLayout.type = SWT.HORIZONTAL;
-		rowLayout.marginLeft = 0;
-		rowLayout.marginTop = 5;
-		rowLayout.marginRight = 0;
-		rowLayout.marginBottom = 5;
-		rowLayout.spacing = 0;
-		composite.setLayout(rowLayout);
+		GridLayout gridLayout = new GridLayout(8, false);
+		gridLayout.marginLeft = 0;
+		gridLayout.marginTop = 0;
+		gridLayout.marginRight = 0;
+		gridLayout.marginBottom = 0;
+		gridLayout.horizontalSpacing = 0;
+		gridLayout.verticalSpacing = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.marginWidth = 0;
+		composite.setLayout(gridLayout);
 
 		Button firstButtonItem = new Button(composite, SWT.FLAT);
 		firstButtonItem.setImage(getPreferences().getIcon("first"));
@@ -685,7 +719,6 @@ public class ChessBoard extends Composite implements Constants {
 		flipButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onFlip();
-
 			}
 		});
 
@@ -703,23 +736,13 @@ public class ChessBoard extends Composite implements Constants {
 	}
 
 	public void packCoolbar() {
-		int maxHeight = 0;
-		for (int i = 0; i < getCoolbar().getItemCount(); i++) {
-			CoolItem item = getCoolbar().getItem(i);
-			Point point = item.getControl().computeSize(SWT.DEFAULT,
-					SWT.DEFAULT);
-			maxHeight = Math.max(maxHeight, point.y);
-		}
-
 		for (int i = 0; i < getCoolbar().getItemCount(); i++) {
 			CoolItem item = getCoolbar().getItem(i);
 			item.getControl().pack();
-			Point size = item.getControl().computeSize(SWT.DEFAULT, maxHeight);
-			item.setPreferredSize(item.computeSize(size.x, maxHeight));
-			item.setSize(item.getPreferredSize());
-			LOG.debug("New item preferred size " + item.getPreferredSize().x
-					+ " " + item.getPreferredSize().y);
+			Point point = item.getControl().computeSize(SWT.DEFAULT,
+					SWT.DEFAULT);
+			item.setSize(item.computeSize(point.x, point.y));
+			LOG.debug("New item preferred size " + point.x + " " + point.y);
 		}
-
 	}
 }

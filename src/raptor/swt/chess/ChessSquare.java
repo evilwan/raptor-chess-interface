@@ -49,8 +49,7 @@ public class ChessSquare extends Composite implements Constants {
 			if (piece == EMPTY) {
 
 			} else {
-				event.image = board.resources
-						.getChessPieceDragImage(piece);
+				event.image = board.resources.getChessPieceDragImage(piece);
 			}
 		}
 	};
@@ -103,7 +102,8 @@ public class ChessSquare extends Composite implements Constants {
 			}
 		}
 
-	}; 
+	};
+	protected boolean dontPaintBackground = false;
 	protected int id;
 	protected boolean isHighlighted;
 	protected boolean isLight;
@@ -168,14 +168,18 @@ public class ChessSquare extends Composite implements Constants {
 	PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent e) {
 			Point size = getSize();
-			if (backgroundImage == null
-					|| backgroundImage.getBounds().width != getSize().x
-					&& backgroundImage.getBounds().height != getSize().y) {
-				backgroundImage = board.resources.getSquareBackgroundImage(
-						isLight, size.x, size.y);
+			if (!dontPaintBackground) {
+				if (backgroundImage == null
+						|| backgroundImage.getBounds().width != getSize().x
+						&& backgroundImage.getBounds().height != getSize().y) {
+					backgroundImage = board.resources.getSquareBackgroundImage(
+							isLight, size.x, size.y);
+				}
+				e.gc.drawImage(backgroundImage, 0, 0);
 			}
-
-			e.gc.drawImage(backgroundImage, 0, 0);
+			else {
+				e.gc.fillRectangle(0,0,size.x,size.y);
+			}
 
 			int highlightBorderWidth = (int) (size.x * board.preferences
 					.getDouble(BOARD_HIGHLIGHT_BORDER_WIDTH));

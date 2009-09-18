@@ -94,8 +94,12 @@ public class ChessBoardResources implements Constants {
 	public Image getChessPieceDragImage(int type) {
 		return getChessPieceImage(type, 35, 35);
 	}
-
-	public Image getChessPieceImage(int type, int width, int height) {
+	
+	public Image getChessPieceIconImage(String set,int type) {
+		return getChessPieceImage(set,type, 35, 35);
+	}
+	
+	public Image getChessPieceImage(String name,int type, int width, int height) {
 		if (type == EMPTY) {
 			return null;
 		} else {
@@ -105,28 +109,36 @@ public class ChessBoardResources implements Constants {
 				height = 10;
 			}
 
-			String setName = getChessSetName();
-			String key = getChessSetName() + "_" + type + "_" + width + "x"
+			String key = name + "_" + type + "_" + width + "x"
 					+ height;
 			Image image = localImageRegistry.get(key);
 
 			if (image == null) {
-				Image stockImage = getChessPieceImageMold(setName, type);
+				Image stockImage = getChessPieceImageMold(name, type);
 				if (stockImage != null) {
 					Image result = new Image(Display.getCurrent(), stockImage
 							.getImageData().scaledTo(width, height));
 					localImageRegistry.put(key, result);
 					return result;
 				} else {
-					LOG.error("Could not find stock image for set " + setName
+					LOG.error("Could not find stock image for set " + name
 							+ " " + type);
 					throw new IllegalStateException(
-							"Could not find stock image for set " + setName
+							"Could not find stock image for set " + name
 									+ " " + type);
 				}
 			} else {
 				return image;
 			}
+		}
+	}
+
+	public Image getChessPieceImage(int type, int width, int height) {
+		if (type == EMPTY) {
+			return null;
+		} else {
+
+			return getChessPieceImage(getChessSetName(),type,width,height);
 		}
 	}
 

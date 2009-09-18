@@ -102,8 +102,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_CLOCK_MILLIS_FORMAT, "hh:mm:ss.S");
 		setDefault(BOARD_CLOCK_LAG_FORMAT, "mm:ss.S");
 
-		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(
-				255, 255, 255));
+		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
+				0, 0));
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_COLOR, new RGB(
 				0, 0, 0));
 		PreferenceConverter.setDefault(this, BOARD_HIGHLIGHT_COLOR, new RGB(0,
@@ -115,9 +115,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_LAG_COLOR, new RGB(128, 128,
 				128));
 		PreferenceConverter.setDefault(this, BOARD_PLAYER_NAME_COLOR, new RGB(
-				0, 0, 0));
-		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_COLOR, new RGB(0,
-				255, 0));
+				128, 128, 128));
+		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_LABEL_COLOR,
+				new RGB(0, 255, 0));
+		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_BACKGROUND_COLOR,
+				new RGB(0, 0, 0));
 		PreferenceConverter.setDefault(this, BOARD_OPENING_DESC_COLOR, new RGB(
 				128, 128, 128));
 		PreferenceConverter.setDefault(this, BOARD_GAME_DESCRIPTION_COLOR,
@@ -138,13 +140,13 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_FONT,
 				new FontData[] { new FontData(defaultFontName, 14, 0) });
 		PreferenceConverter.setDefault(this, BOARD_OPENING_DESC_FONT,
-				new FontData[] { new FontData(defaultFontName, 14, 0) });
-		PreferenceConverter.setDefault(this, BOARD_OPENING_DESC_FONT,
-				new FontData[] { new FontData(defaultFontName, 14, 0) });
+				new FontData[] { new FontData(defaultFontName, 10, 0) });
+		PreferenceConverter.setDefault(this,BOARD_STATUS_FONT,
+				new FontData[] { new FontData(defaultFontName, 10, 0) });
+		PreferenceConverter.setDefault(this, BOARD_GAME_DESCRIPTION_FONT,
+				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
-				new FontData[] { new FontData(defaultFontName, 14, 0) });
-		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
-				new FontData[] { new FontData(defaultFontName, 14, 0) });
+				new FontData[] { new FontData(defaultFontName, 12, 0) });
 
 		// Chat
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
@@ -167,16 +169,16 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				0, 0));
 		PreferenceConverter.setDefault(this, CHAT_LINK_COLOR,
 				new RGB(0, 0, 255));
-		
-		//Fics
+
+		// Fics
 		setDefault(FICS_KEEP_ALIVE, true);
-		setDefault(FICS_AUTO_CONNECT,true);
-		setDefault(FICS_USER_NAME,"");
-		setDefault(FICS_PASSWORD,"");
-		setDefault(FICS_IS_NAMED_GUEST,false);
-		setDefault(FICS_IS_ANON_GUEST,false);
-		setDefault(FICS_LOGIN_SCRIPT,"");
-		setDefault(FICS_IS_LOGGING_GAMES,false);
+		setDefault(FICS_AUTO_CONNECT, true);
+		setDefault(FICS_USER_NAME, "");
+		setDefault(FICS_PASSWORD, "");
+		setDefault(FICS_IS_NAMED_GUEST, false);
+		setDefault(FICS_IS_ANON_GUEST, false);
+		setDefault(FICS_LOGIN_SCRIPT, "");
+		setDefault(FICS_IS_LOGGING_GAMES, false);
 
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
