@@ -8,10 +8,9 @@ import java.io.IOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.App;
-
 public class FileUtil {
 	private static final Log LOG = LogFactory.getLog(FileUtil.class);
+
 	/**
 	 * This code was obtained from:
 	 * http://www.dreamincode.net/code/snippet1443.htm
@@ -30,12 +29,12 @@ public class FileUtil {
 	 *             if unable to copy.
 	 */
 	public static void copyFiles(File src, File dest) throws IOException {
-
 		if (src.getName().startsWith(".")) {
-			LOG.info("Ignoring " + src.getAbsolutePath() + " because name started with .");
+			LOG.info("Ignoring " + src.getAbsolutePath()
+					+ " because name started with .");
 			return;
 		}
-		
+
 		// Check to ensure that the source is valid...
 		if (!src.exists()) {
 			throw new IOException("copyFiles: Can not find source: "

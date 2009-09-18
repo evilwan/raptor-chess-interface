@@ -2,10 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/common/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="lib/common/commons-collections-3.2.1.jar" sourcepath="lib/common/source/commons-collections-3.2.1-src.zip"/>
 	<classpathentry kind="lib" path="lib/common/commons-configuration-1.6.jar"/>
-	<classpathentry kind="lib" path="lib/common/commons-lang-2.4.jar"/>
-	<classpathentry kind="lib" path="lib/common/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/common/commons-lang-2.4.jar" sourcepath="lib/common/source/commons-lang-2.4-src.zip"/>
+	<classpathentry kind="lib" path="lib/common/commons-logging-1.1.1.jar" sourcepath="lib/common/source/commons-logging-1.1.1-src.zip"/>
 	<classpathentry kind="lib" path="lib/common/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/common/org.eclipse.jface_3.4.2.M20090107-0800.jar"/>
 	<classpathentry kind="lib" path="lib/common/org.eclipse.jface.text_3.4.2.r342_v20081119-0800.jar"/>
@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.swt_3.4.2.v3452b.jar"/>
 	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.swt.carbon.macosx_3.4.1.v3452b.jar"/>
 	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.ui.carbon_4.0.0.I20080610-1200.jar"/>
+	<classpathentry kind="lib" path="lib/common/velocity-1.6.2.jar" sourcepath="lib/common/source/velocity-1.6.2-src.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
