@@ -101,7 +101,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_CLOCK_FORMAT, "HH:mm");
 		setDefault(BOARD_CLOCK_SECONDS_FORMAT, "mm:ss");
 		setDefault(BOARD_CLOCK_MILLIS_FORMAT, "mm:ss.S");
-		setDefault(BOARD_CLOCK_LAG_FORMAT, "mm:ss.S");
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
@@ -135,7 +134,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_CLOCK_FONT,
 				new FontData[] { new FontData(defaultFontName, 24, SWT.BOLD) });
 		PreferenceConverter.setDefault(this, BOARD_LAG_FONT,
-				new FontData[] { new FontData(defaultFontName, 14, 0) });
+				new FontData[] { new FontData(defaultFontName, 10, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PLAYER_NAME_FONT,
 				new FontData[] { new FontData(defaultFontName, 14, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_FONT,

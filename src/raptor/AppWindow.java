@@ -43,6 +43,8 @@ public class AppWindow extends ApplicationWindow {
 		game.setInitialBlackTimeMillis(60000 * 3);
 		game.setInitialWhiteIncMillis(0);
 		game.setInitialWhiteTimeMillis(60000 * 3);
+		game.setWhiteLagMillis(3567L);
+		game.setBlackLagMillis(9876L);
 		game.setResultDescription("");
 		game.setGameDescription("Playing (Game 123) 3 3 blitz");
 		game.setSettingMoveSan(true);
