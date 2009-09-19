@@ -27,8 +27,8 @@ class ClockLabelUpdater implements Runnable,PreferenceKeys {
 	}
 
 	public void run() {
-		if (isRunning && board != null && clockLabel != null) {
-			valueToSubtractNextRun -= valueToSubtractNextRun;
+		if (isRunning && board != null && clockLabel != null && !clockLabel.isDisposed()) {
+			remainingTimeMillis -= valueToSubtractNextRun;
 			clockLabel.setText(board.getController().timeToString(remainingTimeMillis));
 
 			if (remainingTimeMillis > 0) {

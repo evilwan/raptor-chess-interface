@@ -7,14 +7,14 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.MoveListTraverser;
 import raptor.game.util.GameUtils;
+import raptor.pref.PreferenceKeys;
+import raptor.pref.RaptorPreferenceStore;
 
 public abstract class ChessBoardController implements Constants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
@@ -36,7 +36,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	protected int promoteType = QUEEN;
 
 	protected ClockLabelUpdater whiteClockUpdater;
-	
+
 	public void dispose() {
 		if (traverser != null) {
 			traverser.dispose();
@@ -131,7 +131,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		return isGameInState(Game.ACTIVE_STATE);
 	}
 
-	protected void adjustClocks() {
+	protected void adjustClockLabelsAndUpdaters() {
 		board.whiteClockLabel.setText(timeToString(board.game
 				.getWhiteRemainingTimeMillis()));
 		board.blackClockLabel.setText(timeToString(board.game
@@ -159,6 +159,24 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		}
 	}
 
+	protected void adjustClockColors() {
+		if (board.game.getColorToMove() == WHITE) {
+			board.getWhiteClockLabel().setForeground(
+					board.getPreferences().getColor(
+							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+			board.getBlackClockLabel().setForeground(
+					board.getPreferences().getColor(
+							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+		} else {
+			board.getBlackClockLabel().setForeground(
+					board.getPreferences().getColor(
+							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+			board.getWhiteClockLabel().setForeground(
+					board.getPreferences().getColor(
+							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+		}
+	}
+
 	protected void setNavButtonsEnablbed() {
 		if (isMoveListTraversable()) {
 			board.setButtonEnabled(traverser.hasFirst(), ChessBoard.FIRST_NAV);
@@ -176,8 +194,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	protected void adjustLagLabels() {
 		board.whiteLagLabel
 				.setText(lagToString(board.game.getWhiteLagMillis()));
-		board.blackLagLabel.setText(lagToString(board.game
-				.getBlackLagMillis()));
+		board.blackLagLabel
+				.setText(lagToString(board.game.getBlackLagMillis()));
 	}
 
 	protected void adjustPremoveLabel() {
@@ -222,8 +240,16 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		LOG.info("adjustToGameChange " + board.game.getId() + " ...");
 		long startTime = System.currentTimeMillis();
 
-		adjustClocks();
-		startClocks();
+		stopClocks();
+
+		adjustBoardToGame(board.game);
+
+		if (isGameActive()) {
+			adjustClockLabelsAndUpdaters();
+			adjustClockColors();
+			startClocks();
+		}
+
 		traverser.adjustHalfMoveIndex();
 		setNavButtonsEnablbed();
 		adjustLagLabels();
@@ -231,7 +257,6 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		adjustStatusLabel();
 		adjustOpeningDescriptionLabel();
 		adjustPieceJailFromGame(board.game);
-		adjustBoardToGame(board.game);
 		adjustGameStatusLabel();
 		adjustToMoveIndicatorLabel();
 
@@ -277,8 +302,6 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	protected abstract void decorateCoolbar();
-
-	
 
 	public void onNavFirst() {
 		if (traverser.hasFirst()) {
@@ -357,10 +380,10 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		if (lag < 0) {
 			lag = 0;
 		}
-		
-		int seconds = (int) (lag/1000L);
+
+		int seconds = (int) (lag / 1000L);
 		long tenths = lag % 10;
-		
+
 		return "Lag " + seconds + "." + tenths + " sec";
 	}
 
@@ -411,15 +434,18 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		whiteClockUpdater.stop();
 		blackClockUpdater.stop();
 	}
-	
+
 	public void adjustToMoveIndicatorLabel() {
 		if (board.game.getColorToMove() == WHITE) {
-			board.getWhiteToMoveIndicatorLabel().setImage(board.getPreferences().getIcon("circle_green30x30"));
-			board.getBlackToMoveIndicatorLabel().setImage(board.getPreferences().getIcon("circle_gray30x30"));
-		}
-		else {
-			board.getBlackToMoveIndicatorLabel().setImage(board.getPreferences().getIcon("circle_green30x30"));
-			board.getWhiteToMoveIndicatorLabel().setImage(board.getPreferences().getIcon("circle_gray30x30"));
+			board.getWhiteToMoveIndicatorLabel().setImage(
+					board.getPreferences().getIcon("circle_green30x30"));
+			board.getBlackToMoveIndicatorLabel().setImage(
+					board.getPreferences().getIcon("circle_gray30x30"));
+		} else {
+			board.getBlackToMoveIndicatorLabel().setImage(
+					board.getPreferences().getIcon("circle_green30x30"));
+			board.getWhiteToMoveIndicatorLabel().setImage(
+					board.getPreferences().getIcon("circle_gray30x30"));
 		}
 	}
 
