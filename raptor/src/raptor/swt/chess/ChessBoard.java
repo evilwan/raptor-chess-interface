@@ -14,7 +14,6 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -29,7 +28,7 @@ import raptor.pref.RaptorPreferenceStore;
 
 public class ChessBoard extends Composite implements Constants {
 	public static final String LAST_NAV = "last_nav";
-	public static final String FORWARD_NAV = "forward_nav";
+	public static final String NEXT_NAV = "forward_nav";
 	public static final String BACK_NAV = "next_nav";
 	public static final String FIRST_NAV = "first_nav";
 	public static final String COMMIT_NAV = "commit_nav";
@@ -95,15 +94,20 @@ public class ChessBoard extends Composite implements Constants {
 	@Override
 	public void dispose() {
 		preferences.removePropertyChangeListener(propertyChangeListener);
-
-		pieceJailSquares = null;
-
-		controller.dispose();
-		layout.dispose();
-		resources.dispose();
-		controller = null;
-		layout = null;
 		super.dispose();
+		pieceJailSquares = null;
+		if (controller != null) {
+			controller.dispose();
+			controller = null;
+		}
+		if (layout != null) {
+			layout.dispose();
+			layout = null;
+		}
+		if (resources != null) {
+			resources.dispose();
+			resources = null;
+		}
 	}
 
 	public Label getBlackClockLabel() {
@@ -521,6 +525,8 @@ public class ChessBoard extends Composite implements Constants {
 		// coolbar.setBackground(preferences.getColor(BOARD_BACKGROUND_COLOR));
 		boardPanel.setBackground(preferences.getColor(BOARD_BACKGROUND_COLOR));
 		setBackground(preferences.getColor(BOARD_BACKGROUND_COLOR));
+
+		forceUpdate();
 	}
 
 	public CoolBar getCoolbar() {
@@ -535,7 +541,7 @@ public class ChessBoard extends Composite implements Constants {
 		return toolItemMap;
 	}
 
-	public void setToolItemEnabled(boolean isEnabled, String key) {
+	public void setButtonEnabled(boolean isEnabled, String key) {
 		Button item = toolItemMap.get(key);
 		if (item != null) {
 			item.setEnabled(isEnabled);
@@ -548,6 +554,11 @@ public class ChessBoard extends Composite implements Constants {
 
 	public void setBoardPanel(Composite boardPanel) {
 		this.boardPanel = boardPanel;
+	}
+
+	public void forceUpdate() {
+		boardPanel.layout();
+		boardPanel.redraw();
 	}
 
 	public void addAutoPromoteRadioGroupToCoolbar() {
@@ -646,7 +657,7 @@ public class ChessBoard extends Composite implements Constants {
 		firstButtonItem.setToolTipText("Go to the previous move played");
 		firstButtonItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
-				controller.onNavLast();
+				controller.onNavFirst();
 
 			}
 		});
@@ -699,7 +710,7 @@ public class ChessBoard extends Composite implements Constants {
 
 			}
 		});
-		getToolItemMap().put(FORWARD_NAV, nextButton);
+		getToolItemMap().put(NEXT_NAV, nextButton);
 
 		Button lastButton = new Button(composite, SWT.FLAT);
 		lastButton.setImage(getPreferences().getIcon("last"));
