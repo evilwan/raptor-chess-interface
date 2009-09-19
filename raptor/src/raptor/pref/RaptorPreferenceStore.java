@@ -98,9 +98,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN, 1000L * 60L + 1L);
 		setDefault(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
 				1000L * 60L * 10L + 1L);
-		setDefault(BOARD_CLOCK_FORMAT, "HH:mm");
-		setDefault(BOARD_CLOCK_SECONDS_FORMAT, "mm:ss");
-		setDefault(BOARD_CLOCK_MILLIS_FORMAT, "mm:ss.S");
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
@@ -114,6 +111,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new RGB(128, 128, 128));
 		PreferenceConverter.setDefault(this, BOARD_LAG_COLOR, new RGB(128, 128,
 				128));
+		PreferenceConverter.setDefault(this, BOARD_LAG_OVER_20_SEC_COLOR,
+				new RGB(255, 0, 0));
 		PreferenceConverter.setDefault(this, BOARD_PLAYER_NAME_COLOR, new RGB(
 				128, 128, 128));
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_LABEL_COLOR,
