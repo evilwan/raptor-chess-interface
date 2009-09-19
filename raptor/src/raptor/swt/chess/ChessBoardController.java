@@ -519,8 +519,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			int minute = (int) (timeRemaining / 60000L);
 			timeRemaining -= minute * 60 * 1000;
 			int seconds = (int) (timeRemaining / 1000L);
-			return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
-					+ RaptorStringUtils.defaultTimeString(minute, 2) + ":"
+			return RaptorStringUtils.defaultTimeString(minute, 2) + ":"
 					+ RaptorStringUtils.defaultTimeString(seconds, 2);
 
 		} else {
@@ -531,8 +530,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			int seconds = (int) (timeRemaining / 1000L);
 			timeRemaining -= seconds * 1000;
 			int tenths = (int) (timeRemaining / 100L);
-			return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
-					+ RaptorStringUtils.defaultTimeString(minute, 2) + ":"
+			return RaptorStringUtils.defaultTimeString(minute, 2) + ":"
 					+ RaptorStringUtils.defaultTimeString(seconds, 2) + "."
 					+ RaptorStringUtils.defaultTimeString(tenths, 1);
 		}
