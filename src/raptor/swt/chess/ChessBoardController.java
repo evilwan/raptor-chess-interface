@@ -1,9 +1,5 @@
 package raptor.swt.chess;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,7 +10,7 @@ import raptor.game.Move;
 import raptor.game.MoveListTraverser;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.RaptorPreferenceStore;
+import raptor.util.RaptorStringUtils;
 
 public abstract class ChessBoardController implements Constants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
@@ -23,8 +19,6 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	public static final String FORWARD_NAV = "forward_nav";
 	public static final String NEXT_NAV = "next_nav";
 	public static final String FIRST_NAV = "first_nav";
-	public static final long TIMEZONE_OFFSET = -Calendar.getInstance().get(
-			Calendar.ZONE_OFFSET);
 
 	protected boolean autoDraw = false;
 	protected ClockLabelUpdater blackClockUpdater;
@@ -177,6 +171,28 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		}
 	}
 
+	public void adjustLagColors() {
+		if (board.game.getWhiteLagMillis() > 20000) {
+			board.getWhiteLagLabel().setForeground(
+					board.getPreferences().getColor(
+							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
+		} else {
+			board.getWhiteLagLabel().setForeground(
+					board.getPreferences().getColor(
+							PreferenceKeys.BOARD_LAG_COLOR));
+		}
+
+		if (board.game.getBlackLagMillis() > 20000) {
+			board.getBlackLagLabel().setForeground(
+					board.getPreferences().getColor(
+							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
+		} else {
+			board.getBlackLagLabel().setForeground(
+					board.getPreferences().getColor(
+							PreferenceKeys.BOARD_LAG_COLOR));
+		}
+	}
+
 	protected void setNavButtonsEnablbed() {
 		if (isMoveListTraversable()) {
 			board.setButtonEnabled(traverser.hasFirst(), ChessBoard.FIRST_NAV);
@@ -253,6 +269,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		traverser.adjustHalfMoveIndex();
 		setNavButtonsEnablbed();
 		adjustLagLabels();
+		adjustLagColors();
 		adjustPremoveLabel();
 		adjustStatusLabel();
 		adjustOpeningDescriptionLabel();
@@ -489,20 +506,35 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 		if (timeLeft >= board.preferences
 				.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					board.preferences.getString(BOARD_CLOCK_FORMAT));
-			return dateFormat.format(new Date(timeLeft + TIMEZONE_OFFSET));
+			int hour = (int) (timeRemaining / (60000L * 60));
+			timeRemaining -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeRemaining / 60000L);
+			return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
+					+ RaptorStringUtils.defaultTimeString(minute, 2);
 
 		} else if (timeLeft >= board.preferences
 				.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					board.preferences.getString(BOARD_CLOCK_SECONDS_FORMAT));
-			return dateFormat.format(new Date(timeLeft + TIMEZONE_OFFSET));
+			int hour = (int) (timeRemaining / (60000L * 60));
+			timeRemaining -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeRemaining / 60000L);
+			timeRemaining -= minute * 60 * 1000;
+			int seconds = (int) (timeRemaining / 1000L);
+			return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
+					+ RaptorStringUtils.defaultTimeString(minute, 2) + ":"
+					+ RaptorStringUtils.defaultTimeString(seconds, 2);
 
 		} else {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(
-					board.preferences.getString(BOARD_CLOCK_MILLIS_FORMAT));
-			return dateFormat.format(new Date(timeLeft + TIMEZONE_OFFSET));
+			int hour = (int) (timeRemaining / (60000L * 60));
+			timeRemaining -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeRemaining / 60000L);
+			timeRemaining -= minute * 60 * 1000;
+			int seconds = (int) (timeRemaining / 1000L);
+			timeRemaining -= seconds * 1000;
+			int tenths = (int) (timeRemaining / 100L);
+			return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
+					+ RaptorStringUtils.defaultTimeString(minute, 2) + ":"
+					+ RaptorStringUtils.defaultTimeString(seconds, 2) + "."
+					+ RaptorStringUtils.defaultTimeString(tenths, 1);
 		}
 	}
 

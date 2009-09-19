@@ -11,10 +11,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_IS_SHOWING_PIECE_JAIL = "board-is-showing-piece-jail";
 	public static final String BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN = "board-clock-show-millis-when-less-than";
 	public static final String BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN = "board-clock-show-seconds-when-less-than";
-	public static final String BOARD_CLOCK_FORMAT = "board-clock-format";
-	public static final String BOARD_CLOCK_SECONDS_FORMAT = "board-clock-seconds-format";
-	public static final String BOARD_CLOCK_MILLIS_FORMAT = "board-clock-millis-format";
-	public static final String BOARD_CLOCK_LAG_FORMAT = "board-clock-lag-format";
 
 	public static final String BOARD_COORDINATES_COLOR = "board-coordinates-color";
 	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
@@ -22,6 +18,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_ACTIVE_CLOCK_COLOR = "board-active-clock-color";
 	public static final String BOARD_INACTIVE_CLOCK_COLOR = "board-inactive-clock-color";
 	public static final String BOARD_LAG_COLOR = "board-lag-color";
+	public static final String BOARD_LAG_OVER_20_SEC_COLOR = "board-over-20-sec-lag-color";
 	public static final String BOARD_PLAYER_NAME_COLOR = "board-player-name-color";
 	public static final String BOARD_PIECE_JAIL_LABEL_COLOR = "board-piece-jail-label-color";
 	public static final String BOARD_PIECE_JAIL_BACKGROUND_COLOR = "board-piece-jail-background-color";

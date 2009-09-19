@@ -1,6 +1,31 @@
 package raptor.util;
 
 public class RaptorStringUtils {
+
+	/**
+	 * Expresses value in terms of digits. If value is 0 and digits is 2 "00"
+	 * will be returned. If value is 1 and digits is 2 "01" is returned. If
+	 * value is 123 and digits is 2 then "XX" is returned.
+	 */
+	public static String defaultTimeString(int value, int digits) {
+		String valueAsString = "" + value;
+		String result = null;
+		if (valueAsString.length() > digits) {
+			for (int i = 0; i < digits; i++) {
+				result += "X";
+			}
+		} else if (valueAsString.length() < digits) {
+			result = valueAsString;
+			while (result.length() < digits) {
+				result = "0" + result;
+			}
+		}
+		else {
+			result = valueAsString;
+		}
+		return result;
+	}
+
 	/**
 	 * Returns a String representing the contents of the array delimited by the
 	 * specified delimiter.
