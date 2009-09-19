@@ -177,7 +177,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		board.whiteLagLabel
 				.setText(lagToString(board.game.getWhiteLagMillis()));
 		board.blackLagLabel.setText(lagToString(board.game
-				.getBlackRemainingTimeMillis()));
+				.getBlackLagMillis()));
 	}
 
 	protected void adjustPremoveLabel() {
@@ -233,6 +233,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		adjustPieceJailFromGame(board.game);
 		adjustBoardToGame(board.game);
 		adjustGameStatusLabel();
+		adjustToMoveIndicatorLabel();
 
 		board.forceUpdate();
 
@@ -356,10 +357,11 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		if (lag < 0) {
 			lag = 0;
 		}
-
-		SimpleDateFormat dateFormat = new SimpleDateFormat(board.preferences
-				.getString(BOARD_CLOCK_LAG_FORMAT));
-		return dateFormat.format(new Date(lag + TIMEZONE_OFFSET));
+		
+		int seconds = (int) (lag/1000L);
+		long tenths = lag % 10;
+		
+		return "Lag " + seconds + "." + tenths + " sec";
 	}
 
 	public void onNavCommit() {
@@ -408,6 +410,17 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	public void stopTimers() {
 		whiteClockUpdater.stop();
 		blackClockUpdater.stop();
+	}
+	
+	public void adjustToMoveIndicatorLabel() {
+		if (board.game.getColorToMove() == WHITE) {
+			board.getWhiteToMoveIndicatorLabel().setImage(board.getPreferences().getIcon("circle_green30x30"));
+			board.getBlackToMoveIndicatorLabel().setImage(board.getPreferences().getIcon("circle_gray30x30"));
+		}
+		else {
+			board.getBlackToMoveIndicatorLabel().setImage(board.getPreferences().getIcon("circle_green30x30"));
+			board.getWhiteToMoveIndicatorLabel().setImage(board.getPreferences().getIcon("circle_gray30x30"));
+		}
 	}
 
 	public void adjustGameDescriptionLabel() {

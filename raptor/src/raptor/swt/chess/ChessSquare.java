@@ -31,8 +31,6 @@ public class ChessSquare extends Composite implements Constants {
 	public static final String DRAG_INITIATOR = "DRAG_INITIATOR";
 	public static final String LAST_DROP_TIME = "LAST_DROP_TIME";
 
-	protected Image backgroundImage = null;
-
 	protected ChessBoard board;
 	protected ControlListener controlListener = new ControlListener() {
 
@@ -103,7 +101,7 @@ public class ChessSquare extends Composite implements Constants {
 		}
 
 	};
-	protected boolean dontPaintBackground = false;
+	protected boolean ignoreBackgroundImage = false;
 	protected int id;
 	protected boolean isHighlighted;
 	protected boolean isLight;
@@ -168,17 +166,12 @@ public class ChessSquare extends Composite implements Constants {
 	PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent e) {
 			Point size = getSize();
-			if (!dontPaintBackground) {
-				if (backgroundImage == null
-						|| backgroundImage.getBounds().width != getSize().x
-						&& backgroundImage.getBounds().height != getSize().y) {
-					backgroundImage = board.resources.getSquareBackgroundImage(
-							isLight, size.x, size.y);
-				}
+			if (!ignoreBackgroundImage) {
+				Image backgroundImage = board.resources
+						.getSquareBackgroundImage(isLight, size.x, size.y);
 				e.gc.drawImage(backgroundImage, 0, 0);
-			}
-			else {
-				e.gc.fillRectangle(0,0,size.x,size.y);
+			} else {
+				e.gc.fillRectangle(0, 0, size.x, size.y);
 			}
 
 			int highlightBorderWidth = (int) (size.x * board.preferences
@@ -253,12 +246,7 @@ public class ChessSquare extends Composite implements Constants {
 	}
 
 	public void forceLayout() {
-		backgroundImage = null;
 		pieceImage = null;
-	}
-
-	public Image getBackgroundImage() {
-		return backgroundImage;
 	}
 
 	public int getId() {
@@ -278,10 +266,6 @@ public class ChessSquare extends Composite implements Constants {
 
 	public boolean isLight() {
 		return isHighlighted;
-	}
-
-	public void setBackgroundImage(Image backgroundImage) {
-		this.backgroundImage = backgroundImage;
 	}
 
 	public void setLight(boolean isLight) {

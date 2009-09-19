@@ -18,6 +18,7 @@ public abstract class ChessBoardLayout extends Layout implements Constants {
 	public static final int LAG_LABEL = 5;
 	public static final int NAME_RATING_LABEL = 6;
 	public static final int COOLBAR = 7;
+	public static final int TO_MOVE_INDICATOR = 8;
 	
 	public ChessBoardLayout(ChessBoard chessBoard) {
 		super();

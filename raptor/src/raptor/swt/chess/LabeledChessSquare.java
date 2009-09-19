@@ -27,7 +27,7 @@ public class LabeledChessSquare extends ChessSquare {
 
 	public LabeledChessSquare(Composite composite, ChessBoard board, int id) {
 		super(composite, board, id,true);
-		dontPaintBackground = true;
+		ignoreBackgroundImage = true;
 		addPaintListener(paintListener);
 		
 	}

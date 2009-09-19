@@ -79,6 +79,8 @@ public class ChessBoard extends Composite implements Constants {
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
 	protected Label whiteClockLabel;
 	protected Label whiteLagLabel;
+	protected Label whiteToMoveIndicatorLabel;
+	protected Label blackToMoveIndicatorLabel;
 	protected CoolBar coolbar;
 
 	protected Label whiteNameRatingLabel;
@@ -236,7 +238,13 @@ public class ChessBoard extends Composite implements Constants {
 				.getStyle(ChessBoardLayout.GAME_DESCRIPTION_LABEL));
 		currentPremovesLabel = new Label(boardPanel, layout
 				.getStyle(ChessBoardLayout.CURRENT_PREMOVE_LABEL));
+		
+		whiteToMoveIndicatorLabel = new Label(boardPanel,layout.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
+		whiteToMoveIndicatorLabel.setImage(preferences.getIcon("circle_green30x30"));
 
+		blackToMoveIndicatorLabel = new Label(boardPanel,layout.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
+		blackToMoveIndicatorLabel.setImage(preferences.getIcon("circle_gray30x30"));
+		
 		preferences.addPropertyChangeListener(propertyChangeListener);
 
 		LOG.info("Initialized controls in "
@@ -490,6 +498,22 @@ public class ChessBoard extends Composite implements Constants {
 		blackNameRatingLabel.setForeground(preferences
 				.getColor(BOARD_PLAYER_NAME_COLOR));
 		blackNameRatingLabel.setBackground(background);
+		
+		whiteToMoveIndicatorLabel.setBackground(background);
+		blackToMoveIndicatorLabel.setBackground(background);
+		
+		
+		whiteLagLabel.setFont(preferences
+				.getFont(BOARD_LAG_FONT));
+		whiteLagLabel.setForeground(preferences
+				.getColor(BOARD_LAG_COLOR));
+		whiteLagLabel.setBackground(background);
+
+		blackLagLabel.setFont(preferences
+				.getFont(BOARD_LAG_FONT));
+		blackLagLabel.setForeground(preferences
+				.getColor(BOARD_LAG_COLOR));
+		blackLagLabel.setBackground(background);
 
 		whiteClockLabel.setFont(preferences.getFont(BOARD_CLOCK_FONT));
 		whiteClockLabel.setForeground(preferences
@@ -522,7 +546,6 @@ public class ChessBoard extends Composite implements Constants {
 				.getColor(BOARD_PREMOVES_COLOR));
 		currentPremovesLabel.setBackground(background);
 
-		// coolbar.setBackground(preferences.getColor(BOARD_BACKGROUND_COLOR));
 		boardPanel.setBackground(preferences.getColor(BOARD_BACKGROUND_COLOR));
 		setBackground(preferences.getColor(BOARD_BACKGROUND_COLOR));
 
@@ -654,7 +677,7 @@ public class ChessBoard extends Composite implements Constants {
 
 		Button firstButtonItem = new Button(composite, SWT.FLAT);
 		firstButtonItem.setImage(getPreferences().getIcon("first"));
-		firstButtonItem.setToolTipText("Go to the previous move played");
+		firstButtonItem.setToolTipText("Go to the first move played");
 		firstButtonItem.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onNavFirst();
@@ -665,7 +688,7 @@ public class ChessBoard extends Composite implements Constants {
 
 		Button backButton = new Button(composite, SWT.FLAT);
 		backButton.setImage(getPreferences().getIcon("back"));
-		backButton.setToolTipText("Go to the first move played");
+		backButton.setToolTipText("Go to the previous move played");
 		backButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onNavBack();
@@ -756,4 +779,14 @@ public class ChessBoard extends Composite implements Constants {
 			LOG.debug("New item preferred size " + point.x + " " + point.y);
 		}
 	}
+
+	public Label getWhiteToMoveIndicatorLabel() {
+		return whiteToMoveIndicatorLabel;
+	}
+
+	public Label getBlackToMoveIndicatorLabel() {
+		return blackToMoveIndicatorLabel;
+	}
+	
+	
 }

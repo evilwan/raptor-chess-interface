@@ -3,10 +3,10 @@ package raptor.swt.chess.layout;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardLayout;
@@ -21,28 +21,33 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 	public static final int[] TOP_BAR_MARGIN = { 0, 5, 5, 5 };
 	public static final int[] BOTTOM_BAR_MARGIN = { 5, 0, 5, 10 };
-	public static final int[] BOARD_MARGIN = { 0, 0, 10, 10 };
-	public static final int[] NAME_LABEL_MARGIN = { 0, 0, 10, 10 };
-	public static final int[] CLOCK_MARGIN = { 5, 5, 10, 10 };
-	public static final int[] PIECE_JAIL_MARGIN = { 0, 0, 10, 10 };
+	public static final int[] BOARD_MARGIN = { 0, 0, 10, 5 };
+	public static final int[] NAME_LABEL_MARGIN = { 0, 0, 0, 10 };
+	public static final int[] CLOCK_MARGIN = { 0, 0, 0, 0 };
+	public static final int[] PIECE_JAIL_MARGIN = { 0, 0, 0, 0 };
 
 	protected Point boardTopLeft;
 	protected Rectangle gameDescriptionLabelRect;
 	protected Rectangle currentPremovesLabelRect;
 	protected Rectangle openingDescriptionLabelRect;
 	protected Rectangle statusLabelRect;
-	protected Rectangle coolbarRect;
 	protected Rectangle whiteNameLabelRect;
 	protected Rectangle blackNameLabelRect;
 	protected Rectangle whiteClockRect;
 	protected Rectangle blackClockRect;
 	protected Rectangle[] pieceJailRects;
+	protected Rectangle whiteLagRect;
+	protected Rectangle blackLagRect;
+	protected Rectangle whiteToMoveIndicatorRect;
+	protected Rectangle blackToMoveIndicatorRect;
 	protected int boardSquareSize;
 	protected int topBarHeight;
 	protected int bottomBarHeight;
 	protected int boardHeight;
 
 	protected int pieceJailSquareSide;
+
+	protected Label worstCaseClockSizeLabel;
 
 	@Override
 	public int getStyle(int controlConstant) {
@@ -63,95 +68,144 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	}
 
 	protected void setLayoutData() {
-		GC gc = new GC(board.getBoardPanel());
+		initWorstCaseLabels();
 
 		int width = board.getBoardPanel().getSize().x;
 		int height = board.getBoardPanel().getSize().y;
 
-		// board.getCoolbar().layout();
-		//		
-		coolbarRect = new Rectangle(0, 0, 0, 0);
+		Point gameDescriptionSize = board.getGameDescriptionLabel()
+				.computeSize((width / 2) - TOP_BAR_MARGIN[WEST], SWT.DEFAULT,
+						true);
+		Point currentPremovesSize = board.getCurrentPremovesLabel()
+				.computeSize((width / 2) - TOP_BAR_MARGIN[EAST], SWT.DEFAULT,
+						true);
 
-		topBarHeight = Math.max(getOneCharSizeInFont(board.getStatusLabel()
-				.getFont(), gc).y, getOneCharSizeInFont(board
-				.getCurrentPremovesLabel().getFont(), gc).y)
+		topBarHeight = Math.max(gameDescriptionSize.y, currentPremovesSize.y)
 				+ TOP_BAR_MARGIN[NORTH] + TOP_BAR_MARGIN[SOUTH];
-		bottomBarHeight = Math.max(getOneCharSizeInFont(board.getStatusLabel()
-				.getFont(), gc).y, getOneCharSizeInFont(board
-				.getOpeningDescriptionLabel().getFont(), gc).y)
+
+		Point statusLabelSize = board.getStatusLabel().computeSize(
+				(width / 2) - BOTTOM_BAR_MARGIN[WEST], SWT.DEFAULT, true);
+		Point openingDescriptionSize = board.getOpeningDescriptionLabel()
+				.computeSize((width / 2) - BOTTOM_BAR_MARGIN[EAST],
+						SWT.DEFAULT, true);
+
+		bottomBarHeight = Math.max(statusLabelSize.y, openingDescriptionSize.y)
 				+ BOTTOM_BAR_MARGIN[NORTH] + BOTTOM_BAR_MARGIN[SOUTH];
 
-		boardSquareSize = (height - coolbarRect.height - topBarHeight
-				- bottomBarHeight - BOARD_MARGIN[NORTH] - BOARD_MARGIN[SOUTH]) / 8;
+		boardSquareSize = (height - topBarHeight - bottomBarHeight
+				- BOARD_MARGIN[NORTH] - BOARD_MARGIN[SOUTH]) / 8;
 		boardHeight = boardSquareSize * 8;
 
 		gameDescriptionLabelRect = new Rectangle(TOP_BAR_MARGIN[WEST],
-				coolbarRect.height + TOP_BAR_MARGIN[NORTH], (width / 2)
-						- TOP_BAR_MARGIN[WEST], topBarHeight
-						- TOP_BAR_MARGIN[NORTH] - TOP_BAR_MARGIN[SOUTH]);
+				TOP_BAR_MARGIN[NORTH], gameDescriptionSize.x,
+				gameDescriptionSize.y);
 		currentPremovesLabelRect = new Rectangle(
-				gameDescriptionLabelRect.width, coolbarRect.height
-						+ TOP_BAR_MARGIN[NORTH], (width / 2)
-						- TOP_BAR_MARGIN[EAST], topBarHeight
-						- TOP_BAR_MARGIN[NORTH] - TOP_BAR_MARGIN[SOUTH]);
+				gameDescriptionLabelRect.width, +TOP_BAR_MARGIN[NORTH],
+				currentPremovesSize.x, currentPremovesSize.y);
 
-		int boardPlusTopBarHeight = coolbarRect.height + topBarHeight
-				+ boardHeight + BOTTOM_BAR_MARGIN[NORTH] + BOARD_MARGIN[NORTH]
+		int boardPlusTopBarHeight = topBarHeight + boardHeight
+				+ BOTTOM_BAR_MARGIN[NORTH] + BOARD_MARGIN[NORTH]
 				+ BOARD_MARGIN[SOUTH];
 
 		statusLabelRect = new Rectangle(BOTTOM_BAR_MARGIN[WEST],
-				boardPlusTopBarHeight, (width / 2) - BOTTOM_BAR_MARGIN[WEST],
-				bottomBarHeight - BOTTOM_BAR_MARGIN[NORTH]
-						- BOTTOM_BAR_MARGIN[SOUTH]);
+				boardPlusTopBarHeight, statusLabelSize.x, statusLabelSize.y);
 		openingDescriptionLabelRect = new Rectangle(statusLabelRect.width,
-				boardPlusTopBarHeight, (width / 2) - BOTTOM_BAR_MARGIN[EAST],
-				bottomBarHeight - BOTTOM_BAR_MARGIN[NORTH]
-						- BOTTOM_BAR_MARGIN[SOUTH]);
+				boardPlusTopBarHeight, openingDescriptionSize.x,
+				openingDescriptionSize.y);
 
 		boardTopLeft = new Point(BOARD_MARGIN[WEST], topBarHeight
-				+ coolbarRect.height + BOARD_MARGIN[NORTH]);
+				+ BOARD_MARGIN[NORTH]);
 
-		int nameLabelHeight = getOneCharSizeInFont(board
-				.getWhiteNameRatingLabel().getFont(), gc).y;
+		Point toMoveIndicatorSize = board.getWhiteToMoveIndicatorLabel()
+				.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+
 		int nameLabelStartX = BOARD_MARGIN[WEST] + boardHeight
 				+ NAME_LABEL_MARGIN[WEST];
+		Point whiteNameLabelSize = board.getWhiteNameRatingLabel().computeSize(
+				width - nameLabelStartX - NAME_LABEL_MARGIN[EAST], SWT.DEFAULT,
+				true);
+		Point blackNameLabelSize = board.getBlackNameRatingLabel().computeSize(
+				width - nameLabelStartX - NAME_LABEL_MARGIN[EAST], SWT.DEFAULT,
+				true);
 
-		int clockHeight = getOneCharSizeInFont(board.getWhiteClockLabel()
-				.getFont(), gc).y * 2;
 		int clockStartX = BOARD_MARGIN[WEST] + boardHeight + CLOCK_MARGIN[WEST];
+		Point whiteClockLabelSize = board.getWhiteClockLabel().computeSize(
+				width - clockStartX - CLOCK_MARGIN[EAST], SWT.DEFAULT, true);
 
+		Point worseCaseClockSize = worstCaseClockSizeLabel.computeSize(
+				SWT.DEFAULT, whiteClockLabelSize.y, false);
+
+		int clockBarWidth = whiteClockLabelSize.x - worseCaseClockSize.x;
+
+		Point lagRectSize = board.getWhiteLagLabel().computeSize(clockBarWidth,
+				SWT.DEFAULT, true);
+
+		int nameStartY = boardTopLeft.y;
+
+		int clockWidth = worseCaseClockSize.x;
 		if (board.isWhiteOnTop()) {
-			whiteNameLabelRect = new Rectangle(nameLabelStartX, boardTopLeft.y,
-					width - nameLabelStartX - NAME_LABEL_MARGIN[EAST],
-					nameLabelHeight);
-			blackNameLabelRect = new Rectangle(nameLabelStartX, boardTopLeft.y
-					+ boardHeight / 2, whiteNameLabelRect.width,
-					whiteNameLabelRect.height);
+			whiteToMoveIndicatorRect = new Rectangle(nameLabelStartX,
+					boardTopLeft.y, toMoveIndicatorSize.x,
+					toMoveIndicatorSize.y);
+			whiteNameLabelRect = new Rectangle(whiteToMoveIndicatorRect.x + 2
+					+ whiteToMoveIndicatorRect.width, nameStartY,
+					whiteNameLabelSize.x, whiteNameLabelSize.y);
 
-			whiteClockRect = new Rectangle(clockStartX, whiteNameLabelRect.y
-					+ whiteNameLabelRect.height + CLOCK_MARGIN[NORTH], width
-					- clockStartX - CLOCK_MARGIN[EAST], clockHeight);
-			blackClockRect = new Rectangle(clockStartX, whiteClockRect.y
-					+ boardHeight / 2, whiteClockRect.width,
-					whiteClockRect.height);
+			blackToMoveIndicatorRect = new Rectangle(nameLabelStartX,
+					boardTopLeft.y + boardHeight / 2, toMoveIndicatorSize.x,
+					toMoveIndicatorSize.y);
+			blackNameLabelRect = new Rectangle(blackToMoveIndicatorRect.x + 2
+					+ whiteToMoveIndicatorRect.width, nameStartY + boardHeight
+					/ 2, blackNameLabelSize.x, blackNameLabelSize.y);
+
+			whiteLagRect = new Rectangle(whiteNameLabelRect.x,
+					whiteNameLabelRect.y + whiteNameLabelRect.height,
+					whiteNameLabelRect.width, lagRectSize.y);
+
+			blackLagRect = new Rectangle(whiteNameLabelRect.x, whiteLagRect.y
+					+ boardHeight / 2, blackNameLabelRect.width, lagRectSize.y);
+
 		} else {
-			blackNameLabelRect = new Rectangle(nameLabelStartX, boardTopLeft.y,
-					width - nameLabelStartX - NAME_LABEL_MARGIN[EAST],
-					nameLabelHeight);
-			whiteNameLabelRect = new Rectangle(nameLabelStartX, boardTopLeft.y
-					+ boardHeight / 2, blackNameLabelRect.width,
-					blackNameLabelRect.height);
+			blackToMoveIndicatorRect = new Rectangle(nameLabelStartX,
+					boardTopLeft.y, toMoveIndicatorSize.x,
+					toMoveIndicatorSize.y);
+			blackNameLabelRect = new Rectangle(blackToMoveIndicatorRect.x + 2
+					+ blackToMoveIndicatorRect.width, nameStartY,
+					blackNameLabelSize.x, blackNameLabelSize.y);
 
-			blackClockRect = new Rectangle(clockStartX, blackNameLabelRect.y
-					+ whiteNameLabelRect.height + CLOCK_MARGIN[NORTH], width
-					- clockStartX - CLOCK_MARGIN[EAST], clockHeight);
-			whiteClockRect = new Rectangle(clockStartX, blackClockRect.y
-					+ boardHeight / 2, blackClockRect.width,
-					blackClockRect.height);
+			whiteToMoveIndicatorRect = new Rectangle(nameLabelStartX,
+					boardTopLeft.y + boardHeight / 2, toMoveIndicatorSize.x,
+					toMoveIndicatorSize.y);
+			whiteNameLabelRect = new Rectangle(whiteToMoveIndicatorRect.x + 2
+					+ whiteToMoveIndicatorRect.width, nameStartY + boardHeight
+					/ 2, whiteNameLabelSize.x, whiteNameLabelSize.y);
+
+			blackLagRect = new Rectangle(blackNameLabelRect.x,
+					blackNameLabelRect.y + blackNameLabelRect.height,
+					blackNameLabelRect.width, lagRectSize.y);
+			whiteLagRect = new Rectangle(whiteNameLabelRect.x,
+					whiteNameLabelRect.y + whiteNameLabelRect.height,
+					whiteNameLabelRect.width, lagRectSize.y);
+
 		}
 
-		int pieceJailStartX = BOARD_MARGIN[WEST] + boardHeight
-				+ PIECE_JAIL_MARGIN[WEST];
+		whiteClockRect = new Rectangle(whiteToMoveIndicatorRect.x, whiteLagRect.y
+				+ whiteLagRect.height, worseCaseClockSize.x,
+				whiteClockLabelSize.y);
+		blackClockRect = new Rectangle(blackToMoveIndicatorRect.x, blackLagRect.y
+				+ blackLagRect.height, worseCaseClockSize.x,
+				whiteClockLabelSize.y);
+		
+		int controlHeight = whiteNameLabelRect.height + whiteLagRect.height;// + whiteClockRect.height;
+		
+		if (controlHeight > whiteToMoveIndicatorRect.height) {
+			whiteToMoveIndicatorRect.y = whiteNameLabelRect.y + (controlHeight - whiteToMoveIndicatorRect.height)/2;			
+			blackToMoveIndicatorRect.y = blackNameLabelRect.y + (controlHeight - blackToMoveIndicatorRect.height)/2;
+		}
+
+		int pieceJailStartX = whiteToMoveIndicatorRect.x;
+		int pieceJailStartY = whiteToMoveIndicatorRect.y
+				+ whiteToMoveIndicatorRect.height;
 		pieceJailRects = new Rectangle[board.getPieceJailSquares().length];
 		if (board.isWhitePieceJailOnTop()) {
 			pieceJailRects[WP] = new Rectangle(pieceJailStartX, boardTopLeft.y
@@ -222,8 +276,6 @@ public class RightOrientedLayout extends ChessBoardLayout {
 					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
 					boardSquareSize, boardSquareSize);
 		}
-
-		gc.dispose();
 	}
 
 	@Override
@@ -231,10 +283,6 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		LOG.debug("in layout ...");
 		long startTime = System.currentTimeMillis();
 		setLayoutData();
-
-		// int width = board.getSize().x;
-		// int height = board.getSize().y;
-		// board.getCoolbar().setBounds(coolbarRect);
 
 		board.getGameDescriptionLabel().setBounds(gameDescriptionLabelRect);
 
@@ -246,11 +294,18 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		board.getOpeningDescriptionLabel().setBounds(
 				openingDescriptionLabelRect);
 
+		board.getWhiteToMoveIndicatorLabel()
+				.setBounds(whiteToMoveIndicatorRect);
+		board.getBlackToMoveIndicatorLabel()
+				.setBounds(blackToMoveIndicatorRect);
 		board.getWhiteNameRatingLabel().setBounds(whiteNameLabelRect);
 		board.getBlackNameRatingLabel().setBounds(blackNameLabelRect);
 
 		board.getWhiteClockLabel().setBounds(whiteClockRect);
 		board.getBlackClockLabel().setBounds(blackClockRect);
+
+		board.getWhiteLagLabel().setBounds(whiteLagRect);
+		board.getBlackLagLabel().setBounds(blackLagRect);
 
 		for (int i = 0; i < pieceJailRects.length; i++) {
 			if (pieceJailRects[i] != null) {
@@ -261,8 +316,20 @@ public class RightOrientedLayout extends ChessBoardLayout {
 				+ (System.currentTimeMillis() - startTime));
 	}
 
+	protected void initWorstCaseLabels() {
+		if (worstCaseClockSizeLabel == null) {
+			worstCaseClockSizeLabel = new Label(board.getBoardPanel(), SWT.NONE);
+			worstCaseClockSizeLabel.setText("00:00:00.000");
+		}
+		worstCaseClockSizeLabel.setFont(board.getWhiteClockLabel().getFont());
+	}
+
 	public RightOrientedLayout(ChessBoard board) {
 		super(board);
+	}
+
+	public void dispose() {
+		super.dispose();
 	}
 
 	@Override
