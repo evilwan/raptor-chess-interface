@@ -51,7 +51,7 @@ public class Utils implements Constants {
 	}
 
 	public static int getSetPieceFromGamePiece(int square, Game game) {
-		long squareBB = GameUtils.getBitmap(square);
+		long squareBB = GameUtils.getBitboard(square);
 		int gamePiece = game.getPiece(square);
 
 		switch (gamePiece) {

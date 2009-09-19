@@ -74,7 +74,7 @@ public class GameUtils implements GameConstants {
 				int pieceColor = Character.isUpperCase(piece) ? WHITE : BLACK;
 				int pieceInt = PIECE_TO_SAN.indexOf(new String(
 						new char[] { piece }).toUpperCase().charAt(0));
-				long pieceSquare = GameUtils.getBitmap(boardIndex);
+				long pieceSquare = GameUtils.getBitboard(boardIndex);
 
 				result.setPieceCount(pieceColor, pieceInt, result
 						.getPieceCount(pieceColor, pieceInt) + 1);
@@ -152,7 +152,7 @@ public class GameUtils implements GameConstants {
 
 	public static final long diagonalMove(int square, long emptySquares,
 			long occupied) {
-		long seed = getBitmap(square);
+		long seed = getBitboard(square);
 		return shiftUpRight(fillUpRightOccluded(seed, emptySquares))
 				| shiftUpLeft(fillUpLeftOccluded(seed, emptySquares))
 				| shiftDownLeft(fillDownLeftOccluded(seed, emptySquares))
@@ -234,7 +234,7 @@ public class GameUtils implements GameConstants {
 		return g |= p & (g << 36);
 	}
 
-	public static final long getBitmap(int square) {
+	public static final long getBitboard(int square) {
 		return SQUARE_TO_COORDINATE[square];
 	}
 
@@ -314,30 +314,30 @@ public class GameUtils implements GameConstants {
 			for (int j = 0; j < 8; j++) {
 				long bitMap = 0L;
 				if (isInBounds(i, j + 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i, j + 1));
+					bitMap |= getBitboard(rankFileToSquare(i, j + 1));
 				}
 				if (isInBounds(i, j - 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i, j - 1));
+					bitMap |= getBitboard(rankFileToSquare(i, j - 1));
 				}
 
 				if (isInBounds(i + 1, j)) {
-					bitMap |= getBitmap(rankFileToSquare(i + 1, j));
+					bitMap |= getBitboard(rankFileToSquare(i + 1, j));
 				}
 				if (isInBounds(i + 1, j + 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i + 1, j + 1));
+					bitMap |= getBitboard(rankFileToSquare(i + 1, j + 1));
 				}
 				if (isInBounds(i + 1, j - 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i + 1, j - 1));
+					bitMap |= getBitboard(rankFileToSquare(i + 1, j - 1));
 				}
 
 				if (isInBounds(i - 1, j)) {
-					bitMap |= getBitmap(rankFileToSquare(i - 1, j));
+					bitMap |= getBitboard(rankFileToSquare(i - 1, j));
 				}
 				if (isInBounds(i - 1, j + 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i - 1, j + 1));
+					bitMap |= getBitboard(rankFileToSquare(i - 1, j + 1));
 				}
 				if (isInBounds(i - 1, j - 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i - 1, j - 1));
+					bitMap |= getBitboard(rankFileToSquare(i - 1, j - 1));
 				}
 
 				KING_ATTACKS[rankFileToSquare(i, j)] = bitMap;
@@ -350,31 +350,31 @@ public class GameUtils implements GameConstants {
 			for (int j = 0; j < 8; j++) {
 				long bitMap = 0L;
 				if (isInBounds(i + 2, j + 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i + 2, j + 1));
+					bitMap |= getBitboard(rankFileToSquare(i + 2, j + 1));
 				}
 				if (isInBounds(i + 2, j - 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i + 2, j - 1));
+					bitMap |= getBitboard(rankFileToSquare(i + 2, j - 1));
 				}
 
 				if (isInBounds(i - 2, j + 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i - 2, j + 1));
+					bitMap |= getBitboard(rankFileToSquare(i - 2, j + 1));
 				}
 				if (isInBounds(i - 2, j - 1)) {
-					bitMap |= getBitmap(rankFileToSquare(i - 2, j - 1));
+					bitMap |= getBitboard(rankFileToSquare(i - 2, j - 1));
 				}
 
 				if (isInBounds(i + 1, j + 2)) {
-					bitMap |= getBitmap(rankFileToSquare(i + 1, j + 2));
+					bitMap |= getBitboard(rankFileToSquare(i + 1, j + 2));
 				}
 				if (isInBounds(i + 1, j - 2)) {
-					bitMap |= getBitmap(rankFileToSquare(i + 1, j - 2));
+					bitMap |= getBitboard(rankFileToSquare(i + 1, j - 2));
 				}
 
 				if (isInBounds(i - 1, j + 2)) {
-					bitMap |= getBitmap(rankFileToSquare(i - 1, j + 2));
+					bitMap |= getBitboard(rankFileToSquare(i - 1, j + 2));
 				}
 				if (isInBounds(i - 1, j - 2)) {
-					bitMap |= getBitmap(rankFileToSquare(i - 1, j - 2));
+					bitMap |= getBitboard(rankFileToSquare(i - 1, j - 2));
 				}
 
 				KNIGHT_ATTACKS[rankFileToSquare(i, j)] = bitMap;
@@ -437,7 +437,7 @@ public class GameUtils implements GameConstants {
 
 	public static final long orthogonalMove(int square, long emptySquares,
 			long occupied) {
-		long seed = getBitmap(square);
+		long seed = getBitboard(square);
 		return shiftRight(fillRightOccluded(seed, emptySquares))
 				| shiftLeft(fillLeftOccluded(seed, emptySquares))
 				| shiftUp(fillUpOccluded(seed, emptySquares))
