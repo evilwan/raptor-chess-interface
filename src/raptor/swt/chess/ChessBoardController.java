@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.widgets.Display;
@@ -11,85 +12,19 @@ import org.eclipse.swt.widgets.Label;
 
 import raptor.game.Game;
 import raptor.game.GameConstants;
-import raptor.game.GameTraverser;
 import raptor.game.Move;
+import raptor.game.MoveListTraverser;
 import raptor.game.util.GameUtils;
 
 public abstract class ChessBoardController implements Constants, GameConstants {
+	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 
 	public static final String LAST_NAV = "last_nav";
 	public static final String FORWARD_NAV = "forward_nav";
 	public static final String NEXT_NAV = "next_nav";
 	public static final String FIRST_NAV = "first_nav";
-	public static final long TIMEZONE_OFFSET = -(Calendar.getInstance().get(Calendar.ZONE_OFFSET) + Calendar.getInstance().get(Calendar.DST_OFFSET));
-
-	class ClockLabelUpdater implements Runnable {
-		Label clockLabel;
-		long remainingTimeMillis;
-		boolean isRunning;
-		long valueToSubtractNextRun = 0;
-
-		public ClockLabelUpdater(Label clockLabel) {
-			this.clockLabel = clockLabel;
-		}
-
-		public long getRemainingTimeMillis() {
-			return remainingTimeMillis;
-		}
-
-		public void run() {
-			if (isRunning) {
-				valueToSubtractNextRun -= valueToSubtractNextRun;
-				clockLabel.setText(timeToString(remainingTimeMillis));
-
-				if (remainingTimeMillis > 0) {
-					long nextUpdate = 1000L;
-
-					if (remainingTimeMillis >= board.preferences
-							.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-						nextUpdate = 60000L;
-					} else if (remainingTimeMillis >= board.preferences
-							.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
-						nextUpdate = 1000L;
-					} else {
-						nextUpdate = 100L;
-					}
-					if (isRunning) {
-						valueToSubtractNextRun = nextUpdate;
-						Display.getCurrent().timerExec((int) nextUpdate, this);
-					}
-				}
-			}
-		}
-
-		public void setRemainingTimeMillis(long elapsedTimeMillis) {
-			this.remainingTimeMillis = elapsedTimeMillis;
-		}
-
-		public void start() {
-			isRunning = true;
-			if (remainingTimeMillis > 0) {
-				long nextUpdate = 1000L;
-
-				if (remainingTimeMillis >= board.preferences
-						.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-					nextUpdate = remainingTimeMillis % 60000L;
-				} else if (remainingTimeMillis >= board.preferences
-						.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
-					nextUpdate = remainingTimeMillis % 1000L;
-				} else {
-					nextUpdate = remainingTimeMillis % 100L;
-				}
-				valueToSubtractNextRun = nextUpdate;
-				Display.getCurrent().timerExec((int) nextUpdate, this);
-			}
-		}
-
-		public void stop() {
-			isRunning = false;
-			Display.getCurrent().timerExec(-1, this);
-		}
-	}
+	public static final long TIMEZONE_OFFSET = -Calendar.getInstance().get(
+			Calendar.ZONE_OFFSET);
 
 	protected boolean autoDraw = false;
 	protected ClockLabelUpdater blackClockUpdater;
@@ -97,20 +32,38 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	protected long currentBlackTime;
 	protected long currentWhiteTime;
-	protected GameTraverser gameTraverser;
-
-	protected boolean isActive = false;
-
-	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
-	protected int promoteType = GameConstants.QUEEN;
+	protected MoveListTraverser traverser;
+	protected int promoteType = QUEEN;
 
 	protected ClockLabelUpdater whiteClockUpdater;
+	
+	public void dispose() {
+		if (traverser != null) {
+			traverser.dispose();
+		}
+		board = null;
+		if (blackClockUpdater != null) {
+			blackClockUpdater.stop();
+			blackClockUpdater.dispose();
+		}
+		if (whiteClockUpdater != null) {
+			whiteClockUpdater.stop();
+			whiteClockUpdater.dispose();
+		}
+	}
 
 	public ChessBoardController(ChessBoard board) {
 		this.board = board;
-		whiteClockUpdater = new ClockLabelUpdater(board.whiteClockLabel);
-		blackClockUpdater = new ClockLabelUpdater(board.blackClockLabel);
-		gameTraverser = new GameTraverser(board.game);
+		traverser = new MoveListTraverser(board.game);
+	}
+
+	protected void initClockUpdaters() {
+		if (whiteClockUpdater == null) {
+			whiteClockUpdater = new ClockLabelUpdater(board.whiteClockLabel,
+					this.board);
+			blackClockUpdater = new ClockLabelUpdater(board.blackClockLabel,
+					this.board);
+		}
 	}
 
 	protected void adjustBoardToGame(Game game) {
@@ -126,9 +79,26 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	protected abstract void adjustCoolbarToInitial();
 
 	protected void adjustFromNavigationChange() {
-		adjustPieceJailFromGame(gameTraverser.getCurrnentGame());
-		adjustBoardToGame(gameTraverser.getCurrnentGame());
-		redraw();
+		adjustPieceJailFromGame(traverser.getAdjustedGame());
+		adjustBoardToGame(traverser.getAdjustedGame());
+		setNavButtonsEnablbed();
+		if (traverser.getTraverserHalfMoveIndex() > 0) {
+			Move move = traverser.getAdjustedGame().getMoves().get(
+					traverser.getTraverserHalfMoveIndex() - 1);
+			String moveDescription = move.getSan();
+
+			if (StringUtils.isBlank(moveDescription)) {
+				moveDescription = move.getLan();
+			}
+			board.statusLabel.setText("Position after move "
+					+ Utils.halfMoveIndexToDescription(traverser
+							.getTraverserHalfMoveIndex(), GameUtils
+							.getOppositeColor(traverser.getAdjustedGame()
+									.getColorToMove())) + moveDescription);
+		} else {
+			board.statusLabel.setText("");
+		}
+		board.forceUpdate();
 	}
 
 	protected void adjustPieceJailFromGame(Game game) {
@@ -152,15 +122,16 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		}
 	}
 
-	protected void adjustToGameChange() {
-		LOG.info("adjustToGameChange " + board.game.getId() + " ...");
-		long startTime = System.currentTimeMillis();
-
+	protected void stopClocks() {
 		whiteClockUpdater.stop();
 		blackClockUpdater.stop();
+	}
 
-		isActive = (board.game.getState() & Game.ACTIVE_STATE) > 0;
+	protected boolean isGameActive() {
+		return isGameInState(Game.ACTIVE_STATE);
+	}
 
+	protected void adjustClocks() {
 		board.whiteClockLabel.setText(timeToString(board.game
 				.getWhiteRemainingTimeMillis()));
 		board.blackClockLabel.setText(timeToString(board.game
@@ -170,70 +141,118 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 				.getWhiteRemainingTimeMillis());
 		blackClockUpdater.setRemainingTimeMillis(board.game
 				.getBlackRemainingTimeMillis());
+	}
 
-		if ((board.game.getState() & Game.ACTIVE_STATE) != 0
-				&& (board.game.getState() & Game.UNTIMED_STATE) == 0
-				&& (board.game.getState() & Game.IS_CLOCK_TICKING_STATE) != 0) {
+	protected boolean isGameInState(int state) {
+		return (board.game.getState() & state) != 0;
+	}
+
+	protected void startClocks() {
+		if (isGameActive() && !isGameInState(Game.UNTIMED_STATE)
+				&& isGameInState(Game.IS_CLOCK_TICKING_STATE)) {
+			initClockUpdaters();
 			if (board.game.getColorToMove() == WHITE) {
 				whiteClockUpdater.start();
 			} else {
 				blackClockUpdater.start();
 			}
 		}
+	}
 
+	protected void setNavButtonsEnablbed() {
 		if (isMoveListTraversable()) {
-			gameTraverser.gotoHalfMove(board.game.getHalfMoveCount());
-			board.setToolItemEnabled(gameTraverser.hasFirst(),
-					ChessBoard.FIRST_NAV);
-			board.setToolItemEnabled(gameTraverser.hasLast(),
-					ChessBoard.LAST_NAV);
-			board.setToolItemEnabled(gameTraverser.hasNext(),
-					ChessBoard.FORWARD_NAV);
-			board.setToolItemEnabled(gameTraverser.hasPrevious(),
-					ChessBoard.BACK_NAV);
+			board.setButtonEnabled(traverser.hasFirst(), ChessBoard.FIRST_NAV);
+			board.setButtonEnabled(traverser.hasLast(), ChessBoard.LAST_NAV);
+			board.setButtonEnabled(traverser.hasNext(), ChessBoard.NEXT_NAV);
+			board.setButtonEnabled(traverser.hasBack(), ChessBoard.BACK_NAV);
 		} else {
-			board.setToolItemEnabled(false, ChessBoard.FIRST_NAV);
-			board.setToolItemEnabled(false, ChessBoard.LAST_NAV);
-			board.setToolItemEnabled(false, ChessBoard.FORWARD_NAV);
-			board.setToolItemEnabled(false, ChessBoard.BACK_NAV);
+			board.setButtonEnabled(false, ChessBoard.FIRST_NAV);
+			board.setButtonEnabled(false, ChessBoard.LAST_NAV);
+			board.setButtonEnabled(false, ChessBoard.NEXT_NAV);
+			board.setButtonEnabled(false, ChessBoard.BACK_NAV);
 		}
+	}
 
+	protected void adjustLagLabels() {
 		board.whiteLagLabel
 				.setText(lagToString(board.game.getWhiteLagMillis()));
 		board.blackLagLabel.setText(lagToString(board.game
 				.getBlackRemainingTimeMillis()));
+	}
 
+	protected void adjustPremoveLabel() {
 		board.currentPremovesLabel.setText("Premoves: EMPTY");
-		board.statusLabel
-				.setText(board.game.getMoves().getSize() > 0 ? board.game
-						.getMoves().get(board.game.getMoves().getSize() - 1)
-						.getLan() : "");
+	}
+
+	protected void adjustStatusLabel() {
+		if (isGameActive()) {
+			System.out.println("In adjust status label game is active.");
+			if (board.getGame().getHalfMoveCount() > 0) {
+				Move move = board.game.getMoves().get(
+						board.getGame().getHalfMoveCount() - 1);
+				String moveDescription = move.getSan();
+
+				if (StringUtils.isBlank(moveDescription)) {
+					moveDescription = move.getLan();
+				}
+				System.out.println("Set status label.");
+				board.statusLabel.setText("Last move: "
+						+ Utils.halfMoveIndexToDescription(board.game
+								.getHalfMoveCount(), GameUtils
+								.getOppositeColor(board.game.getColorToMove()))
+						+ moveDescription);
+			} else {
+				board.statusLabel.setText("");
+			}
+		} else {
+			System.out.println("In adjust status label game is not active.");
+			board.statusLabel
+					.setText(StringUtils
+							.defaultString(board.game.getResultDescription(),
+									"Game is not active and no result string is set. This is a bug"));
+		}
+	}
+
+	protected void adjustOpeningDescriptionLabel() {
 		board.openingDescriptionLabel
 				.setText("This will show opening description in the future.");
-		board.statusLabel.setText(!isActive ? board.game.getResultDescription()
-				: "");
+	}
 
+	protected void adjustToGameChange() {
+		LOG.info("adjustToGameChange " + board.game.getId() + " ...");
+		long startTime = System.currentTimeMillis();
+
+		adjustClocks();
+		startClocks();
+		traverser.adjustHalfMoveIndex();
+		setNavButtonsEnablbed();
+		adjustLagLabels();
+		adjustPremoveLabel();
+		adjustStatusLabel();
+		adjustOpeningDescriptionLabel();
 		adjustPieceJailFromGame(board.game);
 		adjustBoardToGame(board.game);
 		adjustGameStatusLabel();
 
-		board.layout();
+		board.forceUpdate();
 
 		LOG.info("adjustToGameChange " + board.game.getId() + "  n "
 				+ (System.currentTimeMillis() - startTime));
 	}
 
-	public void adjustToGameInitial() {
-		LOG.info("adjustToGame " + board.game.getId() + " ...");
-		long startTime = System.currentTimeMillis();
-
-		adjustCoolbarToInitial();
-
+	protected void adjustNameRatingLabels() {
 		board.blackNameRatingLabel.setText(board.game.getBlackName() + " ("
 				+ board.game.getBlackRating() + ")");
 		board.whiteNameRatingLabel.setText(board.game.getWhiteName() + " ("
 				+ board.game.getWhiteRating() + ")");
+	}
 
+	public void adjustToGameInitial() {
+		LOG.info("adjustToGame " + board.game.getId() + " ...");
+		long startTime = System.currentTimeMillis();
+		initClockUpdaters();
+		adjustCoolbarToInitial();
+		adjustNameRatingLabels();
 		adjustToGameChange();
 		adjustGameDescriptionLabel();
 
@@ -242,9 +261,11 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	public void onNavBack() {
-		if (gameTraverser.hasPrevious()) {
-			gameTraverser.previous();
+		if (traverser.hasBack()) {
+			traverser.back();
 			adjustFromNavigationChange();
+		} else {
+			LOG.error("Traverser did not have previous so ignoring action");
 		}
 	}
 
@@ -256,32 +277,29 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	protected abstract void decorateCoolbar();
 
-	public void dispose() {
-		if (gameTraverser != null) {
-			gameTraverser.dispose();
-		}
-		board = null;
-	}
+	
 
 	public void onNavFirst() {
-		if (gameTraverser.hasFirst()) {
-			gameTraverser.first();
+		if (traverser.hasFirst()) {
+			traverser.first();
 			adjustFromNavigationChange();
+		} else {
+			LOG.error("Traverser did not have first so ignoring action");
 		}
+
 	}
 
 	public void onFlip() {
 		LOG.debug("onFlip");
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
-		board.getBoardPanel().layout();
-		board.getBoardPanel().redraw();
+		board.forceUpdate();
 		LOG.debug("isWhiteOnTop = " + board.isWhiteOnTop);
 	}
 
 	public void onNavForward() {
-		if (gameTraverser.hasNext()) {
-			gameTraverser.next();
+		if (traverser.hasNext()) {
+			traverser.next();
 			adjustFromNavigationChange();
 		}
 	}
@@ -298,8 +316,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		return board.game;
 	}
 
-	public GameTraverser getGameTraverser() {
-		return gameTraverser;
+	public MoveListTraverser getGameTraverser() {
+		return traverser;
 	}
 
 	public int getPromoteType() {
@@ -345,22 +363,18 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	public void onNavCommit() {
-
+		// TO DO
 	}
 
 	public void onNavRevert() {
-
+		// TO DO
 	}
 
 	public void onNavLast() {
-		if (gameTraverser.hasLast()) {
-			gameTraverser.last();
+		if (traverser.hasLast()) {
+			traverser.last();
 			adjustFromNavigationChange();
 		}
-	}
-
-	public void layout() {
-		board.layout();
 	}
 
 	public String pieceCountToString(int count) {
@@ -369,10 +383,6 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		} else {
 			return "" + count;
 		}
-	}
-
-	public void redraw() {
-		board.redraw();
 	}
 
 	public void setAutoDraw(boolean autoDraw) {

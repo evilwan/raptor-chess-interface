@@ -32,7 +32,7 @@ public class AppWindow extends ApplicationWindow {
 		game = GameUtils.createStartingPosition();
 		game.setId("1");
 		game.setType(Game.BLITZ);
-		game.setState(Game.ACTIVE_STATE & Game.IS_CLOCK_TICKING_STATE);
+		game.setState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 		game.setWhiteName("AReallyLongName");
 		game.setWhiteRating("1934");
 		game.setBlackName("shorty");
@@ -49,7 +49,7 @@ public class AppWindow extends ApplicationWindow {
 
 		addMenuBar();
 		addStatusLine();
-		 addCoolBar(SWT.FLAT);
+		addCoolBar(SWT.FLAT);
 	}
 
 	protected MenuManager createMenuManager() {

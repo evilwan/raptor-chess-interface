@@ -16,6 +16,12 @@ public class Utils implements Constants {
 				|| (isBlackPiece(piece1) && isBlackPiece(piece2));
 	}
 	
+	public static String halfMoveIndexToDescription(int halfMoveIndex,int colorToMove) {
+		int fullMoveIndex = (halfMoveIndex/2) + 1;
+		
+		return colorToMove == WHITE ? fullMoveIndex + ") " : fullMoveIndex + ") ... ";
+	}
+	
 	public static int setPieceFromColoredPiece(int coloredPiece) {
 		switch (coloredPiece) {
 		case EMPTY:

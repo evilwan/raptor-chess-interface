@@ -20,6 +20,7 @@ public final class MoveList implements GameConstants {
 		for (int i = 0; i < moves.length; i++) {
 			result.moves[i] = moves[i];
 		}
+		result.size = size;
 		return result;
 	}
 
