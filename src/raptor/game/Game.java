@@ -3,7 +3,7 @@ package raptor.game;
 import static raptor.game.util.GameUtils.bitscanClear;
 import static raptor.game.util.GameUtils.bitscanForward;
 import static raptor.game.util.GameUtils.diagonalMove;
-import static raptor.game.util.GameUtils.getBitmap;
+import static raptor.game.util.GameUtils.getBitboard;
 import static raptor.game.util.GameUtils.getOppositeColor;
 import static raptor.game.util.GameUtils.getSan;
 import static raptor.game.util.GameUtils.getString;
@@ -370,7 +370,7 @@ public class Game implements GameConstants {
 		if (getEpSquare() != EMPTY) {
 
 			long toBB = pawnEpCapture(getColorToMove(), fromBB, getPieceBB(
-					oppositeColor, PAWN), getBitmap(getEpSquare()));
+					oppositeColor, PAWN), getBitboard(getEpSquare()));
 
 			if (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
@@ -396,7 +396,7 @@ public class Game implements GameConstants {
 
 		while (pawnsBB != 0) {
 			int fromSquare = bitscanForward(pawnsBB);
-			long fromBB = getBitmap(fromSquare);
+			long fromBB = getBitboard(fromSquare);
 
 			genPseudoPawnEPCaptures(fromSquare, fromBB, oppositeColor, moves);
 			genPseudoPawnCaptures(fromSquare, fromBB, oppositeColor, moves);
@@ -822,8 +822,8 @@ public class Game implements GameConstants {
 	}
 
 	public void makeEPMove(Move move) {
-		long fromBB = getBitmap(move.getFrom());
-		long toBB = getBitmap(move.getTo());
+		long fromBB = getBitboard(move.getFrom());
+		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
 		long captureBB = getColorToMove() == WHITE ? moveOne(SOUTH, toBB)
 				: moveOne(NORTH, toBB);
@@ -895,8 +895,8 @@ public class Game implements GameConstants {
 	}
 
 	public void makeNonEpNonCastlingMove(Move move) {
-		long fromBB = getBitmap(move.getFrom());
-		long toBB = getBitmap(move.getTo());
+		long fromBB = getBitboard(move.getFrom());
+		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
 		int oppositeColor = getOppositeColor(move.getColor());
 
@@ -1162,7 +1162,7 @@ public class Game implements GameConstants {
 											.bitscanForward(getPieceBB(
 													cachedColorToMove, KING));
 									if (!isInCheck(cachedColorToMove, GameUtils
-											.getBitmap(newKingCoordinates))) {
+											.getBitboard(newKingCoordinates))) {
 										result = current;
 										matchesCount++;
 									}
@@ -1294,8 +1294,8 @@ public class Game implements GameConstants {
 
 	public void rollbackEpMove(Move move) {
 		int oppositeColor = getOppositeColor(getColorToMove());
-		long fromBB = getBitmap(move.getFrom());
-		long toBB = getBitmap(move.getTo());
+		long fromBB = getBitboard(move.getFrom());
+		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
 
 		long captureBB = oppositeColor == WHITE ? moveOne(SOUTH, toBB)
@@ -1320,8 +1320,8 @@ public class Game implements GameConstants {
 
 	public void rollbackNonEpNonCastlingMove(Move move) {
 		int oppositeColor = getOppositeColor(move.getColor());
-		long fromBB = getBitmap(move.getFrom());
-		long toBB = getBitmap(move.getTo());
+		long fromBB = getBitboard(move.getFrom());
+		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
 
 		xor(move.getColor(), fromToBB);
@@ -1498,12 +1498,13 @@ public class Game implements GameConstants {
 		if (isSettingMoveSan() && move.getSan() == null) {
 			// TO DO: possible add + or ++ for check/checkmate
 			String shortAlgebraic = null;
-			
-			if ( (move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
+
+			if ((move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
 				shortAlgebraic = "O-O";
-			} else if ( (move.getMoveCharacteristic() & Move.QUEENSIDE_CASTLING_CHARACTERISTIC) != 0) {
+			} else if ((move.getMoveCharacteristic() & Move.QUEENSIDE_CASTLING_CHARACTERISTIC) != 0) {
 				shortAlgebraic = "O-O-O";
-			} else if (move.getPiece() == PAWN && (move.getMoveCharacteristic() & Move.EN_PASSANT_CHARACTERISTIC) != 0) // e.p.
+			} else if (move.getPiece() == PAWN
+					&& (move.getMoveCharacteristic() & Move.EN_PASSANT_CHARACTERISTIC) != 0) // e.p.
 			// is
 			// optional but
 			// the x is
@@ -1512,7 +1513,7 @@ public class Game implements GameConstants {
 			// are never
 			// unambiguous)
 			{
-				shortAlgebraic = SanUtil.squareToFileSan(move.getFrom())  + "x"
+				shortAlgebraic = SanUtil.squareToFileSan(move.getFrom()) + "x"
 						+ SanUtil.squareToSan(move.getTo());
 			} else if (move.getPiece() == PAWN && move.isCapture()) // Possible
 			// formats ed
@@ -1521,14 +1522,16 @@ public class Game implements GameConstants {
 			// can be
 			// ambiguous)
 			{
-				int oppositeColorToMove = GameUtils.getOppositeColor(colorToMove);
+				int oppositeColorToMove = GameUtils
+						.getOppositeColor(colorToMove);
 				long fromBB = getPieceBB(getColorToMove(), PAWN);
 
 				int movesFound = 0;
 				while (fromBB != 0) {
 					int fromSquare = bitscanForward(fromBB);
-					if ((GameUtils.getBitmap(move.getTo()) & 
-			                 GameUtils.pawnCapture(colorToMove, getBitmap(fromSquare), getColorBB(oppositeColorToMove))) != 0) {
+					if ((GameUtils.getBitboard(move.getTo()) & GameUtils
+							.pawnCapture(colorToMove, getBitboard(fromSquare),
+									getColorBB(oppositeColorToMove))) != 0) {
 						movesFound++;
 					}
 					fromBB = bitscanClear(fromBB);
@@ -1539,33 +1542,37 @@ public class Game implements GameConstants {
 							+ "x"
 							+ SanUtil.squareToSan(move.getTo())
 							+ (move.isPromotion() ? "="
-									+ PIECE_TO_SAN.charAt(move.getPiecePromotedTo()) : "");
+									+ PIECE_TO_SAN.charAt(move
+											.getPiecePromotedTo()) : "");
 				} else {
 					shortAlgebraic = SanUtil.squareToFileSan(move.getFrom())
-					+ "x"
-					+ SanUtil.squareToFileSan(move.getTo())
-					+ (move.isPromotion() ? "="
-							+ PIECE_TO_SAN.charAt(move.getPiecePromotedTo()) : "");
+							+ "x"
+							+ SanUtil.squareToFileSan(move.getTo())
+							+ (move.isPromotion() ? "="
+									+ PIECE_TO_SAN.charAt(move
+											.getPiecePromotedTo()) : "");
 				}
 			} else if (move.getPiece() == PAWN) // e4 (pawn moves are never
 			// ambiguous)
 			{
 				shortAlgebraic = SanUtil.squareToSan(move.getTo())
 						+ (move.isPromotion() ? "="
-								+ PIECE_TO_SAN.charAt(move.getPiecePromotedTo()) : "");
+								+ PIECE_TO_SAN
+										.charAt(move.getPiecePromotedTo()) : "");
 			} else {
-			
-				shortAlgebraic = "" + PIECE_TO_SAN.charAt(move.getPiece());
-						
-				long fromBB = getPieceBB(getColorToMove(), PAWN);
-				long toBB = GameUtils.getBitmap(move.getTo());
 
-				int moveFromFile = GameUtils.getFile(move.getTo());
-				int moveFromRank = GameUtils.getRank(move.getTo());
-				
+				shortAlgebraic = "" + PIECE_TO_SAN.charAt(move.getPiece());
+
+				long fromBB = getPieceBB(getColorToMove(), move.getPiece());
+				long toBB = GameUtils.getBitboard(move.getTo());
+
+				int moveFromFile = GameUtils.getFile(move.getFrom());
+				int moveFromRank = GameUtils.getRank(move.getFrom());
+
 				int sameFilesFound = 0;
 				int sameRanksFound = 0;
-				
+				int matchesFound = 0;
+
 				if (move.getPiece() != KING) {
 					while (fromBB != 0) {
 						int fromSquare = bitscanForward(fromBB);
@@ -1573,8 +1580,10 @@ public class Game implements GameConstants {
 
 						switch (move.getPiece()) {
 						case KNIGHT:
-							resultBB = GameUtils.knightMove(move.getFrom())
-									& toBB;
+							System.err.println("knightMove BB\n"
+									+ GameUtils.getString(GameUtils
+											.knightMove(fromSquare)));
+							resultBB = GameUtils.knightMove(fromSquare) & toBB;
 							break;
 						case BISHOP:
 							resultBB = diagonalMove(fromSquare, getEmptyBB(),
@@ -1587,37 +1596,47 @@ public class Game implements GameConstants {
 									& getNotColorToMoveBB() & toBB;
 							break;
 						case QUEEN:
-							resultBB = orthogonalMove(fromSquare, getEmptyBB(),
-									getOccupiedBB())
-									& getNotColorToMoveBB()
-									& toBB
-									& diagonalMove(fromSquare, getEmptyBB(),
-											getOccupiedBB());
+							resultBB = (orthogonalMove(fromSquare,
+									getEmptyBB(), getOccupiedBB())
+									& getNotColorToMoveBB() & toBB)
+									| (diagonalMove(fromSquare, getEmptyBB(),
+											getOccupiedBB())
+											& getNotColorToMoveBB() & toBB);
 							break;
 						}
 
 						if (resultBB != 0) {
-							int resultSquare = bitscanForward(resultBB);
-							if (GameUtils.getFile(resultSquare) == moveFromFile) {
+							matchesFound++;
+
+							if (GameUtils.getFile(fromSquare) == moveFromFile) {
 								sameFilesFound++;
 							}
-							if (GameUtils.getRank(resultSquare) == moveFromRank) {
+							if (GameUtils.getRank(fromSquare) == moveFromRank) {
 								sameRanksFound++;
 							}
 						}
 						fromBB = bitscanClear(fromBB);
 					}
 				}
-				
+
+                boolean handledAmbiguity = false;
+
+				if (sameRanksFound > 1) {
+					shortAlgebraic += SanUtil.squareToFileSan(move.getFrom());
+					handledAmbiguity = true;
+				}
 				if (sameFilesFound > 1) {
+					shortAlgebraic += SanUtil.squareToRankSan(move.getFrom());
+					handledAmbiguity = true;
+				}
+				if (!handledAmbiguity && matchesFound > 1) {
 					shortAlgebraic += SanUtil.squareToFileSan(move.getFrom());
 				}
-				if (sameRanksFound > 1) {
-					shortAlgebraic += SanUtil.squareToRankSan(move.getFrom());
-				}
-				shortAlgebraic += (move.isCapture() ? "x" : "") + SanUtil.squareToSan(move.getTo());
+				
+				shortAlgebraic += (move.isCapture() ? "x" : "")
+						+ SanUtil.squareToSan(move.getTo());
 			}
-			
+
 			move.setSan(shortAlgebraic);
 		}
 	}
@@ -1678,7 +1697,7 @@ public class Game implements GameConstants {
 				if (piece == EMPTY) {
 					consecutiveEmpty++;
 				} else {
-					long squareBB = getBitmap(square);
+					long squareBB = getBitboard(square);
 					int color = (getPieceBB(WHITE, piece) & squareBB) != 0L ? WHITE
 							: BLACK;
 					if (consecutiveEmpty > 0) {
@@ -1764,7 +1783,7 @@ public class Game implements GameConstants {
 			for (int j = 0; j < 8; j++) {
 				int square = rankFileToSquare(i, j);
 				int piece = getPiece(square);
-				int color = (getBitmap(square) & getColorBB(colorToMove)) != 0L ? colorToMove
+				int color = (getBitboard(square) & getColorBB(colorToMove)) != 0L ? colorToMove
 						: getOppositeColor(colorToMove);
 
 				result.append("|" + COLOR_PIECE_TO_CHAR[color].charAt(piece));
@@ -1850,7 +1869,7 @@ public class Game implements GameConstants {
 			for (int j = 0; j < 8; j++) {
 				int square = rankFileToSquare(i, j);
 				int piece = getPiece(square);
-				int color = (getBitmap(square) & getColorBB(colorToMove)) != 0L ? colorToMove
+				int color = (getBitboard(square) & getColorBB(colorToMove)) != 0L ? colorToMove
 						: getOppositeColor(colorToMove);
 
 				result.append("|" + COLOR_PIECE_TO_CHAR[color].charAt(piece));
