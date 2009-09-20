@@ -31,7 +31,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
 	private static final Log LOG = LogFactory
 			.getLog(RaptorPreferenceStore.class);
-	public static final File RAPTOR_PROPERTIES = new File(App.getInstance()
+	public static final File RAPTOR_PROPERTIES = new File(App
 			.getRaptorUserDir(), "raptor.properties");
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 	public static final String ICONS_DIR = "resources/common/icons/";
@@ -58,8 +58,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			}
 			setFilename(RAPTOR_PROPERTIES.getAbsolutePath());
 		} catch (Exception e) {
-			LOG.error("Error reading or writing to file "
-					+ RAPTOR_PROPERTIES.getAbsolutePath(), e);
+			LOG.error("Error reading or writing to file ", e);
 			throw new RuntimeException(e);
 		}
 
@@ -87,6 +86,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	public void loadDefaults() {
 		String defaultFontName = fontRegistry.defaultFont().getFontData()[0]
 				.getName();
+		String defaultMonospacedFontName = "Courier";
 
 		// Board
 		setDefault(BOARD_CHESS_SET_NAME, "Fantasy");
@@ -152,9 +152,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_TIMESTAMP_CONSOLE, false);
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
-				new FontData[] { new FontData(defaultFontName, 16, 0) });
+				new FontData[] { new FontData(defaultMonospacedFontName, 16, 0) });
 		PreferenceConverter.setDefault(this, CHAT_OUTPUT_FONT,
-				new FontData[] { new FontData(defaultFontName, 16, 0) });
+				new FontData[] { new FontData(defaultMonospacedFontName, 16, 0) });
 		PreferenceConverter.setDefault(this, CHAT_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 
@@ -169,6 +169,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, CHAT_LINK_COLOR,
 				new RGB(0, 0, 255));
 
+		setDefault(SOUND_ENABLED, true);
+
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, true);
 		setDefault(FICS_AUTO_CONNECT, true);
@@ -178,6 +180,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_IS_ANON_GUEST, false);
 		setDefault(FICS_LOGIN_SCRIPT, "");
 		setDefault(FICS_IS_LOGGING_GAMES, false);
+		setDefault(FICS_SERVER_URL, "freechess.org");
+		setDefault(FICS_PORT, 5000);
+		setDefault(FICS_TIMESEAL_ENABLED, true);
 
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
