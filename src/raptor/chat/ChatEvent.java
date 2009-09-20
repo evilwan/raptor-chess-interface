@@ -25,8 +25,8 @@ public class ChatEvent {
 	}
 
 	public String toString() {
-		return "ChatEvent: source=" + source + " type=" + type + " gameId"
-				+ gameId + " message=" + message;
+		return "ChatEvent: source=" + source + " type=" + type + " gameId="
+				+ gameId + " message='" + message + "'";
 	}
 
 	public String getMessage() {
