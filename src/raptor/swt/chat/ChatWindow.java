@@ -37,7 +37,7 @@ public class ChatWindow extends ApplicationWindow {
 		app.getFicsConnector().getPreferences().setValue(
 				PreferenceKeys.FICS_IS_NAMED_GUEST, true);
 		app.getFicsConnector().getPreferences().setValue(
-				PreferenceKeys.FICS_USER_NAME, "raptorTest");
+				PreferenceKeys.FICS_USER_NAME, "raptorTest2");
 		display.asyncExec(new Runnable() {
 			public void run() {
 				app.getFicsConnector().connect();
