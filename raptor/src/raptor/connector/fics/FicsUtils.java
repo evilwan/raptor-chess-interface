@@ -128,7 +128,7 @@ public class FicsUtils {
 					int intValue = Integer.parseInt(unicodeHex, 16);
 					String replacement = new String(
 							new char[] { (char) intValue });
-					builder.replace(unicodePrefix, unicodePrefix + 7,
+					builder.replace(unicodePrefix, endIndex + 1,
 							replacement);
 				} catch (NumberFormatException nfe) {
 					unicodePrefix = endIndex;
