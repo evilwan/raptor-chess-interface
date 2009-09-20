@@ -34,7 +34,6 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public static final String PASSWORD_PROMPT = "password:";
 	public static final String PROMPT = "\n\rfics% ";
 	public static final int PROMPT_LENGTH = PROMPT.length();
-	public static final String TIMER_DEFAULT_COMMAND = "date";
 
 	protected ChatService chatService = new ChatService();
 	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();

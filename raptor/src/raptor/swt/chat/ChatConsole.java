@@ -31,8 +31,6 @@ import raptor.service.ChatService.ChatListener;
 public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes {
 	private static final Log LOG = LogFactory.getLog(ChatConsole.class);
 	public static final double CLEAN_PERCENTAGE = .33;
-	public static final SimpleDateFormat TIMESTAMP_FORMAT = new SimpleDateFormat(
-			"kk:mm ");
 
 	protected String inboundRegex;
 	protected int inboundType = -1;
@@ -79,6 +77,8 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 				fireSendOutput();
 			} else {
 				outputText.append("" + arg0.character);
+				outputText.setSelection(new Point(outputText.getCharCount(),
+						outputText.getCharCount()));
 				outputText.forceFocus();
 			}
 		}
@@ -116,10 +116,12 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 				getDisplay().asyncExec(new Runnable() {
 					public void run() {
 
-						if (e.getType() == ChatTypes.OUTBOUND) {
-							acceptOutbound(e);
-						} else {
-							acceptInbound(e);
+						if (!ChatConsole.this.isDisposed()) {
+							if (e.getType() == ChatTypes.OUTBOUND) {
+								acceptOutbound(e);
+							} else {
+								acceptInbound(e);
+							}
 						}
 					}
 				});
@@ -142,7 +144,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		}
 
 		if (result) {
-			append("\n" + event.getMessage());
+			append(event.getMessage());
 		}
 		return result;
 	}
@@ -158,7 +160,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		}
 
 		if (result) {
-			append("\n" + event.getMessage());
+			append(event.getMessage());
 		}
 		return result;
 	}
@@ -186,8 +188,12 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 	protected void append(String text) {
 		if (App.getInstance().getPreferences().getBoolean(
 				CHAT_TIMESTAMP_CONSOLE)) {
-			text = TIMESTAMP_FORMAT.format(new Date()) + text;
+			SimpleDateFormat format = new SimpleDateFormat(App.getInstance()
+					.getPreferences().getString(CHAT_TIMESTAMP_CONSOLE_FORMAT));
+			text = format.format(new Date()) + text;
 		}
+
+		text = '\n' + text;
 		int positionBeforeAdding = inputText.getCharCount();
 		inputText.append(text);
 		inputText.setCaretOffset(inputText.getCharCount());

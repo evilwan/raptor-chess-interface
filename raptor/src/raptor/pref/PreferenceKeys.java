@@ -39,7 +39,7 @@ public interface PreferenceKeys {
 
 	public static final String CHAT_MAX_CONSOLE_CHARS = "chat-max-console-chars";
 	public static final String CHAT_TIMESTAMP_CONSOLE = "chat-timestamp-console";
-
+    public static final String CHAT_TIMESTAMP_CONSOLE_FORMAT = "chat-timestamp-console-format";
 	public static final String CHAT_OUTPUT_FONT = "chat-output-font";
 	public static final String CHAT_INPUT_FONT = "chat-input-font";
 	public static final String CHAT_LAG_FONT = "chat-lag-font";
