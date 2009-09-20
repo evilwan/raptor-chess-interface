@@ -27,59 +27,37 @@ import raptor.util.RaptorStringUtils;
 import free.freechess.timeseal.TimesealingSocket;
 
 public class FicsConnector implements Connector, PreferenceKeys {
-	static final Log LOG = LogFactory.getLog(FicsConnector.class);
-
-	public static final long READ_DELAY_MILLIS = 100;
-	public static final String LOGGED_IN_MSG = "**** Starting FICS session as ";
-
-	public static final String PROMPT = "\n\rfics% ";
-
-	public static final int PROMPT_LENGTH = PROMPT.length();
-
-	public static final String LOGIN_PROMPT = "login: ";
-
 	public static final String ENTER_PROMPT = "\":";
-
+	private static final Log LOG = LogFactory.getLog(FicsConnector.class);
+	public static final String LOGGED_IN_MSG = "**** Starting FICS session as ";
+	public static final String LOGIN_PROMPT = "login: ";
 	public static final String PASSWORD_PROMPT = "password:";
-
-	public static final int READ_BUFFER_SIZE = 25000;
-
+	public static final String PROMPT = "\n\rfics% ";
+	public static final int PROMPT_LENGTH = PROMPT.length();
 	public static final String TIMER_DEFAULT_COMMAND = "date";
 
-	protected PreferenceStore preferences;
-
-	protected Socket socket;
-	protected ReadableByteChannel inputChannel;
-	protected WritableByteChannel outputChannel;
-	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
-	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
-	protected boolean isLoggedIn = false;
+	protected ChatService chatService = new ChatService();
+	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();
 	protected boolean hasSentLogin = false;
 	protected boolean hasSentPassword = false;
-	protected String userName;
-	protected ChatService chatService = new ChatService();
-	private FicsParser parser = new FicsParser();
+	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
+	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
+	protected ReadableByteChannel inputChannel;
+	protected boolean isLoggedIn = false;
+	protected WritableByteChannel outputChannel;
+	protected FicsParser parser = new FicsParser();
+	protected PreferenceStore preferences;
+	protected Socket socket;
 
-	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();
+	protected String userName;
 
 	public FicsConnector() {
 		refreshGameScripts();
 	}
 
-	public PreferenceStore getPreferences() {
-		return preferences;
-	}
-
-	public void setPreferences(PreferenceStore preferences) {
-		this.preferences = preferences;
-	}
-
-	public String getDescription() {
-		return "Free Internet Chess Server";
-	}
-
-	public String getShortName() {
-		return "fics";
+	public void addGameScript(GameScript script) {
+		gameScriptsMap.put(script.getName(), script);
+		script.save();
 	}
 
 	public void connect() {
@@ -119,24 +97,74 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		LOG.info("Connection successful");
 	}
 
-	protected void readInput() {
+	public void disconnect() {
 		try {
-			while (true) {
-				int numRead = inputChannel.read(inputBuffer);
-				if (numRead > 0) {
-					System.err.println("Read " + numRead + " bytes.");
-					inputBuffer.rewind();
-					byte[] bytes = new byte[numRead];
-					inputBuffer.get(bytes);
-					publishInput(new String(bytes));
-					inputBuffer.clear();
-				}
-				Thread.sleep(50);
-			}
+			socket.close();
 		} catch (Throwable t) {
-			LOG.error("Error occured in read", t);
-			disconnect();
+			LOG.error("Error disposing channel", t);
 		}
+		LOG.error("Disconnected from FicsConnection.");
+	}
+
+	public ChatService getChatService() {
+		return chatService;
+	}
+
+	public String getDescription() {
+		return "Free Internet Chess Server";
+	}
+
+	public GameScript getGameScript(String name) {
+		return gameScriptsMap.get(name);
+	}
+
+	public GameScript[] getGameScripts() {
+		return gameScriptsMap.values().toArray(new GameScript[0]);
+	}
+
+	public GameService getGameService() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public PreferenceStore getPreferences() {
+		return preferences;
+	}
+
+	public String getShortName() {
+		return "fics";
+	}
+
+	public void makeMove(Game game, Move move) {
+		sendMessage(move.getSan());
+	}
+
+	public void onDraw(Game game) {
+		sendMessage("draw");
+	}
+
+	public void onExamineModeBack(Game game) {
+		sendMessage("back");
+	}
+
+	public void onExamineModeCommit(Game game) {
+		sendMessage("commit");
+	}
+
+	public void onExamineModeFirst(Game game) {
+		sendMessage("back 300");
+	}
+
+	public void onExamineModeForward(Game game) {
+		sendMessage("forward 1");
+	}
+
+	public void onExamineModeLast(Game game) {
+		sendMessage("forward 300");
+	}
+
+	public void onExamineModeRevert(Game game) {
+		sendMessage("revert");
 	}
 
 	protected void onLoginEvent(String message, boolean isLoginPrompt) {
@@ -189,6 +217,16 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		}
 	}
 
+	protected void onMessageEvent(String message) {
+		ChatEvent[] events = parser.parse(message);
+		for (ChatEvent event : events) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Publishing event : " + event);
+			}
+			chatService.publishChatEvent(event);
+		}
+	}
+
 	protected void onSuccessfulLogin() {
 		System.err.println("onSuccessfulLogin: ");
 	}
@@ -208,33 +246,38 @@ public class FicsConnector implements Connector, PreferenceKeys {
 				inboundMessageBuffer.append(message);
 				int loginIndex = inboundMessageBuffer.indexOf(LOGIN_PROMPT);
 				if (loginIndex != -1) {
-					String event = inboundMessageBuffer.substring(0,
-							loginIndex + LOGIN_PROMPT.length());
-					inboundMessageBuffer.delete(0, loginIndex + LOGIN_PROMPT.length());
+					String event = inboundMessageBuffer.substring(0, loginIndex
+							+ LOGIN_PROMPT.length());
+					inboundMessageBuffer.delete(0, loginIndex
+							+ LOGIN_PROMPT.length());
 					event = RaptorStringUtils.replaceAll(event, "\n\r", "\n");
-					onLoginEvent(event,true);
-				}
-				else {
-					int enterPromptIndex = inboundMessageBuffer.indexOf(ENTER_PROMPT);
+					onLoginEvent(event, true);
+				} else {
+					int enterPromptIndex = inboundMessageBuffer
+							.indexOf(ENTER_PROMPT);
 					if (enterPromptIndex != -1) {
 						String event = inboundMessageBuffer.substring(0,
 								enterPromptIndex + ENTER_PROMPT.length());
-						inboundMessageBuffer.delete(0, enterPromptIndex + ENTER_PROMPT.length());
-						event = RaptorStringUtils.replaceAll(event, "\n\r", "\n");
-						onLoginEvent(event,false);
-					}
-					else {
-						int passwordPromptIndex = inboundMessageBuffer.indexOf(PASSWORD_PROMPT);
+						inboundMessageBuffer.delete(0, enterPromptIndex
+								+ ENTER_PROMPT.length());
+						event = RaptorStringUtils.replaceAll(event, "\n\r",
+								"\n");
+						onLoginEvent(event, false);
+					} else {
+						int passwordPromptIndex = inboundMessageBuffer
+								.indexOf(PASSWORD_PROMPT);
 						if (passwordPromptIndex != -1) {
 							String event = inboundMessageBuffer.substring(0,
-									passwordPromptIndex + PASSWORD_PROMPT.length());
-							inboundMessageBuffer.delete(0, passwordPromptIndex + PASSWORD_PROMPT.length());
-							event = RaptorStringUtils.replaceAll(event, "\n\r", "\n");
-							onLoginEvent(event,false);
-							
-						}
-						else {
-	                        System.err.println("Dangling:\n" + message);
+									passwordPromptIndex
+											+ PASSWORD_PROMPT.length());
+							inboundMessageBuffer.delete(0, passwordPromptIndex
+									+ PASSWORD_PROMPT.length());
+							event = RaptorStringUtils.replaceAll(event, "\n\r",
+									"\n");
+							onLoginEvent(event, false);
+
+						} else {
+							System.err.println("Dangling:\n" + message);
 						}
 					}
 				}
@@ -254,32 +297,37 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		}
 	}
 
-	public void onMessageEvent(String message) {
-		ChatEvent[] events = parser.parse(message);
-		for (ChatEvent event : events) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Publishing event : " + event);
-			}
-			chatService.publishChatEvent(event);
-		}
-	}
-
-	public void disconnect() {
+	protected void readInput() {
 		try {
-			socket.close();
+			while (true) {
+				int numRead = inputChannel.read(inputBuffer);
+				if (numRead > 0) {
+					System.err.println("Read " + numRead + " bytes.");
+					inputBuffer.rewind();
+					byte[] bytes = new byte[numRead];
+					inputBuffer.get(bytes);
+					publishInput(new String(bytes));
+					inputBuffer.clear();
+				}
+				Thread.sleep(50);
+			}
 		} catch (Throwable t) {
-			LOG.error("Error disposing channel", t);
+			LOG.error("Error occured in read", t);
+			disconnect();
 		}
-		LOG.error("Disconnected from FicsConnection.");
 	}
 
-	public ChatService getChatService() {
-		return chatService;
+	public void refreshGameScripts() {
+		gameScriptsMap.clear();
+		GameScript[] scripts = GameScript.getGameScripts(this);
+		for (GameScript script : scripts) {
+			gameScriptsMap.put(script.getName(), script);
+		}
 	}
 
-	public GameService getGameService() {
-		// TODO Auto-generated method stub
-		return null;
+	public void removeGameScript(GameScript script) {
+		script.delete();
+		gameScriptsMap.remove(script.getName());
 	}
 
 	public void sendMessage(String msg) {
@@ -305,61 +353,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 				msg.trim()));
 	}
 
-	public void makeMove(Game game, Move move) {
-		sendMessage(move.getSan());
-	}
-
-	public void onDraw(Game game) {
-		sendMessage("draw");
-	}
-
-	public void onExamineModeBack(Game game) {
-		sendMessage("back");
-	}
-
-	public void onExamineModeCommit(Game game) {
-		sendMessage("commit");
-	}
-
-	public void onExamineModeFirst(Game game) {
-		sendMessage("back 300");
-	}
-
-	public void onExamineModeForward(Game game) {
-		sendMessage("forward 1");
-	}
-
-	public void onExamineModeLast(Game game) {
-		sendMessage("forward 300");
-	}
-
-	public void onExamineModeRevert(Game game) {
-		sendMessage("revert");
-	}
-
-	public GameScript[] getGameScripts() {
-		return gameScriptsMap.values().toArray(new GameScript[0]);
-	}
-
-	public void addGameScript(GameScript script) {
-		gameScriptsMap.put(script.getName(), script);
-		script.save();
-	}
-
-	public GameScript getGameScript(String name) {
-		return gameScriptsMap.get(name);
-	}
-
-	public void removeGameScript(GameScript script) {
-		script.delete();
-		gameScriptsMap.remove(script.getName());
-	}
-
-	public void refreshGameScripts() {
-		gameScriptsMap.clear();
-		GameScript[] scripts = GameScript.getGameScripts(this);
-		for (GameScript script : scripts) {
-			gameScriptsMap.put(script.getName(), script);
-		}
+	public void setPreferences(PreferenceStore preferences) {
+		this.preferences = preferences;
 	}
 }
