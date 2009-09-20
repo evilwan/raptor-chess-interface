@@ -69,13 +69,27 @@ public class FicsConnector implements Connector, PreferenceKeys {
 			hasSentPassword = false;
 
 			LOG.info("Trying to connect");
-			if (getPreferences().getBoolean(FICS_TIMESEAL_ENABLED)) {
-				socket = new TimesealingSocket(preferences
-						.getString(FICS_SERVER_URL), preferences
-						.getInt(FICS_PORT));
-			} else {
-				socket = new Socket(preferences.getString(FICS_SERVER_URL),
-						preferences.getInt(FICS_PORT));
+			try {
+				onMessageEvent("Connecting to "
+						+ preferences.getString(FICS_SERVER_URL)
+						+ " "
+						+ preferences.getInt(FICS_PORT)
+						+ (getPreferences().getBoolean(FICS_TIMESEAL_ENABLED) ? " with "
+								: " without ") + "timeseal ...");
+
+				if (getPreferences().getBoolean(FICS_TIMESEAL_ENABLED)) {
+					socket = new TimesealingSocket(preferences
+							.getString(FICS_SERVER_URL), preferences
+							.getInt(FICS_PORT));
+				} else {
+					socket = new Socket(preferences.getString(FICS_SERVER_URL),
+							preferences.getInt(FICS_PORT));
+				}
+				onMessageEvent("Connected");
+
+			} catch (Exception ce) {
+				onMessageEvent("Error: " + ce.getMessage());
+				return;
 			}
 
 			inputChannel = Channels.newChannel(socket.getInputStream());

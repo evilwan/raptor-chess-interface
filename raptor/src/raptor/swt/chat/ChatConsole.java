@@ -113,18 +113,20 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 
 		connector.getChatService().addChatServiceListener(new ChatListener() {
 			public void chatEventOccured(final ChatEvent e) {
-				getDisplay().asyncExec(new Runnable() {
-					public void run() {
+				if (!getDisplay().isDisposed()) {
+					getDisplay().asyncExec(new Runnable() {
+						public void run() {
 
-						if (!ChatConsole.this.isDisposed()) {
-							if (e.getType() == ChatTypes.OUTBOUND) {
-								acceptOutbound(e);
-							} else {
-								acceptInbound(e);
+							if (!ChatConsole.this.isDisposed()) {
+								if (e.getType() == ChatTypes.OUTBOUND) {
+									acceptOutbound(e);
+								} else {
+									acceptInbound(e);
+								}
 							}
 						}
-					}
-				});
+					});
+				}
 			}
 		});
 	}
