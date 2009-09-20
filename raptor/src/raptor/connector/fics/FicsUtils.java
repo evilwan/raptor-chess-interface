@@ -80,13 +80,23 @@ public class FicsUtils {
 
 	/**
 	 * Filters out illegal chars, and appends a \n to the passed in message.
+	 * This also converts unicode chars into Maciejg format. See
+	 * maciejgFormatToUnicode for more info.
 	 */
 	public static void filterOutbound(StringBuilder message) {
 		for (int i = 0; i < message.length(); i++) {
 			char currentChar = message.charAt(i);
 			if (LEGAL_CHARACTERS.indexOf(currentChar) == -1) {
-				message.deleteCharAt(i);
-				i--;
+				if (currentChar > 256) {
+					int charAsInt = (int) currentChar;
+					String stringVersion = Integer.toString(charAsInt, 16);
+					String replacement = "&#x" + stringVersion + ";";
+					message.replace(i, i + 1, replacement);
+					i += replacement.length() - 1;
+				} else {
+					message.deleteCharAt(i);
+					i--;
+				}
 			}
 		}
 		message.append('\n');
@@ -99,5 +109,32 @@ public class FicsUtils {
 			return stringtokenizer.nextToken();
 		else
 			return playerName;
+	}
+
+	/**
+	 * Maciejg format, named after him because of his finger notes. Unicode
+	 * chars are represented as &#x3b1; &#x3b2; &#x3b3; &#x3b4; &#x3b5; &#x3b6;
+	 * unicode equivalent \u03B1,\U03B2,...
+	 */
+	public static String maciejgFormatToUnicode(String inputString) {
+		StringBuilder builder = new StringBuilder(inputString);
+		int unicodePrefix = 0;
+		while ((unicodePrefix = builder.indexOf("&#x", unicodePrefix)) != -1) {
+			int endIndex = builder.indexOf(";", unicodePrefix);
+			if (endIndex != -1 && (endIndex - unicodePrefix) <= 8) {
+				String unicodeHex = builder.substring(unicodePrefix + 3,
+						endIndex).toUpperCase();
+				try {
+					int intValue = Integer.parseInt(unicodeHex, 16);
+					String replacement = new String(
+							new char[] { (char) intValue });
+					builder.replace(unicodePrefix, unicodePrefix + 7,
+							replacement);
+				} catch (NumberFormatException nfe) {
+					unicodePrefix = endIndex;
+				}
+			}
+		}
+		return builder.toString();
 	}
 }

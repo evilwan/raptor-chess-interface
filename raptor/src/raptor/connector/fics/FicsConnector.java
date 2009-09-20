@@ -47,12 +47,16 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	protected FicsParser parser = new FicsParser();
 	protected PreferenceStore preferences;
 	protected Socket socket;
+	protected boolean hasDisconnected = false;
 
 	protected String userName;
 
 	public FicsConnector() {
 		refreshGameScripts();
 	}
+
+	// maciejg
+	// &#x3b1; &#x3b2; &#x3b3; &#x3b4; &#x3b5; &#x3b6;
 
 	public void addGameScript(GameScript script) {
 		gameScriptsMap.put(script.getName(), script);
@@ -67,6 +71,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 			isLoggedIn = false;
 			hasSentLogin = false;
 			hasSentPassword = false;
+			hasDisconnected = false;
 
 			LOG.info("Trying to connect");
 			try {
@@ -111,12 +116,21 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	public void disconnect() {
-		try {
-			socket.close();
-		} catch (Throwable t) {
-			LOG.error("Error disposing channel", t);
+		if (!hasDisconnected) {
+			try {
+				socket.close();
+			} catch (Throwable t) {
+			} finally {
+				hasDisconnected = true;
+			}
+			if (inboundMessageBuffer.length() > 0) {
+				onMessageEvent(inboundMessageBuffer.substring(0,
+						inboundMessageBuffer.length())
+						+ "\nDisconnected");
+				inboundMessageBuffer.delete(0, inboundMessageBuffer.length());
+			}
+			LOG.error("Disconnected from FicsConnection.");
 		}
-		LOG.error("Disconnected from FicsConnection.");
 	}
 
 	public ChatService getChatService() {
@@ -236,6 +250,8 @@ public class FicsConnector implements Connector, PreferenceKeys {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Publishing event : " + event);
 			}
+
+			event.setMessage(FicsUtils.maciejgFormatToUnicode(message));
 			chatService.publishChatEvent(event);
 		}
 	}
@@ -289,7 +305,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 									"\n");
 							onLoginEvent(event, false);
 
-						} else {
+						}  else {
 							System.err.println("Dangling:\n" + message);
 						}
 					}
@@ -313,16 +329,22 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	protected void readInput() {
 		try {
 			while (true) {
-				int numRead = inputChannel.read(inputBuffer);
-				if (numRead > 0) {
-					System.err.println("Read " + numRead + " bytes.");
-					inputBuffer.rewind();
-					byte[] bytes = new byte[numRead];
-					inputBuffer.get(bytes);
-					publishInput(new String(bytes));
-					inputBuffer.clear();
+				if (!hasDisconnected && !socket.isClosed()) {
+					int numRead = inputChannel.read(inputBuffer);
+					if (numRead > 0) {
+						System.err.println("Read " + numRead + " bytes.");
+						inputBuffer.rewind();
+						byte[] bytes = new byte[numRead];
+						inputBuffer.get(bytes);
+						publishInput(new String(bytes));
+						inputBuffer.clear();
+					} else {
+						disconnect();
+					}
+					Thread.sleep(50);
+				} else {
+					disconnect();
 				}
-				Thread.sleep(50);
 			}
 		} catch (Throwable t) {
 			LOG.error("Error occured in read", t);
