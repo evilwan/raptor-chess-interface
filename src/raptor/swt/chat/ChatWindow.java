@@ -28,7 +28,7 @@ public class ChatWindow extends ApplicationWindow {
 				PreferenceKeys.FICS_TIMESEAL_ENABLED, true);
 		app.getFicsConnector().getPreferences().setValue(
 				PreferenceKeys.FICS_IS_NAMED_GUEST, true);
-		app.getFicsConnector().getPreferences().setValue(PreferenceKeys.FICS_USER_NAME, "cday");
+		app.getFicsConnector().getPreferences().setValue(PreferenceKeys.FICS_USER_NAME, "raptorTest");
 		app.getFicsConnector().connect();
 		window.setBlockOnOpen(true);
 		window.open();
