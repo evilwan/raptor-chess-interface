@@ -12,4 +12,11 @@ public class ThreadService {
 		thread.start();
 	}
 
+	public void runDaemon(Runnable runnable) {
+		Thread thread = new Thread(runnable);
+		thread.setDaemon(true);
+		thread.setPriority(Thread.MAX_PRIORITY);
+		thread.start();
+	}
+
 }

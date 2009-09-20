@@ -49,6 +49,11 @@ public interface PreferenceKeys {
 	public static final String CHAT_OUTPUT_TEXT_COLOR = "chat-output-text-color";
 	public static final String CHAT_INPUT_DEFAULT_TEXT_COLOR = "chat-input-default-text-color";
 	
+	
+	public static final String SOUND_ENABLED = "sound-enabled";
+	
+	public static final String FICS_SERVER_URL = "fics-server-url";
+	public static final String FICS_PORT = "fics-port";
 	public static final String FICS_KEEP_ALIVE = "fics-keepalive";
 	public static final String FICS_AUTO_CONNECT = "fics-auto-connect";
 	public static final String FICS_USER_NAME = "fics-user-name";
@@ -57,6 +62,7 @@ public interface PreferenceKeys {
 	public static final String FICS_IS_ANON_GUEST = "fics-is-anon-guest";
 	public static final String FICS_LOGIN_SCRIPT = "fics-login-script";
 	public static final String FICS_IS_LOGGING_GAMES = "fics-is-logging-games";
+	public static final String FICS_TIMESEAL_ENABLED = "fics-timeseal-enabled";
 	
 	
 	public static final String CHAT_LINK_COLOR = "chat-link-color";

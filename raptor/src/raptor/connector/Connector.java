@@ -1,5 +1,7 @@
 package raptor.connector;
 
+import org.eclipse.jface.preference.PreferenceStore;
+
 import raptor.game.Game;
 import raptor.game.Move;
 import raptor.script.GameScript;
@@ -46,4 +48,8 @@ public interface Connector {
 	public void addGameScript(GameScript script);
 	
 	public void refreshGameScripts();
+	
+	public PreferenceStore getPreferences();
+
+	public void setPreferences(PreferenceStore preferences);
 }
