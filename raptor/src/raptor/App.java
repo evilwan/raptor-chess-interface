@@ -17,7 +17,7 @@ public class App {
 	public static final File DEFAULT_HOME_DIR = new File("defaultHomeDir/");
 	public static final String APP_HOME_DIR = ".raptor/";
 
-	private static App instance = new App();
+	private static App instance;
 
 	private Connector ficsConnector;
 	private RaptorPreferenceStore preferences;
@@ -25,8 +25,8 @@ public class App {
 	public static void main(String args[]) {
 
 		Display display = new Display();
+		createInstance();
 		AppWindow window = new AppWindow();
-		instance = getInstance();
 		window.setBlockOnOpen(true);
 		window.open();
 		display.dispose();
@@ -36,6 +36,10 @@ public class App {
 		preferences = new RaptorPreferenceStore();
 		ficsConnector = new FicsConnector();
 		ficsConnector.setPreferences(preferences);
+	}
+	
+	public static void createInstance() {
+		instance = new App();
 	}
 
 	public static App getInstance() {
