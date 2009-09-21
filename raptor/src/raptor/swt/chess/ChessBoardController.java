@@ -195,15 +195,15 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	protected void setNavButtonsEnablbed() {
 		if (isMoveListTraversable()) {
-			board.setButtonEnabled(traverser.hasFirst(), ChessBoard.FIRST_NAV);
-			board.setButtonEnabled(traverser.hasLast(), ChessBoard.LAST_NAV);
-			board.setButtonEnabled(traverser.hasNext(), ChessBoard.NEXT_NAV);
-			board.setButtonEnabled(traverser.hasBack(), ChessBoard.BACK_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasFirst(), ChessBoard.FIRST_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasLast(), ChessBoard.LAST_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasNext(), ChessBoard.NEXT_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasBack(), ChessBoard.BACK_NAV);
 		} else {
-			board.setButtonEnabled(false, ChessBoard.FIRST_NAV);
-			board.setButtonEnabled(false, ChessBoard.LAST_NAV);
-			board.setButtonEnabled(false, ChessBoard.NEXT_NAV);
-			board.setButtonEnabled(false, ChessBoard.BACK_NAV);
+			board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
+			board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
+			board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
+			board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
 		}
 	}
 
