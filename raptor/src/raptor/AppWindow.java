@@ -33,9 +33,9 @@ public class AppWindow extends ApplicationWindow {
 		game.setId("1");
 		game.setType(Game.BLITZ);
 		game.setState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
-		game.setWhiteName("AReallyLongName");
-		game.setWhiteRating("1934");
-		game.setBlackName("shorty");
+		game.setWhiteName("White");
+		game.setWhiteRating("----");
+		game.setBlackName("Black");
 		game.setBlackRating("----");
 		game.setBlackRemainingTimeMillis(60000 * 3);
 		game.setWhitRemainingeTimeMillis(60000 * 3);

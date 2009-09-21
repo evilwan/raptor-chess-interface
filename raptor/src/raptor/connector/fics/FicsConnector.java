@@ -269,11 +269,24 @@ public class FicsConnector implements Connector, PreferenceKeys {
 				int nameStartIndex = message.indexOf(LOGGED_IN_MSG)
 						+ LOGGED_IN_MSG.length();
 				int endIndex = message.indexOf("****", nameStartIndex);
-				userName = FicsUtils.removeTitles(message.substring(
-						nameStartIndex, endIndex).trim());
-				System.err.println("login complete. userName=" + userName);
-				isLoggedIn = true;
-				onSuccessfulLogin();
+				if (endIndex != -1) {
+					userName = FicsUtils.removeTitles(message.substring(
+							nameStartIndex, endIndex).trim());
+					System.err.println("login complete. userName=" + userName);
+					isLoggedIn = true;
+					onSuccessfulLogin();
+				} else {
+					LOG
+							.error(
+									"Unexpected occurance in publishInput. Dumping text to console.",
+									new Exception());
+					inboundMessageBuffer.append(message);
+					String event = inboundMessageBuffer.substring(0,
+							inboundMessageBuffer.length());
+					inboundMessageBuffer.delete(0, inboundMessageBuffer
+							.length());
+					onMessageEvent(event);
+				}
 			} else {
 				inboundMessageBuffer.append(message);
 				int loginIndex = inboundMessageBuffer.indexOf(LOGIN_PROMPT);
@@ -312,12 +325,11 @@ public class FicsConnector implements Connector, PreferenceKeys {
 							int errorMessageIndex = inboundMessageBuffer
 									.indexOf(LOGIN_ERROR_MESSAGE);
 							if (errorMessageIndex != -1) {
+								inboundMessageBuffer.append(message);
 								String event = inboundMessageBuffer.substring(
-										0, passwordPromptIndex
-												+ LOGIN_ERROR_MESSAGE.length());
+										0, inboundMessageBuffer.length());
 								inboundMessageBuffer.delete(0,
-										passwordPromptIndex
-												+ LOGIN_ERROR_MESSAGE.length());
+										inboundMessageBuffer.length());
 								event = RaptorStringUtils.replaceAll(event,
 										"\n\r", "\n");
 								onMessageEvent(event);

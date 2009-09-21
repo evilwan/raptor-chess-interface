@@ -51,6 +51,10 @@ public interface PreferenceKeys {
 	public static final String CHAT_INPUT_DEFAULT_TEXT_COLOR = "chat-input-default-text-color";
 	public static final String CHAT_CONSOLE_BACKGROUND_COLOR = "chat-console-background-color";
 	public static final String CHAT_PROMPT_COLOR = "chat-prompt-color";
+	public static final String CHAT_QUOTE_UNDERLINE_COLOR = "chat-quote-underline-color";
+	public static final String CHAT_LINK_UNDERLINE_COLOR = "chat-link-underline-color";
+	
+	public static final String MISC_BROWSER_NAME = "misc-browser-name";
 
 	public static final String APP_LAG_FONT = "app-lag-font";
 	public static final String APP_LAG_COLOR = "app-lag-color";

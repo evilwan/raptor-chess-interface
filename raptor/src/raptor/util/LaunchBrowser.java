@@ -15,9 +15,14 @@ import java.lang.reflect.Method;
 
 import javax.swing.JOptionPane;
 
-public class LaunchBrowser {
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-	private static final String errMsg = "Error attempting to launch web browser";
+import raptor.App;
+import raptor.pref.PreferenceKeys;
+
+public class LaunchBrowser {
+	private static final Log LOG = LogFactory.getLog(LaunchBrowser.class);
 
 	public static void openURL(String url) {
 		String osName = System.getProperty("os.name");
@@ -31,22 +36,37 @@ public class LaunchBrowser {
 				Runtime.getRuntime().exec(
 						"rundll32 url.dll,FileProtocolHandler " + url);
 			else { // assume Unix or Linux
-				String[] browsers = { "firefox", "opera", "konqueror",
-						"epiphany", "mozilla", "netscape" };
-				String browser = null;
-				for (int count = 0; count < browsers.length && browser == null; count++)
-					if (Runtime.getRuntime().exec(
-							new String[] { "which", browsers[count] })
-							.waitFor() == 0)
-						browser = browsers[count];
-				if (browser == null)
-					throw new Exception("Could not find web browser");
-				else
-					Runtime.getRuntime().exec(new String[] { browser, url });
+				String prefBrowser = App.getInstance().getPreferences()
+						.getString(PreferenceKeys.MISC_BROWSER_NAME);
+
+				if (prefBrowser == null) {
+					String[] browsers = { "firefox", "opera", "konqueror",
+							"epiphany", "mozilla", "netscape" };
+					String browser = null;
+					for (int count = 0; count < browsers.length
+							&& browser == null; count++)
+						if (Runtime.getRuntime().exec(
+								new String[] { "which", browsers[count] })
+								.waitFor() == 0)
+							browser = browsers[count];
+					if (browser == null)
+						throw new Exception("Could not find web browser");
+					else
+						Runtime.getRuntime()
+								.exec(new String[] { browser, url });
+				} else {
+					String browser = null;
+					if (browser == null) {
+						throw new Exception("Could not find web browser");
+					} else {
+						Runtime.getRuntime()
+								.exec(new String[] { browser, url });
+
+					}
+				}
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, errMsg + ":\n"
-					+ e.getLocalizedMessage());
+			LOG.error("Error occured launching browser:", e);
 		}
 	}
 

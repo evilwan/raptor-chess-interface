@@ -154,7 +154,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Chat
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
 		setDefault(CHAT_TIMESTAMP_CONSOLE, true);
-		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['HH:mm']'");
+		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['hh:mma']'");
 
 		PreferenceConverter
 				.setDefault(this, CHAT_INPUT_FONT,
@@ -217,9 +217,13 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
 						+ "-" + 53 + "-color", new RGB(255, 0, 255));
-
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));
+		PreferenceConverter.setDefault(this,
+				CHAT_QUOTE_UNDERLINE_COLOR, new RGB(0, 255, 0));
+		PreferenceConverter.setDefault(this,CHAT_LINK_UNDERLINE_COLOR, new RGB(0,
+				0, 255));
+
 
 		PreferenceConverter.setDefault(this, APP_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
