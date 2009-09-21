@@ -1,5 +1,7 @@
 package raptor.swt.chat;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,9 +14,14 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.ScrollBar;
 
 import raptor.App;
 import raptor.chat.ChatEvent;
@@ -22,11 +29,12 @@ import raptor.chat.ChatTypes;
 import raptor.connector.fics.FicsUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ChatService.ChatListener;
+import raptor.util.LaunchBrowser;
 
 public abstract class ChatConsoleController implements PreferenceKeys,
 		ChatTypes {
 	public static final double CLEAN_PERCENTAGE = .33;
-	public static final int CHUNK_SIZE_TO_SEARCH = 1000;
+	public static final int TEXT_CHUNK_SIZE = 1000;
 	private static final Log LOG = LogFactory
 			.getLog(ChatConsoleController.class);
 
@@ -136,8 +144,49 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 					chatConsole.outputText.setSelection(chatConsole.outputText
 							.getCharCount() + 1);
 				}
-			} else if (arg0.keyCode == SWT.SCROLL_LOCK) {
-				setScrollLockEnabled(!isScrollLockEnabled());
+			}
+		}
+	};
+
+	protected MouseListener inputTextClickListener = new MouseAdapter() {
+
+		public void mouseUp(MouseEvent e) {
+			if (e.button == 1) {
+				int caretPosition = chatConsole.inputText.getCaretOffset();
+
+				String url = Utils.getUrl(chatConsole.inputText, caretPosition);
+				if (url != null) {
+					LaunchBrowser.openURL(url);
+				}
+
+				String quotedText = Utils.getQuotedText(chatConsole.inputText,
+						caretPosition);
+				if (quotedText != null) {
+					chatConsole.getConnector().sendMessage(quotedText);
+				}
+			} else if (e.button == 3) {
+				int caretPosition = chatConsole.inputText.getCaretOffset();
+				// TO DO: add person popup.
+				System.err.println("CaretPosition = " + caretPosition);
+				System.err.println("Word="
+						+ Utils.getWord(chatConsole.inputText, caretPosition));
+				System.err.println("StrippedWord="
+						+ Utils.getStrippedWord(chatConsole.inputText,
+								caretPosition));
+				System.err.println("isLikelyPerson="
+						+ Utils.isLikelyPerson(Utils.getWord(
+								chatConsole.inputText, caretPosition)));
+				System.err.println("QuotedText="
+						+ Utils.getQuotedText(chatConsole.inputText,
+								caretPosition));
+				System.err.println("WrappedWord="
+						+ Utils.getWrappedWord(chatConsole.inputText,
+								caretPosition));
+				System.err.println("Channel="
+						+ Utils.getChannel(Utils.getWord(chatConsole.inputText,
+								caretPosition)));
+				System.err.println("Url="
+						+ Utils.getUrl(chatConsole.inputText, caretPosition));
 			}
 		}
 	};
@@ -155,6 +204,10 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		chatConsole.inputText.addKeyListener(inputTextKeyListener);
 		chatConsole.inputText.addKeyListener(functionKeyListener);
 		chatConsole.inputText.addKeyListener(outputHistoryListener);
+	}
+
+	protected void addMouseListeners() {
+		chatConsole.inputText.addMouseListener(inputTextClickListener);
 	}
 
 	protected void adjustScrollLockButton() {
@@ -185,6 +238,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		chatConsole.inputText.removeKeyListener(inputTextKeyListener);
 		chatConsole.inputText.removeKeyListener(functionKeyListener);
 		chatConsole.inputText.removeKeyListener(outputHistoryListener);
+
+		chatConsole.inputText.removeMouseListener(inputTextClickListener);
 	}
 
 	public String getPrenedText() {
@@ -197,6 +252,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	public void init() {
 		addInputTextKeyListeners();
+		addMouseListeners();
 		registerForChatEvents();
 		adjustScrollLockButton();
 	}
@@ -212,9 +268,19 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	public abstract boolean isSearchable();
 
 	public void onAppendChatEventToInputText(ChatEvent event) {
+		boolean isScrollBarAtMax = false;
+		ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
+		if (scrollbar != null && scrollbar.isVisible()) {
+			isScrollBarAtMax = scrollbar.getMaximum() == scrollbar
+					.getSelection()
+					+ scrollbar.getThumb();
+			System.err.println("Scrollbar is at maximum=" + isScrollBarAtMax
+					+ " max=" + scrollbar.getMaximum() + " sel="
+					+ scrollbar.getSelection() + " thumbSize="
+					+ scrollbar.getThumb());
 
-		boolean atEndPriorToEvent = chatConsole.inputText.getCharCount() - 1 <= chatConsole.inputText
-				.getCaretOffset();
+		}
+
 		String messageText = event.getMessage();
 		String date = "";
 		if (App.getInstance().getPreferences().getBoolean(
@@ -232,10 +298,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		int startIndex = chatConsole.inputText.getCharCount()
 				- appendText.length();
 
-		if (atEndPriorToEvent && isScrollLockEnabled) {
+		if (isScrollBarAtMax) {
 			forceScrollToInputTextEnd();
-		} else if (!atEndPriorToEvent && isScrollLockEnabled) {
-			setScrollLockEnabled(false);
 		}
 
 		onDecorateInputText(event, appendText, startIndex);
@@ -265,19 +329,72 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	protected void onDecorateInputText(ChatEvent event, String message,
 			int textStartPosition) {
-		Color color = chatConsole.preferences.getColor(event);
-		if (color != null
-				&& !color.getRGB().equals(
-						chatConsole.inputText.getForeground().getRGB())) {
-			String prompt = chatConsole.getConnector().getPrompt();
-			int length = message.endsWith(chatConsole.getConnector()
-					.getPrompt()) ? message.length() - prompt.length()
-					: message.length();
+		decorateForegroundColor(event, message, textStartPosition);
+		decorateQuotes(event, message, textStartPosition);
+		decorateLinks(event, message, textStartPosition);
+	}
 
-			chatConsole.inputText.setStyleRange(new StyleRange(
-					textStartPosition, length, color, chatConsole.inputText
-							.getBackground()));
+	protected void decorateForegroundColor(ChatEvent event, String message,
+			int textStartPosition) {
+		Color color = chatConsole.preferences.getColor(event);
+		if (color == null) {
+			color = chatConsole.inputText.getForeground();
 		}
+
+		String prompt = chatConsole.getConnector().getPrompt();
+		if (message.endsWith(prompt)) {
+			message = message.substring(0, message.length() - prompt.length());
+		}
+
+		chatConsole.inputText
+				.setStyleRange(new StyleRange(textStartPosition, message
+						.length(), color, chatConsole.inputText.getBackground()));
+	}
+
+	protected void decorateQuotes(ChatEvent event, String message,
+			int textStartPosition) {
+		List<int[]> quotedRanges = new ArrayList<int[]>(5);
+
+		int quoteIndex = message.indexOf("\"");
+		if (quoteIndex == -1) {
+			quoteIndex = message.indexOf("'");
+		}
+
+		while (quoteIndex != -1) {
+			int endQuote = message.indexOf("\"", quoteIndex + 1);
+			if (endQuote == -1) {
+				endQuote = message.indexOf("'", quoteIndex + 1);
+			}
+
+			if (endQuote == -1) {
+				break;
+			} else {
+				if (quoteIndex + 1 != endQuote) {
+					quotedRanges
+							.add(new int[] { quoteIndex + 1, endQuote });
+				}
+			}
+
+			quoteIndex = message.indexOf("\"", endQuote + 1);
+			if (quoteIndex == -1) {
+				quoteIndex = message.indexOf("'", endQuote + 1);
+			}
+		}
+
+		for (int[] quotedRange : quotedRanges) {
+			Color underlineColor = chatConsole.getPreferences().getColor(
+					CHAT_QUOTE_UNDERLINE_COLOR);
+			StyleRange range = new StyleRange(textStartPosition + quotedRange[0], quotedRange[1]
+					- quotedRange[0], underlineColor, chatConsole.inputText
+					.getBackground());
+			range.underline = true;
+			chatConsole.inputText.setStyleRange(range);
+		}
+	}
+
+	protected void decorateLinks(ChatEvent event, String message,
+			int textStartPosition) {
+
 	}
 
 	protected void onSearch() {
@@ -298,8 +415,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 				while (start > 0) {
 					int charsBack = 0;
-					if (start - CHUNK_SIZE_TO_SEARCH > 0) {
-						charsBack = CHUNK_SIZE_TO_SEARCH;
+					if (start - TEXT_CHUNK_SIZE > 0) {
+						charsBack = TEXT_CHUNK_SIZE;
 					} else {
 						charsBack = start;
 					}
@@ -311,7 +428,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 						System.err.println("Found " + (start + index) + " "
 								+ (start + index + searchString.length()) + " "
 								+ searchString);
-						setScrollLockEnabled(false);
 						int textStart = start - charsBack + index;
 						chatConsole.inputText.setSelection(textStart, textStart
 								+ searchString.length());
@@ -326,6 +442,62 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	public void onSendOutputText() {
 		chatConsole.connector.sendMessage(chatConsole.outputText.getText());
 		chatConsole.outputText.setText("");
+	}
+
+	public void onSave() {
+		FileDialog fd = new FileDialog(chatConsole.getShell(), SWT.SAVE);
+		fd.setText("Save Console Output.");
+		fd.setFilterPath("");
+		String[] filterExt = { "*.txt", "*.*" };
+		fd.setFilterExtensions(filterExt);
+		final String selected = fd.open();
+
+		if (selected != null) {
+			chatConsole.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					FileWriter writer = null;
+					try {
+						writer = new FileWriter(selected);
+						writer.append("Raptor console log created on "
+								+ new Date() + "\n");
+						int i = 0;
+						while (i < chatConsole.getInputText().getCharCount() - 1) {
+							int endIndex = i + TEXT_CHUNK_SIZE;
+							if (endIndex >= chatConsole.getInputText()
+									.getCharCount()) {
+								endIndex = i
+										+ (chatConsole.getInputText()
+												.getCharCount() - i) - 1;
+							}
+
+							System.err
+									.println("i="
+											+ i
+											+ " endIndex="
+											+ endIndex
+											+ " textlen="
+											+ chatConsole.getInputText()
+													.getCharCount());
+							String string = chatConsole.getInputText().getText(
+									i, endIndex);
+							writer.append(string);
+							i = endIndex;
+						}
+						writer.flush();
+						LOG.debug("Wrote file " + selected);
+					} catch (Throwable t) {
+						LOG.error("Error writing file: " + selected, t);
+					} finally {
+						if (writer != null) {
+							try {
+								writer.close();
+							} catch (IOException ioe) {
+							}
+						}
+					}
+				}
+			});
+		}
 	}
 
 	protected void reduceInputTextIfNeeded() {
@@ -352,17 +524,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	public void setPrenedText(String prenedText) {
 		this.prenedText = prenedText;
-	}
-
-	public void setScrollLockEnabled(boolean isScrollLockEnabled) {
-		if (this.isScrollLockEnabled != isScrollLockEnabled) {
-			this.isScrollLockEnabled = isScrollLockEnabled;
-			adjustScrollLockButton();
-
-			if (isScrollLockEnabled) {
-				forceScrollToInputTextEnd();
-			}
-		}
 	}
 
 	public String getSourceOfLastTellReceived() {

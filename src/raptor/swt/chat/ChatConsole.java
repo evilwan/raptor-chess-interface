@@ -32,8 +32,9 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 
 	public static final String SEND_BUTTON = "send";
 	public static final String SCROLL_LOCK_BUTTON = "scrollLock";
-	public static final String SEARCH_BUTTON = "send";
-	public static final String PREPEND_TEXT_BUTTON = "send";
+	public static final String SEARCH_BUTTON = "search";
+	public static final String PREPEND_TEXT_BUTTON = "prepend";
+	public static final String SAVE_BUTTON = "save";
 
 	protected StyledText inputText;
 	protected StyledText outputText;
@@ -69,18 +70,17 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		});
 		buttonMap.put(SEND_BUTTON, sendButton);
 
-		final Button scrollLockButton = new Button(buttonComposite, SWT.FLAT);
-		scrollLockButton.setImage(preferences.getIcon("locked"));
-		scrollLockButton.setToolTipText(SCROLL_LOCK_ON_TOOLTIP);
-		scrollLockButton.addSelectionListener(new SelectionAdapter() {
+		final Button saveButton = new Button(buttonComposite, SWT.FLAT);
+		saveButton.setImage(preferences.getIcon("save"));
+		saveButton
+				.setToolTipText("Save the current console text to a file.");
+		saveButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
-				controller
-						.setScrollLockEnabled(scrollLockButton.getToolTipText()
-								.equals(SCROLL_LOCK_ON_TOOLTIP) ? false : true);
+				controller.onSave();
 
 			}
 		});
-		buttonMap.put(SCROLL_LOCK_BUTTON, scrollLockButton);
+		buttonMap.put(SAVE_BUTTON, saveButton);
 
 		if (controller.isSearchable()) {
 			Button searchButton = new Button(buttonComposite, SWT.FLAT);
@@ -204,7 +204,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 	public void updateFromPrefs() {
 		RaptorPreferenceStore prefs = App.getInstance().getPreferences();
 		Color consoleBackground = prefs.getColor(CHAT_CONSOLE_BACKGROUND_COLOR);
-		
+
 		buttonComposite.setBackground(consoleBackground);
 		southControlsComposite.setBackground(consoleBackground);
 		setBackground(consoleBackground);
