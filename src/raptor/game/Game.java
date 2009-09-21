@@ -45,7 +45,7 @@ public class Game implements GameConstants {
 	public static final int PLAYING_STATE = 16;
 	public static final int STANDARD = 2;
 
-	public static final int SUCIDE = 5;
+	public static final int SUICIDE = 5;
 	public static final int UNDETERMINED_RESULT = 4;
 	public static final int UNTIMED_STATE = 32;
 	public static final int WHTIE_WON_RESULT = 1;
