@@ -8,6 +8,7 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.MoveListTraverser;
+import raptor.game.util.ECOParser;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorStringUtils;
@@ -254,8 +255,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	protected void adjustToGameChange() {
 		LOG.info("adjustToGameChange " + board.game.getId() + " ...");
-		long startTime = System.currentTimeMillis();
-
+		long startTime = System.currentTimeMillis();	
+		
 		stopClocks();
 
 		adjustBoardToGame(board.game);
@@ -277,6 +278,13 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		adjustGameStatusLabel();
 		adjustToMoveIndicatorLabel();
 
+		
+		//CDay tells you: you can do board.getOpeningDescriptionLabel().setText(your opening description);
+		//CDay tells you: so you can test it from the gui
+		ECOParser p = ECOParser.getECOParser(board.getGame());
+		if (p != null)
+		board.getOpeningDescriptionLabel().setText(p.toString());
+		
 		board.forceUpdate();
 
 		LOG.info("adjustToGameChange " + board.game.getId() + "  n "
