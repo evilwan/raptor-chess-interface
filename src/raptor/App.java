@@ -9,6 +9,7 @@ import org.eclipse.swt.widgets.Display;
 
 import raptor.connector.Connector;
 import raptor.connector.fics.FicsConnector;
+import raptor.game.util.ECOParser;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.util.FileUtil;
 
@@ -24,6 +25,15 @@ public class App {
 
 	public static void main(String args[]) {
 
+		// ECOParser code
+		// Make sure file f exists!
+		File f = new File(getRaptorUserDir() + File.separator + "ECO.txt");
+		try {
+			ECOParser.parse(f);
+		} catch (IOException e) {
+			e.printStackTrace(System.err);
+		}
+		
 		Display display = new Display();
 		createInstance();
 		AppWindow window = new AppWindow();
