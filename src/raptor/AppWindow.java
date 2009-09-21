@@ -112,7 +112,7 @@ public class AppWindow extends ApplicationWindow {
 		board.setBoardLayout(new RightOrientedLayout(board));
 		board.setPreferences(App.getInstance().getPreferences());
 		board.setResources(new ChessBoardResources(board));
-		board.initControls();
+		board.createControls();
 		board.setLayoutData(new GridData(GridData.FILL_BOTH));
 		board.getController().adjustToGameInitial();
 		setStatus("Sample status message");

@@ -87,7 +87,7 @@ public class ChessBoard extends Composite implements Constants {
 
 	protected Composite boardPanel;
 
-	protected Map<String, Button> toolItemMap = new HashMap<String, Button>();
+	protected Map<String, Button> coolbarButtonMap = new HashMap<String, Button>();
 
 	public ChessBoard(Composite parent, int style) {
 		super(parent, style);
@@ -203,8 +203,8 @@ public class ChessBoard extends Composite implements Constants {
 		return whiteNameRatingLabel;
 	}
 
-	public void initControls() {
-		LOG.info("Initializing controls");
+	public void createControls() {
+		LOG.info("Creating controls");
 		long startTime = System.currentTimeMillis();
 
 		setLayout(new GridLayout(1, false));
@@ -238,16 +238,20 @@ public class ChessBoard extends Composite implements Constants {
 				.getStyle(ChessBoardLayout.GAME_DESCRIPTION_LABEL));
 		currentPremovesLabel = new Label(boardPanel, layout
 				.getStyle(ChessBoardLayout.CURRENT_PREMOVE_LABEL));
-		
-		whiteToMoveIndicatorLabel = new Label(boardPanel,layout.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
-		whiteToMoveIndicatorLabel.setImage(preferences.getIcon("circle_green30x30"));
 
-		blackToMoveIndicatorLabel = new Label(boardPanel,layout.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
-		blackToMoveIndicatorLabel.setImage(preferences.getIcon("circle_gray30x30"));
-		
+		whiteToMoveIndicatorLabel = new Label(boardPanel, layout
+				.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
+		whiteToMoveIndicatorLabel.setImage(preferences
+				.getIcon("circle_green30x30"));
+
+		blackToMoveIndicatorLabel = new Label(boardPanel, layout
+				.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
+		blackToMoveIndicatorLabel.setImage(preferences
+				.getIcon("circle_gray30x30"));
+
 		preferences.addPropertyChangeListener(propertyChangeListener);
 
-		LOG.info("Initialized controls in "
+		LOG.info("Created controls in "
 				+ (System.currentTimeMillis() - startTime));
 
 		updateFromPrefs();
@@ -498,21 +502,16 @@ public class ChessBoard extends Composite implements Constants {
 		blackNameRatingLabel.setForeground(preferences
 				.getColor(BOARD_PLAYER_NAME_COLOR));
 		blackNameRatingLabel.setBackground(background);
-		
+
 		whiteToMoveIndicatorLabel.setBackground(background);
 		blackToMoveIndicatorLabel.setBackground(background);
-		
-		
-		whiteLagLabel.setFont(preferences
-				.getFont(BOARD_LAG_FONT));
-		whiteLagLabel.setForeground(preferences
-				.getColor(BOARD_LAG_COLOR));
+
+		whiteLagLabel.setFont(preferences.getFont(BOARD_LAG_FONT));
+		whiteLagLabel.setForeground(preferences.getColor(BOARD_LAG_COLOR));
 		whiteLagLabel.setBackground(background);
 
-		blackLagLabel.setFont(preferences
-				.getFont(BOARD_LAG_FONT));
-		blackLagLabel.setForeground(preferences
-				.getColor(BOARD_LAG_COLOR));
+		blackLagLabel.setFont(preferences.getFont(BOARD_LAG_FONT));
+		blackLagLabel.setForeground(preferences.getColor(BOARD_LAG_COLOR));
 		blackLagLabel.setBackground(background);
 
 		whiteClockLabel.setFont(preferences.getFont(BOARD_CLOCK_FONT));
@@ -560,14 +559,14 @@ public class ChessBoard extends Composite implements Constants {
 		this.coolbar = coolbar;
 	}
 
-	public Map<String, Button> getToolItemMap() {
-		return toolItemMap;
+	public Button getCoolBarButton(String buttonKey) {
+		return coolbarButtonMap.get(buttonKey);
 	}
 
-	public void setButtonEnabled(boolean isEnabled, String key) {
-		Button item = toolItemMap.get(key);
-		if (item != null) {
-			item.setEnabled(isEnabled);
+	public void setCoolBarButtonEnabled(boolean isEnabled, String buttonKey) {
+		Button button = getCoolBarButton(buttonKey);
+		if (button != null) {
+			button.setEnabled(isEnabled);
 		}
 	}
 
@@ -603,14 +602,14 @@ public class ChessBoard extends Composite implements Constants {
 		queenButton.setImage(getResources()
 				.getChessPieceIconImage("XBoard", BQ));
 		queenButton.setSelection(true);
-		getToolItemMap().put(AUTO_QUEEN, queenButton);
+		coolbarButtonMap.put(AUTO_QUEEN, queenButton);
 		queenButton.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button knightButton = new Button(composite, SWT.RADIO);
 		knightButton.setToolTipText("Set auto promote piece to a knight.");
 		knightButton.setImage(getResources().getChessPieceIconImage("XBoard",
 				BN));
-		getToolItemMap().put(AUTO_KNIGHT, knightButton);
+		coolbarButtonMap.put(AUTO_KNIGHT, knightButton);
 		knightButton
 				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
@@ -618,14 +617,14 @@ public class ChessBoard extends Composite implements Constants {
 		rookButton.setToolTipText("Set auto promote piece to a rook.");
 		rookButton
 				.setImage(getResources().getChessPieceIconImage("XBoard", BR));
-		getToolItemMap().put(AUTO_ROOK, rookButton);
+		coolbarButtonMap.put(AUTO_ROOK, rookButton);
 		rookButton.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button bishopButton = new Button(composite, SWT.RADIO);
 		bishopButton.setToolTipText("Set auto promote piece to a bishop.");
 		bishopButton.setImage(getResources().getChessPieceIconImage("XBoard",
 				BB));
-		getToolItemMap().put(AUTO_BISHOP, bishopButton);
+		coolbarButtonMap.put(AUTO_BISHOP, bishopButton);
 		bishopButton
 				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
@@ -684,7 +683,7 @@ public class ChessBoard extends Composite implements Constants {
 
 			}
 		});
-		getToolItemMap().put(FIRST_NAV, firstButtonItem);
+		coolbarButtonMap.put(FIRST_NAV, firstButtonItem);
 
 		Button backButton = new Button(composite, SWT.FLAT);
 		backButton.setImage(getPreferences().getIcon("back"));
@@ -695,7 +694,7 @@ public class ChessBoard extends Composite implements Constants {
 
 			}
 		});
-		getToolItemMap().put(BACK_NAV, backButton);
+		coolbarButtonMap.put(BACK_NAV, backButton);
 
 		if (controller.isRevertable()) {
 			Button revertButton = new Button(composite, SWT.FLAT);
@@ -707,7 +706,7 @@ public class ChessBoard extends Composite implements Constants {
 
 				}
 			});
-			getToolItemMap().put(REVERT_NAV, revertButton);
+			coolbarButtonMap.put(REVERT_NAV, revertButton);
 		}
 
 		if (controller.isCommitable()) {
@@ -721,7 +720,7 @@ public class ChessBoard extends Composite implements Constants {
 				}
 			});
 
-			getToolItemMap().put(COMMIT_NAV, commitButton);
+			coolbarButtonMap.put(COMMIT_NAV, commitButton);
 		}
 
 		Button nextButton = new Button(composite, SWT.FLAT);
@@ -733,7 +732,7 @@ public class ChessBoard extends Composite implements Constants {
 
 			}
 		});
-		getToolItemMap().put(NEXT_NAV, nextButton);
+		coolbarButtonMap.put(NEXT_NAV, nextButton);
 
 		Button lastButton = new Button(composite, SWT.FLAT);
 		lastButton.setImage(getPreferences().getIcon("last"));
@@ -744,12 +743,12 @@ public class ChessBoard extends Composite implements Constants {
 
 			}
 		});
-		getToolItemMap().put(LAST_NAV, lastButton);
+		coolbarButtonMap.put(LAST_NAV, lastButton);
 
 		Button flipButton = new Button(composite, SWT.FLAT);
 		flipButton.setImage(getPreferences().getIcon("flip"));
 		flipButton.setToolTipText("Flips the chess board.");
-		getToolItemMap().put(FLIP, flipButton);
+		coolbarButtonMap.put(FLIP, flipButton);
 		flipButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onFlip();
@@ -761,7 +760,7 @@ public class ChessBoard extends Composite implements Constants {
 			autoDrawButton.setImage(getPreferences().getIcon("draw"));
 			autoDrawButton
 					.setToolTipText("Offer a draw after every move you make.");
-			getToolItemMap().put(AUTO_DRAW, autoDrawButton);
+			coolbarButtonMap.put(AUTO_DRAW, autoDrawButton);
 			autoDrawButton.setSize(flipButton.getSize());
 		}
 
@@ -787,6 +786,5 @@ public class ChessBoard extends Composite implements Constants {
 	public Label getBlackToMoveIndicatorLabel() {
 		return blackToMoveIndicatorLabel;
 	}
-	
-	
+
 }

@@ -16,6 +16,8 @@ public interface Connector {
 	public String getShortName();
 
 	public String getDescription();
+	
+	public String getPrompt();
 
 	public GameService getGameService();
 
@@ -38,6 +40,16 @@ public interface Connector {
 	public void onExamineModeCommit(Game game);
 
 	public void onDraw(Game game);
+	
+	public void onAcceptKeyPress();
+	
+	public void onDeclineKeyPress();
+	
+	public void onAbortKeyPress();
+	
+	public void onRematchKeyPress();
+	
+	public String getTellToString(String handle);
 
 	public GameScript[] getGameScripts();
 	

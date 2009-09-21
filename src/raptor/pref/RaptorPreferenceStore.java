@@ -150,16 +150,24 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Chat
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
 		setDefault(CHAT_TIMESTAMP_CONSOLE, true);
-		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT,"'['HH:mm']'");
+		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['HH:mm']'");
 
-		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
-				new FontData[] { new FontData(defaultMonospacedFontName, 16, 0) });
-		PreferenceConverter.setDefault(this, CHAT_OUTPUT_FONT,
-				new FontData[] { new FontData(defaultMonospacedFontName, 16, 0) });
-		PreferenceConverter.setDefault(this, CHAT_LAG_FONT,
-				new FontData[] { new FontData(defaultFontName, 12, 0) });
+		PreferenceConverter
+				.setDefault(this, CHAT_INPUT_FONT,
+						new FontData[] { new FontData(
+								defaultMonospacedFontName, 16, 0) });
+		PreferenceConverter
+				.setDefault(this, CHAT_OUTPUT_FONT,
+						new FontData[] { new FontData(
+								defaultMonospacedFontName, 20, 0) });
+		PreferenceConverter
+				.setDefault(this, CHAT_PROMPT_FONT,
+						new FontData[] { new FontData(
+								defaultMonospacedFontName, 20, 0) });
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_BACKGROUND_COLOR,
+				new RGB(0, 0, 0));
+		PreferenceConverter.setDefault(this, CHAT_CONSOLE_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
 		PreferenceConverter.setDefault(this, CHAT_INPUT_DEFAULT_TEXT_COLOR,
 				new RGB(255, 255, 255));
@@ -169,6 +177,12 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				0, 0));
 		PreferenceConverter.setDefault(this, CHAT_LINK_COLOR,
 				new RGB(0, 0, 255));
+		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(255,
+				255, 255));
+
+		PreferenceConverter.setDefault(this, APP_LAG_FONT,
+				new FontData[] { new FontData(defaultFontName, 12, 0) });
+		PreferenceConverter.setDefault(this, APP_LAG_COLOR, new RGB(0, 0, 0));
 
 		setDefault(SOUND_ENABLED, true);
 
@@ -192,7 +206,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		try {
 			if (!colorRegistry.hasValueFor(key)) {
 				RGB rgb = PreferenceConverter.getColor(this, key);
-				colorRegistry.put(key, rgb);
+				if (rgb != null) {
+					colorRegistry.put(key, rgb);
+				}
 			}
 			return colorRegistry.get(key);
 		} catch (Throwable t) {

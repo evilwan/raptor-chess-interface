@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Display;
 
 import raptor.App;
 import raptor.pref.PreferenceKeys;
+import raptor.swt.chat.controller.MainConsoleController;
 
 public class ChatWindow extends ApplicationWindow {
 	private static final Log LOG = LogFactory.getLog(ChatWindow.class);
@@ -37,7 +38,7 @@ public class ChatWindow extends ApplicationWindow {
 		app.getFicsConnector().getPreferences().setValue(
 				PreferenceKeys.FICS_IS_NAMED_GUEST, true);
 		app.getFicsConnector().getPreferences().setValue(
-				PreferenceKeys.FICS_USER_NAME, "raptorTest2");
+				PreferenceKeys.FICS_USER_NAME, "raptorTestTwo");
 		display.asyncExec(new Runnable() {
 			public void run() {
 				app.getFicsConnector().connect();
@@ -68,8 +69,12 @@ public class ChatWindow extends ApplicationWindow {
 		System.out.println("createdContents");
 
 		parent.setLayout(gridLayout);
-		mainConsole = new ChatConsole(parent, SWT.NONE, true, this, App
-				.getInstance().getFicsConnector());
+		mainConsole = new ChatConsole(parent, SWT.NONE);
+		mainConsole.setController(new MainConsoleController(mainConsole));
+		mainConsole.setPreferences(App.getInstance().getPreferences());
+		mainConsole.setConnector(App.getInstance().getFicsConnector());
+		mainConsole.createControls();
+		mainConsole.getController().init();
 		mainConsole.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		// tabFolder = new CTabFolder(parent, SWT.BORDER);

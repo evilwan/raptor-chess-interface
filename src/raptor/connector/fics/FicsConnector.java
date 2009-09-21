@@ -30,6 +30,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public static final String ENTER_PROMPT = "\":";
 	private static final Log LOG = LogFactory.getLog(FicsConnector.class);
 	public static final String LOGGED_IN_MSG = "**** Starting FICS session as ";
+	public static final String LOGIN_ERROR_MESSAGE = "\n\r*** ";
 	public static final String LOGIN_PROMPT = "login: ";
 	public static final String PASSWORD_PROMPT = "password:";
 	public static final String PROMPT = "\n\rfics% ";
@@ -48,15 +49,13 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	protected PreferenceStore preferences;
 	protected Socket socket;
 	protected boolean hasDisconnected = false;
+	protected String prompt;
 
 	protected String userName;
 
 	public FicsConnector() {
 		refreshGameScripts();
 	}
-
-	// maciejg
-	// &#x3b1; &#x3b2; &#x3b3; &#x3b4; &#x3b5; &#x3b6;
 
 	public void addGameScript(GameScript script) {
 		gameScriptsMap.put(script.getName(), script);
@@ -194,6 +193,10 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		sendMessage("revert");
 	}
 
+	public String getPrompt() {
+		return "fics%";
+	}
+
 	protected void onLoginEvent(String message, boolean isLoginPrompt) {
 		if (isLoginPrompt) {
 			if (getPreferences().getBoolean(FICS_IS_ANON_GUEST)
@@ -305,8 +308,22 @@ public class FicsConnector implements Connector, PreferenceKeys {
 									"\n");
 							onLoginEvent(event, false);
 
-						}  else {
-							System.err.println("Dangling:\n" + message);
+						} else {
+							int errorMessageIndex = inboundMessageBuffer
+									.indexOf(LOGIN_ERROR_MESSAGE);
+							if (errorMessageIndex != -1) {
+								String event = inboundMessageBuffer.substring(
+										0, passwordPromptIndex
+												+ LOGIN_ERROR_MESSAGE.length());
+								inboundMessageBuffer.delete(0,
+										passwordPromptIndex
+												+ LOGIN_ERROR_MESSAGE.length());
+								event = RaptorStringUtils.replaceAll(event,
+										"\n\r", "\n");
+								onMessageEvent(event);
+							} else {
+								System.err.println("Dangling:\n" + message);
+							}
 						}
 					}
 				}
@@ -366,29 +383,60 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	public void sendMessage(String msg) {
-		StringBuilder builder = new StringBuilder(msg);
-		FicsUtils.filterOutbound(builder);
-		msg = builder.toString();
+		if (socket.isConnected() && !socket.isClosed()) {
+			StringBuilder builder = new StringBuilder(msg);
+			FicsUtils.filterOutbound(builder);
+			msg = builder.toString();
 
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Fics Conector Sending: " + msg.trim());
-		}
-
-		synchronized (this) {
-			try {
-				socket.getOutputStream().write(msg.getBytes());
-				socket.getOutputStream().flush();
-			} catch (Throwable t) {
-				LOG.error("Error occured in send", t);
-				disconnect();
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Fics Conector Sending: " + msg.trim());
 			}
-		}
 
-		chatService.publishChatEvent(new ChatEvent(null, ChatTypes.OUTBOUND,
-				msg.trim()));
+			synchronized (this) {
+				try {
+					socket.getOutputStream().write(msg.getBytes());
+					socket.getOutputStream().flush();
+				} catch (Throwable t) {
+					LOG.error("Error occured in send", t);
+					disconnect();
+				}
+			}
+
+			chatService.publishChatEvent(new ChatEvent(null,
+					ChatTypes.OUTBOUND, msg.trim()));
+		} else if (!socket.isConnected()) {
+			chatService.publishChatEvent(new ChatEvent(null,
+					ChatTypes.OUTBOUND, "Error: Unable to send " + msg
+							+ ". A connection is not yet been established."));
+		} else if (!socket.isClosed()) {
+			chatService.publishChatEvent(new ChatEvent(null,
+					ChatTypes.OUTBOUND, "Error: Unable to send " + msg
+							+ ". The connection has been closed."));
+		}
 	}
 
 	public void setPreferences(PreferenceStore preferences) {
 		this.preferences = preferences;
 	}
+
+	public void onAcceptKeyPress() {
+		sendMessage("accept");
+	}
+
+	public void onDeclineKeyPress() {
+		sendMessage("decline");
+	}
+
+	public void onAbortKeyPress() {
+		sendMessage("abort");
+	}
+
+	public void onRematchKeyPress() {
+		sendMessage("rematch");
+	}
+
+	public String getTellToString(String handle) {
+		return "tell " + handle + " ";
+	}
+
 }
