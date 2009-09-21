@@ -38,7 +38,7 @@ public class FicsUtils {
 		int result = -1;
 
 		if (identifier.indexOf(SUICIDE_IDENTIFIER) != -1)
-			result = Game.SUCIDE;
+			result = Game.SUICIDE;
 		else if (identifier.indexOf(BUGHOUSE_IDENTIFIER) != -1)
 			result = Game.BUGHOUSE;
 		else if (identifier.indexOf(CRAZYHOUSE_IDENTIFIER) != -1)
