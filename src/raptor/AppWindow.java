@@ -29,9 +29,8 @@ public class AppWindow extends ApplicationWindow {
 	public AppWindow() {
 		super(null);
 
-		game = GameUtils.createStartingPosition();
+		game = GameUtils.createStartingPosition(Game.STANDARD);
 		game.setId("1");
-		game.setType(Game.BLITZ);
 		game.setState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 		game.setWhiteName("White");
 		game.setWhiteRating("----");

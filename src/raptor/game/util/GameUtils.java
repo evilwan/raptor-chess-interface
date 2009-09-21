@@ -2,8 +2,11 @@ package raptor.game.util;
 
 import java.util.StringTokenizer;
 
+import raptor.game.FischerRandomGame;
 import raptor.game.Game;
 import raptor.game.GameConstants;
+import raptor.game.LosersGame;
+import raptor.game.SuicideGame;
 
 //KoggeStone
 //http://www.open-aurec.com/wbforum/viewtopic.php?f=4&t=49948&sid=abd6ee7224f34b11a5211aa167f01ac4
@@ -50,10 +53,36 @@ public class GameUtils implements GameConstants {
 		return bitboard & ~squaresToClear;
 	}
 
-	public static final Game createFromFen(String fen) {
+	public static final Game createFromFen(String fen, int gameType) {
 		// rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
-		Game result = new Game();
+		Game result = null;
+
+		switch (gameType) {
+		case Game.BLITZ:
+		case Game.STANDARD:
+		case Game.LIGHTNING:
+		case Game.UNTIMED_STATE:
+			result = new Game();
+			break;
+		case Game.LOSERS:
+			result = new LosersGame();
+			break;
+		case Game.SUICIDE:
+			result = new SuicideGame();
+			break;
+		case Game.FISCHER_RANDOM:
+			result = new FischerRandomGame();
+			break;
+		case Game.WILD:
+			result = new Game();
+			break;
+		case Game.BUGHOUSE:
+		case Game.CRAZY_HOUSE:
+		default:
+			throw new IllegalArgumentException("Type " + gameType
+					+ " is not supported");
+		}
 
 		StringTokenizer tok = new StringTokenizer(fen, " ");
 		String boardStr = tok.nextToken();
@@ -146,8 +175,8 @@ public class GameUtils implements GameConstants {
 		return result;
 	}
 
-	public static final Game createStartingPosition() {
-		return createFromFen(STARTING_POSITION_FEN);
+	public static final Game createStartingPosition(int gameType) {
+		return createFromFen(STARTING_POSITION_FEN, gameType);
 	}
 
 	public static final long diagonalMove(int square, long emptySquares,
