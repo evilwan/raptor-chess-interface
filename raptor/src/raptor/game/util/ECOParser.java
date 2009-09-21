@@ -6,11 +6,40 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 
+import raptor.game.Game;
+import raptor.game.Move;
+import raptor.game.MoveList;
 
 /**
  * @author John Nahlen (johnthegreat)
  */
 public class ECOParser {
+	
+	/**
+	 * @param game Instance of Game that an ECOParser object needs to be retrieved from.
+	 * @return ECOParser instance if found, <code>null</code> if not.
+	 */
+	public static ECOParser getECOParser(Game game) {
+		MoveList m = game.getMoves();
+		Move[] moves = m.asArray();
+		
+		String str = "";
+		//for(int i=moves.length-1;i>0;i--) {
+		for(int i=0;i<moves.length;i++) {
+			if (i >= 10) break;
+			str += moves[i].getSan() + " ";
+			str = str.toUpperCase();
+		}
+		str = str.trim();
+		System.out.println("str = " + str);
+		if (ECOParser.getMap().containsKey(str)) {
+			ECOParser parser = ECOParser.getMap().get(str);
+			return parser;
+		}
+		
+		return null;
+	}
+	
 	
 	/**
 	 * Maps move sequences to ECOParser instances. 
@@ -32,60 +61,65 @@ public class ECOParser {
 	 * @throws IOException If something goes wrong during reading.
 	 */
 	public static void parse(File file) throws IOException {
+		System.err.println("parse() begin");
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		while(reader.ready()) {
 			String line = reader.readLine();
-			String[] arr = line.split("|");
-			ECOParser parser = new ECOParser(arr[0],arr[1],arr[2],arr[3]);
+			String[] arr = line.split("\\|");
+			//System.out.println(java.util.Arrays.toString(arr));
+			String varName = "";
+			if (arr.length == 4) varName = arr[3];
+			ECOParser parser = new ECOParser(arr[0],arr[1],arr[2],varName);
 			ECOParser.getMap().put(arr[0],parser);
 		}
+		System.err.println("parse() end");
 	}
 	
-	private String MoveSequence;
-	private String ECOCode;
-	private String OpeningName;
-	private String VariationName = "";
+	private String moveSequence;
+	private String EcoCode;
+	private String openingName;
+	private String variationName = "";
 	
 	public ECOParser(String moves,String eco,String opening,String variation) {
-		this.MoveSequence = moves;
-		this.ECOCode = eco;
-		this.OpeningName = opening;
-		this.VariationName = variation;
+		this.moveSequence = moves;
+		this.EcoCode = eco;
+		this.openingName = opening;
+		this.variationName = variation;
 	}
 	
 	/**
 	 * @return The ECO code.
 	 */
 	public String getECOCode() {
-		return ECOCode;
+		return EcoCode;
 	}
 	
 	/**
 	 * @return The name of the opening.
 	 */
 	public String getOpening() {
-		return OpeningName;
+		return openingName;
 	}
 	
 	/**
 	 * @return The variation name of the opening.
 	 */
 	public String getVariation() {
-		return VariationName;
+		return variationName;
 	}
 	
 	/**
 	 * @return The move sequence required to get to this ECO code.
 	 */
 	public String getMoves() {
-		return MoveSequence;
+		return moveSequence;
 	}
 	
 	/**
-	 * @return <code>getOpening() + ":" + getVariation()</code>
+	 * @return <code>getOpening() + " : " + getVariation()</code>
 	 */
 	@Override
 	public String toString() {
-		return getOpening() + ":" + getVariation();
+		return getOpening() + " : " + getVariation();
 	}
 }
