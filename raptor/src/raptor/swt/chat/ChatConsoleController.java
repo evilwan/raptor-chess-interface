@@ -8,9 +8,11 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 
@@ -24,14 +26,14 @@ import raptor.service.ChatService.ChatListener;
 public abstract class ChatConsoleController implements PreferenceKeys,
 		ChatTypes {
 	public static final double CLEAN_PERCENTAGE = .33;
+	public static final int CHUNK_SIZE_TO_SEARCH = 1000;
 	private static final Log LOG = LogFactory
 			.getLog(ChatConsoleController.class);
 
 	protected ChatConsole chatConsole;
 	protected ChatListener chatServiceListener = new ChatListener() {
 		public void chatEventOccured(final ChatEvent event) {
-			if (!chatConsole.getDisplay().isDisposed()
-					&& !chatConsole.isDisposed() && isAcceptingChatEvent(event)) {
+			if (!chatConsole.isDisposed() && isAcceptingChatEvent(event)) {
 
 				chatConsole.getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -228,8 +230,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 		chatConsole.inputText.append(appendText);
 		int startIndex = chatConsole.inputText.getCharCount()
-				- messageText.length();
-		int endIndex = chatConsole.inputText.getCharCount();
+				- appendText.length();
 
 		if (atEndPriorToEvent && isScrollLockEnabled) {
 			forceScrollToInputTextEnd();
@@ -237,7 +238,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 			setScrollLockEnabled(false);
 		}
 
-		onDecorateInputText(event, startIndex, endIndex);
+		onDecorateInputText(event, appendText, startIndex);
 		reduceInputTextIfNeeded();
 	}
 
@@ -262,13 +263,64 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		onAppendChatEventToInputText(event);
 	}
 
-	protected void onDecorateInputText(ChatEvent event, int textStartPosition,
-			int textEndPosition) {
-		// TO DO.
+	protected void onDecorateInputText(ChatEvent event, String message,
+			int textStartPosition) {
+		Color color = chatConsole.preferences.getColor(event);
+		if (color != null
+				&& !color.getRGB().equals(
+						chatConsole.inputText.getForeground().getRGB())) {
+			String prompt = chatConsole.getConnector().getPrompt();
+			int length = message.endsWith(chatConsole.getConnector()
+					.getPrompt()) ? message.length() - prompt.length()
+					: message.length();
+
+			chatConsole.inputText.setStyleRange(new StyleRange(
+					textStartPosition, length, color, chatConsole.inputText
+							.getBackground()));
+		}
 	}
 
 	protected void onSearch() {
-		// TO DO
+		chatConsole.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				String searchString = chatConsole.outputText.getText();
+				int start = chatConsole.inputText.getCaretOffset();
+
+				if (start >= chatConsole.inputText.getCharCount()) {
+					start = chatConsole.inputText.getCharCount() - 1;
+				} else if (start - searchString.length() + 1 >= 0) {
+					String text = chatConsole.inputText.getText(start
+							- searchString.length(), start - 1);
+					if (text.equals(searchString)) {
+						start -= searchString.length();
+					}
+				}
+
+				while (start > 0) {
+					int charsBack = 0;
+					if (start - CHUNK_SIZE_TO_SEARCH > 0) {
+						charsBack = CHUNK_SIZE_TO_SEARCH;
+					} else {
+						charsBack = start;
+					}
+
+					String stringToSearch = chatConsole.inputText.getText(start
+							- charsBack, start);
+					int index = stringToSearch.lastIndexOf(searchString);
+					if (index != -1) {
+						System.err.println("Found " + (start + index) + " "
+								+ (start + index + searchString.length()) + " "
+								+ searchString);
+						setScrollLockEnabled(false);
+						int textStart = start - charsBack + index;
+						chatConsole.inputText.setSelection(textStart, textStart
+								+ searchString.length());
+						break;
+					}
+					start -= charsBack;
+				}
+			}
+		});
 	}
 
 	public void onSendOutputText() {

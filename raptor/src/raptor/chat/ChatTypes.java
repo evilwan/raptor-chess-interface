@@ -8,7 +8,6 @@ public interface ChatTypes {
 	public static final int SHOUT = 4;
 	public static final int CSHOUT = 5;
 	public static final int CHAN_TELL = 6;
-	public static final int SAY = 7;
 	public static final int PARTNER_TELL = 8;
 	public static final int PARTNERSHIP_CREATED = 9;
 	public static final int PARTNERSHIP_DESTROYED = 10;
