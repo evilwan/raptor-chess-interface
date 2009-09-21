@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -12,6 +13,7 @@ import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -26,6 +28,8 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
 import raptor.App;
+import raptor.chat.ChatEvent;
+import raptor.chat.ChatTypes;
 
 public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
@@ -170,15 +174,52 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, CHAT_CONSOLE_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
 		PreferenceConverter.setDefault(this, CHAT_INPUT_DEFAULT_TEXT_COLOR,
-				new RGB(255, 255, 255));
+				new RGB(128, 128, 128));
 		PreferenceConverter.setDefault(this, CHAT_OUTPUT_BACKGROUND_COLOR,
 				new RGB(255, 255, 255));
 		PreferenceConverter.setDefault(this, CHAT_OUTPUT_TEXT_COLOR, new RGB(0,
 				0, 0));
 		PreferenceConverter.setDefault(this, CHAT_LINK_COLOR,
 				new RGB(0, 0, 255));
-		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(255,
-				255, 255));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHALLENGE
+						+ "-color", new RGB(100, 149, 237));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CSHOUT
+						+ "-color", new RGB(221, 160, 221));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.SHOUT
+						+ "-color", new RGB(221, 160, 221));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.KIBITZ
+						+ "-color", new RGB(100, 149, 237));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.WHISPER
+						+ "-color", new RGB(100, 149, 237));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.OUTBOUND
+						+ "-color", new RGB(0, 0, 255));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.PARTNER_TELL
+						+ "-color", new RGB(255, 0, 0));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.TELL
+						+ "-color", new RGB(255, 0, 0));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
+						+ "-" + 1 + "-color", new RGB(255, 200, 0));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
+						+ "-" + 4 + "-color", new RGB(0, 255, 0));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
+						+ "-" + 50 + "-color", new RGB(255, 175, 175));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
+						+ "-" + 53 + "-color", new RGB(255, 0, 255));
+
+		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
+				128, 128));
 
 		PreferenceConverter.setDefault(this, APP_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
@@ -202,6 +243,49 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
 
+	/**
+	 * Returns the foreground color to use for the specified chat event. Returns
+	 * null if no special color should be used.
+	 */
+	public Color getColor(ChatEvent event) {
+		Color result = null;
+
+		String key = null;
+		if (event.getType() == ChatTypes.CHAN_TELL) {
+			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType() + "-"
+					+ event.getChannel() + "-color";
+		} else {
+			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType()
+					+ "-color";
+		}
+		try {
+			if (!colorRegistry.hasValueFor(key)) {
+				// We don't want the default color if not found we want to
+				// return null, so use
+				// StringConverter instead of PreferenceConverter.
+				String value = getString(key);
+				if (StringUtils.isNotBlank(value)) {
+					RGB rgb = StringConverter.asRGB(value, null);
+					if (rgb != null) {
+						colorRegistry.put(key, rgb);
+					} else {
+						return null;
+					}
+				} else {
+					return null;
+				}
+			}
+			result = colorRegistry.get(key);
+		} catch (Throwable t) {
+			result = null;
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the color for the specified key. Returns BLACK if the key was not
+	 * found.
+	 */
 	public Color getColor(String key) {
 		try {
 			if (!colorRegistry.hasValueFor(key)) {
@@ -217,6 +301,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	}
 
+	/**
+	 * Returns the font for the specified key. Returns the default font if key
+	 * was not found.
+	 */
 	public Font getFont(String key) {
 		try {
 			if (!fontRegistry.hasValueFor(key)) {

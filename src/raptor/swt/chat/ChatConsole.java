@@ -86,7 +86,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 			Button searchButton = new Button(buttonComposite, SWT.FLAT);
 			searchButton.setImage(preferences.getIcon("search"));
 			searchButton
-					.setToolTipText("Searches backward for the specified text entered in the input text area.");
+					.setToolTipText("Searches backward for the message in the console text.");
 			searchButton.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent arg0) {
 					controller.onSearch();

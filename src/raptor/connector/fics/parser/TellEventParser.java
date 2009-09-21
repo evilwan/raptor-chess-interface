@@ -22,7 +22,7 @@ public class TellEventParser extends ChatEventParser {
 					String s2 = tok.nextToken();
 					if (s2.equals("says:")) {
 						return new ChatEvent(FicsUtils.removeTitles(source),
-								SAY, text);
+								TELL, text);
 
 					} else if (s2.equals("tells")) {
 						if (tok.hasMoreTokens()) {

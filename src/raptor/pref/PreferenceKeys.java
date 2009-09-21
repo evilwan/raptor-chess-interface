@@ -43,6 +43,7 @@ public interface PreferenceKeys {
 	public static final String CHAT_OUTPUT_FONT = "chat-output-font";
 	public static final String CHAT_INPUT_FONT = "chat-input-font";
 	public static final String CHAT_PROMPT_FONT = "chat-prompt-font";
+	public static final String CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO = "chat-event-";
 
 	public static final String CHAT_OUTPUT_BACKGROUND_COLOR = "chat-output-background-color";
 	public static final String CHAT_INPUT_BACKGROUND_COLOR = "chat-input-background-color";
