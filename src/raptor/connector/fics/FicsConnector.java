@@ -22,6 +22,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.script.GameScript;
 import raptor.service.ChatService;
 import raptor.service.GameService;
+import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.util.RaptorStringUtils;
 import free.freechess.timeseal.TimesealingSocket;
@@ -90,6 +91,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 							preferences.getInt(FICS_PORT));
 				}
 				onMessageEvent("Connected");
+			    SoundService.getInstance().playSound("alert");
 
 			} catch (Exception ce) {
 				onMessageEvent("Error: " + ce.getMessage());

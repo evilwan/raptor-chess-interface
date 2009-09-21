@@ -28,6 +28,7 @@ import raptor.chat.ChatEvent;
 import raptor.chat.ChatTypes;
 import raptor.connector.fics.FicsUtils;
 import raptor.pref.PreferenceKeys;
+import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
 import raptor.util.LaunchBrowser;
 
@@ -325,13 +326,20 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 			sourceOfLastTellReceived = event.getSource();
 		}
 		onAppendChatEventToInputText(event);
+		playSounds(event);
 	}
 
-	protected void onDecorateInputText(ChatEvent event, String message,
-			int textStartPosition) {
-		decorateForegroundColor(event, message, textStartPosition);
-		decorateQuotes(event, message, textStartPosition);
-		decorateLinks(event, message, textStartPosition);
+	protected void onDecorateInputText(final ChatEvent event,
+			final String message, final int textStartPosition) {
+
+		// The following operations can be expensive so run them asynch.
+		chatConsole.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				decorateForegroundColor(event, message, textStartPosition);
+				decorateQuotes(event, message, textStartPosition);
+				decorateLinks(event, message, textStartPosition);
+			}
+		});
 	}
 
 	protected void decorateForegroundColor(ChatEvent event, String message,
@@ -370,8 +378,24 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				break;
 			} else {
 				if (quoteIndex + 1 != endQuote) {
-					quotedRanges
-							.add(new int[] { quoteIndex + 1, endQuote });
+
+					// If there is a newline between the quotes ignore it.
+					int newLine = message.indexOf("\n", quoteIndex);
+
+					// If there is just one character and the a space after the first quote ignore it.
+					boolean isASpaceTwoCharsAfterQuote = message
+							.charAt(quoteIndex + 2) == ' ';
+
+					// If the quotes dont match ignore it.
+					boolean doQuotesMatch = message.charAt(quoteIndex) == message
+							.charAt(endQuote);
+
+					if (!(newLine > quoteIndex && newLine < endQuote)
+							&& !isASpaceTwoCharsAfterQuote && doQuotesMatch) {
+						quotedRanges
+								.add(new int[] { quoteIndex + 1, endQuote });
+
+					}
 				}
 			}
 
@@ -384,9 +408,9 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		for (int[] quotedRange : quotedRanges) {
 			Color underlineColor = chatConsole.getPreferences().getColor(
 					CHAT_QUOTE_UNDERLINE_COLOR);
-			StyleRange range = new StyleRange(textStartPosition + quotedRange[0], quotedRange[1]
-					- quotedRange[0], underlineColor, chatConsole.inputText
-					.getBackground());
+			StyleRange range = new StyleRange(textStartPosition
+					+ quotedRange[0], quotedRange[1] - quotedRange[0],
+					underlineColor, chatConsole.inputText.getBackground());
 			range.underline = true;
 			chatConsole.inputText.setStyleRange(range);
 		}
@@ -395,6 +419,12 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	protected void decorateLinks(ChatEvent event, String message,
 			int textStartPosition) {
 
+	}
+
+	protected void playSounds(ChatEvent event) {
+		if (event.getType() == ChatTypes.TELL) {
+			SoundService.getInstance().playSound("chat");
+		}
 	}
 
 	protected void onSearch() {
@@ -425,9 +455,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 							- charsBack, start);
 					int index = stringToSearch.lastIndexOf(searchString);
 					if (index != -1) {
-						System.err.println("Found " + (start + index) + " "
-								+ (start + index + searchString.length()) + " "
-								+ searchString);
 						int textStart = start - charsBack + index;
 						chatConsole.inputText.setSelection(textStart, textStart
 								+ searchString.length());
@@ -469,22 +496,12 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 										+ (chatConsole.getInputText()
 												.getCharCount() - i) - 1;
 							}
-
-							System.err
-									.println("i="
-											+ i
-											+ " endIndex="
-											+ endIndex
-											+ " textlen="
-											+ chatConsole.getInputText()
-													.getCharCount());
 							String string = chatConsole.getInputText().getText(
 									i, endIndex);
 							writer.append(string);
 							i = endIndex;
 						}
 						writer.flush();
-						LOG.debug("Wrote file " + selected);
 					} catch (Throwable t) {
 						LOG.error("Error writing file: " + selected, t);
 					} finally {
