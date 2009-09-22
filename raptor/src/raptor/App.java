@@ -25,15 +25,6 @@ public class App {
 
 	public static void main(String args[]) {
 
-		// ECOParser code
-		// Make sure file f exists!
-		File f = new File(getRaptorUserDir() + File.separator + "ECO.txt");
-		try {
-			ECOParser.parse(f);
-		} catch (IOException e) {
-			e.printStackTrace(System.err);
-		}
-		
 		Display display = new Display();
 		createInstance();
 		AppWindow window = new AppWindow();

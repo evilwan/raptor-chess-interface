@@ -2,6 +2,8 @@ package raptor.connector.fics;
 
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.WordUtils;
+
 import raptor.game.Game;
 
 public class FicsUtils {
@@ -128,13 +130,16 @@ public class FicsUtils {
 					int intValue = Integer.parseInt(unicodeHex, 16);
 					String replacement = new String(
 							new char[] { (char) intValue });
-					builder.replace(unicodePrefix, endIndex + 1,
-							replacement);
+					builder.replace(unicodePrefix, endIndex + 1, replacement);
 				} catch (NumberFormatException nfe) {
 					unicodePrefix = endIndex;
 				}
 			}
 		}
 		return builder.toString();
+	}
+
+	public static String wrapText(String string) {
+		return WordUtils.wrap(string, 80, "\n", true);
 	}
 }
