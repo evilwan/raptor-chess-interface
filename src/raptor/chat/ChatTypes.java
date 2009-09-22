@@ -14,5 +14,14 @@ public interface ChatTypes {
 	public static final int FOLLOWING = 11;
 	public static final int NOT_FOLLOWING = 12;
 	public static final int CHALLENGE = 13;
+
+	/**
+	 * Used for messages sent to fics.
+	 */
 	public static final int OUTBOUND = 14;
+
+	/**
+	 * Used for internal messages only inside of raptor.
+	 */
+	public static final int INTERNAL = 15;
 }

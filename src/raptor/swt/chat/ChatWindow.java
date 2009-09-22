@@ -39,7 +39,7 @@ public class ChatWindow extends ApplicationWindow {
 				PreferenceKeys.FICS_IS_NAMED_GUEST, false);
 		app.getFicsConnector().getPreferences().setValue(
 				PreferenceKeys.FICS_USER_NAME, "cday");
-		display.asyncExec(new Runnable() {
+		display.timerExec(2000, new Runnable() {
 			public void run() {
 				app.getFicsConnector().connect();
 			}

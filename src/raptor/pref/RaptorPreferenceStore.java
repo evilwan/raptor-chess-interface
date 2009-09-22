@@ -198,7 +198,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						+ "-color", new RGB(100, 149, 237));
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.OUTBOUND
-						+ "-color", new RGB(0, 0, 255));
+						+ "-color", new RGB(192, 192, 192));
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.PARTNER_TELL
 						+ "-color", new RGB(255, 0, 0));
@@ -217,6 +217,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
 						+ "-" + 53 + "-color", new RGB(255, 0, 255));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.INTERNAL
+						+ "-color", new RGB(255, 0, 0));
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));
 		PreferenceConverter.setDefault(this,

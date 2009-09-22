@@ -22,19 +22,16 @@ import raptor.chat.ChatTypes;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.swt.RaptorStyledText;
 
 public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes {
 
-	public static final String SCROLL_LOCK_ON_TOOLTIP = "Scroll Lock Enabled";
-	public static final String SCROLL_LOCK_OFF_TOOLTIP = "Scroll Lock Disabled";
-	public static final String SCROLL_LOCK_ON_ICON = "locked";
-	public static final String SCROLL_LOCK_OFF_ICON = "unlocked";
-
 	public static final String SEND_BUTTON = "send";
-	public static final String SCROLL_LOCK_BUTTON = "scrollLock";
+	public static final String AWAY_BUTTON = "away";
 	public static final String SEARCH_BUTTON = "search";
 	public static final String PREPEND_TEXT_BUTTON = "prepend";
 	public static final String SAVE_BUTTON = "save";
+	public static final String AUTO_SCROLL_BUTTON = "autoScroll";
 
 	protected StyledText inputText;
 	protected StyledText outputText;
@@ -61,8 +58,8 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 
 	protected void addButtons() {
 		Button sendButton = new Button(buttonComposite, SWT.FLAT);
-		sendButton.setImage(preferences.getIcon("southWest"));
-		sendButton.setToolTipText("Sends the message in the input text area.");
+		sendButton.setImage(preferences.getIcon("enter"));
+		sendButton.setToolTipText("Sends the message in the input field.");
 		sendButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onSendOutputText();
@@ -70,10 +67,18 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		});
 		buttonMap.put(SEND_BUTTON, sendButton);
 
+		if (controller.isPrependable()) {
+			Button prependTextButton = new Button(buttonComposite, SWT.CHECK);
+			prependTextButton.setImage(preferences.getIcon("redStar"));
+			prependTextButton.setToolTipText("Prepends " + prependTextButton
+					+ " to all messages sent.");
+			prependTextButton.setSelection(true);
+			buttonMap.put(PREPEND_TEXT_BUTTON, prependTextButton);
+		}
+
 		final Button saveButton = new Button(buttonComposite, SWT.FLAT);
 		saveButton.setImage(preferences.getIcon("save"));
-		saveButton
-				.setToolTipText("Save the current console text to a file.");
+		saveButton.setToolTipText("Save the current console text to a file.");
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onSave();
@@ -82,11 +87,25 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		});
 		buttonMap.put(SAVE_BUTTON, saveButton);
 
+		final Button awayButton = new Button(buttonComposite, SWT.FLAT);
+		awayButton.setImage(preferences.getIcon("chat"));
+		awayButton
+				.setToolTipText("Displays all of the direct tells you missed while you were away. "
+						+ "The list of tells you missed is reset each time you send a message.");
+		awayButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				controller.onAway();
+
+			}
+		});
+		buttonMap.put(AWAY_BUTTON, awayButton);
+
 		if (controller.isSearchable()) {
 			Button searchButton = new Button(buttonComposite, SWT.FLAT);
 			searchButton.setImage(preferences.getIcon("search"));
 			searchButton
-					.setToolTipText("Searches backward for the message in the console text.");
+					.setToolTipText("Searches backward for the message in the console text. "
+							+ "The search is case insensitive and does not use regular expressions.");
 			searchButton.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent arg0) {
 					controller.onSearch();
@@ -95,14 +114,16 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 			buttonMap.put(SEARCH_BUTTON, searchButton);
 		}
 
-		if (controller.isPrependable()) {
-			Button prependText = new Button(buttonComposite, SWT.CHECK);
-			prependText.setImage(preferences.getIcon("redStar"));
-			prependText.setToolTipText("Prepends " + prependText
-					+ " to all messages sent.");
-			prependText.setSelection(true);
-			buttonMap.put(PREPEND_TEXT_BUTTON, prependText);
-		}
+		final Button autoScroll = new Button(buttonComposite, SWT.FLAT);
+		autoScroll.setImage(preferences.getIcon("down"));
+		autoScroll.setToolTipText("Forces auto scrolling.");
+		autoScroll.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent arg0) {
+				controller.onForceAutoScroll();
+
+			}
+		});
+		buttonMap.put(AUTO_SCROLL_BUTTON, autoScroll);
 	}
 
 	public void dispose() {
@@ -136,12 +157,11 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 	}
 
 	public void createControls() {
-
 		setLayout(new GridLayout(1, true));
 
 		App.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
-		inputText = new StyledText(this, SWT.V_SCROLL | SWT.H_SCROLL
+		inputText = new RaptorStyledText(this, SWT.V_SCROLL | SWT.H_SCROLL
 				| SWT.MULTI);
 		inputText.setLayoutData(new GridData(GridData.FILL_BOTH));
 		inputText.setEditable(false);
@@ -160,7 +180,9 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		promptLabel = new Label(southControlsComposite, SWT.NONE);
 		promptLabel.setText(controller.getPrompt());
 
-		outputText = new StyledText(southControlsComposite, SWT.SINGLE);
+		outputText = new RaptorStyledText(southControlsComposite, SWT.SINGLE) {
+
+		};
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		buttonComposite = new Composite(southControlsComposite, SWT.NONE);
