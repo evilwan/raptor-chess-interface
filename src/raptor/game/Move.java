@@ -123,7 +123,7 @@ public class Move implements GameConstants {
 	}
 
 	public boolean isCapture() {
-		return capture != GameConstants.EMPTY;
+		return getCapture() != GameConstants.EMPTY;
 	}
 
 	public boolean isPromotion() {
@@ -184,6 +184,6 @@ public class Move implements GameConstants {
 
 	@Override
 	public String toString() {
-		return san != null ? san : getLan();
+		return getSan() != null ? getSan() : getLan();
 	}
 }
