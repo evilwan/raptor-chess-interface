@@ -102,6 +102,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN, 1000L * 60L + 1L);
 		setDefault(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
 				1000L * 60L * 10L + 1L);
+		setDefault(BOARD_PREMOVE_ENABLED, true);
+		setDefault(BOARD_SMARTMOVE_ENABLED, true);
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
@@ -163,11 +165,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter
 				.setDefault(this, CHAT_OUTPUT_FONT,
 						new FontData[] { new FontData(
-								defaultMonospacedFontName, 20, 0) });
+								defaultMonospacedFontName, 16, 0) });
 		PreferenceConverter
 				.setDefault(this, CHAT_PROMPT_FONT,
 						new FontData[] { new FontData(
-								defaultMonospacedFontName, 20, 0) });
+								defaultMonospacedFontName, 16, 0) });
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
@@ -198,7 +200,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						+ "-color", new RGB(100, 149, 237));
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.OUTBOUND
-						+ "-color", new RGB(192, 192, 192));
+						+ "-color", new RGB(128, 128, 128));
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.PARTNER_TELL
 						+ "-color", new RGB(255, 0, 0));
@@ -222,12 +224,12 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						+ "-color", new RGB(255, 0, 0));
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));
-		PreferenceConverter.setDefault(this,
-				CHAT_QUOTE_UNDERLINE_COLOR, new RGB(0, 255, 0));
-		PreferenceConverter.setDefault(this,CHAT_LINK_UNDERLINE_COLOR, new RGB(0,
-				0, 255));
+		PreferenceConverter.setDefault(this, CHAT_QUOTE_UNDERLINE_COLOR,
+				new RGB(0, 255, 0));
+		PreferenceConverter.setDefault(this, CHAT_LINK_UNDERLINE_COLOR,
+				new RGB(0, 0, 255));
 
-
+		setDefault(APP_NAME, "raptor v alpha.1");
 		PreferenceConverter.setDefault(this, APP_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, APP_LAG_COLOR, new RGB(0, 0, 0));
@@ -241,7 +243,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_PASSWORD, "");
 		setDefault(FICS_IS_NAMED_GUEST, false);
 		setDefault(FICS_IS_ANON_GUEST, false);
-		setDefault(FICS_LOGIN_SCRIPT, "");
+		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1");
 		setDefault(FICS_IS_LOGGING_GAMES, false);
 		setDefault(FICS_SERVER_URL, "freechess.org");
 		setDefault(FICS_PORT, 5000);

@@ -1,4 +1,4 @@
-package raptor.connector.fics.parser;
+package raptor.connector.fics.chat;
 
 import org.apache.log4j.Logger;
 

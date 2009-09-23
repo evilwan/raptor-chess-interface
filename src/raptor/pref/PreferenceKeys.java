@@ -11,6 +11,8 @@ public interface PreferenceKeys {
 	public static final String BOARD_IS_SHOWING_PIECE_JAIL = "board-is-showing-piece-jail";
 	public static final String BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN = "board-clock-show-millis-when-less-than";
 	public static final String BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN = "board-clock-show-seconds-when-less-than";
+	public static final String BOARD_PREMOVE_ENABLED = "board-premove-enabled";
+	public static final String BOARD_SMARTMOVE_ENABLED = "board-smartmove-enabled";
 
 	public static final String BOARD_COORDINATES_COLOR = "board-coordinates-color";
 	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
@@ -58,6 +60,8 @@ public interface PreferenceKeys {
 
 	public static final String APP_LAG_FONT = "app-lag-font";
 	public static final String APP_LAG_COLOR = "app-lag-color";
+	public static final String APP_NAME = "app-name";
+
 
 	public static final String SOUND_ENABLED = "sound-enabled";
 
