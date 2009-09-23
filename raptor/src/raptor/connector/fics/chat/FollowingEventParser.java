@@ -1,4 +1,4 @@
-package raptor.connector.fics.parser;
+package raptor.connector.fics.chat;
 
 import java.util.StringTokenizer;
 

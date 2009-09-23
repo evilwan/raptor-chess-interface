@@ -162,9 +162,10 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		App.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
 		inputText = new RaptorStyledText(this, SWT.V_SCROLL | SWT.H_SCROLL
-				| SWT.MULTI);
+				| SWT.MULTI | SWT.BORDER);
 		inputText.setLayoutData(new GridData(GridData.FILL_BOTH));
 		inputText.setEditable(false);
+		inputText.setWordWrap(true);
 
 		southControlsComposite = new Composite(this, SWT.NONE);
 		southControlsComposite.setLayoutData(new GridData(
@@ -180,7 +181,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		promptLabel = new Label(southControlsComposite, SWT.NONE);
 		promptLabel.setText(controller.getPrompt());
 
-		outputText = new RaptorStyledText(southControlsComposite, SWT.SINGLE) {
+		outputText = new RaptorStyledText(southControlsComposite, SWT.SINGLE | SWT.BORDER) {
 
 		};
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

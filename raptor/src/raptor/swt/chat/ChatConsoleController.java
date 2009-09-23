@@ -267,40 +267,48 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 			adjustAwayButtonEnabled();
 		}
 
-		boolean isScrollBarAtMax = false;
-		ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
-		if (scrollbar != null && scrollbar.isVisible()) {
-			isScrollBarAtMax = scrollbar.getMaximum() == scrollbar
-					.getSelection()
-					+ scrollbar.getThumb();
-			System.err.println("Scrollbar is at maximum=" + isScrollBarAtMax
-					+ " max=" + scrollbar.getMaximum() + " sel="
-					+ scrollbar.getSelection() + " thumbSize="
-					+ scrollbar.getThumb());
+		String appendText = null;
+		int startIndex = 0;
 
-		}
+		// synchronize on chatConsole so the scrolling will be handled
+		// appropriately if there are multiple events being
+		// published at the same time.
+		synchronized (chatConsole) {
+			boolean isScrollBarAtMax = false;
+			ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
+			if (scrollbar != null && scrollbar.isVisible()) {
+				isScrollBarAtMax = scrollbar.getMaximum() == scrollbar
+						.getSelection()
+						+ scrollbar.getThumb();
+				System.err.println("Scrollbar is at maximum="
+						+ isScrollBarAtMax + " max=" + scrollbar.getMaximum()
+						+ " sel=" + scrollbar.getSelection() + " thumbSize="
+						+ scrollbar.getThumb());
 
-		String messageText = event.getMessage();
-		String date = "";
-		if (App.getInstance().getPreferences().getBoolean(
-				CHAT_TIMESTAMP_CONSOLE)) {
-			SimpleDateFormat format = new SimpleDateFormat(App.getInstance()
-					.getPreferences().getString(CHAT_TIMESTAMP_CONSOLE_FORMAT));
-			date = format.format(new Date(event.getTime()));
-		}
+			}
 
-		String appendText = (chatConsole.inputText.getCharCount() == 0 ? ""
-				: "\n")
-				+ date + messageText;
+			String messageText = event.getMessage();
+			String date = "";
+			if (App.getInstance().getPreferences().getBoolean(
+					CHAT_TIMESTAMP_CONSOLE)) {
+				SimpleDateFormat format = new SimpleDateFormat(App
+						.getInstance().getPreferences().getString(
+								CHAT_TIMESTAMP_CONSOLE_FORMAT));
+				date = format.format(new Date(event.getTime()));
+			}
 
-		chatConsole.inputText.append(appendText);
-		int startIndex = chatConsole.inputText.getCharCount()
-				- appendText.length();
+			appendText = (chatConsole.inputText.getCharCount() == 0 ? "" : "\n")
+					+ date + messageText;
 
-		if (isScrollBarAtMax
-				&& ((chatConsole.inputText.getSelection().y - chatConsole.inputText
-						.getSelection().x) == 0)) {
-			onForceAutoScroll();
+			chatConsole.inputText.append(appendText);
+			startIndex = chatConsole.inputText.getCharCount()
+					- appendText.length();
+
+			if (isScrollBarAtMax
+					&& ((chatConsole.inputText.getSelection().y - chatConsole.inputText
+							.getSelection().x) == 0)) {
+				onForceAutoScroll();
+			}
 		}
 
 		onDecorateInputText(event, appendText, startIndex);
@@ -331,15 +339,9 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	protected void onDecorateInputText(final ChatEvent event,
 			final String message, final int textStartPosition) {
-
-		// The following operations can be expensive so run them asynch.
-		chatConsole.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				decorateForegroundColor(event, message, textStartPosition);
-				decorateQuotes(event, message, textStartPosition);
-				decorateLinks(event, message, textStartPosition);
-			}
-		});
+		decorateForegroundColor(event, message, textStartPosition);
+		decorateQuotes(event, message, textStartPosition);
+		decorateLinks(event, message, textStartPosition);
 	}
 
 	protected void decorateForegroundColor(ChatEvent event, String message,

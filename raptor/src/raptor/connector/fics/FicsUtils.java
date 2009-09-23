@@ -138,8 +138,4 @@ public class FicsUtils {
 		}
 		return builder.toString();
 	}
-
-	public static String wrapText(String string) {
-		return WordUtils.wrap(string, 80, "\n", true);
-	}
 }

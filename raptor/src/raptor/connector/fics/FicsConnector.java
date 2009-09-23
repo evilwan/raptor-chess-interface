@@ -14,7 +14,6 @@ import org.eclipse.jface.preference.PreferenceStore;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatTypes;
 import raptor.connector.Connector;
-import raptor.connector.fics.parser.FicsParser;
 import raptor.game.Game;
 import raptor.game.Move;
 import raptor.pref.PreferenceKeys;
@@ -23,29 +22,58 @@ import raptor.service.ChatService;
 import raptor.service.GameService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
-import raptor.util.RaptorStringUtils;
+import raptor.util.RaptorStringTokenizer;
 import free.freechess.timeseal.TimesealingSocket;
 
 public class FicsConnector implements Connector, PreferenceKeys {
 
 	/**
 	 * The runnable that is executed in the DaemonThread. This class handles
-	 * interacting with reading the text between prompts and invoking
-	 * parseMessage when it encounters a new message.
+	 * reading the text between prompts and invoking parseMessage when it
+	 * encounters a new message.
 	 * 
-	 * This class also handles the auto login login, as well as logging in.
+	 * This class also handles the auto login logic as well.
 	 */
 	protected class DaemonRunnable implements Runnable {
+		protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
+		protected boolean isLoggedIn = false;
+		protected boolean hasSentLogin = false;
+		protected boolean hasSentPassword = false;
+
+		/**
+		 * Removes all of the characters from inboundMessageBuffer and returns
+		 * the string removed.
+		 */
+		protected String drainInboundMessageBuffer() {
+			return drainInboundMessageBuffer(inboundMessageBuffer.length());
+		}
+
+		/**
+		 * Removes characters 0-index from inboundMessageBuffer and returns the
+		 * string removed.
+		 */
+		protected String drainInboundMessageBuffer(int index) {
+			String result = inboundMessageBuffer.substring(0, index);
+			inboundMessageBuffer.delete(0, index);
+			return result;
+		}
+
+		/**
+		 * Processes a login message. Handles sending the user name and password
+		 * information and the enter if prompted to hit enter if logging in as a
+		 * guest.
+		 * 
+		 * @param message
+		 * @param isLoginPrompt
+		 */
 		protected void onLoginEvent(String message, boolean isLoginPrompt) {
 			if (isLoginPrompt) {
 				if (getPreferences().getBoolean(FICS_IS_ANON_GUEST)
 						&& !hasSentLogin) {
-					System.err.println("Handling login: as anon-guest");
 					parseMessage(message);
 					hasSentLogin = true;
 					sendMessage("guest");
 				} else if (!hasSentLogin) {
-					System.err.println("Handling login: as non anon-guest");
 					parseMessage(message);
 					hasSentLogin = true;
 					String handle = getPreferences().getString(
@@ -54,30 +82,27 @@ public class FicsConnector implements Connector, PreferenceKeys {
 						sendMessage(handle);
 					}
 				} else {
-					System.err.println("Handling login: catch all");
 					parseMessage(message);
 				}
 			} else {
 				if (getPreferences().getBoolean(FICS_IS_ANON_GUEST)
 						&& !hasSentPassword) {
-					System.err.println("Handling : as anon guest.");
 					hasSentPassword = true;
 					parseMessage(message);
 					sendMessage("");
 				} else if (getPreferences().getBoolean(FICS_IS_NAMED_GUEST)
 						&& !hasSentPassword) {
-					System.err.println("Handling : as named guest.");
 					hasSentPassword = true;
 					parseMessage(message);
 					sendMessage("");
 				} else if (!hasSentPassword) {
-					System.err.println("Handling : as user.");
 					hasSentPassword = true;
 					parseMessage(message);
 					String password = getPreferences().getString(
 							PreferenceKeys.FICS_PASSWORD);
 					if (StringUtils.isNotBlank(password)) {
-						sendMessage(password);
+						// Don't show the users password.
+						sendMessage(password, true);
 					}
 				} else {
 					System.err.println("Handling : catch all");
@@ -86,26 +111,47 @@ public class FicsConnector implements Connector, PreferenceKeys {
 			}
 		}
 
-		protected void publishInput(String message) {
-			if (!isLoggedIn) {
-				inboundMessageBuffer.append(message);
+		/**
+		 * This method is invoked by the run method when there is new text to be
+		 * handled. It buffers text until a prompt is found then invokes
+		 * parseMessage.
+		 * 
+		 * This method also handles login logic which is tricky.
+		 */
+		protected void onNewInput() {
+			if (isLoggedIn) {
+
+				// If we are logged in. Then parse out all the text between the
+				// prompts.
+				int promptIndex = -1;
+				while ((promptIndex = inboundMessageBuffer.indexOf(RAW_PROMPT)) != -1) {
+					String message = drainInboundMessageBuffer(promptIndex
+							+ RAW_PROMPT.length());
+					parseMessage(message);
+				}
+			} else {
+				// We are not logged in.
+				// There are several complex cases here depending on the prompt
+				// we are waiting on.
+				// There is a login prompt, a password prompt, an enter prompt,
+				// and also you have to handle invalid logins.
 				int loggedInMessageIndex = inboundMessageBuffer
 						.indexOf(LOGGED_IN_MSG);
 				if (loggedInMessageIndex != -1) {
-					int nameStartIndex = message.indexOf(LOGGED_IN_MSG)
+					int nameStartIndex = inboundMessageBuffer
+							.indexOf(LOGGED_IN_MSG)
 							+ LOGGED_IN_MSG.length();
-					int endIndex = message.indexOf("****", nameStartIndex);
+					int endIndex = inboundMessageBuffer.indexOf("****",
+							nameStartIndex);
 					if (endIndex != -1) {
-						userName = FicsUtils.removeTitles(message.substring(
-								nameStartIndex, endIndex).trim());
-						System.err.println("login complete. userName="
-								+ userName);
+						userName = FicsUtils.removeTitles(inboundMessageBuffer
+								.substring(nameStartIndex, endIndex).trim());
+						LOG.info("login complete. userName=" + userName);
 						isLoggedIn = true;
 						onSuccessfulLogin();
-
-						// The user is now logged in no need to drain the queue
-						// let the isLoggedIn block handle that when a prompt
-						// arrives.
+						// Since we are now logged in, just buffer the text
+						// received and
+						// invoke parseMessage when the prompt arrives.
 					} else {
 						// We have yet to receive the **** closing message so
 						// wait
@@ -116,8 +162,6 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					if (loginIndex != -1) {
 						String event = drainInboundMessageBuffer(loginIndex
 								+ LOGIN_PROMPT.length());
-						event = RaptorStringUtils.replaceAll(event, "\n\r",
-								"\n");
 						onLoginEvent(event, true);
 					} else {
 						int enterPromptIndex = inboundMessageBuffer
@@ -125,8 +169,6 @@ public class FicsConnector implements Connector, PreferenceKeys {
 						if (enterPromptIndex != -1) {
 							String event = drainInboundMessageBuffer(enterPromptIndex
 									+ ENTER_PROMPT.length());
-							event = RaptorStringUtils.replaceAll(event, "\n\r",
-									"\n");
 							onLoginEvent(event, false);
 						} else {
 							int passwordPromptIndex = inboundMessageBuffer
@@ -134,69 +176,98 @@ public class FicsConnector implements Connector, PreferenceKeys {
 							if (passwordPromptIndex != -1) {
 								String event = drainInboundMessageBuffer(passwordPromptIndex
 										+ PASSWORD_PROMPT.length());
-								event = RaptorStringUtils.replaceAll(event,
-										"\n\r", "\n");
 								onLoginEvent(event, false);
 
 							} else {
 								int errorMessageIndex = inboundMessageBuffer
 										.indexOf(LOGIN_ERROR_MESSAGE);
 								if (errorMessageIndex != -1) {
-									inboundMessageBuffer.append(message);
 									String event = drainInboundMessageBuffer();
-									event = RaptorStringUtils.replaceAll(event,
-											"\n\r", "\n");
 									parseMessage(event);
-								} else {
-									System.err.println("Dangling:\n" + message);
 								}
 							}
 						}
 					}
 				}
 			}
-			if (isLoggedIn) {
-				inboundMessageBuffer.append(message);
-				int promptIndex = -1;
-				while ((promptIndex = inboundMessageBuffer.indexOf(PROMPT)) != -1) {
-					String event = drainInboundMessageBuffer(promptIndex
-							+ PROMPT.length());
-					message = RaptorStringUtils.replaceAll(event, "\n\r", "\n")
-							.trim();
-					parseMessage(message);
-				}
-			}
 		}
 
+		/**
+		 * Cleans up the message by ensuring only \n is used as a line
+		 * terminator. \r\n and \r may be used depending on the operating
+		 * system.
+		 */
+		public String cleanupMessage(String message) {
+			return StringUtils.remove(message, '\r');
+		}
+
+		/**
+		 * The run method. Reads the inputChannel and then invokes publishInput
+		 * with the text read.
+		 */
 		public void run() {
 			try {
 				while (true) {
 					if (isConnected()) {
 						int numRead = inputChannel.read(inputBuffer);
 						if (numRead > 0) {
-							System.err.println("Read " + numRead + " bytes.");
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("Read " + numRead + " bytes.");
+							}
 							inputBuffer.rewind();
 							byte[] bytes = new byte[numRead];
 							inputBuffer.get(bytes);
-							publishInput(new String(bytes));
+							inboundMessageBuffer
+									.append(cleanupMessage(new String(bytes)));
+							onNewInput();
 							inputBuffer.clear();
 						} else {
-							System.err.println("Read 0 bytes disconnecting.");
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("Read 0 bytes disconnecting.");
+							}
 							disconnect();
 							break;
 						}
 						Thread.sleep(50);
 					} else {
-						System.err.println("Not connected disconnecting.");
+						if (LOG.isDebugEnabled()) {
+							LOG.debug("Not connected disconnecting.");
+						}
 						disconnect();
 						break;
 					}
 				}
 			} catch (Throwable t) {
-				LOG.error("Error occured in read", t);
+				LOG.warn("Error occured in read", t);
 				disconnect();
 			} finally {
 				LOG.debug("Leaving readInput");
+			}
+		}
+
+		/**
+		 * Processes a message. If the user is logged in, message will be all of
+		 * the text received since the last prompt from fics. If the user is not
+		 * logged in, message will be all of the text received since the last
+		 * login prompt.
+		 * 
+		 * message will always use \n as the line delimiter.
+		 */
+		protected void parseMessage(String message) {
+			// Handle and remove game messages.
+			String afterGameMessages = parser.parseOutAndProcessGameEvents(
+					getGameService(), message);
+
+			// Don't send anything if the message is only the prompt.
+			if (!afterGameMessages.trim().equals(PROMPT)) {
+
+				// Parse what is left into ChatEvents and publish them.
+				ChatEvent[] events = parser.parse(afterGameMessages);
+				for (ChatEvent event : events) {
+					event.setMessage(FicsUtils
+							.maciejgFormatToUnicode(afterGameMessages));
+					publishEvent(event);
+				}
 			}
 		}
 	}
@@ -204,27 +275,22 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public static final String ENTER_PROMPT = "\":";
 	private static final Log LOG = LogFactory.getLog(FicsConnector.class);
 	public static final String LOGGED_IN_MSG = "**** Starting FICS session as ";
-	public static final String LOGIN_ERROR_MESSAGE = "\n\r*** ";
+	public static final String LOGIN_ERROR_MESSAGE = "\n*** ";
 	public static final String LOGIN_PROMPT = "login: ";
 	public static final String PASSWORD_PROMPT = "password:";
-	public static final String PROMPT = "\n\rfics% ";
-	public static final int PROMPT_LENGTH = PROMPT.length();
+	public static final String RAW_PROMPT = "\nfics% ";
+	public static final int RAW_PROMPT_LENGTH = RAW_PROMPT.length();
+	public static final String PROMPT = "fics%";
 
 	protected ChatService chatService = new ChatService();
 	protected Thread daemonThread;
+	protected DaemonRunnable daemonRunnable;
 	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();
-	protected boolean hasSentLogin = false;
-	protected boolean hasSentPassword = false;
-	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
 	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
 	protected ReadableByteChannel inputChannel;
-	protected boolean isLoggedIn = false;
 	protected FicsParser parser = new FicsParser();
 	protected PreferenceStore preferences;
-	protected String prompt;
-
 	protected Socket socket;
-
 	protected String userName;
 
 	public FicsConnector() {
@@ -244,13 +310,13 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	 * Connects to fics using the settings in preferences.
 	 */
 	public void connect() {
+		if (isConnected()) {
+			throw new IllegalStateException(
+					"You are already connected. Disconnect before invoking connect.");
+		}
+
 		LOG.info("Connecting to " + preferences.getString(FICS_SERVER_URL)
 				+ " " + preferences.getInt(FICS_PORT));
-
-		isLoggedIn = false;
-		hasSentLogin = false;
-		hasSentPassword = false;
-
 		LOG.info("Trying to connect");
 		publishEvent(new ChatEvent(
 				null,
@@ -283,8 +349,8 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					inputChannel = Channels.newChannel(socket.getInputStream());
 
 					SoundService.getInstance().playSound("alert");
-
-					daemonThread = new Thread(new DaemonRunnable());
+					daemonRunnable = new DaemonRunnable();
+					daemonThread = new Thread(daemonRunnable);
 					daemonThread.setName("FicsConnectorDaemon");
 					daemonThread.setPriority(Thread.MAX_PRIORITY);
 					daemonThread.start();
@@ -306,61 +372,60 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	 */
 	@SuppressWarnings("deprecation")
 	public void disconnect() {
-		try {
-			if (inputChannel != null) {
+		synchronized (this) {
+			if (!isConnected()) {
 				try {
-					inputChannel.close();
-				} catch (Throwable t) {
-				}
-			}
-			if (socket != null) {
-				try {
-					socket.close();
-				} catch (Throwable t) {
-				}
-			}
+					if (inputChannel != null) {
+						try {
+							inputChannel.close();
+						} catch (Throwable t) {
+						}
+					}
+					if (socket != null) {
+						try {
+							socket.close();
+						} catch (Throwable t) {
+						}
+					}
 
-			if (daemonThread != null) {
-				try {
-					if (daemonThread.isAlive()) {
-						// Make sure the thread is dead.
-						// There are no synchronized blocks to worry about
-						// so its ok to kill it off.
-						daemonThread.stop();
+					if (daemonThread != null) {
+						try {
+							if (daemonThread.isAlive()) {
+								// Make sure the thread is dead.
+								// There are no synchronized blocks to worry
+								// about
+								// so its ok to kill it off.
+								daemonThread.stop();
+							}
+						} catch (Throwable t) {
+						}
 					}
 				} catch (Throwable t) {
+				} finally {
+					socket = null;
+					inputChannel = null;
+					daemonThread = null;
 				}
+
+				try {
+					if (daemonRunnable != null) {
+						// If anything was buffered, process it.
+						String messageLeftInBuffer = daemonRunnable
+								.drainInboundMessageBuffer();
+						if (StringUtils.isNotBlank(messageLeftInBuffer)) {
+							daemonRunnable.parseMessage(messageLeftInBuffer);
+						}
+					}
+				} catch (Throwable t) {
+				} finally {
+					daemonRunnable = null;
+				}
+
+				publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
+						"Disconnected"));
+				LOG.error("Disconnected from FicsConnection.");
 			}
-		} catch (Throwable t) {
-		} finally {
-			socket = null;
-			inputChannel = null;
-			daemonThread = null;
 		}
-		if (inboundMessageBuffer.length() > 0) {
-			parseMessage(drainInboundMessageBuffer());
-			publishEvent(new ChatEvent(null, ChatTypes.INTERNAL, "Disconnected"));
-		}
-		LOG.error("Disconnected from FicsConnection.");
-	}
-
-	/**
-	 * Removes all of the characters from inboundMessageBuffer and returns the
-	 * string removed.
-	 */
-	protected String drainInboundMessageBuffer() {
-		return drainInboundMessageBuffer(inboundMessageBuffer.length());
-
-	}
-
-	/**
-	 * Removes characters 0-index from inboundMessageBuffer and returns the
-	 * string removed.
-	 */
-	protected String drainInboundMessageBuffer(int index) {
-		String result = inboundMessageBuffer.substring(0, index);
-		inboundMessageBuffer.delete(0, index);
-		return result;
 	}
 
 	public ChatService getChatService() {
@@ -389,7 +454,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	public String getPrompt() {
-		return "fics%";
+		return PROMPT;
 	}
 
 	public String getShortName() {
@@ -401,7 +466,8 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	public boolean isConnected() {
-		return socket != null && inputChannel != null && daemonThread != null;
+		return socket != null && inputChannel != null && daemonThread != null
+				&& daemonRunnable != null;
 	}
 
 	public void makeMove(Game game, Move move) {
@@ -453,22 +519,42 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	protected void onSuccessfulLogin() {
-		System.err.println("onSuccessfulLogin: ");
-	}
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				sendMessage("iset defprompt 1", true);
+				sendMessage("iset gameinfo 1", true);
+				sendMessage("iset ms 1", true);
+				sendMessage("iset allresults 1", true);
+				sendMessage(
+						"iset premove "
+								+ (getPreferences().getBoolean(
+										BOARD_PREMOVE_ENABLED) ? "1" : "0"),
+						true);
+				sendMessage(
+						"iset smartmove "
+								+ (getPreferences().getBoolean(
+										BOARD_SMARTMOVE_ENABLED) ? "1" : "0"),
+						true);
+				sendMessage("set interface "
+						+ getPreferences().getString(APP_NAME));
+				sendMessage("set style 12", true);
+				sendMessage("set bell 0", true);
 
-	/**
-	 * Parses the message into ChatEvents and publishes them.
-	 */
-	protected void parseMessage(String message) {
-		// Some fics messages need wrapping even though most are fixed at 80
-		// columns.
-		// The notify list when you log in is an example.
-		// message = FicsUtils.wrapText(message);
-		ChatEvent[] events = parser.parse(message);
-		for (ChatEvent event : events) {
-			event.setMessage(FicsUtils.maciejgFormatToUnicode(message));
-			publishEvent(event);
-		}
+				String loginScript = getPreferences().getString(
+						FICS_LOGIN_SCRIPT);
+				if (StringUtils.isNotBlank(loginScript)) {
+					RaptorStringTokenizer tok = new RaptorStringTokenizer(
+							loginScript, "\n\r");
+					while (tok.hasMoreTokens()) {
+						try {
+							Thread.sleep(50L);
+						} catch (InterruptedException ie) {
+						}
+						sendMessage(tok.nextToken().trim());
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -479,6 +565,9 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Publishing event : " + event);
 		}
+
+		// It is interesting to note messages are handled sequentially
+		// up to this point.
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
 				chatService.publishChatEvent(event);
@@ -499,20 +588,20 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		gameScriptsMap.remove(script.getName());
 	}
 
-	public void sendMessage(String msg) {
+	public void sendMessage(String message, boolean isHidingFromUser) {
 		if (isConnected()) {
-			StringBuilder builder = new StringBuilder(msg);
+			StringBuilder builder = new StringBuilder(message);
 			FicsUtils.filterOutbound(builder);
-			msg = builder.toString();
+			message = builder.toString();
 
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Fics Conector Sending: " + msg.trim());
+				LOG.debug("Fics Conector Sending: " + message.trim());
 			}
 
 			// Only one thread at a time should write to the socket.
 			synchronized (socket) {
 				try {
-					socket.getOutputStream().write(msg.getBytes());
+					socket.getOutputStream().write(message.getBytes());
 					socket.getOutputStream().flush();
 				} catch (Throwable t) {
 					publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
@@ -521,14 +610,20 @@ public class FicsConnector implements Connector, PreferenceKeys {
 				}
 			}
 
-			// Wrap the text before publishing an outbound event.
-			publishEvent(new ChatEvent(null, ChatTypes.OUTBOUND, FicsUtils
-					.wrapText(msg.trim())));
+			if (!isHidingFromUser) {
+				// Wrap the text before publishing an outbound event.
+				publishEvent(new ChatEvent(null, ChatTypes.OUTBOUND, message
+						.trim()));
+			}
 		} else {
-			publishEvent(new ChatEvent(null, ChatTypes.INTERNAL, FicsUtils
-					.wrapText("Error: Unable to send " + msg
-							+ ". There is currently no connection.")));
+			publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
+					"Error: Unable to send " + message
+							+ ". There is currently no connection."));
 		}
+	}
+
+	public void sendMessage(String message) {
+		sendMessage(message, false);
 	}
 
 	public void setPreferences(PreferenceStore preferences) {

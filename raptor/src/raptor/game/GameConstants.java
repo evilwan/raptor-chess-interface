@@ -222,6 +222,23 @@ public interface GameConstants {
 	public static final int PROMOTED_KNIGHT = KNIGHT | PROMOTED_MASK;
 	public static final int PROMOTED_ROOK = ROOK | PROMOTED_MASK;
 	public static final int PROMOTED_QUEEN = QUEEN | PROMOTED_MASK;
+	
+	
+	//Colored piece constants. 
+	//*NOTE* These are not used in the game class, 
+	//however they are useful for other classes.
+	public static final int WP = 1;
+	public static final int WB = 2;
+	public static final int WN = 3;
+	public static final int WR = 4;
+	public static final int WQ = 5;
+	public static final int WK = 6;
+	public static final int BP = 7;
+	public static final int BB = 8;
+	public static final int BN = 9;
+	public static final int BR = 10;
+	public static final int BQ = 11;
+	public static final int BK = 12;
 
 	// Color constants.
 	public static final int WHITE = 0;
