@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.script.GameScript;
 
 public class FicsGameScriptsPage extends PreferencePage {
@@ -36,13 +36,13 @@ public class FicsGameScriptsPage extends PreferencePage {
 	public FicsGameScriptsPage() {
 		// Use the "flat" layout
 		super();
-		setPreferenceStore(App.getInstance().getPreferences());
+		setPreferenceStore(Raptor.getInstance().getPreferences());
 		setTitle("Fics Script Editor");
 	}
 
 	public void populateScriptNames() {
 		scriptName.removeAll();
-		GameScript[] scripts = App.getInstance().getFicsConnector()
+		GameScript[] scripts = Raptor.getInstance().getFicsConnector()
 				.getGameScripts();
 		for (int i = 0; i < scripts.length; i++) {
 			scriptName.add(scripts[i].getName());
@@ -66,7 +66,7 @@ public class FicsGameScriptsPage extends PreferencePage {
 				| SWT.READ_ONLY);
 		scriptName.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				GameScript gameScript = App.getInstance().getFicsConnector()
+				GameScript gameScript = Raptor.getInstance().getFicsConnector()
 						.getGameScript(
 								scriptName.getItem(scriptName
 										.getSelectionIndex()));
@@ -127,7 +127,7 @@ public class FicsGameScriptsPage extends PreferencePage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String nameString = name.getText();
-				GameScript gameScript = App.getInstance().getFicsConnector()
+				GameScript gameScript = Raptor.getInstance().getFicsConnector()
 						.getGameScript(nameString);
 				if (gameScript != null) {
 					gameScript.setDescription(description.getText());
@@ -148,12 +148,12 @@ public class FicsGameScriptsPage extends PreferencePage {
 					gameScript.setAvailableInSetupState(isAvailableInSetupState
 							.getSelection());
 					gameScript.save();
-					App.getInstance().getFicsConnector().refreshGameScripts();
+					Raptor.getInstance().getFicsConnector().refreshGameScripts();
 					populateScriptNames();
 
 				} else {
 					gameScript = new GameScript();
-					gameScript.setConnector(App.getInstance()
+					gameScript.setConnector(Raptor.getInstance()
 							.getFicsConnector());
 					gameScript.setDescription(description.getText());
 					gameScript.setName(name.getText());
@@ -173,7 +173,7 @@ public class FicsGameScriptsPage extends PreferencePage {
 					gameScript.setAvailableInSetupState(isAvailableInSetupState
 							.getSelection());
 					gameScript.save();
-					App.getInstance().getFicsConnector().refreshGameScripts();
+					Raptor.getInstance().getFicsConnector().refreshGameScripts();
 					populateScriptNames();
 				}
 			}
@@ -184,12 +184,12 @@ public class FicsGameScriptsPage extends PreferencePage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String nameString = name.getText();
-				GameScript gameScript = App.getInstance().getFicsConnector()
+				GameScript gameScript = Raptor.getInstance().getFicsConnector()
 						.getGameScript(nameString);
 				if (gameScript != null) {
-					App.getInstance().getFicsConnector().removeGameScript(
+					Raptor.getInstance().getFicsConnector().removeGameScript(
 							gameScript);
-					App.getInstance().getFicsConnector().refreshGameScripts();
+					Raptor.getInstance().getFicsConnector().refreshGameScripts();
 					populateScriptNames();
 
 				}

@@ -3,14 +3,14 @@ package raptor.pref;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
-import raptor.App;
+import raptor.Raptor;
 
 public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 	public ChessBoardBehaviorPage() {
 		// Use the "flat" layout
 		super(FLAT);
 		setTitle("Chess Board Behavior");
-		setPreferenceStore(App.getInstance().getPreferences());
+		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override

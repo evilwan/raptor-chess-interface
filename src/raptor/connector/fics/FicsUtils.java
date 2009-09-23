@@ -2,8 +2,6 @@ package raptor.connector.fics;
 
 import java.util.StringTokenizer;
 
-import org.apache.commons.lang.WordUtils;
-
 import raptor.game.Game;
 
 public class FicsUtils {

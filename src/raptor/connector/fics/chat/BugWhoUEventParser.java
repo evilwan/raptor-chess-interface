@@ -150,9 +150,9 @@ public class BugWhoUEventParser {
 	// }
 	// }
 
-	private static final String UNPARTNERED_PLAYERS = "Unpartnered players with bugopen on";
-
-	private static final String END = "(*) indicates system administrator.";
+//	private static final String UNPARTNERED_PLAYERS = "Unpartnered players with bugopen on";
+//
+//	private static final String END = "(*) indicates system administrator.";
 
 	/*
 	 * ^ involved in a game ~ running a simul match : not open for a match #
@@ -160,6 +160,6 @@ public class BugWhoUEventParser {
 	 * 
 	 * not busy & involved in a tournament
 	 */
-	private static final String MODIFIERS = "^~:#.&";
+//	private static final String MODIFIERS = "^~:#.&";
 
 }

@@ -13,7 +13,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 
-import raptor.App;
+import raptor.Raptor;
 
 public class ChessBoardResources implements Constants {
 	public static final String CHESS_SET_DIR = "resources/common/set/";
@@ -147,7 +147,7 @@ public class ChessBoardResources implements Constants {
 			return null;
 		} else {
 
-			return App.getInstance().getPreferences().getImage(
+			return Raptor.getInstance().getPreferences().getImage(
 					getChessPieceImageName(name, type));
 		}
 	}
@@ -179,7 +179,7 @@ public class ChessBoardResources implements Constants {
 	}
 
 	public static Image getSquareBackgroundMold(String name, boolean isLight) {
-		return App.getInstance().getPreferences().getImage(
+		return Raptor.getInstance().getPreferences().getImage(
 				getSquareBackgroundImageName(name, isLight));
 	}
 

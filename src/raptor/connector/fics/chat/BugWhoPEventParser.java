@@ -166,9 +166,10 @@ public class BugWhoPEventParser {
 	// return 0;
 	// }
 
-	private static final String PARTNERSHIPS_NOT_PLAYING = "Partnerships not playing bughouse";
-
-	private static final String PARTNERSHIPS_DISPLAYED = "displayed.";
+	// private static final String PARTNERSHIPS_NOT_PLAYING =
+	// "Partnerships not playing bughouse";
+	//
+	// private static final String PARTNERSHIPS_DISPLAYED = "displayed.";
 
 	/*
 	 *  ^ involved in a game
@@ -180,6 +181,6 @@ public class BugWhoPEventParser {
 	 * not busy
 	 *  & involved in a tournament
 	 */
-	private static final String MODIFIERS = "^~:#.&";
+	//private static final String MODIFIERS = "^~:#.&";
 
 }

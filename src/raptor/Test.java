@@ -2,10 +2,7 @@ package raptor;
 
 import java.util.Calendar;
 
-import org.eclipse.swt.widgets.Display;
-
 import raptor.connector.fics.FicsUtils;
-import raptor.pref.PreferenceKeys;
 
 public class Test {
 	public static final long TIMEZONE_OFFSET = -(Calendar.getInstance()

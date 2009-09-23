@@ -142,6 +142,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 		int nameStartY = boardTopLeft.y;
 
+		@SuppressWarnings("unused")
 		int clockWidth = worseCaseClockSize.x;
 		if (board.isWhiteOnTop()) {
 			whiteToMoveIndicatorRect = new Rectangle(nameLabelStartX,
@@ -204,6 +205,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		}
 
 		int pieceJailStartX = whiteToMoveIndicatorRect.x;
+		@SuppressWarnings("unused")
 		int pieceJailStartY = whiteToMoveIndicatorRect.y
 				+ whiteToMoveIndicatorRect.height;
 		pieceJailRects = new Rectangle[board.getPieceJailSquares().length];

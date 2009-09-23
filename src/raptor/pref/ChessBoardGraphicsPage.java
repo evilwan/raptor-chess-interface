@@ -8,7 +8,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.swt.chess.ChessBoardResources;
 import raptor.swt.chess.Constants;
 
@@ -45,7 +45,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 	public ChessBoardGraphicsPage() {
 		// Use the "grid" layout
 		super(GRID);
-		setPreferenceStore(App.getInstance().getPreferences());
+		setPreferenceStore(Raptor.getInstance().getPreferences());
 		setTitle("Chess Board Graphics");
 	}
 
@@ -85,7 +85,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		setCompositeII.setLayout(new GridLayout(1, false));
 		setWhiteImagesComposite = new ImageComposite(setCompositeII, 6);
 		setBlackImagesComposite = new ImageComposite(setCompositeII, 6);
-		updateSetImages(App.getInstance().getPreferences().getString(
+		updateSetImages(Raptor.getInstance().getPreferences().getString(
 				PreferenceKeys.BOARD_CHESS_SET_NAME));
 
 		String[] backgrounds = ChessBoardResources.getSquareBackgroundNames();
@@ -112,7 +112,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		};
 		addField(backgroundFieldEditor);
 		backgroundImageComposite = new ImageComposite(backgroundComposite, 2);
-		updateBackgroundImages(App.getInstance().getPreferences().getString(
+		updateBackgroundImages(Raptor.getInstance().getPreferences().getString(
 				PreferenceKeys.BOARD_SQUARE_BACKGROUND_NAME));
 
 	}

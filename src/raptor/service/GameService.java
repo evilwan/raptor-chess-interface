@@ -22,6 +22,10 @@ public class GameService {
 		return instance;
 	}
 
+	public void dispose() {
+		gameMap.clear();
+	}
+
 	HashMap<String, Game> gameMap = new HashMap<String, Game>();
 
 	public void addGame(Game game) {

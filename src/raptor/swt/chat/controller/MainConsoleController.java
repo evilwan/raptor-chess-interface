@@ -1,13 +1,11 @@
 package raptor.swt.chat.controller;
 
 import raptor.chat.ChatEvent;
-import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleController;
 
 public class MainConsoleController extends ChatConsoleController {
 
-	public MainConsoleController(ChatConsole console) {
-		super(console);
+	public MainConsoleController() {
 	}
 
 	@Override

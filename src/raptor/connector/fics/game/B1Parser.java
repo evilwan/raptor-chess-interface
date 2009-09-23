@@ -10,7 +10,7 @@ public class B1Parser implements GameConstants {
 	public B1Message parse(String message) {
 		if (message.startsWith(B1_START)) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
-					" {}><-\n",true);
+					" {}><-\n", true);
 			B1Message result = new B1Message();
 
 			tok.nextToken();
@@ -33,7 +33,6 @@ public class B1Parser implements GameConstants {
 		int[] result = new int[6];
 
 		for (int i = 0; i < s.length(); i++) {
-			int piece = -1;
 			switch (s.charAt(i)) {
 			case 'P':
 			case 'p':

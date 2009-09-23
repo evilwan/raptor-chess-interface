@@ -10,7 +10,6 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.game.GameConstants;
 import raptor.game.Move;
-import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.Constants;
 import raptor.swt.chess.Utils;
@@ -20,8 +19,7 @@ public class FreeFormController extends ChessBoardController implements
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 	Random random = new SecureRandom();
 
-	public FreeFormController(ChessBoard chessTable) {
-		super(chessTable);
+	public FreeFormController() {
 	}
 
 	@Override
