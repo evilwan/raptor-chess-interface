@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.controller.MainConsoleController;
 
@@ -23,8 +23,8 @@ public class ChatWindow extends ApplicationWindow {
 
 	public static void main(String[] args) throws Exception {
 		Display display = new Display();
-		App.createInstance();
-		final App app = App.getInstance();
+		Raptor.createInstance();
+		final Raptor app = Raptor.getInstance();
 		ChatWindow window = new ChatWindow();
 
 		// app.getFicsConnector().getPreferences().setValue(
@@ -36,9 +36,9 @@ public class ChatWindow extends ApplicationWindow {
 		app.getFicsConnector().getPreferences().setValue(
 				PreferenceKeys.FICS_TIMESEAL_ENABLED, true);
 		app.getFicsConnector().getPreferences().setValue(
-				PreferenceKeys.FICS_IS_NAMED_GUEST, false);
+				PreferenceKeys.FICS_IS_NAMED_GUEST, true);
 		app.getFicsConnector().getPreferences().setValue(
-				PreferenceKeys.FICS_USER_NAME, "cday");
+				PreferenceKeys.FICS_USER_NAME, "raptorTester");
 		display.timerExec(2000, new Runnable() {
 			public void run() {
 				app.getFicsConnector().connect();
@@ -70,9 +70,11 @@ public class ChatWindow extends ApplicationWindow {
 
 		parent.setLayout(gridLayout);
 		mainConsole = new ChatConsole(parent, SWT.NONE);
-		mainConsole.setController(new MainConsoleController(mainConsole));
-		mainConsole.setPreferences(App.getInstance().getPreferences());
-		mainConsole.setConnector(App.getInstance().getFicsConnector());
+		ChatConsoleController controller = new MainConsoleController();
+		controller.setChatConsole(mainConsole);
+		mainConsole.setController(controller);
+		mainConsole.setPreferences(Raptor.getInstance().getPreferences());
+		mainConsole.setConnector(Raptor.getInstance().getFicsConnector());
 		mainConsole.createControls();
 		mainConsole.getController().init();
 		mainConsole.setLayoutData(new GridData(GridData.FILL_BOTH));

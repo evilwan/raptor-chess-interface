@@ -3,14 +3,14 @@ package raptor.pref;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FontFieldEditor;
 
-import raptor.App;
+import raptor.Raptor;
 
 public class FontsPage extends FieldEditorPreferencePage implements
 		PreferenceKeys {
 	public FontsPage() {
 		// Use the "grid" layout
 		super(GRID);
-		setPreferenceStore(App.getInstance().getPreferences());
+		setPreferenceStore(Raptor.getInstance().getPreferences());
 		setTitle("Fonts");
 	}
 

@@ -47,8 +47,18 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		}
 	}
 
-	public ChessBoardController(ChessBoard board) {
+	public ChessBoard getBoard() {
+		return board;
+	}
+
+	public void setBoard(ChessBoard board) {
 		this.board = board;
+	}
+
+	public ChessBoardController() {
+	}
+
+	public void init() {
 		traverser = new MoveListTraverser(board.game);
 	}
 
@@ -196,10 +206,14 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	protected void setNavButtonsEnablbed() {
 		if (isMoveListTraversable()) {
-			board.setCoolBarButtonEnabled(traverser.hasFirst(), ChessBoard.FIRST_NAV);
-			board.setCoolBarButtonEnabled(traverser.hasLast(), ChessBoard.LAST_NAV);
-			board.setCoolBarButtonEnabled(traverser.hasNext(), ChessBoard.NEXT_NAV);
-			board.setCoolBarButtonEnabled(traverser.hasBack(), ChessBoard.BACK_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasFirst(),
+					ChessBoard.FIRST_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasLast(),
+					ChessBoard.LAST_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasNext(),
+					ChessBoard.NEXT_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasBack(),
+					ChessBoard.BACK_NAV);
 		} else {
 			board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
 			board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
@@ -255,8 +269,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	protected void adjustToGameChange() {
 		LOG.info("adjustToGameChange " + board.game.getId() + " ...");
-		long startTime = System.currentTimeMillis();	
-		
+		long startTime = System.currentTimeMillis();
+
 		stopClocks();
 
 		adjustBoardToGame(board.game);
@@ -278,13 +292,13 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		adjustGameStatusLabel();
 		adjustToMoveIndicatorLabel();
 
-		
-		//CDay tells you: you can do board.getOpeningDescriptionLabel().setText(your opening description);
-		//CDay tells you: so you can test it from the gui
+		// CDay tells you: you can do
+		// board.getOpeningDescriptionLabel().setText(your opening description);
+		// CDay tells you: so you can test it from the gui
 		ECOParser p = ECOParser.getECOParser(board.getGame());
 		if (p != null)
-		board.getOpeningDescriptionLabel().setText(p.toString());
-		
+			board.getOpeningDescriptionLabel().setText(p.toString());
+
 		board.forceUpdate();
 
 		LOG.info("adjustToGameChange " + board.game.getId() + "  n "

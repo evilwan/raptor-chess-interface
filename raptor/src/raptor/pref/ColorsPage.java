@@ -3,14 +3,14 @@ package raptor.pref;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
-import raptor.App;
+import raptor.Raptor;
 
 public class ColorsPage extends FieldEditorPreferencePage implements
 		PreferenceKeys {
 	public ColorsPage() {
 		// Use the "grid" layout
 		super(GRID);
-		setPreferenceStore(App.getInstance().getPreferences());
+		setPreferenceStore(Raptor.getInstance().getPreferences());
 		setTitle("Colors");
 	}
 

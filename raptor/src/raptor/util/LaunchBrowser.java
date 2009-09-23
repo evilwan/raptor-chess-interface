@@ -13,17 +13,16 @@ package raptor.util;
 
 import java.lang.reflect.Method;
 
-import javax.swing.JOptionPane;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 
 public class LaunchBrowser {
 	private static final Log LOG = LogFactory.getLog(LaunchBrowser.class);
 
+	@SuppressWarnings("unchecked")
 	public static void openURL(String url) {
 		String osName = System.getProperty("os.name");
 		try {
@@ -36,7 +35,7 @@ public class LaunchBrowser {
 				Runtime.getRuntime().exec(
 						"rundll32 url.dll,FileProtocolHandler " + url);
 			else { // assume Unix or Linux
-				String prefBrowser = App.getInstance().getPreferences()
+				String prefBrowser = Raptor.getInstance().getPreferences()
 						.getString(PreferenceKeys.MISC_BROWSER_NAME);
 
 				if (prefBrowser == null) {

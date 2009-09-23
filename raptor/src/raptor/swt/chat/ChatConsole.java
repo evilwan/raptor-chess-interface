@@ -3,6 +3,8 @@ package raptor.swt.chat;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -17,7 +19,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.chat.ChatTypes;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -25,6 +27,8 @@ import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.RaptorStyledText;
 
 public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes {
+
+	static final Log LOG = LogFactory.getLog(ChatConsole.class);
 
 	public static final String SEND_BUTTON = "send";
 	public static final String AWAY_BUTTON = "away";
@@ -127,12 +131,14 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 	}
 
 	public void dispose() {
-		App.getInstance().getPreferences().removePropertyChangeListener(
+		Raptor.getInstance().getPreferences().removePropertyChangeListener(
 				propertyChangeListener);
 		if (controller != null) {
 			controller.dispose();
 		}
 		buttonMap.clear();
+
+		LOG.info("Disposed chat console.");
 		super.dispose();
 	}
 
@@ -159,7 +165,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 	public void createControls() {
 		setLayout(new GridLayout(1, true));
 
-		App.getInstance().getPreferences().addPropertyChangeListener(
+		Raptor.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
 		inputText = new RaptorStyledText(this, SWT.V_SCROLL | SWT.H_SCROLL
 				| SWT.MULTI | SWT.BORDER);
@@ -181,7 +187,8 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		promptLabel = new Label(southControlsComposite, SWT.NONE);
 		promptLabel.setText(controller.getPrompt());
 
-		outputText = new RaptorStyledText(southControlsComposite, SWT.SINGLE | SWT.BORDER) {
+		outputText = new RaptorStyledText(southControlsComposite, SWT.SINGLE
+				| SWT.BORDER) {
 
 		};
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -225,7 +232,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 	}
 
 	public void updateFromPrefs() {
-		RaptorPreferenceStore prefs = App.getInstance().getPreferences();
+		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
 		Color consoleBackground = prefs.getColor(CHAT_CONSOLE_BACKGROUND_COLOR);
 
 		buttonComposite.setBackground(consoleBackground);

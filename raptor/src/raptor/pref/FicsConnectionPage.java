@@ -4,14 +4,14 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 
-import raptor.App;
+import raptor.Raptor;
 
 public class FicsConnectionPage extends FieldEditorPreferencePage {
 	public FicsConnectionPage() {
 		// Use the "flat" layout
 		super(FLAT);
 		setTitle("Fics Connection");
-		setPreferenceStore(App.getInstance().getPreferences());
+		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override

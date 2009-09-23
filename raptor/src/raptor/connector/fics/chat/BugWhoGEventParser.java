@@ -1,11 +1,10 @@
 package raptor.connector.fics.chat;
 
-import org.apache.log4j.Logger;
 
 public class BugWhoGEventParser {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(BugWhoGEventParser.class);
+	// private static final Logger LOGGER = Logger
+	// .getLogger(BugWhoGEventParser.class);
 
 	/**
 	 * Bughouse games in progress 65 1613 crankinhaus 1692 RooRooBear [ Br 2 0]
@@ -81,9 +80,10 @@ public class BugWhoGEventParser {
 	// return null;
 	// }
 	// }
-
-	private static final String GAMES_IN_PROGRESS = "Bughouse games in progress";
-
-	private static final String DISPLAYED = "displayed.";
+	//
+	// private static final String GAMES_IN_PROGRESS =
+	// "Bughouse games in progress";
+	//
+	// private static final String DISPLAYED = "displayed.";
 
 }

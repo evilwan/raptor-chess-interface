@@ -21,7 +21,6 @@ public class KibitzEventParser extends ChatEventParser {
 				if (stringtokenizer.hasMoreTokens()) {
 					String s2 = stringtokenizer.nextToken();
 					if (s2.equals("kibitzes:")) {
-						int i = text.indexOf("kibitzes:");
 						int j = text.indexOf("[") + 1;
 						int k = text.indexOf("]");
 						try {

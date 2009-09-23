@@ -11,7 +11,7 @@ import javax.sound.sampled.SourceDataLine;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 
 public class SoundService {
@@ -33,7 +33,7 @@ public class SoundService {
 	 * @param sound
 	 */
 	public void playSound(final String sound) {
-		if (App.getInstance().getPreferences().getBoolean(
+		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.SOUND_ENABLED)) {
 			final String url = "file:resources/common/sounds/" + sound + ".wav";
 			ThreadService.getInstance().run(new Runnable() {

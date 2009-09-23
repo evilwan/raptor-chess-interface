@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ScrollBar;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatTypes;
 import raptor.connector.fics.FicsUtils;
@@ -193,8 +193,15 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		}
 	};
 
-	public ChatConsoleController(ChatConsole console) {
-		this.chatConsole = console;
+	public ChatConsoleController() {
+	}
+
+	public ChatConsole getChatConsole() {
+		return chatConsole;
+	}
+
+	public void setChatConsole(ChatConsole chatConsole) {
+		this.chatConsole = chatConsole;
 	}
 
 	public void onAway() {
@@ -289,9 +296,9 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 			String messageText = event.getMessage();
 			String date = "";
-			if (App.getInstance().getPreferences().getBoolean(
+			if (Raptor.getInstance().getPreferences().getBoolean(
 					CHAT_TIMESTAMP_CONSOLE)) {
-				SimpleDateFormat format = new SimpleDateFormat(App
+				SimpleDateFormat format = new SimpleDateFormat(Raptor
 						.getInstance().getPreferences().getString(
 								CHAT_TIMESTAMP_CONSOLE_FORMAT));
 				date = format.format(new Date(event.getTime()));
@@ -320,6 +327,11 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				.getCharCount());
 		chatConsole.inputText.setSelection(new Point(chatConsole.inputText
 				.getCharCount(), chatConsole.inputText.getCharCount()));
+
+//		if (chatConsole.inputText.getVerticalBar().isVisible()) {
+//			chatConsole.inputText.getVerticalBar().setSelection(
+//					chatConsole.inputText.getVerticalBar().getMaximum());
+//		}
 	}
 
 	public void onAppendOutputText(String string) {
@@ -675,7 +687,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	protected void reduceInputTextIfNeeded() {
 		int charCount = chatConsole.inputText.getCharCount();
-		if (charCount > App.getInstance().getPreferences().getInt(
+		if (charCount > Raptor.getInstance().getPreferences().getInt(
 				CHAT_MAX_CONSOLE_CHARS)) {
 			LOG.info("Cleaning chat console");
 			long startTime = System.currentTimeMillis();

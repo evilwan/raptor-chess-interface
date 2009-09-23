@@ -2,16 +2,15 @@ package raptor.pref;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.ListEditor;
 
-import raptor.App;
+import raptor.Raptor;
 
 public class FicsPage extends FieldEditorPreferencePage {
 	public FicsPage() {
 		// Use the "flat" layout
 		super(FLAT);
 		setTitle("Fics");
-		setPreferenceStore(App.getInstance().getPreferences());
+		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override

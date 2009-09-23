@@ -27,7 +27,7 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatTypes;
 
@@ -35,7 +35,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
 	private static final Log LOG = LogFactory
 			.getLog(RaptorPreferenceStore.class);
-	public static final File RAPTOR_PROPERTIES = new File(App
+	public static final File RAPTOR_PROPERTIES = new File(Raptor
 			.getRaptorUserDir(), "raptor.properties");
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 	public static final String ICONS_DIR = "resources/common/icons/";
@@ -238,7 +238,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, true);
-		setDefault(FICS_AUTO_CONNECT, true);
+		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_USER_NAME, "");
 		setDefault(FICS_PASSWORD, "");
 		setDefault(FICS_IS_NAMED_GUEST, false);

@@ -14,7 +14,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.eclipse.jface.preference.PreferenceStore;
 
-import raptor.App;
+import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.swt.chess.ChessBoard;
 import raptor.util.RaptorStringUtils;
@@ -22,8 +22,8 @@ import raptor.util.RaptorStringUtils;
 public class GameScript implements Comparable<GameScript> {
 	static final Log LOG = LogFactory.getLog(GameScript.class);
 
-	public static final String SCRIPT_DIR = App.getInstance()
-			.getRaptorUserDir().getAbsolutePath()
+	public static final String SCRIPT_DIR = Raptor.getRaptorUserDir()
+			.getAbsolutePath()
 			+ "/scripts/";
 
 	public static final String DESCRIPTION = "description";
@@ -49,20 +49,19 @@ public class GameScript implements Comparable<GameScript> {
 				return arg0.getName().endsWith(".properties");
 			}
 		});
-        if(files != null) {
-		for (int i = 0; i < files.length; i++) {
-			String name = RaptorStringUtils.replaceAll(files[i].getName(),
-					".properties", "");
-			result.add(new GameScript(connector, name));
+		if (files != null) {
+			for (int i = 0; i < files.length; i++) {
+				String name = RaptorStringUtils.replaceAll(files[i].getName(),
+						".properties", "");
+				result.add(new GameScript(connector, name));
+			}
+
+			Collections.sort(result);
+
+			return result.toArray(new GameScript[0]);
+		} else {
+			return new GameScript[0];
 		}
-
-		Collections.sort(result);
-
-		return result.toArray(new GameScript[0]);
-        }
-        else {
-        	return new GameScript[0];
-        }
 	}
 
 	public GameScript() {

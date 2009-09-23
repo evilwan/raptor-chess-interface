@@ -238,7 +238,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					}
 				}
 			} catch (Throwable t) {
-				LOG.warn("Error occured in read", t);
+				LOG.debug("Error occured in read", t);
 				disconnect();
 			} finally {
 				LOG.debug("Leaving readInput");
@@ -283,6 +283,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public static final String PROMPT = "fics%";
 
 	protected ChatService chatService = new ChatService();
+	protected GameService gameService;
 	protected Thread daemonThread;
 	protected DaemonRunnable daemonRunnable;
 	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();
@@ -295,6 +296,41 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 	public FicsConnector() {
 		refreshGameScripts();
+	}
+
+	public void dispose() {
+		if (isConnected()) {
+			disconnect();
+		}
+
+		if (gameScriptsMap != null) {
+			gameScriptsMap.clear();
+			gameScriptsMap = null;
+		}
+
+		if (chatService != null) {
+			chatService.dispose();
+			chatService = null;
+		}
+		if (gameService != null) {
+			gameService.dispose();
+			gameService = null;
+		}
+
+		if (inputBuffer != null) {
+			inputBuffer.clear();
+			inputBuffer = null;
+		}
+
+		if (inputChannel != null) {
+			try {
+				inputChannel.close();
+			} catch (Throwable t) {
+			}
+			inputChannel = null;
+		}
+
+		LOG.info("Disposed FicsConnector");
 	}
 
 	/**
@@ -370,10 +406,9 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	/**
 	 * Disconnects from fics.
 	 */
-	@SuppressWarnings("deprecation")
 	public void disconnect() {
 		synchronized (this) {
-			if (!isConnected()) {
+			if (isConnected()) {
 				try {
 					if (inputChannel != null) {
 						try {
@@ -391,11 +426,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					if (daemonThread != null) {
 						try {
 							if (daemonThread.isAlive()) {
-								// Make sure the thread is dead.
-								// There are no synchronized blocks to worry
-								// about
-								// so its ok to kill it off.
-								daemonThread.stop();
+								daemonThread.interrupt();
 							}
 						} catch (Throwable t) {
 						}
@@ -562,17 +593,19 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	 * are published on seperate threads via ThreadService.
 	 */
 	protected void publishEvent(final ChatEvent event) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Publishing event : " + event);
-		}
-
-		// It is interesting to note messages are handled sequentially
-		// up to this point.
-		ThreadService.getInstance().run(new Runnable() {
-			public void run() {
-				chatService.publishChatEvent(event);
+		if (chatService != null) { // Could have been disposed.
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Publishing event : " + event);
 			}
-		});
+
+			// It is interesting to note messages are handled sequentially
+			// up to this point.
+			ThreadService.getInstance().run(new Runnable() {
+				public void run() {
+					chatService.publishChatEvent(event);
+				}
+			});
+		}
 	}
 
 	public void refreshGameScripts() {

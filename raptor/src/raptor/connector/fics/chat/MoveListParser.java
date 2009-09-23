@@ -1,13 +1,12 @@
 package raptor.connector.fics.chat;
 
-import org.apache.log4j.Logger;
-
 import raptor.chat.ChatEvent;
 
 public class MoveListParser extends ChatEventParser {
-	private static final Logger LOGGER = Logger.getLogger(MoveListParser.class);
-
-	private static final String EVENT_START = "Movelist for game ";
+	// private static final Logger LOGGER =
+	// Logger.getLogger(MoveListParser.class);
+	//
+	// private static final String EVENT_START = "Movelist for game ";
 
 	//private ShortAlgebraicEncoder encoder = new ShortAlgebraicEncoder();
 

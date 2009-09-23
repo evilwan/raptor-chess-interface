@@ -96,7 +96,6 @@ public class ChessBoard extends Composite implements Constants {
 	@Override
 	public void dispose() {
 		preferences.removePropertyChangeListener(propertyChangeListener);
-		super.dispose();
 		pieceJailSquares = null;
 		if (controller != null) {
 			controller.dispose();
@@ -110,6 +109,10 @@ public class ChessBoard extends Composite implements Constants {
 			resources.dispose();
 			resources = null;
 		}
+
+		LOG.info("Disposed chessboard.");
+
+		super.dispose();
 	}
 
 	public Label getBlackClockLabel() {
