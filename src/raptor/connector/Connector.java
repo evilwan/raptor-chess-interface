@@ -38,6 +38,8 @@ public interface Connector {
 	public void onExamineModeRevert(Game game);
 
 	public void onExamineModeCommit(Game game);
+	
+	public void onUnobserve(Game game);
 
 	public void onDraw(Game game);
 
@@ -66,4 +68,6 @@ public interface Connector {
 	public void setPreferences(PreferenceStore preferences);
 
 	public void dispose();
+
+	public boolean isConnected();
 }

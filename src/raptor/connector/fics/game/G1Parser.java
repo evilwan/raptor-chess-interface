@@ -18,9 +18,15 @@ import raptor.util.RaptorStringTokenizer;
  * 
  * This is in the format: game_number p=private(1/0) t=type r=rated(1/0)
  * u=white_registered(1/0),black_registered(1/0)
- * it=initial_white_time,initial_black_time
+ * 
+ * it=initial_white_time,initial_black_time [ CDay: **INCORRECT** its
+ * it=initialWhiteTimeSec,initialWhiteIncSec]
+ * 
  * i=initial_white_inc,initial_black_inc pt=partner's_game_number(or 0 if none)
+ * [CDay: **INCORRECT** its it=initialBlackTimeSec,initialBlackIncSec]
+ * 
  * rt=white_rating(+ provshow character),black_rating(+ provshow character)
+ * 
  * ts=white_uses_timeseal(0/1),black_uses_timeseal(0/1)
  * 
  * Note any new fields will be appended to the end so the interface must be able
@@ -42,7 +48,7 @@ public class G1Parser {
 		G1Message result = null;
 		if (message.startsWith(G1)) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
-					" =,",true);
+					" =,", true);
 			result = new G1Message();
 
 			// parse past <g1>
@@ -69,17 +75,13 @@ public class G1Parser {
 
 			// parse past it
 			tok.nextToken();
-			result.initialWhiteTimeMillis = Long.parseLong(tok.nextToken());
-			result.initialBlackTimeMillis = Long.parseLong(tok.nextToken());
-			result.initialWhiteTimeMillis = result.initialWhiteTimeMillis * 60 * 1000;
-			result.initialBlackTimeMillis = result.initialBlackTimeMillis * 60 * 1000;
+			result.initialWhiteTimeMillis = Long.parseLong(tok.nextToken()) * 1000;
+			result.initialWhiteIncMillis = Long.parseLong(tok.nextToken()) * 1000;
 
 			// parse past i
 			tok.nextToken();
-			result.initialWhiteIncMillis = Long.parseLong(tok.nextToken());
-			result.initialBlackIncMillis = Long.parseLong(tok.nextToken());
-			result.initialWhiteIncMillis = result.initialWhiteIncMillis * 60 * 1000;
-			result.initialBlackIncMillis = result.initialBlackIncMillis * 60 * 1000;
+			result.initialBlackTimeMillis = Long.parseLong(tok.nextToken()) * 1000;
+			result.initialBlackIncMillis = Long.parseLong(tok.nextToken()) * 1000;
 
 			// parse past pt
 			tok.nextToken();

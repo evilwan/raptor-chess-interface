@@ -183,7 +183,8 @@ public class Style12Parser implements GameConstants {
 		Style12Message result = null;
 		if (message.startsWith(STYLE_12)) {
 			result = new Style12Message();
-			StringTokenizer tok = new StringTokenizer(message, " <>\n");
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
+					" <>\n", true);
 
 			// parse past <12>.
 			tok.nextToken();

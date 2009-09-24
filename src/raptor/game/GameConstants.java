@@ -216,6 +216,7 @@ public interface GameConstants {
 	public static final int ROOK = 4;
 	public static final int QUEEN = 5;
 	public static final int KING = 6;
+	
 	public static final int PROMOTED_MASK = 8;
 	public static final int NOT_PROMOTED_MASK = 7;
 	public static final int PROMOTED_BISHOP = BISHOP | PROMOTED_MASK;

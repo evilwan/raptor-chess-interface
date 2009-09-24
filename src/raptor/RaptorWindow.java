@@ -113,27 +113,27 @@ public class RaptorWindow extends ApplicationWindow {
 		chessBoards = new ChessBoards(sashForm, SWT.NONE);
 		chatConsoles = new ChatConsoles(sashForm, SWT.NONE);
 
-		Game game = GameUtils.createStartingPosition(Game.STANDARD);
-		game.setId("1");
-		game.setState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
-		game.setWhiteName("White");
-		game.setWhiteRating("----");
-		game.setBlackName("Black");
-		game.setBlackRating("----");
-		game.setBlackRemainingTimeMillis(60000 * 3);
-		game.setWhitRemainingeTimeMillis(60000 * 3);
-		game.setInitialBlackIncMillis(0);
-		game.setInitialBlackTimeMillis(60000 * 3);
-		game.setInitialWhiteIncMillis(0);
-		game.setInitialWhiteTimeMillis(60000 * 3);
-		game.setWhiteLagMillis(3567L);
-		game.setBlackLagMillis(29876L);
-		game.setResultDescription("");
-		game.setGameDescription("Playing (Game 123) 3 3 blitz");
-		game.setSettingMoveSan(true);
-
-		chessBoards.add(game, new FreeFormController(), Raptor.getInstance()
-				.getFicsConnector(), game.getId(), true);
+//		Game game = GameUtils.createStartingPosition(Game.STANDARD);
+//		game.setId("1");
+//		game.setState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
+//		game.setWhiteName("White");
+//		game.setWhiteRating("----");
+//		game.setBlackName("Black");
+//		game.setBlackRating("----");
+//		game.setBlackRemainingTimeMillis(60000 * 3);
+//		game.setWhitRemainingeTimeMillis(60000 * 3);
+//		game.setInitialBlackIncMillis(0);
+//		game.setInitialBlackTimeMillis(60000 * 3);
+//		game.setInitialWhiteIncMillis(0);
+//		game.setInitialWhiteTimeMillis(60000 * 3);
+//		game.setWhiteLagMillis(3567L);
+//		game.setBlackLagMillis(29876L);
+//		game.setResultDescription("");
+//		game.setGameDescription("Playing (Game 123) 3 3 blitz");
+//		game.setSettingMoveSan(true);
+//
+//		chessBoards.add(game, new FreeFormController(), Raptor.getInstance()
+//				.getFicsConnector(), game.getId(), true);
 		chatConsoles.addChatConsole(new MainConsoleController(), Raptor
 				.getInstance().getFicsConnector(), false, "Main");
 

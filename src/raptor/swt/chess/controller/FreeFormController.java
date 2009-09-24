@@ -21,6 +21,20 @@ public class FreeFormController extends ChessBoardController implements
 
 	public FreeFormController() {
 	}
+	
+	@Override
+	protected void onPlayMoveSound() {
+	}
+	
+	
+
+	@Override
+	protected void onPlayGameEndSound() {
+	}
+
+	@Override
+	protected void onPlayGameStartSound() {
+	}
 
 	@Override
 	protected void adjustCoolbarToInitial() {
@@ -39,9 +53,7 @@ public class FreeFormController extends ChessBoardController implements
 		return false;
 	}
 
-	@Override
-	protected void decorateCoolbar() {
-	}
+	
 
 	@Override
 	public boolean isAutoDrawable() {

@@ -13,6 +13,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN = "board-clock-show-seconds-when-less-than";
 	public static final String BOARD_PREMOVE_ENABLED = "board-premove-enabled";
 	public static final String BOARD_SMARTMOVE_ENABLED = "board-smartmove-enabled";
+	public static final String BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING = "board-play-move-sound-when-observing";
 
 	public static final String BOARD_COORDINATES_COLOR = "board-coordinates-color";
 	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
