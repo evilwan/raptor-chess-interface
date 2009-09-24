@@ -333,16 +333,16 @@ public class Game implements GameConstants {
 			int toSquare = bitscanForward(toBB);
 			if ((toBB & (RANK8_OR_RANK1)) != 0L) {
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						getPieceWithPromoteMask(toSquare), PROMOTED_KNIGHT,
+						getPieceWithPromoteMask(toSquare), KNIGHT,
 						EMPTY_SQUARE, Move.PROMOTION_CHARACTERISTIC), moves);
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						getPiece(toSquare), PROMOTED_BISHOP, EMPTY_SQUARE,
+						getPiece(toSquare), BISHOP, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						getPiece(toSquare), PROMOTED_QUEEN, EMPTY_SQUARE,
+						getPiece(toSquare), QUEEN, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						getPiece(toSquare), PROMOTED_ROOK, EMPTY_SQUARE,
+						getPiece(toSquare), ROOK, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 			} else {
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
@@ -420,16 +420,16 @@ public class Game implements GameConstants {
 
 			if ((toBB & (RANK8_OR_RANK1)) != 0L) {
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						EMPTY, PROMOTED_KNIGHT, EMPTY_SQUARE,
+						EMPTY, KNIGHT, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						EMPTY, PROMOTED_BISHOP, EMPTY_SQUARE,
+						EMPTY, BISHOP, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						EMPTY, PROMOTED_QUEEN, EMPTY_SQUARE,
+						EMPTY, QUEEN, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						EMPTY, PROMOTED_ROOK, EMPTY_SQUARE,
+						EMPTY, ROOK, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 			} else {
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
@@ -924,7 +924,7 @@ public class Game implements GameConstants {
 					toBB);
 
 			setPiece(move.getTo(), move.getPiecePromotedTo()
-					& NOT_PROMOTED_MASK);
+					| NOT_PROMOTED_MASK);
 			setPiece(move.getFrom(), EMPTY);
 
 			// capture is handled in forceMove.
