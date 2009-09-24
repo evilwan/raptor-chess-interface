@@ -242,6 +242,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		chatConsole.inputText.removeKeyListener(outputHistoryListener);
 
 		chatConsole.inputText.removeMouseListener(inputTextClickListener);
+
+		LOG.debug("Disposed ChatConsoleController");
 	}
 
 	public String getPrenedText() {
@@ -280,6 +282,10 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		// appropriately if there are multiple events being
 		// published at the same time.
 		synchronized (chatConsole) {
+			if (chatConsole.isDisposed()) {
+				return;
+			}
+
 			boolean isScrollBarAtMax = false;
 			ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
 			if (scrollbar != null && scrollbar.isVisible()) {

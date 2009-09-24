@@ -184,7 +184,13 @@ public class FicsParser implements GameConstants {
 					|| (message.isWhitesMoveAfterMoveIsMade && game
 							.getColorToMove() == WHITE)) {
 				// At the end of a game multiple <12> messages are sent.
-				// Assume that is what happened and just ignore it.
+				// The are also sent when a refresh is sent.
+				game
+				.setWhiteRemainingeTimeMillis(message.whiteRemainingTimeMillis);
+		        game
+				.setBlackRemainingTimeMillis(message.blackRemainingTimeMillis);
+		        service.fireGameStateChanged(message.gameId,false);
+
 			} else {
 				if (message.san.equals("none")) {
 					LOG.warn("Received a none for san in a style 12 event.");
@@ -205,7 +211,7 @@ public class FicsParser implements GameConstants {
 							+ message.lagInMillis);
 				}
 
-				service.fireGameStateChanged(message.gameId);
+				service.fireGameStateChanged(message.gameId,true);
 			}
 		} else {
 			G1Message g1Message = unprocessedG1Messages.get(message.gameId);

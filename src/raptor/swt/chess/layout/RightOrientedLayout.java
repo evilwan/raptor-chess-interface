@@ -332,6 +332,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 	public void dispose() {
 		super.dispose();
+		LOG.debug("Disposed RightOrientedLayout");
 	}
 
 	@Override

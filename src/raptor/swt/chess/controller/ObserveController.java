@@ -17,17 +17,22 @@ public class ObserveController extends ChessBoardController {
 			if (game.getId().equals(board.getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						adjustToGameChange();
+						adjustToGameChangeNotInvolvingMove();
 					}
 				});
 			}
 		}
 
-		public void gameStateChanged(Game game) {
+		public void gameStateChanged(Game game,final boolean isNewMove) {
 			if (game.getId().equals(board.getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						adjustToGameChange();
+						if (isNewMove) {
+							adjustToGameMove();
+						}
+						else {
+							adjustToGameChangeNotInvolvingMove();
+						}
 					}
 				});
 			}
