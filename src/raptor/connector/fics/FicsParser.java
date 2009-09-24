@@ -1,7 +1,9 @@
 package raptor.connector.fics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,10 +34,14 @@ import raptor.connector.fics.game.message.GameEndMessage;
 import raptor.connector.fics.game.message.IllegalMoveMessage;
 import raptor.connector.fics.game.message.RemovingObsGameMessage;
 import raptor.connector.fics.game.message.Style12Message;
+import raptor.game.Game;
+import raptor.game.GameConstants;
+import raptor.game.util.GameUtils;
+import raptor.game.util.ZobristHash;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 
-public class FicsParser {
+public class FicsParser implements GameConstants {
 	public static final int MAX_GAME_MESSAGE = 1000;
 	private static final Log LOG = LogFactory.getLog(FicsParser.class);
 
@@ -48,6 +54,13 @@ public class FicsParser {
 
 	protected List<ChatEventParser> nonGameEventParsers = new ArrayList<ChatEventParser>(
 			30);
+
+	/**
+	 * A map keyed by game id. Used to temporarily store G1 messages until the
+	 * first style 12 message comes along. A new game requires a 12 message as
+	 * well as a G1.
+	 */
+	protected Map<String, G1Message> unprocessedG1Messages = new HashMap<String, G1Message>();
 
 	public FicsParser() {
 		style12Parser = new Style12Parser();
@@ -156,26 +169,240 @@ public class FicsParser {
 	}
 
 	public void process(G1Message message, GameService service) {
+		unprocessedG1Messages.put(message.gameId, message);
 		LOG.debug("Processing g1: " + message);
 	}
 
 	public void process(Style12Message message, GameService service) {
 		LOG.debug("Processing style 12: " + message);
+		long startTime = System.currentTimeMillis();
+
+		Game game = service.getGame(message.gameId);
+		if (game != null) {
+
+			if (!message.isWhitesMoveAfterMoveIsMade && game.getColorToMove() != WHITE) {
+				// At the end of a game multiple <12> messages are sent.
+				// Assume that is what happened and just ignore it.
+			} else {
+				if (message.san.equals("none")) {
+					LOG.warn("Received a none for san in a style 12 event.");
+				} else {
+					game.makeSanMove(message.san);
+				}
+
+				game
+						.setWhitRemainingeTimeMillis(message.whiteRemainingTimeMillis);
+				game
+						.setBlackRemainingTimeMillis(message.blackRemainingTimeMillis);
+
+				service.fireGameStateChanged(message.gameId);
+			}
+		} else {
+			G1Message g1Message = unprocessedG1Messages.get(message.gameId);
+			if (g1Message == null) {
+				LOG
+						.error("Encountered a style 12 message which was not in the GameService and did not have an unprocessed G1 message.");
+				return;
+			} else {
+				unprocessedG1Messages.remove(message.gameId);
+				int gameType = FicsUtils
+						.identifierToGameType(g1Message.gameTypeDescription);
+				switch (gameType) {
+				case Game.BLITZ:
+					game = new Game();
+					game.setType(Game.BLITZ);
+					break;
+				case Game.STANDARD:
+					game = new Game();
+					game.setType(Game.STANDARD);
+					break;
+				case Game.LIGHTNING:
+					game = new Game();
+					game.setType(Game.LIGHTNING);
+					break;
+				default:
+					LOG.error("Uhandled game type "
+							+ g1Message.gameTypeDescription);
+					return;
+				}
+				game.setId(message.gameId);
+				game.setGameDescription(g1Message.gameTypeDescription);
+				game.setSettingMoveSan(true);
+				game.setStartTime(System.currentTimeMillis());
+				game.setSite("freechess.org");
+
+				switch (message.relation) {
+				case Style12Message.EXAMINING_GAME_RELATION:
+					game.setState(Game.EXAMINING_STATE);
+					break;
+				case Style12Message.ISOLATED_POSITION_RELATION:
+					game.setState(Game.SETUP_STATE);
+					break;
+				case Style12Message.OBSERVING_EXAMINED_GAME_RELATION:
+					game.setState(Game.OBSERVING_EXAMINED_STATE);
+					break;
+				case Style12Message.OBSERVING_GAME_RELATION:
+					game.setState(Game.OBSERVING_STATE);
+					break;
+				case Style12Message.PLAYING_MY_MOVE_RELATION:
+				case Style12Message.PLAYING_OPPONENTS_MOVE_RELATION:
+					game.setState(Game.PLAYING_STATE);
+					break;
+				}
+				game.setState(game.getState() | Game.ACTIVE_STATE);
+
+				if (message.relation == Style12Message.EXAMINING_GAME_RELATION) {
+					game.setState(Game.EXAMINING_STATE);
+				} else if (message.relation == Style12Message.ISOLATED_POSITION_RELATION) {
+					game.setState(Game.EXAMINING_STATE);
+				}
+
+				game
+						.setInitialWhiteTimeMillis(g1Message.initialWhiteTimeMillis);
+				game
+						.setInitialBlackTimeMillis(g1Message.initialBlackTimeMillis);
+				game.setInitialWhiteIncMillis(g1Message.initialWhiteIncMillis);
+				game.setInitialBlackIncMillis(g1Message.initialBlackIncMillis);
+
+				game.setBlackName(message.blackName);
+				game.setBlackRating(g1Message.blackRating);
+
+				game.setWhiteName(message.whiteName);
+				game.setWhiteRating(g1Message.whiteRating);
+
+				game
+						.setWhitRemainingeTimeMillis(message.whiteRemainingTimeMillis);
+				game
+						.setBlackRemainingTimeMillis(message.blackRemainingTimeMillis);
+
+				FicsUtils.updateGamePosition(game, message);
+
+				game.setColorToMove(message.isWhitesMoveAfterMoveIsMade ? WHITE : BLACK);
+
+				game
+						.setCastling(
+								WHITE,
+								message.canWhiteCastleKSide
+										&& message.canWhiteCastleQSide ? CASTLE_BOTH
+										: message.canWhiteCastleKSide ? CASTLE_KINGSIDE
+												: message.canWhiteCastleQSide ? CASTLE_QUEENSIDE
+														: CASTLE_NONE);
+				game
+						.setCastling(
+								BLACK,
+								message.canBlackCastleKSide
+										&& message.canBlackCastleQSide ? CASTLE_BOTH
+										: message.canBlackCastleKSide ? CASTLE_KINGSIDE
+												: message.canBlackCastleQSide ? CASTLE_QUEENSIDE
+														: CASTLE_NONE);
+
+				if (message.doublePawnPushFile == -1) {
+					game.setEpSquare(EMPTY_SQUARE);
+					game.setInitialEpSquare(EMPTY_SQUARE);
+				} else {
+					int doublePawnPushSquare = GameUtils.rankFileToSquare(
+							message.isWhitesMoveAfterMoveIsMade ? 4 : 5,
+							message.doublePawnPushFile);
+					game.setEpSquare(doublePawnPushSquare);
+					game.setInitialEpSquare(doublePawnPushSquare);
+				}
+
+				game
+						.setFiftyMoveCount(message.numberOfMovesSinceLastIrreversible);
+
+				int fullMoveCount = message.fullMoveNumber;
+				game
+						.setHalfMoveCount(game.getColorToMove() == BLACK ? fullMoveCount * 2 - 1
+								: fullMoveCount * 2 - 2);
+
+				game.setEmptyBB(~game.getOccupiedBB());
+				game.setNotColorToMoveBB(~game
+						.getColorBB(game.getColorToMove()));
+
+				game.setZobristPositionHash(ZobristHash
+						.zobristHashPositionOnly(game));
+				game.setZobristGameHash(game.getZobristPositionHash()
+						^ ZobristHash.zobrist(game.getColorToMove(), game
+								.getEpSquare(), game.getCastling(WHITE), game
+								.getCastling(BLACK)));
+
+				game.incrementRepCount();
+
+				game.setEvent(game.getInitialWhiteTimeMillis() / 60000 + " "
+						+ game.getInitialWhiteIncMillis() / 1000 + " "
+						+ (!g1Message.isRated ? "unrated" : "rated") + " "
+						+ game.getGameDescription());
+
+				if (!game.isLegalPosition()) {
+					LOG.warn("Position is not legal: " + game.toString());
+				}
+
+				service.addGame(game);
+				service.fireGameCreated(game.getId());
+			}
+		}
+
+		LOG.debug("Processed style 12: " + message + " in "
+				+ (System.currentTimeMillis() - startTime));
 	}
 
 	public void process(B1Message message, GameService service) {
-		LOG.debug("Processing b1: " + message);
+		LOG.debug("Processing b1: " + message
+				+ " <Ignoiring not yet implemented>");
 	}
 
 	public void process(IllegalMoveMessage message, GameService service) {
-		LOG.debug("Processing illegal move: " + message);
+		LOG.debug("Processing illegal move: " + message
+				+ " <Ignoiring not yet implemented>");
 	}
 
 	public void process(GameEndMessage message, GameService service) {
-		LOG.debug("Processing game end: " + message);
+		Game game = service.getGame(message.gameId);
+		if (game == null) {
+			LOG.error("Received game end for a game not in the GameService. "
+					+ message);
+		} else {
+			switch (message.type) {
+			case GameEndMessage.ABORTED:
+				game.setResult(Game.UNDETERMINED_RESULT);
+				break;
+			case GameEndMessage.ADJOURNED:
+				game.setResult(Game.IN_PROGRESS_RESULT);
+				break;
+			case GameEndMessage.BLACK_WON:
+				game.setResult(Game.BLACK_WON_RESULT);
+				break;
+			case GameEndMessage.WHITE_WON:
+				game.setResult(Game.WHTIE_WON_RESULT);
+				break;
+			case GameEndMessage.DRAW:
+				game.setResult(Game.DRAW_RESULT);
+				break;
+			case GameEndMessage.UNDETERMINED:
+				game.setResult(Game.UNDETERMINED_RESULT);
+				break;
+			default:
+				LOG.error("Undetermined game end type. " + message);
+				break;
+			}
+			game.setResultDescription(message.description);
+			game.setState(game.getState() | Game.INACTIVE_STATE);
+			service.fireGameInactive(game.getId());
+		}
+		LOG.debug("Processed game end: " + message);
 	}
 
 	public void process(RemovingObsGameMessage message, GameService service) {
-		LOG.debug("Processing removing obs game: " + message);
+		Game game = service.getGame(message.gameId);
+		if (game == null) {
+			LOG
+					.error("Received removing obs game message for a game not in the GameService. "
+							+ message);
+		} else {
+			game.setState(game.getState() | Game.INACTIVE_STATE);
+			service.fireGameInactive(game.getId());
+		}
+		LOG.debug("Processed removing obs game: " + message);
 	}
+
 }

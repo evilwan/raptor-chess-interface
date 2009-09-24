@@ -5,7 +5,7 @@ import raptor.util.RaptorStringUtils;
 /**
  * A class containing validation methods for Short Algebraic Notation (SAN).
  */
-public class SanUtil  {
+public class SanUtil {
 	public static final String FILES = "abcdefgh";
 
 	public static final String RANKS = "12345678";
@@ -273,6 +273,7 @@ public class SanUtil  {
 	 * @return
 	 */
 	public static String toStrictSan(String unstrictSan) {
+		// TO DO: write a utility method to do all of this in on loop.
 		String result = RaptorStringUtils.removeAll(unstrictSan, ',');
 		result = RaptorStringUtils.removeAll(result, '+');
 		result = RaptorStringUtils.removeAll(result, '#');
@@ -429,19 +430,18 @@ public class SanUtil  {
 	public static boolean isValidQSideCastle(String san) {
 		return san.equals("O-O-O");
 	}
-	
-	
+
 	public static String squareToSan(int square) {
 		return "" + squareToFileSan(square) + squareToRankSan(square);
 	}
-	
+
 	public static char squareToRankSan(int square) {
 		return GameConstants.SQUARE_TO_RANK_SAN.charAt(square);
 	}
-	
+
 	public static char squareToFileSan(int square) {
 		return GameConstants.SQUARE_TO_FILE_SAN.charAt(square);
-		
+
 	}
 
 	/**

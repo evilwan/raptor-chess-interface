@@ -2,9 +2,13 @@ package raptor.connector.fics;
 
 import java.util.StringTokenizer;
 
+import raptor.connector.fics.game.message.Style12Message;
 import raptor.game.Game;
+import raptor.game.GameConstants;
+import raptor.game.util.GameUtils;
+import raptor.swt.chess.Utils;
 
-public class FicsUtils {
+public class FicsUtils implements GameConstants {
 	public static final String LEGAL_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
 			+ "!@#$%^&*()-=_+`~[{]}\\|;:'\",<.>/?";
 
@@ -135,5 +139,30 @@ public class FicsUtils {
 			}
 		}
 		return builder.toString();
+	}
+
+	public static void updateGamePosition(Game game, Style12Message style12) {
+		for (int i = 0; i < style12.position.length; i++) {
+			for (int j = 0; j < style12.position[i].length; j++) {
+				if (style12.position[i][j] != EMPTY) {
+					int square = GameUtils.rankFileToSquare(i, j);
+					int pieceColor = Utils.isWhitePiece(style12.position[i][j]) ? WHITE
+							: BLACK;
+					int piece = Utils
+							.pieceFromColoredPiece(style12.position[i][j]);
+					long squareBB = GameUtils.getBitboard(square);
+
+					game.setPieceCount(pieceColor, piece, game.getPieceCount(
+							pieceColor, piece) + 1);
+					game.getBoard()[square] = piece;
+					game.setColorBB(pieceColor, game.getColorBB(pieceColor)
+							| squareBB);
+					game.setOccupiedBB(game.getOccupiedBB() | squareBB);
+					game.setPieceBB(pieceColor, piece, game.getPieceBB(
+							pieceColor, piece)
+							| squareBB);
+				}
+			}
+		}
 	}
 }

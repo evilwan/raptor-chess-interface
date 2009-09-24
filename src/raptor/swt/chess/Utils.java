@@ -22,7 +22,7 @@ public class Utils implements Constants {
 		return colorToMove == WHITE ? fullMoveIndex + ") " : fullMoveIndex + ") ... ";
 	}
 	
-	public static int setPieceFromColoredPiece(int coloredPiece) {
+	public static int pieceFromColoredPiece(int coloredPiece) {
 		switch (coloredPiece) {
 		case EMPTY:
 			return GameConstants.EMPTY;
@@ -50,7 +50,7 @@ public class Utils implements Constants {
 		}
 	}
 
-	public static int getSetPieceFromGamePiece(int square, Game game) {
+	public static int getColoredPiece(int square, Game game) {
 		long squareBB = GameUtils.getBitboard(square);
 		int gamePiece = game.getPiece(square);
 

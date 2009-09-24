@@ -75,7 +75,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board.getSquare(i, j).setPiece(
-						Utils.getSetPieceFromGamePiece(GameUtils
+						Utils.getColoredPiece(GameUtils
 								.rankFileToSquare(i, j), game));
 			}
 		}
@@ -111,7 +111,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			int color = DROPPABLE_PIECE_COLOR[i];
 			int count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
 					- board.game.getPieceCount(color, Utils
-							.setPieceFromColoredPiece(DROPPABLE_PIECES[i]));
+							.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
 
 			if (count == 0) {
 				board.pieceJailSquares[DROPPABLE_PIECES[i]]
