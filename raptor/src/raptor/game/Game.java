@@ -26,30 +26,32 @@ import raptor.game.util.ZobristHash;
 public class Game implements GameConstants {
 
 	public static final int ACTIVE_STATE = 2;
+	public static final int DROPPABLE_STATE = 64;
+	public static final int EXAMINING_STATE = 8;
+	public static final int PLAYING_STATE = 16;
+	public static final int OBSERVING_STATE = 512;
+	public static final int OBSERVING_EXAMINED_STATE = 256;
+	public static final int UNTIMED_STATE = 32;
+	public static final int INACTIVE_STATE = 4;
+	public static final int IS_CLOCK_TICKING_STATE = 128;
+	public static final int SETUP_STATE = 1024;
+
 	public static final int ATOMIC = 6;
-	public static final int BLACK_WON_RESULT = 2;
 	public static final int BLITZ = 0;
 	public static final int BUGHOUSE = 9;
 	public static final int CRAZY_HOUSE = 8;
-
-	public static final int DRAW_RESULT = 3;
-	public static final int DROPPABLE_STATE = 64;
-	public static final int EXAMINING_STATE = 8;
+	public static final int LIGHTNING = 1;
+	public static final int LOSERS = 7;
+	public static final int STANDARD = 2;
+	public static final int SUICIDE = 5;
+	public static final int WILD = 3;
 	public static final int FISCHER_RANDOM = 4;
 
 	public static final int IN_PROGRESS_RESULT = 0;
-	public static final int INACTIVE_STATE = 4;
-	public static final int IS_CLOCK_TICKING_STATE = 128;
-	public static final int LIGHTNING = 1;
-	public static final int LOSERS = 7;
-	public static final int PLAYING_STATE = 16;
-	public static final int STANDARD = 2;
-
-	public static final int SUICIDE = 5;
+	public static final int BLACK_WON_RESULT = 2;
+	public static final int DRAW_RESULT = 3;
 	public static final int UNDETERMINED_RESULT = 4;
-	public static final int UNTIMED_STATE = 32;
 	public static final int WHTIE_WON_RESULT = 1;
-	public static final int WILD = 3;
 
 	/**
 	 * Currently places captures ahead of non captures.
@@ -1033,7 +1035,8 @@ public class Game implements GameConstants {
 					}
 
 					int start = GameUtils.rankFileToSquare(startRank,
-							validations.getStrictSan().charAt(0));
+							GameConstants.FILE_FROM_SAN.indexOf(validations
+									.getStrictSan().charAt(0)));
 
 					for (Move move : pseudoLegals) {
 						if (move.getPiece() == candidatePieceMoving
@@ -1053,8 +1056,8 @@ public class Game implements GameConstants {
 
 						for (Move move : pseudoLegals) {
 							if (move.getPiece() == candidatePieceMoving
-									&& move.getFrom() == startFile
-									&& move.getTo() == endFile
+									&& GameUtils.getFile(move.getFrom()) == startFile
+									&& GameUtils.getFile(move.getTo()) == endFile
 									&& move.isCapture()
 									&& move.getPiecePromotedTo() == candidatePromotedPiece) {
 								matches.append(move);
@@ -1140,8 +1143,8 @@ public class Game implements GameConstants {
 			}
 
 			if (matches.getSize() == 0) {
-				throw new IllegalArgumentException("Invalid move"
-						+ shortAlgebraic);
+				throw new IllegalArgumentException("Invalid move "
+						+ shortAlgebraic + "\n" + toString());
 			} else if (matches.getSize() == 1) {
 				result = matches.get(0);
 			} else {
@@ -1181,11 +1184,11 @@ public class Game implements GameConstants {
 				}
 
 				if (matchesCount == 0) {
-					throw new IllegalArgumentException("Invalid move"
-							+ shortAlgebraic);
+					throw new IllegalArgumentException("Invalid move "
+							+ shortAlgebraic + "\n" + toString());
 				} else if (matchesCount > 1) {
 					throw new IllegalArgumentException("Ambiguous move "
-							+ shortAlgebraic);
+							+ shortAlgebraic + "\n" + toString());
 
 				}
 			}
@@ -1619,7 +1622,7 @@ public class Game implements GameConstants {
 					}
 				}
 
-                boolean handledAmbiguity = false;
+				boolean handledAmbiguity = false;
 
 				if (sameRanksFound > 1) {
 					shortAlgebraic += SanUtil.squareToFileSan(move.getFrom());
@@ -1632,7 +1635,7 @@ public class Game implements GameConstants {
 				if (!handledAmbiguity && matchesFound > 1) {
 					shortAlgebraic += SanUtil.squareToFileSan(move.getFrom());
 				}
-				
+
 				shortAlgebraic += (move.isCapture() ? "x" : "")
 						+ SanUtil.squareToSan(move.getTo());
 			}

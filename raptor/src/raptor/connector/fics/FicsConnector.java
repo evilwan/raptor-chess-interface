@@ -1,5 +1,6 @@
 package raptor.connector.fics;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -7,6 +8,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.PreferenceStore;
@@ -239,6 +241,18 @@ public class FicsConnector implements Connector, PreferenceKeys {
 				}
 			} catch (Throwable t) {
 				LOG.debug("Error occured in read", t);
+				String errorMessage = null;
+
+				if (t instanceof IOException) {
+					errorMessage = cleanupMessage(t.getMessage());
+				} else {
+					errorMessage = cleanupMessage("Critical error occured! We are trying to make Raptor "
+							+ "bug free and we need your help! Please take a moment to report this "
+							+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n"
+							+ ExceptionUtils.getFullStackTrace(t));
+				}
+				publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
+						errorMessage));
 				disconnect();
 			} finally {
 				LOG.debug("Leaving readInput");
@@ -283,7 +297,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public static final String PROMPT = "fics%";
 
 	protected ChatService chatService = new ChatService();
-	protected GameService gameService;
+	protected GameService gameService = new GameService();
 	protected Thread daemonThread;
 	protected DaemonRunnable daemonRunnable;
 	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();
@@ -476,8 +490,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	public GameService getGameService() {
-		// TODO Auto-generated method stub
-		return null;
+		return gameService;
 	}
 
 	public PreferenceStore getPreferences() {

@@ -217,7 +217,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	}
 
 	protected void addInputTextKeyListeners() {
-
 		chatConsole.outputText.addKeyListener(functionKeyListener);
 		chatConsole.outputText.addKeyListener(outputHistoryListener);
 		chatConsole.outputText.addKeyListener(outputKeyListener);
@@ -287,11 +286,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				isScrollBarAtMax = scrollbar.getMaximum() == scrollbar
 						.getSelection()
 						+ scrollbar.getThumb();
-				System.err.println("Scrollbar is at maximum="
-						+ isScrollBarAtMax + " max=" + scrollbar.getMaximum()
-						+ " sel=" + scrollbar.getSelection() + " thumbSize="
-						+ scrollbar.getThumb());
-
 			}
 
 			String messageText = event.getMessage();
@@ -327,11 +321,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				.getCharCount());
 		chatConsole.inputText.setSelection(new Point(chatConsole.inputText
 				.getCharCount(), chatConsole.inputText.getCharCount()));
-
-//		if (chatConsole.inputText.getVerticalBar().isVisible()) {
-//			chatConsole.inputText.getVerticalBar().setSelection(
-//					chatConsole.inputText.getVerticalBar().getMaximum());
-//		}
 	}
 
 	public void onAppendOutputText(String string) {
@@ -375,9 +364,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	protected void decorateQuotes(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() != OUTBOUND && event.getType() != INTERNAL) {
-			System.err.println("entering decorateQuotes");
-
+		if (event.getType() != OUTBOUND) {
 			List<int[]> quotedRanges = new ArrayList<int[]>(5);
 
 			int quoteIndex = message.indexOf("\"");
@@ -433,14 +420,12 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
-			System.err.println("leaving decorateQuotes");
 		}
 	}
 
 	protected void decorateLinks(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() != OUTBOUND && event.getType() != INTERNAL) {
-			System.err.println("entering decorating links");
+		if (event.getType() != OUTBOUND) {
 			List<int[]> linkRanges = new ArrayList<int[]>(5);
 
 			// First check http://,https://,www.
@@ -544,8 +529,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
-			System.err.println("leaving decorating links");
-
 		}
 	}
 

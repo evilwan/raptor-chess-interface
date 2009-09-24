@@ -5,7 +5,7 @@ public class Style12Message {
 	}
 
 	public String toString() {
-		return "MoveEvent: gameId=" + gameId + " " + san;
+		return "Style12: gameId=" + gameId + " " + san;
 	}
 
 	public static final int ISOLATED_POSITION_RELATION = -3;
@@ -33,7 +33,7 @@ public class Style12Message {
 	public String san;
 	public boolean isWhiteOnTop;
 	public boolean isClockTicking;
-	public boolean isWhitesMove;
+	public boolean isWhitesMoveAfterMoveIsMade;
 	public boolean canWhiteCastleKSide;
 	public boolean canWhiteCastleQSide;
 	public boolean canBlackCastleKSide;

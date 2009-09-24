@@ -1,58 +1,65 @@
 package raptor.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import raptor.game.Game;
-import raptor.game.Move;
 
 public class GameService {
 	public interface GameServiceListener {
-		public void gameCreated(String gameId);
+		public void gameCreated(Game game);
 
-		public void gameDestroyed(String gameId);
+		public void gameInactive(Game game);
 
-		public void gameEnded(String gameId);
-
-		public void gameStateChanged(String gameId);
+		public void gameStateChanged(Game game);
 	}
 
-	private static final GameService instance = new GameService();
-
-	public static GameService getInstance() {
-		return instance;
-	}
-
-	public void dispose() {
-		gameMap.clear();
-	}
-
-	HashMap<String, Game> gameMap = new HashMap<String, Game>();
+	protected HashMap<String, Game> gameMap = new HashMap<String, Game>();
+	protected List<GameServiceListener> listeners = new ArrayList<GameServiceListener>(
+			20);
 
 	public void addGame(Game game) {
 		gameMap.put(game.getId(), game);
 	}
 
 	public void addGameServiceListener(GameServiceListener listener) {
+		listeners.add(listener);
+	}
+
+	public void dispose() {
+		gameMap.clear();
+	}
+
+	public void fireGameCreated(String gameId) {
+		Game game = getGame(gameId);
+		if (game != null) {
+			for (GameServiceListener listener : listeners) {
+				listener.gameCreated(game);
+			}
+		}
+	}
+
+	public void fireGameInactive(String gameId) {
+		Game game = getGame(gameId);
+		if (game != null) {
+			for (GameServiceListener listener : listeners) {
+				listener.gameInactive(game);
+			}
+		}
+	}
+
+	public void fireGameStateChanged(String gameId) {
+		Game game = getGame(gameId);
+		if (game != null) {
+			for (GameServiceListener listener : listeners) {
+				listener.gameStateChanged(game);
+			}
+		}
 	}
 
 	public Game getGame(String gameId) {
 		return gameMap.get(gameId);
-	}
-
-	public void notifyGameCreated(String gameId) {
-	}
-
-	public void notifyGameDestroyed(String gameId) {
-	}
-
-	public void notifyGameEnded(String gameId) {
-	}
-
-	public void notifyGameStateChanged(String gameId) {
-	}
-
-	public void notifyUserMove(String gameId, Move move) {
-
 	}
 
 	public void removeGame(Game game) {
@@ -60,5 +67,6 @@ public class GameService {
 	}
 
 	public void removeGameServiceListener(GameServiceListener listener) {
+		listeners.remove(listener);
 	}
 }

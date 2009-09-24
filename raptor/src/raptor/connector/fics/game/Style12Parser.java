@@ -194,7 +194,7 @@ public class Style12Parser implements GameConstants {
 			}
 			result.position = parsePosition(positionString);
 
-			result.isWhitesMove = tok.nextToken().equals("W");
+			result.isWhitesMoveAfterMoveIsMade = tok.nextToken().equals("W");
 
 			result.doublePawnPushFile = Integer.parseInt(tok.nextToken());
 
