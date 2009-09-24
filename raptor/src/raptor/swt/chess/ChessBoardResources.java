@@ -89,17 +89,18 @@ public class ChessBoardResources implements Constants {
 	public void dispose() {
 		localImageRegistry.dispose();
 		board = null;
+		LOG.debug("Disposed ChessBoardResources");
 	}
 
 	public Image getChessPieceDragImage(int type) {
 		return getChessPieceImage(type, 35, 35);
 	}
-	
-	public Image getChessPieceIconImage(String set,int type) {
-		return getChessPieceImage(set,type, 35, 35);
+
+	public Image getChessPieceIconImage(String set, int type) {
+		return getChessPieceImage(set, type, 35, 35);
 	}
-	
-	public Image getChessPieceImage(String name,int type, int width, int height) {
+
+	public Image getChessPieceImage(String name, int type, int width, int height) {
 		if (type == EMPTY) {
 			return null;
 		} else {
@@ -109,8 +110,7 @@ public class ChessBoardResources implements Constants {
 				height = 10;
 			}
 
-			String key = name + "_" + type + "_" + width + "x"
-					+ height;
+			String key = name + "_" + type + "_" + width + "x" + height;
 			Image image = localImageRegistry.get(key);
 
 			if (image == null) {
@@ -124,8 +124,8 @@ public class ChessBoardResources implements Constants {
 					LOG.error("Could not find stock image for set " + name
 							+ " " + type);
 					throw new IllegalStateException(
-							"Could not find stock image for set " + name
-									+ " " + type);
+							"Could not find stock image for set " + name + " "
+									+ type);
 				}
 			} else {
 				return image;
@@ -138,7 +138,7 @@ public class ChessBoardResources implements Constants {
 			return null;
 		} else {
 
-			return getChessPieceImage(getChessSetName(),type,width,height);
+			return getChessPieceImage(getChessSetName(), type, width, height);
 		}
 	}
 

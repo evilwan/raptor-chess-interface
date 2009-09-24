@@ -110,7 +110,7 @@ public class ChessBoard extends Composite implements Constants {
 			resources = null;
 		}
 
-		LOG.info("Disposed chessboard.");
+		LOG.debug("Disposed chessboard.");
 
 		super.dispose();
 	}

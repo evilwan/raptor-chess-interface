@@ -10,6 +10,10 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 import raptor.Raptor;
 import raptor.connector.Connector;
@@ -72,8 +76,30 @@ public class ChatConsoles extends Composite {
 								.maximizeChatConsoles();
 					}
 				}
-				// TODO Auto-generated method stub
 				super.mouseDoubleClick(e);
+			}
+
+			@Override
+			public void mouseDown(MouseEvent e) {
+				System.err.println("Mouse down " + e.button);
+				if (e.button == 3) {
+					System.err.println("On mouse down");
+					Menu menu = new Menu(folder.getShell(), SWT.POP_UP);
+					MenuItem item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Comming soon.");
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							System.out.println("Item Selected");
+						}
+					});
+					menu.setLocation(folder.toDisplay(e.x, e.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!folder.getDisplay().readAndDispatch())
+							folder.getDisplay().sleep();
+					}
+					menu.dispose();
+				}
 			}
 
 		});

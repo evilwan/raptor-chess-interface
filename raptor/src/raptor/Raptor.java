@@ -32,54 +32,57 @@ public class Raptor implements PreferenceKeys {
 
 	public static void main(String args[]) {
 
-		Display display = new Display();
-		createInstance();
+		try {
+			Display display = new Display();
+			createInstance();
 
-		if (!instance.getPreferences().getBoolean(FICS_AUTO_CONNECT)) {
-			LoginDialog loginDialog = new LoginDialog();
-			loginDialog.open();
-			if (!loginDialog.wasLoginPressed()) {
-				instance.shutdown();
-				return;
-			}
-		}
-
-		instance.appWindow = new RaptorWindow();
-		instance.appWindow.setBlockOnOpen(true);
-
-		display.timerExec(500, new Runnable() {
-			public void run() {
-				Shell shell = instance.appWindow.getShell();
-				if (shell == null) {
-					System.err.println("Why is shell null");
-				} else {
-					shell.addListener(SWT.Close, new Listener() {
-						public void handleEvent(Event e) {
-							Raptor.getInstance().shutdown();
-						}
-					});
+			if (!instance.getPreferences().getBoolean(FICS_AUTO_CONNECT)) {
+				LoginDialog loginDialog = new LoginDialog();
+				loginDialog.open();
+				if (!loginDialog.wasLoginPressed()) {
+					instance.shutdown();
+					return;
 				}
 			}
-		});
 
-		display.timerExec(1000, new Runnable() {
-			public void run() {
-				instance.getFicsConnector().connect();
-			}
-		});
+			instance.appWindow = new RaptorWindow();
+			instance.appWindow.setBlockOnOpen(true);
 
-		instance.appWindow.open();
+			display.timerExec(500, new Runnable() {
+				public void run() {
+					Shell shell = instance.appWindow.getShell();
+					if (shell == null) {
+						System.err.println("Why is shell null");
+					} else {
+						shell.addListener(SWT.Close, new Listener() {
+							public void handleEvent(Event e) {
+								Raptor.getInstance().shutdown();
+							}
+						});
+					}
+				}
+			});
 
-		try {
-			if (!Display.getCurrent().isDisposed()) {
-				Display.getCurrent().dispose();
-			}
+			display.timerExec(1000, new Runnable() {
+				public void run() {
+					instance.getFicsConnector().connect();
+				}
+			});
+			instance.appWindow.open();
+
 		} catch (Throwable t) {
-			LOG.error("Error occured disposing display:", t);
+			LOG.error("Error occured in main:", t);
+		} finally {
+			try {
+				if (!Display.getCurrent().isDisposed()) {
+					Display.getCurrent().dispose();
+				}
+			} catch (Throwable t) {
+				LOG.error("Error occured disposing display:", t);
+			} finally {
+				System.exit(1);
+			}
 		}
-
-		System.exit(1);
-
 	}
 
 	public Raptor() {

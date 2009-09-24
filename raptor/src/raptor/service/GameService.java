@@ -12,7 +12,7 @@ public class GameService {
 
 		public void gameInactive(Game game);
 
-		public void gameStateChanged(Game game);
+		public void gameStateChanged(Game game,boolean isNewMove);
 	}
 
 	protected HashMap<String, Game> gameMap = new HashMap<String, Game>();
@@ -49,11 +49,11 @@ public class GameService {
 		}
 	}
 
-	public void fireGameStateChanged(String gameId) {
+	public void fireGameStateChanged(String gameId,boolean isNewMove) {
 		Game game = getGame(gameId);
 		if (game != null) {
 			for (GameServiceListener listener : listeners) {
-				listener.gameStateChanged(game);
+				listener.gameStateChanged(game,isNewMove);
 			}
 		}
 	}

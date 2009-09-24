@@ -21,12 +21,10 @@ public class FreeFormController extends ChessBoardController implements
 
 	public FreeFormController() {
 	}
-	
+
 	@Override
 	protected void onPlayMoveSound() {
 	}
-	
-	
 
 	@Override
 	protected void onPlayGameEndSound() {
@@ -52,8 +50,6 @@ public class FreeFormController extends ChessBoardController implements
 		}
 		return false;
 	}
-
-	
 
 	@Override
 	public boolean isAutoDrawable() {
@@ -118,7 +114,7 @@ public class FreeFormController extends ChessBoardController implements
 		LOG.debug("moveCancelled" + board.getGame().getId() + " " + fromSquare
 				+ " " + isDnd);
 		board.unhighlightAllSquares();
-		adjustToGameChange();
+		adjustToGameMove();
 	}
 
 	@Override
@@ -143,11 +139,11 @@ public class FreeFormController extends ChessBoardController implements
 			Move move = board.getGame().makeMove(fromSquare, toSquare);
 			board.getSquare(move.getFrom()).highlight();
 			board.getSquare(move.getTo()).highlight();
-			adjustToGameChange();
+			adjustToGameMove();
 		} catch (IllegalArgumentException iae) {
 			LOG.info("Move was illegal " + fromSquare + " " + toSquare);
 			board.unhighlightAllSquares();
-			adjustToGameChange();
+			adjustToGameMove();
 		}
 	}
 
@@ -168,7 +164,7 @@ public class FreeFormController extends ChessBoardController implements
 			board.unhighlightAllSquares();
 			board.getSquare(move.getFrom()).highlight();
 			board.getSquare(move.getTo()).highlight();
-			adjustToGameChange();
+			adjustToGameMove();
 		}
 	}
 

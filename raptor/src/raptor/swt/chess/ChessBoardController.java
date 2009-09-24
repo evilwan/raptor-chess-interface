@@ -45,6 +45,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			whiteClockUpdater.stop();
 			whiteClockUpdater.dispose();
 		}
+
+		LOG.debug("Disposed ChessBoardController");
 	}
 
 	public ChessBoard getBoard() {
@@ -59,7 +61,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	public void init() {
-		traverser = new MoveListTraverser(board.game);
+		traverser = new MoveListTraverser(getGame());
 	}
 
 	protected void initClockUpdaters() {
@@ -116,8 +118,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
 			int color = DROPPABLE_PIECE_COLOR[i];
 			int count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
-					- board.game.getPieceCount(color, Utils
-							.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+					- getGame().getPieceCount(color,
+							Utils.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
 
 			if (count == 0) {
 				board.pieceJailSquares[DROPPABLE_PIECES[i]]
@@ -138,31 +140,22 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		blackClockUpdater.stop();
 	}
 
-	protected boolean isGameActive() {
-		return isGameInState(Game.ACTIVE_STATE);
-	}
-
 	protected void adjustClockLabelsAndUpdaters() {
-		board.whiteClockLabel.setText(timeToString(board.game
+		board.whiteClockLabel.setText(timeToString(getGame()
 				.getWhiteRemainingTimeMillis()));
-		board.blackClockLabel.setText(timeToString(board.game
+		board.blackClockLabel.setText(timeToString(getGame()
 				.getBlackRemainingTimeMillis()));
 
-		whiteClockUpdater.setRemainingTimeMillis(board.game
+		whiteClockUpdater.setRemainingTimeMillis(getGame()
 				.getWhiteRemainingTimeMillis());
-		blackClockUpdater.setRemainingTimeMillis(board.game
+		blackClockUpdater.setRemainingTimeMillis(getGame()
 				.getBlackRemainingTimeMillis());
 	}
 
-	protected boolean isGameInState(int state) {
-		return (board.game.getState() & state) != 0;
-	}
-
 	protected void startClocks() {
-		if (isGameActive() && !isGameInState(Game.UNTIMED_STATE)
-				&& isGameInState(Game.IS_CLOCK_TICKING_STATE)) {
+		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
 			initClockUpdaters();
-			if (board.game.getColorToMove() == WHITE) {
+			if (getGame().getColorToMove() == WHITE) {
 				whiteClockUpdater.start();
 			} else {
 				blackClockUpdater.start();
@@ -171,8 +164,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	protected void adjustClockColors() {
-		if (isGameActive()) {
-			if (board.game.getColorToMove() == WHITE) {
+		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
+			if (getGame().getColorToMove() == WHITE) {
 				board.getWhiteClockLabel().setForeground(
 						board.getPreferences().getColor(
 								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
@@ -198,7 +191,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	public void adjustLagColors() {
-		if (board.game.getWhiteLagMillis() > 20000) {
+		if (getGame().getWhiteLagMillis() > 20000) {
 			board.getWhiteLagLabel().setForeground(
 					board.getPreferences().getColor(
 							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
@@ -208,7 +201,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 							PreferenceKeys.BOARD_LAG_COLOR));
 		}
 
-		if (board.game.getBlackLagMillis() > 20000) {
+		if (getGame().getBlackLagMillis() > 20000) {
 			board.getBlackLagLabel().setForeground(
 					board.getPreferences().getColor(
 							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
@@ -238,49 +231,12 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	protected void adjustLagLabels() {
-		board.whiteLagLabel
-				.setText(lagToString(board.game.getWhiteLagMillis()));
-		board.blackLagLabel
-				.setText(lagToString(board.game.getBlackLagMillis()));
+		board.whiteLagLabel.setText(lagToString(getGame().getWhiteLagMillis()));
+		board.blackLagLabel.setText(lagToString(getGame().getBlackLagMillis()));
 	}
 
 	protected void adjustPremoveLabel() {
 		board.currentPremovesLabel.setText("Premoves: EMPTY");
-	}
-
-	protected void adjustStatusLabel() {
-		if (isGameActive()) {
-			System.out.println("In adjust status label game is active.");
-			if (board.getGame().getHalfMoveCount() > 0) {
-				Move move = board.game.getMoves().get(
-						board.getGame().getHalfMoveCount() - 1);
-
-				// move can be null if it is an observed game.
-				if (move != null) {
-					String moveDescription = move.getSan();
-
-					if (StringUtils.isBlank(moveDescription)) {
-						moveDescription = move.toString();
-					}
-
-					board.statusLabel.setText("Last move: "
-							+ Utils.halfMoveIndexToDescription(board.game
-									.getHalfMoveCount(), GameUtils
-									.getOppositeColor(board.game
-											.getColorToMove()))
-							+ moveDescription);
-				} else {
-					board.statusLabel.setText("");
-				}
-			} else {
-				board.statusLabel.setText("");
-			}
-		} else {
-			board.statusLabel
-					.setText(StringUtils
-							.defaultString(board.game.getResultDescription(),
-									"Game is not active and no result string is set. This is a bug"));
-		}
 	}
 
 	protected void adjustOpeningDescriptionLabel() {
@@ -292,67 +248,69 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			board.getOpeningDescriptionLabel().setText(p.toString());
 	}
 
-	protected void adjustToGameChange(boolean isInAdjustToGameInitial) {
-		LOG.info("adjustToGameChange " + board.game.getId() + " ...");
+	protected void adjustToGameMove() {
+		LOG.info("adjustToGameChange " + getGame().getId() + " ...");
 		long startTime = System.currentTimeMillis();
+		
+		adjustToGameChangeNotInvolvingMove();
 
-		stopClocks();
-
-		adjustBoardToGame(board.game);
-
-		if (isGameActive()) {
-			adjustClockLabelsAndUpdaters();
-			adjustClockColors();
-			startClocks();
-		}
+		adjustBoardToGame(getGame());
+		adjustPieceJailFromGame(getGame());
 
 		traverser.adjustHalfMoveIndex();
 		setNavButtonsEnablbed();
+
 		adjustLagLabels();
 		adjustLagColors();
+		
 		adjustPremoveLabel();
-		adjustStatusLabel();
-		adjustOpeningDescriptionLabel();
-		adjustPieceJailFromGame(board.game);
-		adjustGameStatusLabel();
-		adjustToMoveIndicatorLabel();
 
-		if (!isInAdjustToGameInitial) {
+		adjustOpeningDescriptionLabel();
+		adjustGameStatusLabel();
+		
+		if (board.getGame().getResult() == 0) {
 			onPlayMoveSound();
 		}
+
+		board.forceUpdate();
+
+		LOG.info("adjustToGameChange " + getGame().getId() + "  n "
+				+ (System.currentTimeMillis() - startTime));
+	}
+
+	protected void adjustToGameChangeNotInvolvingMove() {
+		// Adjust the clocks.
+		stopClocks();
+		adjustClockLabelsAndUpdaters();
+		adjustClockColors();
+		startClocks();
+
+		adjustToMoveIndicatorLabel();
 
 		if (board.getGame().getResult() != 0) {
 			onPlayGameEndSound();
 		}
 
-		board.forceUpdate();
-
-		LOG.info("adjustToGameChange " + board.game.getId() + "  n "
-				+ (System.currentTimeMillis() - startTime));
-	}
-
-	protected void adjustToGameChange() {
-		adjustToGameChange(false);
 	}
 
 	protected void adjustNameRatingLabels() {
-		board.blackNameRatingLabel.setText(board.game.getBlackName() + " ("
-				+ board.game.getBlackRating() + ")");
-		board.whiteNameRatingLabel.setText(board.game.getWhiteName() + " ("
-				+ board.game.getWhiteRating() + ")");
+		board.blackNameRatingLabel.setText(getGame().getBlackName() + " ("
+				+ getGame().getBlackRating() + ")");
+		board.whiteNameRatingLabel.setText(getGame().getWhiteName() + " ("
+				+ getGame().getWhiteRating() + ")");
 	}
 
 	public void adjustToGameInitial() {
-		LOG.info("adjustToGame " + board.game.getId() + " ...");
+		LOG.info("adjustToGame " + getGame().getId() + " ...");
 		long startTime = System.currentTimeMillis();
 		initClockUpdaters();
 		onPlayGameStartSound();
 		adjustCoolbarToInitial();
 		adjustNameRatingLabels();
-		adjustToGameChange(true);
+		adjustToGameMove();
 		adjustGameDescriptionLabel();
 
-		LOG.info("adjustToGame in " + board.game.getId() + "  "
+		LOG.info("adjustToGame in " + getGame().getId() + "  "
 				+ (System.currentTimeMillis() - startTime));
 	}
 
@@ -450,7 +408,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		}
 
 		int seconds = (int) (lag / 1000L);
-		long tenths = lag % 10;
+		int tenths = (int) (lag % 1000) / 100;
 
 		return "Lag " + seconds + "." + tenths + " sec";
 	}
@@ -504,7 +462,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	public void adjustToMoveIndicatorLabel() {
-		if (board.game.getColorToMove() == WHITE) {
+		if (getGame().getColorToMove() == WHITE) {
 			board.getWhiteToMoveIndicatorLabel().setImage(
 					board.getPreferences().getIcon("circle_green30x30"));
 			board.getBlackToMoveIndicatorLabel().setImage(
@@ -528,10 +486,10 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	public void adjustGameStatusLabel() {
-		if ((board.game.getState() & Game.ACTIVE_STATE) != 0) {
-			if (board.game.getMoves().getSize() > 0) {
-				Move lastMove = board.game.getMoves().get(
-						board.game.getMoves().getSize() - 1);
+		if (getGame().isInState(Game.ACTIVE_STATE)) {
+			if (getGame().getMoves().getSize() > 0) {
+				Move lastMove = getGame().getMoves().get(
+						getGame().getMoves().getSize() - 1);
 				int moveNumber = (board.getGame().getHalfMoveCount() / 2) + 1;
 
 				board.getStatusLabel().setText(
@@ -545,15 +503,15 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			}
 		} else {
 			System.err.println("inactive");
-			board.getStatusLabel().setText(board.game.getResultDescription());
+			board.getStatusLabel().setText(getGame().getResultDescription());
 		}
 		System.err.println("Set game status to "
 				+ board.getStatusLabel().getText());
 	}
 
-	public String timeToString(long timeRemaining) {
+	public String timeToString(long timeMillis) {
 
-		long timeLeft = timeRemaining;
+		long timeLeft = timeMillis;
 
 		if (timeLeft < 0) {
 			timeLeft = 0;
@@ -561,30 +519,30 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 		if (timeLeft >= board.preferences
 				.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-			int hour = (int) (timeRemaining / (60000L * 60));
-			timeRemaining -= hour * 60 * 1000 * 60;
-			int minute = (int) (timeRemaining / 60000L);
+			int hour = (int) (timeLeft / (60000L * 60));
+			timeLeft -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeLeft / 60000L);
 			return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
 					+ RaptorStringUtils.defaultTimeString(minute, 2);
 
 		} else if (timeLeft >= board.preferences
 				.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
-			int hour = (int) (timeRemaining / (60000L * 60));
-			timeRemaining -= hour * 60 * 1000 * 60;
-			int minute = (int) (timeRemaining / 60000L);
-			timeRemaining -= minute * 60 * 1000;
-			int seconds = (int) (timeRemaining / 1000L);
+			int hour = (int) (timeLeft / (60000L * 60));
+			timeLeft -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeLeft / 60000L);
+			timeLeft -= minute * 60 * 1000;
+			int seconds = (int) (timeLeft / 1000L);
 			return RaptorStringUtils.defaultTimeString(minute, 2) + ":"
 					+ RaptorStringUtils.defaultTimeString(seconds, 2);
 
 		} else {
-			int hour = (int) (timeRemaining / (60000L * 60));
-			timeRemaining -= hour * 60 * 1000 * 60;
-			int minute = (int) (timeRemaining / 60000L);
-			timeRemaining -= minute * 60 * 1000;
-			int seconds = (int) (timeRemaining / 1000L);
-			timeRemaining -= seconds * 1000;
-			int tenths = (int) (timeRemaining / 100L);
+			int hour = (int) (timeLeft / (60000L * 60));
+			timeLeft -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeLeft / 60000L);
+			timeLeft -= minute * 60 * 1000;
+			int seconds = (int) (timeLeft / 1000L);
+			timeLeft -= seconds * 1000;
+			int tenths = (int) (timeLeft / 100L);
 			return RaptorStringUtils.defaultTimeString(minute, 2) + ":"
 					+ RaptorStringUtils.defaultTimeString(seconds, 2) + "."
 					+ RaptorStringUtils.defaultTimeString(tenths, 1);
