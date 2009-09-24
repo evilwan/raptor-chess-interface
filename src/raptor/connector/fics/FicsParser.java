@@ -180,7 +180,9 @@ public class FicsParser implements GameConstants {
 		Game game = service.getGame(message.gameId);
 		if (game != null) {
 
-			if (!message.isWhitesMoveAfterMoveIsMade && game.getColorToMove() != WHITE) {
+			if ((!message.isWhitesMoveAfterMoveIsMade && game.getColorToMove() != WHITE)
+					|| (message.isWhitesMoveAfterMoveIsMade && game
+							.getColorToMove() == WHITE)) {
 				// At the end of a game multiple <12> messages are sent.
 				// Assume that is what happened and just ignore it.
 			} else {
@@ -277,7 +279,8 @@ public class FicsParser implements GameConstants {
 
 				FicsUtils.updateGamePosition(game, message);
 
-				game.setColorToMove(message.isWhitesMoveAfterMoveIsMade ? WHITE : BLACK);
+				game.setColorToMove(message.isWhitesMoveAfterMoveIsMade ? WHITE
+						: BLACK);
 
 				game
 						.setCastling(
