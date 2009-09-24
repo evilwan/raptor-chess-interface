@@ -1,7 +1,5 @@
 package raptor.connector.fics.game;
 
-import java.util.StringTokenizer;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
