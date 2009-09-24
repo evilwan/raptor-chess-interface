@@ -3,7 +3,9 @@ package raptor.connector.fics.game.message;
 public class GameEndMessage {
 
 	public String toString() {
-		return "GameEndMessage: " + gameId;
+		return "GameEndMessage: game=" + gameId + " whiteName=" + whiteName
+				+ " blackName=" + blackName + " type=" + type + " descriptin="
+				+ description;
 	}
 
 	public static final int WHITE_WON = 0;

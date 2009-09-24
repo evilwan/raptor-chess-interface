@@ -116,6 +116,27 @@ public class Game implements GameConstants {
 		moveRepHash[getRepHash()]--;
 	}
 
+	/**
+	 * Returns true if one of the state flags is in the specified state.
+	 */
+	public boolean isInState(int state) {
+		return (getState() & state) != 0;
+	}
+
+	/**
+	 * Removes the specified state flags from the games state.
+	 */
+	public void clearState(int state) {
+		setState(getState() & ~state);
+	}
+
+	/**
+	 * Adds the state flag to the games state.
+	 */
+	public void addState(int state) {
+		setState(getState() | state);
+	}
+
 	public Game deepCopy(boolean ignoreHashes) {
 		Game result = new Game();
 		result.id = id;
@@ -193,8 +214,7 @@ public class Game implements GameConstants {
 
 		move.setPrevious50MoveCount(getFiftyMoveCount());
 		if (move.isCapture()) {
-			setPieceCount(oppToMove, move.getCapture(), getPieceCount(
-					oppToMove, move.getCapture()) - 1);
+			decrementPieceCount(oppToMove, move.getCaptureWithPromoteMask());
 			setFiftyMoveCount(0);
 		} else if (move.getPiece() == PAWN) {
 			setFiftyMoveCount(0);
@@ -923,17 +943,16 @@ public class Game implements GameConstants {
 			xor(move.getColor(), move.getPiecePromotedTo() & NOT_PROMOTED_MASK,
 					toBB);
 
-			setPiece(move.getTo(), move.getPiecePromotedTo()
-					| NOT_PROMOTED_MASK);
+			setPiece(move.getTo(), move.getPiecePromotedTo() | PROMOTED_MASK);
 			setPiece(move.getFrom(), EMPTY);
 
 			// capture is handled in forceMove.
 			setPieceCount(getColorToMove(), PAWN, getPieceCount(
 					getColorToMove(), PAWN) - 1);
-			setPieceCount(getColorToMove(), move.getPiecePromotedTo()
-					& NOT_PROMOTED_MASK, getPieceCount(getColorToMove(), move
-					.getPiecePromotedTo()
-					& NOT_PROMOTED_MASK) + 1);
+			setPieceCount(
+					getColorToMove(),
+					move.getPiecePromotedTo(),
+					getPieceCount(getColorToMove(), move.getPiecePromotedTo()) + 1);
 		} else {
 			xor(move.getColor(), move.getPiece(), fromToBB);
 
@@ -1228,8 +1247,8 @@ public class Game implements GameConstants {
 		}
 
 		if (move.isCapture()) {
-			setPieceCount(getColorToMove(), move.getCapture(), getPieceCount(
-					getColorToMove(), move.getCapture()) + 1);
+			incrementPieceCount(getColorToMove(), move
+					.getCaptureWithPromoteMask());
 		}
 
 		setColorToMove(getOppositeColor(getColorToMove()));
@@ -1483,7 +1502,24 @@ public class Game implements GameConstants {
 	}
 
 	public void setPieceCount(int color, int piece, int count) {
-		pieceCounts[color][piece] = count;
+		pieceCounts[color][piece & NOT_PROMOTED_MASK] = count;
+	}
+
+	public void decrementPieceCount(int color, int piece) {
+		if ((piece & PROMOTED_MASK) != 0) {
+			piece = PAWN;
+		}
+		pieceCounts[color][piece] = pieceCounts[color][piece] - 1;
+	}
+
+	public void incrementPieceCount(int color, int piece) {
+		int pieceWithoutMask = piece;
+
+		if ((piece & PROMOTED_MASK) != 0) {
+			pieceWithoutMask = piece & NOT_PROMOTED_MASK;
+			pieceCounts[color][PAWN] = pieceCounts[color][PAWN] - 1;
+		}
+		pieceCounts[color][pieceWithoutMask] = pieceCounts[color][pieceWithoutMask] + 1;
 	}
 
 	public void setResult(int result) {
@@ -1676,7 +1712,7 @@ public class Game implements GameConstants {
 		this.whiteRating = whiteRating;
 	}
 
-	public void setWhitRemainingeTimeMillis(long whiteTimeMillis) {
+	public void setWhiteRemainingeTimeMillis(long whiteTimeMillis) {
 		this.whiteRemainingTimeMilis = whiteTimeMillis;
 	}
 
@@ -1755,6 +1791,8 @@ public class Game implements GameConstants {
 				getPieceBB(BLACK, QUEEN), getPieceBB(BLACK, KING) })
 				+ "\n\n");
 
+		result.append("FEN=" + toFEN());
+
 		String legalMovesString = Arrays.toString(getLegalMoves().asArray());
 		// "DISABLED";
 
@@ -1781,7 +1819,6 @@ public class Game implements GameConstants {
 
 		String legalMovesString4 = legalMovesString;
 
-		result.append("\n\n");
 		for (int i = 7; i > -1; i--) {
 			for (int j = 0; j < 8; j++) {
 				int square = rankFileToSquare(i, j);

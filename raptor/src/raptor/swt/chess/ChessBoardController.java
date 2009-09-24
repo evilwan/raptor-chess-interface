@@ -75,13 +75,19 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board.getSquare(i, j).setPiece(
-						Utils.getColoredPiece(GameUtils
-								.rankFileToSquare(i, j), game));
+						Utils.getColoredPiece(GameUtils.rankFileToSquare(i, j),
+								game));
 			}
 		}
 	}
 
 	protected abstract void adjustCoolbarToInitial();
+
+	protected abstract void onPlayMoveSound();
+
+	protected abstract void onPlayGameStartSound();
+
+	protected abstract void onPlayGameEndSound();
 
 	protected void adjustFromNavigationChange() {
 		adjustPieceJailFromGame(traverser.getAdjustedGame());
@@ -165,18 +171,27 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	protected void adjustClockColors() {
-		if (board.game.getColorToMove() == WHITE) {
+		if (isGameActive()) {
+			if (board.game.getColorToMove() == WHITE) {
+				board.getWhiteClockLabel().setForeground(
+						board.getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getBlackClockLabel().setForeground(
+						board.getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			} else {
+				board.getBlackClockLabel().setForeground(
+						board.getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getWhiteClockLabel().setForeground(
+						board.getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			}
+		} else {
 			board.getWhiteClockLabel().setForeground(
-					board.getPreferences().getColor(
-							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-			board.getBlackClockLabel().setForeground(
 					board.getPreferences().getColor(
 							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-		} else {
 			board.getBlackClockLabel().setForeground(
-					board.getPreferences().getColor(
-							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-			board.getWhiteClockLabel().setForeground(
 					board.getPreferences().getColor(
 							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
 		}
@@ -239,22 +254,28 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 			if (board.getGame().getHalfMoveCount() > 0) {
 				Move move = board.game.getMoves().get(
 						board.getGame().getHalfMoveCount() - 1);
-				String moveDescription = move.getSan();
 
-				if (StringUtils.isBlank(moveDescription)) {
-					moveDescription = move.getLan();
+				// move can be null if it is an observed game.
+				if (move != null) {
+					String moveDescription = move.getSan();
+
+					if (StringUtils.isBlank(moveDescription)) {
+						moveDescription = move.toString();
+					}
+
+					board.statusLabel.setText("Last move: "
+							+ Utils.halfMoveIndexToDescription(board.game
+									.getHalfMoveCount(), GameUtils
+									.getOppositeColor(board.game
+											.getColorToMove()))
+							+ moveDescription);
+				} else {
+					board.statusLabel.setText("");
 				}
-				System.out.println("Set status label.");
-				board.statusLabel.setText("Last move: "
-						+ Utils.halfMoveIndexToDescription(board.game
-								.getHalfMoveCount(), GameUtils
-								.getOppositeColor(board.game.getColorToMove()))
-						+ moveDescription);
 			} else {
 				board.statusLabel.setText("");
 			}
 		} else {
-			System.out.println("In adjust status label game is not active.");
 			board.statusLabel
 					.setText(StringUtils
 							.defaultString(board.game.getResultDescription(),
@@ -263,11 +284,15 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	protected void adjustOpeningDescriptionLabel() {
-		board.openingDescriptionLabel
-				.setText("This will show opening description in the future.");
+		// CDay tells you: you can do
+		// board.getOpeningDescriptionLabel().setText(your opening description);
+		// CDay tells you: so you can test it from the gui
+		ECOParser p = ECOParser.getECOParser(board.getGame());
+		if (p != null)
+			board.getOpeningDescriptionLabel().setText(p.toString());
 	}
 
-	protected void adjustToGameChange() {
+	protected void adjustToGameChange(boolean isInAdjustToGameInitial) {
 		LOG.info("adjustToGameChange " + board.game.getId() + " ...");
 		long startTime = System.currentTimeMillis();
 
@@ -292,17 +317,22 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		adjustGameStatusLabel();
 		adjustToMoveIndicatorLabel();
 
-		// CDay tells you: you can do
-		// board.getOpeningDescriptionLabel().setText(your opening description);
-		// CDay tells you: so you can test it from the gui
-		ECOParser p = ECOParser.getECOParser(board.getGame());
-		if (p != null)
-			board.getOpeningDescriptionLabel().setText(p.toString());
+		if (!isInAdjustToGameInitial) {
+			onPlayMoveSound();
+		}
+
+		if (board.getGame().getResult() != 0) {
+			onPlayGameEndSound();
+		}
 
 		board.forceUpdate();
 
 		LOG.info("adjustToGameChange " + board.game.getId() + "  n "
 				+ (System.currentTimeMillis() - startTime));
+	}
+
+	protected void adjustToGameChange() {
+		adjustToGameChange(false);
 	}
 
 	protected void adjustNameRatingLabels() {
@@ -316,9 +346,10 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		LOG.info("adjustToGame " + board.game.getId() + " ...");
 		long startTime = System.currentTimeMillis();
 		initClockUpdaters();
+		onPlayGameStartSound();
 		adjustCoolbarToInitial();
 		adjustNameRatingLabels();
-		adjustToGameChange();
+		adjustToGameChange(true);
 		adjustGameDescriptionLabel();
 
 		LOG.info("adjustToGame in " + board.game.getId() + "  "
@@ -339,8 +370,6 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	public void clearPremoves() {
 		board.currentPremovesLabel.setText("");
 	}
-
-	protected abstract void decorateCoolbar();
 
 	public void onNavFirst() {
 		if (traverser.hasFirst()) {
@@ -489,9 +518,13 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	public void adjustGameDescriptionLabel() {
-		board.gameDescriptionLabel.setText(board.game.getGameDescription());
-		System.err.println("Set game description to "
-				+ board.getGameDescriptionLabel().getText());
+		String adjective = board.getGame().isInState(Game.PLAYING_STATE) ? "Playing "
+				: board.getGame().isInState(Game.OBSERVING_STATE) ? "Observing "
+						: board.getGame().isInState(Game.EXAMINING_STATE) ? "Examining "
+								: board.getGame().isInState(Game.SETUP_STATE) ? "Setting up "
+										: "";
+		board.gameDescriptionLabel.setText(adjective
+				+ board.getGame().getEvent());
 	}
 
 	public void adjustGameStatusLabel() {

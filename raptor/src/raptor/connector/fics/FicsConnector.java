@@ -530,6 +530,10 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		sendMessage("decline");
 	}
 
+	public void onUnobserve(Game game) {
+		sendMessage("unobserve " + game.getId());
+	}
+
 	public void onDraw(Game game) {
 		sendMessage("draw");
 	}

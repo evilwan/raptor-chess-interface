@@ -1,8 +1,7 @@
 package raptor.connector.fics.game;
 
-import java.util.StringTokenizer;
-
 import raptor.connector.fics.game.message.GameEndMessage;
+import raptor.util.RaptorStringTokenizer;
 
 public class GameEndParser {
 
@@ -12,7 +11,8 @@ public class GameEndParser {
 		GameEndMessage result = null;
 		if (message.startsWith(GAME_END)) {
 			result = new GameEndMessage();
-			StringTokenizer tok = new StringTokenizer(message, " ()",true);
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
+					" ()", true);
 
 			// parse past {Game
 			tok.nextToken();

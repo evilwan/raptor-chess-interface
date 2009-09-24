@@ -193,9 +193,17 @@ public class FicsParser implements GameConstants {
 				}
 
 				game
-						.setWhitRemainingeTimeMillis(message.whiteRemainingTimeMillis);
+						.setWhiteRemainingeTimeMillis(message.whiteRemainingTimeMillis);
 				game
 						.setBlackRemainingTimeMillis(message.blackRemainingTimeMillis);
+
+				if (message.isWhitesMoveAfterMoveIsMade) {
+					game.setBlackLagMillis(game.getBlackLagMillis()
+							+ message.lagInMillis);
+				} else {
+					game.setWhiteLagMillis(game.getWhiteLagMillis()
+							+ message.lagInMillis);
+				}
 
 				service.fireGameStateChanged(message.gameId);
 			}
@@ -244,11 +252,14 @@ public class FicsParser implements GameConstants {
 					game.setState(Game.OBSERVING_EXAMINED_STATE);
 					break;
 				case Style12Message.OBSERVING_GAME_RELATION:
-					game.setState(Game.OBSERVING_STATE);
+					game.setState(Game.OBSERVING_STATE
+							| Game.IS_CLOCK_TICKING_STATE);
 					break;
 				case Style12Message.PLAYING_MY_MOVE_RELATION:
 				case Style12Message.PLAYING_OPPONENTS_MOVE_RELATION:
-					game.setState(Game.PLAYING_STATE);
+					game.setState(Game.PLAYING_STATE
+							| Game.IS_CLOCK_TICKING_STATE);
+					;
 					break;
 				}
 				game.setState(game.getState() | Game.ACTIVE_STATE);
@@ -273,7 +284,7 @@ public class FicsParser implements GameConstants {
 				game.setWhiteRating(g1Message.whiteRating);
 
 				game
-						.setWhitRemainingeTimeMillis(message.whiteRemainingTimeMillis);
+						.setWhiteRemainingeTimeMillis(message.whiteRemainingTimeMillis);
 				game
 						.setBlackRemainingTimeMillis(message.blackRemainingTimeMillis);
 
@@ -367,10 +378,9 @@ public class FicsParser implements GameConstants {
 		} else {
 			switch (message.type) {
 			case GameEndMessage.ABORTED:
-				game.setResult(Game.UNDETERMINED_RESULT);
-				break;
 			case GameEndMessage.ADJOURNED:
-				game.setResult(Game.IN_PROGRESS_RESULT);
+			case GameEndMessage.UNDETERMINED:
+				game.setResult(Game.UNDETERMINED_RESULT);
 				break;
 			case GameEndMessage.BLACK_WON:
 				game.setResult(Game.BLACK_WON_RESULT);
@@ -381,16 +391,15 @@ public class FicsParser implements GameConstants {
 			case GameEndMessage.DRAW:
 				game.setResult(Game.DRAW_RESULT);
 				break;
-			case GameEndMessage.UNDETERMINED:
-				game.setResult(Game.UNDETERMINED_RESULT);
-				break;
 			default:
 				LOG.error("Undetermined game end type. " + message);
 				break;
 			}
 			game.setResultDescription(message.description);
-			game.setState(game.getState() | Game.INACTIVE_STATE);
+			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
+			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
+			service.removeGame(game);
 		}
 		LOG.debug("Processed game end: " + message);
 	}
@@ -402,8 +411,12 @@ public class FicsParser implements GameConstants {
 					.error("Received removing obs game message for a game not in the GameService. "
 							+ message);
 		} else {
+			game.setResultDescription("Interrupted by unobserve");
+			game.setResult(Game.UNDETERMINED_RESULT);
+			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 			game.setState(game.getState() | Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
+			service.removeGame(game);
 		}
 		LOG.debug("Processed removing obs game: " + message);
 	}

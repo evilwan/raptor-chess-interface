@@ -57,8 +57,11 @@ public class Move implements GameConstants {
 		this.moveCharacteristic = (byte) moveCharacteristic;
 	}
 
+	/**
+	 * Returns the capture without the promote mask.
+	 */
 	public int getCapture() {
-		return capture;
+		return capture & NOT_PROMOTED_MASK;
 	}
 
 	public int getCaptureColor() {
@@ -136,6 +139,13 @@ public class Move implements GameConstants {
 
 	public void setCapture(int capture) {
 		this.capture = (byte) capture;
+	}
+	
+	/**
+	 * Returns the capture with the promote mask.
+	 */
+	public int getCaptureWithPromoteMask() {
+		return this.capture;
 	}
 
 	public void setColor(int color) {

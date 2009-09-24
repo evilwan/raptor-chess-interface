@@ -104,6 +104,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				1000L * 60L * 10L + 1L);
 		setDefault(BOARD_PREMOVE_ENABLED, true);
 		setDefault(BOARD_SMARTMOVE_ENABLED, true);
+		setDefault(BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING, true);
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
@@ -227,7 +228,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, CHAT_QUOTE_UNDERLINE_COLOR,
 				new RGB(0, 255, 0));
 		PreferenceConverter.setDefault(this, CHAT_LINK_UNDERLINE_COLOR,
-				new RGB(0, 0, 255));
+				new RGB(0, 0, 238));
 
 		setDefault(APP_NAME, "raptor v alpha.1");
 		PreferenceConverter.setDefault(this, APP_LAG_FONT,
