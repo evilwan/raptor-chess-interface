@@ -25,16 +25,37 @@ import raptor.game.util.ZobristHash;
 
 public class Game implements GameConstants {
 
-	public static final int ACTIVE_STATE = 2;
-	public static final int DROPPABLE_STATE = 64;
-	public static final int EXAMINING_STATE = 8;
-	public static final int PLAYING_STATE = 16;
-	public static final int OBSERVING_STATE = 512;
-	public static final int OBSERVING_EXAMINED_STATE = 256;
-	public static final int UNTIMED_STATE = 32;
-	public static final int INACTIVE_STATE = 4;
-	public static final int IS_CLOCK_TICKING_STATE = 128;
-	public static final int SETUP_STATE = 1024;
+	public static final class PositionState {
+		public int[] board = new int[64];
+		public int[] castling = new int[2];
+		public long[] colorBB = new long[2];
+		public int colorToMove;
+		public int[][] dropCounts = new int[2][7];
+		public long emptyBB;
+		public int epSquare = EMPTY_SQUARE;
+		public int fiftyMoveCount;
+		public int halfMoveCount;
+		public int initialEpSquare = EMPTY_SQUARE;
+		public long zobristGameHash;
+		public long zobristPositionHash;
+		public int[] moveRepHash = new int[MOVE_REP_CACHE_SIZE];
+		public long notColorToMoveBB;
+		public long occupiedBB;
+		public long[][] pieceBB = new long[2][7];
+		public int[][] pieceCounts = new int[2][7];
+		public MoveList moves = new MoveList();
+	}
+
+	public static final int ACTIVE_STATE = 1;
+	public static final int INACTIVE_STATE = ACTIVE_STATE << 1;
+	public static final int EXAMINING_STATE = ACTIVE_STATE << 2;;
+	public static final int PLAYING_STATE = ACTIVE_STATE << 3;
+	public static final int UNTIMED_STATE = ACTIVE_STATE << 4;
+	public static final int DROPPABLE_STATE = ACTIVE_STATE << 5;
+	public static final int IS_CLOCK_TICKING_STATE = ACTIVE_STATE << 6;
+	public static final int OBSERVING_EXAMINED_STATE = ACTIVE_STATE << 7;
+	public static final int OBSERVING_STATE = ACTIVE_STATE << 8;
+	public static final int SETUP_STATE = ACTIVE_STATE << 9;
 
 	public static final int ATOMIC = 6;
 	public static final int BLITZ = 0;
@@ -45,55 +66,28 @@ public class Game implements GameConstants {
 	public static final int STANDARD = 2;
 	public static final int SUICIDE = 5;
 	public static final int WILD = 3;
-	public static final int FISCHER_RANDOM = 4;
 
+	public static final int FISCHER_RANDOM = 4;
 	public static final int IN_PROGRESS_RESULT = 0;
 	public static final int BLACK_WON_RESULT = 2;
 	public static final int DRAW_RESULT = 3;
 	public static final int UNDETERMINED_RESULT = 4;
+
 	public static final int WHTIE_WON_RESULT = 1;
 
-	/**
-	 * Currently places captures ahead of non captures.
-	 */
-	static void addMove(Move move, PriorityMoveList moves) {
-		if (move.isCapture() || move.isPromotion()) {
-			moves.appendHighPriority(move);
-		} else {
-			moves.appendLowPriority(move);
-		}
-	}
-
+	protected long initialWhiteIncMillis;
+	protected long initialWhiteTimeMillis;
+	protected long initialBlackIncMillis;
+	protected long initialBlackTimeMillis;
+	protected PositionState positionState = new PositionState();
 	protected long blackLagMillis;
 	protected String blackName;
 	protected String blackRating;
 	protected long blackRemainingTimeMillis;
-
-	protected int[] board = new int[64];
-	protected int[] castling = new int[2];
-	protected long[] colorBB = new long[2];
-	protected int colorToMove;
-	protected int[][] dropCounts = new int[2][7];
-	protected long emptyBB;
-	protected int epSquare = EMPTY_SQUARE;
-	protected String event;
-	protected int fiftyMoveCount;
 	protected String gameDescription;
-	protected int halfMoveCount;
-	protected String id;
-	protected long initialBlackIncMillis;
-	protected long initialBlackTimeMillis;
-	protected int initialEpSquare = EMPTY_SQUARE;
-	protected long initialWhiteIncMillis;
-	protected long initialWhiteTimeMillis;
-
+	protected String event;
 	protected boolean isSettingMoveSan = false;
-	protected int[] moveRepHash = new int[MOVE_REP_CACHE_SIZE];
-	protected MoveList moves = new MoveList();
-	protected long notColorToMoveBB;
-	protected long occupiedBB;
-	protected long[][] pieceBB = new long[2][7];
-	protected int[][] pieceCounts = new int[2][7];
+	protected String id;
 	protected int result;
 	protected String resultDescription;
 	protected String site;
@@ -104,30 +98,16 @@ public class Game implements GameConstants {
 	protected String whiteName;
 	protected String whiteRating;
 	protected long whiteRemainingTimeMilis;
-	protected long zobristGameHash;
-
-	protected long zobristPositionHash;
-
-	public boolean areBothKingsOnBoard() {
-		return getPieceBB(WHITE, KING) != 0L && getPieceBB(BLACK, KING) != 0L;
-	}
-
-	public void decrementRepCount() {
-		moveRepHash[getRepHash()]--;
-	}
 
 	/**
-	 * Returns true if one of the state flags is in the specified state.
+	 * Currently places captures ahead of non captures.
 	 */
-	public boolean isInState(int state) {
-		return (getState() & state) != 0;
-	}
-
-	/**
-	 * Removes the specified state flags from the games state.
-	 */
-	public void clearState(int state) {
-		setState(getState() & ~state);
+	public void addMove(Move move, PriorityMoveList moves) {
+		if (move.isCapture() || move.isPromotion()) {
+			moves.appendHighPriority(move);
+		} else {
+			moves.appendLowPriority(move);
+		}
 	}
 
 	/**
@@ -135,6 +115,28 @@ public class Game implements GameConstants {
 	 */
 	public void addState(int state) {
 		setState(getState() | state);
+	}
+
+	public boolean areBothKingsOnBoard() {
+		return getPieceBB(WHITE, KING) != 0L && getPieceBB(BLACK, KING) != 0L;
+	}
+
+	/**
+	 * RepositionState.moves the specified state flags from the games state.
+	 */
+	public void clearState(int state) {
+		setState(getState() & ~state);
+	}
+
+	public void decrementPieceCount(int color, int piece) {
+		if ((piece & PROMOTED_MASK) != 0) {
+			piece = PAWN;
+		}
+		positionState.pieceCounts[color][piece] = positionState.pieceCounts[color][piece] - 1;
+	}
+
+	public void decrementRepCount() {
+		positionState.moveRepHash[getRepHash()]--;
 	}
 
 	public Game deepCopy(boolean ignoreHashes) {
@@ -159,36 +161,46 @@ public class Game implements GameConstants {
 		result.site = site;
 		result.event = event;
 		result.resultDescription = resultDescription;
-		result.moves = moves.deepCopy();
-		result.halfMoveCount = halfMoveCount;
-		System.arraycopy(colorBB, 0, result.colorBB, 0, result.colorBB.length);
-		for (int i = 0; i < pieceBB.length; i++) {
-			System.arraycopy(pieceBB[i], 0, result.pieceBB[i], 0,
-					pieceBB[i].length);
+		result.positionState.moves = positionState.moves.deepCopy();
+		result.positionState.halfMoveCount = positionState.halfMoveCount;
+		System.arraycopy(positionState.colorBB, 0,
+				result.positionState.colorBB, 0,
+				result.positionState.colorBB.length);
+		for (int i = 0; i < positionState.pieceBB.length; i++) {
+			System.arraycopy(positionState.pieceBB[i], 0,
+					result.positionState.pieceBB[i], 0,
+					positionState.pieceBB[i].length);
 		}
-		System.arraycopy(board, 0, result.board, 0, result.board.length);
-		result.occupiedBB = occupiedBB;
-		result.emptyBB = emptyBB;
-		result.notColorToMoveBB = notColorToMoveBB;
-		System.arraycopy(castling, 0, result.castling, 0, castling.length);
-		result.initialEpSquare = initialEpSquare;
-		result.epSquare = epSquare;
-		result.colorToMove = colorToMove;
-		result.fiftyMoveCount = fiftyMoveCount;
-		for (int i = 0; i < pieceCounts.length; i++) {
-			System.arraycopy(pieceCounts[i], 0, result.pieceCounts[i], 0,
-					pieceCounts[i].length);
+		System.arraycopy(positionState.board, 0, result.positionState.board, 0,
+				result.positionState.board.length);
+		result.positionState.occupiedBB = positionState.occupiedBB;
+		result.positionState.emptyBB = positionState.emptyBB;
+		result.positionState.notColorToMoveBB = positionState.notColorToMoveBB;
+		System
+				.arraycopy(positionState.castling, 0,
+						result.positionState.castling, 0,
+						positionState.castling.length);
+		result.positionState.initialEpSquare = positionState.initialEpSquare;
+		result.positionState.epSquare = positionState.epSquare;
+		result.positionState.colorToMove = positionState.colorToMove;
+		result.positionState.fiftyMoveCount = positionState.fiftyMoveCount;
+		for (int i = 0; i < positionState.pieceCounts.length; i++) {
+			System.arraycopy(positionState.pieceCounts[i], 0,
+					result.positionState.pieceCounts[i], 0,
+					positionState.pieceCounts[i].length);
 		}
-		for (int i = 0; i < dropCounts.length; i++) {
-			System.arraycopy(dropCounts[i], 0, result.dropCounts[i], 0,
-					dropCounts[i].length);
+		for (int i = 0; i < positionState.dropCounts.length; i++) {
+			System.arraycopy(positionState.dropCounts[i], 0,
+					result.positionState.dropCounts[i], 0,
+					positionState.dropCounts[i].length);
 		}
-		result.zobristPositionHash = zobristGameHash;
-		result.zobristGameHash = zobristGameHash;
+		result.positionState.zobristPositionHash = positionState.zobristGameHash;
+		result.positionState.zobristGameHash = positionState.zobristGameHash;
 
 		if (!ignoreHashes) {
-			System.arraycopy(moveRepHash, 0, result.moveRepHash, 0,
-					moveRepHash.length);
+			System.arraycopy(positionState.moveRepHash, 0,
+					result.positionState.moveRepHash, 0,
+					positionState.moveRepHash.length);
 		}
 		return result;
 	}
@@ -524,31 +536,31 @@ public class Game implements GameConstants {
 	}
 
 	public int[] getBoard() {
-		return board;
+		return positionState.board;
 	}
 
 	public int getCastling(int color) {
-		return castling[color];
+		return positionState.castling[color];
 	}
 
 	public long getColorBB(int color) {
-		return colorBB[color];
+		return positionState.colorBB[color];
 	}
 
 	public int getColorToMove() {
-		return colorToMove;
+		return positionState.colorToMove;
 	}
 
 	public int getDropCount(int color, int piece) {
-		return pieceCounts[color][piece];
+		return positionState.pieceCounts[color][piece];
 	}
 
 	public long getEmptyBB() {
-		return emptyBB;
+		return positionState.emptyBB;
 	}
 
 	public int getEpSquare() {
-		return epSquare;
+		return positionState.epSquare;
 	}
 
 	public String getEvent() {
@@ -568,15 +580,25 @@ public class Game implements GameConstants {
 	}
 
 	public int getFiftyMoveCount() {
-		return fiftyMoveCount;
+		return positionState.fiftyMoveCount;
+	}
+
+	/**
+	 * Returns the full move count. The next move will have this number.
+	 */
+	public int getFullMoveCount() {
+		return getHalfMoveCount() / 2 + 1;
 	}
 
 	public String getGameDescription() {
 		return gameDescription;
 	}
 
+	/**
+	 * Returns the number of half positionState.moves made.
+	 */
 	public int getHalfMoveCount() {
-		return halfMoveCount;
+		return positionState.halfMoveCount;
 	}
 
 	public String getId() {
@@ -592,7 +614,7 @@ public class Game implements GameConstants {
 	}
 
 	public int getInitialEpSquare() {
-		return initialEpSquare;
+		return positionState.initialEpSquare;
 	}
 
 	public long getInitialWhiteIncMillis() {
@@ -634,39 +656,40 @@ public class Game implements GameConstants {
 	}
 
 	public MoveList getMoves() {
-		return moves;
+		return positionState.moves;
 	}
 
 	public long getNotColorToMoveBB() {
-		return notColorToMoveBB;
+		return positionState.notColorToMoveBB;
 	}
 
 	public long getOccupiedBB() {
-		return occupiedBB;
+		return positionState.occupiedBB;
 	}
 
 	public int getPiece(int square) {
-		return board[square] & NOT_PROMOTED_MASK;
+		return positionState.board[square] & NOT_PROMOTED_MASK;
 	}
 
 	public long getPieceBB(int piece) {
-		return pieceBB[0][piece] | pieceBB[1][piece];
+		return positionState.pieceBB[0][piece]
+				| positionState.pieceBB[1][piece];
 	}
 
 	public long getPieceBB(int color, int piece) {
-		return pieceBB[color][piece];
+		return positionState.pieceBB[color][piece];
 	}
 
 	public int getPieceCount(int color, int piece) {
-		return pieceCounts[color][piece];
+		return positionState.pieceCounts[color][piece];
 	}
 
 	public int getPieceWithPromoteMask(int square) {
-		return board[square];
+		return positionState.board[square];
 	}
 
-	public Position getPosition() {
-		return new Position(this);
+	public PositionState getPositionState() {
+		return positionState;
 	}
 
 	public PriorityMoveList getPseudoLegalMoves() {
@@ -681,11 +704,11 @@ public class Game implements GameConstants {
 	}
 
 	public int getRepCount() {
-		return moveRepHash[getRepHash()];
+		return positionState.moveRepHash[getRepHash()];
 	}
 
 	public int getRepHash() {
-		return (int) (zobristPositionHash & MOVE_REP_CACHE_SIZE_MINUS_1);
+		return (int) (positionState.zobristPositionHash & MOVE_REP_CACHE_SIZE_MINUS_1);
 	}
 
 	public int getResult() {
@@ -729,15 +752,25 @@ public class Game implements GameConstants {
 	}
 
 	public long getZobristGameHash() {
-		return zobristGameHash;
+		return positionState.zobristGameHash;
 	}
 
 	public long getZobristPositionHash() {
-		return zobristPositionHash;
+		return positionState.zobristPositionHash;
+	}
+
+	public void incrementPieceCount(int color, int piece) {
+		int pieceWithoutMask = piece;
+
+		if ((piece & PROMOTED_MASK) != 0) {
+			pieceWithoutMask = piece & NOT_PROMOTED_MASK;
+			positionState.pieceCounts[color][PAWN] = positionState.pieceCounts[color][PAWN] - 1;
+		}
+		positionState.pieceCounts[color][pieceWithoutMask] = positionState.pieceCounts[color][pieceWithoutMask] + 1;
 	}
 
 	public void incrementRepCount() {
-		moveRepHash[getRepHash()]++;
+		positionState.moveRepHash[getRepHash()]++;
 	}
 
 	public boolean isCheckmate() {
@@ -768,6 +801,13 @@ public class Game implements GameConstants {
 				oppositeColor, KNIGHT)) == 0L));
 	}
 
+	/**
+	 * Returns true if one of the state flags is in the specified state.
+	 */
+	public boolean isInState(int state) {
+		return (getState() & state) != 0;
+	}
+
 	public boolean isLegalPosition() {
 		return areBothKingsOnBoard()
 				&& !isInCheck(getOppositeColor(getColorToMove()));
@@ -783,6 +823,10 @@ public class Game implements GameConstants {
 
 	public boolean isStalemate(PriorityMoveList moveList) {
 		return moveList.getSize() == 0 && !isInCheck(getColorToMove());
+	}
+
+	public boolean isWhitesMove() {
+		return positionState.colorToMove == WHITE;
 	}
 
 	public void makeCastlingMove(Move move) {
@@ -902,6 +946,31 @@ public class Game implements GameConstants {
 			Move candidate = legals[i];
 			if (candidate.getFrom() == startSquare
 					&& candidate.getTo() == endSquare) {
+				move = candidate;
+			}
+		}
+
+		if (move == null) {
+			throw new IllegalArgumentException("Invalid move: " + startSquare
+					+ " " + endSquare + " \n" + toString());
+		} else {
+			forceMove(move);
+		}
+
+		return move;
+	}
+
+	public Move makeMove(int startSquare, int endSquare, int promotePiece)
+			throws IllegalArgumentException {
+		Move move = null;
+
+		Move[] legals = getLegalMoves().asArray();
+
+		for (int i = 0; move == null && i < legals.length; i++) {
+			Move candidate = legals[i];
+			if (candidate.getFrom() == startSquare
+					&& candidate.getTo() == endSquare
+					&& candidate.getPiecePromotedTo() == promotePiece) {
 				move = candidate;
 			}
 		}
@@ -1046,7 +1115,7 @@ public class Game implements GameConstants {
 									.getStrictSan().charAt(1)));
 
 					int startRank = GameUtils.getRank(end)
-							+ (colorToMove == WHITE ? -1 : +1);
+							+ (positionState.colorToMove == WHITE ? -1 : +1);
 
 					if (startRank > 7 || startRank < 0) {
 						throw new IllegalArgumentException(
@@ -1169,8 +1238,8 @@ public class Game implements GameConstants {
 			} else {
 				// now do legality checking on whats left.
 				int kingSquare = GameUtils.bitscanForward(getPieceBB(
-						colorToMove, KING));
-				int cachedColorToMove = colorToMove;
+						positionState.colorToMove, KING));
+				int cachedColorToMove = positionState.colorToMove;
 				int matchesCount = 0;
 
 				if (kingSquare != 0) { // Now trim illegals
@@ -1404,34 +1473,34 @@ public class Game implements GameConstants {
 	}
 
 	public void setBoard(int[] board) {
-		this.board = board;
+		this.positionState.board = board;
 	}
 
 	public void setCastling(int color, int castling) {
-		this.castling[color] = castling;
+		this.positionState.castling[color] = castling;
 	}
 
 	public void setColorBB(int color, long bb) {
-		colorBB[color] = bb;
+		positionState.colorBB[color] = bb;
 	}
 
 	public void setColorToMove(int color) {
-		this.colorToMove = color;
+		this.positionState.colorToMove = color;
 	}
 
 	public void setDropCount(int color, int piece, int count) {
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
 		}
-		pieceCounts[color][piece] = count;
+		positionState.pieceCounts[color][piece] = count;
 	}
 
 	public void setEmptyBB(long emptyBB) {
-		this.emptyBB = emptyBB;
+		positionState.emptyBB = emptyBB;
 	}
 
 	public void setEpSquare(int epSquare) {
-		this.epSquare = epSquare;
+		positionState.epSquare = epSquare;
 	}
 
 	public void setEpSquareFromPreviousMove() {
@@ -1450,7 +1519,7 @@ public class Game implements GameConstants {
 	}
 
 	public void setFiftyMoveCount(int fiftyMoveCount) {
-		this.fiftyMoveCount = fiftyMoveCount;
+		this.positionState.fiftyMoveCount = fiftyMoveCount;
 	}
 
 	public void setGameDescription(String gameDescription) {
@@ -1458,7 +1527,7 @@ public class Game implements GameConstants {
 	}
 
 	public void setHalfMoveCount(int halfMoveCount) {
-		this.halfMoveCount = halfMoveCount;
+		this.positionState.halfMoveCount = halfMoveCount;
 	}
 
 	public void setId(String id) {
@@ -1474,7 +1543,7 @@ public class Game implements GameConstants {
 	}
 
 	public void setInitialEpSquare(int initialEpSquare) {
-		this.initialEpSquare = initialEpSquare;
+		positionState.initialEpSquare = initialEpSquare;
 	}
 
 	public void setInitialWhiteIncMillis(long initialWhiteIncMillis) {
@@ -1486,40 +1555,27 @@ public class Game implements GameConstants {
 	}
 
 	public void setNotColorToMoveBB(long notColorToMoveBB) {
-		this.notColorToMoveBB = notColorToMoveBB;
+		this.positionState.notColorToMoveBB = notColorToMoveBB;
 	}
 
 	public void setOccupiedBB(long occupiedBB) {
-		this.occupiedBB = occupiedBB;
+		positionState.occupiedBB = occupiedBB;
 	}
 
 	public void setPiece(int square, int piece) {
-		board[square] = piece;
+		positionState.board[square] = piece;
 	}
 
 	public void setPieceBB(int color, int piece, long bb) {
-		pieceBB[color][piece] = bb;
+		positionState.pieceBB[color][piece] = bb;
 	}
 
 	public void setPieceCount(int color, int piece, int count) {
-		pieceCounts[color][piece & NOT_PROMOTED_MASK] = count;
+		positionState.pieceCounts[color][piece & NOT_PROMOTED_MASK] = count;
 	}
 
-	public void decrementPieceCount(int color, int piece) {
-		if ((piece & PROMOTED_MASK) != 0) {
-			piece = PAWN;
-		}
-		pieceCounts[color][piece] = pieceCounts[color][piece] - 1;
-	}
-
-	public void incrementPieceCount(int color, int piece) {
-		int pieceWithoutMask = piece;
-
-		if ((piece & PROMOTED_MASK) != 0) {
-			pieceWithoutMask = piece & NOT_PROMOTED_MASK;
-			pieceCounts[color][PAWN] = pieceCounts[color][PAWN] - 1;
-		}
-		pieceCounts[color][pieceWithoutMask] = pieceCounts[color][pieceWithoutMask] + 1;
+	public void setPositionState(PositionState positionState) {
+		this.positionState = positionState;
 	}
 
 	public void setResult(int result) {
@@ -1562,14 +1618,15 @@ public class Game implements GameConstants {
 			// ambiguous)
 			{
 				int oppositeColorToMove = GameUtils
-						.getOppositeColor(colorToMove);
+						.getOppositeColor(positionState.colorToMove);
 				long fromBB = getPieceBB(getColorToMove(), PAWN);
 
 				int movesFound = 0;
 				while (fromBB != 0) {
 					int fromSquare = bitscanForward(fromBB);
 					if ((GameUtils.getBitboard(move.getTo()) & GameUtils
-							.pawnCapture(colorToMove, getBitboard(fromSquare),
+							.pawnCapture(positionState.colorToMove,
+									getBitboard(fromSquare),
 									getColorBB(oppositeColorToMove))) != 0) {
 						movesFound++;
 					}
@@ -1591,7 +1648,8 @@ public class Game implements GameConstants {
 									+ PIECE_TO_SAN.charAt(move
 											.getPiecePromotedTo()) : "");
 				}
-			} else if (move.getPiece() == PAWN) // e4 (pawn moves are never
+			} else if (move.getPiece() == PAWN) // e4 (pawn positionState.moves
+			// are never
 			// ambiguous)
 			{
 				shortAlgebraic = SanUtil.squareToSan(move.getTo())
@@ -1619,9 +1677,6 @@ public class Game implements GameConstants {
 
 						switch (move.getPiece()) {
 						case KNIGHT:
-							System.err.println("knightMove BB\n"
-									+ GameUtils.getString(GameUtils
-											.knightMove(fromSquare)));
 							resultBB = GameUtils.knightMove(fromSquare) & toBB;
 							break;
 						case BISHOP:
@@ -1717,11 +1772,11 @@ public class Game implements GameConstants {
 	}
 
 	public void setZobristGameHash(long hash) {
-		zobristGameHash = hash;
+		positionState.zobristGameHash = hash;
 	}
 
 	public void setZobristPositionHash(long hash) {
-		zobristPositionHash = hash;
+		positionState.zobristPositionHash = hash;
 	}
 
 	// rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
@@ -1752,12 +1807,12 @@ public class Game implements GameConstants {
 			}
 		}
 
-		result.append(colorToMove == WHITE ? " w" : " b");
+		result.append(positionState.colorToMove == WHITE ? " w" : " b");
 
 		result.append(" " + getFenCastle());
-		result.append(" " + getSan(epSquare));
-		result.append(" " + fiftyMoveCount);
-		result.append(" " + halfMoveCount);
+		result.append(" " + getSan(positionState.epSquare));
+		result.append(" " + positionState.fiftyMoveCount);
+		result.append(" " + positionState.halfMoveCount);
 
 		return result.toString();
 	}
@@ -1769,10 +1824,12 @@ public class Game implements GameConstants {
 	public String toString() {
 		StringBuilder result = new StringBuilder(1000);
 
-		result.append(getString(new String[] { "emptyBB", "occupiedBB",
-				"notColorToMoveBB", "color[WHITE]", "color[BLACK]" },
-				new long[] { emptyBB, occupiedBB, notColorToMoveBB,
-						getColorBB(WHITE), getColorBB(BLACK) })
+		result.append(getString(new String[] { "emptyBB",
+				"occupiedBB", "notColorToMoveBB",
+				"color[WHITE]", "color[BLACK]" }, new long[] {
+				positionState.emptyBB, positionState.occupiedBB,
+				positionState.notColorToMoveBB, getColorBB(WHITE),
+				getColorBB(BLACK) })
 				+ "\n\n");
 
 		result.append(getString(new String[] { "[WHITE][PAWN]",
@@ -1823,8 +1880,8 @@ public class Game implements GameConstants {
 			for (int j = 0; j < 8; j++) {
 				int square = rankFileToSquare(i, j);
 				int piece = getPiece(square);
-				int color = (getBitboard(square) & getColorBB(colorToMove)) != 0L ? colorToMove
-						: getOppositeColor(colorToMove);
+				int color = (getBitboard(square) & getColorBB(positionState.colorToMove)) != 0L ? positionState.colorToMove
+						: getOppositeColor(positionState.colorToMove);
 
 				result.append("|" + COLOR_PIECE_TO_CHAR[color].charAt(piece));
 			}
@@ -1832,9 +1889,12 @@ public class Game implements GameConstants {
 
 			switch (i) {
 			case 7:
-				result.append("To Move: " + COLOR_DESCRIPTION[colorToMove]
-						+ " " + "Last Move: "
-						+ (moves.getSize() == 0 ? "" : moves.getLast()));
+				result.append("To Move: "
+						+ COLOR_DESCRIPTION[positionState.colorToMove]
+						+ " "
+						+ "Last Move: "
+						+ (positionState.moves.getSize() == 0 ? ""
+								: positionState.moves.getLast()));
 				break;
 
 			case 6:
@@ -1852,11 +1912,12 @@ public class Game implements GameConstants {
 						+ getPieceCount(BLACK, KING) + "]");
 				break;
 			case 5:
-				result.append("Moves: " + halfMoveCount + " EP: "
-						+ getSan(epSquare) + " Castle: " + getFenCastle());
+				result.append("Moves: " + positionState.halfMoveCount + " EP: "
+						+ getSan(positionState.epSquare) + " Castle: "
+						+ getFenCastle());
 				break;
 			case 4:
-				result.append("Move List: " + moves);
+				result.append("Move List: " + positionState.moves);
 				break;
 			case 3:
 				result.append("Legals: " + legalMovesString1);
@@ -1909,8 +1970,8 @@ public class Game implements GameConstants {
 			for (int j = 0; j < 8; j++) {
 				int square = rankFileToSquare(i, j);
 				int piece = getPiece(square);
-				int color = (getBitboard(square) & getColorBB(colorToMove)) != 0L ? colorToMove
-						: getOppositeColor(colorToMove);
+				int color = (getBitboard(square) & getColorBB(positionState.colorToMove)) != 0L ? positionState.colorToMove
+						: getOppositeColor(positionState.colorToMove);
 
 				result.append("|" + COLOR_PIECE_TO_CHAR[color].charAt(piece));
 			}
@@ -1920,13 +1981,17 @@ public class Game implements GameConstants {
 			case 7:
 				break;
 			case 6:
-				result.append("To Move: " + COLOR_DESCRIPTION[colorToMove]
-						+ " " + "Last Move: "
-						+ (moves.getSize() == 0 ? "" : moves.getLast()));
+				result.append("To Move: "
+						+ COLOR_DESCRIPTION[positionState.colorToMove]
+						+ " "
+						+ "Last Move: "
+						+ (positionState.moves.getSize() == 0 ? ""
+								: positionState.moves.getLast()));
 				break;
 			case 5:
-				result.append("Moves: " + halfMoveCount + " EP: "
-						+ getSan(epSquare) + " Castle: " + getFenCastle());
+				result.append("Moves: " + positionState.halfMoveCount + " EP: "
+						+ getSan(positionState.epSquare) + " Castle: "
+						+ getFenCastle());
 				break;
 			case 4:
 				break;
@@ -1946,28 +2011,29 @@ public class Game implements GameConstants {
 
 			result.append("\n");
 		}
-		// result.append("\n MoveList:" + moves);
+		// result.append("\n MoveList:" + positionState.moves);
 		return result.toString();
 	}
 
 	void updateZobristEP(Move move, int captureSquare) {
-		zobristPositionHash ^= ZobristHash.zobrist(move.getColor(), PAWN, move
-				.getFrom())
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
+				.getColor(), PAWN, move.getFrom())
 				^ ZobristHash.zobrist(move.getColor(), PAWN, move.getTo())
 				^ ZobristHash.zobrist(move.getCaptureColor(), PAWN,
 						captureSquare);
 	}
 
 	void updateZobristHash() {
-		zobristGameHash = zobristPositionHash
+		positionState.zobristGameHash = positionState.zobristPositionHash
 				^ ZobristHash.zobrist(getColorToMove(), getEpSquare(),
 						getCastling(WHITE), getCastling(BLACK));
 	}
 
 	void updateZobristPOCapture(Move move, int oppositeColor) {
-		zobristPositionHash ^= ZobristHash.zobrist(move.getColor(), move
-				.isPromotion() ? move.getPiecePromotedTo() & NOT_PROMOTED_MASK
-				: move.getPiece() & NOT_PROMOTED_MASK, move.getTo())
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
+				.getColor(), move.isPromotion() ? move.getPiecePromotedTo()
+				& NOT_PROMOTED_MASK : move.getPiece() & NOT_PROMOTED_MASK, move
+				.getTo())
 				^ ZobristHash.zobrist(oppositeColor, move.getCapture()
 						& NOT_PROMOTED_MASK, move.getTo())
 				^ ZobristHash.zobrist(move.getColor(), move.getPiece()
@@ -1975,47 +2041,52 @@ public class Game implements GameConstants {
 	}
 
 	void updateZobristPOCastleKsideBlack() {
-		zobristPositionHash ^= ZobristHash.zobrist(BLACK, KING, SQUARE_E8)
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(BLACK, KING,
+				SQUARE_E8)
 				^ ZobristHash.zobrist(BLACK, KING, SQUARE_G8)
 				^ ZobristHash.zobrist(BLACK, ROOK, SQUARE_H8)
 				^ ZobristHash.zobrist(BLACK, ROOK, SQUARE_F8);
 	}
 
 	void updateZobristPOCastleKsideWhite() {
-		zobristPositionHash ^= ZobristHash.zobrist(WHITE, KING, SQUARE_E1)
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(WHITE, KING,
+				SQUARE_E1)
 				^ ZobristHash.zobrist(WHITE, KING, SQUARE_G1)
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_H1)
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_F1);
 	}
 
 	void updateZobristPOCastleQsideBlack() {
-		zobristPositionHash ^= ZobristHash.zobrist(BLACK, KING, SQUARE_E8)
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(BLACK, KING,
+				SQUARE_E8)
 				^ ZobristHash.zobrist(BLACK, KING, SQUARE_C8)
 				^ ZobristHash.zobrist(BLACK, ROOK, SQUARE_A8)
 				^ ZobristHash.zobrist(BLACK, ROOK, SQUARE_D8);
 	}
 
 	void updateZobristPOCastleQsideWhite() {
-		zobristPositionHash ^= ZobristHash.zobrist(WHITE, KING, SQUARE_E1)
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(WHITE, KING,
+				SQUARE_E1)
 				^ ZobristHash.zobrist(WHITE, KING, SQUARE_C1)
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_A1)
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_D1);
 	}
 
 	void updateZobristPONoCapture(Move move, int oppositeColor) {
-		zobristPositionHash ^= ZobristHash.zobrist(move.getColor(), move
-				.isPromotion() ? move.getPiecePromotedTo() & NOT_PROMOTED_MASK
-				: move.getPiece() & NOT_PROMOTED_MASK, move.getTo())
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
+				.getColor(), move.isPromotion() ? move.getPiecePromotedTo()
+				& NOT_PROMOTED_MASK : move.getPiece() & NOT_PROMOTED_MASK, move
+				.getTo())
 				^ ZobristHash.zobrist(move.getColor(), move.getPiece()
 						& NOT_PROMOTED_MASK, move.getFrom());
 	}
 
 	public void xor(int color, int piece, long bb) {
-		pieceBB[color][piece] ^= bb;
+		positionState.pieceBB[color][piece] ^= bb;
 	}
 
 	public void xor(int color, long bb) {
-		colorBB[color] ^= bb;
+		positionState.colorBB[color] ^= bb;
 	}
 
 }

@@ -25,6 +25,7 @@ public class ProfileWIndow extends ApplicationWindow {
 		super(null);
 	}
 
+	@Override
 	protected Control createContents(Composite parent) {
 		parent.setLayout(new FillLayout());
 		getShell().setText("Raptor Mini-Profiler");

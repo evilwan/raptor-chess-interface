@@ -1,6 +1,5 @@
 package raptor.connector.fics.chat;
 
-
 public class BugWhoGEventParser {
 
 	// private static final Logger LOGGER = Logger
@@ -85,5 +84,4 @@ public class BugWhoGEventParser {
 	// "Bughouse games in progress";
 	//
 	// private static final String DISPLAYED = "displayed.";
-
 }

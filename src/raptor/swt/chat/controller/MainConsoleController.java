@@ -9,6 +9,12 @@ public class MainConsoleController extends ChatConsoleController {
 	}
 
 	@Override
+	public String getPrompt() {
+		// TODO Auto-generated method stub
+		return chatConsole.getConnector().getPrompt();
+	}
+
+	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
 		// TODO Auto-generated method stub
 		return true;
@@ -25,13 +31,5 @@ public class MainConsoleController extends ChatConsoleController {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
-	@Override
-	public String getPrompt() {
-		// TODO Auto-generated method stub
-		return chatConsole.getConnector().getPrompt();
-	}
-	
-	
 
 }

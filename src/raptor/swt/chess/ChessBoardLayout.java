@@ -8,7 +8,6 @@ import org.eclipse.swt.widgets.Layout;
 
 public abstract class ChessBoardLayout extends Layout implements Constants {
 	protected ChessBoard board;
-	
 
 	public static final int GAME_DESCRIPTION_LABEL = 0;
 	public static final int STATUS_LABEL = 1;
@@ -19,29 +18,9 @@ public abstract class ChessBoardLayout extends Layout implements Constants {
 	public static final int NAME_RATING_LABEL = 6;
 	public static final int COOLBAR = 7;
 	public static final int TO_MOVE_INDICATOR = 8;
-	
+
 	public ChessBoardLayout(ChessBoard chessBoard) {
 		super();
-	}
-	
-	public abstract int getStyle(int controlConstant);
-
-	public ChessBoard getBoard() {
-		return board;
-	}
-
-	public void setBoard(ChessBoard board) {
-		this.board = board;
-	}
-
-	public void dispose() {
-	}
-
-	public abstract String getName();
-	
-	protected Point getOneCharSizeInFont(Font font,GC gc) {
-		 return new Point(gc.getFontMetrics().getAverageCharWidth(),gc.getFontMetrics().getAscent()
-		 + gc.getFontMetrics().getDescent());
 	}
 
 	@Override
@@ -49,6 +28,23 @@ public abstract class ChessBoardLayout extends Layout implements Constants {
 			boolean flushCache) {
 		return composite.getSize();
 	}
+
+	public void dispose() {
+	}
+
+	public ChessBoard getBoard() {
+		return board;
+	}
+
+	public abstract String getName();
+
+	protected Point getOneCharSizeInFont(Font font, GC gc) {
+		return new Point(gc.getFontMetrics().getAverageCharWidth(), gc
+				.getFontMetrics().getAscent()
+				+ gc.getFontMetrics().getDescent());
+	}
+
+	public abstract int getStyle(int controlConstant);
 
 	protected void layoutChessBoard(Point topLeft, int squareSideSize) {
 		int x = topLeft.x;
@@ -76,5 +72,9 @@ public abstract class ChessBoardLayout extends Layout implements Constants {
 				y += squareSideSize;
 			}
 		}
+	}
+
+	public void setBoard(ChessBoard board) {
+		this.board = board;
 	}
 }

@@ -10,6 +10,8 @@ public class Move implements GameConstants {
 	public static final int EN_PASSANT_CHARACTERISTIC = 16;
 	public static final int DROP_CHARACTERISTIC = 32;
 
+	// Bytes are used because they take up less space than ints and there is no
+	// need for the extra space.
 	protected byte from = EMPTY_SQUARE;
 	protected byte to = EMPTY_SQUARE;
 	protected byte piece;
@@ -21,11 +23,21 @@ public class Move implements GameConstants {
 	protected byte moveCharacteristic;
 	protected byte lastCastleState;
 	protected byte previous50MoveCount;
-	
+
 	protected String san;
+
+	/**
+	 * Constructor for drop moves.
+	 */
+	public Move(int to, int piece) {
+		this.to = (byte) to;
+		this.piece = (byte) piece;
+		this.moveCharacteristic = DROP_CHARACTERISTIC;
+	}
 
 	public Move(int from, int to, int piece, int color, int capture) {
 		super();
+
 		this.piece = (byte) piece;
 		this.color = (byte) color;
 		this.capture = (byte) capture;
@@ -68,6 +80,13 @@ public class Move implements GameConstants {
 		return GameUtils.getOppositeColor(getColor());
 	}
 
+	/**
+	 * Returns the capture with the promote mask.
+	 */
+	public int getCaptureWithPromoteMask() {
+		return this.capture;
+	}
+
 	public int getColor() {
 		return color;
 	}
@@ -81,24 +100,18 @@ public class Move implements GameConstants {
 	}
 
 	public String getLan() {
-		return ((moveCharacteristic & CASTLE_KINGSIDE) != 0) ? "O-O"
-				: (moveCharacteristic & CASTLE_QUEENSIDE) != 0 ? "O-O-O"
-						: (moveCharacteristic & DROP_CHARACTERISTIC) != 0 ? PIECE_TO_SAN
-								.charAt(getPiece())
-								+ "@"
-								+ SQUARE_TO_FILE_SAN.charAt(getTo())
-								+ SQUARE_TO_RANK_SAN.charAt(getTo())
-								: ""
-										+ SQUARE_TO_FILE_SAN.charAt(getFrom())
-										+ SQUARE_TO_RANK_SAN.charAt(getFrom())
-										+ (isCapture() ? "x" : "-")
-										+ SQUARE_TO_FILE_SAN.charAt(getTo())
-										+ SQUARE_TO_RANK_SAN.charAt(getTo())
-										+ (isPromotion() ? "="
-												+ PIECE_TO_SAN
-														.charAt(piecePromotedTo
-																& NOT_PROMOTED_MASK)
-												: "");
+		return isCastleKSide() ? "O-O" : isCastleQSide() ? "O-O-O"
+				: isDrop() ? PIECE_TO_SAN.charAt(getPiece()) + "@"
+						+ SQUARE_TO_FILE_SAN.charAt(getTo())
+						+ SQUARE_TO_RANK_SAN.charAt(getTo()) : ""
+						+ SQUARE_TO_FILE_SAN.charAt(getFrom())
+						+ SQUARE_TO_RANK_SAN.charAt(getFrom())
+						+ "-"
+						+ SQUARE_TO_FILE_SAN.charAt(getTo())
+						+ SQUARE_TO_RANK_SAN.charAt(getTo())
+						+ (isPromotion() ? "="
+								+ PIECE_TO_SAN.charAt(piecePromotedTo
+										& NOT_PROMOTED_MASK) : "");
 	}
 
 	public int getLastCastleState() {
@@ -121,6 +134,10 @@ public class Move implements GameConstants {
 		return previous50MoveCount;
 	}
 
+	public String getSan() {
+		return san;
+	}
+
 	public int getTo() {
 		return to;
 	}
@@ -139,13 +156,6 @@ public class Move implements GameConstants {
 
 	public void setCapture(int capture) {
 		this.capture = (byte) capture;
-	}
-	
-	/**
-	 * Returns the capture with the promote mask.
-	 */
-	public int getCaptureWithPromoteMask() {
-		return this.capture;
 	}
 
 	public void setColor(int color) {
@@ -180,16 +190,28 @@ public class Move implements GameConstants {
 		this.previous50MoveCount = (byte) previous50MoveCount;
 	}
 
+	public void setSan(String san) {
+		this.san = san;
+	}
+
 	public void setTo(int to) {
 		this.to = (byte) to;
 	}
-	
-	public String getSan() {
-		return san;
+
+	public boolean isDrop() {
+		return (moveCharacteristic & DROP_CHARACTERISTIC) != 0;
 	}
 
-	public void setSan(String san) {
-		this.san = san;
+	public boolean isCastleKSide() {
+		return (moveCharacteristic & KINGSIDE_CASTLING_CHARACTERISTIC) != 0;
+	}
+
+	public boolean isCastleQSide() {
+		return (moveCharacteristic & QUEENSIDE_CASTLING_CHARACTERISTIC) != 0;
+	}
+
+	public boolean isEnPassant() {
+		return (moveCharacteristic & EN_PASSANT_CHARACTERISTIC) != 0;
 	}
 
 	@Override

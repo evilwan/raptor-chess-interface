@@ -26,9 +26,17 @@ public class Raptor implements PreferenceKeys {
 
 	private static Raptor instance;
 
-	protected Connector ficsConnector;
-	protected RaptorPreferenceStore preferences;
-	protected RaptorWindow appWindow;
+	public static void createInstance() {
+		instance = new Raptor();
+	}
+
+	public static Raptor getInstance() {
+		return instance;
+	}
+
+	public static File getRaptorUserDir() {
+		return new File(System.getProperty("user.home") + "/" + APP_HOME_DIR);
+	}
 
 	public static void main(String args[]) {
 
@@ -85,34 +93,41 @@ public class Raptor implements PreferenceKeys {
 		}
 	}
 
+	protected Connector ficsConnector;
+
+	protected RaptorPreferenceStore preferences;
+
+	protected RaptorWindow appWindow;
+
 	public Raptor() {
 		preferences = new RaptorPreferenceStore();
 		ficsConnector = new FicsConnector();
 		ficsConnector.setPreferences(preferences);
 	}
 
-	public static void createInstance() {
-		instance = new Raptor();
-	}
-
-	public static Raptor getInstance() {
-		return instance;
+	public RaptorWindow getAppWindow() {
+		return appWindow;
 	}
 
 	public Connector getFicsConnector() {
 		return ficsConnector;
 	}
 
-	public static File getRaptorUserDir() {
-		return new File(System.getProperty("user.home") + "/" + APP_HOME_DIR);
-	}
-
 	public RaptorPreferenceStore getPreferences() {
 		return preferences;
 	}
 
-	public RaptorWindow getAppWindow() {
-		return appWindow;
+	public void install() {
+		File raptorHome = getRaptorUserDir();
+		if (!raptorHome.exists()) {
+			LOG.info("Copying default homw directory to "
+					+ getRaptorUserDir().getAbsolutePath());
+			try {
+				FileUtil.copyFiles(DEFAULT_HOME_DIR, getRaptorUserDir());
+			} catch (IOException ioe) {
+				throw new RuntimeException(ioe);
+			}
+		}
 	}
 
 	public void shutdown() {
@@ -128,18 +143,5 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		LOG.info("Shutdown Raptor");
-	}
-
-	public void install() {
-		File raptorHome = getRaptorUserDir();
-		if (!raptorHome.exists()) {
-			LOG.info("Copying default homw directory to "
-					+ getRaptorUserDir().getAbsolutePath());
-			try {
-				FileUtil.copyFiles(DEFAULT_HOME_DIR, getRaptorUserDir());
-			} catch (IOException ioe) {
-				throw new RuntimeException(ioe);
-			}
-		}
 	}
 }

@@ -43,10 +43,26 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 	protected Button loginButton;
 	protected boolean wasLoginPressed;
 
-	public boolean wasLoginPressed() {
-		return wasLoginPressed;
+	public LoginDialog() {
+		super((Shell) null);
 	}
 
+	protected void adjustToCheckBoxControls() {
+		if (guestLoginCheckBox.getSelection()) {
+			passwordField.setText("");
+			passwordLabel.setEnabled(false);
+			passwordField.setEnabled(false);
+			handleLabel.setEnabled(true);
+			handleField.setEnabled(true);
+		} else {
+			passwordLabel.setEnabled(true);
+			passwordField.setEnabled(true);
+			handleLabel.setEnabled(true);
+			handleField.setEnabled(true);
+		}
+	}
+
+	@Override
 	public Composite createContents(Composite parent) {
 
 		getShell().setText("Raptor Login");
@@ -190,10 +206,6 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 		return content;
 	}
 
-	public LoginDialog() {
-		super((Shell) null);
-	}
-
 	protected void saveOptions() {
 		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
 
@@ -220,18 +232,7 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 		}
 	}
 
-	protected void adjustToCheckBoxControls() {
-		if (guestLoginCheckBox.getSelection()) {
-			passwordField.setText("");
-			passwordLabel.setEnabled(false);
-			passwordField.setEnabled(false);
-			handleLabel.setEnabled(true);
-			handleField.setEnabled(true);
-		} else {
-			passwordLabel.setEnabled(true);
-			passwordField.setEnabled(true);
-			handleLabel.setEnabled(true);
-			handleField.setEnabled(true);
-		}
+	public boolean wasLoginPressed() {
+		return wasLoginPressed;
 	}
 }

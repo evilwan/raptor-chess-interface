@@ -39,67 +39,6 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	@Override
-	protected MenuManager createMenuManager() {
-		MenuManager menuBar = new MenuManager("");
-		MenuManager connectionsMenu = new MenuManager("&Connections");
-		MenuManager configureMenu = new MenuManager("&Configure");
-		MenuManager windowMenu = new MenuManager("&Window");
-		MenuManager helpMenu = new MenuManager("&Help");
-
-		connectionsMenu.add(new Action("Connect to &fics") {
-			@Override
-			public void run() {
-			}
-		});
-		connectionsMenu.add(new Action("Profile") {
-			@Override
-			public void run() {
-				ProfileWIndow profiler = new ProfileWIndow();
-				profiler.setBlockOnOpen(false);
-				profiler.open();
-			}
-		});
-		configureMenu.add(new Action("Preferences") {
-			@Override
-			public void run() {
-				new PreferencesDialog().run();
-			}
-		});
-		helpMenu.add(new Action("&About") {
-			@Override
-			public void run() {
-			}
-		});
-		windowMenu.add(new Action("&Cascade") {
-			@Override
-			public void run() {
-			}
-		});
-
-		menuBar.add(connectionsMenu);
-		menuBar.add(configureMenu);
-		menuBar.add(windowMenu);
-		menuBar.add(helpMenu);
-		return menuBar;
-	}
-
-	// protected StatusLineManager createStatusLineManager() {
-	// StatusLineManager slm = new StatusLineManager();
-	// slm.setMessage("Lag 34ms");
-	// return slm;
-	// }
-	//
-	// protected CoolBarManager createCoolBarManager(int style) {
-	// CoolBarManager coolbarManager = new CoolBarManager(style);
-	// coolbarManager.add(new Action("Test") {
-	// public void run() {
-	// LOG.info("Test running");
-	// }
-	// });
-	// return coolbarManager;
-	// }
-
-	@Override
 	protected Control createContents(Composite parent) {
 		getShell().setText(
 				Raptor.getInstance().getPreferences().getString(
@@ -149,12 +88,73 @@ public class RaptorWindow extends ApplicationWindow {
 		return sashForm;
 	}
 
-	public void maximizeChessBoards() {
-		if (!chessBoards.isMaximized() && !chatConsoles.isMaximized()) {
-			storedWeights = sashForm.getWeights();
-		}
-		chessBoards.maximize();
-		sashForm.setMaximizedControl(chessBoards);
+	// protected StatusLineManager createStatusLineManager() {
+	// StatusLineManager slm = new StatusLineManager();
+	// slm.setMessage("Lag 34ms");
+	// return slm;
+	// }
+	//
+	// protected CoolBarManager createCoolBarManager(int style) {
+	// CoolBarManager coolbarManager = new CoolBarManager(style);
+	// coolbarManager.add(new Action("Test") {
+	// public void run() {
+	// LOG.info("Test running");
+	// }
+	// });
+	// return coolbarManager;
+	// }
+
+	@Override
+	protected MenuManager createMenuManager() {
+		MenuManager menuBar = new MenuManager("");
+		MenuManager connectionsMenu = new MenuManager("&Connections");
+		MenuManager configureMenu = new MenuManager("&Configure");
+		MenuManager windowMenu = new MenuManager("&Window");
+		MenuManager helpMenu = new MenuManager("&Help");
+
+		connectionsMenu.add(new Action("Connect to &fics") {
+			@Override
+			public void run() {
+			}
+		});
+		connectionsMenu.add(new Action("Profile") {
+			@Override
+			public void run() {
+				ProfileWIndow profiler = new ProfileWIndow();
+				profiler.setBlockOnOpen(false);
+				profiler.open();
+			}
+		});
+		configureMenu.add(new Action("Preferences") {
+			@Override
+			public void run() {
+				new PreferencesDialog().run();
+			}
+		});
+		helpMenu.add(new Action("&About") {
+			@Override
+			public void run() {
+			}
+		});
+		windowMenu.add(new Action("&Cascade") {
+			@Override
+			public void run() {
+			}
+		});
+
+		menuBar.add(connectionsMenu);
+		menuBar.add(configureMenu);
+		menuBar.add(windowMenu);
+		menuBar.add(helpMenu);
+		return menuBar;
+	}
+
+	@Override
+	protected void initializeBounds() {
+		Rectangle fullScreenBounds = Display.getCurrent().getPrimaryMonitor()
+				.getBounds();
+		getShell().setSize(fullScreenBounds.width, fullScreenBounds.height);
+		getShell().setLocation(0, 0);
 	}
 
 	public void maximizeChatConsoles() {
@@ -165,20 +165,20 @@ public class RaptorWindow extends ApplicationWindow {
 		sashForm.setMaximizedControl(chatConsoles);
 	}
 
+	public void maximizeChessBoards() {
+		if (!chessBoards.isMaximized() && !chatConsoles.isMaximized()) {
+			storedWeights = sashForm.getWeights();
+		}
+		chessBoards.maximize();
+		sashForm.setMaximizedControl(chessBoards);
+	}
+
 	public void restore() {
 		chatConsoles.restore();
 		chessBoards.restore();
 		sashForm.setWeights(storedWeights);
 		sashForm.setMaximizedControl(null);
 		// sashForm.layout(false);
-	}
-
-	@Override
-	protected void initializeBounds() {
-		Rectangle fullScreenBounds = Display.getCurrent().getPrimaryMonitor()
-				.getBounds();
-		getShell().setSize(fullScreenBounds.width, fullScreenBounds.height);
-		getShell().setLocation(0, 0);
 	}
 
 }

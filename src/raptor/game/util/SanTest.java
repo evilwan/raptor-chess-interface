@@ -15,8 +15,7 @@ public class SanTest extends TestCase implements GameConstants {
 		SanValidations validations = SanUtil.getValidations("dxe4");
 		System.err.println("is valie epOrAmbigStrict="
 				+ validations.isEpOrAmbigPxStrict());
-		asserts(validations.isPawnMove()
-				&& validations.isEpOrAmbigPxStrict(),
+		asserts(validations.isPawnMove() && validations.isEpOrAmbigPxStrict(),
 				"Invalid validations '" + validations.getStrictSan() + "'");
 	}
 }

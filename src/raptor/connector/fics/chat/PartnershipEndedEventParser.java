@@ -3,9 +3,14 @@ package raptor.connector.fics.chat;
 import raptor.chat.ChatEvent;
 
 public class PartnershipEndedEventParser extends ChatEventParser {
+	private static final String ID_1 = "You no longer have a bughouse partner.";
+
+	private static final String ID_2 = "Your partner has ended partnership.";
+
 	public PartnershipEndedEventParser() {
 	}
 
+	@Override
 	public ChatEvent parse(String text) {
 		if (text.length() < 100) {
 			if (text.indexOf(ID_1) != -1)
@@ -17,8 +22,4 @@ public class PartnershipEndedEventParser extends ChatEventParser {
 		}
 		return null;
 	}
-
-	private static final String ID_1 = "You no longer have a bughouse partner.";
-
-	private static final String ID_2 = "Your partner has ended partnership.";
 }

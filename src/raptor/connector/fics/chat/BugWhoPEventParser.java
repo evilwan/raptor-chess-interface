@@ -19,7 +19,6 @@
  */
 package raptor.connector.fics.chat;
 
-
 public class BugWhoPEventParser {
 
 	// private static final Logger LOGGER = Logger
@@ -172,15 +171,10 @@ public class BugWhoPEventParser {
 	// private static final String PARTNERSHIPS_DISPLAYED = "displayed.";
 
 	/*
-	 *  ^ involved in a game
-	 *  ~ running a simul match
-	 *  : not open for a match
-	 *  # examining a game
-	 *  . inactive for 5 minutes or longer, or if "busy" is set
+	 * ^ involved in a game ~ running a simul match : not open for a match #
+	 * examining a game . inactive for 5 minutes or longer, or if "busy" is set
 	 * 
-	 * not busy
-	 *  & involved in a tournament
+	 * not busy & involved in a tournament
 	 */
-	//private static final String MODIFIERS = "^~:#.&";
-
+	// private static final String MODIFIERS = "^~:#.&";
 }

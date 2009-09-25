@@ -14,44 +14,9 @@ public class MoveListTraverser {
 		this.sourceGame = sourceGame;
 		adjustHalfMoveIndex();
 	}
-	
-	public int getTraverserHalfMoveIndex() {
-		return traverserHalfMoveIndex;
-	}
 
 	public void adjustHalfMoveIndex() {
-		traverserHalfMoveIndex = sourceGame.halfMoveCount;
-	}
-
-	public void dispose() {
-		sourceGame = null;
-		traversrState = null;
-	}
-
-	public boolean hasNext() {
-		return traverserHalfMoveIndex + 1 <= sourceGame.getHalfMoveCount();
-	}
-
-	public boolean hasBack() {
-		LOG.debug("In hasPrevious travHMI=" + traverserHalfMoveIndex + " sourceHMI=" + sourceGame.getHalfMoveCount());
-		return traverserHalfMoveIndex - 1 >= 1;
-	}
-
-	public boolean hasLast() {
-		
-		return traverserHalfMoveIndex != sourceGame.getHalfMoveCount();
-	}
-
-	public boolean hasFirst() {
-		LOG.debug("In hasFirst travHMI=" + traverserHalfMoveIndex + " sourceHMI=" + sourceGame.getHalfMoveCount());
-		return traverserHalfMoveIndex > 1;
-	}
-
-	public void next() {
-		if (hasNext()) {
-			traverserHalfMoveIndex++;
-			synch();
-		}
+		traverserHalfMoveIndex = sourceGame.getHalfMoveCount();
 	}
 
 	public void back() {
@@ -61,23 +26,15 @@ public class MoveListTraverser {
 		}
 	}
 
-	public void last() {
-		if (hasLast()) {
-			traverserHalfMoveIndex = sourceGame.getHalfMoveCount();
-			synch();
-		}
+	public void dispose() {
+		sourceGame = null;
+		traversrState = null;
 	}
 
 	public void first() {
 		if (hasFirst()) {
 			traverserHalfMoveIndex = 0;
 			synch();
-		}
-	}
-
-	public void gotoHalfMove(int moveNumber) {
-		if (moveNumber >= 0 && moveNumber <= sourceGame.getHalfMoveCount()) {
-			traverserHalfMoveIndex = moveNumber;
 		}
 	}
 
@@ -89,11 +46,58 @@ public class MoveListTraverser {
 		return sourceGame;
 	}
 
+	public int getTraverserHalfMoveIndex() {
+		return traverserHalfMoveIndex;
+	}
+
+	public void gotoHalfMove(int moveNumber) {
+		if (moveNumber >= 0 && moveNumber <= sourceGame.getHalfMoveCount()) {
+			traverserHalfMoveIndex = moveNumber;
+		}
+	}
+
+	public boolean hasBack() {
+		LOG.debug("In hasPrevious travHMI=" + traverserHalfMoveIndex
+				+ " sourceHMI=" + sourceGame.getHalfMoveCount());
+		return traverserHalfMoveIndex - 1 >= 1;
+	}
+
+	public boolean hasFirst() {
+		LOG.debug("In hasFirst travHMI=" + traverserHalfMoveIndex
+				+ " sourceHMI=" + sourceGame.getHalfMoveCount());
+		return traverserHalfMoveIndex > 1;
+	}
+
+	public boolean hasLast() {
+
+		return traverserHalfMoveIndex != sourceGame.getHalfMoveCount();
+	}
+
+	public boolean hasNext() {
+		return traverserHalfMoveIndex + 1 <= sourceGame.getHalfMoveCount();
+	}
+
+	public void last() {
+		if (hasLast()) {
+			traverserHalfMoveIndex = sourceGame.getHalfMoveCount();
+			synch();
+		}
+	}
+
+	public void next() {
+		if (hasNext()) {
+			traverserHalfMoveIndex++;
+			synch();
+		}
+	}
+
 	private void synch() {
 		traversrState = sourceGame.deepCopy(true);
-		LOG.debug("Before loop in sync:" + traverserHalfMoveIndex + " sourceHMI=" + traversrState.getHalfMoveCount());
+		LOG.debug("Before loop in sync:" + traverserHalfMoveIndex
+				+ " sourceHMI=" + traversrState.getHalfMoveCount());
 		while (traverserHalfMoveIndex < traversrState.getHalfMoveCount()) {
-			LOG.debug("Looping in sync:" + traverserHalfMoveIndex + " sourceHMI=" + traversrState.getHalfMoveCount());
+			LOG.debug("Looping in sync:" + traverserHalfMoveIndex
+					+ " sourceHMI=" + traversrState.getHalfMoveCount());
 			traversrState.rollback();
 		}
 	}

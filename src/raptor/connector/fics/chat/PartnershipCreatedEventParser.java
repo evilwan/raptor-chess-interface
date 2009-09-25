@@ -5,9 +5,14 @@ import raptor.connector.fics.FicsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class PartnershipCreatedEventParser extends ChatEventParser {
+	private static final String IDENTIFIER = "You agree to be";
+
+	private static final String IDENTIFIER_2 = "agrees to be your partner.";
+
 	public PartnershipCreatedEventParser() {
 	}
 
+	@Override
 	public ChatEvent parse(String text) {
 		if (text.length() < 100) {
 			int i = text.indexOf(IDENTIFIER);
@@ -33,8 +38,4 @@ public class PartnershipCreatedEventParser extends ChatEventParser {
 		return null;
 
 	}
-
-	private static final String IDENTIFIER = "You agree to be";
-
-	private static final String IDENTIFIER_2 = "agrees to be your partner.";
 }

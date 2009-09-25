@@ -216,18 +216,17 @@ public interface GameConstants {
 	public static final int ROOK = 4;
 	public static final int QUEEN = 5;
 	public static final int KING = 6;
-	
+
 	public static final int PROMOTED_MASK = 8;
 	public static final int NOT_PROMOTED_MASK = 7;
 	public static final int PROMOTED_BISHOP = BISHOP | PROMOTED_MASK;
 	public static final int PROMOTED_KNIGHT = KNIGHT | PROMOTED_MASK;
 	public static final int PROMOTED_ROOK = ROOK | PROMOTED_MASK;
 	public static final int PROMOTED_QUEEN = QUEEN | PROMOTED_MASK;
-	
-	
-	//Colored piece constants. 
-	//*NOTE* These are not used in the game class, 
-	//however they are useful for other classes.
+
+	// Colored piece constants.
+	// *NOTE* These are not used in the game class,
+	// however they are useful for other classes.
 	public static final int WP = 1;
 	public static final int WB = 2;
 	public static final int WN = 3;

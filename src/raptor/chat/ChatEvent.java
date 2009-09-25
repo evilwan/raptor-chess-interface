@@ -24,9 +24,12 @@ public class ChatEvent {
 		this.gameId = gameId;
 	}
 
-	public String toString() {
-		return "ChatEvent: source=" + source + " type=" + type + " gameId="
-				+ gameId + " message='" + message + "'";
+	public String getChannel() {
+		return channel;
+	}
+
+	public String getGameId() {
+		return gameId;
 	}
 
 	public String getMessage() {
@@ -45,6 +48,14 @@ public class ChatEvent {
 		return type;
 	}
 
+	public void setChannel(String channel) {
+		this.channel = channel;
+	}
+
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
+	}
+
 	public void setMessage(String message) {
 		this.message = message;
 	}
@@ -61,20 +72,10 @@ public class ChatEvent {
 		this.type = type;
 	}
 
-	public String getGameId() {
-		return gameId;
-	}
-
-	public void setGameId(String gameId) {
-		this.gameId = gameId;
-	}
-
-	public String getChannel() {
-		return channel;
-	}
-
-	public void setChannel(String channel) {
-		this.channel = channel;
+	@Override
+	public String toString() {
+		return "ChatEvent: source=" + source + " type=" + type + " gameId="
+				+ gameId + " message='" + message + "'";
 	}
 
 }

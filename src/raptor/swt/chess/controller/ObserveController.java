@@ -1,14 +1,19 @@
 package raptor.swt.chess.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import raptor.game.Game;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
+import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.chess.ChessBoardController;
 
 public class ObserveController extends ChessBoardController {
+	static final Log LOG = LogFactory.getLog(ObserveController.class);
 
-	protected GameServiceListener listener = new GameServiceListener() {
+	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		public void gameCreated(Game game) {
 		}
@@ -17,60 +22,39 @@ public class ObserveController extends ChessBoardController {
 			if (game.getId().equals(board.getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						adjustToGameChangeNotInvolvingMove();
+						try {
+							adjustToGameChangeNotInvolvingMove();
+						} catch (Throwable t) {
+							board.getConnector().onError(
+									"ObserveController.gameStateChanged", t);
+						} finally {
+							board.getConnector().getGameService()
+									.removeGameServiceListener(listener);
+						}
 					}
 				});
 			}
 		}
 
-		public void gameStateChanged(Game game,final boolean isNewMove) {
+		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (game.getId().equals(board.getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						if (isNewMove) {
-							adjustToGameMove();
-						}
-						else {
-							adjustToGameChangeNotInvolvingMove();
+						try {
+							if (isNewMove) {
+								adjustToGameMove();
+							} else {
+								adjustToGameChangeNotInvolvingMove();
+							}
+						} catch (Throwable t) {
+							board.getConnector().onError(
+									"ObserveController.gameStateChanged", t);
 						}
 					}
 				});
 			}
 		}
 	};
-
-	protected void adjustPremoveLabel() {
-		board.getCurrentPremovesLabel().setText("");
-	}
-
-	@Override
-	protected void onPlayMoveSound() {
-		if (board.getPreferences().getBoolean(
-				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING)) {
-			SoundService.getInstance().playSound("obsMove");
-		}
-	}
-
-	@Override
-	protected void onPlayGameEndSound() {
-		SoundService.getInstance().playSound("obsGameEnd");
-	}
-
-	@Override
-	protected void onPlayGameStartSound() {
-		SoundService.getInstance().playSound("gameStart");
-	}
-
-	public void init() {
-		super.init();
-		board.getConnector().getGameService().addGameServiceListener(listener);
-	}
-
-	public void dispose() {
-		board.getConnector().getGameService().removeGameServiceListener(
-				listener);
-		super.dispose();
-	}
 
 	@Override
 	protected void adjustCoolbarToInitial() {
@@ -80,8 +64,33 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	@Override
+	protected void adjustPremoveLabel() {
+		board.getCurrentPremovesLabel().setText("");
+	}
+
+	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		return false;
+	}
+
+	@Override
+	public void dispose() {
+		board.getConnector().getGameService().removeGameServiceListener(
+				listener);
+		super.dispose();
+	}
+
+	@Override
+	public String getTitle() {
+		Game game = getGame();
+		return "(" + game.getId() + ") " + game.getWhiteName() + " vs "
+				+ game.getBlackName();
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		board.getConnector().getGameService().addGameServiceListener(listener);
 	}
 
 	@Override
@@ -97,6 +106,11 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public boolean isAutoDrawable() {
 		return false;
+	}
+
+	@Override
+	public boolean isCloseable() {
+		return true;
 	}
 
 	@Override
@@ -137,6 +151,34 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public boolean isRevertable() {
 		return false;
+	}
+
+	@Override
+	public boolean onClose() {
+		boolean result = true;
+		if (board.getConnector().isConnected()
+				&& board.getGame().isInState(Game.ACTIVE_STATE)) {
+			board.getConnector().onUnobserve(board.getGame());
+		}
+		return result;
+	}
+
+	@Override
+	protected void onPlayGameEndSound() {
+		SoundService.getInstance().playSound("obsGameEnd");
+	}
+
+	@Override
+	protected void onPlayGameStartSound() {
+		SoundService.getInstance().playSound("gameStart");
+	}
+
+	@Override
+	protected void onPlayMoveSound() {
+		if (board.getPreferences().getBoolean(
+				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING)) {
+			SoundService.getInstance().playSound("obsMove");
+		}
 	}
 
 	@Override

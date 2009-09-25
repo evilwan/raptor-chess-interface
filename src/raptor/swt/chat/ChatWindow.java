@@ -18,9 +18,6 @@ import raptor.swt.chat.controller.MainConsoleController;
 public class ChatWindow extends ApplicationWindow {
 	private static final Log LOG = LogFactory.getLog(ChatWindow.class);
 
-	ChatConsole mainConsole = null;
-	CTabFolder tabFolder = null;
-
 	public static void main(String[] args) throws Exception {
 		Display display = new Display();
 		Raptor.createInstance();
@@ -49,6 +46,10 @@ public class ChatWindow extends ApplicationWindow {
 		Display.getCurrent().dispose();
 	}
 
+	ChatConsole mainConsole = null;
+
+	CTabFolder tabFolder = null;
+
 	public ChatWindow() {
 		super(null);
 	}
@@ -57,10 +58,6 @@ public class ChatWindow extends ApplicationWindow {
 	}
 
 	public void addDirectTellTab(String personName) {
-	}
-
-	public ChatConsole getTabConsole(int index) {
-		return (ChatConsole) tabFolder.getItem(index).getControl();
 	}
 
 	@Override
@@ -87,6 +84,10 @@ public class ChatWindow extends ApplicationWindow {
 
 	public void dispose() {
 		LOG.info("Disposed ChatWindow ");
+	}
+
+	public ChatConsole getTabConsole(int index) {
+		return (ChatConsole) tabFolder.getItem(index).getControl();
 	}
 
 	@Override

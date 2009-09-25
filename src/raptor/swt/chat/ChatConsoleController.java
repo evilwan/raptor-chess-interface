@@ -46,7 +46,12 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 			if (!chatConsole.isDisposed() && isAcceptingChatEvent(event)) {
 				chatConsole.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						onChatEvent(event);
+						try {
+							onChatEvent(event);
+						} catch (Throwable t) {
+							chatConsole.getConnector()
+									.onError("onChatEvent", t);
+						}
 					}
 				});
 			}
@@ -60,6 +65,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
 
 	protected KeyListener inputTextKeyListener = new KeyAdapter() {
+		@Override
 		public void keyReleased(KeyEvent arg0) {
 			if (arg0.character == '\r') {
 				onSendOutputText();
@@ -78,6 +84,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	};
 
 	protected KeyListener outputKeyListener = new KeyAdapter() {
+		@Override
 		public void keyReleased(KeyEvent arg0) {
 			if (arg0.character == '\r') {
 				onSendOutputText();
@@ -89,6 +96,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		protected List<String> sentText = new ArrayList<String>(50);
 		protected int sentTextIndex = 0;
 
+		@Override
 		public void keyReleased(KeyEvent arg0) {
 			if (arg0.keyCode == SWT.ARROW_UP) {
 				System.err.println("In outputHistoryListener arrow up");
@@ -130,6 +138,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	};
 
 	protected KeyListener functionKeyListener = new KeyAdapter() {
+		@Override
 		public void keyReleased(KeyEvent arg0) {
 			if (arg0.keyCode == SWT.F3) {
 				chatConsole.connector.onAcceptKeyPress();
@@ -152,6 +161,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	protected MouseListener inputTextClickListener = new MouseAdapter() {
 
+		@Override
 		public void mouseUp(MouseEvent e) {
 			if (e.button == 1) {
 				int caretPosition = chatConsole.inputText.getCaretOffset();
@@ -196,26 +206,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	public ChatConsoleController() {
 	}
 
-	public ChatConsole getChatConsole() {
-		return chatConsole;
-	}
-
-	public void setChatConsole(ChatConsole chatConsole) {
-		this.chatConsole = chatConsole;
-	}
-
-	public void onAway() {
-		ignoreAwayList = true;
-		onAppendChatEventToInputText(new ChatEvent(null, ChatTypes.OUTBOUND,
-				"Direct tells you missed while you were away:"));
-		for (ChatEvent event : awayList) {
-			onAppendChatEventToInputText(event);
-		}
-		awayList.clear();
-		ignoreAwayList = false;
-		adjustAwayButtonEnabled();
-	}
-
 	protected void addInputTextKeyListeners() {
 		chatConsole.outputText.addKeyListener(functionKeyListener);
 		chatConsole.outputText.addKeyListener(outputHistoryListener);
@@ -230,125 +220,9 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		chatConsole.inputText.addMouseListener(inputTextClickListener);
 	}
 
-	public void dispose() {
-		chatConsole.connector.getChatService().removeChatServiceListener(
-				chatServiceListener);
-		chatConsole.outputText.removeKeyListener(functionKeyListener);
-		chatConsole.outputText.removeKeyListener(outputHistoryListener);
-		chatConsole.outputText.removeKeyListener(outputKeyListener);
-
-		chatConsole.inputText.removeKeyListener(inputTextKeyListener);
-		chatConsole.inputText.removeKeyListener(functionKeyListener);
-		chatConsole.inputText.removeKeyListener(outputHistoryListener);
-
-		chatConsole.inputText.removeMouseListener(inputTextClickListener);
-
-		LOG.debug("Disposed ChatConsoleController");
-	}
-
-	public String getPrenedText() {
-		return prenedText;
-	}
-
-	public boolean hasUnseenText() {
-		return hasUnseenText;
-	}
-
-	public void init() {
-		addInputTextKeyListeners();
-		addMouseListeners();
-		registerForChatEvents();
-		adjustAwayButtonEnabled();
-	}
-
-	public abstract boolean isAcceptingChatEvent(ChatEvent inboundEvent);
-
-	public abstract boolean isPrependable();
-
-	public abstract boolean isSearchable();
-
-	public void onAppendChatEventToInputText(ChatEvent event) {
-
-		if (!ignoreAwayList && event.getType() == ChatTypes.TELL
-				|| event.getType() == ChatTypes.PARTNER_TELL) {
-			awayList.add(event);
-			adjustAwayButtonEnabled();
-		}
-
-		String appendText = null;
-		int startIndex = 0;
-
-		// synchronize on chatConsole so the scrolling will be handled
-		// appropriately if there are multiple events being
-		// published at the same time.
-		synchronized (chatConsole) {
-			if (chatConsole.isDisposed()) {
-				return;
-			}
-
-			boolean isScrollBarAtMax = false;
-			ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
-			if (scrollbar != null && scrollbar.isVisible()) {
-				isScrollBarAtMax = scrollbar.getMaximum() == scrollbar
-						.getSelection()
-						+ scrollbar.getThumb();
-			}
-
-			String messageText = event.getMessage();
-			String date = "";
-			if (Raptor.getInstance().getPreferences().getBoolean(
-					CHAT_TIMESTAMP_CONSOLE)) {
-				SimpleDateFormat format = new SimpleDateFormat(Raptor
-						.getInstance().getPreferences().getString(
-								CHAT_TIMESTAMP_CONSOLE_FORMAT));
-				date = format.format(new Date(event.getTime()));
-			}
-
-			appendText = (chatConsole.inputText.getCharCount() == 0 ? "" : "\n")
-					+ date + messageText;
-
-			chatConsole.inputText.append(appendText);
-			startIndex = chatConsole.inputText.getCharCount()
-					- appendText.length();
-
-			if (isScrollBarAtMax
-					&& ((chatConsole.inputText.getSelection().y - chatConsole.inputText
-							.getSelection().x) == 0)) {
-				onForceAutoScroll();
-			}
-		}
-
-		onDecorateInputText(event, appendText, startIndex);
-		reduceInputTextIfNeeded();
-	}
-
-	public void onForceAutoScroll() {
-		chatConsole.inputText.setCaretOffset(chatConsole.inputText
-				.getCharCount());
-		chatConsole.inputText.setSelection(new Point(chatConsole.inputText
-				.getCharCount(), chatConsole.inputText.getCharCount()));
-	}
-
-	public void onAppendOutputText(String string) {
-		chatConsole.outputText.append(string);
-		chatConsole.outputText.setSelection(chatConsole.outputText
-				.getCharCount());
-		chatConsole.outputText.forceFocus();
-	}
-
-	public void onChatEvent(ChatEvent event) {
-		if (event.getType() == TELL) {
-			sourceOfLastTellReceived = event.getSource();
-		}
-		onAppendChatEventToInputText(event);
-		playSounds(event);
-	}
-
-	protected void onDecorateInputText(final ChatEvent event,
-			final String message, final int textStartPosition) {
-		decorateForegroundColor(event, message, textStartPosition);
-		decorateQuotes(event, message, textStartPosition);
-		decorateLinks(event, message, textStartPosition);
+	protected void adjustAwayButtonEnabled() {
+		chatConsole.setButtonEnabled(!awayList.isEmpty(),
+				ChatConsole.AWAY_BUTTON);
 	}
 
 	protected void decorateForegroundColor(ChatEvent event, String message,
@@ -366,67 +240,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		chatConsole.inputText
 				.setStyleRange(new StyleRange(textStartPosition, message
 						.length(), color, chatConsole.inputText.getBackground()));
-	}
-
-	protected void decorateQuotes(ChatEvent event, String message,
-			int textStartPosition) {
-		if (event.getType() != OUTBOUND) {
-			List<int[]> quotedRanges = new ArrayList<int[]>(5);
-
-			int quoteIndex = message.indexOf("\"");
-			if (quoteIndex == -1) {
-				quoteIndex = message.indexOf("'");
-			}
-
-			while (quoteIndex != -1) {
-				int endQuote = message.indexOf("\"", quoteIndex + 1);
-				if (endQuote == -1) {
-					endQuote = message.indexOf("'", quoteIndex + 1);
-				}
-
-				if (endQuote == -1) {
-					break;
-				} else {
-					if (quoteIndex + 1 != endQuote) {
-
-						// If there is a newline between the quotes ignore it.
-						int newLine = message.indexOf("\n", quoteIndex);
-
-						// If there is just one character and the a space after
-						// the
-						// first quote ignore it.
-						boolean isASpaceTwoCharsAfterQuote = message
-								.charAt(quoteIndex + 2) == ' ';
-
-						// If the quotes dont match ignore it.
-						boolean doQuotesMatch = message.charAt(quoteIndex) == message
-								.charAt(endQuote);
-
-						if (!(newLine > quoteIndex && newLine < endQuote)
-								&& !isASpaceTwoCharsAfterQuote && doQuotesMatch) {
-							quotedRanges.add(new int[] { quoteIndex + 1,
-									endQuote });
-
-						}
-					}
-				}
-
-				quoteIndex = message.indexOf("\"", endQuote + 1);
-				if (quoteIndex == -1) {
-					quoteIndex = message.indexOf("'", endQuote + 1);
-				}
-			}
-
-			for (int[] quotedRange : quotedRanges) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
-				StyleRange range = new StyleRange(textStartPosition
-						+ quotedRange[0], quotedRange[1] - quotedRange[0],
-						underlineColor, chatConsole.inputText.getBackground());
-				range.underline = true;
-				chatConsole.inputText.setStyleRange(range);
-			}
-		}
 	}
 
 	protected void decorateLinks(ChatEvent event, String message,
@@ -538,6 +351,110 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		}
 	}
 
+	protected void decorateQuotes(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() != OUTBOUND) {
+			List<int[]> quotedRanges = new ArrayList<int[]>(5);
+
+			int quoteIndex = message.indexOf("\"");
+			if (quoteIndex == -1) {
+				quoteIndex = message.indexOf("'");
+			}
+
+			while (quoteIndex != -1) {
+				int endQuote = message.indexOf("\"", quoteIndex + 1);
+				if (endQuote == -1) {
+					endQuote = message.indexOf("'", quoteIndex + 1);
+				}
+
+				if (endQuote == -1) {
+					break;
+				} else {
+					if (quoteIndex + 1 != endQuote) {
+
+						// If there is a newline between the quotes ignore it.
+						int newLine = message.indexOf("\n", quoteIndex);
+
+						// If there is just one character and the a space after
+						// the
+						// first quote ignore it.
+						boolean isASpaceTwoCharsAfterQuote = message
+								.charAt(quoteIndex + 2) == ' ';
+
+						// If the quotes dont match ignore it.
+						boolean doQuotesMatch = message.charAt(quoteIndex) == message
+								.charAt(endQuote);
+
+						if (!(newLine > quoteIndex && newLine < endQuote)
+								&& !isASpaceTwoCharsAfterQuote && doQuotesMatch) {
+							quotedRanges.add(new int[] { quoteIndex + 1,
+									endQuote });
+
+						}
+					}
+				}
+
+				quoteIndex = message.indexOf("\"", endQuote + 1);
+				if (quoteIndex == -1) {
+					quoteIndex = message.indexOf("'", endQuote + 1);
+				}
+			}
+
+			for (int[] quotedRange : quotedRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_QUOTE_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ quotedRange[0], quotedRange[1] - quotedRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
+	public void dispose() {
+		chatConsole.connector.getChatService().removeChatServiceListener(
+				chatServiceListener);
+		chatConsole.outputText.removeKeyListener(functionKeyListener);
+		chatConsole.outputText.removeKeyListener(outputHistoryListener);
+		chatConsole.outputText.removeKeyListener(outputKeyListener);
+
+		chatConsole.inputText.removeKeyListener(inputTextKeyListener);
+		chatConsole.inputText.removeKeyListener(functionKeyListener);
+		chatConsole.inputText.removeKeyListener(outputHistoryListener);
+
+		chatConsole.inputText.removeMouseListener(inputTextClickListener);
+
+		LOG.debug("Disposed ChatConsoleController");
+	}
+
+	public ChatConsole getChatConsole() {
+		return chatConsole;
+	}
+
+	public String getPrenedText() {
+		return prenedText;
+	}
+
+	public abstract String getPrompt();
+
+	public String getSourceOfLastTellReceived() {
+		return sourceOfLastTellReceived;
+	}
+
+	public boolean hasUnseenText() {
+		return hasUnseenText;
+	}
+
+	public void init() {
+		addInputTextKeyListeners();
+		addMouseListeners();
+		registerForChatEvents();
+		adjustAwayButtonEnabled();
+	}
+
+	public abstract boolean isAcceptingChatEvent(ChatEvent inboundEvent);
+
 	protected boolean isInRanges(int location, List<int[]> ranges) {
 		boolean result = false;
 		for (int[] range : ranges) {
@@ -549,10 +466,149 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		return result;
 	}
 
-	protected void playSounds(ChatEvent event) {
-		if (event.getType() == ChatTypes.TELL
+	public abstract boolean isPrependable();
+
+	public abstract boolean isSearchable();
+
+	public void onAppendChatEventToInputText(ChatEvent event) {
+
+		if (!ignoreAwayList && event.getType() == ChatTypes.TELL
 				|| event.getType() == ChatTypes.PARTNER_TELL) {
-			SoundService.getInstance().playSound("chat");
+			awayList.add(event);
+			adjustAwayButtonEnabled();
+		}
+
+		String appendText = null;
+		int startIndex = 0;
+
+		// synchronize on chatConsole so the scrolling will be handled
+		// appropriately if there are multiple events being
+		// published at the same time.
+		synchronized (chatConsole) {
+			if (chatConsole.isDisposed()) {
+				return;
+			}
+
+			boolean isScrollBarAtMax = false;
+			ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
+			if (scrollbar != null && scrollbar.isVisible()) {
+				isScrollBarAtMax = scrollbar.getMaximum() == scrollbar
+						.getSelection()
+						+ scrollbar.getThumb();
+			}
+
+			String messageText = event.getMessage();
+			String date = "";
+			if (Raptor.getInstance().getPreferences().getBoolean(
+					CHAT_TIMESTAMP_CONSOLE)) {
+				SimpleDateFormat format = new SimpleDateFormat(Raptor
+						.getInstance().getPreferences().getString(
+								CHAT_TIMESTAMP_CONSOLE_FORMAT));
+				date = format.format(new Date(event.getTime()));
+			}
+
+			appendText = (chatConsole.inputText.getCharCount() == 0 ? "" : "\n")
+					+ date + messageText;
+
+			chatConsole.inputText.append(appendText);
+			startIndex = chatConsole.inputText.getCharCount()
+					- appendText.length();
+
+			if (isScrollBarAtMax
+					&& ((chatConsole.inputText.getSelection().y - chatConsole.inputText
+							.getSelection().x) == 0)) {
+				onForceAutoScroll();
+			}
+		}
+
+		onDecorateInputText(event, appendText, startIndex);
+		reduceInputTextIfNeeded();
+	}
+
+	public void onAppendOutputText(String string) {
+		chatConsole.outputText.append(string);
+		chatConsole.outputText.setSelection(chatConsole.outputText
+				.getCharCount());
+		chatConsole.outputText.forceFocus();
+	}
+
+	public void onAway() {
+		ignoreAwayList = true;
+		onAppendChatEventToInputText(new ChatEvent(null, ChatTypes.OUTBOUND,
+				"Direct tells you missed while you were away:"));
+		for (ChatEvent event : awayList) {
+			onAppendChatEventToInputText(event);
+		}
+		awayList.clear();
+		ignoreAwayList = false;
+		adjustAwayButtonEnabled();
+	}
+
+	public void onChatEvent(ChatEvent event) {
+		if (event.getType() == TELL) {
+			sourceOfLastTellReceived = event.getSource();
+		}
+		onAppendChatEventToInputText(event);
+		playSounds(event);
+	}
+
+	protected void onDecorateInputText(final ChatEvent event,
+			final String message, final int textStartPosition) {
+		decorateForegroundColor(event, message, textStartPosition);
+		decorateQuotes(event, message, textStartPosition);
+		decorateLinks(event, message, textStartPosition);
+	}
+
+	public void onForceAutoScroll() {
+		chatConsole.inputText.setCaretOffset(chatConsole.inputText
+				.getCharCount());
+		chatConsole.inputText.setSelection(new Point(chatConsole.inputText
+				.getCharCount(), chatConsole.inputText.getCharCount()));
+	}
+
+	public void onSave() {
+		FileDialog fd = new FileDialog(chatConsole.getShell(), SWT.SAVE);
+		fd.setText("Save Console Output.");
+		fd.setFilterPath("");
+		String[] filterExt = { "*.txt", "*.*" };
+		fd.setFilterExtensions(filterExt);
+		final String selected = fd.open();
+
+		if (selected != null) {
+			chatConsole.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					FileWriter writer = null;
+					try {
+						writer = new FileWriter(selected);
+						writer.append("Raptor console log created on "
+								+ new Date() + "\n");
+						int i = 0;
+						while (i < chatConsole.getInputText().getCharCount() - 1) {
+							int endIndex = i + TEXT_CHUNK_SIZE;
+							if (endIndex >= chatConsole.getInputText()
+									.getCharCount()) {
+								endIndex = i
+										+ (chatConsole.getInputText()
+												.getCharCount() - i) - 1;
+							}
+							String string = chatConsole.getInputText().getText(
+									i, endIndex);
+							writer.append(string);
+							i = endIndex;
+						}
+						writer.flush();
+					} catch (Throwable t) {
+						LOG.error("Error writing file: " + selected, t);
+					} finally {
+						if (writer != null) {
+							try {
+								writer.close();
+							} catch (IOException ioe) {
+							}
+						}
+					}
+				}
+			});
 		}
 	}
 
@@ -623,55 +679,11 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		adjustAwayButtonEnabled();
 	}
 
-	public void onSave() {
-		FileDialog fd = new FileDialog(chatConsole.getShell(), SWT.SAVE);
-		fd.setText("Save Console Output.");
-		fd.setFilterPath("");
-		String[] filterExt = { "*.txt", "*.*" };
-		fd.setFilterExtensions(filterExt);
-		final String selected = fd.open();
-
-		if (selected != null) {
-			chatConsole.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					FileWriter writer = null;
-					try {
-						writer = new FileWriter(selected);
-						writer.append("Raptor console log created on "
-								+ new Date() + "\n");
-						int i = 0;
-						while (i < chatConsole.getInputText().getCharCount() - 1) {
-							int endIndex = i + TEXT_CHUNK_SIZE;
-							if (endIndex >= chatConsole.getInputText()
-									.getCharCount()) {
-								endIndex = i
-										+ (chatConsole.getInputText()
-												.getCharCount() - i) - 1;
-							}
-							String string = chatConsole.getInputText().getText(
-									i, endIndex);
-							writer.append(string);
-							i = endIndex;
-						}
-						writer.flush();
-					} catch (Throwable t) {
-						LOG.error("Error writing file: " + selected, t);
-					} finally {
-						if (writer != null) {
-							try {
-								writer.close();
-							} catch (IOException ioe) {
-							}
-						}
-					}
-				}
-			});
+	protected void playSounds(ChatEvent event) {
+		if (event.getType() == ChatTypes.TELL
+				|| event.getType() == ChatTypes.PARTNER_TELL) {
+			SoundService.getInstance().playSound("chat");
 		}
-	}
-
-	protected void adjustAwayButtonEnabled() {
-		chatConsole.setButtonEnabled(!awayList.isEmpty(),
-				ChatConsole.AWAY_BUTTON);
 	}
 
 	protected void reduceInputTextIfNeeded() {
@@ -692,6 +704,10 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				chatServiceListener);
 	}
 
+	public void setChatConsole(ChatConsole chatConsole) {
+		this.chatConsole = chatConsole;
+	}
+
 	public void setHasUnseenText(boolean hasUnseenText) {
 		this.hasUnseenText = hasUnseenText;
 	}
@@ -700,13 +716,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		this.prenedText = prenedText;
 	}
 
-	public String getSourceOfLastTellReceived() {
-		return sourceOfLastTellReceived;
-	}
-
 	public void setSourceOfLastTellReceived(String sourceOfLastTellReceived) {
 		this.sourceOfLastTellReceived = sourceOfLastTellReceived;
 	}
-
-	public abstract String getPrompt();
 }

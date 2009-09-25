@@ -68,7 +68,7 @@ public class SoughtEventParser {
 	// }
 	// }
 
-//	private static final String AD_DISPLAYED = "ad displayed.";
-//	private static final String ADS_DISPLAYED = "ads displayed.";
+	// private static final String AD_DISPLAYED = "ad displayed.";
+	// private static final String ADS_DISPLAYED = "ads displayed.";
 
 }

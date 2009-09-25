@@ -49,6 +49,21 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 	protected Label worstCaseClockSizeLabel;
 
+	public RightOrientedLayout(ChessBoard board) {
+		super(board);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		LOG.debug("Disposed RightOrientedLayout");
+	}
+
+	@Override
+	public String getName() {
+		return "Right Oriented";
+	}
+
 	@Override
 	public int getStyle(int controlConstant) {
 		switch (controlConstant) {
@@ -65,6 +80,52 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		default:
 			return SWT.NONE;
 		}
+	}
+
+	protected void initWorstCaseLabels() {
+		if (worstCaseClockSizeLabel == null) {
+			worstCaseClockSizeLabel = new Label(board.getBoardPanel(), SWT.NONE);
+			worstCaseClockSizeLabel.setText("00:00:00.000");
+		}
+		worstCaseClockSizeLabel.setFont(board.getWhiteClockLabel().getFont());
+	}
+
+	@Override
+	protected void layout(Composite composite, boolean flushCache) {
+		LOG.debug("in layout ...");
+		long startTime = System.currentTimeMillis();
+		setLayoutData();
+
+		board.getGameDescriptionLabel().setBounds(gameDescriptionLabelRect);
+
+		board.getCurrentPremovesLabel().setBounds(currentPremovesLabelRect);
+
+		layoutChessBoard(boardTopLeft, boardSquareSize);
+
+		board.getStatusLabel().setBounds(statusLabelRect);
+		board.getOpeningDescriptionLabel().setBounds(
+				openingDescriptionLabelRect);
+
+		board.getWhiteToMoveIndicatorLabel()
+				.setBounds(whiteToMoveIndicatorRect);
+		board.getBlackToMoveIndicatorLabel()
+				.setBounds(blackToMoveIndicatorRect);
+		board.getWhiteNameRatingLabel().setBounds(whiteNameLabelRect);
+		board.getBlackNameRatingLabel().setBounds(blackNameLabelRect);
+
+		board.getWhiteClockLabel().setBounds(whiteClockRect);
+		board.getBlackClockLabel().setBounds(blackClockRect);
+
+		board.getWhiteLagLabel().setBounds(whiteLagRect);
+		board.getBlackLagLabel().setBounds(blackLagRect);
+
+		for (int i = 0; i < pieceJailRects.length; i++) {
+			if (pieceJailRects[i] != null) {
+				board.getPieceJailSquares()[i].setBounds(pieceJailRects[i]);
+			}
+		}
+		LOG.debug("Layout completed in "
+				+ (System.currentTimeMillis() - startTime));
 	}
 
 	protected void setLayoutData() {
@@ -190,18 +251,21 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 		}
 
-		whiteClockRect = new Rectangle(whiteToMoveIndicatorRect.x, whiteLagRect.y
-				+ whiteLagRect.height, worseCaseClockSize.x,
+		whiteClockRect = new Rectangle(whiteToMoveIndicatorRect.x,
+				whiteLagRect.y + whiteLagRect.height, worseCaseClockSize.x,
 				whiteClockLabelSize.y);
-		blackClockRect = new Rectangle(blackToMoveIndicatorRect.x, blackLagRect.y
-				+ blackLagRect.height, worseCaseClockSize.x,
+		blackClockRect = new Rectangle(blackToMoveIndicatorRect.x,
+				blackLagRect.y + blackLagRect.height, worseCaseClockSize.x,
 				whiteClockLabelSize.y);
-		
-		int controlHeight = whiteNameLabelRect.height + whiteLagRect.height;// + whiteClockRect.height;
-		
+
+		int controlHeight = whiteNameLabelRect.height + whiteLagRect.height;// +
+																			// whiteClockRect.height;
+
 		if (controlHeight > whiteToMoveIndicatorRect.height) {
-			whiteToMoveIndicatorRect.y = whiteNameLabelRect.y + (controlHeight - whiteToMoveIndicatorRect.height)/2;			
-			blackToMoveIndicatorRect.y = blackNameLabelRect.y + (controlHeight - blackToMoveIndicatorRect.height)/2;
+			whiteToMoveIndicatorRect.y = whiteNameLabelRect.y
+					+ (controlHeight - whiteToMoveIndicatorRect.height) / 2;
+			blackToMoveIndicatorRect.y = blackNameLabelRect.y
+					+ (controlHeight - blackToMoveIndicatorRect.height) / 2;
 		}
 
 		int pieceJailStartX = whiteToMoveIndicatorRect.x;
@@ -278,65 +342,5 @@ public class RightOrientedLayout extends ChessBoardLayout {
 					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
 					boardSquareSize, boardSquareSize);
 		}
-	}
-
-	@Override
-	protected void layout(Composite composite, boolean flushCache) {
-		LOG.debug("in layout ...");
-		long startTime = System.currentTimeMillis();
-		setLayoutData();
-
-		board.getGameDescriptionLabel().setBounds(gameDescriptionLabelRect);
-
-		board.getCurrentPremovesLabel().setBounds(currentPremovesLabelRect);
-
-		layoutChessBoard(boardTopLeft, boardSquareSize);
-
-		board.getStatusLabel().setBounds(statusLabelRect);
-		board.getOpeningDescriptionLabel().setBounds(
-				openingDescriptionLabelRect);
-
-		board.getWhiteToMoveIndicatorLabel()
-				.setBounds(whiteToMoveIndicatorRect);
-		board.getBlackToMoveIndicatorLabel()
-				.setBounds(blackToMoveIndicatorRect);
-		board.getWhiteNameRatingLabel().setBounds(whiteNameLabelRect);
-		board.getBlackNameRatingLabel().setBounds(blackNameLabelRect);
-
-		board.getWhiteClockLabel().setBounds(whiteClockRect);
-		board.getBlackClockLabel().setBounds(blackClockRect);
-
-		board.getWhiteLagLabel().setBounds(whiteLagRect);
-		board.getBlackLagLabel().setBounds(blackLagRect);
-
-		for (int i = 0; i < pieceJailRects.length; i++) {
-			if (pieceJailRects[i] != null) {
-				board.getPieceJailSquares()[i].setBounds(pieceJailRects[i]);
-			}
-		}
-		LOG.debug("Layout completed in "
-				+ (System.currentTimeMillis() - startTime));
-	}
-
-	protected void initWorstCaseLabels() {
-		if (worstCaseClockSizeLabel == null) {
-			worstCaseClockSizeLabel = new Label(board.getBoardPanel(), SWT.NONE);
-			worstCaseClockSizeLabel.setText("00:00:00.000");
-		}
-		worstCaseClockSizeLabel.setFont(board.getWhiteClockLabel().getFont());
-	}
-
-	public RightOrientedLayout(ChessBoard board) {
-		super(board);
-	}
-
-	public void dispose() {
-		super.dispose();
-		LOG.debug("Disposed RightOrientedLayout");
-	}
-
-	@Override
-	public String getName() {
-		return "Right Oriented";
 	}
 }

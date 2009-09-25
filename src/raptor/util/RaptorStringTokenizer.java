@@ -36,17 +36,21 @@ public class RaptorStringTokenizer {
 		this.isEatingBlocksOfDelimiters = isEatingBlocksOfDelimiters;
 	}
 
-	public boolean isEatingBlocksOfDelimiters() {
-		return isEatingBlocksOfDelimiters;
-	}
-
-	public void setEatingBlocksOfDelimiters(boolean isEatingBlocksOfDelimiters) {
-		this.isEatingBlocksOfDelimiters = isEatingBlocksOfDelimiters;
-	}
-
 	public void changeDelimiters(String newDelimiters) {
 		synchronized (this) {
 			delimiters = newDelimiters;
+		}
+	}
+
+	public int getCurrentIndex() {
+		return currentIndex;
+	}
+
+	public String getWhatsLeft() {
+		if (isEmpty()) {
+			return "";
+		} else {
+			return source.substring(currentIndex);
 		}
 	}
 
@@ -63,15 +67,16 @@ public class RaptorStringTokenizer {
 		}
 	}
 
-	private boolean isEmpty() {
-		return currentIndex >= source.length();
+	public int indexInWhatsLeft(char token) {
+		return source.indexOf(token, currentIndex);
 	}
 
-	private void trimStartingDelimiters() {
-		while (!isEmpty()
-				&& delimiters.indexOf(source.charAt(currentIndex)) != -1) {
-			currentIndex++;
-		}
+	public boolean isEatingBlocksOfDelimiters() {
+		return isEatingBlocksOfDelimiters;
+	}
+
+	private boolean isEmpty() {
+		return currentIndex >= source.length();
 	}
 
 	/**
@@ -115,28 +120,23 @@ public class RaptorStringTokenizer {
 		return result;
 	}
 
-	public String getWhatsLeft() {
-		if (isEmpty()) {
-			return "";
-		} else {
-			return source.substring(currentIndex);
-		}
-	}
-
-	public int getCurrentIndex() {
-		return currentIndex;
-	}
-
 	public void setCurrentIndex(int currentIndex) {
 		this.currentIndex = currentIndex;
 	}
 
-	public int indexInWhatsLeft(char token) {
-		return source.indexOf(token, currentIndex);
+	public void setEatingBlocksOfDelimiters(boolean isEatingBlocksOfDelimiters) {
+		this.isEatingBlocksOfDelimiters = isEatingBlocksOfDelimiters;
 	}
 
 	public String substringSource(int start, int end) {
 		return source.substring(start, end);
+	}
+
+	private void trimStartingDelimiters() {
+		while (!isEmpty()
+				&& delimiters.indexOf(source.charAt(currentIndex)) != -1) {
+			currentIndex++;
+		}
 	}
 
 }

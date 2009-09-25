@@ -22,24 +22,6 @@ public class ChatConsoles extends Composite {
 
 	protected CTabFolder folder;
 
-	public void addChatConsole(ChatConsoleController controller,
-			Connector connector, boolean isCloseable, String title) {
-		int style = isCloseable ? SWT.CLOSE : SWT.NONE;
-		CTabItem item = new CTabItem(folder, style);
-		ChatConsole chatConsole = new ChatConsole(folder, SWT.NONE);
-		chatConsole.setController(controller);
-		chatConsole.setPreferences(Raptor.getInstance().getPreferences());
-		chatConsole.setConnector(connector);
-		controller.setChatConsole(chatConsole);
-		chatConsole.createControls();
-		chatConsole.getController().init();
-		chatConsole.pack();
-		item.setControl(chatConsole);
-		item.setText(title);
-		folder.layout(true);
-		folder.setSelection(item);
-	}
-
 	public ChatConsoles(Composite parent, int style) {
 		super(parent, style);
 		setLayout(new GridLayout());
@@ -54,10 +36,12 @@ public class ChatConsoles extends Composite {
 		restore();
 
 		folder.addCTabFolder2Listener(new CTabFolder2Adapter() {
+			@Override
 			public void maximize(CTabFolderEvent event) {
 				Raptor.getInstance().getAppWindow().maximizeChatConsoles();
 			}
 
+			@Override
 			public void restore(CTabFolderEvent event) {
 				Raptor.getInstance().getAppWindow().restore();
 			}
@@ -81,9 +65,7 @@ public class ChatConsoles extends Composite {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				System.err.println("Mouse down " + e.button);
 				if (e.button == 3) {
-					System.err.println("On mouse down");
 					Menu menu = new Menu(folder.getShell(), SWT.POP_UP);
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Comming soon.");
@@ -106,6 +88,24 @@ public class ChatConsoles extends Composite {
 		pack();
 	}
 
+	public void addChatConsole(ChatConsoleController controller,
+			Connector connector, boolean isCloseable, String title) {
+		int style = isCloseable ? SWT.CLOSE : SWT.NONE;
+		CTabItem item = new CTabItem(folder, style);
+		ChatConsole chatConsole = new ChatConsole(folder, SWT.NONE);
+		chatConsole.setController(controller);
+		chatConsole.setPreferences(Raptor.getInstance().getPreferences());
+		chatConsole.setConnector(connector);
+		controller.setChatConsole(chatConsole);
+		chatConsole.createControls();
+		chatConsole.getController().init();
+		chatConsole.pack();
+		item.setControl(chatConsole);
+		item.setText(title);
+		folder.layout(true);
+		folder.setSelection(item);
+	}
+
 	protected void forceScrollCurrentConsole() {
 		if (folder.getItemCount() > 0) {
 			final ChatConsole currentConsole = (ChatConsole) folder.getItem(
@@ -125,13 +125,13 @@ public class ChatConsoles extends Composite {
 		return folder.getMaximized();
 	}
 
-	public void restore() {
-		folder.setMaximized(false);
+	public void maximize() {
+		folder.setMaximized(true);
 		forceScrollCurrentConsole();
 	}
 
-	public void maximize() {
-		folder.setMaximized(true);
+	public void restore() {
+		folder.setMaximized(false);
 		forceScrollCurrentConsole();
 	}
 }

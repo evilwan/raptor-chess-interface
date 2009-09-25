@@ -65,6 +65,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		sendButton.setImage(preferences.getIcon("enter"));
 		sendButton.setToolTipText("Sends the message in the input field.");
 		sendButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onSendOutputText();
 			}
@@ -84,6 +85,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		saveButton.setImage(preferences.getIcon("save"));
 		saveButton.setToolTipText("Save the current console text to a file.");
 		saveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onSave();
 
@@ -97,6 +99,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 				.setToolTipText("Displays all of the direct tells you missed while you were away. "
 						+ "The list of tells you missed is reset each time you send a message.");
 		awayButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onAway();
 
@@ -111,6 +114,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 					.setToolTipText("Searches backward for the message in the console text. "
 							+ "The search is case insensitive and does not use regular expressions.");
 			searchButton.addSelectionListener(new SelectionAdapter() {
+				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					controller.onSearch();
 				}
@@ -122,44 +126,13 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		autoScroll.setImage(preferences.getIcon("down"));
 		autoScroll.setToolTipText("Forces auto scrolling.");
 		autoScroll.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				controller.onForceAutoScroll();
 
 			}
 		});
 		buttonMap.put(AUTO_SCROLL_BUTTON, autoScroll);
-	}
-
-	public void dispose() {
-		Raptor.getInstance().getPreferences().removePropertyChangeListener(
-				propertyChangeListener);
-		if (controller != null) {
-			controller.dispose();
-		}
-		buttonMap.clear();
-
-		LOG.info("Disposed chat console.");
-		super.dispose();
-	}
-
-	public Connector getConnector() {
-		return connector;
-	}
-
-	public ChatConsoleController getController() {
-		return controller;
-	}
-
-	public Button getButton(String button) {
-		return buttonMap.get(button);
-	}
-
-	public RaptorPreferenceStore getPreferences() {
-		return preferences;
-	}
-
-	public String getTitle() {
-		return title;
 	}
 
 	public void createControls() {
@@ -208,12 +181,45 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		updateFromPrefs();
 	}
 
-	public void setConnector(Connector connector) {
-		this.connector = connector;
+	@Override
+	public void dispose() {
+		Raptor.getInstance().getPreferences().removePropertyChangeListener(
+				propertyChangeListener);
+		if (controller != null) {
+			controller.dispose();
+		}
+		buttonMap.clear();
+
+		LOG.info("Disposed chat console.");
+		super.dispose();
 	}
 
-	public void setController(ChatConsoleController controller) {
-		this.controller = controller;
+	public Button getButton(String button) {
+		return buttonMap.get(button);
+	}
+
+	public Connector getConnector() {
+		return connector;
+	}
+
+	public ChatConsoleController getController() {
+		return controller;
+	}
+
+	public StyledText getInputText() {
+		return inputText;
+	}
+
+	public StyledText getOutputText() {
+		return outputText;
+	}
+
+	public RaptorPreferenceStore getPreferences() {
+		return preferences;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 	public void setButtonEnabled(boolean isEnabled, String key) {
@@ -221,6 +227,14 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		if (item != null) {
 			item.setEnabled(isEnabled);
 		}
+	}
+
+	public void setConnector(Connector connector) {
+		this.connector = connector;
+	}
+
+	public void setController(ChatConsoleController controller) {
+		this.controller = controller;
 	}
 
 	public void setPreferences(RaptorPreferenceStore preferences) {
@@ -251,14 +265,6 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		promptLabel.setForeground(prefs.getColor(CHAT_PROMPT_COLOR));
 		promptLabel
 				.setBackground(prefs.getColor(CHAT_CONSOLE_BACKGROUND_COLOR));
-	}
-
-	public StyledText getInputText() {
-		return inputText;
-	}
-
-	public StyledText getOutputText() {
-		return outputText;
 	}
 
 }

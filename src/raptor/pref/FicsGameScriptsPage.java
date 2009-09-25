@@ -40,17 +40,6 @@ public class FicsGameScriptsPage extends PreferencePage {
 		setTitle("Fics Script Editor");
 	}
 
-	public void populateScriptNames() {
-		scriptName.removeAll();
-		GameScript[] scripts = Raptor.getInstance().getFicsConnector()
-				.getGameScripts();
-		for (int i = 0; i < scripts.length; i++) {
-			scriptName.add(scripts[i].getName());
-		}
-		scriptNameComposite.pack();
-		scriptNameComposite.layout();
-	}
-
 	@Override
 	protected Control createContents(Composite arg0) {
 		parent = new Composite(arg0, SWT.NONE);
@@ -65,6 +54,7 @@ public class FicsGameScriptsPage extends PreferencePage {
 		scriptName = new Combo(scriptNameComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
 		scriptName.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				GameScript gameScript = Raptor.getInstance().getFicsConnector()
 						.getGameScript(
@@ -148,7 +138,8 @@ public class FicsGameScriptsPage extends PreferencePage {
 					gameScript.setAvailableInSetupState(isAvailableInSetupState
 							.getSelection());
 					gameScript.save();
-					Raptor.getInstance().getFicsConnector().refreshGameScripts();
+					Raptor.getInstance().getFicsConnector()
+							.refreshGameScripts();
 					populateScriptNames();
 
 				} else {
@@ -173,7 +164,8 @@ public class FicsGameScriptsPage extends PreferencePage {
 					gameScript.setAvailableInSetupState(isAvailableInSetupState
 							.getSelection());
 					gameScript.save();
-					Raptor.getInstance().getFicsConnector().refreshGameScripts();
+					Raptor.getInstance().getFicsConnector()
+							.refreshGameScripts();
 					populateScriptNames();
 				}
 			}
@@ -189,7 +181,8 @@ public class FicsGameScriptsPage extends PreferencePage {
 				if (gameScript != null) {
 					Raptor.getInstance().getFicsConnector().removeGameScript(
 							gameScript);
-					Raptor.getInstance().getFicsConnector().refreshGameScripts();
+					Raptor.getInstance().getFicsConnector()
+							.refreshGameScripts();
 					populateScriptNames();
 
 				}
@@ -198,6 +191,17 @@ public class FicsGameScriptsPage extends PreferencePage {
 
 		populateScriptNames();
 		return parent;
+	}
+
+	public void populateScriptNames() {
+		scriptName.removeAll();
+		GameScript[] scripts = Raptor.getInstance().getFicsConnector()
+				.getGameScripts();
+		for (int i = 0; i < scripts.length; i++) {
+			scriptName.add(scripts[i].getName());
+		}
+		scriptNameComposite.pack();
+		scriptNameComposite.layout();
 	}
 
 }

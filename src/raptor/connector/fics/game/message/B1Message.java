@@ -19,11 +19,8 @@ package raptor.connector.fics.game.message;
  * A prompt may preceed the <b1> header.
  */
 public class B1Message {
-	public String toString() {
-		return "B1Message: gameId=" + gameId;
-	}
-
 	public String gameId;
+
 	/**
 	 * Indexed by GameConstants piece type, valued by the number of pieces.
 	 */
@@ -32,4 +29,9 @@ public class B1Message {
 	 * Indexed by GameConstants piece type, valued by the number of pieces.
 	 */
 	public int[] whiteHoldings;
+
+	@Override
+	public String toString() {
+		return "B1Message: gameId=" + gameId;
+	}
 }

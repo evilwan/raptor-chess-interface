@@ -41,7 +41,9 @@ public class Benchmark {
 	public static void main(String args[]) {
 		// Prime:
 		for (int i = 0; i < 5; i++) {
-			Game game = createFromFen("rnbqkbnr/p2ppp2/6pp/1pp5/1PP5/6PP/P2PPP2/RNBQKBNR w KQkq - 0 1",Game.STANDARD);
+			Game game = createFromFen(
+					"rnbqkbnr/p2ppp2/6pp/1pp5/1PP5/6PP/P2PPP2/RNBQKBNR w KQkq - 0 1",
+					Game.STANDARD);
 			moveWalk(game);
 		}
 
@@ -50,7 +52,9 @@ public class Benchmark {
 		long[] trials = new long[n];
 
 		for (int i = 0; i < n; i++) {
-			Game game = createFromFen("rnbqkbnr/p2ppp2/6pp/1pp5/1PP5/6PP/P2PPP2/RNBQKBNR w KQkq - 0 1",Game.STANDARD);
+			Game game = createFromFen(
+					"rnbqkbnr/p2ppp2/6pp/1pp5/1PP5/6PP/P2PPP2/RNBQKBNR w KQkq - 0 1",
+					Game.STANDARD);
 			long startTime = System.nanoTime();
 			long nodes = moveWalk(game);
 

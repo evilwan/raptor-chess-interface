@@ -24,6 +24,16 @@ public class ChessBoardResources implements Constants {
 	public static final String SQUARE_BACKGROUND_DIR = "resources/common/square/";
 	public static final String SQUARE_BACKGROUND_IMAGE_SUFFIX = ".png";
 
+	public static Image getChessPieceImageMold(String name, int type) {
+		if (type == EMPTY) {
+			return null;
+		} else {
+
+			return Raptor.getInstance().getPreferences().getImage(
+					getChessPieceImageName(name, type));
+		}
+	}
+
 	public static String getChessPieceImageName(String chessSetName, int piece) {
 		return CHESS_SET_DIR + chessSetName + "/" + PIECE_TO_NAME[piece]
 				+ PIECE_IMAGE_SUFFIX;
@@ -57,6 +67,11 @@ public class ChessBoardResources implements Constants {
 				+ (isLight ? "light" : "dark") + SQUARE_BACKGROUND_IMAGE_SUFFIX;
 	}
 
+	public static Image getSquareBackgroundMold(String name, boolean isLight) {
+		return Raptor.getInstance().getPreferences().getImage(
+				getSquareBackgroundImageName(name, isLight));
+	}
+
 	public static String[] getSquareBackgroundNames() {
 		List<String> result = new LinkedList<String>();
 
@@ -80,6 +95,7 @@ public class ChessBoardResources implements Constants {
 	}
 
 	ChessBoard board;
+
 	ImageRegistry localImageRegistry = new ImageRegistry();
 
 	public ChessBoardResources(ChessBoard board) {
@@ -98,6 +114,15 @@ public class ChessBoardResources implements Constants {
 
 	public Image getChessPieceIconImage(String set, int type) {
 		return getChessPieceImage(set, type, 35, 35);
+	}
+
+	public Image getChessPieceImage(int type, int width, int height) {
+		if (type == EMPTY) {
+			return null;
+		} else {
+
+			return getChessPieceImage(getChessSetName(), type, width, height);
+		}
 	}
 
 	public Image getChessPieceImage(String name, int type, int width, int height) {
@@ -133,25 +158,6 @@ public class ChessBoardResources implements Constants {
 		}
 	}
 
-	public Image getChessPieceImage(int type, int width, int height) {
-		if (type == EMPTY) {
-			return null;
-		} else {
-
-			return getChessPieceImage(getChessSetName(), type, width, height);
-		}
-	}
-
-	public static Image getChessPieceImageMold(String name, int type) {
-		if (type == EMPTY) {
-			return null;
-		} else {
-
-			return Raptor.getInstance().getPreferences().getImage(
-					getChessPieceImageName(name, type));
-		}
-	}
-
 	public String getChessSetName() {
 		return board.getPreferences().getString(BOARD_CHESS_SET_NAME);
 	}
@@ -176,11 +182,6 @@ public class ChessBoardResources implements Constants {
 		} else {
 			return result;
 		}
-	}
-
-	public static Image getSquareBackgroundMold(String name, boolean isLight) {
-		return Raptor.getInstance().getPreferences().getImage(
-				getSquareBackgroundImageName(name, isLight));
 	}
 
 	public String getSquareBackgroundName() {

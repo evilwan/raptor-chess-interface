@@ -3,7 +3,7 @@ package raptor.connector.fics.chat;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatTypes;
 
-public abstract class ChatEventParser implements ChatTypes{
+public abstract class ChatEventParser implements ChatTypes {
 	public ChatEventParser() {
 	}
 

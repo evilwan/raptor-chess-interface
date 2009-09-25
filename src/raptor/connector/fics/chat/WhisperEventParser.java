@@ -5,12 +5,15 @@ import raptor.connector.fics.FicsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class WhisperEventParser extends ChatEventParser {
+	public static final String IDENTIFIER = "whispers:";
+
 	public WhisperEventParser() {
 	}
 
 	/**
 	 * Returns null if text does not match the event this class produces.
 	 */
+	@Override
 	public ChatEvent parse(String text) {
 		if (text.length() < 1500) {
 			RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
@@ -32,6 +35,4 @@ public class WhisperEventParser extends ChatEventParser {
 		}
 		return null;
 	}
-
-	public static final String IDENTIFIER = "whispers:";
 }
