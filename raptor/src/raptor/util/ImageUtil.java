@@ -10,25 +10,25 @@ public class ImageUtil {
 	public static void main(String args[]) throws Exception {
 
 		scaleImage("resources/common/images/circle_green.jpg",
-				"resources/common/images/circle_green30x30.png", 255,255,255,
-				30, 30,
-				SWT.IMAGE_PNG);
+				"resources/common/images/circle_green30x30.png", 255, 255, 255,
+				30, 30, SWT.IMAGE_PNG);
 
 	}
 
-	public static void scaleImage(String imagePath, String destinationPath,int width, int height,
-			int destinationFormat) {
+	public static void scaleImage(String imagePath, String destinationPath,
+			int width, int height, int destinationFormat) {
 		ImageData data = new ImageData(imagePath).scaledTo(width, height);
 		ImageLoader loader = new ImageLoader();
 		loader.data = new ImageData[] { data };
 		loader.save(destinationPath, destinationFormat);
 	}
-	
-	public static void scaleImage(String imagePath, String destinationPath,int transRed,int transGreen,int transBlue,int width, int height,
+
+	public static void scaleImage(String imagePath, String destinationPath,
+			int transRed, int transGreen, int transBlue, int width, int height,
 			int destinationFormat) {
 		ImageData data = new ImageData(imagePath).scaledTo(width, height);
-		data.transparentPixel = data.palette
-		 .getPixel(new RGB(transRed, transBlue, transGreen));
+		data.transparentPixel = data.palette.getPixel(new RGB(transRed,
+				transBlue, transGreen));
 		ImageLoader loader = new ImageLoader();
 		loader.data = new ImageData[] { data };
 		loader.save(destinationPath, destinationFormat);

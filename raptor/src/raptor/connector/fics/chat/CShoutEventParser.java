@@ -5,6 +5,8 @@ import raptor.connector.fics.FicsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class CShoutEventParser extends ChatEventParser {
+	private static final String IDENTIFIER = "c-shouts:";
+
 	public CShoutEventParser() {
 		super();
 	}
@@ -12,6 +14,7 @@ public class CShoutEventParser extends ChatEventParser {
 	/**
 	 * Returns null if text does not match the event this class produces.
 	 */
+	@Override
 	public ChatEvent parse(String text) {
 		RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(text,
 				" ");
@@ -27,6 +30,4 @@ public class CShoutEventParser extends ChatEventParser {
 		return null;
 
 	}
-
-	private static final String IDENTIFIER = "c-shouts:";
 }

@@ -11,15 +11,18 @@ public class ChatService {
 		public void chatEventOccured(ChatEvent e);
 	}
 
+	// Don't sycnrhonize this list.
+	// Its a little risky but it takes advantage of multiple cores if you do
+	// not.
 	List<ChatListener> listeners = new ArrayList<ChatListener>(5);
+
+	public void addChatServiceListener(ChatListener listener) {
+		listeners.add(listener);
+	}
 
 	public void dispose() {
 		listeners.clear();
 		listeners = null;
-	}
-
-	public void addChatServiceListener(ChatListener listener) {
-		listeners.add(listener);
 	}
 
 	public void publishChatEvent(ChatEvent event) {

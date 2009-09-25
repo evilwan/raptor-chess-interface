@@ -46,6 +46,21 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	private ColorRegistry colorRegistry = new ColorRegistry(Display
 			.getCurrent());
 
+	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
+
+		public void propertyChange(PropertyChangeEvent arg0) {
+			if (arg0.getProperty().endsWith("color")) {
+				colorRegistry.put(arg0.getProperty(), PreferenceConverter
+						.getColor(RaptorPreferenceStore.this, arg0
+								.getProperty()));
+			} else if (arg0.getProperty().endsWith("font")) {
+				fontRegistry.put(arg0.getProperty(), PreferenceConverter
+						.getFontDataArray(RaptorPreferenceStore.this, arg0
+								.getProperty()));
+			}
+		}
+	};
+
 	public RaptorPreferenceStore() {
 		super();
 		try {
@@ -72,20 +87,110 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	}
 
-	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
+	/**
+	 * Returns the foreground color to use for the specified chat event. Returns
+	 * null if no special color should be used.
+	 */
+	public Color getColor(ChatEvent event) {
+		Color result = null;
 
-		public void propertyChange(PropertyChangeEvent arg0) {
-			if (arg0.getProperty().endsWith("color")) {
-				colorRegistry.put(arg0.getProperty(), PreferenceConverter
-						.getColor(RaptorPreferenceStore.this, arg0
-								.getProperty()));
-			} else if (arg0.getProperty().endsWith("font")) {
-				fontRegistry.put(arg0.getProperty(), PreferenceConverter
-						.getFontDataArray(RaptorPreferenceStore.this, arg0
-								.getProperty()));
+		String key = null;
+		if (event.getType() == ChatTypes.CHAN_TELL) {
+			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType() + "-"
+					+ event.getChannel() + "-color";
+		} else {
+			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType()
+					+ "-color";
+		}
+		try {
+			if (!colorRegistry.hasValueFor(key)) {
+				// We don't want the default color if not found we want to
+				// return null, so use
+				// StringConverter instead of PreferenceConverter.
+				String value = getString(key);
+				if (StringUtils.isNotBlank(value)) {
+					RGB rgb = StringConverter.asRGB(value, null);
+					if (rgb != null) {
+						colorRegistry.put(key, rgb);
+					} else {
+						return null;
+					}
+				} else {
+					return null;
+				}
+			}
+			result = colorRegistry.get(key);
+		} catch (Throwable t) {
+			result = null;
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the color for the specified key. Returns BLACK if the key was not
+	 * found.
+	 */
+	public Color getColor(String key) {
+		try {
+			if (!colorRegistry.hasValueFor(key)) {
+				RGB rgb = PreferenceConverter.getColor(this, key);
+				if (rgb != null) {
+					colorRegistry.put(key, rgb);
+				}
+			}
+			return colorRegistry.get(key);
+		} catch (Throwable t) {
+			LOG.error("Error in getColor(" + key + ") Returning black.", t);
+			return new Color(Display.getCurrent(), new RGB(0, 0, 0));
+		}
+	}
+
+	/**
+	 * Returns the font for the specified key. Returns the default font if key
+	 * was not found.
+	 */
+	public Font getFont(String key) {
+		try {
+			if (!fontRegistry.hasValueFor(key)) {
+				FontData[] fontData = PreferenceConverter.getFontDataArray(
+						this, key);
+				fontRegistry.put(key, fontData);
+			}
+			return fontRegistry.get(key);
+		} catch (Throwable t) {
+			LOG.error("Error in getFont(" + key + ") Returning default font.",
+					t);
+			return fontRegistry.defaultFont();
+		}
+	}
+
+	public Image getIcon(String key) {
+		String fileName = ICONS_DIR + key + ".png";
+		return getImage(fileName);
+	}
+
+	public Image getImage(String fileName) {
+		Image result = imageRegistry.get(fileName);
+		if (result == null) {
+			try {
+				ImageData data = new ImageData(fileName);
+				imageRegistry.put(fileName, result = new Image(Display
+						.getCurrent(), data));
+			} catch (RuntimeException e) {
+				LOG.error("Error loading image " + fileName, e);
+				throw e;
 			}
 		}
-	};
+		return result;
+	}
+
+	public Point getPoint(String key) {
+		return PreferenceConverter.getPoint(this, key);
+	}
+
+	public Rectangle getRectangle(String key) {
+		return PreferenceConverter.getRectangle(this, key);
+	}
 
 	public void loadDefaults() {
 		String defaultFontName = fontRegistry.defaultFont().getFontData()[0]
@@ -253,116 +358,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
 
-	/**
-	 * Returns the foreground color to use for the specified chat event. Returns
-	 * null if no special color should be used.
-	 */
-	public Color getColor(ChatEvent event) {
-		Color result = null;
-
-		String key = null;
-		if (event.getType() == ChatTypes.CHAN_TELL) {
-			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType() + "-"
-					+ event.getChannel() + "-color";
-		} else {
-			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType()
-					+ "-color";
-		}
-		try {
-			if (!colorRegistry.hasValueFor(key)) {
-				// We don't want the default color if not found we want to
-				// return null, so use
-				// StringConverter instead of PreferenceConverter.
-				String value = getString(key);
-				if (StringUtils.isNotBlank(value)) {
-					RGB rgb = StringConverter.asRGB(value, null);
-					if (rgb != null) {
-						colorRegistry.put(key, rgb);
-					} else {
-						return null;
-					}
-				} else {
-					return null;
-				}
-			}
-			result = colorRegistry.get(key);
-		} catch (Throwable t) {
-			result = null;
-		}
-		return result;
-	}
-
-	/**
-	 * Returns the color for the specified key. Returns BLACK if the key was not
-	 * found.
-	 */
-	public Color getColor(String key) {
-		try {
-			if (!colorRegistry.hasValueFor(key)) {
-				RGB rgb = PreferenceConverter.getColor(this, key);
-				if (rgb != null) {
-					colorRegistry.put(key, rgb);
-				}
-			}
-			return colorRegistry.get(key);
-		} catch (Throwable t) {
-			LOG.error("Error in getColor(" + key + ") Returning black.", t);
-			return new Color(Display.getCurrent(), new RGB(0, 0, 0));
-		}
-	}
-
-	/**
-	 * Returns the font for the specified key. Returns the default font if key
-	 * was not found.
-	 */
-	public Font getFont(String key) {
-		try {
-			if (!fontRegistry.hasValueFor(key)) {
-				FontData[] fontData = PreferenceConverter.getFontDataArray(
-						this, key);
-				fontRegistry.put(key, fontData);
-			}
-			return fontRegistry.get(key);
-		} catch (Throwable t) {
-			LOG.error("Error in getFont(" + key + ") Returning default font.",
-					t);
-			return fontRegistry.defaultFont();
-		}
-	}
-
-	public Point getPoint(String key) {
-		return PreferenceConverter.getPoint(this, key);
-	}
-
-	public Rectangle getRectangle(String key) {
-		return PreferenceConverter.getRectangle(this, key);
-	}
-
 	public void setPoint(String key, Point point) {
 		PreferenceConverter.setValue(this, key, point);
 	}
 
 	public void setRectangle(String key, Rectangle rectangle) {
 		PreferenceConverter.setValue(this, key, rectangle);
-	}
-
-	public Image getImage(String fileName) {
-		Image result = imageRegistry.get(fileName);
-		if (result == null) {
-			try {
-				ImageData data = new ImageData(fileName);
-				imageRegistry.put(fileName, result = new Image(Display
-						.getCurrent(), data));
-			} catch (RuntimeException e) {
-				LOG.error("Error loading image " + fileName, e);
-				throw e;
-			}
-		}
-		return result;
-	}
-
-	public Image getIcon(String key) {
-		String fileName = ICONS_DIR + key + ".png";
-		return getImage(fileName);
 	}
 }

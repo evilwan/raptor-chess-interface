@@ -8,79 +8,80 @@ public class MoveListParser extends ChatEventParser {
 	//
 	// private static final String EVENT_START = "Movelist for game ";
 
-	//private ShortAlgebraicEncoder encoder = new ShortAlgebraicEncoder();
+	// private ShortAlgebraicEncoder encoder = new ShortAlgebraicEncoder();
 
 	public MoveListParser() {
 		super();
 	}
 
+	@Override
 	public ChatEvent parse(String string) {
-//		if (string.startsWith(EVENT_START)) {
-//			int lastDash = string.lastIndexOf("--");
-//			int firstColon = string.indexOf(':', 0);
-//			int gameNumber = Integer.parseInt(string.substring(EVENT_START
-//					.length(), firstColon));
-//
-//			Position startingPosition = new Position();
-//			MoveListModel moveList = new MoveListModel(startingPosition);
-//			Position currentPosition = (Position) startingPosition.clone();
-//
-//			if (lastDash != -1) {
-//				try {
-//					String afterDash = string.substring(lastDash);
-//					BufferedReader reader = new BufferedReader(
-//							new StringReader(afterDash));
-//					String currentLine = reader.readLine();
-//
-//					while (currentLine != null) {
-//						currentLine = currentLine.trim();
-//						if (currentLine.startsWith("{Still in progress}")) {
-//							break;
-//						} else if (currentLine.startsWith("{")) {
-//							moveList.end(currentLine);
-//							break;
-//						} else {
-//							StringTokenizer tok = new StringTokenizer(
-//									currentLine, " ");
-//
-//							String moveNumber = null;
-//							String whiteMove = null;
-//							String whiteTime = null;
-//							String blackMove = null;
-//							String blackTime = null;
-//
-//							if (tok.hasMoreTokens()) {
-//								moveNumber = tok.nextToken();
-//							}
-//							if (tok.hasMoreTokens()) {
-//								whiteMove = tok.nextToken();
-//							}
-//							if (tok.hasMoreTokens()) {
-//								whiteTime = tok.nextToken();
-//								currentPosition = appendMove(whiteTime,
-//										whiteMove, moveList, currentPosition);
-//							}
-//							if (tok.hasMoreTokens()) {
-//								blackMove = tok.nextToken();
-//							}
-//							if (tok.hasMoreTokens()) {
-//								blackTime = tok.nextToken();
-//								currentPosition = appendMove(blackTime,
-//										blackMove, moveList, currentPosition);
-//							}
-//						}
-//						currentLine = reader.readLine();
-//					}
-//				} catch (Exception e) {
-//					LOGGER.error("Error occured parsing movelist", e);
-//					return null;
-//				}
-//
-//				return new MoveListEvent(icsId, string, gameNumber, moveList);
-//			} else {
-//				return null;
-//			}
-//		}
+		// if (string.startsWith(EVENT_START)) {
+		// int lastDash = string.lastIndexOf("--");
+		// int firstColon = string.indexOf(':', 0);
+		// int gameNumber = Integer.parseInt(string.substring(EVENT_START
+		// .length(), firstColon));
+		//
+		// Position startingPosition = new Position();
+		// MoveListModel moveList = new MoveListModel(startingPosition);
+		// Position currentPosition = (Position) startingPosition.clone();
+		//
+		// if (lastDash != -1) {
+		// try {
+		// String afterDash = string.substring(lastDash);
+		// BufferedReader reader = new BufferedReader(
+		// new StringReader(afterDash));
+		// String currentLine = reader.readLine();
+		//
+		// while (currentLine != null) {
+		// currentLine = currentLine.trim();
+		// if (currentLine.startsWith("{Still in progress}")) {
+		// break;
+		// } else if (currentLine.startsWith("{")) {
+		// moveList.end(currentLine);
+		// break;
+		// } else {
+		// StringTokenizer tok = new StringTokenizer(
+		// currentLine, " ");
+		//
+		// String moveNumber = null;
+		// String whiteMove = null;
+		// String whiteTime = null;
+		// String blackMove = null;
+		// String blackTime = null;
+		//
+		// if (tok.hasMoreTokens()) {
+		// moveNumber = tok.nextToken();
+		// }
+		// if (tok.hasMoreTokens()) {
+		// whiteMove = tok.nextToken();
+		// }
+		// if (tok.hasMoreTokens()) {
+		// whiteTime = tok.nextToken();
+		// currentPosition = appendMove(whiteTime,
+		// whiteMove, moveList, currentPosition);
+		// }
+		// if (tok.hasMoreTokens()) {
+		// blackMove = tok.nextToken();
+		// }
+		// if (tok.hasMoreTokens()) {
+		// blackTime = tok.nextToken();
+		// currentPosition = appendMove(blackTime,
+		// blackMove, moveList, currentPosition);
+		// }
+		// }
+		// currentLine = reader.readLine();
+		// }
+		// } catch (Exception e) {
+		// LOGGER.error("Error occured parsing movelist", e);
+		// return null;
+		// }
+		//
+		// return new MoveListEvent(icsId, string, gameNumber, moveList);
+		// } else {
+		// return null;
+		// }
+		// }
 		return null;
 	}
 

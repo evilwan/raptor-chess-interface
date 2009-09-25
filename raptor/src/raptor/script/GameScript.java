@@ -34,10 +34,6 @@ public class GameScript implements Comparable<GameScript> {
 	public static final String IS_AVAILABLE_IN_SETUP_STATE = "isAvailableInSetupState";
 	public static final String IS_AVAILABLE_IN_FREEFORM_STATE = "isAvailableInFreeformState";
 
-	protected String name;
-	protected Connector connector;
-	protected PreferenceStore store;
-
 	public static GameScript[] getGameScripts(Connector connector) {
 		String scriptDirectory = SCRIPT_DIR + connector.getShortName()
 				+ "/game/";
@@ -64,6 +60,11 @@ public class GameScript implements Comparable<GameScript> {
 		}
 	}
 
+	protected String name;
+	protected Connector connector;
+
+	protected PreferenceStore store;
+
 	public GameScript() {
 		store = new PreferenceStore();
 	}
@@ -83,83 +84,18 @@ public class GameScript implements Comparable<GameScript> {
 		this.connector = connector;
 	}
 
-	public Connector getConnector() {
-		return connector;
+	public int compareTo(GameScript o) {
+		return this.getName().compareTo(o.getName());
 	}
 
-	public void setConnector(Connector connector) {
-		this.connector = connector;
+	public void delete() {
+		new File(SCRIPT_DIR + connector.getShortName() + "/game/" + name
+				+ ".properties").delete();
 	}
 
-	public String getDescription() {
-		return store.getString(DESCRIPTION);
-	}
-
-	public void setDescription(String description) {
-		store.setValue(DESCRIPTION, description);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getScript() {
-		return store.getString(SCRIPT);
-	}
-
-	public void setScript(String script) {
-		store.setValue(SCRIPT, script);
-	}
-
-	public boolean isAvailableInExamineState() {
-		return store.getBoolean(IS_AVAILABLE_IN_EXAMINE_STATE);
-	}
-
-	public void setAvailableInExamineState(boolean isAvailableInExamineState) {
-		store
-				.setValue(IS_AVAILABLE_IN_EXAMINE_STATE,
-						isAvailableInExamineState);
-	}
-
-	public boolean isAvailableInPlayingState() {
-		return store.getBoolean(IS_AVAILABLE_IN_PLAYING_STATE);
-	}
-
-	public void setAvailableInPlayingState(boolean isAvailableInPlayingState) {
-		store
-				.setValue(IS_AVAILABLE_IN_PLAYING_STATE,
-						isAvailableInPlayingState);
-	}
-
-	public boolean isAvailableInObserveState() {
-		return store.getBoolean(IS_AVAILABLE_IN_OBSERVE_STATE);
-	}
-
-	public void setAvailableInObserveState(boolean isAvailableInObserveState) {
-		store
-				.setValue(IS_AVAILABLE_IN_OBSERVE_STATE,
-						isAvailableInObserveState);
-	}
-
-	public boolean isAvailableInSetupState() {
-		return store.getBoolean(IS_AVAILABLE_IN_SETUP_STATE);
-	}
-
-	public void setAvailableInSetupState(boolean isAvailableInSetupState) {
-		store.setValue(IS_AVAILABLE_IN_SETUP_STATE, isAvailableInSetupState);
-	}
-
-	public boolean isAvailableInFreeformState() {
-		return store.getBoolean(IS_AVAILABLE_IN_FREEFORM_STATE);
-	}
-
-	public void setAvailableInFreeformState(boolean isAvailableInFreeformState) {
-		store.setValue(IS_AVAILABLE_IN_FREEFORM_STATE,
-				isAvailableInFreeformState);
+	public boolean equals(GameScript script) {
+		return this.connector == script.connector
+				&& this.name.equals(script.name);
 	}
 
 	public void execute(ChessBoard board) {
@@ -182,14 +118,40 @@ public class GameScript implements Comparable<GameScript> {
 		}
 	}
 
-	public boolean equals(GameScript script) {
-		return this.connector == script.connector
-				&& this.name.equals(script.name);
+	public Connector getConnector() {
+		return connector;
 	}
 
-	public void delete() {
-		new File(SCRIPT_DIR + connector.getShortName() + "/game/" + name
-				+ ".properties").delete();
+	public String getDescription() {
+		return store.getString(DESCRIPTION);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getScript() {
+		return store.getString(SCRIPT);
+	}
+
+	public boolean isAvailableInExamineState() {
+		return store.getBoolean(IS_AVAILABLE_IN_EXAMINE_STATE);
+	}
+
+	public boolean isAvailableInFreeformState() {
+		return store.getBoolean(IS_AVAILABLE_IN_FREEFORM_STATE);
+	}
+
+	public boolean isAvailableInObserveState() {
+		return store.getBoolean(IS_AVAILABLE_IN_OBSERVE_STATE);
+	}
+
+	public boolean isAvailableInPlayingState() {
+		return store.getBoolean(IS_AVAILABLE_IN_PLAYING_STATE);
+	}
+
+	public boolean isAvailableInSetupState() {
+		return store.getBoolean(IS_AVAILABLE_IN_SETUP_STATE);
 	}
 
 	public void save() {
@@ -205,8 +167,47 @@ public class GameScript implements Comparable<GameScript> {
 		}
 	}
 
-	public int compareTo(GameScript o) {
-		return this.getName().compareTo(o.getName());
+	public void setAvailableInExamineState(boolean isAvailableInExamineState) {
+		store
+				.setValue(IS_AVAILABLE_IN_EXAMINE_STATE,
+						isAvailableInExamineState);
+	}
+
+	public void setAvailableInFreeformState(boolean isAvailableInFreeformState) {
+		store.setValue(IS_AVAILABLE_IN_FREEFORM_STATE,
+				isAvailableInFreeformState);
+	}
+
+	public void setAvailableInObserveState(boolean isAvailableInObserveState) {
+		store
+				.setValue(IS_AVAILABLE_IN_OBSERVE_STATE,
+						isAvailableInObserveState);
+	}
+
+	public void setAvailableInPlayingState(boolean isAvailableInPlayingState) {
+		store
+				.setValue(IS_AVAILABLE_IN_PLAYING_STATE,
+						isAvailableInPlayingState);
+	}
+
+	public void setAvailableInSetupState(boolean isAvailableInSetupState) {
+		store.setValue(IS_AVAILABLE_IN_SETUP_STATE, isAvailableInSetupState);
+	}
+
+	public void setConnector(Connector connector) {
+		this.connector = connector;
+	}
+
+	public void setDescription(String description) {
+		store.setValue(DESCRIPTION, description);
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setScript(String script) {
+		store.setValue(SCRIPT, script);
 	}
 
 }

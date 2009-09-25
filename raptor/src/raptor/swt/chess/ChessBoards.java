@@ -7,8 +7,6 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolder2Adapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
-import org.eclipse.swt.events.DisposeEvent;
-import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.GridData;
@@ -22,80 +20,41 @@ import org.eclipse.swt.widgets.MenuItem;
 import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.game.Game;
+import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
-import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.layout.RightOrientedLayout;
 
 public class ChessBoards extends Composite {
 	private static final Log LOG = LogFactory.getLog(ChessBoards.class);
 	protected CTabFolder folder;
 
-	protected GameServiceListener gameServiceListener = new GameServiceListener() {
-		public void gameInactive(Game game) {
-		}
-
-		public void gameStateChanged(Game game,boolean isNewMove) {
-		}
-
+	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
 		public void gameCreated(final Game game) {
 			getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					ChessBoardController controller = null;
-					String title = null;
+					ChessBoardController controller = Utils
+							.buildController(game);
 
-					if ((game.getState() & Game.OBSERVING_STATE) != 0
-							|| (game.getState() & Game.OBSERVING_EXAMINED_STATE) != 0) {
-						controller = new ObserveController();
-						title = "(" + game.getId() + ") " + game.getWhiteName()
-								+ " vs " + game.getBlackName();
-						ChessBoard result = add(game, controller, Raptor
-								.getInstance().getFicsConnector(), title, true);
-
-						result.addDisposeListener(new DisposeListener() {
-							public void widgetDisposed(DisposeEvent e) {
-								if (Raptor.getInstance().getFicsConnector()
-										.isConnected()
-										&& (game.getState() & Game.ACTIVE_STATE) != 0) {
-									Raptor.getInstance().getFicsConnector()
-											.onUnobserve(game);
-								}
-
-							}
-						});
-
-					} else {
-						LOG
-								.error("Could not find controller type for game state. "
-										+ "Ignoring game. state= "
-										+ game.getState());
+					if (controller == null) {
+						Raptor
+								.getInstance()
+								.getFicsConnector()
+								.onError(
+										"Game type or action is not currenrly supported in ChessBoards. gameDescription"
+												+ game.getGameDescription()
+												+ " gameState"
+												+ game.getState());
+						return;
 					}
+
+					add(game, controller, Raptor.getInstance()
+							.getFicsConnector());
+
 				}
 			});
 
 		}
 	};
-
-	public ChessBoard add(Game game, ChessBoardController controller,
-			Connector connector, String title, boolean isCloseable) {
-		CTabItem item = new CTabItem(folder, SWT.CLOSE);
-		ChessBoard board = new ChessBoard(folder, SWT.NONE);
-		board.setGame(game);
-		board.setConnector(connector);
-		board.setController(controller);
-		board.setBoardLayout(new RightOrientedLayout(board));
-		board.setPreferences(Raptor.getInstance().getPreferences());
-		board.setResources(new ChessBoardResources(board));
-		board.createControls();
-		controller.setBoard(board);
-		board.getController().init();
-		board.getController().adjustToGameInitial();
-
-		item.setControl(board);
-		item.setText(title);
-
-		folder.setSelection(item);
-		return board;
-	}
 
 	public ChessBoards(Composite parent, int style) {
 		super(parent, style);
@@ -113,10 +72,23 @@ public class ChessBoards extends Composite {
 		folder.setMaximizeVisible(true);
 
 		folder.addCTabFolder2Listener(new CTabFolder2Adapter() {
+			@Override
+			public void close(CTabFolderEvent event) {
+				ChessBoard currentBoard = getCurrentBoard();
+				if (currentBoard.getController().onClose()) {
+					currentBoard.dispose();
+				} else {
+					LOG.debug("Close vetoed by controller.");
+					event.doit = false;
+				}
+			}
+
+			@Override
 			public void maximize(CTabFolderEvent event) {
 				Raptor.getInstance().getAppWindow().maximizeChessBoards();
 			}
 
+			@Override
 			public void restore(CTabFolderEvent event) {
 				Raptor.getInstance().getAppWindow().restore();
 			}
@@ -138,16 +110,8 @@ public class ChessBoards extends Composite {
 			}
 
 			@Override
-			public void mouseUp(MouseEvent e) {
-				System.err.println("Mouse up " + e.button);
-				super.mouseUp(e);
-			}
-
-			@Override
 			public void mouseDown(MouseEvent e) {
-				System.err.println("Mouse down " + e.button);
 				if (e.button == 3) {
-					System.err.println("On mouse down");
 					Menu menu = new Menu(folder.getShell(), SWT.POP_UP);
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Comming soon.");
@@ -166,26 +130,64 @@ public class ChessBoards extends Composite {
 				}
 
 			}
+
+			@Override
+			public void mouseUp(MouseEvent e) {
+				System.err.println("Mouse up " + e.button);
+				super.mouseUp(e);
+			}
 		});
 		pack();
 	}
 
+	public ChessBoard add(Game game, ChessBoardController controller,
+			Connector connector) {
+		CTabItem item = new CTabItem(folder,
+				controller.isCloseable() ? SWT.CLOSE : SWT.NONE);
+		ChessBoard board = new ChessBoard(folder, SWT.NONE);
+		board.setGame(game);
+		board.setConnector(connector);
+		board.setController(controller);
+		board.setBoardLayout(new RightOrientedLayout(board));
+		board.setPreferences(Raptor.getInstance().getPreferences());
+		board.setResources(new ChessBoardResources(board));
+		board.createControls();
+		controller.setBoard(board);
+		board.getController().init();
+
+		item.setControl(board);
+		item.setText(controller.getTitle());
+
+		folder.setSelection(item);
+		return board;
+	}
+
+	@Override
 	public void dispose() {
 		Raptor.getInstance().getFicsConnector().getGameService()
 				.removeGameServiceListener(gameServiceListener);
 		super.dispose();
 	}
 
+	public ChessBoard getCurrentBoard() {
+		CTabItem item = folder.getSelection();
+		if (item != null) {
+			return (ChessBoard) item.getControl();
+		} else {
+			return null;
+		}
+	}
+
 	public boolean isMaximized() {
 		return folder.getMaximized();
 	}
 
-	public void restore() {
-		folder.setMaximized(false);
-	}
-
 	public void maximize() {
 		folder.setMaximized(true);
+	}
+
+	public void restore() {
+		folder.setMaximized(false);
 	}
 
 }

@@ -105,6 +105,40 @@ public class TextFieldEditor extends FieldEditor {
 	}
 
 	/**
+	 * Creates a string field editor of unlimited width. Use the method
+	 * <code>setTextLimit</code> to limit the text.
+	 * 
+	 * @param name
+	 *            the name of the preference this field editor works on
+	 * @param labelText
+	 *            the label text of the field editor
+	 * @param parent
+	 *            the parent of the field editor's control
+	 */
+	public TextFieldEditor(String name, String labelText, Composite parent) {
+		this(name, labelText, UNLIMITED, parent);
+	}
+
+	/**
+	 * Creates a string field editor. Use the method <code>setTextLimit</code>
+	 * to limit the text.
+	 * 
+	 * @param name
+	 *            the name of the preference this field editor works on
+	 * @param labelText
+	 *            the label text of the field editor
+	 * @param width
+	 *            the width of the text input field in characters, or
+	 *            <code>UNLIMITED</code> for no limit
+	 * @param parent
+	 *            the parent of the field editor's control
+	 */
+	public TextFieldEditor(String name, String labelText, int width,
+			Composite parent) {
+		this(name, labelText, width, VALIDATE_ON_KEY_STROKE, parent);
+	}
+
+	/**
 	 * Creates a string field editor. Use the method <code>setTextLimit</code>
 	 * to limit the text.
 	 * 
@@ -135,43 +169,10 @@ public class TextFieldEditor extends FieldEditor {
 		createControl(parent);
 	}
 
-	/**
-	 * Creates a string field editor. Use the method <code>setTextLimit</code>
-	 * to limit the text.
-	 * 
-	 * @param name
-	 *            the name of the preference this field editor works on
-	 * @param labelText
-	 *            the label text of the field editor
-	 * @param width
-	 *            the width of the text input field in characters, or
-	 *            <code>UNLIMITED</code> for no limit
-	 * @param parent
-	 *            the parent of the field editor's control
-	 */
-	public TextFieldEditor(String name, String labelText, int width,
-			Composite parent) {
-		this(name, labelText, width, VALIDATE_ON_KEY_STROKE, parent);
-	}
-
-	/**
-	 * Creates a string field editor of unlimited width. Use the method
-	 * <code>setTextLimit</code> to limit the text.
-	 * 
-	 * @param name
-	 *            the name of the preference this field editor works on
-	 * @param labelText
-	 *            the label text of the field editor
-	 * @param parent
-	 *            the parent of the field editor's control
-	 */
-	public TextFieldEditor(String name, String labelText, Composite parent) {
-		this(name, labelText, UNLIMITED, parent);
-	}
-
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void adjustForNumColumns(int numColumns) {
 		GridData gd = (GridData) textField.getLayoutData();
 		gd.horizontalSpan = numColumns - 1;
@@ -236,6 +237,7 @@ public class TextFieldEditor extends FieldEditor {
 	 * must call <code>super.doFillIntoGrid</code>.
 	 * </p>
 	 */
+	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		getLabelControl(parent);
 
@@ -262,6 +264,7 @@ public class TextFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doLoad() {
 		if (textField != null) {
 			String value = getPreferenceStore().getString(getPreferenceName());
@@ -273,6 +276,7 @@ public class TextFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doLoadDefault() {
 		if (textField != null) {
 			String value = getPreferenceStore().getDefaultString(
@@ -285,6 +289,7 @@ public class TextFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doStore() {
 		getPreferenceStore().setValue(getPreferenceName(), textField.getText());
 	}
@@ -302,6 +307,7 @@ public class TextFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 2;
 	}
@@ -354,6 +360,7 @@ public class TextFieldEditor extends FieldEditor {
 					 * org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse
 					 * .swt.events.KeyEvent)
 					 */
+					@Override
 					public void keyReleased(KeyEvent e) {
 						valueChanged();
 					}
@@ -362,15 +369,18 @@ public class TextFieldEditor extends FieldEditor {
 				break;
 			case VALIDATE_ON_FOCUS_LOST:
 				textField.addKeyListener(new KeyAdapter() {
+					@Override
 					public void keyPressed(KeyEvent e) {
 						clearErrorMessage();
 					}
 				});
 				textField.addFocusListener(new FocusAdapter() {
+					@Override
 					public void focusGained(FocusEvent e) {
 						refreshValidState();
 					}
 
+					@Override
 					public void focusLost(FocusEvent e) {
 						valueChanged();
 						clearErrorMessage();
@@ -408,6 +418,7 @@ public class TextFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	public boolean isValid() {
 		return isValid;
 	}
@@ -415,6 +426,7 @@ public class TextFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void refreshValidState() {
 		isValid = checkState();
 	}
@@ -428,6 +440,15 @@ public class TextFieldEditor extends FieldEditor {
 	 */
 	public void setEmptyStringAllowed(boolean b) {
 		emptyStringAllowed = b;
+	}
+
+	/*
+	 * @see FieldEditor.setEnabled(boolean,Composite).
+	 */
+	@Override
+	public void setEnabled(boolean enabled, Composite parent) {
+		super.setEnabled(enabled, parent);
+		getTextControl(parent).setEnabled(enabled);
 	}
 
 	/**
@@ -444,6 +465,7 @@ public class TextFieldEditor extends FieldEditor {
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
+	@Override
 	public void setFocus() {
 		if (textField != null) {
 			textField.setFocus();
@@ -534,13 +556,5 @@ public class TextFieldEditor extends FieldEditor {
 			fireValueChanged(VALUE, oldValue, newValue);
 			oldValue = newValue;
 		}
-	}
-
-	/*
-	 * @see FieldEditor.setEnabled(boolean,Composite).
-	 */
-	public void setEnabled(boolean enabled, Composite parent) {
-		super.setEnabled(enabled, parent);
-		getTextControl(parent).setEnabled(enabled);
 	}
 }

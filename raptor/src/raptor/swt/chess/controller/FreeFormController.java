@@ -23,18 +23,6 @@ public class FreeFormController extends ChessBoardController implements
 	}
 
 	@Override
-	protected void onPlayMoveSound() {
-	}
-
-	@Override
-	protected void onPlayGameEndSound() {
-	}
-
-	@Override
-	protected void onPlayGameStartSound() {
-	}
-
-	@Override
 	protected void adjustCoolbarToInitial() {
 		board.addGameActionButtonsToCoolbar();
 		board.addAutoPromoteRadioGroupToCoolbar();
@@ -46,8 +34,23 @@ public class FreeFormController extends ChessBoardController implements
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!Utils.isPieceJailSquare(squareId)) {
-			return board.getSquare(squareId).getPiece() != Constants.EMPTY;
+			return board.getSquare(squareId).getPiece() != GameConstants.EMPTY;
 		}
+		return false;
+	}
+
+	@Override
+	public String getTitle() {
+		return "(" + board.getGame().getId() + ") Inactive";
+	}
+
+	@Override
+	public boolean isAbortable() {
+		return false;
+	}
+
+	@Override
+	public boolean isAdjournable() {
 		return false;
 	}
 
@@ -58,24 +61,13 @@ public class FreeFormController extends ChessBoardController implements
 	}
 
 	@Override
+	public boolean isCloseable() {
+		return true;
+	}
+
+	@Override
 	public boolean isCommitable() {
 		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isRevertable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isAbortable() {
-		return false;
-	}
-
-	@Override
-	public boolean isAdjournable() {
 		return false;
 	}
 
@@ -110,6 +102,29 @@ public class FreeFormController extends ChessBoardController implements
 	}
 
 	@Override
+	public boolean isRevertable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean onClose() {
+		return true;
+	}
+
+	@Override
+	protected void onPlayGameEndSound() {
+	}
+
+	@Override
+	protected void onPlayGameStartSound() {
+	}
+
+	@Override
+	protected void onPlayMoveSound() {
+	}
+
+	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
 		LOG.debug("moveCancelled" + board.getGame().getId() + " " + fromSquare
 				+ " " + isDnd);
@@ -125,7 +140,7 @@ public class FreeFormController extends ChessBoardController implements
 		board.unhighlightAllSquares();
 		board.getSquare(square).highlight();
 		if (isDnd) {
-			board.getSquare(square).setPiece(Constants.EMPTY);
+			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
 
 	}

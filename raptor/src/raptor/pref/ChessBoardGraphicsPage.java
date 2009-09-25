@@ -9,8 +9,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
+import raptor.game.GameConstants;
 import raptor.swt.chess.ChessBoardResources;
-import raptor.swt.chess.Constants;
 
 class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 
@@ -131,30 +131,30 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		;
 
 		whiteImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.WP);
+				GameConstants.WP);
 		whiteImages[1] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.WN);
+				GameConstants.WN);
 		whiteImages[2] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.WB);
+				GameConstants.WB);
 		whiteImages[3] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.WR);
+				GameConstants.WR);
 		whiteImages[4] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.WQ);
+				GameConstants.WQ);
 		whiteImages[5] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.WK);
+				GameConstants.WK);
 
 		blackImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.BP);
+				GameConstants.BP);
 		blackImages[1] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.BN);
+				GameConstants.BN);
 		blackImages[2] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.BB);
+				GameConstants.BB);
 		blackImages[3] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.BR);
+				GameConstants.BR);
 		blackImages[4] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.BQ);
+				GameConstants.BQ);
 		blackImages[5] = ChessBoardResources.getChessPieceImageMold(setName,
-				Constants.BK);
+				GameConstants.BK);
 
 		setWhiteImagesComposite.setImages(whiteImages);
 		setBlackImagesComposite.setImages(blackImages);

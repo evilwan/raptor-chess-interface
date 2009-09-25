@@ -195,71 +195,6 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		}
 
 		/**
-		 * Cleans up the message by ensuring only \n is used as a line
-		 * terminator. \r\n and \r may be used depending on the operating
-		 * system.
-		 */
-		public String cleanupMessage(String message) {
-			return StringUtils.remove(message, '\r');
-		}
-
-		/**
-		 * The run method. Reads the inputChannel and then invokes publishInput
-		 * with the text read.
-		 */
-		public void run() {
-			try {
-				while (true) {
-					if (isConnected()) {
-						int numRead = inputChannel.read(inputBuffer);
-						if (numRead > 0) {
-							if (LOG.isDebugEnabled()) {
-								LOG.debug("Read " + numRead + " bytes.");
-							}
-							inputBuffer.rewind();
-							byte[] bytes = new byte[numRead];
-							inputBuffer.get(bytes);
-							inboundMessageBuffer
-									.append(cleanupMessage(new String(bytes)));
-							onNewInput();
-							inputBuffer.clear();
-						} else {
-							if (LOG.isDebugEnabled()) {
-								LOG.debug("Read 0 bytes disconnecting.");
-							}
-							disconnect();
-							break;
-						}
-						Thread.sleep(50);
-					} else {
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("Not connected disconnecting.");
-						}
-						disconnect();
-						break;
-					}
-				}
-			} catch (Throwable t) {
-				LOG.debug("Error occured in read", t);
-				String errorMessage = null;
-
-				if (t instanceof IOException) {
-					errorMessage = cleanupMessage(t.getMessage());
-				} else {
-					errorMessage = cleanupMessage("Critical error occured! We are trying to make Raptor "
-							+ "bug free and we need your help! Please take a moment to report this "
-							+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n"
-							+ ExceptionUtils.getFullStackTrace(t));
-				}
-				publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
-						errorMessage));
-				disconnect();
-			} finally {
-				LOG.debug("Leaving readInput");
-			}
-		}
-
-		/**
 		 * Processes a message. If the user is logged in, message will be all of
 		 * the text received since the last prompt from fics. If the user is not
 		 * logged in, message will be all of the text received since the last
@@ -282,6 +217,62 @@ public class FicsConnector implements Connector, PreferenceKeys {
 							.maciejgFormatToUnicode(afterGameMessages));
 					publishEvent(event);
 				}
+			}
+		}
+
+		/**
+		 * The run method. Reads the inputChannel and then invokes publishInput
+		 * with the text read.
+		 */
+		public void run() {
+			try {
+				while (true) {
+					if (isConnected()) {
+						int numRead = inputChannel.read(inputBuffer);
+						if (numRead > 0) {
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("Read " + numRead + " bytes.");
+							}
+							inputBuffer.rewind();
+							byte[] bytes = new byte[numRead];
+							inputBuffer.get(bytes);
+							inboundMessageBuffer.append(FicsUtils
+									.cleanupMessage(new String(bytes)));
+							try {
+								onNewInput();
+							} catch (Throwable t) {
+								onError("Error in DaemonRun.onNewInput", t);
+							}
+							inputBuffer.clear();
+						} else {
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("Read 0 bytes disconnecting.");
+							}
+							disconnect();
+							break;
+						}
+						Thread.sleep(50);
+					} else {
+						if (LOG.isDebugEnabled()) {
+							LOG.debug("Not connected disconnecting.");
+						}
+						disconnect();
+						break;
+					}
+				}
+			} catch (Throwable t) {
+				LOG.debug("Error occured in read", t);
+				if (t instanceof IOException) {
+					LOG
+							.debug(
+									"IOException occured in DaemonRun (These are common when disconnecting and ignorable)",
+									t);
+				} else {
+					onError("Error in DaemonRun Thwoable", t);
+				}
+				disconnect();
+			} finally {
+				LOG.debug("Leaving readInput");
 			}
 		}
 	}
@@ -310,41 +301,6 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 	public FicsConnector() {
 		refreshGameScripts();
-	}
-
-	public void dispose() {
-		if (isConnected()) {
-			disconnect();
-		}
-
-		if (gameScriptsMap != null) {
-			gameScriptsMap.clear();
-			gameScriptsMap = null;
-		}
-
-		if (chatService != null) {
-			chatService.dispose();
-			chatService = null;
-		}
-		if (gameService != null) {
-			gameService.dispose();
-			gameService = null;
-		}
-
-		if (inputBuffer != null) {
-			inputBuffer.clear();
-			inputBuffer = null;
-		}
-
-		if (inputChannel != null) {
-			try {
-				inputChannel.close();
-			} catch (Throwable t) {
-			}
-			inputChannel = null;
-		}
-
-		LOG.info("Disposed FicsConnector");
 	}
 
 	/**
@@ -473,6 +429,41 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		}
 	}
 
+	public void dispose() {
+		if (isConnected()) {
+			disconnect();
+		}
+
+		if (gameScriptsMap != null) {
+			gameScriptsMap.clear();
+			gameScriptsMap = null;
+		}
+
+		if (chatService != null) {
+			chatService.dispose();
+			chatService = null;
+		}
+		if (gameService != null) {
+			gameService.dispose();
+			gameService = null;
+		}
+
+		if (inputBuffer != null) {
+			inputBuffer.clear();
+			inputBuffer = null;
+		}
+
+		if (inputChannel != null) {
+			try {
+				inputChannel.close();
+			} catch (Throwable t) {
+			}
+			inputChannel = null;
+		}
+
+		LOG.info("Disposed FicsConnector");
+	}
+
 	public ChatService getChatService() {
 		return chatService;
 	}
@@ -515,7 +506,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	public void makeMove(Game game, Move move) {
-		sendMessage(move.getSan());
+		sendMessage(move.toString());
 	}
 
 	public void onAbortKeyPress() {
@@ -530,12 +521,26 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		sendMessage("decline");
 	}
 
-	public void onUnobserve(Game game) {
-		sendMessage("unobserve " + game.getId());
-	}
-
 	public void onDraw(Game game) {
 		sendMessage("draw");
+	}
+
+	public void onError(String message) {
+		String errorMessage = FicsUtils
+				.cleanupMessage("Critical error occured! We are trying to make Raptor "
+						+ "bug free and we need your help! Please take a moment to report this "
+						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
+						+ message);
+		publishEvent(new ChatEvent(null, ChatTypes.INTERNAL, errorMessage));
+	}
+
+	public void onError(String message, Throwable t) {
+		String errorMessage = FicsUtils
+				.cleanupMessage("Critical error occured! We are trying to make Raptor "
+						+ "bug free and we need your help! Please take a moment to report this "
+						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
+						+ message + "\n" + ExceptionUtils.getFullStackTrace(t));
+		publishEvent(new ChatEvent(null, ChatTypes.INTERNAL, errorMessage));
 	}
 
 	public void onExamineModeBack(Game game) {
@@ -605,6 +610,14 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		});
 	}
 
+	public void onUnexamine(Game game) {
+		sendMessage("unexamine");
+	}
+
+	public void onUnobserve(Game game) {
+		sendMessage("unobs " + game.getId());
+	}
+
 	/**
 	 * Publishes the specified event to the chat service. Currently all messages
 	 * are published on seperate threads via ThreadService.
@@ -636,6 +649,10 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public void removeGameScript(GameScript script) {
 		script.delete();
 		gameScriptsMap.remove(script.getName());
+	}
+
+	public void sendMessage(String message) {
+		sendMessage(message, false);
 	}
 
 	public void sendMessage(String message, boolean isHidingFromUser) {
@@ -670,10 +687,6 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					"Error: Unable to send " + message
 							+ ". There is currently no connection."));
 		}
-	}
-
-	public void sendMessage(String message) {
-		sendMessage(message, false);
 	}
 
 	public void setPreferences(PreferenceStore preferences) {

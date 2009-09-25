@@ -17,6 +17,33 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 		this.board = board;
 	}
 
+	public long calculateNextUpdate() {
+
+		// The timer is not always perfect.
+		// The following code adjusts the ideal durations in half to make up for
+		// the differences.
+		long result = 0L;
+		if (remainingTimeMillis >= board.preferences
+				.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
+			result = remainingTimeMillis % 30000L;
+			if (result == 0L) {
+				result = 30000L;
+			}
+		} else if (remainingTimeMillis >= board.preferences
+				.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
+			result = remainingTimeMillis % 500L;
+			if (result == 0L) {
+				result = 500L;
+			}
+		} else {
+			result = remainingTimeMillis % 50L;
+			if (result == 0L) {
+				result = 50L;
+			}
+		}
+		return result;
+	}
+
 	public void dispose() {
 		board = null;
 		clockLabel = null;
@@ -50,33 +77,6 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 
 	public void setRemainingTimeMillis(long elapsedTimeMillis) {
 		this.remainingTimeMillis = elapsedTimeMillis;
-	}
-
-	public long calculateNextUpdate() {
-
-		// The timer is not always perfect.
-		// The following code adjusts the ideal durations in half to make up for
-		// the differences.
-		long result = 0L;
-		if (remainingTimeMillis >= board.preferences
-				.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-			result = remainingTimeMillis % 30000L;
-			if (result == 0L) {
-				result = 30000L;
-			}
-		} else if (remainingTimeMillis >= board.preferences
-				.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
-			result = remainingTimeMillis % 500L;
-			if (result == 0L) {
-				result = 500L;
-			}
-		} else {
-			result = remainingTimeMillis % 50L;
-			if (result == 0L) {
-				result = 50L;
-			}
-		}
-		return result;
 	}
 
 	public void start() {

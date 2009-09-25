@@ -267,8 +267,16 @@ public class GameUtils implements GameConstants {
 		return SQUARE_TO_COORDINATE[square];
 	}
 
+	public static int getFile(int square) {
+		return square % 8;
+	}
+
 	public static final int getOppositeColor(int color) {
 		return OPPOSITE_COLOR[color];
+	}
+
+	public static int getRank(int square) {
+		return square / 8;
 	}
 
 	public static final String getSan(int square) {
@@ -284,7 +292,7 @@ public class GameUtils implements GameConstants {
 		return rankFileToSquare(RANK_FROM_SAN.indexOf((san.charAt(1))),
 				FILE_FROM_SAN.indexOf(san.charAt(0)));
 	}
-
+	
 	public static final String getString(long board) {
 		StringBuilder result = new StringBuilder(200);
 
@@ -411,14 +419,6 @@ public class GameUtils implements GameConstants {
 		}
 	}
 
-	public static int getFile(int square) {
-		return square % 8;
-	}
-
-	public static int getRank(int square) {
-		return square / 8;
-	}
-
 	public static final boolean isInBounds(int rank, int file) {
 		return rank >= 0 && rank <= 7 && file >= 0 && file <= 7;
 	}
@@ -426,6 +426,14 @@ public class GameUtils implements GameConstants {
 	public static final boolean isOnEdge(int zeroBasedRank, int zeroBasedFile) {
 		return zeroBasedRank == 0 || zeroBasedRank == 7 || zeroBasedFile == 0
 				|| zeroBasedFile == 7;
+	}
+
+	public static boolean isPromotion(Game game, int fromSquare, int toSquare) {
+		if (game.getColorToMove() == WHITE) {
+			return game.getPiece(fromSquare) == PAWN && getRank(toSquare) == 7;
+		} else {
+			return game.getPiece(fromSquare) == PAWN && getRank(toSquare) == 0;
+		}
 	}
 
 	public static final long kingMove(int square) {

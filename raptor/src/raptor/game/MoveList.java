@@ -6,22 +6,13 @@ import java.util.List;
 public final class MoveList implements GameConstants {
 	private Move[] moves;
 	private int size = 0;
-	
+
 	public MoveList() {
-	   this(MAX_HALF_MOVES_IN_GAME);	
+		this(MAX_HALF_MOVES_IN_GAME);
 	}
-	
+
 	public MoveList(int maxSize) {
 		moves = new Move[maxSize];
-	}
-	
-	public MoveList deepCopy() {
-		MoveList result = new MoveList();
-		for (int i = 0; i < moves.length; i++) {
-			result.moves[i] = moves[i];
-		}
-		result.size = size;
-		return result;
 	}
 
 	public void append(Move move) {
@@ -39,6 +30,19 @@ public final class MoveList implements GameConstants {
 		for (int i = 0; i < size; i++) {
 			result.add(moves[i]);
 		}
+		return result;
+	}
+
+	public void clear() {
+		size = 0;
+	}
+
+	public MoveList deepCopy() {
+		MoveList result = new MoveList();
+		for (int i = 0; i < moves.length; i++) {
+			result.moves[i] = moves[i];
+		}
+		result.size = size;
 		return result;
 	}
 

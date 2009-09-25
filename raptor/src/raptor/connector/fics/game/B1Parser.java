@@ -7,28 +7,6 @@ import raptor.util.RaptorStringTokenizer;
 public class B1Parser implements GameConstants {
 	public static final String B1_START = "<b1>";
 
-	public B1Message parse(String message) {
-		if (message.startsWith(B1_START)) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
-					" {}><-\n", true);
-			B1Message result = new B1Message();
-
-			tok.nextToken();
-			tok.nextToken();
-			result.gameId = tok.nextToken();
-			tok.nextToken();
-			String whiteHoldings = tok.nextToken();
-			result.whiteHoldings = buildPieceHoldingsArray(whiteHoldings
-					.substring(1, whiteHoldings.length() - 1));
-			tok.nextToken();
-			String blackHoldings = tok.nextToken();
-			result.blackHoldings = buildPieceHoldingsArray(blackHoldings
-					.substring(1, blackHoldings.length() - 1));
-			return result;
-		}
-		return null;
-	}
-
 	public static int[] buildPieceHoldingsArray(String s) {
 		int[] result = new int[6];
 
@@ -69,5 +47,27 @@ public class B1Parser implements GameConstants {
 		}
 
 		return result;
+	}
+
+	public B1Message parse(String message) {
+		if (message.startsWith(B1_START)) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
+					" {}><-\n", true);
+			B1Message result = new B1Message();
+
+			tok.nextToken();
+			tok.nextToken();
+			result.gameId = tok.nextToken();
+			tok.nextToken();
+			String whiteHoldings = tok.nextToken();
+			result.whiteHoldings = buildPieceHoldingsArray(whiteHoldings
+					.substring(1, whiteHoldings.length() - 1));
+			tok.nextToken();
+			String blackHoldings = tok.nextToken();
+			result.blackHoldings = buildPieceHoldingsArray(blackHoldings
+					.substring(1, blackHoldings.length() - 1));
+			return result;
+		}
+		return null;
 	}
 }

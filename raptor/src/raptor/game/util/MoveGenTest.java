@@ -11,7 +11,7 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 
-public class MoveGenTest  extends TestCase implements GameConstants{
+public class MoveGenTest extends TestCase implements GameConstants {
 
 	public static void main(String args[]) {
 		MoveGenTest test = new MoveGenTest();
@@ -59,8 +59,6 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 			"2r3k1/8/8/8/8/8/PP1PPPPP/R3K2R w QK - 0 0|O-O",
 			"2r3k1/8/8/8/8/8/PPPPrPPPP/R3K2R w QK - 0 0" };
 
-
-
 	public void testBasicRepHashing() {
 		Game game = createStartingPosition(Game.STANDARD);
 
@@ -82,7 +80,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 
 	public void testInCheck() {
 		for (String fen : IN_CHECK_TESTS) {
-			Game game = createFromFen(fen,Game.STANDARD);
+			Game game = createFromFen(fen, Game.STANDARD);
 			asserts(game.isInCheck(game.getColorToMove()),
 					"User is in check in position:\n " + game);
 		}
@@ -92,7 +90,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 		for (String test : LEGAL_MOVE_TESTS) {
 			String[] split = test.split("\\|");
 
-			Game game = createFromFen(split[0],Game.STANDARD);
+			Game game = createFromFen(split[0], Game.STANDARD);
 
 			Move[] moves = game.getPseudoLegalMoves().asArray();
 			for (Move move : moves) {
@@ -120,7 +118,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 	public void testLegals() {
 		for (String test : PSEUDO_LEGAL_MOVE_TESTS) {
 			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0],Game.STANDARD);
+			Game game = createFromFen(split[0], Game.STANDARD);
 
 			if (split.length == 1) {
 				asserts(game.getPseudoLegalMoves().asArray().length == 0,
@@ -160,7 +158,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 
 	public void testNotCheckmate() {
 		for (String fen : NOT_CHECKMATE_TESTS) {
-			Game game = createFromFen(fen,Game.STANDARD);
+			Game game = createFromFen(fen, Game.STANDARD);
 			asserts(!game.isCheckmate(), "Position is not checkmate: \n" + game);
 		}
 	}
@@ -334,7 +332,9 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 	}
 
 	public void testPieceDisappearBug() {
-		Game game = createFromFen("r1q1k2r/3ppppp/1pn5/p3N3/3PPB2/5Q2/PPP2PPP/R4bK1 w kq - 0 0",Game.STANDARD);
+		Game game = createFromFen(
+				"r1q1k2r/3ppppp/1pn5/p3N3/3PPB2/5Q2/PPP2PPP/R4bK1 w kq - 0 0",
+				Game.STANDARD);
 		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
 		game.makeLanMove("a1xf1");
 		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
@@ -343,7 +343,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 	public void testPromotions() {
 		for (String test : PROMOTION_TEST) {
 			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0],Game.STANDARD);
+			Game game = createFromFen(split[0], Game.STANDARD);
 			game.makeLanMove(split[1]);
 
 			List<Move> expectedMoves = new ArrayList<Move>(split.length - 2);
@@ -358,7 +358,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 
 		for (String test : PROMOTION_TEST) {
 			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0],Game.STANDARD);
+			Game game = createFromFen(split[0], Game.STANDARD);
 			game.makeLanMove(split[1]);
 
 			List<Move> expectedMoves = new ArrayList<Move>(split.length - 2);
@@ -367,7 +367,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 				expectedMoves.add(game.makeLanMove(split[i]));
 				game.rollback();
 				game.rollback();
-				Game game2 = createFromFen(split[0],Game.STANDARD);
+				Game game2 = createFromFen(split[0], Game.STANDARD);
 				asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 						&& game.getEmptyBB() == game2.getEmptyBB(),
 						"Occupied/empty are not the same.");
@@ -435,7 +435,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 	public void testValidCastle() {
 		for (String test : VALID_CASTLE_TEST) {
 			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0],Game.STANDARD);
+			Game game = createFromFen(split[0], Game.STANDARD);
 
 			boolean isCastleKingside = contains("O-O", split);
 			boolean isCastleQueenside = contains("O-O-O", split);
@@ -450,7 +450,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 						(game.getCastling(game.getColorToMove()) & CASTLE_KINGSIDE) != 0,
 						"Rollback erased castle kingside");
 
-				Game game2 = createFromFen(split[0],Game.STANDARD);
+				Game game2 = createFromFen(split[0], Game.STANDARD);
 				asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 						&& game.getEmptyBB() == game2.getEmptyBB(),
 						"Occupied is not the same.");
@@ -466,7 +466,7 @@ public class MoveGenTest  extends TestCase implements GameConstants{
 				asserts(
 						(game.getCastling(game.getColorToMove()) & CASTLE_QUEENSIDE) != 0,
 						"Rollback erased castle queenside");
-				Game game2 = createFromFen(split[0],Game.STANDARD);
+				Game game2 = createFromFen(split[0], Game.STANDARD);
 				asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 						&& game.getEmptyBB() == game2.getEmptyBB(),
 						"Occupied is not the same.");

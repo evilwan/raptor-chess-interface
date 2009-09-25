@@ -3,6 +3,20 @@ package raptor.util;
 public class RaptorStringUtils {
 
 	/**
+	 * A fast utility method that does'nt use REGEX and returns the number of
+	 * character in source.
+	 */
+	public static int count(String source, char character) {
+		int result = 0;
+		for (int i = 0; i < source.length(); i++) {
+			if (source.charAt(i) == character) {
+				result++;
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Expresses value in terms of digits. If value is 0 and digits is 2 "00"
 	 * will be returned. If value is 1 and digits is 2 "01" is returned. If
 	 * value is 123 and digits is 2 then "12" is returned.
@@ -21,50 +35,6 @@ public class RaptorStringUtils {
 			}
 		} else {
 			result = valueAsString;
-		}
-		return result;
-	}
-
-	/**
-	 * Returns a String representing the contents of the array delimited by the
-	 * specified delimiter.
-	 */
-	public static String toDelimitedString(Object[] array, String delimiter) {
-		StringBuilder result = new StringBuilder(100);
-		if (array == null) {
-			result.append("null");
-		} else if (array.length == 0) {
-			result.append("empty");
-		} else {
-			for (int i = 0; i < array.length; i++) {
-				result.append(array[i].toString());
-
-				if (i < array.length - 1) {
-					result.append(delimiter);
-				}
-			}
-		}
-		return result.toString();
-	}
-
-	/**
-	 * Returns a String representing the contents of the array delimited by the
-	 * a comma.
-	 */
-	public static String toDelimitedString(Object[] array) {
-		return toDelimitedString(array, ",");
-	}
-
-	/**
-	 * A fast utility method that does'nt use REGEX and returns the number of
-	 * character in source.
-	 */
-	public static int count(String source, char character) {
-		int result = 0;
-		for (int i = 0; i < source.length(); i++) {
-			if (source.charAt(i) == character) {
-				result++;
-			}
 		}
 		return result;
 	}
@@ -146,6 +116,36 @@ public class RaptorStringUtils {
 		} else {
 			return source;
 		}
+	}
+
+	/**
+	 * Returns a String representing the contents of the array delimited by the
+	 * a comma.
+	 */
+	public static String toDelimitedString(Object[] array) {
+		return toDelimitedString(array, ",");
+	}
+
+	/**
+	 * Returns a String representing the contents of the array delimited by the
+	 * specified delimiter.
+	 */
+	public static String toDelimitedString(Object[] array, String delimiter) {
+		StringBuilder result = new StringBuilder(100);
+		if (array == null) {
+			result.append("null");
+		} else if (array.length == 0) {
+			result.append("empty");
+		} else {
+			for (int i = 0; i < array.length; i++) {
+				result.append(array[i].toString());
+
+				if (i < array.length - 1) {
+					result.append(delimiter);
+				}
+			}
+		}
+		return result.toString();
 	}
 
 }

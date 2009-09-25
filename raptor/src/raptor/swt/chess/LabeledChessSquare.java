@@ -26,12 +26,13 @@ public class LabeledChessSquare extends ChessSquare {
 	};
 
 	public LabeledChessSquare(Composite composite, ChessBoard board, int id) {
-		super(composite, board, id,true);
+		super(composite, board, id, true);
 		ignoreBackgroundImage = true;
 		addPaintListener(paintListener);
-		
+
 	}
 
+	@Override
 	public void dispose() {
 		removePaintListener(paintListener);
 		super.dispose();
