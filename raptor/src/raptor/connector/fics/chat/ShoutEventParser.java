@@ -18,9 +18,10 @@ public class ShoutEventParser extends ChatEventParser {
 	@Override
 	public ChatEvent parse(String text) {
 		if (text.length() < 1500) {
-			if (text.startsWith(SHOUT_1)) {
+			if (text.startsWith("\n" + SHOUT_1)) {
+				String name = text.substring(SHOUT_1.length()).trim();
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
-						text.substring("SHOUT_1".length()), " ");
+						name, " ");
 				String s1 = FicsUtils.removeTitles(stringtokenizer.nextToken());
 				return new ChatEvent(s1, SHOUT, text);
 
