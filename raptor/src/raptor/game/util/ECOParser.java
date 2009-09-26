@@ -20,10 +20,10 @@ public class ECOParser {
 	private static final Log LOG = LogFactory.getLog(ECOParser.class);
 	
 	static {
-		File f = new File(raptor.Raptor.getRaptorUserDir() + File.separator + "ECO.txt");
+		File f = new File(raptor.Raptor.USER_RAPTOR_HOME_PATH + File.separator + "ECO.txt");
 		try {
 			ECOParser.parse(f);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LOG.error("Error occurred reading file containing ECO information: " + f.getAbsolutePath(),e);
 		}
 	}
@@ -78,8 +78,10 @@ public class ECOParser {
 	 * @param file File containing the ECO information.
 	 * @throws IOException If something goes wrong during reading.
 	 */
-	public static void parse(File file) throws IOException {
+	public static void parse(File file) throws IOException,NullPointerException {
 		LOG.info("parse() begin");
+		if (ECOParser.getMap().size() > 0) return;
+		
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		while(reader.ready()) {
 			String line = reader.readLine();
