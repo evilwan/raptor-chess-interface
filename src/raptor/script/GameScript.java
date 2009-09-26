@@ -22,7 +22,7 @@ import raptor.util.RaptorStringUtils;
 public class GameScript implements Comparable<GameScript> {
 	static final Log LOG = LogFactory.getLog(GameScript.class);
 
-	public static final String SCRIPT_DIR = Raptor.getRaptorUserDir()
+	public static final String SCRIPT_DIR = Raptor.USER_RAPTOR_DIR
 			.getAbsolutePath()
 			+ "/scripts/";
 

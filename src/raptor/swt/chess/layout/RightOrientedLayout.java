@@ -259,7 +259,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 				whiteClockLabelSize.y);
 
 		int controlHeight = whiteNameLabelRect.height + whiteLagRect.height;// +
-																			// whiteClockRect.height;
+		// whiteClockRect.height;
 
 		if (controlHeight > whiteToMoveIndicatorRect.height) {
 			whiteToMoveIndicatorRect.y = whiteNameLabelRect.y
@@ -275,70 +275,74 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		pieceJailRects = new Rectangle[board.getPieceJailSquares().length];
 		if (board.isWhitePieceJailOnTop()) {
 			pieceJailRects[WP] = new Rectangle(pieceJailStartX, boardTopLeft.y
-					+ boardSquareSize * 2, boardSquareSize, boardSquareSize);
-			pieceJailRects[WN] = new Rectangle(pieceJailStartX
-					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 2,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WB] = new Rectangle(pieceJailStartX + 2
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 2,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WQ] = new Rectangle(pieceJailStartX, boardTopLeft.y
 					+ boardSquareSize * 3, boardSquareSize, boardSquareSize);
-			pieceJailRects[WR] = new Rectangle(pieceJailStartX
+			pieceJailRects[WN] = new Rectangle(pieceJailStartX
 					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
 					boardSquareSize, boardSquareSize);
-			pieceJailRects[WK] = new Rectangle(pieceJailStartX + 2
+			pieceJailRects[WB] = new Rectangle(pieceJailStartX + 2
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[WQ] = new Rectangle(pieceJailStartX + 3
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[WR] = new Rectangle(pieceJailStartX + 4
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[WK] = new Rectangle(pieceJailStartX + 5
 					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
 					boardSquareSize, boardSquareSize);
 
 			pieceJailRects[BP] = new Rectangle(pieceJailStartX, boardTopLeft.y
-					+ boardSquareSize * 6, boardSquareSize, boardSquareSize);
-			pieceJailRects[BN] = new Rectangle(pieceJailStartX
-					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 6,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BB] = new Rectangle(pieceJailStartX + 2
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 6,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BQ] = new Rectangle(pieceJailStartX, boardTopLeft.y
 					+ boardSquareSize * 7, boardSquareSize, boardSquareSize);
-			pieceJailRects[BR] = new Rectangle(pieceJailStartX
+			pieceJailRects[BN] = new Rectangle(pieceJailStartX
 					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
 					boardSquareSize, boardSquareSize);
-			pieceJailRects[BK] = new Rectangle(pieceJailStartX + 2
+			pieceJailRects[BB] = new Rectangle(pieceJailStartX + 2
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[BQ] = new Rectangle(pieceJailStartX + 3
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[BR] = new Rectangle(pieceJailStartX + 4
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[BK] = new Rectangle(pieceJailStartX + 5
 					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
 					boardSquareSize, boardSquareSize);
 		} else {
 			pieceJailRects[BP] = new Rectangle(pieceJailStartX, boardTopLeft.y
-					+ boardSquareSize * 2, boardSquareSize, boardSquareSize);
-			pieceJailRects[BN] = new Rectangle(pieceJailStartX
-					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 2,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BB] = new Rectangle(pieceJailStartX + 2
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 2,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BQ] = new Rectangle(pieceJailStartX, boardTopLeft.y
 					+ boardSquareSize * 3, boardSquareSize, boardSquareSize);
-			pieceJailRects[BR] = new Rectangle(pieceJailStartX
+			pieceJailRects[BN] = new Rectangle(pieceJailStartX
 					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
 					boardSquareSize, boardSquareSize);
-			pieceJailRects[BK] = new Rectangle(pieceJailStartX + 2
+			pieceJailRects[BB] = new Rectangle(pieceJailStartX + 2
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[BQ] = new Rectangle(pieceJailStartX + 3
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[BR] = new Rectangle(pieceJailStartX + 4
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[BK] = new Rectangle(pieceJailStartX + 5
 					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
 					boardSquareSize, boardSquareSize);
 
 			pieceJailRects[WP] = new Rectangle(pieceJailStartX, boardTopLeft.y
-					+ boardSquareSize * 6, boardSquareSize, boardSquareSize);
-			pieceJailRects[WN] = new Rectangle(pieceJailStartX
-					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 6,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WB] = new Rectangle(pieceJailStartX + 2
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 6,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WQ] = new Rectangle(pieceJailStartX, boardTopLeft.y
 					+ boardSquareSize * 7, boardSquareSize, boardSquareSize);
-			pieceJailRects[WR] = new Rectangle(pieceJailStartX
+			pieceJailRects[WN] = new Rectangle(pieceJailStartX
 					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
 					boardSquareSize, boardSquareSize);
-			pieceJailRects[WK] = new Rectangle(pieceJailStartX + 2
+			pieceJailRects[WB] = new Rectangle(pieceJailStartX + 2
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[WQ] = new Rectangle(pieceJailStartX + 3
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[WR] = new Rectangle(pieceJailStartX + 4
+					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
+					boardSquareSize, boardSquareSize);
+			pieceJailRects[WK] = new Rectangle(pieceJailStartX + 5
 					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
 					boardSquareSize, boardSquareSize);
 		}

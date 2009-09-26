@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.Raptor;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
@@ -329,14 +330,14 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	public void adjustToMoveIndicatorLabel() {
 		if (getGame().getColorToMove() == WHITE) {
 			board.getWhiteToMoveIndicatorLabel().setImage(
-					board.getPreferences().getIcon("circle_green30x30"));
+					Raptor.getInstance().getIcon("circle_green30x30"));
 			board.getBlackToMoveIndicatorLabel().setImage(
-					board.getPreferences().getIcon("circle_gray30x30"));
+					Raptor.getInstance().getIcon("circle_gray30x30"));
 		} else {
 			board.getBlackToMoveIndicatorLabel().setImage(
-					board.getPreferences().getIcon("circle_green30x30"));
+					Raptor.getInstance().getIcon("circle_green30x30"));
 			board.getWhiteToMoveIndicatorLabel().setImage(
-					board.getPreferences().getIcon("circle_gray30x30"));
+					Raptor.getInstance().getIcon("circle_gray30x30"));
 		}
 	}
 

@@ -9,7 +9,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
-import raptor.game.GameConstants;
 import raptor.swt.chess.ChessBoardResources;
 
 class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
@@ -130,31 +129,31 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		Image[] blackImages = new Image[6];
 		;
 
-		whiteImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.WP);
-		whiteImages[1] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.WN);
-		whiteImages[2] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.WB);
-		whiteImages[3] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.WR);
-		whiteImages[4] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.WQ);
-		whiteImages[5] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.WK);
-
-		blackImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.BP);
-		blackImages[1] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.BN);
-		blackImages[2] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.BB);
-		blackImages[3] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.BR);
-		blackImages[4] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.BQ);
-		blackImages[5] = ChessBoardResources.getChessPieceImageMold(setName,
-				GameConstants.BK);
+		// whiteImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.WP);
+		// whiteImages[1] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.WN);
+		// whiteImages[2] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.WB);
+		// whiteImages[3] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.WR);
+		// whiteImages[4] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.WQ);
+		// whiteImages[5] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.WK);
+		//
+		// blackImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.BP);
+		// blackImages[1] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.BN);
+		// blackImages[2] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.BB);
+		// blackImages[3] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.BR);
+		// blackImages[4] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.BQ);
+		// blackImages[5] = ChessBoardResources.getChessPieceImageMold(setName,
+		// GameConstants.BK);
 
 		setWhiteImagesComposite.setImages(whiteImages);
 		setBlackImagesComposite.setImages(blackImages);

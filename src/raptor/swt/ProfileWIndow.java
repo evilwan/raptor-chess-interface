@@ -16,13 +16,15 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
+import raptor.Raptor;
+
 public class ProfileWIndow extends ApplicationWindow {
 
 	private Label heapm, heap1, heap2, heap3, heap4, stackm, stack1, stack2,
 			stack3, stack4, threadsm, threads1, threads2, threads3;
 
 	public ProfileWIndow() {
-		super(null);
+		super(Raptor.getInstance().getAppWindow().getShell());
 	}
 
 	@Override

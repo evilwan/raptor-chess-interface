@@ -8,7 +8,7 @@ public class Test {
 	public static final long TIMEZONE_OFFSET = -(Calendar.getInstance()
 			.get(Calendar.ZONE_OFFSET));
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws Exception {
 
 		// System.out.println(FicsUtils.replaceUnicode("&#x3b1;&#x3b2;&#x3b3;&#x3b4;&#x3b5;&#x3b6;"));
 		StringBuilder builder = new StringBuilder(
