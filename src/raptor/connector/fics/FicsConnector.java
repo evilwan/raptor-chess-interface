@@ -107,7 +107,6 @@ public class FicsConnector implements Connector, PreferenceKeys {
 						sendMessage(password, true);
 					}
 				} else {
-					System.err.println("Handling : catch all");
 					parseMessage(message);
 				}
 			}
