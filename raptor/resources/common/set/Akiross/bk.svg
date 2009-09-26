@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="54.9375"
+   height="147.5625"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   version="1.0"
+   sodipodi:docbase="/home/akiross/Works/Painting"
+   sodipodi:docname="BKing.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
+   inkscape:export-xdpi="56.25"
+   inkscape:export-ydpi="56.25">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="464.70289"
+     inkscape:cy="110.2768"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="480px"
+     height="280px"
+     inkscape:window-width="1272"
+     inkscape:window-height="946"
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Chess Pieces Set</dc:title>
+        <dc:date>21 jan 2008</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Alessandro [AkiRoss] Re</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Alessandro Re</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:description>http://www.ale-re.net</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-52.21199,-140.9375)">
+    <path
+       sodipodi:nodetypes="ccccccccscsccccccscsccccccccc"
+       id="BKing"
+       d="M 82.64949,143.4375 L 82.64949,154.3125 L 96.05574,154.3125 L 96.05574,161.5625 L 82.64949,161.5625 L 82.64949,174.9375 L 100.74324,184.22366 L 94.24324,199.5625 C 97.71069,203.18321 99.83699,208.09423 99.83699,213.5 C 99.83698,221.00033 95.73239,227.5316 89.64949,231 C 98.3455,231.81534 104.43074,233.66596 104.43074,235.8125 C 104.43074,238.1369 97.29214,240.08896 87.43074,240.78125 C 90.57963,259.06426 104.64949,261.77694 104.64949,280.03125 L 104.64949,286 L 54.71199,286 L 54.74324,280.03125 C 54.74323,261.62878 69.0305,260.43737 72.02449,240.78125 C 62.11413,240.09496 54.93074,238.14431 54.93074,235.8125 C 54.93074,233.66336 61.03034,231.81383 69.74324,231 C 63.64752,227.53687 59.52449,221.00934 59.52449,213.5 C 59.52449,208.34731 61.4653,203.65842 64.64949,200.09375 L 57.61824,184.22366 L 75.71199,174.9375 L 75.71199,161.5625 L 62.30574,161.5625 L 62.30574,154.3125 L 75.71199,154.3125 L 75.71199,143.4375 L 82.64949,143.4375 z "
+       style="opacity:1;fill:#404040;fill-opacity:1;fill-rule:nonzero;stroke:#919191;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       inkscape:label="Black King" />
+  </g>
+</svg>

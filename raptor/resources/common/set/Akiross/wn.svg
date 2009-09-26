@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64.867706"
+   height="90.399384"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   version="1.0"
+   sodipodi:docbase="/home/akiross/Works/Painting"
+   sodipodi:docname="WKnight.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
+   inkscape:export-xdpi="56.25"
+   inkscape:export-ydpi="56.25">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="235.70289"
+     inkscape:cy="120.2768"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="480px"
+     height="280px"
+     inkscape:window-width="1272"
+     inkscape:window-height="946"
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Chess Pieces Set</dc:title>
+        <dc:date>21 jan 2008</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Alessandro [AkiRoss] Re</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Alessandro Re</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:description>http://www.ale-re.net</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-193.43227,-43.937504)">
+    <path
+       style="opacity:1;fill:#bababa;fill-opacity:1;fill-rule:nonzero;stroke:#dedede;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 213.18227,65.21189 L 195.93227,81.33689 L 204.18227,90.83689 L 222.43227,84.58689 C 222.43227,84.58689 212.23368,90.28548 203.43227,99.08689 C 194.55124,107.96792 196.37897,124.76582 199.56095,131.83689 L 249.18227,131.83689 C 229.68227,107.83689 265.87264,84.25027 252.93227,61.83689 C 240.33234,40.01315 220.0502,43.39299 207.81044,59.46479 C 209.67754,61.33189 211.45587,63.48549 213.18227,65.21189 z "
+       id="WKnight"
+       sodipodi:nodetypes="cccczcczcc"
+       inkscape:label="White Knight" />
+  </g>
+</svg>
