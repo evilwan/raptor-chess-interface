@@ -59,21 +59,21 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#303042;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="M 22.5,11.625 L 22.5,6"
        id="path6570" />
     <path
-       style="fill:black;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:black;fill-opacity:1;fill-rule:evenodd;stroke:#303042;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="M 22.5,25 C 22.5,25 27,17.5 25.5,14.5 C 25.5,14.5 24.5,12 22.5,12 C 20.5,12 19.5,14.5 19.5,14.5 C 18,17.5 22.5,25 22.5,25"
        id="path5683"
        sodipodi:nodetypes="ccccc" />
     <path
-       style="fill:black;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:black;fill-opacity:1;fill-rule:evenodd;stroke:#303042;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="M 11.5,37 C 17,40.5 27,40.5 32.5,37 L 32.5,30 C 32.5,30 41.5,25.5 38.5,19.5 C 34.5,13 25,16 22.5,23.5 L 22.5,27 L 22.5,23.5 C 19,16 9.5,13 6.5,19.5 C 3.5,25.5 11.5,29.5 11.5,29.5 L 11.5,37 z "
        id="path5681"
        sodipodi:nodetypes="cccccccccc" />
     <path
-       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:black;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#303042;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="M 20,8 L 25,8"
        id="path6572" />
     <path
