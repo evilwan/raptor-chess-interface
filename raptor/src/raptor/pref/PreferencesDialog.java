@@ -37,6 +37,7 @@ public class PreferencesDialog {
 				new FicsConnectionPage()));
 		mgr.addToRoot(new PreferenceNode("ficsGameScripts",
 				new FicsGameScriptsPage()));
+		mgr.addToRoot(new PreferenceNode("clocks", new ClocksPage()));
 
 		// Create the preferences dialog
 		PreferenceDialog dlg = new PreferenceDialog(null, mgr);
