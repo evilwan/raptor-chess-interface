@@ -10,9 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
-import org.eclipse.jface.resource.ColorRegistry;
-import org.eclipse.jface.resource.FontRegistry;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -20,8 +17,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
@@ -170,7 +165,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	}
 
 	public void loadDefaults() {
-		String defaultFontName = Raptor.getInstance().getFontRegistry().defaultFont().getFontData()[0]
+		String defaultFontName = Raptor.getInstance().getFontRegistry()
+				.defaultFont().getFontData()[0]
 				.getName();
 		String defaultMonospacedFontName = "Courier";
 
