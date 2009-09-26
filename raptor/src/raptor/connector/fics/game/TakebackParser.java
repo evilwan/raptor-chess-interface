@@ -12,7 +12,7 @@ import raptor.util.RaptorStringTokenizer;
  * This parser is a bit unusual in that it maintains state as messages are
  * processed.
  * 
- * You can invoke getTakeBackMessage(gameId) to receive the last takeback offer
+ * You can invoke getTakeBackMessage(gameId) to receive the last take back offer
  * requested and whether or not it was accepted.
  * 
  * It is important to clearTakebackMessages after there is no longer a need to
