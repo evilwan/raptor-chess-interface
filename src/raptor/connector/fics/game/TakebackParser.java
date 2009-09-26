@@ -33,14 +33,24 @@ public class TakebackParser {
 	public static final String ACCEPTD_TAKE_BACK = "accepts the takeback request";
 	private static final Log LOG = LogFactory.getLog(TakebackParser.class);
 
+	/**
+	 * Returns the take back message for the specified game id. Returns null if
+	 * there are none.
+	 */
 	public TakebackMessage getTakebackMessage(String gameId) {
 		return gameToTakebackMessages.get(gameId);
 	}
 
+	/**
+	 * Clears the take back message for the specified gameId.
+	 */
 	public void clearTakebackMessages(String gameId) {
 		gameToTakebackMessages.remove(gameId);
 	}
 
+	/**
+	 * Returns true if line is a take back accepted message.
+	 */
 	public boolean parse(String line) {
 		if (line.startsWith(IDENTIFIER) && line.contains(REQUEST_TAKE_BACK)) {
 			if (LOG.isDebugEnabled()) {
