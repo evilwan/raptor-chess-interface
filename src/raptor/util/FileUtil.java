@@ -58,6 +58,7 @@ public class FileUtil {
 							"copyFiles: Could not create direcotry: "
 									+ dest.getAbsolutePath() + ".");
 				}
+				LOG.debug("Created directory " + dest.getAbsolutePath());
 			}
 			// get a listing of files...
 
@@ -92,6 +93,8 @@ public class FileUtil {
 
 					fout.write(buffer, 0, bytesRead);
 				}
+				LOG.debug("Copied " + src.getAbsolutePath() + " to "
+						+ dest.getAbsolutePath());
 
 			} catch (IOException e) { // Error copying file...
 
