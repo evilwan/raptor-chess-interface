@@ -86,7 +86,8 @@ public class ExamineController extends ChessBoardController {
 
 		stopClocks();
 		adjustClockColors();
-		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
+		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)
+				&& getGame().isInState(Game.ACTIVE_STATE)) {
 			adjustClockLabelsAndUpdaters();
 			startClocks();
 		}
