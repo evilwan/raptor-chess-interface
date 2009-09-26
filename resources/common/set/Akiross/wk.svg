@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="54.9375"
+   height="147.5625"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   version="1.0"
+   sodipodi:docbase="/home/akiross/Works/Painting"
+   sodipodi:docname="WKing.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
+   inkscape:export-xdpi="56.25"
+   inkscape:export-ydpi="56.25">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="464.70289"
+     inkscape:cy="110.2768"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="480px"
+     height="280px"
+     inkscape:window-width="1272"
+     inkscape:window-height="946"
+     inkscape:window-x="0"
+     inkscape:window-y="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Chess Pieces Set</dc:title>
+        <dc:date>21 jan 2008</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Alessandro [AkiRoss] Re</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Alessandro Re</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:description>http://www.ale-re.net</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-428.03128,-43.9375)">
+    <path
+       style="opacity:1;fill:#bababa;fill-opacity:1;fill-rule:nonzero;stroke:#dedede;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 452.53128,46.4375 L 452.53128,57.3125 L 439.12503,57.3125 L 439.12503,64.5625 L 452.53128,64.5625 L 452.53128,77.9375 L 434.43753,87.22367 L 440.93753,102.5625 C 437.47008,106.18321 435.34378,111.09423 435.34378,116.5 C 435.34379,124.00033 439.44838,130.5316 445.53128,134 C 436.83527,134.81534 430.75003,136.66596 430.75003,138.8125 C 430.75003,141.1369 437.88863,143.08896 447.75003,143.78125 C 444.60114,162.06426 430.53128,164.77694 430.53128,183.03125 L 430.53128,189 L 480.46878,189 L 480.43753,183.03125 C 480.43754,164.62878 466.15027,163.43737 463.15628,143.78125 C 473.06664,143.09496 480.25003,141.14431 480.25003,138.8125 C 480.25003,136.66336 474.15043,134.81383 465.43753,134 C 471.53325,130.53687 475.65628,124.00934 475.65628,116.5 C 475.65628,111.34731 473.71547,106.65842 470.53128,103.09375 L 477.56253,87.22367 L 459.46878,77.9375 L 459.46878,64.5625 L 472.87503,64.5625 L 472.87503,57.3125 L 459.46878,57.3125 L 459.46878,46.4375 L 452.53128,46.4375 z "
+       id="WKing"
+       sodipodi:nodetypes="ccccccccscsccccccscsccccccccc"
+       inkscape:label="White King" />
+  </g>
+</svg>
