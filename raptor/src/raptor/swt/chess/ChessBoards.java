@@ -81,6 +81,10 @@ public class ChessBoards extends Composite {
 					LOG.debug("Close vetoed by controller.");
 					event.doit = false;
 				}
+
+				if (folder.getItemCount() == 1) {
+					Raptor.getInstance().getAppWindow().maximizeChatConsoles();
+				}
 			}
 
 			@Override
@@ -159,6 +163,10 @@ public class ChessBoards extends Composite {
 		item.setText(controller.getTitle());
 
 		folder.setSelection(item);
+
+		if (Raptor.getInstance().getAppWindow().isChatConsolesMaximized()) {
+			Raptor.getInstance().getAppWindow().restore();
+		}
 		return board;
 	}
 

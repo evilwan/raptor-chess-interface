@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Label;
 
+import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.game.GameConstants;
@@ -158,7 +159,7 @@ public class ChessBoard extends Composite implements Constants {
 		composite.setLayout(gridLayout);
 
 		Button firstButtonItem = new Button(composite, SWT.FLAT);
-		firstButtonItem.setImage(getPreferences().getIcon("first"));
+		firstButtonItem.setImage(Raptor.getInstance().getIcon("first"));
 		firstButtonItem.setToolTipText("Go to the first move played");
 		firstButtonItem.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -170,7 +171,7 @@ public class ChessBoard extends Composite implements Constants {
 		coolbarButtonMap.put(FIRST_NAV, firstButtonItem);
 
 		Button backButton = new Button(composite, SWT.FLAT);
-		backButton.setImage(getPreferences().getIcon("back"));
+		backButton.setImage(Raptor.getInstance().getIcon("back"));
 		backButton.setToolTipText("Go to the previous move played");
 		backButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -183,7 +184,7 @@ public class ChessBoard extends Composite implements Constants {
 
 		if (controller.isRevertable()) {
 			Button revertButton = new Button(composite, SWT.FLAT);
-			revertButton.setImage(getPreferences().getIcon("counterClockwise"));
+			revertButton.setImage(Raptor.getInstance().getIcon("counterClockwise"));
 			revertButton.setToolTipText("Revert back to main-variation.");
 			revertButton.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -197,7 +198,7 @@ public class ChessBoard extends Composite implements Constants {
 
 		if (controller.isCommitable()) {
 			Button commitButton = new Button(composite, SWT.FLAT);
-			commitButton.setImage(getPreferences().getIcon("clockwise"));
+			commitButton.setImage(Raptor.getInstance().getIcon("clockwise"));
 			commitButton.setToolTipText("Commit sub-variation.");
 			commitButton.addSelectionListener(new SelectionAdapter() {
 				@Override
@@ -211,7 +212,7 @@ public class ChessBoard extends Composite implements Constants {
 		}
 
 		Button nextButton = new Button(composite, SWT.FLAT);
-		nextButton.setImage(getPreferences().getIcon("next"));
+		nextButton.setImage(Raptor.getInstance().getIcon("next"));
 		nextButton.setToolTipText("Go to the next move played");
 		nextButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -223,7 +224,7 @@ public class ChessBoard extends Composite implements Constants {
 		coolbarButtonMap.put(NEXT_NAV, nextButton);
 
 		Button lastButton = new Button(composite, SWT.FLAT);
-		lastButton.setImage(getPreferences().getIcon("last"));
+		lastButton.setImage(Raptor.getInstance().getIcon("last"));
 		lastButton.setToolTipText("Go to the last move played");
 		lastButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -235,7 +236,7 @@ public class ChessBoard extends Composite implements Constants {
 		coolbarButtonMap.put(LAST_NAV, lastButton);
 
 		Button flipButton = new Button(composite, SWT.FLAT);
-		flipButton.setImage(getPreferences().getIcon("flip"));
+		flipButton.setImage(Raptor.getInstance().getIcon("flip"));
 		flipButton.setToolTipText("Flips the chess board.");
 		coolbarButtonMap.put(FLIP, flipButton);
 		flipButton.addSelectionListener(new SelectionAdapter() {
@@ -247,7 +248,7 @@ public class ChessBoard extends Composite implements Constants {
 
 		if (controller.isAutoDrawable()) {
 			Button autoDrawButton = new Button(composite, SWT.CHECK);
-			autoDrawButton.setImage(getPreferences().getIcon("draw"));
+			autoDrawButton.setImage(Raptor.getInstance().getIcon("draw"));
 			autoDrawButton
 					.setToolTipText("Offer a draw after every move you make.");
 			coolbarButtonMap.put(AUTO_DRAW, autoDrawButton);
@@ -278,7 +279,7 @@ public class ChessBoard extends Composite implements Constants {
 		combo.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button executeButton = new Button(composite, SWT.FLAT);
-		executeButton.setImage(getPreferences().getIcon("enter"));
+		executeButton.setImage(Raptor.getInstance().getIcon("enter"));
 		executeButton.setToolTipText("Executes the selected script.");
 		executeButton.setLayoutData(new GridData(GridData.FILL_VERTICAL));
 
@@ -324,13 +325,11 @@ public class ChessBoard extends Composite implements Constants {
 
 		whiteToMoveIndicatorLabel = new Label(boardPanel, layout
 				.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
-		whiteToMoveIndicatorLabel.setImage(preferences
-				.getIcon("circle_green30x30"));
+		whiteToMoveIndicatorLabel.setImage(Raptor.getInstance().getIcon("circle_green30x30"));
 
 		blackToMoveIndicatorLabel = new Label(boardPanel, layout
 				.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
-		blackToMoveIndicatorLabel.setImage(preferences
-				.getIcon("circle_gray30x30"));
+		blackToMoveIndicatorLabel.setImage(Raptor.getInstance().getIcon("circle_gray30x30"));
 
 		preferences.addPropertyChangeListener(propertyChangeListener);
 

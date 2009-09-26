@@ -62,7 +62,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 
 	protected void addButtons() {
 		Button sendButton = new Button(buttonComposite, SWT.FLAT);
-		sendButton.setImage(preferences.getIcon("enter"));
+		sendButton.setImage(Raptor.getInstance().getIcon("enter"));
 		sendButton.setToolTipText("Sends the message in the input field.");
 		sendButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -74,7 +74,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 
 		if (controller.isPrependable()) {
 			Button prependTextButton = new Button(buttonComposite, SWT.CHECK);
-			prependTextButton.setImage(preferences.getIcon("redStar"));
+			prependTextButton.setImage(Raptor.getInstance().getIcon("redStar"));
 			prependTextButton.setToolTipText("Prepends " + prependTextButton
 					+ " to all messages sent.");
 			prependTextButton.setSelection(true);
@@ -82,7 +82,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		}
 
 		final Button saveButton = new Button(buttonComposite, SWT.FLAT);
-		saveButton.setImage(preferences.getIcon("save"));
+		saveButton.setImage(Raptor.getInstance().getIcon("save"));
 		saveButton.setToolTipText("Save the current console text to a file.");
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -94,7 +94,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		buttonMap.put(SAVE_BUTTON, saveButton);
 
 		final Button awayButton = new Button(buttonComposite, SWT.FLAT);
-		awayButton.setImage(preferences.getIcon("chat"));
+		awayButton.setImage(Raptor.getInstance().getIcon("chat"));
 		awayButton
 				.setToolTipText("Displays all of the direct tells you missed while you were away. "
 						+ "The list of tells you missed is reset each time you send a message.");
@@ -109,7 +109,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 
 		if (controller.isSearchable()) {
 			Button searchButton = new Button(buttonComposite, SWT.FLAT);
-			searchButton.setImage(preferences.getIcon("search"));
+			searchButton.setImage(Raptor.getInstance().getIcon("search"));
 			searchButton
 					.setToolTipText("Searches backward for the message in the console text. "
 							+ "The search is case insensitive and does not use regular expressions.");
@@ -123,7 +123,7 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		}
 
 		final Button autoScroll = new Button(buttonComposite, SWT.FLAT);
-		autoScroll.setImage(preferences.getIcon("down"));
+		autoScroll.setImage(Raptor.getInstance().getIcon("down"));
 		autoScroll.setToolTipText("Forces auto scrolling.");
 		autoScroll.addSelectionListener(new SelectionAdapter() {
 			@Override

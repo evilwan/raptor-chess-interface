@@ -36,25 +36,20 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	private static final Log LOG = LogFactory
 			.getLog(RaptorPreferenceStore.class);
 	public static final File RAPTOR_PROPERTIES = new File(Raptor
-			.getRaptorUserDir(), "raptor.properties");
+			.USER_RAPTOR_DIR, "raptor.properties");
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
-	public static final String ICONS_DIR = "resources/common/icons/";
 
-	private ImageRegistry imageRegistry = new ImageRegistry(Display
-			.getCurrent());
-	private FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
-	private ColorRegistry colorRegistry = new ColorRegistry(Display
-			.getCurrent());
+	
 
 	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent arg0) {
 			if (arg0.getProperty().endsWith("color")) {
-				colorRegistry.put(arg0.getProperty(), PreferenceConverter
+				Raptor.getInstance().getColorRegistry().put(arg0.getProperty(), PreferenceConverter
 						.getColor(RaptorPreferenceStore.this, arg0
 								.getProperty()));
 			} else if (arg0.getProperty().endsWith("font")) {
-				fontRegistry.put(arg0.getProperty(), PreferenceConverter
+				Raptor.getInstance().getFontRegistry().put(arg0.getProperty(), PreferenceConverter
 						.getFontDataArray(RaptorPreferenceStore.this, arg0
 								.getProperty()));
 			}
@@ -103,7 +98,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 					+ "-color";
 		}
 		try {
-			if (!colorRegistry.hasValueFor(key)) {
+			if (!Raptor.getInstance().getColorRegistry().hasValueFor(key)) {
 				// We don't want the default color if not found we want to
 				// return null, so use
 				// StringConverter instead of PreferenceConverter.
@@ -111,7 +106,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				if (StringUtils.isNotBlank(value)) {
 					RGB rgb = StringConverter.asRGB(value, null);
 					if (rgb != null) {
-						colorRegistry.put(key, rgb);
+						Raptor.getInstance().getColorRegistry().put(key, rgb);
 					} else {
 						return null;
 					}
@@ -119,7 +114,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 					return null;
 				}
 			}
-			result = colorRegistry.get(key);
+			result = Raptor.getInstance().getColorRegistry().get(key);
 		} catch (Throwable t) {
 			result = null;
 		}
@@ -132,13 +127,13 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	 */
 	public Color getColor(String key) {
 		try {
-			if (!colorRegistry.hasValueFor(key)) {
+			if (!Raptor.getInstance().getColorRegistry().hasValueFor(key)) {
 				RGB rgb = PreferenceConverter.getColor(this, key);
 				if (rgb != null) {
-					colorRegistry.put(key, rgb);
+					Raptor.getInstance().getColorRegistry().put(key, rgb);
 				}
 			}
-			return colorRegistry.get(key);
+			return Raptor.getInstance().getColorRegistry().get(key);
 		} catch (Throwable t) {
 			LOG.error("Error in getColor(" + key + ") Returning black.", t);
 			return new Color(Display.getCurrent(), new RGB(0, 0, 0));
@@ -151,38 +146,20 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	 */
 	public Font getFont(String key) {
 		try {
-			if (!fontRegistry.hasValueFor(key)) {
+			if (!Raptor.getInstance().getFontRegistry().hasValueFor(key)) {
 				FontData[] fontData = PreferenceConverter.getFontDataArray(
 						this, key);
-				fontRegistry.put(key, fontData);
+				Raptor.getInstance().getFontRegistry().put(key, fontData);
 			}
-			return fontRegistry.get(key);
+			return Raptor.getInstance().getFontRegistry().get(key);
 		} catch (Throwable t) {
 			LOG.error("Error in getFont(" + key + ") Returning default font.",
 					t);
-			return fontRegistry.defaultFont();
+			return Raptor.getInstance().getFontRegistry().defaultFont();
 		}
 	}
 
-	public Image getIcon(String key) {
-		String fileName = ICONS_DIR + key + ".png";
-		return getImage(fileName);
-	}
-
-	public Image getImage(String fileName) {
-		Image result = imageRegistry.get(fileName);
-		if (result == null) {
-			try {
-				ImageData data = new ImageData(fileName);
-				imageRegistry.put(fileName, result = new Image(Display
-						.getCurrent(), data));
-			} catch (RuntimeException e) {
-				LOG.error("Error loading image " + fileName, e);
-				throw e;
-			}
-		}
-		return result;
-	}
+	
 
 	public Point getPoint(String key) {
 		return PreferenceConverter.getPoint(this, key);
@@ -193,12 +170,12 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	}
 
 	public void loadDefaults() {
-		String defaultFontName = fontRegistry.defaultFont().getFontData()[0]
+		String defaultFontName = Raptor.getInstance().getFontRegistry().defaultFont().getFontData()[0]
 				.getName();
 		String defaultMonospacedFontName = "Courier";
 
 		// Board
-		setDefault(BOARD_CHESS_SET_NAME, "Fantasy");
+		setDefault(BOARD_CHESS_SET_NAME, "BSD");
 		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "Wood2");
 		setDefault(BOARD_IS_SHOW_COORDINATES, true);
 		setDefault(BOARD_PIECE_SIZE_ADJUSTMENT, .03);
@@ -335,7 +312,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, CHAT_LINK_UNDERLINE_COLOR,
 				new RGB(0, 0, 238));
 
-		setDefault(APP_NAME, "raptor v alpha.1");
+		setDefault(APP_NAME, "Raptor v.Alpha.1");
 		PreferenceConverter.setDefault(this, APP_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, APP_LAG_COLOR, new RGB(0, 0, 0));

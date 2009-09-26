@@ -17,7 +17,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
@@ -44,7 +43,7 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 	protected boolean wasLoginPressed;
 
 	public LoginDialog() {
-		super((Shell) null);
+		super(Raptor.getInstance().getAppWindow().getShell());
 	}
 
 	protected void adjustToCheckBoxControls() {
