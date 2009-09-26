@@ -2,26 +2,34 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="54.9375"
-   height="112.8125"
+   width="112.81"
+   height="112.81"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    version="1.0"
    sodipodi:docbase="/home/akiross/Works/Painting"
-   sodipodi:docname="WBishop.svg"
+   sodipodi:docname="wb.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
    inkscape:export-xdpi="56.25"
    inkscape:export-ydpi="56.25">
   <defs
-     id="defs4" />
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 56.40625 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="54.9375 : 56.40625 : 1"
+       inkscape:persp3d-origin="27.46875 : 37.604167 : 1"
+       id="perspective10339" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -33,16 +41,23 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="235.70289"
-     inkscape:cy="120.2768"
+     inkscape:cx="464.70289"
+     inkscape:cy="110.2768"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      width="480px"
      height="280px"
      inkscape:window-width="1272"
      inkscape:window-height="946"
-     inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-x="335"
+     inkscape:window-y="35"
+     showgrid="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid10341"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -88,11 +103,11 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-273.90625,-43.9375)">
+     transform="translate(-206.33702,-175.6875)">
     <path
-       style="opacity:1;fill:#bababa;fill-opacity:1;fill-rule:nonzero;stroke:#dedede;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 301.40625,46.4375 L 280.03125,64.1875 L 287.90625,86.78125 C 283.81111,90.47127 281.21875,95.80724 281.21875,101.75 C 281.21875,108.59041 284.65986,114.64059 289.875,118.28125 C 282.33354,118.91733 277.15625,120.1414 277.15625,121.5625 C 277.15625,123.2381 284.31251,124.61345 294.125,125.09375 C 292.45077,145.71238 276.40625,128.80123 276.40625,148.28125 L 276.40625,154.25 L 326.34375,154.25 L 326.34375,148.28125 C 326.34375,128.80773 310.30823,145.66256 308.625,125.09375 C 318.45364,124.61494 325.65625,123.23988 325.65625,121.5625 C 325.65625,120.1414 320.44771,118.91733 312.90625,118.28125 C 318.13297,114.64468 321.53125,108.59863 321.53125,101.75 C 321.53125,95.82301 318.98247,90.50148 314.90625,86.8125 L 322.78125,64.1875 L 301.40625,46.4375 z M 301.375,59.875 C 301.99825,59.875 302.5,60.37675 302.5,61 L 302.5,66.4375 L 308.15625,66.4375 C 308.7795,66.4375 309.28125,66.85563 309.28125,67.375 C 309.28125,67.89438 308.7795,68.3125 308.15625,68.3125 L 302.5,68.3125 L 302.5,77.75 C 302.5,78.37325 301.99825,78.875 301.375,78.875 C 300.75175,78.875 300.25,78.37325 300.25,77.75 L 300.25,68.3125 L 294.59375,68.3125 C 293.9705,68.3125 293.46875,67.89438 293.46875,67.375 C 293.46875,66.85563 293.9705,66.4375 294.59375,66.4375 L 300.25,66.4375 L 300.25,61 C 300.25,60.37675 300.75175,59.875 301.375,59.875 z "
-       id="WBishop"
-       inkscape:label="White Bishop" />
+       id="BBishop"
+       d="M 262.27452,178.188 L 283.64952,195.938 L 275.77452,218.53175 C 279.86966,222.22177 282.46202,227.55774 282.46202,233.5005 C 282.46202,240.34091 279.02091,246.39109 273.80577,250.03175 C 281.34723,250.66783 286.52452,251.8919 286.52452,253.313 C 286.52452,254.9886 279.36826,256.36395 269.55577,256.84425 C 271.23,277.46288 287.27452,260.55173 287.27452,280.03175 L 287.27452,286.0005 L 237.33702,286.0005 L 237.33702,280.03175 C 237.33702,260.55823 253.37254,277.41306 255.05577,256.84425 C 245.22713,256.36544 238.02452,254.99038 238.02452,253.313 C 238.02452,251.8919 243.23306,250.66783 250.77452,250.03175 C 245.5478,246.39518 242.14952,240.34913 242.14952,233.5005 C 242.14952,227.57351 244.6983,222.25198 248.77452,218.563 L 240.89952,195.938 L 262.27452,178.188 z M 262.30577,191.6255 C 261.68252,191.6255 261.18077,192.12725 261.18077,192.7505 L 261.18077,198.188 L 255.52452,198.188 C 254.90127,198.188 254.39952,198.60613 254.39952,199.1255 C 254.39952,199.64488 254.90127,200.063 255.52452,200.063 L 261.18077,200.063 L 261.18077,209.5005 C 261.18077,210.12375 261.68252,210.6255 262.30577,210.6255 C 262.92902,210.6255 263.43077,210.12375 263.43077,209.5005 L 263.43077,200.063 L 269.08702,200.063 C 269.71027,200.063 270.21202,199.64488 270.21202,199.1255 C 270.21202,198.60613 269.71027,198.188 269.08702,198.188 L 263.43077,198.188 L 263.43077,192.7505 C 263.43077,192.12725 262.92902,191.6255 262.30577,191.6255 z"
+       style="opacity:1;fill:#ececec;fill-opacity:1;fill-rule:nonzero;stroke:#333333;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       inkscape:label="Black Bishop" />
   </g>
 </svg>

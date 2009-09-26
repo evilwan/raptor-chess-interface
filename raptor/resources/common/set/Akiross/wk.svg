@@ -2,26 +2,34 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="54.9375"
-   height="147.5625"
+   width="147.56"
+   height="147.56"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    version="1.0"
    sodipodi:docbase="/home/akiross/Works/Painting"
-   sodipodi:docname="WKing.svg"
+   sodipodi:docname="wk.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
    inkscape:export-xdpi="56.25"
    inkscape:export-ydpi="56.25">
   <defs
-     id="defs4" />
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 73.78125 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="54.9375 : 73.78125 : 1"
+       inkscape:persp3d-origin="27.46875 : 49.1875 : 1"
+       id="perspective10065" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -33,7 +41,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="464.70289"
+     inkscape:cx="292.20289"
      inkscape:cy="110.2768"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -41,8 +49,15 @@
      height="280px"
      inkscape:window-width="1272"
      inkscape:window-height="946"
-     inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-x="48"
+     inkscape:window-y="22"
+     showgrid="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid10067"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -88,12 +103,12 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-428.03128,-43.9375)">
+     transform="translate(-52.21199,-140.9375)">
     <path
-       style="opacity:1;fill:#bababa;fill-opacity:1;fill-rule:nonzero;stroke:#dedede;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 452.53128,46.4375 L 452.53128,57.3125 L 439.12503,57.3125 L 439.12503,64.5625 L 452.53128,64.5625 L 452.53128,77.9375 L 434.43753,87.22367 L 440.93753,102.5625 C 437.47008,106.18321 435.34378,111.09423 435.34378,116.5 C 435.34379,124.00033 439.44838,130.5316 445.53128,134 C 436.83527,134.81534 430.75003,136.66596 430.75003,138.8125 C 430.75003,141.1369 437.88863,143.08896 447.75003,143.78125 C 444.60114,162.06426 430.53128,164.77694 430.53128,183.03125 L 430.53128,189 L 480.46878,189 L 480.43753,183.03125 C 480.43754,164.62878 466.15027,163.43737 463.15628,143.78125 C 473.06664,143.09496 480.25003,141.14431 480.25003,138.8125 C 480.25003,136.66336 474.15043,134.81383 465.43753,134 C 471.53325,130.53687 475.65628,124.00934 475.65628,116.5 C 475.65628,111.34731 473.71547,106.65842 470.53128,103.09375 L 477.56253,87.22367 L 459.46878,77.9375 L 459.46878,64.5625 L 472.87503,64.5625 L 472.87503,57.3125 L 459.46878,57.3125 L 459.46878,46.4375 L 452.53128,46.4375 z "
-       id="WKing"
        sodipodi:nodetypes="ccccccccscsccccccscsccccccccc"
-       inkscape:label="White King" />
+       id="BKing"
+       d="M 131.83699,143.435 L 131.83699,154.31 L 150.60574,154.31 L 150.60574,161.56 L 131.83699,161.56 L 131.83699,174.935 L 157.16824,184.22116 L 148.06824,199.56 C 152.92267,203.18071 155.89949,208.09173 155.89949,213.4975 C 155.89948,220.99783 150.15305,227.5291 141.63699,230.9975 C 153.8114,231.81284 162.33074,233.66346 162.33074,235.81 C 162.33074,238.1344 152.3367,240.08646 138.53074,240.77875 C 142.93919,259.06176 162.63699,261.77444 162.63699,280.02875 L 162.63699,285.9975 L 92.72449,285.9975 L 92.76824,280.02875 C 92.768226,261.62628 112.7704,260.43487 116.96199,240.77875 C 103.08749,240.09246 93.03074,238.14181 93.03074,235.81 C 93.03074,233.66086 101.57018,231.81133 113.76824,230.9975 C 105.23423,227.53437 99.46199,221.00684 99.46199,213.4975 C 99.46199,208.34481 102.17912,203.65592 106.63699,200.09125 L 96.79324,184.22116 L 122.12449,174.935 L 122.12449,161.56 L 103.35574,161.56 L 103.35574,154.31 L 122.12449,154.31 L 122.12449,143.435 L 131.83699,143.435 z"
+       style="opacity:1;fill:#ececec;fill-opacity:1;fill-rule:nonzero;stroke:#333333;stroke-width:5.91608000000000001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       inkscape:label="Black King" />
   </g>
 </svg>

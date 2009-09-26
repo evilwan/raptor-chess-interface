@@ -2,26 +2,34 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64.867706"
+   width="90.400002"
    height="90.399384"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    version="1.0"
    sodipodi:docbase="/home/akiross/Works/Painting"
-   sodipodi:docname="WKnight.svg"
+   sodipodi:docname="wn.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
    inkscape:export-xdpi="56.25"
    inkscape:export-ydpi="56.25">
   <defs
-     id="defs4" />
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 45.199692 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="64.867706 : 45.199692 : 1"
+       inkscape:persp3d-origin="32.433853 : 30.133128 : 1"
+       id="perspective10895" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -33,16 +41,23 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="235.70289"
-     inkscape:cy="120.2768"
+     inkscape:cx="292.20289"
+     inkscape:cy="110.2768"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      width="480px"
      height="280px"
      inkscape:window-width="1272"
      inkscape:window-height="946"
-     inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-x="20"
+     inkscape:window-y="41"
+     showgrid="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid10897"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -88,12 +103,12 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-193.43227,-43.937504)">
+     transform="translate(-276.88079,-198.10061)">
     <path
-       style="opacity:1;fill:#bababa;fill-opacity:1;fill-rule:nonzero;stroke:#dedede;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 213.18227,65.21189 L 195.93227,81.33689 L 204.18227,90.83689 L 222.43227,84.58689 C 222.43227,84.58689 212.23368,90.28548 203.43227,99.08689 C 194.55124,107.96792 196.37897,124.76582 199.56095,131.83689 L 249.18227,131.83689 C 229.68227,107.83689 265.87264,84.25027 252.93227,61.83689 C 240.33234,40.01315 220.0502,43.39299 207.81044,59.46479 C 209.67754,61.33189 211.45587,63.48549 213.18227,65.21189 z "
-       id="WKnight"
        sodipodi:nodetypes="cccczcczcc"
-       inkscape:label="White Knight" />
+       id="BKnight"
+       d="M 329.46173,233.19999 L 343.26173,246.09999 L 336.66173,253.69999 L 322.06173,248.69999 C 322.06173,248.69999 330.2206,253.25886 337.26173,260.29999 C 344.36655,267.40482 342.90437,280.84314 340.35879,286.49999 L 300.66173,286.49999 C 316.26173,267.29999 287.30943,248.4307 297.66173,230.49999 C 307.74167,213.041 323.96739,215.74487 333.75919,228.60231 C 332.26551,230.09599 330.84285,231.81887 329.46173,233.19999 z"
+       style="opacity:1;fill:#ececec;fill-opacity:1;fill-rule:nonzero;stroke:#333333;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       inkscape:label="Black Knight" />
   </g>
 </svg>
