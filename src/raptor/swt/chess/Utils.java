@@ -100,7 +100,7 @@ public class Utils implements Constants {
 	}
 
 	public static boolean isBlackPiece(int setPieceType) {
-		return setPieceType > 7 && setPieceType < 13;
+		return setPieceType >= 7 && setPieceType < 13;
 	}
 
 	public static boolean isPieceJailSquare(int pieceJailSquare) {
