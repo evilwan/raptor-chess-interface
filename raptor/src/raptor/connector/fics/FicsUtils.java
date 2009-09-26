@@ -6,6 +6,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.connector.fics.game.TakebackParser;
+import raptor.connector.fics.game.TakebackParser.TakebackMessage;
 import raptor.connector.fics.game.message.G1Message;
 import raptor.connector.fics.game.message.Style12Message;
 import raptor.game.Game;
@@ -80,55 +82,52 @@ public class FicsUtils implements GameConstants {
 	}
 
 	/**
-	 * Adjusts the game for takebacks. If this method returns true the game was
-	 * updated and no more processing needs to be done. If this method returns
-	 * false the game either didnt need any updating, or was rolled back to
-	 * adjust for the takebacks and still requires adjusting to the move in the
-	 * style 12 message.
+	 * Returns true if the game was adjusted for takebacks. False otherwise.
 	 */
-	public static boolean adjustToTakebacks(Game game, Style12Message message) {
+	public static boolean adjustToTakebacks(Game game, Style12Message message,
+			TakebackParser takebackParser) {
 		boolean result = false;
+		TakebackMessage takeback = takebackParser.getTakebackMessage(game
+				.getId());
 
-		// First make sure the move counts match.
-		// Takebacks will roll them back.
-		int messageHalfMoveCount = 0;
-		if (message.fullMoveNumber == 1) {
-			messageHalfMoveCount = message.isWhitesMoveAfterMoveIsMade ? 1 : 0;
-		} else if (message.fullMoveNumber == 2) {
-			messageHalfMoveCount = message.isWhitesMoveAfterMoveIsMade ? 3 : 2;
-		} else {
-			// Half move to full move conversion table.
-			// hm fm
-			// 0 1 1 1
-			// 2 3 2 2
-			// 3 4 3 3
-			// 5 6 4 4
-			// 7 8 5 5
-			// 9 10 6 6
-			messageHalfMoveCount = (message.fullMoveNumber - 1) * 2
-					+ (message.isWhitesMoveAfterMoveIsMade ? -1 : 0);
-		}
-
-		// Now check to see if we have all the moves inside the game to roll
-		// back.
-		int rollBacks = game.getHalfMoveCount() - messageHalfMoveCount;
-
-		if (rollBacks != 0) {
-			if (game.getMoves().getSize() < rollBacks) {
-				// We have to do a hard reset of the games position because we
-				// dont have the moves to rollback.
+		if (takeback != null && takeback.wasAccepted) {
+			if (takeback.halfMovesRequested == -1) {
+				if (LOG.isDebugEnabled()) {
+					LOG
+							.debug("Resettting position becuse we dont know how many moves to rollback.");
+				}
 				resetGame(game, message);
 				result = true;
 			} else {
-				System.err.println("Rolling back " + rollBacks);
-				// Rollback the moves.
-				for (int i = 0; i < rollBacks; i++) {
-					game.rollback();
+				int adjustedHalfMoveCount = game.getHalfMoveCount()
+						- takeback.halfMovesRequested;
+
+				if (game.getMoves().getSize() < adjustedHalfMoveCount) {
+					if (LOG.isDebugEnabled()) {
+						LOG
+								.debug("Resettting position becuse we dont have enough moves to handle the takebacks");
+					}
+					resetGame(game, message);
+					result = true;
+				} else {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Rolling back moves to adjust to takebacks. "
+								+ takeback.halfMovesRequested);
+					}
+
+					for (int i = 0; i < takeback.halfMovesRequested; i++) {
+						game.rollback();
+					}
+
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Finished rolling back.");
+					}
+
+					result = true;
 				}
-				result = true;
 			}
 		}
-
+		takebackParser.clearTakebackMessages(game.getId());
 		return result;
 	}
 

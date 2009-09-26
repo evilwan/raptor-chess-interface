@@ -28,6 +28,7 @@ import raptor.connector.fics.game.GameEndParser;
 import raptor.connector.fics.game.IllegalMoveParser;
 import raptor.connector.fics.game.RemovingObsGameParser;
 import raptor.connector.fics.game.Style12Parser;
+import raptor.connector.fics.game.TakebackParser;
 import raptor.connector.fics.game.message.B1Message;
 import raptor.connector.fics.game.message.G1Message;
 import raptor.connector.fics.game.message.GameEndMessage;
@@ -49,6 +50,7 @@ public class FicsParser implements GameConstants {
 	protected GameEndParser gameEndParser;
 	protected IllegalMoveParser illegalMoveParser;
 	protected RemovingObsGameParser removingObsGameParser;
+	protected TakebackParser takebackParser;
 
 	protected List<ChatEventParser> nonGameEventParsers = new ArrayList<ChatEventParser>(
 			30);
@@ -67,6 +69,7 @@ public class FicsParser implements GameConstants {
 		g1Parser = new G1Parser();
 		illegalMoveParser = new IllegalMoveParser();
 		removingObsGameParser = new RemovingObsGameParser();
+		takebackParser = new TakebackParser();
 
 		// handle user tell types of events first so others can't be spoofed
 		// nonGameEventParsers.add(new BugWhoGEventParser(icsId));
@@ -118,7 +121,9 @@ public class FicsParser implements GameConstants {
 
 			while (tok.hasMoreTokens()) {
 				String line = tok.nextToken();
-				System.err.println("Processing raw line: " + line);
+				if (LOG.isDebugEnabled()) {
+					System.err.println("Processing raw line: " + line);
+				}
 
 				G1Message g1Message = g1Parser.parse(line);
 				if (g1Message != null) {
@@ -160,6 +165,9 @@ public class FicsParser implements GameConstants {
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 					continue;
 				}
+
+				takebackParser.parse(line);
+
 				result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 			}
 			return result.toString();
@@ -167,8 +175,10 @@ public class FicsParser implements GameConstants {
 	}
 
 	public void process(B1Message message, GameService service) {
-		LOG.debug("Processing b1: " + message
-				+ " <Ignoiring not yet implemented>");
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing b1: " + message
+					+ " <Ignoiring not yet implemented>");
+		}
 	}
 
 	public void process(G1Message message, GameService service) {
@@ -205,8 +215,11 @@ public class FicsParser implements GameConstants {
 			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
 			service.removeGame(game);
+			takebackParser.clearTakebackMessages(game.getId());
 		}
-		LOG.debug("Processed game end: " + message);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processed game end: " + message);
+		}
 	}
 
 	public void process(IllegalMoveMessage message, GameService service) {
@@ -217,7 +230,9 @@ public class FicsParser implements GameConstants {
 		for (Game game : allActive) {
 			service.fireIllegalMove(game.getId(), message.move);
 		}
-		LOG.debug("Processed illegal move: " + message);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processed illegal move: " + message);
+		}
 	}
 
 	public void process(RemovingObsGameMessage message, GameService service) {
@@ -233,12 +248,17 @@ public class FicsParser implements GameConstants {
 			game.setState(game.getState() | Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
 			service.removeGame(game);
+			takebackParser.clearTakebackMessages(game.getId());
 		}
-		LOG.debug("Processed removing obs game: " + message);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processed removing obs game: " + message);
+		}
 	}
 
 	public void process(Style12Message message, GameService service) {
-		LOG.debug("Processing style 12: " + message);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing style 12: " + message);
+		}
 		long startTime = System.currentTimeMillis();
 
 		Game game = service.getGame(message.gameId);
@@ -246,7 +266,9 @@ public class FicsParser implements GameConstants {
 			if (game.isInState(Game.EXAMINING_STATE)
 					|| game.isInState(Game.SETUP_STATE)) {
 				// Examined/BSetup moves flow through here.
-				LOG.debug("Processing bsetup or examine position move.");
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Processing bsetup or examine position move.");
+				}
 
 				// Clear out the game and start over.
 				// There is no telling what happened
@@ -255,24 +277,35 @@ public class FicsParser implements GameConstants {
 				service.fireGameStateChanged(message.gameId, true);
 			} else {
 				// Playing/Obsing moves flow through here.
-				LOG.debug("Processing obs/playing position move.");
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Processing obs/playing position move.");
+				}
 
 				// Takebacks may have effected the state of the game so first
 				// adjsut to those.
-				if (!FicsUtils.adjustToTakebacks(game, message)) {
-					LOG.debug("Making move in obs/playing position.");
+				if (!FicsUtils.adjustToTakebacks(game, message, takebackParser)) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Making move in obs/playing position.");
+					}
 					// Now add the move to the game.
 					// Game Ends and Refreshes dont involve adding a move.
 					if (FicsUtils.addCurrentMove(game, message)) {
-						LOG.debug("Position was a move firing state changed.");
+						if (LOG.isDebugEnabled()) {
+							LOG
+									.debug("Position was a move firing state changed.");
+						}
 						service.fireGameStateChanged(message.gameId, true);
 					} else {
-						LOG
-								.debug("Position was not a move firing state changed.");
+						if (LOG.isDebugEnabled()) {
+							LOG
+									.debug("Position was not a move firing state changed.");
+						}
 						service.fireGameStateChanged(message.gameId, false);
 					}
 				} else {
-					LOG.debug("Adjusted for takebacks.");
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Adjusted for takebacks.");
+					}
 					service.fireGameStateChanged(message.gameId, true);
 				}
 			}
@@ -283,12 +316,15 @@ public class FicsParser implements GameConstants {
 				LOG.debug("Processing new ex or bsetup game.");
 				game = FicsUtils.createGame(message);
 				service.addGame(game);
-
-				LOG.debug("Firing game created.");
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Firing game created.");
+				}
 				service.fireGameCreated(game.getId());
 			} else {
 				// Observed/Playing games starts flow through here
-				LOG.debug("Processing new obs/playing game.");
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Processing new obs/playing game.");
+				}
 				unprocessedG1Messages.remove(message.gameId);
 
 				game = FicsUtils.createGame(g1Message);
@@ -297,13 +333,16 @@ public class FicsParser implements GameConstants {
 				FicsUtils.verifyLegal(game);
 
 				service.addGame(game);
-				LOG.debug("Firing game created.");
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Firing game created.");
+				}
 				service.fireGameCreated(game.getId());
 			}
 		}
-
-		LOG.debug("Processed style 12: " + message + " in "
-				+ (System.currentTimeMillis() - startTime));
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processed style 12: " + message + " in "
+					+ (System.currentTimeMillis() - startTime));
+		}
 	}
 
 }
