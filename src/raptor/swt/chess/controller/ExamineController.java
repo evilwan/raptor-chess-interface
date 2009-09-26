@@ -83,12 +83,21 @@ public class ExamineController extends ChessBoardController {
 	public void examinePositionUpdate() {
 		LOG.info("examinePositionUpdate " + getGame().getId() + " ...");
 		long startTime = System.currentTimeMillis();
+
+		stopClocks();
+		adjustClockColors();
+		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
+			adjustClockLabelsAndUpdaters();
+			startClocks();
+		}
+
 		adjustNameRatingLabels();
 		adjustGameDescriptionLabel();
 		adjustToGameChangeNotInvolvingMove();
 		adjustBoardToGame(getGame());
 		adjustPieceJailFromGame(getGame());
 		adjustNavButtonEnabledState();
+
 		board.forceUpdate();
 		onPlayMoveSound();
 		board.unhighlightAllSquares();

@@ -348,6 +348,13 @@ public class FicsUtils implements GameConstants {
 			game.setState(Game.PLAYING_STATE | Game.IS_CLOCK_TICKING_STATE);
 			break;
 		}
+
+		if (message.isClockTicking) {
+			game.addState(Game.IS_CLOCK_TICKING_STATE);
+		} else {
+			game.clearState(Game.IS_CLOCK_TICKING_STATE);
+		}
+
 		game.addState(Game.ACTIVE_STATE);
 
 		game.setBlackName(message.blackName);
