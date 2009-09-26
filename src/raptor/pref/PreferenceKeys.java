@@ -78,13 +78,4 @@ public interface PreferenceKeys {
 	public static final String FICS_TIMESEAL_ENABLED = "fics-timeseal-enabled";
 
 	public static final String CHAT_LINK_COLOR = "chat-link-color";
-
-	public static final String[] colorKeys = { BOARD_BACKGROUND_COLOR,
-			BOARD_COORDINATES_COLOR, BOARD_HIGHLIGHT_COLOR,
-			BOARD_ACTIVE_CLOCK_COLOR, BOARD_INACTIVE_CLOCK_COLOR,
-			BOARD_LAG_COLOR, BOARD_LAG_COLOR };
-
-	public static final String[] fontkeys = { BOARD_COORDINATES_FONT,
-			BOARD_CLOCK_FONT, BOARD_LAG_FONT, BOARD_PLAYER_NAME_FONT,
-			BOARD_PIECE_JAIL_FONT };
 }
