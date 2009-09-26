@@ -2,26 +2,34 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="64.867706"
+   width="90.400002"
    height="90.399384"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    version="1.0"
    sodipodi:docbase="/home/akiross/Works/Painting"
-   sodipodi:docname="BKnight.svg"
+   sodipodi:docname="bn.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
    inkscape:export-xdpi="56.25"
    inkscape:export-ydpi="56.25">
   <defs
-     id="defs4" />
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 45.199692 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="64.867706 : 45.199692 : 1"
+       inkscape:persp3d-origin="32.433853 : 30.133128 : 1"
+       id="perspective10895" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -33,7 +41,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="464.70289"
+     inkscape:cx="292.20289"
      inkscape:cy="110.2768"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -41,8 +49,15 @@
      height="280px"
      inkscape:window-width="1272"
      inkscape:window-height="946"
-     inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-x="20"
+     inkscape:window-y="41"
+     showgrid="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid10897"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -92,8 +107,8 @@
     <path
        sodipodi:nodetypes="cccczcczcc"
        id="BKnight"
-       d="M 321.9985,219.375 L 339.2485,235.5 L 330.9985,245 L 312.7485,238.75 C 312.7485,238.75 322.94709,244.44859 331.7485,253.25 C 340.62953,262.13103 338.8018,278.92893 335.61982,286 L 285.9985,286 C 305.4985,262 269.30813,238.41338 282.2485,216 C 294.84843,194.17626 315.13057,197.5561 327.37033,213.6279 C 325.50323,215.495 323.7249,217.6486 321.9985,219.375 z "
-       style="opacity:1;fill:#404040;fill-opacity:1;fill-rule:nonzero;stroke:#919191;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 329.46173,233.19999 L 343.26173,246.09999 L 336.66173,253.69999 L 322.06173,248.69999 C 322.06173,248.69999 330.2206,253.25886 337.26173,260.29999 C 344.36655,267.40482 342.90437,280.84314 340.35879,286.49999 L 300.66173,286.49999 C 316.26173,267.29999 287.30943,248.4307 297.66173,230.49999 C 307.74167,213.041 323.96739,215.74487 333.75919,228.60231 C 332.26551,230.09599 330.84285,231.81887 329.46173,233.19999 z"
+       style="opacity:1;fill:#404040;fill-opacity:1;fill-rule:nonzero;stroke:#919191;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        inkscape:label="Black Knight" />
   </g>
 </svg>

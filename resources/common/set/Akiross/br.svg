@@ -2,26 +2,34 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="54.937489"
+   width="79.860001"
    height="79.864571"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    version="1.0"
    sodipodi:docbase="/home/akiross/Works/Painting"
-   sodipodi:docname="BRook.svg"
+   sodipodi:docname="br.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
    inkscape:export-xdpi="56.25"
    inkscape:export-ydpi="56.25">
   <defs
-     id="defs4" />
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 39.932285 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="54.937489 : 39.932285 : 1"
+       inkscape:persp3d-origin="27.468744 : 26.621524 : 1"
+       id="perspective11039" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -33,7 +41,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="464.70289"
+     inkscape:cx="292.20289"
      inkscape:cy="110.2768"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -41,8 +49,15 @@
      height="280px"
      inkscape:window-width="1272"
      inkscape:window-height="946"
-     inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-x="255"
+     inkscape:window-y="41"
+     showgrid="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid11041"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -92,8 +107,8 @@
     <path
        sodipodi:nodetypes="cccccccccccccc"
        id="BRook"
-       d="M 412.89242,211.13543 L 412.86117,217.13543 C 412.86117,247.33407 412.10287,272.04013 387.92368,286 C 363.39752,271.83981 362.95493,248.27673 362.95493,217.13543 L 362.95493,211.13543 L 371.57993,211.13543 L 371.57993,219.538 L 383.57993,219.538 L 383.57993,211.13543 L 392.23618,211.13543 L 392.23618,219.538 L 404.26742,219.538 L 404.26742,211.13543 L 412.89242,211.13543 z "
-       style="opacity:1;fill:#404040;fill-opacity:1;fill-rule:nonzero;stroke:#919191;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 419.89867,226.60835 L 419.87367,231.40835 C 419.87367,255.56726 419.26703,275.33211 399.92368,286.5 C 380.30275,275.17185 379.94868,256.32139 379.94868,231.40835 L 379.94868,226.60835 L 386.84868,226.60835 L 386.84868,233.3304 L 396.44868,233.3304 L 396.44868,226.60835 L 403.37368,226.60835 L 403.37368,233.3304 L 412.99867,233.3304 L 412.99867,226.60835 L 419.89867,226.60835 z"
+       style="opacity:1;fill:#404040;fill-opacity:1;fill-rule:nonzero;stroke:#919191;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        inkscape:label="Black Rook" />
   </g>
 </svg>

@@ -2,26 +2,34 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="54.968761"
-   height="75.625"
+   width="75.620003"
+   height="75.620003"
    id="svg2"
    sodipodi:version="0.32"
-   inkscape:version="0.45.1"
+   inkscape:version="0.46"
    version="1.0"
    sodipodi:docbase="/home/akiross/Works/Painting"
-   sodipodi:docname="BPawn.svg"
+   sodipodi:docname="bp.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
    inkscape:export-xdpi="56.25"
    inkscape:export-ydpi="56.25">
   <defs
-     id="defs4" />
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 37.8125 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="54.968761 : 37.8125 : 1"
+       inkscape:persp3d-origin="27.484381 : 25.208333 : 1"
+       id="perspective10629" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -32,17 +40,24 @@
      objecttolerance="10"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="464.70289"
-     inkscape:cy="110.2768"
+     inkscape:zoom="4"
+     inkscape:cx="27.724001"
+     inkscape:cy="60.2768"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      width="480px"
      height="280px"
      inkscape:window-width="1272"
      inkscape:window-height="946"
-     inkscape:window-x="0"
-     inkscape:window-y="0" />
+     inkscape:window-x="419"
+     inkscape:window-y="29"
+     showgrid="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid10631"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -91,8 +106,8 @@
      transform="translate(-428.00002,-212.875)">
     <path
        id="BPawn"
-       d="M 455.46877,215.375 C 464.57678,215.375 471.96878,222.767 471.96878,231.875 C 471.96878,238.43145 468.13745,244.05802 462.59377,246.71875 C 463.01745,284.49093 480.43753,259.72788 480.43753,280.03125 L 480.46878,286 L 430.50002,286 L 430.53127,280.03125 C 430.53127,259.72792 447.92002,284.4906 448.34377,246.71875 C 442.81388,244.05289 438.96877,238.42138 438.96877,231.875 C 438.96877,222.767 446.36077,215.375 455.46877,215.375 z "
-       style="opacity:1;fill:#404040;fill-opacity:1;fill-rule:nonzero;stroke:#919191;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="M 465.47315,235.845 C 472.03091,235.845 477.35315,241.16724 477.35315,247.725 C 477.35315,252.44564 474.5946,256.49678 470.60315,258.4125 C 470.9082,285.60847 483.45065,267.77907 483.45065,282.3975 L 483.47315,286.695 L 447.49565,286.695 L 447.51815,282.3975 C 447.51815,267.77911 460.03805,285.60823 460.34315,258.4125 C 456.36162,256.49308 453.59315,252.43839 453.59315,247.725 C 453.59315,241.16724 458.91539,235.845 465.47315,235.845 z"
+       style="opacity:1;fill:#404040;fill-opacity:1;fill-rule:nonzero;stroke:#919191;stroke-width:3.5999999;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
        inkscape:label="Black Pawn" />
   </g>
 </svg>
