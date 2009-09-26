@@ -61,9 +61,55 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 		}
 	}
 
+	private static class Profile {
+		public static Profile[] getProfiles() {
+			Profile[] profiles = new Profile[3];
+			
+			profiles[0] = new Profile();
+			profiles[0].setServerName("FICS");
+			profiles[0].setServerAddress("freechess.org");
+			profiles[0].setServerPort(5000);
+			
+			profiles[1] = new Profile();
+			profiles[1].setServerName("BICS");
+			profiles[1].setServerAddress("chess.sipay.ru");
+			profiles[1].setServerPort(5000);
+			
+			profiles[2] = new Profile();
+			profiles[2].setServerName("BICS Dev");
+			profiles[2].setServerAddress("dev.chess.sipay.ru");
+			profiles[2].setServerPort(5000);
+			return profiles;
+		}
+		
+		private String serverName = "";
+		private String serverAddress = "";
+		private int serverPort = 0;
+		
+		public void setServerName(String serverName) {
+			this.serverName = serverName;
+		}
+		public String getServerName() {
+			return serverName;
+		}
+		
+		public void setServerAddress(String serverAddress) {
+			this.serverAddress = serverAddress;
+		}
+		public String getServerAddress() {
+			return serverAddress;
+		}
+		
+		public void setServerPort(int serverPort) {
+			this.serverPort = serverPort;
+		}
+		public int getServerPort() {
+			return serverPort;
+		}
+	}
+	
 	@Override
 	public Composite createContents(Composite parent) {
-
 		getShell().setText("Raptor Login");
 
 		final Composite content = new Composite(parent, SWT.NONE);
@@ -79,8 +125,12 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 		profileLabel = new Label(content, SWT.NONE);
 		profileLabel.setText("Profile");
 		profile = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
-		profile.add("Fics");
+		//profile.add("FICS");
+		
+		Profile[] myProfiles = Profile.getProfiles();
+		for(int i=0;i<myProfiles.length;i++) { profile.add(myProfiles[i].getServerName()); }
 		profile.select(0);
+		//profile.getSelectionIndex();
 
 		handleLabel = new Label(content, SWT.NONE);
 		handleLabel.setText("Login:");
