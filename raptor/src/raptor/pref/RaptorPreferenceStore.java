@@ -171,7 +171,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		String defaultMonospacedFontName = "Courier";
 
 		// Board
-		setDefault(BOARD_CHESS_SET_NAME, "BSD");
+		setDefault(BOARD_CHESS_SET_NAME, "Fantasy");
 		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "Wood2");
 		setDefault(BOARD_IS_SHOW_COORDINATES, true);
 		setDefault(BOARD_PIECE_SIZE_ADJUSTMENT, .03);
