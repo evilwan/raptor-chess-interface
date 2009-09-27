@@ -100,7 +100,7 @@ public class Game implements GameConstants {
 	protected long whiteRemainingTimeMilis;
 
 	/**
-	 * Currently places captures ahead of non captures.
+	 * Currently places captures and promotions ahead of non captures.
 	 */
 	public void addMove(Move move, PriorityMoveList moves) {
 		if (move.isCapture() || move.isPromotion()) {
@@ -139,6 +139,10 @@ public class Game implements GameConstants {
 		positionState.moveRepHash[getRepHash()]--;
 	}
 
+	/**
+	 * @param ignoreHashes Whether to include copying hash tables.
+	 * @return An deep clone copy of this Game object.
+	 */
 	public Game deepCopy(boolean ignoreHashes) {
 		Game result = new Game();
 		result.id = id;
@@ -205,6 +209,10 @@ public class Game implements GameConstants {
 		return result;
 	}
 
+	/**
+	 * Forces the board to make the move.
+	 * @param move
+	 */
 	public void forceMove(Move move) {
 		move.setLastCastleState(getCastling(getColorToMove()));
 
@@ -519,18 +527,30 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * @return Black's lag in milliseconds.
+	 */
 	public long getBlackLagMillis() {
 		return blackLagMillis;
 	}
 
+	/**
+	 * @return Black's name.
+	 */
 	public String getBlackName() {
 		return blackName;
 	}
 
+	/**
+	 * @return Black's rating.
+	 */
 	public String getBlackRating() {
 		return blackRating;
 	}
 
+	/**
+	 * @return The amount of time that black has on the clock in milliseconds.
+	 */
 	public long getBlackRemainingTimeMillis() {
 		return blackRemainingTimeMillis;
 	}
@@ -601,14 +621,23 @@ public class Game implements GameConstants {
 		return positionState.halfMoveCount;
 	}
 
+	/**
+	 * @return The game number on the ICS server.
+	 */
 	public String getId() {
 		return id;
 	}
 
+	/**
+	 * @return Black's initial increment in milliseconds.
+	 */
 	public long getInitialBlackIncMillis() {
 		return initialBlackIncMillis;
 	}
 
+	/**
+	 * @return Black's initial time in milliseconds.
+	 */
 	public long getInitialBlackTimeMillis() {
 		return initialBlackTimeMillis;
 	}
@@ -617,10 +646,16 @@ public class Game implements GameConstants {
 		return positionState.initialEpSquare;
 	}
 
+	/**
+	 * @return White's initial increment in milliseconds.
+	 */
 	public long getInitialWhiteIncMillis() {
 		return initialWhiteIncMillis;
 	}
 
+	/**
+	 * @return Black's initial time in milliseconds.
+	 */
 	public long getInitialWhiteTimeMillis() {
 		return initialWhiteTimeMillis;
 	}
@@ -735,18 +770,30 @@ public class Game implements GameConstants {
 		return type;
 	}
 
+	/**
+	 * @return White's lag time in milliseconds.
+	 */
 	public long getWhiteLagMillis() {
 		return whiteLagMillis;
 	}
 
+	/**
+	 * @return White's name.
+	 */
 	public String getWhiteName() {
 		return whiteName;
 	}
 
+	/**
+	 * @return White's rating.
+	 */
 	public String getWhiteRating() {
 		return whiteRating;
 	}
-
+	
+	/**
+	 * @return White's remaining amount of time on the clock in milliseconds.
+	 */
 	public long getWhiteRemainingTimeMillis() {
 		return whiteRemainingTimeMilis;
 	}
@@ -773,6 +820,9 @@ public class Game implements GameConstants {
 		positionState.moveRepHash[getRepHash()]++;
 	}
 
+	/**
+	 * @return If the position is checkmate or not.
+	 */
 	public boolean isCheckmate() {
 		return isCheckmate(getLegalMoves());
 	}
@@ -808,6 +858,11 @@ public class Game implements GameConstants {
 		return (getState() & state) != 0;
 	}
 
+	/**
+	 * This is one of the methods that needs to be overridden in subclasses.
+	 * 
+	 * @return If the position is legal.
+	 */
 	public boolean isLegalPosition() {
 		return areBothKingsOnBoard()
 				&& !isInCheck(getOppositeColor(getColorToMove()));
@@ -825,6 +880,9 @@ public class Game implements GameConstants {
 		return moveList.getSize() == 0 && !isInCheck(getColorToMove());
 	}
 
+	/**
+	 * @return If it is currently white's move in this Game.
+	 */
 	public boolean isWhitesMove() {
 		return positionState.colorToMove == WHITE;
 	}
@@ -1297,6 +1355,9 @@ public class Game implements GameConstants {
 		return true;
 	}
 
+	/**
+	 * Rolls back (undoes) a move. 
+	 */
 	public void rollback() {
 
 		Move move = getMoves().removeLast();
@@ -1456,18 +1517,34 @@ public class Game implements GameConstants {
 		setEpSquareFromPreviousMove();
 	}
 
+	/**
+	 * Sets black's lag time in milliseconds.
+	 * @param blackLagMillis Lag time to set.
+	 */
 	public void setBlackLagMillis(long blackLagMillis) {
 		this.blackLagMillis = blackLagMillis;
 	}
 
+	/**
+	 * Sets black's name.
+	 * @param blackName Name to set.
+	 */
 	public void setBlackName(String blackName) {
 		this.blackName = blackName;
 	}
 
+	/**
+	 * Sets black's rating.
+	 * @param blackRating
+	 */
 	public void setBlackRating(String blackRating) {
 		this.blackRating = blackRating;
 	}
 
+	/**
+	 * Sets black's remaining time in milliseconds.
+	 * @param blackTimeMillis
+	 */
 	public void setBlackRemainingTimeMillis(long blackTimeMillis) {
 		this.blackRemainingTimeMillis = blackTimeMillis;
 	}
@@ -1526,6 +1603,10 @@ public class Game implements GameConstants {
 		this.gameDescription = gameDescription;
 	}
 
+	/**
+	 * Sets the number of half moves played.
+	 * @param halfMoveCount
+	 */
 	public void setHalfMoveCount(int halfMoveCount) {
 		this.positionState.halfMoveCount = halfMoveCount;
 	}
@@ -1534,10 +1615,18 @@ public class Game implements GameConstants {
 		this.id = id;
 	}
 
+	/**
+	 * Sets black's initial increment in milliseconds.
+	 * @param initialBlackIncMillis
+	 */
 	public void setInitialBlackIncMillis(long initialBlackIncMillis) {
 		this.initialBlackIncMillis = initialBlackIncMillis;
 	}
 
+	/**
+	 * Sets black's initial time in milliseconds.
+	 * @param initialBlackTimeMillis
+	 */
 	public void setInitialBlackTimeMillis(long initialBlackTimeMillis) {
 		this.initialBlackTimeMillis = initialBlackTimeMillis;
 	}
@@ -1546,10 +1635,18 @@ public class Game implements GameConstants {
 		positionState.initialEpSquare = initialEpSquare;
 	}
 
+	/**
+	 * Sets white's initial increment in milliseconds.
+	 * @param initialWhiteIncMillis
+	 */
 	public void setInitialWhiteIncMillis(long initialWhiteIncMillis) {
 		this.initialWhiteIncMillis = initialWhiteIncMillis;
 	}
 
+	/**
+	 * Sets white's initial time in milliseconds.
+	 * @param initialWhiteTimeMillis
+	 */
 	public void setInitialWhiteTimeMillis(long initialWhiteTimeMillis) {
 		this.initialWhiteTimeMillis = initialWhiteTimeMillis;
 	}
@@ -1755,14 +1852,26 @@ public class Game implements GameConstants {
 		this.type = type;
 	}
 
+	/**
+	 * Sets white's lag time in milliseconds.
+	 * @param whiteLagMillis
+	 */
 	public void setWhiteLagMillis(long whiteLagMillis) {
 		this.whiteLagMillis = whiteLagMillis;
 	}
 
+	/**
+	 * Sets white's name.
+	 * @param whiteName
+	 */
 	public void setWhiteName(String whiteName) {
 		this.whiteName = whiteName;
 	}
 
+	/**
+	 * Sets white's rating.
+	 * @param whiteRating
+	 */
 	public void setWhiteRating(String whiteRating) {
 		this.whiteRating = whiteRating;
 	}
