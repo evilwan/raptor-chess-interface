@@ -484,7 +484,8 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		return new String[][] {
 				new String[] { "Observe game " + gameId, "observe " + gameId },
 				new String[] { "All observers in game " + gameId,
-						"allobs " + gameId } };
+						"allobs " + gameId },
+				{ "Move list for game " + gameId, "moves " + gameId } };
 	}
 
 	public GameScript getGameScript(String name) {
