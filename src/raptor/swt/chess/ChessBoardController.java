@@ -211,12 +211,18 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	}
 
 	protected void adjustOpeningDescriptionLabel() {
+		LOG.info("adjustOpeningDescriptionLabel()");
+		//if (board.game.getState() == Game.EXAMINING_STATE) return;
+		
 		// CDay tells you: you can do
 		// board.getOpeningDescriptionLabel().setText(your opening description);
 		// CDay tells you: so you can test it from the gui
+		
 		ECOParser p = ECOParser.getECOParser(board.getGame());
-		if (p != null)
+		if (p != null) {
+			LOG.info("ECOParser.getECOParser(board.getGame()) = " + p.toString());
 			board.getOpeningDescriptionLabel().setText(p.toString());
+		}
 	}
 
 	protected void adjustPieceJailFromGame(Game game) {
