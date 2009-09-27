@@ -126,10 +126,6 @@ public class Raptor implements PreferenceKeys {
 	public Raptor() {
 	}
 
-	public RaptorWindow getAppWindow() {
-		return appWindow;
-	}
-
 	public ColorRegistry getColorRegistry() {
 		return colorRegistry;
 	}
@@ -176,6 +172,10 @@ public class Raptor implements PreferenceKeys {
 
 	public RaptorPreferenceStore getPreferences() {
 		return preferences;
+	}
+
+	public RaptorWindow getRaptorWindow() {
+		return appWindow;
 	}
 
 	public void init() {

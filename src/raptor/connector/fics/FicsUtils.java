@@ -17,12 +17,19 @@ import raptor.game.Game.PositionState;
 import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
 import raptor.swt.chess.Utils;
+import raptor.util.RaptorStringTokenizer;
 
 public class FicsUtils implements GameConstants {
 	private static final Log LOG = LogFactory.getLog(FicsUtils.class);
 
 	public static final String LEGAL_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
 			+ "!@#$%^&*()-=_+`~[{]}\\|;:'\",<.>/?";
+
+	public static final String VALID_PERSON_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	public static final String STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]1234567890";
+
+	public static final String CHANNEL_STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]";
 
 	public static final String BLITZ_IDENTIFIER = "blitz";
 
@@ -282,6 +289,67 @@ public class FicsUtils implements GameConstants {
 	}
 
 	/**
+	 * Removes the ICS channel wrapping around a specified channel word
+	 * returning only the channel number.
+	 * 
+	 * Returns -1 if the specified word is not a channel.
+	 */
+	public static boolean isLikelyChannel(String word) {
+		boolean result = false;
+		if (word != null) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(word,
+					CHANNEL_STRIP_CHARS, true);
+			if (tok.hasMoreTokens()) {
+				String current = tok.nextToken();
+				try {
+					int channel = Integer.parseInt(current);
+					return channel >= 0 && channel <= 255;
+				} catch (NumberFormatException nfe) {
+					if (tok.hasMoreTokens()) {
+						try {
+							current = tok.nextToken();
+							int channel = Integer.parseInt(current);
+							return channel >= 0 && channel <= 255;
+						} catch (NumberFormatException nfe2) {
+						}
+					}
+				}
+
+			}
+		}
+		return result;
+	}
+
+	public static boolean isLikelyGameId(String word) {
+		boolean result = false;
+		if (word != null) {
+			try {
+				int gameId = Integer.parseInt(stripWord(word));
+				return gameId > 0 && gameId <= 5000;
+			} catch (NumberFormatException nfe) {
+				return false;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns true if the specified word is probably a persons name.
+	 */
+	public static boolean isLikelyPerson(String word) {
+		String strippedWord = stripWord(word);
+		if (word != null && strippedWord.length() > 2) {
+			boolean result = true;
+			for (int i = 0; result && i < strippedWord.length(); i++) {
+				result = VALID_PERSON_CHARS.indexOf(word.charAt(i)) != -1;
+			}
+			return result;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Maciejg format, named after him because of his finger notes. Unicode
 	 * chars are represented as &#x3b1; &#x3b2; &#x3b3; &#x3b4; &#x3b5; &#x3b6;
 	 * unicode equivalent \u03B1,\U03B2,...
@@ -332,6 +400,56 @@ public class FicsUtils implements GameConstants {
 		FicsUtils.updateNonPositionFields(game, message);
 		FicsUtils.updatePosition(game, message);
 		verifyLegal(game);
+	}
+
+	public static String stripChannel(String word) {
+		String result = null;
+		if (word != null) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(word,
+					CHANNEL_STRIP_CHARS, true);
+			if (tok.hasMoreTokens()) {
+				String current = tok.nextToken();
+				try {
+					int channel = Integer.parseInt(current);
+					if (channel >= 0 && channel <= 255) {
+						return "" + channel;
+					}
+				} catch (NumberFormatException nfe) {
+					if (tok.hasMoreTokens()) {
+						try {
+							current = tok.nextToken();
+							int channel = Integer.parseInt(current);
+							if (channel >= 0 && channel <= 255) {
+								return "" + channel;
+							}
+						} catch (NumberFormatException nfe2) {
+						}
+					}
+				}
+
+			}
+		}
+		return result;
+	}
+
+	public static String stripGameId(String gameId) {
+		return gameId;
+	}
+
+	/**
+	 * Returns the word with all characters in: ()~!@?#$%^&*_+|}{'\";/?<>.,
+	 * :[]1234567890\t\r\n removed.
+	 */
+	public static String stripWord(String word) {
+		if (word != null) {
+			RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
+					word, STRIP_CHARS, true);
+			if (stringtokenizer.hasMoreTokens())
+				return stringtokenizer.nextToken();
+			else
+				return word;
+		}
+		return null;
 	}
 
 	/**

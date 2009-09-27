@@ -464,12 +464,27 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		LOG.info("Disposed FicsConnector");
 	}
 
+	public String[][] getChannelActions(String channel) {
+		return new String[][] {
+				new String[] { "Add Channel " + channel, "+channel " + channel },
+				new String[] { "Remove Channel " + channel,
+						"-channel " + channel },
+				new String[] { "In Channel " + channel, "in " + channel } };
+	}
+
 	public ChatService getChatService() {
 		return chatService;
 	}
 
 	public String getDescription() {
 		return "Free Internet Chess Server";
+	}
+
+	public String[][] getGameIdActions(String gameId) {
+		return new String[][] {
+				new String[] { "Observe game " + gameId, "observe " + gameId },
+				new String[] { "All observers in game " + gameId,
+						"allobs " + gameId } };
 	}
 
 	public GameScript getGameScript(String name) {
@@ -482,6 +497,20 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 	public GameService getGameService() {
 		return gameService;
+	}
+
+	public String[][] getPersonActions(String person) {
+		return new String[][] {
+				new String[] { "Finger " + person, "finger " + person },
+				new String[] { "Observe " + person, "observe " + person },
+				new String[] { "History " + person, "history " + person },
+				new String[] { "Follow " + person, "follow " + person },
+				new String[] { "Partner " + person, "partner " + person },
+				new String[] { "Vars " + person, "vars " + person },
+				new String[] { "Censor " + person, "+censor " + person },
+				new String[] { "Uncensor " + person, "-censor " + person },
+				new String[] { "Noplay " + person, "+noplay " + person },
+				new String[] { "Unnoplay " + person, "noplay " + person } };
 	}
 
 	public PreferenceStore getPreferences() {
@@ -503,6 +532,18 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public boolean isConnected() {
 		return socket != null && inputChannel != null && daemonThread != null
 				&& daemonRunnable != null;
+	}
+
+	public boolean isLikelyChannel(String word) {
+		return FicsUtils.isLikelyChannel(word);
+	}
+
+	public boolean isLikelyGameId(String word) {
+		return FicsUtils.isLikelyGameId(word);
+	}
+
+	public boolean isLikelyPerson(String word) {
+		return FicsUtils.isLikelyPerson(word);
 	}
 
 	public void makeMove(Game game, Move move) {
@@ -636,6 +677,18 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 	public void onUnobserve(Game game) {
 		sendMessage("unobs " + game.getId());
+	}
+
+	public String parseChannel(String word) {
+		return FicsUtils.stripChannel(word);
+	}
+
+	public String parseGameId(String word) {
+		return FicsUtils.stripGameId(word);
+	}
+
+	public String parsePerson(String word) {
+		return FicsUtils.stripWord(word);
 	}
 
 	/**

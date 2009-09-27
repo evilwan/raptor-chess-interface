@@ -95,18 +95,19 @@ public class ChessBoards extends Composite {
 				}
 
 				if (folder.getItemCount() == 1) {
-					Raptor.getInstance().getAppWindow().maximizeChatConsoles();
+					Raptor.getInstance().getRaptorWindow()
+							.maximizeChatConsoles();
 				}
 			}
 
 			@Override
 			public void maximize(CTabFolderEvent event) {
-				Raptor.getInstance().getAppWindow().maximizeChessBoards();
+				Raptor.getInstance().getRaptorWindow().maximizeChessBoards();
 			}
 
 			@Override
 			public void restore(CTabFolderEvent event) {
-				Raptor.getInstance().getAppWindow().restore();
+				Raptor.getInstance().getRaptorWindow().restore();
 			}
 		});
 
@@ -116,9 +117,9 @@ public class ChessBoards extends Composite {
 				System.err.println("Mouse double click " + e.count);
 				if (e.count == 2) {
 					if (isMaximized()) {
-						Raptor.getInstance().getAppWindow().restore();
+						Raptor.getInstance().getRaptorWindow().restore();
 					} else {
-						Raptor.getInstance().getAppWindow()
+						Raptor.getInstance().getRaptorWindow()
 								.maximizeChessBoards();
 					}
 				}
@@ -177,8 +178,8 @@ public class ChessBoards extends Composite {
 
 		folder.setSelection(item);
 
-		if (Raptor.getInstance().getAppWindow().isChatConsolesMaximized()) {
-			Raptor.getInstance().getAppWindow().restore();
+		if (Raptor.getInstance().getRaptorWindow().isChatConsolesMaximized()) {
+			Raptor.getInstance().getRaptorWindow().restore();
 		}
 		return board;
 	}

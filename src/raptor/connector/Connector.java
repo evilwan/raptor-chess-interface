@@ -17,15 +17,36 @@ public interface Connector {
 
 	public void dispose();
 
+	/**
+	 * Returns descriptions and messages to send to the connector. This is
+	 * intended to be used to generate pop-up menus. Returns a String[n][2]
+	 * where 0 is the description and 1 is the message to send to the connector.
+	 */
+	public String[][] getChannelActions(String channel);
+
 	public ChatService getChatService();
 
 	public String getDescription();
+
+	/**
+	 * Returns descriptions and messages to send to the connector. This is
+	 * intended to be used to generate pop-up menus. Returns a String[n][2]
+	 * where 0 is the description and 1 is the message to send to the connector.
+	 */
+	public String[][] getGameIdActions(String gameId);
 
 	public GameScript getGameScript(String name);
 
 	public GameScript[] getGameScripts();
 
 	public GameService getGameService();
+
+	/**
+	 * Returns descriptions and messages to send to the connector. This is
+	 * intended to be used to generate pop-up menus. Returns a String[n][2]
+	 * where 0 is the description and 1 is the message to send to the connector.
+	 */
+	public String[][] getPersonActions(String person);
 
 	public PreferenceStore getPreferences();
 
@@ -36,6 +57,12 @@ public interface Connector {
 	public String getTellToString(String handle);
 
 	public boolean isConnected();
+
+	public boolean isLikelyChannel(String channel);
+
+	public boolean isLikelyGameId(String channel);
+
+	public boolean isLikelyPerson(String word);
 
 	public void makeMove(Game game, Move move);
 
@@ -79,6 +106,12 @@ public interface Connector {
 
 	public void onUnobserve(Game game);
 
+	public String parseChannel(String word);
+
+	public String parseGameId(String word);
+
+	public String parsePerson(String word);
+
 	public void refreshGameScripts();
 
 	public void removeGameScript(GameScript script);
@@ -86,4 +119,5 @@ public interface Connector {
 	public void sendMessage(String msg);
 
 	public void setPreferences(PreferenceStore preferences);
+
 }

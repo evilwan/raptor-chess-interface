@@ -24,7 +24,7 @@ public class ProfileWIndow extends ApplicationWindow {
 			stack3, stack4, threadsm, threads1, threads2, threads3;
 
 	public ProfileWIndow() {
-		super(Raptor.getInstance().getAppWindow().getShell());
+		super(Raptor.getInstance().getRaptorWindow().getShell());
 	}
 
 	@Override
