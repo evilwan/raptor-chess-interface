@@ -1,16 +1,11 @@
 package raptor.swt.chat.controller;
 
 import raptor.chat.ChatEvent;
-import raptor.chat.ChatTypes;
 import raptor.swt.chat.ChatConsoleController;
 
-public class ChannelConsoleController extends ChatConsoleController {
+public class MainController extends ChatConsoleController {
 
-	protected String channel;
-
-	public ChannelConsoleController(String channel) {
-		super();
-		this.channel = channel;
+	public MainController() {
 	}
 
 	@Override
@@ -20,18 +15,17 @@ public class ChannelConsoleController extends ChatConsoleController {
 
 	@Override
 	public String getTitle() {
-		return chatConsole.getConnector().getShortName() + "(" + channel + ")";
+		return chatConsole.getConnector().getShortName() + "(Main)";
 	}
 
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
-		return inboundEvent.getType() == ChatTypes.CHAN_TELL
-				&& inboundEvent.getChannel().equals(channel);
+		return true;
 	}
 
 	@Override
 	public boolean isCloseable() {
-		return true;
+		return false;
 	}
 
 	@Override

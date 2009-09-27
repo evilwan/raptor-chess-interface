@@ -35,8 +35,8 @@ import raptor.connector.fics.FicsUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
-import raptor.swt.chat.controller.ChannelConsoleController;
-import raptor.swt.chat.controller.PersonConsoleController;
+import raptor.swt.chat.controller.ChannelController;
+import raptor.swt.chat.controller.PersonController;
 import raptor.util.LaunchBrowser;
 
 public abstract class ChatConsoleController implements PreferenceKeys,
@@ -208,7 +208,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 									.getRaptorWindow()
 									.getChatConsoles()
 									.addChatConsole(
-											new PersonConsoleController(person),
+											new PersonController(person),
 											chatConsole.getConnector());
 						}
 					});
@@ -240,7 +240,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 						public void handleEvent(Event e) {
 							Raptor.getInstance().getRaptorWindow()
 									.getChatConsoles().addChatConsole(
-											new ChannelConsoleController(
+											new ChannelController(
 													channel),
 											chatConsole.getConnector());
 						}
