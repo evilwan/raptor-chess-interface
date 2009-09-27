@@ -49,7 +49,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	protected ChatConsole chatConsole;
 	protected ChatListener chatServiceListener = new ChatListener() {
 		public void chatEventOccured(final ChatEvent event) {
-			if (!chatConsole.isDisposed() && isAcceptingChatEvent(event)) {
+			if (!chatConsole.isDisposed()) {
 				chatConsole.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -203,13 +203,12 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 					item.setText("Add a tab for person: " + person);
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
-							Raptor
-									.getInstance()
-									.getRaptorWindow()
-									.getChatConsoles()
+							ChatConsole console = Raptor.getInstance()
+									.getRaptorWindow().getChatConsoles()
 									.addChatConsole(
 											new PersonController(person),
 											chatConsole.getConnector());
+							Utils.appendPreviousChatsToController(console);
 						}
 					});
 
@@ -238,11 +237,12 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 					item.setText("Add a tab for channel: " + channel);
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
-							Raptor.getInstance().getRaptorWindow()
-									.getChatConsoles().addChatConsole(
-											new ChannelController(
-													channel),
+							ChatConsole console = Raptor.getInstance()
+									.getRaptorWindow().getChatConsoles()
+									.addChatConsole(
+											new ChannelController(channel),
 											chatConsole.getConnector());
+							Utils.appendPreviousChatsToController(console);
 						}
 					});
 
@@ -556,6 +556,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	public abstract boolean isAcceptingChatEvent(ChatEvent inboundEvent);
 
+	public abstract boolean isAwayable();
+
 	public abstract boolean isCloseable();
 
 	protected boolean isInRanges(int location, List<int[]> ranges) {
@@ -651,8 +653,11 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		if (event.getType() == TELL) {
 			sourceOfLastTellReceived = event.getSource();
 		}
-		onAppendChatEventToInputText(event);
-		playSounds(event);
+
+		if (isAcceptingChatEvent(event)) {
+			onAppendChatEventToInputText(event);
+			playSounds(event);
+		}
 	}
 
 	protected void onDecorateInputText(final ChatEvent event,

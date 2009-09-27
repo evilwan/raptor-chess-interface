@@ -92,19 +92,21 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		});
 		buttonMap.put(SAVE_BUTTON, saveButton);
 
-		final Button awayButton = new Button(buttonComposite, SWT.FLAT);
-		awayButton.setImage(Raptor.getInstance().getIcon("chat"));
-		awayButton
-				.setToolTipText("Displays all of the direct tells you missed while you were away. "
-						+ "The list of tells you missed is reset each time you send a message.");
-		awayButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onAway();
+		if (getController().isAwayable()) {
+			final Button awayButton = new Button(buttonComposite, SWT.FLAT);
+			awayButton.setImage(Raptor.getInstance().getIcon("chat"));
+			awayButton
+					.setToolTipText("Displays all of the direct tells you missed while you were away. "
+							+ "The list of tells you missed is reset each time you send a message.");
+			awayButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onAway();
 
-			}
-		});
-		buttonMap.put(AWAY_BUTTON, awayButton);
+				}
+			});
+			buttonMap.put(AWAY_BUTTON, awayButton);
+		}
 
 		if (controller.isSearchable()) {
 			Button searchButton = new Button(buttonComposite, SWT.FLAT);

@@ -24,16 +24,6 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
-	public void init() {
-		super.init();
-		if (getGame().isInState(Game.DROPPABLE_STATE)) {
-			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
-		} else {
-			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
-		}
-	}
-
-	@Override
 	protected void adjustCoolbarToInitial() {
 		board.addGameActionButtonsToCoolbar();
 		board.addAutoPromoteRadioGroupToCoolbar();
@@ -73,6 +63,16 @@ public class InactiveController extends ChessBoardController implements
 	@Override
 	public String getTitle() {
 		return "Inactive(" + getGame().getId() + ")";
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		if (getGame().isInState(Game.DROPPABLE_STATE)) {
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
+		} else {
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
+		}
 	}
 
 	@Override

@@ -40,21 +40,34 @@ public class PersonController extends ChatConsoleController {
 
 	@Override
 	public String getTitle() {
-		return chatConsole.getConnector().getShortName() + "(" + person + ")";
+		return chatConsole.getConnector().getShortName() + "("
+				+ StringUtils.abbreviate(person, 10) + ")";
 	}
 
 	@Override
-	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
-		return (!StringUtils.isBlank(inboundEvent.getSource())
-				&& inboundEvent.getSource().equals(person) && (inboundEvent
-				.getType() == ChatTypes.TELL || inboundEvent.getType() == ChatTypes.PARTNER_TELL))
-				|| (inboundEvent.getType() == ChatTypes.OUTBOUND && inboundEvent
-						.getMessage().contains(person));
+	public boolean isAcceptingChatEvent(ChatEvent event) {
+		return isDirectTellFromPerson(event)
+				|| isOutboundTellPertainingToPerson(event);
+	}
+
+	@Override
+	public boolean isAwayable() {
+		return false;
 	}
 
 	@Override
 	public boolean isCloseable() {
 		return true;
+	}
+
+	protected boolean isDirectTellFromPerson(ChatEvent event) {
+		return StringUtils.equalsIgnoreCase(event.getSource(), person)
+				&& (event.getType() == ChatTypes.TELL || event.getType() == ChatTypes.PARTNER_TELL);
+	}
+
+	protected boolean isOutboundTellPertainingToPerson(ChatEvent event) {
+		return StringUtils.containsIgnoreCase(event.getMessage(), person)
+				&& event.getType() == ChatTypes.OUTBOUND;
 	}
 
 	@Override
@@ -66,4 +79,5 @@ public class PersonController extends ChatConsoleController {
 	public boolean isSearchable() {
 		return true;
 	}
+
 }

@@ -28,6 +28,9 @@ import raptor.service.ThreadService;
 import raptor.util.RaptorStringTokenizer;
 import free.freechess.timeseal.TimesealingSocket;
 
+/**
+ * The connector used to connect to freechess.org port 5000
+ */
 public class FicsConnector implements Connector, PreferenceKeys {
 
 	/**
@@ -287,7 +290,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public static final int RAW_PROMPT_LENGTH = RAW_PROMPT.length();
 	public static final String PROMPT = "fics%";
 
-	protected ChatService chatService = new ChatService();
+	protected ChatService chatService = new ChatService(this);
 	protected GameService gameService = new GameService();
 	protected Thread daemonThread;
 	protected DaemonRunnable daemonRunnable;
@@ -556,7 +559,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	public boolean isLikelyPartnerTell(String outboundMessage) {
-		return outboundMessage.startsWith("pt");
+		return StringUtils.startsWithIgnoreCase(outboundMessage, "pt");
 	}
 
 	public boolean isLikelyPerson(String word) {
@@ -710,7 +713,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 	/**
 	 * Publishes the specified event to the chat service. Currently all messages
-	 * are published on seperate threads via ThreadService.
+	 * are published on separate threads via ThreadService.
 	 */
 	protected void publishEvent(final ChatEvent event) {
 		if (chatService != null) { // Could have been disposed.
@@ -719,12 +722,9 @@ public class FicsConnector implements Connector, PreferenceKeys {
 			}
 
 			// It is interesting to note messages are handled sequentially
-			// up to this point.
-			ThreadService.getInstance().run(new Runnable() {
-				public void run() {
-					chatService.publishChatEvent(event);
-				}
-			});
+			// up to this point. chatService will publish the event
+			// asynchronously.
+			chatService.publishChatEvent(event);
 		}
 	}
 

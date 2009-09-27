@@ -39,8 +39,7 @@ public class ExamineController extends ChessBoardController {
 							ExamineController.this.dispose();
 						} catch (Throwable t) {
 							board.getConnector().onError(
-									"ExamineController.gameInactive",
-									t);
+									"ExamineController.gameInactive", t);
 						}
 					}
 				});

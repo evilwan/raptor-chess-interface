@@ -99,7 +99,7 @@ public class ChatConsoles extends Composite {
 		pack();
 	}
 
-	public void addChatConsole(ChatConsoleController controller,
+	public ChatConsole addChatConsole(ChatConsoleController controller,
 			Connector connector) {
 		CTabItem item = new CTabItem(folder, SWT.NONE);
 		ChatConsole chatConsole = new ChatConsole(folder, SWT.NONE);
@@ -115,6 +115,7 @@ public class ChatConsoles extends Composite {
 		item.setShowClose(chatConsole.getController().isCloseable());
 		folder.layout(true);
 		folder.setSelection(item);
+		return chatConsole;
 	}
 
 	protected void forceScrollCurrentConsole() {

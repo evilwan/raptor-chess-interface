@@ -54,7 +54,7 @@ public class ChatEvent {
 	}
 
 	/**
-	 * @return The type of ChatEvent. 
+	 * @return The type of ChatEvent.
 	 * @see ChatTypes.
 	 */
 	public int getType() {
@@ -78,14 +78,16 @@ public class ChatEvent {
 	}
 
 	/**
-	 * @param time The time that this chat event occurred.
+	 * @param time
+	 *            The time that this chat event occurred.
 	 */
 	public void setTime(long time) {
 		this.time = time;
 	}
 
 	/**
-	 * @param type The type of ChatEvent this is.
+	 * @param type
+	 *            The type of ChatEvent this is.
 	 * @see ChatTypes.
 	 */
 	public void setType(int type) {

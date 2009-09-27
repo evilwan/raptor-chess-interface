@@ -24,6 +24,11 @@ public class MainController extends ChatConsoleController {
 	}
 
 	@Override
+	public boolean isAwayable() {
+		return true;
+	}
+
+	@Override
 	public boolean isCloseable() {
 		return false;
 	}
@@ -37,4 +42,5 @@ public class MainController extends ChatConsoleController {
 	public boolean isSearchable() {
 		return true;
 	}
+
 }

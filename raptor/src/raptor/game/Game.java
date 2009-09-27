@@ -140,7 +140,8 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * @param ignoreHashes Whether to include copying hash tables.
+	 * @param ignoreHashes
+	 *            Whether to include copying hash tables.
 	 * @return An deep clone copy of this Game object.
 	 */
 	public Game deepCopy(boolean ignoreHashes) {
@@ -211,6 +212,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Forces the board to make the move.
+	 * 
 	 * @param move
 	 */
 	public void forceMove(Move move) {
@@ -790,7 +792,7 @@ public class Game implements GameConstants {
 	public String getWhiteRating() {
 		return whiteRating;
 	}
-	
+
 	/**
 	 * @return White's remaining amount of time on the clock in milliseconds.
 	 */
@@ -1356,7 +1358,7 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Rolls back (undoes) a move. 
+	 * Rolls back (undoes) a move.
 	 */
 	public void rollback() {
 
@@ -1519,7 +1521,9 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets black's lag time in milliseconds.
-	 * @param blackLagMillis Lag time to set.
+	 * 
+	 * @param blackLagMillis
+	 *            Lag time to set.
 	 */
 	public void setBlackLagMillis(long blackLagMillis) {
 		this.blackLagMillis = blackLagMillis;
@@ -1527,7 +1531,9 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets black's name.
-	 * @param blackName Name to set.
+	 * 
+	 * @param blackName
+	 *            Name to set.
 	 */
 	public void setBlackName(String blackName) {
 		this.blackName = blackName;
@@ -1535,6 +1541,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets black's rating.
+	 * 
 	 * @param blackRating
 	 */
 	public void setBlackRating(String blackRating) {
@@ -1543,6 +1550,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets black's remaining time in milliseconds.
+	 * 
 	 * @param blackTimeMillis
 	 */
 	public void setBlackRemainingTimeMillis(long blackTimeMillis) {
@@ -1605,6 +1613,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets the number of half moves played.
+	 * 
 	 * @param halfMoveCount
 	 */
 	public void setHalfMoveCount(int halfMoveCount) {
@@ -1617,6 +1626,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets black's initial increment in milliseconds.
+	 * 
 	 * @param initialBlackIncMillis
 	 */
 	public void setInitialBlackIncMillis(long initialBlackIncMillis) {
@@ -1625,6 +1635,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets black's initial time in milliseconds.
+	 * 
 	 * @param initialBlackTimeMillis
 	 */
 	public void setInitialBlackTimeMillis(long initialBlackTimeMillis) {
@@ -1637,6 +1648,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets white's initial increment in milliseconds.
+	 * 
 	 * @param initialWhiteIncMillis
 	 */
 	public void setInitialWhiteIncMillis(long initialWhiteIncMillis) {
@@ -1645,6 +1657,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets white's initial time in milliseconds.
+	 * 
 	 * @param initialWhiteTimeMillis
 	 */
 	public void setInitialWhiteTimeMillis(long initialWhiteTimeMillis) {
@@ -1854,6 +1867,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets white's lag time in milliseconds.
+	 * 
 	 * @param whiteLagMillis
 	 */
 	public void setWhiteLagMillis(long whiteLagMillis) {
@@ -1862,6 +1876,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets white's name.
+	 * 
 	 * @param whiteName
 	 */
 	public void setWhiteName(String whiteName) {
@@ -1870,6 +1885,7 @@ public class Game implements GameConstants {
 
 	/**
 	 * Sets white's rating.
+	 * 
 	 * @param whiteRating
 	 */
 	public void setWhiteRating(String whiteRating) {

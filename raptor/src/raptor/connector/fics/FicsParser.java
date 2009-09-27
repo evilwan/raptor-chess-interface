@@ -247,26 +247,6 @@ public class FicsParser implements GameConstants {
 		}
 	}
 
-	public void process(RemovingObsGameMessage message, GameService service) {
-		Game game = service.getGame(message.gameId);
-		if (game == null) {
-			LOG
-					.error("Received removing obs game message for a game not in the GameService. "
-							+ message);
-		} else {
-			game.setResultDescription("Interrupted by unobserve");
-			game.setResult(Game.UNDETERMINED_RESULT);
-			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
-			game.addState(Game.INACTIVE_STATE);
-			service.fireGameInactive(game.getId());
-			service.removeGame(game);
-			takebackParser.clearTakebackMessages(game.getId());
-		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Processed removing obs game: " + message);
-		}
-	}
-
 	public void process(NoLongerExaminingGameMessage message,
 			GameService service) {
 		Game game = service.getGame(message.gameId);
@@ -285,6 +265,26 @@ public class FicsParser implements GameConstants {
 		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processed no longer examining game message: " + message);
+		}
+	}
+
+	public void process(RemovingObsGameMessage message, GameService service) {
+		Game game = service.getGame(message.gameId);
+		if (game == null) {
+			LOG
+					.error("Received removing obs game message for a game not in the GameService. "
+							+ message);
+		} else {
+			game.setResultDescription("Interrupted by unobserve");
+			game.setResult(Game.UNDETERMINED_RESULT);
+			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
+			game.addState(Game.INACTIVE_STATE);
+			service.fireGameInactive(game.getId());
+			service.removeGame(game);
+			takebackParser.clearTakebackMessages(game.getId());
+		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processed removing obs game: " + message);
 		}
 	}
 
