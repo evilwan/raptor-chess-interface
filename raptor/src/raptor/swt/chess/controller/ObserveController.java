@@ -91,9 +91,7 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public String getTitle() {
-		return "Observing(" + getGame().getId() + " "
-				+ getGame().getWhiteName() + " vs " + getGame().getBlackName()
-				+ ")";
+		return "Observing(" + getGame().getId() + ")";
 	}
 
 	@Override
