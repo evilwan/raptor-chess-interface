@@ -13,7 +13,7 @@ import org.eclipse.swt.widgets.Display;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
-import raptor.swt.chat.controller.MainConsoleController;
+import raptor.swt.chat.controller.MainController;
 
 public class ChatWindow extends ApplicationWindow {
 	private static final Log LOG = LogFactory.getLog(ChatWindow.class);
@@ -67,7 +67,7 @@ public class ChatWindow extends ApplicationWindow {
 
 		parent.setLayout(gridLayout);
 		mainConsole = new ChatConsole(parent, SWT.NONE);
-		ChatConsoleController controller = new MainConsoleController();
+		ChatConsoleController controller = new MainController();
 		controller.setChatConsole(mainConsole);
 		mainConsole.setController(controller);
 		mainConsole.setPreferences(Raptor.getInstance().getPreferences());

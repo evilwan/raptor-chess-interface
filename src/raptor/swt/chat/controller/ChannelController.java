@@ -1,6 +1,5 @@
 package raptor.swt.chat.controller;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Button;
 
 import raptor.chat.ChatEvent;
@@ -8,13 +7,13 @@ import raptor.chat.ChatTypes;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleController;
 
-public class PersonConsoleController extends ChatConsoleController {
+public class ChannelController extends ChatConsoleController {
 
-	protected String person;
+	protected String channel;
 
-	public PersonConsoleController(String person) {
+	public ChannelController(String channel) {
 		super();
-		this.person = person;
+		this.channel = channel;
 	}
 
 	@Override
@@ -26,7 +25,7 @@ public class PersonConsoleController extends ChatConsoleController {
 		if (prependButton != null) {
 			if (prependButton.getSelection()) {
 				prependText = chatConsole.getConnector().getChannelTabPrefix(
-						person);
+						channel);
 			}
 		}
 
@@ -40,16 +39,13 @@ public class PersonConsoleController extends ChatConsoleController {
 
 	@Override
 	public String getTitle() {
-		return chatConsole.getConnector().getShortName() + "(" + person + ")";
+		return chatConsole.getConnector().getShortName() + "(" + channel + ")";
 	}
 
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
-		return (!StringUtils.isBlank(inboundEvent.getSource())
-				&& inboundEvent.getSource().equals(person) && (inboundEvent
-				.getType() == ChatTypes.TELL || inboundEvent.getType() == ChatTypes.PARTNER_TELL))
-				|| (inboundEvent.getType() == ChatTypes.OUTBOUND && inboundEvent
-						.getMessage().contains(person));
+		return inboundEvent.getType() == ChatTypes.CHAN_TELL
+				&& inboundEvent.getChannel().equals(channel);
 	}
 
 	@Override

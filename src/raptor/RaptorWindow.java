@@ -18,7 +18,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferencesDialog;
 import raptor.swt.ProfileWIndow;
 import raptor.swt.chat.ChatConsoles;
-import raptor.swt.chat.controller.MainConsoleController;
+import raptor.swt.chat.controller.MainController;
 import raptor.swt.chess.ChessBoards;
 
 public class RaptorWindow extends ApplicationWindow {
@@ -52,7 +52,7 @@ public class RaptorWindow extends ApplicationWindow {
 		chessBoards = new ChessBoards(sashForm, SWT.NONE);
 		chatConsoles = new ChatConsoles(sashForm, SWT.NONE);
 
-		chatConsoles.addChatConsole(new MainConsoleController(), Raptor
+		chatConsoles.addChatConsole(new MainController(), Raptor
 				.getInstance().getFicsConnector());
 
 		maximizeChatConsoles();
