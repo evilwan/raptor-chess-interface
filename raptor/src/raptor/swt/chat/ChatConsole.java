@@ -54,8 +54,6 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		}
 	};
 
-	String title;
-
 	public ChatConsole(Composite parent, int style) {
 		super(parent, style);
 	}
@@ -75,8 +73,9 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		if (controller.isPrependable()) {
 			Button prependTextButton = new Button(buttonComposite, SWT.CHECK);
 			prependTextButton.setImage(Raptor.getInstance().getIcon("redStar"));
-			prependTextButton.setToolTipText("Prepends " + prependTextButton
-					+ " to all messages sent.");
+			prependTextButton.setToolTipText("Prepends "
+					+ controller.getPrependText()
+					+ " to the input text after sending a tell.");
 			prependTextButton.setSelection(true);
 			buttonMap.put(PREPEND_TEXT_BUTTON, prependTextButton);
 		}
@@ -218,10 +217,6 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		return preferences;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
 	public void setButtonEnabled(boolean isEnabled, String key) {
 		Button item = buttonMap.get(key);
 		if (item != null) {
@@ -239,10 +234,6 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 
 	public void setPreferences(RaptorPreferenceStore preferences) {
 		this.preferences = preferences;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 	public void updateFromPrefs() {

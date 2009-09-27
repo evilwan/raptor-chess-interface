@@ -67,7 +67,6 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	protected boolean hasUnseenText;
 	protected boolean ignoreAwayList;
 	protected boolean isDirty;
-	protected String prenedText;
 	protected String sourceOfLastTellReceived;
 	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
 
@@ -530,8 +529,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		return chatConsole;
 	}
 
-	public String getPrenedText() {
-		return prenedText;
+	public String getPrependText() {
+		return "";
 	}
 
 	public abstract String getPrompt();
@@ -551,6 +550,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		addMouseListeners();
 		registerForChatEvents();
 		adjustAwayButtonEnabled();
+		chatConsole.getOutputText().setText(getPrependText());
+		setCaretToOutputTextEnd();
 	}
 
 	public abstract boolean isAcceptingChatEvent(ChatEvent inboundEvent);
@@ -631,7 +632,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		chatConsole.outputText.append(string);
 		chatConsole.outputText.setSelection(chatConsole.outputText
 				.getCharCount());
-		chatConsole.outputText.forceFocus();
+		setCaretToOutputTextEnd();
 	}
 
 	public void onAway() {
@@ -776,7 +777,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	public void onSendOutputText() {
 		chatConsole.connector.sendMessage(chatConsole.outputText.getText());
-		chatConsole.outputText.setText("");
+		chatConsole.outputText.setText(getPrependText());
+		setCaretToOutputTextEnd();
 		awayList.clear();
 		adjustAwayButtonEnabled();
 	}
@@ -806,16 +808,18 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				chatServiceListener);
 	}
 
+	protected void setCaretToOutputTextEnd() {
+		chatConsole.outputText.forceFocus();
+		getChatConsole().getOutputText().setSelection(
+				getChatConsole().getOutputText().getCharCount());
+	}
+
 	public void setChatConsole(ChatConsole chatConsole) {
 		this.chatConsole = chatConsole;
 	}
 
 	public void setHasUnseenText(boolean hasUnseenText) {
 		this.hasUnseenText = hasUnseenText;
-	}
-
-	public void setPrenedText(String prenedText) {
-		this.prenedText = prenedText;
 	}
 
 	public void setSourceOfLastTellReceived(String sourceOfLastTellReceived) {
