@@ -29,10 +29,11 @@ public class Move implements GameConstants {
 	/**
 	 * Constructor for drop moves.
 	 */
-	public Move(int to, int piece) {
+	public Move(int to, int piece, int color) {
 		this.to = (byte) to;
 		this.piece = (byte) piece;
 		this.moveCharacteristic = DROP_CHARACTERISTIC;
+		this.color = (byte) color;
 	}
 
 	public Move(int from, int to, int piece, int color, int capture) {
@@ -101,8 +102,8 @@ public class Move implements GameConstants {
 
 	public String getLan() {
 		return isCastleKSide() ? "O-O" : isCastleQSide() ? "O-O-O"
-				: isDrop() ? PIECE_TO_SAN.charAt(getPiece()) + "@"
-						+ SQUARE_TO_FILE_SAN.charAt(getTo())
+				: isDrop() ? COLOR_PIECE_TO_CHAR[color].charAt(getPiece())
+						+ "@" + SQUARE_TO_FILE_SAN.charAt(getTo())
 						+ SQUARE_TO_RANK_SAN.charAt(getTo()) : ""
 						+ SQUARE_TO_FILE_SAN.charAt(getFrom())
 						+ SQUARE_TO_RANK_SAN.charAt(getFrom())
@@ -144,6 +145,22 @@ public class Move implements GameConstants {
 
 	public boolean isCapture() {
 		return getCapture() != GameConstants.EMPTY;
+	}
+
+	public boolean isCastleKSide() {
+		return (moveCharacteristic & KINGSIDE_CASTLING_CHARACTERISTIC) != 0;
+	}
+
+	public boolean isCastleQSide() {
+		return (moveCharacteristic & QUEENSIDE_CASTLING_CHARACTERISTIC) != 0;
+	}
+
+	public boolean isDrop() {
+		return (moveCharacteristic & DROP_CHARACTERISTIC) != 0;
+	}
+
+	public boolean isEnPassant() {
+		return (moveCharacteristic & EN_PASSANT_CHARACTERISTIC) != 0;
 	}
 
 	public boolean isPromotion() {
@@ -196,22 +213,6 @@ public class Move implements GameConstants {
 
 	public void setTo(int to) {
 		this.to = (byte) to;
-	}
-
-	public boolean isDrop() {
-		return (moveCharacteristic & DROP_CHARACTERISTIC) != 0;
-	}
-
-	public boolean isCastleKSide() {
-		return (moveCharacteristic & KINGSIDE_CASTLING_CHARACTERISTIC) != 0;
-	}
-
-	public boolean isCastleQSide() {
-		return (moveCharacteristic & QUEENSIDE_CASTLING_CHARACTERISTIC) != 0;
-	}
-
-	public boolean isEnPassant() {
-		return (moveCharacteristic & EN_PASSANT_CHARACTERISTIC) != 0;
 	}
 
 	@Override

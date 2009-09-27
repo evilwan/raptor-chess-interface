@@ -126,39 +126,16 @@ public class Raptor implements PreferenceKeys {
 	public Raptor() {
 	}
 
-	public void init() {
-		install();
-		preferences = new RaptorPreferenceStore();
-		ficsConnector = new FicsConnector();
-		ficsConnector.setPreferences(preferences);
-	}
-
 	public RaptorWindow getAppWindow() {
 		return appWindow;
 	}
 
-	public Connector getFicsConnector() {
-		return ficsConnector;
-	}
-
-	public RaptorPreferenceStore getPreferences() {
-		return preferences;
-	}
-
-	public void install() {
-		try {
-			FileUtil.copyFiles(DEFAULT_HOME_DIR, USER_RAPTOR_DIR);
-		} catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
-	}
-
-	public ImageRegistry getImageRegistry() {
-		return imageRegistry;
-	}
-
 	public ColorRegistry getColorRegistry() {
 		return colorRegistry;
+	}
+
+	public Connector getFicsConnector() {
+		return ficsConnector;
 	}
 
 	public FontRegistry getFontRegistry() {
@@ -191,6 +168,29 @@ public class Raptor implements PreferenceKeys {
 			}
 		}
 		return result;
+	}
+
+	public ImageRegistry getImageRegistry() {
+		return imageRegistry;
+	}
+
+	public RaptorPreferenceStore getPreferences() {
+		return preferences;
+	}
+
+	public void init() {
+		install();
+		preferences = new RaptorPreferenceStore();
+		ficsConnector = new FicsConnector();
+		ficsConnector.setPreferences(preferences);
+	}
+
+	public void install() {
+		try {
+			FileUtil.copyFiles(DEFAULT_HOME_DIR, USER_RAPTOR_DIR);
+		} catch (IOException ioe) {
+			throw new RuntimeException(ioe);
+		}
 	}
 
 	public void shutdown() {

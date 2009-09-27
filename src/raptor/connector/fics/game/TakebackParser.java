@@ -34,18 +34,18 @@ public class TakebackParser {
 	private static final Log LOG = LogFactory.getLog(TakebackParser.class);
 
 	/**
+	 * Clears the take back message for the specified gameId.
+	 */
+	public void clearTakebackMessages(String gameId) {
+		gameToTakebackMessages.remove(gameId);
+	}
+
+	/**
 	 * Returns the take back message for the specified game id. Returns null if
 	 * there are none.
 	 */
 	public TakebackMessage getTakebackMessage(String gameId) {
 		return gameToTakebackMessages.get(gameId);
-	}
-
-	/**
-	 * Clears the take back message for the specified gameId.
-	 */
-	public void clearTakebackMessages(String gameId) {
-		gameToTakebackMessages.remove(gameId);
 	}
 
 	/**

@@ -47,6 +47,10 @@ public interface Connector {
 
 	public void onDraw(Game game);
 
+	public void onError(String message);
+
+	public void onError(String message, Throwable t);
+
 	public void onExamineModeBack(Game game);
 
 	public void onExamineModeCommit(Game game);
@@ -61,6 +65,16 @@ public interface Connector {
 
 	public void onRematchKeyPress();
 
+	public void onSetupClear(Game game);
+
+	public void onSetupClearSquare(Game game, int square);
+
+	public void onSetupComplete(Game game);
+
+	public void onSetupFromFEN(Game game, String fen);
+
+	public void onSetupStartPosition(Game game);
+
 	public void onUnexamine(Game game);
 
 	public void onUnobserve(Game game);
@@ -72,8 +86,4 @@ public interface Connector {
 	public void sendMessage(String msg);
 
 	public void setPreferences(PreferenceStore preferences);
-	
-	public void onError(String message,Throwable t);
-	
-	public void onError(String message);
 }

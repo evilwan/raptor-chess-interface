@@ -19,6 +19,7 @@ public class ExamineController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ExamineController.class);
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
+		@Override
 		public void gameInactive(Game game) {
 			if (game.getId().equals(board.getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
@@ -37,6 +38,7 @@ public class ExamineController extends ChessBoardController {
 			}
 		}
 
+		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (game.getId().equals(board.getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
@@ -74,48 +76,6 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public void dispose() {
-		board.getConnector().getGameService().removeGameServiceListener(
-				listener);
-		super.dispose();
-	}
-
-	public void examinePositionUpdate() {
-		LOG.info("examinePositionUpdate " + getGame().getId() + " ...");
-		long startTime = System.currentTimeMillis();
-
-		stopClocks();
-		adjustClockColors();
-		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)
-				&& getGame().isInState(Game.ACTIVE_STATE)) {
-			adjustClockLabelsAndUpdaters();
-			startClocks();
-		}
-
-		adjustNameRatingLabels();
-		adjustGameDescriptionLabel();
-		adjustToGameChangeNotInvolvingMove();
-		adjustBoardToGame(getGame());
-		adjustPieceJailFromGame(getGame());
-		adjustNavButtonEnabledState();
-
-		board.forceUpdate();
-		onPlayMoveSound();
-		board.unhighlightAllSquares();
-		LOG.info("examinePositionUpdate in " + getGame().getId() + "  "
-				+ (System.currentTimeMillis() - startTime));
-	}
-
-	public void examineOnIllegalMove(String move) {
-		LOG.info("examineOnIllegalMove " + getGame().getId() + " ...");
-		long startTime = System.currentTimeMillis();
-		SoundService.getInstance().playSound("illegalMove");
-		board.getStatusLabel().setText("Illegal Move: " + move);
-		board.unhighlightAllSquares();
-		LOG.info("examineOnIllegalMove in " + getGame().getId() + "  "
-				+ (System.currentTimeMillis() - startTime));
-	}
-
 	protected void adjustClockColors() {
 		if (getGame().getColorToMove() == WHITE) {
 			board.getWhiteClockLabel().setForeground(
@@ -141,6 +101,12 @@ public class ExamineController extends ChessBoardController {
 		board.packCoolbar();
 	}
 
+	@Override
+	public void adjustGameDescriptionLabel() {
+		board.getGameDescriptionLabel().setText("Examining a game");
+	}
+
+	@Override
 	protected void adjustNavButtonEnabledState() {
 		if (board.getGame().isInState(Game.ACTIVE_STATE)) {
 			board.setCoolBarButtonEnabled(true, ChessBoard.FIRST_NAV);
@@ -171,8 +137,51 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
+	public void dispose() {
+		board.getConnector().getGameService().removeGameServiceListener(
+				listener);
+		super.dispose();
+	}
+
+	public void examineOnIllegalMove(String move) {
+		LOG.info("examineOnIllegalMove " + getGame().getId() + " ...");
+		long startTime = System.currentTimeMillis();
+		SoundService.getInstance().playSound("illegalMove");
+		board.getStatusLabel().setText("Illegal Move: " + move);
+		board.unhighlightAllSquares();
+		LOG.info("examineOnIllegalMove in " + getGame().getId() + "  "
+				+ (System.currentTimeMillis() - startTime));
+	}
+
+	public void examinePositionUpdate() {
+		LOG.info("examinePositionUpdate " + getGame().getId() + " ...");
+		long startTime = System.currentTimeMillis();
+
+		stopClocks();
+		adjustClockColors();
+		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)
+				&& getGame().isInState(Game.ACTIVE_STATE)) {
+			adjustClockLabelsAndUpdaters();
+			startClocks();
+		}
+
+		adjustNameRatingLabels();
+		adjustGameDescriptionLabel();
+		adjustToGameChangeNotInvolvingMove();
+		adjustBoardToGame(getGame());
+		adjustPieceJailFromGame(getGame());
+		adjustNavButtonEnabledState();
+
+		board.forceUpdate();
+		onPlayMoveSound();
+		board.unhighlightAllSquares();
+		LOG.info("examinePositionUpdate in " + getGame().getId() + "  "
+				+ (System.currentTimeMillis() - startTime));
+	}
+
+	@Override
 	public String getTitle() {
-		return "(" + getGame().getId() + ") Examining";
+		return "Examining(" + getGame().getId() + ")";
 	}
 
 	@Override
@@ -218,6 +227,11 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public boolean isMoveListTraversable() {
+		return true;
+	}
+
+	@Override
+	public boolean isNavigatable() {
 		return true;
 	}
 
@@ -324,13 +338,7 @@ public class ExamineController extends ChessBoardController {
 
 		Game game = board.getGame();
 		Move move = null;
-		if (Utils.isPieceJailSquare(fromSquare)) {
-			move = new Move(Utils.pieceFromColoredPiece(Utils
-					.pieceJailSquareToPiece(fromSquare)), toSquare);
-			board.getSquare(toSquare).setPiece(
-					Utils.getColoredPiece(board.getAutoPromoteSelection(), game
-							.isWhitesMove()));
-		} else if (GameUtils.isPromotion(board.getGame(), fromSquare, toSquare)) {
+		if (GameUtils.isPromotion(board.getGame(), fromSquare, toSquare)) {
 			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
 					game.getColorToMove(), game.getPiece(toSquare), board
 							.getAutoPromoteSelection(), EMPTY,

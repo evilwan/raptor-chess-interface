@@ -110,15 +110,7 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		board.forceUpdate();
 	}
 
-	public void adjustGameDescriptionLabel() {
-		String adjective = board.getGame().isInState(Game.PLAYING_STATE) ? "Playing "
-				: board.getGame().isInState(Game.OBSERVING_STATE) ? "Observing "
-						: board.getGame().isInState(Game.EXAMINING_STATE) ? "Examining "
-								: board.getGame().isInState(Game.SETUP_STATE) ? "Setting up "
-										: "";
-		board.gameDescriptionLabel.setText(adjective
-				+ board.getGame().getEvent());
-	}
+	public abstract void adjustGameDescriptionLabel();
 
 	public void adjustGameStatusLabel() {
 		if (getGame().isInState(Game.ACTIVE_STATE)) {
@@ -424,6 +416,8 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 
 	public abstract boolean isMoveListTraversable();
 
+	public abstract boolean isNavigatable();
+
 	public abstract boolean isPausable();
 
 	public abstract boolean isRematchable();
@@ -509,6 +503,18 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 	protected abstract void onPlayGameStartSound();
 
 	protected abstract void onPlayMoveSound();
+
+	public void onSetupClear() {
+	}
+
+	public void onSetupDone() {
+	}
+
+	public void onSetupFen(String fen) {
+	}
+
+	public void onSetupStart() {
+	}
 
 	public String pieceCountToString(int count) {
 		if (count < 2) {

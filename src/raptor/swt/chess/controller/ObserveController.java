@@ -15,9 +15,11 @@ public class ObserveController extends ChessBoardController {
 
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
+		@Override
 		public void gameCreated(Game game) {
 		}
 
+		@Override
 		public void gameInactive(Game game) {
 			if (game.getId().equals(board.getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
@@ -36,6 +38,7 @@ public class ObserveController extends ChessBoardController {
 			}
 		}
 
+		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (game.getId().equals(board.getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
@@ -64,6 +67,12 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	@Override
+	public void adjustGameDescriptionLabel() {
+		board.getGameDescriptionLabel().setText(
+				"Observing " + getGame().getEvent());
+	}
+
+	@Override
 	protected void adjustPremoveLabel() {
 		board.getCurrentPremovesLabel().setText("");
 	}
@@ -82,9 +91,9 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public String getTitle() {
-		Game game = getGame();
-		return "(" + game.getId() + ") " + game.getWhiteName() + " vs "
-				+ game.getBlackName();
+		return "Observing(" + getGame().getId() + " "
+				+ getGame().getWhiteName() + " vs " + getGame().getBlackName()
+				+ ")";
 	}
 
 	@Override
@@ -130,6 +139,11 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public boolean isMoveListTraversable() {
+		return true;
+	}
+
+	@Override
+	public boolean isNavigatable() {
 		return true;
 	}
 
@@ -200,5 +214,4 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public void userRightClicked(int square) {
 	}
-
 }

@@ -5,9 +5,11 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.game.Game;
 import raptor.game.GameConstants;
+import raptor.game.Move;
 import raptor.game.util.GameUtils;
 import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.ObserveController;
+import raptor.swt.chess.controller.SetupController;
 
 public class Utils implements Constants {
 	private static final Log LOG = LogFactory.getLog(Utils.class);
@@ -24,6 +26,8 @@ public class Utils implements Constants {
 				|| game.isInState(Game.OBSERVING_EXAMINED_STATE)) {
 			controller = new ObserveController();
 
+		} else if (game.isInState(Game.SETUP_STATE)) {
+			controller = new SetupController();
 		} else if (game.isInState(Game.EXAMINING_STATE)) {
 			controller = new ExamineController();
 		} else {
@@ -31,6 +35,14 @@ public class Utils implements Constants {
 					+ "Ignoring game. state= " + game.getState());
 		}
 		return controller;
+	}
+
+	public static Move createDropMove(int fromSquare, int toSquare) {
+		int coloredPiece = Utils.pieceJailSquareToPiece(fromSquare);
+		int colorlessPiece = Utils.pieceFromColoredPiece(coloredPiece);
+
+		return new Move(toSquare, colorlessPiece, Utils
+				.isWhitePiece(coloredPiece) ? WHITE : BLACK);
 	}
 
 	public static int getColoredPiece(int piece, boolean isWhite) {

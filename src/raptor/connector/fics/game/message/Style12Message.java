@@ -2,9 +2,7 @@ package raptor.connector.fics.game.message;
 
 public class Style12Message {
 	public static final int ISOLATED_POSITION_RELATION = -3;
-
 	public static final int OBSERVING_EXAMINED_GAME_RELATION = -2;
-
 	public static final int EXAMINING_GAME_RELATION = 2;
 	public static final int PLAYING_OPPONENTS_MOVE_RELATION = -1;
 	public static final int PLAYING_MY_MOVE_RELATION = 1;

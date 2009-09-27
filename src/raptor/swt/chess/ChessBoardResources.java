@@ -32,25 +32,6 @@ public class ChessBoardResources implements Constants {
 	private static SecureRandom secureRandom = new SecureRandom();
 
 	/**
-	 * Returns the path to the specified svg chess piece.
-	 */
-	public static String getSVGChessPieceName(String chessSetName, int piece) {
-		return CHESS_SET_DIR + chessSetName + "/" + PIECE_TO_NAME[piece]
-				+ PIECE_IMAGE_SUFFIX;
-	}
-
-	/**
-	 * Returns the path to the specified chess piece in the users image cache.
-	 */
-	public static String getUserImageCachePieceName(String chessSetName,
-			int piece, int width, int height) {
-		return Raptor.USER_RAPTOR_HOME_PATH + "/imagecache/" + chessSetName
-				+ "_" + PIECE_TO_NAME[piece] + "_" + width + "_" + height
-				+ ".png";
-
-	}
-
-	/**
 	 * Returns a list of all chess set names.
 	 */
 	public static String[] getChessSetNames() {
@@ -116,6 +97,25 @@ public class ChessBoardResources implements Constants {
 
 		Collections.sort(result);
 		return result.toArray(new String[0]);
+	}
+
+	/**
+	 * Returns the path to the specified svg chess piece.
+	 */
+	public static String getSVGChessPieceName(String chessSetName, int piece) {
+		return CHESS_SET_DIR + chessSetName + "/" + PIECE_TO_NAME[piece]
+				+ PIECE_IMAGE_SUFFIX;
+	}
+
+	/**
+	 * Returns the path to the specified chess piece in the users image cache.
+	 */
+	public static String getUserImageCachePieceName(String chessSetName,
+			int piece, int width, int height) {
+		return Raptor.USER_RAPTOR_HOME_PATH + "/imagecache/" + chessSetName
+				+ "_" + PIECE_TO_NAME[piece] + "_" + width + "_" + height
+				+ ".png";
+
 	}
 
 	protected ChessBoard board;
@@ -194,6 +194,46 @@ public class ChessBoardResources implements Constants {
 	}
 
 	/**
+	 * Returns the users current chess set name.
+	 */
+	public String getChessSetName() {
+		return board.getPreferences().getString(BOARD_CHESS_SET_NAME);
+	}
+
+	/**
+	 * Returns the Image for users current background name
+	 */
+	public Image getSquareBackgroundImage(boolean isLight, int width, int height) {
+		String name = getSquareBackgroundName();
+
+		if (width <= 0 || height <= 0) {
+			width = 10;
+			height = 10;
+		}
+
+		String key = name + "_" + isLight + "_" + width + "x" + height;
+
+		Image result = Raptor.getInstance().getImageRegistry().get(key);
+
+		if (result == null) {
+			result = new Image(Display.getCurrent(), getSquareBackgroundMold(
+					name, isLight).getImageData().scaledTo(width, height));
+			Raptor.getInstance().getImageRegistry().put(key, result);
+			return result;
+		} else {
+			return result;
+		}
+	}
+
+	/**
+	 * Returns the users current square background name.
+	 */
+	public String getSquareBackgroundName() {
+		return board.getPreferences().getString(BOARD_SQUARE_BACKGROUND_NAME);
+
+	}
+
+	/**
 	 * Attempts to load the png file from the users cache. If the file wasnt
 	 * there it loads the SVG file, which will save the png file for later
 	 * loading.
@@ -261,45 +301,5 @@ public class ChessBoardResources implements Constants {
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
-	}
-
-	/**
-	 * Returns the users current chess set name.
-	 */
-	public String getChessSetName() {
-		return board.getPreferences().getString(BOARD_CHESS_SET_NAME);
-	}
-
-	/**
-	 * Returns the Image for users current background name
-	 */
-	public Image getSquareBackgroundImage(boolean isLight, int width, int height) {
-		String name = getSquareBackgroundName();
-
-		if (width <= 0 || height <= 0) {
-			width = 10;
-			height = 10;
-		}
-
-		String key = name + "_" + isLight + "_" + width + "x" + height;
-
-		Image result = Raptor.getInstance().getImageRegistry().get(key);
-
-		if (result == null) {
-			result = new Image(Display.getCurrent(), getSquareBackgroundMold(
-					name, isLight).getImageData().scaledTo(width, height));
-			Raptor.getInstance().getImageRegistry().put(key, result);
-			return result;
-		} else {
-			return result;
-		}
-	}
-
-	/**
-	 * Returns the users current square background name.
-	 */
-	public String getSquareBackgroundName() {
-		return board.getPreferences().getString(BOARD_SQUARE_BACKGROUND_NAME);
-
 	}
 }

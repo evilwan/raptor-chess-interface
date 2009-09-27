@@ -42,7 +42,7 @@ public class LosersGame extends Game {
 				i--;
 				continue;
 			} // remove all, since there are no non-capture legal moves if can
-				// capture
+			// capture
 
 			Move move = result.getLowPriority(i);
 			forceMove(move);

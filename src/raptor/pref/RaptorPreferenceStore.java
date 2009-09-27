@@ -30,23 +30,27 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
 	private static final Log LOG = LogFactory
 			.getLog(RaptorPreferenceStore.class);
-	public static final File RAPTOR_PROPERTIES = new File(Raptor
-			.USER_RAPTOR_DIR, "raptor.properties");
+	public static final File RAPTOR_PROPERTIES = new File(
+			Raptor.USER_RAPTOR_DIR, "raptor.properties");
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
-
-	
 
 	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent arg0) {
 			if (arg0.getProperty().endsWith("color")) {
-				Raptor.getInstance().getColorRegistry().put(arg0.getProperty(), PreferenceConverter
-						.getColor(RaptorPreferenceStore.this, arg0
-								.getProperty()));
+				Raptor.getInstance().getColorRegistry()
+						.put(
+								arg0.getProperty(),
+								PreferenceConverter.getColor(
+										RaptorPreferenceStore.this, arg0
+												.getProperty()));
 			} else if (arg0.getProperty().endsWith("font")) {
-				Raptor.getInstance().getFontRegistry().put(arg0.getProperty(), PreferenceConverter
-						.getFontDataArray(RaptorPreferenceStore.this, arg0
-								.getProperty()));
+				Raptor.getInstance().getFontRegistry()
+						.put(
+								arg0.getProperty(),
+								PreferenceConverter.getFontDataArray(
+										RaptorPreferenceStore.this, arg0
+												.getProperty()));
 			}
 		}
 	};
@@ -154,8 +158,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	}
 
-	
-
 	public Point getPoint(String key) {
 		return PreferenceConverter.getPoint(this, key);
 	}
@@ -166,8 +168,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public void loadDefaults() {
 		String defaultFontName = Raptor.getInstance().getFontRegistry()
-				.defaultFont().getFontData()[0]
-				.getName();
+				.defaultFont().getFontData()[0].getName();
 		String defaultMonospacedFontName = "Courier";
 
 		// Board
