@@ -47,6 +47,11 @@ public class PartnerTellController extends ChatConsoleController {
 	}
 
 	@Override
+	public boolean isAwayable() {
+		return false;
+	}
+
+	@Override
 	public boolean isCloseable() {
 		return true;
 	}
@@ -60,4 +65,5 @@ public class PartnerTellController extends ChatConsoleController {
 	public boolean isSearchable() {
 		return true;
 	}
+
 }

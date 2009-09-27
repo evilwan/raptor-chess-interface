@@ -1,5 +1,6 @@
 package raptor.swt.chat.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Button;
 
 import raptor.chat.ChatEvent;
@@ -45,7 +46,12 @@ public class ChannelController extends ChatConsoleController {
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
 		return inboundEvent.getType() == ChatTypes.CHAN_TELL
-				&& inboundEvent.getChannel().equals(channel);
+				&& StringUtils.equals(inboundEvent.getChannel(), channel);
+	}
+
+	@Override
+	public boolean isAwayable() {
+		return false;
 	}
 
 	@Override

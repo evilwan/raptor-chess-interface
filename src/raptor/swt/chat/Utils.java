@@ -2,7 +2,40 @@ package raptor.swt.chat;
 
 import org.eclipse.swt.custom.StyledText;
 
+import raptor.chat.ChatEvent;
+import raptor.chat.ChatLogger.ChatEventParseListener;
+import raptor.service.ThreadService;
+
 public class Utils {
+
+	public static void appendPreviousChatsToController(final ChatConsole console) {
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				console.getConnector().getChatService().getChatLogger()
+						.parseFile(new ChatEventParseListener() {
+
+							public void onNewEventParsed(final ChatEvent event) {
+								console.getDisplay().asyncExec(new Runnable() {
+									public void run() {
+										try {
+											if (!console.isDisposed()) {
+												console.getController()
+														.onChatEvent(event);
+											}
+										} catch (Throwable t) {
+											console
+													.getConnector()
+													.onError(
+															"appendPreviousChatsToController",
+															t);
+										}
+									}
+								});
+							}
+						});
+			}
+		});
+	}
 
 	/**
 	 * Returns null if the current position isn't quoted text, otherwise returns
@@ -115,7 +148,8 @@ public class Utils {
 
 			lineEnd = currentPosition;
 
-			return text.getText(lineStart + 1, lineEnd - 1);
+			return trimDateStampFromWord(text.getText(lineStart + 1,
+					lineEnd - 1));
 
 		} catch (Exception e) {
 			return null;
@@ -187,11 +221,24 @@ public class Utils {
 				}
 			}
 
+			if (result != null) {
+				return trimDateStampFromWord(result);
+			}
 			return result;
 
 		} catch (Exception e) {
 			return null;
 		}
+	}
+
+	public static String trimDateStampFromWord(String word) {
+		if (word.startsWith("[")) {
+			int closingBrace = word.indexOf("]");
+			if (closingBrace != -1) {
+				return word.substring(closingBrace + 1);
+			}
+		}
+		return word;
 	}
 
 }

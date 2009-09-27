@@ -10,8 +10,8 @@ public class NoLongerExaminingGameParser {
 		NoLongerExaminingGameMessage result = null;
 		if (message.startsWith(NO_LONGER_EXAMINING)) {
 			result = new NoLongerExaminingGameMessage();
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(message, " .",
-					true);
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
+					" .", true);
 
 			// parse past You are no longer examinng game.
 			tok.nextToken();

@@ -33,8 +33,6 @@ public class RaptorWindow extends ApplicationWindow {
 	public RaptorWindow() {
 		super(null);
 		addMenuBar();
-		// addStatusLine();
-		// addCoolBar(SWT.FLAT);
 	}
 
 	@Override
@@ -52,8 +50,8 @@ public class RaptorWindow extends ApplicationWindow {
 		chessBoards = new ChessBoards(sashForm, SWT.NONE);
 		chatConsoles = new ChatConsoles(sashForm, SWT.NONE);
 
-		chatConsoles.addChatConsole(new MainController(), Raptor
-				.getInstance().getFicsConnector());
+		chatConsoles.addChatConsole(new MainController(), Raptor.getInstance()
+				.getFicsConnector());
 
 		maximizeChatConsoles();
 
