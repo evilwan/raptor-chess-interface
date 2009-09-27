@@ -37,8 +37,6 @@ public class InactiveController extends ChessBoardController implements
 	protected void adjustCoolbarToInitial() {
 		board.addGameActionButtonsToCoolbar();
 		board.addAutoPromoteRadioGroupToCoolbar();
-		board.addScripterCoolbar();
-
 		board.packCoolbar();
 	}
 

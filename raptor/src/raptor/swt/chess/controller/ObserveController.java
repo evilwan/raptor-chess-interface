@@ -25,13 +25,21 @@ public class ObserveController extends ChessBoardController {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							adjustToGameChangeNotInvolvingMove();
-						} catch (Throwable t) {
-							board.getConnector().onError(
-									"ObserveController.gameStateChanged", t);
-						} finally {
+							InactiveController inactiveController = new InactiveController();
+							getBoard().setController(inactiveController);
+							inactiveController.setBoard(board);
+
+							board.clearCoolbar();
 							board.getConnector().getGameService()
 									.removeGameServiceListener(listener);
+
+							inactiveController.init();
+
+							getBoard().fireOnControllerStateChange();
+							ObserveController.this.dispose();
+						} catch (Throwable t) {
+							board.getConnector().onError(
+									"ExamineController.gameInactive", t);
 						}
 					}
 				});

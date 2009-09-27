@@ -30,7 +30,6 @@ public class ExamineController extends ChessBoardController {
 							inactiveController.setBoard(board);
 
 							board.clearCoolbar();
-							board.setWhitePieceJailOnTop(true);
 							board.getConnector().getGameService()
 									.removeGameServiceListener(listener);
 
@@ -45,7 +44,6 @@ public class ExamineController extends ChessBoardController {
 						}
 					}
 				});
-
 			}
 		}
 
