@@ -25,16 +25,27 @@ public class ExamineController extends ChessBoardController {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							examinePositionUpdate();
-						} catch (Throwable t) {
-							board.getConnector().onError(
-									"ExamineController.onGameInactive", t);
-						} finally {
+							InactiveController inactiveController = new InactiveController();
+							getBoard().setController(inactiveController);
+							inactiveController.setBoard(board);
+
+							board.clearCoolbar();
+							board.setWhitePieceJailOnTop(true);
 							board.getConnector().getGameService()
 									.removeGameServiceListener(listener);
+
+							inactiveController.init();
+
+							getBoard().fireOnControllerStateChange();
+							ExamineController.this.dispose();
+						} catch (Throwable t) {
+							board.getConnector().onError(
+									"ExamineController.gameInactive",
+									t);
 						}
 					}
 				});
+
 			}
 		}
 

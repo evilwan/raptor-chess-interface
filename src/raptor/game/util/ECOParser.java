@@ -27,8 +27,7 @@ public class ECOParser {
 	private static LinkedHashMap<String, ECOParser> map = new LinkedHashMap<String, ECOParser>();
 
 	static {
-		File f = new File(raptor.Raptor.USER_RAPTOR_HOME_PATH + File.separator
-				+ "ECO.txt");
+		File f = new File(raptor.Raptor.RESOURCES_COMMON_DIR + "ECO.txt");
 		try {
 			ECOParser.parse(f);
 		} catch (Exception e) {
