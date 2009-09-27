@@ -20,7 +20,11 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ScrollBar;
 
@@ -31,6 +35,8 @@ import raptor.connector.fics.FicsUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
+import raptor.swt.chat.controller.ChannelConsoleController;
+import raptor.swt.chat.controller.PersonConsoleController;
 import raptor.util.LaunchBrowser;
 
 public abstract class ChatConsoleController implements PreferenceKeys,
@@ -60,6 +66,7 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 
 	protected boolean hasUnseenText;
 	protected boolean ignoreAwayList;
+	protected boolean isDirty;
 	protected String prenedText;
 	protected String sourceOfLastTellReceived;
 	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
@@ -169,36 +176,127 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 				String url = Utils.getUrl(chatConsole.inputText, caretPosition);
 				if (url != null) {
 					LaunchBrowser.openURL(url);
+					return;
 				}
 
 				String quotedText = Utils.getQuotedText(chatConsole.inputText,
 						caretPosition);
 				if (quotedText != null) {
 					chatConsole.getConnector().sendMessage(quotedText);
+					return;
 				}
-			} else if (e.button == 3) {
-				int caretPosition = chatConsole.inputText.getCaretOffset();
-				// TO DO: add person popup.
-				System.err.println("CaretPosition = " + caretPosition);
-				System.err.println("Word="
-						+ Utils.getWord(chatConsole.inputText, caretPosition));
-				System.err.println("StrippedWord="
-						+ Utils.getStrippedWord(chatConsole.inputText,
-								caretPosition));
-				System.err.println("isLikelyPerson="
-						+ Utils.isLikelyPerson(Utils.getWord(
-								chatConsole.inputText, caretPosition)));
-				System.err.println("QuotedText="
-						+ Utils.getQuotedText(chatConsole.inputText,
-								caretPosition));
-				System.err.println("WrappedWord="
-						+ Utils.getWrappedWord(chatConsole.inputText,
-								caretPosition));
-				System.err.println("Channel="
-						+ Utils.getChannel(Utils.getWord(chatConsole.inputText,
-								caretPosition)));
-				System.err.println("Url="
-						+ Utils.getUrl(chatConsole.inputText, caretPosition));
+
+			}
+			if (e.button == 3) {
+				int carePosition = chatConsole.inputText
+						.getOffsetAtLocation(new Point(e.x, e.y));
+
+				String word = Utils
+						.getWord(chatConsole.inputText, carePosition);
+
+				Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
+
+				// TO DO: move this down into the connector.
+				if (chatConsole.getConnector().isLikelyPerson(word)) {
+					final String person = chatConsole.getConnector()
+							.parsePerson(word);
+					MenuItem item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Add a tab for person: " + person);
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							Raptor
+									.getInstance()
+									.getRaptorWindow()
+									.getChatConsoles()
+									.addChatConsole(
+											new PersonConsoleController(person),
+											chatConsole.getConnector());
+						}
+					});
+
+					final String[][] connectorPersonItems = chatConsole
+							.getConnector().getPersonActions(person);
+					if (connectorPersonItems != null) {
+						for (int i = 0; i < connectorPersonItems.length; i++) {
+							item = new MenuItem(menu, SWT.PUSH);
+							item.setText(connectorPersonItems[i][0]);
+							final int index = i;
+							item.addListener(SWT.Selection, new Listener() {
+								public void handleEvent(Event e) {
+									chatConsole.getConnector().sendMessage(
+											connectorPersonItems[index][1]);
+								}
+							});
+						}
+					}
+				}
+				if (chatConsole.getConnector().isLikelyChannel(word)) {
+					MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
+					final String channel = chatConsole.getConnector()
+							.parseChannel(word);
+
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Add a tab for channel: " + channel);
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							Raptor.getInstance().getRaptorWindow()
+									.getChatConsoles().addChatConsole(
+											new ChannelConsoleController(
+													channel),
+											chatConsole.getConnector());
+						}
+					});
+
+					final String[][] connectorChannelItems = chatConsole
+							.getConnector().getChannelActions(channel);
+					if (connectorChannelItems != null) {
+						for (int i = 0; i < connectorChannelItems.length; i++) {
+							item = new MenuItem(menu, SWT.PUSH);
+							item.setText(connectorChannelItems[i][0]);
+							final int index = i;
+							item.addListener(SWT.Selection, new Listener() {
+								public void handleEvent(Event e) {
+									chatConsole.getConnector().sendMessage(
+											connectorChannelItems[index][1]);
+								}
+							});
+						}
+					}
+				}
+				if (chatConsole.getConnector().isLikelyGameId(word)) {
+					MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
+					String gameId = chatConsole.getConnector()
+							.parseGameId(word);
+
+					final String[][] gameIdItems = chatConsole.getConnector()
+							.getGameIdActions(gameId);
+					if (gameIdItems != null) {
+						for (int i = 0; i < gameIdItems.length; i++) {
+							item = new MenuItem(menu, SWT.PUSH);
+							item.setText(gameIdItems[i][0]);
+							final int index = i;
+							item.addListener(SWT.Selection, new Listener() {
+								public void handleEvent(Event e) {
+									chatConsole.getConnector().sendMessage(
+											gameIdItems[index][1]);
+								}
+							});
+						}
+					}
+				}
+
+				if (menu.getItemCount() > 0) {
+					LOG.debug("Showing popup with " + menu.getItemCount()
+							+ " items. "
+							+ chatConsole.inputText.toDisplay(e.x, e.y));
+					menu.setLocation(chatConsole.inputText.toDisplay(e.x, e.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!chatConsole.getDisplay().readAndDispatch())
+							chatConsole.getDisplay().sleep();
+					}
+				}
+				menu.dispose();
 			}
 		}
 	};
@@ -442,6 +540,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 		return sourceOfLastTellReceived;
 	}
 
+	public abstract String getTitle();
+
 	public boolean hasUnseenText() {
 		return hasUnseenText;
 	}
@@ -454,6 +554,8 @@ public abstract class ChatConsoleController implements PreferenceKeys,
 	}
 
 	public abstract boolean isAcceptingChatEvent(ChatEvent inboundEvent);
+
+	public abstract boolean isCloseable();
 
 	protected boolean isInRanges(int location, List<int[]> ranges) {
 		boolean result = false;

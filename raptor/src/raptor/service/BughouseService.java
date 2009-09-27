@@ -7,23 +7,22 @@ public class BughouseService {
 	private Bugger[] unpartneredBuggers;
 	private Partnership[] availablePartnerships;
 
-	/*public void buggersAvailableUpdated() {
-		
-	}
-	
-	public void bugGamesPlayingUpdated() {
-		
-	}
-
-	public void bugTeamsAvailableUpdated() {
-		
-	}*/
-
-	/**
-	 * This method should only be called by BugWhoUParser.parse().
+	/*
+	 * public void buggersAvailableUpdated() {
+	 * 
+	 * }
+	 * 
+	 * public void bugGamesPlayingUpdated() {
+	 * 
+	 * }
+	 * 
+	 * public void bugTeamsAvailableUpdated() {
+	 * 
+	 * }
 	 */
-	public void setUnpartneredBuggers(Bugger[] unpartneredBuggers) {
-		this.unpartneredBuggers = unpartneredBuggers;
+
+	public Partnership[] getAvailablePartnerships() {
+		return availablePartnerships;
 	}
 
 	public Bugger[] getUnpartneredBuggers() {
@@ -37,8 +36,11 @@ public class BughouseService {
 		this.availablePartnerships = availablePartnerships;
 	}
 
-	public Partnership[] getAvailablePartnerships() {
-		return availablePartnerships;
+	/**
+	 * This method should only be called by BugWhoUParser.parse().
+	 */
+	public void setUnpartneredBuggers(Bugger[] unpartneredBuggers) {
+		this.unpartneredBuggers = unpartneredBuggers;
 	}
 
 }

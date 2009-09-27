@@ -7,6 +7,8 @@ import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -35,15 +37,24 @@ public class ChatConsoles extends Composite {
 		folder.setMaximizeVisible(true);
 		restore();
 
+		folder.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				forceScrollCurrentConsole();
+			}
+
+		});
+
 		folder.addCTabFolder2Listener(new CTabFolder2Adapter() {
 			@Override
 			public void maximize(CTabFolderEvent event) {
-				Raptor.getInstance().getAppWindow().maximizeChatConsoles();
+				Raptor.getInstance().getRaptorWindow().maximizeChatConsoles();
 			}
 
 			@Override
 			public void restore(CTabFolderEvent event) {
-				Raptor.getInstance().getAppWindow().restore();
+				Raptor.getInstance().getRaptorWindow().restore();
 			}
 
 		});
@@ -54,9 +65,9 @@ public class ChatConsoles extends Composite {
 				System.err.println("Mouse double click " + e.count);
 				if (e.count == 2) {
 					if (isMaximized()) {
-						Raptor.getInstance().getAppWindow().restore();
+						Raptor.getInstance().getRaptorWindow().restore();
 					} else {
-						Raptor.getInstance().getAppWindow()
+						Raptor.getInstance().getRaptorWindow()
 								.maximizeChatConsoles();
 					}
 				}
@@ -89,9 +100,8 @@ public class ChatConsoles extends Composite {
 	}
 
 	public void addChatConsole(ChatConsoleController controller,
-			Connector connector, boolean isCloseable, String title) {
-		int style = isCloseable ? SWT.CLOSE : SWT.NONE;
-		CTabItem item = new CTabItem(folder, style);
+			Connector connector) {
+		CTabItem item = new CTabItem(folder, SWT.NONE);
 		ChatConsole chatConsole = new ChatConsole(folder, SWT.NONE);
 		chatConsole.setController(controller);
 		chatConsole.setPreferences(Raptor.getInstance().getPreferences());
@@ -101,7 +111,8 @@ public class ChatConsoles extends Composite {
 		chatConsole.getController().init();
 		chatConsole.pack();
 		item.setControl(chatConsole);
-		item.setText(title);
+		item.setText(chatConsole.getController().getTitle());
+		item.setShowClose(chatConsole.getController().isCloseable());
 		folder.layout(true);
 		folder.setSelection(item);
 	}

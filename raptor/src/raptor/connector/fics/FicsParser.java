@@ -273,8 +273,9 @@ public class FicsParser implements GameConstants {
 
 				if (entireMessage
 						.contains("Game is validated - entering examine mode.\n")) {
-					
-					//Games changing from Setup to Examine mode flow through here.
+
+					// Games changing from Setup to Examine mode flow through
+					// here.
 					game.clearState(Game.SETUP_STATE);
 					game.clearState(Game.DROPPABLE_STATE);
 					FicsUtils.resetGame(game, message);

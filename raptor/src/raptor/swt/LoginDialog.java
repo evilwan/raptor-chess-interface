@@ -93,7 +93,7 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 	protected boolean wasLoginPressed;
 
 	public LoginDialog() {
-		super(Raptor.getInstance().getAppWindow().getShell());
+		super(Raptor.getInstance().getRaptorWindow().getShell());
 	}
 
 	protected void adjustToCheckBoxControls() {

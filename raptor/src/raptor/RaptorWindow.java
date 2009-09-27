@@ -53,7 +53,7 @@ public class RaptorWindow extends ApplicationWindow {
 		chatConsoles = new ChatConsoles(sashForm, SWT.NONE);
 
 		chatConsoles.addChatConsole(new MainConsoleController(), Raptor
-				.getInstance().getFicsConnector(), false, "Main");
+				.getInstance().getFicsConnector());
 
 		maximizeChatConsoles();
 
@@ -104,6 +104,14 @@ public class RaptorWindow extends ApplicationWindow {
 		menuBar.add(windowMenu);
 		menuBar.add(helpMenu);
 		return menuBar;
+	}
+
+	public ChatConsoles getChatConsoles() {
+		return chatConsoles;
+	}
+
+	public ChessBoards getChessBoards() {
+		return chessBoards;
 	}
 
 	@Override

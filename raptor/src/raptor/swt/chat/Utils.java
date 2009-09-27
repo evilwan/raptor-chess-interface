@@ -2,37 +2,7 @@ package raptor.swt.chat;
 
 import org.eclipse.swt.custom.StyledText;
 
-import raptor.util.RaptorStringTokenizer;
-
 public class Utils {
-	public static final String VALID_PERSON_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-	/**
-	 * Removes the ICS channel wrapping around a specified channel word
-	 * returning only the channel number.
-	 * 
-	 * Returns -1 if the specified word is not a channel.
-	 */
-	public static int getChannel(String word) {
-
-		int result = -1;
-		if (word != null) {
-			int openParenIndex = word.lastIndexOf("(");
-			int closeParenIndex = word.lastIndexOf(")");
-
-			if (openParenIndex != -1 && closeParenIndex != -1
-					&& openParenIndex < closeParenIndex) {
-				try {
-					result = Integer.parseInt(word.substring(
-							openParenIndex + 1, closeParenIndex));
-				} catch (NumberFormatException nfe) {
-					result = -1;
-				}
-
-			}
-		}
-		return result;
-	}
 
 	/**
 	 * Returns null if the current position isn't quoted text, otherwise returns
@@ -80,16 +50,15 @@ public class Utils {
 	 * Returns the stripped word at the specified position, null if there is not
 	 * one.
 	 */
-	public static String getStrippedWord(StyledText text, int position) {
-		String word = getWord(text, position);
-
-		if (word != null) {
-			return stripWord(word);
-		} else {
-			return null;
-		}
-	}
-
+	// public static String getStrippedWord(StyledText text, int position) {
+	// String word = getWord(text, position);
+	//
+	// if (word != null) {
+	// return stripWord(word);
+	// } else {
+	// return null;
+	// }
+	// }
 	/**
 	 * Returns the url at the specified position, null if there is not one. This
 	 * method handles ICS wrapping and will remove it and return just the url.
@@ -225,34 +194,4 @@ public class Utils {
 		}
 	}
 
-	/**
-	 * Returns true if the specified word is probably a persons name.
-	 */
-	public static boolean isLikelyPerson(String word) {
-		if (word != null && word.length() > 2) {
-			boolean result = true;
-			for (int i = 0; result && i < word.length(); i++) {
-				result = VALID_PERSON_CHARS.indexOf(word.charAt(i)) != -1;
-			}
-			return result;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Returns the word with all characters in: ()~!@?#$%^&*_+|}{'\";/?<>.,
-	 * :[]1234567890\t\r\n removed.
-	 */
-	public static String stripWord(String word) {
-		if (word != null) {
-			RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
-					word, "()~!@?#$%^&*_+|}{'\";/?<>., :[]1234567890\t\r\n");
-			if (stringtokenizer.hasMoreTokens())
-				return stringtokenizer.nextToken();
-			else
-				return word;
-		}
-		return null;
-	}
 }

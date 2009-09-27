@@ -35,6 +35,7 @@ public class ChessBoard extends Composite implements Constants {
 	public static interface ChessBoardListener {
 		public void onControllerStateChange();
 	}
+
 	public static final String LAST_NAV = "last_nav";
 	public static final String NEXT_NAV = "forward_nav";
 	public static final String BACK_NAV = "next_nav";
