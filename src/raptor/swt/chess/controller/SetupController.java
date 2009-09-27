@@ -36,7 +36,6 @@ public class SetupController extends ChessBoardController {
 							inactiveController.setBoard(board);
 
 							board.clearCoolbar();
-							board.setWhitePieceJailOnTop(true);
 							board.getConnector().getGameService()
 									.removeGameServiceListener(listener);
 
@@ -185,7 +184,6 @@ public class SetupController extends ChessBoardController {
 		board.getSquare(move.getTo()).setPiece(
 				Utils.getColoredPiece(move.getPiece(), move.isWhitesMove()));
 	}
-
 
 	public void besetupPositionUpdated() {
 		LOG.info("besetupPositionUpdated " + getGame().getId() + " ...");
