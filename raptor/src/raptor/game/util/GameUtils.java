@@ -292,7 +292,7 @@ public class GameUtils implements GameConstants {
 		return rankFileToSquare(RANK_FROM_SAN.indexOf((san.charAt(1))),
 				FILE_FROM_SAN.indexOf(san.charAt(0)));
 	}
-	
+
 	public static final String getString(long board) {
 		StringBuilder result = new StringBuilder(200);
 

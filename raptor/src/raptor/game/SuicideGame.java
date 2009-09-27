@@ -42,14 +42,14 @@ public class SuicideGame extends Game {
 				i--;
 				continue;
 			} // remove all, since there are no non-capture legal moves if can
-				// capture
+			// capture
 
 			Move move = result.getLowPriority(i);
 			forceMove(move);
 
 			if (!isLegalPosition()/* || move.isCastling() */) { // castling not
-																// allowed in
-																// suicide
+				// allowed in
+				// suicide
 				result.removeLowPriority(i);
 				i--;
 			}

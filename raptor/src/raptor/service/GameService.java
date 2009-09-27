@@ -11,6 +11,24 @@ import raptor.game.Game;
  * A class which manages active games that belong to a connector.
  */
 public class GameService {
+	public static class GameServiceAdapter implements GameServiceListener {
+		public void gameCreated(Game game) {
+		}
+
+		public void gameInactive(Game game) {
+		}
+
+		public void gameStateChanged(Game game, boolean isNewMove) {
+		}
+
+		public void illegalMove(Game game, String move) {
+		}
+
+		public void setupGameBecameExamined(Game game) {
+
+		}
+	}
+
 	public static interface GameServiceListener {
 
 		/**
@@ -35,21 +53,12 @@ public class GameService {
 		 * Invoked when a user makes a move on a connector that is invalid.
 		 */
 		public void illegalMove(Game game, String move);
-	}
 
-	public static class GameServiceAdapter implements GameServiceListener {
-		public void gameCreated(Game game) {
-		}
-
-		public void gameInactive(Game game) {
-		}
-
-		public void gameStateChanged(Game game, boolean isNewMove) {
-		}
-
-		public void illegalMove(Game game, String move) {
-		}
-
+		/**
+		 * Invoked when a game which was previously in setup mode has entered
+		 * examine mode.
+		 */
+		public void setupGameBecameExamined(Game game);
 	}
 
 	protected HashMap<String, Game> gameMap = new HashMap<String, Game>();
@@ -115,7 +124,7 @@ public class GameService {
 			}
 		}
 	}
-	
+
 	/**
 	 * This method should only be invoked from a connector.
 	 */
@@ -130,8 +139,18 @@ public class GameService {
 		}
 	}
 
-	public int getGameCount() {
-		return gameMap.values().size();
+	/**
+	 * This method should only be invoked from a connector.
+	 */
+	public void fireSetupGameBecameExamined(String gameId) {
+		Game game = getGame(gameId);
+		if (game != null) {
+			synchronized (listeners) {
+				for (GameServiceListener listener : listeners) {
+					listener.setupGameBecameExamined(game);
+				}
+			}
+		}
 	}
 
 	public Game[] getAllActiveGames() {
@@ -146,6 +165,10 @@ public class GameService {
 
 	public Game getGame(String gameId) {
 		return gameMap.get(gameId);
+	}
+
+	public int getGameCount() {
+		return gameMap.values().size();
 	}
 
 	public void removeGame(Game game) {

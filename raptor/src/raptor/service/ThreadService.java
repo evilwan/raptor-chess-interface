@@ -24,37 +24,6 @@ public class ThreadService {
 		return instance;
 	}
 
-	ExecutorService executorService = Executors.newFixedThreadPool(20);
-
-	ScheduledExecutorService scheduledExecutorService = Executors
-			.newScheduledThreadPool(40);
-
-	public ThreadService() {
-	}
-
-	public void dispose() {
-		executorService.shutdownNow();
-		scheduledExecutorService.shutdown();
-	}
-
-	/**
-	 * Runs the runnable one time after a delay.
-	 * 
-	 * @param delay
-	 *            Delay in millis
-	 * @param runnable
-	 *            The runnable.
-	 */
-	public void scheduleOneShot(long delay, Runnable runnable) {
-		try {
-			scheduledExecutorService.schedule(runnable, delay,
-					TimeUnit.MILLISECONDS);
-		} catch (RejectedExecutionException rej) {
-			threadDump();
-			System.exit(1);
-		}
-	}
-
 	/**
 	 * Dumps stack traces of all threads to threaddump.txt.
 	 */
@@ -97,12 +66,43 @@ public class ThreadService {
 		}
 	}
 
+	ExecutorService executorService = Executors.newFixedThreadPool(20);
+
+	ScheduledExecutorService scheduledExecutorService = Executors
+			.newScheduledThreadPool(40);
+
+	public ThreadService() {
+	}
+
+	public void dispose() {
+		executorService.shutdownNow();
+		scheduledExecutorService.shutdown();
+	}
+
 	/**
 	 * Executes a runnable asynchly.
 	 */
 	public void run(Runnable runnable) {
 		try {
 			executorService.execute(runnable);
+		} catch (RejectedExecutionException rej) {
+			threadDump();
+			System.exit(1);
+		}
+	}
+
+	/**
+	 * Runs the runnable one time after a delay.
+	 * 
+	 * @param delay
+	 *            Delay in millis
+	 * @param runnable
+	 *            The runnable.
+	 */
+	public void scheduleOneShot(long delay, Runnable runnable) {
+		try {
+			scheduledExecutorService.schedule(runnable, delay,
+					TimeUnit.MILLISECONDS);
 		} catch (RejectedExecutionException rej) {
 			threadDump();
 			System.exit(1);

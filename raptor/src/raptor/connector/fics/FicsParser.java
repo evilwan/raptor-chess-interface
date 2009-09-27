@@ -133,7 +133,7 @@ public class FicsParser implements GameConstants {
 
 				Style12Message style12Message = style12Parser.parse(line);
 				if (style12Message != null) {
-					process(style12Message, service);
+					process(style12Message, service, inboundEvent);
 					continue;
 				}
 
@@ -255,7 +255,8 @@ public class FicsParser implements GameConstants {
 		}
 	}
 
-	public void process(Style12Message message, GameService service) {
+	public void process(Style12Message message, GameService service,
+			String entireMessage) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processing style 12: " + message);
 		}
@@ -270,11 +271,19 @@ public class FicsParser implements GameConstants {
 					LOG.debug("Processing bsetup or examine position move.");
 				}
 
-				// Clear out the game and start over.
-				// There is no telling what happened
-				// in a setup or examine game.
-				FicsUtils.resetGame(game, message);
-				service.fireGameStateChanged(message.gameId, true);
+				if (entireMessage
+						.contains("Game is validated - entering examine mode.\n")) {
+					game.clearState(Game.SETUP_STATE);
+					game.clearState(Game.DROPPABLE_STATE);
+					FicsUtils.resetGame(game, message);
+					service.fireSetupGameBecameExamined(message.gameId);
+				} else {
+					// Clear out the game and start over.
+					// There is no telling what happened
+					// in a setup or examine game.
+					FicsUtils.resetGame(game, message);
+					service.fireGameStateChanged(message.gameId, true);
+				}
 			} else {
 				// Playing/Obsing moves flow through here.
 				if (LOG.isDebugEnabled()) {
@@ -314,7 +323,7 @@ public class FicsParser implements GameConstants {
 			if (g1Message == null) {
 				// Examined/Bsetup game starts flow through here
 				LOG.debug("Processing new ex or bsetup game.");
-				game = FicsUtils.createGame(message);
+				game = FicsUtils.createGame(message, entireMessage);
 				service.addGame(game);
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Firing game created.");

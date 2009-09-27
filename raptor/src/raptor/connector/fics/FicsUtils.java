@@ -12,6 +12,7 @@ import raptor.connector.fics.game.message.G1Message;
 import raptor.connector.fics.game.message.Style12Message;
 import raptor.game.Game;
 import raptor.game.GameConstants;
+import raptor.game.SetupGame;
 import raptor.game.Game.PositionState;
 import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
@@ -132,6 +133,14 @@ public class FicsUtils implements GameConstants {
 	}
 
 	/**
+	 * Cleans up the message by ensuring only \n is used as a line terminator.
+	 * \r\n and \r may be used depending on the operating system.
+	 */
+	public static String cleanupMessage(String message) {
+		return StringUtils.remove(message, '\r');
+	}
+
+	/**
 	 * Clears out all the games position state.
 	 */
 	public static void clearGamePosition(Game game) {
@@ -179,14 +188,14 @@ public class FicsUtils implements GameConstants {
 		return result;
 	}
 
-	public static Game createGame(Style12Message message) {
-		if (message.relation == Style12Message.EXAMINING_GAME_RELATION
-				|| message.relation == Style12Message.ISOLATED_POSITION_RELATION) {
-			Game game = new Game();
+	public static Game createGame(Style12Message message, String entireMessage) {
+		if (message.relation == Style12Message.EXAMINING_GAME_RELATION) {
+
+			boolean isSetup = entireMessage.contains("Entering setup mode.\n");
+			Game game = isSetup ? new SetupGame() : new Game();
 			game.setId(message.gameId);
-			game
-					.setGameDescription(message.relation == Style12Message.EXAMINING_GAME_RELATION ? "Examining"
-							: "SettingUp");
+			game.setGameDescription(isSetup ? "Setting Up Position"
+					: "Examining Game");
 			game.setSettingMoveSan(true);
 			game.setStartTime(System.currentTimeMillis());
 			game.setSite("freechess.org");
@@ -332,20 +341,21 @@ public class FicsUtils implements GameConstants {
 	public static void updateNonPositionFields(Game game, Style12Message message) {
 		switch (message.relation) {
 		case Style12Message.EXAMINING_GAME_RELATION:
-			game.setState(Game.EXAMINING_STATE);
+			game.addState(Game.EXAMINING_STATE);
 			break;
 		case Style12Message.ISOLATED_POSITION_RELATION:
-			game.setState(Game.SETUP_STATE);
-			break;
+			throw new IllegalArgumentException(
+					"Isolated positions are not currently implemented. "
+							+ game.getId() + " " + message);
 		case Style12Message.OBSERVING_EXAMINED_GAME_RELATION:
-			game.setState(Game.OBSERVING_EXAMINED_STATE);
+			game.addState(Game.OBSERVING_EXAMINED_STATE);
 			break;
 		case Style12Message.OBSERVING_GAME_RELATION:
-			game.setState(Game.OBSERVING_STATE | Game.IS_CLOCK_TICKING_STATE);
+			game.addState(Game.OBSERVING_STATE);
 			break;
 		case Style12Message.PLAYING_MY_MOVE_RELATION:
 		case Style12Message.PLAYING_OPPONENTS_MOVE_RELATION:
-			game.setState(Game.PLAYING_STATE | Game.IS_CLOCK_TICKING_STATE);
+			game.addState(Game.PLAYING_STATE);
 			break;
 		}
 
@@ -434,6 +444,21 @@ public class FicsUtils implements GameConstants {
 				^ ZobristHash.zobrist(game.getColorToMove(),
 						game.getEpSquare(), game.getCastling(WHITE), game
 								.getCastling(BLACK)));
+
+		if (game.isInState(Game.SETUP_STATE)) {
+			game.setPieceCount(WHITE, PAWN, 1);
+			game.setPieceCount(WHITE, KNIGHT, 1);
+			game.setPieceCount(WHITE, BISHOP, 1);
+			game.setPieceCount(WHITE, ROOK, 1);
+			game.setPieceCount(WHITE, QUEEN, 1);
+			game.setPieceCount(WHITE, KING, 1);
+			game.setPieceCount(BLACK, PAWN, 1);
+			game.setPieceCount(BLACK, KNIGHT, 1);
+			game.setPieceCount(BLACK, BISHOP, 1);
+			game.setPieceCount(BLACK, ROOK, 1);
+			game.setPieceCount(BLACK, QUEEN, 1);
+			game.setPieceCount(BLACK, KING, 1);
+		}
 	}
 
 	public static void verifyLegal(Game game) {
@@ -441,13 +466,5 @@ public class FicsUtils implements GameConstants {
 			throw new IllegalStateException("Position is not legal: "
 					+ game.toString());
 		}
-	}
-
-	/**
-	 * Cleans up the message by ensuring only \n is used as a line terminator.
-	 * \r\n and \r may be used depending on the operating system.
-	 */
-	public static String cleanupMessage(String message) {
-		return StringUtils.remove(message, '\r');
 	}
 }

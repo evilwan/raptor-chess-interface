@@ -1824,12 +1824,11 @@ public class Game implements GameConstants {
 	public String toString() {
 		StringBuilder result = new StringBuilder(1000);
 
-		result.append(getString(new String[] { "emptyBB",
-				"occupiedBB", "notColorToMoveBB",
-				"color[WHITE]", "color[BLACK]" }, new long[] {
-				positionState.emptyBB, positionState.occupiedBB,
-				positionState.notColorToMoveBB, getColorBB(WHITE),
-				getColorBB(BLACK) })
+		result.append(getString(new String[] { "emptyBB", "occupiedBB",
+				"notColorToMoveBB", "color[WHITE]", "color[BLACK]" },
+				new long[] { positionState.emptyBB, positionState.occupiedBB,
+						positionState.notColorToMoveBB, getColorBB(WHITE),
+						getColorBB(BLACK) })
 				+ "\n\n");
 
 		result.append(getString(new String[] { "[WHITE][PAWN]",

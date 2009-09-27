@@ -114,6 +114,14 @@ public class RaptorWindow extends ApplicationWindow {
 		getShell().setLocation(0, 0);
 	}
 
+	public boolean isChatConsolesMaximized() {
+		return sashForm.getMaximizedControl() == chatConsoles;
+	}
+
+	public boolean isChessBoardssMaximized() {
+		return sashForm.getMaximizedControl() == chessBoards;
+	}
+
 	public void maximizeChatConsoles() {
 		if (!chessBoards.isMaximized() && !chatConsoles.isMaximized()) {
 			storedWeights = sashForm.getWeights();
@@ -128,14 +136,6 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 		chessBoards.maximize();
 		sashForm.setMaximizedControl(chessBoards);
-	}
-
-	public boolean isChatConsolesMaximized() {
-		return sashForm.getMaximizedControl() == chatConsoles;
-	}
-
-	public boolean isChessBoardssMaximized() {
-		return sashForm.getMaximizedControl() == chessBoards;
 	}
 
 	public void restore() {

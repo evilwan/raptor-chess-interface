@@ -32,6 +32,12 @@ public class FreeFormController extends ChessBoardController implements
 	}
 
 	@Override
+	public void adjustGameDescriptionLabel() {
+		board.getGameDescriptionLabel().setText(
+				"Freestyling " + getGame().getEvent());
+	}
+
+	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!Utils.isPieceJailSquare(squareId)) {
 			return board.getSquare(squareId).getPiece() != GameConstants.EMPTY;
@@ -41,7 +47,8 @@ public class FreeFormController extends ChessBoardController implements
 
 	@Override
 	public String getTitle() {
-		return "(" + board.getGame().getId() + ") Inactive";
+		return "Inactive(" + getGame().getId() + " " + getGame().getWhiteName()
+				+ " vs " + getGame().getBlackName() + ")";
 	}
 
 	@Override
@@ -83,6 +90,11 @@ public class FreeFormController extends ChessBoardController implements
 
 	@Override
 	public boolean isMoveListTraversable() {
+		return true;
+	}
+
+	@Override
+	public boolean isNavigatable() {
 		return true;
 	}
 

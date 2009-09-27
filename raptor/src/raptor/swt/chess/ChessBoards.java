@@ -22,6 +22,7 @@ import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.swt.chess.ChessBoard.ChessBoardListener;
 import raptor.swt.chess.layout.RightOrientedLayout;
 
 public class ChessBoards extends Composite {
@@ -29,6 +30,7 @@ public class ChessBoards extends Composite {
 	protected CTabFolder folder;
 
 	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
+		@Override
 		public void gameCreated(final Game game) {
 			getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -52,7 +54,17 @@ public class ChessBoards extends Composite {
 
 				}
 			});
+		}
+	};
 
+	protected ChessBoardListener chessBoardListener = new ChessBoardListener() {
+		public void onControllerStateChange() {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				CTabItem item = folder.getItem(i);
+				ChessBoard board = (ChessBoard) item.getControl();
+				item.setShowClose(board.getController().isCloseable());
+				item.setText(board.getController().getTitle());
+			}
 		}
 	};
 
@@ -156,6 +168,7 @@ public class ChessBoards extends Composite {
 		board.setPreferences(Raptor.getInstance().getPreferences());
 		board.setResources(new ChessBoardResources(board));
 		board.createControls();
+		board.addChessBoardListener(chessBoardListener);
 		controller.setBoard(board);
 		board.getController().init();
 

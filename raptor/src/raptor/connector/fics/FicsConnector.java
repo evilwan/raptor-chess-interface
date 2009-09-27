@@ -18,6 +18,7 @@ import raptor.chat.ChatTypes;
 import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.game.Move;
+import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.script.GameScript;
 import raptor.service.ChatService;
@@ -568,6 +569,26 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 	public void onRematchKeyPress() {
 		sendMessage("rematch");
+	}
+
+	public void onSetupClear(Game game) {
+		sendMessage("bsetup clear");
+	}
+
+	public void onSetupClearSquare(Game game, int square) {
+		sendMessage("x@" + GameUtils.getSan(square));
+	}
+
+	public void onSetupComplete(Game game) {
+		sendMessage("bsetup done");
+	}
+
+	public void onSetupFromFEN(Game game, String fen) {
+		sendMessage("bsetup fen " + fen);
+	}
+
+	public void onSetupStartPosition(Game game) {
+		sendMessage("bsetup start");
 	}
 
 	protected void onSuccessfulLogin() {
