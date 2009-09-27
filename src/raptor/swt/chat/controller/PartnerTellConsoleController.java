@@ -1,6 +1,5 @@
 package raptor.swt.chat.controller;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Button;
 
 import raptor.chat.ChatEvent;
@@ -8,13 +7,10 @@ import raptor.chat.ChatTypes;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleController;
 
-public class PersonConsoleController extends ChatConsoleController {
+public class PartnerTellConsoleController extends ChatConsoleController {
 
-	protected String person;
-
-	public PersonConsoleController(String person) {
+	public PartnerTellConsoleController() {
 		super();
-		this.person = person;
 	}
 
 	@Override
@@ -25,8 +21,7 @@ public class PersonConsoleController extends ChatConsoleController {
 				.getButton(ChatConsole.PREPEND_TEXT_BUTTON);
 		if (prependButton != null) {
 			if (prependButton.getSelection()) {
-				prependText = chatConsole.getConnector().getChannelTabPrefix(
-						person);
+				prependText = chatConsole.getConnector().getPartnerTellPrefix();
 			}
 		}
 
@@ -40,16 +35,15 @@ public class PersonConsoleController extends ChatConsoleController {
 
 	@Override
 	public String getTitle() {
-		return chatConsole.getConnector().getShortName() + "(" + person + ")";
+		return chatConsole.getConnector().getShortName() + "(PartnerTells)";
 	}
 
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
-		return (!StringUtils.isBlank(inboundEvent.getSource())
-				&& inboundEvent.getSource().equals(person) && (inboundEvent
-				.getType() == ChatTypes.TELL || inboundEvent.getType() == ChatTypes.PARTNER_TELL))
-				|| (inboundEvent.getType() == ChatTypes.OUTBOUND && inboundEvent
-						.getMessage().contains(person));
+		return (inboundEvent.getType() == ChatTypes.PARTNER_TELL)
+				|| (inboundEvent.getType() == ChatTypes.OUTBOUND && chatConsole
+						.getConnector().isLikelyPartnerTell(
+								inboundEvent.getMessage()));
 	}
 
 	@Override

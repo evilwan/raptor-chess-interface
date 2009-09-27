@@ -472,6 +472,10 @@ public class FicsConnector implements Connector, PreferenceKeys {
 				new String[] { "In Channel " + channel, "in " + channel } };
 	}
 
+	public String getChannelTabPrefix(String channel) {
+		return "tell " + channel + " ";
+	}
+
 	public ChatService getChatService() {
 		return chatService;
 	}
@@ -500,6 +504,10 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		return gameService;
 	}
 
+	public String getPartnerTellPrefix() {
+		return "ptell ";
+	}
+
 	public String[][] getPersonActions(String person) {
 		return new String[][] {
 				new String[] { "Finger " + person, "finger " + person },
@@ -512,6 +520,10 @@ public class FicsConnector implements Connector, PreferenceKeys {
 				new String[] { "Uncensor " + person, "-censor " + person },
 				new String[] { "Noplay " + person, "+noplay " + person },
 				new String[] { "Unnoplay " + person, "noplay " + person } };
+	}
+
+	public String getPersonTabPrefix(String person) {
+		return "tell " + person + " ";
 	}
 
 	public PreferenceStore getPreferences() {
@@ -541,6 +553,10 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 	public boolean isLikelyGameId(String word) {
 		return FicsUtils.isLikelyGameId(word);
+	}
+
+	public boolean isLikelyPartnerTell(String outboundMessage) {
+		return outboundMessage.startsWith("pt");
 	}
 
 	public boolean isLikelyPerson(String word) {
@@ -766,5 +782,4 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	public void setPreferences(PreferenceStore preferences) {
 		this.preferences = preferences;
 	}
-
 }

@@ -24,6 +24,8 @@ public interface Connector {
 	 */
 	public String[][] getChannelActions(String channel);
 
+	public String getChannelTabPrefix(String channel);
+
 	public ChatService getChatService();
 
 	public String getDescription();
@@ -41,12 +43,16 @@ public interface Connector {
 
 	public GameService getGameService();
 
+	public String getPartnerTellPrefix();
+
 	/**
 	 * Returns descriptions and messages to send to the connector. This is
 	 * intended to be used to generate pop-up menus. Returns a String[n][2]
 	 * where 0 is the description and 1 is the message to send to the connector.
 	 */
 	public String[][] getPersonActions(String person);
+
+	public String getPersonTabPrefix(String person);
 
 	public PreferenceStore getPreferences();
 
@@ -61,6 +67,8 @@ public interface Connector {
 	public boolean isLikelyChannel(String channel);
 
 	public boolean isLikelyGameId(String channel);
+
+	public boolean isLikelyPartnerTell(String outboundMessage);
 
 	public boolean isLikelyPerson(String word);
 
@@ -119,5 +127,4 @@ public interface Connector {
 	public void sendMessage(String msg);
 
 	public void setPreferences(PreferenceStore preferences);
-
 }
