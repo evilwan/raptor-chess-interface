@@ -26,6 +26,7 @@ import raptor.connector.fics.game.B1Parser;
 import raptor.connector.fics.game.G1Parser;
 import raptor.connector.fics.game.GameEndParser;
 import raptor.connector.fics.game.IllegalMoveParser;
+import raptor.connector.fics.game.NoLongerExaminingGameParser;
 import raptor.connector.fics.game.RemovingObsGameParser;
 import raptor.connector.fics.game.Style12Parser;
 import raptor.connector.fics.game.TakebackParser;
@@ -33,6 +34,7 @@ import raptor.connector.fics.game.message.B1Message;
 import raptor.connector.fics.game.message.G1Message;
 import raptor.connector.fics.game.message.GameEndMessage;
 import raptor.connector.fics.game.message.IllegalMoveMessage;
+import raptor.connector.fics.game.message.NoLongerExaminingGameMessage;
 import raptor.connector.fics.game.message.RemovingObsGameMessage;
 import raptor.connector.fics.game.message.Style12Message;
 import raptor.game.Game;
@@ -51,6 +53,7 @@ public class FicsParser implements GameConstants {
 	protected IllegalMoveParser illegalMoveParser;
 	protected RemovingObsGameParser removingObsGameParser;
 	protected TakebackParser takebackParser;
+	protected NoLongerExaminingGameParser noLongerExaminingParser;
 
 	protected List<ChatEventParser> nonGameEventParsers = new ArrayList<ChatEventParser>(
 			30);
@@ -70,6 +73,7 @@ public class FicsParser implements GameConstants {
 		illegalMoveParser = new IllegalMoveParser();
 		removingObsGameParser = new RemovingObsGameParser();
 		takebackParser = new TakebackParser();
+		noLongerExaminingParser = new NoLongerExaminingGameParser();
 
 		// handle user tell types of events first so others can't be spoofed
 		// nonGameEventParsers.add(new BugWhoGEventParser(icsId));
@@ -166,6 +170,14 @@ public class FicsParser implements GameConstants {
 					continue;
 				}
 
+				NoLongerExaminingGameMessage noLonerExaminingGameMessage = noLongerExaminingParser
+						.parse(line);
+				if (noLonerExaminingGameMessage != null) {
+					process(noLonerExaminingGameMessage, service);
+					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
+					continue;
+				}
+
 				takebackParser.parse(line);
 
 				result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
@@ -252,6 +264,27 @@ public class FicsParser implements GameConstants {
 		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processed removing obs game: " + message);
+		}
+	}
+
+	public void process(NoLongerExaminingGameMessage message,
+			GameService service) {
+		Game game = service.getGame(message.gameId);
+		if (game == null) {
+			LOG
+					.error("Received no longer examining game message for a game not in the GameService. "
+							+ message);
+		} else {
+			game.setResultDescription("Interrupted by uexamine.");
+			game.setResult(Game.UNDETERMINED_RESULT);
+			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
+			game.addState(Game.INACTIVE_STATE);
+			service.fireGameInactive(game.getId());
+			service.removeGame(game);
+			takebackParser.clearTakebackMessages(game.getId());
+		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processed no longer examining game message: " + message);
 		}
 	}
 

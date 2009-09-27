@@ -31,16 +31,26 @@ public class SetupController extends ChessBoardController {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							besetupPositionUpdated();
-						} catch (Throwable t) {
-							board.getConnector().onError(
-									"ExamineController.onGameInactive", t);
-						} finally {
+							InactiveController inactiveController = new InactiveController();
+							getBoard().setController(inactiveController);
+							inactiveController.setBoard(board);
+
+							board.clearCoolbar();
+							board.setWhitePieceJailOnTop(true);
 							board.getConnector().getGameService()
 									.removeGameServiceListener(listener);
+
+							inactiveController.init();
+
+							getBoard().fireOnControllerStateChange();
+							SetupController.this.dispose();
+						} catch (Throwable t) {
+							board.getConnector().onError(
+									"SetupController.gameInactive", t);
 						}
 					}
 				});
+
 			}
 		}
 
@@ -175,6 +185,7 @@ public class SetupController extends ChessBoardController {
 		board.getSquare(move.getTo()).setPiece(
 				Utils.getColoredPiece(move.getPiece(), move.isWhitesMove()));
 	}
+
 
 	public void besetupPositionUpdated() {
 		LOG.info("besetupPositionUpdated " + getGame().getId() + " ...");
@@ -395,8 +406,6 @@ public class SetupController extends ChessBoardController {
 	@Override
 	public void userRightClicked(final int square) {
 		if (!Utils.isPieceJailSquare(square)) {
-			final int squareColor = Utils.isWhitePiece(Utils
-					.pieceJailSquareToPiece(square)) ? WHITE : BLACK;
 
 			Menu menu = new Menu(board.getShell(), SWT.POP_UP);
 
@@ -411,60 +420,128 @@ public class SetupController extends ChessBoardController {
 				});
 			} else {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place pawn on " + GameUtils.getSan(square));
+				item.setText("Place white pawn on " + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						Move move = new Move(square, PAWN, squareColor);
+						Move move = new Move(square, PAWN, WHITE);
 						adjustToDropMove(move);
 						board.getConnector().makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place knight on " + GameUtils.getSan(square));
+				item.setText("Place white knight on "
+						+ GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						Move move = new Move(square, KNIGHT, squareColor);
+						Move move = new Move(square, KNIGHT, WHITE);
 						adjustToDropMove(move);
 						board.getConnector().makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place bishop on " + GameUtils.getSan(square));
+				item.setText("Place white bishop on "
+						+ GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						Move move = new Move(square, BISHOP, squareColor);
+						Move move = new Move(square, BISHOP, WHITE);
 						adjustToDropMove(move);
 						board.getConnector().makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place rook on " + GameUtils.getSan(square));
+				item.setText("Place white rook on " + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						Move move = new Move(square, ROOK, squareColor);
+						Move move = new Move(square, ROOK, WHITE);
 						adjustToDropMove(move);
 						board.getConnector().makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place queen on " + GameUtils.getSan(square));
+				item
+						.setText("Place white queen on "
+								+ GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						Move move = new Move(square, QUEEN, squareColor);
+						Move move = new Move(square, QUEEN, WHITE);
 						adjustToDropMove(move);
 						board.getConnector().makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place king on " + GameUtils.getSan(square));
+				item.setText("Place white king on " + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						Move move = new Move(square, KING, squareColor);
+						Move move = new Move(square, KING, WHITE);
+						adjustToDropMove(move);
+						board.getConnector().makeMove(getGame(), move);
+					}
+				});
+
+				item = new MenuItem(menu, SWT.PUSH);
+				item.setText("Place black pawn on " + GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						Move move = new Move(square, PAWN, BLACK);
+						adjustToDropMove(move);
+						board.getConnector().makeMove(getGame(), move);
+					}
+				});
+
+				item = new MenuItem(menu, SWT.PUSH);
+				item.setText("Place black knight on "
+						+ GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						Move move = new Move(square, KNIGHT, BLACK);
+						adjustToDropMove(move);
+						board.getConnector().makeMove(getGame(), move);
+					}
+				});
+
+				item = new MenuItem(menu, SWT.PUSH);
+				item.setText("Place black bishop on "
+						+ GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						Move move = new Move(square, BISHOP, BLACK);
+						adjustToDropMove(move);
+						board.getConnector().makeMove(getGame(), move);
+					}
+				});
+
+				item = new MenuItem(menu, SWT.PUSH);
+				item.setText("Place black rook on " + GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						Move move = new Move(square, ROOK, BLACK);
+						adjustToDropMove(move);
+						board.getConnector().makeMove(getGame(), move);
+					}
+				});
+
+				item = new MenuItem(menu, SWT.PUSH);
+				item
+						.setText("Place black queen on "
+								+ GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						Move move = new Move(square, QUEEN, BLACK);
+						adjustToDropMove(move);
+						board.getConnector().makeMove(getGame(), move);
+					}
+				});
+
+				item = new MenuItem(menu, SWT.PUSH);
+				item.setText("Place black king on " + GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						Move move = new Move(square, KING, BLACK);
 						adjustToDropMove(move);
 						board.getConnector().makeMove(getGame(), move);
 					}

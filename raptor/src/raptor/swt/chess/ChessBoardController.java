@@ -263,7 +263,6 @@ public abstract class ChessBoardController implements Constants, GameConstants {
 		if (board.getGame().getResult() != 0) {
 			onPlayGameEndSound();
 		}
-
 	}
 
 	public void adjustToGameInitial() {

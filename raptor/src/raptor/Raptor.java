@@ -35,6 +35,7 @@ public class Raptor implements PreferenceKeys {
 			.getAbsolutePath();
 	public static final String ICONS_DIR = "resources/common/icons/";
 	public static final String IMAGES_DIR = "resources/common/images/";
+	public static final String RESOURCES_COMMON_DIR = "resources/common/";
 
 	private static Raptor instance;
 

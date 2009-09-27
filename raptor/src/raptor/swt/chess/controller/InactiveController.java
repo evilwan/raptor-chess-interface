@@ -1,25 +1,36 @@
 package raptor.swt.chess.controller;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
+import raptor.game.util.GameUtils;
+import raptor.service.SoundService;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.Constants;
 import raptor.swt.chess.Utils;
 
-public class FreeFormController extends ChessBoardController implements
+public class InactiveController extends ChessBoardController implements
 		Constants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 	Random random = new SecureRandom();
 
-	public FreeFormController() {
+	public InactiveController() {
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		if (getGame().isInState(Game.DROPPABLE_STATE)) {
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
+		} else {
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
+		}
 	}
 
 	@Override
@@ -34,11 +45,27 @@ public class FreeFormController extends ChessBoardController implements
 	@Override
 	public void adjustGameDescriptionLabel() {
 		board.getGameDescriptionLabel().setText(
-				"Freestyling " + getGame().getEvent());
+				"Inactive " + getGame().getEvent());
 	}
 
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
+		if (getGame().getPiece(squareId) == EMPTY) {
+			return false;
+		} else if (Utils.isPieceJailSquare(squareId)) {
+			if (getGame().isInState(Game.DROPPABLE_STATE)) {
+				int pieceType = Utils.pieceJailSquareToPiece(squareId);
+				return (getGame().isWhitesMove()
+						&& Utils.isWhitePiece(pieceType) || (!getGame()
+						.isWhitesMove() && Utils.isBlackPiece(pieceType)));
+			} else {
+				return (getGame().isWhitesMove() && Utils.isWhitePiece(board
+						.getSquare(squareId).getPiece()))
+						|| (!getGame().isWhitesMove() && Utils
+								.isBlackPiece(board.getSquare(squareId)
+										.getPiece()));
+			}
+		}
 		if (!Utils.isPieceJailSquare(squareId)) {
 			return board.getSquare(squareId).getPiece() != GameConstants.EMPTY;
 		}
@@ -47,8 +74,7 @@ public class FreeFormController extends ChessBoardController implements
 
 	@Override
 	public String getTitle() {
-		return "Inactive(" + getGame().getId() + " " + getGame().getWhiteName()
-				+ " vs " + getGame().getBlackName() + ")";
+		return "Inactive(" + getGame().getId() + ")";
 	}
 
 	@Override
@@ -63,8 +89,7 @@ public class FreeFormController extends ChessBoardController implements
 
 	@Override
 	public boolean isAutoDrawable() {
-		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
 	@Override
@@ -134,6 +159,7 @@ public class FreeFormController extends ChessBoardController implements
 
 	@Override
 	protected void onPlayMoveSound() {
+		SoundService.getInstance().playSound("move");
 	}
 
 	@Override
@@ -151,10 +177,9 @@ public class FreeFormController extends ChessBoardController implements
 
 		board.unhighlightAllSquares();
 		board.getSquare(square).highlight();
-		if (isDnd) {
+		if (isDnd && !Utils.isPieceJailSquare(square)) {
 			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
-
 	}
 
 	@Override
@@ -162,14 +187,43 @@ public class FreeFormController extends ChessBoardController implements
 		LOG.debug("Move made " + board.getGame().getId() + " " + fromSquare
 				+ " " + toSquare);
 		board.unhighlightAllSquares();
-		try {
-			Move move = board.getGame().makeMove(fromSquare, toSquare);
-			board.getSquare(move.getFrom()).highlight();
-			board.getSquare(move.getTo()).highlight();
-			adjustToGameMove();
-		} catch (IllegalArgumentException iae) {
-			LOG.info("Move was illegal " + fromSquare + " " + toSquare);
+
+		if (fromSquare == toSquare || Utils.isPieceJailSquare(toSquare)) {
 			board.unhighlightAllSquares();
+			adjustToGameMove();
+			SoundService.getInstance().playSound("illegalMove");
+			return;
+		}
+
+		Game game = board.getGame();
+		Move move = null;
+
+		if (Utils.isPieceJailSquare(fromSquare)) {
+			if (game.isInState(Game.DROPPABLE_STATE)) {
+				move = Utils.createDropMove(fromSquare, toSquare);
+			} else {
+				board.unhighlightAllSquares();
+				adjustToGameMove();
+				SoundService.getInstance().playSound("illegalMove");
+				return;
+			}
+		} else if (GameUtils.isPromotion(board.getGame(), fromSquare, toSquare)) {
+			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
+					game.getColorToMove(), game.getPiece(toSquare), board
+							.getAutoPromoteSelection(), EMPTY,
+					Move.PROMOTION_CHARACTERISTIC);
+		} else {
+			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
+					game.getColorToMove(), game.getPiece(toSquare));
+		}
+
+		try {
+			game.move(move);
+			getBoard().getSquare(fromSquare).highlight();
+			getBoard().getSquare(toSquare).highlight();
+		} catch (IllegalArgumentException iae) {
+			board.unhighlightAllSquares();
+		} finally {
 			adjustToGameMove();
 		}
 	}
@@ -177,22 +231,22 @@ public class FreeFormController extends ChessBoardController implements
 	@Override
 	public void userMiddleClicked(int square) {
 		LOG.debug("On middle click " + board.getGame().getId() + " " + square);
-		Move[] moves = board.getGame().getLegalMoves().asArray();
-		List<Move> foundMoves = new ArrayList<Move>(5);
-		for (Move move : moves) {
-			if (move.getTo() == square) {
-				foundMoves.add(move);
-			}
-		}
-
-		if (foundMoves.size() > 0) {
-			Move move = foundMoves.get(random.nextInt(foundMoves.size()));
-			board.getGame().move(move);
-			board.unhighlightAllSquares();
-			board.getSquare(move.getFrom()).highlight();
-			board.getSquare(move.getTo()).highlight();
-			adjustToGameMove();
-		}
+		// Move[] moves = board.getGame().getLegalMoves().asArray();
+		// List<Move> foundMoves = new ArrayList<Move>(5);
+		// for (Move move : moves) {
+		// if (move.getTo() == square) {
+		// foundMoves.add(move);
+		// }
+		// }
+		//
+		// if (foundMoves.size() > 0) {
+		// Move move = foundMoves.get(random.nextInt(foundMoves.size()));
+		// board.getGame().move(move);
+		// board.unhighlightAllSquares();
+		// board.getSquare(move.getFrom()).highlight();
+		// board.getSquare(move.getTo()).highlight();
+		// adjustToGameMove();
+		// }
 	}
 
 	@Override
