@@ -245,7 +245,7 @@ public class FicsParser implements GameConstants {
 			game.setResultDescription("Interrupted by unobserve");
 			game.setResult(Game.UNDETERMINED_RESULT);
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
-			game.setState(game.getState() | Game.INACTIVE_STATE);
+			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
 			service.removeGame(game);
 			takebackParser.clearTakebackMessages(game.getId());
@@ -273,6 +273,8 @@ public class FicsParser implements GameConstants {
 
 				if (entireMessage
 						.contains("Game is validated - entering examine mode.\n")) {
+					
+					//Games changing from Setup to Examine mode flow through here.
 					game.clearState(Game.SETUP_STATE);
 					game.clearState(Game.DROPPABLE_STATE);
 					FicsUtils.resetGame(game, message);
