@@ -1,0 +1,54 @@
+
+Unexpected crashes in OSX (I think it might have to do with overloading the thread pool).
+
+Game legal move generation:
+
+ Issue: Error in DaemonRun.onNewInput
+java.lang.IllegalArgumentException: Invalid move Re1
+ emptyBB            occupiedBB         notColorToMoveBB   color[WHITE]       color[BLACK]      
+ 0 1 1 0 1 1 0 1    1 0 0 1 0 0 1 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 0 0 1 0 0 1 0   
+ 0 0 1 1 1 1 0 0    1 1 0 0 0 0 1 1    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 1 0 0 0 0 1 1   
+ 1 0 1 1 1 0 1 1    0 1 0 0 0 1 0 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 1 0 0 0 1 0 0   
+ 1 1 0 0 0 0 1 1    0 0 1 1 1 1 0 0    1 1 1 0 0 1 1 1    0 0 0 1 1 0 0 0    0 0 1 0 0 1 0 0   
+ 1 1 1 1 1 0 1 1    0 0 0 0 0 1 0 0    1 1 1 1 1 0 1 1    0 0 0 0 0 1 0 0    0 0 0 0 0 0 0 0   
+ 1 0 1 1 1 1 0 1    0 1 0 0 0 0 1 0    1 0 1 1 1 1 0 1    0 1 0 0 0 0 1 0    0 0 0 0 0 0 0 0   
+ 0 0 0 1 1 0 0 0    1 1 1 0 0 1 1 1    0 0 1 1 1 0 0 0    1 1 0 0 0 1 1 1    0 0 1 0 0 0 0 0   
+ 1 1 1 1 0 1 0 1    0 0 0 0 1 0 1 0    1 1 1 1 0 1 0 1    0 0 0 0 1 0 1 0    0 0 0 0 0 0 0 0   
+
+ [WHITE][PAWN]      [WHITE][KNIGHT]    [WHITE][BISHOP]    [WHITE][ROOK]      [WHITE][QUEEN]     [WHITE][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 1 0 0 0 0    0 0 0 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0    0 0 0 0 0 0 0 0   
+ 1 0 0 0 0 0 1 1    0 0 0 0 0 0 0 0    0 1 0 0 0 0 0 0    0 0 0 0 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0   
+
+ [BLACK][PAWN]      [BLACK][KNIGHT]    [BLACK][BISHOP]    [BLACK][ROOK]      [BLACK][QUEEN]     [BLACK][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    1 0 0 1 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0   
+ 1 0 0 0 0 0 1 1    0 0 0 0 0 0 0 0    0 1 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 0 0 0 0 0 0    0 0 0 0 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 1 0 0    0 0 0 0 0 0 0 0    0 0 1 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 1 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+
+FEN=r2r2k1/pb4pp/1p3n2/2bPNp2/5P2/1P4Q1/PBq2RPP/4R1K w  - - 2 42|r|*|*|r|*|*|k|*|   To Move: White Last Move: Bc5
+|p|b|*|*|*|*|p|p|   Piece counts [6 1 1 2 1 1][5 1 2 2 1 1]
+|*|p|*|*|*|n|*|*|   Moves: 42 EP: - Castle:  -
+|*|*|b|P|N|p|*|*|   Move List: [Ba6, b3, Qc7, Ne5, Rd8, Qf3, Bb7, Bb2, f5, Bc2, c5, Qg3, cxd4, exd4, Nd7, Rae1, Nf6, d5, exd5, cxd5, Qxc2, Rf2, Bc5]
+|*|*|*|*|*|P|*|*|   Legals: [Qc3, Qd3, Qe3, Qf3, Qh3, Qg4, Qh4, Qg5, Qg6, Nd3, Nf3, Nc4, Ng4, Nc6, Ng6,
+|*|P|*|*|*|*|Q|*|      Nd7, Nf7, Ba1, Bc1, Ba3, Bc3, Bd4, Ra1, Rb1, Rc1, Rd1, Ref1, Ree2, Re3, Re4, a3, a4,
+|P|B|q|*|*|R|P|P|      h3, h4, b4, d6, Kf1, Kh1, Qxg7]
+|*|*|*|*|R|*|K|*|     
+
+    at raptor.game.Game.makeSanMove(Game.java:1294)
+    at raptor.connector.fics.FicsUtils.addCurrentMove(FicsUtils.java:79)
+    at raptor.connector.fics.FicsParser.process(FicsParser.java:337)
+    at raptor.connector.fics.FicsParser.parseOutAndProcessGameEvents(FicsParser.java:140)
+    at raptor.connector.fics.FicsConnector$DaemonRunnable.parseMessage(FicsConnector.java:227)
+    at raptor.connector.fics.FicsConnector$DaemonRunnable.onNewInput(FicsConnector.java:152)
+    at raptor.connector.fics.FicsConnector$DaemonRunnable.run(FicsConnector.java:262)
+    at java.lang.Thread.run(Thread.java:613)
