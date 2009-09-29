@@ -101,10 +101,9 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		// controllers can be changed during a game.
 		controller = board.getController();
 		board.setController(null);
+		board.dispose();
 		controller.onPreReparent();
 		controller.setBoard(null);
-		board.setVisible(false);
-		board.dispose();
 		board = new ChessBoard(newParent, SWT.NONE);
 		board.setController(controller);
 		controller.setBoard(board);

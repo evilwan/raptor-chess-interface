@@ -123,6 +123,7 @@ public class RaptorWindow extends ApplicationWindow {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Creating RaptorTabItem.");
 			}
+
 			raptorItem = item;
 			if (isInitingItem) {
 				if (LOG.isDebugEnabled()) {
@@ -133,13 +134,16 @@ public class RaptorWindow extends ApplicationWindow {
 
 			item.addItemChangedListener(listener = new ItemChangedListener() {
 				public void itemStateChanged() {
-					if (LOG.isDebugEnabled()) {
-						LOG
-								.debug("Item changed, updating text,title,showClose");
+					if (item.getControl() != null
+							&& !item.getControl().isDisposed()) {
+						if (LOG.isDebugEnabled()) {
+							LOG
+									.debug("Item changed, updating text,title,showClose");
+						}
+						setText(item.getTitle());
+						setImage(item.getImage());
+						setShowClose(item.isCloseable());
 					}
-					setText(item.getTitle());
-					setImage(item.getImage());
-					setShowClose(item.isCloseable());
 				}
 			});
 
@@ -147,14 +151,13 @@ public class RaptorWindow extends ApplicationWindow {
 			setText(item.getTitle());
 			setImage(item.getImage());
 			setShowClose(item.isCloseable());
-			parent.layout(true);
+			parent.layout(true, true);
 			parent.setSelection(this);
-
+			raptorItem.onActivate();
 		}
 
 		@Override
 		public void dispose() {
-			raptorItem.dispose();
 			super.dispose();
 		}
 
@@ -164,10 +167,8 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		public void reParent(RaptorTabFolder newParent) {
-			setControl(null);
-			raptorItem.getControl().setVisible(false);
-			raptorItem.onReparent(newParent);
 			raptorItem.removeItemChangedListener(listener);
+			raptorItem.onReparent(newParent);
 			new RaptorTabItem(newParent, getStyle(), raptorItem, false);
 			dispose();
 			restoreFolders();
@@ -453,6 +454,7 @@ public class RaptorWindow extends ApplicationWindow {
 				RaptorTabItem item = (RaptorTabItem) folder.getSelection();
 				if (item.raptorItem.isCloseable()) {
 					event.doit = true;
+					item.raptorItem.dispose();
 					item.dispose();
 				}
 				restoreFolders();
@@ -465,8 +467,20 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 
 			@Override
+			public void minimize(CTabFolderEvent event) {
+				folder.getRaptorTabItemSelection().raptorItem.onPassivate();
+			}
+
+			@Override
 			public void restore(CTabFolderEvent event) {
 				restoreFolders();
+
+				folder.getDisplay().timerExec(100, new Runnable() {
+					public void run() {
+						folder.getRaptorTabItemSelection().raptorItem
+								.onActivate();
+					}
+				});
 			}
 		});
 

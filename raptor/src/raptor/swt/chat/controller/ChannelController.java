@@ -29,6 +29,10 @@ public class ChannelController extends ChatConsoleController {
 
 	@Override
 	public String getPrependText() {
+		if (isIgnoringActions()) {
+			return "";
+		}
+
 		String prependText = "";
 
 		Button prependButton = chatConsole

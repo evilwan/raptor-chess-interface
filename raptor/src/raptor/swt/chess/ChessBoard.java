@@ -494,8 +494,11 @@ public class ChessBoard extends Composite implements BoardConstants {
 	 */
 	@Override
 	public void dispose() {
-		Raptor.getInstance().getPreferences().removePropertyChangeListener(
-				propertyChangeListener);
+		if (propertyChangeListener != null) {
+			Raptor.getInstance().getPreferences().removePropertyChangeListener(
+					propertyChangeListener);
+			propertyChangeListener = null;
+		}
 		pieceJailSquares = null;
 		if (controller != null) {
 			controller.dispose();
@@ -508,7 +511,9 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 		LOG.debug("Disposed chessboard.");
 
-		super.dispose();
+		if (!isDisposed()) {
+			super.dispose();
+		}
 	}
 
 	/**
