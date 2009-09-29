@@ -51,6 +51,7 @@ public class ChessBoard extends Composite implements BoardConstants {
 	public static final String SETUP_DONE = "setup-done";
 	public static final String SETUP_START = "setup-start";
 	public static final String SETUP_CLEAR = "setup-done";
+	public static final String PREMOVE = "premoveia";
 
 	public static final String SETUP_EXECUTE_FEN = "setup-execute-fen";
 
@@ -265,13 +266,25 @@ public class ChessBoard extends Composite implements BoardConstants {
 			}
 		});
 
+		if (controller.isPremoveable()) {
+			Button premoveButton = new Button(composite, SWT.FLAT);
+			premoveButton.setImage(Raptor.getInstance().getIcon("fire"));
+			premoveButton.setToolTipText("Clears all premoves.");
+			coolbarButtonMap.put(PREMOVE, premoveButton);
+			premoveButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onClearPremoves();
+				}
+			});
+		}
+
 		if (controller.isAutoDrawable()) {
 			Button autoDrawButton = new Button(composite, SWT.CHECK);
 			autoDrawButton.setImage(Raptor.getInstance().getIcon("draw"));
 			autoDrawButton
 					.setToolTipText("Offer a draw after every move you make.");
 			coolbarButtonMap.put(AUTO_DRAW, autoDrawButton);
-			autoDrawButton.setSize(flipButton.getSize());
 		}
 
 		CoolItem item = new CoolItem(getCoolbar(), SWT.NONE);
