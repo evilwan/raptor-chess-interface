@@ -1,7 +1,8 @@
+1) Added in code to change observe controller to examine controller when someone mexes you.
 
-Unexpected crashes in OSX (I think it might have to do with overloading the thread pool).
+2) Unexpected crashes in OSX (I think it might have to do with overloading the thread pool).
 
-Game legal move generation:
+3) Game legal move generation:
 
  Issue: Error in DaemonRun.onNewInput
 java.lang.IllegalArgumentException: Invalid move Re1
