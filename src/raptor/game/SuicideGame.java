@@ -7,7 +7,7 @@ public class SuicideGame extends Game {
 	private static final Log LOG = LogFactory.getLog(SuicideGame.class);
 
 	public SuicideGame() {
-		setType(Game.SUICIDE);
+		setType(Type.SUICIDE);
 	}
 
 	@Override

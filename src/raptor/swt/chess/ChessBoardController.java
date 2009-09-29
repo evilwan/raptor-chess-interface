@@ -12,6 +12,7 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.MoveListTraverser;
+import raptor.game.Game.Result;
 import raptor.game.util.ECOParser;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
@@ -42,341 +43,365 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	protected void adjustBoardToGame(Game game) {
-		if (!isBeingReparented()) {
-			for (int i = 0; i < 8; i++) {
-				for (int j = 0; j < 8; j++) {
-					board.getSquare(i, j).setPiece(
-							BoardUtils.getColoredPiece(GameUtils
-									.rankFileToSquare(i, j), game));
-				}
+		if (isBeingReparented()) {
+			return;
+		}
+
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				board.getSquare(i, j).setPiece(
+						BoardUtils.getColoredPiece(GameUtils.rankFileToSquare(
+								i, j), game));
 			}
 		}
 	}
 
 	protected void adjustClockColors() {
-		if (!isBeingReparented()) {
-			if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
-				if (getGame().getColorToMove() == WHITE) {
-					board.getWhiteClockLabel().setForeground(
-							getPreferences().getColor(
-									PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-					board.getBlackClockLabel().setForeground(
-							getPreferences().getColor(
-									PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-				} else {
-					board.getBlackClockLabel().setForeground(
-							getPreferences().getColor(
-									PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-					board.getWhiteClockLabel().setForeground(
-							getPreferences().getColor(
-									PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-				}
-			} else {
+		if (isBeingReparented()) {
+			return;
+		}
+
+		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
+			if (getGame().getColorToMove() == WHITE) {
 				board.getWhiteClockLabel().setForeground(
 						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
 				board.getBlackClockLabel().setForeground(
 						getPreferences().getColor(
 								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			} else {
+				board.getBlackClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getWhiteClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
 			}
+		} else {
+			board.getWhiteClockLabel().setForeground(
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			board.getBlackClockLabel().setForeground(
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
 		}
 	}
 
 	protected void adjustClockLabelsAndUpdaters() {
-		if (!isBeingReparented()) {
-			board.whiteClockLabel.setText(BoardUtils.timeToString(getGame()
-					.getWhiteRemainingTimeMillis()));
-			board.blackClockLabel.setText(BoardUtils.timeToString(getGame()
-					.getBlackRemainingTimeMillis()));
-
-			whiteClockUpdater.setRemainingTimeMillis(getGame()
-					.getWhiteRemainingTimeMillis());
-			blackClockUpdater.setRemainingTimeMillis(getGame()
-					.getBlackRemainingTimeMillis());
+		if (isBeingReparented()) {
+			return;
 		}
+
+		board.whiteClockLabel.setText(BoardUtils.timeToString(getGame()
+				.getWhiteRemainingTimeMillis()));
+		board.blackClockLabel.setText(BoardUtils.timeToString(getGame()
+				.getBlackRemainingTimeMillis()));
+
+		whiteClockUpdater.setRemainingTimeMillis(getGame()
+				.getWhiteRemainingTimeMillis());
+		blackClockUpdater.setRemainingTimeMillis(getGame()
+				.getBlackRemainingTimeMillis());
 	}
 
 	protected abstract void adjustCoolbarToInitial();
 
 	protected void adjustFromNavigationChange() {
-		if (!isBeingReparented()) {
-			adjustPieceJailFromGame(traverser.getAdjustedGame());
-			adjustBoardToGame(traverser.getAdjustedGame());
-			adjustNavButtonEnabledState();
-			if (traverser.getTraverserHalfMoveIndex() > 0) {
-				Move move = traverser.getAdjustedGame().getMoves().get(
-						traverser.getTraverserHalfMoveIndex() - 1);
-				String moveDescription = move.getSan();
-
-				if (StringUtils.isBlank(moveDescription)) {
-					moveDescription = move.getLan();
-				}
-				board.statusLabel.setText("Position after move "
-						+ BoardUtils.halfMoveIndexToDescription(traverser
-								.getTraverserHalfMoveIndex(), GameUtils
-								.getOppositeColor(traverser.getAdjustedGame()
-										.getColorToMove())) + moveDescription);
-			} else {
-				board.statusLabel.setText("");
-			}
-			board.forceUpdate();
+		if (isBeingReparented()) {
+			return;
 		}
+
+		adjustPieceJailFromGame(traverser.getAdjustedGame());
+		adjustBoardToGame(traverser.getAdjustedGame());
+		adjustNavButtonEnabledState();
+		if (traverser.getTraverserHalfMoveIndex() > 0) {
+			Move move = traverser.getAdjustedGame().getMoveList().get(
+					traverser.getTraverserHalfMoveIndex() - 1);
+			String moveDescription = move.getSan();
+
+			if (StringUtils.isBlank(moveDescription)) {
+				moveDescription = move.getLan();
+			}
+			board.statusLabel.setText("Position after move "
+					+ BoardUtils.halfMoveIndexToDescription(traverser
+							.getTraverserHalfMoveIndex(), GameUtils
+							.getOppositeColor(traverser.getAdjustedGame()
+									.getColorToMove())) + moveDescription);
+		} else {
+			board.statusLabel.setText("");
+		}
+		board.forceUpdate();
 	}
 
 	public abstract void adjustGameDescriptionLabel();
 
 	public void adjustGameStatusLabel() {
-		if (!isBeingReparented()) {
-			if (getGame().isInState(Game.ACTIVE_STATE)) {
-				if (getGame().getMoves().getSize() > 0) {
-					Move lastMove = getGame().getMoves().get(
-							getGame().getMoves().getSize() - 1);
-					int moveNumber = (getGame().getHalfMoveCount() / 2) + 1;
+		if (isBeingReparented()) {
+			return;
+		}
 
-					board.getStatusLabel().setText(
-							"Last Move: " + moveNumber + ") "
-									+ (lastMove.isWhitesMove() ? "" : "...")
-									+ lastMove.toString());
+		if (getGame().isInState(Game.ACTIVE_STATE)) {
+			if (getGame().getMoveList().getSize() > 0) {
+				Move lastMove = getGame().getMoveList().get(
+						getGame().getMoveList().getSize() - 1);
+				int moveNumber = (getGame().getHalfMoveCount() / 2) + 1;
 
-				} else {
-					board.getStatusLabel().setText("");
-				}
+				board.getStatusLabel().setText(
+						"Last Move: " + moveNumber + ") "
+								+ (lastMove.isWhitesMove() ? "" : "...")
+								+ lastMove.toString());
+
 			} else {
-				String result = getGame().getResultDescription();
-				if (result != null) {
-					board.getStatusLabel().setText(
-							getGame().getResultDescription());
-				}
+				board.getStatusLabel().setText("");
+			}
+		} else {
+			String result = getGame().getResultDescription();
+			if (result != null) {
+				board.getStatusLabel()
+						.setText(getGame().getResultDescription());
 			}
 		}
 	}
 
 	public void adjustLagColors() {
-		if (!isBeingReparented()) {
-			if (getGame().getWhiteLagMillis() > 20000) {
-				board.getWhiteLagLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
-			} else {
-				board.getWhiteLagLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_LAG_COLOR));
-			}
+		if (isBeingReparented()) {
+			return;
+		}
+		if (getGame().getWhiteLagMillis() > 20000) {
+			board.getWhiteLagLabel().setForeground(
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
+		} else {
+			board.getWhiteLagLabel().setForeground(
+					getPreferences().getColor(PreferenceKeys.BOARD_LAG_COLOR));
+		}
 
-			if (getGame().getBlackLagMillis() > 20000) {
-				board.getBlackLagLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
-			} else {
-				board.getBlackLagLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_LAG_COLOR));
-			}
+		if (getGame().getBlackLagMillis() > 20000) {
+			board.getBlackLagLabel().setForeground(
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
+		} else {
+			board.getBlackLagLabel().setForeground(
+					getPreferences().getColor(PreferenceKeys.BOARD_LAG_COLOR));
 		}
 	}
 
 	protected void adjustLagLabels() {
-		if (!isBeingReparented()) {
-			board.whiteLagLabel.setText(BoardUtils.lagToString(getGame()
-					.getWhiteLagMillis()));
-			board.blackLagLabel.setText(BoardUtils.lagToString(getGame()
-					.getBlackLagMillis()));
+		if (isBeingReparented()) {
+			return;
 		}
+		board.whiteLagLabel.setText(BoardUtils.lagToString(getGame()
+				.getWhiteLagMillis()));
+		board.blackLagLabel.setText(BoardUtils.lagToString(getGame()
+				.getBlackLagMillis()));
 	}
 
 	protected void adjustNameRatingLabels() {
-		if (!isBeingReparented()) {
-			String blackName = getGame().getBlackName();
-			String blackRating = getGame().getBlackRating();
-			String whiteName = getGame().getWhiteName();
-			String whiteRating = getGame().getWhiteRating();
-
-			String whiteNameRating = null;
-			String blackNameRating = null;
-
-			if (StringUtils.isBlank(whiteName)) {
-				whiteNameRating = "White";
-			} else if (StringUtils.isBlank(whiteRating)) {
-				whiteNameRating = whiteName;
-			} else {
-				whiteNameRating = whiteName + " (" + whiteRating + ")";
-			}
-
-			if (StringUtils.isBlank(blackName)) {
-				blackNameRating = "Black";
-			} else if (StringUtils.isBlank(blackRating)) {
-				blackNameRating = blackName;
-			} else {
-				blackNameRating = blackName + " (" + blackRating + ")";
-			}
-
-			board.blackNameRatingLabel.setText(blackNameRating);
-			board.whiteNameRatingLabel.setText(whiteNameRating);
+		if (isBeingReparented()) {
+			return;
 		}
+		String blackName = getGame().getBlackName();
+		String blackRating = getGame().getBlackRating();
+		String whiteName = getGame().getWhiteName();
+		String whiteRating = getGame().getWhiteRating();
+
+		String whiteNameRating = null;
+		String blackNameRating = null;
+
+		if (StringUtils.isBlank(whiteName)) {
+			whiteNameRating = "White";
+		} else if (StringUtils.isBlank(whiteRating)) {
+			whiteNameRating = whiteName;
+		} else {
+			whiteNameRating = whiteName + " (" + whiteRating + ")";
+		}
+
+		if (StringUtils.isBlank(blackName)) {
+			blackNameRating = "Black";
+		} else if (StringUtils.isBlank(blackRating)) {
+			blackNameRating = blackName;
+		} else {
+			blackNameRating = blackName + " (" + blackRating + ")";
+		}
+
+		board.blackNameRatingLabel.setText(blackNameRating);
+		board.whiteNameRatingLabel.setText(whiteNameRating);
 	}
 
 	protected void adjustNavButtonEnabledState() {
-		if (!isBeingReparented()) {
-			if (isMoveListTraversable()) {
-				board.setCoolBarButtonEnabled(traverser.hasFirst(),
-						ChessBoard.FIRST_NAV);
-				board.setCoolBarButtonEnabled(traverser.hasLast(),
-						ChessBoard.LAST_NAV);
-				board.setCoolBarButtonEnabled(traverser.hasNext(),
-						ChessBoard.NEXT_NAV);
-				board.setCoolBarButtonEnabled(traverser.hasBack(),
-						ChessBoard.BACK_NAV);
-			} else {
-				board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
-				board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
-				board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
-				board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
-			}
+		if (isBeingReparented()) {
+			return;
+		}
+		if (isMoveListTraversable()) {
+			board.setCoolBarButtonEnabled(traverser.hasFirst(),
+					ChessBoard.FIRST_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasLast(),
+					ChessBoard.LAST_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasNext(),
+					ChessBoard.NEXT_NAV);
+			board.setCoolBarButtonEnabled(traverser.hasBack(),
+					ChessBoard.BACK_NAV);
+		} else {
+			board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
+			board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
+			board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
+			board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
 		}
 	}
 
 	protected void adjustOpeningDescriptionLabel() {
-		if (!isBeingReparented()) {
-			LOG.info("adjustOpeningDescriptionLabel()");
-			// if (board.game.getState() == Game.EXAMINING_STATE) return;
+		if (isBeingReparented()) {
+			return;
+		}
+		LOG.info("adjustOpeningDescriptionLabel()");
+		// if (board.game.getState() == Game.EXAMINING_STATE) return;
 
-			// CDay tells you: you can do
-			// board.getOpeningDescriptionLabel().setText(your opening
-			// description);
-			// CDay tells you: so you can test it from the gui
+		// CDay tells you: you can do
+		// board.getOpeningDescriptionLabel().setText(your opening
+		// description);
+		// CDay tells you: so you can test it from the gui
 
-			ECOParser p = ECOParser.getECOParser(getGame());
-			if (p != null) {
-				LOG.info("ECOParser.getECOParser(getGame()) = " + p.toString());
-				board.getOpeningDescriptionLabel().setText(p.toString());
-			}
+		ECOParser p = ECOParser.getECOParser(getGame());
+		if (p != null) {
+			LOG.info("ECOParser.getECOParser(getGame()) = " + p.toString());
+			board.getOpeningDescriptionLabel().setText(p.toString());
 		}
 	}
 
 	protected void adjustPieceJailFromGame(Game game) {
-		if (!isBeingReparented()) {
-			for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
-				int color = DROPPABLE_PIECE_COLOR[i];
-				int count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
-						- getGame()
-								.getPieceCount(
-										color,
-										BoardUtils
-												.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+		if (isBeingReparented()) {
+			return;
+		}
+		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
+			int color = DROPPABLE_PIECE_COLOR[i];
+			int count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
+					- getGame()
+							.getPieceCount(
+									color,
+									BoardUtils
+											.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
 
-				if (count == 0) {
-					board.pieceJailSquares[DROPPABLE_PIECES[i]]
-							.setPiece(GameConstants.EMPTY);
-				} else {
-					board.pieceJailSquares[DROPPABLE_PIECES[i]]
-							.setPiece(DROPPABLE_PIECES[i]);
-				}
-
-				board.pieceJailSquares[DROPPABLE_PIECES[i]].setText(BoardUtils
-						.pieceCountToString(count));
-				board.pieceJailSquares[DROPPABLE_PIECES[i]].redraw();
+			if (count == 0) {
+				board.pieceJailSquares[DROPPABLE_PIECES[i]]
+						.setPiece(GameConstants.EMPTY);
+			} else {
+				board.pieceJailSquares[DROPPABLE_PIECES[i]]
+						.setPiece(DROPPABLE_PIECES[i]);
 			}
+
+			board.pieceJailSquares[DROPPABLE_PIECES[i]].setText(BoardUtils
+					.pieceCountToString(count));
+			board.pieceJailSquares[DROPPABLE_PIECES[i]].redraw();
 		}
 	}
 
 	protected void adjustPremoveLabel() {
-		if (!isBeingReparented()) {
-			board.currentPremovesLabel.setText("Premoves: EMPTY");
+		if (isBeingReparented()) {
+			return;
 		}
+		board.currentPremovesLabel.setText("Premoves: EMPTY");
 	}
 
 	protected void adjustToGameChangeNotInvolvingMove() {
-		if (!isBeingReparented()) {
-			// Adjust the clocks.
-			stopClocks();
-			adjustClockLabelsAndUpdaters();
-			adjustClockColors();
-			startClocks();
+		if (isBeingReparented()) {
+			return;
+		}
+		// Adjust the clocks.
+		stopClocks();
+		adjustClockLabelsAndUpdaters();
+		adjustClockColors();
+		startClocks();
 
-			adjustToMoveIndicatorLabel();
+		adjustToMoveIndicatorLabel();
 
-			if (getGame().getResult() != 0) {
-				onPlayGameEndSound();
-			}
+		if (getGame().getResult() != Result.IN_PROGRESS) {
+			onPlayGameEndSound();
 		}
 	}
 
 	public void adjustToGameInitial() {
-		if (!isBeingReparented()) {
-			LOG.info("adjustToGameInitial " + getGame().getId() + " ...");
-			long startTime = System.currentTimeMillis();
-			initClockUpdaters();
-			adjustNameRatingLabels();
-			adjustGameDescriptionLabel();
-
-			adjustToGameChangeNotInvolvingMove();
-
-			adjustBoardToGame(getGame());
-			adjustPieceJailFromGame(getGame());
-
-			traverser.adjustHalfMoveIndex();
-			adjustNavButtonEnabledState();
-
-			adjustLagLabels();
-			adjustLagColors();
-
-			adjustPremoveLabel();
-
-			adjustOpeningDescriptionLabel();
-			adjustGameStatusLabel();
-
-			board.forceUpdate();
-
-			LOG.info("Completed adjustToGameInitial in " + getGame().getId()
-					+ "  " + (System.currentTimeMillis() - startTime));
+		if (isBeingReparented()) {
+			return;
 		}
+
+		LOG.info("adjustToGameInitial " + getGame().getId() + " ...");
+		long startTime = System.currentTimeMillis();
+		initClockUpdaters();
+		adjustNameRatingLabels();
+		adjustGameDescriptionLabel();
+
+		adjustToGameChangeNotInvolvingMove();
+
+		adjustBoardToGame(getGame());
+		adjustPieceJailFromGame(getGame());
+
+		traverser.adjustHalfMoveIndex();
+		adjustNavButtonEnabledState();
+
+		adjustLagLabels();
+		adjustLagColors();
+
+		adjustPremoveLabel();
+
+		adjustOpeningDescriptionLabel();
+		adjustGameStatusLabel();
+
+		board.forceUpdate();
+
+		LOG.info("Completed adjustToGameInitial in " + getGame().getId() + "  "
+				+ (System.currentTimeMillis() - startTime));
+
 	}
 
 	protected void adjustToGameMove() {
-		if (!isBeingReparented()) {
-			LOG.info("adjustToGameChange " + getGame().getId() + " ...");
-			long startTime = System.currentTimeMillis();
-
-			adjustToGameChangeNotInvolvingMove();
-
-			adjustBoardToGame(getGame());
-			adjustPieceJailFromGame(getGame());
-
-			traverser.adjustHalfMoveIndex();
-			adjustNavButtonEnabledState();
-
-			adjustLagLabels();
-			adjustLagColors();
-
-			adjustPremoveLabel();
-
-			adjustOpeningDescriptionLabel();
-			adjustGameStatusLabel();
-
-			if (getGame().getResult() == 0) {
-				onPlayMoveSound();
-			}
-
-			board.forceUpdate();
-
-			LOG.info("adjustToGameChange " + getGame().getId() + "  n "
-					+ (System.currentTimeMillis() - startTime));
+		if (isBeingReparented()) {
+			return;
 		}
+
+		LOG.info("adjustToGameChange " + getGame().getId() + " ...");
+		long startTime = System.currentTimeMillis();
+
+		adjustToGameChangeNotInvolvingMove();
+
+		adjustBoardToGame(getGame());
+		adjustPieceJailFromGame(getGame());
+
+		traverser.adjustHalfMoveIndex();
+		adjustNavButtonEnabledState();
+
+		adjustLagLabels();
+		adjustLagColors();
+
+		adjustPremoveLabel();
+
+		adjustOpeningDescriptionLabel();
+		adjustGameStatusLabel();
+
+		if (getGame().getResult() == Result.IN_PROGRESS) {
+			onPlayMoveSound();
+		}
+
+		board.forceUpdate();
+
+		LOG.info("adjustToGameChange " + getGame().getId() + "  n "
+				+ (System.currentTimeMillis() - startTime));
+
 	}
 
 	public void adjustToMoveIndicatorLabel() {
-		if (!isBeingReparented()) {
-			if (getGame().getColorToMove() == WHITE) {
-				board.getWhiteToMoveIndicatorLabel().setImage(
-						Raptor.getInstance().getIcon("circle_green30x30"));
-				board.getBlackToMoveIndicatorLabel().setImage(
-						Raptor.getInstance().getIcon("circle_gray30x30"));
-			} else {
-				board.getBlackToMoveIndicatorLabel().setImage(
-						Raptor.getInstance().getIcon("circle_green30x30"));
-				board.getWhiteToMoveIndicatorLabel().setImage(
-						Raptor.getInstance().getIcon("circle_gray30x30"));
-			}
+		if (isBeingReparented()) {
+			return;
+		}
+
+		if (getGame().getColorToMove() == WHITE) {
+			board.getWhiteToMoveIndicatorLabel().setImage(
+					Raptor.getInstance().getIcon("circle_green30x30"));
+			board.getBlackToMoveIndicatorLabel().setImage(
+					Raptor.getInstance().getIcon("circle_gray30x30"));
+		} else {
+			board.getBlackToMoveIndicatorLabel().setImage(
+					Raptor.getInstance().getIcon("circle_green30x30"));
+			board.getWhiteToMoveIndicatorLabel().setImage(
+					Raptor.getInstance().getIcon("circle_gray30x30"));
 		}
 	}
 
@@ -619,31 +644,27 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	protected void startClocks() {
-		if (!isBeingReparented()) {
-			if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
-				initClockUpdaters();
-				if (getGame().getColorToMove() == WHITE) {
-					whiteClockUpdater.start();
-				} else {
-					blackClockUpdater.start();
-				}
+		if (isBeingReparented()) {
+			return;
+		}
+		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
+			initClockUpdaters();
+			if (getGame().getColorToMove() == WHITE) {
+				whiteClockUpdater.start();
+			} else {
+				blackClockUpdater.start();
 			}
 		}
+
 	}
 
 	protected void stopClocks() {
-		if (!isBeingReparented()) {
-			whiteClockUpdater.stop();
-			blackClockUpdater.stop();
+		if (isBeingReparented()) {
+			return;
 		}
-	}
 
-	public void stopTimers() {
-		if (!isBeingReparented()) {
-
-			whiteClockUpdater.stop();
-			blackClockUpdater.stop();
-		}
+		whiteClockUpdater.stop();
+		blackClockUpdater.stop();
 	}
 
 	public abstract void userCancelledMove(int fromSquare, boolean isDnd);

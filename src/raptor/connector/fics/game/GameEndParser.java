@@ -6,10 +6,11 @@ import raptor.util.RaptorStringTokenizer;
 public class GameEndParser {
 
 	public static final String GAME_END = "{Game";
+	public static final String EXCLUDE = "Creating";
 
 	public GameEndMessage parse(String message) {
 		GameEndMessage result = null;
-		if (message.startsWith(GAME_END)) {
+		if (message.startsWith(GAME_END) && !message.contains(EXCLUDE)) {
 			result = new GameEndMessage();
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
 					" ()", true);

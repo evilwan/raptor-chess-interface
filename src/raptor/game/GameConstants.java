@@ -240,6 +240,21 @@ public interface GameConstants {
 	public static final int BQ = 11;
 	public static final int BK = 12;
 
+	// Used for droppable games and position setup.
+	// Constants used to identify a drop square.
+	public static final int WP_DROP_FROM_SQUARE = WP + 100;
+	public static final int WB_DROP_FROM_SQUARE = WB + 100;
+	public static final int WN_DROP_FROM_SQUARE = WN + 100;
+	public static final int WR_DROP_FROM_SQUARE = WR + 100;
+	public static final int WQ_DROP_FROM_SQUARE = WQ + 100;
+	public static final int WK_DROP_FROM_SQUARE = WK + 100;
+	public static final int BP_DROP_FROM_SQUARE = BP + 100;
+	public static final int BB_DROP_FROM_SQUARE = BB + 100;
+	public static final int BN_DROP_FROM_SQUARE = BN + 100;
+	public static final int BR_DROP_FROM_SQUARE = BR + 100;
+	public static final int BQ_DROP_FROM_SQUARE = BQ + 100;
+	public static final int BK_DROP_FROM_SQUARE = BK + 100;
+
 	// Color constants.
 	public static final int WHITE = 0;
 	public static final int BLACK = 1;

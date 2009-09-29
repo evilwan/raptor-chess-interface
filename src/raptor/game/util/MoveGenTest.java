@@ -10,6 +10,7 @@ import java.util.Random;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
+import raptor.game.Game.Type;
 
 public class MoveGenTest extends TestCase implements GameConstants {
 
@@ -60,7 +61,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 			"2r3k1/8/8/8/8/8/PPPPrPPPP/R3K2R w QK - 0 0" };
 
 	public void testBasicRepHashing() {
-		Game game = createStartingPosition(Game.STANDARD);
+		Game game = createStartingPosition(Type.CLASSIC);
 
 		long positionOnlyHash = game.getZobristPositionHash();
 		long gameHash = game.getZobristGameHash();
@@ -80,7 +81,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 
 	public void testInCheck() {
 		for (String fen : IN_CHECK_TESTS) {
-			Game game = createFromFen(fen, Game.STANDARD);
+			Game game = createFromFen(fen, Type.CLASSIC);
 			asserts(game.isInCheck(game.getColorToMove()),
 					"User is in check in position:\n " + game);
 		}
@@ -90,7 +91,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 		for (String test : LEGAL_MOVE_TESTS) {
 			String[] split = test.split("\\|");
 
-			Game game = createFromFen(split[0], Game.STANDARD);
+			Game game = createFromFen(split[0], Type.CLASSIC);
 
 			Move[] moves = game.getPseudoLegalMoves().asArray();
 			for (Move move : moves) {
@@ -118,7 +119,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 	public void testLegals() {
 		for (String test : PSEUDO_LEGAL_MOVE_TESTS) {
 			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0], Game.STANDARD);
+			Game game = createFromFen(split[0], Type.CLASSIC);
 
 			if (split.length == 1) {
 				asserts(game.getPseudoLegalMoves().asArray().length == 0,
@@ -158,13 +159,13 @@ public class MoveGenTest extends TestCase implements GameConstants {
 
 	public void testNotCheckmate() {
 		for (String fen : NOT_CHECKMATE_TESTS) {
-			Game game = createFromFen(fen, Game.STANDARD);
+			Game game = createFromFen(fen, Type.CLASSIC);
 			asserts(!game.isCheckmate(), "Position is not checkmate: \n" + game);
 		}
 	}
 
 	public void testOccupiedEmpty() {
-		Game game = createStartingPosition(Game.STANDARD);
+		Game game = createStartingPosition(Type.CLASSIC);
 		game.makeLanMove("e2-e4");
 		game.makeLanMove("h7-h6");
 		game.makeLanMove("d2-d4");
@@ -186,7 +187,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 		game.rollback();
 		game.rollback();
 
-		Game game2 = createStartingPosition(Game.STANDARD);
+		Game game2 = createStartingPosition(Type.CLASSIC);
 		asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 				&& game.getEmptyBB() == game2.getEmptyBB(),
 				"Occupied is not the same.");
@@ -194,7 +195,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 	}
 
 	public void testPawnCaptures() {
-		Game game = createStartingPosition(Game.STANDARD);
+		Game game = createStartingPosition(Type.CLASSIC);
 		game.makeLanMove("e2-e4");
 		game.makeLanMove("d7-d5");
 		game.makeLanMove("e4xd5");
@@ -202,12 +203,12 @@ public class MoveGenTest extends TestCase implements GameConstants {
 		game.rollback();
 		game.rollback();
 
-		Game game2 = createStartingPosition(Game.STANDARD);
+		Game game2 = createStartingPosition(Type.CLASSIC);
 		asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 				&& game.getEmptyBB() == game2.getEmptyBB(),
 				"Occupied is not the same.");
 
-		game = createStartingPosition(Game.STANDARD);
+		game = createStartingPosition(Type.CLASSIC);
 		game.makeLanMove("e2-e4");
 		game.makeLanMove("d7-d5");
 		game.makeLanMove("e4-e5");
@@ -218,12 +219,12 @@ public class MoveGenTest extends TestCase implements GameConstants {
 		game.rollback();
 		game.rollback();
 		game.rollback();
-		game2 = createStartingPosition(Game.STANDARD);
+		game2 = createStartingPosition(Type.CLASSIC);
 		asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 				&& game.getEmptyBB() == game2.getEmptyBB(),
 				"Occupied is not the same.");
 
-		game = createStartingPosition(Game.STANDARD);
+		game = createStartingPosition(Type.CLASSIC);
 		game.makeLanMove("e2-e4");
 		game.makeLanMove("h7-h6");
 		game.makeLanMove("e4-e5");
@@ -234,12 +235,12 @@ public class MoveGenTest extends TestCase implements GameConstants {
 		game.rollback();
 		game.rollback();
 		game.rollback();
-		game2 = createStartingPosition(Game.STANDARD);
+		game2 = createStartingPosition(Type.CLASSIC);
 		asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 				&& game.getEmptyBB() == game2.getEmptyBB(),
 				"Occupied is not the same.");
 
-		game = createStartingPosition(Game.STANDARD);
+		game = createStartingPosition(Type.CLASSIC);
 		game.makeLanMove("h2-h3");
 		game.makeLanMove("d7-d5");
 		game.makeLanMove("h3-h4");
@@ -252,12 +253,12 @@ public class MoveGenTest extends TestCase implements GameConstants {
 		game.rollback();
 		game.rollback();
 		game.rollback();
-		game2 = createStartingPosition(Game.STANDARD);
+		game2 = createStartingPosition(Type.CLASSIC);
 		asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 				&& game.getEmptyBB() == game2.getEmptyBB(),
 				"Occupied is not the same.");
 
-		game = createStartingPosition(Game.STANDARD);
+		game = createStartingPosition(Type.CLASSIC);
 		game.makeLanMove("h2-h3");
 		game.makeLanMove("d7-d5");
 		game.makeLanMove("h3-h4");
@@ -270,14 +271,14 @@ public class MoveGenTest extends TestCase implements GameConstants {
 		game.rollback();
 		game.rollback();
 		game.rollback();
-		game2 = createStartingPosition(Game.STANDARD);
+		game2 = createStartingPosition(Type.CLASSIC);
 		asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 				&& game.getEmptyBB() == game2.getEmptyBB(),
 				"Occupied is not the same.");
 	}
 
 	public void testPieceCounts() {
-		Game game = createStartingPosition(Game.STANDARD);
+		Game game = createStartingPosition(Type.CLASSIC);
 		asserts(game.getPieceCount(WHITE, PAWN) == 8, "Not 8 white pawns.");
 		asserts(game.getPieceCount(BLACK, PAWN) == 8, "Not 8 black pawns.");
 		asserts(game.getPieceCount(WHITE, KNIGHT) == 2, "Not 2 white knights.");
@@ -334,7 +335,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 	public void testPieceDisappearBug() {
 		Game game = createFromFen(
 				"r1q1k2r/3ppppp/1pn5/p3N3/3PPB2/5Q2/PPP2PPP/R4bK1 w kq - 0 0",
-				Game.STANDARD);
+				Type.CLASSIC);
 		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
 		game.makeLanMove("a1xf1");
 		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
@@ -343,7 +344,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 	public void testPromotions() {
 		for (String test : PROMOTION_TEST) {
 			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0], Game.STANDARD);
+			Game game = createFromFen(split[0], Type.CLASSIC);
 			game.makeLanMove(split[1]);
 
 			List<Move> expectedMoves = new ArrayList<Move>(split.length - 2);
@@ -358,7 +359,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 
 		for (String test : PROMOTION_TEST) {
 			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0], Game.STANDARD);
+			Game game = createFromFen(split[0], Type.CLASSIC);
 			game.makeLanMove(split[1]);
 
 			List<Move> expectedMoves = new ArrayList<Move>(split.length - 2);
@@ -367,7 +368,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 				expectedMoves.add(game.makeLanMove(split[i]));
 				game.rollback();
 				game.rollback();
-				Game game2 = createFromFen(split[0], Game.STANDARD);
+				Game game2 = createFromFen(split[0], Type.CLASSIC);
 				asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 						&& game.getEmptyBB() == game2.getEmptyBB(),
 						"Occupied/empty are not the same.");
@@ -376,7 +377,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 	}
 
 	public void testRepHashing() {
-		Game game = createStartingPosition(Game.STANDARD);
+		Game game = createStartingPosition(Type.CLASSIC);
 		Random random = new Random();
 		long positionOnlyHash = game.getZobristPositionHash();
 		long gameHash = game.getZobristGameHash();
@@ -402,7 +403,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 	}
 
 	public void testThreeXRep() {
-		Game game = createStartingPosition(Game.STANDARD);
+		Game game = createStartingPosition(Type.CLASSIC);
 		game.makeLanMove("g1-h3");
 		asserts(game.getRepCount() == 1, "Invalid rep count "
 				+ game.getRepCount());
@@ -435,7 +436,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 	public void testValidCastle() {
 		for (String test : VALID_CASTLE_TEST) {
 			String[] split = test.split("\\|");
-			Game game = createFromFen(split[0], Game.STANDARD);
+			Game game = createFromFen(split[0], Type.CLASSIC);
 
 			boolean isCastleKingside = contains("O-O", split);
 			boolean isCastleQueenside = contains("O-O-O", split);
@@ -450,7 +451,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 						(game.getCastling(game.getColorToMove()) & CASTLE_KINGSIDE) != 0,
 						"Rollback erased castle kingside");
 
-				Game game2 = createFromFen(split[0], Game.STANDARD);
+				Game game2 = createFromFen(split[0], Type.CLASSIC);
 				asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 						&& game.getEmptyBB() == game2.getEmptyBB(),
 						"Occupied is not the same.");
@@ -466,7 +467,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 				asserts(
 						(game.getCastling(game.getColorToMove()) & CASTLE_QUEENSIDE) != 0,
 						"Rollback erased castle queenside");
-				Game game2 = createFromFen(split[0], Game.STANDARD);
+				Game game2 = createFromFen(split[0], Type.CLASSIC);
 				asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 						&& game.getEmptyBB() == game2.getEmptyBB(),
 						"Occupied is not the same.");

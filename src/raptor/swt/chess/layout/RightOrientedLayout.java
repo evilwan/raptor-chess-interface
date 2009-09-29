@@ -48,6 +48,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	protected int pieceJailSquareSide;
 
 	protected Label worstCaseClockSizeLabel;
+	protected boolean hasInitedPainter = false;
 
 	public RightOrientedLayout(ChessBoard board) {
 		super(board);
@@ -94,6 +95,10 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	protected void layout(Composite composite, boolean flushCache) {
 		LOG.debug("in layout ...");
 		long startTime = System.currentTimeMillis();
+
+		// if (!hasInitedPainter) {
+		// initPainter();
+		// }
 		setLayoutData();
 
 		board.getGameDescriptionLabel().setBounds(gameDescriptionLabelRect);

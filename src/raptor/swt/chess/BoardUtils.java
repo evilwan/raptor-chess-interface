@@ -50,6 +50,34 @@ public class BoardUtils implements BoardConstants {
 				.isWhitePiece(coloredPiece) ? WHITE : BLACK);
 	}
 
+	public static Move createMove(Game game, int fromSquare, int toSquare) {
+		try {
+			Move result = game.makeMove(fromSquare, toSquare);
+			game.rollback();
+			return result;
+		} catch (IllegalArgumentException iae) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("IllegalArgumentException in game.makeMove()", iae);
+			}
+			return null;
+		}
+	}
+
+	public static Move createMove(Game game, int fromSquare, int toSquare,
+			int nonColoredPromotionPiece) {
+		try {
+			Move result = game.makeMove(fromSquare, toSquare,
+					nonColoredPromotionPiece);
+			game.rollback();
+			return result;
+		} catch (IllegalArgumentException iae) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("IllegalArgumentException in game.makeMove()", iae);
+			}
+			return null;
+		}
+	}
+
 	/**
 	 * Returns a chess piece suitable for using as an icon when dragging it.
 	 */
@@ -308,6 +336,14 @@ public class BoardUtils implements BoardConstants {
 
 	public static boolean isBlackPiece(int setPieceType) {
 		return setPieceType >= 7 && setPieceType < 13;
+	}
+
+	public static boolean isJailSquareBlackPiece(int pieceJailSquare) {
+		return isBlackPiece(pieceJailSquareToPiece(pieceJailSquare));
+	}
+
+	public static boolean isJailSquareWhitePiece(int pieceJailSquare) {
+		return isWhitePiece(pieceJailSquareToPiece(pieceJailSquare));
 	}
 
 	public static boolean isPieceJailSquare(int pieceJailSquare) {

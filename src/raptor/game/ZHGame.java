@@ -3,7 +3,7 @@ package raptor.game;
 public class ZHGame extends Game {
 
 	public ZHGame() {
-		setType(Game.CRAZY_HOUSE);
+		setType(Type.CRAZYHOUSE);
 	}
 
 	@Override

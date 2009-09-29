@@ -29,6 +29,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_GAME_DESCRIPTION_COLOR = "board-game-description-color";
 	public static final String BOARD_PREMOVES_COLOR = "board-premoves-color";
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
+	public static final String BOARD_RESULT_COLOR = "board-result-color";
 
 	public static final String BOARD_COORDINATES_FONT = "board-coordinates-font";
 	public static final String BOARD_CLOCK_FONT = "board-clock-font";
@@ -39,6 +40,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_GAME_DESCRIPTION_FONT = "board-game-description-font";
 	public static final String BOARD_PREMOVES_FONT = "board-premoves-font";
 	public static final String BOARD_STATUS_FONT = "board-status-font";
+	public static final String BOARD_RESULT_FONT = "board-result-font";
 
 	public static final String CHAT_MAX_CONSOLE_CHARS = "chat-max-console-chars";
 	public static final String CHAT_TIMESTAMP_CONSOLE = "chat-timestamp-console";

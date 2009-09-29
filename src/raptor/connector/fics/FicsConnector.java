@@ -315,7 +315,6 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
 	protected ReadableByteChannel inputChannel;
 	protected FicsParser parser = new FicsParser();
-	protected PreferenceStore preferences;
 	protected Socket socket;
 	protected String userName;
 	protected long lastSendTime;
@@ -360,16 +359,16 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
 				new ChatConsoleWindowItem(new MainController(this)), true);
 
-		LOG.info("Connecting to " + preferences.getString(FICS_SERVER_URL)
-				+ " " + preferences.getInt(FICS_PORT));
+		LOG.info("Connecting to " + getPreferences().getString(FICS_SERVER_URL)
+				+ " " + getPreferences().getInt(FICS_PORT));
 		LOG.info("Trying to connect");
 		publishEvent(new ChatEvent(
 				null,
 				ChatType.INTERNAL,
 				"Connecting to "
-						+ preferences.getString(FICS_SERVER_URL)
+						+ getPreferences().getString(FICS_SERVER_URL)
 						+ " "
-						+ preferences.getInt(FICS_PORT)
+						+ getPreferences().getInt(FICS_PORT)
 						+ (getPreferences().getBoolean(FICS_TIMESEAL_ENABLED) ? " with "
 								: " without ") + "timeseal ..."));
 
@@ -380,13 +379,13 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					if (getPreferences().getBoolean(FICS_TIMESEAL_ENABLED)) {
 						// TO DO: rewrite TimesealingSocket to use a
 						// SocketChannel.
-						socket = new TimesealingSocket(preferences
-								.getString(FICS_SERVER_URL), preferences
+						socket = new TimesealingSocket(getPreferences()
+								.getString(FICS_SERVER_URL), getPreferences()
 								.getInt(FICS_PORT));
 					} else {
-						socket = new Socket(preferences
-								.getString(FICS_SERVER_URL), preferences
-								.getInt(FICS_PORT));
+						socket = new Socket(getPreferences().getString(
+								FICS_SERVER_URL), getPreferences().getInt(
+								FICS_PORT));
 					}
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Connected"));
@@ -567,7 +566,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	}
 
 	public PreferenceStore getPreferences() {
-		return preferences;
+		return Raptor.getInstance().getPreferences();
 	}
 
 	public String getPrompt() {
@@ -580,6 +579,13 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 	public String getTellToString(String handle) {
 		return "tell " + handle + " ";
+	}
+
+	/**
+	 * Returns the name of the current user logged in.
+	 */
+	public String getUserName() {
+		return userName;
 	}
 
 	public boolean isConnected() {
@@ -815,9 +821,5 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					"Error: Unable to send " + message
 							+ ". There is currently no connection."));
 		}
-	}
-
-	public void setPreferences(PreferenceStore preferences) {
-		this.preferences = preferences;
 	}
 }

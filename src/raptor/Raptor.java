@@ -185,7 +185,6 @@ public class Raptor implements PreferenceKeys {
 		install();
 		preferences = new RaptorPreferenceStore();
 		ficsConnector = new FicsConnector();
-		ficsConnector.setPreferences(preferences);
 	}
 
 	public void install() {

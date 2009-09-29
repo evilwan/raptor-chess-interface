@@ -23,8 +23,17 @@ import raptor.game.SanUtil.SanValidations;
 import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
 
+/**
+ * A game class which uses bitboards and Zobrist hashing.
+ */
 public class Game implements GameConstants {
 
+	/**
+	 * A class containing state information about the game. This class does'nt
+	 * contain things like the games state, white/black times, white/black
+	 * names, etc. However it does contain the bitmaps, zobrists, moves, and
+	 * other non text information.
+	 */
 	public static final class PositionState {
 		public int[] board = new int[64];
 		public int[] castling = new int[2];
@@ -46,34 +55,67 @@ public class Game implements GameConstants {
 		public MoveList moves = new MoveList();
 	}
 
+	public static enum Result {
+		IN_PROGRESS, BLACK_WON, DRAW, UNDETERMINED, WHITE_WON
+	}
+
+	public static enum Type {
+		CLASSIC, ATOMIC, BUGHOUSE, CRAZYHOUSE, LOSERS, STANDARD, SUICIDE, WILD, FISCHER_RANDOM
+	}
+
+	/**
+	 * The active state bitmask. Set when a game is actively being played.
+	 */
 	public static final int ACTIVE_STATE = 1;
+
+	/**
+	 * The inactive state bitmask. Set when a game is no longer being played.
+	 */
 	public static final int INACTIVE_STATE = ACTIVE_STATE << 1;
-	public static final int EXAMINING_STATE = ACTIVE_STATE << 2;;
+
+	/**
+	 * The examining state bitmask. Set when a game is in an examined state.
+	 */
+	public static final int EXAMINING_STATE = ACTIVE_STATE << 2;
+
+	/**
+	 * The playing state bitmask. Set when a user is playing the game.
+	 */
 	public static final int PLAYING_STATE = ACTIVE_STATE << 3;
+
+	/**
+	 * The untimed state bitmask. Set when the game is not timed.
+	 */
 	public static final int UNTIMED_STATE = ACTIVE_STATE << 4;
+
+	/**
+	 * The droppable state bitmask. Set when the game is a droppable game, e.g.
+	 * crazyhouse or bughouse. Set when the game is not timed.
+	 */
 	public static final int DROPPABLE_STATE = ACTIVE_STATE << 5;
+
+	/**
+	 * The clock is ticking state bitmask. Set when the color to moves clock is
+	 * ticking.
+	 */
 	public static final int IS_CLOCK_TICKING_STATE = ACTIVE_STATE << 6;
+
+	/**
+	 * The observing an examined game bitmask Set when the game is an
+	 * observation of an examinied game.
+	 */
 	public static final int OBSERVING_EXAMINED_STATE = ACTIVE_STATE << 7;
+
+	/**
+	 * The observing state bitmask. Set when the game is an observation.
+	 */
 	public static final int OBSERVING_STATE = ACTIVE_STATE << 8;
+
+	/**
+	 * The setup bitmask. Set when the game is in a setup state e.g. the
+	 * position is being set up.
+	 */
 	public static final int SETUP_STATE = ACTIVE_STATE << 9;
-
-	public static final int ATOMIC = 6;
-	public static final int BLITZ = 0;
-	public static final int BUGHOUSE = 9;
-	public static final int CRAZY_HOUSE = 8;
-	public static final int LIGHTNING = 1;
-	public static final int LOSERS = 7;
-	public static final int STANDARD = 2;
-	public static final int SUICIDE = 5;
-	public static final int WILD = 3;
-
-	public static final int FISCHER_RANDOM = 4;
-	public static final int IN_PROGRESS_RESULT = 0;
-	public static final int BLACK_WON_RESULT = 2;
-	public static final int DRAW_RESULT = 3;
-	public static final int UNDETERMINED_RESULT = 4;
-
-	public static final int WHTIE_WON_RESULT = 1;
 
 	protected long initialWhiteIncMillis;
 	protected long initialWhiteTimeMillis;
@@ -88,12 +130,12 @@ public class Game implements GameConstants {
 	protected String event;
 	protected boolean isSettingMoveSan = false;
 	protected String id;
-	protected int result;
+	protected Result result = Result.IN_PROGRESS;
 	protected String resultDescription;
 	protected String site;
 	protected long startTime;
 	protected int state;
-	protected int type;
+	protected Type type = Type.CLASSIC;
 	protected long whiteLagMillis;
 	protected String whiteName;
 	protected String whiteRating;
@@ -102,7 +144,7 @@ public class Game implements GameConstants {
 	/**
 	 * Currently places captures and promotions ahead of non captures.
 	 */
-	public void addMove(Move move, PriorityMoveList moves) {
+	protected void addMove(Move move, PriorityMoveList moves) {
 		if (move.isCapture() || move.isPromotion()) {
 			moves.appendHighPriority(move);
 		} else {
@@ -117,17 +159,29 @@ public class Game implements GameConstants {
 		setState(getState() | state);
 	}
 
+	/**
+	 * Returns true if a king of each color is on the board.
+	 */
 	public boolean areBothKingsOnBoard() {
 		return getPieceBB(WHITE, KING) != 0L && getPieceBB(BLACK, KING) != 0L;
 	}
 
 	/**
-	 * RepositionState.moves the specified state flags from the games state.
+	 * Clears the specified state constant from the games state.
 	 */
 	public void clearState(int state) {
 		setState(getState() & ~state);
 	}
 
+	/**
+	 * Decrements the piece count for the specified piece. This method handles
+	 * promotion masks as well.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK.
+	 * @param piece
+	 *            The un-colored piece constant.
+	 */
 	public void decrementPieceCount(int color, int piece) {
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
@@ -135,6 +189,9 @@ public class Game implements GameConstants {
 		positionState.pieceCounts[color][piece] = positionState.pieceCounts[color][piece] - 1;
 	}
 
+	/**
+	 * Decrements the current positions repetition count.
+	 */
 	public void decrementRepCount() {
 		positionState.moveRepHash[getRepHash()]--;
 	}
@@ -248,12 +305,19 @@ public class Game implements GameConstants {
 		setNotColorToMoveBB(~getColorBB(getColorToMove()));
 		setHalfMoveCount(getHalfMoveCount() + 1);
 
-		getMoves().append(move);
+		getMoveList().append(move);
 
 		updateZobristHash();
 		incrementRepCount();
 	}
 
+	/**
+	 * Generates all of the pseudo legal bishop moves in the position and adds
+	 * them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoBishopMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), BISHOP);
 
@@ -276,6 +340,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal king castling moves in the position and
+	 * adds them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoKingCastlingMoves(long fromBB, PriorityMoveList moves) {
 		// The king destination square isnt checked, its checked when legal
 		// getMoves() are checked.
@@ -322,6 +393,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal king moves in the position and adds
+	 * them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoKingMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), KING);
 		int fromSquare = bitscanForward(fromBB);
@@ -341,6 +419,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal knight moves in the position and adds
+	 * them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoKnightMoves(PriorityMoveList moves) {
 
 		long fromBB = getPieceBB(getColorToMove(), KNIGHT);
@@ -365,6 +450,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal pawn captures in the position and adds
+	 * them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoPawnCaptures(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
 
@@ -394,6 +486,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal double pawn pushes in the position and
+	 * adds them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoPawnDoublePush(int fromSquare, long fromBB,
 			int oppositeColor, int epModifier, PriorityMoveList moves) {
 
@@ -409,6 +508,13 @@ public class Game implements GameConstants {
 
 	}
 
+	/**
+	 * Generates all of the pseudo En-Passant moves in the position and adds
+	 * them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoPawnEPCaptures(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
 		if (getEpSquare() != EMPTY) {
@@ -426,6 +532,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal pawn moves in the position and adds
+	 * them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoPawnMoves(PriorityMoveList moves) {
 		long pawnsBB = getPieceBB(getColorToMove(), PAWN);
 		int oppositeColor, epModifier;
@@ -452,6 +565,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal single push pawn moves in the position
+	 * and adds them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoPawnSinglePush(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
 
@@ -482,6 +602,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal queen moves in the position and adds
+	 * them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoQueenMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), QUEEN);
 
@@ -506,6 +633,13 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Generates all of the pseudo legal rook moves in the position and adds
+	 * them to the specified move list.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public void genPseudoRookMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), ROOK);
 
@@ -557,39 +691,79 @@ public class Game implements GameConstants {
 		return blackRemainingTimeMillis;
 	}
 
+	/**
+	 * Returns the games board. This is an int[64] containg non-colored piece
+	 * constants where there are pieces.
+	 * 
+	 * @param moves
+	 *            A move list.
+	 */
 	public int[] getBoard() {
 		return positionState.board;
 	}
 
+	/**
+	 * Returns the castling constant for the specified color.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @return The castling constant.
+	 */
 	public int getCastling(int color) {
 		return positionState.castling[color];
 	}
 
+	/**
+	 * Returns a bitboard with 1s in the squares of the pieces of the specified
+	 * color.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 */
 	public long getColorBB(int color) {
 		return positionState.colorBB[color];
 	}
 
+	/**
+	 * Returns the color to move, WHITE or BLACK.
+	 */
 	public int getColorToMove() {
 		return positionState.colorToMove;
 	}
 
+	/**
+	 * Returns the drop piece count for the specified color and piece. This is
+	 * useful for games such as bughouse or crazyhosue
+	 */
 	public int getDropCount(int color, int piece) {
 		return positionState.pieceCounts[color][piece];
 	}
 
+	/**
+	 * Returns a bitboard with 1s in the squares which are empty.
+	 * 
+	 * @return
+	 */
 	public long getEmptyBB() {
 		return positionState.emptyBB;
 	}
 
+	/**
+	 * If the last move was a double pawn push, this method returns the square
+	 * otherwise returns EMPTY.
+	 */
 	public int getEpSquare() {
 		return positionState.epSquare;
 	}
 
+	/**
+	 * Returns the games event. This is useful for going to/from PGN.
+	 */
 	public String getEvent() {
 		return event;
 	}
 
-	private String getFenCastle() {
+	protected String getFenCastle() {
 		String whiteCastlingFen = getCastling(WHITE) == CASTLE_NONE ? ""
 				: getCastling(WHITE) == CASTLE_BOTH ? "KQ"
 						: getCastling(WHITE) == CASTLE_KINGSIDE ? "K" : "Q";
@@ -601,6 +775,10 @@ public class Game implements GameConstants {
 				: whiteCastlingFen + blackCastlingFen;
 	}
 
+	/**
+	 * Returns the number of half moves since the last irreversible move. This
+	 * is useful for determining the 50 move draw rule.
+	 */
 	public int getFiftyMoveCount() {
 		return positionState.fiftyMoveCount;
 	}
@@ -612,6 +790,9 @@ public class Game implements GameConstants {
 		return getHalfMoveCount() / 2 + 1;
 	}
 
+	/**
+	 * Returns the games description. This is useful for going to/from PGN.
+	 */
 	public String getGameDescription() {
 		return gameDescription;
 	}
@@ -662,6 +843,9 @@ public class Game implements GameConstants {
 		return initialWhiteTimeMillis;
 	}
 
+	/**
+	 * Returns a move list of all legal moves in the position.
+	 */
 	public PriorityMoveList getLegalMoves() {
 		PriorityMoveList result = getPseudoLegalMoves();
 
@@ -692,43 +876,90 @@ public class Game implements GameConstants {
 		return result;
 	}
 
-	public MoveList getMoves() {
+	/**
+	 * Returns a move list of the moves that have been made in the position.
+	 * 
+	 */
+	public MoveList getMoveList() {
 		return positionState.moves;
 	}
 
+	/**
+	 * Returns a bitboard with 1s on all of the squares that do not contain the
+	 * color to moves pieces.
+	 */
 	public long getNotColorToMoveBB() {
 		return positionState.notColorToMoveBB;
 	}
 
+	/**
+	 * Returns a bitboard with 1s on all squares that are occupied in the
+	 * position.
+	 */
 	public long getOccupiedBB() {
 		return positionState.occupiedBB;
 	}
 
+	/**
+	 * Returns the piece at the specified square with its promotion mask
+	 * removed.
+	 */
 	public int getPiece(int square) {
 		return positionState.board[square] & NOT_PROMOTED_MASK;
 	}
 
+	/**
+	 * Returns a bitboard with 1s on all of the squares containing the piece.
+	 * 
+	 * @param piece
+	 *            The un-colored piece constant.
+	 */
 	public long getPieceBB(int piece) {
 		return positionState.pieceBB[0][piece]
 				| positionState.pieceBB[1][piece];
 	}
 
+	/**
+	 * Returns a bitboard with 1s on all squares containing the piece.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The un-colored piece constant.
+	 */
 	public long getPieceBB(int color, int piece) {
 		return positionState.pieceBB[color][piece];
 	}
 
+	/**
+	 * Returns the number of pieces on the board.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The un-colored piece constant.
+	 */
 	public int getPieceCount(int color, int piece) {
 		return positionState.pieceCounts[color][piece];
 	}
 
+	/**
+	 * Returns the piece at the specified square with its promotion mask.
+	 */
 	public int getPieceWithPromoteMask(int square) {
 		return positionState.board[square];
 	}
 
+	/**
+	 * Returns the games position state object.
+	 */
 	public PositionState getPositionState() {
 		return positionState;
 	}
 
+	/**
+	 * Returns a move list containing all pseudo legal moves.
+	 */
 	public PriorityMoveList getPseudoLegalMoves() {
 		PriorityMoveList result = new PriorityMoveList();
 		genPseudoQueenMoves(result);
@@ -740,35 +971,70 @@ public class Game implements GameConstants {
 		return result;
 	}
 
+	/**
+	 * Returns the number of times this position has occured.
+	 */
 	public int getRepCount() {
 		return positionState.moveRepHash[getRepHash()];
 	}
 
+	/**
+	 * Returns a hash that can be used to reference positionState.moveRepHash.
+	 * The hash is created using the zobrist position hash.
+	 * 
+	 * @return The hash.
+	 */
 	public int getRepHash() {
 		return (int) (positionState.zobristPositionHash & MOVE_REP_CACHE_SIZE_MINUS_1);
 	}
 
-	public int getResult() {
+	/**
+	 * Returns the games result constant.
+	 */
+	public Result getResult() {
 		return result;
 	}
 
+	/**
+	 * Returns the description of the result. Useful for going to/from PGN.
+	 */
 	public String getResultDescription() {
 		return resultDescription;
 	}
 
+	/**
+	 * Returns the site the game is being played at. Useful for going to/from
+	 * PGN.
+	 */
 	public String getSite() {
 		return site;
 	}
 
+	/**
+	 * Returns a long in UTC time represetening the time the game started.
+	 * Useful for going to/from PGN.
+	 * 
+	 * @return The start time in UTC.
+	 */
 	public long getStartTime() {
 		return startTime;
 	}
 
+	/**
+	 * Returns an integer with 1s in all of the states the game has set.
+	 * 
+	 * @return The games state/
+	 */
 	public int getState() {
 		return state;
 	}
 
-	public int getType() {
+	/**
+	 * Returns the games type constant.
+	 * 
+	 * @return
+	 */
+	public Type getType() {
 		return type;
 	}
 
@@ -800,14 +1066,35 @@ public class Game implements GameConstants {
 		return whiteRemainingTimeMilis;
 	}
 
+	/**
+	 * Returns the games Zobrist game hash. The game hash includes state
+	 * information such as color to move, castling, and ep info.
+	 * 
+	 * @return The Zobrist game hash.
+	 */
 	public long getZobristGameHash() {
 		return positionState.zobristGameHash;
 	}
 
+	/**
+	 * Returns the games Zobrist position hash. The position hash is the Zobrist
+	 * WITHOUT state info such as color to move, castling, ep info.
+	 * 
+	 * @return THe Zobrist position hash.
+	 */
 	public long getZobristPositionHash() {
 		return positionState.zobristPositionHash;
 	}
 
+	/**
+	 * Increments the piece count. This method handles incrementing pieces with
+	 * a promote mask.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The uncolored piece constant.
+	 */
 	public void incrementPieceCount(int color, int piece) {
 		int pieceWithoutMask = piece;
 
@@ -818,25 +1105,51 @@ public class Game implements GameConstants {
 		positionState.pieceCounts[color][pieceWithoutMask] = positionState.pieceCounts[color][pieceWithoutMask] + 1;
 	}
 
+	/**
+	 * Increments the move hash repetition count for the current position.
+	 */
 	public void incrementRepCount() {
 		positionState.moveRepHash[getRepHash()]++;
 	}
 
 	/**
-	 * @return If the position is checkmate or not.
+	 * Returns true if the current position is check-mate.
 	 */
 	public boolean isCheckmate() {
 		return isCheckmate(getLegalMoves());
 	}
 
+	/**
+	 * Returns true if the current position is check-mate given a list of moves.
+	 * This method is provided so move generation does'nt have to be done twice
+	 * if it was already performed and a moveList is available.
+	 */
 	public boolean isCheckmate(PriorityMoveList moveList) {
 		return moveList.getSize() == 0 && isInCheck(getColorToMove());
 	}
 
+	/**
+	 * Returns true if the specified color is in check in the specified
+	 * position.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @return true if in check, otherwise false.
+	 */
 	public boolean isInCheck(int color) {
 		return isInCheck(color, getPieceBB(color, KING));
 	}
 
+	/**
+	 * Returns true if the specified square would be in check if it contained a
+	 * king.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK.
+	 * @param pieceBB
+	 *            A bitboard representing the square to to check.
+	 * @return true if in check, false otherwise.
+	 */
 	public boolean isInCheck(int color, long pieceBB) {
 		long kingBB = pieceBB;
 		int kingSquare = bitscanForward(kingBB);
@@ -870,14 +1183,27 @@ public class Game implements GameConstants {
 				&& !isInCheck(getOppositeColor(getColorToMove()));
 	}
 
+	/**
+	 * Returns true if SAN, short algebraic notation, is being set on all mvoes
+	 * generated by this class. This is an expensive operation and should be
+	 * turned off for engines.
+	 */
 	public boolean isSettingMoveSan() {
 		return isSettingMoveSan;
 	}
 
+	/**
+	 * Returns true if the current position is stalemate.
+	 */
 	public boolean isStalemate() {
 		return isStalemate(getLegalMoves());
 	}
 
+	/**
+	 * Returns true if the current position is stalemate given a list of moves.
+	 * This method is provided so move generation doesnt have to be done twice
+	 * if it was already performed and a moveList is available.
+	 */
 	public boolean isStalemate(PriorityMoveList moveList) {
 		return moveList.getSize() == 0 && !isInCheck(getColorToMove());
 	}
@@ -889,7 +1215,7 @@ public class Game implements GameConstants {
 		return positionState.colorToMove == WHITE;
 	}
 
-	public void makeCastlingMove(Move move) {
+	protected void makeCastlingMove(Move move) {
 		long kingFromBB, kingToBB, rookFromBB, rookToBB;
 
 		if (move.getColor() == WHITE) {
@@ -943,11 +1269,23 @@ public class Game implements GameConstants {
 		setEpSquare(EMPTY_SQUARE);
 	}
 
-	public Move makeDropMove(int piece, int destination) {
-		throw new IllegalArgumentException("Not supported in classical");
+	/**
+	 * Makes a drop move given the piece to drop and the destination square.
+	 * 
+	 * @param piece
+	 *            THe piece to drop.
+	 * @param destination
+	 *            The destination square.
+	 * @return The move made.
+	 * @throws IllegalArgumentException
+	 *             thrown if the move is invalid.
+	 */
+	public Move makeDropMove(int piece, int destination)
+			throws IllegalArgumentException {
+		throw new UnsupportedOperationException("Not supported in classical");
 	}
 
-	public void makeEPMove(Move move) {
+	protected void makeEPMove(Move move) {
 		long fromBB = getBitboard(move.getFrom());
 		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
@@ -974,6 +1312,15 @@ public class Game implements GameConstants {
 		setEpSquare(EMPTY_SQUARE);
 	}
 
+	/**
+	 * Makes the specified move in LAN, long algebraic notation.
+	 * 
+	 * @param lan
+	 *            The move in LAN.
+	 * @return The move made.
+	 * @throws IllegalArgumentException
+	 *             Thrown if the move was invalid.
+	 */
 	public Move makeLanMove(String lan) throws IllegalArgumentException {
 		Move move = null;
 
@@ -996,6 +1343,17 @@ public class Game implements GameConstants {
 		return move;
 	}
 
+	/**
+	 * Makes a move using the start/end square.
+	 * 
+	 * @param startSquare
+	 *            The start square.
+	 * @param endSquare
+	 *            The end square.
+	 * @return The move made.
+	 * @throws IllegalArgumentException
+	 *             Thrown if the move is illegal.
+	 */
 	public Move makeMove(int startSquare, int endSquare)
 			throws IllegalArgumentException {
 		Move move = null;
@@ -1011,8 +1369,9 @@ public class Game implements GameConstants {
 		}
 
 		if (move == null) {
-			throw new IllegalArgumentException("Invalid move: " + startSquare
-					+ " " + endSquare + " \n" + toString());
+			throw new IllegalArgumentException("Invalid move: "
+					+ GameUtils.getSan(startSquare) + " "
+					+ GameUtils.getSan(endSquare) + " \n" + toString());
 		} else {
 			forceMove(move);
 		}
@@ -1020,6 +1379,21 @@ public class Game implements GameConstants {
 		return move;
 	}
 
+	/**
+	 * Makes a move using the start/end square and the specified promotion
+	 * piece.
+	 * 
+	 * @param startSquare
+	 *            The start square.
+	 * @param endSquare
+	 *            The end square.
+	 * @param promotionPiece
+	 *            The non colored piece constant representing the promoted
+	 *            piece.
+	 * @return The move made.
+	 * @throws IllegalArgumentException
+	 *             Thrown if the move is illegal.
+	 */
 	public Move makeMove(int startSquare, int endSquare, int promotePiece)
 			throws IllegalArgumentException {
 		Move move = null;
@@ -1036,8 +1410,11 @@ public class Game implements GameConstants {
 		}
 
 		if (move == null) {
-			throw new IllegalArgumentException("Invalid move: " + startSquare
-					+ " " + endSquare + " \n" + toString());
+			throw new IllegalArgumentException("Invalid move: "
+					+ GameUtils.getSan(startSquare) + "-"
+					+ GameUtils.getSan(endSquare) + "="
+					+ GameConstants.PIECE_TO_SAN.charAt(promotePiece) + "\n"
+					+ toString());
 		} else {
 			forceMove(move);
 		}
@@ -1045,7 +1422,7 @@ public class Game implements GameConstants {
 		return move;
 	}
 
-	public void makeNonEpNonCastlingMove(Move move) {
+	protected void makeNonEpNonCastlingMove(Move move) {
 		long fromBB = getBitboard(move.getFrom());
 		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
@@ -1113,6 +1490,15 @@ public class Game implements GameConstants {
 		setEpSquare(move.getEpSquare());
 	}
 
+	/**
+	 * Makes a move given SAN, short algebraic notation.
+	 * 
+	 * @param shortAlgebraic
+	 *            The move in SAN.
+	 * @return THe move made.
+	 * @throws IllegalArgumentException
+	 *             Thrown if the move was invalid.
+	 */
 	public Move makeSanMove(String shortAlgebraic)
 			throws IllegalArgumentException {
 		SanValidations validations = SanUtil.getValidations(shortAlgebraic);
@@ -1347,6 +1733,13 @@ public class Game implements GameConstants {
 		return result;
 	}
 
+	/**
+	 * Makes a move. If the move is illegal false is returned.
+	 * 
+	 * @param move
+	 *            The move to make.
+	 * @return true if the move was legal, false otherwise.
+	 */
 	public boolean move(Move move) {
 		// first make the move.
 		forceMove(move);
@@ -1358,11 +1751,11 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Rolls back (undoes) a move.
+	 * Rolls back the last move made.
 	 */
 	public void rollback() {
 
-		Move move = getMoves().removeLast();
+		Move move = getMoveList().removeLast();
 		decrementRepCount();
 
 		switch (move.getMoveCharacteristic()) {
@@ -1393,7 +1786,7 @@ public class Game implements GameConstants {
 		updateZobristHash();
 	}
 
-	public void rollbackCastlingMove(Move move) {
+	protected void rollbackCastlingMove(Move move) {
 		long kingFromBB, kingToBB, rookFromBB, rookToBB;
 
 		if (move.getColor() == WHITE) {
@@ -1446,7 +1839,7 @@ public class Game implements GameConstants {
 		setEpSquareFromPreviousMove();
 	}
 
-	public void rollbackEpMove(Move move) {
+	protected void rollbackEpMove(Move move) {
 		int oppositeColor = getOppositeColor(getColorToMove());
 		long fromBB = getBitboard(move.getFrom());
 		long toBB = getBitboard(move.getTo());
@@ -1472,7 +1865,7 @@ public class Game implements GameConstants {
 		setEpSquareFromPreviousMove();
 	}
 
-	public void rollbackNonEpNonCastlingMove(Move move) {
+	protected void rollbackNonEpNonCastlingMove(Move move) {
 		int oppositeColor = getOppositeColor(move.getColor());
 		long fromBB = getBitboard(move.getFrom());
 		long toBB = getBitboard(move.getTo());
@@ -1557,22 +1950,53 @@ public class Game implements GameConstants {
 		this.blackRemainingTimeMillis = blackTimeMillis;
 	}
 
+	/**
+	 * Sets the positionStates board. This does NOT update any bitboards. Use
+	 * with care.
+	 * 
+	 * @param board
+	 *            The positiosn board.
+	 */
 	public void setBoard(int[] board) {
 		this.positionState.board = board;
 	}
 
+	/**
+	 * Sets the castling state for the specified color.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param castling
+	 *            The new castling state constant.
+	 */
 	public void setCastling(int color, int castling) {
 		this.positionState.castling[color] = castling;
 	}
 
+	/**
+	 * Sets the color bitboard for a specified color. This bitboard contains 1s
+	 * on all of the squares that contain the specified colors pieces.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param bb
+	 *            The new bitboard.
+	 */
 	public void setColorBB(int color, long bb) {
 		positionState.colorBB[color] = bb;
 	}
 
+	/**
+	 * Sets the color to move. WHITE or BLACK.
+	 */
 	public void setColorToMove(int color) {
 		this.positionState.colorToMove = color;
 	}
 
+	/**
+	 * Sets the drop count of the specified piece. This is useful for droppable
+	 * games like bughouse and crazyhouse.
+	 */
 	public void setDropCount(int color, int piece, int count) {
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
@@ -1580,33 +2004,54 @@ public class Game implements GameConstants {
 		positionState.pieceCounts[color][piece] = count;
 	}
 
+	/**
+	 * Sets the empty bitboard. This is the bitboard with 1s in all of the empty
+	 * squares.
+	 */
 	public void setEmptyBB(long emptyBB) {
 		positionState.emptyBB = emptyBB;
 	}
 
+	/**
+	 * Sets the EP square. This is the move of the last double pawn push. Can be
+	 * EMPTY.
+	 */
 	public void setEpSquare(int epSquare) {
 		positionState.epSquare = epSquare;
 	}
 
-	public void setEpSquareFromPreviousMove() {
-		switch (getMoves().getSize()) {
+	protected void setEpSquareFromPreviousMove() {
+		switch (getMoveList().getSize()) {
 		case 0:
 			setEpSquare(getInitialEpSquare());
 			break;
 		default:
-			setEpSquare(getMoves().getLast().getEpSquare());
+			setEpSquare(getMoveList().getLast().getEpSquare());
 			break;
 		}
 	}
 
+	/**
+	 * Sets the games event. Intended to be used with PGN headers when going
+	 * from/to PGN.
+	 */
 	public void setEvent(String event) {
 		this.event = event;
 	}
 
+	/**
+	 * Returns the current 50 move count. This is the count since the last
+	 * non-reversible move. This count is used to determine the 50 move draw
+	 * rule.
+	 */
 	public void setFiftyMoveCount(int fiftyMoveCount) {
 		this.positionState.fiftyMoveCount = fiftyMoveCount;
 	}
 
+	/**
+	 * Sets the games description. Intended to be used with PGN headers when
+	 * going from/to PGN.
+	 */
 	public void setGameDescription(String gameDescription) {
 		this.gameDescription = gameDescription;
 	}
@@ -1620,6 +2065,9 @@ public class Game implements GameConstants {
 		this.positionState.halfMoveCount = halfMoveCount;
 	}
 
+	/**
+	 * Sets the games id.
+	 */
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -1642,6 +2090,11 @@ public class Game implements GameConstants {
 		this.initialBlackTimeMillis = initialBlackTimeMillis;
 	}
 
+	/**
+	 * Returns the initial ep square used to create this game. This is useful
+	 * when rolling back the first move. The ep square is the square of the last
+	 * double pawn push. Can be EMPTY.
+	 */
 	public void setInitialEpSquare(int initialEpSquare) {
 		positionState.initialEpSquare = initialEpSquare;
 	}
@@ -1664,34 +2117,93 @@ public class Game implements GameConstants {
 		this.initialWhiteTimeMillis = initialWhiteTimeMillis;
 	}
 
+	/**
+	 * Sets the not color to move bitboard to the specified bitboard. This is a
+	 * bitmap containing the negation of the bitmap containing 1s where all of
+	 * the color to moves pieces are location.
+	 * 
+	 * @param notColorToMoveBB
+	 */
 	public void setNotColorToMoveBB(long notColorToMoveBB) {
 		this.positionState.notColorToMoveBB = notColorToMoveBB;
 	}
 
+	/**
+	 * Sets the occupied bitboard. This is the bitboard with all of the occupied
+	 * squares set to 1.
+	 * 
+	 * @param occupiedBB
+	 *            The occupied bitboard.
+	 */
 	public void setOccupiedBB(long occupiedBB) {
 		positionState.occupiedBB = occupiedBB;
 	}
 
+	/**
+	 * Sets a piece at a specified square. This only updated the
+	 * positionState.board object and does NOT update the bitmaps.
+	 * 
+	 * @param square
+	 *            The square.
+	 * @param piece
+	 *            The un-colored piece constant.
+	 */
 	public void setPiece(int square, int piece) {
 		positionState.board[square] = piece;
 	}
 
+	/**
+	 * Sets the piece bitboard to the specified bitboard.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The un-colored piece constant.
+	 * @param bb
+	 *            The new bitboard.
+	 */
 	public void setPieceBB(int color, int piece, long bb) {
 		positionState.pieceBB[color][piece] = bb;
 	}
 
+	/**
+	 * Sets the piece count for the specified piece. This method handles
+	 * un-masking the piece so its ok to pass in promotion masked pieces.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The un-colored piece constant.
+	 * @param count
+	 *            The new piece count.
+	 */
 	public void setPieceCount(int color, int piece, int count) {
 		positionState.pieceCounts[color][piece & NOT_PROMOTED_MASK] = count;
 	}
 
+	/**
+	 * Sets the games state object. Should obviously be used with care.
+	 */
 	public void setPositionState(PositionState positionState) {
 		this.positionState = positionState;
 	}
 
-	public void setResult(int result) {
+	/**
+	 * Sets the result to one of the result constants.
+	 * 
+	 * @param result
+	 *            The result.
+	 */
+	public void setResult(Result result) {
 		this.result = result;
 	}
 
+	/**
+	 * Sets the result description.
+	 * 
+	 * @param resultDescription
+	 *            THe result description.
+	 */
 	public void setResultDescription(String resultDescription) {
 		this.resultDescription = resultDescription;
 	}
@@ -1845,23 +2357,45 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * Sets whether or not the game is updating SAN, short algebraic notation,
+	 * on moves produced. This is an expensive operation and should probably be
+	 * avoided in chess engines.
+	 * 
+	 * @param isSettingMoveSan
+	 *            True if the game should set SAN notation, false otherwise.
+	 */
 	public void setSettingMoveSan(boolean isSettingMoveSan) {
 		this.isSettingMoveSan = isSettingMoveSan;
 	}
 
+	/**
+	 * Returns the site the game was played at. This is added so its easy to
+	 * parse to/from PGN.
+	 */
 	public void setSite(String site) {
 		this.site = site;
 	}
 
+	/**
+	 * Sets the time in milliseconds the game was created. This is added so its
+	 * easy to parse to/from PGN.
+	 */
 	public void setStartTime(long startTime) {
 		this.startTime = startTime;
 	}
 
-	public void setState(int state) {
+	protected void setState(int state) {
 		this.state = state;
 	}
 
-	public void setType(int type) {
+	/**
+	 * Sets the game type to one of the game type constants.
+	 * 
+	 * @param type
+	 *            The games type.
+	 */
+	public void setType(Type type) {
 		this.type = type;
 	}
 
@@ -1904,8 +2438,14 @@ public class Game implements GameConstants {
 		positionState.zobristPositionHash = hash;
 	}
 
-	// rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+	/**
+	 * Returns the FEN, Forsyth Edwards notation, of the game.
+	 * 
+	 * @return The games position in FEN.
+	 */
 	public String toFEN() {
+		// rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+
 		StringBuilder result = new StringBuilder(77);
 		for (int j = 7; j > -1; j--) {
 			int consecutiveEmpty = 0;
@@ -1943,7 +2483,8 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Use with care expensive operation.
+	 * Returns a dump of the game class suitable for debugging. Quite a lot of
+	 * information is produced and its an expensive operation, use with care.
 	 */
 	@Override
 	public String toString() {
@@ -1972,7 +2513,7 @@ public class Game implements GameConstants {
 				getPieceBB(BLACK, QUEEN), getPieceBB(BLACK, KING) })
 				+ "\n\n");
 
-		result.append("FEN=" + toFEN());
+		result.append("FEN=" + toFEN() + "\n\n");
 
 		String legalMovesString = Arrays.toString(getLegalMoves().asArray());
 		// "DISABLED";
@@ -2062,6 +2603,12 @@ public class Game implements GameConstants {
 		return result.toString();
 	}
 
+	/**
+	 * Returns string representation of the current game suitable for displaying
+	 * to a user.
+	 * 
+	 * @return A string representation of the current game.
+	 */
 	public String toUserString() {
 		StringBuilder result = new StringBuilder(1000);
 
@@ -2139,7 +2686,7 @@ public class Game implements GameConstants {
 		return result.toString();
 	}
 
-	void updateZobristEP(Move move, int captureSquare) {
+	protected void updateZobristEP(Move move, int captureSquare) {
 		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
 				.getColor(), PAWN, move.getFrom())
 				^ ZobristHash.zobrist(move.getColor(), PAWN, move.getTo())
@@ -2147,13 +2694,13 @@ public class Game implements GameConstants {
 						captureSquare);
 	}
 
-	void updateZobristHash() {
+	protected void updateZobristHash() {
 		positionState.zobristGameHash = positionState.zobristPositionHash
 				^ ZobristHash.zobrist(getColorToMove(), getEpSquare(),
 						getCastling(WHITE), getCastling(BLACK));
 	}
 
-	void updateZobristPOCapture(Move move, int oppositeColor) {
+	protected void updateZobristPOCapture(Move move, int oppositeColor) {
 		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
 				.getColor(), move.isPromotion() ? move.getPiecePromotedTo()
 				& NOT_PROMOTED_MASK : move.getPiece() & NOT_PROMOTED_MASK, move
@@ -2164,7 +2711,7 @@ public class Game implements GameConstants {
 						& NOT_PROMOTED_MASK, move.getFrom());
 	}
 
-	void updateZobristPOCastleKsideBlack() {
+	protected void updateZobristPOCastleKsideBlack() {
 		positionState.zobristPositionHash ^= ZobristHash.zobrist(BLACK, KING,
 				SQUARE_E8)
 				^ ZobristHash.zobrist(BLACK, KING, SQUARE_G8)
@@ -2172,7 +2719,7 @@ public class Game implements GameConstants {
 				^ ZobristHash.zobrist(BLACK, ROOK, SQUARE_F8);
 	}
 
-	void updateZobristPOCastleKsideWhite() {
+	protected void updateZobristPOCastleKsideWhite() {
 		positionState.zobristPositionHash ^= ZobristHash.zobrist(WHITE, KING,
 				SQUARE_E1)
 				^ ZobristHash.zobrist(WHITE, KING, SQUARE_G1)
@@ -2180,7 +2727,7 @@ public class Game implements GameConstants {
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_F1);
 	}
 
-	void updateZobristPOCastleQsideBlack() {
+	protected void updateZobristPOCastleQsideBlack() {
 		positionState.zobristPositionHash ^= ZobristHash.zobrist(BLACK, KING,
 				SQUARE_E8)
 				^ ZobristHash.zobrist(BLACK, KING, SQUARE_C8)
@@ -2188,7 +2735,7 @@ public class Game implements GameConstants {
 				^ ZobristHash.zobrist(BLACK, ROOK, SQUARE_D8);
 	}
 
-	void updateZobristPOCastleQsideWhite() {
+	protected void updateZobristPOCastleQsideWhite() {
 		positionState.zobristPositionHash ^= ZobristHash.zobrist(WHITE, KING,
 				SQUARE_E1)
 				^ ZobristHash.zobrist(WHITE, KING, SQUARE_C1)
@@ -2196,7 +2743,7 @@ public class Game implements GameConstants {
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_D1);
 	}
 
-	void updateZobristPONoCapture(Move move, int oppositeColor) {
+	protected void updateZobristPONoCapture(Move move, int oppositeColor) {
 		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
 				.getColor(), move.isPromotion() ? move.getPiecePromotedTo()
 				& NOT_PROMOTED_MASK : move.getPiece() & NOT_PROMOTED_MASK, move
@@ -2205,10 +2752,30 @@ public class Game implements GameConstants {
 						& NOT_PROMOTED_MASK, move.getFrom());
 	}
 
+	/**
+	 * Exclusive bitwise ors the games piece bitboard with the specified
+	 * bitboard.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The non-colored piece type.
+	 * @param bb
+	 *            The bitmap to XOR.
+	 */
 	public void xor(int color, int piece, long bb) {
 		positionState.pieceBB[color][piece] ^= bb;
 	}
 
+	/**
+	 * Exclusive bitwise ors the games color bitboard with the specified
+	 * bitboard.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param bb
+	 *            The bitmap to XOR.
+	 */
 	public void xor(int color, long bb) {
 		positionState.colorBB[color] ^= bb;
 	}
