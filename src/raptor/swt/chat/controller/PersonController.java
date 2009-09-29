@@ -29,6 +29,10 @@ public class PersonController extends ChatConsoleController {
 
 	@Override
 	public String getPrependText() {
+		if (this.isIgnoringActions()) {
+			return "";
+		}
+
 		String prependText = "";
 
 		Button prependButton = chatConsole

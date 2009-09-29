@@ -25,6 +25,11 @@ public class PartnerTellController extends ChatConsoleController {
 
 	@Override
 	public String getPrependText() {
+		if (isIgnoringActions()) {
+			return "";
+		}
+
+		
 		String prependText = "";
 
 		Button prependButton = chatConsole

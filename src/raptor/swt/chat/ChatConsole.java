@@ -180,15 +180,24 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 
 	@Override
 	public void dispose() {
-		Raptor.getInstance().getPreferences().removePropertyChangeListener(
-				propertyChangeListener);
+		if (propertyChangeListener != null) {
+			Raptor.getInstance().getPreferences().removePropertyChangeListener(
+					propertyChangeListener);
+			propertyChangeListener = null;
+		}
 		if (controller != null) {
 			controller.dispose();
 		}
-		buttonMap.clear();
+		if (buttonMap != null) {
+			buttonMap.clear();
+			buttonMap = null;
+		}
 
 		LOG.info("Disposed chat console.");
-		super.dispose();
+
+		if (!isDisposed()) {
+			super.dispose();
+		}
 	}
 
 	public Button getButton(String button) {

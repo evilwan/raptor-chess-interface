@@ -56,8 +56,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected boolean isBeingReparented;
 	protected ChatListener chatServiceListener = new ChatListener() {
 		public void chatEventOccured(final ChatEvent event) {
-			if (!chatConsole.isDisposed()) {
-				if (!isBeingReparented()) {
+			if (chatConsole != null && !chatConsole.isDisposed()) {
+				if (!isBeingReparented) {
 					chatConsole.getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							try {
@@ -87,31 +87,34 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected KeyListener inputTextKeyListener = new KeyAdapter() {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			if (!isBeingReparented()) {
-				if (arg0.character == '\r') {
-					onSendOutputText();
-					chatConsole.outputText.forceFocus();
-					chatConsole.outputText.setSelection(chatConsole.outputText
-							.getCharCount());
-				} else if (FicsUtils.LEGAL_CHARACTERS.indexOf(arg0.character) != -1
-						&& arg0.stateMask == 0) {
-					onAppendOutputText("" + arg0.character);
-				} else {
-					chatConsole.outputText.forceFocus();
-					chatConsole.outputText.setSelection(chatConsole.outputText
-							.getCharCount());
-				}
+			if (isIgnoringActions()) {
+				return;
 			}
+			if (arg0.character == '\r') {
+				onSendOutputText();
+				chatConsole.outputText.forceFocus();
+				chatConsole.outputText.setSelection(chatConsole.outputText
+						.getCharCount());
+			} else if (FicsUtils.LEGAL_CHARACTERS.indexOf(arg0.character) != -1
+					&& arg0.stateMask == 0) {
+				onAppendOutputText("" + arg0.character);
+			} else {
+				chatConsole.outputText.forceFocus();
+				chatConsole.outputText.setSelection(chatConsole.outputText
+						.getCharCount());
+			}
+
 		}
 	};
 
 	protected KeyListener outputKeyListener = new KeyAdapter() {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			if (!isBeingReparented()) {
-				if (arg0.character == '\r') {
-					onSendOutputText();
-				}
+			if (isIgnoringActions()) {
+				return;
+			}
+			if (arg0.character == '\r') {
+				onSendOutputText();
 			}
 		}
 	};
@@ -122,209 +125,215 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			if (!isBeingReparented()) {
-				if (arg0.keyCode == SWT.ARROW_UP) {
-					System.err.println("In outputHistoryListener arrow up");
+			if (isIgnoringActions()) {
+				return;
+			}
+			if (arg0.keyCode == SWT.ARROW_UP) {
+				System.err.println("In outputHistoryListener arrow up");
 
-					if (sentTextIndex >= 0) {
-						if (sentTextIndex > 0) {
-							sentTextIndex--;
-						}
-						if (!sentText.isEmpty()) {
-							chatConsole.outputText.setText(sentText
-									.get(sentTextIndex));
-							chatConsole.outputText
-									.setSelection(chatConsole.inputText
-											.getCharCount() + 1);
-						}
+				if (sentTextIndex >= 0) {
+					if (sentTextIndex > 0) {
+						sentTextIndex--;
 					}
-				} else if (arg0.keyCode == SWT.ARROW_DOWN) {
-					System.err.println("In outputHistoryListener arrow down");
-
-					if (sentTextIndex < sentText.size() - 1) {
-						sentTextIndex++;
+					if (!sentText.isEmpty()) {
 						chatConsole.outputText.setText(sentText
 								.get(sentTextIndex));
 						chatConsole.outputText
 								.setSelection(chatConsole.inputText
 										.getCharCount() + 1);
-					} else {
-						chatConsole.outputText.setText("");
 					}
-				} else if (arg0.character == '\r') {
-					System.err.println("In outputHistoryListener CR");
-
-					if (sentText.size() > 50) {
-						sentText.remove(0);
-					}
-					sentText.add(chatConsole.outputText.getText().substring(0,
-							chatConsole.outputText.getText().length()));
-					sentTextIndex = sentText.size() - 1;
 				}
+			} else if (arg0.keyCode == SWT.ARROW_DOWN) {
+				System.err.println("In outputHistoryListener arrow down");
+
+				if (sentTextIndex < sentText.size() - 1) {
+					sentTextIndex++;
+					chatConsole.outputText.setText(sentText.get(sentTextIndex));
+					chatConsole.outputText.setSelection(chatConsole.inputText
+							.getCharCount() + 1);
+				} else {
+					chatConsole.outputText.setText("");
+				}
+			} else if (arg0.character == '\r') {
+				System.err.println("In outputHistoryListener CR");
+
+				if (sentText.size() > 50) {
+					sentText.remove(0);
+				}
+				sentText.add(chatConsole.outputText.getText().substring(0,
+						chatConsole.outputText.getText().length()));
+				sentTextIndex = sentText.size() - 1;
 			}
 		}
+
 	};
 
 	protected KeyListener functionKeyListener = new KeyAdapter() {
 		@Override
 		public void keyReleased(KeyEvent arg0) {
-			if (!isBeingReparented()) {
-				if (arg0.keyCode == SWT.F3) {
-					connector.onAcceptKeyPress();
-				} else if (arg0.keyCode == SWT.F4) {
-					connector.onDeclineKeyPress();
-				} else if (arg0.keyCode == SWT.F6) {
-					connector.onAbortKeyPress();
-				} else if (arg0.keyCode == SWT.F7) {
-					connector.onRematchKeyPress();
-				} else if (arg0.keyCode == SWT.F9) {
-					if (sourceOfLastTellReceived != null) {
-						chatConsole.outputText.setText(connector
-								.getTellToString(sourceOfLastTellReceived));
-						chatConsole.outputText
-								.setSelection(chatConsole.outputText
-										.getCharCount() + 1);
-					}
+			if (isIgnoringActions()) {
+				return;
+			}
+			if (arg0.keyCode == SWT.F3) {
+				connector.onAcceptKeyPress();
+			} else if (arg0.keyCode == SWT.F4) {
+				connector.onDeclineKeyPress();
+			} else if (arg0.keyCode == SWT.F6) {
+				connector.onAbortKeyPress();
+			} else if (arg0.keyCode == SWT.F7) {
+				connector.onRematchKeyPress();
+			} else if (arg0.keyCode == SWT.F9) {
+				if (sourceOfLastTellReceived != null) {
+					chatConsole.outputText.setText(connector
+							.getTellToString(sourceOfLastTellReceived));
+					chatConsole.outputText.setSelection(chatConsole.outputText
+							.getCharCount() + 1);
 				}
 			}
 		}
+
 	};
 
 	protected MouseListener inputTextClickListener = new MouseAdapter() {
 
 		@Override
 		public void mouseUp(MouseEvent e) {
-			if (!isBeingReparented()) {
-				if (e.button == 1) {
-					int caretPosition = chatConsole.inputText.getCaretOffset();
+			if (isIgnoringActions()) {
+				return;
+			}
+			if (e.button == 1) {
+				int caretPosition = chatConsole.inputText.getCaretOffset();
 
-					String url = ChatUtils.getUrl(chatConsole.inputText,
-							caretPosition);
-					if (url != null) {
-						LaunchBrowser.openURL(url);
-						return;
-					}
-
-					String quotedText = ChatUtils.getQuotedText(
-							chatConsole.inputText, caretPosition);
-					if (quotedText != null) {
-						connector.sendMessage(quotedText);
-						return;
-					}
-
+				String url = ChatUtils.getUrl(chatConsole.inputText,
+						caretPosition);
+				if (url != null) {
+					LaunchBrowser.openURL(url);
+					return;
 				}
-				if (e.button == 3) {
-					int carePosition = chatConsole.inputText
+
+				String quotedText = ChatUtils.getQuotedText(
+						chatConsole.inputText, caretPosition);
+				if (quotedText != null) {
+					connector.sendMessage(quotedText);
+					return;
+				}
+
+			}
+			if (e.button == 3) {
+				int caretPosition = 0;
+				try {
+					caretPosition = chatConsole.inputText
 							.getOffsetAtLocation(new Point(e.x, e.y));
-
-					String word = ChatUtils.getWord(chatConsole.inputText,
-							carePosition);
-
-					Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
-
-					// TO DO: move this down into the connector.
-					if (connector.isLikelyPerson(word)) {
-						final String person = connector.parsePerson(word);
-						MenuItem item = new MenuItem(menu, SWT.PUSH);
-						item.setText("Add a tab for person: " + person);
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-										new PersonController(connector, person));
-								Raptor.getInstance().getRaptorWindow()
-										.addRaptorWindowItem(windowItem, true);
-								ChatUtils
-										.appendPreviousChatsToController(windowItem.console);
-							}
-						});
-
-						final String[][] connectorPersonItems = connector
-								.getPersonActions(person);
-						if (connectorPersonItems != null) {
-							for (int i = 0; i < connectorPersonItems.length; i++) {
-								item = new MenuItem(menu, SWT.PUSH);
-								item.setText(connectorPersonItems[i][0]);
-								final int index = i;
-								item.addListener(SWT.Selection, new Listener() {
-									public void handleEvent(Event e) {
-										connector
-												.sendMessage(connectorPersonItems[index][1]);
-									}
-								});
-							}
-						}
-					}
-					if (connector.isLikelyChannel(word)) {
-						MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
-						final String channel = connector.parseChannel(word);
-
-						item = new MenuItem(menu, SWT.PUSH);
-						item.setText("Add a tab for channel: " + channel);
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-										new ChannelController(connector,
-												channel));
-								Raptor.getInstance().getRaptorWindow()
-										.addRaptorWindowItem(windowItem, true);
-								ChatUtils
-										.appendPreviousChatsToController(windowItem.console);
-							}
-						});
-
-						final String[][] connectorChannelItems = connector
-								.getChannelActions(channel);
-						if (connectorChannelItems != null) {
-							for (int i = 0; i < connectorChannelItems.length; i++) {
-								item = new MenuItem(menu, SWT.PUSH);
-								item.setText(connectorChannelItems[i][0]);
-								final int index = i;
-								item.addListener(SWT.Selection, new Listener() {
-									public void handleEvent(Event e) {
-										connector
-												.sendMessage(connectorChannelItems[index][1]);
-									}
-								});
-							}
-						}
-					}
-					if (connector.isLikelyGameId(word)) {
-						MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
-						String gameId = connector.parseGameId(word);
-
-						final String[][] gameIdItems = connector
-								.getGameIdActions(gameId);
-						if (gameIdItems != null) {
-							for (int i = 0; i < gameIdItems.length; i++) {
-								item = new MenuItem(menu, SWT.PUSH);
-								item.setText(gameIdItems[i][0]);
-								final int index = i;
-								item.addListener(SWT.Selection, new Listener() {
-									public void handleEvent(Event e) {
-										connector
-												.sendMessage(gameIdItems[index][1]);
-									}
-								});
-							}
-						}
-					}
-
-					if (menu.getItemCount() > 0) {
-						LOG.debug("Showing popup with " + menu.getItemCount()
-								+ " items. "
-								+ chatConsole.inputText.toDisplay(e.x, e.y));
-						menu.setLocation(chatConsole.inputText.toDisplay(e.x,
-								e.y));
-						menu.setVisible(true);
-						while (!menu.isDisposed() && menu.isVisible()) {
-							if (!chatConsole.getDisplay().readAndDispatch())
-								chatConsole.getDisplay().sleep();
-						}
-					}
-					menu.dispose();
+				} catch (IllegalArgumentException iae) {
+					return;
 				}
+
+				String word = ChatUtils.getWord(chatConsole.inputText,
+						caretPosition);
+
+				Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
+
+				// TO DO: move this down into the connector.
+				if (connector.isLikelyPerson(word)) {
+					final String person = connector.parsePerson(word);
+					MenuItem item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Add a tab for person: " + person);
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+									new PersonController(connector, person));
+							Raptor.getInstance().getRaptorWindow()
+									.addRaptorWindowItem(windowItem, true);
+							ChatUtils
+									.appendPreviousChatsToController(windowItem.console);
+						}
+					});
+
+					final String[][] connectorPersonItems = connector
+							.getPersonActions(person);
+					if (connectorPersonItems != null) {
+						for (int i = 0; i < connectorPersonItems.length; i++) {
+							item = new MenuItem(menu, SWT.PUSH);
+							item.setText(connectorPersonItems[i][0]);
+							final int index = i;
+							item.addListener(SWT.Selection, new Listener() {
+								public void handleEvent(Event e) {
+									connector
+											.sendMessage(connectorPersonItems[index][1]);
+								}
+							});
+						}
+					}
+				}
+				if (connector.isLikelyChannel(word)) {
+					MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
+					final String channel = connector.parseChannel(word);
+
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Add a tab for channel: " + channel);
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+									new ChannelController(connector, channel));
+							Raptor.getInstance().getRaptorWindow()
+									.addRaptorWindowItem(windowItem, true);
+							ChatUtils
+									.appendPreviousChatsToController(windowItem.console);
+						}
+					});
+
+					final String[][] connectorChannelItems = connector
+							.getChannelActions(channel);
+					if (connectorChannelItems != null) {
+						for (int i = 0; i < connectorChannelItems.length; i++) {
+							item = new MenuItem(menu, SWT.PUSH);
+							item.setText(connectorChannelItems[i][0]);
+							final int index = i;
+							item.addListener(SWT.Selection, new Listener() {
+								public void handleEvent(Event e) {
+									connector
+											.sendMessage(connectorChannelItems[index][1]);
+								}
+							});
+						}
+					}
+				}
+				if (connector.isLikelyGameId(word)) {
+					MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
+					String gameId = connector.parseGameId(word);
+
+					final String[][] gameIdItems = connector
+							.getGameIdActions(gameId);
+					if (gameIdItems != null) {
+						for (int i = 0; i < gameIdItems.length; i++) {
+							item = new MenuItem(menu, SWT.PUSH);
+							item.setText(gameIdItems[i][0]);
+							final int index = i;
+							item.addListener(SWT.Selection, new Listener() {
+								public void handleEvent(Event e) {
+									connector
+											.sendMessage(gameIdItems[index][1]);
+								}
+							});
+						}
+					}
+				}
+
+				if (menu.getItemCount() > 0) {
+					LOG.debug("Showing popup with " + menu.getItemCount()
+							+ " items. "
+							+ chatConsole.inputText.toDisplay(e.x, e.y));
+					menu.setLocation(chatConsole.inputText.toDisplay(e.x, e.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!chatConsole.getDisplay().readAndDispatch())
+							chatConsole.getDisplay().sleep();
+					}
+				}
+				menu.dispose();
 			}
 		}
+
 	};
 
 	protected boolean isSoundDisabled = false;
@@ -334,7 +343,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void addInputTextKeyListeners() {
-		if (!isBeingReparented()) {
+		if (!isIgnoringActions()) {
 			chatConsole.outputText.addKeyListener(functionKeyListener);
 			chatConsole.outputText.addKeyListener(outputHistoryListener);
 			chatConsole.outputText.addKeyListener(outputKeyListener);
@@ -350,13 +359,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void addMouseListeners() {
-		if (!isBeingReparented()) {
+		if (!isIgnoringActions()) {
 			chatConsole.inputText.addMouseListener(inputTextClickListener);
 		}
 	}
 
 	protected void adjustAwayButtonEnabled() {
-		if (!isBeingReparented()) {
+		if (!isIgnoringActions()) {
 			chatConsole.setButtonEnabled(!awayList.isEmpty(),
 					ChatConsole.AWAY_BUTTON);
 		}
@@ -647,9 +656,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public abstract boolean isAwayable();
 
-	public boolean isBeingReparented() {
+	public boolean isIgnoringActions() {
 		boolean result = false;
-		if (isBeingReparented) {
+		if (isBeingReparented || chatConsole == null
+				|| chatConsole.isDisposed()) {
 			LOG
 					.debug(
 							"isBeingReparented invoked. The exception is thrown just to debug the stack trace.",
@@ -771,7 +781,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		if (isAcceptingChatEvent(event)) {
 			onAppendChatEventToInputText(event);
-			if (!isBeingReparented()) {
+			if (!isIgnoringActions()) {
 				playSounds(event);
 			}
 		}
@@ -788,6 +798,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onForceAutoScroll() {
+		if (this.isIgnoringActions()) {
+			return;
+		}
 
 		chatConsole.inputText.setCaretOffset(chatConsole.inputText
 				.getCharCount());
@@ -827,56 +840,57 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onSave() {
-		if (!isBeingReparented()) {
-			FileDialog fd = new FileDialog(chatConsole.getShell(), SWT.SAVE);
-			fd.setText("Save Console Output.");
-			fd.setFilterPath("");
-			String[] filterExt = { "*.txt", "*.*" };
-			fd.setFilterExtensions(filterExt);
-			final String selected = fd.open();
+		if (isIgnoringActions()) {
+			return;
+		}
+		FileDialog fd = new FileDialog(chatConsole.getShell(), SWT.SAVE);
+		fd.setText("Save Console Output.");
+		fd.setFilterPath("");
+		String[] filterExt = { "*.txt", "*.*" };
+		fd.setFilterExtensions(filterExt);
+		final String selected = fd.open();
 
-			if (selected != null) {
-				chatConsole.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						FileWriter writer = null;
-						try {
-							writer = new FileWriter(selected);
-							writer.append("Raptor console log created on "
-									+ new Date() + "\n");
-							int i = 0;
-							while (i < chatConsole.getInputText()
-									.getCharCount() - 1) {
-								int endIndex = i + TEXT_CHUNK_SIZE;
-								if (endIndex >= chatConsole.getInputText()
-										.getCharCount()) {
-									endIndex = i
-											+ (chatConsole.getInputText()
-													.getCharCount() - i) - 1;
-								}
-								String string = chatConsole.getInputText()
-										.getText(i, endIndex);
-								writer.append(string);
-								i = endIndex;
+		if (selected != null) {
+			chatConsole.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					FileWriter writer = null;
+					try {
+						writer = new FileWriter(selected);
+						writer.append("Raptor console log created on "
+								+ new Date() + "\n");
+						int i = 0;
+						while (i < chatConsole.getInputText().getCharCount() - 1) {
+							int endIndex = i + TEXT_CHUNK_SIZE;
+							if (endIndex >= chatConsole.getInputText()
+									.getCharCount()) {
+								endIndex = i
+										+ (chatConsole.getInputText()
+												.getCharCount() - i) - 1;
 							}
-							writer.flush();
-						} catch (Throwable t) {
-							LOG.error("Error writing file: " + selected, t);
-						} finally {
-							if (writer != null) {
-								try {
-									writer.close();
-								} catch (IOException ioe) {
-								}
+							String string = chatConsole.getInputText().getText(
+									i, endIndex);
+							writer.append(string);
+							i = endIndex;
+						}
+						writer.flush();
+					} catch (Throwable t) {
+						LOG.error("Error writing file: " + selected, t);
+					} finally {
+						if (writer != null) {
+							try {
+								writer.close();
+							} catch (IOException ioe) {
 							}
 						}
 					}
-				});
-			}
+				}
+			});
 		}
+
 	}
 
 	protected void onSearch() {
-		if (!isBeingReparented()) {
+		if (!isIgnoringActions()) {
 
 			chatConsole.getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -995,7 +1009,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void setCaretToOutputTextEnd() {
-		if (!isBeingReparented()) {
+		if (!isIgnoringActions()) {
 			chatConsole.outputText.forceFocus();
 			getChatConsole().getOutputText().setSelection(
 					getChatConsole().getOutputText().getCharCount());

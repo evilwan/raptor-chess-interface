@@ -32,7 +32,14 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	}
 
 	public void dispose() {
-		console.dispose();
+		if (console != null) {
+			console.dispose();
+			console = null;
+		}
+		if (controller != null) {
+			controller.dispose();
+			controller = null;
+		}
 	}
 
 	public Composite getControl() {
@@ -40,16 +47,17 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	}
 
 	public Image getImage() {
-		return controller.getIconImage();
+		return controller != null ? controller.getIconImage() : null;
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		return controller.getPreferredQuadrant();
+		return controller != null ? controller.getPreferredQuadrant()
+				: Quadrant.I;
 
 	}
 
 	public String getTitle() {
-		return controller.getTitle();
+		return controller != null ? controller.getTitle() : "ERROR";
 	}
 
 	public void init(Composite parent) {
@@ -61,40 +69,44 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	}
 
 	public boolean isCloseable() {
-		return controller.isCloseable();
+		return controller != null ? controller.isCloseable() : true;
 	}
 
 	public void onActivate() {
-		console.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				controller.onForceAutoScroll();
-			}
-		});
+		if (console != null && !console.isDisposed() && controller != null) {
+			console.getDisplay().syncExec(new Runnable() {
+				public void run() {
+					controller.onForceAutoScroll();
+					controller.chatConsole.outputText.forceFocus();
+				}
+			});
+		}
 	}
 
 	public void onPassivate() {
 	}
 
 	public void onReparent(Composite newParent) {
-		// Grab the controller from the console since it may have changed.
-		controller = console.getController();
-		controller.onPreReparent();
-		console.setController(null);
+		if (controller != null) {
+			// Grab the controller from the console since it may have changed.
+			controller = console.getController();
+			controller.onPreReparent();
+			console.setController(null);
+			console.dispose();
 
-		ChatConsole newConsole = new ChatConsole(newParent, SWT.NONE);
-		newConsole.setController(controller);
-		newConsole.createControls();
-		controller.setChatConsole(newConsole);
+			console = new ChatConsole(newParent, SWT.NONE);
+			console.setController(controller);
+			console.createControls();
+			controller.setChatConsole(console);
 
-		console.setVisible(false);
-		console.dispose();
-
-		controller.onPostReparent();
-		console = newConsole;
-		console.redraw();
+			controller.onPostReparent();
+			console.redraw();
+		}
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
-		controller.removeItemChangedListener(listener);
+		if (controller != null) {
+			controller.removeItemChangedListener(listener);
+		}
 	}
 }
