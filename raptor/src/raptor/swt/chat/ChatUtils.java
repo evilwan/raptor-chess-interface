@@ -11,13 +11,14 @@ public class ChatUtils {
 	public static void appendPreviousChatsToController(final ChatConsole console) {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
+				console.getController().setSoundDisabled(true);
 				console.getController().getConnector().getChatService()
 						.getChatLogger().parseFile(
 								new ChatEventParseListener() {
 
 									public void onNewEventParsed(
 											final ChatEvent event) {
-										console.getDisplay().asyncExec(
+										console.getDisplay().syncExec(
 												new Runnable() {
 													public void run() {
 														try {
@@ -38,6 +39,11 @@ public class ChatUtils {
 														}
 													}
 												});
+									}
+
+									public void onParseCompleted() {
+										console.getController()
+												.setSoundDisabled(false);
 									}
 								});
 			}

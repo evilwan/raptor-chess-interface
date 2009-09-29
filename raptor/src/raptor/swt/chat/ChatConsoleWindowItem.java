@@ -2,11 +2,13 @@ package raptor.swt.chat;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
+import raptor.swt.ItemChangedListener;
 
 public class ChatConsoleWindowItem implements RaptorWindowItem {
 	public static final int TEXT_BLOCK = 5000;
@@ -15,6 +17,10 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 
 	public ChatConsoleWindowItem(ChatConsoleController controller) {
 		this.controller = controller;
+	}
+
+	public void addItemChangedListener(ItemChangedListener listener) {
+		controller.addItemChangedListener(listener);
 	}
 
 	public boolean confirmReparenting() {
@@ -31,6 +37,10 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 
 	public Composite getControl() {
 		return console;
+	}
+
+	public Image getImage() {
+		return controller.getIconImage();
 	}
 
 	public Quadrant getPreferredQuadrant() {
@@ -84,4 +94,7 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 		console.redraw();
 	}
 
+	public void removeItemChangedListener(ItemChangedListener listener) {
+		controller.removeItemChangedListener(listener);
+	}
 }

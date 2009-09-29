@@ -3,8 +3,10 @@ package raptor;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageRegistry;
@@ -194,6 +196,45 @@ public class Raptor implements PreferenceKeys {
 		}
 	}
 
+	public void onError(final String error) {
+		getInstance().getRaptorWindow().getShell().getDisplay().asyncExec(
+				new Runnable() {
+					public void run() {
+						MessageDialog
+								.openError(
+										Raptor.getInstance().getRaptorWindow()
+												.getShell(),
+										"Error",
+										"Critical error occured! We are trying to make Raptor "
+												+ "bug free and we need your help! Please take a moment to report this "
+												+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
+												+ error);
+					}
+				});
+
+	}
+
+	public void onError(final String error, final Throwable throwable) {
+		getInstance().getRaptorWindow().getShell().getDisplay().asyncExec(
+				new Runnable() {
+					public void run() {
+						MessageDialog
+								.openError(
+										Raptor.getInstance().getRaptorWindow()
+												.getShell(),
+										"Error",
+										"Critical error occured! We are trying to make Raptor "
+												+ "bug free and we need your help! Please take a moment to report this "
+												+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
+												+ error
+												+ "\n"
+												+ ExceptionUtils
+														.getFullStackTrace(throwable));
+					}
+				});
+
+	}
+
 	public void shutdown() {
 		try {
 			ficsConnector.dispose();
@@ -213,4 +254,5 @@ public class Raptor implements PreferenceKeys {
 
 		LOG.info("Shutdown Raptor");
 	}
+
 }

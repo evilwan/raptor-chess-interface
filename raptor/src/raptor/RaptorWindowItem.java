@@ -1,6 +1,9 @@
 package raptor;
 
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+
+import raptor.swt.ItemChangedListener;
 
 /**
  * An interface defining a RaptorWindowItem. RaptorWindowItems support
@@ -8,6 +11,12 @@ import org.eclipse.swt.widgets.Composite;
  * 
  */
 public interface RaptorWindowItem {
+
+	/**
+	 * Adds an item changed listener. This listeners stateChanged method should
+	 * be invoked whenever the title,image, or closeable information changes.
+	 */
+	public void addItemChangedListener(ItemChangedListener listener);
 
 	/**
 	 * Returns true if the window can be reparented.
@@ -25,6 +34,12 @@ public interface RaptorWindowItem {
 	 * Returns the window items control.
 	 */
 	public Composite getControl();
+
+	/**
+	 * Returns an image to display to represent the window item. Returns null if
+	 * there is no image.
+	 */
+	public Image getImage();
 
 	/**
 	 * Returns the preferred quadrant the window item would like to be added to.
@@ -61,4 +76,9 @@ public interface RaptorWindowItem {
 	 * reparents the control to the new parent.
 	 */
 	public void onReparent(Composite newParent);
+
+	/**
+	 * Removes an item changed listener.
+	 */
+	public void removeItemChangedListener(ItemChangedListener listener);
 }

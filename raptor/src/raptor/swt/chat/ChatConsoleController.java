@@ -20,6 +20,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -39,6 +40,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
+import raptor.swt.ItemChangedListener;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.util.LaunchBrowser;
@@ -79,6 +81,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
 	protected List<ChatEvent> eventsWhileBeingReparented = Collections
 			.synchronizedList(new ArrayList<ChatEvent>(100));
+	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
+			5);
 
 	protected KeyListener inputTextKeyListener = new KeyAdapter() {
 		@Override
@@ -228,7 +232,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 										new PersonController(connector, person));
 								Raptor.getInstance().getRaptorWindow()
-										.addRaptorWindowItem(windowItem);
+										.addRaptorWindowItem(windowItem, true);
 								ChatUtils
 										.appendPreviousChatsToController(windowItem.console);
 							}
@@ -262,7 +266,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 										new ChannelController(connector,
 												channel));
 								Raptor.getInstance().getRaptorWindow()
-										.addRaptorWindowItem(windowItem);
+										.addRaptorWindowItem(windowItem, true);
 								ChatUtils
 										.appendPreviousChatsToController(windowItem.console);
 							}
@@ -323,6 +327,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	};
 
+	protected boolean isSoundDisabled = false;
+
 	public ChatConsoleController(Connector connector) {
 		this.connector = connector;
 	}
@@ -337,6 +343,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			chatConsole.inputText.addKeyListener(functionKeyListener);
 			chatConsole.inputText.addKeyListener(outputHistoryListener);
 		}
+	}
+
+	public void addItemChangedListener(ItemChangedListener listener) {
+		itemChangedListeners.add(listener);
 	}
 
 	protected void addMouseListeners() {
@@ -547,11 +557,40 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void dispose() {
-		connector.getChatService().removeChatServiceListener(
-				chatServiceListener);
+
+		if (connector != null) {
+			connector.getChatService().removeChatServiceListener(
+					chatServiceListener);
+			connector = null;
+		}
+
 		removeListenersTiedToChatConsole();
 
+		if (itemChangedListeners != null) {
+			itemChangedListeners.clear();
+			itemChangedListeners = null;
+		}
+
+		if (awayList != null) {
+			awayList.clear();
+			awayList = null;
+		}
+
+		if (eventsWhileBeingReparented != null) {
+			eventsWhileBeingReparented.clear();
+			eventsWhileBeingReparented = null;
+		}
+
 		LOG.debug("Disposed ChatConsoleController");
+	}
+
+	/**
+	 * Should be invoked when the title or closeability changes.
+	 */
+	protected void fireItemChanged() {
+		for (ItemChangedListener listener : itemChangedListeners) {
+			listener.itemStateChanged();
+		}
 	}
 
 	public ChatConsole getChatConsole() {
@@ -560,6 +599,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public Connector getConnector() {
 		return connector;
+	}
+
+	/**
+	 * Returns an Image icon that can be used to represent this controller.
+	 */
+	public Image getIconImage() {
+		return null;
+	}
+
+	public List<ItemChangedListener> getItemChangedListeners() {
+		return itemChangedListeners;
 	}
 
 	public RaptorPreferenceStore getPreferences() {
@@ -625,6 +675,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public abstract boolean isPrependable();
 
 	public abstract boolean isSearchable();
+
+	public boolean isSoundDisabled() {
+		return isSoundDisabled;
+	}
 
 	public void onActivate() {
 		onForceAutoScroll();
@@ -896,9 +950,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void playSounds(ChatEvent event) {
-		if (event.getType() == ChatType.TELL
-				|| event.getType() == ChatType.PARTNER_TELL) {
-			SoundService.getInstance().playSound("chat");
+		System.err.println("play sound " + isSoundDisabled);
+		if (!isSoundDisabled) {
+			if (event.getType() == ChatType.TELL
+					|| event.getType() == ChatType.PARTNER_TELL) {
+				SoundService.getInstance().playSound("chat");
+			}
 		}
 	}
 
@@ -921,16 +978,20 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		connector.getChatService().addChatServiceListener(chatServiceListener);
 	}
 
+	public void removeItemChangedListener(ItemChangedListener listener) {
+		itemChangedListeners.remove(listener);
+	}
+
 	protected void removeListenersTiedToChatConsole() {
-
-		chatConsole.outputText.removeKeyListener(functionKeyListener);
-		chatConsole.outputText.removeKeyListener(outputHistoryListener);
-		chatConsole.outputText.removeKeyListener(outputKeyListener);
-		chatConsole.inputText.removeKeyListener(inputTextKeyListener);
-		chatConsole.inputText.removeKeyListener(functionKeyListener);
-		chatConsole.inputText.removeKeyListener(outputHistoryListener);
-		chatConsole.inputText.removeMouseListener(inputTextClickListener);
-
+		if (!chatConsole.isDisposed()) {
+			chatConsole.outputText.removeKeyListener(functionKeyListener);
+			chatConsole.outputText.removeKeyListener(outputHistoryListener);
+			chatConsole.outputText.removeKeyListener(outputKeyListener);
+			chatConsole.inputText.removeKeyListener(inputTextKeyListener);
+			chatConsole.inputText.removeKeyListener(functionKeyListener);
+			chatConsole.inputText.removeKeyListener(outputHistoryListener);
+			chatConsole.inputText.removeMouseListener(inputTextClickListener);
+		}
 	}
 
 	protected void setCaretToOutputTextEnd() {
@@ -947,6 +1008,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public void setHasUnseenText(boolean hasUnseenText) {
 		this.hasUnseenText = hasUnseenText;
+	}
+
+	public void setItemChangedListeners(
+			List<ItemChangedListener> itemChangedListeners) {
+		this.itemChangedListeners = itemChangedListeners;
+	}
+
+	public void setSoundDisabled(boolean isSoundDisabled) {
+		System.err.println("setSoundDisabled" + isSoundDisabled);
+		this.isSoundDisabled = isSoundDisabled;
 	}
 
 	public void setSourceOfLastTellReceived(String sourceOfLastTellReceived) {

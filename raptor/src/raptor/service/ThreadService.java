@@ -7,18 +7,20 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.Raptor;
+
 public class ThreadService {
 	private static final Log LOG = LogFactory.getLog(ThreadService.class);
 	private static final ThreadService instance = new ThreadService();
+	public static final String THREAD_DUMP_FILE_PATH = Raptor.USER_RAPTOR_HOME_PATH
+			+ "/logs/threaddump_" + System.currentTimeMillis() + ".txt";
 
 	public static ThreadService getInstance() {
 		return instance;
@@ -34,7 +36,7 @@ public class ThreadService {
 		long[] threadIds = threads.getAllThreadIds();
 		PrintWriter printWriter = null;
 		try {
-			printWriter = new PrintWriter(new FileWriter("threaddump.txt",
+			printWriter = new PrintWriter(new FileWriter(THREAD_DUMP_FILE_PATH,
 					false));
 			printWriter.println("Raptor ThreadService initiated dump "
 					+ new Date());
@@ -66,33 +68,44 @@ public class ThreadService {
 		}
 	}
 
-	ExecutorService executorService = Executors.newFixedThreadPool(20);
-
-	ScheduledExecutorService scheduledExecutorService = Executors
-			.newScheduledThreadPool(40);
+	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(50) {
+		@Override
+		protected void afterExecute(Runnable arg0, Throwable arg1) {
+			if (arg1 != null) {
+				LOG.error("Error executing runnable: ", arg1);
+				Raptor.getInstance().onError(
+						"Error in ThreadService Runnable.", arg1);
+			}
+			super.afterExecute(arg0, arg1);
+		}
+	};
 
 	public ThreadService() {
 	}
 
 	public void dispose() {
-		executorService.shutdownNow();
-		scheduledExecutorService.shutdown();
+		executor.shutdownNow();
 	}
 
 	/**
-	 * Executes a runnable asynchly.
+	 * Executes a runnable asynch in a controlled way. Exceptions are monitored
+	 * and displayed if they occur.
 	 */
 	public void run(Runnable runnable) {
 		try {
-			executorService.execute(runnable);
+			executor.execute(runnable);
 		} catch (RejectedExecutionException rej) {
+			LOG.error("Error executing runnable: ", rej);
 			threadDump();
-			System.exit(1);
+			Raptor.getInstance().onError(
+					"ThreadServie has no more threads. A thread dump can be found at "
+							+ THREAD_DUMP_FILE_PATH, rej);
 		}
 	}
 
 	/**
-	 * Runs the runnable one time after a delay.
+	 * Runs the runnable one time after a delay. Exceptions are monitored and
+	 * displayed if they occur.
 	 * 
 	 * @param delay
 	 *            Delay in millis
@@ -101,11 +114,13 @@ public class ThreadService {
 	 */
 	public void scheduleOneShot(long delay, Runnable runnable) {
 		try {
-			scheduledExecutorService.schedule(runnable, delay,
-					TimeUnit.MILLISECONDS);
+			executor.schedule(runnable, delay, TimeUnit.MILLISECONDS);
 		} catch (RejectedExecutionException rej) {
+			LOG.error("Error executing runnable in scheduleOneShot: ", rej);
 			threadDump();
-			System.exit(1);
+			Raptor.getInstance().onError(
+					"ThreadServie has no more threads. A thread dump can be found at "
+							+ THREAD_DUMP_FILE_PATH);
 		}
 	}
 }
