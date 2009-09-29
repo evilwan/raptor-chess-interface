@@ -1,8 +1,10 @@
-1) Added in code to change observe controller to examine controller when someone mexes you.
+1) Add in code to change observe controller to examine controller when someone mexes you.
 
-2) Unexpected crashes in OSX (I think it might have to do with overloading the thread pool).
+2) Unexpected crashes in OSX (I think it might have to do with overloading the thread pool). 
+The are less frequent but they still occur.
 
-3) Game legal move generation:
+3) Game legal move generation: (I think that has to do with disambiguity by check.
+ There is code in the san parsing to do this, but its not working.)
 
  Issue: Error in DaemonRun.onNewInput
 java.lang.IllegalArgumentException: Invalid move Re1
