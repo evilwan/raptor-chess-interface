@@ -3,6 +3,7 @@ package raptor.swt.chess.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
@@ -11,9 +12,9 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
-import raptor.swt.chess.Utils;
 
 public class ExamineController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ExamineController.class);
@@ -21,16 +22,17 @@ public class ExamineController extends ChessBoardController {
 
 		@Override
 		public void gameInactive(Game game) {
-			if (game.getId().equals(board.getGame().getId())) {
+			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							InactiveController inactiveController = new InactiveController();
+							InactiveController inactiveController = new InactiveController(
+									getGame());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 
 							board.clearCoolbar();
-							board.getConnector().getGameService()
+							connector.getGameService()
 									.removeGameServiceListener(listener);
 
 							inactiveController.init();
@@ -38,8 +40,8 @@ public class ExamineController extends ChessBoardController {
 							getBoard().fireOnControllerStateChange();
 							ExamineController.this.dispose();
 						} catch (Throwable t) {
-							board.getConnector().onError(
-									"ExamineController.gameInactive", t);
+							connector.onError("ExamineController.gameInactive",
+									t);
 						}
 					}
 				});
@@ -48,13 +50,13 @@ public class ExamineController extends ChessBoardController {
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
-			if (game.getId().equals(board.getGame().getId())) {
+			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							examinePositionUpdate();
 						} catch (Throwable t) {
-							board.getConnector().onError(
+							connector.onError(
 									"ExamineController.gameStateChanged", t);
 						}
 					}
@@ -64,14 +66,14 @@ public class ExamineController extends ChessBoardController {
 
 		@Override
 		public void illegalMove(Game game, final String move) {
-			if (game.getId().equals(board.getGame().getId())) {
+			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							examineOnIllegalMove(move);
 						} catch (Throwable t) {
-							board.getConnector().onError(
-									"ExamineController.illegalMove", t);
+							connector.onError("ExamineController.illegalMove",
+									t);
 						}
 					}
 				});
@@ -80,111 +82,137 @@ public class ExamineController extends ChessBoardController {
 
 	};
 
-	public ExamineController() {
+	protected Connector connector;
+
+	public ExamineController(Game game, Connector connector) {
+		super(game);
+		this.connector = connector;
 	}
 
 	@Override
 	protected void adjustClockColors() {
-		if (getGame().getColorToMove() == WHITE) {
-			board.getWhiteClockLabel().setForeground(
-					board.getPreferences().getColor(
-							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-			board.getBlackClockLabel().setForeground(
-					board.getPreferences().getColor(
-							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-		} else {
-			board.getBlackClockLabel().setForeground(
-					board.getPreferences().getColor(
-							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-			board.getWhiteClockLabel().setForeground(
-					board.getPreferences().getColor(
-							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+		if (!isBeingReparented()) {
+			if (getGame().getColorToMove() == WHITE) {
+				board.getWhiteClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getBlackClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			} else {
+				board.getBlackClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getWhiteClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			}
 		}
 	}
 
 	@Override
 	protected void adjustCoolbarToInitial() {
-		board.addGameActionButtonsToCoolbar();
-		board.addAutoPromoteRadioGroupToCoolbar();
-		board.packCoolbar();
+		if (!isBeingReparented()) {
+			board.addGameActionButtonsToCoolbar();
+			board.addAutoPromoteRadioGroupToCoolbar();
+			board.packCoolbar();
+		}
 	}
 
 	@Override
 	public void adjustGameDescriptionLabel() {
-		board.getGameDescriptionLabel().setText("Examining a game");
+		if (!isBeingReparented()) {
+			board.getGameDescriptionLabel().setText("Examining a game");
+		}
 	}
 
 	@Override
 	protected void adjustNavButtonEnabledState() {
-		if (board.getGame().isInState(Game.ACTIVE_STATE)) {
-			board.setCoolBarButtonEnabled(true, ChessBoard.FIRST_NAV);
-			board.setCoolBarButtonEnabled(true, ChessBoard.LAST_NAV);
-			board.setCoolBarButtonEnabled(true, ChessBoard.NEXT_NAV);
-			board.setCoolBarButtonEnabled(true, ChessBoard.BACK_NAV);
-			board.setCoolBarButtonEnabled(true, ChessBoard.COMMIT_NAV);
-			board.setCoolBarButtonEnabled(true, ChessBoard.REVERT_NAV);
-		} else {
-			board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.COMMIT_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.REVERT_NAV);
+		if (!isBeingReparented()) {
+			if (getGame().isInState(Game.ACTIVE_STATE)) {
+				board.setCoolBarButtonEnabled(true, ChessBoard.FIRST_NAV);
+				board.setCoolBarButtonEnabled(true, ChessBoard.LAST_NAV);
+				board.setCoolBarButtonEnabled(true, ChessBoard.NEXT_NAV);
+				board.setCoolBarButtonEnabled(true, ChessBoard.BACK_NAV);
+				board.setCoolBarButtonEnabled(true, ChessBoard.COMMIT_NAV);
+				board.setCoolBarButtonEnabled(true, ChessBoard.REVERT_NAV);
+			} else {
+				board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
+				board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
+				board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
+				board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
+				board.setCoolBarButtonEnabled(false, ChessBoard.COMMIT_NAV);
+				board.setCoolBarButtonEnabled(false, ChessBoard.REVERT_NAV);
+			}
 		}
 	}
 
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
-		if (Utils.isPieceJailSquare(squareId)) {
-			return false;
-		} else {
-			int piece = Utils.getColoredPiece(squareId, getGame());
-			return Utils.isWhitePiece(piece) && getGame().isWhitesMove()
-					|| Utils.isBlackPiece(piece) && !getGame().isWhitesMove();
+		if (!isBeingReparented()) {
+			if (BoardUtils.isPieceJailSquare(squareId)) {
+				return false;
+			} else {
+				int piece = BoardUtils.getColoredPiece(squareId, getGame());
+				return BoardUtils.isWhitePiece(piece)
+						&& getGame().isWhitesMove()
+						|| BoardUtils.isBlackPiece(piece)
+						&& !getGame().isWhitesMove();
+			}
 		}
+		return false;
 	}
 
 	@Override
 	public void dispose() {
-		board.getConnector().getGameService().removeGameServiceListener(
-				listener);
+		if (!isBeingReparented()) {
+			connector.getGameService().removeGameServiceListener(listener);
+		}
 		super.dispose();
 	}
 
 	public void examineOnIllegalMove(String move) {
-		LOG.info("examineOnIllegalMove " + getGame().getId() + " ...");
-		long startTime = System.currentTimeMillis();
-		SoundService.getInstance().playSound("illegalMove");
-		board.getStatusLabel().setText("Illegal Move: " + move);
-		board.unhighlightAllSquares();
-		LOG.info("examineOnIllegalMove in " + getGame().getId() + "  "
-				+ (System.currentTimeMillis() - startTime));
+		if (!isBeingReparented()) {
+			LOG.info("examineOnIllegalMove " + getGame().getId() + " ...");
+			long startTime = System.currentTimeMillis();
+			SoundService.getInstance().playSound("illegalMove");
+			board.getStatusLabel().setText("Illegal Move: " + move);
+			board.unhighlightAllSquares();
+			LOG.info("examineOnIllegalMove in " + getGame().getId() + "  "
+					+ (System.currentTimeMillis() - startTime));
+		}
 	}
 
 	public void examinePositionUpdate() {
-		LOG.info("examinePositionUpdate " + getGame().getId() + " ...");
-		long startTime = System.currentTimeMillis();
+		if (!isBeingReparented()) {
+			LOG.info("examinePositionUpdate " + getGame().getId() + " ...");
+			long startTime = System.currentTimeMillis();
 
-		stopClocks();
-		adjustClockColors();
-		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)
-				&& getGame().isInState(Game.ACTIVE_STATE)) {
-			adjustClockLabelsAndUpdaters();
-			startClocks();
+			stopClocks();
+			adjustClockColors();
+			if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)
+					&& getGame().isInState(Game.ACTIVE_STATE)) {
+				adjustClockLabelsAndUpdaters();
+				startClocks();
+			}
+
+			adjustNameRatingLabels();
+			adjustGameDescriptionLabel();
+			adjustToGameChangeNotInvolvingMove();
+			adjustBoardToGame(getGame());
+			adjustPieceJailFromGame(getGame());
+			adjustNavButtonEnabledState();
+
+			board.forceUpdate();
+			onPlayMoveSound();
+			board.unhighlightAllSquares();
+			LOG.info("examinePositionUpdate in " + getGame().getId() + "  "
+					+ (System.currentTimeMillis() - startTime));
 		}
+	}
 
-		adjustNameRatingLabels();
-		adjustGameDescriptionLabel();
-		adjustToGameChangeNotInvolvingMove();
-		adjustBoardToGame(getGame());
-		adjustPieceJailFromGame(getGame());
-		adjustNavButtonEnabledState();
-
-		board.forceUpdate();
-		onPlayMoveSound();
-		board.unhighlightAllSquares();
-		LOG.info("examinePositionUpdate in " + getGame().getId() + "  "
-				+ (System.currentTimeMillis() - startTime));
+	public Connector getConnector() {
+		return connector;
 	}
 
 	@Override
@@ -195,7 +223,7 @@ public class ExamineController extends ChessBoardController {
 	@Override
 	public void init() {
 		super.init();
-		board.getConnector().getGameService().addGameServiceListener(listener);
+		connector.getGameService().addGameServiceListener(listener);
 	}
 
 	@Override
@@ -266,41 +294,40 @@ public class ExamineController extends ChessBoardController {
 	@Override
 	public boolean onClose() {
 		boolean result = true;
-		if (board.getConnector().isConnected()
-				&& board.getGame().isInState(Game.ACTIVE_STATE)) {
-			board.getConnector().onUnexamine(board.getGame());
+		if (connector.isConnected() && getGame().isInState(Game.ACTIVE_STATE)) {
+			connector.onUnexamine(getGame());
 		}
 		return result;
 	}
 
 	@Override
 	public void onNavBack() {
-		board.getConnector().onExamineModeBack(board.getGame());
+		connector.onExamineModeBack(getGame());
 	}
 
 	@Override
 	public void onNavCommit() {
-		board.getConnector().onExamineModeCommit(board.getGame());
+		connector.onExamineModeCommit(getGame());
 	}
 
 	@Override
 	public void onNavFirst() {
-		board.getConnector().onExamineModeFirst(board.getGame());
+		connector.onExamineModeFirst(getGame());
 	}
 
 	@Override
 	public void onNavForward() {
-		board.getConnector().onExamineModeForward(board.getGame());
+		connector.onExamineModeForward(getGame());
 	}
 
 	@Override
 	public void onNavLast() {
-		board.getConnector().onExamineModeLast(board.getGame());
+		connector.onExamineModeLast(getGame());
 	}
 
 	@Override
 	public void onNavRevert() {
-		board.getConnector().onExamineModeRevert(board.getGame());
+		connector.onExamineModeRevert(getGame());
 	}
 
 	@Override
@@ -320,51 +347,60 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		board.unhighlightAllSquares();
-		adjustToGameMove();
+		if (!isBeingReparented()) {
+			board.unhighlightAllSquares();
+			adjustToGameMove();
+		}
 	}
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		board.unhighlightAllSquares();
-		board.getSquare(square).highlight();
-		if (isDnd && !Utils.isPieceJailSquare(square)) {
-			board.getSquare(square).setPiece(GameConstants.EMPTY);
+		if (!isBeingReparented()) {
+			board.unhighlightAllSquares();
+			board.getSquare(square).highlight();
+			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
+				board.getSquare(square).setPiece(GameConstants.EMPTY);
+			}
 		}
 	}
 
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-		LOG.debug("Move made " + board.getGame().getId() + " " + fromSquare
-				+ " " + toSquare);
-		board.unhighlightAllSquares();
+		if (!isBeingReparented()) {
+			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
+					+ toSquare);
+			board.unhighlightAllSquares();
 
-		if (Utils.isPieceJailSquare(toSquare)) {
-			SoundService.getInstance().playSound("illegalMove");
-			return;
+			if (BoardUtils.isPieceJailSquare(toSquare)) {
+				SoundService.getInstance().playSound("illegalMove");
+				return;
+			}
+
+			Game game = getGame();
+			Move move = null;
+			if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
+				move = new Move(fromSquare, toSquare,
+						game.getPiece(fromSquare), game.getColorToMove(), game
+								.getPiece(toSquare), board
+								.getAutoPromoteSelection(), EMPTY,
+						Move.PROMOTION_CHARACTERISTIC);
+				board.getSquare(toSquare).setPiece(
+						BoardUtils
+								.getColoredPiece(board
+										.getAutoPromoteSelection(), game
+										.isWhitesMove()));
+			} else {
+				move = new Move(fromSquare, toSquare,
+						game.getPiece(fromSquare), game.getColorToMove(), game
+								.getPiece(toSquare));
+				board.getSquare(toSquare).setPiece(
+						BoardUtils.getColoredPiece(game.getPiece(fromSquare),
+								game.isWhitesMove()));
+			}
+			board.getSquare(fromSquare).highlight();
+			board.getSquare(toSquare).highlight();
+			connector.makeMove(game, move);
 		}
-
-		Game game = board.getGame();
-		Move move = null;
-		if (GameUtils.isPromotion(board.getGame(), fromSquare, toSquare)) {
-			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
-					game.getColorToMove(), game.getPiece(toSquare), board
-							.getAutoPromoteSelection(), EMPTY,
-					Move.PROMOTION_CHARACTERISTIC);
-			board.getSquare(toSquare).setPiece(
-					Utils.getColoredPiece(board.getAutoPromoteSelection(), game
-							.isWhitesMove()));
-		} else {
-			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
-					game.getColorToMove(), game.getPiece(toSquare));
-			board.getSquare(toSquare).setPiece(
-					Utils.getColoredPiece(game.getPiece(fromSquare), game
-							.isWhitesMove()));
-		}
-		board.getSquare(fromSquare).highlight();
-		board.getSquare(toSquare).highlight();
-		board.getConnector().makeMove(game, move);
-
 	}
 
 	@Override

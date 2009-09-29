@@ -1,6 +1,7 @@
 package raptor.connector.fics.chat;
 
 import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.connector.fics.FicsUtils;
 import raptor.util.RaptorStringTokenizer;
 
@@ -26,7 +27,7 @@ public class ChannelTellEventParser extends ChatEventParser {
 					if (k < j && k != -1 && j != -1) {
 
 						ChatEvent event = new ChatEvent(FicsUtils
-								.removeTitles(s1), CHAN_TELL, text);
+								.removeTitles(s1), ChatType.CHAN_TELL, text);
 						event.setChannel(text.substring(k + 1, j));
 						return event;
 					}

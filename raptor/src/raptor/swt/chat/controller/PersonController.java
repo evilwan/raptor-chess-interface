@@ -3,8 +3,12 @@ package raptor.swt.chat.controller;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Button;
 
+import raptor.Quadrant;
+import raptor.Raptor;
 import raptor.chat.ChatEvent;
-import raptor.chat.ChatTypes;
+import raptor.chat.ChatType;
+import raptor.connector.Connector;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleController;
 
@@ -12,9 +16,15 @@ public class PersonController extends ChatConsoleController {
 
 	protected String person;
 
-	public PersonController(String person) {
-		super();
+	public PersonController(Connector connector, String person) {
+		super(connector);
 		this.person = person;
+	}
+
+	@Override
+	public Quadrant getPreferredQuadrant() {
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				PreferenceKeys.APP_PERSON_TAB_QUADRANT);
 	}
 
 	@Override
@@ -25,8 +35,7 @@ public class PersonController extends ChatConsoleController {
 				.getButton(ChatConsole.PREPEND_TEXT_BUTTON);
 		if (prependButton != null) {
 			if (prependButton.getSelection()) {
-				prependText = chatConsole.getConnector().getChannelTabPrefix(
-						person);
+				prependText = connector.getChannelTabPrefix(person);
 			}
 		}
 
@@ -35,12 +44,12 @@ public class PersonController extends ChatConsoleController {
 
 	@Override
 	public String getPrompt() {
-		return chatConsole.getConnector().getPrompt();
+		return connector.getPrompt();
 	}
 
 	@Override
 	public String getTitle() {
-		return chatConsole.getConnector().getShortName() + "("
+		return connector.getShortName() + "("
 				+ StringUtils.abbreviate(person, 10) + ")";
 	}
 
@@ -62,12 +71,12 @@ public class PersonController extends ChatConsoleController {
 
 	protected boolean isDirectTellFromPerson(ChatEvent event) {
 		return StringUtils.equalsIgnoreCase(event.getSource(), person)
-				&& (event.getType() == ChatTypes.TELL || event.getType() == ChatTypes.PARTNER_TELL);
+				&& (event.getType() == ChatType.TELL || event.getType() == ChatType.PARTNER_TELL);
 	}
 
 	protected boolean isOutboundTellPertainingToPerson(ChatEvent event) {
 		return StringUtils.containsIgnoreCase(event.getMessage(), person)
-				&& event.getType() == ChatTypes.OUTBOUND;
+				&& event.getType() == ChatType.OUTBOUND;
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package raptor.connector.fics.chat;
 
 import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.connector.fics.FicsUtils;
 import raptor.util.RaptorStringTokenizer;
 
@@ -23,7 +24,7 @@ public class PartnerTellEventParser extends ChatEventParser {
 				String s1 = stringtokenizer.nextToken();
 				if (stringtokenizer.nextToken().equals("(your"))
 					return new ChatEvent(FicsUtils.removeTitles(s1),
-							PARTNER_TELL, text);
+							ChatType.PARTNER_TELL, text);
 			}
 			return null;
 		}

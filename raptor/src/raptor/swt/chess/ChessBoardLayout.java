@@ -1,26 +1,19 @@
 package raptor.swt.chess;
 
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
 public abstract class ChessBoardLayout extends Layout implements Constants {
+	public static enum Field {
+		GAME_DESCRIPTION_LABEL, STATUS_LABEL, CURRENT_PREMOVE_LABEL, OPENING_DESCRIPTION_LABEL, CLOCK_LABEL, LAG_LABEL, NAME_RATING_LABEL, COOLBAR, TO_MOVE_INDICATOR;
+	}
+
 	protected ChessBoard board;
 
-	public static final int GAME_DESCRIPTION_LABEL = 0;
-	public static final int STATUS_LABEL = 1;
-	public static final int CURRENT_PREMOVE_LABEL = 2;
-	public static final int OPENING_DESCRIPTION_LABEL = 3;
-	public static final int CLOCK_LABEL = 4;
-	public static final int LAG_LABEL = 5;
-	public static final int NAME_RATING_LABEL = 6;
-	public static final int COOLBAR = 7;
-	public static final int TO_MOVE_INDICATOR = 8;
-
-	public ChessBoardLayout(ChessBoard chessBoard) {
+	public ChessBoardLayout(ChessBoard board) {
 		super();
+		this.board = board;
 	}
 
 	@Override
@@ -30,6 +23,7 @@ public abstract class ChessBoardLayout extends Layout implements Constants {
 	}
 
 	public void dispose() {
+		board = null;
 	}
 
 	public ChessBoard getBoard() {
@@ -38,13 +32,7 @@ public abstract class ChessBoardLayout extends Layout implements Constants {
 
 	public abstract String getName();
 
-	protected Point getOneCharSizeInFont(Font font, GC gc) {
-		return new Point(gc.getFontMetrics().getAverageCharWidth(), gc
-				.getFontMetrics().getAscent()
-				+ gc.getFontMetrics().getDescent());
-	}
-
-	public abstract int getStyle(int controlConstant);
+	public abstract int getStyle(Field field);
 
 	protected void layoutChessBoard(Point topLeft, int squareSideSize) {
 		int x = topLeft.x;
@@ -72,9 +60,5 @@ public abstract class ChessBoardLayout extends Layout implements Constants {
 				y += squareSideSize;
 			}
 		}
-	}
-
-	public void setBoard(ChessBoard board) {
-		this.board = board;
 	}
 }

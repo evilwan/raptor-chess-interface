@@ -1,6 +1,7 @@
 package raptor.connector.fics.chat;
 
 import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.connector.fics.FicsUtils;
 import raptor.util.RaptorStringTokenizer;
 
@@ -23,7 +24,7 @@ public class ShoutEventParser extends ChatEventParser {
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 						name, " ");
 				String s1 = FicsUtils.removeTitles(stringtokenizer.nextToken());
-				return new ChatEvent(s1, SHOUT, text);
+				return new ChatEvent(s1, ChatType.SHOUT, text);
 
 			}
 			RaptorStringTokenizer stringtokenizer1 = new RaptorStringTokenizer(
@@ -33,8 +34,8 @@ public class ShoutEventParser extends ChatEventParser {
 				if (stringtokenizer1.hasMoreTokens()) {
 					String s3 = stringtokenizer1.nextToken();
 					if (s3.equals(SHOUT_2))
-						return new ChatEvent(FicsUtils.removeTitles(s2), SHOUT,
-								text);
+						return new ChatEvent(FicsUtils.removeTitles(s2),
+								ChatType.SHOUT, text);
 				}
 			}
 			return null;

@@ -3,6 +3,7 @@ package raptor.connector.fics.chat;
 import java.util.StringTokenizer;
 
 import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.connector.fics.FicsUtils;
 
 public class FollowingEventParser extends ChatEventParser {
@@ -27,10 +28,10 @@ public class FollowingEventParser extends ChatEventParser {
 						identifierIndex + IDENTIFIER.length(), text.length()),
 						" '(");
 				return new ChatEvent(FicsUtils.removeTitles(tok.nextToken()),
-						FOLLOWING, text);
+						ChatType.FOLLOWING, text);
 			} else {
 				if (text.indexOf(IDENTIFIER2) != -1) {
-					return new ChatEvent(null, NOT_FOLLOWING, text);
+					return new ChatEvent(null, ChatType.NOT_FOLLOWING, text);
 				} else {
 					return null;
 				}

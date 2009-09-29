@@ -25,11 +25,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
-import raptor.connector.Connector;
-import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.util.GameUtils;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.swt.chess.layout.RightOrientedLayout;
 
 public class ChessBoard extends Composite implements Constants {
 	public static interface ChessBoardListener {
@@ -59,7 +58,6 @@ public class ChessBoard extends Composite implements Constants {
 	protected Label blackClockLabel;
 	protected Label blackLagLabel;
 	protected Label blackNameRatingLabel;
-	protected Connector connector;
 
 	protected ChessBoardController controller;
 	protected Label currentPremovesLabel;
@@ -67,12 +65,11 @@ public class ChessBoard extends Composite implements Constants {
 
 	protected Label[] fileLabels = new Label[8];
 
-	protected Game game;
 	protected boolean isWhiteOnTop = false;
 	protected boolean isWhitePieceJailOnTop = true;
 
 	protected Label statusLabel;
-	protected ChessBoardLayout layout;
+	protected ChessBoardLayout chessBoardLayout;
 
 	protected Label openingDescriptionLabel;
 
@@ -82,7 +79,6 @@ public class ChessBoard extends Composite implements Constants {
 	// Piece jail is indexed by the colored piece constants in Constants.
 	// Some of the indexes will always be null.
 	protected LabeledChessSquare[] pieceJailSquares = new LabeledChessSquare[14];
-	protected RaptorPreferenceStore preferences;
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent arg0) {
 			updateFromPrefs();
@@ -90,8 +86,6 @@ public class ChessBoard extends Composite implements Constants {
 		}
 	};
 	protected Label[] rankLabels = new Label[8];
-
-	protected ChessBoardResources resources;
 
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
 	protected Label whiteClockLabel;
@@ -128,31 +122,27 @@ public class ChessBoard extends Composite implements Constants {
 
 		Button queenButton = new Button(composite, SWT.RADIO);
 		queenButton.setToolTipText("Set auto promote piece to a queen.");
-		queenButton.setImage(getResources()
-				.getChessPieceIconImage("XBoard", BQ));
+		queenButton.setImage(BoardUtils.getChessPieceIconImage("XBoard", BQ));
 		queenButton.setSelection(true);
 		coolbarButtonMap.put(AUTO_QUEEN, queenButton);
 		queenButton.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button knightButton = new Button(composite, SWT.RADIO);
 		knightButton.setToolTipText("Set auto promote piece to a knight.");
-		knightButton.setImage(getResources().getChessPieceIconImage("XBoard",
-				BN));
+		knightButton.setImage(BoardUtils.getChessPieceIconImage("XBoard", BN));
 		coolbarButtonMap.put(AUTO_KNIGHT, knightButton);
 		knightButton
 				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button rookButton = new Button(composite, SWT.RADIO);
 		rookButton.setToolTipText("Set auto promote piece to a rook.");
-		rookButton
-				.setImage(getResources().getChessPieceIconImage("XBoard", BR));
+		rookButton.setImage(BoardUtils.getChessPieceIconImage("XBoard", BR));
 		coolbarButtonMap.put(AUTO_ROOK, rookButton);
 		rookButton.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
 
 		Button bishopButton = new Button(composite, SWT.RADIO);
 		bishopButton.setToolTipText("Set auto promote piece to a bishop.");
-		bishopButton.setImage(getResources().getChessPieceIconImage("XBoard",
-				BB));
+		bishopButton.setImage(BoardUtils.getChessPieceIconImage("XBoard", BB));
 		coolbarButtonMap.put(AUTO_BISHOP, bishopButton);
 		bishopButton
 				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
@@ -393,8 +383,8 @@ public class ChessBoard extends Composite implements Constants {
 		coolbar.setVisible(false);
 		coolbar.dispose();
 
-		coolbar = new CoolBar(coolbarComposite, layout
-				.getStyle(ChessBoardLayout.COOLBAR));
+		coolbar = new CoolBar(coolbarComposite, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.COOLBAR));
 		coolbar.setLayoutData(new GridData(GridData.FILL_BOTH));
 		// for (int i = 0; i < getCoolbar().getItemCount(); i++) {
 		// CoolItem item = getCoolbar().getItem(i);
@@ -412,9 +402,14 @@ public class ChessBoard extends Composite implements Constants {
 		// }
 	}
 
+	protected void createChessBoardLayout() {
+		chessBoardLayout = new RightOrientedLayout(this);
+	}
+
 	public void createControls() {
 		LOG.info("Creating controls");
 		long startTime = System.currentTimeMillis();
+		createChessBoardLayout();
 
 		GridLayout mainLayout = new GridLayout(1, false);
 		mainLayout.marginLeft = 0;
@@ -441,50 +436,51 @@ public class ChessBoard extends Composite implements Constants {
 		coolbarCompositeLayout.marginWidth = 0;
 		coolbarComposite.setLayout(coolbarCompositeLayout);
 
-		coolbar = new CoolBar(coolbarComposite, layout
-				.getStyle(ChessBoardLayout.COOLBAR));
+		coolbar = new CoolBar(coolbarComposite, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.COOLBAR));
 		coolbar.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		boardPanel = new Composite(this, SWT.NONE);
 		boardPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
-		boardPanel.setLayout(layout);
+		boardPanel.setLayout(chessBoardLayout);
 
 		initSquares();
 		// initSquareLabels();
 		initPieceJail();
 
-		whiteNameRatingLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.NAME_RATING_LABEL));
-		blackNameRatingLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.NAME_RATING_LABEL));
-		whiteClockLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.CLOCK_LABEL));
-		blackClockLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.CLOCK_LABEL));
-		whiteLagLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.LAG_LABEL));
-		blackLagLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.LAG_LABEL));
-		openingDescriptionLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.OPENING_DESCRIPTION_LABEL));
-		statusLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.STATUS_LABEL));
-		gameDescriptionLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.GAME_DESCRIPTION_LABEL));
-		currentPremovesLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.CURRENT_PREMOVE_LABEL));
+		whiteNameRatingLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
+		blackNameRatingLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
+		whiteClockLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.CLOCK_LABEL));
+		blackClockLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.CLOCK_LABEL));
+		whiteLagLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.LAG_LABEL));
+		blackLagLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.LAG_LABEL));
+		openingDescriptionLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.OPENING_DESCRIPTION_LABEL));
+		statusLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.STATUS_LABEL));
+		gameDescriptionLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.GAME_DESCRIPTION_LABEL));
+		currentPremovesLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.CURRENT_PREMOVE_LABEL));
 
-		whiteToMoveIndicatorLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
+		whiteToMoveIndicatorLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.TO_MOVE_INDICATOR));
 		whiteToMoveIndicatorLabel.setImage(Raptor.getInstance().getIcon(
 				"circle_green30x30"));
 
-		blackToMoveIndicatorLabel = new Label(boardPanel, layout
-				.getStyle(ChessBoardLayout.TO_MOVE_INDICATOR));
+		blackToMoveIndicatorLabel = new Label(boardPanel, chessBoardLayout
+				.getStyle(ChessBoardLayout.Field.TO_MOVE_INDICATOR));
 		blackToMoveIndicatorLabel.setImage(Raptor.getInstance().getIcon(
 				"circle_gray30x30"));
 
-		preferences.addPropertyChangeListener(propertyChangeListener);
+		Raptor.getInstance().getPreferences().addPropertyChangeListener(
+				propertyChangeListener);
 
 		LOG.info("Created controls in "
 				+ (System.currentTimeMillis() - startTime));
@@ -492,21 +488,22 @@ public class ChessBoard extends Composite implements Constants {
 		updateFromPrefs();
 	}
 
+	/**
+	 * If a controller is set on the chess board it will be disposed on this
+	 * method call.
+	 */
 	@Override
 	public void dispose() {
-		preferences.removePropertyChangeListener(propertyChangeListener);
+		Raptor.getInstance().getPreferences().removePropertyChangeListener(
+				propertyChangeListener);
 		pieceJailSquares = null;
 		if (controller != null) {
 			controller.dispose();
 			controller = null;
 		}
-		if (layout != null) {
-			layout.dispose();
-			layout = null;
-		}
-		if (resources != null) {
-			resources.dispose();
-			resources = null;
+		if (chessBoardLayout != null) {
+			chessBoardLayout.dispose();
+			chessBoardLayout = null;
 		}
 		if (listeners != null) {
 			listeners.clear();
@@ -525,11 +522,17 @@ public class ChessBoard extends Composite implements Constants {
 	}
 
 	public void forceUpdate() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Entering force update.");
+		}
 		long startTime = System.currentTimeMillis();
-		boardPanel.layout(true);
-		coolbarComposite.layout(true);
-		layout(true);
-		redraw();
+
+		if (isVisible()) {
+			// boardPanel.layout(true);
+			// coolbarComposite.layout(true);
+			layout(true, true);
+			// redraw();
+		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("forceUpdate in "
 					+ (System.currentTimeMillis() - startTime));
@@ -573,16 +576,8 @@ public class ChessBoard extends Composite implements Constants {
 		return blackToMoveIndicatorLabel;
 	}
 
-	public ChessBoardLayout getBoardLayout() {
-		return layout;
-	}
-
 	public Composite getBoardPanel() {
 		return boardPanel;
-	}
-
-	public Connector getConnector() {
-		return connector;
 	}
 
 	public ChessBoardController getController() {
@@ -605,10 +600,6 @@ public class ChessBoard extends Composite implements Constants {
 		return fileLabels;
 	}
 
-	public Game getGame() {
-		return game;
-	}
-
 	public Label getGameDescriptionLabel() {
 		return gameDescriptionLabel;
 	}
@@ -619,10 +610,6 @@ public class ChessBoard extends Composite implements Constants {
 
 	public LabeledChessSquare getPieceJailSquare(int coloredPiece) {
 		return pieceJailSquares[coloredPiece];
-	}
-
-	public LabeledChessSquare[] getPieceJailSquares() {
-		return pieceJailSquares;
 	}
 
 	// void initSquareLabels() {
@@ -667,22 +654,18 @@ public class ChessBoard extends Composite implements Constants {
 	// fileLabels[7].setText("h");
 	// }
 
-	public RaptorPreferenceStore getPreferences() {
-		return preferences;
+	public LabeledChessSquare[] getPieceJailSquares() {
+		return pieceJailSquares;
 	}
 
 	public Label[] getRankLabels() {
 		return rankLabels;
 	}
 
-	public ChessBoardResources getResources() {
-		return resources;
-	}
-
 	public ChessSquare getSquare(int square) {
 
-		if (Utils.isPieceJailSquare(square)) {
-			return pieceJailSquares[Utils.pieceJailSquareToPiece(square)];
+		if (BoardUtils.isPieceJailSquare(square)) {
+			return pieceJailSquares[BoardUtils.pieceJailSquareToPiece(square)];
 		} else {
 			int rank = square / 8;
 			int file = square % 8;
@@ -802,19 +785,8 @@ public class ChessBoard extends Composite implements Constants {
 		this.blackNameRatingLabel = blackNameRatingLabel;
 	}
 
-	public void setBoardLayout(ChessBoardLayout layout) {
-		if (this.layout != layout) {
-			this.layout = layout;
-			layout.setBoard(this);
-		}
-	}
-
 	public void setBoardPanel(Composite boardPanel) {
 		this.boardPanel = boardPanel;
-	}
-
-	public void setConnector(Connector connector) {
-		this.connector = connector;
 	}
 
 	public void setController(ChessBoardController controller) {
@@ -838,18 +810,6 @@ public class ChessBoard extends Composite implements Constants {
 
 	public void setFileLabels(Label[] fileLabels) {
 		this.fileLabels = fileLabels;
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
-	public void setPreferences(RaptorPreferenceStore preferences) {
-		this.preferences = preferences;
-	}
-
-	public void setResources(ChessBoardResources resources) {
-		this.resources = resources;
 	}
 
 	public void setSquares(ChessSquare[][] squares) {
@@ -878,6 +838,8 @@ public class ChessBoard extends Composite implements Constants {
 	}
 
 	void updateBoardFromPrefs() {
+		RaptorPreferenceStore preferences = Raptor.getInstance()
+				.getPreferences();
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				squares[i][j].setForeground(preferences
@@ -936,6 +898,9 @@ public class ChessBoard extends Composite implements Constants {
 	}
 
 	public void updateFromPrefs() {
+		RaptorPreferenceStore preferences = Raptor.getInstance()
+				.getPreferences();
+
 		updateBoardFromPrefs();
 		updateCoordinateLabelsFromPrefs();
 

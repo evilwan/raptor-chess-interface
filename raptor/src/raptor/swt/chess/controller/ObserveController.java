@@ -3,6 +3,7 @@ package raptor.swt.chess.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
@@ -14,23 +15,19 @@ public class ObserveController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ObserveController.class);
 
 	protected GameServiceListener listener = new GameServiceAdapter() {
-
-		@Override
-		public void gameCreated(Game game) {
-		}
-
 		@Override
 		public void gameInactive(Game game) {
-			if (game.getId().equals(board.getGame().getId())) {
+			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							InactiveController inactiveController = new InactiveController();
+							InactiveController inactiveController = new InactiveController(
+									getGame());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 
 							board.clearCoolbar();
-							board.getConnector().getGameService()
+							getConnector().getGameService()
 									.removeGameServiceListener(listener);
 
 							inactiveController.init();
@@ -38,7 +35,7 @@ public class ObserveController extends ChessBoardController {
 							getBoard().fireOnControllerStateChange();
 							ObserveController.this.dispose();
 						} catch (Throwable t) {
-							board.getConnector().onError(
+							getConnector().onError(
 									"ExamineController.gameInactive", t);
 						}
 					}
@@ -48,7 +45,7 @@ public class ObserveController extends ChessBoardController {
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
-			if (game.getId().equals(board.getGame().getId())) {
+			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -58,7 +55,7 @@ public class ObserveController extends ChessBoardController {
 								adjustToGameChangeNotInvolvingMove();
 							}
 						} catch (Throwable t) {
-							board.getConnector().onError(
+							connector.onError(
 									"ObserveController.gameStateChanged", t);
 						}
 					}
@@ -67,22 +64,35 @@ public class ObserveController extends ChessBoardController {
 		}
 	};
 
+	protected Connector connector;
+
+	public ObserveController(Game game, Connector connector) {
+		super(game);
+		this.connector = connector;
+	}
+
 	@Override
 	protected void adjustCoolbarToInitial() {
-		board.addGameActionButtonsToCoolbar();
-		board.addScripterCoolbar();
-		board.packCoolbar();
+		if (!isBeingReparented()) {
+			board.addGameActionButtonsToCoolbar();
+			board.addScripterCoolbar();
+			board.packCoolbar();
+		}
 	}
 
 	@Override
 	public void adjustGameDescriptionLabel() {
-		board.getGameDescriptionLabel().setText(
-				"Observing " + getGame().getEvent());
+		if (!isBeingReparented()) {
+			board.getGameDescriptionLabel().setText(
+					"Observing " + getGame().getEvent());
+		}
 	}
 
 	@Override
 	protected void adjustPremoveLabel() {
-		board.getCurrentPremovesLabel().setText("");
+		if (!isBeingReparented()) {
+			board.getCurrentPremovesLabel().setText("");
+		}
 	}
 
 	@Override
@@ -92,9 +102,12 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void dispose() {
-		board.getConnector().getGameService().removeGameServiceListener(
-				listener);
+		connector.getGameService().removeGameServiceListener(listener);
 		super.dispose();
+	}
+
+	public Connector getConnector() {
+		return connector;
 	}
 
 	@Override
@@ -105,7 +118,7 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public void init() {
 		super.init();
-		board.getConnector().getGameService().addGameServiceListener(listener);
+		connector.getGameService().addGameServiceListener(listener);
 	}
 
 	@Override
@@ -175,12 +188,10 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public boolean onClose() {
-		boolean result = true;
-		if (board.getConnector().isConnected()
-				&& board.getGame().isInState(Game.ACTIVE_STATE)) {
-			board.getConnector().onUnobserve(board.getGame());
+		if (connector.isConnected() && getGame().isInState(Game.ACTIVE_STATE)) {
+			connector.onUnobserve(getGame());
 		}
-		return result;
+		return true;
 	}
 
 	@Override
@@ -195,7 +206,7 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	protected void onPlayMoveSound() {
-		if (board.getPreferences().getBoolean(
+		if (getPreferences().getBoolean(
 				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING)) {
 			SoundService.getInstance().playSound("obsMove");
 		}

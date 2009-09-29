@@ -20,13 +20,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
-import raptor.chat.ChatTypes;
-import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.RaptorStyledText;
 
-public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes {
+public class ChatConsole extends Composite implements PreferenceKeys {
 
 	static final Log LOG = LogFactory.getLog(ChatConsole.class);
 
@@ -41,8 +39,6 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 	protected StyledText outputText;
 	protected Composite buttonComposite;
 	protected Composite southControlsComposite;
-	protected Connector connector;
-	protected RaptorPreferenceStore preferences;
 	protected ChatConsoleController controller;
 	protected Label promptLabel;
 	protected Map<String, Button> buttonMap = new HashMap<String, Button>();
@@ -141,8 +137,8 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 
 		Raptor.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
-		inputText = new RaptorStyledText(this, SWT.V_SCROLL | SWT.H_SCROLL
-				| SWT.MULTI | SWT.BORDER);
+		inputText = new RaptorStyledText(this, SWT.V_SCROLL | SWT.MULTI
+				| SWT.BORDER);
 		inputText.setLayoutData(new GridData(GridData.FILL_BOTH));
 		inputText.setEditable(false);
 		inputText.setWordWrap(true);
@@ -199,10 +195,6 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		return buttonMap.get(button);
 	}
 
-	public Connector getConnector() {
-		return connector;
-	}
-
 	public ChatConsoleController getController() {
 		return controller;
 	}
@@ -215,8 +207,8 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		return outputText;
 	}
 
-	public RaptorPreferenceStore getPreferences() {
-		return preferences;
+	protected RaptorPreferenceStore getPreferences() {
+		return Raptor.getInstance().getPreferences();
 	}
 
 	public void setButtonEnabled(boolean isEnabled, String key) {
@@ -226,20 +218,12 @@ public class ChatConsole extends Composite implements PreferenceKeys, ChatTypes 
 		}
 	}
 
-	public void setConnector(Connector connector) {
-		this.connector = connector;
-	}
-
 	public void setController(ChatConsoleController controller) {
 		this.controller = controller;
 	}
 
-	public void setPreferences(RaptorPreferenceStore preferences) {
-		this.preferences = preferences;
-	}
-
 	public void updateFromPrefs() {
-		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
+		RaptorPreferenceStore prefs = getPreferences();
 		Color consoleBackground = prefs.getColor(CHAT_CONSOLE_BACKGROUND_COLOR);
 
 		buttonComposite.setBackground(consoleBackground);

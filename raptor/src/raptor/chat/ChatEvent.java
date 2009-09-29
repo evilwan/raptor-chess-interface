@@ -2,7 +2,7 @@ package raptor.chat;
 
 public class ChatEvent {
 	protected String source;
-	protected int type;
+	protected ChatType type;
 	protected String gameId;
 	protected String message;
 	protected String channel;
@@ -12,14 +12,14 @@ public class ChatEvent {
 		time = System.currentTimeMillis();
 	}
 
-	public ChatEvent(String source, int type, String message) {
+	public ChatEvent(String source, ChatType type, String message) {
 		this();
 		this.source = source;
 		this.type = type;
 		this.message = message;
 	}
 
-	public ChatEvent(String source, int type, String message, String gameId) {
+	public ChatEvent(String source, ChatType type, String message, String gameId) {
 		this(source, type, message);
 		this.gameId = gameId;
 	}
@@ -57,7 +57,7 @@ public class ChatEvent {
 	 * @return The type of ChatEvent.
 	 * @see ChatTypes.
 	 */
-	public int getType() {
+	public ChatType getType() {
 		return type;
 	}
 
@@ -90,7 +90,7 @@ public class ChatEvent {
 	 *            The type of ChatEvent this is.
 	 * @see ChatTypes.
 	 */
-	public void setType(int type) {
+	public void setType(ChatType type) {
 		this.type = type;
 	}
 
@@ -99,8 +99,8 @@ public class ChatEvent {
 	 */
 	@Override
 	public String toString() {
-		return "ChatEvent: source=" + source + " type=" + type + " gameId="
-				+ gameId + " message='" + message + "'";
+		return "ChatEvent: source=" + source + " type=" + type.name()
+				+ " gameId=" + gameId + " message='" + message + "'";
 	}
 
 }

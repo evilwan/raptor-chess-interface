@@ -13,8 +13,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.PreferenceStore;
 
+import raptor.Raptor;
 import raptor.chat.ChatEvent;
-import raptor.chat.ChatTypes;
+import raptor.chat.ChatType;
 import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.game.Move;
@@ -25,6 +26,11 @@ import raptor.service.ChatService;
 import raptor.service.GameService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
+import raptor.service.GameService.GameServiceAdapter;
+import raptor.service.GameService.GameServiceListener;
+import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.controller.MainController;
+import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.util.RaptorStringTokenizer;
 import free.freechess.timeseal.TimesealingSocket;
 
@@ -124,6 +130,17 @@ public class FicsConnector implements Connector, PreferenceKeys {
 		 * This method also handles login logic which is tricky.
 		 */
 		protected void onNewInput() {
+
+			if (lastSendTime != 0) {
+				ThreadService.getInstance().run(new Runnable() {
+					public void run() {
+						long currentTime = System.currentTimeMillis();
+						Raptor.getInstance().getRaptorWindow().setPingTime(
+								FicsConnector.this, currentTime - lastSendTime);
+						lastSendTime = 0;
+					}
+				});
+			}
 			if (isLoggedIn) {
 
 				// If we are logged in. Then parse out all the text between the
@@ -301,9 +318,24 @@ public class FicsConnector implements Connector, PreferenceKeys {
 	protected PreferenceStore preferences;
 	protected Socket socket;
 	protected String userName;
+	protected long lastSendTime;
+
+	/**
+	 * Adds the game windows to the RaptorAppWindow.
+	 */
+	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
+
+		@Override
+		public void gameCreated(Game game) {
+			Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+					new ChessBoardWindowItem(FicsUtils.buildController(game,
+							FicsConnector.this)));
+		}
+	};
 
 	public FicsConnector() {
 		refreshGameScripts();
+		gameService.addGameServiceListener(gameServiceListener);
 	}
 
 	/**
@@ -324,12 +356,16 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					"You are already connected. Disconnect before invoking connect.");
 		}
 
+		// Add the main console tab to the raptor window.
+		Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				new ChatConsoleWindowItem(new MainController(this)), true);
+
 		LOG.info("Connecting to " + preferences.getString(FICS_SERVER_URL)
 				+ " " + preferences.getInt(FICS_PORT));
 		LOG.info("Trying to connect");
 		publishEvent(new ChatEvent(
 				null,
-				ChatTypes.INTERNAL,
+				ChatType.INTERNAL,
 				"Connecting to "
 						+ preferences.getString(FICS_SERVER_URL)
 						+ " "
@@ -352,7 +388,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 								.getString(FICS_SERVER_URL), preferences
 								.getInt(FICS_PORT));
 					}
-					publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
+					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Connected"));
 
 					inputChannel = Channels.newChannel(socket.getInputStream());
@@ -366,7 +402,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 					LOG.info("Connection successful");
 				} catch (Exception ce) {
-					publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
+					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Error: " + ce.getMessage()));
 					disconnect();
 					return;
@@ -425,7 +461,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 					daemonRunnable = null;
 				}
 
-				publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
+				publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 						"Disconnected"));
 				LOG.error("Disconnected from FicsConnection.");
 			}
@@ -447,6 +483,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 			chatService = null;
 		}
 		if (gameService != null) {
+			gameService.removeGameServiceListener(gameServiceListener);
 			gameService.dispose();
 			gameService = null;
 		}
@@ -592,7 +629,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 						+ "bug free and we need your help! Please take a moment to report this "
 						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
 						+ message);
-		publishEvent(new ChatEvent(null, ChatTypes.INTERNAL, errorMessage));
+		publishEvent(new ChatEvent(null, ChatType.INTERNAL, errorMessage));
 	}
 
 	public void onError(String message, Throwable t) {
@@ -601,7 +638,7 @@ public class FicsConnector implements Connector, PreferenceKeys {
 						+ "bug free and we need your help! Please take a moment to report this "
 						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
 						+ message + "\n" + ExceptionUtils.getFullStackTrace(t));
-		publishEvent(new ChatEvent(null, ChatTypes.INTERNAL, errorMessage));
+		publishEvent(new ChatEvent(null, ChatType.INTERNAL, errorMessage));
 	}
 
 	public void onExamineModeBack(Game game) {
@@ -760,8 +797,9 @@ public class FicsConnector implements Connector, PreferenceKeys {
 				try {
 					socket.getOutputStream().write(message.getBytes());
 					socket.getOutputStream().flush();
+					lastSendTime = System.currentTimeMillis();
 				} catch (Throwable t) {
-					publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
+					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Error: " + t.getMessage()));
 					disconnect();
 				}
@@ -769,11 +807,11 @@ public class FicsConnector implements Connector, PreferenceKeys {
 
 			if (!isHidingFromUser) {
 				// Wrap the text before publishing an outbound event.
-				publishEvent(new ChatEvent(null, ChatTypes.OUTBOUND, message
+				publishEvent(new ChatEvent(null, ChatType.OUTBOUND, message
 						.trim()));
 			}
 		} else {
-			publishEvent(new ChatEvent(null, ChatTypes.INTERNAL,
+			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 					"Error: Unable to send " + message
 							+ ". There is currently no connection."));
 		}
