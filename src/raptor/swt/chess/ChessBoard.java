@@ -14,7 +14,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -441,62 +440,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 		boardPanel = new Composite(this, SWT.NONE);
 		boardPanel.setBackgroundMode(SWT.INHERIT_DEFAULT);
-
-		Image myImage = new Image(Raptor.getInstance().getRaptorWindow()
-				.getShell().getDisplay(), 500, 500);
-
-		// if (getBoard().getController().getGame().getResult() ==
-		// Result.IN_PROGRESS) {
-		// return;
-		// } else {
-		// String text = null;
-		// switch (getBoard().getController().getGame().getResult()) {
-		// case WHITE_WON:
-		// text = "1-0";
-		// case BLACK_WON:
-		// text = "0-1";
-		// case DRAW:
-		// text = "1/2-1/2";
-		// default:
-		// text = "*";
-		// }
-		//
-		// Point extent = e.gc.stringExtent(text);
-		//
-		// System.err.println("Extent: " + extent.x + "," + extent.y
-		// + " text=" + text + " font=" + e.gc.getFont() + " "
-		// + e.gc.getForeground());
-		//
-		// // e.gc.setForeground(Raptor.getInstance().getPreferences()
-		// // .getColor(PreferenceKeys.BOARD_RESULT_COLOR));
-		// // e.gc.setFont(Raptor.getInstance().getPreferences().getFont(
-		// // PreferenceKeys.BOARD_RESULT_FONT));
-		//
-		// e.gc.drawString(text, 0, 0, false);
-		//
-		// e.gc.setAlpha(200);
-		//
-		// e.gc.setForeground(new Color(board.getDisplay(), new RGB(
-		// 255, 255, 255)));
-		// e.gc.setFont(Raptor.getInstance().getPreferences().getFont(
-		// PreferenceKeys.BOARD_RESULT_FONT));
-		//
-		// extent = e.gc.stringExtent(text);
-		//
-		// System.err.println("Extent: " + extent.x + "," + extent.y
-		// + " text=" + text + " font=" + e.gc.getFont() + " "
-		// + e.gc.getForeground());
-		//
-		// e.gc.drawText(text, boardTopLeft.x + boardSquareSize * 4
-		// - extent.x / 2, boardTopLeft.y + boardSquareSize
-		// * 4 - extent.y / 2, true);
-		//
-		// LOG.debug("DREW RESULT TEXT");
-		//
-		// }
-		// }
-		// });
-		// }
 
 		boardPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
 		boardPanel.setLayout(chessBoardLayout);
