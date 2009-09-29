@@ -4,7 +4,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Layout;
 
-public abstract class ChessBoardLayout extends Layout implements Constants {
+public abstract class ChessBoardLayout extends Layout implements BoardConstants {
 	public static enum Field {
 		GAME_DESCRIPTION_LABEL, STATUS_LABEL, CURRENT_PREMOVE_LABEL, OPENING_DESCRIPTION_LABEL, CLOCK_LABEL, LAG_LABEL, NAME_RATING_LABEL, COOLBAR, TO_MOVE_INDICATOR;
 	}

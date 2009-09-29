@@ -28,7 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import raptor.Raptor;
 import raptor.pref.RaptorPreferenceStore;
 
-public class ChessSquare extends Composite implements Constants {
+public class ChessSquare extends Composite implements BoardConstants {
 
 	public static final String CLICK_INITIATOR = "CLICK_INITIATOR";
 	public static final String DRAG_INITIATOR = "DRAG_INITIATOR";
