@@ -3,8 +3,13 @@
 2) Unexpected crashes in OSX (I think it might have to do with overloading the thread pool). 
 The are less frequent but they still occur.
 
-3) Game legal move generation: (I think that has to do with disambiguity by check.
+3) Fix RightOrientedLayout it doesnt look right at all sizes pieces get cut off.
+   Add fonts that grow/shrink and change the size of the piece jail squares if they will not fit.
+   
+4) Game legal move generation: (I think that has to do with disambiguity by check.
  There is code in the san parsing to do this, but its not working.)
+ 
+
 
  Issue: Error in DaemonRun.onNewInput
 java.lang.IllegalArgumentException: Invalid move Re1
