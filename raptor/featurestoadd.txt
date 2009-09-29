@@ -1,0 +1,23 @@
+1) Support for zh,bughosue,and all variaints.
+2) Preference screens for all prefs.
+3) BICS connector
+4) Installer
+5) Build
+6) Bug buttons
+7) Seek graph
+8) Bugwho panels
+9) Scripting
+10) Engine support
+11) More ChessBoardLayouts
+12) More Chess Sets
+13) Redo sounds
+14) Making music while moves are made on the chessboard.
+15) Graphical Arrows to show moves made.
+16) Premove
+17) Bughouse suggestions.
+18) Better mouse image cursor (Current way of doing it sucks).
+19) Login dialog to handle multiple profiles.
+20) Add in some support for ficsgames.com
+21) Voice support
+22) Add in drag and drop of RaptorWindowItems into different Quadrants.
+23) PGN support.
