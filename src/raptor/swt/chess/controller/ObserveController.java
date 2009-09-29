@@ -31,9 +31,13 @@ public class ObserveController extends ChessBoardController {
 									.removeGameServiceListener(listener);
 
 							inactiveController.init();
-
-							getBoard().fireOnControllerStateChange();
+							inactiveController
+									.setItemChangedListeners(itemChangedListeners);
+							// Set the listeners to null so they wont get
+							// cleared and disposed
+							setItemChangedListeners(null);
 							ObserveController.this.dispose();
+							inactiveController.fireItemChanged();
 						} catch (Throwable t) {
 							getConnector().onError(
 									"ExamineController.gameInactive", t);
@@ -103,6 +107,9 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public void dispose() {
 		connector.getGameService().removeGameServiceListener(listener);
+		if (connector.isConnected() && getGame().isInState(Game.ACTIVE_STATE)) {
+			connector.onUnobserve(getGame());
+		}
 		super.dispose();
 	}
 
@@ -184,14 +191,6 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public boolean isRevertable() {
 		return false;
-	}
-
-	@Override
-	public boolean onClose() {
-		if (connector.isConnected() && getGame().isInState(Game.ACTIVE_STATE)) {
-			connector.onUnobserve(getGame());
-		}
-		return true;
 	}
 
 	@Override

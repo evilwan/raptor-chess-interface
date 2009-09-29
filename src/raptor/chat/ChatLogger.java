@@ -22,6 +22,8 @@ public class ChatLogger {
 		 * Invoked on each chat event encountered in the file.
 		 */
 		public void onNewEventParsed(ChatEvent event);
+
+		public void onParseCompleted();
 	}
 
 	private static final Log LOG = LogFactory.getLog(ChatLogger.class);
@@ -69,6 +71,7 @@ public class ChatLogger {
 					}
 					currentLine = reader.readLine();
 				}
+				listener.onParseCompleted();
 			} catch (IOException ioe) {
 				throw new RuntimeException(ioe);
 			} finally {

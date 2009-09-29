@@ -43,8 +43,14 @@ public class SetupController extends ChessBoardController {
 
 							inactiveController.init();
 
-							getBoard().fireOnControllerStateChange();
+							inactiveController
+									.setItemChangedListeners(itemChangedListeners);
+							// Set the listeners to null so they wont get
+							// cleared and disposed
+							setItemChangedListeners(null);
+							unexamineOnDispose = false;
 							SetupController.this.dispose();
+							inactiveController.fireItemChanged();
 						} catch (Throwable t) {
 							connector
 									.onError("SetupController.gameInactive", t);
@@ -105,8 +111,14 @@ public class SetupController extends ChessBoardController {
 
 							examineController.init();
 
-							getBoard().fireOnControllerStateChange();
+							examineController
+									.setItemChangedListeners(itemChangedListeners);
+							// Set the listeners to null so they wont get
+							// cleared and disposed
+							setItemChangedListeners(null);
+							unexamineOnDispose = false;
 							SetupController.this.dispose();
+							examineController.fireItemChanged();
 						} catch (Throwable t) {
 							connector.onError(
 									"SetupController.setupGameBecameExamined",
@@ -119,6 +131,7 @@ public class SetupController extends ChessBoardController {
 	};
 
 	protected Connector connector;
+	protected boolean unexamineOnDispose = true;
 
 	public SetupController(Game game, Connector connector) {
 		super(game);
@@ -249,8 +262,9 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void dispose() {
-		if (!isBeingReparented()) {
-			connector.getGameService().removeGameServiceListener(listener);
+		connector.getGameService().removeGameServiceListener(listener);
+		if (unexamineOnDispose && getGame().isInState(Game.ACTIVE_STATE)) {
+			connector.onUnexamine(getGame());
 		}
 		super.dispose();
 	}
@@ -334,17 +348,6 @@ public class SetupController extends ChessBoardController {
 	@Override
 	public boolean isRevertable() {
 		return false;
-	}
-
-	@Override
-	public boolean onClose() {
-		if (!isBeingReparented()) {
-			if (connector.isConnected()
-					&& getGame().isInState(Game.ACTIVE_STATE)) {
-				connector.onUnexamine(getGame());
-			}
-		}
-		return true;
 	}
 
 	@Override

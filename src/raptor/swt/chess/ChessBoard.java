@@ -1,8 +1,6 @@
 package raptor.swt.chess;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -31,9 +29,6 @@ import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.chess.layout.RightOrientedLayout;
 
 public class ChessBoard extends Composite implements BoardConstants {
-	public static interface ChessBoardListener {
-		public void onControllerStateChange();
-	}
 
 	public static final String LAST_NAV = "last_nav";
 	public static final String NEXT_NAV = "forward_nav";
@@ -72,9 +67,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 	protected ChessBoardLayout chessBoardLayout;
 
 	protected Label openingDescriptionLabel;
-
-	protected List<ChessBoardListener> listeners = new ArrayList<ChessBoardListener>(
-			5);
 
 	// Piece jail is indexed by the colored piece constants in Constants.
 	// Some of the indexes will always be null.
@@ -149,10 +141,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 		CoolItem item = new CoolItem(getCoolbar(), SWT.NONE);
 		item.setControl(composite);
-	}
-
-	public void addChessBoardListener(ChessBoardListener listener) {
-		listeners.add(listener);
 	}
 
 	public void addGameActionButtonsToCoolbar() {
@@ -505,20 +493,10 @@ public class ChessBoard extends Composite implements BoardConstants {
 			chessBoardLayout.dispose();
 			chessBoardLayout = null;
 		}
-		if (listeners != null) {
-			listeners.clear();
-			listeners = null;
-		}
 
 		LOG.debug("Disposed chessboard.");
 
 		super.dispose();
-	}
-
-	public void fireOnControllerStateChange() {
-		for (ChessBoardListener listener : listeners) {
-			listener.onControllerStateChange();
-		}
 	}
 
 	public void forceUpdate() {
@@ -767,10 +745,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 			}
 		}
 		coolbarComposite.layout();
-	}
-
-	public void removeChessBoardListener(ChessBoardListener listener) {
-		listeners.add(listener);
 	}
 
 	public void setBlackClockLabel(Label blackClockLabel) {

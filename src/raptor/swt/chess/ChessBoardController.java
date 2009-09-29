@@ -1,5 +1,8 @@
 package raptor.swt.chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -13,8 +16,10 @@ import raptor.game.util.ECOParser;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.swt.ItemChangedListener;
 
-public abstract class ChessBoardController implements BoardConstants, GameConstants {
+public abstract class ChessBoardController implements BoardConstants,
+		GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 
 	protected ClockLabelUpdater blackClockUpdater;
@@ -24,10 +29,16 @@ public abstract class ChessBoardController implements BoardConstants, GameConsta
 	protected Game game;
 	protected boolean storedIsWhiteOnTop;
 	protected boolean storedIsWhitePieceJailOnTop;
+	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
+			5);
 
 	public ChessBoardController(Game game) {
 		this.game = game;
 		traverser = new MoveListTraverser(game);
+	}
+
+	public void addItemChangedListener(ItemChangedListener listener) {
+		itemChangedListeners.add(listener);
 	}
 
 	protected void adjustBoardToGame(Game game) {
@@ -395,7 +406,27 @@ public abstract class ChessBoardController implements BoardConstants, GameConsta
 			whiteClockUpdater.stop();
 			whiteClockUpdater.dispose();
 		}
+
+		if (itemChangedListeners != null) {
+			itemChangedListeners.clear();
+			itemChangedListeners = null;
+		}
+
+		game = null;
+
 		LOG.debug("Disposed ChessBoardController");
+	}
+
+	/**
+	 * Should be invoked when the title or closeability changes.
+	 */
+	public void fireItemChanged() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Firing itemChanged");
+		}
+		for (ItemChangedListener listener : itemChangedListeners) {
+			listener.itemStateChanged();
+		}
 	}
 
 	public ChessBoard getBoard() {
@@ -408,6 +439,10 @@ public abstract class ChessBoardController implements BoardConstants, GameConsta
 
 	public MoveListTraverser getGameTraverser() {
 		return traverser;
+	}
+
+	public List<ItemChangedListener> getItemChangedListeners() {
+		return itemChangedListeners;
 	}
 
 	protected RaptorPreferenceStore getPreferences() {
@@ -481,12 +516,6 @@ public abstract class ChessBoardController implements BoardConstants, GameConsta
 	public void onActivate() {
 	}
 
-	/**
-	 * Return true to continue with the close operation. False if the close
-	 * operation should be haulted.
-	 */
-	public abstract boolean onClose();
-
 	public void onFlip() {
 		LOG.debug("onFlip");
 		board.setWhiteOnTop(!board.isWhiteOnTop());
@@ -550,7 +579,6 @@ public abstract class ChessBoardController implements BoardConstants, GameConsta
 		board.setWhitePieceJailOnTop(storedIsWhitePieceJailOnTop);
 		storedIsWhiteOnTop = board.isWhiteOnTop();
 		storedIsWhitePieceJailOnTop = board.isWhitePieceJailOnTop();
-		initClockUpdaters();
 		adjustCoolbarToInitial();
 		adjustToGameInitial();
 	}
@@ -577,12 +605,21 @@ public abstract class ChessBoardController implements BoardConstants, GameConsta
 	public void onSetupStart() {
 	}
 
+	public void removeItemChangedListener(ItemChangedListener listener) {
+		itemChangedListeners.remove(listener);
+	}
+
 	public void setBoard(ChessBoard board) {
 		this.board = board;
 	}
 
+	public void setItemChangedListeners(
+			List<ItemChangedListener> itemChangedListeners) {
+		this.itemChangedListeners = itemChangedListeners;
+	}
+
 	protected void startClocks() {
-		if (isBeingReparented()) {
+		if (!isBeingReparented()) {
 			if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
 				initClockUpdaters();
 				if (getGame().getColorToMove() == WHITE) {

@@ -11,9 +11,9 @@ import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
 import raptor.service.SoundService;
+import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
-import raptor.swt.chess.BoardConstants;
 
 public class InactiveController extends ChessBoardController implements
 		BoardConstants, GameConstants {
@@ -147,11 +147,6 @@ public class InactiveController extends ChessBoardController implements
 	public boolean isRevertable() {
 		// TODO Auto-generated method stub
 		return false;
-	}
-
-	@Override
-	public boolean onClose() {
-		return true;
 	}
 
 	@Override

@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferencesDialog;
+import raptor.swt.ItemChangedListener;
 import raptor.swt.ProfileWIndow;
 import raptor.swt.SWTUtils;
 
@@ -108,6 +109,7 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	protected class RaptorTabItem extends CTabItem {
 		protected RaptorWindowItem raptorItem;
+		protected ItemChangedListener listener;
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				RaptorWindowItem item) {
@@ -115,7 +117,7 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
-				RaptorWindowItem item, boolean isInitingItem) {
+				final RaptorWindowItem item, boolean isInitingItem) {
 			super(parent, style);
 
 			if (LOG.isDebugEnabled()) {
@@ -129,12 +131,31 @@ public class RaptorWindow extends ApplicationWindow {
 				item.init(parent);
 			}
 
+			item.addItemChangedListener(listener = new ItemChangedListener() {
+				public void itemStateChanged() {
+					if (LOG.isDebugEnabled()) {
+						LOG
+								.debug("Item changed, updating text,title,showClose");
+					}
+					setText(item.getTitle());
+					setImage(item.getImage());
+					setShowClose(item.isCloseable());
+				}
+			});
+
 			setControl(item.getControl());
 			setText(item.getTitle());
+			setImage(item.getImage());
 			setShowClose(item.isCloseable());
 			parent.layout(true);
 			parent.setSelection(this);
 
+		}
+
+		@Override
+		public void dispose() {
+			raptorItem.dispose();
+			super.dispose();
 		}
 
 		public void refresh() {
@@ -146,6 +167,7 @@ public class RaptorWindow extends ApplicationWindow {
 			setControl(null);
 			raptorItem.getControl().setVisible(false);
 			raptorItem.onReparent(newParent);
+			raptorItem.removeItemChangedListener(listener);
 			new RaptorTabItem(newParent, getStyle(), raptorItem, false);
 			dispose();
 			restoreFolders();
