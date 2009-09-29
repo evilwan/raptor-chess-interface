@@ -6,6 +6,23 @@ The are less frequent but they still occur.
 3) Fix RightOrientedLayout it doesnt look right at all sizes pieces get cut off.
    Add fonts that grow/shrink and change the size of the piece jail squares if they will not fit.
    
+4) Bug when pressing the goto first button when obsing a game.   
+   ava.lang.NullPointerException
+    at raptor.swt.chess.ChessBoardController.adjustFromNavigationChange(ChessBoardController.java:119)
+    at raptor.swt.chess.ChessBoardController.onNavBack(ChessBoardController.java:555)
+    at raptor.swt.chess.ChessBoard$3.widgetSelected(ChessBoard.java:192)
+    at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:228)
+    at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:84)
+    at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1561)
+    at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1585)
+    at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1570)
+    at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:1360)
+    at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3482)
+    at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3068)
+    at org.eclipse.jface.window.Window.runEventLoop(Window.java:825)
+    at org.eclipse.jface.window.Window.open(Window.java:801)
+    at raptor.Raptor.main(Raptor.java:98)
+   
 4) Game legal move generation: (I think that has to do with disambiguity by check.
  There is code in the san parsing to do this, but its not working.)
  
