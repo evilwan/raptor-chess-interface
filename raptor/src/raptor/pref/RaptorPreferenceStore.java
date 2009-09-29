@@ -218,6 +218,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				128, 128));
 		PreferenceConverter.setDefault(this, BOARD_STATUS_COLOR, new RGB(128,
 				128, 128));
+		PreferenceConverter.setDefault(this, BOARD_RESULT_COLOR, new RGB(255,
+				0, 0));
 
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName, 14, 0) });
@@ -237,6 +239,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
+		PreferenceConverter.setDefault(this, BOARD_RESULT_FONT,
+				new FontData[] { new FontData(defaultFontName, 40, SWT.BOLD) });
 
 		// Chat
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);

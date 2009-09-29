@@ -67,7 +67,7 @@ public class SetupController extends ChessBoardController {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							besetupPositionUpdated();
+							setupPositionUpdated();
 						} catch (Throwable t) {
 							connector.onError(
 									"ExamineController.gameStateChanged", t);
@@ -83,7 +83,7 @@ public class SetupController extends ChessBoardController {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							bsetupOnIllegalMove(move);
+							setupOnIllegalMove(move);
 						} catch (Throwable t) {
 							connector.onError("ExamineController.illegalMove",
 									t);
@@ -217,41 +217,6 @@ public class SetupController extends ChessBoardController {
 			board.getSquare(move.getTo()).setPiece(
 					BoardUtils.getColoredPiece(move.getPiece(), move
 							.isWhitesMove()));
-		}
-	}
-
-	public void besetupPositionUpdated() {
-		if (!isBeingReparented()) {
-			LOG.info("besetupPositionUpdated " + getGame().getId() + " ...");
-			long startTime = System.currentTimeMillis();
-
-			stopClocks();
-
-			adjustNameRatingLabels();
-			adjustGameDescriptionLabel();
-			adjustToGameChangeNotInvolvingMove();
-			adjustBoardToGame(getGame());
-			adjustPieceJailFromGame(getGame());
-			adjustNavButtonEnabledState();
-			adjustClockColors();
-
-			board.forceUpdate();
-			onPlayMoveSound();
-			board.unhighlightAllSquares();
-			LOG.info("examinePositionUpdate in " + getGame().getId() + "  "
-					+ (System.currentTimeMillis() - startTime));
-		}
-	}
-
-	public void bsetupOnIllegalMove(String move) {
-		if (!isBeingReparented()) {
-			LOG.info("bsetupOnIllegalMove " + getGame().getId() + " ...");
-			long startTime = System.currentTimeMillis();
-			SoundService.getInstance().playSound("illegalMove");
-			board.getStatusLabel().setText("Illegal Move: " + move);
-			board.unhighlightAllSquares();
-			LOG.info("examineOnIllegalMove in " + getGame().getId() + "  "
-					+ (System.currentTimeMillis() - startTime));
 		}
 	}
 
@@ -390,6 +355,41 @@ public class SetupController extends ChessBoardController {
 	public void onSetupStart() {
 		if (!isBeingReparented()) {
 			connector.onSetupStartPosition(getGame());
+		}
+	}
+
+	public void setupOnIllegalMove(String move) {
+		if (!isBeingReparented()) {
+			LOG.info("bsetupOnIllegalMove " + getGame().getId() + " ...");
+			long startTime = System.currentTimeMillis();
+			SoundService.getInstance().playSound("illegalMove");
+			board.getStatusLabel().setText("Illegal Move: " + move);
+			board.unhighlightAllSquares();
+			LOG.info("examineOnIllegalMove in " + getGame().getId() + "  "
+					+ (System.currentTimeMillis() - startTime));
+		}
+	}
+
+	public void setupPositionUpdated() {
+		if (!isBeingReparented()) {
+			LOG.info("besetupPositionUpdated " + getGame().getId() + " ...");
+			long startTime = System.currentTimeMillis();
+
+			stopClocks();
+
+			adjustNameRatingLabels();
+			adjustGameDescriptionLabel();
+			adjustToGameChangeNotInvolvingMove();
+			adjustBoardToGame(getGame());
+			adjustPieceJailFromGame(getGame());
+			adjustNavButtonEnabledState();
+			adjustClockColors();
+
+			board.forceUpdate();
+			onPlayMoveSound();
+			board.unhighlightAllSquares();
+			LOG.info("examinePositionUpdate in " + getGame().getId() + "  "
+					+ (System.currentTimeMillis() - startTime));
 		}
 	}
 

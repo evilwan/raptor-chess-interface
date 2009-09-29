@@ -4,7 +4,8 @@ import raptor.connector.fics.game.message.G1Message;
 import raptor.util.RaptorStringTokenizer;
 
 /**
- *iv_gameinfo
+ *iv_gameinfo help file on fics. CDays comments are in []s because some of the
+ * documentation is just wrong.
  * 
  * Setting ivariable gameinfo provides the interface with extra notifications
  * when the start starts a game or simul or a game is observed.
@@ -17,7 +18,9 @@ import raptor.util.RaptorStringTokenizer;
  * helpfile)
  * 
  * This is in the format: game_number p=private(1/0) t=type r=rated(1/0)
- * u=white_registered(1/0),black_registered(1/0)
+ * 
+ * u=white_registered(1/0),black_registered(1/0) [ CDay: ***INCORRECT they are
+ * set to 1 if white/black are UNregistered]
  * 
  * it=initial_white_time,initial_black_time [ CDay: **INCORRECT** its
  * it=initialWhiteTimeSec,initialWhiteIncSec]
@@ -70,8 +73,8 @@ public class G1Parser {
 
 			// parse past u
 			tok.nextToken();
-			result.isWhtieRegistered = tok.nextToken().equals("1");
-			result.isBlackRegistered = tok.nextToken().equals("1");
+			result.isWhtieRegistered = !tok.nextToken().equals("1");
+			result.isBlackRegistered = !tok.nextToken().equals("1");
 
 			// parse past it
 			tok.nextToken();
@@ -100,6 +103,13 @@ public class G1Parser {
 			// m and n are still there i have no idea what they are.
 			// If you do please update the documentation and let the team know.
 			// They might be useful.
+
+			if (!result.isBlackRegistered) {
+				result.blackRating = "++++";
+			}
+			if (!result.isWhtieRegistered) {
+				result.whiteRating = "++++";
+			}
 
 			return result;
 		}

@@ -1,8 +1,10 @@
 package raptor.swt;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Display;
 
 public class SWTUtils {
 
@@ -28,4 +30,12 @@ public class SWTUtils {
 		result.marginWidth = 0;
 		return result;
 	}
+
+	public static Font getProportionalFont(Display display, Font oldFont,
+			double resizePercentage, int controlHeight) {
+		return new Font(display, oldFont.getFontData()[0].getName(),
+				(int) (controlHeight * resizePercentage),
+				oldFont.getFontData()[0].getStyle());
+	}
+
 }

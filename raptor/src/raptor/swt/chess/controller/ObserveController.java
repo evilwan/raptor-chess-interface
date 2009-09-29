@@ -21,6 +21,9 @@ public class ObserveController extends ChessBoardController {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+
+							board.redrawSquares();
+
 							InactiveController inactiveController = new InactiveController(
 									getGame());
 							getBoard().setController(inactiveController);

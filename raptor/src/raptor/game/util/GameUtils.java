@@ -7,6 +7,7 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.LosersGame;
 import raptor.game.SuicideGame;
+import raptor.game.Game.Type;
 
 //KoggeStone
 //http://www.open-aurec.com/wbforum/viewtopic.php?f=4&t=49948&sid=abd6ee7224f34b11a5211aa167f01ac4
@@ -53,32 +54,27 @@ public class GameUtils implements GameConstants {
 		return bitboard & ~squaresToClear;
 	}
 
-	public static final Game createFromFen(String fen, int gameType) {
+	public static final Game createFromFen(String fen, Type gameType) {
 		// rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
 		Game result = null;
 
 		switch (gameType) {
-		case Game.BLITZ:
-		case Game.STANDARD:
-		case Game.LIGHTNING:
-		case Game.UNTIMED_STATE:
+		case CLASSIC:
+		case WILD:
 			result = new Game();
 			break;
-		case Game.LOSERS:
+		case LOSERS:
 			result = new LosersGame();
 			break;
-		case Game.SUICIDE:
+		case SUICIDE:
 			result = new SuicideGame();
 			break;
-		case Game.FISCHER_RANDOM:
+		case FISCHER_RANDOM:
 			result = new FischerRandomGame();
 			break;
-		case Game.WILD:
-			result = new Game();
-			break;
-		case Game.BUGHOUSE:
-		case Game.CRAZY_HOUSE:
+		case BUGHOUSE:
+		case CRAZYHOUSE:
 		default:
 			throw new IllegalArgumentException("Type " + gameType
 					+ " is not supported");
@@ -175,7 +171,7 @@ public class GameUtils implements GameConstants {
 		return result;
 	}
 
-	public static final Game createStartingPosition(int gameType) {
+	public static final Game createStartingPosition(Type gameType) {
 		return createFromFen(STARTING_POSITION_FEN, gameType);
 	}
 
@@ -279,12 +275,49 @@ public class GameUtils implements GameConstants {
 		return square / 8;
 	}
 
+	/**
+	 * Returns the SAN,short algebraic notation for the square. If square is a
+	 * DROP square returns a constant suitable for debugging.
+	 * 
+	 * @param square
+	 *            The square.
+	 */
 	public static final String getSan(int square) {
 		if (square == 64) {
 			return "-";
-		} else {
+		} else if (square < 100) {
 			return "" + FILE_FROM_SAN.charAt(square % 8)
 					+ RANK_FROM_SAN.charAt(square / 8);
+		} else {
+			switch (square) {
+			case WN_DROP_FROM_SQUARE:
+				return "WN_DROP";
+			case WP_DROP_FROM_SQUARE:
+				return "WP_DROP";
+			case WB_DROP_FROM_SQUARE:
+				return "WB_DROP";
+			case WR_DROP_FROM_SQUARE:
+				return "WR_DROP";
+			case WQ_DROP_FROM_SQUARE:
+				return "WQ_DROP";
+			case WK_DROP_FROM_SQUARE:
+				return "WK_DROP";
+			case BN_DROP_FROM_SQUARE:
+				return "BN_DROP";
+			case BP_DROP_FROM_SQUARE:
+				return "BP_DROP";
+			case BB_DROP_FROM_SQUARE:
+				return "BB_DROP";
+			case BR_DROP_FROM_SQUARE:
+				return "BR_DROP";
+			case BQ_DROP_FROM_SQUARE:
+				return "BQ_DROP";
+			case BK_DROP_FROM_SQUARE:
+				return "BK_DROP";
+			default:
+				throw new IllegalArgumentException("Invalid square " + square);
+
+			}
 		}
 	}
 
@@ -419,6 +452,10 @@ public class GameUtils implements GameConstants {
 		}
 	}
 
+	public static boolean isBlackPiece(Game game, int square) {
+		return (game.getColorBB(BLACK) & getBitboard(square)) != 0;
+	}
+
 	public static final boolean isInBounds(int rank, int file) {
 		return rank >= 0 && rank <= 7 && file >= 0 && file <= 7;
 	}
@@ -434,6 +471,10 @@ public class GameUtils implements GameConstants {
 		} else {
 			return game.getPiece(fromSquare) == PAWN && getRank(toSquare) == 0;
 		}
+	}
+
+	public static boolean isWhitePiece(Game game, int square) {
+		return (game.getColorBB(WHITE) & getBitboard(square)) != 0;
 	}
 
 	public static final long kingMove(int square) {
@@ -586,5 +627,4 @@ public class GameUtils implements GameConstants {
 	public static long whiteSinglePushTargets(long whitePawns, long empty) {
 		return (northOne(whitePawns) & empty);
 	}
-
 }

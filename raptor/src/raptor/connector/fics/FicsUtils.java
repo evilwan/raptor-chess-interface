@@ -13,14 +13,18 @@ import raptor.connector.fics.game.message.G1Message;
 import raptor.connector.fics.game.message.Style12Message;
 import raptor.game.Game;
 import raptor.game.GameConstants;
+import raptor.game.LosersGame;
 import raptor.game.SetupGame;
+import raptor.game.SuicideGame;
 import raptor.game.Game.PositionState;
+import raptor.game.Game.Type;
 import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.ObserveController;
+import raptor.swt.chess.controller.PlayingController;
 import raptor.swt.chess.controller.SetupController;
 import raptor.util.RaptorStringTokenizer;
 
@@ -91,6 +95,12 @@ public class FicsUtils implements GameConstants {
 			}
 			result = true;
 		}
+
+		if (message.isClockTicking) {
+			game.addState(Game.IS_CLOCK_TICKING_STATE);
+		} else {
+			game.clearState(Game.IS_CLOCK_TICKING_STATE);
+		}
 		return result;
 	}
 
@@ -115,7 +125,7 @@ public class FicsUtils implements GameConstants {
 				int adjustedHalfMoveCount = game.getHalfMoveCount()
 						- takeback.halfMovesRequested;
 
-				if (game.getMoves().getSize() < adjustedHalfMoveCount) {
+				if (game.getMoveList().getSize() < adjustedHalfMoveCount) {
 					if (LOG.isDebugEnabled()) {
 						LOG
 								.debug("Resettting position becuse we dont have enough moves to handle the takebacks");
@@ -156,6 +166,8 @@ public class FicsUtils implements GameConstants {
 			controller = new SetupController(game, connector);
 		} else if (game.isInState(Game.EXAMINING_STATE)) {
 			controller = new ExamineController(game, connector);
+		} else if (game.isInState(Game.PLAYING_STATE)) {
+			controller = new PlayingController(game, connector);
 		} else {
 			LOG.error("Could not find controller type for game state. "
 					+ "Ignoring game. state= " + game.getState());
@@ -180,19 +192,16 @@ public class FicsUtils implements GameConstants {
 
 	public static Game createGame(G1Message g1) {
 		Game result = null;
-		int gameType = FicsUtils.identifierToGameType(g1.gameTypeDescription);
+		Type gameType = FicsUtils.identifierToGameType(g1.gameTypeDescription);
 		switch (gameType) {
-		case Game.BLITZ:
+		case CLASSIC:
 			result = new Game();
-			result.setType(Game.BLITZ);
 			break;
-		case Game.STANDARD:
-			result = new Game();
-			result.setType(Game.STANDARD);
+		case SUICIDE:
+			result = new SuicideGame();
 			break;
-		case Game.LIGHTNING:
-			result = new Game();
-			result.setType(Game.LIGHTNING);
+		case LOSERS:
+			result = new LosersGame();
 			break;
 		default:
 			LOG.error("Uhandled game type " + g1.gameTypeDescription);
@@ -214,6 +223,7 @@ public class FicsUtils implements GameConstants {
 		result.setEvent(result.getInitialWhiteTimeMillis() / 60000 + " "
 				+ result.getInitialWhiteIncMillis() / 1000 + " "
 				+ (!g1.isRated ? "unrated" : "rated") + " "
+				+ (g1.isPrivate ? "private " : "")
 				+ result.getGameDescription());
 
 		return result;
@@ -279,29 +289,29 @@ public class FicsUtils implements GameConstants {
 	 * Returns the game type constant for the specified identifier.
 	 * 
 	 */
-	public static int identifierToGameType(String identifier) {
-		int result = -1;
+	public static Type identifierToGameType(String identifier) {
+		Type result = null;
 
 		if (identifier.indexOf(SUICIDE_IDENTIFIER) != -1)
-			result = Game.SUICIDE;
+			result = Type.SUICIDE;
 		else if (identifier.indexOf(BUGHOUSE_IDENTIFIER) != -1)
-			result = Game.BUGHOUSE;
+			result = Type.BUGHOUSE;
 		else if (identifier.indexOf(CRAZYHOUSE_IDENTIFIER) != -1)
-			result = Game.CRAZY_HOUSE;
+			result = Type.CRAZYHOUSE;
 		else if (identifier.indexOf(STANDARD_IDENTIFIER) != -1)
-			result = Game.STANDARD;
+			result = Type.CLASSIC;
 		else if (identifier.indexOf(WILD_IDENTIFIER) != -1)
-			result = Game.WILD;
+			result = Type.WILD;
 		else if (identifier.indexOf(LIGHTNING_IDENTIFIER) != -1)
-			result = Game.LIGHTNING;
+			result = Type.CLASSIC;
 		else if (identifier.indexOf(BLITZ_IDENTIFIER) != -1)
-			result = Game.BLITZ;
+			result = Type.CLASSIC;
 		else if (identifier.indexOf(ATOMIC_IDENTIFIER) != -1)
-			result = Game.ATOMIC;
+			result = Type.ATOMIC;
 		else if (identifier.indexOf(LOSERS_IDENTIFIER) != -1)
-			result = Game.LOSERS;
+			result = Type.LOSERS;
 		else if (identifier.indexOf(UNTIMED_IDENTIFIER) != -1)
-			result = UNTIMED_GAME_TYPE;
+			result = Type.CLASSIC;
 
 		else
 			throw new IllegalArgumentException("Unknown identifier "
@@ -399,20 +409,9 @@ public class FicsUtils implements GameConstants {
 		return builder.toString();
 	}
 
-	public static int removeRatingDecorators(String rating) {
-		String ratingWithoutDecorators = "";
-
-		for (int i = 0; i < rating.length(); i++) {
-			if (Character.isDigit(rating.charAt(i))) {
-				ratingWithoutDecorators += rating.charAt(i);
-			}
-		}
-		return Integer.parseInt(ratingWithoutDecorators);
-	}
-
 	public static String removeTitles(String playerName) {
 		StringTokenizer stringtokenizer = new StringTokenizer(playerName,
-				"()~!@#$%^&*_+|}{';/., :[]");
+				"()~!@#$%^&*_+|}{';/.,:[]");
 		if (stringtokenizer.hasMoreTokens())
 			return stringtokenizer.nextToken();
 		else
@@ -509,8 +508,8 @@ public class FicsUtils implements GameConstants {
 
 		game.addState(Game.ACTIVE_STATE);
 
-		game.setBlackName(message.blackName);
-		game.setWhiteName(message.whiteName);
+		game.setBlackName(FicsUtils.removeTitles(message.blackName));
+		game.setWhiteName(FicsUtils.removeTitles(message.whiteName));
 
 		game.setWhiteRemainingeTimeMillis(message.whiteRemainingTimeMillis);
 		game.setBlackRemainingTimeMillis(message.blackRemainingTimeMillis);

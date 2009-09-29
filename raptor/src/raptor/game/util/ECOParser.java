@@ -44,7 +44,7 @@ public class ECOParser {
 	 * @return ECOParser instance if found, <code>null</code> if not.
 	 */
 	public static ECOParser getECOParser(Game game) {
-		MoveList m = game.getMoves();
+		MoveList m = game.getMoveList();
 		Move[] moves = m.asArray();
 
 		String str = "";

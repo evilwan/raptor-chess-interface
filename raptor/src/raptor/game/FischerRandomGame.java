@@ -3,7 +3,7 @@ package raptor.game;
 public class FischerRandomGame extends Game {
 
 	public FischerRandomGame() {
-		setType(Game.FISCHER_RANDOM);
+		setType(Type.FISCHER_RANDOM);
 	}
 
 	@Override

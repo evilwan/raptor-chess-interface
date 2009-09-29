@@ -28,14 +28,13 @@ public class ChatWindow extends ApplicationWindow {
 		// PreferenceKeys.FICS_SERVER_URL, "dev.chess.sipay.ru");
 		// app.getFicsConnector().getPreferences().setValue(
 		// PreferenceKeys.FICS_SERVER_URL, "chess.sipay.ru");
-		app.getFicsConnector().getPreferences().setValue(
-				PreferenceKeys.FICS_SERVER_URL, "freechess.org");
-		app.getFicsConnector().getPreferences().setValue(
-				PreferenceKeys.FICS_TIMESEAL_ENABLED, true);
-		app.getFicsConnector().getPreferences().setValue(
-				PreferenceKeys.FICS_IS_NAMED_GUEST, true);
-		app.getFicsConnector().getPreferences().setValue(
-				PreferenceKeys.FICS_USER_NAME, "raptorTester");
+		app.getPreferences().setValue(PreferenceKeys.FICS_SERVER_URL,
+				"freechess.org");
+		app.getPreferences().setValue(PreferenceKeys.FICS_TIMESEAL_ENABLED,
+				true);
+		app.getPreferences().setValue(PreferenceKeys.FICS_IS_NAMED_GUEST, true);
+		app.getPreferences().setValue(PreferenceKeys.FICS_USER_NAME,
+				"raptorTester");
 		display.timerExec(2000, new Runnable() {
 			public void run() {
 				app.getFicsConnector().connect();

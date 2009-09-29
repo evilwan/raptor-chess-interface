@@ -7,7 +7,7 @@ public class LosersGame extends Game {
 	private static final Log LOG = LogFactory.getLog(LosersGame.class);
 
 	public LosersGame() {
-		setType(Game.LOSERS);
+		setType(Type.LOSERS);
 	}
 
 	@Override

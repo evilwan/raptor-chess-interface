@@ -39,6 +39,7 @@ import raptor.connector.fics.game.message.RemovingObsGameMessage;
 import raptor.connector.fics.game.message.Style12Message;
 import raptor.game.Game;
 import raptor.game.GameConstants;
+import raptor.game.Game.Result;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 
@@ -207,16 +208,16 @@ public class FicsParser implements GameConstants {
 			case GameEndMessage.ABORTED:
 			case GameEndMessage.ADJOURNED:
 			case GameEndMessage.UNDETERMINED:
-				game.setResult(Game.UNDETERMINED_RESULT);
+				game.setResult(Result.UNDETERMINED);
 				break;
 			case GameEndMessage.BLACK_WON:
-				game.setResult(Game.BLACK_WON_RESULT);
+				game.setResult(Result.BLACK_WON);
 				break;
 			case GameEndMessage.WHITE_WON:
-				game.setResult(Game.WHTIE_WON_RESULT);
+				game.setResult(Result.WHITE_WON);
 				break;
 			case GameEndMessage.DRAW:
-				game.setResult(Game.DRAW_RESULT);
+				game.setResult(Result.DRAW);
 				break;
 			default:
 				LOG.error("Undetermined game end type. " + message);
@@ -256,7 +257,7 @@ public class FicsParser implements GameConstants {
 							+ message);
 		} else {
 			game.setResultDescription("Interrupted by uexamine.");
-			game.setResult(Game.UNDETERMINED_RESULT);
+			game.setResult(Result.UNDETERMINED);
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
@@ -276,7 +277,7 @@ public class FicsParser implements GameConstants {
 							+ message);
 		} else {
 			game.setResultDescription("Interrupted by unobserve");
-			game.setResult(Game.UNDETERMINED_RESULT);
+			game.setResult(Result.UNDETERMINED);
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());

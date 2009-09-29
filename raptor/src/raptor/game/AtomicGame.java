@@ -3,7 +3,7 @@ package raptor.game;
 public class AtomicGame extends Game {
 
 	public AtomicGame() {
-		setType(Game.ATOMIC);
+		setType(Type.ATOMIC);
 	}
 
 	@Override

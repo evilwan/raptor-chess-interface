@@ -374,24 +374,12 @@ public class ExamineController extends ChessBoardController {
 			Game game = getGame();
 			Move move = null;
 			if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
-				move = new Move(fromSquare, toSquare,
-						game.getPiece(fromSquare), game.getColorToMove(), game
-								.getPiece(toSquare), board
-								.getAutoPromoteSelection(), EMPTY,
-						Move.PROMOTION_CHARACTERISTIC);
-				board.getSquare(toSquare).setPiece(
-						BoardUtils
-								.getColoredPiece(board
-										.getAutoPromoteSelection(), game
-										.isWhitesMove()));
+				move = BoardUtils.createMove(getGame(), fromSquare, toSquare,
+						board.getAutoPromoteSelection());
 			} else {
-				move = new Move(fromSquare, toSquare,
-						game.getPiece(fromSquare), game.getColorToMove(), game
-								.getPiece(toSquare));
-				board.getSquare(toSquare).setPiece(
-						BoardUtils.getColoredPiece(game.getPiece(fromSquare),
-								game.isWhitesMove()));
+				move = BoardUtils.createMove(getGame(), fromSquare, toSquare);
 			}
+
 			board.getSquare(fromSquare).highlight();
 			board.getSquare(toSquare).highlight();
 			connector.makeMove(game, move);
