@@ -466,7 +466,13 @@ public class GameUtils implements GameConstants {
 	}
 
 	public static boolean isPromotion(Game game, int fromSquare, int toSquare) {
-		if (game.getColorToMove() == WHITE) {
+		return isPromotion(game.getColorToMove() == WHITE, game, fromSquare,
+				toSquare);
+	}
+
+	public static boolean isPromotion(boolean isWhiteToMove, Game game,
+			int fromSquare, int toSquare) {
+		if (isWhiteToMove) {
 			return game.getPiece(fromSquare) == PAWN && getRank(toSquare) == 7;
 		} else {
 			return game.getPiece(fromSquare) == PAWN && getRank(toSquare) == 0;

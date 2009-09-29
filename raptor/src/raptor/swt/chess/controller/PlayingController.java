@@ -2,6 +2,7 @@ package raptor.swt.chess.controller;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -9,6 +10,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.game.GameConstants;
@@ -40,20 +42,17 @@ public class PlayingController extends ChessBoardController {
 									getGame());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
-
-							board.clearCoolbar();
+							inactiveController
+							.setItemChangedListeners(itemChangedListeners);
 							connector.getGameService()
 									.removeGameServiceListener(listener);
-
+							board.clearCoolbar();
 							inactiveController.init();
-
-							inactiveController
-									.setItemChangedListeners(itemChangedListeners);
+							inactiveController.fireItemChanged();
 							// Set the listeners to null so they wont get
 							// cleared and disposed
 							setItemChangedListeners(null);
 							PlayingController.this.dispose();
-							inactiveController.fireItemChanged();
 						} catch (Throwable t) {
 							connector.onError("PlayingController.gameInactive",
 									t);
@@ -70,7 +69,13 @@ public class PlayingController extends ChessBoardController {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							adjustToGameMove();
+							if (isNewMove) {
+								if (!makePremove()) {
+									adjustToGameMove();
+								}
+							} else {
+								adjustToGameMove();
+							}
 						} catch (Throwable t) {
 							connector.onError(
 									"PlayingController.gameStateChanged", t);
@@ -97,10 +102,18 @@ public class PlayingController extends ChessBoardController {
 		}
 	};
 
+	protected static class PremoveInfo {
+		int fromSquare;
+		int toSquare;
+		int promotionColorlessPiece;
+	}
+
 	protected Connector connector;
 	protected boolean isUserWhite;
 	protected Random random = new SecureRandom();
 	protected boolean isPlayingMoveSound = true;
+	protected List<PremoveInfo> premoves = Collections
+			.synchronizedList(new ArrayList<PremoveInfo>(10));
 
 	public PlayingController(Game game, Connector connector) {
 		super(game);
@@ -123,6 +136,81 @@ public class PlayingController extends ChessBoardController {
 			LOG.debug("isUserWhite=" + isUserWhite);
 		}
 
+	}
+
+	@Override
+	public void onClearPremoves() {
+		premoves.clear();
+		adjustPremoveLabel();
+	}
+
+	/**
+	 * Returns true if a premove was made.
+	 * 
+	 * @return
+	 */
+	protected boolean makePremove() {
+		synchronized (premoves) {
+			for (PremoveInfo info : premoves) {
+				Move move = null;
+				try {
+					if (info.promotionColorlessPiece == EMPTY) {
+						move = game.makeMove(info.fromSquare, info.toSquare);
+					} else {
+						move = game.makeMove(info.fromSquare, info.toSquare,
+								info.promotionColorlessPiece);
+					}
+					getConnector().makeMove(getGame(), move);
+					premoves.remove(move);
+					adjustToGameMove();
+					return true;
+				} catch (IllegalArgumentException iae) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Invalid premove trying next one in queue.",
+								iae);
+					}
+				}
+			}
+		}
+		premoves.clear();
+		adjustPremoveLabel();
+		return false;
+	}
+
+	public boolean isPremoveable() {
+		return Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.BOARD_PREMOVE_ENABLED);
+	}
+
+	@Override
+	protected void adjustPremoveLabel() {
+		if (isBeingReparented()) {
+			return;
+		}
+ 
+		String labelText = "";
+		synchronized (premoves) {
+			for (PremoveInfo info : premoves) {
+				String premove = ""
+						+ BoardUtils.getPieceRepresentation(BoardUtils
+								.getColoredPiece(info.fromSquare, game))
+						+ (board.getSquare(info.toSquare).getPiece() != EMPTY ? "x"
+								: "") + GameUtils.getSan(info.toSquare);
+				if (labelText.equals("")) {
+					labelText += premove;
+				} else {
+					labelText += " , " + premove;
+				}
+			}
+		}
+		if (labelText.equals("")) {
+			labelText = "Premoves: EMPTY";
+			board.setCoolBarButtonEnabled(false, ChessBoard.PREMOVE);
+		} else {
+			labelText = "Premoves: " + labelText;
+			board.setCoolBarButtonEnabled(true, ChessBoard.PREMOVE);
+		}
+		board.getCurrentPremovesLabel().setText(labelText);
 	}
 
 	@Override
@@ -209,6 +297,20 @@ public class PlayingController extends ChessBoardController {
 			LOG.debug("canUserInitiateMoveFrom " + GameUtils.getSan(squareId));
 		}
 		if (!isUsersMove()) {
+			if (isPremoveable()) {
+				if (getGame().isInState(Game.DROPPABLE_STATE)
+						&& BoardUtils.isPieceJailSquare(squareId)) {
+					return (isUserWhite && BoardUtils
+							.isJailSquareWhitePiece(squareId))
+							|| (!isUserWhite && BoardUtils
+									.isJailSquareBlackPiece(squareId));
+				} else {
+					return (isUserWhite && GameUtils.isWhitePiece(getGame(),
+							squareId))
+							|| (!isUserWhite && GameUtils.isBlackPiece(game,
+									squareId));
+				}
+			}
 			return false;
 		} else if (BoardUtils.isPieceJailSquare(squareId)
 				&& !getGame().isInState(Game.DROPPABLE_STATE)) {
@@ -274,7 +376,7 @@ public class PlayingController extends ChessBoardController {
 
 	@Override
 	public boolean isCloseable() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -409,6 +511,10 @@ public class PlayingController extends ChessBoardController {
 				adjustForIllegalMove(fromSquare, toSquare);
 			}
 
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Processing user move..");
+			}
+
 			Move move = null;
 			if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
 				move = BoardUtils.createMove(getGame(), fromSquare, toSquare,
@@ -437,17 +543,40 @@ public class PlayingController extends ChessBoardController {
 				}
 			}
 
-		} else {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("is not users move.");
+		} else if (isPremoveable()) {
+			if (fromSquare == toSquare
+					|| BoardUtils.isPieceJailSquare(toSquare)) {
+				// No need to check other conditions they are checked in
+				// canUserInitiateMoveFrom
+
+				if (LOG.isDebugEnabled()) {
+					LOG
+							.debug("User tried to make a premove that failed immediate validation.");
+				}
+
+				adjustForIllegalMove(fromSquare, toSquare);
 			}
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Processing premove.");
+			}
+
+			PremoveInfo premoveInfo = new PremoveInfo();
+			premoveInfo.fromSquare = fromSquare;
+			premoveInfo.toSquare = toSquare;
+			premoveInfo.promotionColorlessPiece = GameUtils.isPromotion(
+					isUserWhite(), getGame(), fromSquare, toSquare) ? board
+					.getAutoPromoteSelection() : EMPTY;
+			premoves.add(premoveInfo);
+			adjustPremoveLabel();
+
+			board.unhighlightAllSquares();
+			adjustBoardToGame(getGame());
 
 		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("userMadeMove completed in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
 		}
-
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
+import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ThreadService;
 import raptor.util.RaptorStringUtils;
@@ -516,6 +517,67 @@ public class BoardUtils implements BoardConstants {
 					+ RaptorStringUtils.defaultTimeString(seconds, 2) + "."
 					+ RaptorStringUtils.defaultTimeString(tenths, 1);
 		}
+	}
+
+	public static String getPieceRepresentation(int coloredPiece) {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+			switch (coloredPiece) {
+			case WK:
+				return "\u2654";
+			case WQ:
+				return "\u2655";
+			case WR:
+				return "\u2656";
+			case WB:
+				return "\u2657";
+			case WN:
+				return "\u2658";
+			case WP:
+				return "\u2659";
+			case BK:
+				return "\u256A";
+			case BQ:
+				return "\u265B";
+			case BR:
+				return "\u265C";
+			case BB:
+				return "\u265D";
+			case BN:
+				return "\u265E";
+			case BP:
+				return "\u265F";
+			}
+		} else {
+			switch (coloredPiece) {
+			case WK:
+				return "N";
+			case WQ:
+				return "Q";
+			case WR:
+				return "R";
+			case WB:
+				return "B";
+			case WN:
+				return "N";
+			case WP:
+				return "P";
+			case BK:
+				return "k";
+			case BQ:
+				return "q";
+			case BR:
+				return "r";
+			case BB:
+				return "b";
+			case BN:
+				return "n";
+			case BP:
+				return "p";
+			}
+		}
+
+		throw new IllegalArgumentException("Invalid piece: " + coloredPiece);
 	}
 
 }

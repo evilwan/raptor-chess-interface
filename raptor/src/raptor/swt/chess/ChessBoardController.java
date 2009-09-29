@@ -480,6 +480,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		adjustCoolbarToInitial();
 		onPlayGameStartSound();
 		adjustToGameInitial();
+		board.setCoolBarButtonEnabled(false, ChessBoard.PREMOVE);
 	}
 
 	protected void initClockUpdaters() {
@@ -533,12 +534,19 @@ public abstract class ChessBoardController implements BoardConstants,
 
 	public abstract boolean isRevertable();
 
+	public boolean isPremoveable() {
+		return false;
+	}
+
 	public boolean isSureDraw() {
 		// TO DO.
 		return false;
 	}
 
 	public void onActivate() {
+	}
+
+	public void onClearPremoves() {
 	}
 
 	public void onFlip() {
