@@ -25,6 +25,9 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
+import raptor.Raptor;
+import raptor.pref.RaptorPreferenceStore;
+
 public class ChessSquare extends Composite implements Constants {
 
 	public static final String CLICK_INITIATOR = "CLICK_INITIATOR";
@@ -47,7 +50,7 @@ public class ChessSquare extends Composite implements Constants {
 			if (piece == EMPTY) {
 
 			} else {
-				event.image = board.resources.getChessPieceDragImage(piece);
+				event.image = BoardUtils.getChessPieceDragImage(piece);
 			}
 		}
 	};
@@ -142,7 +145,7 @@ public class ChessSquare extends Composite implements Constants {
 							board.controller.userCancelledMove(initiator.id,
 									false);
 							board.setData(CLICK_INITIATOR, null);
-						} else if (Utils.arePiecesSameColor(piece,
+						} else if (BoardUtils.arePiecesSameColor(piece,
 								initiator.piece)) {// Clicked
 							// on
 							// same
@@ -167,14 +170,14 @@ public class ChessSquare extends Composite implements Constants {
 		public void paintControl(PaintEvent e) {
 			Point size = getSize();
 			if (!ignoreBackgroundImage) {
-				Image backgroundImage = board.resources
-						.getSquareBackgroundImage(isLight, size.x, size.y);
+				Image backgroundImage = BoardUtils.getSquareBackgroundImage(
+						isLight, size.x, size.y);
 				e.gc.drawImage(backgroundImage, 0, 0);
 			} else {
 				e.gc.fillRectangle(0, 0, size.x, size.y);
 			}
 
-			int highlightBorderWidth = (int) (size.x * board.preferences
+			int highlightBorderWidth = (int) (size.x * getPreferences()
 					.getDouble(BOARD_HIGHLIGHT_BORDER_WIDTH));
 			if (isHighlighted) {
 				for (int i = 0; i < highlightBorderWidth; i++) {
@@ -183,16 +186,16 @@ public class ChessSquare extends Composite implements Constants {
 				}
 			}
 
-			double imageSquareSideAdjustment = board.preferences
-					.getDouble(BOARD_PIECE_SIZE_ADJUSTMENT);
+			double imageSquareSideAdjustment = getPreferences().getDouble(
+					BOARD_PIECE_SIZE_ADJUSTMENT);
 			int imageSide = (int) ((size.x - highlightBorderWidth * 2) * (1.0 - imageSquareSideAdjustment));
 			if (imageSide % 2 != 0) {
 				imageSide = imageSide - 1;
 			}
 
 			if (pieceImage == null && piece != EMPTY) {
-				pieceImage = board.resources.getChessPieceImage(piece,
-						imageSide, imageSide);
+				pieceImage = BoardUtils.getChessPieceImage(piece, imageSide,
+						imageSide);
 			}
 
 			if (pieceImage != null) {
@@ -255,6 +258,10 @@ public class ChessSquare extends Composite implements Constants {
 
 	public int getPiece() {
 		return piece;
+	}
+
+	protected RaptorPreferenceStore getPreferences() {
+		return Raptor.getInstance().getPreferences();
 	}
 
 	public void highlight() {

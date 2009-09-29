@@ -12,10 +12,11 @@ public class LabeledChessSquare extends ChessSquare {
 		public void paintControl(PaintEvent arg0) {
 			if (StringUtils.isNotBlank(getText())) {
 				Point size = getSize();
-				arg0.gc.setForeground(board.preferences
-						.getColor(BOARD_PIECE_JAIL_LABEL_COLOR));
-				arg0.gc.setFont(board.preferences
-						.getFont(BOARD_PIECE_JAIL_FONT));
+				arg0.gc.setForeground(getPreferences().getColor(
+						BOARD_PIECE_JAIL_LABEL_COLOR));
+				arg0.gc
+						.setFont(getPreferences()
+								.getFont(BOARD_PIECE_JAIL_FONT));
 
 				int width = arg0.gc.getFontMetrics().getAverageCharWidth()
 						* text.length() + 2;

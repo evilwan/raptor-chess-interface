@@ -15,7 +15,7 @@ public class ChatEventUtils {
 				+ FIELD_SEPARATOR, false);
 		ChatEvent result = new ChatEvent();
 		result.setTime(Long.parseLong(deserializeField(tok.nextToken())));
-		result.setType(Integer.parseInt(deserializeField(tok.nextToken())));
+		result.setType(ChatType.valueOf(deserializeField(tok.nextToken())));
 		result.setGameId(deserializeField(tok.nextToken()));
 		result.setChannel(deserializeField(tok.nextToken()));
 		result.setSource(deserializeField(tok.nextToken()));

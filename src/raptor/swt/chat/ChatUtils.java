@@ -6,33 +6,40 @@ import raptor.chat.ChatEvent;
 import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.service.ThreadService;
 
-public class Utils {
+public class ChatUtils {
 
 	public static void appendPreviousChatsToController(final ChatConsole console) {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
-				console.getConnector().getChatService().getChatLogger()
-						.parseFile(new ChatEventParseListener() {
+				console.getController().getConnector().getChatService()
+						.getChatLogger().parseFile(
+								new ChatEventParseListener() {
 
-							public void onNewEventParsed(final ChatEvent event) {
-								console.getDisplay().asyncExec(new Runnable() {
-									public void run() {
-										try {
-											if (!console.isDisposed()) {
-												console.getController()
-														.onChatEvent(event);
-											}
-										} catch (Throwable t) {
-											console
-													.getConnector()
-													.onError(
-															"appendPreviousChatsToController",
-															t);
-										}
+									public void onNewEventParsed(
+											final ChatEvent event) {
+										console.getDisplay().asyncExec(
+												new Runnable() {
+													public void run() {
+														try {
+															if (!console
+																	.isDisposed()) {
+																console
+																		.getController()
+																		.onChatEvent(
+																				event);
+															}
+														} catch (Throwable t) {
+															console
+																	.getController()
+																	.getConnector()
+																	.onError(
+																			"appendPreviousChatsToController",
+																			t);
+														}
+													}
+												});
 									}
 								});
-							}
-						});
 			}
 		});
 	}

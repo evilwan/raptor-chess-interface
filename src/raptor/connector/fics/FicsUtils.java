@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.connector.Connector;
 import raptor.connector.fics.game.TakebackParser;
 import raptor.connector.fics.game.TakebackParser.TakebackMessage;
 import raptor.connector.fics.game.message.G1Message;
@@ -16,7 +17,11 @@ import raptor.game.SetupGame;
 import raptor.game.Game.PositionState;
 import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
-import raptor.swt.chess.Utils;
+import raptor.swt.chess.BoardUtils;
+import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.controller.ExamineController;
+import raptor.swt.chess.controller.ObserveController;
+import raptor.swt.chess.controller.SetupController;
 import raptor.util.RaptorStringTokenizer;
 
 public class FicsUtils implements GameConstants {
@@ -137,6 +142,25 @@ public class FicsUtils implements GameConstants {
 		}
 		takebackParser.clearTakebackMessages(game.getId());
 		return result;
+	}
+
+	public static ChessBoardController buildController(Game game,
+			Connector connector) {
+		ChessBoardController controller = null;
+
+		if (game.isInState(Game.OBSERVING_STATE)
+				|| game.isInState(Game.OBSERVING_EXAMINED_STATE)) {
+			controller = new ObserveController(game, connector);
+
+		} else if (game.isInState(Game.SETUP_STATE)) {
+			controller = new SetupController(game, connector);
+		} else if (game.isInState(Game.EXAMINING_STATE)) {
+			controller = new ExamineController(game, connector);
+		} else {
+			LOG.error("Could not find controller type for game state. "
+					+ "Ignoring game. state= " + game.getState());
+		}
+		return controller;
 	}
 
 	/**
@@ -535,9 +559,10 @@ public class FicsUtils implements GameConstants {
 			for (int j = 0; j < style12.position[i].length; j++) {
 				if (style12.position[i][j] != EMPTY) {
 					int square = GameUtils.rankFileToSquare(i, j);
-					int pieceColor = Utils.isWhitePiece(style12.position[i][j]) ? WHITE
+					int pieceColor = BoardUtils
+							.isWhitePiece(style12.position[i][j]) ? WHITE
 							: BLACK;
-					int piece = Utils
+					int piece = BoardUtils
 							.pieceFromColoredPiece(style12.position[i][j]);
 					long squareBB = GameUtils.getBitboard(square);
 

@@ -65,8 +65,8 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	}
 
 	@Override
-	public int getStyle(int controlConstant) {
-		switch (controlConstant) {
+	public int getStyle(Field field) {
+		switch (field) {
 		case GAME_DESCRIPTION_LABEL:
 			return SWT.LEFT;
 		case CURRENT_PREMOVE_LABEL:

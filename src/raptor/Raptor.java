@@ -86,7 +86,7 @@ public class Raptor implements PreferenceKeys {
 			});
 
 			// Start the fics connector.
-			display.timerExec(1000, new Runnable() {
+			display.asyncExec(new Runnable() {
 				public void run() {
 					instance.getFicsConnector().connect();
 				}

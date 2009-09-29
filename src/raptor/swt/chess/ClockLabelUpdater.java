@@ -3,7 +3,9 @@ package raptor.swt.chess;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 
+import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.RaptorPreferenceStore;
 
 class ClockLabelUpdater implements Runnable, PreferenceKeys {
 	Label clockLabel;
@@ -23,14 +25,14 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 		// The following code adjusts the ideal durations in half to make up for
 		// the differences.
 		long result = 0L;
-		if (remainingTimeMillis >= board.preferences
-				.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
+		if (remainingTimeMillis >= getPreferences().getLong(
+				BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
 			result = remainingTimeMillis % 30000L;
 			if (result == 0L) {
 				result = 30000L;
 			}
-		} else if (remainingTimeMillis >= board.preferences
-				.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
+		} else if (remainingTimeMillis >= getPreferences().getLong(
+				BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
 			result = remainingTimeMillis % 500L;
 			if (result == 0L) {
 				result = 500L;
@@ -49,6 +51,10 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 		clockLabel = null;
 	}
 
+	protected RaptorPreferenceStore getPreferences() {
+		return Raptor.getInstance().getPreferences();
+	}
+
 	public long getRemainingTimeMillis() {
 		return remainingTimeMillis;
 	}
@@ -60,8 +66,7 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			remainingTimeMillis -= currentTime - lastSystemTime;
 			lastSystemTime = currentTime;
 
-			clockLabel.setText(board.getController().timeToString(
-					remainingTimeMillis));
+			clockLabel.setText(BoardUtils.timeToString(remainingTimeMillis));
 
 			if (remainingTimeMillis > 0) {
 				long nextUpdate = calculateNextUpdate();

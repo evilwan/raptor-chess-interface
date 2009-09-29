@@ -1,6 +1,7 @@
 package raptor.connector.fics.chat;
 
 import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.connector.fics.FicsUtils;
 import raptor.util.RaptorStringTokenizer;
 
@@ -26,7 +27,7 @@ public class KibitzEventParser extends ChatEventParser {
 						int k = text.indexOf("]");
 						try {
 							return new ChatEvent(FicsUtils.removeTitles(s1),
-									KIBITZ, text, text.substring(j, k));
+									ChatType.KIBITZ, text, text.substring(j, k));
 						} catch (Exception exception) {
 							exception.printStackTrace();
 						}

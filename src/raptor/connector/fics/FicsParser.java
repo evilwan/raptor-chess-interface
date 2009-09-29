@@ -9,7 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.chat.ChatEvent;
-import raptor.chat.ChatTypes;
+import raptor.chat.ChatType;
 import raptor.connector.fics.chat.CShoutEventParser;
 import raptor.connector.fics.chat.ChallengeEventParser;
 import raptor.connector.fics.chat.ChannelTellEventParser;
@@ -105,7 +105,7 @@ public class FicsParser implements GameConstants {
 			}
 		}
 		if (events.isEmpty()) {
-			events.add(new ChatEvent(null, ChatTypes.UNKNOWN, inboundEvent));
+			events.add(new ChatEvent(null, ChatType.UNKNOWN, inboundEvent));
 		}
 		return events.toArray(new ChatEvent[0]);
 	}

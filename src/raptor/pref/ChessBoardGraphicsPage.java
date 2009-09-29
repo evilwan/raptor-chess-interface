@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
-import raptor.swt.chess.ChessBoardResources;
+import raptor.swt.chess.BoardUtils;
 
 class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 
@@ -56,7 +56,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		Composite needToLearnLayouts = new Composite(parent, SWT.NONE);
 		needToLearnLayouts.setLayout(new GridLayout(1, false));
 
-		String[] sets = ChessBoardResources.getChessSetNames();
+		String[] sets = BoardUtils.getChessSetNames();
 		String[][] setNameValues = new String[sets.length][2];
 
 		for (int i = 0; i < sets.length; i++) {
@@ -87,7 +87,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		updateSetImages(Raptor.getInstance().getPreferences().getString(
 				PreferenceKeys.BOARD_CHESS_SET_NAME));
 
-		String[] backgrounds = ChessBoardResources.getSquareBackgroundNames();
+		String[] backgrounds = BoardUtils.getSquareBackgroundNames();
 		String[][] backgroundNameValues = new String[backgrounds.length][2];
 		for (int i = 0; i < backgrounds.length; i++) {
 			backgroundNameValues[i][0] = backgrounds[i];
@@ -118,16 +118,13 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 
 	void updateBackgroundImages(String backgroundName) {
 		backgroundImageComposite.setImages(new Image[] {
-				ChessBoardResources.getSquareBackgroundMold(backgroundName,
-						false),
-				ChessBoardResources.getSquareBackgroundMold(backgroundName,
-						true) });
+				BoardUtils.getSquareBackgroundMold(backgroundName, false),
+				BoardUtils.getSquareBackgroundMold(backgroundName, true) });
 	}
 
 	void updateSetImages(String setName) {
 		Image[] whiteImages = new Image[6];
 		Image[] blackImages = new Image[6];
-		;
 
 		// whiteImages[0] = ChessBoardResources.getChessPieceImageMold(setName,
 		// GameConstants.WP);

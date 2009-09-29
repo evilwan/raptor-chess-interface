@@ -1,6 +1,7 @@
 package raptor.connector.fics.chat;
 
 import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.connector.fics.FicsUtils;
 import raptor.util.RaptorStringTokenizer;
 
@@ -27,7 +28,8 @@ public class WhisperEventParser extends ChatEventParser {
 						int k = text.indexOf("]");
 
 						return new ChatEvent(FicsUtils.removeTitles(source),
-								WHISPER, text, text.substring(j + 1, k));
+								ChatType.WHISPER, text, text
+										.substring(j + 1, k));
 					}
 				}
 			}

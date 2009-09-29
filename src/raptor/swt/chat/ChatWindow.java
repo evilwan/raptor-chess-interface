@@ -67,11 +67,10 @@ public class ChatWindow extends ApplicationWindow {
 
 		parent.setLayout(gridLayout);
 		mainConsole = new ChatConsole(parent, SWT.NONE);
-		ChatConsoleController controller = new MainController();
+		ChatConsoleController controller = new MainController(Raptor
+				.getInstance().getFicsConnector());
 		controller.setChatConsole(mainConsole);
 		mainConsole.setController(controller);
-		mainConsole.setPreferences(Raptor.getInstance().getPreferences());
-		mainConsole.setConnector(Raptor.getInstance().getFicsConnector());
 		mainConsole.createControls();
 		mainConsole.getController().init();
 		mainConsole.setLayoutData(new GridData(GridData.FILL_BOTH));

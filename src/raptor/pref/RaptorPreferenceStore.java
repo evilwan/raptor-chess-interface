@@ -22,9 +22,10 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Display;
 
+import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
-import raptor.chat.ChatTypes;
+import raptor.chat.ChatType;
 
 public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
@@ -89,7 +90,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		Color result = null;
 
 		String key = null;
-		if (event.getType() == ChatTypes.CHAN_TELL) {
+		if (event.getType() == ChatType.CHAN_TELL) {
 			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType() + "-"
 					+ event.getChannel() + "-color";
 		} else {
@@ -160,6 +161,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public Point getPoint(String key) {
 		return PreferenceConverter.getPoint(this, key);
+	}
+
+	public Quadrant getQuadrant(String key) {
+		return Quadrant.valueOf(getString(key));
 	}
 
 	public Rectangle getRectangle(String key) {
@@ -264,43 +269,43 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, CHAT_LINK_COLOR,
 				new RGB(0, 0, 255));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHALLENGE
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHALLENGE
 						+ "-color", new RGB(100, 149, 237));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CSHOUT
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CSHOUT
 						+ "-color", new RGB(221, 160, 221));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.SHOUT
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.SHOUT
 						+ "-color", new RGB(221, 160, 221));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.KIBITZ
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.KIBITZ
 						+ "-color", new RGB(100, 149, 237));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.WHISPER
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.WHISPER
 						+ "-color", new RGB(100, 149, 237));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.OUTBOUND
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.OUTBOUND
 						+ "-color", new RGB(128, 128, 128));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.PARTNER_TELL
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.PARTNER_TELL
 						+ "-color", new RGB(255, 0, 0));
+		PreferenceConverter
+				.setDefault(this, CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.TELL + "-color", new RGB(255, 0, 0));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.TELL
-						+ "-color", new RGB(255, 0, 0));
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHAN_TELL + "-"
+						+ 1 + "-color", new RGB(255, 200, 0));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
-						+ "-" + 1 + "-color", new RGB(255, 200, 0));
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHAN_TELL + "-"
+						+ 4 + "-color", new RGB(0, 255, 0));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
-						+ "-" + 4 + "-color", new RGB(0, 255, 0));
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHAN_TELL + "-"
+						+ 50 + "-color", new RGB(255, 175, 175));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
-						+ "-" + 50 + "-color", new RGB(255, 175, 175));
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHAN_TELL + "-"
+						+ 53 + "-color", new RGB(255, 0, 255));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.CHAN_TELL
-						+ "-" + 53 + "-color", new RGB(255, 0, 255));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatTypes.INTERNAL
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.INTERNAL
 						+ "-color", new RGB(255, 0, 0));
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));
@@ -313,6 +318,18 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, APP_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, APP_LAG_COLOR, new RGB(0, 0, 0));
+
+		PreferenceConverter.setDefault(this, APP_STATUS_BAR_FONT,
+				new FontData[] { new FontData(defaultFontName, 12, 0) });
+		PreferenceConverter.setDefault(this, APP_STATUS_BAR_COLOR, new RGB(0,
+				0, 0));
+
+		setDefault(APP_MAIN_TAB_QUADRANT, "III");
+		setDefault(APP_CHANNEL_TAB_QUADRANT, "III");
+		setDefault(APP_PERSON_TAB_QUADRANT, "III");
+		setDefault(APP_REGEX_TAB_QUADRANT, "III");
+		setDefault(APP_PARTNER_TELL_TAB_QUADRANT, "III");
+		setDefault(APP_GAME_QUADRANT, "II");
 
 		setDefault(SOUND_ENABLED, true);
 
@@ -334,6 +351,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public void setPoint(String key, Point point) {
 		PreferenceConverter.setValue(this, key, point);
+	}
+
+	public void setQuadrant(String key, Quadrant quadrant) {
+		setValue(key, quadrant.name());
 	}
 
 	public void setRectangle(String key, Rectangle rectangle) {

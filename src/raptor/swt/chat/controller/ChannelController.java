@@ -3,8 +3,12 @@ package raptor.swt.chat.controller;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Button;
 
+import raptor.Quadrant;
+import raptor.Raptor;
 import raptor.chat.ChatEvent;
-import raptor.chat.ChatTypes;
+import raptor.chat.ChatType;
+import raptor.connector.Connector;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleController;
 
@@ -12,9 +16,15 @@ public class ChannelController extends ChatConsoleController {
 
 	protected String channel;
 
-	public ChannelController(String channel) {
-		super();
+	public ChannelController(Connector connector, String channel) {
+		super(connector);
 		this.channel = channel;
+	}
+
+	@Override
+	public Quadrant getPreferredQuadrant() {
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				PreferenceKeys.APP_CHANNEL_TAB_QUADRANT);
 	}
 
 	@Override
@@ -25,8 +35,7 @@ public class ChannelController extends ChatConsoleController {
 				.getButton(ChatConsole.PREPEND_TEXT_BUTTON);
 		if (prependButton != null) {
 			if (prependButton.getSelection()) {
-				prependText = chatConsole.getConnector().getChannelTabPrefix(
-						channel);
+				prependText = connector.getChannelTabPrefix(channel);
 			}
 		}
 
@@ -35,17 +44,17 @@ public class ChannelController extends ChatConsoleController {
 
 	@Override
 	public String getPrompt() {
-		return chatConsole.getConnector().getPrompt();
+		return connector.getPrompt();
 	}
 
 	@Override
 	public String getTitle() {
-		return chatConsole.getConnector().getShortName() + "(" + channel + ")";
+		return connector.getShortName() + "(" + channel + ")";
 	}
 
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
-		return inboundEvent.getType() == ChatTypes.CHAN_TELL
+		return inboundEvent.getType() == ChatType.CHAN_TELL
 				&& StringUtils.equals(inboundEvent.getChannel(), channel);
 	}
 

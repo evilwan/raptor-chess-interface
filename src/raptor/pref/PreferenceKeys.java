@@ -61,10 +61,20 @@ public interface PreferenceKeys {
 
 	public static final String APP_LAG_FONT = "app-lag-font";
 	public static final String APP_LAG_COLOR = "app-lag-color";
+	public static final String APP_STATUS_BAR_FONT = "app-status-bar-font";
+	public static final String APP_STATUS_BAR_COLOR = "app-starus-bar-color";
 	public static final String APP_NAME = "app-name";
+	public static final String APP_MAIN_TAB_QUADRANT = "app-channel-tell-quadrant";
+	public static final String APP_CHANNEL_TAB_QUADRANT = "app-channel-tell-quadrant";
+	public static final String APP_PERSON_TAB_QUADRANT = "app-person-tell-quadrant";
+	public static final String APP_REGEX_TAB_QUADRANT = "app-regex-tab-quadrant";
+	public static final String APP_PARTNER_TELL_TAB_QUADRANT = "app-partner-tell-quadrant";
+	public static final String APP_GAME_QUADRANT = "app-game-quadrant";
 
 	public static final String SOUND_ENABLED = "sound-enabled";
 
+	// Connector preferences should always use the short name of the connector
+	// followed by the preference.
 	public static final String FICS_SERVER_URL = "fics-server-url";
 	public static final String FICS_PORT = "fics-port";
 	public static final String FICS_KEEP_ALIVE = "fics-keepalive";

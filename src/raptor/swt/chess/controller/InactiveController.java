@@ -11,51 +11,59 @@ import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
 import raptor.service.SoundService;
+import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.Constants;
-import raptor.swt.chess.Utils;
 
 public class InactiveController extends ChessBoardController implements
 		Constants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 	Random random = new SecureRandom();
 
-	public InactiveController() {
+	public InactiveController(Game game) {
+		super(game);
 	}
 
 	@Override
 	protected void adjustCoolbarToInitial() {
-		board.addGameActionButtonsToCoolbar();
-		board.addAutoPromoteRadioGroupToCoolbar();
-		board.packCoolbar();
+		if (!isBeingReparented()) {
+			board.addGameActionButtonsToCoolbar();
+			board.addAutoPromoteRadioGroupToCoolbar();
+			board.packCoolbar();
+		}
 	}
 
 	@Override
 	public void adjustGameDescriptionLabel() {
-		board.getGameDescriptionLabel().setText(
-				"Inactive " + getGame().getEvent());
+		if (!isBeingReparented()) {
+			board.getGameDescriptionLabel().setText(
+					"Inactive " + getGame().getEvent());
+		}
 	}
 
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
-		if (getGame().getPiece(squareId) == EMPTY) {
-			return false;
-		} else if (Utils.isPieceJailSquare(squareId)) {
-			if (getGame().isInState(Game.DROPPABLE_STATE)) {
-				int pieceType = Utils.pieceJailSquareToPiece(squareId);
-				return (getGame().isWhitesMove()
-						&& Utils.isWhitePiece(pieceType) || (!getGame()
-						.isWhitesMove() && Utils.isBlackPiece(pieceType)));
-			} else {
-				return (getGame().isWhitesMove() && Utils.isWhitePiece(board
-						.getSquare(squareId).getPiece()))
-						|| (!getGame().isWhitesMove() && Utils
-								.isBlackPiece(board.getSquare(squareId)
-										.getPiece()));
+		if (!isBeingReparented()) {
+			if (getGame().getPiece(squareId) == EMPTY) {
+				return false;
+			} else if (BoardUtils.isPieceJailSquare(squareId)) {
+				if (getGame().isInState(Game.DROPPABLE_STATE)) {
+					int pieceType = BoardUtils.pieceJailSquareToPiece(squareId);
+					return (getGame().isWhitesMove()
+							&& BoardUtils.isWhitePiece(pieceType) || (!getGame()
+							.isWhitesMove() && BoardUtils
+							.isBlackPiece(pieceType)));
+				} else {
+					return (getGame().isWhitesMove() && BoardUtils
+							.isWhitePiece(board.getSquare(squareId).getPiece()))
+							|| (!getGame().isWhitesMove() && BoardUtils
+									.isBlackPiece(board.getSquare(squareId)
+											.getPiece()));
+				}
 			}
-		}
-		if (!Utils.isPieceJailSquare(squareId)) {
-			return board.getSquare(squareId).getPiece() != GameConstants.EMPTY;
+			if (!BoardUtils.isPieceJailSquare(squareId)) {
+				return board.getSquare(squareId).getPiece() != GameConstants.EMPTY;
+			}
 		}
 		return false;
 	}
@@ -97,7 +105,6 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public boolean isCommitable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -162,74 +169,83 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		LOG.debug("moveCancelled" + board.getGame().getId() + " " + fromSquare
-				+ " " + isDnd);
-		board.unhighlightAllSquares();
-		adjustToGameMove();
+		if (!isBeingReparented()) {
+			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare
+					+ " " + isDnd);
+			board.unhighlightAllSquares();
+			adjustToGameMove();
+		}
 	}
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		LOG.debug("moveInitiated" + board.getGame().getId() + " " + square
-				+ " " + isDnd);
+		if (!isBeingReparented()) {
+			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " "
+					+ isDnd);
 
-		board.unhighlightAllSquares();
-		board.getSquare(square).highlight();
-		if (isDnd && !Utils.isPieceJailSquare(square)) {
-			board.getSquare(square).setPiece(GameConstants.EMPTY);
+			board.unhighlightAllSquares();
+			board.getSquare(square).highlight();
+			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
+				board.getSquare(square).setPiece(GameConstants.EMPTY);
+			}
 		}
 	}
 
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-		LOG.debug("Move made " + board.getGame().getId() + " " + fromSquare
-				+ " " + toSquare);
-		board.unhighlightAllSquares();
-
-		if (fromSquare == toSquare || Utils.isPieceJailSquare(toSquare)) {
+		if (!isBeingReparented()) {
+			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
+					+ toSquare);
 			board.unhighlightAllSquares();
-			adjustToGameMove();
-			SoundService.getInstance().playSound("illegalMove");
-			return;
-		}
 
-		Game game = board.getGame();
-		Move move = null;
-
-		if (Utils.isPieceJailSquare(fromSquare)) {
-			if (game.isInState(Game.DROPPABLE_STATE)) {
-				move = Utils.createDropMove(fromSquare, toSquare);
-			} else {
+			if (fromSquare == toSquare
+					|| BoardUtils.isPieceJailSquare(toSquare)) {
 				board.unhighlightAllSquares();
 				adjustToGameMove();
 				SoundService.getInstance().playSound("illegalMove");
 				return;
 			}
-		} else if (GameUtils.isPromotion(board.getGame(), fromSquare, toSquare)) {
-			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
-					game.getColorToMove(), game.getPiece(toSquare), board
-							.getAutoPromoteSelection(), EMPTY,
-					Move.PROMOTION_CHARACTERISTIC);
-		} else {
-			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
-					game.getColorToMove(), game.getPiece(toSquare));
-		}
 
-		try {
-			game.move(move);
-			getBoard().getSquare(fromSquare).highlight();
-			getBoard().getSquare(toSquare).highlight();
-		} catch (IllegalArgumentException iae) {
-			board.unhighlightAllSquares();
-		} finally {
-			adjustToGameMove();
+			Game game = getGame();
+			Move move = null;
+
+			if (BoardUtils.isPieceJailSquare(fromSquare)) {
+				if (game.isInState(Game.DROPPABLE_STATE)) {
+					move = BoardUtils.createDropMove(fromSquare, toSquare);
+				} else {
+					board.unhighlightAllSquares();
+					adjustToGameMove();
+					SoundService.getInstance().playSound("illegalMove");
+					return;
+				}
+			} else if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
+				move = new Move(fromSquare, toSquare,
+						game.getPiece(fromSquare), game.getColorToMove(), game
+								.getPiece(toSquare), board
+								.getAutoPromoteSelection(), EMPTY,
+						Move.PROMOTION_CHARACTERISTIC);
+			} else {
+				move = new Move(fromSquare, toSquare,
+						game.getPiece(fromSquare), game.getColorToMove(), game
+								.getPiece(toSquare));
+			}
+
+			try {
+				game.move(move);
+				getBoard().getSquare(fromSquare).highlight();
+				getBoard().getSquare(toSquare).highlight();
+			} catch (IllegalArgumentException iae) {
+				board.unhighlightAllSquares();
+			} finally {
+				adjustToGameMove();
+			}
 		}
 	}
 
 	@Override
 	public void userMiddleClicked(int square) {
-		LOG.debug("On middle click " + board.getGame().getId() + " " + square);
-		// Move[] moves = board.getGame().getLegalMoves().asArray();
+		LOG.debug("On middle click " + getGame().getId() + " " + square);
+		// Move[] moves = getGame().getLegalMoves().asArray();
 		// List<Move> foundMoves = new ArrayList<Move>(5);
 		// for (Move move : moves) {
 		// if (move.getTo() == square) {
@@ -239,7 +255,7 @@ public class InactiveController extends ChessBoardController implements
 		//
 		// if (foundMoves.size() > 0) {
 		// Move move = foundMoves.get(random.nextInt(foundMoves.size()));
-		// board.getGame().move(move);
+		// getGame().move(move);
 		// board.unhighlightAllSquares();
 		// board.getSquare(move.getFrom()).highlight();
 		// board.getSquare(move.getTo()).highlight();
@@ -249,6 +265,6 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void userRightClicked(int square) {
-		LOG.debug("On right click " + board.getGame().getId() + " " + square);
+		LOG.debug("On right click " + getGame().getId() + " " + square);
 	}
 }

@@ -1,21 +1,32 @@
 package raptor.swt.chat.controller;
 
+import raptor.Quadrant;
+import raptor.Raptor;
 import raptor.chat.ChatEvent;
+import raptor.connector.Connector;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.ChatConsoleController;
 
 public class MainController extends ChatConsoleController {
 
-	public MainController() {
+	public MainController(Connector connector) {
+		super(connector);
+	}
+
+	@Override
+	public Quadrant getPreferredQuadrant() {
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				PreferenceKeys.APP_MAIN_TAB_QUADRANT);
 	}
 
 	@Override
 	public String getPrompt() {
-		return chatConsole.getConnector().getPrompt();
+		return connector.getPrompt();
 	}
 
 	@Override
 	public String getTitle() {
-		return chatConsole.getConnector().getShortName() + "(Main)";
+		return connector.getShortName() + "(Main)";
 	}
 
 	@Override
@@ -42,5 +53,4 @@ public class MainController extends ChatConsoleController {
 	public boolean isSearchable() {
 		return true;
 	}
-
 }
