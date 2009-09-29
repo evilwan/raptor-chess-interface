@@ -27,7 +27,7 @@ import raptor.service.ThreadService;
 import raptor.util.RaptorStringUtils;
 import raptor.util.SVGUtil;
 
-public class BoardUtils implements Constants {
+public class BoardUtils implements BoardConstants {
 	private static final Log LOG = LogFactory.getLog(BoardUtils.class);
 	public static final String CHESS_SET_DIR = "resources/common/set/";
 	public static final int DARK_IMAGE_INDEX = 1;

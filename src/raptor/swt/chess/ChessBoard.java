@@ -30,7 +30,7 @@ import raptor.game.util.GameUtils;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.chess.layout.RightOrientedLayout;
 
-public class ChessBoard extends Composite implements Constants {
+public class ChessBoard extends Composite implements BoardConstants {
 	public static interface ChessBoardListener {
 		public void onControllerStateChange();
 	}
@@ -703,30 +703,30 @@ public class ChessBoard extends Composite implements Constants {
 
 	void initPieceJail() {
 		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(boardPanel,
-				this, Constants.WP_PIECE_JAIL_SQUARE);
+				this, BoardConstants.WP_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(boardPanel,
-				this, Constants.WN_PIECE_JAIL_SQUARE);
+				this, BoardConstants.WN_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(boardPanel,
-				this, Constants.WB_PIECE_JAIL_SQUARE);
+				this, BoardConstants.WB_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(boardPanel,
-				this, Constants.WR_PIECE_JAIL_SQUARE);
+				this, BoardConstants.WR_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(boardPanel,
-				this, Constants.WQ_PIECE_JAIL_SQUARE);
+				this, BoardConstants.WQ_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(boardPanel,
-				this, Constants.WK_PIECE_JAIL_SQUARE);
+				this, BoardConstants.WK_PIECE_JAIL_SQUARE);
 
 		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(boardPanel,
-				this, Constants.BP_PIECE_JAIL_SQUARE);
+				this, BoardConstants.BP_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(boardPanel,
-				this, Constants.BN_PIECE_JAIL_SQUARE);
+				this, BoardConstants.BN_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(boardPanel,
-				this, Constants.BB_PIECE_JAIL_SQUARE);
+				this, BoardConstants.BB_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(boardPanel,
-				this, Constants.BR_PIECE_JAIL_SQUARE);
+				this, BoardConstants.BR_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(boardPanel,
-				this, Constants.BQ_PIECE_JAIL_SQUARE);
+				this, BoardConstants.BQ_PIECE_JAIL_SQUARE);
 		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(boardPanel,
-				this, Constants.BK_PIECE_JAIL_SQUARE);
+				this, BoardConstants.BK_PIECE_JAIL_SQUARE);
 	}
 
 	void initSquares() {

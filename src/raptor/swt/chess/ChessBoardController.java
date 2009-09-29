@@ -14,7 +14,7 @@ import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 
-public abstract class ChessBoardController implements Constants, GameConstants {
+public abstract class ChessBoardController implements BoardConstants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 
 	protected ClockLabelUpdater blackClockUpdater;

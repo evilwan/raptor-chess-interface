@@ -3,7 +3,7 @@ package raptor.swt.chess;
 import raptor.game.GameConstants;
 import raptor.pref.PreferenceKeys;
 
-public interface Constants extends GameConstants, PreferenceKeys {
+public interface BoardConstants extends GameConstants, PreferenceKeys {
 
 	public static final int WP_PIECE_JAIL_SQUARE = WP + 100;
 	public static final int WB_PIECE_JAIL_SQUARE = WB + 100;

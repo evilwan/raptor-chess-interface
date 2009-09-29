@@ -13,10 +13,10 @@ import raptor.game.util.GameUtils;
 import raptor.service.SoundService;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
-import raptor.swt.chess.Constants;
+import raptor.swt.chess.BoardConstants;
 
 public class InactiveController extends ChessBoardController implements
-		Constants, GameConstants {
+		BoardConstants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 	Random random = new SecureRandom();
 
