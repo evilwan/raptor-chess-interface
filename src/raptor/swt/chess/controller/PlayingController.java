@@ -25,6 +25,15 @@ import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
 
+/**
+ * The controller used when a user is playing a game. Supports premove,queued
+ * premove, and auto draw. game.getWhiteName() or game.getBlackName() must match
+ * connector.getUserName().
+ * 
+ * When a game is no longer active, this controller swaps itself out with the
+ * Inactive controller.
+ * 
+ */
 public class PlayingController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(PlayingController.class);
 	protected GameServiceListener listener = new GameServiceAdapter() {
