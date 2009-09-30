@@ -11,6 +11,10 @@ import raptor.game.Game;
  * A class which manages active games that belong to a connector.
  */
 public class GameService {
+	
+	/**
+	 * An adapter class which provides default implementations for the GameServiceListener interface.
+	 */
 	public static class GameServiceAdapter implements GameServiceListener {
 		public void gameCreated(Game game) {
 		}
@@ -25,7 +29,6 @@ public class GameService {
 		}
 
 		public void setupGameBecameExamined(Game game) {
-
 		}
 	}
 
@@ -153,6 +156,9 @@ public class GameService {
 		}
 	}
 
+	/**
+	 * Returns an array of all active games in the game service.
+	 */
 	public Game[] getAllActiveGames() {
 		List<Game> result = new ArrayList<Game>(5);
 		for (Game game : gameMap.values()) {
@@ -163,18 +169,30 @@ public class GameService {
 		return result.toArray(new Game[0]);
 	}
 
+	/**
+	 * Returns the game with the specified id.
+	 */
 	public Game getGame(String gameId) {
 		return gameMap.get(gameId);
 	}
 
+	/**
+	 * Returns the number of games this game service is managing.
+	 */
 	public int getGameCount() {
 		return gameMap.values().size();
 	}
 
+	/**
+	 * Removes a game from the game service.
+	 */
 	public void removeGame(Game game) {
 		gameMap.remove(game.getId());
 	}
 
+	/**
+	 * Removes a game service listener.
+	 */
 	public void removeGameServiceListener(GameServiceListener listener) {
 		listeners.remove(listener);
 	}
