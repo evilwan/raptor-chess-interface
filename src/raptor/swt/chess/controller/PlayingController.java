@@ -37,21 +37,34 @@ public class PlayingController extends ChessBoardController {
 						try {
 
 							board.redrawSquares();
-
+							onPlayGameEndSound();
+							
+							//Now swap controllers to the inactive controller.
 							InactiveController inactiveController = new InactiveController(
 									getGame());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 							inactiveController
 							.setItemChangedListeners(itemChangedListeners);
+							
+							//Detatch from the GameService.
 							connector.getGameService()
 									.removeGameServiceListener(listener);
+							
+							//Clear the cool bar and init the inactive controller.
 							board.clearCoolbar();
 							inactiveController.init();
-							inactiveController.fireItemChanged();
+							
+							
 							// Set the listeners to null so they wont get
-							// cleared and disposed
+							// cleared and we wont get notified.
 							setItemChangedListeners(null);
+							
+							//Fire item changed from the inactive controller
+							//so they tab information gets adjusted.
+							inactiveController.fireItemChanged();
+							
+							//And finally dispose.
 							PlayingController.this.dispose();
 						} catch (Throwable t) {
 							connector.onError("PlayingController.gameInactive",
