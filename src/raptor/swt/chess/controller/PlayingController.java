@@ -38,33 +38,33 @@ public class PlayingController extends ChessBoardController {
 
 							board.redrawSquares();
 							onPlayGameEndSound();
-							
-							//Now swap controllers to the inactive controller.
+
+							// Now swap controllers to the inactive controller.
 							InactiveController inactiveController = new InactiveController(
 									getGame());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 							inactiveController
-							.setItemChangedListeners(itemChangedListeners);
-							
-							//Detatch from the GameService.
+									.setItemChangedListeners(itemChangedListeners);
+
+							// Detatch from the GameService.
 							connector.getGameService()
 									.removeGameServiceListener(listener);
-							
-							//Clear the cool bar and init the inactive controller.
+
+							// Clear the cool bar and init the inactive
+							// controller.
 							board.clearCoolbar();
 							inactiveController.init();
-							
-							
+
 							// Set the listeners to null so they wont get
 							// cleared and we wont get notified.
 							setItemChangedListeners(null);
-							
-							//Fire item changed from the inactive controller
-							//so they tab information gets adjusted.
+
+							// Fire item changed from the inactive controller
+							// so they tab information gets adjusted.
 							inactiveController.fireItemChanged();
-							
-							//And finally dispose.
+
+							// And finally dispose.
 							PlayingController.this.dispose();
 						} catch (Throwable t) {
 							connector.onError("PlayingController.gameInactive",
@@ -83,6 +83,7 @@ public class PlayingController extends ChessBoardController {
 					public void run() {
 						try {
 							if (isNewMove) {
+								handleAutoDraw();
 								if (!makePremove()) {
 									adjustToGameMove();
 								}
@@ -115,6 +116,9 @@ public class PlayingController extends ChessBoardController {
 		}
 	};
 
+	/**
+	 * A class containing the details of a premove.
+	 */
 	protected static class PremoveInfo {
 		int fromSquare;
 		int toSquare;
@@ -128,6 +132,15 @@ public class PlayingController extends ChessBoardController {
 	protected List<PremoveInfo> premoves = Collections
 			.synchronizedList(new ArrayList<PremoveInfo>(10));
 
+	/**
+	 * Creates a playing controller. One of the players white or black playing
+	 * the game must match the name of connector.getUserName.
+	 * 
+	 * @param game
+	 *            The game to control.
+	 * @param connector
+	 *            The backing connector.
+	 */
 	public PlayingController(Game game, Connector connector) {
 		super(game);
 		this.connector = connector;
@@ -151,6 +164,10 @@ public class PlayingController extends ChessBoardController {
 
 	}
 
+	/**
+	 * Clears the premove queue and adjusts the premove label and clear premove
+	 * button.
+	 */
 	@Override
 	public void onClearPremoves() {
 		premoves.clear();
@@ -158,9 +175,24 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	/**
-	 * Returns true if a premove was made.
+	 * If auto draw is enabled, a draw request is sent. This method should be
+	 * invoked when receiving a move and right after sending one.
 	 * 
-	 * @return
+	 * In the future this will become smarter and only draw when the game shows
+	 * a draw by three times in the same position or 50 move draw rule.
+	 */
+	protected void handleAutoDraw() {
+		if (board.isCoolbarButtonSelectd(ChessBoard.AUTO_DRAW)) {
+			getConnector().onDraw(getGame());
+		}
+	}
+
+	/**
+	 * Runs through the premove queue and tries to make each move. If a move
+	 * succeeds it is made and the rest of the queue is left intact. If a move
+	 * fails it is removed from the queue and the next move is tried.
+	 * 
+	 * If a move succeeded true is returned, otherwise false is returned.
 	 */
 	protected boolean makePremove() {
 		synchronized (premoves) {
@@ -175,6 +207,7 @@ public class PlayingController extends ChessBoardController {
 					}
 					getConnector().makeMove(getGame(), move);
 					premoves.remove(move);
+					handleAutoDraw();
 					adjustToGameMove();
 					return true;
 				} catch (IllegalArgumentException iae) {
@@ -182,6 +215,7 @@ public class PlayingController extends ChessBoardController {
 						LOG.debug("Invalid premove trying next one in queue.",
 								iae);
 					}
+					premoves.remove(move);
 				}
 			}
 		}
@@ -190,17 +224,24 @@ public class PlayingController extends ChessBoardController {
 		return false;
 	}
 
+	/**
+	 * Returns true if the premove preference is enabled.
+	 */
 	public boolean isPremoveable() {
 		return Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.BOARD_PREMOVE_ENABLED);
 	}
 
+	/**
+	 * Adds all premoves to the premoves label. Also updates the clear premove
+	 * button if there are moves in the premove queue.
+	 */
 	@Override
 	protected void adjustPremoveLabel() {
 		if (isBeingReparented()) {
 			return;
 		}
- 
+
 		String labelText = "";
 		synchronized (premoves) {
 			for (PremoveInfo info : premoves) {
@@ -227,27 +268,6 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	@Override
-	protected void adjustClockColors() {
-		if (!isBeingReparented()) {
-			if (getGame().getColorToMove() == WHITE) {
-				board.getWhiteClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-				board.getBlackClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			} else {
-				board.getBlackClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-				board.getWhiteClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			}
-		}
-	}
-
-	@Override
 	protected void adjustCoolbarToInitial() {
 		if (!isBeingReparented()) {
 			board.addGameActionButtonsToCoolbar();
@@ -256,11 +276,21 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * If premove is enabled, and premove is not in queued mode then clear the
+	 * premoves on an illegal move.
+	 */
 	public void adjustForIllegalMove(int fromSquare, int toSquare) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("adjustForIllegalMove " + GameUtils.getSan(fromSquare)
 					+ " " + GameUtils.getSan(toSquare));
 		}
+
+		if (!getPreferences().getBoolean(
+				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
+			onClearPremoves();
+		}
+
 		board.unhighlightAllSquares();
 		adjustToGameMove();
 		SoundService.getInstance().playSound("illegalMove");
@@ -304,6 +334,17 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * Invoked when the user tries to start a dnd or click click move operation
+	 * on the board. This method returns false if its not allowed.
+	 * 
+	 * For non premoven you can only move one of your pieces when its your move.
+	 * If the game is droppable you can drop from the piece jail, otherwise you
+	 * can't.
+	 * 
+	 * If premove is enabled you are allowed to move your pieces when it is not
+	 * your move.
+	 */
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (LOG.isDebugEnabled()) {
@@ -356,7 +397,16 @@ public class PlayingController extends ChessBoardController {
 
 	@Override
 	public void init() {
+
 		board.setWhiteOnTop(!isUserWhite());
+
+		/**
+		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail
+		 * since you can drop pieces from it.
+		 * 
+		 * In other games its just a collection of pieces yu have captured so
+		 * your opponent owns your piece jail.
+		 */
 		if (getGame().isInState(Game.DROPPABLE_STATE)) {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
 		} else {
@@ -473,6 +523,11 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * Invoked when the user cancels an initiated move. All squares are
+	 * unhighlighted and the board is adjusted back to the game so any pieces
+	 * removed in userInitiatedMove will be added back.
+	 */
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
 		if (!isBeingReparented()) {
@@ -481,6 +536,10 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * Invoked when the user initiates a move from a square. The square becomes
+	 * highlighted and if its a DND move the piece is removed.
+	 */
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
 		if (LOG.isDebugEnabled()) {
@@ -497,6 +556,10 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * Invoked when a user makes a dnd move or a click click move on the
+	 * chessboard.
+	 */
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
 		if (isBeingReparented()) {
@@ -513,9 +576,9 @@ public class PlayingController extends ChessBoardController {
 		board.unhighlightAllSquares();
 
 		if (isUsersMove()) {
+			// Non premoves flow through here
 			if (fromSquare == toSquare
 					|| BoardUtils.isPieceJailSquare(toSquare)) {
-
 				if (LOG.isDebugEnabled()) {
 					LOG
 							.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
@@ -546,6 +609,7 @@ public class PlayingController extends ChessBoardController {
 					connector.makeMove(game, move);
 					isPlayingMoveSound = false;
 					adjustToGameMove();
+					handleAutoDraw();
 					isPlayingMoveSound = true;
 				} else {
 					connector.onError(
@@ -557,6 +621,8 @@ public class PlayingController extends ChessBoardController {
 			}
 
 		} else if (isPremoveable()) {
+			// Premove logic flows through here
+
 			if (fromSquare == toSquare
 					|| BoardUtils.isPieceJailSquare(toSquare)) {
 				// No need to check other conditions they are checked in
@@ -579,7 +645,18 @@ public class PlayingController extends ChessBoardController {
 			premoveInfo.promotionColorlessPiece = GameUtils.isPromotion(
 					isUserWhite(), getGame(), fromSquare, toSquare) ? board
 					.getAutoPromoteSelection() : EMPTY;
+
+			/**
+			 * In queued premove mode you can have multiple premoves so just add
+			 * it to the queue. In non queued premove you can have only one, so
+			 * always clear out the queue before adding new moves.
+			 */
+			if (!getPreferences().getBoolean(
+					PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
+				premoves.clear();
+			}
 			premoves.add(premoveInfo);
+
 			adjustPremoveLabel();
 
 			board.unhighlightAllSquares();
@@ -592,6 +669,10 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * Middle click is smart move. A move is randomly selected that is'nt a drop
+	 * move and played if its enabled.
+	 */
 	@Override
 	public void userMiddleClicked(int square) {
 		if (isBeingReparented()) {
@@ -626,6 +707,8 @@ public class PlayingController extends ChessBoardController {
 					board.unhighlightAllSquares();
 					board.getSquare(move.getFrom()).highlight();
 					board.getSquare(move.getTo()).highlight();
+
+					// Turn off sound while the move is adjusted
 					isPlayingMoveSound = false;
 					adjustToGameMove();
 					isPlayingMoveSound = true;
@@ -638,6 +721,11 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * In droppable games this shows a menu of the pieces available for
+	 * dropping. In bughouse the menu includes the premove drop features which
+	 * drops a move when the piece becomes available.
+	 */
 	@Override
 	public void userRightClicked(final int square) {
 		if (isBeingReparented()) {

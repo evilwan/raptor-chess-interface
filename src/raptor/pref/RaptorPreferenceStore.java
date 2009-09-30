@@ -190,6 +190,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SMARTMOVE_ENABLED, true);
 		setDefault(BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING, true);
 		setDefault(BOARD_IS_SHOWING_PIECE_UNICODE_CHARS, true);
+		setDefault(BOARD_QUEUED_PREMOVE_ENABLED, true);
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
@@ -241,7 +242,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, BOARD_RESULT_FONT,
-				new FontData[] { new FontData(defaultMonospacedFontName, 40, SWT.BOLD) });
+				new FontData[] { new FontData(defaultMonospacedFontName, 40,
+						SWT.BOLD) });
 
 		// Chat
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);

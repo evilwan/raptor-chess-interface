@@ -393,7 +393,7 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 		coolbar.setVisible(false);
 		coolbar.dispose();
-
+		coolbarButtonMap.clear();
 		coolbar = new CoolBar(coolbarComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.COOLBAR));
 		coolbar.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -618,6 +618,18 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 	public CoolBar getCoolbar() {
 		return coolbar;
+	}
+
+	/**
+	 * Returns true if the specified button is selected, false otherwise.
+	 */
+	public boolean isCoolbarButtonSelectd(String buttonKey) {
+		boolean result = false;
+		Button button = coolbarButtonMap.get(buttonKey);
+		if (button != null) {
+			result = button.getSelection();
+		}
+		return result;
 	}
 
 	public Button getCoolBarButton(String buttonKey) {
