@@ -661,9 +661,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		return sourceOfLastTellReceived;
 	}
 
+	/**
+	 * Returns the title. THe current format is connector.shortName([CONNECTOR
+	 * STATUS IF NOT CONNECTED]getName()).
+	 */
 	public String getTitle() {
-		String title = "";
-
 		if (connector == null) {
 			return "Error";
 		} else if (connector.isConnecting()) {
