@@ -1,5 +1,9 @@
 package raptor.connector;
 
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.preference.PreferencePage;
+
 import raptor.game.Game;
 import raptor.game.Move;
 import raptor.script.GameScript;
@@ -7,6 +11,11 @@ import raptor.service.ChatService;
 import raptor.service.GameService;
 
 public interface Connector {
+	/**
+	 * Adds a connector listener to the connector.
+	 */
+	public void addConnectorListener(ConnectorListener listener);
+
 	/**
 	 * TO DO: iron out what this is.
 	 */
@@ -77,6 +86,12 @@ public interface Connector {
 	public GameService getGameService();
 
 	/**
+	 * Returns the menu manager to use in the RaptorWindow menu bar for this
+	 * connector.
+	 */
+	public MenuManager getMenuManager();
+
+	/**
 	 * Returns the prefix to use for partner tells. On fics this would be 'ptell
 	 * '
 	 */
@@ -102,6 +117,19 @@ public interface Connector {
 	public String getPrompt();
 
 	/**
+	 * Return the preference node to add to the root preference dialog. This
+	 * preference node will show up with the connectors first name. You can add
+	 * secondary nodes by implementing getSecondaryPreferenceNodes. These nodes
+	 * will show up below the root node.
+	 */
+	public PreferencePage getRootPreferencePage();
+
+	/**
+	 * Returns an array of the secondary preference nodes.
+	 */
+	public PreferenceNode[] getSecondaryPreferenceNodes();
+
+	/**
 	 * Returns a short name describing this connector.
 	 * 
 	 * @return
@@ -123,6 +151,11 @@ public interface Connector {
 	 * Returns true if the connector is connected.
 	 */
 	public boolean isConnected();
+
+	/**
+	 * Returns true if the connector is in the process of connecting.
+	 */
+	public boolean isConnecting();
 
 	/**
 	 * Returns true if the specified word is likely a channel. A call to
@@ -161,6 +194,12 @@ public interface Connector {
 	 * Handles accepting a match request.
 	 */
 	public void onAcceptKeyPress();
+
+	/**
+	 * If this connector is setup to auto-connect it should auto connect when
+	 * this method is invoked.
+	 */
+	public void onAutoConnect();
 
 	/**
 	 * Handles declining a match request.
@@ -221,6 +260,11 @@ public interface Connector {
 	public void onRematchKeyPress();
 
 	/**
+	 * Resigns the specified game.
+	 */
+	public void onResign(Game game);
+
+	/**
 	 * Handles a request to clear a position being setup.
 	 */
 	public void onSetupClear(Game game);
@@ -275,6 +319,11 @@ public interface Connector {
 	 * TO DO: iron out what this really is.
 	 */
 	public void refreshGameScripts();
+
+	/**
+	 * Removes a connector listener from the connector.
+	 */
+	public void removeConnectorListener(ConnectorListener listener);
 
 	/**
 	 * TO DO: iron out what this really is.

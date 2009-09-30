@@ -10,20 +10,15 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.resource.ImageRegistry;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Shell;
 
 import raptor.connector.Connector;
-import raptor.connector.fics.FicsConnector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.service.ConnectorService;
 import raptor.service.ThreadService;
-import raptor.swt.LoginDialog;
 import raptor.util.FileUtil;
 
 public class Raptor implements PreferenceKeys {
@@ -58,45 +53,22 @@ public class Raptor implements PreferenceKeys {
 			createInstance();
 
 			instance.appWindow = new RaptorWindow();
-
-			// Create the login dialog if needed.
-			if (!instance.getPreferences().getBoolean(FICS_AUTO_CONNECT)) {
-				LoginDialog loginDialog = new LoginDialog();
-				loginDialog.open();
-				if (!loginDialog.wasLoginPressed()) {
-					instance.shutdown();
-					return;
-				}
-			}
-
 			instance.appWindow.setBlockOnOpen(true);
 
-			// Add a hook to call shutdown.
-			display.timerExec(500, new Runnable() {
-				public void run() {
-					Shell shell = instance.appWindow.getShell();
-					if (shell == null) {
-						System.err.println("Why is shell null");
-					} else {
-						shell.addListener(SWT.Close, new Listener() {
-							public void handleEvent(Event e) {
-								Raptor.getInstance().shutdown();
+			// Auto login the connectors.
+			Connector[] connectors = ConnectorService.getInstance()
+					.getConnectors();
+			for (final Connector connector : connectors) {
+				ThreadService.getInstance().scheduleOneShot(250,
+						new Runnable() {
+							public void run() {
+								connector.onAutoConnect();
 							}
 						});
-					}
-				}
-			});
-
-			// Start the fics connector.
-			display.asyncExec(new Runnable() {
-				public void run() {
-					instance.getFicsConnector().connect();
-				}
-			});
+			}
 
 			// Open the app window
 			instance.appWindow.open();
-
 		} catch (Throwable t) {
 			LOG.error("Error occured in main:", t);
 		} finally {
@@ -120,8 +92,6 @@ public class Raptor implements PreferenceKeys {
 	protected ColorRegistry colorRegistry = new ColorRegistry(Display
 			.getCurrent());
 
-	protected Connector ficsConnector;
-
 	protected RaptorPreferenceStore preferences;
 
 	protected RaptorWindow appWindow;
@@ -129,12 +99,26 @@ public class Raptor implements PreferenceKeys {
 	public Raptor() {
 	}
 
-	public ColorRegistry getColorRegistry() {
-		return colorRegistry;
+	public void alert(final String message) {
+		getInstance().getRaptorWindow().getShell().getDisplay().asyncExec(
+				new Runnable() {
+					public void run() {
+						MessageDialog
+								.openInformation(Raptor.getInstance()
+										.getRaptorWindow().getShell(), "Alert",
+										message);
+					}
+				});
+
 	}
 
-	public Connector getFicsConnector() {
-		return ficsConnector;
+	public boolean confirm(final String question) {
+		return MessageDialog.openConfirm(Raptor.getInstance().getRaptorWindow()
+				.getShell(), "Confirm", question);
+	}
+
+	public ColorRegistry getColorRegistry() {
+		return colorRegistry;
 	}
 
 	public FontRegistry getFontRegistry() {
@@ -184,7 +168,6 @@ public class Raptor implements PreferenceKeys {
 	public void init() {
 		install();
 		preferences = new RaptorPreferenceStore();
-		ficsConnector = new FicsConnector();
 	}
 
 	public void install() {
@@ -236,11 +219,6 @@ public class Raptor implements PreferenceKeys {
 
 	public void shutdown() {
 		try {
-			ficsConnector.dispose();
-		} catch (Throwable t) {
-		}
-
-		try {
 			imageRegistry.dispose();
 		} catch (Throwable t) {
 		}
@@ -250,7 +228,6 @@ public class Raptor implements PreferenceKeys {
 		} catch (Throwable t) {
 
 		}
-
 		LOG.info("Shutdown Raptor");
 	}
 

@@ -541,6 +541,15 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Confirms closing of the window the game is being viewed in. Default is to
+	 * always return true indicating to go ahead and close it. Can be overridden
+	 * to provide other behavior.
+	 */
+	public boolean confirmClose() {
+		return true;
+	}
+
+	/**
 	 * Disposes this controller. The ChessBoard this controller is managing
 	 * should NEVER be disposed. However, all other resources such as the
 	 * traverser,and clock updaters must be disposed.
@@ -688,11 +697,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Returns true if this game is closeable, false otherwise.
-	 */
-	public abstract boolean isCloseable();
-
-	/**
 	 * Returns true if this game is commitable. This method is used by the
 	 * ChessBoard class to determine if it will show the commit button.
 	 */
@@ -709,17 +713,17 @@ public abstract class ChessBoardController implements BoardConstants,
 	public abstract boolean isNavigatable();
 
 	/**
-	 * Returns true if the ChessBoard should show the revert button.
-	 */
-	public abstract boolean isRevertable();
-
-	/**
 	 * Returns true if this chess board controller handles premoves. The default
 	 * implementation returns false.
 	 */
 	public boolean isPremoveable() {
 		return false;
 	}
+
+	/**
+	 * Returns true if the ChessBoard should show the revert button.
+	 */
+	public abstract boolean isRevertable();
 
 	/**
 	 * Invoked when the ChessBoard is being viewed. The default implementation

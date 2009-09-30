@@ -1,4 +1,4 @@
-package raptor.connector.fics;
+package raptor.connector.bics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,9 +45,9 @@ import raptor.game.Game.Result;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 
-public class FicsParser implements IcsParser, GameConstants {
+public class BicsParser implements IcsParser, GameConstants {
 	public static final int MAX_GAME_MESSAGE = 1000;
-	private static final Log LOG = LogFactory.getLog(FicsParser.class);
+	private static final Log LOG = LogFactory.getLog(BicsParser.class);
 
 	protected Style12Parser style12Parser;
 	protected G1Parser g1Parser;
@@ -68,7 +68,7 @@ public class FicsParser implements IcsParser, GameConstants {
 	 */
 	protected Map<String, G1Message> unprocessedG1Messages = new HashMap<String, G1Message>();
 
-	public FicsParser() {
+	public BicsParser() {
 		style12Parser = new Style12Parser();
 		gameEndParser = new GameEndParser();
 		b1Parser = new B1Parser();

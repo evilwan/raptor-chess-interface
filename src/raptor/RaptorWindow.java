@@ -1,6 +1,9 @@
 package raptor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -33,9 +36,9 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.PreferencesDialog;
+import raptor.pref.PreferenceUtil;
+import raptor.service.ConnectorService;
 import raptor.swt.ItemChangedListener;
-import raptor.swt.ProfileWIndow;
 import raptor.swt.SWTUtils;
 
 /**
@@ -110,6 +113,7 @@ public class RaptorWindow extends ApplicationWindow {
 	protected class RaptorTabItem extends CTabItem {
 		protected RaptorWindowItem raptorItem;
 		protected ItemChangedListener listener;
+		protected RaptorTabFolder raptorParent;
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				RaptorWindowItem item) {
@@ -119,6 +123,7 @@ public class RaptorWindow extends ApplicationWindow {
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				final RaptorWindowItem item, boolean isInitingItem) {
 			super(parent, style);
+			raptorParent = parent;
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Creating RaptorTabItem.");
@@ -136,13 +141,18 @@ public class RaptorWindow extends ApplicationWindow {
 				public void itemStateChanged() {
 					if (item.getControl() != null
 							&& !item.getControl().isDisposed()) {
-						if (LOG.isDebugEnabled()) {
-							LOG
-									.debug("Item changed, updating text,title,showClose");
-						}
-						setText(item.getTitle());
-						setImage(item.getImage());
-						setShowClose(item.isCloseable());
+						getDisplay().asyncExec(new Runnable() {
+							public void run() {
+
+								if (LOG.isDebugEnabled()) {
+									LOG
+											.debug("Item changed, updating text,title,showClose");
+								}
+								setText(item.getTitle());
+								setImage(item.getImage());
+								setShowClose(true);
+							}
+						});
 					}
 				}
 			});
@@ -150,20 +160,17 @@ public class RaptorWindow extends ApplicationWindow {
 			setControl(item.getControl());
 			setText(item.getTitle());
 			setImage(item.getImage());
-			setShowClose(item.isCloseable());
+			setShowClose(true);
 			parent.layout(true, true);
 			parent.setSelection(this);
 			raptorItem.onActivate();
+			activeItems.add(this);
 		}
 
 		@Override
 		public void dispose() {
+			activeItems.add(this);
 			super.dispose();
-		}
-
-		public void refresh() {
-			setText(raptorItem.getTitle());
-			setShowClose(raptorItem.isCloseable());
 		}
 
 		public void reParent(RaptorTabFolder newParent) {
@@ -196,6 +203,8 @@ public class RaptorWindow extends ApplicationWindow {
 	protected Composite statusBar;
 	protected Label statusLabel;
 	protected Map<String, Label> pingLabelsMap = new HashMap<String, Label>();
+	protected List<RaptorTabItem> activeItems = Collections
+			.synchronizedList(new ArrayList<RaptorTabItem>());
 
 	public RaptorWindow() {
 		super(null);
@@ -219,7 +228,7 @@ public class RaptorWindow extends ApplicationWindow {
 			LOG.debug("Adding raptor window item");
 		}
 
-		if (isAsynch) {
+		if (!isAsynch) {
 			getShell().getDisplay().syncExec(new Runnable() {
 				public void run() {
 					RaptorTabFolder folder = getTabFolder(item
@@ -257,6 +266,12 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
+		getShell().addListener(SWT.Close, new Listener() {
+			public void handleEvent(Event e) {
+				Raptor.getInstance().shutdown();
+			}
+		});
+
 		getShell().setText(
 				Raptor.getInstance().getPreferences().getString(
 						PreferenceKeys.APP_NAME));
@@ -336,44 +351,32 @@ public class RaptorWindow extends ApplicationWindow {
 	@Override
 	protected MenuManager createMenuManager() {
 		MenuManager menuBar = new MenuManager("Raptor");
-		MenuManager connectionsMenu = new MenuManager("&Connections");
 		MenuManager configureMenu = new MenuManager("&Configure");
-		MenuManager windowMenu = new MenuManager("&Window");
 		MenuManager helpMenu = new MenuManager("&Help");
 
-		connectionsMenu.add(new Action("Connect to &fics") {
-			@Override
-			public void run() {
+		Connector[] connectors = ConnectorService.getInstance().getConnectors();
+
+		for (Connector connector : connectors) {
+			MenuManager manager = connector.getMenuManager();
+			if (manager != null) {
+				menuBar.add(manager);
 			}
-		});
-		connectionsMenu.add(new Action("Profile") {
-			@Override
-			public void run() {
-				ProfileWIndow profiler = new ProfileWIndow();
-				profiler.setBlockOnOpen(false);
-				profiler.open();
-			}
-		});
+		}
+
 		configureMenu.add(new Action("Preferences") {
 			@Override
 			public void run() {
-				new PreferencesDialog().run();
+				PreferenceUtil.launchPreferenceDialog();
 			}
 		});
 		helpMenu.add(new Action("&About") {
 			@Override
 			public void run() {
-			}
-		});
-		windowMenu.add(new Action("&Cascade") {
-			@Override
-			public void run() {
+				Raptor.getInstance().alert("Comming soon.");
 			}
 		});
 
-		menuBar.add(connectionsMenu);
 		menuBar.add(configureMenu);
-		menuBar.add(windowMenu);
 		menuBar.add(helpMenu);
 		return menuBar;
 	}
@@ -402,6 +405,64 @@ public class RaptorWindow extends ApplicationWindow {
 				PreferenceKeys.APP_STATUS_BAR_FONT));
 		statusLabel.setForeground(Raptor.getInstance().getPreferences()
 				.getColor(PreferenceKeys.APP_STATUS_BAR_COLOR));
+	}
+
+	public void dispose() {
+		if (pingLabelsMap != null) {
+			pingLabelsMap.clear();
+		}
+		if (activeItems != null) {
+			activeItems.clear();
+		}
+	}
+
+	/**
+	 * Disposes an item and removes it from the RaptorWindow. After this method
+	 * is invoked the item passed in is disposed.
+	 */
+	public void disposeRaptorWindowItem(final RaptorWindowItem item) {
+		getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				RaptorTabItem tabItem = null;
+				synchronized (activeItems) {
+					for (RaptorTabItem currentTabItem : activeItems) {
+						if (currentTabItem.raptorItem == item) {
+							tabItem = currentTabItem;
+							break;
+						}
+					}
+				}
+				if (item != null) {
+					tabItem.dispose();
+					item.dispose();
+					restoreFolders();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Returns the quadrant the current window item is in. Null if the
+	 * windowItem is not being managed.
+	 */
+	public Quadrant getQuadrant(RaptorWindowItem windowItem) {
+		Quadrant result = null;
+		synchronized (activeItems) {
+			for (RaptorTabItem currentTabItem : activeItems) {
+				if (currentTabItem.raptorItem == windowItem) {
+					result = currentTabItem.raptorParent.quadrant;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns an array of all RaptorWindowItems currently active.
+	 */
+	public RaptorWindowItem[] getRaptorWindowItems() {
+		return activeItems.toArray(new RaptorWindowItem[0]);
 	}
 
 	/**
@@ -452,12 +513,12 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void close(CTabFolderEvent event) {
 				RaptorTabItem item = (RaptorTabItem) folder.getSelection();
-				if (item.raptorItem.isCloseable()) {
+				if (item.raptorItem.confirmClose()) {
 					event.doit = true;
 					item.raptorItem.dispose();
 					item.dispose();
+					restoreFolders();
 				}
-				restoreFolders();
 			}
 
 			@Override
@@ -511,7 +572,7 @@ public class RaptorWindow extends ApplicationWindow {
 								public void handleEvent(Event e) {
 									RaptorTabItem item = folder
 											.getRaptorTabItemSelection();
-									if (item.raptorItem.confirmReparenting()) {
+									if (item.raptorItem.confirmQuadrantMove()) {
 										item.reParent(folders[currentQuadrant
 												.ordinal()]);
 									}
@@ -529,6 +590,23 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Returns true if the item is being managed by the RaptorWindow. As items
+	 * are closed and disposed they are no longer managed.
+	 */
+	public boolean isBeingManaged(final RaptorWindowItem item) {
+		boolean result = false;
+		synchronized (activeItems) {
+			for (RaptorTabItem currentTabItem : activeItems) {
+				if (currentTabItem.raptorItem == item) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 	/**

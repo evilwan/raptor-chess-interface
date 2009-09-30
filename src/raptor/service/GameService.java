@@ -11,9 +11,10 @@ import raptor.game.Game;
  * A class which manages active games that belong to a connector.
  */
 public class GameService {
-	
+
 	/**
-	 * An adapter class which provides default implementations for the GameServiceListener interface.
+	 * An adapter class which provides default implementations for the
+	 * GameServiceListener interface.
 	 */
 	public static class GameServiceAdapter implements GameServiceListener {
 		public void gameCreated(Game game) {

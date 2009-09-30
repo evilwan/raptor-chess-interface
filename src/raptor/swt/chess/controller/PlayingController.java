@@ -35,7 +35,17 @@ import raptor.swt.chess.ChessBoardController;
  * 
  */
 public class PlayingController extends ChessBoardController {
+	/**
+	 * A class containing the details of a premove.
+	 */
+	protected static class PremoveInfo {
+		int fromSquare;
+		int toSquare;
+		int promotionColorlessPiece;
+	}
+
 	static final Log LOG = LogFactory.getLog(PlayingController.class);
+
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
@@ -125,15 +135,6 @@ public class PlayingController extends ChessBoardController {
 		}
 	};
 
-	/**
-	 * A class containing the details of a premove.
-	 */
-	protected static class PremoveInfo {
-		int fromSquare;
-		int toSquare;
-		int promotionColorlessPiece;
-	}
-
 	protected Connector connector;
 	protected boolean isUserWhite;
 	protected Random random = new SecureRandom();
@@ -171,110 +172,6 @@ public class PlayingController extends ChessBoardController {
 			LOG.debug("isUserWhite=" + isUserWhite);
 		}
 
-	}
-
-	/**
-	 * Clears the premove queue and adjusts the premove label and clear premove
-	 * button.
-	 */
-	@Override
-	public void onClearPremoves() {
-		premoves.clear();
-		adjustPremoveLabel();
-	}
-
-	/**
-	 * If auto draw is enabled, a draw request is sent. This method should be
-	 * invoked when receiving a move and right after sending one.
-	 * 
-	 * In the future this will become smarter and only draw when the game shows
-	 * a draw by three times in the same position or 50 move draw rule.
-	 */
-	protected void handleAutoDraw() {
-		if (board.isCoolbarButtonSelectd(ChessBoard.AUTO_DRAW)) {
-			getConnector().onDraw(getGame());
-		}
-	}
-
-	/**
-	 * Runs through the premove queue and tries to make each move. If a move
-	 * succeeds it is made and the rest of the queue is left intact. If a move
-	 * fails it is removed from the queue and the next move is tried.
-	 * 
-	 * If a move succeeded true is returned, otherwise false is returned.
-	 */
-	protected boolean makePremove() {
-		synchronized (premoves) {
-			for (PremoveInfo info : premoves) {
-				Move move = null;
-				try {
-					if (info.promotionColorlessPiece == EMPTY) {
-						move = game.makeMove(info.fromSquare, info.toSquare);
-					} else {
-						move = game.makeMove(info.fromSquare, info.toSquare,
-								info.promotionColorlessPiece);
-					}
-					getConnector().makeMove(getGame(), move);
-					premoves.remove(move);
-					handleAutoDraw();
-					adjustToGameMove();
-					return true;
-				} catch (IllegalArgumentException iae) {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Invalid premove trying next one in queue.",
-								iae);
-					}
-					premoves.remove(move);
-				}
-			}
-		}
-		premoves.clear();
-		adjustPremoveLabel();
-		return false;
-	}
-
-	/**
-	 * Returns true if the premove preference is enabled.
-	 */
-	@Override
-	public boolean isPremoveable() {
-		return Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.BOARD_PREMOVE_ENABLED);
-	}
-
-	/**
-	 * Adds all premoves to the premoves label. Also updates the clear premove
-	 * button if there are moves in the premove queue.
-	 */
-	@Override
-	protected void adjustPremoveLabel() {
-		if (isBeingReparented()) {
-			return;
-		}
-
-		String labelText = "";
-		synchronized (premoves) {
-			for (PremoveInfo info : premoves) {
-				String premove = ""
-						+ BoardUtils.getPieceRepresentation(BoardUtils
-								.getColoredPiece(info.fromSquare, game))
-						+ (board.getSquare(info.toSquare).getPiece() != EMPTY ? "x"
-								: "") + GameUtils.getSan(info.toSquare);
-				if (labelText.equals("")) {
-					labelText += premove;
-				} else {
-					labelText += " , " + premove;
-				}
-			}
-		}
-		if (labelText.equals("")) {
-			labelText = "Premoves: EMPTY";
-			board.setCoolBarButtonEnabled(false, ChessBoard.PREMOVE);
-		} else {
-			labelText = "Premoves: " + labelText;
-			board.setCoolBarButtonEnabled(true, ChessBoard.PREMOVE);
-		}
-		board.getCurrentPremovesLabel().setText(labelText);
 	}
 
 	@Override
@@ -345,6 +242,41 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	/**
+	 * Adds all premoves to the premoves label. Also updates the clear premove
+	 * button if there are moves in the premove queue.
+	 */
+	@Override
+	protected void adjustPremoveLabel() {
+		if (isBeingReparented()) {
+			return;
+		}
+
+		String labelText = "";
+		synchronized (premoves) {
+			for (PremoveInfo info : premoves) {
+				String premove = ""
+						+ BoardUtils.getPieceRepresentation(BoardUtils
+								.getColoredPiece(info.fromSquare, game))
+						+ (board.getSquare(info.toSquare).getPiece() != EMPTY ? "x"
+								: "") + GameUtils.getSan(info.toSquare);
+				if (labelText.equals("")) {
+					labelText += premove;
+				} else {
+					labelText += " , " + premove;
+				}
+			}
+		}
+		if (labelText.equals("")) {
+			labelText = "Premoves: EMPTY";
+			board.setCoolBarButtonEnabled(false, ChessBoard.PREMOVE);
+		} else {
+			labelText = "Premoves: " + labelText;
+			board.setCoolBarButtonEnabled(true, ChessBoard.PREMOVE);
+		}
+		board.getCurrentPremovesLabel().setText(labelText);
+	}
+
+	/**
 	 * Invoked when the user tries to start a dnd or click click move operation
 	 * on the board. This method returns false if its not allowed.
 	 * 
@@ -391,6 +323,21 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	@Override
+	public boolean confirmClose() {
+		if (connector.isConnected()) {
+			boolean result = Raptor.getInstance().confirm(
+					"Closing a game you are playing will result in resignation of the game."
+							+ ". Do you wish to proceed?");
+			if (result) {
+				connector.onResign(getGame());
+			}
+			return result;
+		} else {
+			return true;
+		}
+	}
+
+	@Override
 	public void dispose() {
 		connector.getGameService().removeGameServiceListener(listener);
 		super.dispose();
@@ -403,6 +350,19 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	public String getTitle() {
 		return "Playing(" + getGame().getId() + ")";
+	}
+
+	/**
+	 * If auto draw is enabled, a draw request is sent. This method should be
+	 * invoked when receiving a move and right after sending one.
+	 * 
+	 * In the future this will become smarter and only draw when the game shows
+	 * a draw by three times in the same position or 50 move draw rule.
+	 */
+	protected void handleAutoDraw() {
+		if (board.isCoolbarButtonSelectd(ChessBoard.AUTO_DRAW)) {
+			getConnector().onDraw(getGame());
+		}
 	}
 
 	@Override
@@ -438,11 +398,6 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isCloseable() {
-		return false;
-	}
-
-	@Override
 	public boolean isCommitable() {
 		return false;
 	}
@@ -457,6 +412,15 @@ public class PlayingController extends ChessBoardController {
 		return true;
 	}
 
+	/**
+	 * Returns true if the premove preference is enabled.
+	 */
+	@Override
+	public boolean isPremoveable() {
+		return Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.BOARD_PREMOVE_ENABLED);
+	}
+
 	@Override
 	public boolean isRevertable() {
 		return false;
@@ -469,6 +433,53 @@ public class PlayingController extends ChessBoardController {
 
 	public boolean isUserWhite() {
 		return isUserWhite;
+	}
+
+	/**
+	 * Runs through the premove queue and tries to make each move. If a move
+	 * succeeds it is made and the rest of the queue is left intact. If a move
+	 * fails it is removed from the queue and the next move is tried.
+	 * 
+	 * If a move succeeded true is returned, otherwise false is returned.
+	 */
+	protected boolean makePremove() {
+		synchronized (premoves) {
+			for (PremoveInfo info : premoves) {
+				Move move = null;
+				try {
+					if (info.promotionColorlessPiece == EMPTY) {
+						move = game.makeMove(info.fromSquare, info.toSquare);
+					} else {
+						move = game.makeMove(info.fromSquare, info.toSquare,
+								info.promotionColorlessPiece);
+					}
+					getConnector().makeMove(getGame(), move);
+					premoves.remove(move);
+					handleAutoDraw();
+					adjustToGameMove();
+					return true;
+				} catch (IllegalArgumentException iae) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Invalid premove trying next one in queue.",
+								iae);
+					}
+					premoves.remove(move);
+				}
+			}
+		}
+		premoves.clear();
+		adjustPremoveLabel();
+		return false;
+	}
+
+	/**
+	 * Clears the premove queue and adjusts the premove label and clear premove
+	 * button.
+	 */
+	@Override
+	public void onClearPremoves() {
+		premoves.clear();
+		adjustPremoveLabel();
 	}
 
 	@Override

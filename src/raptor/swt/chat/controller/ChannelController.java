@@ -22,6 +22,11 @@ public class ChannelController extends ChatConsoleController {
 	}
 
 	@Override
+	public String getName() {
+		return channel;
+	}
+
+	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
 				PreferenceKeys.APP_CHANNEL_TAB_QUADRANT);
@@ -49,11 +54,6 @@ public class ChannelController extends ChatConsoleController {
 	@Override
 	public String getPrompt() {
 		return connector.getPrompt();
-	}
-
-	@Override
-	public String getTitle() {
-		return connector.getShortName() + "(" + channel + ")";
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import raptor.connector.Connector;
+import raptor.connector.bics.BicsConnector;
 import raptor.connector.fics.FicsConnector;
 
 /**
@@ -18,9 +19,31 @@ public class ConnectorService {
 
 	Map<String, Connector> shortNameToConnector = new HashMap<String, Connector>();
 
-	public ConnectorService() {
+	private ConnectorService() {
 		FicsConnector ficsConnector = new FicsConnector();
+		BicsConnector bicsConnector = new BicsConnector();
 		shortNameToConnector.put(ficsConnector.getShortName(), ficsConnector);
+		shortNameToConnector.put(bicsConnector.getShortName(), bicsConnector);
+	}
+
+	/**
+	 * Disposes of all the connectors being managed.
+	 */
+	public void dispose() {
+		Connector[] connectors = ConnectorService.getInstance().getConnectors();
+		for (Connector connector : connectors) {
+			try {
+				connector.dispose();
+			} catch (Throwable t) {
+			}
+		}
+	}
+
+	/**
+	 * Returns a connector given its short name.
+	 */
+	public Connector getConnector(String shortName) {
+		return shortNameToConnector.get(shortName);
 	}
 
 	/**
@@ -30,12 +53,4 @@ public class ConnectorService {
 		return shortNameToConnector.values().toArray(new Connector[0]);
 
 	}
-
-	/**
-	 * Returns a connector given its short name.
-	 */
-	public Connector getConnector(String shortName) {
-       return shortNameToConnector.get(shortName);
-	}
-
 }

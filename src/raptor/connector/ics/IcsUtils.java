@@ -1,4 +1,4 @@
-package raptor.connector.fics;
+package raptor.connector.ics;
 
 import java.util.StringTokenizer;
 
@@ -28,8 +28,8 @@ import raptor.swt.chess.controller.PlayingController;
 import raptor.swt.chess.controller.SetupController;
 import raptor.util.RaptorStringTokenizer;
 
-public class FicsUtils implements GameConstants {
-	private static final Log LOG = LogFactory.getLog(FicsUtils.class);
+public class IcsUtils implements GameConstants {
+	private static final Log LOG = LogFactory.getLog(IcsUtils.class);
 
 	public static final String LEGAL_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
 			+ "!@#$%^&*()-=_+`~[{]}\\|;:'\",<.>/?";
@@ -192,7 +192,7 @@ public class FicsUtils implements GameConstants {
 
 	public static Game createGame(G1Message g1) {
 		Game result = null;
-		Type gameType = FicsUtils.identifierToGameType(g1.gameTypeDescription);
+		Type gameType = IcsUtils.identifierToGameType(g1.gameTypeDescription);
 		switch (gameType) {
 		case CLASSIC:
 			result = new Game();
@@ -419,9 +419,9 @@ public class FicsUtils implements GameConstants {
 	}
 
 	public static void resetGame(Game game, Style12Message message) {
-		FicsUtils.clearGamePosition(game);
-		FicsUtils.updateNonPositionFields(game, message);
-		FicsUtils.updatePosition(game, message);
+		IcsUtils.clearGamePosition(game);
+		IcsUtils.updateNonPositionFields(game, message);
+		IcsUtils.updatePosition(game, message);
 		verifyLegal(game);
 	}
 
@@ -508,8 +508,8 @@ public class FicsUtils implements GameConstants {
 
 		game.addState(Game.ACTIVE_STATE);
 
-		game.setBlackName(FicsUtils.removeTitles(message.blackName));
-		game.setWhiteName(FicsUtils.removeTitles(message.whiteName));
+		game.setBlackName(IcsUtils.removeTitles(message.blackName));
+		game.setWhiteName(IcsUtils.removeTitles(message.whiteName));
 
 		game.setWhiteRemainingeTimeMillis(message.whiteRemainingTimeMillis);
 		game.setBlackRemainingTimeMillis(message.blackRemainingTimeMillis);

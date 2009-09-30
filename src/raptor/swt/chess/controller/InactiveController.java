@@ -95,11 +95,6 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
-	public boolean isCloseable() {
-		return true;
-	}
-
-	@Override
 	public boolean isCommitable() {
 		return false;
 	}

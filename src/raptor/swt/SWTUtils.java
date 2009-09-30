@@ -1,15 +1,38 @@
 package raptor.swt;
 
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
+import raptor.Raptor;
 
 /**
  * A class containing SWT and JFace utilities.
  */
 public class SWTUtils {
+
+	/**
+	 * Centers the shell in the RaptorWindow.
+	 */
+	public static void centerInRaptorWindow(Dialog dialog) {
+		Shell parent = Raptor.getInstance().getRaptorWindow().getShell();
+
+		Rectangle parentSize = parent.getBounds();
+		Point mySize = dialog.getShell().computeSize(0, 0);
+
+		int locationX, locationY;
+		locationX = (parentSize.width - mySize.x) / 2 + mySize.x;
+		locationY = (parentSize.height - mySize.y) / 2 - mySize.y;
+
+		dialog.getShell().setLocation(new Point(locationX, locationY));
+
+	}
 
 	/**
 	 * Returns a HORIZONTAL fill layout without any margins or spacing.

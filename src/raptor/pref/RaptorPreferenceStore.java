@@ -343,16 +343,67 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, true);
 		setDefault(FICS_AUTO_CONNECT, false);
-		setDefault(FICS_USER_NAME, "");
-		setDefault(FICS_PASSWORD, "");
-		setDefault(FICS_IS_NAMED_GUEST, false);
-		setDefault(FICS_IS_ANON_GUEST, false);
 		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1");
 		setDefault(FICS_IS_LOGGING_GAMES, false);
-		setDefault(FICS_SERVER_URL, "freechess.org");
-		setDefault(FICS_PORT, 5000);
-		setDefault(FICS_TIMESEAL_ENABLED, true);
+		setDefault(FICS_AUTO_CONNECT, false);
+		setDefault(FICS_PROFILE, "Primary");
+		// Fics Primary
+		setDefault(FICS_PRIMARY_USER_NAME, "");
+		setDefault(FICS_PRIMARY_PASSWORD, "");
+		setDefault(FICS_PRIMARY_IS_NAMED_GUEST, false);
+		setDefault(FICS_PRIMARY_IS_ANON_GUEST, false);
+		setDefault(FICS_PRIMARY_SERVER_URL, "freechess.org");
+		setDefault(FICS_PRIMARY_PORT, 5000);
+		setDefault(FICS_PRIMARY_TIMESEAL_ENABLED, true);
+		// Fics Secondary
+		setDefault(FICS_SECONDARY_USER_NAME, "");
+		setDefault(FICS_SECONDARY_PASSWORD, "");
+		setDefault(FICS_SECONDARY_IS_NAMED_GUEST, false);
+		setDefault(FICS_SECONDARY_IS_ANON_GUEST, false);
+		setDefault(FICS_SECONDARY_SERVER_URL, "freechess.org");
+		setDefault(FICS_SECONDARY_PORT, 5000);
+		setDefault(FICS_SECONDARY_TIMESEAL_ENABLED, true);
+		// Fics Tertiary
+		setDefault(FICS_TERTIARY_USER_NAME, "");
+		setDefault(FICS_TERTIARY_PASSWORD, "");
+		setDefault(FICS_TERTIARY_IS_NAMED_GUEST, false);
+		setDefault(FICS_TERTIARY_IS_ANON_GUEST, false);
+		setDefault(FICS_TERTIARY_SERVER_URL, "freechess.org");
+		setDefault(FICS_TERTIARY_PORT, 5000);
+		setDefault(FICS_TERTIARY_TIMESEAL_ENABLED, true);
+		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 
+		// Bics
+		setDefault(BICS_KEEP_ALIVE, true);
+		setDefault(BICS_AUTO_CONNECT, false);
+		setDefault(BICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1");
+		setDefault(BICS_IS_LOGGING_GAMES, false);
+		setDefault(BICS_AUTO_CONNECT, false);
+		setDefault(BICS_PROFILE, "Primary");
+		// Bics Primary
+		setDefault(BICS_PRIMARY_USER_NAME, "");
+		setDefault(BICS_PRIMARY_PASSWORD, "");
+		setDefault(BICS_PRIMARY_IS_NAMED_GUEST, false);
+		setDefault(BICS_PRIMARY_IS_ANON_GUEST, false);
+		setDefault(BICS_PRIMARY_SERVER_URL, "chess.sipay.ru");
+		setDefault(BICS_PRIMARY_PORT, 5000);
+		setDefault(BICS_PRIMARY_TIMESEAL_ENABLED, true);
+		// Bics Secondary
+		setDefault(BICS_SECONDARY_USER_NAME, "");
+		setDefault(BICS_SECONDARY_PASSWORD, "");
+		setDefault(BICS_SECONDARY_IS_NAMED_GUEST, false);
+		setDefault(BICS_SECONDARY_IS_ANON_GUEST, false);
+		setDefault(BICS_SECONDARY_SERVER_URL, "dev.chess.sipay.ru");
+		setDefault(BICS_SECONDARY_PORT, 5000);
+		setDefault(BICS_SECONDARY_TIMESEAL_ENABLED, true);
+		// Bics Tertiary
+		setDefault(BICS_TERTIARY_USER_NAME, "");
+		setDefault(BICS_TERTIARY_PASSWORD, "");
+		setDefault(BICS_TERTIARY_IS_NAMED_GUEST, false);
+		setDefault(BICS_TERTIARY_IS_ANON_GUEST, false);
+		setDefault(BICS_TERTIARY_SERVER_URL, "chess.sipay.ru");
+		setDefault(BICS_TERTIARY_PORT, 5000);
+		setDefault(BICS_TERTIARY_TIMESEAL_ENABLED, true);
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
 

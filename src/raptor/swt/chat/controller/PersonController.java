@@ -22,6 +22,11 @@ public class PersonController extends ChatConsoleController {
 	}
 
 	@Override
+	public String getName() {
+		return person;
+	}
+
+	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
 				PreferenceKeys.APP_PERSON_TAB_QUADRANT);
@@ -49,12 +54,6 @@ public class PersonController extends ChatConsoleController {
 	@Override
 	public String getPrompt() {
 		return connector.getPrompt();
-	}
-
-	@Override
-	public String getTitle() {
-		return connector.getShortName() + "("
-				+ StringUtils.abbreviate(person, 10) + ")";
 	}
 
 	@Override

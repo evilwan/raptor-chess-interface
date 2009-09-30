@@ -18,6 +18,11 @@ public class PartnerTellController extends ChatConsoleController {
 	}
 
 	@Override
+	public String getName() {
+		return "PartnerTells";
+	}
+
+	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
 				PreferenceKeys.APP_PARTNER_TELL_TAB_QUADRANT);
@@ -29,7 +34,6 @@ public class PartnerTellController extends ChatConsoleController {
 			return "";
 		}
 
-		
 		String prependText = "";
 
 		Button prependButton = chatConsole
@@ -46,11 +50,6 @@ public class PartnerTellController extends ChatConsoleController {
 	@Override
 	public String getPrompt() {
 		return connector.getPrompt();
-	}
-
-	@Override
-	public String getTitle() {
-		return connector.getShortName() + "(PartnerTells)";
 	}
 
 	@Override

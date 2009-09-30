@@ -35,7 +35,11 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		controller.addItemChangedListener(listener);
 	}
 
-	public boolean confirmReparenting() {
+	public boolean confirmClose() {
+		return controller.confirmClose();
+	}
+
+	public boolean confirmQuadrantMove() {
 		return true;
 	}
 
@@ -74,10 +78,6 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 			LOG.debug("Inited window item in "
 					+ (System.currentTimeMillis() - startTime));
 		}
-	}
-
-	public boolean isCloseable() {
-		return controller.isCloseable();
 	}
 
 	public void onActivate() {
