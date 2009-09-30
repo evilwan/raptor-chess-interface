@@ -16,7 +16,5 @@
 	<classpathentry kind="lib" path="lib/common/velocity-1.6.2.jar" sourcepath="lib/common/source/velocity-1.6.2-src.jar"/>
 	<classpathentry kind="lib" path="lib/common/source/timesealing.jar"/>
 	<classpathentry kind="lib" path="lib/common/svgSalamander.jar"/>
-	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.swt.carbon.macosx_3.4.1.v3452b.jar" sourcepath="lib/osxcarbon/source/src.zip"/>
-	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.ui.carbon_4.0.0.I20080610-1200.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
