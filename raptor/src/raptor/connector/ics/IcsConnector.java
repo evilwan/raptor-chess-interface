@@ -77,6 +77,11 @@ public abstract class IcsConnector implements Connector {
 		}
 	};
 
+	/**
+	 * Constructs an IcsConnector with the specified context.
+	 * 
+	 * @param context
+	 */
 	protected IcsConnector(IcsConnectorContext context) {
 		this.context = context;
 		chatService = new ChatService(this);
@@ -94,7 +99,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	/**
-	 * Adds a game script to the set of scripts this connector manages and svaes
+	 * Adds a game script to the set of scripts this connector manages and saves
 	 * the script.
 	 */
 	public void addGameScript(GameScript script) {
@@ -103,17 +108,20 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	/**
-	 * Connects to fics using the settings in preferences.
+	 * Connects to ics using the settings in preferences.
 	 */
 	public void connect() {
 		connect(Raptor.getInstance().getPreferences().getString(
 				context.getPreferencePrefix() + "profile"));
 	}
 
+	/**
+	 * Connects with the specified profile name.
+	 */
 	protected void connect(final String profileName) {
 		if (isConnected()) {
-			throw new IllegalStateException(
-					"You are already connected. Disconnect before invoking connect.");
+			throw new IllegalStateException("You are already connected to "
+					+ getShortName() + " . Disconnect before invoking connect.");
 		}
 
 		currentProfileName = profileName;
@@ -142,10 +150,11 @@ public abstract class IcsConnector implements Connector {
 		// as the state of the connector changes from the ConnectorListener it
 		// registered.
 
-		LOG.info("Connecting to "
-				+ getPreferences().getString(profilePrefix + "server-url")
-				+ " " + getPreferences().getInt(profilePrefix + "port"));
-		LOG.info("Trying to connect");
+		if (LOG.isInfoEnabled()) {
+			LOG.info(getShortName() + " Connecting to "
+					+ getPreferences().getString(profilePrefix + "server-url")
+					+ " " + getPreferences().getInt(profilePrefix + "port"));
+		}
 		publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Connecting to "
 				+ getPreferences().getString(profilePrefix + "server-url")
 				+ " "
@@ -186,7 +195,9 @@ public abstract class IcsConnector implements Connector {
 					daemonThread.setPriority(Thread.MAX_PRIORITY);
 					daemonThread.start();
 
-					LOG.info("Connection successful");
+					if (LOG.isInfoEnabled()) {
+						LOG.info(getShortName() + " Connection successful");
+					}
 				} catch (Exception ce) {
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Error: " + ce.getMessage()));
@@ -298,7 +309,7 @@ public abstract class IcsConnector implements Connector {
 			inputChannel = null;
 		}
 
-		LOG.info("Disposed IcsConnector");
+		LOG.info("Disposed " + getShortName() + "Connector");
 	}
 
 	/**
@@ -479,7 +490,7 @@ public abstract class IcsConnector implements Connector {
 					int numRead = inputChannel.read(inputBuffer);
 					if (numRead > 0) {
 						if (LOG.isDebugEnabled()) {
-							LOG.debug(context.getShortName() + "Conector "
+							LOG.debug(context.getShortName() + "Connector "
 									+ "Read " + numRead + " bytes.");
 						}
 						inputBuffer.rewind();
@@ -490,13 +501,13 @@ public abstract class IcsConnector implements Connector {
 						try {
 							onNewInput();
 						} catch (Throwable t) {
-							onError(context.getShortName() + "Conector "
+							onError(context.getShortName() + "Connector "
 									+ "Error in DaemonRun.onNewInput", t);
 						}
 						inputBuffer.clear();
 					} else {
 						if (LOG.isDebugEnabled()) {
-							LOG.debug(context.getShortName() + "Conector "
+							LOG.debug(context.getShortName() + "Connector "
 									+ "Read 0 bytes disconnecting.");
 						}
 						disconnect();
@@ -505,7 +516,7 @@ public abstract class IcsConnector implements Connector {
 					Thread.sleep(50);
 				} else {
 					if (LOG.isDebugEnabled()) {
-						LOG.debug(context.getShortName() + "Conector "
+						LOG.debug(context.getShortName() + "Connector "
 								+ "Not connected disconnecting.");
 					}
 					disconnect();
@@ -518,15 +529,16 @@ public abstract class IcsConnector implements Connector {
 				LOG
 						.debug(
 								context.getShortName()
-										+ "Conector "
+										+ "Connector "
 										+ "IOException occured in DaemonRun (These are common when disconnecting and ignorable)",
 								t);
 			} else {
-				onError("Error in DaemonRun Thwoable", t);
+				onError(context.getShortName()
+						+ "Connector Error in DaemonRun Thwoable", t);
 			}
 			disconnect();
 		} finally {
-			LOG.debug("Leaving readInput");
+			LOG.debug(context.getShortName() + "Connector Leaving readInput");
 		}
 	}
 
@@ -557,12 +569,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onError(String message) {
-		String errorMessage = IcsUtils
-				.cleanupMessage("Critical error occured! We are trying to make Raptor "
-						+ "bug free and we need your help! Please take a moment to report this "
-						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
-						+ message);
-		publishEvent(new ChatEvent(null, ChatType.INTERNAL, errorMessage));
+		onError(message, null);
 	}
 
 	public void onError(String message, Throwable t) {
@@ -570,7 +577,9 @@ public abstract class IcsConnector implements Connector {
 				.cleanupMessage("Critical error occured! We are trying to make Raptor "
 						+ "bug free and we need your help! Please take a moment to report this "
 						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
-						+ message + "\n" + ExceptionUtils.getFullStackTrace(t));
+						+ message
+						+ (t == null ? "" : "\n"
+								+ ExceptionUtils.getFullStackTrace(t)));
 		publishEvent(new ChatEvent(null, ChatType.INTERNAL, errorMessage));
 	}
 
@@ -699,7 +708,7 @@ public abstract class IcsConnector implements Connector {
 				if (endIndex != -1) {
 					userName = IcsUtils.removeTitles(inboundMessageBuffer
 							.substring(nameStartIndex, endIndex).trim());
-					LOG.info(context.getShortName() + "Conector "
+					LOG.info(context.getShortName() + "Connector "
 							+ "login complete. userName=" + userName);
 					isLoggedIn = true;
 					onSuccessfulLogin();
@@ -873,7 +882,7 @@ public abstract class IcsConnector implements Connector {
 			message = builder.toString();
 
 			if (LOG.isDebugEnabled()) {
-				LOG.debug(context.getShortName() + "Conector Sending: "
+				LOG.debug(context.getShortName() + "Connector Sending: "
 						+ message.trim());
 			}
 
@@ -897,7 +906,8 @@ public abstract class IcsConnector implements Connector {
 			}
 		} else {
 			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-					"Error: Unable to send " + message
+					"Error: Unable to send " + message + " to "
+							+ getShortName()
 							+ ". There is currently no connection."));
 		}
 	}

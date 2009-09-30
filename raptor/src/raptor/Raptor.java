@@ -21,6 +21,13 @@ import raptor.service.ConnectorService;
 import raptor.service.ThreadService;
 import raptor.util.FileUtil;
 
+/**
+ * Raptor is a singleton representing the application. It contains methods to
+ * get various pieces of the application (e.g. the
+ * RaptorWindow,preferences,etc).
+ * 
+ * This classes main is the application main.
+ */
 public class Raptor implements PreferenceKeys {
 	private static final Log LOG = LogFactory.getLog(Raptor.class);
 	public static final File DEFAULT_HOME_DIR = new File("defaultHomeDir/");
@@ -36,24 +43,33 @@ public class Raptor implements PreferenceKeys {
 
 	private static Raptor instance;
 
+	private static Display display;
+
 	public static void createInstance() {
 		instance = new Raptor();
 		instance.init();
 	}
 
+	/**
+	 * Returns the singleton raptor instance.
+	 * 
+	 * @return
+	 */
 	public static Raptor getInstance() {
 		return instance;
 	}
 
+	/**
+	 * The applications main method. Takes no arguments.
+	 */
 	public static void main(String args[]) {
-		Display display = null;
 		try {
 			display = new Display();
 
 			createInstance();
 
-			instance.appWindow = new RaptorWindow();
-			instance.appWindow.setBlockOnOpen(true);
+			instance.raptorWindow = new RaptorWindow();
+			instance.raptorWindow.setBlockOnOpen(true);
 
 			// Auto login the connectors.
 			Connector[] connectors = ConnectorService.getInstance()
@@ -68,19 +84,11 @@ public class Raptor implements PreferenceKeys {
 			}
 
 			// Open the app window
-			instance.appWindow.open();
+			instance.raptorWindow.open();
 		} catch (Throwable t) {
 			LOG.error("Error occured in main:", t);
 		} finally {
-			try {
-				if (display != null && !display.isDisposed()) {
-					display.dispose();
-				}
-			} catch (Throwable t) {
-				LOG.error("Error occured disposing display:", t);
-			} finally {
-				System.exit(1);
-			}
+			instance.shutdown();
 		}
 	}
 
@@ -94,11 +102,14 @@ public class Raptor implements PreferenceKeys {
 
 	protected RaptorPreferenceStore preferences;
 
-	protected RaptorWindow appWindow;
+	protected RaptorWindow raptorWindow;
 
 	public Raptor() {
 	}
 
+	/**
+	 * Displays an alert message centered in the RaptorWindow.
+	 */
 	public void alert(final String message) {
 		getInstance().getRaptorWindow().getShell().getDisplay().asyncExec(
 				new Runnable() {
@@ -112,15 +123,27 @@ public class Raptor implements PreferenceKeys {
 
 	}
 
+	/**
+	 * Displays a confirm message centered in the RaptorWindow. If the user
+	 * presses yes true is returned, otherwise false.
+	 */
 	public boolean confirm(final String question) {
 		return MessageDialog.openConfirm(Raptor.getInstance().getRaptorWindow()
 				.getShell(), "Confirm", question);
 	}
 
+	/**
+	 * Returns the color registry. All colors should be placed in this registry
+	 * so they can be properly managed.
+	 */
 	public ColorRegistry getColorRegistry() {
 		return colorRegistry;
 	}
 
+	/**
+	 * Returns the font registry. All fonts should be placed in this registry so
+	 * they can be properly managed.
+	 */
 	public FontRegistry getFontRegistry() {
 		return fontRegistry;
 	}
@@ -153,24 +176,45 @@ public class Raptor implements PreferenceKeys {
 		return result;
 	}
 
+	/**
+	 * Returns the image registry. All images should be registered in this
+	 * registry.
+	 * 
+	 * @return
+	 */
 	public ImageRegistry getImageRegistry() {
 		return imageRegistry;
 	}
 
+	/**
+	 * Returns the RaptorPreferenceStore used by the application. All
+	 * preferences should be stored and loaded form here.
+	 */
 	public RaptorPreferenceStore getPreferences() {
 		return preferences;
 	}
 
+	/**
+	 * Returns the RaptorWindow (the main application window.
+	 */
 	public RaptorWindow getRaptorWindow() {
-		return appWindow;
+		return raptorWindow;
 	}
 
-	public void init() {
+	/**
+	 * Initializes raptor.
+	 */
+	private void init() {
 		install();
 		preferences = new RaptorPreferenceStore();
 	}
 
-	public void install() {
+	/**
+	 * Installs raptor. Currently this places everything in the default home
+	 * directory in the users raptor directory. This is so new releases will
+	 * always take effect.
+	 */
+	private void install() {
 		try {
 			FileUtil.copyFiles(DEFAULT_HOME_DIR, USER_RAPTOR_DIR);
 		} catch (IOException ioe) {
@@ -178,25 +222,23 @@ public class Raptor implements PreferenceKeys {
 		}
 	}
 
+	/**
+	 * Handles an error in a way the user is notified and can report an issue.
+	 * If possible try and use a connectors on error if you have access to one,
+	 * otherwise you can use this.
+	 */
 	public void onError(final String error) {
-		getInstance().getRaptorWindow().getShell().getDisplay().asyncExec(
-				new Runnable() {
-					public void run() {
-						MessageDialog
-								.openError(
-										Raptor.getInstance().getRaptorWindow()
-												.getShell(),
-										"Error",
-										"Critical error occured! We are trying to make Raptor "
-												+ "bug free and we need your help! Please take a moment to report this "
-												+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
-												+ error);
-					}
-				});
+		onError(error, null);
 
 	}
 
+	/**
+	 * Handles an error in a way the user is notified and can report an issue.
+	 * If possible try and use a connectors on error if you have access to one,
+	 * otherwise you can use this.
+	 */
 	public void onError(final String error, final Throwable throwable) {
+		LOG.error(error, throwable);
 		getInstance().getRaptorWindow().getShell().getDisplay().asyncExec(
 				new Runnable() {
 					public void run() {
@@ -208,27 +250,54 @@ public class Raptor implements PreferenceKeys {
 										"Critical error occured! We are trying to make Raptor "
 												+ "bug free and we need your help! Please take a moment to report this "
 												+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
-												+ error
-												+ "\n"
-												+ ExceptionUtils
-														.getFullStackTrace(throwable));
+												+ error + "\n" + throwable != null ? ExceptionUtils
+												.getFullStackTrace(throwable)
+												: "");
 					}
 				});
 
 	}
 
+	/**
+	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
+	 */
 	public void shutdown() {
 		try {
 			imageRegistry.dispose();
 		} catch (Throwable t) {
+			LOG.error("Error shutting down raptor", t);
+		}
+
+		try {
+			ConnectorService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.error("Error shutting down raptor", t);
 		}
 
 		try {
 			ThreadService.getInstance().dispose();
 		} catch (Throwable t) {
-
+			LOG.error("Error shutting down raptor", t);
 		}
+
+		try {
+			if (raptorWindow != null) {
+				raptorWindow.close();
+			}
+		} catch (Throwable t) {
+			LOG.error("Error shutting down raptor", t);
+		}
+
+		try {
+			if (display != null && !display.isDisposed()) {
+				display.dispose();
+			}
+		} catch (Throwable t) {
+			LOG.error("Error shutting down raptor", t);
+		}
+
 		LOG.info("Shutdown Raptor");
+		System.exit(1);
 	}
 
 }
