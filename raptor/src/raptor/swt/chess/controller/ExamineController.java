@@ -16,6 +16,12 @@ import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
 
+/**
+ * Examines a game on a backing connector. When examining a game the user is
+ * allowed to traverse the position through the nav buttons and make moves.
+ * However all of these actions are sent directly to the connector and it drives
+ * the process
+ */
 public class ExamineController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ExamineController.class);
 	protected GameServiceListener listener = new GameServiceAdapter() {
@@ -231,16 +237,6 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isAbortable() {
-		return false;
-	}
-
-	@Override
-	public boolean isAdjournable() {
-		return false;
-	}
-
-	@Override
 	public boolean isAutoDrawable() {
 		return false;
 	}
@@ -256,16 +252,6 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isDrawable() {
-		return false;
-	}
-
-	@Override
-	public boolean isExaminable() {
-		return false;
-	}
-
-	@Override
 	public boolean isMoveListTraversable() {
 		return true;
 	}
@@ -273,21 +259,6 @@ public class ExamineController extends ChessBoardController {
 	@Override
 	public boolean isNavigatable() {
 		return true;
-	}
-
-	@Override
-	public boolean isPausable() {
-		return false;
-	}
-
-	@Override
-	public boolean isRematchable() {
-		return false;
-	}
-
-	@Override
-	public boolean isResignable() {
-		return false;
 	}
 
 	@Override

@@ -236,6 +236,7 @@ public class PlayingController extends ChessBoardController {
 	/**
 	 * Returns true if the premove preference is enabled.
 	 */
+	@Override
 	public boolean isPremoveable() {
 		return Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.BOARD_PREMOVE_ENABLED);
@@ -432,16 +433,6 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isAbortable() {
-		return true;
-	}
-
-	@Override
-	public boolean isAdjournable() {
-		return true;
-	}
-
-	@Override
 	public boolean isAutoDrawable() {
 		return true;
 	}
@@ -457,37 +448,12 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isDrawable() {
-		return true;
-	}
-
-	@Override
-	public boolean isExaminable() {
-		return false;
-	}
-
-	@Override
 	public boolean isMoveListTraversable() {
 		return true;
 	}
 
 	@Override
 	public boolean isNavigatable() {
-		return true;
-	}
-
-	@Override
-	public boolean isPausable() {
-		return true;
-	}
-
-	@Override
-	public boolean isRematchable() {
-		return true;
-	}
-
-	@Override
-	public boolean isResignable() {
 		return true;
 	}
 
@@ -886,4 +852,5 @@ public class PlayingController extends ChessBoardController {
 			// menu.dispose();
 		}
 	}
+
 }
