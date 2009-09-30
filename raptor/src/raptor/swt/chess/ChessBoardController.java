@@ -368,14 +368,22 @@ public abstract class ChessBoardController implements BoardConstants,
 		if (isBeingReparented()) {
 			return;
 		}
+
 		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
 			int color = DROPPABLE_PIECE_COLOR[i];
-			int count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
-					- getGame()
-							.getPieceCount(
-									color,
-									BoardUtils
-											.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+			int count = 0;
+			if (game.isInState(Game.DROPPABLE_STATE)) {
+				count = getGame().getDropCount(color,
+						BoardUtils.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+			} else {
+
+				count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
+						- getGame()
+								.getPieceCount(
+										color,
+										BoardUtils
+												.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+			}
 
 			if (count == 0) {
 				board.pieceJailSquares[DROPPABLE_PIECES[i]]
@@ -389,6 +397,7 @@ public abstract class ChessBoardController implements BoardConstants,
 					.pieceCountToString(count));
 			board.pieceJailSquares[DROPPABLE_PIECES[i]].redraw();
 		}
+
 	}
 
 	/**

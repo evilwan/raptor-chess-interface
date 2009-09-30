@@ -50,9 +50,7 @@ public class InactiveController extends ChessBoardController implements
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!isBeingReparented()) {
-			if (getGame().getPiece(squareId) == EMPTY) {
-				return false;
-			} else if (BoardUtils.isPieceJailSquare(squareId)) {
+			if (BoardUtils.isPieceJailSquare(squareId)) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)) {
 					int pieceType = BoardUtils.pieceJailSquareToPiece(squareId);
 					return (getGame().isWhitesMove()
@@ -66,8 +64,9 @@ public class InactiveController extends ChessBoardController implements
 									.isBlackPiece(board.getSquare(squareId)
 											.getPiece()));
 				}
-			}
-			if (!BoardUtils.isPieceJailSquare(squareId)) {
+			} else if (getGame().getPiece(squareId) == EMPTY) {
+				return false;
+			} else {
 				return board.getSquare(squareId).getPiece() != GameConstants.EMPTY;
 			}
 		}

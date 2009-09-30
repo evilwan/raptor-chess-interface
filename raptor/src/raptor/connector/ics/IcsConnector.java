@@ -719,6 +719,7 @@ public abstract class IcsConnector implements Connector {
 					// We have yet to receive the **** closing message so
 					// wait
 					// until it arrives.
+					System.err.println("Danging: " + inboundMessageBuffer);
 				}
 			} else {
 				int loginIndex = inboundMessageBuffer.indexOf(context
@@ -748,6 +749,9 @@ public abstract class IcsConnector implements Connector {
 							if (errorMessageIndex != -1) {
 								String event = drainInboundMessageBuffer();
 								parseMessage(event);
+							}
+							else {
+								System.err.println("Danging: " + inboundMessageBuffer);
 							}
 						}
 					}
