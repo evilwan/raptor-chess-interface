@@ -1,4 +1,4 @@
-package raptor.connector.bics.prefs;
+package raptor.connector.bics.pref;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
