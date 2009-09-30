@@ -18,6 +18,10 @@ import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
 
+/**
+ * The profile window class. This is just a poor mans profiler to be able to
+ * quickly check how Raptor is doing in terms of thread usage and memory usage.
+ */
 public class ProfileWIndow extends ApplicationWindow {
 
 	private Label heapm, heap1, heap2, heap3, heap4, stackm, stack1, stack2,
