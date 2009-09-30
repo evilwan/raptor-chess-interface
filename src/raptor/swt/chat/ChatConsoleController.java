@@ -244,7 +244,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 									new PersonController(connector, person));
 							Raptor.getInstance().getRaptorWindow()
-									.addRaptorWindowItem(windowItem, true);
+									.addRaptorWindowItem(windowItem, false);
 							ChatUtils
 									.appendPreviousChatsToController(windowItem.console);
 						}
@@ -277,7 +277,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 									new ChannelController(connector, channel));
 							Raptor.getInstance().getRaptorWindow()
-									.addRaptorWindowItem(windowItem, true);
+									.addRaptorWindowItem(windowItem, false);
 							ChatUtils
 									.appendPreviousChatsToController(windowItem.console);
 						}

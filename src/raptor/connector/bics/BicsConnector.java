@@ -8,7 +8,7 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
-import raptor.connector.bics.prefs.BicsPage;
+import raptor.connector.bics.pref.BicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.dialog.IcsLoginDialog;
