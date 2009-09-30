@@ -1,5 +1,6 @@
-package raptor.game;
+package raptor.game.util;
 
+import raptor.game.GameConstants;
 import raptor.util.RaptorStringUtils;
 
 /**

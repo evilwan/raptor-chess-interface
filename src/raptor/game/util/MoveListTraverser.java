@@ -1,7 +1,9 @@
-package raptor.game;
+package raptor.game.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import raptor.game.Game;
 
 public class MoveListTraverser {
 	static final Log LOG = LogFactory.getLog(MoveListTraverser.class);
