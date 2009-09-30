@@ -158,7 +158,7 @@ public abstract class IcsConnector implements Connector {
 		publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Connecting to "
 				+ getPreferences().getString(profilePrefix + "server-url")
 				+ " "
-				+ getPreferences().getInt(profilePrefix + "profilePrefix")
+				+ getPreferences().getInt(profilePrefix + "port")
 				+ (getPreferences().getBoolean(
 						profilePrefix + "timeseal-enabled") ? " with "
 						: " without ") + "timeseal ..."));

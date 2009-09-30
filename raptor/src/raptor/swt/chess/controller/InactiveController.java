@@ -76,7 +76,7 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public String getTitle() {
-		return "Inactive(" + getGame().getId() + ")";
+		return "Inactive";
 	}
 
 	@Override
