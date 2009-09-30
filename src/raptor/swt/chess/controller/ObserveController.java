@@ -11,6 +11,12 @@ import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.chess.ChessBoardController;
 
+/**
+ * A controller used when observing a game.
+ * 
+ * The user isnt allowed to make any moves on a game being observed. However
+ * they are allowed to use the nav buttons.
+ */
 public class ObserveController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ObserveController.class);
 
@@ -132,16 +138,6 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isAbortable() {
-		return false;
-	}
-
-	@Override
-	public boolean isAdjournable() {
-		return false;
-	}
-
-	@Override
 	public boolean isAutoDrawable() {
 		return false;
 	}
@@ -157,16 +153,6 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isDrawable() {
-		return false;
-	}
-
-	@Override
-	public boolean isExaminable() {
-		return false;
-	}
-
-	@Override
 	public boolean isMoveListTraversable() {
 		return true;
 	}
@@ -174,21 +160,6 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public boolean isNavigatable() {
 		return true;
-	}
-
-	@Override
-	public boolean isPausable() {
-		return false;
-	}
-
-	@Override
-	public boolean isRematchable() {
-		return false;
-	}
-
-	@Override
-	public boolean isResignable() {
-		return false;
 	}
 
 	@Override

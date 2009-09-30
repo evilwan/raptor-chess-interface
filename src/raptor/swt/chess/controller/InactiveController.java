@@ -15,6 +15,12 @@ import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
 
+/**
+ * This controller is used when a game is no longer active. It allows the user
+ * to play around with the position and traverser the move list. However it is
+ * not backed by a connector, so the users actions do not do anything to a
+ * connector.
+ */
 public class InactiveController extends ChessBoardController implements
 		BoardConstants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
@@ -84,16 +90,6 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
-	public boolean isAbortable() {
-		return false;
-	}
-
-	@Override
-	public boolean isAdjournable() {
-		return false;
-	}
-
-	@Override
 	public boolean isAutoDrawable() {
 		return false;
 	}
@@ -109,16 +105,6 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
-	public boolean isDrawable() {
-		return false;
-	}
-
-	@Override
-	public boolean isExaminable() {
-		return false;
-	}
-
-	@Override
 	public boolean isMoveListTraversable() {
 		return true;
 	}
@@ -126,21 +112,6 @@ public class InactiveController extends ChessBoardController implements
 	@Override
 	public boolean isNavigatable() {
 		return true;
-	}
-
-	@Override
-	public boolean isPausable() {
-		return false;
-	}
-
-	@Override
-	public boolean isRematchable() {
-		return false;
-	}
-
-	@Override
-	public boolean isResignable() {
-		return false;
 	}
 
 	@Override
@@ -240,22 +211,6 @@ public class InactiveController extends ChessBoardController implements
 	@Override
 	public void userMiddleClicked(int square) {
 		LOG.debug("On middle click " + getGame().getId() + " " + square);
-		// Move[] moves = getGame().getLegalMoves().asArray();
-		// List<Move> foundMoves = new ArrayList<Move>(5);
-		// for (Move move : moves) {
-		// if (move.getTo() == square) {
-		// foundMoves.add(move);
-		// }
-		// }
-		//
-		// if (foundMoves.size() > 0) {
-		// Move move = foundMoves.get(random.nextInt(foundMoves.size()));
-		// getGame().move(move);
-		// board.unhighlightAllSquares();
-		// board.getSquare(move.getFrom()).highlight();
-		// board.getSquare(move.getTo()).highlight();
-		// adjustToGameMove();
-		// }
 	}
 
 	@Override

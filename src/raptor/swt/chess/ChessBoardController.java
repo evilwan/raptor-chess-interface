@@ -19,6 +19,18 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.ItemChangedListener;
 
+/**
+ * A chess board controller manages user adjustments to the ChessBoard and also
+ * manages the Game its constructed with.
+ * 
+ * It manipulates both the game object and the ChessBoard object it is
+ * controlling.
+ * 
+ * 
+ * This is the base controller class providing method implementations to do many
+ * things. The idea is to override a method if you want to change the
+ * functionality.
+ */
 public abstract class ChessBoardController implements BoardConstants,
 		GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
@@ -33,15 +45,35 @@ public abstract class ChessBoardController implements BoardConstants,
 	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
 			5);
 
+	/**
+	 * Constructs a ChessBoardController with the specified game.
+	 * 
+	 * It is important to note that upon construction a controller will not have
+	 * a ChessBoard.
+	 * 
+	 * To set a chess board, construct a controller, then call setChessBoard and
+	 * when the ChessBoard has had its controls created invoke init().
+	 * 
+	 * @param game
+	 *            The game this controller manages.
+	 */
 	public ChessBoardController(Game game) {
 		this.game = game;
 		traverser = new MoveListTraverser(game);
 	}
 
+	/**
+	 * Adds an item changed listener. This listener should be invoked whenever
+	 * the meta information about the game changes e.g. if it is closable, its
+	 * title, its icon, etc.
+	 */
 	public void addItemChangedListener(ItemChangedListener listener) {
 		itemChangedListeners.add(listener);
 	}
 
+	/**
+	 * Adjusts only the ChessBoard squares to match the squares in the game.
+	 */
 	protected void adjustBoardToGame(Game game) {
 		if (isBeingReparented()) {
 			return;
@@ -56,6 +88,13 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Adjusts only the colors of the chess clocks. If the game is in an
+	 * IS_CLOCK_TICKING_STATE the colors are set to inactive/active based on
+	 * whose move it is in the game.
+	 * 
+	 * Otherwise they are always set to the inactive color.
+	 */
 	protected void adjustClockColors() {
 		if (isBeingReparented()) {
 			return;
@@ -87,6 +126,14 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Sets the times on the clock to the times in the game.
+	 * 
+	 * Sets the times in the whiteClockUpdater and blackClockUpdater to the
+	 * times of the game.
+	 * 
+	 * Does NOT start or stop the clocks.
+	 */
 	protected void adjustClockLabelsAndUpdaters() {
 		if (isBeingReparented()) {
 			return;
@@ -103,8 +150,18 @@ public abstract class ChessBoardController implements BoardConstants,
 				.getBlackRemainingTimeMillis());
 	}
 
+	/**
+	 * This method should be overridden to add items to the ChessBoards coolbar.
+	 */
 	protected abstract void adjustCoolbarToInitial();
 
+	/**
+	 * This class provides functionality for handling a nav button change.
+	 * 
+	 * Nav buttons adjust the traverser.
+	 * 
+	 * This method change the state of the ChessBoard to that of the traverser.
+	 */
 	protected void adjustFromNavigationChange() {
 		if (isBeingReparented()) {
 			return;
@@ -132,8 +189,17 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.forceUpdate();
 	}
 
+	/**
+	 * Adjusts the games description label. Should be overridden to provide a
+	 * description of the game.
+	 */
 	public abstract void adjustGameDescriptionLabel();
 
+	/**
+	 * Adjusts the game status label. The status label should contain
+	 * information such as the last move made, and a detailed result of the game
+	 * if it is over.
+	 */
 	public void adjustGameStatusLabel() {
 		if (isBeingReparented()) {
 			return;
@@ -162,6 +228,11 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Adjusts the colors of the lag labels based on the white lag and black lag
+	 * in the game object. If lag is over 20 seconds the color changes based on
+	 * the BOARD_LAG_OVER_20_SEC_COLOR preference.
+	 */
 	public void adjustLagColors() {
 		if (isBeingReparented()) {
 			return;
@@ -185,6 +256,9 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Sets the values of the lag labels to match those of the game object.
+	 */
 	protected void adjustLagLabels() {
 		if (isBeingReparented()) {
 			return;
@@ -195,6 +269,10 @@ public abstract class ChessBoardController implements BoardConstants,
 				.getBlackLagMillis()));
 	}
 
+	/**
+	 * Sets the values of the name and rating labels on the board to those of
+	 * the game object.
+	 */
 	protected void adjustNameRatingLabels() {
 		if (isBeingReparented()) {
 			return;
@@ -227,6 +305,12 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.whiteNameRatingLabel.setText(whiteNameRating);
 	}
 
+	/**
+	 * Adjusts the state of the nav buttons. The default implementation uses the
+	 * traverser and enables/disables the buttons based on there being moves
+	 * available in the traverser (e.g. if the user is at the end of the game
+	 * LAST will no longer be available).
+	 */
 	protected void adjustNavButtonEnabledState() {
 		if (isBeingReparented()) {
 			return;
@@ -248,6 +332,11 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Adjusts the opening description label on the chess board. The default
+	 * implementation uses the ECOParser to populate this field based on the
+	 * state of the game object.
+	 */
 	protected void adjustOpeningDescriptionLabel() {
 		if (isBeingReparented()) {
 			return;
@@ -267,6 +356,14 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Adjusts the contents of the piece jail based on the game.
+	 * 
+	 * If the game is not droppable the piece jail contains the pieces the
+	 * player has captured during the game.
+	 * 
+	 * *TO DO add adjustments when game is droppable.
+	 */
 	protected void adjustPieceJailFromGame(Game game) {
 		if (isBeingReparented()) {
 			return;
@@ -294,13 +391,22 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Adjusts the boards premove label. The default implementation shows an
+	 * empty string. This method should be overridden to provide premove
+	 * support.
+	 */
 	protected void adjustPremoveLabel() {
 		if (isBeingReparented()) {
 			return;
 		}
-		board.currentPremovesLabel.setText("Premoves: EMPTY");
+		board.currentPremovesLabel.setText("");
 	}
 
+	/**
+	 * Adjusts the ChessBoard to a game change without modifying either the
+	 * boards position or the piece jails.
+	 */
 	protected void adjustToGameChangeNotInvolvingMove() {
 		if (isBeingReparented()) {
 			return;
@@ -318,6 +424,9 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Adjusts all of the ChessBoard to the state of the board object.
+	 */
 	public void adjustToGameInitial() {
 		if (isBeingReparented()) {
 			return;
@@ -352,6 +461,11 @@ public abstract class ChessBoardController implements BoardConstants,
 
 	}
 
+	/**
+	 * Adjusts only the fields of the ChessBoard that change during a move. e.g.
+	 * the clocks/lag,board,piece jail,opening description,game status,nav
+	 * button state
+	 */
 	protected void adjustToGameMove() {
 		if (isBeingReparented()) {
 			return;
@@ -387,6 +501,9 @@ public abstract class ChessBoardController implements BoardConstants,
 
 	}
 
+	/**
+	 * Adjusts the to move indicator based on whose move it is in the game.
+	 */
 	public void adjustToMoveIndicatorLabel() {
 		if (isBeingReparented()) {
 			return;
@@ -405,14 +522,32 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Returns true if a user can begin making a move from the specified square.
+	 */
 	public abstract boolean canUserInitiateMoveFrom(int squareId);
 
+	/**
+	 * Invoked when the user desires to clear out all premoves. The default
+	 * implementation is to set the text to "".
+	 * 
+	 * This method should be overridden if premove support is provided by the
+	 * controller.
+	 */
 	public void clearPremoves() {
 		if (!isBeingReparented()) {
 			board.currentPremovesLabel.setText("");
 		}
 	}
 
+	/**
+	 * Disposes this controller. The ChessBoard this controller is managing
+	 * should NEVER be disposed. However, all other resources such as the
+	 * traverser,and clock updaters must be disposed.
+	 * 
+	 * This method can also be overridden to remove listeners when a controller
+	 * is no longer being used.
+	 */
 	public void dispose() {
 		if (traverser != null) {
 			traverser.dispose();
@@ -443,7 +578,9 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Should be invoked when the title or closeability changes.
+	 * Should be invoked when meta information about a game changes. This
+	 * information includes, whether or not the game is closable,its title, its
+	 * icon.
 	 */
 	public void fireItemChanged() {
 		if (LOG.isDebugEnabled()) {
@@ -454,35 +591,69 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Returns the ChessBoard this controller is controlling.
+	 */
 	public ChessBoard getBoard() {
 		return board;
 	}
 
+	/**
+	 * Returns the game class this controller is controlling.
+	 */
 	public Game getGame() {
 		return game;
 	}
 
+	/**
+	 * Returns the MoveListTraverser this controller uses to handle nav changes.
+	 * 
+	 * @return
+	 */
 	public MoveListTraverser getGameTraverser() {
 		return traverser;
 	}
 
+	/**
+	 * Returns the list of ItemChangedListeners added to this controller.
+	 * 
+	 * @return
+	 */
 	public List<ItemChangedListener> getItemChangedListeners() {
 		return itemChangedListeners;
 	}
 
+	/**
+	 * Returns the preferences.
+	 */
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
 	}
 
+	/**
+	 * Should be overridden to show a suitable title for the game. The result
+	 * should be short 10-12 chars max.
+	 */
 	public abstract String getTitle();
 
+	/**
+	 * Initializes the ChessBoardController. A ChessBoard should be set on the
+	 * controller prior to calling this method.
+	 * 
+	 * The default behavior is: invoke adjustCooolbarToInitial (To add all of
+	 * the coolbar items) onPlayStartSound() (To play the sound associated with
+	 * a game starting) adjustToGameInitial (To adjust the ChessBoard to the
+	 * state of the game)
+	 */
 	public void init() {
 		adjustCoolbarToInitial();
 		onPlayGameStartSound();
 		adjustToGameInitial();
-		board.setCoolBarButtonEnabled(false, ChessBoard.PREMOVE);
 	}
 
+	/**
+	 * If the clock updaters have not been intiailized, they are initialized.
+	 */
 	protected void initClockUpdaters() {
 		if (whiteClockUpdater == null) {
 			whiteClockUpdater = new ClockLabelUpdater(board.whiteClockLabel,
@@ -492,12 +663,17 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
-	public abstract boolean isAbortable();
-
-	public abstract boolean isAdjournable();
-
+	/**
+	 * Should return true if the game is auto-drawable. This method is used by
+	 * the ChessBoard class to determine if it will show the auto draw button.
+	 */
 	public abstract boolean isAutoDrawable();
 
+	/**
+	 * SWT does not allow moving around controls to different parents. To
+	 * accomplish this the control actually has to be recreated. When this
+	 * processes is occurring this method will return true.
+	 */
 	public boolean isBeingReparented() {
 		boolean result = false;
 		if (board == null) {
@@ -516,39 +692,52 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public abstract boolean isCloseable();
 
+	/**
+	 * Returns true if this game is commitable. This method is used by the
+	 * ChessBoard class to determine if it will show the commit button.
+	 */
 	public abstract boolean isCommitable();
 
-	public abstract boolean isDrawable();
-
-	public abstract boolean isExaminable();
-
+	/**
+	 * Returns true if this games move list is able to be traversed.
+	 */
 	public abstract boolean isMoveListTraversable();
 
+	/**
+	 * Returns true if the ChessBoard should show the navigation buttons.
+	 */
 	public abstract boolean isNavigatable();
 
-	public abstract boolean isPausable();
-
-	public abstract boolean isRematchable();
-
-	public abstract boolean isResignable();
-
+	/**
+	 * Returns true if the ChessBoard should show the revert button.
+	 */
 	public abstract boolean isRevertable();
 
+	/**
+	 * Returns true if this chess board controller handles premoves. The default
+	 * implementation returns false.
+	 */
 	public boolean isPremoveable() {
 		return false;
 	}
 
-	public boolean isSureDraw() {
-		// TO DO.
-		return false;
-	}
-
+	/**
+	 * Invoked when the ChessBoard is being viewed. The default implementation
+	 * does nothing.
+	 */
 	public void onActivate() {
 	}
 
+	/**
+	 * Invoked whent he user wants to clear premoves. The default implementation
+	 * does nothing.
+	 */
 	public void onClearPremoves() {
 	}
 
+	/**
+	 * Flips the ChessBoard object.
+	 */
 	public void onFlip() {
 		LOG.debug("onFlip");
 		board.setWhiteOnTop(!board.isWhiteOnTop());
@@ -557,6 +746,10 @@ public abstract class ChessBoardController implements BoardConstants,
 		LOG.debug("isWhiteOnTop = " + board.isWhiteOnTop);
 	}
 
+	/**
+	 * Invoked when the back nav button is pressed. The default behavior is to
+	 * adjust the traverser and invoke adjustFromNavChange.
+	 */
 	public void onNavBack() {
 		if (traverser.hasBack()) {
 			traverser.back();
@@ -566,10 +759,17 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Invoked when the user presses the commit nav button. The default behavior
+	 * is to do nothing.
+	 */
 	public void onNavCommit() {
-		// TO DO
 	}
 
+	/**
+	 * Invoked when the first nav button is pressed. The default behavior is to
+	 * adjust the traverser and invoke adjustFromNavChange.
+	 */
 	public void onNavFirst() {
 		if (traverser.hasFirst()) {
 			traverser.first();
@@ -580,6 +780,10 @@ public abstract class ChessBoardController implements BoardConstants,
 
 	}
 
+	/**
+	 * Invoked when the forward nav button is pressed. The default behavior is
+	 * to adjust the traverser and invoke adjustFromNavChange.
+	 */
 	public void onNavForward() {
 		if (traverser.hasNext()) {
 			traverser.next();
@@ -587,6 +791,10 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Invoked when the last nav button is pressed. The default behavior is to
+	 * adjust the traverser and invoke adjustFromNavChange.
+	 */
 	public void onNavLast() {
 		if (traverser.hasLast()) {
 			traverser.last();
@@ -594,19 +802,41 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	/**
+	 * Invoked when the revert nav button is pressed. The default behavior is to
+	 * do nothing.
+	 */
 	public void onNavRevert() {
-		// TO DO
 	}
 
+	/**
+	 * Invoked when a chess board is no longer visible to a user, however can be
+	 * viewed in the future. The default behavior is to do nothing.
+	 */
 	public void onPassivate() {
 	}
 
+	/**
+	 * Invoked when a game has ended. Should be implemented to play an
+	 * appropriate sound.
+	 */
 	protected abstract void onPlayGameEndSound();
 
+	/**
+	 * Invoked when a game has started. Should be implemented to play an
+	 * appropriate sound.
+	 */
 	protected abstract void onPlayGameStartSound();
 
+	/**
+	 * Invoked when a move is made during a game. Should be implemented to play
+	 * an appropriate sound.
+	 */
 	protected abstract void onPlayMoveSound();
 
+	/**
+	 * Invoked when the reparenting process is completed.
+	 */
 	public void onPostReparent() {
 		board.setWhiteOnTop(storedIsWhiteOnTop);
 		board.setWhitePieceJailOnTop(storedIsWhitePieceJailOnTop);
@@ -616,6 +846,15 @@ public abstract class ChessBoardController implements BoardConstants,
 		adjustToGameInitial();
 	}
 
+	/**
+	 * In SWT controls can't be reprented easily. The control must be recreated.
+	 * This method is invoked when the ChessBoard is in the process of being
+	 * reprented. It is invoked before the chess board is destroyed. However
+	 * during the reparenting process the ChessBoard might be set to null on the
+	 * controller. This method prepres for the reparenting.
+	 * 
+	 * After reparenting is completed onPostReparent is invoked.
+	 */
 	public void onPreReparent() {
 		storedIsWhiteOnTop = board.isWhiteOnTop();
 		storedIsWhitePieceJailOnTop = board.isWhitePieceJailOnTop();
@@ -626,31 +865,60 @@ public abstract class ChessBoardController implements BoardConstants,
 		blackClockUpdater = null;
 	}
 
+	/**
+	 * Invoked when the setup clear button is pressed. Default behavior is to do
+	 * nothing.
+	 */
 	public void onSetupClear() {
 	}
 
+	/**
+	 * Invoked when the setup done button is pressed. Default behavior is to do
+	 * nothing.
+	 */
 	public void onSetupDone() {
 	}
 
+	/**
+	 * Invoked when the setup fen button is pressed. Default behavior is to do
+	 * nothing.
+	 */
 	public void onSetupFen(String fen) {
 	}
 
+	/**
+	 * Invoked when the setup start button is pressed. Default behavior is to do
+	 * nothing.
+	 */
 	public void onSetupStart() {
 	}
 
+	/**
+	 * Removes an item change listener from this controller.
+	 */
 	public void removeItemChangedListener(ItemChangedListener listener) {
 		itemChangedListeners.remove(listener);
 	}
 
+	/**
+	 * Sets the ChessBoard this controller is controlling.
+	 */
 	public void setBoard(ChessBoard board) {
 		this.board = board;
 	}
 
+	/**
+	 * Sets the list of ItemChangeListeners on this controller.
+	 */
 	public void setItemChangedListeners(
 			List<ItemChangedListener> itemChangedListeners) {
 		this.itemChangedListeners = itemChangedListeners;
 	}
 
+	/**
+	 * Starts the chess clocks. This method does NOT adjust the times or colors
+	 * of the clocks, nor does it adjust the clock updaters.
+	 */
 	protected void startClocks() {
 		if (isBeingReparented()) {
 			return;
@@ -666,6 +934,10 @@ public abstract class ChessBoardController implements BoardConstants,
 
 	}
 
+	/**
+	 * Stops the chess clocks. This method does NOT adjust the times or the
+	 * colors on the clocks.
+	 */
 	protected void stopClocks() {
 		if (isBeingReparented()) {
 			return;
@@ -675,13 +947,45 @@ public abstract class ChessBoardController implements BoardConstants,
 		blackClockUpdater.stop();
 	}
 
+	/**
+	 * Invoked when the user cancels a move.
+	 */
 	public abstract void userCancelledMove(int fromSquare, boolean isDnd);
 
+	/**
+	 * Invoked when the user initiates a move.
+	 * 
+	 * @param square
+	 *            The square the move starts from.
+	 * @param isDnd
+	 *            True if this is a drag and drop move, false if its a click
+	 *            click move.
+	 */
 	public abstract void userInitiatedMove(int square, boolean isDnd);
 
+	/**
+	 * Invoked when the user has made a move.
+	 * 
+	 * @param fromSquare
+	 *            The from square.
+	 * @param toSquare
+	 *            The two square.
+	 */
 	public abstract void userMadeMove(int fromSquare, int toSquare);
 
+	/**
+	 * Invoked when the user middle clicks on a square.
+	 * 
+	 * @param square
+	 *            The square middle clicked on.
+	 */
 	public abstract void userMiddleClicked(int square);
 
+	/**
+	 * Invoked when the user right clicks on a square.
+	 * 
+	 * @param square
+	 *            The square right clicked on.
+	 */
 	public abstract void userRightClicked(int square);
 }

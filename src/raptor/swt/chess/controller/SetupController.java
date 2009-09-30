@@ -22,6 +22,14 @@ import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.LabeledChessSquare;
 
+/**
+ * A controller used when setting up a position. When the controller receives a
+ * setupGameBecameExamined call from the GameService on the backing controller,
+ * it changes the controller over to an examine controller.
+ * 
+ * All moves and adjustments made by this controller are sent directly to the
+ * backing connector
+ */
 public class SetupController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ExamineController.class);
 	protected GameServiceListener listener = new GameServiceAdapter() {
@@ -251,16 +259,6 @@ public class SetupController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isAbortable() {
-		return false;
-	}
-
-	@Override
-	public boolean isAdjournable() {
-		return false;
-	}
-
-	@Override
 	public boolean isAutoDrawable() {
 		return false;
 	}
@@ -276,37 +274,12 @@ public class SetupController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isDrawable() {
-		return false;
-	}
-
-	@Override
-	public boolean isExaminable() {
-		return false;
-	}
-
-	@Override
 	public boolean isMoveListTraversable() {
 		return false;
 	}
 
 	@Override
 	public boolean isNavigatable() {
-		return false;
-	}
-
-	@Override
-	public boolean isPausable() {
-		return false;
-	}
-
-	@Override
-	public boolean isRematchable() {
-		return false;
-	}
-
-	@Override
-	public boolean isResignable() {
 		return false;
 	}
 
@@ -452,6 +425,9 @@ public class SetupController extends ChessBoardController {
 	public void userMiddleClicked(int square) {
 	}
 
+	/**
+	 * Provides a menu the user can use to drop and clear pieces.
+	 */
 	@Override
 	public void userRightClicked(final int square) {
 		if (!isBeingReparented() && !BoardUtils.isPieceJailSquare(square)) {
