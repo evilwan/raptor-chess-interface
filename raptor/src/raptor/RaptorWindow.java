@@ -279,9 +279,10 @@ public class RaptorWindow extends ApplicationWindow {
 				Raptor.getInstance().getImage(
 						"resources/common/images/raptorIcon.gif"));
 
-		parent.setLayout(SWTUtils.createMarginlessFillLayout());
+		parent.setLayout(SWTUtils.createMarginlessGridLayout(1,true));
 
 		windowComposite = new Composite(parent, SWT.NONE);
+		windowComposite.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		windowComposite.setLayout(SWTUtils.createMarginlessGridLayout(1, true));
 
 		createFolderAndSashControls();
