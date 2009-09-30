@@ -86,7 +86,7 @@ public class ThreadService {
 		}
 	};
 
-	public ThreadService() {
+	private ThreadService() {
 	}
 
 	public void dispose() {

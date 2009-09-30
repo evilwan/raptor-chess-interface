@@ -35,7 +35,8 @@ import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
-import raptor.connector.fics.FicsUtils;
+import raptor.connector.ConnectorListener;
+import raptor.connector.ics.IcsUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.SoundService;
@@ -95,7 +96,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				chatConsole.outputText.forceFocus();
 				chatConsole.outputText.setSelection(chatConsole.outputText
 						.getCharCount());
-			} else if (FicsUtils.LEGAL_CHARACTERS.indexOf(arg0.character) != -1
+			} else if (IcsUtils.LEGAL_CHARACTERS.indexOf(arg0.character) != -1
 					&& arg0.stateMask == 0) {
 				onAppendOutputText("" + arg0.character);
 			} else {
@@ -336,10 +337,25 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	};
 
+	protected ConnectorListener connectorListener = new ConnectorListener() {
+		public void onConnect() {
+			fireItemChanged();
+		}
+
+		public void onConnecting() {
+			fireItemChanged();
+		}
+
+		public void onDisconnect() {
+			fireItemChanged();
+		}
+	};
+
 	protected boolean isSoundDisabled = false;
 
 	public ChatConsoleController(Connector connector) {
 		this.connector = connector;
+		connector.addConnectorListener(connectorListener);
 	}
 
 	protected void addInputTextKeyListeners() {
@@ -369,6 +385,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			chatConsole.setButtonEnabled(!awayList.isEmpty(),
 					ChatConsole.AWAY_BUTTON);
 		}
+	}
+
+	public boolean confirmClose() {
+		return true;
 	}
 
 	protected void decorateForegroundColor(ChatEvent event, String message,
@@ -570,6 +590,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (connector != null) {
 			connector.getChatService().removeChatServiceListener(
 					chatServiceListener);
+			connector.addConnectorListener(connectorListener);
+			connectorListener = null;
 			connector = null;
 		}
 
@@ -621,6 +643,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		return itemChangedListeners;
 	}
 
+	public abstract String getName();
+
 	public RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
 	}
@@ -637,7 +661,20 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		return sourceOfLastTellReceived;
 	}
 
-	public abstract String getTitle();
+	public String getTitle() {
+		String title = "";
+
+		if (connector == null) {
+			return "Error";
+		} else if (connector.isConnecting()) {
+			return connector.getShortName() + "(Connecting-" + getName() + ")";
+		} else if (connector.isConnected()) {
+			return connector.getShortName() + "(" + getName() + ")";
+		} else {
+			return connector.getShortName() + "(Disconnected-" + getName()
+					+ ")";
+		}
+	}
 
 	public boolean hasUnseenText() {
 		return hasUnseenText;
@@ -656,6 +693,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public abstract boolean isAwayable();
 
+	public abstract boolean isCloseable();
+
 	public boolean isIgnoringActions() {
 		boolean result = false;
 		if (isBeingReparented || chatConsole == null
@@ -668,8 +707,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 		return result;
 	}
-
-	public abstract boolean isCloseable();
 
 	protected boolean isInRanges(int location, List<int[]> ranges) {
 		boolean result = false;

@@ -1,15 +1,16 @@
-package raptor.swt;
-
-import java.io.IOException;
+package raptor.connector.ics.dialog;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -17,6 +18,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Monitor;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
@@ -24,60 +27,11 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 
 /**
- * The raptor login dialog.
+ * The ics login dialog.
  */
-public class LoginDialog extends Dialog implements PreferenceKeys {
-	private static class Profile {
-		public static Profile[] getProfiles() {
-			Profile[] profiles = new Profile[3];
+public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
-			profiles[0] = new Profile();
-			profiles[0].setServerName("FICS");
-			profiles[0].setServerAddress("freechess.org");
-			profiles[0].setServerPort(5000);
-
-			profiles[1] = new Profile();
-			profiles[1].setServerName("BICS");
-			profiles[1].setServerAddress("chess.sipay.ru");
-			profiles[1].setServerPort(5000);
-
-			profiles[2] = new Profile();
-			profiles[2].setServerName("BICS Dev");
-			profiles[2].setServerAddress("dev.chess.sipay.ru");
-			profiles[2].setServerPort(5000);
-			return profiles;
-		}
-
-		private String serverName = "";
-		private String serverAddress = "";
-		private int serverPort = 0;
-
-		public String getServerAddress() {
-			return serverAddress;
-		}
-
-		public String getServerName() {
-			return serverName;
-		}
-
-		public int getServerPort() {
-			return serverPort;
-		}
-
-		public void setServerAddress(String serverAddress) {
-			this.serverAddress = serverAddress;
-		}
-
-		public void setServerName(String serverName) {
-			this.serverName = serverName;
-		}
-
-		public void setServerPort(int serverPort) {
-			this.serverPort = serverPort;
-		}
-	}
-
-	private static final Log LOG = LogFactory.getLog(LoginDialog.class);
+	private static final Log LOG = LogFactory.getLog(IcsLoginDialog.class);
 	protected Combo profile;
 	protected Label profileLabel;
 	protected Label handleLabel;
@@ -92,11 +46,16 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 	protected Button timesealEnabledCheckBox;
 	protected Text passwordField;
 	protected Button loginButton;
+	protected String lastSelection;
 
 	protected boolean wasLoginPressed;
+	protected String profilePrefix;
+	protected String title;
 
-	public LoginDialog() {
+	public IcsLoginDialog(String profilePrefix, String title) {
 		super(Raptor.getInstance().getRaptorWindow().getShell());
+		this.profilePrefix = profilePrefix;
+		this.title = title;
 	}
 
 	protected void adjustToCheckBoxControls() {
@@ -116,83 +75,65 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 
 	@Override
 	public Composite createContents(Composite parent) {
-		getShell().setText("Raptor Login");
+		getShell().setText(title);
 
 		final Composite content = new Composite(parent, SWT.NONE);
-		GridLayout gridLayout = new GridLayout(2, false);
-		gridLayout.marginBottom = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginLeft = 0;
-		gridLayout.marginRight = 0;
-		gridLayout.marginTop = 0;
-		gridLayout.marginWidth = 0;
 		content.setLayout(new GridLayout(2, false));
 
 		profileLabel = new Label(content, SWT.NONE);
-		profileLabel.setText("Profile");
+		profileLabel.setText("Profile:");
 		profile = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
-		// profile.add("FICS");
+		profile.add("Primary");
+		profile.add("Secondary");
+		profile.add("Tertiary");
 
-		Profile[] myProfiles = Profile.getProfiles();
-		for (int i = 0; i < myProfiles.length; i++) {
-			profile.add(myProfiles[i].getServerName());
-		}
-		profile.select(0);
-		// profile.getSelectionIndex();
+		profile.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				String itemSelected = profile.getItem(profile
+						.getSelectionIndex());
+				storeProfile(lastSelection);
+				loadFromProfile(itemSelected);
+				lastSelection = itemSelected;
+			}
+		});
 
 		handleLabel = new Label(content, SWT.NONE);
 		handleLabel.setText("Login:");
 		handleField = new Text(content, SWT.BORDER);
 		handleField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		handleField.setText(Raptor.getInstance().getPreferences().getString(
-				PreferenceKeys.FICS_USER_NAME));
 
 		passwordLabel = new Label(content, SWT.NONE);
 		passwordLabel.setText("Password:");
 		passwordField = new Text(content, SWT.BORDER);
 		passwordField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		passwordField.setText(Raptor.getInstance().getPreferences().getString(
-				PreferenceKeys.FICS_PASSWORD));
 
 		serverLabel = new Label(content, SWT.NONE);
 		serverLabel.setText("Server:");
 		serverField = new Text(content, SWT.BORDER);
 		serverField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		serverField.setText(Raptor.getInstance().getPreferences().getString(
-				PreferenceKeys.FICS_SERVER_URL));
 
 		portLabel = new Label(content, SWT.NONE);
 		portLabel.setText("Port:");
 		portField = new Text(content, SWT.BORDER);
 		portField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		portField.setText(Raptor.getInstance().getPreferences().getString(
-				PreferenceKeys.FICS_PORT));
 
 		guestLoginCheckBox = new Button(content, SWT.CHECK);
 		guestLoginCheckBox.setText("Login as guest");
 		GridData data = new GridData();
 		data.horizontalSpan = 2;
 		guestLoginCheckBox.setLayoutData(data);
-		guestLoginCheckBox.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(FICS_IS_ANON_GUEST)
-				|| Raptor.getInstance().getPreferences().getBoolean(
-						FICS_IS_NAMED_GUEST));
 
 		timesealEnabledCheckBox = new Button(content, SWT.CHECK);
 		timesealEnabledCheckBox.setText("Timeseal");
 		data = new GridData();
 		data.horizontalSpan = 2;
 		timesealEnabledCheckBox.setLayoutData(data);
-		timesealEnabledCheckBox.setSelection(Raptor.getInstance()
-				.getPreferences().getBoolean(FICS_TIMESEAL_ENABLED));
 
 		autoLoginCheckBox = new Button(content, SWT.CHECK);
 		autoLoginCheckBox.setText("Auto log me in next time.");
 		data = new GridData();
 		data.horizontalSpan = 2;
 		autoLoginCheckBox.setLayoutData(data);
-		autoLoginCheckBox.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(FICS_AUTO_CONNECT));
 
 		loginButton = new Button(content, SWT.PUSH);
 		loginButton.setText("Login");
@@ -245,7 +186,14 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 						box.setText("Invalid Password.");
 						box.open();
 					} else {
-						saveOptions();
+						String itemSelected = profile.getItem(profile
+								.getSelectionIndex());
+						lastSelection = itemSelected;
+						storeProfile(itemSelected);
+						try {
+							Raptor.getInstance().getPreferences().save();
+						} catch (Throwable t) {
+						}
 						wasLoginPressed = true;
 						close();
 					}
@@ -256,6 +204,19 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 		loginButton.addSelectionListener(selectionListener);
 		guestLoginCheckBox.addSelectionListener(selectionListener);
 
+		String currentProfile = Raptor.getInstance().getPreferences()
+				.getString(PreferenceKeys.FICS_PROFILE);
+		lastSelection = currentProfile;
+		loadFromProfile(currentProfile);
+
+		int selectedIndex = 0;
+		for (int i = 0; i < profile.getItems().length; i++) {
+			if (StringUtils.equals(profile.getItem(i), currentProfile)) {
+				selectedIndex = i;
+				break;
+			}
+		}
+		profile.select(selectedIndex);
 		adjustToCheckBoxControls();
 
 		content.pack();
@@ -263,30 +224,74 @@ public class LoginDialog extends Dialog implements PreferenceKeys {
 		return content;
 	}
 
-	protected void saveOptions() {
-		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
+	public String getSelectedProfile() {
+		return lastSelection;
+	}
 
-		prefs.setValue(PreferenceKeys.FICS_USER_NAME, handleField.getText());
-		prefs.setValue(PreferenceKeys.FICS_PASSWORD, passwordField.getText());
-		prefs.setValue(PreferenceKeys.FICS_SERVER_URL, serverField.getText());
-		prefs.setValue(PreferenceKeys.FICS_PORT, portField.getText());
-		prefs.setValue(PreferenceKeys.FICS_IS_NAMED_GUEST, guestLoginCheckBox
-				.getSelection()
-				&& StringUtils.isNotBlank(handleField.getText()));
-		prefs.setValue(PreferenceKeys.FICS_IS_ANON_GUEST, guestLoginCheckBox
-				.getSelection()
-				&& StringUtils.isBlank(handleField.getText()));
-		prefs.setValue(PreferenceKeys.FICS_TIMESEAL_ENABLED,
-				timesealEnabledCheckBox.getSelection());
-		prefs.setValue(PreferenceKeys.FICS_AUTO_CONNECT, autoLoginCheckBox
-				.getSelection());
+	@Override
+	protected void initializeBounds() {
+		super.initializeBounds();
+		Shell shell = this.getShell();
+		Monitor primary = shell.getMonitor();
+		Rectangle bounds = primary.getBounds();
+		Rectangle rect = shell.getBounds();
+		int x = bounds.x + (bounds.width - rect.width) / 2;
+		int y = bounds.y + (bounds.height - rect.height) / 2;
+		shell.setLocation(x, y);
+	}
+
+	protected void loadFromProfile(String profileName) {
+		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
+		String prefix = profilePrefix + profileName + "-";
+		handleField.setText(prefs.getString(prefix + "user-name"));
+		serverField.setText(prefs.getString(prefix + "server-url"));
+		portField.setText(prefs.getString(prefix + "port"));
+		passwordField.setText(prefs.getString(prefix + "password"));
+		guestLoginCheckBox.setSelection(prefs.getBoolean(prefix
+				+ "is-anon-guest")
+				|| prefs.getBoolean(prefix + "is-named-guest"));
+		timesealEnabledCheckBox.setSelection(prefs.getBoolean(prefix
+				+ "timeseal-enabled"));
+		autoLoginCheckBox.setSelection(prefs.getBoolean(profilePrefix
+				+ "auto-connect"));
+		LOG.info("Loaded loadFromProfile " + profileName);
+		adjustToCheckBoxControls();
+	}
+
+	@Override
+	public int open() {
+		return super.open();
+	}
+
+	protected void storeProfile(String profileName) {
+		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
+		String prefix = profilePrefix + profileName + "-";
+
+		prefs.setValue(prefix + "user-name", StringUtils
+				.defaultString(handleField.getText()));
+		prefs.setValue(prefix + "server-url", StringUtils
+				.defaultString(serverField.getText()));
+		prefs.setValue(prefix + "password", StringUtils
+				.defaultString(passwordField.getText()));
 
 		try {
-			prefs.save();
-		} catch (IOException ioe) {
-			LOG.error("Error occured saving preferences", ioe);
-			throw new RuntimeException(ioe);
+			prefs.setValue(prefix + "port", Integer.parseInt(StringUtils
+					.defaultString(portField.getText())));
+		} catch (NumberFormatException nfe) {
 		}
+
+		prefs.setValue(prefix + "is-named-guest", guestLoginCheckBox
+				.getSelection()
+				&& StringUtils.isNotBlank(handleField.getText()));
+		prefs.setValue(prefix + "is-anon-guest", guestLoginCheckBox
+				.getSelection()
+				&& StringUtils.isBlank(handleField.getText()));
+		prefs.setValue(prefix + "timeseal-enabled", timesealEnabledCheckBox
+				.getSelection());
+		prefs.setValue(profilePrefix + "auto-connect", autoLoginCheckBox
+				.getSelection());
+		prefs.setValue(profilePrefix + "profile", profileName);
+		LOG.info("Saved " + profileName);
 	}
 
 	public boolean wasLoginPressed() {

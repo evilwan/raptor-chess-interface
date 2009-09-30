@@ -1,4 +1,4 @@
-package raptor.connector.fics;
+package raptor.connector.bics;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.Action;
@@ -8,8 +8,7 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
-import raptor.connector.fics.pref.FicsGameScriptsPage;
-import raptor.connector.fics.pref.FicsPage;
+import raptor.connector.bics.prefs.BicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.dialog.IcsLoginDialog;
@@ -20,7 +19,68 @@ import raptor.util.RaptorStringTokenizer;
 /**
  * The connector used to connect to www.freechess.org.
  */
-public class FicsConnector extends IcsConnector implements PreferenceKeys {
+public class BicsConnector extends IcsConnector implements PreferenceKeys {
+
+	public static class BicsConnectorContext extends IcsConnectorContext {
+		public BicsConnectorContext() {
+			super(new BicsParser());
+		}
+
+		@Override
+		public String getDescription() {
+			return "Bughouse Internet Chess Server";
+		}
+
+		@Override
+		public String getEnterPrompt() {
+			return "\":";
+		}
+
+		@Override
+		public String getLoggedInMessage() {
+			return "**** Starting BICS session as ";
+		}
+
+		@Override
+		public String getLoginErrorMessage() {
+			return "\n*** ";
+		}
+
+		@Override
+		public String getLoginPrompt() {
+			return "login: ";
+		}
+
+		@Override
+		public String getPasswordPrompt() {
+			return "password:";
+		}
+
+		@Override
+		public String getPreferencePrefix() {
+			return "bics-";
+		}
+
+		@Override
+		public String getPrompt() {
+			return "bics%";
+		}
+
+		@Override
+		public String getRawPrompt() {
+			return "\nbics% ";
+		}
+
+		@Override
+		public int getRawPromptLength() {
+			return getRawPrompt().length();
+		}
+
+		@Override
+		public String getShortName() {
+			return "bics";
+		}
+	}
 
 	protected MenuManager connectionsMenu;
 
@@ -34,15 +94,15 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
 	 */
-	protected FicsConnector fics2 = null;
+	protected BicsConnector bics2 = null;
 
-	public FicsConnector() {
-		this(new IcsConnectorContext(new FicsParser()));
+	public BicsConnector() {
+		this(new BicsConnectorContext());
 	}
 
-	public FicsConnector(IcsConnectorContext context) {
+	public BicsConnector(BicsConnectorContext context) {
 		super(context);
-		initFics2();
+		initBics2();
 		createMenuActions();
 
 	}
@@ -61,12 +121,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	 * Creates the connectionsMenu and all of the actions associated with it.
 	 */
 	protected void createMenuActions() {
-		connectionsMenu = new MenuManager("&Fics");
+		connectionsMenu = new MenuManager("&Bics");
 		connectAction = new Action("&Connect") {
 			@Override
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(context
-						.getPreferencePrefix(), "Fics Login");
+						.getPreferencePrefix(), "Bics Login");
 				dialog.open();
 				if (dialog.wasLoginPressed()) {
 					connect();
@@ -117,64 +177,64 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(seekGraphAction);
 		connectionsMenu.add(new Separator());
 
-		MenuManager fics2Menu = new MenuManager(
+		MenuManager bics2Menu = new MenuManager(
 				"&Another Simultaneous Connection");
-		fics2.connectAction = new Action("&Connect") {
+		bics2.connectAction = new Action("&Connect") {
 			@Override
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(context
-						.getPreferencePrefix(), "Fics Simultaneous Login");
+						.getPreferencePrefix(), "Bics Simultaneous Login");
 				dialog.open();
 				if (dialog.wasLoginPressed()) {
-					fics2.connect(dialog.getSelectedProfile());
+					bics2.connect(dialog.getSelectedProfile());
 				}
 			}
 		};
 
-		fics2.disconnectAction = new Action("&Disconnect") {
+		bics2.disconnectAction = new Action("&Disconnect") {
 			@Override
 			public void run() {
-				fics2.disconnect();
+				bics2.disconnect();
 			}
 		};
 
-		fics2.reconnectAction = new Action("&Reconnect") {
+		bics2.reconnectAction = new Action("&Reconnect") {
 			@Override
 			public void run() {
-				fics2.disconnect();
-				fics2.connect();
+				bics2.disconnect();
+				bics2.connect();
 			}
 		};
 
-		fics2.seekGraphAction = new Action("Show &Seek Graph") {
+		bics2.seekGraphAction = new Action("Show &Seek Graph") {
 			@Override
 			public void run() {
 				Raptor.getInstance().alert("Seek Graph Comming soon");
 			}
 		};
 
-		fics2.bughouseArenaAction = new Action("Show &Bughouse Arena") {
+		bics2.bughouseArenaAction = new Action("Show &Bughouse Arena") {
 			@Override
 			public void run() {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
 			}
 		};
 
-		fics2.connectAction.setEnabled(true);
-		fics2.disconnectAction.setEnabled(false);
-		fics2.reconnectAction.setEnabled(false);
-		fics2.bughouseArenaAction.setEnabled(false);
-		fics2.seekGraphAction.setEnabled(false);
+		bics2.connectAction.setEnabled(true);
+		bics2.disconnectAction.setEnabled(false);
+		bics2.reconnectAction.setEnabled(false);
+		bics2.bughouseArenaAction.setEnabled(false);
+		bics2.seekGraphAction.setEnabled(false);
 
-		fics2Menu.add(fics2.connectAction);
-		fics2Menu.add(fics2.disconnectAction);
-		fics2Menu.add(fics2.reconnectAction);
-		fics2Menu.add(new Separator());
-		fics2Menu.add(fics2.bughouseArenaAction);
-		fics2Menu.add(fics2.seekGraphAction);
-		fics2Menu.add(new Separator());
+		bics2Menu.add(bics2.connectAction);
+		bics2Menu.add(bics2.disconnectAction);
+		bics2Menu.add(bics2.reconnectAction);
+		bics2Menu.add(new Separator());
+		bics2Menu.add(bics2.bughouseArenaAction);
+		bics2Menu.add(bics2.seekGraphAction);
+		bics2Menu.add(new Separator());
 
-		connectionsMenu.add(fics2Menu);
+		connectionsMenu.add(bics2Menu);
 
 	}
 
@@ -191,9 +251,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (fics2 != null) {
-			fics2.dispose();
-			fics2 = null;
+		if (bics2 != null) {
+			bics2.dispose();
+			bics2 = null;
 		}
 	}
 
@@ -211,28 +271,26 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	 * will show up below the root node.
 	 */
 	public PreferencePage getRootPreferencePage() {
-		return new FicsPage();
+		return new BicsPage();
 	}
 
 	/**
 	 * Returns an array of the secondary preference nodes.
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
-		return new PreferenceNode[] { new PreferenceNode("Scripts",
-				new FicsGameScriptsPage(this)) };
-
+		return null;
 	}
 
-	protected void initFics2() {
-		fics2 = new FicsConnector(new IcsConnectorContext(new FicsParser()) {
+	protected void initBics2() {
+		bics2 = new BicsConnector(new BicsConnectorContext() {
 			@Override
 			public String getDescription() {
-				return "Free Internet Chess Server Another Simultaneous Connection";
+				return "Bughouse Internet Chess Server Another Simultaneous Connection";
 			}
 
 			@Override
 			public String getShortName() {
-				return "fics2";
+				return "bics2";
 			}
 		}) {
 
@@ -264,7 +322,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			 * recursion.
 			 */
 			@Override
-			protected void initFics2() {
+			protected void initBics2() {
 
 			}
 

@@ -19,11 +19,18 @@ public interface RaptorWindowItem {
 	public void addItemChangedListener(ItemChangedListener listener);
 
 	/**
-	 * Returns true if the window can be reparented.
-	 * 
-	 * @return
+	 * Returns true if the RaptorWindowItem can be closed, false otherwise. This
+	 * method can be used to prompt the user to determine if it should be
+	 * closed.
 	 */
-	public boolean confirmReparenting();
+	public boolean confirmClose();
+
+	/**
+	 * Returns true if the RaptorWindowItem can be move to another quadrant,
+	 * false otherwise. This method can be used to prompt the user to determine
+	 * if it should be moved.
+	 */
+	public boolean confirmQuadrantMove();
 
 	/**
 	 * Disposes of the window item.
@@ -57,11 +64,6 @@ public interface RaptorWindowItem {
 	public void init(Composite parent);
 
 	/**
-	 * Returns true if the window item is closeable.
-	 */
-	public boolean isCloseable();
-
-	/**
 	 * Invoked when the window item is visible to the user.
 	 */
 	public void onActivate();
@@ -72,7 +74,7 @@ public interface RaptorWindowItem {
 	public void onPassivate();
 
 	/**
-	 * If confirm reparenting returns true, this method should be supported. It
+	 * If confirmQuadrantMove returns true, this method should be supported. It
 	 * reparents the control to the new parent.
 	 */
 	public void onReparent(Composite newParent);

@@ -465,11 +465,6 @@ public class GameUtils implements GameConstants {
 				|| zeroBasedFile == 7;
 	}
 
-	public static boolean isPromotion(Game game, int fromSquare, int toSquare) {
-		return isPromotion(game.getColorToMove() == WHITE, game, fromSquare,
-				toSquare);
-	}
-
 	public static boolean isPromotion(boolean isWhiteToMove, Game game,
 			int fromSquare, int toSquare) {
 		if (isWhiteToMove) {
@@ -477,6 +472,11 @@ public class GameUtils implements GameConstants {
 		} else {
 			return game.getPiece(fromSquare) == PAWN && getRank(toSquare) == 0;
 		}
+	}
+
+	public static boolean isPromotion(Game game, int fromSquare, int toSquare) {
+		return isPromotion(game.getColorToMove() == WHITE, game, fromSquare,
+				toSquare);
 	}
 
 	public static boolean isWhitePiece(Game game, int square) {

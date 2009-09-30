@@ -2,8 +2,6 @@ package raptor;
 
 import java.util.Calendar;
 
-import raptor.connector.fics.FicsUtils;
-
 public class Test {
 	public static final long TIMEZONE_OFFSET = -(Calendar.getInstance()
 			.get(Calendar.ZONE_OFFSET));

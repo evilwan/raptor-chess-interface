@@ -1,8 +1,8 @@
-package raptor.connector.fics.chat;
+package raptor.connector.ics.chat;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
-import raptor.connector.fics.FicsUtils;
+import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class TellEventParser extends ChatEventParser {
@@ -23,14 +23,14 @@ public class TellEventParser extends ChatEventParser {
 				if (tok.hasMoreTokens()) {
 					String s2 = tok.nextToken();
 					if (s2.equals("says:")) {
-						return new ChatEvent(FicsUtils.removeTitles(source),
+						return new ChatEvent(IcsUtils.removeTitles(source),
 								ChatType.TELL, text);
 
 					} else if (s2.equals("tells")) {
 						if (tok.hasMoreTokens()) {
 							String s3 = tok.nextToken();
 							if (s3.equals("you:")) {
-								return new ChatEvent(FicsUtils
+								return new ChatEvent(IcsUtils
 										.removeTitles(source), ChatType.TELL,
 										text);
 							}

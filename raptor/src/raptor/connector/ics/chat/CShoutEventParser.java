@@ -1,8 +1,8 @@
-package raptor.connector.fics.chat;
+package raptor.connector.ics.chat;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
-import raptor.connector.fics.FicsUtils;
+import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class CShoutEventParser extends ChatEventParser {
@@ -24,7 +24,7 @@ public class CShoutEventParser extends ChatEventParser {
 			if (stringtokenizer.hasMoreTokens()) {
 				String s2 = stringtokenizer.nextToken();
 				if (s2.equals(IDENTIFIER))
-					return new ChatEvent(FicsUtils.removeTitles(s1),
+					return new ChatEvent(IcsUtils.removeTitles(s1),
 							ChatType.CSHOUT, text);
 			}
 		}

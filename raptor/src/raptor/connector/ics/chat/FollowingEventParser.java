@@ -1,10 +1,10 @@
-package raptor.connector.fics.chat;
+package raptor.connector.ics.chat;
 
 import java.util.StringTokenizer;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
-import raptor.connector.fics.FicsUtils;
+import raptor.connector.ics.IcsUtils;
 
 public class FollowingEventParser extends ChatEventParser {
 
@@ -27,7 +27,7 @@ public class FollowingEventParser extends ChatEventParser {
 				StringTokenizer tok = new StringTokenizer(text.substring(
 						identifierIndex + IDENTIFIER.length(), text.length()),
 						" '(");
-				return new ChatEvent(FicsUtils.removeTitles(tok.nextToken()),
+				return new ChatEvent(IcsUtils.removeTitles(tok.nextToken()),
 						ChatType.FOLLOWING, text);
 			} else {
 				if (text.indexOf(IDENTIFIER2) != -1) {

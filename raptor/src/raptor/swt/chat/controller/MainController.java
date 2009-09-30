@@ -8,9 +8,31 @@ import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.ChatConsoleController;
 
 public class MainController extends ChatConsoleController {
+	protected boolean isCloseable = false;
 
 	public MainController(Connector connector) {
 		super(connector);
+	}
+
+	@Override
+	public boolean confirmClose() {
+		boolean result = true;
+		if (connector.isConnected()) {
+			result = Raptor.getInstance().confirm(
+					"Closing a main console will disconnect you from "
+							+ connector.getShortName()
+							+ ". Do you wish to proceed?");
+
+			if (result) {
+				connector.disconnect();
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public String getName() {
+		return "Main";
 	}
 
 	@Override
@@ -25,11 +47,6 @@ public class MainController extends ChatConsoleController {
 	}
 
 	@Override
-	public String getTitle() {
-		return connector.getShortName() + "(Main)";
-	}
-
-	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
 		return true;
 	}
@@ -41,7 +58,7 @@ public class MainController extends ChatConsoleController {
 
 	@Override
 	public boolean isCloseable() {
-		return false;
+		return true;
 	}
 
 	@Override
@@ -52,5 +69,9 @@ public class MainController extends ChatConsoleController {
 	@Override
 	public boolean isSearchable() {
 		return true;
+	}
+
+	public void setCloseable() {
+
 	}
 }

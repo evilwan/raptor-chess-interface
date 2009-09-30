@@ -1,4 +1,4 @@
-package raptor.connector.fics.chat;
+package raptor.connector.ics.chat;
 
 public class SoughtEventParser {
 

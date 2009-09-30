@@ -242,11 +242,6 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public boolean isCloseable() {
-		return true;
-	}
-
-	@Override
 	public boolean isCommitable() {
 		return true;
 	}

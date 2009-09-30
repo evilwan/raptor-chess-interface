@@ -1,14 +1,13 @@
-package raptor.connector.fics.chat;
+package raptor.connector.ics.chat;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
-import raptor.connector.fics.FicsUtils;
+import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
-public class WhisperEventParser extends ChatEventParser {
-	public static final String IDENTIFIER = "whispers:";
-
-	public WhisperEventParser() {
+public class KibitzEventParser extends ChatEventParser {
+	public KibitzEventParser() {
+		super();
 	}
 
 	/**
@@ -20,16 +19,18 @@ public class WhisperEventParser extends ChatEventParser {
 			RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 					text, " ");
 			if (stringtokenizer.hasMoreTokens()) {
-				String source = stringtokenizer.nextToken();
+				String s1 = stringtokenizer.nextToken();
 				if (stringtokenizer.hasMoreTokens()) {
 					String s2 = stringtokenizer.nextToken();
-					if (s2.equals(IDENTIFIER)) {
-						int j = text.indexOf("[");
+					if (s2.equals("kibitzes:")) {
+						int j = text.indexOf("[") + 1;
 						int k = text.indexOf("]");
-
-						return new ChatEvent(FicsUtils.removeTitles(source),
-								ChatType.WHISPER, text, text
-										.substring(j + 1, k));
+						try {
+							return new ChatEvent(IcsUtils.removeTitles(s1),
+									ChatType.KIBITZ, text, text.substring(j, k));
+						} catch (Exception exception) {
+							exception.printStackTrace();
+						}
 					}
 				}
 			}

@@ -1,8 +1,8 @@
-package raptor.connector.fics.chat;
+package raptor.connector.ics.chat;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
-import raptor.connector.fics.FicsUtils;
+import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class ChannelTellEventParser extends ChatEventParser {
@@ -26,7 +26,7 @@ public class ChannelTellEventParser extends ChatEventParser {
 					int k = s1.lastIndexOf("(");
 					if (k < j && k != -1 && j != -1) {
 
-						ChatEvent event = new ChatEvent(FicsUtils
+						ChatEvent event = new ChatEvent(IcsUtils
 								.removeTitles(s1), ChatType.CHAN_TELL, text);
 						event.setChannel(text.substring(k + 1, j));
 						return event;

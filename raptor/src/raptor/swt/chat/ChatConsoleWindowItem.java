@@ -1,6 +1,5 @@
 package raptor.swt.chat;
 
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -23,12 +22,16 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 		controller.addItemChangedListener(listener);
 	}
 
-	public boolean confirmReparenting() {
-		return MessageDialog
-				.openConfirm(
-						Raptor.getInstance().getRaptorWindow().getShell(),
-						"Confirm",
-						"Moving a chat console results in losing all previous messages. Do you wish to proceed?");
+	public boolean confirmClose() {
+		return controller.confirmClose();
+	}
+
+	public boolean confirmQuadrantMove() {
+		return Raptor
+				.getInstance()
+				.confirm(
+						"Moving a chat console might result in a loss of previous messages\n"
+								+ "depending on how many there are. Do you wish to proceed?");
 	}
 
 	public void dispose() {

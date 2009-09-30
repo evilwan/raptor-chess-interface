@@ -1,7 +1,5 @@
 package raptor.swt.chat.controller;
 
-import org.apache.commons.lang.StringUtils;
-
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
@@ -19,6 +17,11 @@ public class RegExController extends ChatConsoleController {
 	}
 
 	@Override
+	public String getName() {
+		return regularExpression;
+	}
+
+	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
 				PreferenceKeys.APP_REGEX_TAB_QUADRANT);
@@ -32,12 +35,6 @@ public class RegExController extends ChatConsoleController {
 	@Override
 	public String getPrompt() {
 		return connector.getPrompt();
-	}
-
-	@Override
-	public String getTitle() {
-		return connector.getShortName() + "("
-				+ StringUtils.abbreviate(regularExpression, 10) + ")";
 	}
 
 	@Override

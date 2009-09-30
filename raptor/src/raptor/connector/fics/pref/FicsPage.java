@@ -1,9 +1,11 @@
-package raptor.pref;
+package raptor.connector.fics.pref;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.pref.PreferenceKeys;
+import raptor.pref.TextFieldEditor;
 
 public class FicsPage extends FieldEditorPreferencePage {
 	public FicsPage() {

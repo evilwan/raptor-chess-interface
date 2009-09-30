@@ -1,8 +1,8 @@
-package raptor.connector.fics.chat;
+package raptor.connector.ics.chat;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
-import raptor.connector.fics.FicsUtils;
+import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class PartnershipCreatedEventParser extends ChatEventParser {
@@ -21,7 +21,7 @@ public class PartnershipCreatedEventParser extends ChatEventParser {
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 						text.substring(i + "You agree to be".length(), text
 								.length()), " '");
-				return new ChatEvent(FicsUtils.removeTitles(stringtokenizer
+				return new ChatEvent(IcsUtils.removeTitles(stringtokenizer
 						.nextToken()), ChatType.PARTNERSHIP_CREATED, text);
 			}
 			int j = text.indexOf(IDENTIFIER_2);
@@ -31,7 +31,7 @@ public class PartnershipCreatedEventParser extends ChatEventParser {
 				String s1 = stringtokenizer1.nextToken();
 				String s2 = stringtokenizer1.nextToken();
 				if (s2.equals("agrees"))
-					return new ChatEvent(FicsUtils.removeTitles(s1),
+					return new ChatEvent(IcsUtils.removeTitles(s1),
 							ChatType.PARTNERSHIP_CREATED, text);
 			}
 			return null;

@@ -620,18 +620,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 		return coolbar;
 	}
 
-	/**
-	 * Returns true if the specified button is selected, false otherwise.
-	 */
-	public boolean isCoolbarButtonSelectd(String buttonKey) {
-		boolean result = false;
-		Button button = coolbarButtonMap.get(buttonKey);
-		if (button != null) {
-			result = button.getSelection();
-		}
-		return result;
-	}
-
 	public Button getCoolBarButton(String buttonKey) {
 		return coolbarButtonMap.get(buttonKey);
 	}
@@ -650,6 +638,10 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 	public Label getOpeningDescriptionLabel() {
 		return openingDescriptionLabel;
+	}
+
+	public LabeledChessSquare getPieceJailSquare(int coloredPiece) {
+		return pieceJailSquares[coloredPiece];
 	}
 
 	// void initSquareLabels() {
@@ -693,10 +685,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 	// fileLabels[7] = new Label(this, labelStyle);
 	// fileLabels[7].setText("h");
 	// }
-
-	public LabeledChessSquare getPieceJailSquare(int coloredPiece) {
-		return pieceJailSquares[coloredPiece];
-	}
 
 	public LabeledChessSquare[] getPieceJailSquares() {
 		return pieceJailSquares;
@@ -934,6 +922,18 @@ public class ChessBoard extends Composite implements BoardConstants {
 					}
 				});
 
+	}
+
+	/**
+	 * Returns true if the specified button is selected, false otherwise.
+	 */
+	public boolean isCoolbarButtonSelectd(String buttonKey) {
+		boolean result = false;
+		Button button = coolbarButtonMap.get(buttonKey);
+		if (button != null) {
+			result = button.getSelection();
+		}
+		return result;
 	}
 
 	public boolean isWhiteOnTop() {
