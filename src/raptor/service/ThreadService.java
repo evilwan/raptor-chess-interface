@@ -16,6 +16,12 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 
+/**
+ * Multi-threading should be usually avoided in Raptor. Instead to launch
+ * something asynchronously you should use this service.
+ * 
+ * This service provides exception handling, and pooling
+ */
 public class ThreadService {
 	private static final Log LOG = LogFactory.getLog(ThreadService.class);
 	private static final ThreadService instance = new ThreadService();

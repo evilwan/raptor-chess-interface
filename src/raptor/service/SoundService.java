@@ -16,6 +16,9 @@ import org.apache.commons.logging.LogFactory;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 
+/**
+ * A Singleton service that plays sounds.
+ */
 public class SoundService {
 
 	private static final Log LOG = LogFactory.getLog(SoundService.class);
@@ -24,6 +27,9 @@ public class SoundService {
 
 	private static final SoundService instance = new SoundService();
 
+	/**
+	 * Returns the singleton instance.
+	 */
 	public static SoundService getInstance() {
 		return instance;
 	}
@@ -107,6 +113,14 @@ public class SoundService {
 		}
 	}
 
+	/**
+	 * Speaks the specified text.
+	 * 
+	 * @param text
+	 *            text to speak.
+	 * 
+	 *            This method is not yet implemented.
+	 */
 	public void textToSpeech(String text) {
 
 		// list all available voices
