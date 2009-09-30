@@ -227,7 +227,7 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public String getTitle() {
-		return "Examining(" + getGame().getId() + ")";
+		return connector.getShortName() + "(Exam " + getGame().getId() + ")";
 	}
 
 	@Override

@@ -248,7 +248,7 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public String getTitle() {
-		return "Setup(" + getGame().getId() + ")";
+		return connector.getShortName() + "(Setup " + getGame().getId() + ")";
 	}
 
 	@Override

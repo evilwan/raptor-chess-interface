@@ -215,7 +215,7 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Adds a RaptorWindowItem to the RaptorWindow.
 	 */
 	public void addRaptorWindowItem(final RaptorWindowItem item) {
-		addRaptorWindowItem(item, false);
+		addRaptorWindowItem(item, true);
 	}
 
 	/**
