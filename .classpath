@@ -10,9 +10,10 @@
 	<classpathentry kind="lib" path="lib/common/org.eclipse.jface_3.4.2.M20090107-0800.jar"/>
 	<classpathentry kind="lib" path="lib/common/org.eclipse.jface.text_3.4.2.r342_v20081119-0800.jar"/>
 	<classpathentry kind="lib" path="lib/common/org.eclipse.osgi_3.4.3.R34x_v20081215-1030.jar"/>
-	<classpathentry kind="lib" path="lib/osxcarbon/org.eclipse.swt_3.4.2.v3452b.jar"/>
 	<classpathentry kind="lib" path="lib/common/velocity-1.6.2.jar" sourcepath="lib/common/source/velocity-1.6.2-src.jar"/>
 	<classpathentry kind="lib" path="lib/common/source/timesealing.jar"/>
 	<classpathentry kind="lib" path="lib/common/svgSalamander.jar"/>
+	<classpathentry kind="lib" path="lib/common/org.eclipse.core.commands_3.4.0.I20080509-2000.jar"/>
+	<classpathentry kind="lib" path="lib/common/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
