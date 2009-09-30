@@ -1,8 +1,7 @@
 package raptor.game.util;
 
 import raptor.game.GameConstants;
-import raptor.game.SanUtil;
-import raptor.game.SanUtil.SanValidations;
+import raptor.game.util.SanUtil.SanValidations;
 
 public class SanTest extends TestCase implements GameConstants {
 	public static void main(String args[]) {

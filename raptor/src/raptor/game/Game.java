@@ -19,9 +19,10 @@ import static raptor.game.util.GameUtils.rankFileToSquare;
 
 import java.util.Arrays;
 
-import raptor.game.SanUtil.SanValidations;
 import raptor.game.util.GameUtils;
+import raptor.game.util.SanUtil;
 import raptor.game.util.ZobristHash;
+import raptor.game.util.SanUtil.SanValidations;
 
 /**
  * A game class which uses bitboards and Zobrist hashing.
