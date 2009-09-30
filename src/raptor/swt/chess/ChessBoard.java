@@ -721,12 +721,12 @@ public class ChessBoard extends Composite implements BoardConstants {
 			resultFont = Raptor.getInstance().getPreferences().getFont(
 					PreferenceKeys.BOARD_RESULT_FONT);
 			resultFont = SWTUtils.getProportionalFont(getDisplay(), resultFont,
-					.8, height);
+					80, height);
 			resultFontHeight = height;
 		} else {
 			if (resultFontHeight != height) {
 				Font newFont = SWTUtils.getProportionalFont(getDisplay(),
-						resultFont, .8, height);
+						resultFont, 80, height);
 				resultFontHeight = height;
 				resultFont.dispose();
 				resultFont = newFont;

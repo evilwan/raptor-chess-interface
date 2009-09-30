@@ -23,6 +23,9 @@ import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 
+/**
+ * The raptor login dialog.
+ */
 public class LoginDialog extends Dialog implements PreferenceKeys {
 	private static class Profile {
 		public static Profile[] getProfiles() {
