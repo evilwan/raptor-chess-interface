@@ -40,6 +40,7 @@ public class SetupController extends ChessBoardController {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							onPlayGameEndSound();
 							InactiveController inactiveController = new InactiveController(
 									getGame());
 							getBoard().setController(inactiveController);

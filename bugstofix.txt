@@ -23,10 +23,10 @@ The are less frequent but they still occur.
     at org.eclipse.jface.window.Window.open(Window.java:801)
     at raptor.Raptor.main(Raptor.java:98)
    
-4) Game legal move generation: (I think that has to do with disambiguity by check.
+5) Game legal move generation: (I think that has to do with disambiguity by check.
  There is code in the san parsing to do this, but its not working.)
  
-
+6) Add in when following someone to always put them on bottom.
 
  Issue: Error in DaemonRun.onNewInput
 java.lang.IllegalArgumentException: Invalid move Re1

@@ -29,6 +29,7 @@ public class ObserveController extends ChessBoardController {
 						try {
 
 							board.redrawSquares();
+							onPlayGameEndSound();
 
 							InactiveController inactiveController = new InactiveController(
 									getGame());
@@ -134,6 +135,20 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public void init() {
 		super.init();
+
+		/**
+		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail
+		 * since you can drop pieces from it.
+		 * 
+		 * In other games its just a collection of pieces yu have captured so
+		 * your opponent owns your piece jail.
+		 */
+		if (getGame().isInState(Game.DROPPABLE_STATE)) {
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
+		} else {
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
+		}
+
 		connector.getGameService().addGameServiceListener(listener);
 	}
 

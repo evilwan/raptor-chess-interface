@@ -16,6 +16,7 @@ import raptor.game.GameConstants;
 import raptor.game.LosersGame;
 import raptor.game.SetupGame;
 import raptor.game.SuicideGame;
+import raptor.game.ZHGame;
 import raptor.game.Game.PositionState;
 import raptor.game.Game.Type;
 import raptor.game.util.GameUtils;
@@ -202,6 +203,13 @@ public class IcsUtils implements GameConstants {
 			break;
 		case LOSERS:
 			result = new LosersGame();
+			break;
+		case CRAZYHOUSE:
+			result = new ZHGame();
+			break;
+		case BUGHOUSE:
+			result = new ZHGame();
+			result.setType(Type.BUGHOUSE);
 			break;
 		default:
 			LOG.error("Uhandled game type " + g1.gameTypeDescription);

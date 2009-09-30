@@ -730,7 +730,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onActivate() {
-		onForceAutoScroll();
+		chatConsole.getDisplay().timerExec(100, new Runnable() {
+			public void run() {
+
+				onForceAutoScroll();
+			}
+		});
 	}
 
 	public void onAppendChatEventToInputText(ChatEvent event) {

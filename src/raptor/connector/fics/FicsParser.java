@@ -129,7 +129,7 @@ public class FicsParser implements IcsParser, GameConstants {
 			while (tok.hasMoreTokens()) {
 				String line = tok.nextToken();
 				if (LOG.isDebugEnabled()) {
-					System.err.println("Processing raw line: " + line);
+					LOG.debug("Processing raw line: " + line);
 				}
 
 				G1Message g1Message = g1Parser.parse(line);
@@ -191,8 +191,20 @@ public class FicsParser implements IcsParser, GameConstants {
 
 	protected void process(B1Message message, GameService service) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Processing b1: " + message
-					+ " <Ignoiring not yet implemented>");
+			LOG.debug("Processing b1: " + message);
+		}
+		Game game = service.getGame(message.gameId);
+		if (game == null) {
+			LOG.error("Received B1 for a game not in the GameService. "
+					+ message);
+		} else {
+			for (int i = 1; i < message.whiteHoldings.length; i++) {
+				game.setDropCount(WHITE, i, message.whiteHoldings[i]);
+			}
+			for (int i = 1; i < message.blackHoldings.length; i++) {
+				game.setDropCount(BLACK, i, message.blackHoldings[i]);
+			}
+			service.fireGameStateChanged(message.gameId, false);
 		}
 	}
 

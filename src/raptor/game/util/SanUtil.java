@@ -40,6 +40,8 @@ public class SanUtil {
 
 		boolean isPromotion;
 
+		boolean isDropMoveStrict;
+
 		public String getStrictSan() {
 			return strictSan;
 		}
@@ -170,6 +172,13 @@ public class SanUtil {
 			this.isValidStrict = isValidStrict;
 		}
 
+		public boolean isDropMoveStrict() {
+			return isDropMoveStrict;
+		}
+
+		public void setDropMoveStrict(boolean isDropMoveStrict) {
+			this.isDropMoveStrict = isDropMoveStrict;
+		}
 	}
 
 	public static final String FILES = "abcdefgh";
@@ -179,6 +188,8 @@ public class SanUtil {
 	public static final String PIECES = "BKNQR";
 
 	public static final String PROMOTIONS = "BNQR";
+
+	public static final String DROPS = "PBNQR";
 
 	public static final String CAPTURES = "x:";
 
@@ -241,6 +252,7 @@ public class SanUtil {
 		result.isPxPPromotionStrict = isValidPxPromotionStrict(result.strictSan);
 		result.isPxStrict = isValidPxStrict(result.strictSan);
 		result.isUnambigPieceStrict = isValidUnambigPieceStrict(result.strictSan);
+		result.isDropMoveStrict = isValidDropStrict(result.strictSan);
 		result.isValidStrict = result.isEpOrAmbigPxStrict
 				|| result.isEpOrAmbigPxPromotionStrict
 				|| result.isUnambigPieceStrict
@@ -249,7 +261,7 @@ public class SanUtil {
 				|| result.isDisambigPieceRankFileStrict || result.isPxStrict
 				|| result.isPMoveStrict || result.isPxPPromotionStrict
 				|| result.isPPromotionStrict || result.isCastleKSideStrict
-				|| result.isCastleQSideStrict;
+				|| result.isCastleQSideStrict || result.isDropMoveStrict;
 
 		if (result.isValidStrict) {
 			result.isPawnMove = result.isPxStrict
@@ -409,6 +421,20 @@ public class SanUtil {
 			return PIECES.indexOf(san.charAt(0)) != -1
 					&& FILES.indexOf(san.charAt(1)) != -1
 					&& RANKS.indexOf(san.charAt(2)) != -1;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * VALID_PIECE_DROP_REGEX = "[PBNQR][@][a-h][1-8]"
+	 */
+	public static boolean isValidDropStrict(String san) {
+		if (san.length() == 4) {
+			return DROPS.indexOf(san.charAt(0)) != -1
+					&& san.charAt(1) == '@'
+					&& FILES.indexOf(san.charAt(2)) != -1
+					&& RANKS.indexOf(san.charAt(3)) != -1;
 		} else {
 			return false;
 		}

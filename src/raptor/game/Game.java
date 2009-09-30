@@ -18,6 +18,9 @@ import static raptor.game.util.GameUtils.pawnSinglePush;
 import static raptor.game.util.GameUtils.rankFileToSquare;
 
 import java.util.Arrays;
+import java.util.Date;
+
+import org.apache.commons.lang.WordUtils;
 
 import raptor.game.util.GameUtils;
 import raptor.game.util.SanUtil;
@@ -184,6 +187,7 @@ public class Game implements GameConstants {
 	 *            The un-colored piece constant.
 	 */
 	public void decrementPieceCount(int color, int piece) {
+		int pieceWithoutMask = piece;
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
 		}
@@ -285,6 +289,9 @@ public class Game implements GameConstants {
 		case Move.QUEENSIDE_CASTLING_CHARACTERISTIC:
 			makeCastlingMove(move);
 			break;
+		case Move.DROP_CHARACTERISTIC:
+			makeDropMove(move);
+			break;
 		default:
 			makeNonEpNonCastlingMove(move);
 			break;
@@ -310,6 +317,41 @@ public class Game implements GameConstants {
 
 		updateZobristHash();
 		incrementRepCount();
+	}
+
+	protected void rollbackDropMove(Move move) {
+		long toBB = getBitboard(move.getTo());
+		int oppositeColor = getOppositeColor(move.getColor());
+
+		xor(move.getColor(), toBB);
+		xor(move.getColor(), move.getPiece(), toBB);
+		setOccupiedBB(getOccupiedBB() ^ toBB);
+		setEmptyBB(getEmptyBB() ^ toBB);
+
+		updateZobristDrop(move, oppositeColor);
+
+		setPiece(move.getTo(), EMPTY);
+		setEpSquare(move.getEpSquare());
+	}
+
+	/**
+	 * Makes a drop move.
+	 * 
+	 * @param move
+	 */
+	protected void makeDropMove(Move move) {
+		long toBB = getBitboard(move.getTo());
+		int oppositeColor = getOppositeColor(move.getColor());
+
+		xor(move.getColor(), toBB);
+		xor(move.getColor(), move.getPiece(), toBB);
+		setOccupiedBB(getOccupiedBB() ^ toBB);
+		setEmptyBB(getEmptyBB() ^ toBB);
+
+		updateZobristDrop(move, oppositeColor);
+
+		setPiece(move.getTo(), move.getPiece());
+		setEpSquare(EMPTY_SQUARE);
 	}
 
 	/**
@@ -1528,7 +1570,21 @@ public class Game implements GameConstants {
 
 		Move result = null;
 
-		if (validations.isCastleKSideStrict()) {
+		if (validations.isDropMoveStrict()) {
+			for (Move move : pseudoLegals) {
+				if ((move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) != 0
+						&& move.getPiece() == SanUtil.sanToPiece(validations
+								.getStrictSan().charAt(0))
+						&& move.getTo() == GameUtils.rankFileToSquare(
+								GameConstants.RANK_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(3)),
+								GameConstants.FILE_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(2)))) {
+					result = move;
+					break;
+				}
+			}
+		} else if (validations.isCastleKSideStrict()) {
 			for (Move move : pseudoLegals) {
 				if ((move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
 					result = move;
@@ -1767,6 +1823,9 @@ public class Game implements GameConstants {
 		case Move.QUEENSIDE_CASTLING_CHARACTERISTIC:
 			rollbackCastlingMove(move);
 			break;
+		case Move.DROP_CHARACTERISTIC:
+			rollbackDropMove(move);
+			break;
 		default:
 			rollbackNonEpNonCastlingMove(move);
 			break;
@@ -1896,13 +1955,8 @@ public class Game implements GameConstants {
 					toBB);
 
 			// capture is handled in rollback.
-			setPieceCount(move.getColor(), PAWN, getPieceCount(move.getColor(),
-					PAWN) + 1);
-			setPieceCount(move.getColor(), move.getPiecePromotedTo()
-					& NOT_PROMOTED_MASK, getPieceCount(move.getColor(), move
-					.getPiecePromotedTo()
-					& NOT_PROMOTED_MASK) - 1);
-
+			incrementPieceCount(move.getColor(), PAWN);
+			decrementPieceCount(move.getColor(), move.getPiecePromotedTo());
 		} else {
 			xor(move.getColor(), move.getPiece(), fromToBB);
 		}
@@ -2217,7 +2271,10 @@ public class Game implements GameConstants {
 			// TO DO: possible add + or ++ for check/checkmate
 			String shortAlgebraic = null;
 
-			if ((move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
+			if (move.isDrop()) {
+				move.setSan(PIECE_TO_SAN.charAt(move.getPiece()) + "@"
+						+ GameUtils.getSan(move.getTo()));
+			} else if ((move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
 				shortAlgebraic = "O-O";
 			} else if ((move.getMoveCharacteristic() & Move.QUEENSIDE_CASTLING_CHARACTERISTIC) != 0) {
 				shortAlgebraic = "O-O-O";
@@ -2514,34 +2571,6 @@ public class Game implements GameConstants {
 				getPieceBB(BLACK, QUEEN), getPieceBB(BLACK, KING) })
 				+ "\n\n");
 
-		result.append("FEN=" + toFEN() + "\n\n");
-
-		String legalMovesString = Arrays.toString(getLegalMoves().asArray());
-		// "DISABLED";
-
-		String legalMovesString1 = legalMovesString.length() > 75 ? legalMovesString
-				.substring(0, 75)
-				: legalMovesString;
-
-		legalMovesString = legalMovesString.length() <= 75 ? ""
-				: legalMovesString.substring(75, legalMovesString.length());
-
-		String legalMovesString2 = legalMovesString.length() > 85 ? legalMovesString
-				.substring(0, 85)
-				: legalMovesString;
-
-		legalMovesString = legalMovesString.length() <= 85 ? ""
-				: legalMovesString.substring(85, legalMovesString.length());
-
-		String legalMovesString3 = legalMovesString.length() > 85 ? legalMovesString
-				.substring(0, 85)
-				: legalMovesString;
-
-		legalMovesString = legalMovesString.length() <= 85 ? ""
-				: legalMovesString.substring(85, legalMovesString.length());
-
-		String legalMovesString4 = legalMovesString;
-
 		for (int i = 7; i > -1; i--) {
 			for (int j = 0; j < 8; j++) {
 				int square = rankFileToSquare(i, j);
@@ -2583,24 +2612,44 @@ public class Game implements GameConstants {
 						+ getFenCastle());
 				break;
 			case 4:
-				result.append("Move List: " + positionState.moves);
+				result.append("FEN: " + toFEN());
 				break;
 			case 3:
-				result.append("Legals: " + legalMovesString1);
+				result.append("State: " + state + " Type=" + type + " Result="
+						+ result);
 				break;
 			case 2:
-				result.append("  " + legalMovesString2);
+				result.append("Event: " + event + " Site=" + site + " Time="
+						+ new Date(startTime));
 				break;
 			case 1:
-				result.append("  " + legalMovesString3);
+				result.append("WhiteName: " + whiteName + " BlackName="
+						+ blackName + " WhiteTime=" + whiteRemainingTimeMilis
+						+ " whiteLag=" + whiteLagMillis
+						+ " blackRemainingTImeMillis = "
+						+ blackRemainingTimeMillis + " blackLag="
+						+ blackLagMillis);
+
 				break;
 			default:
-				result.append("  " + legalMovesString4);
+				result.append("initialWhiteTimeMillis: "
+						+ initialWhiteTimeMillis + " initialBlackTimeMillis="
+						+ initialBlackTimeMillis + " initialWhiteIncMillis="
+						+ initialWhiteIncMillis + " initialBlackIncMillis="
+						+ initialBlackIncMillis);
 				break;
 			}
 
 			result.append("\n");
 		}
+		
+		String legalMovesString = Arrays.toString(getLegalMoves().asArray());
+		result.append("\n");
+		result.append(WordUtils.wrap("Legals=" + legalMovesString, 80, "\n",
+				true));
+		result.append(WordUtils.wrap("Movelist=" + positionState.moves, 80,
+				"\n", true));
+
 		return result.toString();
 	}
 
@@ -2742,6 +2791,11 @@ public class Game implements GameConstants {
 				^ ZobristHash.zobrist(WHITE, KING, SQUARE_C1)
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_A1)
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_D1);
+	}
+
+	protected void updateZobristDrop(Move move, int oppositeColor) {
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
+				.getColor(), move.getPiece() & NOT_PROMOTED_MASK, move.getTo());
 	}
 
 	protected void updateZobristPONoCapture(Move move, int oppositeColor) {
