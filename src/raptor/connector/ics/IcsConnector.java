@@ -116,6 +116,15 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	/**
+	 * Resets state variables related to the connection state.
+	 */
+	protected void resetConnectionStateVars() {
+		isLoggedIn = false;
+		hasSentLogin = false;
+		hasSentPassword = false;
+	}
+
+	/**
 	 * Connects with the specified profile name.
 	 */
 	protected void connect(final String profileName) {
@@ -123,6 +132,8 @@ public abstract class IcsConnector implements Connector {
 			throw new IllegalStateException("You are already connected to "
 					+ getShortName() + " . Disconnect before invoking connect.");
 		}
+
+		resetConnectionStateVars();
 
 		currentProfileName = profileName;
 
@@ -141,7 +152,7 @@ public abstract class IcsConnector implements Connector {
 		} else if (!Raptor.getInstance().getRaptorWindow().isBeingManaged(
 				mainConsoleWindowItem)) {
 			// Add a new main console to the raptor window since the existing
-			// one is no longer beign managed.
+			// one is no longer being managed (it was already disposed).
 			createMainConsoleWindowItem();
 			Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
 					mainConsoleWindowItem, false);
@@ -335,7 +346,9 @@ public abstract class IcsConnector implements Connector {
 			public void run() {
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
+						System.err.println("Invoking connected. " + listener);
 						listener.onConnect();
+						System.err.println("Done connected.");
 					}
 				}
 			}
@@ -347,7 +360,9 @@ public abstract class IcsConnector implements Connector {
 			public void run() {
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
+						System.err.println("Invoking connecting. " + listener);
 						listener.onConnecting();
+						System.err.println("Done connecting.");
 					}
 				}
 			}
@@ -359,7 +374,11 @@ public abstract class IcsConnector implements Connector {
 			public void run() {
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
-						listener.onDisconnect();
+						System.err.println("Invoking disconnecting. "
+								+ listener);
+						listener.onConnecting();
+						System.err.println("Done disconnecting.");
+
 					}
 				}
 			}
@@ -749,9 +768,9 @@ public abstract class IcsConnector implements Connector {
 							if (errorMessageIndex != -1) {
 								String event = drainInboundMessageBuffer();
 								parseMessage(event);
-							}
-							else {
-								System.err.println("Danging: " + inboundMessageBuffer);
+							} else {
+								System.err.println("Danging: "
+										+ inboundMessageBuffer);
 							}
 						}
 					}

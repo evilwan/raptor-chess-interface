@@ -169,7 +169,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 		@Override
 		public void dispose() {
-			activeItems.add(this);
+			activeItems.remove(this);
 			super.dispose();
 		}
 

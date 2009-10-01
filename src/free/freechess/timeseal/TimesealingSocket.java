@@ -12,143 +12,143 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import free.a.c;
-import free.a.b;
+import free.TimesealPipe;
 
 public class TimesealingSocket extends Socket implements Runnable {
-	private class a extends OutputStream {
+	private class CryptOutputStream extends OutputStream {
 
-		private int a(byte abyte0[], long l) {
-			int i = abyte0.length;
-			System.arraycopy(abyte0, 0, a, 0, abyte0.length);
-			a[i++] = 24;
+		private int crypt(byte bytesIn[], long l) {
+			int bytesInLength = bytesIn.length;
+			System.arraycopy(bytesIn, 0, buffer, 0, bytesIn.length);
+			buffer[bytesInLength++] = 24;
 			byte abyte1[] = Long.toString(l).getBytes();
-			System.arraycopy(abyte1, 0, a, i, abyte1.length);
-			i += abyte1.length;
-			a[i++] = 25;
-			int j = i;
-			for (i += 12 - i % 12; j < i;)
-				a[j++] = 49;
+			System.arraycopy(abyte1, 0, buffer, bytesInLength, abyte1.length);
+			bytesInLength += abyte1.length;
+			buffer[bytesInLength++] = 25;
+			int j = bytesInLength;
+			for (bytesInLength += 12 - bytesInLength % 12; j < bytesInLength;)
+				buffer[j++] = 49;
 
-			for (int k = 0; k < i; k++)
-				a[k] = (byte) (a[k] | 0x80);
+			for (int k = 0; k < bytesInLength; k++)
+				buffer[k] = (byte) (buffer[k] | 0x80);
 
-			for (int i1 = 0; i1 < i; i1 += 12) {
-				byte byte0 = a[i1 + 11];
-				a[i1 + 11] = a[i1];
-				a[i1] = byte0;
-				byte0 = a[i1 + 9];
-				a[i1 + 9] = a[i1 + 2];
-				a[i1 + 2] = byte0;
-				byte0 = a[i1 + 7];
-				a[i1 + 7] = a[i1 + 4];
-				a[i1 + 4] = byte0;
+			for (int i1 = 0; i1 < bytesInLength; i1 += 12) {
+				byte byte0 = buffer[i1 + 11];
+				buffer[i1 + 11] = buffer[i1];
+				buffer[i1] = byte0;
+				byte0 = buffer[i1 + 9];
+				buffer[i1 + 9] = buffer[i1 + 2];
+				buffer[i1 + 2] = byte0;
+				byte0 = buffer[i1 + 7];
+				buffer[i1 + 7] = buffer[i1 + 4];
+				buffer[i1 + 4] = byte0;
 			}
 
 			int l1 = 0;
-			for (int j1 = 0; j1 < i; j1++) {
-				a[j1] = (byte) (a[j1] ^ initialTIme[l1]);
-				l1 = (l1 + 1) % initialTIme.length;
+			for (int j1 = 0; j1 < bytesInLength; j1++) {
+				buffer[j1] = (byte) (buffer[j1] ^ timesealKey[l1]);
+				l1 = (l1 + 1) % timesealKey.length;
 			}
 
-			for (int k1 = 0; k1 < i; k1++)
-				a[k1] = (byte) (a[k1] - 32);
+			for (int k1 = 0; k1 < bytesInLength; k1++)
+				buffer[k1] = (byte) (buffer[k1] - 32);
 
-			a[i++] = -128;
-			a[i++] = 10;
-			return i;
+			buffer[bytesInLength++] = -128;
+			buffer[bytesInLength++] = 10;
+			return bytesInLength;
 		}
 
 		public void write(int i) throws IOException {
 			if (i == 10)
 				synchronized (TimesealingSocket.this) {
-					int j = a(_fldif.toByteArray(), System.currentTimeMillis()
-							- TimesealingSocket.this.initialTIme);
-					_flddo.write(a, 0, j);
-					_flddo.flush();
-					_fldif.reset();
+					int resultLength = crypt(byteArrayOutputStream.toByteArray(), System
+							.currentTimeMillis()
+							- TimesealingSocket.this.initialTime);
+					outputStream.write(buffer, 0, resultLength);
+					outputStream.flush();
+					byteArrayOutputStream.reset();
 				}
 			else
-				_fldif.write(i);
+				byteArrayOutputStream.write(i);
 		}
 
-		private final byte initialTIme[] = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
+		private final byte timesealKey[] = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
 				.getBytes();
-		private byte a[];
-		private final OutputStream _flddo;
-		private final ByteArrayOutputStream _fldif = new ByteArrayOutputStream();
+		private byte buffer[];
+		private final OutputStream outputStream;
+		private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-		public a(OutputStream outputstream) {
-			a = new byte[10000];
-			_flddo = outputstream;
+		public CryptOutputStream(OutputStream outputstream) {
+			buffer = new byte[10000];
+			outputStream = outputstream;
 		}
 	}
 
 	public TimesealingSocket(String s, int i) throws IOException {
 		super(s, i);
-		_flddo = new c(10000);
-		_mthif();
+		timesealPipe = new TimesealPipe(10000);
+		init();
 	}
 
 	public TimesealingSocket(InetAddress inetaddress, int i) throws IOException {
 		super(inetaddress, i);
-		_flddo = new c(10000);
-		_mthif();
+		timesealPipe = new TimesealPipe(10000);
+		init();
 	}
 
 	public void close() throws IOException {
 		super.close();
-		a = null;
+		thread = null;
 	}
 
 	public InputStream getInputStream() {
-		return _flddo._mthif();
+		return timesealPipe.getTimesealInputStream();
 	}
 
 	public OutputStream getOutputStream() throws IOException {
-		return _fldif;
+		return outputStream;
 	}
 
-	private void a() throws IOException {
+	private void writeInitialTimesealString() throws IOException {
 		OutputStream outputstream = getOutputStream();
 		synchronized (outputstream) {
-			outputstream.write(key.getBytes());
+			outputstream.write(initialTimesealString.getBytes());
 			outputstream.write(10);
 		}
 	}
 
-	private void _mthif() throws IOException {
-		initialTIme = System.currentTimeMillis();
-		_fldif = new a(super.getOutputStream());
-		a();
-		a = new Thread(this, "Timeseal thread");
-		a.start();
+	private void init() throws IOException {
+		initialTime = System.currentTimeMillis();
+		outputStream = new CryptOutputStream(super.getOutputStream());
+		writeInitialTimesealString();
+		thread = new Thread(this, "Timeseal thread");
+		thread.start();
 	}
 
 	public void run() {
 		try {
 			BufferedInputStream bufferedinputstream = new BufferedInputStream(
 					super.getInputStream());
-			free.a.b b1 = _flddo._mthbyte();
-			String s = "\n\r[G]\n\r";
-			byte abyte0[] = new byte[s.length()];
+			free.TimesealOutputStream timesealOutputStream = timesealPipe.getTimesealOutputStream();
+			String timesealRequest = "\n\r[G]\n\r";
+			byte timesealRequestBytes[] = new byte[timesealRequest.length()];
 			int i = 0;
 			int j = 0;
-			while (a != null) {
+			while (thread != null) {
 				int k;
 				if (i != 0) {
-					k = abyte0[0];
+					k = timesealRequestBytes[0];
 					if (k < 0)
 						k += 256;
 					for (int l = 0; l < i; l++)
-						abyte0[l] = abyte0[l + 1];
+						timesealRequestBytes[l] = timesealRequestBytes[l + 1];
 
 					i--;
 				} else {
 					k = bufferedinputstream.read();
 				}
-				if (s.charAt(j) == k) {
-					if (++j == s.length()) {
+				if (timesealRequest.charAt(j) == k) {
+					if (++j == timesealRequest.length()) {
 						j = 0;
 						i = 0;
 						synchronized (this) {
@@ -156,42 +156,42 @@ public class TimesealingSocket extends Socket implements Runnable {
 						}
 					}
 				} else if (j != 0) {
-					b1.write((byte) s.charAt(0));
+					timesealOutputStream.write((byte) timesealRequest.charAt(0));
 					for (int i1 = 0; i1 < j - 1; i1++) {
-						abyte0[i1] = (byte) s.charAt(i1 + 1);
+						timesealRequestBytes[i1] = (byte) timesealRequest.charAt(i1 + 1);
 						i++;
 					}
 
-					abyte0[i++] = (byte) k;
+					timesealRequestBytes[i++] = (byte) k;
 					j = 0;
 				} else {
 					if (k < 0) {
-						b1.close();
+						timesealOutputStream.close();
 						return;
 					}
-					b1.write(k);
+					timesealOutputStream.write(k);
 				}
 			}
 		} catch (IOException _ex) {
 			try {
-				_fldif.close();
+				outputStream.close();
 			} catch (IOException ioexception) {
 				System.err.println("Failed to close PipedStream");
 				ioexception.printStackTrace();
 			}
 		} finally {
 			try {
-				free.a.b b = _flddo._mthbyte();
-				b.close();
+				free.TimesealOutputStream timesealOutputStream = timesealPipe.getTimesealOutputStream();
+				timesealOutputStream.close();
 			} catch (IOException _ex) {
 			}
 		}
 	}
 
-	private volatile long initialTIme;
-	private static final String key = "TIMESTAMP|iv|IHATEJIN|";
-	private final c _flddo;
-	private OutputStream _fldif;
-	private volatile Thread a;
+	private volatile long initialTime;
+	private static final String initialTimesealString = "TIMESTAMP|iv|IHATEJIN|";
+	private final TimesealPipe timesealPipe;
+	private OutputStream outputStream;
+	private volatile Thread thread;
 
 }
