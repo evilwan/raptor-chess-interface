@@ -590,7 +590,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (connector != null) {
 			connector.getChatService().removeChatServiceListener(
 					chatServiceListener);
-			connector.addConnectorListener(connectorListener);
 			connectorListener = null;
 			connector = null;
 		}

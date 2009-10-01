@@ -2,7 +2,7 @@
 // Jad home page: http://www.geocities.com/kpdus/jad.html
 // Decompiler options: packimports(3) 
 
-package free.a;
+package free;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,10 +10,10 @@ import java.io.InputStream;
 // Referenced classes of package free.a:
 //            c
 
-class a extends InputStream
+class TimesealInputStream extends InputStream
 {
 
-    public a(c c1)
+    public TimesealInputStream(TimesealPipe c1)
     {
         a = c1;
     }
@@ -41,5 +41,5 @@ class a extends InputStream
         return a._mthif(abyte0, i, j);
     }
 
-    private final c a;
+    private final TimesealPipe a;
 }
