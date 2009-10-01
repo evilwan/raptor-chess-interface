@@ -2,7 +2,7 @@
 // Jad home page: http://www.geocities.com/kpdus/jad.html
 // Decompiler options: packimports(3) 
 
-package free;
+package raptor.connector.ics.timeseal;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,6 +10,10 @@ import java.io.OutputStream;
 // Referenced classes of package free.a:
 //            c
 
+/**
+ * This code was reverse engineered from the JIN project. JIN is a gpled
+ * project. Its url can be found here: http://www.jinchess.com/
+ */
 public class TimesealOutputStream extends OutputStream
 {
 

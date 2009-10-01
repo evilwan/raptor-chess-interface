@@ -1,10 +1,9 @@
 package raptor.connector.ics;
 
 import java.io.IOException;
-import java.net.Socket;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,7 +20,6 @@ import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
-import raptor.connector.ics.timeseal.TimesealingSocket;
 import raptor.game.Game;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
@@ -38,12 +36,10 @@ import raptor.swt.chat.controller.MainController;
 import raptor.swt.chess.ChessBoardWindowItem;
 
 /**
- * An ics (internet chess server) connector. You will need to supply yuor own
- * IcsConnectorContext because they are all different. You might also need to
- * override some methods in order to get it working.
+ * A work in progress.
  */
-public abstract class IcsConnector implements Connector {
-	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
+public abstract class ChannelIcsConnector implements Connector {
+	private static final Log LOG = LogFactory.getLog(ChannelIcsConnector.class);
 	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
 	protected boolean isLoggedIn = false;
 	protected boolean hasSentLogin = false;
@@ -57,11 +53,18 @@ public abstract class IcsConnector implements Connector {
 	protected List<ConnectorListener> connectorListeners = Collections
 			.synchronizedList(new ArrayList<ConnectorListener>(10));
 	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
-	protected ReadableByteChannel inputChannel;
-	protected Socket socket;
+	// protected ReadableByteChannel inputChannel;
+	// protected Socket socket;
+	protected SocketChannel channel;
 	protected String userName;
 	protected long lastSendTime;
 	protected boolean isConnecting;
+	protected boolean isTimesealing;
+	private ByteBuffer writeBuffer = ByteBuffer.allocate(2000);
+	private long creationTime = System.currentTimeMillis();
+	private final byte[] cryptBuffer = new byte[5000];
+	private byte[] timesealKey = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
+			.getBytes();
 
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 
@@ -74,7 +77,7 @@ public abstract class IcsConnector implements Connector {
 		public void gameCreated(Game game) {
 			Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
 					new ChessBoardWindowItem(IcsUtils.buildController(game,
-							IcsConnector.this)));
+							ChannelIcsConnector.this)));
 		}
 	};
 
@@ -83,7 +86,7 @@ public abstract class IcsConnector implements Connector {
 	 * 
 	 * @param context
 	 */
-	protected IcsConnector(IcsConnectorContext context) {
+	protected ChannelIcsConnector(IcsConnectorContext context) {
 		this.context = context;
 		chatService = new ChatService(this);
 		gameService = new GameService();
@@ -123,6 +126,10 @@ public abstract class IcsConnector implements Connector {
 		isLoggedIn = false;
 		hasSentLogin = false;
 		hasSentPassword = false;
+		isTimesealing = false;
+		isConnecting = false;
+		channel = null;
+		daemonThread = null;
 	}
 
 	/**
@@ -181,26 +188,21 @@ public abstract class IcsConnector implements Connector {
 
 					if (getPreferences().getBoolean(
 							profilePrefix + "timeseal-enabled")) {
-						// TO DO: rewrite TimesealingSocket to use a
-						// SocketChannel.
-						socket = new TimesealingSocket(
-								getPreferences().getString(
-										profilePrefix + "server-url"),
-								getPreferences().getInt(profilePrefix + "port"),
-								getInitialTimesealString());
-
-						publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-								"Timeseal connection string "
-										+ getInitialTimesealString()));
-					} else {
-						socket = new Socket(getPreferences().getString(
-								profilePrefix + "server-url"), getPreferences()
-								.getInt(profilePrefix + "port"));
+						isTimesealing = true;
 					}
+
+					channel = SocketChannel.open();
+					channel.configureBlocking(true);
+					channel.connect(new InetSocketAddress(getPreferences()
+							.getString(profilePrefix + "server-url"),
+							getPreferences().getInt(profilePrefix + "port")));
+
+					if (isTimesealing) {
+						send(getInitialTimesealString());
+					}
+
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Connected"));
-
-					inputChannel = Channels.newChannel(socket.getInputStream());
 
 					SoundService.getInstance().playSound("alert");
 
@@ -209,7 +211,7 @@ public abstract class IcsConnector implements Connector {
 							messageLoop();
 						}
 					});
-					daemonThread.setName("FicsConnectorDaemon");
+					daemonThread.setName(getShortName() + " ConnectorDaemon");
 					daemonThread.setPriority(Thread.MAX_PRIORITY);
 					daemonThread.start();
 
@@ -242,15 +244,9 @@ public abstract class IcsConnector implements Connector {
 		synchronized (this) {
 			if (isConnected()) {
 				try {
-					if (inputChannel != null) {
+					if (channel != null) {
 						try {
-							inputChannel.close();
-						} catch (Throwable t) {
-						}
-					}
-					if (socket != null) {
-						try {
-							socket.close();
+							channel.close();
 						} catch (Throwable t) {
 						}
 					}
@@ -265,8 +261,7 @@ public abstract class IcsConnector implements Connector {
 					}
 				} catch (Throwable t) {
 				} finally {
-					socket = null;
-					inputChannel = null;
+					channel = null;
 					daemonThread = null;
 				}
 
@@ -279,11 +274,9 @@ public abstract class IcsConnector implements Connector {
 				} catch (Throwable t) {
 				} finally {
 				}
-				isConnecting = false;
-
+				resetConnectionStateVars();
 				publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 						"Disconnected"));
-
 				fireDisconnected();
 				LOG.error("Disconnected from " + getShortName());
 			}
@@ -319,12 +312,12 @@ public abstract class IcsConnector implements Connector {
 			inputBuffer = null;
 		}
 
-		if (inputChannel != null) {
+		if (channel != null) {
 			try {
-				inputChannel.close();
+				channel.close();
 			} catch (Throwable t) {
 			}
-			inputChannel = null;
+			channel = null;
 		}
 
 		LOG.info("Disposed " + getShortName() + "Connector");
@@ -478,7 +471,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public boolean isConnected() {
-		return socket != null && inputChannel != null && daemonThread != null;
+		return channel != null && channel.isConnected() && daemonThread != null;
 	}
 
 	public boolean isConnecting() {
@@ -513,7 +506,7 @@ public abstract class IcsConnector implements Connector {
 		try {
 			while (true) {
 				if (isConnected()) {
-					int numRead = inputChannel.read(inputBuffer);
+					int numRead = channel.read(inputBuffer);
 					if (numRead > 0) {
 						if (LOG.isDebugEnabled()) {
 							LOG.debug(context.getShortName() + "Connector "
@@ -695,13 +688,13 @@ public abstract class IcsConnector implements Connector {
 	 * This method also handles login logic which is tricky.
 	 */
 	protected void onNewInput() {
-
+		System.err.println("Buffers contents = " + inboundMessageBuffer);
 		if (lastSendTime != 0) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
 					long currentTime = System.currentTimeMillis();
 					Raptor.getInstance().getRaptorWindow().setPingTime(
-							IcsConnector.this, currentTime - lastSendTime);
+							ChannelIcsConnector.this, currentTime - lastSendTime);
 					lastSendTime = 0;
 				}
 			});
@@ -905,6 +898,28 @@ public abstract class IcsConnector implements Connector {
 		sendMessage(message, false);
 	}
 
+	private boolean send(String message) {
+		boolean result = true;
+		synchronized (writeBuffer) {
+			try {
+				System.out.println("Writing...'" + message + "'");
+				crypt(message, writeBuffer, System.currentTimeMillis()
+						- creationTime);
+				writeBuffer.rewind();
+				System.out.println("Buffer..." + writeBuffer);
+				channel.write(writeBuffer);
+				writeBuffer.clear();
+				lastSendTime = System.currentTimeMillis();
+			} catch (Throwable t) {
+				publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Error: "
+						+ t.getMessage()));
+				disconnect();
+				result = false;
+			}
+		}
+		return result;
+	}
+
 	public void sendMessage(String message, boolean isHidingFromUser) {
 		if (isConnected()) {
 			StringBuilder builder = new StringBuilder(message);
@@ -916,24 +931,12 @@ public abstract class IcsConnector implements Connector {
 						+ message.trim());
 			}
 
-			// Only one thread at a time should write to the socket.
-			synchronized (socket) {
-				try {
-					socket.getOutputStream().write(message.getBytes());
-					socket.getOutputStream().flush();
-					lastSendTime = System.currentTimeMillis();
-
-				} catch (Throwable t) {
-					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-							"Error: " + t.getMessage()));
-					disconnect();
+			if (send(message.toString())) {
+				if (!isHidingFromUser) {
+					// Wrap the text before publishing an outbound event.
+					publishEvent(new ChatEvent(null, ChatType.OUTBOUND, message
+							.trim()));
 				}
-			}
-
-			if (!isHidingFromUser) {
-				// Wrap the text before publishing an outbound event.
-				publishEvent(new ChatEvent(null, ChatType.OUTBOUND, message
-						.trim()));
 			}
 		} else {
 			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
@@ -943,9 +946,57 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
+	private void crypt(String message, ByteBuffer bufferToWriteTo,
+			long timestamp) {
+		if (isTimesealing) {
+			byte[] bytesToWrite = message.getBytes();
+			int bytesInLength = bytesToWrite.length;
+			System.arraycopy(bytesToWrite, 0, cryptBuffer, 0,
+					bytesToWrite.length);
+			cryptBuffer[bytesInLength++] = 24;
+			byte abyte1[] = Long.toString(timestamp).getBytes();
+			System.arraycopy(abyte1, 0, cryptBuffer, bytesInLength,
+					abyte1.length);
+			bytesInLength += abyte1.length;
+			cryptBuffer[bytesInLength++] = 25;
+			int j = bytesInLength;
+			for (bytesInLength += 12 - bytesInLength % 12; j < bytesInLength;)
+				cryptBuffer[j++] = 49;
+
+			for (int k = 0; k < bytesInLength; k++)
+				cryptBuffer[k] = (byte) (cryptBuffer[k] | 0x80);
+
+			for (int i1 = 0; i1 < bytesInLength; i1 += 12) {
+				byte byte0 = cryptBuffer[i1 + 11];
+				cryptBuffer[i1 + 11] = cryptBuffer[i1];
+				cryptBuffer[i1] = byte0;
+				byte0 = cryptBuffer[i1 + 9];
+				cryptBuffer[i1 + 9] = cryptBuffer[i1 + 2];
+				cryptBuffer[i1 + 2] = byte0;
+				byte0 = cryptBuffer[i1 + 7];
+				cryptBuffer[i1 + 7] = cryptBuffer[i1 + 4];
+				cryptBuffer[i1 + 4] = byte0;
+			}
+
+			int l1 = 0;
+			for (int j1 = 0; j1 < bytesInLength; j1++) {
+				cryptBuffer[j1] = (byte) (cryptBuffer[j1] ^ timesealKey[l1]);
+				l1 = (l1 + 1) % timesealKey.length;
+			}
+
+			for (int k1 = 0; k1 < bytesInLength; k1++)
+				cryptBuffer[k1] = (byte) (cryptBuffer[k1] - 32);
+
+			cryptBuffer[bytesInLength++] = -128;
+			cryptBuffer[bytesInLength++] = 10;
+			bufferToWriteTo.put(cryptBuffer, 0, bytesInLength);
+		} else {
+			bufferToWriteTo.put(message.getBytes());
+		}
+	}
+
 	protected String getInitialTimesealString() {
 		return Raptor.getInstance().getPreferences().getString(
 				PreferenceKeys.TIMESEAL_INIT_STRING);
 	}
-
 }

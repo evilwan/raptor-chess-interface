@@ -2,7 +2,7 @@
 // Jad home page: http://www.geocities.com/kpdus/jad.html
 // Decompiler options: packimports(3) 
 
-package free.freechess.timeseal;
+package raptor.connector.ics.timeseal;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,16 +12,31 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import free.TimesealPipe;
-
+/**
+ * This code was reverse engineered from the JIN project. JIN is a GPLed
+ * project. Its URL can be found here: http://www.jinchess.com/
+ * 
+ * Variable names have been changed to be more readable.
+ * 
+ * It has also been modified to change the initial connect string. The original
+ * version sent the operating system information stored in java system
+ * properties.
+ * 
+ * This class isn't so bad but the TimesealPipe is horrendous. What it does
+ * actually impacts the timeseal protocol and you can't just use the crypt
+ * method in this class and do it yourself.
+ * 
+ * I would like to rewrite this using ChannelSocket in Raptor to speed it up.
+ */
 public class TimesealingSocket extends Socket implements Runnable {
 	private class CryptOutputStream extends OutputStream {
 
-		private int crypt(byte bytesIn[], long l) {
-			int bytesInLength = bytesIn.length;
-			System.arraycopy(bytesIn, 0, buffer, 0, bytesIn.length);
+		private int crypt(byte stringToWriteBytes[], long timestamp) {
+			int bytesInLength = stringToWriteBytes.length;
+			System.arraycopy(stringToWriteBytes, 0, buffer, 0,
+					stringToWriteBytes.length);
 			buffer[bytesInLength++] = 24;
-			byte abyte1[] = Long.toString(l).getBytes();
+			byte abyte1[] = Long.toString(timestamp).getBytes();
 			System.arraycopy(abyte1, 0, buffer, bytesInLength, abyte1.length);
 			bytesInLength += abyte1.length;
 			buffer[bytesInLength++] = 25;
@@ -61,11 +76,11 @@ public class TimesealingSocket extends Socket implements Runnable {
 		public void write(int i) throws IOException {
 			if (i == 10)
 				synchronized (TimesealingSocket.this) {
-					int resultLength = crypt(byteArrayOutputStream.toByteArray(), System
-							.currentTimeMillis()
+					int resultLength = crypt(byteArrayOutputStream
+							.toByteArray(), System.currentTimeMillis()
 							- TimesealingSocket.this.initialTime);
-					outputStream.write(buffer, 0, resultLength);
-					outputStream.flush();
+					outputStreamToDecorate.write(buffer, 0, resultLength);
+					outputStreamToDecorate.flush();
 					byteArrayOutputStream.reset();
 				}
 			else
@@ -75,23 +90,27 @@ public class TimesealingSocket extends Socket implements Runnable {
 		private final byte timesealKey[] = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
 				.getBytes();
 		private byte buffer[];
-		private final OutputStream outputStream;
+		private final OutputStream outputStreamToDecorate;
 		private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
 		public CryptOutputStream(OutputStream outputstream) {
 			buffer = new byte[10000];
-			outputStream = outputstream;
+			outputStreamToDecorate = outputstream;
 		}
 	}
 
-	public TimesealingSocket(String s, int i) throws IOException {
+	public TimesealingSocket(String s, int i, String intialTimestampString)
+			throws IOException {
 		super(s, i);
 		timesealPipe = new TimesealPipe(10000);
+		this.initialTimesealString = intialTimestampString;
 		init();
 	}
 
-	public TimesealingSocket(InetAddress inetaddress, int i) throws IOException {
+	public TimesealingSocket(InetAddress inetaddress, int i,
+			String intialTimestampString) throws IOException {
 		super(inetaddress, i);
+		this.initialTimesealString = intialTimestampString;
 		timesealPipe = new TimesealPipe(10000);
 		init();
 	}
@@ -105,8 +124,8 @@ public class TimesealingSocket extends Socket implements Runnable {
 		return timesealPipe.getTimesealInputStream();
 	}
 
-	public OutputStream getOutputStream() throws IOException {
-		return outputStream;
+	public CryptOutputStream getOutputStream() throws IOException {
+		return cryptedOutputStream;
 	}
 
 	private void writeInitialTimesealString() throws IOException {
@@ -119,7 +138,7 @@ public class TimesealingSocket extends Socket implements Runnable {
 
 	private void init() throws IOException {
 		initialTime = System.currentTimeMillis();
-		outputStream = new CryptOutputStream(super.getOutputStream());
+		cryptedOutputStream = new CryptOutputStream(super.getOutputStream());
 		writeInitialTimesealString();
 		thread = new Thread(this, "Timeseal thread");
 		thread.start();
@@ -129,7 +148,8 @@ public class TimesealingSocket extends Socket implements Runnable {
 		try {
 			BufferedInputStream bufferedinputstream = new BufferedInputStream(
 					super.getInputStream());
-			free.TimesealOutputStream timesealOutputStream = timesealPipe.getTimesealOutputStream();
+			raptor.connector.ics.timeseal.TimesealOutputStream timesealOutputStream = timesealPipe
+					.getTimesealOutputStream();
 			String timesealRequest = "\n\r[G]\n\r";
 			byte timesealRequestBytes[] = new byte[timesealRequest.length()];
 			int i = 0;
@@ -156,9 +176,11 @@ public class TimesealingSocket extends Socket implements Runnable {
 						}
 					}
 				} else if (j != 0) {
-					timesealOutputStream.write((byte) timesealRequest.charAt(0));
+					timesealOutputStream
+							.write((byte) timesealRequest.charAt(0));
 					for (int i1 = 0; i1 < j - 1; i1++) {
-						timesealRequestBytes[i1] = (byte) timesealRequest.charAt(i1 + 1);
+						timesealRequestBytes[i1] = (byte) timesealRequest
+								.charAt(i1 + 1);
 						i++;
 					}
 
@@ -174,14 +196,15 @@ public class TimesealingSocket extends Socket implements Runnable {
 			}
 		} catch (IOException _ex) {
 			try {
-				outputStream.close();
+				cryptedOutputStream.close();
 			} catch (IOException ioexception) {
 				System.err.println("Failed to close PipedStream");
 				ioexception.printStackTrace();
 			}
 		} finally {
 			try {
-				free.TimesealOutputStream timesealOutputStream = timesealPipe.getTimesealOutputStream();
+				raptor.connector.ics.timeseal.TimesealOutputStream timesealOutputStream = timesealPipe
+						.getTimesealOutputStream();
 				timesealOutputStream.close();
 			} catch (IOException _ex) {
 			}
@@ -189,9 +212,9 @@ public class TimesealingSocket extends Socket implements Runnable {
 	}
 
 	private volatile long initialTime;
-	private static final String initialTimesealString = "TIMESTAMP|iv|IHATEJIN|";
+	private String initialTimesealString = null;
 	private final TimesealPipe timesealPipe;
-	private OutputStream outputStream;
+	private CryptOutputStream cryptedOutputStream;
 	private volatile Thread thread;
 
 }
