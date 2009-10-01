@@ -68,7 +68,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 		@Override
 		public String getRawPrompt() {
-			return "\fics% ";
+			return "\n" + getPrompt() + " ";
 		}
 
 		@Override
