@@ -122,6 +122,9 @@ public class FicsParser implements IcsParser, GameConstants {
 		if (inboundEvent.length() > MAX_GAME_MESSAGE) {
 			return inboundEvent;
 		} else {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Raw message in: " + inboundEvent);
+			}
 			StringBuilder result = new StringBuilder(inboundEvent.length());
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(inboundEvent,
 					"\n");
