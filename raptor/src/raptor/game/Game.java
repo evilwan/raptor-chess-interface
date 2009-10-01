@@ -187,7 +187,6 @@ public class Game implements GameConstants {
 	 *            The un-colored piece constant.
 	 */
 	public void decrementPieceCount(int color, int piece) {
-		int pieceWithoutMask = piece;
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
 		}
@@ -2642,7 +2641,7 @@ public class Game implements GameConstants {
 
 			result.append("\n");
 		}
-		
+
 		String legalMovesString = Arrays.toString(getLegalMoves().asArray());
 		result.append("\n");
 		result.append(WordUtils.wrap("Legals=" + legalMovesString, 80, "\n",

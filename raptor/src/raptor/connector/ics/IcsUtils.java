@@ -1,13 +1,11 @@
 package raptor.connector.ics;
 
-import java.nio.ByteBuffer;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.connector.fics.game.TakebackParser;
 import raptor.connector.fics.game.TakebackParser.TakebackMessage;
@@ -23,7 +21,6 @@ import raptor.game.Game.PositionState;
 import raptor.game.Game.Type;
 import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
-import raptor.pref.PreferenceKeys;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.controller.ExamineController;
