@@ -138,6 +138,8 @@ public interface PreferenceKeys {
 	public static final String BICS_TERTIARY_IS_NAMED_GUEST = "bics-Tertiary-is-named-guest";
 	public static final String BICS_TERTIARY_IS_ANON_GUEST = "bics-Tertiary-is-anon-guest";
 	public static final String BICS_TERTIARY_TIMESEAL_ENABLED = "bics-Tertiary-timeseal-enabled";
+	
+	public static final String TIMESEAL_INIT_STRING = "timeseal-init-string";
 
 	public static final String CHAT_LINK_COLOR = "chat-link-color";
 }
