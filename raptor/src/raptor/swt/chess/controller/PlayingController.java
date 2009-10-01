@@ -178,7 +178,7 @@ public class PlayingController extends ChessBoardController {
 	protected void adjustCoolbarToInitial() {
 		if (!isBeingReparented()) {
 			board.addGameActionButtonsToCoolbar();
-			board.addScripterCoolbar();
+			board.addAutoPromoteRadioGroupToCoolbar();
 			board.packCoolbar();
 		}
 	}
@@ -187,10 +187,9 @@ public class PlayingController extends ChessBoardController {
 	 * If premove is enabled, and premove is not in queued mode then clear the
 	 * premoves on an illegal move.
 	 */
-	public void adjustForIllegalMove(int fromSquare, int toSquare) {
+	public void adjustForIllegalMove() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("adjustForIllegalMove " + GameUtils.getSan(fromSquare)
-					+ " " + GameUtils.getSan(toSquare));
+			LOG.debug("adjustForIllegalMove ");
 		}
 
 		if (!getPreferences().getBoolean(
@@ -199,25 +198,16 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		board.unhighlightAllSquares();
+		isPlayingMoveSound = false;
 		adjustToGameMove();
+		isPlayingMoveSound = true;
 		SoundService.getInstance().playSound("illegalMove");
 	}
 
 	public void adjustForIllegalMove(String move) {
 		if (!isBeingReparented()) {
-			if (LOG.isDebugEnabled()) {
-				LOG.info("adjustForIllegalMove " + getGame().getId() + " ...");
-			}
-
-			long startTime = System.currentTimeMillis();
-			SoundService.getInstance().playSound("illegalMove");
 			board.getStatusLabel().setText("Illegal Move: " + move);
-			board.unhighlightAllSquares();
-
-			if (LOG.isDebugEnabled()) {
-				LOG.info("adjustForIllegalMove in " + getGame().getId() + "  "
-						+ (System.currentTimeMillis() - startTime));
-			}
+			adjustForIllegalMove();
 		}
 	}
 
@@ -516,10 +506,14 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		if (!isBeingReparented()) {
-			board.unhighlightAllSquares();
-			adjustToGameMove();
+		if (isBeingReparented()) {
+			return;
 		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("userCancelledMove " + GameUtils.getSan(fromSquare)
+					+ " is drag and drop=" + isDnd);
+		}
+		adjustForIllegalMove();
 	}
 
 	/**
@@ -541,6 +535,14 @@ public class PlayingController extends ChessBoardController {
 			}
 		}
 	}
+	
+//	/**
+//	 * This method doesnt update the clocks but updates the board and the piece jails.
+//	 */
+//	public void adjustToMoveBeingSentToConnector() {
+//		adjustBoardToGame(getGame());
+//		adjustPieceJailFromGame(getGame());
+//	}
 
 	/**
 	 * Invoked when a user makes a dnd move or a click click move on the
@@ -570,7 +572,7 @@ public class PlayingController extends ChessBoardController {
 							.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
 				}
 
-				adjustForIllegalMove(fromSquare, toSquare);
+				adjustForIllegalMove();
 			}
 
 			if (LOG.isDebugEnabled()) {
@@ -586,7 +588,7 @@ public class PlayingController extends ChessBoardController {
 			}
 
 			if (move == null) {
-				adjustForIllegalMove(fromSquare, toSquare);
+				adjustForIllegalMove();
 			} else {
 				board.getSquare(fromSquare).highlight();
 				board.getSquare(toSquare).highlight();
@@ -619,7 +621,8 @@ public class PlayingController extends ChessBoardController {
 							.debug("User tried to make a premove that failed immediate validation.");
 				}
 
-				adjustForIllegalMove(fromSquare, toSquare);
+				adjustForIllegalMove();
+				return;
 			}
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Processing premove.");
