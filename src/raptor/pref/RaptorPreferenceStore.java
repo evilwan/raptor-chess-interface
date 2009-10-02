@@ -338,8 +338,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_REGEX_TAB_QUADRANT, "III");
 		setDefault(APP_PARTNER_TELL_TAB_QUADRANT, "III");
 		setDefault(APP_GAME_QUADRANT, "II");
-		setDefault(ALL_BROWSER_QUADRANT, "II");
-
+		setDefault(APP_BROWSER_QUADRANT, "II");
+		setDefault(APP_HOME_URL,
+				"http://code.google.com/p/raptor-chess-interface/wiki/RaptorHomePage");
 		setDefault(SOUND_ENABLED, true);
 
 		// Fics
@@ -349,6 +350,14 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_IS_LOGGING_GAMES, false);
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
+		setDefault(FICS_COMMANDS_HELP_URL,
+				"http://www.freechess.org/Help/AllFiles.html");
+		setDefault(FICS_FREECHESS_ORG_URL, "http://www.freechess.org");
+		setDefault(FICS_FICS_GAMES_URL, "http://www.ficsgames.com");
+		setDefault(FICS_ADJUDICATE_URL,
+				"http://www.freechess.org/Adjudicate/index.html");
+		setDefault(FICS_TEAM_LEAGUE_URL, "http://teamleague.org/");
+
 		// Fics Primary
 		setDefault(FICS_PRIMARY_USER_NAME, "");
 		setDefault(FICS_PRIMARY_PASSWORD, "");

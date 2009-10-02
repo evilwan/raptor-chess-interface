@@ -133,21 +133,27 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
 			@Override
 			public void run() {
-				Raptor
-						.getInstance()
-						.getRaptorWindow()
-						.addRaptorWindowItem(
-								new BrowserWindowItem("Adjudicate a game",
-										"http://www.freechess.org/Adjudicate/index.html"));
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						new BrowserWindowItem("Adjudicate Games", Raptor
+								.getInstance().getPreferences().getString(
+										PreferenceKeys.FICS_ADJUDICATE_URL)));
 			}
 		};
 		Action ficsSite = new Action("www.freechess.org") {
 
 			@Override
 			public void run() {
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
-						new BrowserWindowItem("www.freechess.org",
-								"www.freechess.org"));
+				Raptor
+						.getInstance()
+						.getRaptorWindow()
+						.addRaptorWindowItem(
+								new BrowserWindowItem(
+										"www.freechess.org",
+										Raptor
+												.getInstance()
+												.getPreferences()
+												.getString(
+														PreferenceKeys.FICS_FREECHESS_ORG_URL)));
 			}
 		};
 		Action ficsGamesSite = new Action("www.ficsgames.com") {
@@ -155,13 +161,25 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			@Override
 			public void run() {
 				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
-						new BrowserWindowItem("www.ficsgames.com",
-								"www.ficsgames.com"));
+						new BrowserWindowItem("www.ficsgames.com", Raptor
+								.getInstance().getPreferences().getString(
+										PreferenceKeys.FICS_FICS_GAMES_URL)));
 			}
 		};
+		Action ficsTeamLeague = new Action("Fics Team League") {
+
+			@Override
+			public void run() {
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						new BrowserWindowItem("Fics Team League", Raptor
+								.getInstance().getPreferences().getString(
+										PreferenceKeys.FICS_TEAM_LEAGUE_URL)));
+			}
+		};
+		connectionsMenu.add(adjudicateAGame);
 		connectionsMenu.add(ficsSite);
 		connectionsMenu.add(ficsGamesSite);
-		connectionsMenu.add(adjudicateAGame);
+		connectionsMenu.add(ficsTeamLeague);
 		connectionsMenu.add(new Separator());
 
 		MenuManager fics2Menu = new MenuManager(
