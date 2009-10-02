@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtil;
+import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
@@ -44,21 +45,42 @@ import raptor.swt.SWTUtils;
 
 /**
  * A raptor window is broken up quadrants. Each quadrant is tabbed. You can add
- * a RaptorWindowItem to any quadrant. Each quadrant can be maximized and
- * restored. When all of the tabs in a quadrannt are vacant, the area
- * disappears.
+ * a RaptorWindowItem to any quad. Each quad can be maximized and restored. When
+ * all of the tabs in a quadrannt are vacant, the area disappears.
  */
 public class RaptorWindow extends ApplicationWindow {
 
+	protected class RaptorSashForm extends SashForm {
+
+		protected String key;
+
+		public RaptorSashForm(Composite parent, int style, String key) {
+			super(parent, style);
+			this.key = key;
+		}
+
+		public String getKey() {
+			return key;
+		}
+
+		public void loadFromPreferences() {
+			setWeights(getPreferences().getCurrentLayoutSashWeights(key));
+		}
+
+		public void storePreferences() {
+			getPreferences().setCurrentLayoutSashWeights(key, getWeights());
+		}
+	}
+
 	/**
-	 * A raptor tab folder. Keeps track of the quadrant its in.
+	 * A raptor tab folder. Keeps track of the quad its in.
 	 */
 	protected class RaptorTabFolder extends CTabFolder {
-		protected Quadrant quadrant;
+		protected Quadrant quad;
 
-		public RaptorTabFolder(Composite composite, int style, Quadrant quadrant) {
+		public RaptorTabFolder(Composite composite, int style, Quadrant quad) {
 			super(composite, style);
-			this.quadrant = quadrant;
+			this.quad = quad;
 		}
 
 		public RaptorTabItem getRaptorTabItemAt(int index) {
@@ -71,36 +93,43 @@ public class RaptorWindow extends ApplicationWindow {
 
 		public void raptorMaximize() {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Entering raptorMaximize quadrant " + quadrant);
+				LOG.debug("Entering raptorMaximize quad " + quad);
 			}
-			switch (quadrant) {
+			switch (quad) {
 			case I:
-				quadrant1quadrant2345Sash.setMaximizedControl(this);
+			case VIII:
+				quad1quad234567quad8Sash.setMaximizedControl(this);
 				this.setMaximized(true);
 				break;
 			case II:
-				quadrant2quadrant345Sash.setMaximizedControl(this);
-				quadrant1quadrant2345Sash
-						.setMaximizedControl(quadrant2345Composite);
-				this.setMaximized(true);
+				quad1quad234567quad8Sash
+						.setMaximizedControl(quad234567Composite);
+				quad2quad34567Sash.setMaximizedControl(this);
 				break;
 			case III:
 			case IV:
-				quadrant3quadrant4Sash.setMaximizedControl(this);
-				quadrant34quadrant5Sash
-						.setMaximizedControl(quadrant34Composite);
-				quadrant2quadrant345Sash
-						.setMaximizedControl(quadrant345Composite);
-				quadrant1quadrant2345Sash
-						.setMaximizedControl(quadrant2345Composite);
-				this.setMaximized(true);
+				quad1quad234567quad8Sash
+						.setMaximizedControl(quad234567Composite);
+				quad2quad34567Sash.setMaximizedControl(quad34567Composite);
+				quad34quad567Sash.setMaximizedControl(quad34Composite);
+				quad3quad4Sash.setMaximizedControl(this);
 				break;
 			case V:
-				quadrant34quadrant5Sash.setMaximizedControl(this);
-				quadrant2quadrant345Sash
-						.setMaximizedControl(quadrant345Composite);
-				quadrant1quadrant2345Sash
-						.setMaximizedControl(quadrant2345Composite);
+			case VI:
+				quad1quad234567quad8Sash
+						.setMaximizedControl(quad234567Composite);
+				quad2quad34567Sash.setMaximizedControl(quad34567Composite);
+				quad34quad567Sash.setMaximizedControl(quad567Composite);
+				quad56quad7Sash.setMaximizedControl(quad56Composite);
+				quad5quad6Sash.setMaximizedControl(this);
+				this.setMaximized(true);
+				break;
+			case VII:
+				quad1quad234567quad8Sash
+						.setMaximizedControl(quad234567Composite);
+				quad2quad34567Sash.setMaximizedControl(quad34567Composite);
+				quad34quad567Sash.setMaximizedControl(quad567Composite);
+				quad56quad7Sash.setMaximizedControl(this);
 				this.setMaximized(true);
 				break;
 			}
@@ -115,6 +144,7 @@ public class RaptorWindow extends ApplicationWindow {
 		protected RaptorWindowItem raptorItem;
 		protected ItemChangedListener listener;
 		protected RaptorTabFolder raptorParent;
+		protected boolean disposed = true;
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				RaptorWindowItem item) {
@@ -140,7 +170,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 			item.addItemChangedListener(listener = new ItemChangedListener() {
 				public void itemStateChanged() {
-					if (item.getControl() != null
+					if (!disposed && item.getControl() != null
 							&& !item.getControl().isDisposed()) {
 						getDisplay().asyncExec(new Runnable() {
 							public void run() {
@@ -170,6 +200,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 		@Override
 		public void dispose() {
+			disposed = true;
 			activeItems.remove(this);
 			super.dispose();
 		}
@@ -186,19 +217,19 @@ public class RaptorWindow extends ApplicationWindow {
 	Log LOG = LogFactory.getLog(RaptorWindow.class);
 
 	protected RaptorTabFolder[] folders = new RaptorTabFolder[Quadrant.values().length];
+	protected RaptorSashForm[] sashes = new RaptorSashForm[6];
 
-	protected Composite quadrant2345Composite;
-	protected Composite quadrant345Composite;
-	protected Composite quadrant34Composite;
-	protected SashForm quadrant1quadrant2345Sash;
-	protected SashForm quadrant2quadrant345Sash;
-	protected SashForm quadrant3quadrant4Sash;
-	protected SashForm quadrant34quadrant5Sash;
-
-	protected int[] quadrant1quadrant2345SashWeights = new int[] { 10, 90 };
-	protected int[] quadrant2quadrant345SashWeights = new int[] { 50, 50 };
-	protected int[] quadrant34quadrant5SashWeights = new int[] { 80, 20 };
-	protected int[] quadrant3quadrant4SashWeights = new int[] { 50, 50 };
+	protected Composite quad234567Composite;
+	protected Composite quad34567Composite;
+	protected Composite quad34Composite;
+	protected Composite quad567Composite;
+	protected Composite quad56Composite;
+	protected RaptorSashForm quad1quad234567quad8Sash;
+	protected RaptorSashForm quad2quad34567Sash;
+	protected RaptorSashForm quad3quad4Sash;
+	protected RaptorSashForm quad34quad567Sash;
+	protected RaptorSashForm quad56quad7Sash;
+	protected RaptorSashForm quad5quad6Sash;
 
 	protected Composite windowComposite;
 	protected Composite statusBar;
@@ -252,12 +283,12 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Returns the number of items in the specified quadrant.
+	 * Returns the number of items in the specified quad.
 	 */
-	public int countItems(Quadrant... quadrants) {
+	public int countItems(Quadrant... quads) {
 		int count = 0;
-		for (Quadrant quadrant : quadrants) {
-			count += getTabFolder(quadrant).getItemCount();
+		for (Quadrant quad : quads) {
+			count += getTabFolder(quad).getItemCount();
 		}
 		return count;
 	}
@@ -293,59 +324,31 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Creates just the folder,sash,and quadrant composite controls.
+	 * Creates just the folder,sash,and quad composite controls.
 	 */
 	protected void createFolderAndSashControls() {
-		quadrant1quadrant2345Sash = new SashForm(windowComposite,
-				SWT.HORIZONTAL | SWT.SMOOTH);
-		quadrant1quadrant2345Sash.setLayoutData(new GridData(SWT.FILL,
-				SWT.FILL, true, true));
-
-		folders[0] = new RaptorTabFolder(quadrant1quadrant2345Sash, SWT.BORDER,
-				Quadrant.values()[0]);
-
-		quadrant2345Composite = new Composite(quadrant1quadrant2345Sash,
-				SWT.NONE);
-		quadrant2345Composite.setLayout(SWTUtils.createMarginlessFillLayout());
-
-		quadrant2quadrant345Sash = new SashForm(quadrant2345Composite,
-				SWT.VERTICAL | SWT.SMOOTH);
-		folders[1] = new RaptorTabFolder(quadrant2quadrant345Sash, SWT.BORDER,
-				Quadrant.values()[1]);
-
-		quadrant345Composite = new Composite(quadrant2quadrant345Sash, SWT.NONE);
-		quadrant345Composite.setLayout(SWTUtils.createMarginlessFillLayout());
-
-		quadrant34quadrant5Sash = new SashForm(quadrant345Composite,
-				SWT.HORIZONTAL | SWT.SMOOTH);
-
-		quadrant34Composite = new Composite(quadrant34quadrant5Sash, SWT.NONE);
-		quadrant34Composite.setLayout(SWTUtils.createMarginlessFillLayout());
-
-		quadrant3quadrant4Sash = new SashForm(quadrant34Composite, SWT.VERTICAL
-				| SWT.SMOOTH);
-
-		folders[2] = new RaptorTabFolder(quadrant3quadrant4Sash, SWT.BORDER,
-				Quadrant.values()[2]);
-		folders[3] = new RaptorTabFolder(quadrant3quadrant4Sash, SWT.BORDER,
-				Quadrant.values()[3]);
-
-		folders[4] = new RaptorTabFolder(quadrant34quadrant5Sash, SWT.BORDER,
-				Quadrant.values()[4]);
-
-		quadrant34quadrant5Sash.setWeights(quadrant34quadrant5SashWeights);
-		quadrant3quadrant4Sash.setWeights(quadrant3quadrant4SashWeights);
-		quadrant1quadrant2345Sash.setWeights(quadrant2quadrant345SashWeights);
-		quadrant2quadrant345Sash.setWeights(quadrant2quadrant345SashWeights);
+		createQuad1Quad234567QuadControls();
+		createQuad2Quad34567Controls();
+		createQuad34Quadv567Controls();
+		createQuad3Quad4Controls();
+		createQuad56Quad7Controls();
+		createQuad5Quad6Controls();
 
 		for (int i = 0; i < folders.length; i++) {
 			initQuadrantFolder(folders[i]);
 		}
 
-		quadrant1quadrant2345Sash.setVisible(false);
-		quadrant2quadrant345Sash.setVisible(false);
-		quadrant3quadrant4Sash.setVisible(false);
-		quadrant34quadrant5Sash.setVisible(false);
+		sashes[0] = quad1quad234567quad8Sash;
+		sashes[1] = quad2quad34567Sash;
+		sashes[2] = quad34quad567Sash;
+		sashes[3] = quad3quad4Sash;
+		sashes[4] = quad56quad7Sash;
+		sashes[5] = quad5quad6Sash;
+
+		for (int i = 0; i < sashes.length; i++) {
+			sashes[i].loadFromPreferences();
+			sashes[i].setVisible(false);
+		}
 	}
 
 	/**
@@ -398,6 +401,79 @@ public class RaptorWindow extends ApplicationWindow {
 		menuBar.add(configureMenu);
 		menuBar.add(helpMenu);
 		return menuBar;
+	}
+
+	protected void createQuad1Quad234567QuadControls() {
+		quad1quad234567quad8Sash = new RaptorSashForm(windowComposite,
+				SWT.VERTICAL | SWT.SMOOTH,
+				PreferenceKeys.QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS);
+		quad1quad234567quad8Sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				true, true));
+
+		folders[Quadrant.I.ordinal()] = new RaptorTabFolder(
+				quad1quad234567quad8Sash, SWT.BORDER, Quadrant.I);
+
+		quad234567Composite = new Composite(quad1quad234567quad8Sash, SWT.NONE);
+		quad234567Composite.setLayout(SWTUtils.createMarginlessFillLayout());
+
+		folders[Quadrant.VIII.ordinal()] = new RaptorTabFolder(
+				quad1quad234567quad8Sash, SWT.BORDER, Quadrant.VIII);
+	}
+
+	protected void createQuad2Quad34567Controls() {
+		quad2quad34567Sash = new RaptorSashForm(quad234567Composite,
+				SWT.HORIZONTAL | SWT.SMOOTH,
+				PreferenceKeys.QUAD2_QUAD234567_SASH_WEIGHTS);
+
+		folders[Quadrant.II.ordinal()] = new RaptorTabFolder(
+				quad2quad34567Sash, SWT.BORDER, Quadrant.II);
+
+		quad34567Composite = new Composite(quad2quad34567Sash, SWT.NONE);
+		quad34567Composite.setLayout(SWTUtils.createMarginlessFillLayout());
+	}
+
+	protected void createQuad34Quadv567Controls() {
+		quad34quad567Sash = new RaptorSashForm(quad34567Composite, SWT.VERTICAL
+				| SWT.SMOOTH, PreferenceKeys.QUAD34_QUAD567_SASH_WEIGHTS);
+
+		quad34Composite = new Composite(quad34quad567Sash, SWT.NONE);
+		quad34Composite.setLayout(SWTUtils.createMarginlessFillLayout());
+
+		quad567Composite = new Composite(quad34quad567Sash, SWT.NONE);
+		quad567Composite.setLayout(SWTUtils.createMarginlessFillLayout());
+	}
+
+	protected void createQuad3Quad4Controls() {
+		quad3quad4Sash = new RaptorSashForm(quad34Composite, SWT.HORIZONTAL
+				| SWT.SMOOTH, PreferenceKeys.QUAD3_QUAD4_SASH_WEIGHTS);
+
+		folders[Quadrant.III.ordinal()] = new RaptorTabFolder(quad3quad4Sash,
+				SWT.BORDER, Quadrant.III);
+
+		folders[Quadrant.IV.ordinal()] = new RaptorTabFolder(quad3quad4Sash,
+				SWT.BORDER, Quadrant.IV);
+	}
+
+	protected void createQuad56Quad7Controls() {
+		quad56quad7Sash = new RaptorSashForm(quad567Composite, SWT.HORIZONTAL
+				| SWT.SMOOTH, PreferenceKeys.QUAD56_QUAD7_SASH_WEIGHTS);
+
+		quad56Composite = new Composite(quad56quad7Sash, SWT.NONE);
+		quad56Composite.setLayout(SWTUtils.createMarginlessFillLayout());
+
+		folders[Quadrant.VII.ordinal()] = new RaptorTabFolder(quad56quad7Sash,
+				SWT.BORDER, Quadrant.VII);
+	}
+
+	protected void createQuad5Quad6Controls() {
+		quad5quad6Sash = new RaptorSashForm(quad56Composite, SWT.VERTICAL
+				| SWT.SMOOTH, PreferenceKeys.QUAD5_QUAD6_SASH_WEIGHTS);
+
+		folders[Quadrant.V.ordinal()] = new RaptorTabFolder(quad5quad6Sash,
+				SWT.BORDER, Quadrant.V);
+
+		folders[Quadrant.VI.ordinal()] = new RaptorTabFolder(quad5quad6Sash,
+				SWT.BORDER, Quadrant.VI);
 	}
 
 	/**
@@ -460,16 +536,20 @@ public class RaptorWindow extends ApplicationWindow {
 		});
 	}
 
+	protected RaptorPreferenceStore getPreferences() {
+		return Raptor.getInstance().getPreferences();
+	}
+
 	/**
-	 * Returns the quadrant the current window item is in. Null if the
-	 * windowItem is not being managed.
+	 * Returns the quad the current window item is in. Null if the windowItem is
+	 * not being managed.
 	 */
 	public Quadrant getQuadrant(RaptorWindowItem windowItem) {
 		Quadrant result = null;
 		synchronized (activeItems) {
 			for (RaptorTabItem currentTabItem : activeItems) {
 				if (currentTabItem.raptorItem == windowItem) {
-					result = currentTabItem.raptorParent.quadrant;
+					result = currentTabItem.raptorParent.quad;
 					break;
 				}
 			}
@@ -492,10 +572,10 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Returns the RaptorTabFolder at the quadrant.
+	 * Returns the RaptorTabFolder at the quad.
 	 */
-	public RaptorTabFolder getTabFolder(Quadrant quadrant) {
-		return folders[quadrant.ordinal()];
+	public RaptorTabFolder getTabFolder(Quadrant quad) {
+		return folders[quad.ordinal()];
 	}
 
 	/**
@@ -503,14 +583,21 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected void initializeBounds() {
-		Rectangle fullScreenBounds = Display.getCurrent().getPrimaryMonitor()
-				.getBounds();
-		getShell().setSize(fullScreenBounds.width, fullScreenBounds.height);
-		getShell().setLocation(0, 0);
+		Rectangle screenBounds = getPreferences().getCurrentLayoutRectangle(
+				PreferenceKeys.WINDOW_BOUNDS);
+
+		if (screenBounds.width == -1 || screenBounds.height == -1) {
+			Rectangle fullViewBounds = Display.getCurrent().getPrimaryMonitor()
+					.getBounds();
+			screenBounds.width = fullViewBounds.width;
+			screenBounds.height = fullViewBounds.height;
+		}
+		getShell().setSize(screenBounds.width, screenBounds.height);
+		getShell().setLocation(screenBounds.x, screenBounds.y);
 	}
 
 	/**
-	 * Initializes a quadrant folder. Also sets up all of the listeners on the
+	 * Initializes a quad folder. Also sets up all of the listeners on the
 	 * folder.
 	 * 
 	 * @param folder
@@ -587,8 +674,8 @@ public class RaptorWindow extends ApplicationWindow {
 			public void mouseDown(MouseEvent e) {
 				if (e.button == 3) {
 					Menu menu = new Menu(folder.getShell(), SWT.POP_UP);
-					for (int i = 0; i < 5; i++) {
-						if (i != folder.quadrant.ordinal()) {
+					for (int i = 0; i < Quadrant.values().length; i++) {
+						if (i != folder.quad.ordinal()) {
 							final Quadrant currentQuadrant = Quadrant.values()[i];
 							MenuItem item = new MenuItem(menu, SWT.PUSH);
 							item.setText("Move to quandrant "
@@ -648,77 +735,136 @@ public class RaptorWindow extends ApplicationWindow {
 			items[i] = countItems(Quadrant.values()[i]);
 		}
 
+		// Rename them to match the quad they are in so its less confusing
 		int quad1Items = items[0];
 		int quad2Items = items[1];
-		int quad2345Items = items[1] + items[2] + items[3] + items[4];
-		int quad345Items = items[2] + items[3] + items[4];
-		int quad34Items = items[2] + items[3];
-		int quad5Items = items[4];
-		int quad4Items = items[3];
 		int quad3Items = items[2];
+		int quad4Items = items[3];
+		int quad5Items = items[4];
+		int quad6Items = items[5];
+		int quad7Items = items[6];
+		int quad8Items = items[7];
 
-		if (quad1Items == 0) {
-			if (quad2345Items > 0) {
-				quadrant1quadrant2345Sash.setVisible(true);
-				quadrant1quadrant2345Sash
-						.setMaximizedControl(quadrant2345Composite);
+		int quad34Items = quad3Items + quad4Items;
+		int quad56Items = quad5Items + quad6Items;
+		int quad567Items = quad56Items + quad7Items;
+		int quad34567Items = quad34Items + quad567Items;
+		int quad234567Items = quad2Items + quad34567Items;
+
+		if (quad1Items > 0) {
+			getTabFolder(Quadrant.I).setVisible(true);
+			quad234567Composite.setVisible(quad234567Items > 0);
+			getTabFolder(Quadrant.VIII).setVisible(quad8Items > 0);
+
+			if (quad234567Items > 0 || quad8Items > 0) {
+				quad1quad234567quad8Sash.setVisible(true);
+				quad1quad234567quad8Sash.setMaximizedControl(null);
 
 			} else {
-				quadrant1quadrant2345Sash.setVisible(false);
-				quadrant1quadrant2345Sash.setMaximizedControl(null);
-			}
-		} else if (quad1Items > 0) {
-			quadrant1quadrant2345Sash.setVisible(true);
-			if (quad2345Items > 0) {
-				quadrant1quadrant2345Sash.setMaximizedControl(null);
-
-			} else {
-				quadrant1quadrant2345Sash
+				quad1quad234567quad8Sash.setVisible(true);
+				quad1quad234567quad8Sash
 						.setMaximizedControl(getTabFolder(Quadrant.I));
 			}
+			quad1quad234567quad8Sash.layout();
+		} else if (quad234567Items > 0) {
+			quad234567Composite.setVisible(true);
+			getTabFolder(Quadrant.I).setVisible(false);
+			getTabFolder(Quadrant.VIII).setVisible(quad8Items > 0);
 
-		}
+			quad1quad234567quad8Sash.setVisible(true);
+			if (quad8Items > 0) {
+				quad1quad234567quad8Sash.setMaximizedControl(null);
 
-		if (quad2345Items > 0) {
-			quadrant2quadrant345Sash.setVisible(true);
-			if (quad2Items > 0) {
-				quadrant2quadrant345Sash
-						.setMaximizedControl(quad345Items > 0 ? null
-								: getTabFolder(Quadrant.II));
 			} else {
-				quadrant2quadrant345Sash
-						.setMaximizedControl(quadrant345Composite);
+				quad1quad234567quad8Sash
+						.setMaximizedControl(quad234567Composite);
 			}
+			quad1quad234567quad8Sash.layout();
+		} else if (quad8Items > 0) {
+			getTabFolder(Quadrant.VIII).setVisible(true);
+			quad234567Composite.setVisible(false);
+			getTabFolder(Quadrant.I).setVisible(false);
+
+			quad1quad234567quad8Sash.setVisible(true);
+			quad1quad234567quad8Sash
+					.setMaximizedControl(getTabFolder(Quadrant.VIII));
+			quad1quad234567quad8Sash.layout();
+		} else {
+			quad1quad234567quad8Sash.setVisible(false);
+			quad1quad234567quad8Sash.setMaximizedControl(null);
+			quad1quad234567quad8Sash.layout();
 		}
 
-		if (quad345Items > 0) {
-			quadrant34quadrant5Sash.setVisible(true);
-			if (quad34Items > 0) {
-				quadrant34quadrant5Sash
-						.setMaximizedControl(quad5Items > 0 ? null
-								: quadrant34Composite);
-			} else {
-				quadrant34quadrant5Sash
-						.setMaximizedControl(getTabFolder(Quadrant.V));
-			}
+		if (quad2Items > 0 && quad34567Items > 0) {
+			quad2quad34567Sash.setVisible(true);
+			quad2quad34567Sash.setVisible(true);
+			quad2quad34567Sash.setMaximizedControl(null);
+		} else if (quad34567Items > 0) {
+			quad2quad34567Sash.setVisible(true);
+			quad2quad34567Sash.setMaximizedControl(quad34567Composite);
+		} else if (quad2Items > 0) {
+			quad2quad34567Sash.setVisible(true);
+			quad2quad34567Sash.setMaximizedControl(getTabFolder(Quadrant.II));
+		} else {
+			quad2quad34567Sash.setVisible(false);
+			quad2quad34567Sash.setMaximizedControl(null);
 		}
 
-		if (quad34Items > 0) {
-			quadrant3quadrant4Sash.setVisible(true);
-			if (quad3Items > 0) {
-				quadrant3quadrant4Sash
-						.setMaximizedControl(quad4Items > 0 ? null
-								: getTabFolder(Quadrant.III));
-			} else {
-				quadrant3quadrant4Sash
-						.setMaximizedControl(getTabFolder(Quadrant.IV));
-			}
+		if (quad34Items > 0 && quad567Items > 0) {
+			quad34quad567Sash.setVisible(true);
+			quad34quad567Sash.setMaximizedControl(null);
+		} else if (quad34Items > 0) {
+			quad34quad567Sash.setVisible(true);
+			quad34quad567Sash.setMaximizedControl(quad34Composite);
+		} else if (quad567Items > 0) {
+			quad34quad567Sash.setVisible(true);
+			quad34quad567Sash.setMaximizedControl(quad567Composite);
+		} else {
+			quad34quad567Sash.setVisible(false);
+			quad34quad567Sash.setMaximizedControl(null);
 		}
 
-		for (int i = 0; i < items.length; i++) {
-			RaptorTabFolder folder = getTabFolder(i);
-			folder.setMaximized(false);
-			folder.setMaximized(false);
+		if (quad56Items > 0 && quad7Items > 0) {
+			quad56quad7Sash.setVisible(true);
+			quad56quad7Sash.setMaximizedControl(null);
+		} else if (quad56Items > 0) {
+			quad56quad7Sash.setVisible(true);
+			quad56quad7Sash.setMaximizedControl(quad56Composite);
+		} else if (quad7Items > 0) {
+			quad56quad7Sash.setVisible(true);
+			quad56quad7Sash.setMaximizedControl(getTabFolder(Quadrant.VII));
+
+		} else {
+			quad56quad7Sash.setVisible(false);
+			quad56quad7Sash.setMaximizedControl(null);
+		}
+
+		if (quad3Items > 0 && quad4Items > 0) {
+			quad3quad4Sash.setVisible(true);
+			quad3quad4Sash.setMaximizedControl(null);
+		} else if (quad3Items > 0) {
+			quad3quad4Sash.setVisible(true);
+			quad3quad4Sash.setMaximizedControl(getTabFolder(Quadrant.III));
+		} else if (quad4Items > 0) {
+			quad3quad4Sash.setVisible(true);
+			quad3quad4Sash.setMaximizedControl(getTabFolder(Quadrant.IV));
+		} else {
+			quad3quad4Sash.setVisible(false);
+			quad3quad4Sash.setMaximizedControl(null);
+		}
+
+		if (quad5Items > 0 && quad6Items > 0) {
+			quad5quad6Sash.setVisible(true);
+			quad5quad6Sash.setMaximizedControl(null);
+		} else if (quad5Items > 0) {
+			quad5quad6Sash.setVisible(true);
+			quad5quad6Sash.setMaximizedControl(getTabFolder(Quadrant.V));
+		} else if (quad6Items > 0) {
+			quad5quad6Sash.setVisible(true);
+			quad5quad6Sash.setMaximizedControl(getTabFolder(Quadrant.VI));
+		} else {
+			quad5quad6Sash.setVisible(false);
+			quad5quad6Sash.setMaximizedControl(null);
 		}
 
 		if (LOG.isDebugEnabled()) {
@@ -756,7 +902,7 @@ public class RaptorWindow extends ApplicationWindow {
 							.getFont(PreferenceKeys.APP_LAG_FONT));
 					label.setForeground(Raptor.getInstance().getPreferences()
 							.getColor(PreferenceKeys.APP_LAG_COLOR));
-				} 
+				}
 				if (pingTime == -1) {
 					label.setVisible(false);
 					label.dispose();

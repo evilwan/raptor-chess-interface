@@ -120,19 +120,6 @@ public abstract class ChannelIcsConnector implements Connector {
 	}
 
 	/**
-	 * Resets state variables related to the connection state.
-	 */
-	protected void resetConnectionStateVars() {
-		isLoggedIn = false;
-		hasSentLogin = false;
-		hasSentPassword = false;
-		isTimesealing = false;
-		isConnecting = false;
-		channel = null;
-		daemonThread = null;
-	}
-
-	/**
 	 * Connects with the specified profile name.
 	 */
 	protected void connect(final String profileName) {
@@ -235,6 +222,55 @@ public abstract class ChannelIcsConnector implements Connector {
 	protected void createMainConsoleWindowItem() {
 		mainConsoleWindowItem = new ChatConsoleWindowItem(new MainController(
 				this));
+	}
+
+	private void crypt(String message, ByteBuffer bufferToWriteTo,
+			long timestamp) {
+		if (isTimesealing) {
+			byte[] bytesToWrite = message.getBytes();
+			int bytesInLength = bytesToWrite.length;
+			System.arraycopy(bytesToWrite, 0, cryptBuffer, 0,
+					bytesToWrite.length);
+			cryptBuffer[bytesInLength++] = 24;
+			byte abyte1[] = Long.toString(timestamp).getBytes();
+			System.arraycopy(abyte1, 0, cryptBuffer, bytesInLength,
+					abyte1.length);
+			bytesInLength += abyte1.length;
+			cryptBuffer[bytesInLength++] = 25;
+			int j = bytesInLength;
+			for (bytesInLength += 12 - bytesInLength % 12; j < bytesInLength;)
+				cryptBuffer[j++] = 49;
+
+			for (int k = 0; k < bytesInLength; k++)
+				cryptBuffer[k] = (byte) (cryptBuffer[k] | 0x80);
+
+			for (int i1 = 0; i1 < bytesInLength; i1 += 12) {
+				byte byte0 = cryptBuffer[i1 + 11];
+				cryptBuffer[i1 + 11] = cryptBuffer[i1];
+				cryptBuffer[i1] = byte0;
+				byte0 = cryptBuffer[i1 + 9];
+				cryptBuffer[i1 + 9] = cryptBuffer[i1 + 2];
+				cryptBuffer[i1 + 2] = byte0;
+				byte0 = cryptBuffer[i1 + 7];
+				cryptBuffer[i1 + 7] = cryptBuffer[i1 + 4];
+				cryptBuffer[i1 + 4] = byte0;
+			}
+
+			int l1 = 0;
+			for (int j1 = 0; j1 < bytesInLength; j1++) {
+				cryptBuffer[j1] = (byte) (cryptBuffer[j1] ^ timesealKey[l1]);
+				l1 = (l1 + 1) % timesealKey.length;
+			}
+
+			for (int k1 = 0; k1 < bytesInLength; k1++)
+				cryptBuffer[k1] = (byte) (cryptBuffer[k1] - 32);
+
+			cryptBuffer[bytesInLength++] = -128;
+			cryptBuffer[bytesInLength++] = 10;
+			bufferToWriteTo.put(cryptBuffer, 0, bytesInLength);
+		} else {
+			bufferToWriteTo.put(message.getBytes());
+		}
 	}
 
 	/**
@@ -423,6 +459,11 @@ public abstract class ChannelIcsConnector implements Connector {
 
 	public GameService getGameService() {
 		return gameService;
+	}
+
+	protected String getInitialTimesealString() {
+		return Raptor.getInstance().getPreferences().getString(
+				PreferenceKeys.TIMESEAL_INIT_STRING);
 	}
 
 	public String getPartnerTellPrefix() {
@@ -694,7 +735,8 @@ public abstract class ChannelIcsConnector implements Connector {
 				public void run() {
 					long currentTime = System.currentTimeMillis();
 					Raptor.getInstance().getRaptorWindow().setPingTime(
-							ChannelIcsConnector.this, currentTime - lastSendTime);
+							ChannelIcsConnector.this,
+							currentTime - lastSendTime);
 					lastSendTime = 0;
 				}
 			});
@@ -894,8 +936,17 @@ public abstract class ChannelIcsConnector implements Connector {
 		gameScriptsMap.remove(script.getName());
 	}
 
-	public void sendMessage(String message) {
-		sendMessage(message, false);
+	/**
+	 * Resets state variables related to the connection state.
+	 */
+	protected void resetConnectionStateVars() {
+		isLoggedIn = false;
+		hasSentLogin = false;
+		hasSentPassword = false;
+		isTimesealing = false;
+		isConnecting = false;
+		channel = null;
+		daemonThread = null;
 	}
 
 	private boolean send(String message) {
@@ -918,6 +969,10 @@ public abstract class ChannelIcsConnector implements Connector {
 			}
 		}
 		return result;
+	}
+
+	public void sendMessage(String message) {
+		sendMessage(message, false);
 	}
 
 	public void sendMessage(String message, boolean isHidingFromUser) {
@@ -944,59 +999,5 @@ public abstract class ChannelIcsConnector implements Connector {
 							+ getShortName()
 							+ ". There is currently no connection."));
 		}
-	}
-
-	private void crypt(String message, ByteBuffer bufferToWriteTo,
-			long timestamp) {
-		if (isTimesealing) {
-			byte[] bytesToWrite = message.getBytes();
-			int bytesInLength = bytesToWrite.length;
-			System.arraycopy(bytesToWrite, 0, cryptBuffer, 0,
-					bytesToWrite.length);
-			cryptBuffer[bytesInLength++] = 24;
-			byte abyte1[] = Long.toString(timestamp).getBytes();
-			System.arraycopy(abyte1, 0, cryptBuffer, bytesInLength,
-					abyte1.length);
-			bytesInLength += abyte1.length;
-			cryptBuffer[bytesInLength++] = 25;
-			int j = bytesInLength;
-			for (bytesInLength += 12 - bytesInLength % 12; j < bytesInLength;)
-				cryptBuffer[j++] = 49;
-
-			for (int k = 0; k < bytesInLength; k++)
-				cryptBuffer[k] = (byte) (cryptBuffer[k] | 0x80);
-
-			for (int i1 = 0; i1 < bytesInLength; i1 += 12) {
-				byte byte0 = cryptBuffer[i1 + 11];
-				cryptBuffer[i1 + 11] = cryptBuffer[i1];
-				cryptBuffer[i1] = byte0;
-				byte0 = cryptBuffer[i1 + 9];
-				cryptBuffer[i1 + 9] = cryptBuffer[i1 + 2];
-				cryptBuffer[i1 + 2] = byte0;
-				byte0 = cryptBuffer[i1 + 7];
-				cryptBuffer[i1 + 7] = cryptBuffer[i1 + 4];
-				cryptBuffer[i1 + 4] = byte0;
-			}
-
-			int l1 = 0;
-			for (int j1 = 0; j1 < bytesInLength; j1++) {
-				cryptBuffer[j1] = (byte) (cryptBuffer[j1] ^ timesealKey[l1]);
-				l1 = (l1 + 1) % timesealKey.length;
-			}
-
-			for (int k1 = 0; k1 < bytesInLength; k1++)
-				cryptBuffer[k1] = (byte) (cryptBuffer[k1] - 32);
-
-			cryptBuffer[bytesInLength++] = -128;
-			cryptBuffer[bytesInLength++] = 10;
-			bufferToWriteTo.put(cryptBuffer, 0, bytesInLength);
-		} else {
-			bufferToWriteTo.put(message.getBytes());
-		}
-	}
-
-	protected String getInitialTimesealString() {
-		return Raptor.getInstance().getPreferences().getString(
-				PreferenceKeys.TIMESEAL_INIT_STRING);
 	}
 }

@@ -66,6 +66,10 @@ public class SanUtil {
 			return isDisambigPieceRankStrict;
 		}
 
+		public boolean isDropMoveStrict() {
+			return isDropMoveStrict;
+		}
+
 		public boolean isEpOrAmbigPxPromotionStrict() {
 			return isEpOrAmbigPxPromotionStrict;
 		}
@@ -127,6 +131,10 @@ public class SanUtil {
 			this.isDisambigPieceRankStrict = isDisambigPieceRankStrict;
 		}
 
+		public void setDropMoveStrict(boolean isDropMoveStrict) {
+			this.isDropMoveStrict = isDropMoveStrict;
+		}
+
 		public void setEpOrAmbigPxPromotionStrict(
 				boolean isEpOrAmbigPxPromotionStrict) {
 			this.isEpOrAmbigPxPromotionStrict = isEpOrAmbigPxPromotionStrict;
@@ -170,14 +178,6 @@ public class SanUtil {
 
 		public void setValidStrict(boolean isValidStrict) {
 			this.isValidStrict = isValidStrict;
-		}
-
-		public boolean isDropMoveStrict() {
-			return isDropMoveStrict;
-		}
-
-		public void setDropMoveStrict(boolean isDropMoveStrict) {
-			this.isDropMoveStrict = isDropMoveStrict;
 		}
 	}
 
@@ -323,6 +323,19 @@ public class SanUtil {
 	}
 
 	/**
+	 * VALID_PIECE_DROP_REGEX = "[PBNQR][@][a-h][1-8]"
+	 */
+	public static boolean isValidDropStrict(String san) {
+		if (san.length() == 4) {
+			return DROPS.indexOf(san.charAt(0)) != -1 && san.charAt(1) == '@'
+					&& FILES.indexOf(san.charAt(2)) != -1
+					&& RANKS.indexOf(san.charAt(3)) != -1;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * VALID_EP_OR_AMBIG_P_CAPTURE_REGEX = "[a-h][a-h][1-8]"
 	 */
 	public static boolean isValidEpOrAmbigPCaptureStrict(String san) {
@@ -421,20 +434,6 @@ public class SanUtil {
 			return PIECES.indexOf(san.charAt(0)) != -1
 					&& FILES.indexOf(san.charAt(1)) != -1
 					&& RANKS.indexOf(san.charAt(2)) != -1;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * VALID_PIECE_DROP_REGEX = "[PBNQR][@][a-h][1-8]"
-	 */
-	public static boolean isValidDropStrict(String san) {
-		if (san.length() == 4) {
-			return DROPS.indexOf(san.charAt(0)) != -1
-					&& san.charAt(1) == '@'
-					&& FILES.indexOf(san.charAt(2)) != -1
-					&& RANKS.indexOf(san.charAt(3)) != -1;
 		} else {
 			return false;
 		}

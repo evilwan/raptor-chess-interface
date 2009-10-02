@@ -56,8 +56,8 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getQuadrant(
-				PreferenceKeys.APP_GAME_QUADRANT);
+		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
+				PreferenceKeys.GAME_QUADRANT);
 	}
 
 	public String getTitle() {

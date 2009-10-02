@@ -318,41 +318,6 @@ public class Game implements GameConstants {
 		incrementRepCount();
 	}
 
-	protected void rollbackDropMove(Move move) {
-		long toBB = getBitboard(move.getTo());
-		int oppositeColor = getOppositeColor(move.getColor());
-
-		xor(move.getColor(), toBB);
-		xor(move.getColor(), move.getPiece(), toBB);
-		setOccupiedBB(getOccupiedBB() ^ toBB);
-		setEmptyBB(getEmptyBB() ^ toBB);
-
-		updateZobristDrop(move, oppositeColor);
-
-		setPiece(move.getTo(), EMPTY);
-		setEpSquare(move.getEpSquare());
-	}
-
-	/**
-	 * Makes a drop move.
-	 * 
-	 * @param move
-	 */
-	protected void makeDropMove(Move move) {
-		long toBB = getBitboard(move.getTo());
-		int oppositeColor = getOppositeColor(move.getColor());
-
-		xor(move.getColor(), toBB);
-		xor(move.getColor(), move.getPiece(), toBB);
-		setOccupiedBB(getOccupiedBB() ^ toBB);
-		setEmptyBB(getEmptyBB() ^ toBB);
-
-		updateZobristDrop(move, oppositeColor);
-
-		setPiece(move.getTo(), move.getPiece());
-		setEpSquare(EMPTY_SQUARE);
-	}
-
 	/**
 	 * Generates all of the pseudo legal bishop moves in the position and adds
 	 * them to the specified move list.
@@ -1327,6 +1292,26 @@ public class Game implements GameConstants {
 		throw new UnsupportedOperationException("Not supported in classical");
 	}
 
+	/**
+	 * Makes a drop move.
+	 * 
+	 * @param move
+	 */
+	protected void makeDropMove(Move move) {
+		long toBB = getBitboard(move.getTo());
+		int oppositeColor = getOppositeColor(move.getColor());
+
+		xor(move.getColor(), toBB);
+		xor(move.getColor(), move.getPiece(), toBB);
+		setOccupiedBB(getOccupiedBB() ^ toBB);
+		setEmptyBB(getEmptyBB() ^ toBB);
+
+		updateZobristDrop(move, oppositeColor);
+
+		setPiece(move.getTo(), move.getPiece());
+		setEpSquare(EMPTY_SQUARE);
+	}
+
 	protected void makeEPMove(Move move) {
 		long fromBB = getBitboard(move.getFrom());
 		long toBB = getBitboard(move.getTo());
@@ -1896,6 +1881,21 @@ public class Game implements GameConstants {
 		setEmptyBB(getEmptyBB() ^ rookFromTo);
 
 		setEpSquareFromPreviousMove();
+	}
+
+	protected void rollbackDropMove(Move move) {
+		long toBB = getBitboard(move.getTo());
+		int oppositeColor = getOppositeColor(move.getColor());
+
+		xor(move.getColor(), toBB);
+		xor(move.getColor(), move.getPiece(), toBB);
+		setOccupiedBB(getOccupiedBB() ^ toBB);
+		setEmptyBB(getEmptyBB() ^ toBB);
+
+		updateZobristDrop(move, oppositeColor);
+
+		setPiece(move.getTo(), EMPTY);
+		setEpSquare(move.getEpSquare());
 	}
 
 	protected void rollbackEpMove(Move move) {
@@ -2735,6 +2735,11 @@ public class Game implements GameConstants {
 		return result.toString();
 	}
 
+	protected void updateZobristDrop(Move move, int oppositeColor) {
+		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
+				.getColor(), move.getPiece() & NOT_PROMOTED_MASK, move.getTo());
+	}
+
 	protected void updateZobristEP(Move move, int captureSquare) {
 		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
 				.getColor(), PAWN, move.getFrom())
@@ -2790,11 +2795,6 @@ public class Game implements GameConstants {
 				^ ZobristHash.zobrist(WHITE, KING, SQUARE_C1)
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_A1)
 				^ ZobristHash.zobrist(WHITE, ROOK, SQUARE_D1);
-	}
-
-	protected void updateZobristDrop(Move move, int oppositeColor) {
-		positionState.zobristPositionHash ^= ZobristHash.zobrist(move
-				.getColor(), move.getPiece() & NOT_PROMOTED_MASK, move.getTo());
 	}
 
 	protected void updateZobristPONoCapture(Move move, int oppositeColor) {

@@ -42,7 +42,7 @@ public class SoundService {
 	 */
 	public void playSound(final String sound) {
 		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.SOUND_ENABLED)) {
+				PreferenceKeys.APP_SOUND_ENABLED)) {
 			final String fileName = "resources/common/sounds/" + sound + ".wav";
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {

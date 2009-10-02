@@ -535,14 +535,15 @@ public class PlayingController extends ChessBoardController {
 			}
 		}
 	}
-	
-//	/**
-//	 * This method doesnt update the clocks but updates the board and the piece jails.
-//	 */
-//	public void adjustToMoveBeingSentToConnector() {
-//		adjustBoardToGame(getGame());
-//		adjustPieceJailFromGame(getGame());
-//	}
+
+	// /**
+	// * This method doesnt update the clocks but updates the board and the
+	// piece jails.
+	// */
+	// public void adjustToMoveBeingSentToConnector() {
+	// adjustBoardToGame(getGame());
+	// adjustPieceJailFromGame(getGame());
+	// }
 
 	/**
 	 * Invoked when a user makes a dnd move or a click click move on the

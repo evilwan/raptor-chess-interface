@@ -8,30 +8,32 @@ import org.eclipse.swt.widgets.Composite;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
-//import raptor.pref.PreferenceKeys;
 import raptor.connector.ics.IcsConnector;
 import raptor.service.BughouseService;
 import raptor.swt.ItemChangedListener;
 
-
 public class BugArena implements RaptorWindowItem {
 
+	private enum myTabs {
+		TAB_UNPARTNERED, TAB_AVAILABLETEAMS, TAB_GAMES;
+	}
 	Composite composite;
 	String title;
+
 	IcsConnector connector;
-	
-	public BugArena(String title,IcsConnector connector) {
+
+	public BugArena(String title, IcsConnector connector) {
 		this.title = title;
 		this.connector = connector;
 	}
-	
-	public void addItemChangedListener(ItemChangedListener listener) { }
+
+	public void addItemChangedListener(ItemChangedListener listener) {
+	}
 
 	public boolean confirmClose() {
 		return !false;
 	}
 
-	@Override
 	public boolean confirmQuadrantMove() {
 		return !false;
 	}
@@ -48,54 +50,47 @@ public class BugArena implements RaptorWindowItem {
 		return null;
 	}
 
-	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
-				//PreferenceKeys.APP_BROWSER_QUADRANT
-				"app-bug-arena"
-		);
+		// PreferenceKeys.APP_BROWSER_QUADRANT
+				"app-bug-arena");
 	}
 
 	public String getTitle() {
 		return title;
 	}
 
-	private enum myTabs {
-		TAB_UNPARTNERED,TAB_AVAILABLETEAMS,TAB_GAMES;
-	}
-	
-	@Override
 	public void init(Composite parent) {
 		// TODO Auto-generated method stub
 		BughouseService service = connector.getBughouseService();
 		myTabs tab = myTabs.TAB_UNPARTNERED;
-		if (tab == myTabs.TAB_UNPARTNERED)
-			{
+		if (tab == myTabs.TAB_UNPARTNERED) {
 			Partnership[] array = service.getAvailablePartnerships();
-				for(Partnership partnership : array) {
-					Bugger[] buggers = partnership.getBuggers();
-					for(Bugger myBugger : buggers) {
-						Button b = new Button(composite,SWT.PUSH);
-						b.setText(myBugger.getUsername() + "(" + myBugger.getRating() + ")");
-					}
+			for (Partnership partnership : array) {
+				Bugger[] buggers = partnership.getBuggers();
+				for (Bugger myBugger : buggers) {
+					Button b = new Button(composite, SWT.PUSH);
+					b.setText(myBugger.getUsername() + "("
+							+ myBugger.getRating() + ")");
 				}
 			}
+		}
 	}
-	
 
 	public void onActivate() {
 		composite.layout(true);
 	}
 
-	public void onPassivate() { }
+	public void onPassivate() {
+	}
 
-	@Override
 	public void onReparent(Composite newParent) {
 		// TODO Auto-generated method stub
 		composite.dispose();
 		init(newParent);
 	}
 
-	public void removeItemChangedListener(ItemChangedListener listener) { }
-	
+	public void removeItemChangedListener(ItemChangedListener listener) {
+	}
+
 }

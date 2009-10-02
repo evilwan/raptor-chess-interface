@@ -54,8 +54,8 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getQuadrant(
-				PreferenceKeys.APP_BROWSER_QUADRANT);
+		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
+				PreferenceKeys.BROWSER_QUADRANT);
 	}
 
 	public String getTitle() {
@@ -116,6 +116,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		browser.setUrl(url);
 		browser.addLocationListener(new LocationAdapter() {
+			@Override
 			public void changed(LocationEvent event) {
 				urlLabel.setText(browser.getUrl());
 			}

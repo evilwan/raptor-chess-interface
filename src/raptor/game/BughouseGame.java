@@ -7,14 +7,19 @@ package raptor.game;
  */
 public class BughouseGame extends ZHGame {
 
+	protected BughouseGame otherBoard;
+
 	public BughouseGame() {
 		setType(Type.BUGHOUSE);
 	}
 
-	protected BughouseGame otherBoard;
-
-	public void setOtherBoard(BughouseGame bughouseGame) {
-		this.otherBoard = bughouseGame;
+	/**
+	 * Decrements the drop count of the other game.
+	 */
+	@Override
+	public void decrementDropCount(int color, int piece) {
+		piece = piece & PROMOTED_MASK;
+		otherBoard.positionState.dropCounts[color][piece] = otherBoard.positionState.dropCounts[color][piece] - 1;
 	}
 
 	public BughouseGame getOtherBoard() {
@@ -24,6 +29,7 @@ public class BughouseGame extends ZHGame {
 	/**
 	 * Increments the drop count of the other game.
 	 */
+	@Override
 	public void incrementDropCount(int color, int piece) {
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
@@ -32,12 +38,8 @@ public class BughouseGame extends ZHGame {
 		}
 	}
 
-	/**
-	 * Decrements the drop count of the other game.
-	 */
-	public void decrementDropCount(int color, int piece) {
-		piece = piece & PROMOTED_MASK;
-		otherBoard.positionState.dropCounts[color][piece] = otherBoard.positionState.dropCounts[color][piece] - 1;
+	public void setOtherBoard(BughouseGame bughouseGame) {
+		this.otherBoard = bughouseGame;
 	}
 
 }
