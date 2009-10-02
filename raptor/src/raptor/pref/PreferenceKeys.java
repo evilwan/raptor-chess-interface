@@ -74,6 +74,7 @@ public interface PreferenceKeys {
 	public static final String APP_REGEX_TAB_QUADRANT = "app-regex-tab-quadrant";
 	public static final String APP_PARTNER_TELL_TAB_QUADRANT = "app-partner-tell-quadrant";
 	public static final String APP_GAME_QUADRANT = "app-game-quadrant";
+	public static final String ALL_BROWSER_QUADRANT = "app-browser-quadrant";
 
 	public static final String SOUND_ENABLED = "sound-enabled";
 

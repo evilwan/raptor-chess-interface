@@ -19,6 +19,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
 import raptor.service.ThreadService;
+import raptor.swt.BrowserWindowItem;
 import raptor.util.FileUtil;
 
 /**
@@ -82,6 +83,15 @@ public class Raptor implements PreferenceKeys {
 							}
 						});
 			}
+
+			display.timerExec(100, new Runnable() {
+				public void run() {
+					instance.raptorWindow
+							.addRaptorWindowItem(new BrowserWindowItem(
+									"Raptor",
+									"http://code.google.com/p/raptor-chess-interface/"));
+				}
+			});
 
 			// Open the app window
 			instance.raptorWindow.open();

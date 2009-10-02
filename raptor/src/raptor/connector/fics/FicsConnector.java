@@ -15,6 +15,7 @@ import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
+import raptor.swt.BrowserWindowItem;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -30,6 +31,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected Action reconnectAction;
 	protected Action bughouseArenaAction;
 	protected Action seekGraphAction;
+	protected Action regexTabAtion;
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
@@ -55,6 +57,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(true);
 		bughouseArenaAction.setEnabled(true);
 		seekGraphAction.setEnabled(true);
+		regexTabAtion.setEnabled(true);
 	}
 
 	/**
@@ -103,11 +106,20 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
+		regexTabAtion = new Action("&Add Regular Expression Tab") {
+			@Override
+			public void run() {
+				Raptor.getInstance().alert(
+						"Add Regular Expression Tab Comming soon");
+			}
+		};
+
 		connectAction.setEnabled(true);
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
+		regexTabAtion.setEnabled(false);
 
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
@@ -115,6 +127,41 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(seekGraphAction);
+		connectionsMenu.add(new Separator());
+
+		Action adjudicateAGame = new Action("Adjudicate a game") {
+
+			@Override
+			public void run() {
+				Raptor
+						.getInstance()
+						.getRaptorWindow()
+						.addRaptorWindowItem(
+								new BrowserWindowItem("Adjudicate a game",
+										"http://www.freechess.org/Adjudicate/index.html"));
+			}
+		};
+		Action ficsSite = new Action("www.freechess.org") {
+
+			@Override
+			public void run() {
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						new BrowserWindowItem("www.freechess.org",
+								"www.freechess.org"));
+			}
+		};
+		Action ficsGamesSite = new Action("www.ficsgames.com") {
+
+			@Override
+			public void run() {
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						new BrowserWindowItem("www.ficsgames.com",
+								"www.ficsgames.com"));
+			}
+		};
+		connectionsMenu.add(ficsSite);
+		connectionsMenu.add(ficsGamesSite);
+		connectionsMenu.add(adjudicateAGame);
 		connectionsMenu.add(new Separator());
 
 		MenuManager fics2Menu = new MenuManager(
@@ -175,7 +222,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2Menu.add(new Separator());
 
 		connectionsMenu.add(fics2Menu);
-
 	}
 
 	@Override
@@ -186,6 +232,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
+		regexTabAtion.setEnabled(false);
 	}
 
 	@Override
