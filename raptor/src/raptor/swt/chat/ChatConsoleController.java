@@ -41,6 +41,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
+import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PersonController;
@@ -208,8 +209,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				String url = ChatUtils.getUrl(chatConsole.inputText,
 						caretPosition);
 				if (url != null) {
-					LaunchBrowser.openURL(url);
-					return;
+					if (getPreferences().getBoolean(
+							CHAT_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
+						LaunchBrowser.openURL(url);
+						return;
+					} else {
+						Raptor.getInstance().getRaptorWindow()
+								.addRaptorWindowItem(
+										new BrowserWindowItem(url, url));
+					}
 				}
 
 				String quotedText = ChatUtils.getQuotedText(
@@ -524,16 +532,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void decorateQuotes(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() != ChatType.OUTBOUND) {
+			boolean isUnderliningSingleQuotes = getPreferences().getBoolean(CHAT_UNDERLINE_SINGLE_QUOTES);
 			List<int[]> quotedRanges = new ArrayList<int[]>(5);
 
 			int quoteIndex = message.indexOf("\"");
-			if (quoteIndex == -1) {
+			if (quoteIndex == -1 && isUnderliningSingleQuotes) {
 				quoteIndex = message.indexOf("'");
 			}
 
 			while (quoteIndex != -1) {
 				int endQuote = message.indexOf("\"", quoteIndex + 1);
-				if (endQuote == -1) {
+				if (endQuote == -1 && isUnderliningSingleQuotes) {
 					endQuote = message.indexOf("'", quoteIndex + 1);
 				}
 
@@ -567,7 +576,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 
 				quoteIndex = message.indexOf("\"", endQuote + 1);
-				if (quoteIndex == -1) {
+				if (quoteIndex == -1 && isUnderliningSingleQuotes) {
 					quoteIndex = message.indexOf("'", endQuote + 1);
 				}
 			}

@@ -289,6 +289,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
 		setDefault(CHAT_TIMESTAMP_CONSOLE, true);
 		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['hh:mma']'");
+		setDefault(CHAT_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
+		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
 
 		PreferenceConverter
 				.setDefault(this, CHAT_INPUT_FONT,

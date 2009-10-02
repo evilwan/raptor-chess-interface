@@ -4,6 +4,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
@@ -69,7 +71,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		addressBar = new Composite(composite, SWT.BORDER_SOLID);
 		addressBar
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		addressBar.setLayout(SWTUtils.createMarginlessGridLayout(4, false));
+		addressBar.setLayout(SWTUtils.createMarginlessGridLayout(5, false));
 
 		Button backButton = new Button(addressBar, SWT.FLAT);
 		backButton.setImage(Raptor.getInstance().getIcon("back"));
@@ -107,10 +109,31 @@ public class BrowserWindowItem implements RaptorWindowItem {
 			}
 		});
 
-		final Text urlLabel = new Text(addressBar, SWT.SINGLE | SWT.BORDER);
-		urlLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		urlLabel.setText(url);
-		urlLabel.setEditable(false);
+		final Text urlText = new Text(addressBar, SWT.SINGLE | SWT.BORDER);
+		urlText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		urlText.setText(url);
+		urlText.setEditable(true);
+		urlText.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.character == '\r') {
+					url = urlText.getText();
+					browser.setUrl(url);
+				}
+			}
+		});
+
+		Button submit = new Button(addressBar, SWT.FLAT);
+		submit.setImage(Raptor.getInstance().getIcon("enter"));
+		submit.setLayoutData(new GridData(SWT.BEGINNING, SWT.CENTER, false,
+				false));
+		submit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				url = urlText.getText();
+				browser.setUrl(url);
+			}
+		});
 
 		browser = new Browser(composite, SWT.NONE);
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -118,7 +141,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		browser.addLocationListener(new LocationAdapter() {
 			@Override
 			public void changed(LocationEvent event) {
-				urlLabel.setText(browser.getUrl());
+				urlText.setText(browser.getUrl());
 			}
 		});
 	}

@@ -87,7 +87,7 @@ public class Raptor implements PreferenceKeys {
 			display.timerExec(100, new Runnable() {
 				public void run() {
 					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
-							new BrowserWindowItem("Fics Help Files", Raptor
+							new BrowserWindowItem("Raptor Home", Raptor
 									.getInstance().getPreferences().getString(
 											PreferenceKeys.APP_HOME_URL)));
 				}
