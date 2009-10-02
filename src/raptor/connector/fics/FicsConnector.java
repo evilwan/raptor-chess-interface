@@ -98,7 +98,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			@Override
 			public void run() {
 				disconnect();
-				connect();
+				// Sleep half a second for everything to adjust.
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException ie) {
+				}
+				connect(currentProfileName);
 			}
 		};
 
@@ -218,7 +223,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			@Override
 			public void run() {
 				fics2.disconnect();
-				fics2.connect();
+				// Sleep half a second for everything to adjust.
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException ie) {
+				}
+				fics2.connect(fics2.currentProfileName);
 			}
 		};
 
