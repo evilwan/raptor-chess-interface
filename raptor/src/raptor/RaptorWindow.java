@@ -756,7 +756,8 @@ public class RaptorWindow extends ApplicationWindow {
 							.getFont(PreferenceKeys.APP_LAG_FONT));
 					label.setForeground(Raptor.getInstance().getPreferences()
 							.getColor(PreferenceKeys.APP_LAG_COLOR));
-				} else if (pingTime == -1) {
+				} 
+				if (pingTime == -1) {
 					label.setVisible(false);
 					label.dispose();
 					pingLabelsMap.remove(connector.getShortName());
@@ -765,8 +766,8 @@ public class RaptorWindow extends ApplicationWindow {
 					label.setText(connector.getShortName() + " ping "
 							+ pingTime + "ms");
 					statusBar.layout(true, true);
+					label.redraw();
 				}
-				label.redraw();
 			}
 		});
 	}
