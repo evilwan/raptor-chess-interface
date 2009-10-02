@@ -38,6 +38,7 @@ import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtil;
 import raptor.service.ConnectorService;
+import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.SWTUtils;
 
@@ -279,10 +280,11 @@ public class RaptorWindow extends ApplicationWindow {
 				Raptor.getInstance().getImage(
 						"resources/common/images/raptorIcon.gif"));
 
-		parent.setLayout(SWTUtils.createMarginlessGridLayout(1,true));
+		parent.setLayout(SWTUtils.createMarginlessGridLayout(1, true));
 
 		windowComposite = new Composite(parent, SWT.NONE);
-		windowComposite.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
+		windowComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true));
 		windowComposite.setLayout(SWTUtils.createMarginlessGridLayout(1, true));
 
 		createFolderAndSashControls();
@@ -374,6 +376,22 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void run() {
 				Raptor.getInstance().alert("Comming soon.");
+			}
+		});
+		helpMenu.add(new Action("&Fics Commands Help") {
+			@Override
+			public void run() {
+				Raptor
+						.getInstance()
+						.getRaptorWindow()
+						.addRaptorWindowItem(
+								new BrowserWindowItem(
+										"Fics Commands Help",
+										Raptor
+												.getInstance()
+												.getPreferences()
+												.getString(
+														PreferenceKeys.FICS_COMMANDS_HELP_URL)));
 			}
 		});
 
@@ -516,9 +534,15 @@ public class RaptorWindow extends ApplicationWindow {
 				RaptorTabItem item = (RaptorTabItem) folder.getSelection();
 				if (item.raptorItem.confirmClose()) {
 					event.doit = true;
-					item.raptorItem.dispose();
-					item.dispose();
-					restoreFolders();
+					// item.raptorItem.dispose();
+					// item.dispose();
+					getShell().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							restoreFolders();
+						}
+					});
+				} else {
+					event.doit = false;
 				}
 			}
 
@@ -696,6 +720,7 @@ public class RaptorWindow extends ApplicationWindow {
 			folder.setMaximized(false);
 			folder.setMaximized(false);
 		}
+
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Leaving restoreFolders execution in "
 					+ (System.currentTimeMillis() - startTime) + "ms");

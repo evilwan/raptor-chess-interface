@@ -74,7 +74,10 @@ public interface PreferenceKeys {
 	public static final String APP_REGEX_TAB_QUADRANT = "app-regex-tab-quadrant";
 	public static final String APP_PARTNER_TELL_TAB_QUADRANT = "app-partner-tell-quadrant";
 	public static final String APP_GAME_QUADRANT = "app-game-quadrant";
-	public static final String ALL_BROWSER_QUADRANT = "app-browser-quadrant";
+	public static final String APP_BROWSER_QUADRANT = "app-browser-quadrant";
+	public static final String APP_HOME_URL = "app-home-url";
+
+	
 
 	public static final String SOUND_ENABLED = "sound-enabled";
 
@@ -85,7 +88,12 @@ public interface PreferenceKeys {
 	public static final String FICS_LOGIN_SCRIPT = "fics-login-script";
 	public static final String FICS_IS_LOGGING_GAMES = "fics-is-logging-games";
 	public static final String FICS_PROFILE = "fics-profile";
-
+	public static final String FICS_COMMANDS_HELP_URL = "fics-commands-help-url";
+	public static final String FICS_FREECHESS_ORG_URL = "fics-freechess-org-url";
+	public static final String FICS_FICS_GAMES_URL = "fics-games-url";
+	public static final String FICS_ADJUDICATE_URL = "fics-adjudicate-url";
+	public static final String FICS_TEAM_LEAGUE_URL = "fics-team-league-url";
+	
 	public static final String FICS_PRIMARY_SERVER_URL = "fics-Primary-server-url";
 	public static final String FICS_PRIMARY_PORT = "fics-Primary-port";
 	public static final String FICS_PRIMARY_USER_NAME = "fics-Primary-user-name";
