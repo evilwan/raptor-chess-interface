@@ -271,6 +271,7 @@ public class RaptorWindow extends ApplicationWindow {
 		protected ItemChangedListener listener;
 		protected RaptorTabFolder raptorParent;
 		protected boolean disposed = false;
+		protected boolean wasReparentedWithoutCreatingControl = true;
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				RaptorWindowItem item) {
@@ -332,9 +333,11 @@ public class RaptorWindow extends ApplicationWindow {
 
 		@Override
 		public void dispose() {
-			disposed = true;
-			if (activeItems != null) {
-				activeItems.remove(this);
+			if (!wasReparentedWithoutCreatingControl) {
+				disposed = true;
+				if (activeItems != null) {
+					activeItems.remove(this);
+				}
 			}
 			raptorItem = null;
 			raptorParent = null;
@@ -343,7 +346,14 @@ public class RaptorWindow extends ApplicationWindow {
 
 		public void reParent(RaptorTabFolder newParent) {
 			raptorItem.removeItemChangedListener(listener);
-			raptorItem.onReparent(newParent);
+			if (raptorItem.onReparent(newParent)) {
+				setControl(null);
+				wasReparentedWithoutCreatingControl = true;
+				activeItems.remove(this);
+			}
+			else {
+				wasReparentedWithoutCreatingControl = false;
+			}
 			new RaptorTabItem(newParent, getStyle(), raptorItem, false);
 			dispose();
 			restoreFolders();

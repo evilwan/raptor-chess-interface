@@ -76,8 +76,11 @@ public interface RaptorWindowItem {
 	/**
 	 * If confirmQuadrantMove returns true, this method should be supported. It
 	 * reparents the control to the new parent.
+	 * 
+	 * It should return true if the component was able to be reparented without
+	 * recreating the control. False otherwise.
 	 */
-	public void onReparent(Composite newParent);
+	public boolean onReparent(Composite newParent);
 
 	/**
 	 * Removes an item changed listener.

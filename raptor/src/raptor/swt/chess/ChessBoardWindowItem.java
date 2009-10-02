@@ -96,20 +96,27 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		});
 	}
 
-	public void onReparent(Composite newParent) {
-		// Grab the controller from the board because
-		// controllers can be changed during a game.
-		controller = board.getController();
-		board.setController(null);
-		board.dispose();
-		controller.onPreReparent();
-		controller.setBoard(null);
-		board = new ChessBoard(newParent, SWT.NONE);
-		board.setController(controller);
-		controller.setBoard(board);
-		board.createControls();
-		controller.onPostReparent();
-		board.forceFocus();
+	public boolean onReparent(Composite newParent) {
+		boolean result = false;
+		if (!board.setParent(newParent)) {
+			// Grab the controller from the board because
+			// controllers can be changed during a game.
+			controller = board.getController();
+			board.setController(null);
+			board.setVisible(false);
+			board.dispose();
+			controller.onPreReparent();
+			controller.setBoard(null);
+			board = new ChessBoard(newParent, SWT.NONE);
+			board.setController(controller);
+			controller.setBoard(board);
+			board.createControls();
+			controller.onPostReparent();
+			board.forceFocus();
+		} else {
+			result = true;
+		}
+		return result;
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
