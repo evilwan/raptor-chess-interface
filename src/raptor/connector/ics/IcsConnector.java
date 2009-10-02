@@ -284,6 +284,7 @@ public abstract class IcsConnector implements Connector {
 				publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 						"Disconnected"));
 
+				Raptor.getInstance().getRaptorWindow().setPingTime(this, -1);
 				fireDisconnected();
 				LOG.error("Disconnected from " + getShortName());
 			}
