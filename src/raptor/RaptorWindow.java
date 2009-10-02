@@ -350,8 +350,7 @@ public class RaptorWindow extends ApplicationWindow {
 				setControl(null);
 				wasReparentedWithoutCreatingControl = true;
 				activeItems.remove(this);
-			}
-			else {
+			} else {
 				wasReparentedWithoutCreatingControl = false;
 			}
 			new RaptorTabItem(newParent, getStyle(), raptorItem, false);

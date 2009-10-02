@@ -4,8 +4,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
-import com.sun.tools.javac.util.Log;
-
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
