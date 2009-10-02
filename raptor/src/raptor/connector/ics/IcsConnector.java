@@ -721,6 +721,7 @@ public abstract class IcsConnector implements Connector {
 				parseMessage(message);
 			}
 		} else {
+
 			// We are not logged in.
 			// There are several complex cases here depending on the prompt
 			// we are waiting on.

@@ -129,6 +129,13 @@ public class TimesealingSocket extends Socket implements Runnable {
 	}
 
 	private void writeInitialTimesealString() throws IOException {
+
+		// BICS can't handle speedy connections so this slows it down a bit.
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException ie) {
+		}
+		
 		OutputStream outputstream = getOutputStream();
 		synchronized (outputstream) {
 			outputstream.write(initialTimesealString.getBytes());

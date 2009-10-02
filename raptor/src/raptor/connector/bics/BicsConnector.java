@@ -154,7 +154,12 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			@Override
 			public void run() {
 				disconnect();
-				connect();
+				// Sleep half a second for everything to adjust.
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException ie) {
+				}
+				connect(currentProfileName);
 			}
 		};
 
@@ -220,7 +225,12 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			@Override
 			public void run() {
 				bics2.disconnect();
-				bics2.connect();
+				// Sleep half a second for everything to adjust.
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException ie) {
+				}
+				bics2.connect(bics2.currentProfileName);
 			}
 		};
 
