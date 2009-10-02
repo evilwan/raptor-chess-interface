@@ -146,6 +146,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	}
 
+	public RGB getDefaultColor(String key) {
+		return PreferenceConverter.getDefaultColor(this, key);
+	}
+
 	public Quadrant getCurrentLayoutQuadrant(String key) {
 		key = "app-" + getString(APP_LAYOUT) + "-" + key;
 		System.err.println("Getting layout quad for key: " + key);
@@ -364,9 +368,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new RGB(0, 0, 238));
 
 		setDefault(APP_NAME, "Raptor v.Alpha.1");
-		PreferenceConverter.setDefault(this, APP_LAG_FONT,
+		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
-		PreferenceConverter.setDefault(this, APP_LAG_COLOR, new RGB(0, 0, 0));
+		PreferenceConverter.setDefault(this, APP_PING_COLOR, new RGB(0, 0, 0));
 
 		PreferenceConverter.setDefault(this, APP_STATUS_BAR_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
@@ -563,6 +567,30 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public void setDefault(String key, String[] values) {
 		setDefault(key, RaptorStringUtils.toString(values));
+	}
+
+	public void setDefault(String key, Font font) {
+		PreferenceConverter.setValue(this, key, font.getFontData());
+	}
+
+	public void setValue(String key, Font font) {
+		PreferenceConverter.setValue(this, key, font.getFontData());
+	}
+
+	public void setDefault(String key, FontData[] fontData) {
+		PreferenceConverter.setValue(this, key, fontData);
+	}
+
+	public void setValue(String key, FontData[] fontData) {
+		PreferenceConverter.setValue(this, key, fontData);
+	}
+
+	public void setDefault(String key, RGB rgb) {
+		PreferenceConverter.setValue(this, key, rgb);
+	}
+
+	public void setValue(String key, RGB rgb) {
+		PreferenceConverter.setValue(this, key, rgb);
 	}
 
 	public void setValue(String key, int[] values) {

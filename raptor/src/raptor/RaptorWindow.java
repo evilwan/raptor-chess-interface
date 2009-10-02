@@ -13,6 +13,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolder2Adapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
@@ -144,7 +145,7 @@ public class RaptorWindow extends ApplicationWindow {
 		protected RaptorWindowItem raptorItem;
 		protected ItemChangedListener listener;
 		protected RaptorTabFolder raptorParent;
-		protected boolean disposed = true;
+		protected boolean disposed = false;
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				RaptorWindowItem item) {
@@ -179,9 +180,15 @@ public class RaptorWindow extends ApplicationWindow {
 									LOG
 											.debug("Item changed, updating text,title,showClose");
 								}
-								setText(item.getTitle());
-								setImage(item.getImage());
-								setShowClose(true);
+								try {
+									setText(item.getTitle());
+									setImage(item.getImage());
+									setShowClose(true);
+								} catch (SWTException swt) {
+									// Just eat it. It is probably a widget is
+									// disposed exception
+									// and i can't figure out how to avoid it.
+								}
 							}
 						});
 					}
@@ -899,9 +906,9 @@ public class RaptorWindow extends ApplicationWindow {
 					label.setLayoutData(gridData);
 					pingLabelsMap.put(connector.getShortName(), label);
 					label.setFont(Raptor.getInstance().getPreferences()
-							.getFont(PreferenceKeys.APP_LAG_FONT));
+							.getFont(PreferenceKeys.APP_PING_FONT));
 					label.setForeground(Raptor.getInstance().getPreferences()
-							.getColor(PreferenceKeys.APP_LAG_COLOR));
+							.getColor(PreferenceKeys.APP_PING_COLOR));
 				}
 				if (pingTime == -1) {
 					label.setVisible(false);

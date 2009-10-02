@@ -65,8 +65,8 @@ public interface PreferenceKeys {
 
 	public static final String MISC_BROWSER_NAME = "misc-browser-name";
 
-	public static final String APP_LAG_FONT = "app-lag-font";
-	public static final String APP_LAG_COLOR = "app-lag-color";
+	public static final String APP_PING_FONT = "app-lag-font";
+	public static final String APP_PING_COLOR = "app-lag-color";
 	public static final String APP_STATUS_BAR_FONT = "app-status-bar-font";
 	public static final String APP_STATUS_BAR_COLOR = "app-starus-bar-color";
 	public static final String APP_NAME = "app-name";
