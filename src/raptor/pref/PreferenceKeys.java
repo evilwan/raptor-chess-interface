@@ -50,6 +50,8 @@ public interface PreferenceKeys {
 	public static final String CHAT_OUTPUT_FONT = "chat-output-font";
 	public static final String CHAT_INPUT_FONT = "chat-input-font";
 	public static final String CHAT_PROMPT_FONT = "chat-prompt-font";
+	public static final String CHAT_OPEN_LINKS_IN_EXTERNAL_BROWSER = "chat-open-links-in-external-browser";
+	public static final String CHAT_UNDERLINE_SINGLE_QUOTES = "chat-underline-single-quotes";
 	public static final String CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO = "chat-event-";
 
 	public static final String CHAT_OUTPUT_BACKGROUND_COLOR = "chat-output-background-color";
