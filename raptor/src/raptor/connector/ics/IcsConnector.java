@@ -27,6 +27,7 @@ import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.GameScript;
+import raptor.service.BughouseService;
 import raptor.service.ChatService;
 import raptor.service.GameService;
 import raptor.service.SoundService;
@@ -62,6 +63,7 @@ public abstract class IcsConnector implements Connector {
 	protected String userName;
 	protected long lastSendTime;
 	protected boolean isConnecting;
+	BughouseService bughouseService;
 
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 
@@ -89,7 +91,15 @@ public abstract class IcsConnector implements Connector {
 		gameService = new GameService();
 		refreshGameScripts();
 		gameService.addGameServiceListener(gameServiceListener);
+		setBughouseService(new BughouseService());
+	}
 
+	private void setBughouseService(BughouseService bughouseService) {
+		this.bughouseService = bughouseService;
+	}
+	
+	public BughouseService getBughouseService() {
+		return bughouseService;
 	}
 
 	/**

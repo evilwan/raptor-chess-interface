@@ -1,34 +1,101 @@
 package raptor.connector.fics.chat.john;
 
-import org.eclipse.jface.dialogs.Dialog;
-//import org.eclipse.swt.SWT;
-//import org.eclipse.swt.widgets.Button;
-//import org.eclipse.swt.widgets.Composite;
-//import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 
+import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.RaptorWindowItem;
+//import raptor.pref.PreferenceKeys;
+import raptor.connector.ics.IcsConnector;
+import raptor.service.BughouseService;
+import raptor.swt.ItemChangedListener;
 
-public class BugArena extends Dialog {
+
+public class BugArena implements RaptorWindowItem {
+
+	Composite composite;
+	String title;
+	IcsConnector connector;
 	
-	protected BugArena(Shell parentShell) {
-		super(Raptor.getInstance().getRaptorWindow().getShell());
+	public BugArena(String title,IcsConnector connector) {
+		this.title = title;
+		this.connector = connector;
 	}
 	
-//	protected String title = "";
-//	@Override
-//	public Composite createContents(Composite parent) {
-//		getShell().setText(title);
-//		final Composite content = new Composite(parent, SWT.NONE);
-//		
-//		Label l = new Label(content,SWT.NONE);
-//		l.setText("Available Partners:");
-//		
-//		BugWhoUParser p = new BugWhoUParser(title);
-//		Button b = new Button(content, SWT.PUSH);
-//		b.setText("Login");
-//		
-//		return content;
-//	}
+	public void addItemChangedListener(ItemChangedListener listener) { }
 
+	public boolean confirmClose() {
+		return !false;
+	}
+
+	@Override
+	public boolean confirmQuadrantMove() {
+		return !false;
+	}
+
+	public void dispose() {
+		composite.dispose();
+	}
+
+	public Composite getControl() {
+		return composite;
+	}
+
+	public Image getImage() {
+		return null;
+	}
+
+	@Override
+	public Quadrant getPreferredQuadrant() {
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				//PreferenceKeys.APP_BROWSER_QUADRANT
+				"app-bug-arena"
+		);
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	private enum myTabs {
+		TAB_UNPARTNERED,TAB_AVAILABLETEAMS,TAB_GAMES;
+	}
+	
+	@Override
+	public void init(Composite parent) {
+		// TODO Auto-generated method stub
+		BughouseService service = connector.getBughouseService();
+		myTabs tab = myTabs.TAB_UNPARTNERED;
+		if (tab == myTabs.TAB_UNPARTNERED)
+			{
+			Partnership[] array = service.getAvailablePartnerships();
+				for(Partnership partnership : array) {
+					Bugger[] buggers = partnership.getBuggers();
+					for(Bugger myBugger : buggers) {
+						Button b = new Button(composite,SWT.PUSH);
+						b.setText(myBugger.getUsername() + "(" + myBugger.getRating() + ")");
+					}
+				}
+			}
+	}
+	
+
+	public void onActivate() {
+		composite.layout(true);
+	}
+
+	public void onPassivate() { }
+
+	@Override
+	public void onReparent(Composite newParent) {
+		// TODO Auto-generated method stub
+		composite.dispose();
+		init(newParent);
+	}
+
+	public void removeItemChangedListener(ItemChangedListener listener) { }
+	
 }
