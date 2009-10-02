@@ -27,11 +27,17 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	}
 
 	public boolean confirmQuadrantMove() {
-		return Raptor
-				.getInstance()
-				.confirm(
-						"Moving a chat console might result in a loss of previous messages\n"
-								+ "depending on how many there are. Do you wish to proceed?");
+		int chars = console.getInputText().getCharCount();
+
+		if (chars > 25000) {
+			return Raptor
+					.getInstance()
+					.confirm(
+							"You have over 25,000 characters in this console. Moving to another quadrant might"
+									+ "take a while to update as the previous messages are loaded. Do you wish to proceed?");
+		} else {
+			return true;
+		}
 	}
 
 	public void dispose() {
@@ -103,6 +109,7 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 			controller.setChatConsole(console);
 
 			controller.onPostReparent();
+			ChatUtils.appendPreviousChatsToController(console);
 			console.redraw();
 		}
 	}
