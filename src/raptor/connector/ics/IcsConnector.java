@@ -554,13 +554,12 @@ public abstract class IcsConnector implements Connector {
 				}
 			}
 		} catch (Throwable t) {
-			LOG.debug("Error occured in read", t);
 			if (t instanceof IOException) {
 				LOG
 						.debug(
 								context.getShortName()
 										+ "Connector "
-										+ "IOException occured in DaemonRun (These are common when disconnecting and ignorable)",
+										+ "IOException occured in messageLoop (These are common when disconnecting and ignorable)",
 								t);
 			} else {
 				onError(context.getShortName()

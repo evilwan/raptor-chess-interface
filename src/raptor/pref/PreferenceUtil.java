@@ -24,6 +24,9 @@ public class PreferenceUtil {
 		PreferenceManager mgr = new PreferenceManager();
 
 		// Add the nodes
+//		mgr
+//				.addToRoot(new PreferenceNode("raptor",
+//						new RaptorPage()));
 		mgr.addToRoot(new PreferenceNode("chessBoardGraphics",
 				new ChessBoardGraphicsPage()));
 		mgr.addToRoot(new PreferenceNode("colors", new ColorsPage()));

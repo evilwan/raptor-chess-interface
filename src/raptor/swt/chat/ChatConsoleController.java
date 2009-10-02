@@ -532,7 +532,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void decorateQuotes(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() != ChatType.OUTBOUND) {
-			boolean isUnderliningSingleQuotes = getPreferences().getBoolean(CHAT_UNDERLINE_SINGLE_QUOTES);
+			boolean isUnderliningSingleQuotes = getPreferences().getBoolean(
+					CHAT_UNDERLINE_SINGLE_QUOTES);
 			List<int[]> quotedRanges = new ArrayList<int[]>(5);
 
 			int quoteIndex = message.indexOf("\"");
@@ -627,7 +628,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	 * Should be invoked when the title or closeability changes.
 	 */
 	protected void fireItemChanged() {
+		System.err.println("in fireItemChanged");
 		for (ItemChangedListener listener : itemChangedListeners) {
+			System.err.println("Firing item changed: " + listener);
 			listener.itemStateChanged();
 		}
 	}
