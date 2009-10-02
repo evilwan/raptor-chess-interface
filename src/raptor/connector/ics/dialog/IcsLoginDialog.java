@@ -1,5 +1,7 @@
 package raptor.connector.ics.dialog;
 
+import java.io.IOException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -205,7 +207,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		guestLoginCheckBox.addSelectionListener(selectionListener);
 
 		String currentProfile = Raptor.getInstance().getPreferences()
-				.getString(PreferenceKeys.FICS_PROFILE);
+				.getString(profilePrefix + "profile");
 		lastSelection = currentProfile;
 		loadFromProfile(currentProfile);
 
@@ -290,7 +292,12 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 				.getSelection());
 		prefs.setValue(profilePrefix + "auto-connect", autoLoginCheckBox
 				.getSelection());
-		prefs.setValue(profileName + "profile", profileName);
+
+		System.err.println("Stored " + prefix + " values");
+
+		// Don't store off the the profileName-profile here.
+		// It should'nt be stored for fics2/bics2 logins.
+		prefs.save();
 		LOG.info("Saved " + profileName);
 	}
 

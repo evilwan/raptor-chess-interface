@@ -74,6 +74,13 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				IcsLoginDialog dialog = new IcsLoginDialog(context
 						.getPreferencePrefix(), "Fics Login");
 				dialog.open();
+				getPreferences().setValue(
+						context.getPreferencePrefix() + "profile",
+						dialog.getSelectedProfile());
+				System.err.println("Set profile to "
+						+ context.getPreferencePrefix() + "profile" + " "
+						+ dialog.getSelectedProfile());
+				getPreferences().save();
 				if (dialog.wasLoginPressed()) {
 					connect();
 				}

@@ -3,6 +3,7 @@ package raptor.pref;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Date;
 
@@ -81,6 +82,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		LOG.info("Loaded preferences from "
 				+ RAPTOR_PROPERTIES.getAbsolutePath());
 
+	}
+
+	public void save() {
+		try {
+			super.save();
+		} catch (IOException ioe) {
+			LOG.error("Error saving raptor preferences:", ioe);
+			throw new RuntimeException(ioe);
+		}
 	}
 
 	/**

@@ -14,7 +14,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.jface.preference.PreferenceStore;
 
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
@@ -26,6 +25,7 @@ import raptor.game.Game;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.RaptorPreferenceStore;
 import raptor.script.GameScript;
 import raptor.service.ChatService;
 import raptor.service.GameService;
@@ -142,7 +142,8 @@ public abstract class IcsConnector implements Connector {
 				+ profileName + "-";
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Profile Prefix=" + profilePrefix);
+			LOG.debug("Profile " + currentProfileName + " Prefix="
+					+ profilePrefix);
 		}
 
 		if (mainConsoleWindowItem == null) {
@@ -455,7 +456,7 @@ public abstract class IcsConnector implements Connector {
 		return "tell " + person + " ";
 	}
 
-	public PreferenceStore getPreferences() {
+	public RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
 	}
 
@@ -643,7 +644,8 @@ public abstract class IcsConnector implements Connector {
 	 * @param isLoginPrompt
 	 */
 	protected void onLoginEvent(String message, boolean isLoginPrompt) {
-		String profilePrefix = "fics-" + currentProfileName + "-";
+		String profilePrefix = context.getPreferencePrefix()
+				+ currentProfileName + "-";
 		if (isLoginPrompt) {
 			if (getPreferences().getBoolean(profilePrefix + "is-anon-guest")
 					&& !hasSentLogin) {
