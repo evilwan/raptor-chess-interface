@@ -290,7 +290,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 				.getSelection());
 		prefs.setValue(profilePrefix + "auto-connect", autoLoginCheckBox
 				.getSelection());
-		prefs.setValue(profilePrefix + "profile", profileName);
+		prefs.setValue(profileName + "profile", profileName);
 		LOG.info("Saved " + profileName);
 	}
 
