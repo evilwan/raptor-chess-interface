@@ -338,6 +338,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_REGEX_TAB_QUADRANT, "III");
 		setDefault(APP_PARTNER_TELL_TAB_QUADRANT, "III");
 		setDefault(APP_GAME_QUADRANT, "II");
+		setDefault(ALL_BROWSER_QUADRANT, "II");
 
 		setDefault(SOUND_ENABLED, true);
 
@@ -405,8 +406,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_TERTIARY_SERVER_URL, "chess.sipay.ru");
 		setDefault(BICS_TERTIARY_PORT, 5000);
 		setDefault(BICS_TERTIARY_TIMESEAL_ENABLED, true);
-		
-		setDefault(TIMESEAL_INIT_STRING,"TIMESTAMP|iv|" + generateRandomWord() + "|");
+
+		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|" + generateRandomWord()
+				+ "|");
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
 
@@ -421,16 +423,17 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	public void setRectangle(String key, Rectangle rectangle) {
 		PreferenceConverter.setValue(this, key, rectangle);
 	}
-	
+
 	protected String generateRandomWord() {
-	    int chars = random.nextInt(11);
-	    StringBuilder result = new StringBuilder(chars);
-	    for (int i = 0; i < chars + 1; i++) {
-	    	result.append(WORD_CHARS.charAt(random.nextInt(WORD_CHARS.length())));
-	    }
-	    return result.toString();
+		int chars = random.nextInt(11);
+		StringBuilder result = new StringBuilder(chars);
+		for (int i = 0; i < chars + 1; i++) {
+			result.append(WORD_CHARS
+					.charAt(random.nextInt(WORD_CHARS.length())));
+		}
+		return result.toString();
 	}
-	
+
 	protected static final SecureRandom random = new SecureRandom();
 	protected static final String WORD_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ134567890";
 }
