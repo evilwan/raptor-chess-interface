@@ -154,11 +154,17 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	public void onPassivate() {
 	}
 
-	public void onReparent(Composite newParent) {
-		url = browser.getUrl();
-		composite.setVisible(false);
-		composite.dispose();
-		init(newParent);
+	public boolean onReparent(Composite newParent) {
+		boolean result = false;
+		if (!composite.setParent(newParent)) {
+			url = browser.getUrl();
+			composite.setVisible(false);
+			composite.dispose();
+			init(newParent);
+		} else {
+			result = true;
+		}
+		return result;
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {

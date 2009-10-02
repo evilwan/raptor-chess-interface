@@ -4,6 +4,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
+import com.sun.tools.javac.util.Log;
+
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
@@ -29,7 +31,7 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	public boolean confirmQuadrantMove() {
 		int chars = console.getInputText().getCharCount();
 
-		if (chars > 25000) {
+		if (!console.isReparentable() && chars > 25000) {
 			return Raptor
 					.getInstance()
 					.confirm(
@@ -95,23 +97,31 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	public void onPassivate() {
 	}
 
-	public void onReparent(Composite newParent) {
+	public boolean onReparent(Composite newParent) {
+		boolean result = false;
 		if (controller != null) {
-			// Grab the controller from the console since it may have changed.
-			controller = console.getController();
-			controller.onPreReparent();
-			console.setController(null);
-			console.dispose();
+			if (!console.setParent(newParent)) {
+				// Grab the controller from the console since it may have
+				// changed.
+				controller = console.getController();
+				controller.onPreReparent();
+				console.setController(null);
+				console.setVisible(false);
+				console.dispose();
 
-			console = new ChatConsole(newParent, SWT.NONE);
-			console.setController(controller);
-			console.createControls();
-			controller.setChatConsole(console);
+				console = new ChatConsole(newParent, SWT.NONE);
+				console.setController(controller);
+				console.createControls();
+				controller.setChatConsole(console);
 
-			controller.onPostReparent();
-			ChatUtils.appendPreviousChatsToController(console);
-			console.redraw();
+				controller.onPostReparent();
+				ChatUtils.appendPreviousChatsToController(console);
+				console.redraw();
+			} else {
+				result = true;
+			}
 		}
+		return result;
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {

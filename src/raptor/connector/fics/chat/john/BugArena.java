@@ -85,10 +85,12 @@ public class BugArena implements RaptorWindowItem {
 	public void onPassivate() {
 	}
 
-	public void onReparent(Composite newParent) {
-		// TODO Auto-generated method stub
+	public boolean onReparent(Composite newParent) {
+		// TO DO: get cday to help with this.
 		composite.dispose();
 		init(newParent);
+
+		return false;
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
