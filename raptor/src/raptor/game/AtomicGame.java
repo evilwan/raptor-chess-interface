@@ -8,11 +8,23 @@ public class AtomicGame extends Game {
 
 	@Override
 	public PriorityMoveList getLegalMoves() {
-		return null;
+		PriorityMoveList result = getPseudoLegalMoves();
+		
+		for (int i = 0; i < result.getHighPrioritySize(); i++) {
+			Move move = result.getHighPriority(i);
+			forceMove(move);
+
+			if (!isLegalPosition()) {
+				result.removeHighPriority(i);
+				i--;
+			}
+		}
+		
+		return result;
 	}
 
 	@Override
 	public boolean isLegalPosition() {
-		return false;
+		return true;
 	}
 }

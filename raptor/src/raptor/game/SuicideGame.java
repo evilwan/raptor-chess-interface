@@ -47,7 +47,7 @@ public class SuicideGame extends Game {
 			Move move = result.getLowPriority(i);
 			forceMove(move);
 
-			if (!isLegalPosition()/* || move.isCastling() */) { // castling not
+			if (!isLegalPosition() || (move.isCastleKSide() || move.isCastleQSide()) ) { // castling not
 				// allowed in
 				// suicide
 				result.removeLowPriority(i);
