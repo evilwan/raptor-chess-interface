@@ -22,26 +22,17 @@ public class ZHGame extends Game {
 	}
 
 	/**
-	 * Overridden to adjust the drop count as well.
-	 */
-	@Override
-	public void setPieceCount(int color, int piece, int count) {
-		positionState.pieceCounts[color][piece & NOT_PROMOTED_MASK] = count;
-	}
-
-	/**
-	 * Overridden to invoke incrementDropCount as well as the
-	 * super.incrementPieceCount.
+	 * Decrements the piece count for the specified piece. This method handles
+	 * promotion masks as well.
 	 * 
 	 * @param color
-	 *            WHITE or BLACK
+	 *            WHITE or BLACK.
 	 * @param piece
-	 *            The uncolored piece constant.
+	 *            The un-colored piece constant.
 	 */
-	@Override
-	public void incrementPieceCount(int color, int piece) {
-		decrementDropCount(GameUtils.getOppositeColor(color), piece);
-		super.incrementPieceCount(color, piece);
+	public void decrementDropCount(int color, int piece) {
+		piece = piece & PROMOTED_MASK;
+		positionState.dropCounts[color][piece] = positionState.dropCounts[color][piece] - 1;
 	}
 
 	/**
@@ -57,47 +48,6 @@ public class ZHGame extends Game {
 	public void decrementPieceCount(int color, int piece) {
 		incrementDropCount(GameUtils.getOppositeColor(color), piece);
 		super.decrementPieceCount(color, piece);
-	}
-
-	/**
-	 * Increments the piece count. This method handles incrementing pieces with
-	 * a promote mask.
-	 * 
-	 * @param color
-	 *            WHITE or BLACK
-	 * @param piece
-	 *            The uncolored piece constant.
-	 */
-	public void incrementDropCount(int color, int piece) {
-		if ((piece & PROMOTED_MASK) != 0) {
-			piece = PAWN;
-		} else {
-			positionState.dropCounts[color][piece] = positionState.dropCounts[color][piece] + 1;
-		}
-	}
-
-	/**
-	 * Decrements the piece count for the specified piece. This method handles
-	 * promotion masks as well.
-	 * 
-	 * @param color
-	 *            WHITE or BLACK.
-	 * @param piece
-	 *            The un-colored piece constant.
-	 */
-	public void decrementDropCount(int color, int piece) {
-		piece = piece & PROMOTED_MASK;
-		positionState.dropCounts[color][piece] = positionState.dropCounts[color][piece] - 1;
-	}
-
-	/**
-	 * Overridden to invoke genDropMoves as well as super.getPseudoLegalMoves.
-	 */
-	@Override
-	public PriorityMoveList getPseudoLegalMoves() {
-		PriorityMoveList result = super.getPseudoLegalMoves();
-		genDropMoves(result);
-		return result;
 	}
 
 	/**
@@ -163,6 +113,56 @@ public class ZHGame extends Game {
 				emptyBB = bitscanClear(emptyBB);
 			}
 		}
+	}
+
+	/**
+	 * Overridden to invoke genDropMoves as well as super.getPseudoLegalMoves.
+	 */
+	@Override
+	public PriorityMoveList getPseudoLegalMoves() {
+		PriorityMoveList result = super.getPseudoLegalMoves();
+		genDropMoves(result);
+		return result;
+	}
+
+	/**
+	 * Increments the piece count. This method handles incrementing pieces with
+	 * a promote mask.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The uncolored piece constant.
+	 */
+	public void incrementDropCount(int color, int piece) {
+		if ((piece & PROMOTED_MASK) != 0) {
+			piece = PAWN;
+		} else {
+			positionState.dropCounts[color][piece] = positionState.dropCounts[color][piece] + 1;
+		}
+	}
+
+	/**
+	 * Overridden to invoke incrementDropCount as well as the
+	 * super.incrementPieceCount.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The uncolored piece constant.
+	 */
+	@Override
+	public void incrementPieceCount(int color, int piece) {
+		decrementDropCount(GameUtils.getOppositeColor(color), piece);
+		super.incrementPieceCount(color, piece);
+	}
+
+	/**
+	 * Overridden to adjust the drop count as well.
+	 */
+	@Override
+	public void setPieceCount(int color, int piece, int count) {
+		positionState.pieceCounts[color][piece & NOT_PROMOTED_MASK] = count;
 	}
 
 	/**

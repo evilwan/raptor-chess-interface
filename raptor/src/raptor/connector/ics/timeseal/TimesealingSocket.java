@@ -31,6 +31,19 @@ import java.net.Socket;
 public class TimesealingSocket extends Socket implements Runnable {
 	private class CryptOutputStream extends OutputStream {
 
+		private final byte timesealKey[] = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
+				.getBytes();
+
+		private byte buffer[];
+
+		private final OutputStream outputStreamToDecorate;
+		private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+		public CryptOutputStream(OutputStream outputstream) {
+			buffer = new byte[10000];
+			outputStreamToDecorate = outputstream;
+		}
+
 		private int crypt(byte stringToWriteBytes[], long timestamp) {
 			int bytesInLength = stringToWriteBytes.length;
 			System.arraycopy(stringToWriteBytes, 0, buffer, 0,
@@ -73,6 +86,7 @@ public class TimesealingSocket extends Socket implements Runnable {
 			return bytesInLength;
 		}
 
+		@Override
 		public void write(int i) throws IOException {
 			if (i == 10)
 				synchronized (TimesealingSocket.this) {
@@ -86,17 +100,24 @@ public class TimesealingSocket extends Socket implements Runnable {
 			else
 				byteArrayOutputStream.write(i);
 		}
+	}
 
-		private final byte timesealKey[] = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
-				.getBytes();
-		private byte buffer[];
-		private final OutputStream outputStreamToDecorate;
-		private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+	private volatile long initialTime;
 
-		public CryptOutputStream(OutputStream outputstream) {
-			buffer = new byte[10000];
-			outputStreamToDecorate = outputstream;
-		}
+	private String initialTimesealString = null;
+
+	private final TimesealPipe timesealPipe;
+
+	private CryptOutputStream cryptedOutputStream;
+
+	private volatile Thread thread;
+
+	public TimesealingSocket(InetAddress inetaddress, int i,
+			String intialTimestampString) throws IOException {
+		super(inetaddress, i);
+		this.initialTimesealString = intialTimestampString;
+		timesealPipe = new TimesealPipe(10000);
+		init();
 	}
 
 	public TimesealingSocket(String s, int i, String intialTimestampString)
@@ -107,40 +128,20 @@ public class TimesealingSocket extends Socket implements Runnable {
 		init();
 	}
 
-	public TimesealingSocket(InetAddress inetaddress, int i,
-			String intialTimestampString) throws IOException {
-		super(inetaddress, i);
-		this.initialTimesealString = intialTimestampString;
-		timesealPipe = new TimesealPipe(10000);
-		init();
-	}
-
+	@Override
 	public void close() throws IOException {
 		super.close();
 		thread = null;
 	}
 
+	@Override
 	public InputStream getInputStream() {
 		return timesealPipe.getTimesealInputStream();
 	}
 
+	@Override
 	public CryptOutputStream getOutputStream() throws IOException {
 		return cryptedOutputStream;
-	}
-
-	private void writeInitialTimesealString() throws IOException {
-
-		// BICS can't handle speedy connections so this slows it down a bit.
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException ie) {
-		}
-		
-		OutputStream outputstream = getOutputStream();
-		synchronized (outputstream) {
-			outputstream.write(initialTimesealString.getBytes());
-			outputstream.write(10);
-		}
 	}
 
 	private void init() throws IOException {
@@ -218,10 +219,19 @@ public class TimesealingSocket extends Socket implements Runnable {
 		}
 	}
 
-	private volatile long initialTime;
-	private String initialTimesealString = null;
-	private final TimesealPipe timesealPipe;
-	private CryptOutputStream cryptedOutputStream;
-	private volatile Thread thread;
+	private void writeInitialTimesealString() throws IOException {
+
+		// BICS can't handle speedy connections so this slows it down a bit.
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException ie) {
+		}
+
+		OutputStream outputstream = getOutputStream();
+		synchronized (outputstream) {
+			outputstream.write(initialTimesealString.getBytes());
+			outputstream.write(10);
+		}
+	}
 
 }

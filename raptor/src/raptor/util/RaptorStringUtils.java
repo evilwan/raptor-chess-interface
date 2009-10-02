@@ -1,6 +1,16 @@
 package raptor.util;
 
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 public class RaptorStringUtils {
+
+	protected static final SecureRandom random = new SecureRandom();
+
+	protected static final String WORD_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ134567890";
 
 	/**
 	 * A fast utility method that does'nt use REGEX and returns the number of
@@ -37,6 +47,47 @@ public class RaptorStringUtils {
 			result = valueAsString;
 		}
 		return result;
+	}
+
+	/**
+	 * Generates a random word between 1 and n chars in length.
+	 */
+	public static String generateRandomWord(int n) {
+		int chars = random.nextInt(n - 1);
+		StringBuilder result = new StringBuilder(chars);
+		for (int i = 0; i < chars + 1; i++) {
+			result.append(WORD_CHARS
+					.charAt(random.nextInt(WORD_CHARS.length())));
+		}
+		return result.toString();
+	}
+
+	/**
+	 * Returns an int[] from a string formatted in what toString(int[]) returns.
+	 */
+	public static int[] intArrayFromString(String string) {
+		List<Integer> result = new ArrayList<Integer>(10);
+
+		System.err.println("intArrayFromString:" + string);
+		if (StringUtils.isNotBlank(string)) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(string, ",",
+					false);
+
+			while (tok.hasMoreTokens()) {
+				try {
+					result.add(Integer.parseInt(tok.nextToken()));
+				} catch (NumberFormatException nfe) {
+					throw new IllegalStateException(nfe);
+				}
+			}
+		}
+
+		int[] arrayResult = new int[result.size()];
+		for (int i = 0; i < result.size(); i++) {
+			arrayResult[i] = result.get(i);
+			System.err.println(i + "=" + arrayResult[i]);
+		}
+		return arrayResult;
 	}
 
 	/**
@@ -119,6 +170,29 @@ public class RaptorStringUtils {
 	}
 
 	/**
+	 * Returns a String[] of strings from a string that is formatted in what
+	 * toString(String[]) returns.
+	 */
+	public static String[] stringArrayFromString(String string) {
+		List<String> result = new ArrayList<String>(10);
+
+		if (StringUtils.isNotBlank(string)) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(string, ",",
+					false);
+
+			while (tok.hasMoreTokens()) {
+				String token = tok.nextToken();
+				if (token.equals("null")) {
+					result.add(null);
+				} else {
+					result.add(tok.nextToken());
+				}
+			}
+		}
+		return result.toArray(new String[0]);
+	}
+
+	/**
 	 * Returns a String representing the contents of the array delimited by the
 	 * a comma.
 	 */
@@ -146,6 +220,40 @@ public class RaptorStringUtils {
 			}
 		}
 		return result.toString();
+	}
+
+	/**
+	 * Returns a comma delimited string containing values.
+	 * 
+	 * @param values
+	 *            An int[]
+	 * @return comma delimited result.
+	 */
+	public static String toString(int[] values) {
+		String result = "";
+		for (int value : values) {
+			result += value + ",";
+		}
+		if (StringUtils.isNotBlank(result)) {
+			result = result.substring(0, result.length() - 1);
+		}
+
+		System.err.println("int[] to string result=" + result);
+		return result;
+	}
+
+	/**
+	 * Returns a comma delimited array of strings.
+	 */
+	public static String toString(String[] values) {
+		String valuesString = "";
+		for (String value : values) {
+			valuesString += value + ",";
+		}
+		if (StringUtils.isNotBlank(valuesString)) {
+			valuesString = valuesString.substring(0, valuesString.length() - 1);
+		}
+		return valuesString;
 	}
 
 }

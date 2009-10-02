@@ -94,14 +94,6 @@ public abstract class IcsConnector implements Connector {
 		setBughouseService(new BughouseService());
 	}
 
-	private void setBughouseService(BughouseService bughouseService) {
-		this.bughouseService = bughouseService;
-	}
-	
-	public BughouseService getBughouseService() {
-		return bughouseService;
-	}
-
 	/**
 	 * Adds a connector listener to the connector.
 	 */
@@ -124,15 +116,6 @@ public abstract class IcsConnector implements Connector {
 	public void connect() {
 		connect(Raptor.getInstance().getPreferences().getString(
 				context.getPreferencePrefix() + "profile"));
-	}
-
-	/**
-	 * Resets state variables related to the connection state.
-	 */
-	protected void resetConnectionStateVars() {
-		isLoggedIn = false;
-		hasSentLogin = false;
-		hasSentPassword = false;
 	}
 
 	/**
@@ -404,6 +387,10 @@ public abstract class IcsConnector implements Connector {
 		});
 	}
 
+	public BughouseService getBughouseService() {
+		return bughouseService;
+	}
+
 	public String[][] getChannelActions(String channel) {
 		return new String[][] {
 				new String[] { "Add Channel " + channel, "+channel " + channel },
@@ -442,6 +429,11 @@ public abstract class IcsConnector implements Connector {
 
 	public GameService getGameService() {
 		return gameService;
+	}
+
+	protected String getInitialTimesealString() {
+		return Raptor.getInstance().getPreferences().getString(
+				PreferenceKeys.TIMESEAL_INIT_STRING);
 	}
 
 	public String getPartnerTellPrefix() {
@@ -915,6 +907,15 @@ public abstract class IcsConnector implements Connector {
 		gameScriptsMap.remove(script.getName());
 	}
 
+	/**
+	 * Resets state variables related to the connection state.
+	 */
+	protected void resetConnectionStateVars() {
+		isLoggedIn = false;
+		hasSentLogin = false;
+		hasSentPassword = false;
+	}
+
 	public void sendMessage(String message) {
 		sendMessage(message, false);
 	}
@@ -957,9 +958,8 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
-	protected String getInitialTimesealString() {
-		return Raptor.getInstance().getPreferences().getString(
-				PreferenceKeys.TIMESEAL_INIT_STRING);
+	private void setBughouseService(BughouseService bughouseService) {
+		this.bughouseService = bughouseService;
 	}
 
 }

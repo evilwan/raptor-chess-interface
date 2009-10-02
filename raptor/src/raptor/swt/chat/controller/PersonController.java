@@ -8,7 +8,6 @@ import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
-import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleController;
 
@@ -28,8 +27,8 @@ public class PersonController extends ChatConsoleController {
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getQuadrant(
-				PreferenceKeys.APP_PERSON_TAB_QUADRANT);
+		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
+				PERSON_TAB_QUADRANT);
 	}
 
 	@Override

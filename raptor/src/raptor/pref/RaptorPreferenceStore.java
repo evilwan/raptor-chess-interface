@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
@@ -28,7 +27,12 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.util.RaptorStringUtils;
 
+/**
+ * The RaptorPreferenceStore. Automatically loads and saves itself at
+ * Raptor.USER_RAPTOR_DIR/raptor.properties . Had additional data type support.
+ */
 public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
 	private static final Log LOG = LogFactory
@@ -82,15 +86,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		LOG.info("Loaded preferences from "
 				+ RAPTOR_PROPERTIES.getAbsolutePath());
 
-	}
-
-	public void save() {
-		try {
-			super.save();
-		} catch (IOException ioe) {
-			LOG.error("Error saving raptor preferences:", ioe);
-			throw new RuntimeException(ioe);
-		}
 	}
 
 	/**
@@ -151,6 +146,32 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	}
 
+	public Quadrant getCurrentLayoutQuadrant(String key) {
+		key = "app-" + getString(APP_LAYOUT) + "-" + key;
+		System.err.println("Getting layout quad for key: " + key);
+		return getQuadrant(key);
+	}
+
+	public Rectangle getCurrentLayoutRectangle(String key) {
+		key = "app-" + getString(APP_LAYOUT) + "-" + key;
+		System.err.println("Getting rect for key: " + key);
+		return getRectangle(key);
+	}
+
+	public int[] getCurrentLayoutSashWeights(String key) {
+		key = "app-" + getString(APP_LAYOUT) + "-" + key;
+		System.err.println("Getting int array for key: " + key);
+		return getIntArray(key);
+	}
+
+	public int[] getDefaultIntArray(String key) {
+		return RaptorStringUtils.intArrayFromString(getDefaultString(key));
+	}
+
+	public String[] getDefaultStringArray(String key) {
+		return RaptorStringUtils.stringArrayFromString(getDefaultString(key));
+	}
+
 	/**
 	 * Returns the font for the specified key. Returns the default font if key
 	 * was not found.
@@ -170,6 +191,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	}
 
+	public int[] getIntArray(String key) {
+		return RaptorStringUtils.intArrayFromString(getString(key));
+	}
+
 	public Point getPoint(String key) {
 		return PreferenceConverter.getPoint(this, key);
 	}
@@ -180,6 +205,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public Rectangle getRectangle(String key) {
 		return PreferenceConverter.getRectangle(this, key);
+	}
+
+	public String[] getStringArray(String key) {
+		return RaptorStringUtils.stringArrayFromString(getString(key));
 	}
 
 	public void loadDefaults() {
@@ -342,16 +371,76 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, APP_STATUS_BAR_COLOR, new RGB(0,
 				0, 0));
 
-		setDefault(APP_MAIN_TAB_QUADRANT, "III");
-		setDefault(APP_CHANNEL_TAB_QUADRANT, "III");
-		setDefault(APP_PERSON_TAB_QUADRANT, "III");
-		setDefault(APP_REGEX_TAB_QUADRANT, "III");
-		setDefault(APP_PARTNER_TELL_TAB_QUADRANT, "III");
-		setDefault(APP_GAME_QUADRANT, "II");
-		setDefault(APP_BROWSER_QUADRANT, "II");
 		setDefault(APP_HOME_URL,
 				"http://code.google.com/p/raptor-chess-interface/wiki/RaptorHomePage");
-		setDefault(SOUND_ENABLED, true);
+		setDefault(APP_SOUND_ENABLED, true);
+		setDefault(APP_LAYOUT, "Layout1");
+		// Layout 1 settings.
+		setDefault(APP_LAYOUT1_MAIN_TAB_QUADRANT, Quadrant.V);
+		setDefault(APP_LAYOUT1_CHANNEL_TAB_QUADRANT, Quadrant.V);
+		setDefault(APP_LAYOUT1_PERSON_TAB_QUADRANT, Quadrant.V);
+		setDefault(APP_LAYOUT1_REGEX_TAB_QUADRANT, Quadrant.V);
+		setDefault(APP_LAYOUT1_PARTNER_TELL_TAB_QUADRANT, Quadrant.V);
+		setDefault(APP_LAYOUT1_GAME_QUADRANT, Quadrant.III);
+		setDefault(APP_LAYOUT1_PARTNER_GAME_QUADRANT, Quadrant.IV);
+		setDefault(APP_LAYOUT1_BROWSER_QUADRANT, Quadrant.III);
+		setDefault(APP_LAYOUT1_BUG_ARENA_QUADRANT, Quadrant.VII);
+		setDefault(APP_LAYOUT1_SEEK_GRAPH_QUADRANT, Quadrant.VII);
+		setDefault(APP_LAYOUT1_BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault(APP_LAYOUT1_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
+		setDefault(APP_LAYOUT1_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS, new int[] {
+				10, 80, 10 });
+		setDefault(APP_LAYOUT1_QUAD2_QUAD234567_SASH_WEIGHTS, new int[] { 10,
+				90 });
+		setDefault(APP_LAYOUT1_QUAD3_QUAD4_SASH_WEIGHTS, new int[] { 50, 50 });
+		setDefault(APP_LAYOUT1_QUAD56_QUAD7_SASH_WEIGHTS, new int[] { 70, 30 });
+		setDefault(APP_LAYOUT1_QUAD34_QUAD567_SASH_WEIGHTS,
+				new int[] { 50, 50 });
+		setDefault(APP_LAYOUT1_QUAD5_QUAD6_SASH_WEIGHTS, new int[] { 50, 50 });
+		// Layout 2 settings.
+		setDefault(APP_LAYOUT2_MAIN_TAB_QUADRANT, Quadrant.V);
+		setDefault(APP_LAYOUT2_CHANNEL_TAB_QUADRANT, Quadrant.VI);
+		setDefault(APP_LAYOUT2_PERSON_TAB_QUADRANT, Quadrant.VI);
+		setDefault(APP_LAYOUT2_REGEX_TAB_QUADRANT, Quadrant.VI);
+		setDefault(APP_LAYOUT2_PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
+		setDefault(APP_LAYOUT2_GAME_QUADRANT, Quadrant.III);
+		setDefault(APP_LAYOUT2_PARTNER_GAME_QUADRANT, Quadrant.IV);
+		setDefault(APP_LAYOUT2_BROWSER_QUADRANT, Quadrant.III);
+		setDefault(APP_LAYOUT2_BUG_ARENA_QUADRANT, Quadrant.VII);
+		setDefault(APP_LAYOUT2_SEEK_GRAPH_QUADRANT, Quadrant.VII);
+		setDefault(APP_LAYOUT2_BUG_BUTTONS_QUADRANT, Quadrant.I);
+		setDefault(APP_LAYOUT2_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
+		setDefault(APP_LAYOUT2_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS, new int[] {
+				10, 80, 10 });
+		setDefault(APP_LAYOUT2_QUAD2_QUAD234567_SASH_WEIGHTS, new int[] { 10,
+				90 });
+		setDefault(APP_LAYOUT2_QUAD3_QUAD4_SASH_WEIGHTS, new int[] { 50, 50 });
+		setDefault(APP_LAYOUT2_QUAD56_QUAD7_SASH_WEIGHTS, new int[] { 70, 30 });
+		setDefault(APP_LAYOUT2_QUAD34_QUAD567_SASH_WEIGHTS,
+				new int[] { 50, 50 });
+		setDefault(APP_LAYOUT2_QUAD5_QUAD6_SASH_WEIGHTS, new int[] { 50, 50 });
+		// Layout 3 settings.
+		setDefault(APP_LAYOUT3_MAIN_TAB_QUADRANT, Quadrant.V);
+		setDefault(APP_LAYOUT3_CHANNEL_TAB_QUADRANT, Quadrant.VI);
+		setDefault(APP_LAYOUT3_PERSON_TAB_QUADRANT, Quadrant.VI);
+		setDefault(APP_LAYOUT3_REGEX_TAB_QUADRANT, Quadrant.VI);
+		setDefault(APP_LAYOUT3_PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
+		setDefault(APP_LAYOUT3_GAME_QUADRANT, Quadrant.III);
+		setDefault(APP_LAYOUT3_PARTNER_GAME_QUADRANT, Quadrant.IV);
+		setDefault(APP_LAYOUT3_BROWSER_QUADRANT, Quadrant.III);
+		setDefault(APP_LAYOUT3_BUG_ARENA_QUADRANT, Quadrant.VII);
+		setDefault(APP_LAYOUT3_SEEK_GRAPH_QUADRANT, Quadrant.VII);
+		setDefault(APP_LAYOUT3_BUG_BUTTONS_QUADRANT, Quadrant.VIII);
+		setDefault(APP_LAYOUT3_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
+		setDefault(APP_LAYOUT3_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS, new int[] {
+				10, 80, 10 });
+		setDefault(APP_LAYOUT3_QUAD2_QUAD234567_SASH_WEIGHTS, new int[] { 10,
+				90 });
+		setDefault(APP_LAYOUT3_QUAD3_QUAD4_SASH_WEIGHTS, new int[] { 50, 50 });
+		setDefault(APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS, new int[] { 70, 30 });
+		setDefault(APP_LAYOUT3_QUAD34_QUAD567_SASH_WEIGHTS,
+				new int[] { 50, 50 });
+		setDefault(APP_LAYOUT3_QUAD5_QUAD6_SASH_WEIGHTS, new int[] { 50, 50 });
 
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, true);
@@ -367,7 +456,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_ADJUDICATE_URL,
 				"http://www.freechess.org/Adjudicate/index.html");
 		setDefault(FICS_TEAM_LEAGUE_URL, "http://teamleague.org/");
-
 		// Fics Primary
 		setDefault(FICS_PRIMARY_USER_NAME, "");
 		setDefault(FICS_PRIMARY_PASSWORD, "");
@@ -392,7 +480,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_TERTIARY_SERVER_URL, "freechess.org");
 		setDefault(FICS_TERTIARY_PORT, 5000);
 		setDefault(FICS_TERTIARY_TIMESEAL_ENABLED, true);
-		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 
 		// Bics
 		setDefault(BICS_KEEP_ALIVE, true);
@@ -426,33 +513,74 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_TERTIARY_PORT, 5000);
 		setDefault(BICS_TERTIARY_TIMESEAL_ENABLED, true);
 
-		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|" + generateRandomWord()
-				+ "|");
+		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|"
+				+ RaptorStringUtils.generateRandomWord(10) + "|");
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
 
-	public void setPoint(String key, Point point) {
-		PreferenceConverter.setValue(this, key, point);
+	@Override
+	public void save() {
+		try {
+			super.save();
+		} catch (IOException ioe) {
+			LOG.error("Error saving raptor preferences:", ioe);
+			throw new RuntimeException(ioe);
+		}
 	}
 
-	public void setQuadrant(String key, Quadrant quadrant) {
+	public void setCurrentLayoutQuadrant(String key, Quadrant quadrant) {
+		key = "app-" + getString(APP_LAYOUT) + "-" + key;
 		setValue(key, quadrant.name());
 	}
 
-	public void setRectangle(String key, Rectangle rectangle) {
+	public void setCurrentLayoutRectangle(String key, Rectangle rectangle) {
+		key = "app-" + getString(APP_LAYOUT) + "-" + key;
+		setValue(key, rectangle);
+	}
+
+	public void setCurrentLayoutSashWeights(String key, int[] array) {
+		key = "app-" + getString(APP_LAYOUT) + "-" + key;
+		setValue(key, array);
+	}
+
+	public void setDefault(String key, int[] values) {
+		setDefault(key, RaptorStringUtils.toString(values));
+	}
+
+	public void setDefault(String key, Point point) {
+		PreferenceConverter.setValue(this, key, point);
+	}
+
+	public void setDefault(String key, Quadrant quadrant) {
+		setDefault(key, quadrant.name());
+	}
+
+	public void setDefault(String key, Rectangle rectangle) {
+		PreferenceConverter.setDefault(this, key, rectangle);
+	}
+
+	public void setDefault(String key, String[] values) {
+		setDefault(key, RaptorStringUtils.toString(values));
+	}
+
+	public void setValue(String key, int[] values) {
+		setValue(key, RaptorStringUtils.toString(values));
+	}
+
+	public void setValue(String key, Point point) {
+		PreferenceConverter.setValue(this, key, point);
+	}
+
+	public void setValue(String key, Quadrant quadrant) {
+		setValue(key, quadrant.name());
+	}
+
+	public void setValue(String key, Rectangle rectangle) {
 		PreferenceConverter.setValue(this, key, rectangle);
 	}
 
-	protected String generateRandomWord() {
-		int chars = random.nextInt(11);
-		StringBuilder result = new StringBuilder(chars);
-		for (int i = 0; i < chars + 1; i++) {
-			result.append(WORD_CHARS
-					.charAt(random.nextInt(WORD_CHARS.length())));
-		}
-		return result.toString();
+	public void setValue(String key, String[] values) {
+		setValue(key, RaptorStringUtils.toString(values));
 	}
 
-	protected static final SecureRandom random = new SecureRandom();
-	protected static final String WORD_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ134567890";
 }

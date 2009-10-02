@@ -2,18 +2,19 @@ package raptor;
 
 /**
  * Represents a quadrant to place a RaptorWindowItem. The following is a diagram
- * of the quadrants.
+ * of the quadrants. The dashes in the below illustration are adjustable
+ * sliders.
  * 
  * <pre>
- * --------------------------------------------
- *                  II
+ * 
+ *                  I
  * --------------------------------------------
  *        |                |
  *        |    III         |    IV
  *        |                | 
  *        |                |             
  *        |-------------------------------------              
- *   I    |         V              |
+ *   II   |         V              |
  *        |                        |
  *        |-------------------------     VII             
  *        |         VI             |
@@ -21,9 +22,9 @@ package raptor;
  *        |                        |
  * ---------------------------------------------
  *                   VIII
- * ---------------------------------------------
+ * 
  * </pre>
  */
 public enum Quadrant {
-	I, II, III, IV, V
+	I, II, III, IV, V, VI, VII, VIII
 }

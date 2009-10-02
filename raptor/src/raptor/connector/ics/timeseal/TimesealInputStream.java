@@ -13,36 +13,31 @@ import java.io.InputStream;
  * This code was reverse engineered from the JIN project. JIN is a gpled
  * project. Its url can be found here: http://www.jinchess.com/
  */
-class TimesealInputStream extends InputStream
-{
+class TimesealInputStream extends InputStream {
 
-    public TimesealInputStream(TimesealPipe c1)
-    {
-        a = c1;
-    }
+	private final TimesealPipe a;
 
-    public int available()
-    {
-        return a._mthcase();
-    }
+	public TimesealInputStream(TimesealPipe c1) {
+		a = c1;
+	}
 
-    public void close()
-        throws IOException
-    {
-        a._mthnew();
-    }
+	@Override
+	public int available() {
+		return a._mthcase();
+	}
 
-    public int read()
-        throws IOException
-    {
-        return a._mthfor();
-    }
+	@Override
+	public void close() throws IOException {
+		a._mthnew();
+	}
 
-    public int read(byte abyte0[], int i, int j)
-        throws IOException
-    {
-        return a._mthif(abyte0, i, j);
-    }
+	@Override
+	public int read() throws IOException {
+		return a._mthfor();
+	}
 
-    private final TimesealPipe a;
+	@Override
+	public int read(byte abyte0[], int i, int j) throws IOException {
+		return a._mthif(abyte0, i, j);
+	}
 }

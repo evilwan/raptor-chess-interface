@@ -4,7 +4,6 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
-import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.ChatConsoleController;
 
 public class RegExController extends ChatConsoleController {
@@ -23,8 +22,8 @@ public class RegExController extends ChatConsoleController {
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getQuadrant(
-				PreferenceKeys.APP_REGEX_TAB_QUADRANT);
+		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
+				REGEX_TAB_QUADRANT);
 	}
 
 	@Override

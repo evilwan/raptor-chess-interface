@@ -14,31 +14,26 @@ import java.io.OutputStream;
  * This code was reverse engineered from the JIN project. JIN is a gpled
  * project. Its url can be found here: http://www.jinchess.com/
  */
-public class TimesealOutputStream extends OutputStream
-{
+public class TimesealOutputStream extends OutputStream {
 
-    public TimesealOutputStream(TimesealPipe c1)
-    {
-        a = c1;
-    }
+	private final TimesealPipe a;
 
-    public void close()
-        throws IOException
-    {
-        a._mthtry();
-    }
+	public TimesealOutputStream(TimesealPipe c1) {
+		a = c1;
+	}
 
-    public void write(int i)
-        throws IOException
-    {
-        a.a(i);
-    }
+	@Override
+	public void close() throws IOException {
+		a._mthtry();
+	}
 
-    public void write(byte abyte0[], int i, int j)
-        throws IOException
-    {
-        a.write(abyte0, i, j);
-    }
+	@Override
+	public void write(byte abyte0[], int i, int j) throws IOException {
+		a.write(abyte0, i, j);
+	}
 
-    private final TimesealPipe a;
+	@Override
+	public void write(int i) throws IOException {
+		a.a(i);
+	}
 }
