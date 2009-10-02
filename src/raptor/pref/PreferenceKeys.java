@@ -80,9 +80,9 @@ public interface PreferenceKeys {
 	public static final String QUAD56_QUAD7_SASH_WEIGHTS = "quad56-quad7-sash-weights";
 	public static final String QUAD34_QUAD567_SASH_WEIGHTS = "quad34-quad567-sash-weights";
 	public static final String QUAD5_QUAD6_SASH_WEIGHTS = "quad5-quad6-sash-weights";
-	public static final String MAIN_TAB_QUADRANT = "main--quadrant";
+	public static final String MAIN_TAB_QUADRANT = "main-quadrant";
 	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrant";
-	public static final String PERSON_TAB_QUADRANT = "person--quadrant";
+	public static final String PERSON_TAB_QUADRANT = "person-quadrant";
 	public static final String REGEX_TAB_QUADRANT = "regex-tab-quadrant";
 	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrant";
 	public static final String GAME_QUADRANT = "game-quadrant";
@@ -99,9 +99,9 @@ public interface PreferenceKeys {
 	public static final String APP_LAYOUT1_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout1-quad56-quad7-sash-weights";
 	public static final String APP_LAYOUT1_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout1-quad34-quad567-sash-weights";
 	public static final String APP_LAYOUT1_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout1-quad5-quad6-sash-weights";
-	public static final String APP_LAYOUT1_MAIN_TAB_QUADRANT = "app-Layout1-main--quadrant";
+	public static final String APP_LAYOUT1_MAIN_TAB_QUADRANT = "app-Layout1-main-quadrant";
 	public static final String APP_LAYOUT1_CHANNEL_TAB_QUADRANT = "app-Layout1-channel-quadrant";
-	public static final String APP_LAYOUT1_PERSON_TAB_QUADRANT = "app-Layout1-person--quadrant";
+	public static final String APP_LAYOUT1_PERSON_TAB_QUADRANT = "app-Layout1-person-quadrant";
 	public static final String APP_LAYOUT1_REGEX_TAB_QUADRANT = "app-Layout1-regex-tab-quadrant";
 	public static final String APP_LAYOUT1_PARTNER_TELL_TAB_QUADRANT = "app-Layout1-partner-quadrant";
 	public static final String APP_LAYOUT1_GAME_QUADRANT = "app-Layout1-game-quadrant";
@@ -118,9 +118,9 @@ public interface PreferenceKeys {
 	public static final String APP_LAYOUT2_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout2-quad56-quad7-sash-weights";
 	public static final String APP_LAYOUT2_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout2-quad34-quad567-sash-weights";
 	public static final String APP_LAYOUT2_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout2-quad5-quad6-sash-weights";
-	public static final String APP_LAYOUT2_MAIN_TAB_QUADRANT = "app-Layout2-main--quadrant";
+	public static final String APP_LAYOUT2_MAIN_TAB_QUADRANT = "app-Layout2-main-quadrant";
 	public static final String APP_LAYOUT2_CHANNEL_TAB_QUADRANT = "app-Layout2-channel-quadrant";
-	public static final String APP_LAYOUT2_PERSON_TAB_QUADRANT = "app-Layout2-person--quadrant";
+	public static final String APP_LAYOUT2_PERSON_TAB_QUADRANT = "app-Layout2-person-quadrant";
 	public static final String APP_LAYOUT2_REGEX_TAB_QUADRANT = "app-Layout2-regex-tab-quadrant";
 	public static final String APP_LAYOUT2_PARTNER_TELL_TAB_QUADRANT = "app-Layout2-partner-quadrant";
 	public static final String APP_LAYOUT2_GAME_QUADRANT = "app-Layout2-game-quadrant";
@@ -137,9 +137,9 @@ public interface PreferenceKeys {
 	public static final String APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout3-quad56-quad7-sash-weights";
 	public static final String APP_LAYOUT3_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout3-quad34-quad567-sash-weights";
 	public static final String APP_LAYOUT3_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout3-quad5-quad6-sash-weights";
-	public static final String APP_LAYOUT3_MAIN_TAB_QUADRANT = "app-Layout3-main--quadrant";
+	public static final String APP_LAYOUT3_MAIN_TAB_QUADRANT = "app-Layout3-main-quadrant";
 	public static final String APP_LAYOUT3_CHANNEL_TAB_QUADRANT = "app-Layout3-channel-quadrant";
-	public static final String APP_LAYOUT3_PERSON_TAB_QUADRANT = "app-Layout3-person--quadrant";
+	public static final String APP_LAYOUT3_PERSON_TAB_QUADRANT = "app-Layout3-person-quadrant";
 	public static final String APP_LAYOUT3_REGEX_TAB_QUADRANT = "app-Layout3-regex-tab-quadrant";
 	public static final String APP_LAYOUT3_PARTNER_TELL_TAB_QUADRANT = "app-Layout3-partner-quadrant";
 	public static final String APP_LAYOUT3_GAME_QUADRANT = "app-Layout3-game-quadrant";
