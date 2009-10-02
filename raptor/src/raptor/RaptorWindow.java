@@ -51,13 +51,29 @@ import raptor.swt.SWTUtils;
  */
 public class RaptorWindow extends ApplicationWindow {
 
+	/**
+	 * A sash form that loads and stores its weights in a specified key. A
+	 * SashForm can only have a RaptorTabFolder or another RaptorSashFolder as a
+	 * child.
+	 */
 	protected class RaptorSashForm extends SashForm {
-
 		protected String key;
 
 		public RaptorSashForm(Composite parent, int style, String key) {
 			super(parent, style);
 			this.key = key;
+		}
+
+		public int getItemsInSash() {
+			int result = 0;
+			for (Control control : getTabList()) {
+				if (control instanceof RaptorSashForm) {
+					result += ((RaptorSashForm) control).getItemsInSash();
+				} else if (control instanceof RaptorTabFolder) {
+					result += ((RaptorTabFolder) control).getItemCount();
+				}
+			}
+			return result;
 		}
 
 		public String getKey() {
@@ -68,78 +84,187 @@ public class RaptorWindow extends ApplicationWindow {
 			setWeights(getPreferences().getCurrentLayoutSashWeights(key));
 		}
 
+		/**
+		 * Restores the tab by setting it visibile if it or one of its children
+		 * contains items. This has a cascading effect if one of its children is
+		 * another RaptorSashForm.
+		 */
+		public void restore() {
+			Control lastChildToShow = null;
+			int numberOfChildrenShowing = 0;
+
+			Control[] children = getTabList();
+			for (int i = 0; i < children.length; i++) {
+				if (children[i] instanceof RaptorTabFolder) {
+					if (((RaptorTabFolder) children[i]).getItemCount() > 0) {
+						RaptorTabFolder childFolder = ((RaptorTabFolder) children[i]);
+						lastChildToShow = childFolder;
+						childFolder.setVisible(true);
+						childFolder.setMaximized(activeItems.size() == 1);
+						childFolder.activate();
+						numberOfChildrenShowing++;
+					} else {
+						children[i].setVisible(false);
+					}
+				}
+			}
+
+			for (int i = 0; i < children.length; i++) {
+				if (children[i] instanceof RaptorSashForm) {
+					if (((RaptorSashForm) children[i]).getItemsInSash() > 0) {
+						RaptorSashForm childSashForm = ((RaptorSashForm) children[i]);
+						lastChildToShow = childSashForm;
+						lastChildToShow.setVisible(true);
+						numberOfChildrenShowing++;
+					} else {
+						children[i].setVisible(false);
+					}
+				}
+			}
+			setVisible(numberOfChildrenShowing > 0);
+			setMaximizedControl(numberOfChildrenShowing == 1 ? lastChildToShow
+					: null);
+			if (isVisible()) {
+				loadFromPreferences();
+			}
+		}
+
 		public void storePreferences() {
 			getPreferences().setCurrentLayoutSashWeights(key, getWeights());
+		}
+
+		@Override
+		public String toString() {
+			return "RaptorSashForm " + key + " isVisible=" + isVisible()
+					+ " maxControl=" + getMaximizedControl();
 		}
 	}
 
 	/**
-	 * A raptor tab folder. Keeps track of the quad its in.
+	 * A RaptorTabFolder which keeps track of the Quadrant it is in in and its
+	 * parent RaptorSashForm. Also provides a raptorMaximize and a raptorRestore
+	 * method to make maximizing and restoring easier. A RaptorTabFolder can
+	 * only contain RaptorTabItems. A RaptorTabFolder can only have a
+	 * RaptorSashForm as its parent. A RaptorTabFolder is also the only
+	 * component in its Quadrant. Each Quadrant has a RaptorTabFolder.
 	 */
 	protected class RaptorTabFolder extends CTabFolder {
 		protected Quadrant quad;
+		protected RaptorSashForm raptorSash;
 
-		public RaptorTabFolder(Composite composite, int style, Quadrant quad) {
-			super(composite, style);
+		public RaptorTabFolder(RaptorSashForm raptorSash, int style,
+				Quadrant quad) {
+			super(raptorSash, style);
 			this.quad = quad;
+			this.raptorSash = raptorSash;
 		}
 
+		/**
+		 * Activates the current selected item.
+		 */
+		public void activate() {
+			if (getRaptorTabItemSelection() != null) {
+				getRaptorTabItemSelection().raptorItem.onActivate();
+			}
+		}
+
+		@Override
+		public void dispose() {
+			quad = null;
+			raptorSash = null;
+			super.dispose();
+		}
+
+		/**
+		 * Returns the RaptorTabItem at the specified index.
+		 */
 		public RaptorTabItem getRaptorTabItemAt(int index) {
 			return (RaptorTabItem) getItem(index);
 		}
 
+		/**
+		 * Returns the selected RaptorTabItem null if there are none.
+		 */
 		public RaptorTabItem getRaptorTabItemSelection() {
 			return (RaptorTabItem) getSelection();
 		}
 
+		/**
+		 * Passivates all of the items in this tab. If includeSelection is true
+		 * the current selection is passivated, otherwise its left alone.
+		 * 
+		 * @param includeSelection
+		 */
+		public void passivate(boolean includeSelection) {
+			for (int i = 0; i < getItemCount(); i++) {
+				if (!includeSelection
+						&& getRaptorTabItemAt(i) == getRaptorTabItemSelection()) {
+				} else {
+					getRaptorTabItemAt(i).raptorItem.onPassivate();
+				}
+			}
+		}
+
+		/**
+		 * Maximizes this folder in the window.
+		 */
 		public void raptorMaximize() {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Entering raptorMaximize quad " + quad);
+
+			// First hide all folders besides ourself.
+			for (RaptorTabFolder folder : folders) {
+				if (folder != this) {
+					folder.setVisible(false);
+					folder.passivate(true);
+					folder.setMaximized(false);
+				}
 			}
-			switch (quad) {
-			case I:
-			case VIII:
-				quad1quad234567quad8Sash.setMaximizedControl(this);
-				this.setMaximized(true);
-				break;
-			case II:
-				quad1quad234567quad8Sash
-						.setMaximizedControl(quad234567Composite);
-				quad2quad34567Sash.setMaximizedControl(this);
-				break;
-			case III:
-			case IV:
-				quad1quad234567quad8Sash
-						.setMaximizedControl(quad234567Composite);
-				quad2quad34567Sash.setMaximizedControl(quad34567Composite);
-				quad34quad567Sash.setMaximizedControl(quad34Composite);
-				quad3quad4Sash.setMaximizedControl(this);
-				break;
-			case V:
-			case VI:
-				quad1quad234567quad8Sash
-						.setMaximizedControl(quad234567Composite);
-				quad2quad34567Sash.setMaximizedControl(quad34567Composite);
-				quad34quad567Sash.setMaximizedControl(quad567Composite);
-				quad56quad7Sash.setMaximizedControl(quad56Composite);
-				quad5quad6Sash.setMaximizedControl(this);
-				this.setMaximized(true);
-				break;
-			case VII:
-				quad1quad234567quad8Sash
-						.setMaximizedControl(quad234567Composite);
-				quad2quad34567Sash.setMaximizedControl(quad34567Composite);
-				quad34quad567Sash.setMaximizedControl(quad567Composite);
-				quad56quad7Sash.setMaximizedControl(this);
-				this.setMaximized(true);
-				break;
+			setVisible(true);
+
+			for (RaptorSashForm form : sashes) {
+				if (form == raptorSash) {
+					form.setVisible(true);
+					form.setMaximizedControl(this);
+				} else {
+					form.setVisible(false);
+					form.setMaximizedControl(null);
+				}
 			}
+
+			List<RaptorSashForm> parents = new ArrayList<RaptorSashForm>(10);
+			Control currentSashParent = raptorSash;
+
+			// Build a list of all the parents. The last entry in the list will
+			// be the greatest ancestor.
+			while (currentSashParent instanceof RaptorSashForm) {
+				parents.add((RaptorSashForm) currentSashParent);
+				currentSashParent = currentSashParent.getParent();
+			}
+
+			// Now walk the list backwards maximizing the sash forms to the
+			// child added.
+			for (int i = 0; i < parents.size() - 1; i++) {
+				parents.get(i + 1).setVisible(true);
+				parents.get(i + 1).setMaximizedControl(parents.get(i));
+			}
+			this.setMaximized(true);
+		}
+
+		@Override
+		public void setVisible(boolean isVisible) {
+			super.setVisible(isVisible);
+		}
+
+		@Override
+		public String toString() {
+			return "RaptorTabFolder " + quad + " isVisible=" + isVisible()
+					+ " itemCount=" + getItemCount() + " currentSelection="
+					+ getRaptorTabItemSelection();
 		}
 	}
 
 	/**
-	 * A raptor tab item. All items added to RaptorTabFoldrs should be
-	 * RaptorTabItems
+	 * A RaptorTabItem. All items added to RaptorTabFoldrs should be
+	 * RaptorTabItems RaptorTabItems can only contain RaptorWindowItem controls.
 	 */
 	protected class RaptorTabItem extends CTabItem {
 		protected RaptorWindowItem raptorItem;
@@ -208,7 +333,11 @@ public class RaptorWindow extends ApplicationWindow {
 		@Override
 		public void dispose() {
 			disposed = true;
-			activeItems.remove(this);
+			if (activeItems != null) {
+				activeItems.remove(this);
+			}
+			raptorItem = null;
+			raptorParent = null;
 			super.dispose();
 		}
 
@@ -219,6 +348,12 @@ public class RaptorWindow extends ApplicationWindow {
 			dispose();
 			restoreFolders();
 		}
+
+		@Override
+		public String toString() {
+			return "RaptorTabItem: " + getText() + " isVisible="
+					+ getControl().isVisible();
+		}
 	}
 
 	Log LOG = LogFactory.getLog(RaptorWindow.class);
@@ -226,11 +361,6 @@ public class RaptorWindow extends ApplicationWindow {
 	protected RaptorTabFolder[] folders = new RaptorTabFolder[Quadrant.values().length];
 	protected RaptorSashForm[] sashes = new RaptorSashForm[6];
 
-	protected Composite quad234567Composite;
-	protected Composite quad34567Composite;
-	protected Composite quad34Composite;
-	protected Composite quad567Composite;
-	protected Composite quad56Composite;
 	protected RaptorSashForm quad1quad234567quad8Sash;
 	protected RaptorSashForm quad2quad34567Sash;
 	protected RaptorSashForm quad3quad4Sash;
@@ -264,7 +394,7 @@ public class RaptorWindow extends ApplicationWindow {
 	public void addRaptorWindowItem(final RaptorWindowItem item,
 			boolean isAsynch) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Adding raptor window item");
+			LOG.debug("Adding raptor window item " + item);
 		}
 
 		if (!isAsynch) {
@@ -331,15 +461,11 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Creates just the folder,sash,and quad composite controls.
+	 * Creates just the folder,sash,and quad composite controls. Initially they
+	 * all start out not visible and noy maximized.
 	 */
 	protected void createFolderAndSashControls() {
 		createQuad1Quad234567QuadControls();
-		createQuad2Quad34567Controls();
-		createQuad34Quadv567Controls();
-		createQuad3Quad4Controls();
-		createQuad56Quad7Controls();
-		createQuad5Quad6Controls();
 
 		for (int i = 0; i < folders.length; i++) {
 			initQuadrantFolder(folders[i]);
@@ -355,6 +481,7 @@ public class RaptorWindow extends ApplicationWindow {
 		for (int i = 0; i < sashes.length; i++) {
 			sashes[i].loadFromPreferences();
 			sashes[i].setVisible(false);
+			sashes[i].setMaximizedControl(null);
 		}
 	}
 
@@ -410,6 +537,9 @@ public class RaptorWindow extends ApplicationWindow {
 		return menuBar;
 	}
 
+	/**
+	 * Creates the sash hierarchy.
+	 */
 	protected void createQuad1Quad234567QuadControls() {
 		quad1quad234567quad8Sash = new RaptorSashForm(windowComposite,
 				SWT.VERTICAL | SWT.SMOOTH,
@@ -420,60 +550,32 @@ public class RaptorWindow extends ApplicationWindow {
 		folders[Quadrant.I.ordinal()] = new RaptorTabFolder(
 				quad1quad234567quad8Sash, SWT.BORDER, Quadrant.I);
 
-		quad234567Composite = new Composite(quad1quad234567quad8Sash, SWT.NONE);
-		quad234567Composite.setLayout(SWTUtils.createMarginlessFillLayout());
+		quad2quad34567Sash = new RaptorSashForm(quad1quad234567quad8Sash,
+				SWT.HORIZONTAL | SWT.SMOOTH,
+				PreferenceKeys.QUAD2_QUAD234567_SASH_WEIGHTS);
 
 		folders[Quadrant.VIII.ordinal()] = new RaptorTabFolder(
 				quad1quad234567quad8Sash, SWT.BORDER, Quadrant.VIII);
-	}
-
-	protected void createQuad2Quad34567Controls() {
-		quad2quad34567Sash = new RaptorSashForm(quad234567Composite,
-				SWT.HORIZONTAL | SWT.SMOOTH,
-				PreferenceKeys.QUAD2_QUAD234567_SASH_WEIGHTS);
 
 		folders[Quadrant.II.ordinal()] = new RaptorTabFolder(
 				quad2quad34567Sash, SWT.BORDER, Quadrant.II);
 
-		quad34567Composite = new Composite(quad2quad34567Sash, SWT.NONE);
-		quad34567Composite.setLayout(SWTUtils.createMarginlessFillLayout());
-	}
-
-	protected void createQuad34Quadv567Controls() {
-		quad34quad567Sash = new RaptorSashForm(quad34567Composite, SWT.VERTICAL
+		quad34quad567Sash = new RaptorSashForm(quad2quad34567Sash, SWT.VERTICAL
 				| SWT.SMOOTH, PreferenceKeys.QUAD34_QUAD567_SASH_WEIGHTS);
 
-		quad34Composite = new Composite(quad34quad567Sash, SWT.NONE);
-		quad34Composite.setLayout(SWTUtils.createMarginlessFillLayout());
-
-		quad567Composite = new Composite(quad34quad567Sash, SWT.NONE);
-		quad567Composite.setLayout(SWTUtils.createMarginlessFillLayout());
-	}
-
-	protected void createQuad3Quad4Controls() {
-		quad3quad4Sash = new RaptorSashForm(quad34Composite, SWT.HORIZONTAL
+		quad3quad4Sash = new RaptorSashForm(quad34quad567Sash, SWT.HORIZONTAL
 				| SWT.SMOOTH, PreferenceKeys.QUAD3_QUAD4_SASH_WEIGHTS);
+
+		quad56quad7Sash = new RaptorSashForm(quad34quad567Sash, SWT.HORIZONTAL
+				| SWT.SMOOTH, PreferenceKeys.QUAD56_QUAD7_SASH_WEIGHTS);
 
 		folders[Quadrant.III.ordinal()] = new RaptorTabFolder(quad3quad4Sash,
 				SWT.BORDER, Quadrant.III);
 
 		folders[Quadrant.IV.ordinal()] = new RaptorTabFolder(quad3quad4Sash,
 				SWT.BORDER, Quadrant.IV);
-	}
 
-	protected void createQuad56Quad7Controls() {
-		quad56quad7Sash = new RaptorSashForm(quad567Composite, SWT.HORIZONTAL
-				| SWT.SMOOTH, PreferenceKeys.QUAD56_QUAD7_SASH_WEIGHTS);
-
-		quad56Composite = new Composite(quad56quad7Sash, SWT.NONE);
-		quad56Composite.setLayout(SWTUtils.createMarginlessFillLayout());
-
-		folders[Quadrant.VII.ordinal()] = new RaptorTabFolder(quad56quad7Sash,
-				SWT.BORDER, Quadrant.VII);
-	}
-
-	protected void createQuad5Quad6Controls() {
-		quad5quad6Sash = new RaptorSashForm(quad56Composite, SWT.VERTICAL
+		quad5quad6Sash = new RaptorSashForm(quad56quad7Sash, SWT.VERTICAL
 				| SWT.SMOOTH, PreferenceKeys.QUAD5_QUAD6_SASH_WEIGHTS);
 
 		folders[Quadrant.V.ordinal()] = new RaptorTabFolder(quad5quad6Sash,
@@ -481,6 +583,9 @@ public class RaptorWindow extends ApplicationWindow {
 
 		folders[Quadrant.VI.ordinal()] = new RaptorTabFolder(quad5quad6Sash,
 				SWT.BORDER, Quadrant.VI);
+
+		folders[Quadrant.VII.ordinal()] = new RaptorTabFolder(quad56quad7Sash,
+				SWT.BORDER, Quadrant.VII);
 	}
 
 	/**
@@ -509,12 +614,23 @@ public class RaptorWindow extends ApplicationWindow {
 				.getColor(PreferenceKeys.APP_STATUS_BAR_COLOR));
 	}
 
+	/**
+	 * Disposes all the resources that will not be cleaned up when this window
+	 * is closed.
+	 */
 	public void dispose() {
 		if (pingLabelsMap != null) {
-			pingLabelsMap.clear();
+			pingLabelsMap = null;
 		}
 		if (activeItems != null) {
 			activeItems.clear();
+			activeItems = null;
+		}
+		if (folders != null) {
+			folders = null;
+		}
+		if (sashes != null) {
+			sashes = null;
 		}
 	}
 
@@ -643,7 +759,6 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void maximize(CTabFolderEvent event) {
 				folder.raptorMaximize();
-
 			}
 
 			@Override
@@ -734,144 +849,12 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	protected void restoreFolders() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Entering restoreFolders");
+			LOG.debug("Entering RaptorWindow.restoreFolders");
 		}
 		long startTime = System.currentTimeMillis();
-		int[] items = new int[Quadrant.values().length];
-		for (int i = 0; i < items.length; i++) {
-			items[i] = countItems(Quadrant.values()[i]);
-		}
 
-		// Rename them to match the quad they are in so its less confusing
-		int quad1Items = items[0];
-		int quad2Items = items[1];
-		int quad3Items = items[2];
-		int quad4Items = items[3];
-		int quad5Items = items[4];
-		int quad6Items = items[5];
-		int quad7Items = items[6];
-		int quad8Items = items[7];
-
-		int quad34Items = quad3Items + quad4Items;
-		int quad56Items = quad5Items + quad6Items;
-		int quad567Items = quad56Items + quad7Items;
-		int quad34567Items = quad34Items + quad567Items;
-		int quad234567Items = quad2Items + quad34567Items;
-
-		if (quad1Items > 0) {
-			getTabFolder(Quadrant.I).setVisible(true);
-			quad234567Composite.setVisible(quad234567Items > 0);
-			getTabFolder(Quadrant.VIII).setVisible(quad8Items > 0);
-
-			if (quad234567Items > 0 || quad8Items > 0) {
-				quad1quad234567quad8Sash.setVisible(true);
-				quad1quad234567quad8Sash.setMaximizedControl(null);
-
-			} else {
-				quad1quad234567quad8Sash.setVisible(true);
-				quad1quad234567quad8Sash
-						.setMaximizedControl(getTabFolder(Quadrant.I));
-			}
-			quad1quad234567quad8Sash.layout();
-		} else if (quad234567Items > 0) {
-			quad234567Composite.setVisible(true);
-			getTabFolder(Quadrant.I).setVisible(false);
-			getTabFolder(Quadrant.VIII).setVisible(quad8Items > 0);
-
-			quad1quad234567quad8Sash.setVisible(true);
-			if (quad8Items > 0) {
-				quad1quad234567quad8Sash.setMaximizedControl(null);
-
-			} else {
-				quad1quad234567quad8Sash
-						.setMaximizedControl(quad234567Composite);
-			}
-			quad1quad234567quad8Sash.layout();
-		} else if (quad8Items > 0) {
-			getTabFolder(Quadrant.VIII).setVisible(true);
-			quad234567Composite.setVisible(false);
-			getTabFolder(Quadrant.I).setVisible(false);
-
-			quad1quad234567quad8Sash.setVisible(true);
-			quad1quad234567quad8Sash
-					.setMaximizedControl(getTabFolder(Quadrant.VIII));
-			quad1quad234567quad8Sash.layout();
-		} else {
-			quad1quad234567quad8Sash.setVisible(false);
-			quad1quad234567quad8Sash.setMaximizedControl(null);
-			quad1quad234567quad8Sash.layout();
-		}
-
-		if (quad2Items > 0 && quad34567Items > 0) {
-			quad2quad34567Sash.setVisible(true);
-			quad2quad34567Sash.setVisible(true);
-			quad2quad34567Sash.setMaximizedControl(null);
-		} else if (quad34567Items > 0) {
-			quad2quad34567Sash.setVisible(true);
-			quad2quad34567Sash.setMaximizedControl(quad34567Composite);
-		} else if (quad2Items > 0) {
-			quad2quad34567Sash.setVisible(true);
-			quad2quad34567Sash.setMaximizedControl(getTabFolder(Quadrant.II));
-		} else {
-			quad2quad34567Sash.setVisible(false);
-			quad2quad34567Sash.setMaximizedControl(null);
-		}
-
-		if (quad34Items > 0 && quad567Items > 0) {
-			quad34quad567Sash.setVisible(true);
-			quad34quad567Sash.setMaximizedControl(null);
-		} else if (quad34Items > 0) {
-			quad34quad567Sash.setVisible(true);
-			quad34quad567Sash.setMaximizedControl(quad34Composite);
-		} else if (quad567Items > 0) {
-			quad34quad567Sash.setVisible(true);
-			quad34quad567Sash.setMaximizedControl(quad567Composite);
-		} else {
-			quad34quad567Sash.setVisible(false);
-			quad34quad567Sash.setMaximizedControl(null);
-		}
-
-		if (quad56Items > 0 && quad7Items > 0) {
-			quad56quad7Sash.setVisible(true);
-			quad56quad7Sash.setMaximizedControl(null);
-		} else if (quad56Items > 0) {
-			quad56quad7Sash.setVisible(true);
-			quad56quad7Sash.setMaximizedControl(quad56Composite);
-		} else if (quad7Items > 0) {
-			quad56quad7Sash.setVisible(true);
-			quad56quad7Sash.setMaximizedControl(getTabFolder(Quadrant.VII));
-
-		} else {
-			quad56quad7Sash.setVisible(false);
-			quad56quad7Sash.setMaximizedControl(null);
-		}
-
-		if (quad3Items > 0 && quad4Items > 0) {
-			quad3quad4Sash.setVisible(true);
-			quad3quad4Sash.setMaximizedControl(null);
-		} else if (quad3Items > 0) {
-			quad3quad4Sash.setVisible(true);
-			quad3quad4Sash.setMaximizedControl(getTabFolder(Quadrant.III));
-		} else if (quad4Items > 0) {
-			quad3quad4Sash.setVisible(true);
-			quad3quad4Sash.setMaximizedControl(getTabFolder(Quadrant.IV));
-		} else {
-			quad3quad4Sash.setVisible(false);
-			quad3quad4Sash.setMaximizedControl(null);
-		}
-
-		if (quad5Items > 0 && quad6Items > 0) {
-			quad5quad6Sash.setVisible(true);
-			quad5quad6Sash.setMaximizedControl(null);
-		} else if (quad5Items > 0) {
-			quad5quad6Sash.setVisible(true);
-			quad5quad6Sash.setMaximizedControl(getTabFolder(Quadrant.V));
-		} else if (quad6Items > 0) {
-			quad5quad6Sash.setVisible(true);
-			quad5quad6Sash.setMaximizedControl(getTabFolder(Quadrant.VI));
-		} else {
-			quad5quad6Sash.setVisible(false);
-			quad5quad6Sash.setMaximizedControl(null);
+		for (int i = 0; i < sashes.length; i++) {
+			sashes[i].restore();
 		}
 
 		if (LOG.isDebugEnabled()) {

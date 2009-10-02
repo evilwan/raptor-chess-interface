@@ -17,6 +17,7 @@ public class BugArena implements RaptorWindowItem {
 	private enum myTabs {
 		TAB_UNPARTNERED, TAB_AVAILABLETEAMS, TAB_GAMES;
 	}
+
 	Composite composite;
 	String title;
 

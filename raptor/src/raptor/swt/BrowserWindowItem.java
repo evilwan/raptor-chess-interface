@@ -68,7 +68,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(SWTUtils.createMarginlessGridLayout(1, false));
 
-		addressBar = new Composite(composite, SWT.BORDER_SOLID);
+		addressBar = new Composite(composite, SWT.NONE);
 		addressBar
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		addressBar.setLayout(SWTUtils.createMarginlessGridLayout(5, false));
@@ -144,12 +144,11 @@ public class BrowserWindowItem implements RaptorWindowItem {
 				urlText.setText(browser.getUrl());
 			}
 		});
+
 	}
 
 	public void onActivate() {
 		System.err.println("On activate " + title);
-		composite.layout(true);
-		// browser.setUrl(url);
 	}
 
 	public void onPassivate() {
@@ -157,6 +156,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 
 	public void onReparent(Composite newParent) {
 		url = browser.getUrl();
+		composite.setVisible(false);
 		composite.dispose();
 		init(newParent);
 	}

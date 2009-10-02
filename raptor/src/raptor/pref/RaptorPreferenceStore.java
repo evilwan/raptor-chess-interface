@@ -146,10 +146,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	}
 
-	public RGB getDefaultColor(String key) {
-		return PreferenceConverter.getDefaultColor(this, key);
-	}
-
 	public Quadrant getCurrentLayoutQuadrant(String key) {
 		key = "app-" + getString(APP_LAYOUT) + "-" + key;
 		System.err.println("Getting layout quad for key: " + key);
@@ -166,6 +162,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		key = "app-" + getString(APP_LAYOUT) + "-" + key;
 		System.err.println("Getting int array for key: " + key);
 		return getIntArray(key);
+	}
+
+	public RGB getDefaultColor(String key) {
+		return PreferenceConverter.getDefaultColor(this, key);
 	}
 
 	public int[] getDefaultIntArray(String key) {
@@ -549,6 +549,14 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setValue(key, array);
 	}
 
+	public void setDefault(String key, Font font) {
+		PreferenceConverter.setValue(this, key, font.getFontData());
+	}
+
+	public void setDefault(String key, FontData[] fontData) {
+		PreferenceConverter.setValue(this, key, fontData);
+	}
+
 	public void setDefault(String key, int[] values) {
 		setDefault(key, RaptorStringUtils.toString(values));
 	}
@@ -565,32 +573,20 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, key, rectangle);
 	}
 
-	public void setDefault(String key, String[] values) {
-		setDefault(key, RaptorStringUtils.toString(values));
+	public void setDefault(String key, RGB rgb) {
+		PreferenceConverter.setValue(this, key, rgb);
 	}
 
-	public void setDefault(String key, Font font) {
-		PreferenceConverter.setValue(this, key, font.getFontData());
+	public void setDefault(String key, String[] values) {
+		setDefault(key, RaptorStringUtils.toString(values));
 	}
 
 	public void setValue(String key, Font font) {
 		PreferenceConverter.setValue(this, key, font.getFontData());
 	}
 
-	public void setDefault(String key, FontData[] fontData) {
-		PreferenceConverter.setValue(this, key, fontData);
-	}
-
 	public void setValue(String key, FontData[] fontData) {
 		PreferenceConverter.setValue(this, key, fontData);
-	}
-
-	public void setDefault(String key, RGB rgb) {
-		PreferenceConverter.setValue(this, key, rgb);
-	}
-
-	public void setValue(String key, RGB rgb) {
-		PreferenceConverter.setValue(this, key, rgb);
 	}
 
 	public void setValue(String key, int[] values) {
@@ -607,6 +603,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public void setValue(String key, Rectangle rectangle) {
 		PreferenceConverter.setValue(this, key, rectangle);
+	}
+
+	public void setValue(String key, RGB rgb) {
+		PreferenceConverter.setValue(this, key, rgb);
 	}
 
 	public void setValue(String key, String[] values) {
