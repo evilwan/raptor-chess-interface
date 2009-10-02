@@ -728,7 +728,8 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Sets the ping time on the window for the specified connector.
+	 * Sets the ping time on the window for the specified connector. If time is
+	 * -1 the label will disappear.
 	 */
 	public void setPingTime(final Connector connector, final long pingTime) {
 		if (LOG.isDebugEnabled()) {
@@ -740,7 +741,9 @@ public class RaptorWindow extends ApplicationWindow {
 			public void run() {
 				Label label = pingLabelsMap.get(connector.getShortName());
 				if (label == null) {
-
+					if (pingTime == -1) {
+						return;
+					}
 					label = new Label(statusBar, SWT.NONE);
 					GridData gridData = new GridData();
 					gridData.grabExcessHorizontalSpace = false;
@@ -753,10 +756,16 @@ public class RaptorWindow extends ApplicationWindow {
 							.getFont(PreferenceKeys.APP_LAG_FONT));
 					label.setForeground(Raptor.getInstance().getPreferences()
 							.getColor(PreferenceKeys.APP_LAG_COLOR));
+				} else if (pingTime == -1) {
+					label.setVisible(false);
+					label.dispose();
+					pingLabelsMap.remove(connector.getShortName());
+					statusBar.layout(true, true);
+				} else {
+					label.setText(connector.getShortName() + " ping "
+							+ pingTime + "ms");
+					statusBar.layout(true, true);
 				}
-				label.setText(connector.getShortName() + " ping " + pingTime
-						+ "ms");
-				statusBar.layout(true, true);
 				label.redraw();
 			}
 		});
