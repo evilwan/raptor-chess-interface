@@ -90,6 +90,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	protected Action reconnectAction;
 	protected Action bughouseArenaAction;
 	protected Action seekGraphAction;
+	protected Action regexTabAction;
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
@@ -110,11 +111,14 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	@Override
 	protected void connect(final String profileName) {
 		super.connect(profileName);
-		connectAction.setEnabled(false);
-		disconnectAction.setEnabled(true);
-		reconnectAction.setEnabled(true);
-		bughouseArenaAction.setEnabled(true);
-		seekGraphAction.setEnabled(true);
+		if (isConnecting) {
+			connectAction.setEnabled(false);
+			disconnectAction.setEnabled(true);
+			reconnectAction.setEnabled(true);
+			bughouseArenaAction.setEnabled(true);
+			seekGraphAction.setEnabled(true);
+			regexTabAction.setEnabled(true);
+		}
 	}
 
 	/**
@@ -162,12 +166,20 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
 			}
 		};
+		regexTabAction = new Action("&Add Regular Expression Tab") {
+			@Override
+			public void run() {
+				Raptor.getInstance().alert(
+						"Add Regular Expression Tab Comming soon");
+			}
+		};
 
 		connectAction.setEnabled(true);
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
+		regexTabAction.setEnabled(false);
 
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
@@ -175,6 +187,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(seekGraphAction);
+		connectionsMenu.add(regexTabAction);
 		connectionsMenu.add(new Separator());
 
 		MenuManager bics2Menu = new MenuManager(
@@ -246,6 +259,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
+		regexTabAction.setEnabled(false);
 	}
 
 	@Override
@@ -355,7 +369,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				sendMessage("set bell 0", true);
 
 				String loginScript = getPreferences().getString(
-						FICS_LOGIN_SCRIPT);
+						BICS_LOGIN_SCRIPT);
 				if (StringUtils.isNotBlank(loginScript)) {
 					RaptorStringTokenizer tok = new RaptorStringTokenizer(
 							loginScript, "\n\r");

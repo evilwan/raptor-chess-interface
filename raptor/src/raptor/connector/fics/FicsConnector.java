@@ -31,7 +31,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected Action reconnectAction;
 	protected Action bughouseArenaAction;
 	protected Action seekGraphAction;
-	protected Action regexTabAtion;
+	protected Action regexTabAction;
+
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
@@ -52,12 +53,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	@Override
 	protected void connect(final String profileName) {
 		super.connect(profileName);
-		connectAction.setEnabled(false);
-		disconnectAction.setEnabled(true);
-		reconnectAction.setEnabled(true);
-		bughouseArenaAction.setEnabled(true);
-		seekGraphAction.setEnabled(true);
-		regexTabAtion.setEnabled(true);
+		if (isConnecting) {
+			connectAction.setEnabled(false);
+			disconnectAction.setEnabled(true);
+			reconnectAction.setEnabled(true);
+			bughouseArenaAction.setEnabled(true);
+			seekGraphAction.setEnabled(true);
+			regexTabAction.setEnabled(true);
+		}
 	}
 
 	/**
@@ -106,7 +109,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		regexTabAtion = new Action("&Add Regular Expression Tab") {
+		regexTabAction = new Action("&Add Regular Expression Tab") {
 			@Override
 			public void run() {
 				Raptor.getInstance().alert(
@@ -119,7 +122,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
-		regexTabAtion.setEnabled(false);
+		regexTabAction.setEnabled(false);
 
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
@@ -127,6 +130,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(seekGraphAction);
+		connectionsMenu.add(regexTabAction);
 		connectionsMenu.add(new Separator());
 
 		Action adjudicateAGame = new Action("Adjudicate a game") {
@@ -250,7 +254,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
-		regexTabAtion.setEnabled(false);
+		regexTabAction.setEnabled(false);
 	}
 
 	@Override
