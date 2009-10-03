@@ -28,12 +28,16 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -64,13 +68,20 @@ public class RaptorWindow extends ApplicationWindow {
 			this.key = key;
 		}
 
+		/**
+		 * Returns all of the items in the sash that are not in folders that are
+		 * minimized.
+		 * 
+		 * @return
+		 */
 		public int getItemsInSash() {
 			int result = 0;
 			for (Control control : getTabList()) {
 				if (control instanceof RaptorSashForm) {
 					result += ((RaptorSashForm) control).getItemsInSash();
 				} else if (control instanceof RaptorTabFolder) {
-					result += ((RaptorTabFolder) control).getItemCount();
+					RaptorTabFolder folder = (RaptorTabFolder) control;
+					result += folder.getMinimized() ? 0 : folder.getItemCount();
 				}
 			}
 			return result;
@@ -94,9 +105,12 @@ public class RaptorWindow extends ApplicationWindow {
 			int numberOfChildrenShowing = 0;
 
 			Control[] children = getTabList();
+
+			// First restore tab folders.
 			for (int i = 0; i < children.length; i++) {
 				if (children[i] instanceof RaptorTabFolder) {
-					if (((RaptorTabFolder) children[i]).getItemCount() > 0) {
+					RaptorTabFolder folder = (RaptorTabFolder) children[i];
+					if (folder.getItemCount() > 0 && !folder.getMinimized()) {
 						RaptorTabFolder childFolder = ((RaptorTabFolder) children[i]);
 						lastChildToShow = childFolder;
 						childFolder.setVisible(true);
@@ -109,6 +123,7 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 
+			// Now restore sashes.
 			for (int i = 0; i < children.length; i++) {
 				if (children[i] instanceof RaptorSashForm) {
 					if (((RaptorSashForm) children[i]).getItemsInSash() > 0) {
@@ -209,10 +224,12 @@ public class RaptorWindow extends ApplicationWindow {
 
 		public void passivateActiveateItems() {
 			for (int i = 0; i < getItemCount(); i++) {
-				if (i == getSelectionIndex()) {
+				if (getMinimized()) {
+					getRaptorTabItemAt(i).raptorItem.onPassivate();
+				} else if (i == getSelectionIndex()) {
 					getRaptorTabItemAt(i).raptorItem.onActivate();
 				} else {
-					getRaptorTabItemAt(i).raptorItem.onActivate();
+					getRaptorTabItemAt(i).raptorItem.onPassivate();
 				}
 			}
 		}
@@ -431,6 +448,11 @@ public class RaptorWindow extends ApplicationWindow {
 	protected RaptorSashForm quad56quad7Sash;
 	protected RaptorSashForm quad5quad6Sash;
 
+	protected CoolBar topCoolbar;
+	protected CoolBar leftCoolbar;
+	protected ToolBar foldersMinimizedToolbar;
+	protected CoolItem foldersMinimiziedCoolItem;
+
 	protected Composite windowComposite;
 	protected Composite statusBar;
 	protected Label statusLabel;
@@ -483,6 +505,60 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
+	 * Adjusts the left coolbar for quadrants minimized.
+	 */
+	protected void adjustToFoldersItemsMinimizied() {
+		ToolItem[] folderMinItems = foldersMinimizedToolbar.getItems();
+		for (ToolItem item : folderMinItems) {
+			item.dispose();
+		}
+
+		boolean isAFolderMinimized = false;
+		for (int i = 0; i < folders.length; i++) {
+			if (folders[i].getMinimized()) {
+				isAFolderMinimized = true;
+				break;
+			}
+		}
+
+		if (isAFolderMinimized) {
+			System.err.println("A folder was minimized.");
+
+			for (Quadrant quadrant : Quadrant.values()) {
+				if (getTabFolder(quadrant).getMinimized()) {
+					ToolItem item = new ToolItem(foldersMinimizedToolbar,
+							SWT.PUSH);
+					item.setText(quadrant.name());
+					item.setToolTipText("Restore quadrant " + quadrant.name());
+					final Quadrant finalQuad = quadrant;
+					item.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							getTabFolder(finalQuad).setMinimized(false);
+							restoreFolders();
+						}
+					});
+
+					System.err.println("Adeed tool item for quad: " + quadrant);
+				}
+			}
+		}
+
+		foldersMinimizedToolbar.pack();
+		foldersMinimiziedCoolItem.setPreferredSize(foldersMinimizedToolbar
+				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+		if (!isAFolderMinimized) {
+			leftCoolbar.setVisible(false);
+		} else {
+			leftCoolbar.setVisible(true);
+		}
+
+		leftCoolbar.layout(true);
+		windowComposite.layout(true);
+	}
+
+	/**
 	 * Returns the number of items in the specified quad.
 	 */
 	public int countItems(Quadrant... quads) {
@@ -516,8 +592,11 @@ public class RaptorWindow extends ApplicationWindow {
 		windowComposite = new Composite(parent, SWT.NONE);
 		windowComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true));
-		windowComposite.setLayout(SWTUtils.createMarginlessGridLayout(1, true));
+		windowComposite
+				.setLayout(SWTUtils.createMarginlessGridLayout(2, false));
 
+		createTopCoolbar();
+		createLeftCoolbar();
 		createFolderAndSashControls();
 		createStatusBarControls();
 		return windowComposite;
@@ -546,6 +625,19 @@ public class RaptorWindow extends ApplicationWindow {
 			sashes[i].setVisible(false);
 			sashes[i].setMaximizedControl(null);
 		}
+	}
+
+	protected void createLeftCoolbar() {
+		leftCoolbar = new CoolBar(windowComposite, SWT.FLAT | SWT.VERTICAL);
+		leftCoolbar.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true,
+				1, 1));
+		foldersMinimizedToolbar = new ToolBar(leftCoolbar, SWT.FLAT
+				| SWT.VERTICAL);
+
+		foldersMinimiziedCoolItem = new CoolItem(leftCoolbar, SWT.NONE);
+		foldersMinimiziedCoolItem.setControl(foldersMinimizedToolbar);
+		foldersMinimiziedCoolItem.setPreferredSize(foldersMinimizedToolbar
+				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 
 	/**
@@ -608,7 +700,7 @@ public class RaptorWindow extends ApplicationWindow {
 				SWT.VERTICAL | SWT.SMOOTH,
 				PreferenceKeys.QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS);
 		quad1quad234567quad8Sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
-				true, true));
+				true, true, 1, 1));
 
 		folders[Quadrant.I.ordinal()] = new RaptorTabFolder(
 				quad1quad234567quad8Sash, SWT.BORDER, Quadrant.I);
@@ -656,8 +748,8 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	protected void createStatusBarControls() {
 		statusBar = new Composite(windowComposite, SWT.NONE);
-		statusBar
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		statusBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+				2, 1));
 		GridLayout layout = new GridLayout(10, false);
 		layout.marginTop = 0;
 		layout.marginBottom = 0;
@@ -675,6 +767,35 @@ public class RaptorWindow extends ApplicationWindow {
 				PreferenceKeys.APP_STATUS_BAR_FONT));
 		statusLabel.setForeground(Raptor.getInstance().getPreferences()
 				.getColor(PreferenceKeys.APP_STATUS_BAR_COLOR));
+	}
+
+	protected void createTopCoolbar() {
+		topCoolbar = new CoolBar(windowComposite, SWT.FLAT);
+		topCoolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 2, 1));
+
+		ToolBar toolBar = new ToolBar(topCoolbar, SWT.FLAT);
+		ToolItem toolItem = new ToolItem(toolBar, SWT.PUSH);
+		toolItem.setText("TestTopCoolbar");
+		toolItem.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				Raptor
+						.getInstance()
+						.alert(
+								"This is just to test out what a top toolbar would "
+										+ "look like. I am thinking about adding the decaf toolbar "
+										+ "like buttons up here");
+			}
+
+		});
+		toolBar.pack();
+
+		CoolItem coolItem = new CoolItem(topCoolbar, SWT.NONE);
+		coolItem.setControl(toolBar);
+		coolItem
+				.setPreferredSize(toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 
 	/**
@@ -793,6 +914,7 @@ public class RaptorWindow extends ApplicationWindow {
 		folder.setUnselectedImageVisible(false);
 		folder.setUnselectedCloseVisible(false);
 		folder.setMaximizeVisible(true);
+		folder.setMinimizeVisible(true);
 
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -824,12 +946,15 @@ public class RaptorWindow extends ApplicationWindow {
 
 			@Override
 			public void maximize(CTabFolderEvent event) {
+				folder.setMaximized(true);
 				folder.raptorMaximize();
 			}
 
 			@Override
 			public void minimize(CTabFolderEvent event) {
-				folder.getRaptorTabItemSelection().raptorItem.onPassivate();
+				// folder.getRaptorTabItemSelection().raptorItem.onPassivate();
+				folder.setMinimized(true);
+				restoreFolders();
 			}
 
 			@Override
@@ -861,12 +986,84 @@ public class RaptorWindow extends ApplicationWindow {
 			public void mouseDown(MouseEvent e) {
 				if (e.button == 3) {
 					Menu menu = new Menu(folder.getShell(), SWT.POP_UP);
+
+					if (folder.getItemCount() > 0) {
+						MenuItem item = new MenuItem(menu, SWT.PUSH);
+						item.setText("Close");
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								if (folder.getRaptorTabItemSelection().raptorItem
+										.confirmClose()) {
+									folder.getRaptorTabItemSelection()
+											.dispose();
+								}
+								if (folder.getItemCount() == 0) {
+									restoreFolders();
+								} else {
+									folder.setSelection(folder
+											.getSelectionIndex());
+								}
+							}
+						});
+					}
+					if (folder.getItemCount() > 1) {
+						MenuItem item = new MenuItem(menu, SWT.PUSH);
+						item.setText("Close Others");
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
+										folder.getItemCount());
+								for (int i = 0; i < folder.getItemCount(); i++) {
+									if (i != folder.getSelectionIndex()
+											&& folder.getRaptorTabItemAt(i).raptorItem
+													.confirmClose()) {
+										itemsToClose.add(folder
+												.getRaptorTabItemAt(i));
+									}
+								}
+								for (RaptorTabItem item : itemsToClose) {
+									item.dispose();
+								}
+								folder.setSelection(folder.getSelectionIndex());
+							}
+						});
+					}
+					if (folder.getItemCount() > 0) {
+						MenuItem item = new MenuItem(menu, SWT.PUSH);
+						item.setText("Close All");
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
+										folder.getItemCount());
+								for (int i = 0; i < folder.getItemCount(); i++) {
+									if (i != folder.getSelectionIndex()
+											&& folder.getRaptorTabItemAt(i).raptorItem
+													.confirmClose()) {
+										itemsToClose.add(folder
+												.getRaptorTabItemAt(i));
+									}
+								}
+								for (RaptorTabItem item : itemsToClose) {
+									item.dispose();
+								}
+
+								if (folder.getItemCount() == 0) {
+									restoreFolders();
+								} else {
+									folder.setSelection(folder
+											.getSelectionIndex());
+								}
+							}
+						});
+					}
+
+					new MenuItem(menu, SWT.SEPARATOR);
+
 					for (int i = 0; i < Quadrant.values().length; i++) {
 						if (i != folder.quad.ordinal()) {
 							final Quadrant currentQuadrant = Quadrant.values()[i];
 							MenuItem item = new MenuItem(menu, SWT.PUSH);
-							item.setText("Move to quandrant "
-									+ currentQuadrant.name());
+							item.setText("Move to " + currentQuadrant.name());
 							item.addListener(SWT.Selection, new Listener() {
 								public void handleEvent(Event e) {
 									RaptorTabItem item = folder
@@ -926,12 +1123,15 @@ public class RaptorWindow extends ApplicationWindow {
 		 * toolbars will all be correct and activate/passivate will get invoked.
 		 */
 		for (int i = 0; i < folders.length; i++) {
-			if (folders[i].getItemCount() > 0) {
+			if (folders[i].getItemCount() > 0 && !folders[i].getMinimized()) {
 				folders[i].setSelection(folders[i].getSelectionIndex());
 			} else {
 				folders[i].updateToolbar();
+				folders[i].passivateActiveateItems();
 			}
 		}
+
+		adjustToFoldersItemsMinimizied();
 
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Leaving restoreFolders execution in "
