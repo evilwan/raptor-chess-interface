@@ -210,35 +210,35 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected MouseListener inputTextClickListener = new MouseAdapter() {
 
 		@Override
+		public void mouseDoubleClick(MouseEvent e) {
+			int caretPosition = chatConsole.inputText.getCaretOffset();
+
+			String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
+			if (url != null) {
+				if (getPreferences().getBoolean(
+						CHAT_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
+					LaunchBrowser.openURL(url);
+					return;
+				} else {
+					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+							new BrowserWindowItem(url, url));
+				}
+			}
+
+			String quotedText = ChatUtils.getQuotedText(chatConsole.inputText,
+					caretPosition);
+			if (quotedText != null) {
+				connector.sendMessage(quotedText);
+				return;
+			}
+		}
+
+		@Override
 		public void mouseUp(MouseEvent e) {
 			if (isIgnoringActions()) {
 				return;
 			}
-			if (e.button == 1) {
-				int caretPosition = chatConsole.inputText.getCaretOffset();
 
-				String url = ChatUtils.getUrl(chatConsole.inputText,
-						caretPosition);
-				if (url != null) {
-					if (getPreferences().getBoolean(
-							CHAT_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
-						LaunchBrowser.openURL(url);
-						return;
-					} else {
-						Raptor.getInstance().getRaptorWindow()
-								.addRaptorWindowItem(
-										new BrowserWindowItem(url, url));
-					}
-				}
-
-				String quotedText = ChatUtils.getQuotedText(
-						chatConsole.inputText, caretPosition);
-				if (quotedText != null) {
-					connector.sendMessage(quotedText);
-					return;
-				}
-
-			}
 			if (e.button == 3) {
 				int caretPosition = 0;
 				try {
@@ -776,6 +776,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			});
 			addToolItem(AUTO_SCROLL_BUTTON, autoScroll);
+
+			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
