@@ -175,3 +175,100 @@ Kd2, Qc2+, Kxe3, Qc3+, Ke2]
 	at raptor.connector.ics.IcsConnector.messageLoop(IcsConnector.java:532)
 	at raptor.connector.ics.IcsConnector$2$1.run(IcsConnector.java:203)
 	at java.lang.Thread.run(Thread.java:619)
+	
+	
+	
+	
+	
+	
+	
+	
+ Issue: ficsConnector Error in DaemonRun.onNewInput
+java.lang.IllegalArgumentException: Invalid move d4
+ emptyBB            occupiedBB         notColorToMoveBB   color[WHITE]       color[BLACK]      
+ 0 1 0 0 1 0 0 1    1 0 1 1 0 1 1 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 0 1 1 0 1 1 0   
+ 1 1 0 1 1 1 0 1    0 0 1 0 0 0 1 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 0 1 0 0 0 1 0   
+ 1 0 1 0 1 1 0 0    0 1 0 1 0 0 1 1    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 1 0 1 0 0 1 1   
+ 0 1 1 0 0 1 1 1    1 0 0 1 1 0 0 0    1 1 1 0 1 1 1 1    0 0 0 1 0 0 0 0    1 0 0 0 1 0 0 0   
+ 1 0 0 1 0 1 1 1    0 1 1 0 1 0 0 0    1 0 0 1 0 1 1 1    0 1 1 0 1 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 0 1 0 0 0 1    1 0 1 0 1 1 1 0    0 1 0 1 1 0 0 1    1 0 1 0 0 1 1 0    0 0 0 0 1 0 0 0   
+ 1 0 0 1 0 1 1 1    0 1 1 0 1 0 0 0    1 0 0 1 0 1 1 1    0 1 1 0 1 0 0 0    0 0 0 0 0 0 0 0   
+ 1 1 1 0 1 0 0 1    0 0 0 1 0 1 1 0    1 1 1 0 1 0 0 1    0 0 0 1 0 1 1 0    0 0 0 0 0 0 0 0   
+
+ [WHITE][PAWN]      [WHITE][KNIGHT]    [WHITE][BISHOP]    [WHITE][ROOK]      [WHITE][QUEEN]     [WHITE][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 1 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 1 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 0 0 0 0 0 1 0    0 0 1 0 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 1 0 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 1 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 1 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0   
+
+ [BLACK][PAWN]      [BLACK][KNIGHT]    [BLACK][BISHOP]    [BLACK][ROOK]      [BLACK][QUEEN]     [BLACK][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 1 0 0 0 0 0    1 0 0 0 0 1 0 0    0 0 0 1 0 0 0 0    0 0 0 0 0 0 1 0   
+ 0 0 1 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 0 1 0 0 0 1    0 0 0 0 0 0 1 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 0 0 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+
+|r|*|b|q|*|r|k|*|   To Move: White Last Move: Ne3
+|*|*|p|*|*|*|b|*|   Piece counts [6 2 2 2 1 1][6 2 2 2 1 1]
+|*|p|*|p|*|*|n|p|   Moves: 42 EP: - Castle:  -
+|p|*|*|P|p|*|*|*|   FEN: r1bq1rk1/2p3b1/1p1p2np/p2Pp3/1PP1P3/P1N1nNP1/1BQ1B3/3R1RK w  - - 1 42
+|*|P|P|*|P|*|*|*|   State: 129 Type=CLASSIC Result= emptyBB            occupiedBB         notColorToMoveBB   color[WHITE]       color[BLACK]      
+ 0 1 0 0 1 0 0 1    1 0 1 1 0 1 1 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 0 1 1 0 1 1 0   
+ 1 1 0 1 1 1 0 1    0 0 1 0 0 0 1 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 0 1 0 0 0 1 0   
+ 1 0 1 0 1 1 0 0    0 1 0 1 0 0 1 1    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 1 0 1 0 0 1 1   
+ 0 1 1 0 0 1 1 1    1 0 0 1 1 0 0 0    1 1 1 0 1 1 1 1    0 0 0 1 0 0 0 0    1 0 0 0 1 0 0 0   
+ 1 0 0 1 0 1 1 1    0 1 1 0 1 0 0 0    1 0 0 1 0 1 1 1    0 1 1 0 1 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 0 1 0 0 0 1    1 0 1 0 1 1 1 0    0 1 0 1 1 0 0 1    1 0 1 0 0 1 1 0    0 0 0 0 1 0 0 0   
+ 1 0 0 1 0 1 1 1    0 1 1 0 1 0 0 0    1 0 0 1 0 1 1 1    0 1 1 0 1 0 0 0    0 0 0 0 0 0 0 0   
+ 1 1 1 0 1 0 0 1    0 0 0 1 0 1 1 0    1 1 1 0 1 0 0 1    0 0 0 1 0 1 1 0    0 0 0 0 0 0 0 0   
+
+ [WHITE][PAWN]      [WHITE][KNIGHT]    [WHITE][BISHOP]    [WHITE][ROOK]      [WHITE][QUEEN]     [WHITE][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 1 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 1 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 0 0 0 0 0 1 0    0 0 1 0 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 1 0 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 1 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 1 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0   
+
+ [BLACK][PAWN]      [BLACK][KNIGHT]    [BLACK][BISHOP]    [BLACK][ROOK]      [BLACK][QUEEN]     [BLACK][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 1 0 0 0 0 0    1 0 0 0 0 1 0 0    0 0 0 1 0 0 0 0    0 0 0 0 0 0 1 0   
+ 0 0 1 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 0 1 0 0 0 1    0 0 0 0 0 0 1 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 0 0 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 1 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+
+|r|*|b|q|*|r|k|*|   To Move: White Last Move: Ne3
+|*|*|p|*|*|*|b|*|   Piece counts [6 2 2 2 1 1][6 2 2 2 1 1]
+|*|p|*|p|*|*|n|p|   Moves: 42 EP: - Castle:  -
+|p|*|*|P|p|*|*|*|   FEN: r1bq1rk1/2p3b1/1p1p2np/p2Pp3/1PP1P3/P1N1nNP1/1BQ1B3/3R1RK w  - - 1 42
+|*|P|P|*|P|*|*|*|   
+|P|*|N|*|n|N|P|*|   Event: 0 0 unrated untimed Site=freechess.org Time=Fri Oct 02 20:16:54 EDT 2009
+|*|B|Q|*|B|*|*|*|   WhiteName: Cobia BlackName=Shidinov WhiteTime=0 whiteLag=0 blackRemainingTImeMillis = 0 blackLag=0
+|*|*|*|R|*|R|K|*|   initialWhiteTimeMillis: 0 initialBlackTimeMillis=0 initialWhiteIncMillis=0 initialBlackIncMillis=0
+
+Legals=[Qb1, Qc1, Qd2, Qb3, Qd3, Qa4, Nb1, Na2, Na4, Nb5, Ne1, Nd2, Nh2, Nd4,
+Nh4, Ng5, Ba1, Bc1, Bd3, Ra1, Rb1, Rc1, Rde1, Rd2, Rd3, Rd4, Rfe1, Rf2, a4, g4,
+b5, c5, Kh1, Kf2, Kh2, Nxe5, bxa]Movelist=[Ne7, Qc2, Nd7, Be3, f5, Ng5, Nf6, Rad1, h6, Nf3, f4, Bc1, b6, b4, a5,
+a3, g5, Bb2, Ng6, h3, g4, hxg4, Nxg4, g3, fxg3, fxg3, Ne3]
+	at raptor.game.Game.makeSanMove(Game.java:1721)
+	at raptor.connector.ics.IcsUtils.addCurrentMove(IcsUtils.java:84)
+	at raptor.connector.fics.FicsParser.process(FicsParser.java:355)
+	at raptor.connector.fics.FicsParser.parseOutAndProcessGameEvents(FicsParser.java:146)
+	at raptor.connector.ics.IcsConnector.parseMessage(IcsConnector.java:852)
+	at raptor.connector.ics.IcsConnector.onNewInput(IcsConnector.java:722)
+	at raptor.connector.ics.IcsConnector.messageLoop(IcsConnector.java:532)
+	at raptor.connector.ics.IcsConnector$2$1.run(IcsConnector.java:203)
+	at java.lang.Thread.run(Thread.java:613)
+'	
