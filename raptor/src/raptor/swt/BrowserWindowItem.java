@@ -12,6 +12,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Quadrant;
@@ -62,6 +63,10 @@ public class BrowserWindowItem implements RaptorWindowItem {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public Control getToolbar(Composite parent) {
+		return null;
 	}
 
 	public void init(Composite parent) {
@@ -148,23 +153,9 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public void onActivate() {
-		System.err.println("On activate " + title);
 	}
 
 	public void onPassivate() {
-	}
-
-	public boolean onReparent(Composite newParent) {
-		boolean result = false;
-		if (!composite.setParent(newParent)) {
-			url = browser.getUrl();
-			composite.setVisible(false);
-			composite.dispose();
-			init(newParent);
-		} else {
-			result = true;
-		}
-		return result;
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {

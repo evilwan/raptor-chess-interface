@@ -5,12 +5,18 @@ import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
 import raptor.service.SoundService;
+import raptor.swt.SWTUtils;
 import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
@@ -25,23 +31,15 @@ public class InactiveController extends ChessBoardController implements
 		BoardConstants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 	Random random = new SecureRandom();
+	ToolBar toolbar;
 
 	public InactiveController(Game game) {
 		super(game);
 	}
 
 	@Override
-	protected void adjustCoolbarToInitial() {
-		if (!isBeingReparented()) {
-			board.addGameActionButtonsToCoolbar();
-			board.addAutoPromoteRadioGroupToCoolbar();
-			board.packCoolbar();
-		}
-	}
-
-	@Override
 	public void adjustGameDescriptionLabel() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.getGameDescriptionLabel().setText(
 					"Inactive " + getGame().getEvent());
 		}
@@ -49,7 +47,7 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			if (BoardUtils.isPieceJailSquare(squareId)) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)) {
 					int pieceType = BoardUtils.pieceJailSquareToPiece(squareId);
@@ -74,8 +72,33 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
+	public void dispose() {
+		super.dispose();
+		if (toolbar != null) {
+			toolbar.setVisible(false);
+			SWTUtils.clearToolbar(toolbar);
+			toolbar = null;
+		}
+	}
+
+	@Override
 	public String getTitle() {
 		return "Inactive";
+	}
+
+	@Override
+	public Control getToolbar(Composite parent) {
+		if (toolbar == null) {
+			toolbar = new ToolBar(parent, SWT.FLAT);
+			BoardUtils.addNavIconsToToolbar(this, toolbar);
+			new ToolItem(toolbar, SWT.SEPARATOR);
+			BoardUtils.addPromotionIconsToToolbar(true, this, toolbar);
+			new ToolItem(toolbar, SWT.SEPARATOR);
+		} else if (toolbar.getParent() != parent) {
+			toolbar.setParent(parent);
+		}
+
+		return toolbar;
 	}
 
 	@Override
@@ -86,6 +109,8 @@ public class InactiveController extends ChessBoardController implements
 		} else {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
+
+		fireItemChanged();
 	}
 
 	@Override
@@ -127,9 +152,18 @@ public class InactiveController extends ChessBoardController implements
 		SoundService.getInstance().playSound("move");
 	}
 
+	/**
+	 * Sets the toolbar. Useful when controllers are swapping out.
+	 * 
+	 * @param toolbar
+	 */
+	public void setToolbar(ToolBar toolbar) {
+		this.toolbar = toolbar;
+	}
+
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare
 					+ " " + isDnd);
 			board.unhighlightAllSquares();
@@ -139,7 +173,7 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " "
 					+ isDnd);
 
@@ -153,7 +187,7 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
 					+ toSquare);
 			board.unhighlightAllSquares();
@@ -181,9 +215,8 @@ public class InactiveController extends ChessBoardController implements
 			} else if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
 				move = new Move(fromSquare, toSquare,
 						game.getPiece(fromSquare), game.getColorToMove(), game
-								.getPiece(toSquare), board
-								.getAutoPromoteSelection(), EMPTY,
-						Move.PROMOTION_CHARACTERISTIC);
+								.getPiece(toSquare), getAutoPromoteSelection(),
+						EMPTY, Move.PROMOTION_CHARACTERISTIC);
 			} else {
 				move = new Move(fromSquare, toSquare,
 						game.getPiece(fromSquare), game.getColorToMove(), game

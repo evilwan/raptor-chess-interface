@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
 import raptor.Raptor;
@@ -59,6 +60,11 @@ public class BugArena implements RaptorWindowItem {
 
 	public String getTitle() {
 		return title;
+	}
+
+	public Control getToolbar(Composite parent) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public void init(Composite parent) {

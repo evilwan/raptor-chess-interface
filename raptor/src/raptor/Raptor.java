@@ -20,6 +20,7 @@ import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
 import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
+import raptor.swt.InputDialog;
 import raptor.util.FileUtil;
 
 /**
@@ -266,6 +267,31 @@ public class Raptor implements PreferenceKeys {
 					}
 				});
 
+	}
+
+	/**
+	 * Prompts a user for the answer to a question. The user enters text. The
+	 * text the user entered is returned.
+	 */
+	public String promptForText(final String question) {
+		InputDialog dialog = new InputDialog(Raptor.getInstance()
+				.getRaptorWindow().getShell(), "Enter Text", question);
+		return dialog.open();
+	}
+
+	/**
+	 * Prompts a user for the answer to a question. The user enters text. The
+	 * text the user entered is returned.
+	 * 
+	 * @answer the initial text to place in the users answer.
+	 */
+	public String promptForText(final String question, String answer) {
+		InputDialog dialog = new InputDialog(Raptor.getInstance()
+				.getRaptorWindow().getShell(), "Enter Text", question);
+		if (answer != null) {
+			dialog.setInput(answer);
+		}
+		return dialog.open();
 	}
 
 	/**

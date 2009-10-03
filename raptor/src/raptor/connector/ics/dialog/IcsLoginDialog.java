@@ -291,8 +291,6 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		prefs.setValue(profilePrefix + "auto-connect", autoLoginCheckBox
 				.getSelection());
 
-		System.err.println("Stored " + prefix + " values");
-
 		// Don't store off the the profileName-profile here.
 		// It should'nt be stored for fics2/bics2 logins.
 		prefs.save();

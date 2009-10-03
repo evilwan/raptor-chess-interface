@@ -117,7 +117,9 @@ public class RaptorWindow extends ApplicationWindow {
 						lastChildToShow.setVisible(true);
 						numberOfChildrenShowing++;
 					} else {
-						children[i].setVisible(false);
+						if (children[i] != null) {
+							children[i].setVisible(false);
+						}
 					}
 				}
 			}
@@ -205,6 +207,16 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		}
 
+		public void passivateActiveateItems() {
+			for (int i = 0; i < getItemCount(); i++) {
+				if (i == getSelectionIndex()) {
+					getRaptorTabItemAt(i).raptorItem.onActivate();
+				} else {
+					getRaptorTabItemAt(i).raptorItem.onActivate();
+				}
+			}
+		}
+
 		/**
 		 * Maximizes this folder in the window.
 		 */
@@ -249,6 +261,28 @@ public class RaptorWindow extends ApplicationWindow {
 			this.setMaximized(true);
 		}
 
+		/**
+		 * Override to make sure setSelection(int index) gets invoked.
+		 */
+		@Override
+		public void setSelection(CTabItem item) {
+			for (int i = 0; i < getItemCount(); i++) {
+				if (getItem(i) == item) {
+					setSelection(i);
+				}
+			}
+		}
+
+		/**
+		 * Overridden to add the toolbar to the CTabFolder.
+		 */
+		@Override
+		public void setSelection(int index) {
+			super.setSelection(index);
+			passivateActiveateItems();
+			updateToolbar();
+		}
+
 		@Override
 		public void setVisible(boolean isVisible) {
 			super.setVisible(isVisible);
@@ -259,6 +293,25 @@ public class RaptorWindow extends ApplicationWindow {
 			return "RaptorTabFolder " + quad + " isVisible=" + isVisible()
 					+ " itemCount=" + getItemCount() + " currentSelection="
 					+ getRaptorTabItemSelection();
+		}
+
+		public void updateToolbar() {
+			RaptorTabItem currentSelection = (RaptorTabItem) getSelection();
+			Control existingControl = getTopRight();
+			if (existingControl != null) {
+				existingControl.setVisible(false);
+				setTopRight(null);
+			}
+			if (currentSelection != null) {
+				Control newControl = currentSelection.raptorItem
+						.getToolbar(this);
+				if (newControl != null) {
+					newControl.setVisible(true);
+					setTopRight(newControl, SWT.RIGHT);
+					setTabHeight(Math.max(newControl.computeSize(SWT.DEFAULT,
+							SWT.DEFAULT).y, getTabHeight()));
+				}
+			}
 		}
 	}
 
@@ -271,7 +324,6 @@ public class RaptorWindow extends ApplicationWindow {
 		protected ItemChangedListener listener;
 		protected RaptorTabFolder raptorParent;
 		protected boolean disposed = false;
-		protected boolean wasReparentedWithoutCreatingControl = true;
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				RaptorWindowItem item) {
@@ -299,24 +351,30 @@ public class RaptorWindow extends ApplicationWindow {
 				public void itemStateChanged() {
 					if (!disposed && item.getControl() != null
 							&& !item.getControl().isDisposed()) {
-						getDisplay().asyncExec(new Runnable() {
-							public void run() {
+						RaptorWindow.this.getShell().getDisplay().asyncExec(
+								new Runnable() {
+									public void run() {
 
-								if (LOG.isDebugEnabled()) {
-									LOG
-											.debug("Item changed, updating text,title,showClose");
-								}
-								try {
-									setText(item.getTitle());
-									setImage(item.getImage());
-									setShowClose(true);
-								} catch (SWTException swt) {
-									// Just eat it. It is probably a widget is
-									// disposed exception
-									// and i can't figure out how to avoid it.
-								}
-							}
-						});
+										if (LOG.isDebugEnabled()) {
+											LOG
+													.debug("Item changed, updating text,title,showClose");
+										}
+										try {
+											setText(item.getTitle());
+											setImage(item.getImage());
+											setShowClose(true);
+											if (raptorParent.getSelection() == RaptorTabItem.this) {
+												raptorParent.updateToolbar();
+											}
+										} catch (SWTException swt) {
+											// Just eat it. It is probably a
+											// widget is
+											// disposed exception
+											// and i can't figure out how to
+											// avoid it.
+										}
+									}
+								});
 					}
 				}
 			});
@@ -327,35 +385,31 @@ public class RaptorWindow extends ApplicationWindow {
 			setShowClose(true);
 			parent.layout(true, true);
 			parent.setSelection(this);
-			raptorItem.onActivate();
 			activeItems.add(this);
 		}
 
 		@Override
 		public void dispose() {
-			if (!wasReparentedWithoutCreatingControl) {
-				disposed = true;
-				if (activeItems != null) {
-					activeItems.remove(this);
-				}
-			}
 			raptorItem = null;
 			raptorParent = null;
 			super.dispose();
 		}
 
-		public void reParent(RaptorTabFolder newParent) {
-			raptorItem.removeItemChangedListener(listener);
-			if (raptorItem.onReparent(newParent)) {
-				setControl(null);
-				wasReparentedWithoutCreatingControl = true;
-				activeItems.remove(this);
+		public void onMoveTo(RaptorTabFolder newParent) {
+			if (!raptorItem.getControl().isReparentable()) {
+				Raptor
+						.getInstance()
+						.alert(
+								"You can only move between quadrants if reparenting is supported in your SWT environment.");
 			} else {
-				wasReparentedWithoutCreatingControl = false;
+				raptorItem.removeItemChangedListener(listener);
+				setControl(null);
+				raptorItem.getControl().setParent(newParent);
+				activeItems.remove(this);
+				new RaptorTabItem(newParent, getStyle(), raptorItem, false);
+				dispose();
+				restoreFolders();
 			}
-			new RaptorTabItem(newParent, getStyle(), raptorItem, false);
-			dispose();
-			restoreFolders();
 		}
 
 		@Override
@@ -743,7 +797,10 @@ public class RaptorWindow extends ApplicationWindow {
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				((RaptorTabItem) folder.getSelection()).raptorItem.onActivate();
+				RaptorTabItem selection = folder.getRaptorTabItemSelection();
+				selection.raptorItem.onActivate();
+				folder.setTopRight(selection.raptorItem.getToolbar(folder),
+						SWT.RIGHT);
 			}
 		});
 
@@ -791,7 +848,6 @@ public class RaptorWindow extends ApplicationWindow {
 		folder.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				System.err.println("Mouse double click " + e.count);
 				if (e.count == 2) {
 					if (folder.getMaximized()) {
 						restoreFolders();
@@ -815,10 +871,9 @@ public class RaptorWindow extends ApplicationWindow {
 								public void handleEvent(Event e) {
 									RaptorTabItem item = folder
 											.getRaptorTabItemSelection();
-									if (item.raptorItem.confirmQuadrantMove()) {
-										item.reParent(folders[currentQuadrant
-												.ordinal()]);
-									}
+									item.onMoveTo(folders[currentQuadrant
+											.ordinal()]);
+
 								}
 							});
 						}
@@ -864,6 +919,18 @@ public class RaptorWindow extends ApplicationWindow {
 
 		for (int i = 0; i < sashes.length; i++) {
 			sashes[i].restore();
+		}
+
+		/**
+		 * Set the selected item on all of the folders again. This ensures the
+		 * toolbars will all be correct and activate/passivate will get invoked.
+		 */
+		for (int i = 0; i < folders.length; i++) {
+			if (folders[i].getItemCount() > 0) {
+				folders[i].setSelection(folders[i].getSelectionIndex());
+			} else {
+				folders[i].updateToolbar();
+			}
 		}
 
 		if (LOG.isDebugEnabled()) {

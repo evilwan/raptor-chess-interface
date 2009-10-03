@@ -167,7 +167,6 @@ public class Style12Parser implements GameConstants {
 	 * Parses a string in (0:00.000) format into a long.
 	 */
 	public static long timeTakenStringToInt(String timeTakenString) {
-		System.err.println(timeTakenString);
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(timeTakenString,
 				":().", true);
 		int minutes = Integer.parseInt(tok.nextToken());

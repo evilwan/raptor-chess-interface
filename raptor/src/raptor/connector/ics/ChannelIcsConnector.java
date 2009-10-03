@@ -382,9 +382,7 @@ public abstract class ChannelIcsConnector implements Connector {
 			public void run() {
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
-						System.err.println("Invoking connected. " + listener);
 						listener.onConnect();
-						System.err.println("Done connected.");
 					}
 				}
 			}
@@ -396,9 +394,7 @@ public abstract class ChannelIcsConnector implements Connector {
 			public void run() {
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
-						System.err.println("Invoking connecting. " + listener);
 						listener.onConnecting();
-						System.err.println("Done connecting.");
 					}
 				}
 			}
@@ -410,11 +406,7 @@ public abstract class ChannelIcsConnector implements Connector {
 			public void run() {
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
-						System.err.println("Invoking disconnecting. "
-								+ listener);
 						listener.onConnecting();
-						System.err.println("Done disconnecting.");
-
 					}
 				}
 			}
@@ -729,7 +721,6 @@ public abstract class ChannelIcsConnector implements Connector {
 	 * This method also handles login logic which is tricky.
 	 */
 	protected void onNewInput() {
-		System.err.println("Buffers contents = " + inboundMessageBuffer);
 		if (lastSendTime != 0) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
@@ -780,7 +771,6 @@ public abstract class ChannelIcsConnector implements Connector {
 					// We have yet to receive the **** closing message so
 					// wait
 					// until it arrives.
-					System.err.println("Danging: " + inboundMessageBuffer);
 				}
 			} else {
 				int loginIndex = inboundMessageBuffer.indexOf(context
@@ -810,9 +800,6 @@ public abstract class ChannelIcsConnector implements Connector {
 							if (errorMessageIndex != -1) {
 								String event = drainInboundMessageBuffer();
 								parseMessage(event);
-							} else {
-								System.err.println("Danging: "
-										+ inboundMessageBuffer);
 							}
 						}
 					}

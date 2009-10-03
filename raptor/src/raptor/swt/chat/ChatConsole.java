@@ -1,8 +1,5 @@
 package raptor.swt.chat;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -28,20 +25,12 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 
 	static final Log LOG = LogFactory.getLog(ChatConsole.class);
 
-	public static final String SEND_BUTTON = "send";
-	public static final String AWAY_BUTTON = "away";
-	public static final String SEARCH_BUTTON = "search";
-	public static final String PREPEND_TEXT_BUTTON = "prepend";
-	public static final String SAVE_BUTTON = "save";
-	public static final String AUTO_SCROLL_BUTTON = "autoScroll";
-
 	protected StyledText inputText;
 	protected StyledText outputText;
 	protected Composite buttonComposite;
 	protected Composite southControlsComposite;
 	protected ChatConsoleController controller;
 	protected Label promptLabel;
-	protected Map<String, Button> buttonMap = new HashMap<String, Button>();
 
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent arg0) {
@@ -64,72 +53,6 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 				controller.onSendOutputText();
 			}
 		});
-		buttonMap.put(SEND_BUTTON, sendButton);
-
-		if (controller.isPrependable()) {
-			Button prependTextButton = new Button(buttonComposite, SWT.CHECK);
-			prependTextButton.setImage(Raptor.getInstance().getIcon("redStar"));
-			prependTextButton.setToolTipText("Prepends "
-					+ controller.getPrependText()
-					+ " to the input text after sending a tell.");
-			prependTextButton.setSelection(true);
-			buttonMap.put(PREPEND_TEXT_BUTTON, prependTextButton);
-		}
-
-		final Button saveButton = new Button(buttonComposite, SWT.FLAT);
-		saveButton.setImage(Raptor.getInstance().getIcon("save"));
-		saveButton.setToolTipText("Save the current console text to a file.");
-		saveButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSave();
-
-			}
-		});
-		buttonMap.put(SAVE_BUTTON, saveButton);
-
-		if (getController().isAwayable()) {
-			final Button awayButton = new Button(buttonComposite, SWT.FLAT);
-			awayButton.setImage(Raptor.getInstance().getIcon("chat"));
-			awayButton
-					.setToolTipText("Displays all of the direct tells you missed while you were away. "
-							+ "The list of tells you missed is reset each time you send a message.");
-			awayButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onAway();
-
-				}
-			});
-			buttonMap.put(AWAY_BUTTON, awayButton);
-		}
-
-		if (controller.isSearchable()) {
-			Button searchButton = new Button(buttonComposite, SWT.FLAT);
-			searchButton.setImage(Raptor.getInstance().getIcon("search"));
-			searchButton
-					.setToolTipText("Searches backward for the message in the console text. "
-							+ "The search is case insensitive and does not use regular expressions.");
-			searchButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onSearch();
-				}
-			});
-			buttonMap.put(SEARCH_BUTTON, searchButton);
-		}
-
-		final Button autoScroll = new Button(buttonComposite, SWT.FLAT);
-		autoScroll.setImage(Raptor.getInstance().getIcon("down"));
-		autoScroll.setToolTipText("Forces auto scrolling.");
-		autoScroll.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onForceAutoScroll();
-
-			}
-		});
-		buttonMap.put(AUTO_SCROLL_BUTTON, autoScroll);
 	}
 
 	public void createControls() {
@@ -188,20 +111,12 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		if (controller != null) {
 			controller.dispose();
 		}
-		if (buttonMap != null) {
-			buttonMap.clear();
-			buttonMap = null;
-		}
 
 		LOG.info("Disposed chat console.");
 
 		if (!isDisposed()) {
 			super.dispose();
 		}
-	}
-
-	public Button getButton(String button) {
-		return buttonMap.get(button);
 	}
 
 	public ChatConsoleController getController() {
@@ -218,13 +133,6 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
-	}
-
-	public void setButtonEnabled(boolean isEnabled, String key) {
-		Button item = buttonMap.get(key);
-		if (item != null) {
-			item.setEnabled(isEnabled);
-		}
 	}
 
 	public void setController(ChatConsoleController controller) {

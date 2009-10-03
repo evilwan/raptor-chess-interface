@@ -58,7 +58,6 @@ public class ChessSquare extends Composite implements BoardConstants {
 	protected DragSourceListener dragSourceListener = new DragSourceAdapter() {
 		@Override
 		public void dragFinished(DragSourceEvent event) {
-			System.err.println("DRAG FINISHED " + event);
 			if (board.getData(DROP_HANDLED) == null
 					|| (Boolean) board.getData(DROP_HANDLED) == false) {
 				board.controller.userCancelledMove(ChessSquare.this.id, true);
@@ -102,7 +101,6 @@ public class ChessSquare extends Composite implements BoardConstants {
 
 		@Override
 		public void drop(DropTargetEvent event) {
-			System.err.println("DROP " + event);
 			if (event.detail != DND.DROP_NONE) {
 				ChessSquare start = (ChessSquare) board.getData(DRAG_INITIATOR);
 				board.controller.userMadeMove(start.id, ChessSquare.this.id);

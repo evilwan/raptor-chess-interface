@@ -3,10 +3,14 @@ package raptor.swt.chess.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.connector.Connector;
 import raptor.game.Game;
@@ -17,8 +21,8 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.swt.SWTUtils;
 import raptor.swt.chess.BoardUtils;
-import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.LabeledChessSquare;
 
@@ -36,7 +40,7 @@ public class SetupController extends ChessBoardController {
 
 		@Override
 		public void gameInactive(Game game) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -44,22 +48,23 @@ public class SetupController extends ChessBoardController {
 							InactiveController inactiveController = new InactiveController(
 									getGame());
 							getBoard().setController(inactiveController);
-							inactiveController.setBoard(board);
 
-							board.clearCoolbar();
+							inactiveController.setBoard(board);
+							inactiveController
+									.setItemChangedListeners(itemChangedListeners);
+
+							// Set the listeners to null so they wont get
+							// cleared and disposed
+							setItemChangedListeners(null);
+
+							// board.clearCoolbar();
 							connector.getGameService()
 									.removeGameServiceListener(listener);
 
 							inactiveController.init();
 
-							inactiveController
-									.setItemChangedListeners(itemChangedListeners);
-							// Set the listeners to null so they wont get
-							// cleared and disposed
-							setItemChangedListeners(null);
 							unexamineOnDispose = false;
 							SetupController.this.dispose();
-							inactiveController.fireItemChanged();
 						} catch (Throwable t) {
 							connector
 									.onError("SetupController.gameInactive", t);
@@ -72,7 +77,7 @@ public class SetupController extends ChessBoardController {
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -88,7 +93,7 @@ public class SetupController extends ChessBoardController {
 
 		@Override
 		public void illegalMove(Game game, final String move) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -104,30 +109,30 @@ public class SetupController extends ChessBoardController {
 
 		@Override
 		public void setupGameBecameExamined(Game game) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							ExamineController examineController = new ExamineController(
 									getGame(), connector);
 							getBoard().setController(examineController);
+							examineController
+									.setItemChangedListeners(itemChangedListeners);
 							examineController.setBoard(board);
-
-							board.clearCoolbar();
+							examineController.fireItemChanged();
 							board.setWhitePieceJailOnTop(true);
 							connector.getGameService()
 									.removeGameServiceListener(listener);
+							setItemChangedListeners(null);
 
 							examineController.init();
 
-							examineController
-									.setItemChangedListeners(itemChangedListeners);
 							// Set the listeners to null so they wont get
 							// cleared and disposed
-							setItemChangedListeners(null);
+
 							unexamineOnDispose = false;
 							SetupController.this.dispose();
-							examineController.fireItemChanged();
+
 						} catch (Throwable t) {
 							connector.onError(
 									"SetupController.setupGameBecameExamined",
@@ -141,6 +146,7 @@ public class SetupController extends ChessBoardController {
 
 	protected Connector connector;
 	protected boolean unexamineOnDispose = true;
+	protected ToolBar toolbar;
 
 	public SetupController(Game game, Connector connector) {
 		super(game);
@@ -149,7 +155,7 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	protected void adjustClockColors() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			if (getGame().getColorToMove() == WHITE) {
 				board.getWhiteClockLabel().setForeground(
 						getPreferences().getColor(
@@ -169,37 +175,25 @@ public class SetupController extends ChessBoardController {
 	}
 
 	@Override
-	protected void adjustCoolbarToInitial() {
-		if (!isBeingReparented()) {
-			board.addGameActionButtonsToCoolbar();
-			board.addSetupToCoolbar();
-			board.packCoolbar();
-		}
-	}
-
-	@Override
 	public void adjustGameDescriptionLabel() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.getGameDescriptionLabel().setText(
 					"Setting up a chess position");
 		}
 	}
 
-	@Override
-	protected void adjustNavButtonEnabledState() {
-		if (!isBeingReparented()) {
-			board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.COMMIT_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.REVERT_NAV);
-		}
-	}
+	// @Override
+	// protected void adjustCoolbarToInitial() {
+	// if (!isBeingReparented()) {
+	// board.addGameActionButtonsToCoolbar();
+	// board.addSetupToCoolbar();
+	// board.packCoolbar();
+	// }
+	// }
 
 	@Override
 	protected void adjustPieceJailFromGame(Game game) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
 				int color = DROPPABLE_PIECE_COLOR[i];
 				int coloredPiece = DROPPABLE_PIECES[i];
@@ -221,8 +215,20 @@ public class SetupController extends ChessBoardController {
 		}
 	}
 
+	// @Override
+	// protected void adjustNavButtonEnabledState() {
+	// if (!isBeingReparented()) {
+	// board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
+	// board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
+	// board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
+	// board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
+	// board.setCoolBarButtonEnabled(false, ChessBoard.COMMIT_NAV);
+	// board.setCoolBarButtonEnabled(false, ChessBoard.REVERT_NAV);
+	// }
+	// }
+
 	protected void adjustToDropMove(Move move) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.getSquare(move.getTo()).setPiece(
 					BoardUtils.getColoredPiece(move.getPiece(), move
 							.isWhitesMove()));
@@ -240,6 +246,12 @@ public class SetupController extends ChessBoardController {
 		if (unexamineOnDispose && getGame().isInState(Game.ACTIVE_STATE)) {
 			connector.onUnexamine(getGame());
 		}
+
+		if (toolbar != null) {
+			toolbar.setVisible(false);
+			SWTUtils.clearToolbar(toolbar);
+			toolbar = null;
+		}
 		super.dispose();
 	}
 
@@ -250,6 +262,18 @@ public class SetupController extends ChessBoardController {
 	@Override
 	public String getTitle() {
 		return connector.getShortName() + "(Setup " + getGame().getId() + ")";
+	}
+
+	@Override
+	public Control getToolbar(Composite parent) {
+		if (toolbar == null) {
+			toolbar = new ToolBar(parent, SWT.FLAT);
+			BoardUtils.addSetupIconsToToolbar(this, toolbar);
+			new ToolItem(toolbar, SWT.SEPARATOR);
+		} else if (toolbar.getParent() != parent) {
+			toolbar.setParent(parent);
+		}
+		return toolbar;
 	}
 
 	@Override
@@ -301,34 +325,34 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void onSetupClear() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			connector.onSetupClear(getGame());
 		}
 	}
 
 	@Override
 	public void onSetupDone() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			connector.onSetupComplete(getGame());
 		}
 	}
 
 	@Override
 	public void onSetupFen(String fen) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			connector.onSetupFromFEN(getGame(), fen);
 		}
 	}
 
 	@Override
 	public void onSetupStart() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			connector.onSetupStartPosition(getGame());
 		}
 	}
 
 	public void setupOnIllegalMove(String move) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			LOG.info("bsetupOnIllegalMove " + getGame().getId() + " ...");
 			long startTime = System.currentTimeMillis();
 			SoundService.getInstance().playSound("illegalMove");
@@ -340,7 +364,7 @@ public class SetupController extends ChessBoardController {
 	}
 
 	public void setupPositionUpdated() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			LOG.info("besetupPositionUpdated " + getGame().getId() + " ...");
 			long startTime = System.currentTimeMillis();
 
@@ -351,7 +375,7 @@ public class SetupController extends ChessBoardController {
 			adjustToGameChangeNotInvolvingMove();
 			adjustBoardToGame(getGame());
 			adjustPieceJailFromGame(getGame());
-			adjustNavButtonEnabledState();
+			// adjustNavButtonEnabledState();
 			adjustClockColors();
 
 			board.forceUpdate();
@@ -364,7 +388,7 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.unhighlightAllSquares();
 			adjustToGameMove();
 		}
@@ -372,7 +396,7 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.unhighlightAllSquares();
 			board.getSquare(square).highlight();
 			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
@@ -383,7 +407,7 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
 					+ toSquare);
 			board.unhighlightAllSquares();
@@ -426,7 +450,7 @@ public class SetupController extends ChessBoardController {
 	 */
 	@Override
 	public void userRightClicked(final int square) {
-		if (!isBeingReparented() && !BoardUtils.isPieceJailSquare(square)) {
+		if (!isBeingUsed() && !BoardUtils.isPieceJailSquare(square)) {
 
 			Menu menu = new Menu(board.getShell(), SWT.POP_UP);
 

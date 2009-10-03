@@ -46,14 +46,6 @@ public final class MoveList implements GameConstants {
 		return result;
 	}
 
-	@SuppressWarnings("unused")
-	private void dump(String message) {
-		System.err.println(message);
-		for (int i = 0; i < size; i++) {
-			System.err.println(moves[i]);
-		}
-	}
-
 	public Move get(int index) {
 		return moves[index];
 	}
