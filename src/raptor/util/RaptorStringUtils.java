@@ -68,7 +68,6 @@ public class RaptorStringUtils {
 	public static int[] intArrayFromString(String string) {
 		List<Integer> result = new ArrayList<Integer>(10);
 
-		System.err.println("intArrayFromString:" + string);
 		if (StringUtils.isNotBlank(string)) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(string, ",",
 					false);
@@ -85,7 +84,6 @@ public class RaptorStringUtils {
 		int[] arrayResult = new int[result.size()];
 		for (int i = 0; i < result.size(); i++) {
 			arrayResult[i] = result.get(i);
-			System.err.println(i + "=" + arrayResult[i]);
 		}
 		return arrayResult;
 	}
@@ -238,7 +236,6 @@ public class RaptorStringUtils {
 			result = result.substring(0, result.length() - 1);
 		}
 
-		System.err.println("int[] to string result=" + result);
 		return result;
 	}
 

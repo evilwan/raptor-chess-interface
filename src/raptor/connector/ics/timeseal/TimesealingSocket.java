@@ -12,6 +12,9 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * This code was reverse engineered from the JIN project. JIN is a GPLed
  * project. Its URL can be found here: http://www.jinchess.com/
@@ -101,6 +104,8 @@ public class TimesealingSocket extends Socket implements Runnable {
 				byteArrayOutputStream.write(i);
 		}
 	}
+
+	private static final Log LOG = LogFactory.getLog(TimesealingSocket.class);
 
 	private volatile long initialTime;
 
@@ -206,7 +211,7 @@ public class TimesealingSocket extends Socket implements Runnable {
 			try {
 				cryptedOutputStream.close();
 			} catch (IOException ioexception) {
-				System.err.println("Failed to close PipedStream");
+				LOG.debug("Failed to close PipedStream");
 				ioexception.printStackTrace();
 			}
 		} finally {

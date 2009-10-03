@@ -27,11 +27,6 @@ public class RegExController extends ChatConsoleController {
 	}
 
 	@Override
-	public String getPrependText() {
-		return "";
-	}
-
-	@Override
 	public String getPrompt() {
 		return connector.getPrompt();
 	}

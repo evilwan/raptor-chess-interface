@@ -2,6 +2,11 @@ package raptor.swt.chess.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.connector.Connector;
 import raptor.game.Game;
@@ -9,6 +14,8 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.swt.SWTUtils;
+import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
 
 /**
@@ -23,7 +30,7 @@ public class ObserveController extends ChessBoardController {
 	protected GameServiceListener listener = new GameServiceAdapter() {
 		@Override
 		public void gameInactive(Game game) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -36,7 +43,7 @@ public class ObserveController extends ChessBoardController {
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 
-							board.clearCoolbar();
+							// board.clearCoolbar();
 							getConnector().getGameService()
 									.removeGameServiceListener(listener);
 
@@ -59,7 +66,7 @@ public class ObserveController extends ChessBoardController {
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -79,24 +86,30 @@ public class ObserveController extends ChessBoardController {
 	};
 
 	protected Connector connector;
+	protected ToolBar toolbar;
 
 	public ObserveController(Game game, Connector connector) {
 		super(game);
 		this.connector = connector;
 	}
 
-	@Override
-	protected void adjustCoolbarToInitial() {
-		if (!isBeingReparented()) {
-			board.addGameActionButtonsToCoolbar();
-			board.addScripterCoolbar();
-			board.packCoolbar();
-		}
-	}
+	// @Override
+	// protected void adjustCoolbarToInitial() {
+	// try {
+	// LOG.error("Initing toolbar");
+	// // if (!isBeingReparented()) {
+	// // board.addGameActionButtonsToCoolbar();
+	// //board.addScripterCoolbar();
+	// // board.packCoolbar();
+	// // }
+	// } catch (Throwable t) {
+	// LOG.error("Error initing toolbar", t);
+	// }
+	// }
 
 	@Override
 	public void adjustGameDescriptionLabel() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.getGameDescriptionLabel().setText(
 					"Observing " + getGame().getEvent());
 		}
@@ -104,7 +117,7 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	protected void adjustPremoveLabel() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.getCurrentPremovesLabel().setText("");
 		}
 	}
@@ -120,6 +133,12 @@ public class ObserveController extends ChessBoardController {
 		if (connector.isConnected() && getGame().isInState(Game.ACTIVE_STATE)) {
 			connector.onUnobserve(getGame());
 		}
+		if (toolbar != null) {
+			toolbar.setVisible(false);
+			SWTUtils.clearToolbar(toolbar);
+			toolbar = null;
+		}
+
 		super.dispose();
 	}
 
@@ -130,6 +149,19 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public String getTitle() {
 		return connector.getShortName() + "(Obs " + getGame().getId() + ")";
+	}
+
+	@Override
+	public Control getToolbar(Composite parent) {
+		if (toolbar == null) {
+			toolbar = new ToolBar(parent, SWT.FLAT);
+			BoardUtils.addNavIconsToToolbar(this, toolbar);
+			new ToolItem(toolbar, SWT.SEPARATOR);
+		} else if (toolbar.getParent() != parent) {
+			toolbar.setParent(parent);
+		}
+
+		return toolbar;
 	}
 
 	@Override

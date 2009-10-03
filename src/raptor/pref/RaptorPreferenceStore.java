@@ -148,19 +148,16 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public Quadrant getCurrentLayoutQuadrant(String key) {
 		key = "app-" + getString(APP_LAYOUT) + "-" + key;
-		System.err.println("Getting layout quad for key: " + key);
 		return getQuadrant(key);
 	}
 
 	public Rectangle getCurrentLayoutRectangle(String key) {
 		key = "app-" + getString(APP_LAYOUT) + "-" + key;
-		System.err.println("Getting rect for key: " + key);
 		return getRectangle(key);
 	}
 
 	public int[] getCurrentLayoutSashWeights(String key) {
 		key = "app-" + getString(APP_LAYOUT) + "-" + key;
-		System.err.println("Getting int array for key: " + key);
 		return getIntArray(key);
 	}
 

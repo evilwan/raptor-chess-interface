@@ -9,6 +9,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
 
@@ -32,6 +34,21 @@ public class SWTUtils {
 
 		dialog.getShell().setLocation(new Point(locationX, locationY));
 
+	}
+
+	/**
+	 * Disposes of all the items in a toolbar.
+	 * 
+	 * @param toolbar
+	 *            THe toolbar to clear.
+	 */
+	public static void clearToolbar(ToolBar toolbar) {
+		if (toolbar != null) {
+			ToolItem[] toolItems = toolbar.getItems();
+			for (int i = 0; i < toolItems.length; i++) {
+				toolItems[i].dispose();
+			}
+		}
 	}
 
 	/**

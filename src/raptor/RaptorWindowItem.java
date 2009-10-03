@@ -2,6 +2,7 @@ package raptor;
 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import raptor.swt.ItemChangedListener;
 
@@ -24,13 +25,6 @@ public interface RaptorWindowItem {
 	 * closed.
 	 */
 	public boolean confirmClose();
-
-	/**
-	 * Returns true if the RaptorWindowItem can be move to another quadrant,
-	 * false otherwise. This method can be used to prompt the user to determine
-	 * if it should be moved.
-	 */
-	public boolean confirmQuadrantMove();
 
 	/**
 	 * Disposes of the window item.
@@ -59,6 +53,12 @@ public interface RaptorWindowItem {
 	public String getTitle();
 
 	/**
+	 * Returns the toolbar to use for the window item. It should be created with
+	 * the specified parent.
+	 */
+	public Control getToolbar(Composite parent);
+
+	/**
 	 * Initializes the window item to the new parent.
 	 */
 	public void init(Composite parent);
@@ -72,15 +72,6 @@ public interface RaptorWindowItem {
 	 * Invoked when the window item is invisible to the user.
 	 */
 	public void onPassivate();
-
-	/**
-	 * If confirmQuadrantMove returns true, this method should be supported. It
-	 * reparents the control to the new parent.
-	 * 
-	 * It should return true if the component was able to be reparented without
-	 * recreating the control. False otherwise.
-	 */
-	public boolean onReparent(Composite newParent);
 
 	/**
 	 * Removes an item changed listener.

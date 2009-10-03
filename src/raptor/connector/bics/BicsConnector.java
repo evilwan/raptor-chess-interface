@@ -132,9 +132,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				IcsLoginDialog dialog = new IcsLoginDialog(context
 						.getPreferencePrefix(), "Bics Login");
 				dialog.open();
-				System.err.println("Set profile to "
-						+ context.getPreferencePrefix() + "profile" + " "
-						+ dialog.getSelectedProfile());
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "profile",
 						dialog.getSelectedProfile());

@@ -3,9 +3,9 @@ package raptor.swt.chat;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
-import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.swt.ItemChangedListener;
 
@@ -24,20 +24,6 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 
 	public boolean confirmClose() {
 		return controller.confirmClose();
-	}
-
-	public boolean confirmQuadrantMove() {
-		int chars = console.getInputText().getCharCount();
-
-		if (!console.isReparentable() && chars > 25000) {
-			return Raptor
-					.getInstance()
-					.confirm(
-							"You have over 25,000 characters in this console. Moving to another quadrant might"
-									+ "take a while to update as the previous messages are loaded. Do you wish to proceed?");
-		} else {
-			return true;
-		}
 	}
 
 	public void dispose() {
@@ -69,6 +55,10 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 		return controller != null ? controller.getTitle() : "ERROR";
 	}
 
+	public Control getToolbar(Composite parent) {
+		return controller.getToolbar(parent);
+	}
+
 	public void init(Composite parent) {
 		console = new ChatConsole(parent, SWT.NONE);
 		console.setController(controller);
@@ -93,33 +83,6 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	}
 
 	public void onPassivate() {
-	}
-
-	public boolean onReparent(Composite newParent) {
-		boolean result = false;
-		if (controller != null) {
-			if (!console.setParent(newParent)) {
-				// Grab the controller from the console since it may have
-				// changed.
-				controller = console.getController();
-				controller.onPreReparent();
-				console.setController(null);
-				console.setVisible(false);
-				console.dispose();
-
-				console = new ChatConsole(newParent, SWT.NONE);
-				console.setController(controller);
-				console.createControls();
-				controller.setChatConsole(console);
-
-				controller.onPostReparent();
-				ChatUtils.appendPreviousChatsToController(console);
-				console.redraw();
-			} else {
-				result = true;
-			}
-		}
-		return result;
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {

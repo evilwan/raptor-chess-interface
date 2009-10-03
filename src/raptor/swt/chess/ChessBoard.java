@@ -1,8 +1,5 @@
 package raptor.swt.chess;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -10,20 +7,12 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
 import raptor.game.GameConstants;
@@ -35,23 +24,6 @@ import raptor.swt.SWTUtils;
 import raptor.swt.chess.layout.RightOrientedLayout;
 
 public class ChessBoard extends Composite implements BoardConstants {
-
-	public static final String LAST_NAV = "last_nav";
-	public static final String NEXT_NAV = "forward_nav";
-	public static final String BACK_NAV = "next_nav";
-	public static final String FIRST_NAV = "first_nav";
-	public static final String COMMIT_NAV = "commit_nav";
-	public static final String REVERT_NAV = "revert_nav";
-	public static final String AUTO_QUEEN = "auto-queen";
-	public static final String AUTO_ROOK = "auto-rook";
-	public static final String AUTO_BISHOP = "auto-bishop";
-	public static final String AUTO_KNIGHT = "auto-knight";
-	public static final String AUTO_DRAW = "auto-draw";
-	public static final String FLIP = "flip";
-	public static final String SETUP_DONE = "setup-done";
-	public static final String SETUP_START = "setup-start";
-	public static final String SETUP_CLEAR = "setup-done";
-	public static final String PREMOVE = "premoveia";
 
 	public static final String SETUP_EXECUTE_FEN = "setup-execute-fen";
 
@@ -91,326 +63,17 @@ public class ChessBoard extends Composite implements BoardConstants {
 	protected Label whiteLagLabel;
 	protected Label whiteToMoveIndicatorLabel;
 	protected Label blackToMoveIndicatorLabel;
-	protected CoolBar coolbar;
 
 	protected Label whiteNameRatingLabel;
 
 	protected Composite boardPanel;
 
-	protected Composite coolbarComposite;
-
 	protected int resultFontHeight;
 
 	protected Font resultFont;
 
-	protected Map<String, Button> coolbarButtonMap = new HashMap<String, Button>();
-
 	public ChessBoard(Composite parent, int style) {
 		super(parent, style);
-	}
-
-	public void addAutoPromoteRadioGroupToCoolbar() {
-		LOG.debug("Adding auto promote radios to coolbar");
-		Composite composite = new Composite(getCoolbar(), SWT.NONE);
-		GridLayout gridLayout = new GridLayout(4, false);
-		gridLayout.marginLeft = 0;
-		gridLayout.marginTop = 0;
-		gridLayout.marginRight = 0;
-		gridLayout.marginBottom = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		composite.setLayout(gridLayout);
-
-		Button queenButton = new Button(composite, SWT.RADIO);
-		queenButton.setToolTipText("Set auto promote piece to a queen.");
-		queenButton.setImage(BoardUtils.getChessPieceIconImage("XBoard", BQ));
-		queenButton.setSelection(true);
-		coolbarButtonMap.put(AUTO_QUEEN, queenButton);
-		queenButton.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
-
-		Button knightButton = new Button(composite, SWT.RADIO);
-		knightButton.setToolTipText("Set auto promote piece to a knight.");
-		knightButton.setImage(BoardUtils.getChessPieceIconImage("XBoard", BN));
-		coolbarButtonMap.put(AUTO_KNIGHT, knightButton);
-		knightButton
-				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
-
-		Button rookButton = new Button(composite, SWT.RADIO);
-		rookButton.setToolTipText("Set auto promote piece to a rook.");
-		rookButton.setImage(BoardUtils.getChessPieceIconImage("XBoard", BR));
-		coolbarButtonMap.put(AUTO_ROOK, rookButton);
-		rookButton.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
-
-		Button bishopButton = new Button(composite, SWT.RADIO);
-		bishopButton.setToolTipText("Set auto promote piece to a bishop.");
-		bishopButton.setImage(BoardUtils.getChessPieceIconImage("XBoard", BB));
-		coolbarButtonMap.put(AUTO_BISHOP, bishopButton);
-		bishopButton
-				.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
-
-		CoolItem item = new CoolItem(getCoolbar(), SWT.NONE);
-		item.setControl(composite);
-	}
-
-	public void addGameActionButtonsToCoolbar() {
-		LOG.debug("Adding game action buttons to coolbar");
-		Composite composite = new Composite(getCoolbar(), SWT.NONE);
-
-		GridLayout gridLayout = new GridLayout(8, false);
-		gridLayout.marginLeft = 0;
-		gridLayout.marginTop = 0;
-		gridLayout.marginRight = 0;
-		gridLayout.marginBottom = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		composite.setLayout(gridLayout);
-
-		if (controller.isNavigatable()) {
-			Button firstButtonItem = new Button(composite, SWT.FLAT);
-			firstButtonItem.setImage(Raptor.getInstance().getIcon("first"));
-			firstButtonItem.setToolTipText("Go to the first move played");
-			firstButtonItem.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavFirst();
-
-				}
-			});
-			coolbarButtonMap.put(FIRST_NAV, firstButtonItem);
-		}
-
-		if (controller.isNavigatable()) {
-			Button backButton = new Button(composite, SWT.FLAT);
-			backButton.setImage(Raptor.getInstance().getIcon("back"));
-			backButton.setToolTipText("Go to the previous move played");
-			backButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavBack();
-
-				}
-			});
-			coolbarButtonMap.put(BACK_NAV, backButton);
-		}
-
-		if (controller.isRevertable()) {
-			Button revertButton = new Button(composite, SWT.FLAT);
-			revertButton.setImage(Raptor.getInstance().getIcon(
-					"counterClockwise"));
-			revertButton.setToolTipText("Revert back to main-variation.");
-			revertButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavRevert();
-
-				}
-			});
-			coolbarButtonMap.put(REVERT_NAV, revertButton);
-		}
-
-		if (controller.isCommitable()) {
-			Button commitButton = new Button(composite, SWT.FLAT);
-			commitButton.setImage(Raptor.getInstance().getIcon("clockwise"));
-			commitButton.setToolTipText("Commit sub-variation.");
-			commitButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavCommit();
-
-				}
-			});
-
-			coolbarButtonMap.put(COMMIT_NAV, commitButton);
-		}
-
-		if (controller.isNavigatable()) {
-			Button nextButton = new Button(composite, SWT.FLAT);
-			nextButton.setImage(Raptor.getInstance().getIcon("next"));
-			nextButton.setToolTipText("Go to the next move played");
-			nextButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavForward();
-
-				}
-			});
-			coolbarButtonMap.put(NEXT_NAV, nextButton);
-		}
-
-		if (controller.isNavigatable()) {
-			Button lastButton = new Button(composite, SWT.FLAT);
-			lastButton.setImage(Raptor.getInstance().getIcon("last"));
-			lastButton.setToolTipText("Go to the last move played");
-			lastButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavLast();
-
-				}
-			});
-			coolbarButtonMap.put(LAST_NAV, lastButton);
-		}
-
-		Button flipButton = new Button(composite, SWT.FLAT);
-		flipButton.setImage(Raptor.getInstance().getIcon("flip"));
-		flipButton.setToolTipText("Flips the chess board.");
-		coolbarButtonMap.put(FLIP, flipButton);
-		flipButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onFlip();
-			}
-		});
-
-		if (controller.isPremoveable()) {
-			Button premoveButton = new Button(composite, SWT.FLAT);
-			premoveButton.setImage(Raptor.getInstance().getIcon("fire"));
-			premoveButton.setToolTipText("Clears all premoves.");
-			coolbarButtonMap.put(PREMOVE, premoveButton);
-			premoveButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onClearPremoves();
-				}
-			});
-		}
-
-		if (controller.isAutoDrawable()) {
-			Button autoDrawButton = new Button(composite, SWT.CHECK);
-			autoDrawButton.setImage(Raptor.getInstance().getIcon("draw"));
-			autoDrawButton
-					.setToolTipText("Offer a draw after every move you make.");
-			coolbarButtonMap.put(AUTO_DRAW, autoDrawButton);
-		}
-
-		CoolItem item = new CoolItem(getCoolbar(), SWT.NONE);
-		item.setControl(composite);
-	}
-
-	public void addScripterCoolbar() {
-		LOG.debug("Adding scripter coolbar");
-		Composite composite = new Composite(getCoolbar(), SWT.NONE);
-		GridLayout gridLayout = new GridLayout(2, false);
-		gridLayout.marginLeft = 0;
-		gridLayout.marginTop = 0;
-		gridLayout.marginRight = 0;
-		gridLayout.marginBottom = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		composite.setLayout(gridLayout);
-
-		Combo combo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		combo.add("Resign");
-		combo.add("Draw");
-		combo.add("Match Winner");
-		combo.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_CENTER));
-
-		Button executeButton = new Button(composite, SWT.FLAT);
-		executeButton.setImage(Raptor.getInstance().getIcon("enter"));
-		executeButton.setToolTipText("Executes the selected script.");
-		executeButton.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-
-		CoolItem item = new CoolItem(getCoolbar(), SWT.NONE);
-		item.setControl(composite);
-	}
-
-	public void addSetupToCoolbar() {
-		LOG.debug("Adding setup to coolbar");
-		Composite composite = new Composite(getCoolbar(), SWT.NONE);
-		GridLayout gridLayout = new GridLayout(10, false);
-		gridLayout.marginLeft = 0;
-		gridLayout.marginTop = 0;
-		gridLayout.marginRight = 0;
-		gridLayout.marginBottom = 0;
-		gridLayout.horizontalSpacing = 0;
-		gridLayout.verticalSpacing = 0;
-		gridLayout.marginHeight = 0;
-		gridLayout.marginWidth = 0;
-		composite.setLayout(gridLayout);
-
-		Button setupInitial = new Button(composite, SWT.FLAT);
-		setupInitial.setText("Start Position");
-		setupInitial.setToolTipText("Sets up the initial position.");
-		setupInitial.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSetupStart();
-
-			}
-		});
-		coolbarButtonMap.put(SETUP_START, setupInitial);
-
-		Button setupClear = new Button(composite, SWT.FLAT);
-		setupClear.setText("Clear Position");
-		setupClear.setToolTipText("Clears all pieces from the chess board.");
-		setupClear.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSetupClear();
-			}
-		});
-		coolbarButtonMap.put(SETUP_CLEAR, setupClear);
-
-		Button setupDone = new Button(composite, SWT.FLAT);
-		setupDone.setText("Setup Complete");
-		setupDone.setToolTipText("Completes setup mode.");
-		setupDone.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSetupDone();
-			}
-		});
-		coolbarButtonMap.put(SETUP_DONE, setupDone);
-
-		Label label = new Label(composite, SWT.NONE);
-		label.setText("Setup from FEN:");
-		final Text text = new Text(composite, SWT.SINGLE | SWT.BORDER);
-		text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		Button executeButton = new Button(composite, SWT.FLAT);
-		executeButton.setImage(Raptor.getInstance().getIcon("enter"));
-		executeButton
-				.setToolTipText("Sets up the position from the specified FEN.");
-		executeButton.setLayoutData(new GridData(GridData.FILL_VERTICAL));
-		executeButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSetupFen(text.getText());
-			}
-		});
-		coolbarButtonMap.put(SETUP_EXECUTE_FEN, executeButton);
-
-		CoolItem item = new CoolItem(getCoolbar(), SWT.NONE);
-		item.setControl(composite);
-	}
-
-	public void clearCoolbar() {
-
-		coolbar.setVisible(false);
-		coolbar.dispose();
-		coolbarButtonMap.clear();
-		coolbar = new CoolBar(coolbarComposite, chessBoardLayout
-				.getStyle(ChessBoardLayout.Field.COOLBAR));
-		coolbar.setLayoutData(new GridData(GridData.FILL_BOTH));
-		// for (int i = 0; i < getCoolbar().getItemCount(); i++) {
-		// CoolItem item = getCoolbar().getItem(i);
-		// if (item.getControl() != null) {
-		// item.getControl().setVisible(false);
-		// // item.getControl().setParent(null);
-		// item.getControl().dispose();
-		// item.setControl(null);
-		// item.setMinimumSize(21, 12);
-		// item.setPreferredSize(0, 0);
-		// item.setSize(0, 0);
-		// item.dispose();
-		// LOG.debug("Disposed of toolbar item.");
-		// }
-		// }
 	}
 
 	protected void createChessBoardLayout() {
@@ -422,39 +85,19 @@ public class ChessBoard extends Composite implements BoardConstants {
 		long startTime = System.currentTimeMillis();
 		createChessBoardLayout();
 
-		GridLayout mainLayout = new GridLayout(1, false);
-		mainLayout.marginLeft = 0;
-		mainLayout.marginTop = 0;
-		mainLayout.marginRight = 0;
-		mainLayout.marginBottom = 0;
-		mainLayout.horizontalSpacing = 0;
-		mainLayout.verticalSpacing = 0;
-		mainLayout.marginHeight = 0;
-		mainLayout.marginWidth = 0;
-		setLayout(mainLayout);
+		setLayout(SWTUtils.createMarginlessGridLayout(1, false));
 
-		coolbarComposite = new Composite(this, SWT.NONE);
-		coolbarComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
-		GridLayout coolbarCompositeLayout = new GridLayout(1, false);
-		coolbarCompositeLayout.marginLeft = 0;
-		coolbarCompositeLayout.marginTop = 0;
-		coolbarCompositeLayout.marginRight = 0;
-		coolbarCompositeLayout.marginBottom = 0;
-		coolbarCompositeLayout.horizontalSpacing = 0;
-		coolbarCompositeLayout.verticalSpacing = 0;
-		coolbarCompositeLayout.marginHeight = 0;
-		coolbarCompositeLayout.marginWidth = 0;
-		coolbarComposite.setLayout(coolbarCompositeLayout);
-
-		coolbar = new CoolBar(coolbarComposite, chessBoardLayout
-				.getStyle(ChessBoardLayout.Field.COOLBAR));
-		coolbar.setLayoutData(new GridData(GridData.FILL_BOTH));
+		// coolbarComposite = new Composite(this,SWT.NONE);
+		// coolbarComposite.setLayout(SWTUtils.createMarginlessGridLayout(1,
+		// false));
+		// coolbar = new CoolBar(this, chessBoardLayout
+		// .getStyle(ChessBoardLayout.Field.COOLBAR));
+		// coolbar
+		// .setLayoutData(new GridData(SWT.FILL, SWT.BEGINNING, true,
+		// false));
 
 		boardPanel = new Composite(this, SWT.NONE);
-		boardPanel.setBackgroundMode(SWT.INHERIT_DEFAULT);
-
-		boardPanel.setLayoutData(new GridData(GridData.FILL_BOTH));
+		boardPanel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		boardPanel.setLayout(chessBoardLayout);
 
 		initSquares();
@@ -568,30 +211,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 		}
 	}
 
-	/**
-	 * Returns the non-colored promotion piece selected. EMPTY if none.
-	 */
-	public int getAutoPromoteSelection() {
-		int result = EMPTY;
-
-		if (getCoolBarButton(AUTO_QUEEN) != null) {
-			result = getCoolBarButton(AUTO_QUEEN).getSelection() ? QUEEN
-					: EMPTY;
-			if (result == EMPTY) {
-				result = getCoolBarButton(AUTO_KNIGHT).getSelection() ? KNIGHT
-						: EMPTY;
-				if (result == EMPTY) {
-					result = getCoolBarButton(AUTO_BISHOP).getSelection() ? BISHOP
-							: EMPTY;
-					if (result == EMPTY) {
-						result = ROOK;
-					}
-				}
-			}
-		}
-		return result;
-	}
-
 	public Label getBlackClockLabel() {
 		return blackClockLabel;
 	}
@@ -616,13 +235,13 @@ public class ChessBoard extends Composite implements BoardConstants {
 		return controller;
 	}
 
-	public CoolBar getCoolbar() {
-		return coolbar;
-	}
-
-	public Button getCoolBarButton(String buttonKey) {
-		return coolbarButtonMap.get(buttonKey);
-	}
+	// public CoolBar getCoolbar() {
+	// return coolbar;
+	// }
+	//
+	// public Button getCoolBarButton(String buttonKey) {
+	// return coolbarButtonMap.get(buttonKey);
+	// }
 
 	public Label getCurrentPremovesLabel() {
 		return currentPremovesLabel;
@@ -927,15 +546,14 @@ public class ChessBoard extends Composite implements BoardConstants {
 	/**
 	 * Returns true if the specified button is selected, false otherwise.
 	 */
-	public boolean isCoolbarButtonSelectd(String buttonKey) {
-		boolean result = false;
-		Button button = coolbarButtonMap.get(buttonKey);
-		if (button != null) {
-			result = button.getSelection();
-		}
-		return result;
-	}
-
+	// public boolean isCoolbarButtonSelectd(String buttonKey) {
+	// boolean result = false;
+	// Button button = coolbarButtonMap.get(buttonKey);
+	// if (button != null) {
+	// result = button.getSelection();
+	// }
+	// return result;
+	// }
 	public boolean isWhiteOnTop() {
 		return isWhiteOnTop;
 	}
@@ -944,25 +562,24 @@ public class ChessBoard extends Composite implements BoardConstants {
 		return this.isWhitePieceJailOnTop;
 	}
 
-	public void packCoolbar() {
-		for (int i = 0; i < getCoolbar().getItemCount(); i++) {
-			CoolItem item = getCoolbar().getItem(i);
-			if (!item.isDisposed() && item.getControl() != null
-					&& item.getControl().isVisible()
-					&& item.getMinimumSize() != null
-					&& !item.getMinimumSize().equals(new Point(21, 12))) {
-				item.getControl().pack();
-				Point point = item.getControl().computeSize(SWT.DEFAULT,
-						SWT.DEFAULT);
-				item.setSize(item.computeSize(point.x, point.y));
-				LOG.debug("New item preferred size " + point.x + " " + point.y);
-			} else {
-				LOG.debug("found item to dispose. settings its size to 0");
-				item.setSize(0, 0);
-			}
-		}
-		coolbarComposite.layout();
-	}
+	// public void packCoolbar() {
+	// LOG.error("PPPAAACCCKKKIIIINNNG DA COOLBAR!!!");
+	// for (int i = 0; i < getCoolbar().getItemCount(); i++) {
+	// CoolItem item = getCoolbar().getItem(i);
+	// if (!item.isDisposed() && item.getControl() != null){
+	// //&& !item.getMinimumSize().equals(new Point(21, 12))) {
+	// item.getControl().pack();
+	// Point point = item.getControl().computeSize(SWT.DEFAULT,
+	// SWT.DEFAULT);
+	// item.setSize(item.computeSize(point.x, point.y));
+	// LOG.debug("New item preferred size " + point.x + " " + point.y);
+	// }
+	// // } else {
+	// // LOG.debug("found item to dispose. settings its size to 0");
+	// // item.setSize(0, 0);
+	// // }
+	// }
+	// }
 
 	/**
 	 * Forces redraws on all of the squares.
@@ -996,16 +613,17 @@ public class ChessBoard extends Composite implements BoardConstants {
 		this.controller = controller;
 	}
 
-	public void setCoolbar(CoolBar coolbar) {
-		this.coolbar = coolbar;
-	}
-
-	public void setCoolBarButtonEnabled(boolean isEnabled, String buttonKey) {
-		Button button = getCoolBarButton(buttonKey);
-		if (button != null) {
-			button.setEnabled(isEnabled);
-		}
-	}
+	// public void setCoolbar(CoolBar coolbar) {
+	// this.coolbar = coolbar;
+	// }
+	//
+	// public void setCoolBarButtonEnabled(boolean isEnabled, String buttonKey)
+	// {
+	// Button button = getCoolBarButton(buttonKey);
+	// if (button != null) {
+	// button.setEnabled(isEnabled);
+	// }
+	// }
 
 	public void setCurrentPremovesLabel(Label currentPremovesLabel) {
 		this.currentPremovesLabel = currentPremovesLabel;

@@ -9,6 +9,11 @@ import java.util.Random;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
 import raptor.connector.Connector;
@@ -21,8 +26,8 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.swt.SWTUtils;
 import raptor.swt.chess.BoardUtils;
-import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
 
 /**
@@ -50,7 +55,7 @@ public class PlayingController extends ChessBoardController {
 
 		@Override
 		public void gameInactive(Game game) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -72,7 +77,7 @@ public class PlayingController extends ChessBoardController {
 
 							// Clear the cool bar and init the inactive
 							// controller.
-							board.clearCoolbar();
+							// board.clearCoolbar();
 							inactiveController.init();
 
 							// Set the listeners to null so they wont get
@@ -97,7 +102,7 @@ public class PlayingController extends ChessBoardController {
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -120,7 +125,7 @@ public class PlayingController extends ChessBoardController {
 
 		@Override
 		public void illegalMove(Game game, final String move) {
-			if (!isBeingReparented() && game.getId().equals(getGame().getId())) {
+			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -141,6 +146,7 @@ public class PlayingController extends ChessBoardController {
 	protected boolean isPlayingMoveSound = true;
 	protected List<PremoveInfo> premoves = Collections
 			.synchronizedList(new ArrayList<PremoveInfo>(10));
+	protected ToolBar toolbar;
 
 	/**
 	 * Creates a playing controller. One of the players white or black playing
@@ -174,15 +180,6 @@ public class PlayingController extends ChessBoardController {
 
 	}
 
-	@Override
-	protected void adjustCoolbarToInitial() {
-		if (!isBeingReparented()) {
-			board.addGameActionButtonsToCoolbar();
-			board.addAutoPromoteRadioGroupToCoolbar();
-			board.packCoolbar();
-		}
-	}
-
 	/**
 	 * If premove is enabled, and premove is not in queued mode then clear the
 	 * premoves on an illegal move.
@@ -205,7 +202,7 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	public void adjustForIllegalMove(String move) {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.getStatusLabel().setText("Illegal Move: " + move);
 			adjustForIllegalMove();
 		}
@@ -213,21 +210,9 @@ public class PlayingController extends ChessBoardController {
 
 	@Override
 	public void adjustGameDescriptionLabel() {
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.getGameDescriptionLabel().setText(
 					"Playing " + getGame().getEvent());
-		}
-	}
-
-	@Override
-	protected void adjustNavButtonEnabledState() {
-		if (!isBeingReparented()) {
-			board.setCoolBarButtonEnabled(true, ChessBoard.FIRST_NAV);
-			board.setCoolBarButtonEnabled(true, ChessBoard.LAST_NAV);
-			board.setCoolBarButtonEnabled(true, ChessBoard.NEXT_NAV);
-			board.setCoolBarButtonEnabled(true, ChessBoard.BACK_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.COMMIT_NAV);
-			board.setCoolBarButtonEnabled(false, ChessBoard.REVERT_NAV);
 		}
 	}
 
@@ -237,7 +222,7 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	protected void adjustPremoveLabel() {
-		if (isBeingReparented()) {
+		if (isBeingUsed()) {
 			return;
 		}
 
@@ -256,15 +241,27 @@ public class PlayingController extends ChessBoardController {
 				}
 			}
 		}
-		if (labelText.equals("")) {
-			labelText = "Premoves: EMPTY";
-			board.setCoolBarButtonEnabled(false, ChessBoard.PREMOVE);
-		} else {
-			labelText = "Premoves: " + labelText;
-			board.setCoolBarButtonEnabled(true, ChessBoard.PREMOVE);
-		}
+		// if (labelText.equals("")) {
+		// labelText = "Premoves: EMPTY";
+		// board.setCoolBarButtonEnabled(false, ChessBoard.PREMOVE);
+		// } else {
+		// labelText = "Premoves: " + labelText;
+		// board.setCoolBarButtonEnabled(true, ChessBoard.PREMOVE);
+		// }
 		board.getCurrentPremovesLabel().setText(labelText);
 	}
+
+	// @Override
+	// protected void adjustNavButtonEnabledState() {
+	// if (!isBeingReparented()) {
+	// // board.setCoolBarButtonEnabled(true, ChessBoard.FIRST_NAV);
+	// // board.setCoolBarButtonEnabled(true, ChessBoard.LAST_NAV);
+	// // board.setCoolBarButtonEnabled(true, ChessBoard.NEXT_NAV);
+	// // board.setCoolBarButtonEnabled(true, ChessBoard.BACK_NAV);
+	// // board.setCoolBarButtonEnabled(false, ChessBoard.COMMIT_NAV);
+	// // board.setCoolBarButtonEnabled(false, ChessBoard.REVERT_NAV);
+	// }
+	// }
 
 	/**
 	 * Invoked when the user tries to start a dnd or click click move operation
@@ -331,6 +328,11 @@ public class PlayingController extends ChessBoardController {
 	public void dispose() {
 		connector.getGameService().removeGameServiceListener(listener);
 		super.dispose();
+		if (toolbar != null) {
+			toolbar.setVisible(false);
+			SWTUtils.clearToolbar(toolbar);
+			toolbar = null;
+		}
 	}
 
 	public Connector getConnector() {
@@ -342,6 +344,21 @@ public class PlayingController extends ChessBoardController {
 		return connector.getShortName() + "(Play " + getGame().getId() + ")";
 	}
 
+	@Override
+	public Control getToolbar(Composite parent) {
+		if (toolbar == null) {
+			toolbar = new ToolBar(parent, SWT.FLAT);
+			BoardUtils.addNavIconsToToolbar(this, toolbar);
+			new ToolItem(toolbar, SWT.SEPARATOR);
+			BoardUtils.addPromotionIconsToToolbar(true, this, toolbar);
+			new ToolItem(toolbar, SWT.SEPARATOR);
+		} else if (toolbar.getParent() != parent) {
+			toolbar.setParent(parent);
+		}
+
+		return toolbar;
+	}
+
 	/**
 	 * If auto draw is enabled, a draw request is sent. This method should be
 	 * invoked when receiving a move and right after sending one.
@@ -350,9 +367,9 @@ public class PlayingController extends ChessBoardController {
 	 * a draw by three times in the same position or 50 move draw rule.
 	 */
 	protected void handleAutoDraw() {
-		if (board.isCoolbarButtonSelectd(ChessBoard.AUTO_DRAW)) {
-			getConnector().onDraw(getGame());
-		}
+		// if (board.isCoolbarButtonSelectd(ChessBoard.AUTO_DRAW)) {
+		// getConnector().onDraw(getGame());
+		// }
 	}
 
 	@Override
@@ -506,7 +523,7 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		if (isBeingReparented()) {
+		if (isBeingUsed()) {
 			return;
 		}
 		if (LOG.isDebugEnabled()) {
@@ -527,7 +544,7 @@ public class PlayingController extends ChessBoardController {
 					+ " is drag and drop=" + isDnd);
 		}
 
-		if (!isBeingReparented()) {
+		if (!isBeingUsed()) {
 			board.unhighlightAllSquares();
 			board.getSquare(square).highlight();
 			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
@@ -551,7 +568,7 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-		if (isBeingReparented()) {
+		if (isBeingUsed()) {
 			return;
 		}
 
@@ -583,7 +600,7 @@ public class PlayingController extends ChessBoardController {
 			Move move = null;
 			if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
 				move = BoardUtils.createMove(getGame(), fromSquare, toSquare,
-						board.getAutoPromoteSelection());
+						getAutoPromoteSelection());
 			} else {
 				move = BoardUtils.createMove(getGame(), fromSquare, toSquare);
 			}
@@ -633,8 +650,8 @@ public class PlayingController extends ChessBoardController {
 			premoveInfo.fromSquare = fromSquare;
 			premoveInfo.toSquare = toSquare;
 			premoveInfo.promotionColorlessPiece = GameUtils.isPromotion(
-					isUserWhite(), getGame(), fromSquare, toSquare) ? board
-					.getAutoPromoteSelection() : EMPTY;
+					isUserWhite(), getGame(), fromSquare, toSquare) ? getAutoPromoteSelection()
+					: EMPTY;
 
 			/**
 			 * In queued premove mode you can have multiple premoves so just add
@@ -665,7 +682,7 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userMiddleClicked(int square) {
-		if (isBeingReparented()) {
+		if (isBeingUsed()) {
 			return;
 		}
 
@@ -718,7 +735,7 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userRightClicked(final int square) {
-		if (isBeingReparented()) {
+		if (isBeingUsed()) {
 			return;
 		}
 

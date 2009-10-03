@@ -1,14 +1,12 @@
 package raptor.swt.chat.controller;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.swt.widgets.Button;
 
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
-import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleController;
 
 public class PersonController extends ChatConsoleController {
@@ -32,22 +30,18 @@ public class PersonController extends ChatConsoleController {
 	}
 
 	@Override
-	public String getPrependText() {
+	public String getPrependText(boolean checkButton) {
 		if (this.isIgnoringActions()) {
 			return "";
 		}
 
-		String prependText = "";
-
-		Button prependButton = chatConsole
-				.getButton(ChatConsole.PREPEND_TEXT_BUTTON);
-		if (prependButton != null) {
-			if (prependButton.getSelection()) {
-				prependText = connector.getChannelTabPrefix(person);
-			}
+		if (checkButton && isToolItemSelected(PREPEND_TEXT_BUTTON)) {
+			return connector.getPersonTabPrefix(person);
+		} else if (!checkButton) {
+			return connector.getPersonTabPrefix(person);
+		} else {
+			return "";
 		}
-
-		return prependText;
 	}
 
 	@Override

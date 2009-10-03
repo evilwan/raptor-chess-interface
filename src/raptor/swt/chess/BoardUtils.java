@@ -12,10 +12,14 @@ import java.util.StringTokenizer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
 import raptor.game.Game;
@@ -37,6 +41,253 @@ public class BoardUtils implements BoardConstants {
 	public static final String SQUARE_BACKGROUND_DIR = "resources/common/square/";
 	public static final String SQUARE_BACKGROUND_IMAGE_SUFFIX = ".png";
 	private static SecureRandom secureRandom = new SecureRandom();
+
+	/**
+	 * Adds the promotion icons to the toolbar.
+	 * 
+	 * @param isUserWhite
+	 *            True if white pieces should be added, otherwise false.
+	 * @param controller
+	 *            The controller to add the ToolItems to.
+	 * @param toolbar
+	 *            The toolbar to add the items to.
+	 */
+	public static void addNavIconsToToolbar(
+			final ChessBoardController controller, ToolBar toolbar) {
+		LOG.debug("Adding addNavIconsToToolbar to toolbar");
+
+		if (controller.isNavigatable()) {
+			ToolItem firstButtonItem = new ToolItem(toolbar, SWT.FLAT);
+			firstButtonItem.setImage(Raptor.getInstance().getIcon("first"));
+			firstButtonItem.setToolTipText("Go to the first move played");
+			firstButtonItem.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onNavFirst();
+
+				}
+			});
+			controller.addToolItem(ChessBoardController.BACK_NAV,
+					firstButtonItem);
+		}
+
+		if (controller.isNavigatable()) {
+			ToolItem backButton = new ToolItem(toolbar, SWT.FLAT);
+			backButton.setImage(Raptor.getInstance().getIcon("back"));
+			backButton.setToolTipText("Go to the previous move played");
+			backButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onNavBack();
+
+				}
+			});
+			controller.addToolItem(ChessBoardController.BACK_NAV, backButton);
+		}
+
+		if (controller.isRevertable()) {
+			ToolItem revertButton = new ToolItem(toolbar, SWT.FLAT);
+			revertButton.setImage(Raptor.getInstance().getIcon(
+					"counterClockwise"));
+			revertButton.setToolTipText("Revert back to main-variation.");
+			revertButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onNavRevert();
+
+				}
+			});
+			controller.addToolItem(ChessBoardController.REVERT_NAV,
+					revertButton);
+		}
+
+		if (controller.isCommitable()) {
+			ToolItem commitButton = new ToolItem(toolbar, SWT.FLAT);
+			commitButton.setImage(Raptor.getInstance().getIcon("clockwise"));
+			commitButton.setToolTipText("Commit sub-variation.");
+			commitButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onNavCommit();
+
+				}
+			});
+			controller.addToolItem(ChessBoardController.COMMIT_NAV,
+					commitButton);
+		}
+
+		if (controller.isNavigatable()) {
+			ToolItem nextButton = new ToolItem(toolbar, SWT.FLAT);
+			nextButton.setImage(Raptor.getInstance().getIcon("next"));
+			nextButton.setToolTipText("Go to the next move played");
+			nextButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onNavForward();
+
+				}
+			});
+			controller.addToolItem(ChessBoardController.NEXT_NAV, nextButton);
+		}
+
+		if (controller.isNavigatable()) {
+			ToolItem lastButton = new ToolItem(toolbar, SWT.FLAT);
+			lastButton.setImage(Raptor.getInstance().getIcon("last"));
+			lastButton.setToolTipText("Go to the last move played");
+			lastButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onNavLast();
+
+				}
+			});
+			controller.addToolItem(ChessBoardController.LAST_NAV, lastButton);
+		}
+
+		ToolItem flipButton = new ToolItem(toolbar, SWT.FLAT);
+		flipButton.setImage(Raptor.getInstance().getIcon("flip"));
+		flipButton.setToolTipText("Flips the chess board.");
+		controller.addToolItem(ChessBoardController.FLIP, flipButton);
+		flipButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				controller.onFlip();
+			}
+		});
+
+		ToolItem fenButton = new ToolItem(toolbar, SWT.FLAT);
+		fenButton.setText("FEN");
+		fenButton
+				.setToolTipText("Shows the FEN (Forsyth Edwards Notation) of the current position.");
+		fenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Raptor.getInstance().promptForText(
+						"FEN for game " + controller.getGame().getId() + ":",
+						controller.getGame().toFEN());
+			}
+		});
+
+		if (controller.isPremoveable()) {
+			ToolItem premoveButton = new ToolItem(toolbar, SWT.FLAT);
+			premoveButton.setImage(Raptor.getInstance().getIcon("redx"));
+			premoveButton.setToolTipText("Clears all premoves.");
+			controller.addToolItem(ChessBoardController.PREMOVE, premoveButton);
+			premoveButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					controller.onClearPremoves();
+				}
+			});
+		}
+
+		if (controller.isAutoDrawable()) {
+			ToolItem autoDrawButton = new ToolItem(toolbar, SWT.CHECK);
+			autoDrawButton.setImage(Raptor.getInstance().getIcon("draw"));
+			autoDrawButton
+					.setToolTipText("Offer a draw after every move you make.");
+			controller.addToolItem(ChessBoardController.AUTO_DRAW,
+					autoDrawButton);
+		}
+	}
+
+	/**
+	 * Adds the promotion icons to the toolbar.
+	 * 
+	 * @param isUserWhite
+	 *            True if white pieces should be added, otherwise false.
+	 * @param controller
+	 *            The controller to add the ToolItems to.
+	 * @param toolbar
+	 *            The toolbar to add the items to.
+	 */
+	public static final void addPromotionIconsToToolbar(boolean isUserWhite,
+			ChessBoardController controller, ToolBar toolbar) {
+		ToolItem queenPromote = new ToolItem(toolbar, SWT.RADIO);
+		queenPromote
+				.setText(getPieceRepresentation(isUserWhite ? GameConstants.WQ
+						: GameConstants.BQ));
+		controller.addToolItem(ChessBoardController.AUTO_QUEEN, queenPromote);
+		queenPromote.setToolTipText("Auto Queen");
+		queenPromote.setSelection(true);
+
+		ToolItem knightPromote = new ToolItem(toolbar, SWT.RADIO);
+		knightPromote
+				.setText(getPieceRepresentation(isUserWhite ? GameConstants.WN
+						: GameConstants.BN));
+		controller.addToolItem(ChessBoardController.AUTO_KNIGHT, knightPromote);
+		knightPromote.setToolTipText("Auto Knight");
+		queenPromote.setSelection(false);
+
+		ToolItem bishopPromote = new ToolItem(toolbar, SWT.RADIO);
+		bishopPromote
+				.setText(getPieceRepresentation(isUserWhite ? GameConstants.WB
+						: GameConstants.BB));
+		controller.addToolItem(ChessBoardController.AUTO_BISHOP, bishopPromote);
+		knightPromote.setToolTipText("Auto Bishop");
+		bishopPromote.setSelection(false);
+
+		ToolItem rookPromote = new ToolItem(toolbar, SWT.RADIO);
+		rookPromote
+				.setText(getPieceRepresentation(isUserWhite ? GameConstants.WR
+						: GameConstants.BR));
+		controller.addToolItem(ChessBoardController.AUTO_ROOK, rookPromote);
+		knightPromote.setToolTipText("Auto Rook");
+		rookPromote.setSelection(false);
+	}
+
+	public static void addSetupIconsToToolbar(
+			final ChessBoardController controller, ToolBar toolbar) {
+
+		ToolItem setupInitial = new ToolItem(toolbar, SWT.FLAT);
+		setupInitial.setText("Initial");
+		setupInitial.setToolTipText("Sets up the initial position.");
+		setupInitial.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				controller.onSetupStart();
+
+			}
+		});
+		controller.addToolItem(ChessBoardController.SETUP_START, setupInitial);
+
+		ToolItem setupClear = new ToolItem(toolbar, SWT.FLAT);
+		setupClear.setText("Clear");
+		setupClear.setToolTipText("Clears all pieces from the chess board.");
+		setupClear.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				controller.onSetupClear();
+			}
+		});
+		controller.addToolItem(ChessBoardController.SETUP_CLEAR, setupClear);
+
+		ToolItem setupDone = new ToolItem(toolbar, SWT.FLAT);
+		setupDone.setText("Done");
+		setupDone.setToolTipText("Completes setup mode.");
+		setupDone.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				controller.onSetupDone();
+			}
+		});
+		controller.addToolItem(ChessBoardController.SETUP_DONE, setupDone);
+
+		ToolItem fromFenButton = new ToolItem(toolbar, SWT.FLAT);
+		fromFenButton.setText("FromFEN");
+		fromFenButton
+				.setToolTipText("Sets up the position from a specified FEN (Forsyth Edwards Notation) string.");
+		fromFenButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				String result = Raptor.getInstance().promptForText(
+						"Enter the FEN to set the position to:");
+				if (result != null) {
+					controller.onSetupFen(result);
+				}
+			}
+		});
+	}
 
 	public static boolean arePiecesSameColor(int piece1, int piece2) {
 		return (isWhitePiece(piece1) && isWhitePiece(piece2))

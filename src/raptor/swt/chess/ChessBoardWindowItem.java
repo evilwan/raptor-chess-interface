@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
 import raptor.Raptor;
@@ -64,6 +65,10 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		return controller.getTitle();
 	}
 
+	public Control getToolbar(Composite parent) {
+		return controller.getToolbar(parent);
+	}
+
 	public void init(Composite parent) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Initing ChessBoardWindowItem");
@@ -94,29 +99,6 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 				controller.onPassivate();
 			}
 		});
-	}
-
-	public boolean onReparent(Composite newParent) {
-		boolean result = false;
-		if (!board.setParent(newParent)) {
-			// Grab the controller from the board because
-			// controllers can be changed during a game.
-			controller = board.getController();
-			board.setController(null);
-			board.setVisible(false);
-			board.dispose();
-			controller.onPreReparent();
-			controller.setBoard(null);
-			board = new ChessBoard(newParent, SWT.NONE);
-			board.setController(controller);
-			controller.setBoard(board);
-			board.createControls();
-			controller.onPostReparent();
-			board.forceFocus();
-		} else {
-			result = true;
-		}
-		return result;
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {

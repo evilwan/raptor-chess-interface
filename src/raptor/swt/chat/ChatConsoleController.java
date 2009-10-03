@@ -6,7 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -19,9 +21,13 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
@@ -29,6 +35,8 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ScrollBar;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
@@ -52,6 +60,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public static final int TEXT_CHUNK_SIZE = 1000;
 	private static final Log LOG = LogFactory
 			.getLog(ChatConsoleController.class);
+
+	public static final String SEND_BUTTON = "send";
+	public static final String AWAY_BUTTON = "away";
+	public static final String SEARCH_BUTTON = "search";
+	public static final String PREPEND_TEXT_BUTTON = "prepend";
+	public static final String SAVE_BUTTON = "save";
+	public static final String AUTO_SCROLL_BUTTON = "autoScroll";
 
 	protected Connector connector;
 	protected ChatConsole chatConsole;
@@ -85,6 +100,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			.synchronizedList(new ArrayList<ChatEvent>(100));
 	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
 			5);
+	protected ToolBar toolbar;
+	protected Map<String, ToolItem> toolItemMap = new HashMap<String, ToolItem>();
 
 	protected KeyListener inputTextKeyListener = new KeyAdapter() {
 		@Override
@@ -131,8 +148,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				return;
 			}
 			if (arg0.keyCode == SWT.ARROW_UP) {
-				System.err.println("In outputHistoryListener arrow up");
-
 				if (sentTextIndex >= 0) {
 					if (sentTextIndex > 0) {
 						sentTextIndex--;
@@ -146,8 +161,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				}
 			} else if (arg0.keyCode == SWT.ARROW_DOWN) {
-				System.err.println("In outputHistoryListener arrow down");
-
 				if (sentTextIndex < sentText.size() - 1) {
 					sentTextIndex++;
 					chatConsole.outputText.setText(sentText.get(sentTextIndex));
@@ -157,8 +170,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					chatConsole.outputText.setText("");
 				}
 			} else if (arg0.character == '\r') {
-				System.err.println("In outputHistoryListener CR");
-
 				if (sentText.size() > 50) {
 					sentText.remove(0);
 				}
@@ -388,10 +399,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	public void addToolItem(String key, ToolItem item) {
+		toolItemMap.put(key, item);
+	}
+
 	protected void adjustAwayButtonEnabled() {
 		if (!isIgnoringActions()) {
-			chatConsole.setButtonEnabled(!awayList.isEmpty(),
-					ChatConsole.AWAY_BUTTON);
+			setToolItemEnabled(AWAY_BUTTON, !awayList.isEmpty());
 		}
 	}
 
@@ -604,6 +618,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			connector = null;
 		}
 
+		if (toolbar != null) {
+			toolbar.setVisible(false);
+			toolbar.dispose();
+			toolbar = null;
+		}
+
 		removeListenersTiedToChatConsole();
 
 		if (itemChangedListeners != null) {
@@ -628,9 +648,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	 * Should be invoked when the title or closeability changes.
 	 */
 	protected void fireItemChanged() {
-		System.err.println("in fireItemChanged");
 		for (ItemChangedListener listener : itemChangedListeners) {
-			System.err.println("Firing item changed: " + listener);
 			listener.itemStateChanged();
 		}
 	}
@@ -662,7 +680,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public abstract Quadrant getPreferredQuadrant();
 
-	public String getPrependText() {
+	public String getPrependText(boolean useButtonState) {
 		return "";
 	}
 
@@ -689,6 +707,87 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	public Control getToolbar(Composite parent) {
+		if (toolbar == null) {
+			toolbar = new ToolBar(parent, SWT.FLAT);
+
+			if (isPrependable()) {
+				ToolItem prependTextButton = new ToolItem(toolbar, SWT.CHECK);
+				prependTextButton.setText("Prepend");
+				prependTextButton.setToolTipText("Prepends "
+						+ getPrependText(false)
+						+ " to the input text after sending a tell.");
+				prependTextButton.setSelection(true);
+				addToolItem(PREPEND_TEXT_BUTTON, prependTextButton);
+			}
+
+			ToolItem saveButton = new ToolItem(toolbar, SWT.FLAT);
+			saveButton.setImage(Raptor.getInstance().getIcon("save"));
+			saveButton
+					.setToolTipText("Save the current console text to a file.");
+			saveButton.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					onSave();
+
+				}
+			});
+			addToolItem(SAVE_BUTTON, saveButton);
+
+			if (isAwayable()) {
+				final ToolItem awayButton = new ToolItem(toolbar, SWT.FLAT);
+				awayButton.setImage(Raptor.getInstance().getIcon("chat"));
+				awayButton
+						.setToolTipText("Displays all of the direct tells you missed while you were away. "
+								+ "The list of tells you missed is reset each time you send a message.");
+				awayButton.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						onAway();
+
+					}
+				});
+				addToolItem(AWAY_BUTTON, awayButton);
+			}
+
+			if (isSearchable()) {
+				ToolItem searchButton = new ToolItem(toolbar, SWT.FLAT);
+				searchButton.setImage(Raptor.getInstance().getIcon("search"));
+				searchButton
+						.setToolTipText("Searches backward for the message in the console text. "
+								+ "The search is case insensitive and does not use regular expressions.");
+				searchButton.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						onSearch();
+					}
+				});
+				addToolItem(SEARCH_BUTTON, searchButton);
+			}
+
+			final ToolItem autoScroll = new ToolItem(toolbar, SWT.FLAT);
+			autoScroll.setImage(Raptor.getInstance().getIcon("down"));
+			autoScroll.setToolTipText("Forces auto scrolling.");
+			autoScroll.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					onForceAutoScroll();
+
+				}
+			});
+			addToolItem(AUTO_SCROLL_BUTTON, autoScroll);
+		} else if (toolbar.getParent() != parent) {
+			toolbar.setParent(parent);
+		}
+
+		return toolbar;
+
+	}
+
+	public ToolItem getToolItem(String key) {
+		return toolItemMap.get(key);
+	}
+
 	public boolean hasUnseenText() {
 		return hasUnseenText;
 	}
@@ -698,7 +797,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		addMouseListeners();
 		registerForChatEvents();
 		adjustAwayButtonEnabled();
-		chatConsole.getOutputText().setText(getPrependText());
+		chatConsole.getOutputText().setText(getPrependText(false));
 		setCaretToOutputTextEnd();
 	}
 
@@ -738,6 +837,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public boolean isSoundDisabled() {
 		return isSoundDisabled;
+	}
+
+	public boolean isToolItemSelected(String key) {
+		boolean result = false;
+		ToolItem item = getToolItem(key);
+		if (item != null) {
+			return item.getSelection();
+		}
+		return result;
 	}
 
 	public void onActivate() {
@@ -867,33 +975,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public void onPassivate() {
 	}
 
-	public void onPostReparent() {
-
-		// Add all the ChatEvents missed.
-		synchronized (eventsWhileBeingReparented) {
-
-			// If a chat event is received while adding missed events it will be
-			// missed.
-			for (ChatEvent event : eventsWhileBeingReparented) {
-				onChatEvent(event);
-			}
-			eventsWhileBeingReparented.clear();
-			isBeingReparented = false;
-		}
-		awayList.clear();
-
-		addInputTextKeyListeners();
-		addMouseListeners();
-		adjustAwayButtonEnabled();
-		setCaretToOutputTextEnd();
-		onForceAutoScroll();
-	}
-
-	public void onPreReparent() {
-		removeListenersTiedToChatConsole();
-		isBeingReparented = true;
-	}
-
 	public void onSave() {
 		if (isIgnoringActions()) {
 			return;
@@ -1011,7 +1092,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public void onSendOutputText() {
 		connector.sendMessage(chatConsole.outputText.getText());
-		chatConsole.outputText.setText(getPrependText());
+		chatConsole.outputText.setText(getPrependText(true));
 		setCaretToOutputTextEnd();
 		awayList.clear();
 		adjustAwayButtonEnabled();
@@ -1019,7 +1100,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void playSounds(ChatEvent event) {
-		System.err.println("play sound " + isSoundDisabled);
 		if (!isSoundDisabled) {
 			if (event.getType() == ChatType.TELL
 					|| event.getType() == ChatType.PARTNER_TELL) {
@@ -1085,11 +1165,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void setSoundDisabled(boolean isSoundDisabled) {
-		System.err.println("setSoundDisabled" + isSoundDisabled);
 		this.isSoundDisabled = isSoundDisabled;
 	}
 
 	public void setSourceOfLastTellReceived(String sourceOfLastTellReceived) {
 		this.sourceOfLastTellReceived = sourceOfLastTellReceived;
+	}
+
+	public void setToolItemEnabled(String key, boolean isEnabled) {
+		ToolItem item = getToolItem(key);
+		if (item != null) {
+			item.setEnabled(isEnabled);
+		}
 	}
 }

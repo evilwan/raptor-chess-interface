@@ -71,9 +71,6 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			if (remainingTimeMillis > 0) {
 				long nextUpdate = calculateNextUpdate();
 				if (isRunning) {
-					// System.err.println("next update: (run) " + nextUpdate
-					// + " System.currentTimeMillis="
-					// + System.currentTimeMillis());
 					Display.getCurrent().timerExec((int) nextUpdate, this);
 				}
 			}
@@ -89,10 +86,6 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 		if (remainingTimeMillis > 0) {
 			lastSystemTime = System.currentTimeMillis();
 			long nextUpdate = calculateNextUpdate();
-			// System.err
-			// .println("next update: (start) " + nextUpdate
-			// + " System.currentTimeMillis="
-			// + System.currentTimeMillis());
 			Display.getCurrent().timerExec((int) nextUpdate, this);
 		}
 	}
