@@ -4,7 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,20 +17,18 @@ import raptor.game.MoveList;
 /**
  * @author John Nahlen (johnthegreat)
  */
-public class ECOParser {
-	private static final Log LOG = LogFactory.getLog(ECOParser.class);
-
-	private static ECOParser lastParserFound = null;
+public class EcoInfo {
+	private static final Log LOG = LogFactory.getLog(EcoInfo.class);
 
 	/**
 	 * Maps move sequences to ECOParser instances.
 	 */
-	private static LinkedHashMap<String, ECOParser> map = new LinkedHashMap<String, ECOParser>();
+	private static List<EcoInfo> ecoInfos = new ArrayList<EcoInfo>();
 
 	static {
 		File f = new File(raptor.Raptor.RESOURCES_COMMON_DIR + "ECO.txt");
 		try {
-			ECOParser.parse(f);
+			EcoInfo.parse(f);
 		} catch (Exception e) {
 			LOG.error(
 					"Error occurred reading file containing ECO information: "
@@ -43,34 +42,33 @@ public class ECOParser {
 	 *            retrieved from.
 	 * @return ECOParser instance if found, <code>null</code> if not.
 	 */
-	public static ECOParser getECOParser(Game game) {
-		MoveList m = game.getMoveList();
-		Move[] moves = m.asArray();
+	public static EcoInfo getECOParser(Game game) {
+		if (game.getType() == Game.Type.CLASSIC) {
+			MoveList m = game.getMoveList();
+			Move[] moves = m.asArray();
 
-		String str = "";
-		// for(int i=moves.length-1;i>0;i--) {
-		for (int i = 0; i < moves.length; i++) {
-			if (i >= 10)
-				break;
-			str += moves[i].getSan() + " ";
-			str = str.toUpperCase();
+			StringBuilder builder = new StringBuilder(100);
+			for (int i = 0; i < moves.length; i++) {
+				if (i >= 22)
+					break;
+				builder.append(moves[i].getSan().toUpperCase() + " ");
+			}
+			String key = builder.toString().trim();
+
+			EcoInfo currentCandidate = null;
+			for (EcoInfo parser : ecoInfos) {
+				if (key.startsWith(parser.moveSequence)) {
+					if (currentCandidate == null) {
+						currentCandidate = parser;
+					} else if (currentCandidate.moveSequence.length() < parser.moveSequence
+							.length()) {
+						currentCandidate = parser;
+					}
+				}
+			}
+			return currentCandidate;
 		}
-		str = str.trim();
-		LOG.info("str = " + str);
-		if (ECOParser.getMap().containsKey(str)) {
-			ECOParser parser = ECOParser.getMap().get(str);
-			lastParserFound = parser;
-			return parser;
-		}
-
-		return lastParserFound;
-	}
-
-	/**
-	 * @see map
-	 */
-	public static LinkedHashMap<String, ECOParser> getMap() {
-		return map;
+		return null;
 	}
 
 	/**
@@ -88,7 +86,7 @@ public class ECOParser {
 	public static void parse(File file) throws IOException,
 			NullPointerException {
 		LOG.info("parse() begin");
-		if (ECOParser.getMap().size() > 0)
+		if (EcoInfo.ecoInfos.size() > 0)
 			return;
 
 		BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -100,21 +98,21 @@ public class ECOParser {
 				varName = arr[3];
 			if (arr.length < 3)
 				continue;
-			ECOParser parser = new ECOParser(arr[0], arr[1], arr[2], varName);
-			ECOParser.getMap().put(arr[0], parser);
+			EcoInfo parser = new EcoInfo(arr[0], arr[1], arr[2], varName);
+			EcoInfo.ecoInfos.add(parser);
 		}
 		reader.close();
 		LOG.info("parse() end");
 	}
 
 	private String moveSequence;
-	private String EcoCode;
+	private String ecoCode;
 	private String openingName;
 	private String variationName = "";
 
-	public ECOParser(String moves, String eco, String opening, String variation) {
+	public EcoInfo(String moves, String eco, String opening, String variation) {
 		this.moveSequence = moves;
-		this.EcoCode = eco;
+		this.ecoCode = eco;
 		this.openingName = opening;
 		this.variationName = variation;
 	}
@@ -122,8 +120,8 @@ public class ECOParser {
 	/**
 	 * @return The ECO code.
 	 */
-	public String getECOCode() {
-		return EcoCode;
+	public String getEcoCode() {
+		return ecoCode;
 	}
 
 	/**
@@ -152,6 +150,6 @@ public class ECOParser {
 	 */
 	@Override
 	public String toString() {
-		return getOpening() + " : " + getVariation();
+		return getEcoCode() + " " + getOpening() + "(" + getVariation() + ")";
 	}
 }

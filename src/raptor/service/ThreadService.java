@@ -74,7 +74,7 @@ public class ThreadService {
 		}
 	}
 
-	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(50) {
+	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(20) {
 		@Override
 		protected void afterExecute(Runnable arg0, Throwable arg1) {
 			if (arg1 != null) {
@@ -87,10 +87,18 @@ public class ThreadService {
 	};
 
 	private ThreadService() {
+		executor.setCorePoolSize(20);
+		executor.setMaximumPoolSize(50);
+		executor.setKeepAliveTime(180, TimeUnit.SECONDS);
+		executor.prestartAllCoreThreads();
 	}
 
 	public void dispose() {
 		executor.shutdownNow();
+	}
+
+	public ScheduledThreadPoolExecutor getExecutor() {
+		return executor;
 	}
 
 	/**

@@ -5,6 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -78,6 +80,28 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 	protected void createChessBoardLayout() {
 		chessBoardLayout = new RightOrientedLayout(this);
+
+		addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				if (propertyChangeListener != null) {
+					Raptor.getInstance().getPreferences()
+							.removePropertyChangeListener(
+									propertyChangeListener);
+					propertyChangeListener = null;
+				}
+				pieceJailSquares = null;
+				if (controller != null) {
+					controller.dispose();
+					controller = null;
+				}
+				if (chessBoardLayout != null) {
+					chessBoardLayout.dispose();
+					chessBoardLayout = null;
+				}
+				LOG.debug("Disposed chessboard.");
+			}
+		});
 	}
 
 	public void createControls() {
@@ -142,34 +166,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 				+ (System.currentTimeMillis() - startTime));
 
 		updateFromPrefs();
-	}
-
-	/**
-	 * If a controller is set on the chess board it will be disposed on this
-	 * method call.
-	 */
-	@Override
-	public void dispose() {
-		if (propertyChangeListener != null) {
-			Raptor.getInstance().getPreferences().removePropertyChangeListener(
-					propertyChangeListener);
-			propertyChangeListener = null;
-		}
-		pieceJailSquares = null;
-		if (controller != null) {
-			controller.dispose();
-			controller = null;
-		}
-		if (chessBoardLayout != null) {
-			chessBoardLayout.dispose();
-			chessBoardLayout = null;
-		}
-
-		LOG.debug("Disposed chessboard.");
-
-		if (!isDisposed()) {
-			super.dispose();
-		}
 	}
 
 	/**
