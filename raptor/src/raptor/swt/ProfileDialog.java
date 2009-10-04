@@ -99,11 +99,12 @@ public class ProfileDialog extends Dialog {
 						.getCompletedTaskCount());
 
 		image1 = new Label(composite, SWT.NONE);
-		image1.setText("Cached Images/Fonts/Colors: "
+		image1.setText("Cached Images/Fonts/Colors/Cursors: "
 				+ Raptor.getInstance().getImageRegistry().getSize() + "/"
 				+ Raptor.getInstance().getFontRegistry().getKeySet().size()
 				+ "/"
-				+ Raptor.getInstance().getColorRegistry().getKeySet().size());
+				+ Raptor.getInstance().getColorRegistry().getKeySet().size()
+				+ "/" + Raptor.getInstance().getCursorRegistry().getSize());
 
 		Button button = new Button(composite, SWT.PUSH);
 		button.setText("Suggest Garbage Collection");
@@ -175,7 +176,10 @@ public class ProfileDialog extends Dialog {
 									.getKeySet().size()
 							+ "/"
 							+ Raptor.getInstance().getColorRegistry()
-									.getKeySet().size());
+									.getKeySet().size()
+							+ "/"
+							+ Raptor.getInstance().getCursorRegistry()
+									.getSize());
 
 					Display.getCurrent().timerExec(2000, this);
 				}

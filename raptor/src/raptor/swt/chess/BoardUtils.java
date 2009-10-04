@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
@@ -331,21 +332,6 @@ public class BoardUtils implements BoardConstants {
 	}
 
 	/**
-	 * Returns a chess piece suitable for using as an icon when dragging it.
-	 */
-	public static Image getChessPieceDragImage(int type) {
-		return getChessPieceImage(type, 35, 35);
-	}
-
-	/**
-	 * Returns an icon size chess piece, suitable for displaying in a toolbar or
-	 * coolbar.
-	 */
-	public static Image getChessPieceIconImage(String set, int type) {
-		return getChessPieceImage(set, type, 35, 35);
-	}
-
-	/**
 	 * Returns the image from the users image cache matching the type,width, and
 	 * height. If the image is in the localImageRegistry it is returned.
 	 * Otherwise the users image cache is checked, if its not there then it is
@@ -480,6 +466,34 @@ public class BoardUtils implements BoardConstants {
 			throw new IllegalArgumentException("Invalid gamePiece" + gamePiece);
 
 		}
+	}
+
+	/**
+	 * Returns the cursor for the specified piece type.
+	 * 
+	 * @param type
+	 *            The piece type.
+	 * @return
+	 */
+	public static Cursor getCursorForPiece(int type, int width, int height) {
+
+		String key = getChessSetName() + "_" + type + "_" + width + "x"
+				+ height;
+
+		Cursor result = Raptor.getInstance().getCursorRegistry().get(key);
+
+		if (result == null) {
+			ImageData pieceImageData = getChessPieceImage(type, width, height)
+					.getImageData();
+
+			int hotx = pieceImageData.width / 2;
+			int hoty = pieceImageData.height / 2;
+
+			result = new Cursor(Raptor.getInstance().getCursorRegistry()
+					.getDisplay(), pieceImageData, hotx, hoty);
+			Raptor.getInstance().getCursorRegistry().put(key, result);
+		}
+		return result;
 	}
 
 	public static String getPieceRepresentation(int coloredPiece) {

@@ -20,6 +20,8 @@ import raptor.service.ConnectorService;
 import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.InputDialog;
+import raptor.swt.RaptorCursorRegistry;
+import raptor.swt.RaptorImageRegistry;
 import raptor.util.FileUtil;
 
 /**
@@ -76,7 +78,7 @@ public class Raptor implements PreferenceKeys {
 			Connector[] connectors = ConnectorService.getInstance()
 					.getConnectors();
 			for (final Connector connector : connectors) {
-				ThreadService.getInstance().scheduleOneShot(250,
+				ThreadService.getInstance().scheduleOneShot(750,
 						new Runnable() {
 							public void run() {
 								connector.onAutoConnect();
@@ -84,12 +86,15 @@ public class Raptor implements PreferenceKeys {
 						});
 			}
 
-			display.timerExec(100, new Runnable() {
+			display.timerExec(500, new Runnable() {
 				public void run() {
 					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
 							new BrowserWindowItem("Raptor Home", Raptor
 									.getInstance().getPreferences().getString(
 											PreferenceKeys.APP_HOME_URL)));
+					Raptor.getInstance().cursorRegistry.setDefaultCursor(Raptor
+							.getInstance().getRaptorWindow().getShell()
+							.getCursor());
 				}
 			});
 
@@ -109,6 +114,9 @@ public class Raptor implements PreferenceKeys {
 
 	protected ColorRegistry colorRegistry = new ColorRegistry(Display
 			.getCurrent());
+
+	protected RaptorCursorRegistry cursorRegistry = new RaptorCursorRegistry(
+			Display.getCurrent());
 
 	protected RaptorPreferenceStore preferences;
 
@@ -148,6 +156,14 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public ColorRegistry getColorRegistry() {
 		return colorRegistry;
+	}
+
+	/**
+	 * Returns the cursor registry. All cursors should be placed in this
+	 * registry so they can be properly managed.
+	 */
+	public RaptorCursorRegistry getCursorRegistry() {
+		return cursorRegistry;
 	}
 
 	/**
