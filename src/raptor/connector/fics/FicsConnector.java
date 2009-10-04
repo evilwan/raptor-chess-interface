@@ -31,7 +31,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected MenuManager connectionsMenu;
 
 	protected Action connectAction;
-
+	protected Action autoConnectAction;
 	protected Action disconnectAction;
 	protected Action reconnectAction;
 	protected Action bughouseArenaAction;
@@ -60,6 +60,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		super.connect(profileName);
 		if (isConnecting) {
 			connectAction.setEnabled(false);
+			autoConnectAction.setChecked(getPreferences().getBoolean(
+					context.getPreferencePrefix() + "auto-connect"));
+			autoConnectAction.setEnabled(true);
 			disconnectAction.setEnabled(true);
 			reconnectAction.setEnabled(true);
 			bughouseArenaAction.setEnabled(true);
@@ -82,6 +85,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "profile",
 						dialog.getSelectedProfile());
+				autoConnectAction.setChecked(getPreferences().getBoolean(
+						context.getPreferencePrefix() + "auto-connect"));
 				getPreferences().save();
 				if (dialog.wasLoginPressed()) {
 					connect();
@@ -145,9 +150,20 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
+		autoConnectAction = new Action("Auto &Login", Action.AS_CHECK_BOX) {
+			public void run() {
+				System.err.println("autoConnectAction clicked");
+				getPreferences().setValue(
+						context.getPreferencePrefix() + "auto-connect",
+						isChecked());
+				getPreferences().save();
+			}
+		};
+
 		connectAction.setEnabled(true);
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
+		autoConnectAction.setEnabled(true);
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
@@ -155,6 +171,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
 		connectionsMenu.add(reconnectAction);
+		connectionsMenu.add(autoConnectAction);
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(seekGraphAction);
@@ -226,6 +243,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				if (dialog.wasLoginPressed()) {
 					fics2.connect(dialog.getSelectedProfile());
 				}
+				autoConnectAction.setChecked(getPreferences().getBoolean(
+						context.getPreferencePrefix() + "auto-connect"));
 			}
 		};
 
@@ -285,6 +304,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
+		fics2.autoConnectAction = new Action("Auto &Login", Action.AS_CHECK_BOX) {
+			@Override
+			public void run() {
+			}
+		};
+
 		fics2.connectAction.setEnabled(true);
 		fics2.disconnectAction.setEnabled(false);
 		fics2.reconnectAction.setEnabled(false);
@@ -312,6 +337,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
+		autoConnectAction.setEnabled(true);
 	}
 
 	@Override

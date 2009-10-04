@@ -85,7 +85,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	protected MenuManager connectionsMenu;
 
 	protected Action connectAction;
-
+	protected Action autoConnectAction;
 	protected Action disconnectAction;
 	protected Action reconnectAction;
 	protected Action bughouseArenaAction;
@@ -112,6 +112,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		super.connect(profileName);
 		if (isConnecting) {
 			connectAction.setEnabled(false);
+			autoConnectAction.setChecked(getPreferences().getBoolean(
+					context.getPreferencePrefix() + "auto-connect"));
 			disconnectAction.setEnabled(true);
 			reconnectAction.setEnabled(true);
 			bughouseArenaAction.setEnabled(true);
@@ -132,6 +134,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "profile",
 						dialog.getSelectedProfile());
+				autoConnectAction.setChecked(getPreferences().getBoolean(
+						context.getPreferencePrefix() + "auto-connect"));
 				getPreferences().save();
 				if (dialog.wasLoginPressed()) {
 					connect();
@@ -165,16 +169,27 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
 			}
 		};
+		
+		autoConnectAction = new Action("Auto &Login", Action.AS_CHECK_BOX) {
+			public void run() {
+				getPreferences().setValue(
+						context.getPreferencePrefix() + "auto-connect",
+						isChecked());
+				getPreferences().save();
+			}
+		};
 
 		connectAction.setEnabled(true);
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
+		autoConnectAction.setEnabled(true);
 
 
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
 		connectionsMenu.add(reconnectAction);
+		connectionsMenu.add(autoConnectAction);
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(new Separator());
@@ -219,6 +234,12 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
 			}
 		};
+		bics2.autoConnectAction = new Action("Auto &Login", Action.AS_CHECK_BOX) {
+			@Override
+			public void run() {
+			}
+		};
+
 
 		bics2.connectAction.setEnabled(true);
 		bics2.disconnectAction.setEnabled(false);
@@ -243,6 +264,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
+		autoConnectAction.setEnabled(true);
 	}
 
 	@Override
