@@ -3,6 +3,7 @@ package raptor.swt;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
+import java.math.BigDecimal;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -49,24 +50,25 @@ public class ProfileDialog extends Dialog {
 		heapm = new Label(composite, SWT.NONE);
 		heapm.setText("Heap: ");
 		heap1 = new Label(composite, SWT.NONE);
-		heap1.setText("   Initial: " + heap.getInit() / 1024 + "K");
 		heap2 = new Label(composite, SWT.NONE);
-		heap2.setText("   Used: " + heap.getUsed() / 1024 + "K");
 		heap3 = new Label(composite, SWT.NONE);
-		heap3.setText("   Committed: " + heap.getMax() / 1024 + "K");
 		heap4 = new Label(composite, SWT.NONE);
-		heap4.setText("   Max: " + heap.getMax() / 1024 + "K");
 
 		stackm = new Label(composite, SWT.NONE);
-		stackm.setText("Stack:");
+		stackm.setText("Stack: ");
 		stack1 = new Label(composite, SWT.NONE);
-		stack1.setText("   Initial: " + stack.getInit() / 1024 + "K");
 		stack2 = new Label(composite, SWT.NONE);
-		stack2.setText("   Used: " + stack.getUsed() / 1024 + "K");
 		stack3 = new Label(composite, SWT.NONE);
-		stack3.setText("   Committed: " + stack.getMax() / 1024 + "K");
 		stack4 = new Label(composite, SWT.NONE);
-		stack4.setText("   Max: " + stack.getMax() / 1024 + "K");
+
+		heap1.setText("   Initial: " + getMegs(heap.getInit()));
+		heap2.setText("   Used: " + getMegs(heap.getUsed()));
+		heap3.setText("   Committed: " + getMegs(heap.getMax()));
+		heap4.setText("   Max: " + getMegs(heap.getMax()));
+		stack1.setText("   Initial: " + getMegs(stack.getInit()));
+		stack2.setText("   Used: " + getMegs(stack.getUsed()));
+		stack3.setText("   Committed: " + getMegs(stack.getMax()));
+		stack4.setText("   Max: " + getMegs(stack.getMax()));
 
 		threadsm = new Label(composite, SWT.NONE);
 		threadsm.setText("Threads:");
@@ -129,20 +131,17 @@ public class ProfileDialog extends Dialog {
 					ThreadMXBean curThreads = ManagementFactory
 							.getThreadMXBean();
 
-					heap1.setText("   Initial: " + curHeap.getInit() / 1024
-							+ "K");
-					heap2.setText("   Used: " + curHeap.getUsed() / 1024 + "K");
-					heap3.setText("   Committed: " + curHeap.getMax() / 1024
-							+ "K");
-					heap4.setText("   Max: " + curHeap.getMax() / 1024 + "K");
-
-					stack1.setText("   Initial: " + curStack.getInit() / 1024
-							+ "K");
-					stack2.setText("   Used: " + curStack.getUsed() / 1024
-							+ "K");
-					stack3.setText("   Committed: " + curStack.getMax() / 1024
-							+ "K");
-					stack4.setText("   Max: " + curStack.getMax() / 1024 + "K");
+					heap1.setText("   Initial: " + getMegs(curHeap.getInit()));
+					heap2.setText("   Used: " + getMegs(curHeap.getUsed()));
+					heap3.setText("   Committed: " + getMegs(curHeap.getMax()));
+					heap4.setText("   Max: " + getMegs(curHeap.getMax()));
+					stack1
+							.setText("   Initial: "
+									+ getMegs(curStack.getInit()));
+					stack2.setText("   Used: " + getMegs(curStack.getUsed()));
+					stack3.setText("   Committed: "
+							+ getMegs(curStack.getMax()));
+					stack4.setText("   Max: " + getMegs(curStack.getMax()));
 
 					threads1.setText("   Threads: "
 							+ curThreads.getThreadCount());
@@ -169,7 +168,7 @@ public class ProfileDialog extends Dialog {
 							+ "/"
 							+ ThreadService.getInstance().getExecutor()
 									.getCompletedTaskCount());
-					image1.setText("Cached Images/Fonts/Colors: "
+					image1.setText("Cached Images/Fonts/Colors/Cursors: "
 							+ Raptor.getInstance().getImageRegistry().getSize()
 							+ "/"
 							+ Raptor.getInstance().getFontRegistry()
@@ -186,6 +185,12 @@ public class ProfileDialog extends Dialog {
 			}
 
 		});
+	}
+
+	public String getMegs(long bytes) {
+		BigDecimal bigDecimal = new BigDecimal(bytes / 1048576.0);
+		bigDecimal = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
+		return bigDecimal.toString() + "Megs";
 	}
 
 	/**
