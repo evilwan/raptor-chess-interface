@@ -97,7 +97,7 @@ public class InactiveController extends ChessBoardController implements
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-
+		setToolItemSelected(AUTO_QUEEN, true);
 		return toolbar;
 	}
 

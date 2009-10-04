@@ -407,9 +407,14 @@ public class RaptorWindow extends ApplicationWindow {
 
 		@Override
 		public void dispose() {
+			super.dispose();
+			try {
+				raptorItem.dispose();
+			} catch (Throwable t) {
+			} // Just eat it its prob a widget is already disposed exception.
 			raptorItem = null;
 			raptorParent = null;
-			super.dispose();
+
 		}
 
 		public void onMoveTo(RaptorTabFolder newParent) {
@@ -610,7 +615,7 @@ public class RaptorWindow extends ApplicationWindow {
 		createQuad1Quad234567QuadControls();
 
 		for (int i = 0; i < folders.length; i++) {
-			initQuadrantFolder(folders[i]);
+			initFolder(folders[i]);
 		}
 
 		sashes[0] = quad1quad234567quad8Sash;
@@ -909,7 +914,7 @@ public class RaptorWindow extends ApplicationWindow {
 	 * 
 	 * @param folder
 	 */
-	protected void initQuadrantFolder(final RaptorTabFolder folder) {
+	protected void initFolder(final RaptorTabFolder folder) {
 		folder.setSimple(false);
 		folder.setUnselectedImageVisible(false);
 		folder.setUnselectedCloseVisible(false);

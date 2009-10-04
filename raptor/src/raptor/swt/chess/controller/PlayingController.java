@@ -355,7 +355,7 @@ public class PlayingController extends ChessBoardController {
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-
+		setToolItemSelected(AUTO_QUEEN, true);
 		return toolbar;
 	}
 

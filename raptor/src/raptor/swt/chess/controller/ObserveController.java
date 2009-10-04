@@ -160,7 +160,6 @@ public class ObserveController extends ChessBoardController {
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-
 		return toolbar;
 	}
 
