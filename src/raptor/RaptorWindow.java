@@ -23,6 +23,7 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -46,6 +48,7 @@ import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
+import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
 
 /**
@@ -66,6 +69,7 @@ public class RaptorWindow extends ApplicationWindow {
 		public RaptorSashForm(Composite parent, int style, String key) {
 			super(parent, style);
 			this.key = key;
+			setSashWidth(10);
 		}
 
 		/**
@@ -118,7 +122,7 @@ public class RaptorWindow extends ApplicationWindow {
 						childFolder.activate();
 						numberOfChildrenShowing++;
 					} else {
-						children[i].setVisible(false);
+						folder.setVisible(false);
 					}
 				}
 			}
@@ -174,6 +178,11 @@ public class RaptorWindow extends ApplicationWindow {
 			super(raptorSash, style);
 			this.quad = quad;
 			this.raptorSash = raptorSash;
+
+			setSelectionBackground(getDisplay().getSystemColor(
+					SWT.COLOR_LIST_SELECTION));
+			setSelectionForeground(getDisplay().getSystemColor(
+					SWT.COLOR_LIST_SELECTION_TEXT));
 		}
 
 		/**
@@ -439,8 +448,8 @@ public class RaptorWindow extends ApplicationWindow {
 
 		@Override
 		public String toString() {
-			return "RaptorTabItem: " + getText() + " isVisible="
-					+ getControl().isVisible();
+			return "RaptorTabItem: " + getText() + " isVisible=" + " quadrant="
+					+ raptorParent.quad + getControl().isVisible();
 		}
 	}
 
@@ -467,6 +476,10 @@ public class RaptorWindow extends ApplicationWindow {
 	protected Map<String, Label> pingLabelsMap = new HashMap<String, Label>();
 	protected List<RaptorTabItem> activeItems = Collections
 			.synchronizedList(new ArrayList<RaptorTabItem>());
+
+	protected RaptorTabItem dragStartItem;
+	protected boolean isInDrag = false;
+	protected boolean isExitDrag = false;
 
 	public RaptorWindow() {
 		super(null);
@@ -672,6 +685,13 @@ public class RaptorWindow extends ApplicationWindow {
 				PreferenceUtil.launchPreferenceDialog();
 			}
 		});
+		configureMenu.add(new Action("Mini Profiler") {
+			@Override
+			public void run() {
+				ProfileDialog dialog = new ProfileDialog();
+				dialog.open();
+			}
+		});
 		helpMenu.add(new Action("&About") {
 			@Override
 			public void run() {
@@ -851,6 +871,21 @@ public class RaptorWindow extends ApplicationWindow {
 		});
 	}
 
+	protected RaptorTabFolder getFolderContainingCursor() {
+		Control control = getShell().getDisplay().getCursorControl();
+
+		while (control != null && !(control instanceof RaptorTabFolder)
+				&& !(control instanceof Shell)) {
+			control = control.getParent();
+		}
+
+		if (control instanceof RaptorTabFolder) {
+			return (RaptorTabFolder) control;
+		} else {
+			return null;
+		}
+	}
+
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
 	}
@@ -891,24 +926,6 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	public RaptorTabFolder getTabFolder(Quadrant quad) {
 		return folders[quad.ordinal()];
-	}
-
-	/**
-	 * Initialzes the windows bounds.
-	 */
-	@Override
-	protected void initializeBounds() {
-		Rectangle screenBounds = getPreferences().getCurrentLayoutRectangle(
-				PreferenceKeys.WINDOW_BOUNDS);
-
-		if (screenBounds.width == -1 || screenBounds.height == -1) {
-			Rectangle fullViewBounds = Display.getCurrent().getPrimaryMonitor()
-					.getBounds();
-			screenBounds.width = fullViewBounds.width;
-			screenBounds.height = fullViewBounds.height;
-		}
-		getShell().setSize(screenBounds.width, screenBounds.height);
-		getShell().setLocation(screenBounds.x, screenBounds.y);
 	}
 
 	/**
@@ -1093,6 +1110,71 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
+
+		Listener listener = new Listener() {
+			public void handleEvent(Event e) {
+				switch (e.type) {
+				case SWT.DragDetect: {
+					Point p = folder.toControl(getShell().getDisplay()
+							.getCursorLocation());
+					System.err.println("Drag Detect: " + folder.quad);
+					CTabItem item = folder.getItem(p);
+					if (item == null)
+						return;
+					isInDrag = true;
+					isExitDrag = false;
+					dragStartItem = (RaptorTabItem) item;
+					System.out.println("Drag start item = " + dragStartItem);
+					getShell().setCursor(
+							getShell().getDisplay().getSystemCursor(
+									SWT.CURSOR_HAND));
+					break;
+				}
+
+				case SWT.MouseUp: {
+					if (!isInDrag) {
+						return;
+					}
+					getShell().setCursor(
+							getShell().getDisplay().getSystemCursor(
+									SWT.CURSOR_ARROW));
+
+					RaptorTabFolder dropFolder = getFolderContainingCursor();
+					System.err.println("Mouse Up: "
+							+ getFolderContainingCursor());
+					if (dropFolder != null
+							&& dropFolder != dragStartItem.raptorParent) {
+						dragStartItem.onMoveTo(dropFolder);
+					}
+					isInDrag = false;
+					isExitDrag = false;
+					dragStartItem = null;
+					break;
+				}
+				}
+			}
+		};
+		folder.addListener(SWT.DragDetect, listener);
+		folder.addListener(SWT.MouseUp, listener);
+
+	}
+
+	/**
+	 * Initialzes the windows bounds.
+	 */
+	@Override
+	protected void initializeBounds() {
+		Rectangle screenBounds = getPreferences().getCurrentLayoutRectangle(
+				PreferenceKeys.WINDOW_BOUNDS);
+
+		if (screenBounds.width == -1 || screenBounds.height == -1) {
+			Rectangle fullViewBounds = Display.getCurrent().getPrimaryMonitor()
+					.getBounds();
+			screenBounds.width = fullViewBounds.width;
+			screenBounds.height = fullViewBounds.height;
+		}
+		getShell().setSize(screenBounds.width, screenBounds.height);
+		getShell().setLocation(screenBounds.x, screenBounds.y);
 	}
 
 	/**

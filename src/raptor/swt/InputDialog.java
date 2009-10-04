@@ -46,7 +46,6 @@ public class InputDialog extends Dialog {
 		if (getInput() != null) {
 			text.setText(getInput());
 		}
-		
 
 		// Create the OK button and add a handler
 		// so that pressing it will set input
@@ -54,8 +53,8 @@ public class InputDialog extends Dialog {
 		Button ok = new Button(shell, SWT.PUSH);
 		ok.setText("OK");
 		ok
-				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true,
-						false, 1, 1));
+				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false,
+						1, 1));
 		ok.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {

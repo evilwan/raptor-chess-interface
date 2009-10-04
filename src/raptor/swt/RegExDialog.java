@@ -38,6 +38,7 @@ public class RegExDialog extends InputDialog {
 	 * @param shell
 	 *            the dialog window
 	 */
+	@Override
 	protected void createContents(final Shell shell) {
 		shell.setLayout(new GridLayout(3, false));
 
@@ -159,6 +160,7 @@ public class RegExDialog extends InputDialog {
 	 * 
 	 * @return String
 	 */
+	@Override
 	public String open() {
 		// Create the dialog window
 		Shell shell = new Shell(getParent(), getStyle());

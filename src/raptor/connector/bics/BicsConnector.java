@@ -2,6 +2,7 @@ package raptor.connector.bics;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.PreferenceNode;
@@ -169,8 +170,9 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
 			}
 		};
-		
-		autoConnectAction = new Action("Auto &Login", Action.AS_CHECK_BOX) {
+
+		autoConnectAction = new Action("Auto &Login", IAction.AS_CHECK_BOX) {
+			@Override
 			public void run() {
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "auto-connect",
@@ -184,7 +186,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
-
 
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
@@ -234,12 +235,12 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
 			}
 		};
-		bics2.autoConnectAction = new Action("Auto &Login", Action.AS_CHECK_BOX) {
+		bics2.autoConnectAction = new Action("Auto &Login",
+				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 			}
 		};
-
 
 		bics2.connectAction.setEnabled(true);
 		bics2.disconnectAction.setEnabled(false);

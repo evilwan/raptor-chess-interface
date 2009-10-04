@@ -30,6 +30,23 @@ public class RegExController extends ChatConsoleController {
 				| Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 	}
 
+	@Override
+	public String getName() {
+		return pattern.pattern();
+	}
+
+	@Override
+	public Quadrant getPreferredQuadrant() {
+		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
+				REGEX_TAB_QUADRANT);
+	}
+
+	@Override
+	public String getPrompt() {
+		return connector.getPrompt();
+	}
+
+	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
@@ -107,22 +124,6 @@ public class RegExController extends ChatConsoleController {
 
 		return toolbar;
 
-	}
-
-	@Override
-	public String getName() {
-		return pattern.pattern();
-	}
-
-	@Override
-	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				REGEX_TAB_QUADRANT);
-	}
-
-	@Override
-	public String getPrompt() {
-		return connector.getPrompt();
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
 import java.lang.management.ThreadMXBean;
 
-import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -12,9 +11,10 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 
 import raptor.Raptor;
 
@@ -22,19 +22,19 @@ import raptor.Raptor;
  * The profile window class. This is just a poor mans profiler to be able to
  * quickly check how Raptor is doing in terms of thread usage and memory usage.
  */
-public class ProfileWIndow extends ApplicationWindow {
+public class ProfileDialog extends Dialog {
 
 	private Label heapm, heap1, heap2, heap3, heap4, stackm, stack1, stack2,
 			stack3, stack4, threadsm, threads1, threads2, threads3;
 
-	public ProfileWIndow() {
-		super(Raptor.getInstance().getRaptorWindow().getShell());
+	public ProfileDialog() {
+		super(Raptor.getInstance().getRaptorWindow().getShell(),
+				SWT.DIALOG_TRIM);
+		setText("Mini Profiler");
 	}
 
-	@Override
-	protected Control createContents(Composite parent) {
+	protected void createContents(final Shell parent) {
 		parent.setLayout(new FillLayout());
-		getShell().setText("Raptor Mini-Profiler");
 		final MemoryUsage heap = ManagementFactory.getMemoryMXBean()
 				.getHeapMemoryUsage();
 		final MemoryUsage stack = ManagementFactory.getMemoryMXBean()
@@ -120,13 +120,25 @@ public class ProfileWIndow extends ApplicationWindow {
 			}
 
 		});
-		composite.pack();
-		return composite;
 	}
 
-	@Override
-	protected void initializeBounds() {
-		getShell().setSize(250, 350);
-		getShell().setLocation(0, 0);
+	/**
+	 * Opens the dialog and returns the input
+	 * 
+	 * @return String
+	 */
+	public void open() {
+		// Create the dialog window
+		Shell shell = new Shell(getParent(), getStyle());
+		shell.setText(getText());
+		createContents(shell);
+		shell.pack();
+		shell.open();
+		Display display = getParent().getDisplay();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
 	}
 }
