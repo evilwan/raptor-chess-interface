@@ -130,7 +130,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		timesealEnabledCheckBox.setLayoutData(data);
 
 		autoLoginCheckBox = new Button(content, SWT.CHECK);
-		autoLoginCheckBox.setText("Auto log me in next time.");
+		autoLoginCheckBox.setText("Automatically log me in me next time.");
 		data = new GridData();
 		data.horizontalSpan = 2;
 		autoLoginCheckBox.setLayoutData(data);
