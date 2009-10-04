@@ -365,6 +365,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new RGB(0, 0, 238));
 
 		setDefault(APP_NAME, "Raptor v.Alpha.1");
+		setDefault(APP_SASH_WIDTH, 10);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, APP_PING_COLOR, new RGB(0, 0, 0));
