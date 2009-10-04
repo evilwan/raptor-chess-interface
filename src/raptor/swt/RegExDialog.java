@@ -94,7 +94,7 @@ public class RegExDialog extends InputDialog {
 		Button test = new Button(shell, SWT.PUSH);
 		test.setText("Test");
 		test
-				.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false,
+				.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false,
 						1, 1));
 		test.addSelectionListener(new SelectionAdapter() {
 			@Override
