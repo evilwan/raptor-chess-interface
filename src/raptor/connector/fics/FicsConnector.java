@@ -16,6 +16,11 @@ import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
+import raptor.swt.RegExDialog;
+import raptor.swt.chat.ChatConsole;
+import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.ChatUtils;
+import raptor.swt.chat.controller.RegExController;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -121,8 +126,22 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		regexTabAction = new Action("&Add Regular Expression Tab") {
 			@Override
 			public void run() {
-				Raptor.getInstance().alert(
-						"Add Regular Expression Tab Comming soon");
+				RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
+						.getRaptorWindow().getShell(), getShortName()
+						+ " Regular Expression Dialog",
+						"Enter the regular expression below:");
+				String regEx = regExDialog.open();
+				if (StringUtils.isNotBlank(regEx)) {
+					final RegExController controller = new RegExController(
+							FicsConnector.this, regEx);
+					ChatConsoleWindowItem chatConsoleWindowItem = new ChatConsoleWindowItem(
+							controller);
+					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+							chatConsoleWindowItem, false);
+					ChatUtils
+							.appendPreviousChatsToController((ChatConsole) chatConsoleWindowItem
+									.getControl());
+				}
 			}
 		};
 
@@ -139,6 +158,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(seekGraphAction);
+		connectionsMenu.add(new Separator());
 		connectionsMenu.add(regexTabAction);
 		connectionsMenu.add(new Separator());
 
@@ -243,11 +263,34 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
+		fics2.regexTabAction = new Action("&Add Regular Expression Tab") {
+			@Override
+			public void run() {
+				RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
+						.getRaptorWindow().getShell(), getShortName()
+						+ " Regular Expression Dialog",
+						"Enter the regular expression below:");
+				String regEx = regExDialog.open();
+				if (StringUtils.isNotBlank(regEx)) {
+					final RegExController controller = new RegExController(
+							FicsConnector.this, regEx);
+					ChatConsoleWindowItem chatConsoleWindowItem = new ChatConsoleWindowItem(
+							controller);
+					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+							chatConsoleWindowItem, false);
+					ChatUtils
+							.appendPreviousChatsToController((ChatConsole) chatConsoleWindowItem
+									.getControl());
+				}
+			}
+		};
+
 		fics2.connectAction.setEnabled(true);
 		fics2.disconnectAction.setEnabled(false);
 		fics2.reconnectAction.setEnabled(false);
 		fics2.bughouseArenaAction.setEnabled(false);
 		fics2.seekGraphAction.setEnabled(false);
+		fics2.regexTabAction.setEnabled(false);
 
 		fics2Menu.add(fics2.connectAction);
 		fics2Menu.add(fics2.disconnectAction);
@@ -256,7 +299,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2Menu.add(fics2.bughouseArenaAction);
 		fics2Menu.add(fics2.seekGraphAction);
 		fics2Menu.add(new Separator());
-
+		fics2Menu.add(regexTabAction);
 		connectionsMenu.add(fics2Menu);
 	}
 
