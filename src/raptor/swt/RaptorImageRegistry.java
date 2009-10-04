@@ -11,7 +11,7 @@
  * [Dialogs] ImageRegistry throws null pointer exception in
  * application with multiple Display's
  *******************************************************************************/
-package raptor;
+package raptor.swt;
 
 import java.util.HashMap;
 import java.util.Iterator;

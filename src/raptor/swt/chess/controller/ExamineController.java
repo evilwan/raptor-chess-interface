@@ -189,8 +189,12 @@ public class ExamineController extends ChessBoardController {
 			LOG.info("examineOnIllegalMove " + getGame().getId() + " ...");
 			long startTime = System.currentTimeMillis();
 			SoundService.getInstance().playSound("illegalMove");
-			board.getStatusLabel().setText("Illegal Move: " + move);
+			if (move != null) {
+				board.getStatusLabel().setText("Illegal Move: " + move);
+			}
 			board.unhighlightAllSquares();
+			adjustBoardToGame(getGame());
+			adjustPieceJailFromGame(game);
 			LOG.info("examineOnIllegalMove in " + getGame().getId() + "  "
 					+ (System.currentTimeMillis() - startTime));
 		}
@@ -365,9 +369,13 @@ public class ExamineController extends ChessBoardController {
 				move = BoardUtils.createMove(getGame(), fromSquare, toSquare);
 			}
 
-			board.getSquare(fromSquare).highlight();
-			board.getSquare(toSquare).highlight();
-			connector.makeMove(game, move);
+			if (move != null) {
+				board.getSquare(fromSquare).highlight();
+				board.getSquare(toSquare).highlight();
+				connector.makeMove(game, move);
+			} else {
+				examineOnIllegalMove(null);
+			}
 		}
 	}
 
