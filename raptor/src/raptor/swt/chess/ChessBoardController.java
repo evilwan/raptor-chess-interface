@@ -17,7 +17,7 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.Game.Result;
-import raptor.game.util.ECOParser;
+import raptor.game.util.EcoInfo;
 import raptor.game.util.GameUtils;
 import raptor.game.util.MoveListTraverser;
 import raptor.pref.PreferenceKeys;
@@ -363,14 +363,8 @@ public abstract class ChessBoardController implements BoardConstants,
 			return;
 		}
 		LOG.info("adjustOpeningDescriptionLabel()");
-		// if (board.game.getState() == Game.EXAMINING_STATE) return;
 
-		// CDay tells you: you can do
-		// board.getOpeningDescriptionLabel().setText(your opening
-		// description);
-		// CDay tells you: so you can test it from the gui
-
-		ECOParser p = ECOParser.getECOParser(getGame());
+		EcoInfo p = EcoInfo.getECOParser(getGame());
 		if (p != null) {
 			LOG.info("ECOParser.getECOParser(getGame()) = " + p.toString());
 			board.getOpeningDescriptionLabel().setText(p.toString());

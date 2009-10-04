@@ -194,13 +194,6 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		}
 
-		@Override
-		public void dispose() {
-			quad = null;
-			raptorSash = null;
-			super.dispose();
-		}
-
 		/**
 		 * Returns the RaptorTabItem at the specified index.
 		 */
@@ -832,6 +825,7 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	public void dispose() {
 		if (pingLabelsMap != null) {
+			pingLabelsMap.clear();
 			pingLabelsMap = null;
 		}
 		if (activeItems != null) {
@@ -1017,16 +1011,19 @@ public class RaptorWindow extends ApplicationWindow {
 						item.setText("Close");
 						item.addListener(SWT.Selection, new Listener() {
 							public void handleEvent(Event e) {
-								if (folder.getRaptorTabItemSelection().raptorItem
-										.confirmClose()) {
-									folder.getRaptorTabItemSelection()
-											.dispose();
-								}
-								if (folder.getItemCount() == 0) {
-									restoreFolders();
-								} else {
-									folder.setSelection(folder
-											.getSelectionIndex());
+								if (folder.getRaptorTabItemSelection() != null) {
+									if (folder.getRaptorTabItemSelection().raptorItem
+											.confirmClose()) {
+										folder.getRaptorTabItemSelection()
+												.dispose();
+
+										if (folder.getItemCount() == 0) {
+											restoreFolders();
+										} else {
+											folder.setSelection(folder
+													.getSelectionIndex());
+										}
+									}
 								}
 							}
 						});
@@ -1061,9 +1058,8 @@ public class RaptorWindow extends ApplicationWindow {
 								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
 										folder.getItemCount());
 								for (int i = 0; i < folder.getItemCount(); i++) {
-									if (i != folder.getSelectionIndex()
-											&& folder.getRaptorTabItemAt(i).raptorItem
-													.confirmClose()) {
+									if (folder.getRaptorTabItemAt(i).raptorItem
+											.confirmClose()) {
 										itemsToClose.add(folder
 												.getRaptorTabItemAt(i));
 									}

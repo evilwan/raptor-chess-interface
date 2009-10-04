@@ -33,12 +33,6 @@ public class LabeledChessSquare extends ChessSquare {
 
 	}
 
-	@Override
-	public void dispose() {
-		removePaintListener(paintListener);
-		super.dispose();
-	}
-
 	public String getText() {
 		return text;
 	}

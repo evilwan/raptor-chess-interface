@@ -17,6 +17,8 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -239,18 +241,26 @@ public class ChessSquare extends Composite implements BoardConstants {
 
 		target.setTransfer(new Transfer[] { TextTransfer.getInstance() });
 		target.addDropListener(dropTargetListener);
-	}
 
-	@Override
-	public void dispose() {
-		removePaintListener(paintListener);
-		removeControlListener(controlListener);
-		removeMouseListener(mouseListener);
-		source.removeDragListener(dragSourceListener);
-		target.removeDropListener(dropTargetListener);
-		source.dispose();
-		target.dispose();
-		super.dispose();
+		addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				removePaintListener(paintListener);
+				removeControlListener(controlListener);
+				removeMouseListener(mouseListener);
+				if (source != null && !source.isDisposed()) {
+					source.removeDragListener(dragSourceListener);
+					source.setDragSourceEffect(null);
+					source.dispose();
+					source = null;
+				}
+				if (target != null && !target.isDisposed()) {
+					target.removeDropListener(dropTargetListener);
+					target.dispose();
+					target = null;
+				}
+			}
+		});
 	}
 
 	public void forceLayout() {

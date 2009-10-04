@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
-import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
@@ -103,8 +102,8 @@ public class Raptor implements PreferenceKeys {
 		}
 	}
 
-	protected ImageRegistry imageRegistry = new ImageRegistry(Display
-			.getCurrent());
+	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
+			Display.getCurrent());
 
 	protected FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
 
@@ -193,7 +192,7 @@ public class Raptor implements PreferenceKeys {
 	 * 
 	 * @return
 	 */
-	public ImageRegistry getImageRegistry() {
+	public RaptorImageRegistry getImageRegistry() {
 		return imageRegistry;
 	}
 

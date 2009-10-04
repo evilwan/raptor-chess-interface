@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import raptor.Raptor;
+import raptor.service.ThreadService;
 
 /**
  * The profile window class. This is just a poor mans profiler to be able to
@@ -25,7 +26,8 @@ import raptor.Raptor;
 public class ProfileDialog extends Dialog {
 
 	private Label heapm, heap1, heap2, heap3, heap4, stackm, stack1, stack2,
-			stack3, stack4, threadsm, threads1, threads2, threads3;
+			stack3, stack4, threadsm, threads1, threads2, threads3, threads4,
+			threads5, image1;
 
 	public ProfileDialog() {
 		super(Raptor.getInstance().getRaptorWindow().getShell(),
@@ -76,6 +78,33 @@ public class ProfileDialog extends Dialog {
 		threads3.setText("   Total Started Threads: "
 				+ threads.getTotalStartedThreadCount());
 
+		Label label = new Label(composite, SWT.NONE);
+		label.setText("ThreadService:");
+		threads4 = new Label(composite, SWT.NONE);
+		threads4.setText("   Size/Core/Largest/Max: "
+				+ ThreadService.getInstance().getExecutor().getPoolSize()
+				+ "/"
+				+ ThreadService.getInstance().getExecutor().getCorePoolSize()
+				+ "/"
+				+ ThreadService.getInstance().getExecutor()
+						.getLargestPoolSize()
+				+ "/"
+				+ ThreadService.getInstance().getExecutor()
+						.getMaximumPoolSize());
+		threads5 = new Label(composite, SWT.NONE);
+		threads5.setText("   Task Scheduled/Completed: "
+				+ ThreadService.getInstance().getExecutor().getTaskCount()
+				+ "/"
+				+ ThreadService.getInstance().getExecutor()
+						.getCompletedTaskCount());
+
+		image1 = new Label(composite, SWT.NONE);
+		image1.setText("Cached Images/Fonts/Colors: "
+				+ Raptor.getInstance().getImageRegistry().getSize() + "/"
+				+ Raptor.getInstance().getFontRegistry().getKeySet().size()
+				+ "/"
+				+ Raptor.getInstance().getColorRegistry().getKeySet().size());
+
 		Button button = new Button(composite, SWT.PUSH);
 		button.setText("Suggest Garbage Collection");
 		button.addSelectionListener(new SelectionListener() {
@@ -91,32 +120,65 @@ public class ProfileDialog extends Dialog {
 
 		Display.getCurrent().timerExec(2000, new Runnable() {
 			public void run() {
-				MemoryUsage curHeap = ManagementFactory.getMemoryMXBean()
-						.getHeapMemoryUsage();
-				MemoryUsage curStack = ManagementFactory.getMemoryMXBean()
-						.getNonHeapMemoryUsage();
-				ThreadMXBean curThreads = ManagementFactory.getThreadMXBean();
+				if (!Display.getCurrent().isDisposed()) {
+					MemoryUsage curHeap = ManagementFactory.getMemoryMXBean()
+							.getHeapMemoryUsage();
+					MemoryUsage curStack = ManagementFactory.getMemoryMXBean()
+							.getNonHeapMemoryUsage();
+					ThreadMXBean curThreads = ManagementFactory
+							.getThreadMXBean();
 
-				heap1.setText("   Initial: " + curHeap.getInit() / 1024 + "K");
-				heap2.setText("   Used: " + curHeap.getUsed() / 1024 + "K");
-				heap3.setText("   Committed: " + curHeap.getMax() / 1024 + "K");
-				heap4.setText("   Max: " + curHeap.getMax() / 1024 + "K");
+					heap1.setText("   Initial: " + curHeap.getInit() / 1024
+							+ "K");
+					heap2.setText("   Used: " + curHeap.getUsed() / 1024 + "K");
+					heap3.setText("   Committed: " + curHeap.getMax() / 1024
+							+ "K");
+					heap4.setText("   Max: " + curHeap.getMax() / 1024 + "K");
 
-				stack1
-						.setText("   Initial: " + curStack.getInit() / 1024
-								+ "K");
-				stack2.setText("   Used: " + curStack.getUsed() / 1024 + "K");
-				stack3.setText("   Committed: " + curStack.getMax() / 1024
-						+ "K");
-				stack4.setText("   Max: " + curStack.getMax() / 1024 + "K");
+					stack1.setText("   Initial: " + curStack.getInit() / 1024
+							+ "K");
+					stack2.setText("   Used: " + curStack.getUsed() / 1024
+							+ "K");
+					stack3.setText("   Committed: " + curStack.getMax() / 1024
+							+ "K");
+					stack4.setText("   Max: " + curStack.getMax() / 1024 + "K");
 
-				threads1.setText("   Threads: " + curThreads.getThreadCount());
-				threads2.setText("   Peak Threads: "
-						+ curThreads.getPeakThreadCount());
-				threads3.setText("   Total Started Threads: "
-						+ curThreads.getTotalStartedThreadCount());
+					threads1.setText("   Threads: "
+							+ curThreads.getThreadCount());
+					threads2.setText("   Peak Threads: "
+							+ curThreads.getPeakThreadCount());
+					threads3.setText("   Total Started Threads: "
+							+ curThreads.getTotalStartedThreadCount());
 
-				Display.getCurrent().timerExec(2000, this);
+					threads4.setText("   Size/Core/Largest/Max: "
+							+ ThreadService.getInstance().getExecutor()
+									.getPoolSize()
+							+ "/"
+							+ ThreadService.getInstance().getExecutor()
+									.getCorePoolSize()
+							+ "/"
+							+ ThreadService.getInstance().getExecutor()
+									.getLargestPoolSize()
+							+ "/"
+							+ ThreadService.getInstance().getExecutor()
+									.getMaximumPoolSize());
+					threads5.setText("   Task Scheduled/Completed: "
+							+ ThreadService.getInstance().getExecutor()
+									.getTaskCount()
+							+ "/"
+							+ ThreadService.getInstance().getExecutor()
+									.getCompletedTaskCount());
+					image1.setText("Cached Images/Fonts/Colors: "
+							+ Raptor.getInstance().getImageRegistry().getSize()
+							+ "/"
+							+ Raptor.getInstance().getFontRegistry()
+									.getKeySet().size()
+							+ "/"
+							+ Raptor.getInstance().getColorRegistry()
+									.getKeySet().size());
+
+					Display.getCurrent().timerExec(2000, this);
+				}
 			}
 
 		});
