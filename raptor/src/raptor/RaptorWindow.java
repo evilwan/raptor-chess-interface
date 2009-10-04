@@ -69,7 +69,7 @@ public class RaptorWindow extends ApplicationWindow {
 		public RaptorSashForm(Composite parent, int style, String key) {
 			super(parent, style);
 			this.key = key;
-			setSashWidth(10);
+			setSashWidth(getPreferences().getInt(PreferenceKeys.APP_SASH_WIDTH));
 		}
 
 		/**
@@ -1113,14 +1113,12 @@ public class RaptorWindow extends ApplicationWindow {
 				case SWT.DragDetect: {
 					Point p = folder.toControl(getShell().getDisplay()
 							.getCursorLocation());
-					System.err.println("Drag Detect: " + folder.quad);
 					CTabItem item = folder.getItem(p);
 					if (item == null)
 						return;
 					isInDrag = true;
 					isExitDrag = false;
 					dragStartItem = (RaptorTabItem) item;
-					System.out.println("Drag start item = " + dragStartItem);
 					getShell().setCursor(
 							getShell().getDisplay().getSystemCursor(
 									SWT.CURSOR_HAND));
@@ -1132,12 +1130,10 @@ public class RaptorWindow extends ApplicationWindow {
 						return;
 					}
 					getShell().setCursor(
-							getShell().getDisplay().getSystemCursor(
-									SWT.CURSOR_ARROW));
+							Raptor.getInstance().getCursorRegistry()
+									.getDefaultCursor());
 
 					RaptorTabFolder dropFolder = getFolderContainingCursor();
-					System.err.println("Mouse Up: "
-							+ getFolderContainingCursor());
 					if (dropFolder != null
 							&& dropFolder != dragStartItem.raptorParent) {
 						dragStartItem.onMoveTo(dropFolder);

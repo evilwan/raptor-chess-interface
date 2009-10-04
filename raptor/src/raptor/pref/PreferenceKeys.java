@@ -72,6 +72,7 @@ public interface PreferenceKeys {
 	public static final String APP_NAME = "app-name";
 	public static final String APP_HOME_URL = "app-home-url";
 	public static final String APP_LAYOUT = "app-layout";
+	public static final String APP_SASH_WIDTH = "app-sash-width";
 
 	// ONLY PASS THESE VALUES INTO get/set SashWeights and get/set Quad
 	public static final String QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "quad1-quad234567-quad8-sash-weights";
