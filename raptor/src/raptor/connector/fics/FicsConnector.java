@@ -2,6 +2,7 @@ package raptor.connector.fics;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.preference.PreferenceNode;
@@ -150,7 +151,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		autoConnectAction = new Action("Auto &Login", Action.AS_CHECK_BOX) {
+		autoConnectAction = new Action("Auto &Login", IAction.AS_CHECK_BOX) {
+			@Override
 			public void run() {
 				System.err.println("autoConnectAction clicked");
 				getPreferences().setValue(
@@ -304,7 +306,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		fics2.autoConnectAction = new Action("Auto &Login", Action.AS_CHECK_BOX) {
+		fics2.autoConnectAction = new Action("Auto &Login",
+				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 			}
