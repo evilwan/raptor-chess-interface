@@ -8,6 +8,10 @@ import raptor.service.ThreadService;
 
 public class ChatUtils {
 
+	/**
+	 * Appends all of the previous chat events to the controller. This method
+	 * executes asynchronously.
+	 */
 	public static void appendPreviousChatsToController(final ChatConsole console) {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {

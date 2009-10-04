@@ -747,6 +747,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 					}
 				});
+				awayButton.setEnabled(!awayList.isEmpty());
 				addToolItem(AWAY_BUTTON, awayButton);
 			}
 

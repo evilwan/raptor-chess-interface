@@ -89,8 +89,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	protected Action disconnectAction;
 	protected Action reconnectAction;
 	protected Action bughouseArenaAction;
-	protected Action seekGraphAction;
-	protected Action regexTabAction;
+
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
@@ -116,8 +115,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			disconnectAction.setEnabled(true);
 			reconnectAction.setEnabled(true);
 			bughouseArenaAction.setEnabled(true);
-			seekGraphAction.setEnabled(true);
-			regexTabAction.setEnabled(true);
 		}
 	}
 
@@ -162,24 +159,10 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		seekGraphAction = new Action("Show &Seek Graph") {
-			@Override
-			public void run() {
-				Raptor.getInstance().alert("Seek Graph Comming soon");
-			}
-		};
-
 		bughouseArenaAction = new Action("Show &Bughouse Arena") {
 			@Override
 			public void run() {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
-			}
-		};
-		regexTabAction = new Action("&Add Regular Expression Tab") {
-			@Override
-			public void run() {
-				Raptor.getInstance().alert(
-						"Add Regular Expression Tab Comming soon");
 			}
 		};
 
@@ -187,16 +170,13 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
-		seekGraphAction.setEnabled(false);
-		regexTabAction.setEnabled(false);
+
 
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
 		connectionsMenu.add(reconnectAction);
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bughouseArenaAction);
-		connectionsMenu.add(seekGraphAction);
-		connectionsMenu.add(regexTabAction);
 		connectionsMenu.add(new Separator());
 
 		MenuManager bics2Menu = new MenuManager(
@@ -233,13 +213,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bics2.seekGraphAction = new Action("Show &Seek Graph") {
-			@Override
-			public void run() {
-				Raptor.getInstance().alert("Seek Graph Comming soon");
-			}
-		};
-
 		bics2.bughouseArenaAction = new Action("Show &Bughouse Arena") {
 			@Override
 			public void run() {
@@ -251,14 +224,12 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bics2.disconnectAction.setEnabled(false);
 		bics2.reconnectAction.setEnabled(false);
 		bics2.bughouseArenaAction.setEnabled(false);
-		bics2.seekGraphAction.setEnabled(false);
 
 		bics2Menu.add(bics2.connectAction);
 		bics2Menu.add(bics2.disconnectAction);
 		bics2Menu.add(bics2.reconnectAction);
 		bics2Menu.add(new Separator());
 		bics2Menu.add(bics2.bughouseArenaAction);
-		bics2Menu.add(bics2.seekGraphAction);
 		bics2Menu.add(new Separator());
 
 		connectionsMenu.add(bics2Menu);
@@ -272,8 +243,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
-		seekGraphAction.setEnabled(false);
-		regexTabAction.setEnabled(false);
 	}
 
 	@Override
