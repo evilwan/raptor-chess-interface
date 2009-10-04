@@ -1,8 +1,5 @@
 1) Add in code to change observe controller to examine controller when someone mexes you.
 
-2) Unexpected crashes in OSX (I think it might have to do with overloading the thread pool). 
-The are less frequent but they still occur.
-
 3) Fix RightOrientedLayout it doesnt look right at all sizes pieces get cut off.
    Add fonts that grow/shrink and change the size of the piece jail squares if they will not fit.
    
@@ -175,13 +172,6 @@ Kd2, Qc2+, Kxe3, Qc3+, Ke2]
 	at raptor.connector.ics.IcsConnector.messageLoop(IcsConnector.java:532)
 	at raptor.connector.ics.IcsConnector$2$1.run(IcsConnector.java:203)
 	at java.lang.Thread.run(Thread.java:619)
-	
-	
-	
-	
-	
-	
-	
 	
  Issue: ficsConnector Error in DaemonRun.onNewInput
 java.lang.IllegalArgumentException: Invalid move d4

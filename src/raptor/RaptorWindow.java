@@ -52,9 +52,11 @@ import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
 
 /**
- * A raptor window is broken up quadrants. Each quadrant is tabbed. You can add
- * a RaptorWindowItem to any quad. Each quad can be maximized and restored. When
- * all of the tabs in a quadrannt are vacant, the area disappears.
+ * A Raptor window is broken up into quadrants. Each quadrant is tabbed. You can
+ * add a RaptorWindowItem to any quadrant. Each quadrant can be
+ * maximized,minimized, and restored. When all of the tabs in a quadrannt are
+ * vacant, the area disappears. You can drag and drop RaptorWindowItems between
+ * visible quadrants.
  */
 public class RaptorWindow extends ApplicationWindow {
 
@@ -480,15 +482,33 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Adds a RaptorWindowItem to the RaptorWindow.
+	 * Adds a RaptorWindowItem to the RaptorWindow asynchronously.
+	 * 
+	 * An item listener will be added to the window item. This listeners
+	 * itemChanged should be invoked whenever the title,or icon of the
+	 * RaptorWindowItem change.
+	 * 
+	 * onPassivate and onActivate will be invoked as the item becomes invisible
+	 * and visible again. Multiple calls to activate may occur even if the
+	 * RaptorWindowItem is visible so the RaptorWindowItem should handle these
+	 * as well.
 	 */
 	public void addRaptorWindowItem(final RaptorWindowItem item) {
 		addRaptorWindowItem(item, true);
 	}
 
 	/**
-	 * Adds a RaptorWindowItem to the RaptorWindow. If isAsynch the window item
-	 * is added asynchronously, otherwise it is added synchronously.
+	 * Adds a RaptorWindowItem to the RaptorWindow either synchronously or
+	 * asynchronously depending on isAsynch.
+	 * 
+	 * An item listener will be added to the window item. This listeners
+	 * itemChanged should be invoked whenever the title,or icon of the
+	 * RaptorWindowItem change.
+	 * 
+	 * onPassivate and onActivate will be invoked as the item becomes invisible
+	 * and visible again. Multiple calls to activate may occur even if the
+	 * RaptorWindowItem is visible so the RaptorWindowItem should handle these
+	 * as well.
 	 */
 	public void addRaptorWindowItem(final RaptorWindowItem item,
 			boolean isAsynch) {
