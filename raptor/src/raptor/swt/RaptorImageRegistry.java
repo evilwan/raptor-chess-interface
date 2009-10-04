@@ -119,7 +119,7 @@ public class RaptorImageRegistry {
 
 	private ResourceManager manager;
 
-	private Map table;
+	private Map<String, Entry> table;
 
 	private Runnable disposeRunnable = new Runnable() {
 		public void run() {
@@ -178,7 +178,7 @@ public class RaptorImageRegistry {
 		manager.cancelDisposeExec(disposeRunnable);
 
 		if (table != null) {
-			for (Iterator i = table.values().iterator(); i.hasNext();) {
+			for (Iterator<Entry> i = table.values().iterator(); i.hasNext();) {
 				Entry entry = (Entry) i.next();
 				if (entry.image != null) {
 					manager.destroyImage(entry.descriptor);
@@ -197,6 +197,7 @@ public class RaptorImageRegistry {
 	 *            the key
 	 * @return the image, or <code>null</code> if none
 	 */
+	@SuppressWarnings( { "deprecation" })
 	public Image get(String key) {
 
 		// can be null
@@ -280,9 +281,9 @@ public class RaptorImageRegistry {
 		return table.size();
 	}
 
-	private Map getTable() {
+	private Map<String, Entry> getTable() {
 		if (table == null) {
-			table = new HashMap(10);
+			table = new HashMap<String, Entry>(10);
 		}
 		return table;
 	}
