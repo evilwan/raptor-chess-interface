@@ -209,7 +209,7 @@ public class BoardUtils implements BoardConstants {
 						: GameConstants.BQ));
 		controller.addToolItem(ChessBoardController.AUTO_QUEEN, queenPromote);
 		queenPromote.setToolTipText("Auto Queen");
-		queenPromote.setSelection(true);
+		queenPromote.setSelection(false);
 
 		ToolItem knightPromote = new ToolItem(toolbar, SWT.RADIO);
 		knightPromote

@@ -243,8 +243,8 @@ public class ExamineController extends ChessBoardController {
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
-		}
-
+		}		
+	    setToolItemSelected(AUTO_QUEEN, true);
 		return toolbar;
 	}
 

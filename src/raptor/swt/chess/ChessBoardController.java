@@ -947,10 +947,25 @@ public abstract class ChessBoardController implements BoardConstants,
 		this.itemChangedListeners = itemChangedListeners;
 	}
 
+	/**
+	 * Sets the enabled state of the tool item matching the specified key.
+	 */
 	public void setToolItemEnabled(String key, boolean isEnabled) {
 		ToolItem item = getToolItem(key);
 		if (item != null) {
 			item.setEnabled(isEnabled);
+		}
+	}
+
+	/**
+	 * Sets the selection state of the tool item matching the specified key.
+	 * This is useful for dealing with radio groups.
+	 * The auto promotes are in a radio group.
+	 */
+	public void setToolItemSelected(String key, boolean isSelected) {
+		ToolItem item = getToolItem(key);
+		if (item != null) {
+			item.setSelection(isSelected);
 		}
 	}
 
