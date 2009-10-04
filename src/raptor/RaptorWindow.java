@@ -315,7 +315,7 @@ public class RaptorWindow extends ApplicationWindow {
 		public void updateToolbar() {
 			RaptorTabItem currentSelection = (RaptorTabItem) getSelection();
 			Control existingControl = getTopRight();
-			if (existingControl != null) {
+			if (existingControl != null && !existingControl.isDisposed()) {
 				existingControl.setVisible(false);
 				setTopRight(null);
 			}
@@ -409,7 +409,9 @@ public class RaptorWindow extends ApplicationWindow {
 		public void dispose() {
 			super.dispose();
 			try {
-				raptorItem.dispose();
+				if (raptorItem != null) {
+					raptorItem.dispose();
+				}
 			} catch (Throwable t) {
 			} // Just eat it its prob a widget is already disposed exception.
 			raptorItem = null;
@@ -429,6 +431,7 @@ public class RaptorWindow extends ApplicationWindow {
 				raptorItem.getControl().setParent(newParent);
 				activeItems.remove(this);
 				new RaptorTabItem(newParent, getStyle(), raptorItem, false);
+				raptorItem = null;
 				dispose();
 				restoreFolders();
 			}

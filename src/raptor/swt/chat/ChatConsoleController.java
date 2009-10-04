@@ -51,6 +51,7 @@ import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
+import raptor.swt.SWTUtils;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.util.LaunchBrowser;
@@ -620,7 +621,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		if (toolbar != null) {
 			toolbar.setVisible(false);
-			toolbar.dispose();
+			// DO NOT dispose the toolbar. It causes all kinds of issues in
+			// RaptorWindow.
+			SWTUtils.clearToolbar(toolbar);
 			toolbar = null;
 		}
 
