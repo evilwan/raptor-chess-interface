@@ -9,7 +9,7 @@ import raptor.Raptor;
 
 public class RaptorWindowPage extends FieldEditorPreferencePage {
 	public RaptorWindowPage() {
-		super(FLAT);
+		super(GRID);
 		setTitle("Raptor Window");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}

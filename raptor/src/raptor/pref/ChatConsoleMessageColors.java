@@ -8,7 +8,7 @@ import raptor.chat.ChatType;
 
 public class ChatConsoleMessageColors extends FieldEditorPreferencePage {
 	public ChatConsoleMessageColors() {
-		super(FLAT);
+		super(GRID);
 		setTitle("Message Colors");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
