@@ -74,8 +74,8 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 	protected Font resultFont;
 
-	public ChessBoard(Composite parent, int style) {
-		super(parent, style);
+	public ChessBoard(Composite parent) {
+		super(parent, SWT.DOUBLE_BUFFERED);
 	}
 
 	protected void createChessBoardLayout() {

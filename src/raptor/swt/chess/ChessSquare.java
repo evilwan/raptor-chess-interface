@@ -201,7 +201,7 @@ public class ChessSquare extends Composite implements BoardConstants {
 
 	public ChessSquare(Composite parent, ChessBoard chessBoard, int id,
 			boolean isLight) {
-		super(parent, SWT.NONE);
+		super(parent, SWT.DOUBLE_BUFFERED);
 		this.board = chessBoard;
 		this.id = id;
 		this.isLight = isLight;
