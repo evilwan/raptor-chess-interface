@@ -15,6 +15,9 @@ public interface PreferenceKeys {
 	public static final String BOARD_SMARTMOVE_ENABLED = "board-smartmove-enabled";
 	public static final String BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING = "board-play-move-sound-when-observing";
 	public static final String BOARD_QUEUED_PREMOVE_ENABLED = "board-queued-premove-enabled";
+	public static final String BOARD_IS_SHOWING_PIECE_UNICODE_CHARS = "board-is-showing-piece-unicode-chars";
+	public static final String BOARD_IS_USING_CROSSHAIRS_CURSOR = "board-is-using-crosshairs-cursor";
+	public static final String BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS = "board-is-playing-10-second-countdown-sounds";
 
 	public static final String BOARD_COORDINATES_COLOR = "board-coordinates-color";
 	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
@@ -31,8 +34,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_PREMOVES_COLOR = "board-premoves-color";
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
 	public static final String BOARD_RESULT_COLOR = "board-result-color";
-	public static final String BOARD_IS_SHOWING_PIECE_UNICODE_CHARS = "board-is-showing-piece-unicode-chars";
-	public static final String BOARD_IS_USING_CROSSHAIRS_CURSOR = "board-is-using-crosshairs-cursor";
 
 	public static final String BOARD_COORDINATES_FONT = "board-coordinates-font";
 	public static final String BOARD_CLOCK_FONT = "board-clock-font";

@@ -5,24 +5,13 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
-import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ChatConsoleMessageColors extends FieldEditorPreferencePage {
-
-	public static final String[][] CONSOLE_CHARS = {
-			{ "1/4 Million Characters", "250000" },
-			{ "1/2 Million Characters", "500000" },
-			{ "1 Million Characters", "1000000" },
-			{ "5 Million Characters", "5000000" },
-			{ "10 Million Characters", "10000000" } };
-
 	public ChatConsoleMessageColors() {
 		super(FLAT);
 		setTitle("Message Colors");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
-
-	LabelButtonFieldEditor labelButtonFieldEditor;
 
 	@Override
 	protected void createFieldEditors() {

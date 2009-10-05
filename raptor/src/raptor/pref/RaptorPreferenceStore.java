@@ -85,7 +85,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		addPropertyChangeListener(propertyChangeListener);
 		LOG.info("Loaded preferences from "
 				+ RAPTOR_PROPERTIES.getAbsolutePath());
-
 	}
 
 	/**
@@ -227,6 +226,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN, 1000L * 10L + 1L);
 		setDefault(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
 				1000L * 60L * 10L + 1L);
+		setDefault(BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS, true);
 		setDefault(BOARD_PREMOVE_ENABLED, true);
 		setDefault(BOARD_SMARTMOVE_ENABLED, true);
 		setDefault(BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING, true);
@@ -449,7 +449,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, true);
 		setDefault(FICS_AUTO_CONNECT, false);
-		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1");
+		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(FICS_IS_LOGGING_GAMES, false);
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
@@ -488,7 +488,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Bics
 		setDefault(BICS_KEEP_ALIVE, true);
 		setDefault(BICS_AUTO_CONNECT, false);
-		setDefault(BICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1");
+		setDefault(BICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(BICS_IS_LOGGING_GAMES, false);
 		setDefault(BICS_AUTO_CONNECT, false);
 		setDefault(BICS_PROFILE, "Primary");

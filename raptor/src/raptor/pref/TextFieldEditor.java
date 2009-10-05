@@ -15,6 +15,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.FocusAdapter;
@@ -25,7 +26,6 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Text;
 
 /**
  * A field editor for a string type preference.
@@ -70,7 +70,7 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * The text field, or <code>null</code> if none.
 	 */
-	Text textField;
+	StyledText textField;
 
 	/**
 	 * Width of text field in characters; initially unlimited.
@@ -331,7 +331,7 @@ public class TextFieldEditor extends FieldEditor {
 	 * @return the text control, or <code>null</code> if no text field is
 	 *         created yet
 	 */
-	protected Text getTextControl() {
+	protected StyledText getTextControl() {
 		return textField;
 	}
 
@@ -345,10 +345,13 @@ public class TextFieldEditor extends FieldEditor {
 	 *            the parent
 	 * @return the text control
 	 */
-	public Text getTextControl(Composite parent) {
+	public StyledText getTextControl(Composite parent) {
 		if (textField == null) {
-			textField = new Text(parent, SWT.MULTI | SWT.BORDER);
+			textField = new StyledText(parent, SWT.MULTI | SWT.BORDER
+					| SWT.V_SCROLL | SWT.H_SCROLL);
 			textField.setFont(parent.getFont());
+			textField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+					true, 1, 4));
 			switch (validateStrategy) {
 			case VALIDATE_ON_KEY_STROKE:
 				textField.addKeyListener(new KeyAdapter() {

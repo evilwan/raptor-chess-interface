@@ -18,7 +18,7 @@ import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.script.GameScript;
 
-public class FicsGameScriptsPage extends PreferencePage {
+public class ICSGameScriptsPage extends PreferencePage {
 	Composite parent;
 	Combo scriptName;
 	Composite scriptNameComposite;
@@ -35,11 +35,11 @@ public class FicsGameScriptsPage extends PreferencePage {
 	Button test;
 	Connector ficsConnector;
 
-	public FicsGameScriptsPage(Connector connector) {
+	public ICSGameScriptsPage(Connector connector) {
 		// Use the "flat" layout
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("ICS Script Editor");
+		setTitle("Ics Script Editor (Comming Soon)");
 		ficsConnector = connector;
 	}
 
