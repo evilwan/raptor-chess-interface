@@ -168,21 +168,16 @@ public class ChessSquare extends Composite implements BoardConstants {
 				e.gc.fillRectangle(0, 0, size.x, size.y);
 			}
 
-			int highlightBorderWidth = (int) (size.x * getPreferences()
-					.getDouble(BOARD_HIGHLIGHT_BORDER_WIDTH));
+			int borderHighlightWidth = getHighlightBorderWidth();
+
 			if (isHighlighted) {
-				for (int i = 0; i < highlightBorderWidth; i++) {
+				for (int i = 0; i < getHighlightBorderWidth(); i++) {
 					e.gc.drawRectangle(i, i, size.x - 1 - i * 2, size.x - 1 - i
 							* 2);
 				}
 			}
 
-			double imageSquareSideAdjustment = getPreferences().getDouble(
-					BOARD_PIECE_SIZE_ADJUSTMENT);
-			int imageSide = (int) ((size.x - highlightBorderWidth * 2) * (1.0 - imageSquareSideAdjustment));
-			if (imageSide % 2 != 0) {
-				imageSide = imageSide - 1;
-			}
+			int imageSide = getImageSize(borderHighlightWidth);
 
 			if (pieceImage == null && piece != EMPTY) {
 				pieceImage = BoardUtils.getChessPieceImage(piece, imageSide,
@@ -196,8 +191,8 @@ public class ChessSquare extends Composite implements BoardConstants {
 			}
 		}
 	};
-	int piece;
 
+	int piece;
 	Image pieceImage;
 
 	public ChessSquare(ChessBoard chessBoard, int id, boolean isLight) {
@@ -221,8 +216,24 @@ public class ChessSquare extends Composite implements BoardConstants {
 		pieceImage = null;
 	}
 
+	protected int getHighlightBorderWidth() {
+		return (int) (getSize().x * getPreferences().getDouble(
+				BOARD_HIGHLIGHT_BORDER_WIDTH));
+	}
+
 	public int getId() {
 		return id;
+	}
+
+	protected int getImageSize(int borderWidth) {
+		double imageSquareSideAdjustment = getPreferences().getDouble(
+				BOARD_PIECE_SIZE_ADJUSTMENT);
+		int imageSide = (int) ((getSize().x - borderWidth * 2) * (1.0 - imageSquareSideAdjustment));
+		if (imageSide % 2 != 0) {
+			imageSide = imageSide - 1;
+		}
+
+		return imageSide;
 	}
 
 	public int getPiece() {
@@ -290,8 +301,9 @@ public class ChessSquare extends Composite implements BoardConstants {
 	 * Updates the cursor for a drag with the specified piece.
 	 */
 	protected void updateCursorForDrag(int piece) {
+		int imageSide = getImageSize(getHighlightBorderWidth());
 		getShell().setCursor(
-				BoardUtils.getCursorForPiece(piece, getSize().x, getSize().y));
+				BoardUtils.getCursorForPiece(piece, imageSide, imageSide));
 	}
 
 	/**
