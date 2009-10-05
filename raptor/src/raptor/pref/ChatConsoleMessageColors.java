@@ -2,8 +2,6 @@ package raptor.pref;
 
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.swt.graphics.RGB;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
