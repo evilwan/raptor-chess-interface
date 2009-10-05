@@ -4,7 +4,6 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
-import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
@@ -104,8 +103,6 @@ public class SWTUtils {
 		double heightInPoints = controlHeight * pointsPerPixel;
 
 		int requestedHeightInPoints = (int) (heightInPoints * resizePercentage / 100.0);
-
-		GC gc = new GC(Raptor.getInstance().getDisplay());
 
 		String key = fontToAdjust.getFontData()[0].getName() + "_"
 				+ requestedHeightInPoints + "_"
