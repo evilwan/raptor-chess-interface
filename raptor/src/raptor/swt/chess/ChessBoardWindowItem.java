@@ -2,7 +2,6 @@ package raptor.swt.chess;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -75,6 +74,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		}
 		long startTime = System.currentTimeMillis();
 		board = new ChessBoard(parent);
+		board.setLayoutDeferred(true);
 		board.setController(controller);
 		controller.setBoard(board);
 		board.createControls();
@@ -86,6 +86,8 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public void onActivate() {
+		board.setLayoutDeferred(false);
+		board.layout(true);
 		board.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				controller.onActivate();
@@ -94,6 +96,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public void onPassivate() {
+		board.setLayoutDeferred(true);
 		board.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				controller.onPassivate();

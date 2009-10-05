@@ -11,6 +11,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -42,6 +43,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.connector.Connector;
+import raptor.game.Game;
+import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtil;
 import raptor.pref.RaptorPreferenceStore;
@@ -50,6 +53,8 @@ import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
+import raptor.swt.chess.ChessBoardWindowItem;
+import raptor.swt.chess.controller.InactiveController;
 
 /**
  * A Raptor window is broken up into quadrants. Each quadrant is tabbed. You can
@@ -679,9 +684,49 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected MenuManager createMenuManager() {
-		MenuManager menuBar = new MenuManager("Raptor");
-		MenuManager configureMenu = new MenuManager("&Configure");
+		MenuManager menuBar = new MenuManager("Main");
+		MenuManager raptorMenu = new MenuManager("Raptor");
 		MenuManager helpMenu = new MenuManager("&Help");
+
+		raptorMenu.add(new Action("Properties") {
+			@Override
+			public void run() {
+				PreferenceUtil.launchPreferenceDialog();
+			}
+		});
+
+		raptorMenu.add(new Separator());
+		raptorMenu.add(new Action("Mini Profiler") {
+			@Override
+			public void run() {
+				ProfileDialog dialog = new ProfileDialog();
+				dialog.open();
+			}
+		});
+		raptorMenu.add(new Action("Create Test Board") {
+			@Override
+			public void run() {
+				Game game = GameUtils.createStartingPosition(Game.Type.CLASSIC);
+				game.setInitialWhiteTimeMillis(180000);
+				game.setInitialBlackTimeMillis(180000);
+				game.setInitialWhiteIncMillis(0);
+				game.setInitialBlackIncMillis(0);
+				game.setWhiteName("White");
+				game.setWhiteRating("----");
+				game.setBlackName("Black");
+				game.setBlackRating("----");
+				game.setWhiteLagMillis(23465);
+				game.setBlackLagMillis(580347);
+				game.setWhiteRemainingeTimeMillis(153857);
+				game.setBlackRemainingTimeMillis(46728);
+				game.setEvent("blitz 3 0 rated");
+				game.setGameDescription(game.getEvent());
+				game.setSettingMoveSan(true);
+				InactiveController controller = new InactiveController(game);
+				addRaptorWindowItem(new ChessBoardWindowItem(controller));
+			}
+		});
+		menuBar.add(raptorMenu);
 
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();
 
@@ -692,19 +737,6 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		}
 
-		configureMenu.add(new Action("Preferences") {
-			@Override
-			public void run() {
-				PreferenceUtil.launchPreferenceDialog();
-			}
-		});
-		configureMenu.add(new Action("Mini Profiler") {
-			@Override
-			public void run() {
-				ProfileDialog dialog = new ProfileDialog();
-				dialog.open();
-			}
-		});
 		helpMenu.add(new Action("&About") {
 			@Override
 			public void run() {
@@ -727,8 +759,6 @@ public class RaptorWindow extends ApplicationWindow {
 														PreferenceKeys.FICS_COMMANDS_HELP_URL)));
 			}
 		});
-
-		menuBar.add(configureMenu);
 		menuBar.add(helpMenu);
 		return menuBar;
 	}

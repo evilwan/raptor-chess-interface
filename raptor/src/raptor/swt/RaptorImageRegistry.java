@@ -179,7 +179,7 @@ public class RaptorImageRegistry {
 
 		if (table != null) {
 			for (Iterator<Entry> i = table.values().iterator(); i.hasNext();) {
-				Entry entry = (Entry) i.next();
+				Entry entry = i.next();
 				if (entry.image != null) {
 					manager.destroyImage(entry.descriptor);
 				}
@@ -274,7 +274,7 @@ public class RaptorImageRegistry {
 	}
 
 	private Entry getEntry(String key) {
-		return (Entry) getTable().get(key);
+		return getTable().get(key);
 	}
 
 	public int getSize() {

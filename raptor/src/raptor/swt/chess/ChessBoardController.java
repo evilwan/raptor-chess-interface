@@ -478,7 +478,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		adjustOpeningDescriptionLabel();
 		adjustGameStatusLabel();
 
-		board.forceUpdate();
+		board.layout();
 
 		LOG.info("Completed adjustToGameInitial in " + getGame().getId() + "  "
 				+ (System.currentTimeMillis() - startTime));
@@ -518,7 +518,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			onPlayMoveSound();
 		}
 
-		board.forceUpdate();
+		board.layout();
 
 		LOG.info("adjustToGameChange " + getGame().getId() + "  n "
 				+ (System.currentTimeMillis() - startTime));
@@ -533,17 +533,15 @@ public abstract class ChessBoardController implements BoardConstants,
 			return;
 		}
 
-		if (getGame().getColorToMove() == WHITE) {
-			board.getWhiteToMoveIndicatorLabel().setImage(
-					Raptor.getInstance().getIcon("circle_green30x30"));
-			board.getBlackToMoveIndicatorLabel().setImage(
-					Raptor.getInstance().getIcon("circle_gray30x30"));
-		} else {
-			board.getBlackToMoveIndicatorLabel().setImage(
-					Raptor.getInstance().getIcon("circle_green30x30"));
-			board.getWhiteToMoveIndicatorLabel().setImage(
-					Raptor.getInstance().getIcon("circle_gray30x30"));
-		}
+		int imageSize = board.getWhiteToMoveIndicatorLabel().getSize().x;
+		board.getWhiteToMoveIndicatorLabel().setImage(
+				BoardUtils.getToMoveIndicatorImage(
+						getGame().getColorToMove() == WHITE ? true : false,
+						imageSize));
+		board.getBlackToMoveIndicatorLabel().setImage(
+				BoardUtils.getToMoveIndicatorImage(
+						getGame().getColorToMove() == WHITE ? false : true,
+						imageSize));
 	}
 
 	/**
@@ -705,7 +703,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * state of the game)
 	 */
 	public void init() {
-		// adjustCoolbarToInitial();
 		onPlayGameStartSound();
 		adjustToGameInitial();
 	}
@@ -799,7 +796,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		LOG.debug("onFlip");
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
-		board.forceUpdate();
+		board.layout();
 		LOG.debug("isWhiteOnTop = " + board.isWhiteOnTop);
 	}
 

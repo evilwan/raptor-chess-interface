@@ -220,7 +220,7 @@ public class ExamineController extends ChessBoardController {
 			adjustPieceJailFromGame(getGame());
 			// adjustNavButtonEnabledState();
 
-			board.forceUpdate();
+			board.layout();
 			onPlayMoveSound();
 			board.unhighlightAllSquares();
 			LOG.info("examinePositionUpdate in " + getGame().getId() + "  "

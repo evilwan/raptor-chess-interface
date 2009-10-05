@@ -3,61 +3,140 @@ package raptor.swt.chess.layout;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Label;
 
+import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardLayout;
 
+/**
+ * This layout adjusts the font sizes to match the viewing area. It displays all
+ * labels.
+ */
 public class RightOrientedLayout extends ChessBoardLayout {
 	private static final Log LOG = LogFactory.getLog(RightOrientedLayout.class);
 
 	public static final int NORTH = 0;
 	public static final int SOUTH = 1;
-	public static final int EAST = 2;
-	public static final int WEST = 3;
+	public static final int EAST = 1;
+	public static final int WEST = 0;
 
-	public static final int[] TOP_BAR_MARGIN = { 0, 5, 5, 5 };
-	public static final int[] BOTTOM_BAR_MARGIN = { 5, 0, 5, 10 };
-	public static final int[] BOARD_MARGIN = { 0, 0, 10, 5 };
-	public static final int[] NAME_LABEL_MARGIN = { 0, 0, 0, 10 };
-	public static final int[] CLOCK_MARGIN = { 0, 0, 0, 0 };
-	public static final int[] PIECE_JAIL_MARGIN = { 0, 0, 0, 0 };
+	public static final int FONT_RESIZE_PERCENTAGE = 90;
+
+	public static final int TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
+	public static final int[] TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1, };
+	public static final int[] TOP_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
+
+	public static final int BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
+	public static final int[] BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1 };
+	public static final int[] BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
+
+	public static final int[] BOARD_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
+
+	public static final int CLOCK_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 100;
+	public static final int NAME_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 70;
+	public static final int LAG_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 30;
+	public static final int TO_MOVE_INDICATOR_PERCENTAGE_OF_BOARD_SQUARE = 85;
 
 	protected Point boardTopLeft;
 	protected Rectangle gameDescriptionLabelRect;
 	protected Rectangle currentPremovesLabelRect;
 	protected Rectangle openingDescriptionLabelRect;
 	protected Rectangle statusLabelRect;
-	protected Rectangle whiteNameLabelRect;
-	protected Rectangle blackNameLabelRect;
-	protected Rectangle whiteClockRect;
-	protected Rectangle blackClockRect;
-	protected Rectangle[] pieceJailRects;
-	protected Rectangle whiteLagRect;
-	protected Rectangle blackLagRect;
-	protected Rectangle whiteToMoveIndicatorRect;
-	protected Rectangle blackToMoveIndicatorRect;
-	protected int boardSquareSize;
-	protected int topBarHeight;
-	protected int bottomBarHeight;
+	protected Rectangle topNameLabelRect;
+	protected Rectangle bottomNameLabelRect;
+	protected Rectangle topClockRect;
+	protected Rectangle bottomClockRect;
+	protected Rectangle topLagRect;
+	protected Rectangle bottomLagRect;
+	protected Rectangle topToMoveIndicatorRect;
+	protected Rectangle bottomToMoveIndicatorRect;
+	protected Point topPieceJailRow1Point;
+	protected Point topPieceJailRow2Point;
+	protected Point bottomPieceJailRow1Point;
+	protected Point bottomPieceJailRow2Point;
+	protected int topLabelHeight;
+	protected int bottomLabelHeight;
+	protected int squareSize;
 	protected int boardHeight;
-
-	protected int pieceJailSquareSide;
-
-	protected Label worstCaseClockSizeLabel;
-	protected boolean hasInitedPainter = false;
+	protected int pieceJailSquareSize;
+	protected boolean hasHeightProblem = false;
+	protected boolean hasSevereHeightProblem = false;
+	protected ControlListener controlListener;
 
 	public RightOrientedLayout(ChessBoard board) {
 		super(board);
+
+		board.addControlListener(controlListener = new ControlListener() {
+
+			public void controlMoved(ControlEvent e) {
+			}
+
+			public void controlResized(ControlEvent e) {
+				setLayoutData();
+				adjustLabelFontsAndImages();
+			}
+		});
+	}
+
+	protected void adjustLabelFontsAndImages() {
+		board.getGameDescriptionLabel().setFont(
+				SWTUtils.getProportionalFont(board.getGameDescriptionLabel()
+						.getFont(), 80, topLabelHeight));
+		board.getCurrentPremovesLabel().setFont(
+				SWTUtils.getProportionalFont(board.getCurrentPremovesLabel()
+						.getFont(), 80, topLabelHeight));
+		board.getStatusLabel().setFont(
+				SWTUtils.getProportionalFont(board.getStatusLabel().getFont(),
+						80, bottomLabelHeight));
+		board.getOpeningDescriptionLabel().setFont(
+				SWTUtils.getProportionalFont(board.getOpeningDescriptionLabel()
+						.getFont(), 60, bottomLabelHeight));
+
+		Font nameFont = SWTUtils.getProportionalFont(board
+				.getWhiteNameRatingLabel().getFont(), hasHeightProblem ? 60
+				: hasSevereHeightProblem ? 50 : 70, topNameLabelRect.height);
+		board.getWhiteNameRatingLabel().setFont(nameFont);
+		board.getBlackNameRatingLabel().setFont(nameFont);
+
+		Font lagFont = SWTUtils.getProportionalFont(board.getWhiteLagLabel()
+				.getFont(), 70, topLagRect.height);
+		board.getWhiteLagLabel().setFont(lagFont);
+		board.getBlackLagLabel().setFont(lagFont);
+
+		Point nameSize = board.getWhiteNameRatingLabel().computeSize(
+				SWT.DEFAULT, SWT.DEFAULT, true);
+		Point lagSize = board.getWhiteLagLabel().computeSize(SWT.DEFAULT,
+				SWT.DEFAULT, true);
+
+		if (nameSize.y + lagSize.y <= squareSize) {
+			System.err.println("****Adjusted name labels****");
+			topNameLabelRect.height = nameSize.y;
+			bottomNameLabelRect.height = nameSize.y;
+
+			topLagRect.y = topNameLabelRect.y + topNameLabelRect.height;
+			topLagRect.height = lagSize.y;
+			bottomLagRect.y = bottomNameLabelRect.y
+					+ bottomNameLabelRect.height;
+			bottomLagRect.height = lagSize.y;
+		}
+
+		Font clockFont = SWTUtils.getProportionalFont(board
+				.getWhiteClockLabel().getFont(), 80, topClockRect.height);
+		board.getWhiteClockLabel().setFont(clockFont);
+		board.getBlackClockLabel().setFont(clockFont);
 	}
 
 	@Override
 	public void dispose() {
 		super.dispose();
 		LOG.debug("Disposed RightOrientedLayout");
+		board.removeControlListener(controlListener);
 	}
 
 	@Override
@@ -76,278 +155,267 @@ public class RightOrientedLayout extends ChessBoardLayout {
 			return SWT.LEFT;
 		case OPENING_DESCRIPTION_LABEL:
 			return SWT.RIGHT;
+		case NAME_RATING_LABEL:
+			return SWT.LEFT;
+		case CLOCK_LABEL:
+			return SWT.LEFT;
+		case LAG_LABEL:
+			return SWT.LEFT;
 		default:
 			return SWT.NONE;
 		}
 	}
 
-	protected void initWorstCaseLabels() {
-		if (worstCaseClockSizeLabel == null) {
-			worstCaseClockSizeLabel = new Label(board.getBoardPanel(), SWT.NONE);
-			worstCaseClockSizeLabel.setText("00:00:00.000");
-		}
-		worstCaseClockSizeLabel.setFont(board.getWhiteClockLabel().getFont());
-	}
-
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
-		LOG.debug("in layout ...");
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("in layout(" + flushCache + ") " + composite.getSize().x
+					+ " " + composite.getSize().y);
+		}
+
+		if (flushCache) {
+			setLayoutData();
+			adjustLabelFontsAndImages();
+		}
+
 		long startTime = System.currentTimeMillis();
 
-		// if (!hasInitedPainter) {
-		// initPainter();
-		// }
-		setLayoutData();
-
 		board.getGameDescriptionLabel().setBounds(gameDescriptionLabelRect);
-
 		board.getCurrentPremovesLabel().setBounds(currentPremovesLabelRect);
-
-		layoutChessBoard(boardTopLeft, boardSquareSize);
-
 		board.getStatusLabel().setBounds(statusLabelRect);
 		board.getOpeningDescriptionLabel().setBounds(
 				openingDescriptionLabelRect);
 
-		board.getWhiteToMoveIndicatorLabel()
-				.setBounds(whiteToMoveIndicatorRect);
-		board.getBlackToMoveIndicatorLabel()
-				.setBounds(blackToMoveIndicatorRect);
-		board.getWhiteNameRatingLabel().setBounds(whiteNameLabelRect);
-		board.getBlackNameRatingLabel().setBounds(blackNameLabelRect);
+		layoutChessBoard(boardTopLeft, squareSize);
 
-		board.getWhiteClockLabel().setBounds(whiteClockRect);
-		board.getBlackClockLabel().setBounds(blackClockRect);
+		board.getWhiteNameRatingLabel().setBounds(
+				board.isWhiteOnTop() ? topNameLabelRect : bottomNameLabelRect);
+		board.getWhiteLagLabel().setBounds(
+				board.isWhiteOnTop() ? topLagRect : bottomLagRect);
+		board.getWhiteClockLabel().setBounds(
+				board.isWhiteOnTop() ? topClockRect : bottomClockRect);
 
-		board.getWhiteLagLabel().setBounds(whiteLagRect);
-		board.getBlackLagLabel().setBounds(blackLagRect);
+		board.getBlackNameRatingLabel().setBounds(
+				board.isWhiteOnTop() ? bottomNameLabelRect : topNameLabelRect);
+		board.getBlackLagLabel().setBounds(
+				board.isWhiteOnTop() ? bottomLagRect : topLagRect);
+		board.getBlackClockLabel().setBounds(
+				board.isWhiteOnTop() ? bottomClockRect : topClockRect);
 
-		for (int i = 0; i < pieceJailRects.length; i++) {
-			if (pieceJailRects[i] != null) {
-				board.getPieceJailSquares()[i].setBounds(pieceJailRects[i]);
-			}
+		if (board.isWhitePieceJailOnTop()) {
+			board.getPieceJailSquares()[WP].setBounds(topPieceJailRow1Point.x,
+					topPieceJailRow1Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[WN].setBounds(topPieceJailRow1Point.x
+					+ pieceJailSquareSize, topPieceJailRow1Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[WB].setBounds(topPieceJailRow1Point.x
+					+ 2 * pieceJailSquareSize, topPieceJailRow1Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[WQ].setBounds(topPieceJailRow2Point.x,
+					topPieceJailRow2Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[WR].setBounds(topPieceJailRow2Point.x
+					+ pieceJailSquareSize, topPieceJailRow2Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[WK].setBounds(topPieceJailRow2Point.x
+					+ 2 * pieceJailSquareSize, topPieceJailRow2Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+
+			board.getPieceJailSquares()[BP].setBounds(
+					bottomPieceJailRow1Point.x, bottomPieceJailRow1Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[BN].setBounds(
+					bottomPieceJailRow1Point.x + pieceJailSquareSize,
+					bottomPieceJailRow1Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[BB].setBounds(
+					bottomPieceJailRow1Point.x + 2 * pieceJailSquareSize,
+					bottomPieceJailRow1Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[BQ].setBounds(
+					bottomPieceJailRow2Point.x, bottomPieceJailRow2Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[BR].setBounds(
+					bottomPieceJailRow2Point.x + pieceJailSquareSize,
+					bottomPieceJailRow2Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[BK].setBounds(
+					bottomPieceJailRow2Point.x + 2 * pieceJailSquareSize,
+					bottomPieceJailRow2Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+		} else {
+			board.getPieceJailSquares()[BP].setBounds(topPieceJailRow1Point.x,
+					topPieceJailRow1Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[BN].setBounds(topPieceJailRow1Point.x
+					+ pieceJailSquareSize, topPieceJailRow1Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[BB].setBounds(topPieceJailRow1Point.x
+					+ 2 * pieceJailSquareSize, topPieceJailRow1Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[BQ].setBounds(topPieceJailRow2Point.x,
+					topPieceJailRow2Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[BR].setBounds(topPieceJailRow2Point.x
+					+ pieceJailSquareSize, topPieceJailRow2Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[BK].setBounds(topPieceJailRow2Point.x
+					+ 2 * pieceJailSquareSize, topPieceJailRow2Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+
+			board.getPieceJailSquares()[WP].setBounds(
+					bottomPieceJailRow1Point.x, bottomPieceJailRow1Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[WN].setBounds(
+					bottomPieceJailRow1Point.x + pieceJailSquareSize,
+					bottomPieceJailRow1Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[WB].setBounds(
+					bottomPieceJailRow1Point.x + 2 * pieceJailSquareSize,
+					bottomPieceJailRow1Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[WQ].setBounds(
+					bottomPieceJailRow2Point.x, bottomPieceJailRow2Point.y,
+					pieceJailSquareSize, pieceJailSquareSize);
+			board.getPieceJailSquares()[WR].setBounds(
+					bottomPieceJailRow2Point.x + pieceJailSquareSize,
+					bottomPieceJailRow2Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
+			board.getPieceJailSquares()[WK].setBounds(
+					bottomPieceJailRow2Point.x + 2 * pieceJailSquareSize,
+					bottomPieceJailRow2Point.y, pieceJailSquareSize,
+					pieceJailSquareSize);
 		}
-		LOG.debug("Layout completed in "
-				+ (System.currentTimeMillis() - startTime));
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Layout completed in "
+					+ (System.currentTimeMillis() - startTime));
+		}
 	}
 
 	protected void setLayoutData() {
-		initWorstCaseLabels();
+		int width = board.getSize().x;
+		int height = board.getSize().y;
 
-		int width = board.getBoardPanel().getSize().x;
-		int height = board.getBoardPanel().getSize().y;
+		hasHeightProblem = false;
+		hasSevereHeightProblem = false;
 
-		Point gameDescriptionSize = board.getGameDescriptionLabel()
-				.computeSize((width / 2) - TOP_BAR_MARGIN[WEST], SWT.DEFAULT,
-						true);
-		Point currentPremovesSize = board.getCurrentPremovesLabel()
-				.computeSize((width / 2) - TOP_BAR_MARGIN[EAST], SWT.DEFAULT,
-						true);
-
-		topBarHeight = Math.max(gameDescriptionSize.y, currentPremovesSize.y)
-				+ TOP_BAR_MARGIN[NORTH] + TOP_BAR_MARGIN[SOUTH];
-
-		Point statusLabelSize = board.getStatusLabel().computeSize(
-				(width / 2) - BOTTOM_BAR_MARGIN[WEST], SWT.DEFAULT, true);
-		Point openingDescriptionSize = board.getOpeningDescriptionLabel()
-				.computeSize((width / 2) - BOTTOM_BAR_MARGIN[EAST],
-						SWT.DEFAULT, true);
-
-		bottomBarHeight = Math.max(statusLabelSize.y, openingDescriptionSize.y)
-				+ BOTTOM_BAR_MARGIN[NORTH] + BOTTOM_BAR_MARGIN[SOUTH];
-
-		boardSquareSize = (height - topBarHeight - bottomBarHeight
-				- BOARD_MARGIN[NORTH] - BOARD_MARGIN[SOUTH]) / 8;
-		boardHeight = boardSquareSize * 8;
-
-		gameDescriptionLabelRect = new Rectangle(TOP_BAR_MARGIN[WEST],
-				TOP_BAR_MARGIN[NORTH], gameDescriptionSize.x,
-				gameDescriptionSize.y);
-		currentPremovesLabelRect = new Rectangle(
-				gameDescriptionLabelRect.width, +TOP_BAR_MARGIN[NORTH],
-				currentPremovesSize.x, currentPremovesSize.y);
-
-		int boardPlusTopBarHeight = topBarHeight + boardHeight
-				+ BOTTOM_BAR_MARGIN[NORTH] + BOARD_MARGIN[NORTH]
-				+ BOARD_MARGIN[SOUTH];
-
-		statusLabelRect = new Rectangle(BOTTOM_BAR_MARGIN[WEST],
-				boardPlusTopBarHeight, statusLabelSize.x, statusLabelSize.y);
-		openingDescriptionLabelRect = new Rectangle(statusLabelRect.width,
-				boardPlusTopBarHeight, openingDescriptionSize.x,
-				openingDescriptionSize.y);
-
-		boardTopLeft = new Point(BOARD_MARGIN[WEST], topBarHeight
-				+ BOARD_MARGIN[NORTH]);
-
-		Point toMoveIndicatorSize = board.getWhiteToMoveIndicatorLabel()
-				.computeSize(SWT.DEFAULT, SWT.DEFAULT);
-
-		int nameLabelStartX = BOARD_MARGIN[WEST] + boardHeight
-				+ NAME_LABEL_MARGIN[WEST];
-		Point whiteNameLabelSize = board.getWhiteNameRatingLabel().computeSize(
-				width - nameLabelStartX - NAME_LABEL_MARGIN[EAST], SWT.DEFAULT,
-				true);
-		Point blackNameLabelSize = board.getBlackNameRatingLabel().computeSize(
-				width - nameLabelStartX - NAME_LABEL_MARGIN[EAST], SWT.DEFAULT,
-				true);
-
-		int clockStartX = BOARD_MARGIN[WEST] + boardHeight + CLOCK_MARGIN[WEST];
-		Point whiteClockLabelSize = board.getWhiteClockLabel().computeSize(
-				width - clockStartX - CLOCK_MARGIN[EAST], SWT.DEFAULT, true);
-
-		Point worseCaseClockSize = worstCaseClockSizeLabel.computeSize(
-				SWT.DEFAULT, whiteClockLabelSize.y, false);
-
-		int clockBarWidth = whiteClockLabelSize.x - worseCaseClockSize.x;
-
-		Point lagRectSize = board.getWhiteLagLabel().computeSize(clockBarWidth,
-				SWT.DEFAULT, true);
-
-		int nameStartY = boardTopLeft.y;
-
-		@SuppressWarnings("unused")
-		int clockWidth = worseCaseClockSize.x;
-		if (board.isWhiteOnTop()) {
-			whiteToMoveIndicatorRect = new Rectangle(nameLabelStartX,
-					boardTopLeft.y, toMoveIndicatorSize.x,
-					toMoveIndicatorSize.y);
-			whiteNameLabelRect = new Rectangle(whiteToMoveIndicatorRect.x + 2
-					+ whiteToMoveIndicatorRect.width, nameStartY,
-					whiteNameLabelSize.x, whiteNameLabelSize.y);
-
-			blackToMoveIndicatorRect = new Rectangle(nameLabelStartX,
-					boardTopLeft.y + boardHeight / 2, toMoveIndicatorSize.x,
-					toMoveIndicatorSize.y);
-			blackNameLabelRect = new Rectangle(blackToMoveIndicatorRect.x + 2
-					+ whiteToMoveIndicatorRect.width, nameStartY + boardHeight
-					/ 2, blackNameLabelSize.x, blackNameLabelSize.y);
-
-			whiteLagRect = new Rectangle(whiteNameLabelRect.x,
-					whiteNameLabelRect.y + whiteNameLabelRect.height,
-					whiteNameLabelRect.width, lagRectSize.y);
-
-			blackLagRect = new Rectangle(whiteNameLabelRect.x, whiteLagRect.y
-					+ boardHeight / 2, blackNameLabelRect.width, lagRectSize.y);
-
-		} else {
-			blackToMoveIndicatorRect = new Rectangle(nameLabelStartX,
-					boardTopLeft.y, toMoveIndicatorSize.x,
-					toMoveIndicatorSize.y);
-			blackNameLabelRect = new Rectangle(blackToMoveIndicatorRect.x + 2
-					+ blackToMoveIndicatorRect.width, nameStartY,
-					blackNameLabelSize.x, blackNameLabelSize.y);
-
-			whiteToMoveIndicatorRect = new Rectangle(nameLabelStartX,
-					boardTopLeft.y + boardHeight / 2, toMoveIndicatorSize.x,
-					toMoveIndicatorSize.y);
-			whiteNameLabelRect = new Rectangle(whiteToMoveIndicatorRect.x + 2
-					+ whiteToMoveIndicatorRect.width, nameStartY + boardHeight
-					/ 2, whiteNameLabelSize.x, whiteNameLabelSize.y);
-
-			blackLagRect = new Rectangle(blackNameLabelRect.x,
-					blackNameLabelRect.y + blackNameLabelRect.height,
-					blackNameLabelRect.width, lagRectSize.y);
-			whiteLagRect = new Rectangle(whiteNameLabelRect.x,
-					whiteNameLabelRect.y + whiteNameLabelRect.height,
-					whiteNameLabelRect.width, lagRectSize.y);
-
+		if (width < height) {
+			height = width;
+			hasHeightProblem = true;
 		}
 
-		whiteClockRect = new Rectangle(whiteToMoveIndicatorRect.x,
-				whiteLagRect.y + whiteLagRect.height, worseCaseClockSize.x,
-				whiteClockLabelSize.y);
-		blackClockRect = new Rectangle(blackToMoveIndicatorRect.x,
-				blackLagRect.y + blackLagRect.height, worseCaseClockSize.x,
-				whiteClockLabelSize.y);
+		int topLabelNorthMargin = height
+				* TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES[NORTH] / 100;
+		topLabelHeight = height * TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN / 100;
+		int topLabelSouthMargin = height
+				* TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES[SOUTH] / 100;
 
-		int controlHeight = whiteNameLabelRect.height + whiteLagRect.height;// +
-		// whiteClockRect.height;
+		int bottomLabelNorthMargin = height
+				* BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES[NORTH] / 100;
+		bottomLabelHeight = height * BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN
+				/ 100;
+		int bottomLabelSouthMargin = height
+				* BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES[SOUTH] / 100;
 
-		if (controlHeight > whiteToMoveIndicatorRect.height) {
-			whiteToMoveIndicatorRect.y = whiteNameLabelRect.y
-					+ (controlHeight - whiteToMoveIndicatorRect.height) / 2;
-			blackToMoveIndicatorRect.y = blackNameLabelRect.y
-					+ (controlHeight - blackToMoveIndicatorRect.height) / 2;
+		int boardWidthPixelsWest = width * BOARD_WIDTH_MARGIN_PERCENTAGES[WEST]
+				/ 100;
+		int boardWidthPixelsEast = width * BOARD_WIDTH_MARGIN_PERCENTAGES[EAST]
+				/ 100;
+
+		squareSize = (height - bottomLabelSouthMargin - bottomLabelHeight
+				- bottomLabelNorthMargin - topLabelSouthMargin - topLabelHeight - topLabelNorthMargin) / 8;
+
+		while (width < (squareSize * 11 + boardWidthPixelsWest + boardWidthPixelsEast)) {
+			squareSize -= 2;
+			hasSevereHeightProblem = true;
 		}
 
-		int pieceJailStartX = whiteToMoveIndicatorRect.x;
-		@SuppressWarnings("unused")
-		int pieceJailStartY = whiteToMoveIndicatorRect.y
-				+ whiteToMoveIndicatorRect.height;
-		pieceJailRects = new Rectangle[board.getPieceJailSquares().length];
-		if (board.isWhitePieceJailOnTop()) {
-			pieceJailRects[WP] = new Rectangle(pieceJailStartX, boardTopLeft.y
-					+ boardSquareSize * 3, boardSquareSize, boardSquareSize);
-			pieceJailRects[WN] = new Rectangle(pieceJailStartX
-					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WB] = new Rectangle(pieceJailStartX + 2
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WQ] = new Rectangle(pieceJailStartX + 3
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WR] = new Rectangle(pieceJailStartX + 4
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WK] = new Rectangle(pieceJailStartX + 5
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
+		pieceJailSquareSize = squareSize;
 
-			pieceJailRects[BP] = new Rectangle(pieceJailStartX, boardTopLeft.y
-					+ boardSquareSize * 7, boardSquareSize, boardSquareSize);
-			pieceJailRects[BN] = new Rectangle(pieceJailStartX
-					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BB] = new Rectangle(pieceJailStartX + 2
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BQ] = new Rectangle(pieceJailStartX + 3
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BR] = new Rectangle(pieceJailStartX + 4
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BK] = new Rectangle(pieceJailStartX + 5
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-		} else {
-			pieceJailRects[BP] = new Rectangle(pieceJailStartX, boardTopLeft.y
-					+ boardSquareSize * 3, boardSquareSize, boardSquareSize);
-			pieceJailRects[BN] = new Rectangle(pieceJailStartX
-					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BB] = new Rectangle(pieceJailStartX + 2
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BQ] = new Rectangle(pieceJailStartX + 3
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BR] = new Rectangle(pieceJailStartX + 4
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[BK] = new Rectangle(pieceJailStartX + 5
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 3,
-					boardSquareSize, boardSquareSize);
+		boardHeight = squareSize * 8;
 
-			pieceJailRects[WP] = new Rectangle(pieceJailStartX, boardTopLeft.y
-					+ boardSquareSize * 7, boardSquareSize, boardSquareSize);
-			pieceJailRects[WN] = new Rectangle(pieceJailStartX
-					+ boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WB] = new Rectangle(pieceJailStartX + 2
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WQ] = new Rectangle(pieceJailStartX + 3
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WR] = new Rectangle(pieceJailStartX + 4
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-			pieceJailRects[WK] = new Rectangle(pieceJailStartX + 5
-					* boardSquareSize, boardTopLeft.y + boardSquareSize * 7,
-					boardSquareSize, boardSquareSize);
-		}
+		int topLabelPixelsWest = width
+				* TOP_LABEL_WIDTH_MARGIN_PERCENTAGES[WEST] / 100;
+		int topLabelPixesEast = width
+				* TOP_LABEL_WIDTH_MARGIN_PERCENTAGES[EAST] / 100;
+		int bottonLabelPixelsWest = width
+				* BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES[WEST] / 100;
+		int bottomLabelPixelsEast = width
+				* BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES[EAST] / 100;
+
+		int gameDescriptionWidth = width / 2 - topLabelPixelsWest;
+		int currentPremovesWidth = width / 2 - topLabelPixesEast;
+		int gameStatusWidth = width / 2 - bottonLabelPixelsWest;
+		int openingDescriptionWidth = width / 2 - bottomLabelPixelsEast;
+
+		int topHeight = topLabelNorthMargin + topLabelHeight
+				+ topLabelSouthMargin;
+
+		gameDescriptionLabelRect = new Rectangle(topLabelPixelsWest,
+				topLabelNorthMargin, gameDescriptionWidth, topLabelHeight);
+		currentPremovesLabelRect = new Rectangle(topLabelPixelsWest
+				+ gameDescriptionLabelRect.width, topLabelNorthMargin,
+				currentPremovesWidth, topLabelHeight);
+
+		statusLabelRect = new Rectangle(bottonLabelPixelsWest, topHeight + 8
+				* squareSize + bottomLabelNorthMargin, gameStatusWidth,
+				bottomLabelHeight);
+		openingDescriptionLabelRect = new Rectangle(bottonLabelPixelsWest
+				+ statusLabelRect.width, topHeight + 8 * squareSize
+				+ bottomLabelNorthMargin, openingDescriptionWidth,
+				bottomLabelHeight);
+
+		boardTopLeft = new Point(boardWidthPixelsWest, topHeight);
+
+		int toMoveIndicatorX = boardWidthPixelsWest + boardHeight
+				+ boardWidthPixelsEast;
+		int toMoveIndicatorSide = TO_MOVE_INDICATOR_PERCENTAGE_OF_BOARD_SQUARE / 100;
+
+		int nameLabelStartX = boardWidthPixelsWest + boardHeight
+				+ boardWidthPixelsEast + toMoveIndicatorSide;
+
+		Point nameLabelSize = new Point(width - nameLabelStartX, squareSize
+				* NAME_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE / 100);
+
+		int clockStartX = boardWidthPixelsWest + boardHeight
+				+ boardWidthPixelsEast;
+
+		Point clockLabelSize = new Point(width - clockStartX, squareSize
+				* CLOCK_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE / 100);
+
+		Point lagLabelSize = new Point(width - nameLabelStartX, squareSize
+				* LAG_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE / 100);
+
+		int nameStartY = topHeight;
+		int bottomHeightStart = nameStartY + 4 * squareSize;
+
+		topToMoveIndicatorRect = new Rectangle(toMoveIndicatorX, nameStartY,
+				toMoveIndicatorSide, toMoveIndicatorSide);
+		topNameLabelRect = new Rectangle(nameLabelStartX, nameStartY,
+				nameLabelSize.x, nameLabelSize.y);
+		topLagRect = new Rectangle(nameLabelStartX, nameStartY
+				+ topNameLabelRect.height, lagLabelSize.x, lagLabelSize.y);
+		topClockRect = new Rectangle(clockStartX, nameStartY + squareSize,
+				clockLabelSize.x, clockLabelSize.y);
+
+		bottomToMoveIndicatorRect = new Rectangle(toMoveIndicatorX,
+				bottomHeightStart, toMoveIndicatorSide, toMoveIndicatorSide);
+		bottomNameLabelRect = new Rectangle(nameLabelStartX, bottomHeightStart,
+				nameLabelSize.x, nameLabelSize.y);
+		bottomLagRect = new Rectangle(nameLabelStartX, bottomHeightStart
+				+ bottomNameLabelRect.height, lagLabelSize.x, lagLabelSize.y);
+		bottomClockRect = new Rectangle(clockStartX, bottomHeightStart
+				+ squareSize, clockLabelSize.x, clockLabelSize.y);
+
+		topPieceJailRow1Point = new Point(clockStartX, topHeight + 2
+				* squareSize);
+		topPieceJailRow2Point = new Point(clockStartX, topHeight + 3
+				* squareSize);
+		bottomPieceJailRow1Point = new Point(clockStartX, topHeight + 6
+				* squareSize);
+		bottomPieceJailRow2Point = new Point(clockStartX, topHeight + 7
+				* squareSize);
 	}
 }

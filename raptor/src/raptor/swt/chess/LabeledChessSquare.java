@@ -6,7 +6,11 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
+import raptor.swt.SWTUtils;
+
 public class LabeledChessSquare extends ChessSquare {
+	public static final int LABEL_HEIGHT_PERCENTAGE = 30;
+
 	String text = "";
 	PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent arg0) {
@@ -14,9 +18,9 @@ public class LabeledChessSquare extends ChessSquare {
 				Point size = getSize();
 				arg0.gc.setForeground(getPreferences().getColor(
 						BOARD_PIECE_JAIL_LABEL_COLOR));
-				arg0.gc
-						.setFont(getPreferences()
-								.getFont(BOARD_PIECE_JAIL_FONT));
+				arg0.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
+						.getFont(BOARD_PIECE_JAIL_FONT),
+						LABEL_HEIGHT_PERCENTAGE, size.y));
 
 				int width = arg0.gc.getFontMetrics().getAverageCharWidth()
 						* text.length() + 2;
@@ -27,7 +31,7 @@ public class LabeledChessSquare extends ChessSquare {
 	};
 
 	public LabeledChessSquare(Composite composite, ChessBoard board, int id) {
-		super(composite, board, id, true);
+		super(board, id, true);
 		ignoreBackgroundImage = true;
 		addPaintListener(paintListener);
 
