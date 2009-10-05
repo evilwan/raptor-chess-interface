@@ -11,16 +11,18 @@ import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import raptor.Raptor;
+import raptor.game.GameConstants;
 import raptor.game.util.GameUtils;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.swt.SWTUtils;
 
-public class ChessSquare extends Composite implements BoardConstants {
+public class ChessSquare extends Canvas implements BoardConstants {
 
 	public static final String CLICK_INITIATOR = "CLICK_INITIATOR";
 	public static final String DRAG_INITIATOR = "DRAG_INITIATOR";
@@ -38,7 +40,7 @@ public class ChessSquare extends Composite implements BoardConstants {
 		}
 
 		public void controlResized(ControlEvent e) {
-			forceLayout();
+			clearCache();
 		}
 	};
 
@@ -189,6 +191,30 @@ public class ChessSquare extends Composite implements BoardConstants {
 				int pieceImageY = (size.y - imageSide) / 2;
 				e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
 			}
+
+			String fileLabel = getFileLabel();
+			if (fileLabel != null) {
+				e.gc.setForeground(getPreferences().getColor(
+						BOARD_COORDINATES_COLOR));
+				e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
+						.getFont(BOARD_COORDINATES_FONT), 15, size.y));
+
+				int fontHeight = e.gc.getFontMetrics().getAscent()
+						+ e.gc.getFontMetrics().getDescent() + 2;
+
+				e.gc.drawString(fileLabel, 2, size.y - fontHeight, true);
+			}
+
+			String rankLabel = getRankLabel();
+			if (rankLabel != null) {
+				e.gc.setForeground(getPreferences().getColor(
+						BOARD_COORDINATES_COLOR));
+				e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
+						.getFont(BOARD_COORDINATES_FONT), 15, size.y));
+
+				e.gc.drawString(rankLabel, 2, 2, true);
+			}
+
 		}
 	};
 
@@ -196,12 +222,7 @@ public class ChessSquare extends Composite implements BoardConstants {
 	Image pieceImage;
 
 	public ChessSquare(ChessBoard chessBoard, int id, boolean isLight) {
-		this(chessBoard, chessBoard, id, isLight);
-	}
-
-	public ChessSquare(Composite parent, ChessBoard chessBoard, int id,
-			boolean isLight) {
-		super(parent, SWT.DOUBLE_BUFFERED);
+		super(chessBoard, SWT.DOUBLE_BUFFERED);
 		this.board = chessBoard;
 		this.id = id;
 		this.isLight = isLight;
@@ -212,8 +233,25 @@ public class ChessSquare extends Composite implements BoardConstants {
 		addListener(SWT.MouseUp, dndListener);
 	}
 
-	public void forceLayout() {
+	public void clearCache() {
 		pieceImage = null;
+	}
+
+	protected String getFileLabel() {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				BOARD_IS_SHOW_COORDINATES)
+				&& !BoardUtils.isPieceJailSquare(id)) {
+			if (board.isWhiteOnTop) {
+				if ((GameUtils.getBitboard(id) & GameConstants.RANK8) != 0) {
+					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
+				}
+			} else {
+				if ((GameUtils.getBitboard(id) & GameConstants.RANK1) != 0) {
+					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
+				}
+			}
+		}
+		return null;
 	}
 
 	protected int getHighlightBorderWidth() {
@@ -242,6 +280,23 @@ public class ChessSquare extends Composite implements BoardConstants {
 
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
+	}
+
+	protected String getRankLabel() {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				BOARD_IS_SHOW_COORDINATES)
+				&& !BoardUtils.isPieceJailSquare(id)) {
+			if (board.isWhiteOnTop) {
+				if ((GameUtils.getBitboard(id) & GameConstants.HFILE) != 0) {
+					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
+				}
+			} else {
+				if ((GameUtils.getBitboard(id) & GameConstants.AFILE) != 0) {
+					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
+				}
+			}
+		}
+		return null;
 	}
 
 	/**

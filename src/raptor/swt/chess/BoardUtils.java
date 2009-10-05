@@ -643,6 +643,45 @@ public class BoardUtils implements BoardConstants {
 	}
 
 	/**
+	 * Returns a to move indicator indicating the side to move with the
+	 * specified width/height this image will always be a square.
+	 */
+	public static Image getToMoveIndicatorImage(boolean isSideToMove, int width) {
+		System.err.println("getToMoveIndicatorImage(" + isSideToMove + ","
+				+ width + ")");
+		if (width < 5) {
+			width = 5;
+		}
+
+		String key = "toMoveIndicator_" + isSideToMove + "_" + width;
+		Image result = Raptor.getInstance().getImageRegistry().get(key);
+		if (result == null) {
+			Image mold = getToMoveIndicatorImageMold(isSideToMove);
+			result = new Image(mold.getDevice(), mold.getImageData().scaledTo(
+					width, width));
+			Raptor.getInstance().getImageRegistry().put(key, result);
+		}
+		return result;
+	}
+
+	/**
+	 * Returns a to move indicator indicating the side to move with the
+	 * specified width/height this image will always be a square.
+	 */
+	public static Image getToMoveIndicatorImageMold(boolean isSideToMove) {
+		String key = "toMoveIndicator_" + isSideToMove;
+
+		Image result = Raptor.getInstance().getImageRegistry().get(key);
+		if (result == null) {
+			result = new Image(Raptor.getInstance().getRaptorWindow()
+					.getShell().getDisplay(), Raptor.IMAGES_DIR + "circle_"
+					+ (isSideToMove ? "green" : "gray") + "30x30.png");
+			Raptor.getInstance().getImageRegistry().put(key, result);
+		}
+		return result;
+	}
+
+	/**
 	 * Returns the path to the specified chess piece in the users image cache.
 	 */
 	public static String getUserImageCachePieceName(String chessSetName,

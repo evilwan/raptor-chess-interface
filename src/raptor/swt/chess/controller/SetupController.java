@@ -378,7 +378,7 @@ public class SetupController extends ChessBoardController {
 			// adjustNavButtonEnabledState();
 			adjustClockColors();
 
-			board.forceUpdate();
+			board.layout();
 			onPlayMoveSound();
 			board.unhighlightAllSquares();
 			LOG.info("examinePositionUpdate in " + getGame().getId() + "  "

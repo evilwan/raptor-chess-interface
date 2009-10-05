@@ -1,20 +1,20 @@
 package raptor.swt.chess;
 
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 
 class ClockLabelUpdater implements Runnable, PreferenceKeys {
-	Label clockLabel;
+	CLabel clockLabel;
 	long remainingTimeMillis;
 	boolean isRunning;
 	long lastSystemTime = 0;
 	ChessBoard board;
 
-	public ClockLabelUpdater(Label clockLabel, ChessBoard board) {
+	public ClockLabelUpdater(CLabel clockLabel, ChessBoard board) {
 		this.clockLabel = clockLabel;
 		this.board = board;
 	}

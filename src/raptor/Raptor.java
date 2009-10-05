@@ -166,6 +166,10 @@ public class Raptor implements PreferenceKeys {
 		return cursorRegistry;
 	}
 
+	public Display getDisplay() {
+		return display;
+	}
+
 	/**
 	 * Returns the font registry. All fonts should be placed in this registry so
 	 * they can be properly managed.
