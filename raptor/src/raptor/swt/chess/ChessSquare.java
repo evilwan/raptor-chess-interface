@@ -9,9 +9,11 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -23,14 +25,24 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.SWTUtils;
 
+/**
+ * A class representing a chess square on a chess board. This class can also be
+ * used to represent a piece jail or drop square.
+ */
 public class ChessSquare extends Canvas implements BoardConstants {
-
+	static final Log LOG = LogFactory.getLog(ChessSquare.class);
 	public static final String CLICK_INITIATOR = "CLICK_INITIATOR";
 	public static final String DRAG_INITIATOR = "DRAG_INITIATOR";
 	public static final String LAST_DROP_TIME = "LAST_DROP_TIME";
 	public static final String DROP_HANDLED = "DROP_HANNDLED";
 
 	protected ChessBoard board;
+	protected boolean ignoreBackgroundImage = false;
+	protected int id;
+	protected boolean isHighlighted;
+	protected boolean isLight;
+	protected int piece;
+	protected Image pieceImage;
 
 	/**
 	 * Forces a layout when the size of the square changes.
@@ -95,16 +107,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			}
 		}
 	};
-
-	protected boolean ignoreBackgroundImage = false;
-
-	protected int id;
-
-	protected boolean isHighlighted;
-
-	protected boolean isLight;
-	protected boolean isSelected = false;
-	static final Log LOG = LogFactory.getLog(ChessSquare.class);
 	MouseListener mouseListener = new MouseListener() {
 		public void mouseDoubleClick(MouseEvent e) {
 		}
@@ -164,15 +166,18 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		public void paintControl(PaintEvent e) {
 			Point size = getSize();
 			if (!ignoreBackgroundImage) {
-				Image backgroundImage = BoardUtils.getSquareBackgroundImage(
-						isLight, size.x, size.y);
-				e.gc.drawImage(backgroundImage, 0, 0);
+				Image backgroundImage = getBackgrondImage(isLight, size.x,
+						size.y);
+				if (backgroundImage != null) {
+					e.gc.drawImage(backgroundImage, 0, 0);
+				}
 			} else {
 				e.gc.fillRectangle(0, 0, size.x, size.y);
 			}
 
 			int borderHighlightWidth = getHighlightBorderWidth();
 
+			e.gc.setForeground(getForeground());
 			if (isHighlighted) {
 				for (int i = 0; i < getHighlightBorderWidth(); i++) {
 					e.gc.drawRectangle(i, i, size.x - 1 - i * 2, size.x - 1 - i
@@ -183,8 +188,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			int imageSide = getImageSize(borderHighlightWidth);
 
 			if (pieceImage == null && piece != EMPTY) {
-				pieceImage = BoardUtils.getChessPieceImage(piece, imageSide,
-						imageSide);
+				pieceImage = getChessPieceImage(piece, imageSide, imageSide);
 			}
 
 			if (pieceImage != null) {
@@ -221,9 +225,20 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		}
 	};
 
-	int piece;
-	Image pieceImage;
-
+	/**
+	 * Creates a ChessSquare tied to the specified board.
+	 * 
+	 * @param id
+	 *            The square id. An integer representing the squares index in
+	 *            GameConstants (e.g.
+	 *            GameConstants.SQUARE_A1,GameConstants.SQUARE_A2, etc).
+	 *            Drop/Piece Jail squares should use the constants
+	 *            (GameConstants
+	 *            .BP_DROP_FROM_SQUARE,GameConstants.BN_DROP_FROM_SQUARE,etc).
+	 * @param isLight
+	 *            True if this is a square with a light background, false if its
+	 *            a square with a dark background.
+	 */
 	public ChessSquare(ChessBoard chessBoard, int id, boolean isLight) {
 		super(chessBoard, SWT.DOUBLE_BUFFERED);
 		this.board = chessBoard;
@@ -234,12 +249,49 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		addMouseListener(mouseListener);
 		addListener(SWT.DragDetect, dndListener);
 		addListener(SWT.MouseUp, dndListener);
+
 	}
 
+	/**
+	 * Creates a ChessSquare not tied to a board. Useful in preferences. Use
+	 * with care, this does'nt add any listeners besides the PaointListener and
+	 * board will be null.
+	 */
+	public ChessSquare(Composite parent, int id, boolean isLight) {
+		super(parent, SWT.DOUBLE_BUFFERED);
+		this.id = id;
+		this.isLight = isLight;
+		addPaintListener(paintListener);
+	}
+
+	/**
+	 * Clears any cached images this square is maintaining. Useful when swapping
+	 * out chess sets or square backgrounds.
+	 */
 	public void clearCache() {
 		pieceImage = null;
 	}
 
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
+	protected Image getBackgrondImage(boolean isLight, int width, int height) {
+		return BoardUtils.getSquareBackgroundImage(isLight, width, height);
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
+	protected Image getChessPieceImage(int piece, int width, int height) {
+		return BoardUtils.getChessPieceImage(piece, width, height);
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
 	protected String getFileLabel() {
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				BOARD_IS_SHOW_COORDINATES)
@@ -257,15 +309,37 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		return null;
 	}
 
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
 	protected int getHighlightBorderWidth() {
 		return (int) (getSize().x * getPreferences().getDouble(
 				BOARD_HIGHLIGHT_BORDER_WIDTH));
 	}
 
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
+	protected Color getHighlightColor() {
+		return getForeground();
+	}
+
+	/**
+	 * An integer representing the squares index in GameConstants (e.g.
+	 * GameConstants.SQUARE_A1,GameConstants.SQUARE_A2, etc). Drop/Piece Jail
+	 * squares should use the constants (GameConstants
+	 * .BP_DROP_FROM_SQUARE,GameConstants.BN_DROP_FROM_SQUARE,etc).
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
 	protected int getImageSize(int borderWidth) {
 		double imageSquareSideAdjustment = getPreferences().getDouble(
 				BOARD_PIECE_SIZE_ADJUSTMENT);
@@ -277,10 +351,19 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		return imageSide;
 	}
 
+	/**
+	 * An integer representing the colored piece type in GameConstants. (e.g.
+	 * GameConstants.WP,GameConstants.WN,GameConstants.WQ,GameConstants.EMPTY,
+	 * etc).
+	 */
 	public int getPiece() {
 		return piece;
 	}
 
+	/**
+	 * Provided so it can easily be overridden.By default returns the preference
+	 * store in Raptor.getInstance.
+	 */
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
 	}
@@ -324,6 +407,9 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		return result;
 	}
 
+	/**
+	 * Highlights this square.
+	 */
 	public void highlight() {
 		if (!isHighlighted) {
 			isHighlighted = true;
@@ -331,23 +417,47 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		}
 	}
 
+	/**
+	 * Returns true if this square has a light background, false otherwise.
+	 * 
+	 * @return
+	 */
 	public boolean isLight() {
 		return isHighlighted;
 	}
 
+	/**
+	 * Sets the vaue of this squares background. True if light, false if dark.
+	 * 
+	 * @param isLight
+	 */
 	public void setLight(boolean isLight) {
 		this.isHighlighted = isLight;
 	}
 
+	/**
+	 * Sets the colored chess piece.
+	 * 
+	 * @param piece
+	 *            An integer representing the colored piece type in
+	 *            GameConstants. (e.g.
+	 *            GameConstants.WP,GameConstants.WN,GameConstants
+	 *            .WQ,GameConstants.EMPTY, etc).
+	 */
 	public void setPiece(int piece) {
 		if (this.piece != piece) {
-			LOG.debug("Setting piece in square " + id + " " + piece);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Setting piece in square " + id + " " + piece);
+			}
 			this.piece = piece;
 			pieceImage = null;
 			redraw();
 		}
 	}
 
+	/**
+	 * Unhighlights this square.
+	 */
 	public void unhighlight() {
 		if (isHighlighted) {
 			isHighlighted = false;

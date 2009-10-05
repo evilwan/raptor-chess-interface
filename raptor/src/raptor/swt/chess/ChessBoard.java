@@ -274,30 +274,30 @@ public class ChessBoard extends Composite implements BoardConstants {
 	}
 
 	void initPieceJail() {
-		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(this,
 				GameConstants.WP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(this,
 				GameConstants.WN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(this,
 				GameConstants.WB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(this,
 				GameConstants.WR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(this,
 				GameConstants.WQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(this,
 				GameConstants.WK_DROP_FROM_SQUARE);
 
-		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(this,
 				GameConstants.BP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(this,
 				GameConstants.BN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(this,
 				GameConstants.BB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(this,
 				GameConstants.BR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(this,
 				GameConstants.BQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(this, this,
+		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(this,
 				GameConstants.BK_DROP_FROM_SQUARE);
 	}
 

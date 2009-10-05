@@ -4,15 +4,18 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.widgets.Composite;
 
 import raptor.swt.SWTUtils;
 
+/**
+ * A labeled chess square. Contains a label in the top right. Currently used for
+ * piece jails and drop squares to show the number of pieces.
+ */
 public class LabeledChessSquare extends ChessSquare {
 	public static final int LABEL_HEIGHT_PERCENTAGE = 30;
 
-	String text = "";
-	PaintListener paintListener = new PaintListener() {
+	protected String text = "";
+	protected PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent arg0) {
 			if (StringUtils.isNotBlank(getText())) {
 				Point size = getSize();
@@ -30,17 +33,24 @@ public class LabeledChessSquare extends ChessSquare {
 		}
 	};
 
-	public LabeledChessSquare(Composite composite, ChessBoard board, int id) {
+	public LabeledChessSquare(ChessBoard board, int id) {
 		super(board, id, true);
 		ignoreBackgroundImage = true;
 		addPaintListener(paintListener);
-
 	}
 
+	/**
+	 * Returns the current label.
+	 */
 	public String getText() {
 		return text;
 	}
 
+	/**
+	 * Sets the label.
+	 * 
+	 * @param text
+	 */
 	public void setText(String text) {
 		this.text = text;
 	}

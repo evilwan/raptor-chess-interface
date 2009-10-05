@@ -7,6 +7,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_SQUARE_BACKGROUND_NAME = "board-square-background-name";
 	public static final String BOARD_IS_SHOW_COORDINATES = "board-show-coordinates";
 	public static final String BOARD_PIECE_SIZE_ADJUSTMENT = "board-piece-size-adjustment-percentage";
+	public static final String BOARD_LAYOUT = "board-layout";
 	public static final String BOARD_HIGHLIGHT_BORDER_WIDTH = "board-highlight-width-percentage";
 	public static final String BOARD_IS_SHOWING_PIECE_JAIL = "board-is-showing-piece-jail";
 	public static final String BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN = "board-clock-show-millis-when-less-than";

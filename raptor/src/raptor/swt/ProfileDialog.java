@@ -6,6 +6,7 @@ import java.lang.management.ThreadMXBean;
 import java.math.BigDecimal;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
@@ -123,64 +124,71 @@ public class ProfileDialog extends Dialog {
 
 		Display.getCurrent().timerExec(2000, new Runnable() {
 			public void run() {
-				if (!Display.getCurrent().isDisposed()) {
-					MemoryUsage curHeap = ManagementFactory.getMemoryMXBean()
-							.getHeapMemoryUsage();
-					MemoryUsage curStack = ManagementFactory.getMemoryMXBean()
-							.getNonHeapMemoryUsage();
-					ThreadMXBean curThreads = ManagementFactory
-							.getThreadMXBean();
+				try {
+					if (!Display.getCurrent().isDisposed()) {
+						MemoryUsage curHeap = ManagementFactory
+								.getMemoryMXBean().getHeapMemoryUsage();
+						MemoryUsage curStack = ManagementFactory
+								.getMemoryMXBean().getNonHeapMemoryUsage();
+						ThreadMXBean curThreads = ManagementFactory
+								.getThreadMXBean();
 
-					heap1.setText("   Initial: " + getMegs(curHeap.getInit()));
-					heap2.setText("   Used: " + getMegs(curHeap.getUsed()));
-					heap3.setText("   Committed: " + getMegs(curHeap.getMax()));
-					heap4.setText("   Max: " + getMegs(curHeap.getMax()));
-					stack1
-							.setText("   Initial: "
-									+ getMegs(curStack.getInit()));
-					stack2.setText("   Used: " + getMegs(curStack.getUsed()));
-					stack3.setText("   Committed: "
-							+ getMegs(curStack.getMax()));
-					stack4.setText("   Max: " + getMegs(curStack.getMax()));
+						heap1.setText("   Initial: "
+								+ getMegs(curHeap.getInit()));
+						heap2.setText("   Used: " + getMegs(curHeap.getUsed()));
+						heap3.setText("   Committed: "
+								+ getMegs(curHeap.getMax()));
+						heap4.setText("   Max: " + getMegs(curHeap.getMax()));
+						stack1.setText("   Initial: "
+								+ getMegs(curStack.getInit()));
+						stack2.setText("   Used: "
+								+ getMegs(curStack.getUsed()));
+						stack3.setText("   Committed: "
+								+ getMegs(curStack.getMax()));
+						stack4.setText("   Max: " + getMegs(curStack.getMax()));
 
-					threads1.setText("   Threads: "
-							+ curThreads.getThreadCount());
-					threads2.setText("   Peak Threads: "
-							+ curThreads.getPeakThreadCount());
-					threads3.setText("   Total Started Threads: "
-							+ curThreads.getTotalStartedThreadCount());
+						threads1.setText("   Threads: "
+								+ curThreads.getThreadCount());
+						threads2.setText("   Peak Threads: "
+								+ curThreads.getPeakThreadCount());
+						threads3.setText("   Total Started Threads: "
+								+ curThreads.getTotalStartedThreadCount());
 
-					threads4.setText("   Size/Core/Largest/Max: "
-							+ ThreadService.getInstance().getExecutor()
-									.getPoolSize()
-							+ "/"
-							+ ThreadService.getInstance().getExecutor()
-									.getCorePoolSize()
-							+ "/"
-							+ ThreadService.getInstance().getExecutor()
-									.getLargestPoolSize()
-							+ "/"
-							+ ThreadService.getInstance().getExecutor()
-									.getMaximumPoolSize());
-					threads5.setText("   Task Scheduled/Completed: "
-							+ ThreadService.getInstance().getExecutor()
-									.getTaskCount()
-							+ "/"
-							+ ThreadService.getInstance().getExecutor()
-									.getCompletedTaskCount());
-					image1.setText("Cached Images/Fonts/Colors/Cursors: "
-							+ Raptor.getInstance().getImageRegistry().getSize()
-							+ "/"
-							+ Raptor.getInstance().getFontRegistry()
-									.getKeySet().size()
-							+ "/"
-							+ Raptor.getInstance().getColorRegistry()
-									.getKeySet().size()
-							+ "/"
-							+ Raptor.getInstance().getCursorRegistry()
-									.getSize());
+						threads4.setText("   Size/Core/Largest/Max: "
+								+ ThreadService.getInstance().getExecutor()
+										.getPoolSize()
+								+ "/"
+								+ ThreadService.getInstance().getExecutor()
+										.getCorePoolSize()
+								+ "/"
+								+ ThreadService.getInstance().getExecutor()
+										.getLargestPoolSize()
+								+ "/"
+								+ ThreadService.getInstance().getExecutor()
+										.getMaximumPoolSize());
+						threads5.setText("   Task Scheduled/Completed: "
+								+ ThreadService.getInstance().getExecutor()
+										.getTaskCount()
+								+ "/"
+								+ ThreadService.getInstance().getExecutor()
+										.getCompletedTaskCount());
+						image1.setText("Cached Images/Fonts/Colors/Cursors: "
+								+ Raptor.getInstance().getImageRegistry()
+										.getSize()
+								+ "/"
+								+ Raptor.getInstance().getFontRegistry()
+										.getKeySet().size()
+								+ "/"
+								+ Raptor.getInstance().getColorRegistry()
+										.getKeySet().size()
+								+ "/"
+								+ Raptor.getInstance().getCursorRegistry()
+										.getSize());
 
-					Display.getCurrent().timerExec(2000, this);
+						Display.getCurrent().timerExec(2000, this);
+					}
+				} catch (SWTException e) // eat it its prob a widget disposed.
+				{
 				}
 			}
 
