@@ -65,8 +65,8 @@
      inkscape:document-units="px"
      inkscape:window-width="1046"
      inkscape:window-height="840"
-     inkscape:window-x="33"
-     inkscape:window-y="75"
+     inkscape:window-x="66"
+     inkscape:window-y="337"
      showgrid="false" />
   <metadata
      id="metadata36225">
@@ -119,6 +119,6 @@
        sodipodi:rx="181.66667"
        sodipodi:ry="185"
        d="M 636.66667,605 A 181.66667,185 0 1 1 273.33333,605 A 181.66667,185 0 1 1 636.66667,605 z"
-       transform="matrix(0.1554411,0,0,0.1554411,-20.454201,-24.041998)" />
+       transform="matrix(0.1554411,0,0,0.1554411,-20.453704,-34.041998)" />
   </g>
 </svg>
