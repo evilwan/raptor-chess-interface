@@ -27,7 +27,7 @@ public class ChessBoardClocksPage extends FieldEditorPreferencePage {
 
 	public ChessBoardClocksPage() {
 		// Use the "flat" layout
-		super(FLAT);
+		super(GRID);
 		setTitle("Clock Preferences");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}

@@ -8,7 +8,7 @@ import raptor.Raptor;
 public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 	public ChessBoardColorsPage() {
 		// Use the "flat" layout
-		super(FLAT);
+		super(GRID);
 		setTitle("Colors");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}

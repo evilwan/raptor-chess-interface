@@ -19,7 +19,7 @@ public class RaptorWindowLayoutPage extends FieldEditorPreferencePage {
 			{ Quadrant.VIII.name(), Quadrant.VIII.name() } };
 
 	public RaptorWindowLayoutPage(String layoutName, String layoutPrefix) {
-		super(FLAT);
+		super(GRID);
 		setTitle("Layout " + layoutName);
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 		this.layoutPrefix = layoutPrefix;

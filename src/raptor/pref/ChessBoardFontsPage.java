@@ -7,7 +7,7 @@ import raptor.Raptor;
 
 public class ChessBoardFontsPage extends FieldEditorPreferencePage {
 	public ChessBoardFontsPage() {
-		super(FLAT);
+		super(GRID);
 		setTitle("Fonts");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}

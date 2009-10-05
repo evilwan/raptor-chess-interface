@@ -8,7 +8,7 @@ import raptor.Raptor;
 public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 	public ChessBoardBehaviorPage() {
 		// Use the "flat" layout
-		super(FLAT);
+		super(GRID);
 		setTitle("Behavior");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}

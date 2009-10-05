@@ -22,7 +22,7 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
 
 	public ChatConsolePage() {
-		super(FLAT);
+		super(GRID);
 		setTitle("Chat Consoles");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
