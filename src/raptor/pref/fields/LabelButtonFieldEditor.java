@@ -52,6 +52,7 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	/*
 	 * (non-) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void adjustForNumColumns(int numColumns) {
 		((GridData) label.getLayoutData()).horizontalSpan = numColumns - 1;
 	}
@@ -59,6 +60,7 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	/*
 	 * (non-) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		label = new Label(parent, SWT.NONE);
 		label.setText(labelText);
@@ -72,6 +74,7 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	 * (non-) Method declared on FieldEditor. Loads the value from the
 	 * preference store and sets it to the check box.
 	 */
+	@Override
 	protected void doLoad() {
 	}
 
@@ -79,6 +82,7 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	 * (non-) Method declared on FieldEditor. Loads the default value from the
 	 * preference store and sets it to the check box.
 	 */
+	@Override
 	protected void doLoadDefault() {
 
 	}
@@ -86,6 +90,7 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	/*
 	 * (non-) Method declared on FieldEditor.
 	 */
+	@Override
 	protected void doStore() {
 
 	}
@@ -93,13 +98,22 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	/*
 	 * (non-) Method declared on FieldEditor.
 	 */
+	@Override
 	public int getNumberOfControls() {
 		return 2;
 	}
 
 	/*
+	 * @see FieldEditor.setEnabled
+	 */
+	@Override
+	public void setEnabled(boolean enabled, Composite parent) {
+	}
+
+	/*
 	 * (non-) Method declared on FieldEditor.
 	 */
+	@Override
 	public void setFocus() {
 		if (button != null) {
 			button.setFocus();
@@ -109,6 +123,7 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	/*
 	 * (non-) Method declared on FieldEditor.
 	 */
+	@Override
 	public void setLabelText(String text) {
 		super.setLabelText(text);
 		label.setText(text);
@@ -125,12 +140,6 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	 *            the new value
 	 */
 	protected void valueChanged(boolean oldValue, boolean newValue) {
-	}
-
-	/*
-	 * @see FieldEditor.setEnabled
-	 */
-	public void setEnabled(boolean enabled, Composite parent) {
 	}
 
 }

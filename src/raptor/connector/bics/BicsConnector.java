@@ -378,7 +378,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 						BICS_LOGIN_SCRIPT);
 				if (StringUtils.isNotBlank(loginScript)) {
 					RaptorStringTokenizer tok = new RaptorStringTokenizer(
-							loginScript, "\n\r");
+							loginScript, "\n\r", true);
 					while (tok.hasMoreTokens()) {
 						try {
 							Thread.sleep(50L);
@@ -390,5 +390,4 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		});
 	}
-
 }

@@ -19,13 +19,13 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 			{ "5 Million Characters", "5000000" },
 			{ "10 Million Characters", "10000000" } };
 
+	LabelButtonFieldEditor labelButtonFieldEditor;
+
 	public ChatConsolePage() {
 		super(FLAT);
 		setTitle("Chat Consoles");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
-
-	LabelButtonFieldEditor labelButtonFieldEditor;
 
 	@Override
 	protected void createFieldEditors() {

@@ -45,7 +45,7 @@ class ChessBoardGraphicsPage extends FieldEditorPreferencePage {
 		// Use the "grid" layout
 		super(GRID);
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Chess Board Graphics");
+		setTitle("Chess Board");
 	}
 
 	@Override

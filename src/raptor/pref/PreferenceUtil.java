@@ -37,14 +37,19 @@ public class PreferenceUtil {
 		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
 		mgr.addTo("chatConsole", new PreferenceNode("messageColors",
 				new ChatConsoleMessageColors()));
+		mgr.addTo("chatConsole", new PreferenceNode("channelColors",
+				new ChatConsoleChannelColorsPage()));
 
-		mgr.addToRoot(new PreferenceNode("chessBoardGraphics",
+		mgr.addToRoot(new PreferenceNode("chessBoard",
 				new ChessBoardGraphicsPage()));
-		mgr.addToRoot(new PreferenceNode("colors", new ColorsPage()));
-		mgr.addToRoot(new PreferenceNode("fonts", new FontsPage()));
-		mgr.addToRoot(new PreferenceNode("chessBoardBehavior",
+		mgr.addTo("chessBoard", new PreferenceNode("behavior",
 				new ChessBoardBehaviorPage()));
-		mgr.addToRoot(new PreferenceNode("clocks", new ClocksPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("clocks",
+				new ChessBoardClocksPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("colors",
+				new ChessBoardColorsPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("fonts",
+				new ChessBoardFontsPage()));
 
 		// Add the connector preference nodes.
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();
@@ -62,9 +67,7 @@ public class PreferenceUtil {
 						mgr.addTo(connector.getShortName(), node);
 					}
 				}
-
 			}
-
 		}
 
 		// Create the preferences dialog

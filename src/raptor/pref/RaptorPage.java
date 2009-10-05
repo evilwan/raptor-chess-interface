@@ -14,13 +14,13 @@ import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
 
 public class RaptorPage extends FieldEditorPreferencePage {
+	LabelButtonFieldEditor labelButtonFieldEditor;
+
 	public RaptorPage() {
 		super(FLAT);
 		setTitle("Raptor");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
-
-	LabelButtonFieldEditor labelButtonFieldEditor;
 
 	@Override
 	protected void createFieldEditors() {

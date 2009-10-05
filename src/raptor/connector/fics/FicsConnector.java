@@ -9,8 +9,8 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
-import raptor.connector.fics.pref.FicsGameScriptsPage;
 import raptor.connector.fics.pref.FicsPage;
+import raptor.connector.fics.pref.ICSGameScriptsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.dialog.IcsLoginDialog;
@@ -374,7 +374,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] { new PreferenceNode("Scripts",
-				new FicsGameScriptsPage(this)) };
+				new ICSGameScriptsPage(this)) };
 
 	}
 
@@ -455,7 +455,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						FICS_LOGIN_SCRIPT);
 				if (StringUtils.isNotBlank(loginScript)) {
 					RaptorStringTokenizer tok = new RaptorStringTokenizer(
-							loginScript, "\n\r");
+							loginScript, "\n\r", true);
 					while (tok.hasMoreTokens()) {
 						try {
 							Thread.sleep(50L);
