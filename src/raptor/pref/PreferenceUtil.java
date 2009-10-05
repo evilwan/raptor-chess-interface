@@ -23,10 +23,21 @@ public class PreferenceUtil {
 		// Create the preference manager
 		PreferenceManager mgr = new PreferenceManager();
 
-		// Add the nodes
-		// mgr
-		// .addToRoot(new PreferenceNode("raptor",
-		// new RaptorPage()));
+		mgr.addToRoot(new PreferenceNode("raptor", new RaptorPage()));
+		mgr
+				.addToRoot(new PreferenceNode("raptorWindow",
+						new RaptorWindowPage()));
+		mgr.addTo("raptorWindow", new PreferenceNode("layout1",
+				new RaptorWindowLayoutPage("1", "app-Layout1")));
+		mgr.addTo("raptorWindow", new PreferenceNode("layout2",
+				new RaptorWindowLayoutPage("2", "app-Layout2")));
+		mgr.addTo("raptorWindow", new PreferenceNode("layout3",
+				new RaptorWindowLayoutPage("3", "app-Layout3")));
+
+		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
+		mgr.addTo("chatConsole", new PreferenceNode("messageColors",
+				new ChatConsoleMessageColors()));
+
 		mgr.addToRoot(new PreferenceNode("chessBoardGraphics",
 				new ChessBoardGraphicsPage()));
 		mgr.addToRoot(new PreferenceNode("colors", new ColorsPage()));

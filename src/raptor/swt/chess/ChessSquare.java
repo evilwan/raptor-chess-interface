@@ -198,12 +198,14 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				e.gc.setForeground(getPreferences().getColor(
 						BOARD_COORDINATES_COLOR));
 				e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
-						.getFont(BOARD_COORDINATES_FONT), 15, size.y));
+						.getFont(BOARD_COORDINATES_FONT), 20, size.y));
 
 				int fontHeight = e.gc.getFontMetrics().getAscent()
-						+ e.gc.getFontMetrics().getDescent() + 2;
+						+ e.gc.getFontMetrics().getDescent() + 0;
 
-				e.gc.drawString(fileLabel, 2, size.y - fontHeight, true);
+				e.gc.drawString(fileLabel, size.x
+						- e.gc.getFontMetrics().getAverageCharWidth() - 2,
+						size.y - fontHeight, true);
 			}
 
 			String rankLabel = getRankLabel();
@@ -211,9 +213,9 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				e.gc.setForeground(getPreferences().getColor(
 						BOARD_COORDINATES_COLOR));
 				e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
-						.getFont(BOARD_COORDINATES_FONT), 15, size.y));
+						.getFont(BOARD_COORDINATES_FONT), 20, size.y));
 
-				e.gc.drawString(rankLabel, 2, 2, true);
+				e.gc.drawString(rankLabel, 0, 0, true);
 			}
 
 		}
