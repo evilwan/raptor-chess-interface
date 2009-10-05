@@ -1,5 +1,6 @@
 1) Support for zh,bughosue,and all variaints.
 2) Preference screens for all prefs.
+3) Add key mappings. (Function key + hot key support).
 4) Installer
 5) Build
 6) Bug buttons

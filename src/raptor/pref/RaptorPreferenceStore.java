@@ -233,6 +233,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_IS_SHOWING_PIECE_UNICODE_CHARS, true);
 		setDefault(BOARD_QUEUED_PREMOVE_ENABLED, true);
 		setDefault(BOARD_IS_USING_CROSSHAIRS_CURSOR, false);
+		setDefault(BOARD_LAYOUT, "raptor.swt.chess.layout.RightOrientedLayout");
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));

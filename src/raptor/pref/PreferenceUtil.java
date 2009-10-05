@@ -40,8 +40,7 @@ public class PreferenceUtil {
 		mgr.addTo("chatConsole", new PreferenceNode("channelColors",
 				new ChatConsoleChannelColorsPage()));
 
-		mgr.addToRoot(new PreferenceNode("chessBoard",
-				new ChessBoardGraphicsPage()));
+		mgr.addToRoot(new PreferenceNode("chessBoard", new ChessBoardPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("behavior",
 				new ChessBoardBehaviorPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("clocks",

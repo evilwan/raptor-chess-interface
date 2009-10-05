@@ -562,7 +562,15 @@ public class BoardUtils implements BoardConstants {
 	 */
 	public static Image getSquareBackgroundImage(boolean isLight, int width,
 			int height) {
-		String name = getSquareBackgroundName();
+		return getSquareBackgroundImage(getSquareBackgroundName(), isLight,
+				width, height);
+	}
+
+	/**
+	 * Returns the Image for users current background name
+	 */
+	public static Image getSquareBackgroundImage(String name, boolean isLight,
+			int width, int height) {
 
 		if (width <= 0 || height <= 0) {
 			width = 10;
@@ -766,7 +774,7 @@ public class BoardUtils implements BoardConstants {
 		try {
 			long startTime = System.currentTimeMillis();
 
-			String svgFileName = getSVGChessPieceName(getChessSetName(), type);
+			String svgFileName = getSVGChessPieceName(setName, type);
 			final ImageData svgImageData = SVGUtil.loadSVG(svgFileName, width,
 					height);
 
