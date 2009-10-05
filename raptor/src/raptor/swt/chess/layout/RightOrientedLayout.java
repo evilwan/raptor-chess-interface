@@ -76,8 +76,6 @@ public class RightOrientedLayout extends ChessBoardLayout {
 			return SWT.LEFT;
 		case OPENING_DESCRIPTION_LABEL:
 			return SWT.RIGHT;
-		case COOLBAR:
-			return SWT.FLAT | SWT.BORDER;
 		default:
 			return SWT.NONE;
 		}
