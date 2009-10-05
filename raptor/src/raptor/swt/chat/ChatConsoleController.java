@@ -217,7 +217,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
 			if (url != null) {
 				if (getPreferences().getBoolean(
-						CHAT_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
+						APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
 					LaunchBrowser.openURL(url);
 					return;
 				} else {

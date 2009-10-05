@@ -36,7 +36,7 @@ public class LaunchBrowser {
 						"rundll32 url.dll,FileProtocolHandler " + url);
 			else { // assume Unix or Linux
 				String prefBrowser = Raptor.getInstance().getPreferences()
-						.getString(PreferenceKeys.MISC_BROWSER_NAME);
+						.getString(PreferenceKeys.APP_LINUX_UNIX_BROWSER_NAME);
 
 				if (prefBrowser == null) {
 					String[] browsers = { "firefox", "opera", "konqueror",

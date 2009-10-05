@@ -289,9 +289,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// Chat
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
-		setDefault(CHAT_TIMESTAMP_CONSOLE, true);
+		setDefault(CHAT_TIMESTAMP_CONSOLE, false);
 		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['hh:mma']'");
-		setDefault(CHAT_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
 
 		PreferenceConverter
@@ -317,8 +316,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new RGB(255, 255, 255));
 		PreferenceConverter.setDefault(this, CHAT_OUTPUT_TEXT_COLOR, new RGB(0,
 				0, 0));
-		PreferenceConverter.setDefault(this, CHAT_LINK_COLOR,
-				new RGB(0, 0, 255));
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHALLENGE
 						+ "-color", new RGB(100, 149, 237));
@@ -366,7 +363,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new RGB(0, 0, 238));
 
 		setDefault(APP_NAME, "Raptor v.Alpha.1");
-		setDefault(APP_SASH_WIDTH, 10);
+		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, APP_PING_COLOR, new RGB(0, 0, 0));
@@ -380,6 +377,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"http://code.google.com/p/raptor-chess-interface/wiki/RaptorHomePage");
 		setDefault(APP_SOUND_ENABLED, true);
 		setDefault(APP_LAYOUT, "Layout1");
+		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
+
 		// Layout 1 settings.
 		setDefault(APP_LAYOUT1_MAIN_TAB_QUADRANT, Quadrant.V);
 		setDefault(APP_LAYOUT1_CHANNEL_TAB_QUADRANT, Quadrant.V);
@@ -387,7 +386,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_LAYOUT1_REGEX_TAB_QUADRANT, Quadrant.V);
 		setDefault(APP_LAYOUT1_PARTNER_TELL_TAB_QUADRANT, Quadrant.V);
 		setDefault(APP_LAYOUT1_GAME_QUADRANT, Quadrant.III);
-		setDefault(APP_LAYOUT1_PARTNER_GAME_QUADRANT, Quadrant.IV);
+		setDefault(APP_LAYOUT1_BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
 		setDefault(APP_LAYOUT1_BROWSER_QUADRANT, Quadrant.III);
 		setDefault(APP_LAYOUT1_BUG_ARENA_QUADRANT, Quadrant.VII);
 		setDefault(APP_LAYOUT1_SEEK_GRAPH_QUADRANT, Quadrant.VII);
@@ -409,7 +408,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_LAYOUT2_REGEX_TAB_QUADRANT, Quadrant.VI);
 		setDefault(APP_LAYOUT2_PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault(APP_LAYOUT2_GAME_QUADRANT, Quadrant.III);
-		setDefault(APP_LAYOUT2_PARTNER_GAME_QUADRANT, Quadrant.IV);
+		setDefault(APP_LAYOUT2_BUGHOUSE_GAME2_QUADRANT, Quadrant.IV);
 		setDefault(APP_LAYOUT2_BROWSER_QUADRANT, Quadrant.III);
 		setDefault(APP_LAYOUT2_BUG_ARENA_QUADRANT, Quadrant.VII);
 		setDefault(APP_LAYOUT2_SEEK_GRAPH_QUADRANT, Quadrant.VII);
@@ -431,7 +430,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_LAYOUT3_REGEX_TAB_QUADRANT, Quadrant.VI);
 		setDefault(APP_LAYOUT3_PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault(APP_LAYOUT3_GAME_QUADRANT, Quadrant.III);
-		setDefault(APP_LAYOUT3_PARTNER_GAME_QUADRANT, Quadrant.IV);
+		setDefault(APP_LAYOUT3_BUGHUOSE_GAME_2_QUADRANT, Quadrant.IV);
 		setDefault(APP_LAYOUT3_BROWSER_QUADRANT, Quadrant.III);
 		setDefault(APP_LAYOUT3_BUG_ARENA_QUADRANT, Quadrant.VII);
 		setDefault(APP_LAYOUT3_SEEK_GRAPH_QUADRANT, Quadrant.VII);
@@ -518,8 +517,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_TERTIARY_PORT, 5000);
 		setDefault(BICS_TERTIARY_TIMESEAL_ENABLED, true);
 
-		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|"
-				+ RaptorStringUtils.generateRandomWord(10) + "|");
+		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|Open Seal|");
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
 
