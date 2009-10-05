@@ -32,6 +32,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
 	public static final String BOARD_RESULT_COLOR = "board-result-color";
 	public static final String BOARD_IS_SHOWING_PIECE_UNICODE_CHARS = "board-is-showing-piece-unicode-chars";
+	public static final String BOARD_IS_USING_CROSSHAIRS_CURSOR = "board-is-using-crosshairs-cursor";
 
 	public static final String BOARD_COORDINATES_FONT = "board-coordinates-font";
 	public static final String BOARD_CLOCK_FONT = "board-clock-font";

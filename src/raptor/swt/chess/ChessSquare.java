@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.Listener;
 import raptor.Raptor;
 import raptor.game.GameConstants;
 import raptor.game.util.GameUtils;
+import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.SWTUtils;
 
@@ -356,9 +357,16 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * Updates the cursor for a drag with the specified piece.
 	 */
 	protected void updateCursorForDrag(int piece) {
-		int imageSide = getImageSize(getHighlightBorderWidth());
-		getShell().setCursor(
-				BoardUtils.getCursorForPiece(piece, imageSide, imageSide));
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR)) {
+			getShell().setCursor(
+					Raptor.getInstance().getDisplay().getSystemCursor(
+							SWT.CURSOR_CROSS));
+		} else {
+			int imageSide = getImageSize(getHighlightBorderWidth());
+			getShell().setCursor(
+					BoardUtils.getCursorForPiece(piece, imageSide, imageSide));
+		}
 	}
 
 	/**
