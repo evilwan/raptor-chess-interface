@@ -899,6 +899,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								CHAT_TIMESTAMP_CONSOLE_FORMAT));
 				date = format.format(new Date(event.getTime()));
 			}
+			else {
+				messageText = messageText.trim();
+			}
 
 			appendText = (chatConsole.inputText.getCharCount() == 0 ? "" : "\n")
 					+ date + messageText;
