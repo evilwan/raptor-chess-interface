@@ -74,7 +74,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 			LOG.debug("Initing ChessBoardWindowItem");
 		}
 		long startTime = System.currentTimeMillis();
-		board = new ChessBoard(parent, SWT.NONE);
+		board = new ChessBoard(parent);
 		board.setController(controller);
 		controller.setBoard(board);
 		board.createControls();
