@@ -103,109 +103,22 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			5);
 	protected ToolBar toolbar;
 	protected Map<String, ToolItem> toolItemMap = new HashMap<String, ToolItem>();
+	protected List<String> sentText = new ArrayList<String>(50);
+	protected int sentTextIndex = 0;
 
-	protected KeyListener inputTextKeyListener = new KeyAdapter() {
+	protected KeyListener consoleOutputTextKeyListener = new KeyAdapter() {
+
 		@Override
-		public void keyReleased(KeyEvent arg0) {
-			if (isIgnoringActions()) {
-				return;
-			}
-			if (arg0.character == '\r') {
-				onSendOutputText();
-				chatConsole.outputText.forceFocus();
-				chatConsole.outputText.setSelection(chatConsole.outputText
-						.getCharCount());
-			} else if (IcsUtils.LEGAL_CHARACTERS.indexOf(arg0.character) != -1
-					&& arg0.stateMask == 0) {
-				onAppendOutputText("" + arg0.character);
-			} else {
-				chatConsole.outputText.forceFocus();
-				chatConsole.outputText.setSelection(chatConsole.outputText
-						.getCharCount());
-			}
-
+		public void keyReleased(KeyEvent event) {
+			processKeystroke(event);
 		}
 	};
 
-	protected KeyListener outputKeyListener = new KeyAdapter() {
+	protected KeyListener consoleInputTextKeyListener = new KeyAdapter() {
 		@Override
-		public void keyReleased(KeyEvent arg0) {
-			if (isIgnoringActions()) {
-				return;
-			}
-			if (arg0.character == '\r') {
-				onSendOutputText();
-			}
+		public void keyReleased(KeyEvent event) {
+			processKeystroke(event);
 		}
-	};
-
-	protected KeyListener outputHistoryListener = new KeyAdapter() {
-		protected List<String> sentText = new ArrayList<String>(50);
-		protected int sentTextIndex = 0;
-
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			if (isIgnoringActions()) {
-				return;
-			}
-			if (arg0.keyCode == SWT.ARROW_UP) {
-				if (sentTextIndex >= 0) {
-					if (sentTextIndex > 0) {
-						sentTextIndex--;
-					}
-					if (!sentText.isEmpty()) {
-						chatConsole.outputText.setText(sentText
-								.get(sentTextIndex));
-						chatConsole.outputText
-								.setSelection(chatConsole.inputText
-										.getCharCount() + 1);
-					}
-				}
-			} else if (arg0.keyCode == SWT.ARROW_DOWN) {
-				if (sentTextIndex < sentText.size() - 1) {
-					sentTextIndex++;
-					chatConsole.outputText.setText(sentText.get(sentTextIndex));
-					chatConsole.outputText.setSelection(chatConsole.inputText
-							.getCharCount() + 1);
-				} else {
-					chatConsole.outputText.setText("");
-				}
-			} else if (arg0.character == '\r') {
-				if (sentText.size() > 50) {
-					sentText.remove(0);
-				}
-				sentText.add(chatConsole.outputText.getText().substring(0,
-						chatConsole.outputText.getText().length()));
-				sentTextIndex = sentText.size();
-			}
-		}
-
-	};
-
-	protected KeyListener functionKeyListener = new KeyAdapter() {
-		@Override
-		public void keyReleased(KeyEvent arg0) {
-			if (isIgnoringActions()) {
-				return;
-			}
-			if (arg0.keyCode == SWT.F3) {
-				connector.onAcceptKeyPress();
-			} else if (arg0.keyCode == SWT.F4) {
-				connector.onDeclineKeyPress();
-			} else if (arg0.keyCode == SWT.F6) {
-				connector.onAbortKeyPress();
-			} else if (arg0.keyCode == SWT.F7) {
-				connector.onRematchKeyPress();
-			} else if (arg0.keyCode == SWT.F9) {
-				if (sourceOfLastTellReceived != null) {
-					chatConsole.outputText.setText(connector
-							.getTellToString(sourceOfLastTellReceived));
-					chatConsole.outputText.setSelection(chatConsole.outputText
-							.getCharCount() + 1);
-				}
-			}
-		}
-
 	};
 
 	protected MouseListener inputTextClickListener = new MouseAdapter() {
@@ -380,13 +293,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void addInputTextKeyListeners() {
 		if (!isIgnoringActions()) {
-			chatConsole.outputText.addKeyListener(functionKeyListener);
-			chatConsole.outputText.addKeyListener(outputHistoryListener);
-			chatConsole.outputText.addKeyListener(outputKeyListener);
-
-			chatConsole.inputText.addKeyListener(inputTextKeyListener);
-			chatConsole.inputText.addKeyListener(functionKeyListener);
-			chatConsole.inputText.addKeyListener(outputHistoryListener);
+			chatConsole.outputText.addKeyListener(consoleOutputTextKeyListener);
+			chatConsole.inputText.addKeyListener(consoleInputTextKeyListener);
 		}
 	}
 
@@ -898,8 +806,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						.getInstance().getPreferences().getString(
 								CHAT_TIMESTAMP_CONSOLE_FORMAT));
 				date = format.format(new Date(event.getTime()));
-			}
-			else {
+			} else {
 				messageText = messageText.trim();
 			}
 
@@ -1105,7 +1012,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		setCaretToOutputTextEnd();
 		awayList.clear();
 		adjustAwayButtonEnabled();
-
 	}
 
 	protected void playSounds(ChatEvent event) {
@@ -1114,6 +1020,72 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					|| event.getType() == ChatType.PARTNER_TELL) {
 				SoundService.getInstance().playSound("chat");
 			}
+		}
+	}
+
+	public void processKeystroke(KeyEvent event) {
+		boolean isConsoleOutputText = event.widget == chatConsole.outputText;
+
+		if (event.keyCode == SWT.F3) {
+			connector.onAcceptKeyPress();
+		} else if (event.keyCode == SWT.F4) {
+			connector.onDeclineKeyPress();
+		} else if (event.keyCode == SWT.F6) {
+			connector.onAbortKeyPress();
+		} else if (event.keyCode == SWT.F7) {
+			connector.onRematchKeyPress();
+		} else if (event.keyCode == SWT.F9) {
+			if (sourceOfLastTellReceived != null) {
+				chatConsole.outputText.setText(connector
+						.getTellToString(sourceOfLastTellReceived));
+				chatConsole.outputText.setSelection(chatConsole.outputText
+						.getCharCount() + 1);
+			}
+		} else if (event.keyCode == SWT.ARROW_UP) {
+			if (sentTextIndex >= 0) {
+				if (sentTextIndex > 0) {
+					sentTextIndex--;
+				}
+				if (!sentText.isEmpty()) {
+					chatConsole.outputText.setText(sentText.get(sentTextIndex));
+					chatConsole.outputText.setSelection(chatConsole.inputText
+							.getCharCount() + 1);
+				}
+			}
+		} else if (event.keyCode == SWT.ARROW_DOWN) {
+			if (sentTextIndex < sentText.size() - 1) {
+				sentTextIndex++;
+				chatConsole.outputText.setText(sentText.get(sentTextIndex));
+				chatConsole.outputText.setSelection(chatConsole.inputText
+						.getCharCount() + 1);
+			} else {
+				chatConsole.outputText.setText("");
+			}
+		} else if (event.character == '\r') {
+			if (sentText.size() > 50) {
+				sentText.remove(0);
+			}
+			sentText.add(chatConsole.outputText.getText().substring(0,
+					chatConsole.outputText.getText().length()));
+			sentTextIndex = sentText.size();
+
+			onSendOutputText();
+
+			if (!isConsoleOutputText) {
+				chatConsole.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						chatConsole.outputText.forceFocus();
+					}
+				});
+			}
+		} else if (!isConsoleOutputText
+				&& IcsUtils.LEGAL_CHARACTERS.indexOf(event.character) != -1
+				&& event.stateMask == 0) {
+			onAppendOutputText("" + event.character);
+		} else if (!isConsoleOutputText) {
+			chatConsole.outputText.forceFocus();
+			chatConsole.outputText.setSelection(chatConsole.outputText
+					.getCharCount());
 		}
 	}
 
@@ -1142,19 +1114,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void removeListenersTiedToChatConsole() {
 		if (!chatConsole.isDisposed()) {
-			chatConsole.outputText.removeKeyListener(functionKeyListener);
-			chatConsole.outputText.removeKeyListener(outputHistoryListener);
-			chatConsole.outputText.removeKeyListener(outputKeyListener);
-			chatConsole.inputText.removeKeyListener(inputTextKeyListener);
-			chatConsole.inputText.removeKeyListener(functionKeyListener);
-			chatConsole.inputText.removeKeyListener(outputHistoryListener);
+			chatConsole.outputText
+					.removeKeyListener(consoleOutputTextKeyListener);
+			chatConsole.inputText
+					.removeKeyListener(consoleInputTextKeyListener);
 			chatConsole.inputText.removeMouseListener(inputTextClickListener);
 		}
 	}
 
 	protected void setCaretToOutputTextEnd() {
 		if (!isIgnoringActions()) {
-			chatConsole.outputText.forceFocus();
+			//chatConsole.outputText.forceFocus();
 			getChatConsole().getOutputText().setSelection(
 					getChatConsole().getOutputText().getCharCount());
 		}
