@@ -176,7 +176,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 				sentText.add(chatConsole.outputText.getText().substring(0,
 						chatConsole.outputText.getText().length()));
-				sentTextIndex = sentText.size() - 1;
+				sentTextIndex = sentText.size();
 			}
 		}
 
