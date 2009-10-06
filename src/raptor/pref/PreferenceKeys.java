@@ -87,7 +87,7 @@ public interface PreferenceKeys {
 	public static final String MAIN_TAB_QUADRANT = "main-quadrant";
 	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrant";
 	public static final String PERSON_TAB_QUADRANT = "person-quadrant";
-	public static final String REGEX_TAB_QUADRANT = "regex-tab-quadrant";
+	public static final String REGEX_TAB_QUADRANT = "regex-quadrant";
 	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrant";
 	public static final String GAME_QUADRANT = "game-quadrant";
 	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrant";
