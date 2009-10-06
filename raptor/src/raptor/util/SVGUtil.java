@@ -39,9 +39,7 @@ public class SVGUtil {
 		Graphics2D g = image.createGraphics();
 
 		g.setClip(0, 0, iconWidth, iconHeight);
-		System.out.println("Painting");
 		icon.paintIcon(null, g, 0, 0);
-		System.out.println("Painted");
 		g.dispose();
 
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
