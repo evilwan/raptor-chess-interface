@@ -1,5 +1,6 @@
 package raptor.swt;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class ChessSetOptimizationDialog extends ProgressBarDialog {
 		this.setExecuteTime(info.length);
 		this.setMayCancel(true);
 		this.setProcessMessage("Converting set " + setName
-				+ " from svg format. This may take a few minutes  ....");
+				+ ". This may take a few minutes ...");
 	}
 
 	@Override
@@ -53,18 +54,23 @@ public class ChessSetOptimizationDialog extends ProgressBarDialog {
 			int size = START_SIZE + 2 * (executionTime - 1);
 
 			for (int i = 1; i < 13; i++) {
-				// Load the svg.
-				String svgFileName = BoardUtils
-						.getSVGChessPieceName(setName, i);
-				ImageData svgImageData = SVGUtil.loadSVG(svgFileName, size,
-						size);
-
-				// Save the pgn
-				ImageLoader loader = new ImageLoader();
-				loader.data = new ImageData[] { svgImageData };
 				String userCacheFileName = BoardUtils
 						.getUserImageCachePieceName(setName, i, size, size);
-				loader.save(userCacheFileName, SWT.IMAGE_PNG);
+
+				// Only execute if the file doesnt exist.
+				if (!(new File(userCacheFileName)).exists()) {
+					// Load the svg.
+					String svgFileName = BoardUtils.getSVGChessPieceName(
+							setName, i);
+					ImageData svgImageData = SVGUtil.loadSVG(svgFileName, size,
+							size);
+
+					// Save the pgn
+					ImageLoader loader = new ImageLoader();
+					loader.data = new ImageData[] { svgImageData };
+
+					loader.save(userCacheFileName, SWT.IMAGE_PNG);
+				}
 			}
 
 		} catch (Exception e) {
