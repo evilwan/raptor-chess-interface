@@ -49,6 +49,7 @@ public class ChessBoard extends Composite implements BoardConstants {
 	// Piece jail is indexed by the colored piece constants in Constants.
 	// Some of the indexes will always be null.
 	protected LabeledChessSquare[] pieceJailSquares = new LabeledChessSquare[14];
+	
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent arg0) {
 			updateFromPrefs();
@@ -566,6 +567,7 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 		setBackground(preferences.getColor(BOARD_BACKGROUND_COLOR));
 		layout(true, true);
+		redraw();
 	}
 
 }
