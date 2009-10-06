@@ -63,6 +63,7 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	@Override
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.LEFT,SWT.CENTER,false,false));
 		label.setText(labelText);
 
 		button = new Button(parent, SWT.PUSH);
