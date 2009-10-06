@@ -8,6 +8,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -77,6 +78,24 @@ public class SWTUtils {
 		result.verticalSpacing = 0;
 		result.marginHeight = 0;
 		result.marginWidth = 0;
+		return result;
+	}
+	
+	/**
+	 * Returns a RowLayout without any margins or spacing.
+	 */
+	public static RowLayout createMarginlessRowLayout(int type) {
+		RowLayout result = new RowLayout();
+		result.marginLeft = 0;
+		result.marginTop = 0;
+		result.marginRight = 0;
+		result.marginBottom = 0;
+		result.fill = true;
+		result.marginHeight = 0;
+		result.marginWidth = 0;
+		result.justify = false;
+		result.spacing = 0;
+		result.wrap = false;
 		return result;
 	}
 
