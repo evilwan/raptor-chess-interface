@@ -1,14 +1,15 @@
 package raptor.service;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.Clip;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,15 +24,50 @@ public class SoundService {
 
 	private static final Log LOG = LogFactory.getLog(SoundService.class);
 
-	private static final int BUFFER_SIZE = 128000;
-
 	private static final SoundService instance = new SoundService();
+
+	protected Map<String, Clip> soundToClip = new HashMap<String, Clip>();
 
 	/**
 	 * Returns the singleton instance.
 	 */
 	public static SoundService getInstance() {
 		return instance;
+	}
+
+	private SoundService() {
+		init();
+	}
+
+	protected void init() {
+		LOG.info("Initializing sound service.");
+		long startTime = System.currentTimeMillis();
+		try {
+			File file = new File("resources/common/sounds/");
+			File[] files = file.listFiles(new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return name.endsWith(".wav");
+				}
+			});
+			for (File currentFile : files) {
+				Clip clip = AudioSystem.getClip();
+				AudioInputStream stream = AudioSystem
+						.getAudioInputStream(currentFile);
+				clip.open(stream);
+				String key = currentFile.getName();
+				int dotIndex = key.indexOf(".");
+				soundToClip.put(key.substring(0, dotIndex), clip);
+				LOG.debug("Loaded sound " + currentFile.getName());
+			}
+		} catch (Throwable t) {
+		}
+		LOG.info("Initializing sound service complete: "
+				+ (System.currentTimeMillis() - startTime));
+	}
+
+	public void dispose() {
+		soundToClip.clear();
+		// Trying to close all of the clips results in noises in OSX 10.4
 	}
 
 	/**
@@ -43,69 +79,26 @@ public class SoundService {
 	public void playSound(final String sound) {
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_SOUND_ENABLED)) {
-			final String fileName = "resources/common/sounds/" + sound + ".wav";
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
-					LOG.debug("Playing sound " + fileName);
 
-					File soundFile = new File(fileName);
-					AudioInputStream audioInputStream = null;
-
-					try {
-						audioInputStream = AudioSystem
-								.getAudioInputStream(soundFile);
-					} catch (Exception t) {
-						LOG.error("Error getting audio input stream", t);
+					Clip clip = soundToClip.get(sound);
+					if (clip == null) {
+						throw new IllegalArgumentException("Unknown sound "
+								+ sound);
 					}
-
-					AudioFormat audioFormat = audioInputStream.getFormat();
-					DataLine.Info info = new DataLine.Info(
-							SourceDataLine.class, audioFormat);
-					SourceDataLine line = null;
-
-					try {
-						try {
-							line = (SourceDataLine) AudioSystem.getLine(info);
-							line.open(audioFormat);
-						} catch (LineUnavailableException e) {
-							LOG.error("No line available", e);
-						} catch (Throwable t) {
-							LOG.error("Error getting line", t);
-						}
-
-						line.start();
-
-						int nBytesRead = 0;
-
-						byte[] abData = new byte[BUFFER_SIZE];
-						while (nBytesRead != -1) {
-							try {
-								nBytesRead = audioInputStream.read(abData, 0,
-										abData.length);
-							} catch (IOException e) {
-								e.printStackTrace();
+					synchronized (clip) {
+						if (!clip.isRunning()) {
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("Playing Sound " + sound + ".");
 							}
-							if (nBytesRead >= 0) {
-								for (int i = 0; i < nBytesRead; i += 4) {
-									byte[] abData2 = { abData[i + 0],
-											abData[i + 1], abData[i + 2],
-											abData[i + 3] };
-									line.write(abData2, 0, 4);
-								}
+							clip.setFramePosition(0);
+							clip.start();
+						} else {
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("Sound " + sound
+										+ " is already playing.");
 							}
-						}
-					} finally {
-						try {
-							line.drain();
-						} catch (Throwable t) {
-						}
-						try {
-							line.close();
-						} catch (Throwable t) {
-						}
-						try {
-							audioInputStream.close();
-						} catch (Throwable t) {
 						}
 					}
 				}

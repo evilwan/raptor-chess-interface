@@ -375,7 +375,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				0, 0));
 
 		setDefault(APP_HOME_URL,
-				"http://code.google.com/p/raptor-chess-interface/wiki/RaptorHomePage");
+				"http://code.google.com/p/raptor-chess-interface/");
 		setDefault(APP_SOUND_ENABLED, true);
 		setDefault(APP_LAYOUT, "Layout1");
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
