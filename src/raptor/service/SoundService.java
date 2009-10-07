@@ -2,9 +2,7 @@ package raptor.service;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.sound.sampled.AudioInputStream;
@@ -26,8 +24,6 @@ public class SoundService {
 
 	private static final SoundService instance = new SoundService();
 
-	protected Map<String, Clip> soundToClip = new HashMap<String, Clip>();
-
 	/**
 	 * Returns the singleton instance.
 	 */
@@ -35,8 +31,15 @@ public class SoundService {
 		return instance;
 	}
 
+	protected Map<String, Clip> soundToClip = new HashMap<String, Clip>();
+
 	private SoundService() {
 		init();
+	}
+
+	public void dispose() {
+		soundToClip.clear();
+		// Trying to close all of the clips results in noises in OSX 10.4
 	}
 
 	protected void init() {
@@ -63,11 +66,6 @@ public class SoundService {
 		}
 		LOG.info("Initializing sound service complete: "
 				+ (System.currentTimeMillis() - startTime));
-	}
-
-	public void dispose() {
-		soundToClip.clear();
-		// Trying to close all of the clips results in noises in OSX 10.4
 	}
 
 	/**

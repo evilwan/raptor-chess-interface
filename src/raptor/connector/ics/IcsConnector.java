@@ -63,8 +63,8 @@ public abstract class IcsConnector implements Connector {
 	protected String userName;
 	protected long lastSendTime;
 	protected boolean isConnecting;
-	BughouseService bughouseService;
-
+	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
+	protected BughouseService bughouseService;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 
 	/**
@@ -498,7 +498,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void makeMove(Game game, Move move) {
-		sendMessage(move.toString());
+		sendMessage(move.getLan(), true);
 	}
 
 	/**
@@ -564,11 +564,11 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onAbortKeyPress() {
-		sendMessage("abort");
+		sendMessage("abort", true);
 	}
 
 	public void onAcceptKeyPress() {
-		sendMessage("accept");
+		sendMessage("accept", true);
 	}
 
 	/**
@@ -582,11 +582,11 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onDeclineKeyPress() {
-		sendMessage("decline");
+		sendMessage("decline", true);
 	}
 
 	public void onDraw(Game game) {
-		sendMessage("draw");
+		sendMessage("draw", true);
 	}
 
 	public void onError(String message) {
@@ -605,27 +605,27 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onExamineModeBack(Game game) {
-		sendMessage("back");
+		sendMessage("back", true);
 	}
 
 	public void onExamineModeCommit(Game game) {
-		sendMessage("commit");
+		sendMessage("commit", true);
 	}
 
 	public void onExamineModeFirst(Game game) {
-		sendMessage("back 300");
+		sendMessage("back 300", true);
 	}
 
 	public void onExamineModeForward(Game game) {
-		sendMessage("forward 1");
+		sendMessage("forward 1", true);
 	}
 
 	public void onExamineModeLast(Game game) {
-		sendMessage("forward 300");
+		sendMessage("forward 300", true);
 	}
 
 	public void onExamineModeRevert(Game game) {
-		sendMessage("revert");
+		sendMessage("revert", true);
 	}
 
 	/**
@@ -644,14 +644,14 @@ public abstract class IcsConnector implements Connector {
 					&& !hasSentLogin) {
 				parseMessage(message);
 				hasSentLogin = true;
-				sendMessage("guest");
+				sendMessage("guest", true);
 			} else if (!hasSentLogin) {
 				parseMessage(message);
 				hasSentLogin = true;
 				String handle = getPreferences().getString(
 						profilePrefix + "user-name");
 				if (StringUtils.isNotBlank(handle)) {
-					sendMessage(handle);
+					sendMessage(handle, true);
 				}
 			} else {
 				parseMessage(message);
@@ -661,13 +661,13 @@ public abstract class IcsConnector implements Connector {
 					&& !hasSentPassword) {
 				hasSentPassword = true;
 				parseMessage(message);
-				sendMessage("");
+				sendMessage("", true);
 			} else if (getPreferences().getBoolean(
 					profilePrefix + "is-named-guest")
 					&& !hasSentPassword) {
 				hasSentPassword = true;
 				parseMessage(message);
-				sendMessage("");
+				sendMessage("", true);
 			} else if (!hasSentPassword) {
 				hasSentPassword = true;
 				parseMessage(message);
@@ -780,44 +780,44 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onRematchKeyPress() {
-		sendMessage("rematch");
+		sendMessage("rematch", true);
 	}
 
 	/**
 	 * Resigns the specified game.
 	 */
 	public void onResign(Game game) {
-		sendMessage("resign");
+		sendMessage("resign", true);
 	}
 
 	public void onSetupClear(Game game) {
-		sendMessage("bsetup clear");
+		sendMessage("bsetup clear", true);
 	}
 
 	public void onSetupClearSquare(Game game, int square) {
-		sendMessage("x@" + GameUtils.getSan(square));
+		sendMessage("x@" + GameUtils.getSan(square), true);
 	}
 
 	public void onSetupComplete(Game game) {
-		sendMessage("bsetup done");
+		sendMessage("bsetup done", true);
 	}
 
 	public void onSetupFromFEN(Game game, String fen) {
-		sendMessage("bsetup fen " + fen);
+		sendMessage("bsetup fen " + fen, true);
 	}
 
 	public void onSetupStartPosition(Game game) {
-		sendMessage("bsetup start");
+		sendMessage("bsetup start", true);
 	}
 
 	protected abstract void onSuccessfulLogin();
 
 	public void onUnexamine(Game game) {
-		sendMessage("unexamine");
+		sendMessage("unexamine", true);
 	}
 
 	public void onUnobserve(Game game) {
-		sendMessage("unobs " + game.getId());
+		sendMessage("unobs " + game.getId(), true);
 	}
 
 	public String parseChannel(String word) {
@@ -867,10 +867,15 @@ public abstract class IcsConnector implements Connector {
 				LOG.debug("Publishing event : " + event);
 			}
 
-			// It is interesting to note messages are handled sequentially
-			// up to this point. chatService will publish the event
-			// asynchronously.
-			chatService.publishChatEvent(event);
+			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
+			if (ignoreIndex != -1) {
+				ignoringChatTypes.remove(ignoreIndex);
+			} else {
+				// It is interesting to note messages are handled sequentially
+				// up to this point. chatService will publish the event
+				// asynchronously.
+				chatService.publishChatEvent(event);
+			}
 		}
 	}
 
@@ -901,13 +906,29 @@ public abstract class IcsConnector implements Connector {
 		isLoggedIn = false;
 		hasSentLogin = false;
 		hasSentPassword = false;
+		ignoringChatTypes.clear();
 	}
 
 	public void sendMessage(String message) {
-		sendMessage(message, false);
+		sendMessage(message, false, null);
 	}
 
+	/**
+	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
+	 * only be published if isHidingFromUser is false.
+	 */
 	public void sendMessage(String message, boolean isHidingFromUser) {
+		sendMessage(message, isHidingFromUser, null);
+	}
+
+	/**
+	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
+	 * only be published containing the message if isHidingFromUser is false.
+	 * The next message the connector reads in that is of the specified type
+	 * should not be published to the ChatService.
+	 */
+	public void sendMessage(String message, boolean isHidingFromUser,
+			ChatType hideNextChatType) {
 		if (isConnected()) {
 			StringBuilder builder = new StringBuilder(message);
 			IcsUtils.filterOutbound(builder);
@@ -916,6 +937,10 @@ public abstract class IcsConnector implements Connector {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(context.getShortName() + "Connector Sending: "
 						+ message.trim());
+			}
+
+			if (hideNextChatType != null) {
+				ignoringChatTypes.add(hideNextChatType);
 			}
 
 			// Only one thread at a time should write to the socket.
@@ -948,5 +973,4 @@ public abstract class IcsConnector implements Connector {
 	private void setBughouseService(BughouseService bughouseService) {
 		this.bughouseService = bughouseService;
 	}
-
 }
