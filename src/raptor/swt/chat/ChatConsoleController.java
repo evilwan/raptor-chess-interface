@@ -359,8 +359,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						// the
 						// main loop.
 						while (endIndex < message.length()
-								&& (Character.isWhitespace(message
-										.charAt(endIndex)))) {
+								&& Character.isWhitespace(message
+										.charAt(endIndex))) {
 							endIndex++;
 						}
 						continue;
@@ -809,8 +809,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					- appendText.length();
 
 			if (isScrollBarAtMax
-					&& ((chatConsole.inputText.getSelection().y - chatConsole.inputText
-							.getSelection().x) == 0)) {
+					&& chatConsole.inputText.getSelection().y
+							- chatConsole.inputText.getSelection().x == 0) {
 				onForceAutoScroll();
 			}
 		}
@@ -868,7 +868,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onForceAutoScroll() {
-		if (this.isIgnoringActions()) {
+		if (isIgnoringActions()) {
 			return;
 		}
 
@@ -930,8 +930,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			menu.setLocation(chatConsole.inputText.toDisplay(e.x, e.y));
 			menu.setVisible(true);
 			while (!menu.isDisposed() && menu.isVisible()) {
-				if (!chatConsole.getDisplay().readAndDispatch())
+				if (!chatConsole.getDisplay().readAndDispatch()) {
 					chatConsole.getDisplay().sleep();
+				}
 			}
 		}
 		menu.dispose();
@@ -965,8 +966,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							if (endIndex >= chatConsole.getInputText()
 									.getCharCount()) {
 								endIndex = i
-										+ (chatConsole.getInputText()
-												.getCharCount() - i) - 1;
+										+ chatConsole.getInputText()
+												.getCharCount() - i - 1;
 							}
 							String string = chatConsole.getInputText().getText(
 									i, endIndex);

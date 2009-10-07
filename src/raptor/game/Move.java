@@ -13,6 +13,15 @@
  */
 package raptor.game;
 
+import java.util.ArrayList;
+
+import raptor.game.pgn.Arrow;
+import raptor.game.pgn.Comment;
+import raptor.game.pgn.Highlight;
+import raptor.game.pgn.MoveAnnotation;
+import raptor.game.pgn.Nag;
+import raptor.game.pgn.RemainingClockTime;
+import raptor.game.pgn.SublineNode;
 import raptor.game.util.GameUtils;
 
 public class Move implements GameConstants {
@@ -37,6 +46,25 @@ public class Move implements GameConstants {
 	protected byte lastCastleState;
 	protected byte previous50MoveCount;
 
+	/**
+	 * May or may not be used.
+	 */
+	protected int fullMoveCount;
+
+	/**
+	 * May or may not be used.
+	 */
+	protected int halfMoveCount;
+
+	/**
+	 * May or may not be used. It is obviously not suitable to use this for a
+	 * chess engine. That is why it starts out null.
+	 */
+	protected ArrayList<MoveAnnotation> annotations = null;
+
+	/**
+	 * May or may not be used.
+	 */
 	protected String san;
 
 	/**
@@ -45,7 +73,7 @@ public class Move implements GameConstants {
 	public Move(int to, int piece, int color) {
 		this.to = (byte) to;
 		this.piece = (byte) piece;
-		this.moveCharacteristic = DROP_CHARACTERISTIC;
+		moveCharacteristic = DROP_CHARACTERISTIC;
 		this.color = (byte) color;
 	}
 
@@ -83,6 +111,35 @@ public class Move implements GameConstants {
 		this.moveCharacteristic = (byte) moveCharacteristic;
 	}
 
+	public void addAnnotation(MoveAnnotation annotation) {
+		if (annotations == null) {
+			annotations = new ArrayList<MoveAnnotation>(5);
+		}
+		annotations.add(annotation);
+	}
+
+	public MoveAnnotation[] getAnnotations() {
+		if (annotations == null) {
+			return new MoveAnnotation[0];
+		}
+
+		return annotations.toArray(new MoveAnnotation[0]);
+	}
+
+	public Arrow[] getArrows() {
+		if (annotations == null) {
+			return new Arrow[0];
+		}
+
+		ArrayList<Arrow> result = new ArrayList<Arrow>(3);
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof Arrow) {
+				result.add((Arrow) annotation);
+			}
+		}
+		return result.toArray(new Arrow[0]);
+	}
+
 	/**
 	 * Returns the capture without the promote mask.
 	 */
@@ -98,11 +155,25 @@ public class Move implements GameConstants {
 	 * Returns the capture with the promote mask.
 	 */
 	public int getCaptureWithPromoteMask() {
-		return this.capture;
+		return capture;
 	}
 
 	public int getColor() {
 		return color;
+	}
+
+	public Comment[] getComments() {
+		if (annotations == null) {
+			return new Comment[0];
+		}
+
+		ArrayList<Comment> result = new ArrayList<Comment>(3);
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof Comment) {
+				result.add((Comment) annotation);
+			}
+		}
+		return result.toArray(new Comment[0]);
 	}
 
 	public int getEpSquare() {
@@ -111,6 +182,28 @@ public class Move implements GameConstants {
 
 	public int getFrom() {
 		return from;
+	}
+
+	public int getFullMoveCount() {
+		return fullMoveCount;
+	}
+
+	public int getHalfMoveCount() {
+		return halfMoveCount;
+	}
+
+	public Highlight[] getHighlights() {
+		if (annotations == null) {
+			return new Highlight[0];
+		}
+
+		ArrayList<Highlight> result = new ArrayList<Highlight>(3);
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof Highlight) {
+				result.add((Highlight) annotation);
+			}
+		}
+		return result.toArray(new Highlight[0]);
 	}
 
 	public String getLan() {
@@ -136,6 +229,35 @@ public class Move implements GameConstants {
 		return moveCharacteristic;
 	}
 
+	public Nag[] getNags() {
+		if (annotations == null) {
+			return new Nag[0];
+		}
+
+		ArrayList<Nag> result = new ArrayList<Nag>(3);
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof Nag) {
+				result.add((Nag) annotation);
+			}
+		}
+		return result.toArray(new Nag[0]);
+	}
+
+	public int getNumAnnotations() {
+		return annotations.size();
+	}
+
+	public int getNumAnnotationsExcludingSublines() {
+		int result = 0;
+
+		for (MoveAnnotation annotation : annotations) {
+			if (!(annotation instanceof SublineNode)) {
+				result++;
+			}
+		}
+		return result;
+	}
+
 	public int getPiece() {
 		return piece;
 	}
@@ -148,12 +270,71 @@ public class Move implements GameConstants {
 		return previous50MoveCount;
 	}
 
+	public RemainingClockTime[] getRemainingClockTimes() {
+		if (annotations == null) {
+			return new RemainingClockTime[0];
+		}
+
+		ArrayList<RemainingClockTime> result = new ArrayList<RemainingClockTime>(
+				3);
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof RemainingClockTime) {
+				result.add((RemainingClockTime) annotation);
+			}
+		}
+		return result.toArray(new RemainingClockTime[0]);
+	}
+
 	public String getSan() {
 		return san;
 	}
 
+	public SublineNode[] getSublines() {
+		if (annotations == null) {
+			return new SublineNode[0];
+		}
+
+		ArrayList<SublineNode> result = new ArrayList<SublineNode>(3);
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof SublineNode) {
+				result.add((SublineNode) annotation);
+			}
+		}
+		return result.toArray(new SublineNode[0]);
+	}
+
 	public int getTo() {
 		return to;
+	}
+
+	public boolean hasNag() {
+		if (annotations == null) {
+			return false;
+		}
+
+		boolean result = false;
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof Nag) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+
+	public boolean hasSubline() {
+		if (annotations == null) {
+			return false;
+		}
+
+		boolean result = false;
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof SublineNode) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 
 	public boolean isCapture() {
@@ -184,6 +365,13 @@ public class Move implements GameConstants {
 		return color == GameConstants.WHITE;
 	}
 
+	public void removeAnnotation(MoveAnnotation annotation) {
+		if (annotations == null) {
+			return;
+		}
+		annotations.remove(annotation);
+	}
+
 	public void setCapture(int capture) {
 		this.capture = (byte) capture;
 	}
@@ -198,6 +386,14 @@ public class Move implements GameConstants {
 
 	public void setFrom(int from) {
 		this.from = (byte) from;
+	}
+
+	public void setFullMoveCount(int fullMoveCount) {
+		this.fullMoveCount = fullMoveCount;
+	}
+
+	public void setHalfMoveCount(int halfMoveCount) {
+		this.halfMoveCount = halfMoveCount;
 	}
 
 	public void setLastCastleState(int lastCastleState) {
@@ -232,4 +428,5 @@ public class Move implements GameConstants {
 	public String toString() {
 		return getSan() != null ? getSan() : getLan();
 	}
+
 }

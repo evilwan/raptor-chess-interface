@@ -95,8 +95,9 @@ public class EcoService {
 
 			StringBuilder builder = new StringBuilder(100);
 			for (int i = 0; i < moves.length; i++) {
-				if (i >= 22)
+				if (i >= 22) {
 					break;
+				}
 				builder.append(moves[i].getSan().toUpperCase() + " ");
 			}
 			String key = builder.toString().trim();
@@ -158,10 +159,12 @@ public class EcoService {
 				String line = reader.readLine();
 				String[] arr = line.split("\\|");
 				String varName = "";
-				if (arr.length == 4)
+				if (arr.length == 4) {
 					varName = arr[3];
-				if (arr.length < 3)
+				}
+				if (arr.length < 3) {
 					continue;
+				}
 				EcoInfo parser = new EcoInfo(arr[0], arr[1], arr[2], varName);
 				result.add(parser);
 			}

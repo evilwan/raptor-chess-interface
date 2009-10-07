@@ -53,7 +53,7 @@ public class Bugger {
 	 *         for match requests.
 	 */
 	public boolean isOpenForMatches() {
-		return (status == ' ' || status == '.'); // available or idle
+		return status == ' ' || status == '.'; // available or idle
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Bugger {
 	 *         game.
 	 */
 	public boolean isPlaying() {
-		return (status == '^'); // playing
+		return status == '^'; // playing
 	}
 
 	protected void setRating(String rating) {

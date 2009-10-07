@@ -44,7 +44,7 @@ public class PersonController extends ChatConsoleController {
 
 	@Override
 	public String getPrependText(boolean checkButton) {
-		if (this.isIgnoringActions()) {
+		if (isIgnoringActions()) {
 			return "";
 		}
 

@@ -46,9 +46,10 @@ public class ShoutEventParser extends ChatEventParser {
 				String s2 = stringtokenizer1.nextToken();
 				if (stringtokenizer1.hasMoreTokens()) {
 					String s3 = stringtokenizer1.nextToken();
-					if (s3.equals(SHOUT_2))
+					if (s3.equals(SHOUT_2)) {
 						return new ChatEvent(IcsUtils.removeTitles(s2),
 								ChatType.SHOUT, text);
+					}
 				}
 			}
 			return null;

@@ -88,7 +88,7 @@ public class InactiveController extends ChessBoardController implements
 			if (getGame().getMoveList().getSize() > 0) {
 				Move lastMove = getGame().getMoveList().get(
 						getGame().getMoveList().getSize() - 1);
-				int moveNumber = (getGame().getHalfMoveCount() / 2) + 1;
+				int moveNumber = getGame().getHalfMoveCount() / 2 + 1;
 
 				board.getStatusLabel().setText(
 						"Last Move: "
@@ -116,16 +116,17 @@ public class InactiveController extends ChessBoardController implements
 			if (BoardUtils.isPieceJailSquare(squareId)) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)) {
 					int pieceType = BoardUtils.pieceJailSquareToPiece(squareId);
-					return (getGame().isWhitesMove()
-							&& BoardUtils.isWhitePiece(pieceType) || (!getGame()
-							.isWhitesMove() && BoardUtils
-							.isBlackPiece(pieceType)));
+					return getGame().isWhitesMove()
+							&& BoardUtils.isWhitePiece(pieceType)
+							|| !getGame().isWhitesMove()
+							&& BoardUtils.isBlackPiece(pieceType);
 				} else {
-					return (getGame().isWhitesMove() && BoardUtils
-							.isWhitePiece(board.getSquare(squareId).getPiece()))
-							|| (!getGame().isWhitesMove() && BoardUtils
-									.isBlackPiece(board.getSquare(squareId)
-											.getPiece()));
+					return getGame().isWhitesMove()
+							&& BoardUtils.isWhitePiece(board
+									.getSquare(squareId).getPiece())
+							|| !getGame().isWhitesMove()
+							&& BoardUtils.isBlackPiece(board
+									.getSquare(squareId).getPiece());
 				}
 			} else if (getGame().getPiece(squareId) == EMPTY) {
 				return false;

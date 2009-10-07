@@ -340,7 +340,8 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		squareSize = (height - bottomLabelSouthMargin - bottomLabelHeight
 				- bottomLabelNorthMargin - topLabelSouthMargin - topLabelHeight - topLabelNorthMargin) / 8;
 
-		while (width < (squareSize * 11 + boardWidthPixelsWest + boardWidthPixelsEast)) {
+		while (width < squareSize * 11 + boardWidthPixelsWest
+				+ boardWidthPixelsEast) {
 			squareSize -= 2;
 			hasSevereHeightProblem = true;
 		}

@@ -120,7 +120,7 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		/**
-		 * Restores the tab by setting it visibile if it or one of its children
+		 * Restores the tab by setting it visible if it or one of its children
 		 * contains items. This has a cascading effect if one of its children is
 		 * another RaptorSashForm.
 		 */
@@ -131,11 +131,11 @@ public class RaptorWindow extends ApplicationWindow {
 			Control[] children = getTabList();
 
 			// First restore tab folders.
-			for (int i = 0; i < children.length; i++) {
-				if (children[i] instanceof RaptorTabFolder) {
-					RaptorTabFolder folder = (RaptorTabFolder) children[i];
+			for (Control element : children) {
+				if (element instanceof RaptorTabFolder) {
+					RaptorTabFolder folder = (RaptorTabFolder) element;
 					if (folder.getItemCount() > 0 && !folder.getMinimized()) {
-						RaptorTabFolder childFolder = ((RaptorTabFolder) children[i]);
+						RaptorTabFolder childFolder = (RaptorTabFolder) element;
 						lastChildToShow = childFolder;
 						childFolder.setVisible(true);
 						childFolder.setMaximized(activeItems.size() == 1);
@@ -148,16 +148,16 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 
 			// Now restore sashes.
-			for (int i = 0; i < children.length; i++) {
-				if (children[i] instanceof RaptorSashForm) {
-					if (((RaptorSashForm) children[i]).getItemsInSash() > 0) {
-						RaptorSashForm childSashForm = ((RaptorSashForm) children[i]);
+			for (Control element : children) {
+				if (element instanceof RaptorSashForm) {
+					if (((RaptorSashForm) element).getItemsInSash() > 0) {
+						RaptorSashForm childSashForm = (RaptorSashForm) element;
 						lastChildToShow = childSashForm;
 						lastChildToShow.setVisible(true);
 						numberOfChildrenShowing++;
 					} else {
-						if (children[i] != null) {
-							children[i].setVisible(false);
+						if (element != null) {
+							element.setVisible(false);
 						}
 					}
 				}
@@ -297,7 +297,7 @@ public class RaptorWindow extends ApplicationWindow {
 				parents.get(i + 1).setVisible(true);
 				parents.get(i + 1).setMaximizedControl(parents.get(i));
 			}
-			this.setMaximized(true);
+			setMaximized(true);
 		}
 
 		/**
@@ -390,30 +390,29 @@ public class RaptorWindow extends ApplicationWindow {
 				public void itemStateChanged() {
 					if (!disposed && item.getControl() != null
 							&& !item.getControl().isDisposed()) {
-						RaptorWindow.this.getShell().getDisplay().asyncExec(
-								new Runnable() {
-									public void run() {
+						getShell().getDisplay().asyncExec(new Runnable() {
+							public void run() {
 
-										if (LOG.isDebugEnabled()) {
-											LOG
-													.debug("Item changed, updating text,title,showClose");
-										}
-										try {
-											setText(item.getTitle());
-											setImage(item.getImage());
-											setShowClose(true);
-											if (raptorParent.getSelection() == RaptorTabItem.this) {
-												raptorParent.updateToolbar();
-											}
-										} catch (SWTException swt) {
-											// Just eat it. It is probably a
-											// widget is
-											// disposed exception
-											// and i can't figure out how to
-											// avoid it.
-										}
+								if (LOG.isDebugEnabled()) {
+									LOG
+											.debug("Item changed, updating text,title,showClose");
+								}
+								try {
+									setText(item.getTitle());
+									setImage(item.getImage());
+									setShowClose(true);
+									if (raptorParent.getSelection() == RaptorTabItem.this) {
+										raptorParent.updateToolbar();
 									}
-								});
+								} catch (SWTException swt) {
+									// Just eat it. It is probably a
+									// widget is
+									// disposed exception
+									// and i can't figure out how to
+									// avoid it.
+								}
+							}
+						});
 					}
 				}
 			});
@@ -566,8 +565,8 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		boolean isAFolderMinimized = false;
-		for (int i = 0; i < folders.length; i++) {
-			if (folders[i].getMinimized()) {
+		for (RaptorTabFolder folder : folders) {
+			if (folder.getMinimized()) {
 				isAFolderMinimized = true;
 				break;
 			}
@@ -661,8 +660,8 @@ public class RaptorWindow extends ApplicationWindow {
 	protected void createFolderAndSashControls() {
 		createQuad1Quad234567QuadControls();
 
-		for (int i = 0; i < folders.length; i++) {
-			initFolder(folders[i]);
+		for (RaptorTabFolder folder : folders) {
+			initFolder(folder);
 		}
 
 		sashes[0] = quad1quad234567quad8Sash;
@@ -672,10 +671,10 @@ public class RaptorWindow extends ApplicationWindow {
 		sashes[4] = quad56quad7Sash;
 		sashes[5] = quad5quad6Sash;
 
-		for (int i = 0; i < sashes.length; i++) {
-			sashes[i].loadFromPreferences();
-			sashes[i].setVisible(false);
-			sashes[i].setMaximizedControl(null);
+		for (RaptorSashForm sashe : sashes) {
+			sashe.loadFromPreferences();
+			sashe.setVisible(false);
+			sashe.setMaximizedControl(null);
 		}
 	}
 
@@ -733,7 +732,9 @@ public class RaptorWindow extends ApplicationWindow {
 				game.setWhiteRemainingeTimeMillis(153857);
 				game.setBlackRemainingTimeMillis(46728);
 				game.setEvent("blitz 3 0 rated");
-				game.setGameDescription(game.getEvent());
+				game.setRound("?");
+				game.setDate(System.currentTimeMillis());
+				game.setSite("raptortest");
 				game.setSettingMoveSan(true);
 				InactiveController controller = new InactiveController(game);
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
@@ -1162,8 +1163,9 @@ public class RaptorWindow extends ApplicationWindow {
 					menu.setLocation(folder.toDisplay(e.x, e.y));
 					menu.setVisible(true);
 					while (!menu.isDisposed() && menu.isVisible()) {
-						if (!folder.getDisplay().readAndDispatch())
+						if (!folder.getDisplay().readAndDispatch()) {
 							folder.getDisplay().sleep();
+						}
 					}
 					menu.dispose();
 				}
@@ -1177,8 +1179,9 @@ public class RaptorWindow extends ApplicationWindow {
 					Point p = folder.toControl(getShell().getDisplay()
 							.getCursorLocation());
 					CTabItem item = folder.getItem(p);
-					if (item == null)
+					if (item == null) {
 						return;
+					}
 					isInDrag = true;
 					isExitDrag = false;
 					dragStartItem = (RaptorTabItem) item;
@@ -1259,8 +1262,8 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 		long startTime = System.currentTimeMillis();
 
-		for (int i = 0; i < sashes.length; i++) {
-			sashes[i].restore();
+		for (RaptorSashForm sashe : sashes) {
+			sashe.restore();
 		}
 
 		/**

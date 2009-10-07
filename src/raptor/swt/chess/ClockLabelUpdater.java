@@ -91,7 +91,7 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 	}
 
 	public void setRemainingTimeMillis(long elapsedTimeMillis) {
-		this.remainingTimeMillis = elapsedTimeMillis;
+		remainingTimeMillis = elapsedTimeMillis;
 	}
 
 	public void start() {

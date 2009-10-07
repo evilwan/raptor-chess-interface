@@ -172,7 +172,7 @@ public abstract class ProgressBarDialog extends Dialog {
 		});
 		cancelButton.setLayoutData(new GridData(78, SWT.DEFAULT));
 		cancelButton.setText("cancel");
-		cancelButton.setEnabled(this.mayCancel);
+		cancelButton.setEnabled(mayCancel);
 
 	}
 
@@ -214,15 +214,16 @@ public abstract class ProgressBarDialog extends Dialog {
 	}
 
 	public void setProcessBarStyle(boolean pStyle) {
-		if (pStyle)
-			this.processBarStyle = SWT.SMOOTH;
-		else
-			this.processBarStyle = SWT.NONE;
+		if (pStyle) {
+			processBarStyle = SWT.SMOOTH;
+		} else {
+			processBarStyle = SWT.NONE;
+		}
 
 	}
 
 	public void setProcessMessage(String processInfo) {
-		this.processMessage = processInfo;
+		processMessage = processInfo;
 	}
 
 	public void setShellTitle(String shellTitle) {

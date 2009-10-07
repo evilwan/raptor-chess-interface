@@ -526,8 +526,9 @@ public class SetupController extends ChessBoardController {
 			menu.setLocation(board.getSquare(square).toDisplay(10, 10));
 			menu.setVisible(true);
 			while (!menu.isDisposed() && menu.isVisible()) {
-				if (!board.getDisplay().readAndDispatch())
+				if (!board.getDisplay().readAndDispatch()) {
 					board.getDisplay().sleep();
+				}
 			}
 			menu.dispose();
 		}

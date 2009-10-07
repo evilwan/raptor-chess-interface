@@ -44,10 +44,10 @@ public class LaunchBrowser {
 				Method openURL = fileMgr.getDeclaredMethod("openURL",
 						new Class[] { String.class });
 				openURL.invoke(null, new Object[] { url });
-			} else if (osName.startsWith("Windows"))
+			} else if (osName.startsWith("Windows")) {
 				Runtime.getRuntime().exec(
 						"rundll32 url.dll,FileProtocolHandler " + url);
-			else { // assume Unix or Linux
+			} else { // assume Unix or Linux
 				String prefBrowser = Raptor.getInstance().getPreferences()
 						.getString(PreferenceKeys.APP_LINUX_UNIX_BROWSER_NAME);
 
@@ -56,16 +56,19 @@ public class LaunchBrowser {
 							"epiphany", "mozilla", "netscape" };
 					String browser = null;
 					for (int count = 0; count < browsers.length
-							&& browser == null; count++)
+							&& browser == null; count++) {
 						if (Runtime.getRuntime().exec(
 								new String[] { "which", browsers[count] })
-								.waitFor() == 0)
+								.waitFor() == 0) {
 							browser = browsers[count];
-					if (browser == null)
+						}
+					}
+					if (browser == null) {
 						throw new Exception("Could not find web browser");
-					else
+					} else {
 						Runtime.getRuntime()
 								.exec(new String[] { browser, url });
+					}
 				} else {
 					String browser = null;
 					if (browser == null) {

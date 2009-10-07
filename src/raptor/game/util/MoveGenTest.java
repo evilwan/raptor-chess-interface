@@ -461,7 +461,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 				game.makeLanMove("O-O");
 				game.rollback();
 				asserts(
-						(game.getCastling(game.getColorToMove()) & CASTLE_KINGSIDE) != 0,
+						(game.getCastling(game.getColorToMove()) & CASTLE_SHORT) != 0,
 						"Rollback erased castle kingside");
 
 				Game game2 = createFromFen(split[0], Type.CLASSIC);
@@ -478,7 +478,7 @@ public class MoveGenTest extends TestCase implements GameConstants {
 				game.makeLanMove("O-O-O");
 				game.rollback();
 				asserts(
-						(game.getCastling(game.getColorToMove()) & CASTLE_QUEENSIDE) != 0,
+						(game.getCastling(game.getColorToMove()) & CASTLE_LONG) != 0,
 						"Rollback erased castle queenside");
 				Game game2 = createFromFen(split[0], Type.CLASSIC);
 				asserts(game.getOccupiedBB() == game2.getOccupiedBB()

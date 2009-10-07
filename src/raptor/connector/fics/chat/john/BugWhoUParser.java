@@ -35,10 +35,12 @@ public class BugWhoUParser {
 		while (tokens.hasMoreTokens()) {
 			Bugger p = new Bugger();
 			String rating = tokens.nextToken();
-			if (rating.equals("----") && !showUnrateds)
+			if (rating.equals("----") && !showUnrateds) {
 				continue;
-			if (rating.equals("++++") && !showGuests)
+			}
+			if (rating.equals("++++") && !showGuests) {
 				continue;
+			}
 			p.setRating(rating);
 			String status = tokens.nextToken();
 			if (status.length() > 1) { /* something wrong */

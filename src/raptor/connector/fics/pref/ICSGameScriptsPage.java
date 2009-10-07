@@ -203,8 +203,8 @@ public class ICSGameScriptsPage extends PreferencePage {
 	public void populateScriptNames() {
 		scriptName.removeAll();
 		GameScript[] scripts = ficsConnector.getGameScripts();
-		for (int i = 0; i < scripts.length; i++) {
-			scriptName.add(scripts[i].getName());
+		for (GameScript script2 : scripts) {
+			scriptName.add(script2.getName());
 		}
 		scriptNameComposite.pack();
 		scriptNameComposite.layout();

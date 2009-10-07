@@ -64,10 +64,11 @@ public class TimesealPipe {
 	}
 
 	synchronized int _mthcase() {
-		if (closedFlag2)
+		if (closedFlag2) {
 			return 0;
-		else
+		} else {
 			return _mthint();
+		}
 	}
 
 	public int _mthdo() {
@@ -76,8 +77,9 @@ public class TimesealPipe {
 
 	synchronized int _mthfor() throws IOException {
 		synchronized (readLock) {
-			if (closedFlag2)
+			if (closedFlag2) {
 				throw new IOException("Stream closed");
+			}
 			long l = System.currentTimeMillis();
 			while (_mthcase() == 0) {
 				if (closedFlag) {
@@ -85,32 +87,37 @@ public class TimesealPipe {
 					return byte0;
 				}
 				long currentTime = System.currentTimeMillis();
-				if (_flddo != 0 && currentTime - l >= _flddo)
+				if (_flddo != 0 && currentTime - l >= _flddo) {
 					throw new InterruptedIOException();
+				}
 				try {
-					if (_flddo == 0)
+					if (_flddo == 0) {
 						wait();
-					else
-						wait((_flddo + currentTime) - l);
+					} else {
+						wait(_flddo + currentTime - l);
+					}
 				} catch (InterruptedException _ex) {
 					throw new InterruptedIOException();
 				}
-				if (closedFlag2)
+				if (closedFlag2) {
 					throw new IOException("Stream closed");
+				}
 			}
 			byte byte1 = buffer[_fldchar++];
-			if (_fldchar == buffer.length)
+			if (_fldchar == buffer.length) {
 				_fldchar = 0;
+			}
 			notifyAll();
-			int i = byte1 >= 0 ? ((int) (byte1)) : byte1 + 256;
+			int i = byte1 >= 0 ? (int) byte1 : byte1 + 256;
 			return i;
 		}
 	}
 
 	synchronized int _mthif(byte abyte0[], int i, int j) throws IOException {
 		synchronized (readLock) {
-			if (closedFlag2)
+			if (closedFlag2) {
 				throw new IOException("Stream closed");
+			}
 			long currentTimeMillis = System.currentTimeMillis();
 			while (_mthcase() == 0) {
 				if (closedFlag) {
@@ -118,18 +125,21 @@ public class TimesealPipe {
 					return byte0;
 				}
 				long l1 = System.currentTimeMillis();
-				if (_flddo != 0 && l1 - currentTimeMillis >= _flddo)
+				if (_flddo != 0 && l1 - currentTimeMillis >= _flddo) {
 					throw new InterruptedIOException();
+				}
 				try {
-					if (_flddo == 0)
+					if (_flddo == 0) {
 						wait();
-					else
-						wait((_flddo + l1) - currentTimeMillis);
+					} else {
+						wait(_flddo + l1 - currentTimeMillis);
+					}
 				} catch (InterruptedException _ex) {
 					throw new InterruptedIOException();
 				}
-				if (closedFlag2)
+				if (closedFlag2) {
 					throw new IOException("Stream closed");
+				}
 			}
 			int i1 = _mthcase();
 			int j1 = j <= i1 ? j : i1;
@@ -152,10 +162,11 @@ public class TimesealPipe {
 	}
 
 	private int _mthint() {
-		if (_fldbyte >= _fldchar)
+		if (_fldbyte >= _fldchar) {
 			return _fldbyte - _fldchar;
-		else
-			return (_fldbyte + buffer.length) - _fldchar;
+		} else {
+			return _fldbyte + buffer.length - _fldchar;
+		}
 	}
 
 	synchronized void _mthnew() {
@@ -180,19 +191,23 @@ public class TimesealPipe {
 
 	synchronized void a(int i) throws IOException {
 		synchronized (writeLock) {
-			if (closedFlag2 || closedFlag)
+			if (closedFlag2 || closedFlag) {
 				throw new IOException("Stream closed");
-			while (duno() == 0)
+			}
+			while (duno() == 0) {
 				try {
 					wait();
 				} catch (InterruptedException _ex) {
 					throw new InterruptedIOException();
 				}
-			if (closedFlag2 || closedFlag)
+			}
+			if (closedFlag2 || closedFlag) {
 				throw new IOException("Stream closed");
+			}
 			buffer[_fldbyte++] = (byte) (i & 0xff);
-			if (_fldbyte == buffer.length)
+			if (_fldbyte == buffer.length) {
 				_fldbyte = 0;
+			}
 			notifyAll();
 		}
 	}
@@ -211,15 +226,17 @@ public class TimesealPipe {
 
 	synchronized void write(byte bytes[], int i, int j) throws IOException {
 		synchronized (writeLock) {
-			if (closedFlag2 || closedFlag)
+			if (closedFlag2 || closedFlag) {
 				throw new IOException("Stream closed");
+			}
 			while (j > 0) {
-				while (duno() == 0)
+				while (duno() == 0) {
 					try {
 						wait();
 					} catch (InterruptedException _ex) {
 						throw new InterruptedIOException();
 					}
+				}
 				int k = duno();
 				int l = j <= k ? j : k;
 				int i1 = buffer.length - _fldbyte < l ? buffer.length

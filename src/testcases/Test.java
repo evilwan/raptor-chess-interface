@@ -11,19 +11,19 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor;
+package testcases;
 
 import java.util.Calendar;
 
 public class Test {
-	public static final long TIMEZONE_OFFSET = -(Calendar.getInstance()
-			.get(Calendar.ZONE_OFFSET));
+	public static final long TIMEZONE_OFFSET = -Calendar.getInstance().get(
+			Calendar.ZONE_OFFSET);
 
 	public static void main(String args[]) throws Exception {
 
 		// System.out.println(FicsUtils.replaceUnicode("&#x3b1;&#x3b2;&#x3b3;&#x3b4;&#x3b5;&#x3b6;"));
 		StringBuilder builder = new StringBuilder(""
-				+ (char) (Integer.valueOf("2654", 16).intValue()));
+				+ (char) Integer.valueOf("2654", 16).intValue());
 		// FicsUtils.filterOutbound(builder);
 		System.out.println(builder.toString());
 		// Display display = new Display();

@@ -14,7 +14,7 @@
 package raptor.game;
 
 public interface GameConstants {
-	public static final int MOVE_REP_CACHE_SIZE = (1 << 12);
+	public static final int MOVE_REP_CACHE_SIZE = 1 << 12;
 	public static final int MOVE_REP_CACHE_SIZE_MINUS_1 = MOVE_REP_CACHE_SIZE - 1;
 
 	public static final int MAX_HALF_MOVES_IN_GAME = 500;
@@ -167,9 +167,9 @@ public interface GameConstants {
 
 	// Castle state constants.
 	public static final int CASTLE_NONE = 0;
-	public static final int CASTLE_KINGSIDE = 1;
-	public static final int CASTLE_QUEENSIDE = 2;
-	public static final int CASTLE_BOTH = CASTLE_KINGSIDE | CASTLE_QUEENSIDE;
+	public static final int CASTLE_SHORT = 1;
+	public static final int CASTLE_LONG = 2;
+	public static final int CASTLE_BOTH = CASTLE_SHORT | CASTLE_LONG;
 
 	// Direction constants.
 	public static final int NORTH = 0;

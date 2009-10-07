@@ -28,7 +28,6 @@
 package raptor.swt;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.core.runtime.Assert;
@@ -176,7 +175,7 @@ public class RaptorImageRegistry {
 		Assert.isNotNull(manager);
 		Device dev = manager.getDevice();
 		if (dev instanceof Display) {
-			this.display = (Display) dev;
+			display = (Display) dev;
 		}
 		this.manager = manager;
 		manager.disposeExec(disposeRunnable);
@@ -192,8 +191,7 @@ public class RaptorImageRegistry {
 		manager.cancelDisposeExec(disposeRunnable);
 
 		if (table != null) {
-			for (Iterator<Entry> i = table.values().iterator(); i.hasNext();) {
-				Entry entry = i.next();
+			for (Entry entry : table.values()) {
 				if (entry.image != null) {
 					manager.destroyImage(entry.descriptor);
 				}

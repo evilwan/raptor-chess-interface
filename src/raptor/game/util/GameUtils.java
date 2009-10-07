@@ -13,6 +13,7 @@
  */
 package raptor.game.util;
 
+import java.util.Set;
 import java.util.StringTokenizer;
 
 import raptor.Raptor;
@@ -20,8 +21,11 @@ import raptor.game.FischerRandomGame;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.LosersGame;
+import raptor.game.Result;
 import raptor.game.SuicideGame;
 import raptor.game.Game.Type;
+import raptor.game.pgn.PgnHeader;
+import raptor.game.pgn.PgnUtil;
 import raptor.pref.PreferenceKeys;
 
 //KoggeStone
@@ -48,7 +52,7 @@ public class GameUtils implements GameConstants {
 	}
 
 	public static final long bitscanClear(long bitboard) {
-		return bitboard & (bitboard - 1);
+		return bitboard & bitboard - 1;
 	}
 
 	/**
@@ -61,7 +65,7 @@ public class GameUtils implements GameConstants {
 	}
 
 	public static int bitScanForwardDeBruijn64(long b) {
-		int idx = (int) (((b & -b) * DE_BRUJIN) >>> 58);
+		int idx = (int) ((b & -b) * DE_BRUJIN >>> 58);
 		return DE_BRUJIN_MAGICS_TABLE[idx];
 	}
 
@@ -111,9 +115,20 @@ public class GameUtils implements GameConstants {
 
 	}
 
+	/**
+	 * Creates a game from fen of the specified type.
+	 * 
+	 * <pre>
+	 * rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+	 * </pre>
+	 * 
+	 * @param fen
+	 *            The FEN (Forsyth Edwards Notation)
+	 * @param gameType
+	 *            The game type.
+	 * @return The game.
+	 */
 	public static final Game createFromFen(String fen, Type gameType) {
-		// rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-
 		Game result = null;
 
 		switch (gameType) {
@@ -180,14 +195,12 @@ public class GameUtils implements GameConstants {
 
 		result.setCastling(WHITE,
 				whiteCastleKSide && whiteCastleQSide ? CASTLE_BOTH
-						: whiteCastleKSide ? CASTLE_KINGSIDE
-								: whiteCastleQSide ? CASTLE_QUEENSIDE
-										: CASTLE_NONE);
+						: whiteCastleKSide ? CASTLE_SHORT
+								: whiteCastleQSide ? CASTLE_LONG : CASTLE_NONE);
 		result.setCastling(BLACK,
 				blackCastleKSide && blackCastleQSide ? CASTLE_BOTH
-						: blackCastleKSide ? CASTLE_KINGSIDE
-								: blackCastleQSide ? CASTLE_QUEENSIDE
-										: CASTLE_NONE);
+						: blackCastleKSide ? CASTLE_SHORT
+								: blackCastleQSide ? CASTLE_LONG : CASTLE_NONE);
 
 		if (!epSquareStr.equals("-")) {
 			result.setEpSquare(GameUtils.getSquare(epSquareStr));
@@ -243,37 +256,37 @@ public class GameUtils implements GameConstants {
 
 	public static long fillDownLeftOccluded(long g, long p) {
 		p &= 0x7f7f7f7f7f7f7f7fL;
-		g |= p & (g >>> 9);
-		p &= (p >>> 9);
-		g |= p & (g >>> 18);
-		p &= (p >>> 18);
-		return g |= p & (g >>> 36);
+		g |= p & g >>> 9;
+		p &= p >>> 9;
+		g |= p & g >>> 18;
+		p &= p >>> 18;
+		return g |= p & g >>> 36;
 	}
 
 	public static long fillDownOccluded(long g, long p) {
-		g |= p & (g >>> 8);
-		p &= (p >>> 8);
-		g |= p & (g >>> 16);
-		p &= (p >>> 16);
-		return g |= p & (g >>> 32);
+		g |= p & g >>> 8;
+		p &= p >>> 8;
+		g |= p & g >>> 16;
+		p &= p >>> 16;
+		return g |= p & g >>> 32;
 	}
 
 	public static long fillDownRightfccluded(long g, long p) {
 		p &= 0xfefefefefefefefeL;
-		g |= p & (g >>> 7);
-		p &= (p >>> 7);
-		g |= p & (g >>> 14);
-		p &= (p >>> 14);
-		return g |= p & (g >>> 28);
+		g |= p & g >>> 7;
+		p &= p >>> 7;
+		g |= p & g >>> 14;
+		p &= p >>> 14;
+		return g |= p & g >>> 28;
 	}
 
 	public static long fillLeftOccluded(long g, long p) {
 		p &= 0x7f7f7f7f7f7f7f7fL;
-		g |= p & (g >>> 1);
-		p &= (p >>> 1);
-		g |= p & (g >>> 2);
-		p &= (p >>> 2);
-		return g |= p & (g >>> 4);
+		g |= p & g >>> 1;
+		p &= p >>> 1;
+		g |= p & g >>> 2;
+		p &= p >>> 2;
+		return g |= p & g >>> 4;
 	}
 
 	/**
@@ -283,37 +296,37 @@ public class GameUtils implements GameConstants {
 	 */
 	public static long fillRightOccluded(long g, long p) {
 		p &= 0xfefefefefefefefeL;
-		g |= p & (g << 1);
-		p &= (p << 1);
-		g |= p & (g << 2);
-		p &= (p << 2);
-		return g |= p & (g << 4);
+		g |= p & g << 1;
+		p &= p << 1;
+		g |= p & g << 2;
+		p &= p << 2;
+		return g |= p & g << 4;
 	}
 
 	public static long fillUpLeftOccluded(long g, long p) {
 		p &= 0x7f7f7f7f7f7f7f7fL;
-		g |= p & (g << 7);
-		p &= (p << 7);
-		g |= p & (g << 14);
-		p &= (p << 14);
-		return g |= p & (g << 28);
+		g |= p & g << 7;
+		p &= p << 7;
+		g |= p & g << 14;
+		p &= p << 14;
+		return g |= p & g << 28;
 	}
 
 	public static long fillUpOccluded(long g, long p) {
-		g |= p & (g << 8);
-		p &= (p << 8);
-		g |= p & (g << 16);
-		p &= (p << 16);
-		return g |= p & (g << 32);
+		g |= p & g << 8;
+		p &= p << 8;
+		g |= p & g << 16;
+		p &= p << 16;
+		return g |= p & g << 32;
 	}
 
 	public static long fillUpRightOccluded(long g, long p) {
 		p &= 0xfefefefefefefefeL;
-		g |= p & (g << 9);
-		p &= (p << 9);
-		g |= p & (g << 18);
-		p &= (p << 18);
-		return g |= p & (g << 36);
+		g |= p & g << 9;
+		p &= p << 9;
+		g |= p & g << 18;
+		p &= p << 18;
+		return g |= p & g << 36;
 	}
 
 	public static final long getBitboard(int square) {
@@ -363,6 +376,17 @@ public class GameUtils implements GameConstants {
 
 	public static int getFile(int square) {
 		return square % 8;
+	}
+
+	private static int getIndex(PgnHeader[] headers, String header) {
+		int result = -1;
+		for (int i = 0; i < headers.length; i++) {
+			if (headers[i].getName().equals(header)) {
+				result = i;
+				break;
+			}
+		}
+		return result;
 	}
 
 	public static final int getOppositeColor(int color) {
@@ -446,11 +470,13 @@ public class GameUtils implements GameConstants {
 			fromPiece = getColoredPiece(fromSquare, game);
 		}
 
-		if ((fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_G1)
-				|| (fromPiece == BK && fromSquare == SQUARE_E8 && toSquare == SQUARE_G8)) {
+		if (fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_G1
+				|| fromPiece == BK && fromSquare == SQUARE_E8
+				&& toSquare == SQUARE_G8) {
 			return "O-O";
-		} else if ((fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_C1)
-				|| (fromPiece == BK && fromSquare == SQUARE_E8 && toSquare == SQUARE_C8)) {
+		} else if (fromPiece == WK && fromSquare == SQUARE_E1
+				&& toSquare == SQUARE_C1 || fromPiece == BK
+				&& fromSquare == SQUARE_E8 && toSquare == SQUARE_C8) {
 			return "O-O-O";
 		} else if (isDrop) {
 			return getPieceRepresentation(fromPiece) + "@"
@@ -472,11 +498,13 @@ public class GameUtils implements GameConstants {
 		boolean isDrop = isDropSquare(fromSquare);
 		boolean isToPieceEmpty = toPiece == EMPTY;
 
-		if ((fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_G1)
-				|| (fromPiece == BK && fromSquare == SQUARE_E8 && toSquare == SQUARE_G8)) {
+		if (fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_G1
+				|| fromPiece == BK && fromSquare == SQUARE_E8
+				&& toSquare == SQUARE_G8) {
 			return "O-O";
-		} else if ((fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_C1)
-				|| (fromPiece == BK && fromSquare == SQUARE_E8 && toSquare == SQUARE_C8)) {
+		} else if (fromPiece == WK && fromSquare == SQUARE_E1
+				&& toSquare == SQUARE_C1 || fromPiece == BK
+				&& fromSquare == SQUARE_E8 && toSquare == SQUARE_C8) {
 			return "O-O-O";
 		} else if (isDrop) {
 			return getPieceRepresentation(fromPiece) + "@"
@@ -540,7 +568,7 @@ public class GameUtils implements GameConstants {
 	}
 
 	public static final int getSquare(String san) {
-		return rankFileToSquare(RANK_FROM_SAN.indexOf((san.charAt(1))),
+		return rankFileToSquare(RANK_FROM_SAN.indexOf(san.charAt(1)),
 				FILE_FROM_SAN.indexOf(san.charAt(0)));
 	}
 
@@ -578,11 +606,11 @@ public class GameUtils implements GameConstants {
 		result.append("\n");
 
 		for (int i = 7; i > -1; i--) {
-			for (int k = 0; k < bitBoards.length; k++) {
+			for (long bitBoard : bitBoards) {
 				result.append(" ");
 				for (int j = 0; j < 8; j++) {
 					result
-							.append(((bitBoards[k] & SQUARE_TO_COORDINATE[rankFileToSquare(
+							.append(((bitBoard & SQUARE_TO_COORDINATE[rankFileToSquare(
 									i, j)]) == 0 ? 0 : 1)
 									+ " ");
 				}
@@ -754,9 +782,9 @@ public class GameUtils implements GameConstants {
 
 	public static final long pawnCapture(int colorToMove, long toMovePawns,
 			long enemyPieces) {
-		return colorToMove == WHITE ? (((toMovePawns & NOT_AFILE) << 7) | ((toMovePawns & NOT_HFILE) << 9))
+		return colorToMove == WHITE ? ((toMovePawns & NOT_AFILE) << 7 | (toMovePawns & NOT_HFILE) << 9)
 				& enemyPieces
-				: (((toMovePawns & NOT_HFILE) >> 7) | ((toMovePawns & NOT_AFILE) >>> 9))
+				: ((toMovePawns & NOT_HFILE) >> 7 | (toMovePawns & NOT_AFILE) >>> 9)
 						& enemyPieces;
 	}
 
@@ -779,7 +807,7 @@ public class GameUtils implements GameConstants {
 	public static final long pawnSinglePush(int colorToMove, long toMovePawns,
 			long empty) {
 		int direction = colorToMove == WHITE ? NORTH : SOUTH;
-		return (moveOne(direction, toMovePawns) & empty);
+		return moveOne(direction, toMovePawns) & empty;
 	}
 
 	public static final int populationCount(long bitboard) {
@@ -790,7 +818,7 @@ public class GameUtils implements GameConstants {
 	 * Returns the square given a 0 based rank and file.
 	 */
 	public static final int rankFileToSquare(int rank, int file) {
-		return (rank * 8) + file;
+		return rank * 8 + file;
 	}
 
 	public static long shiftDown(long b) {
@@ -798,20 +826,20 @@ public class GameUtils implements GameConstants {
 	}
 
 	public static long shiftDownLeft(long b) {
-		return (b >>> 9) & 0x7f7f7f7f7f7f7f7fL;
+		return b >>> 9 & 0x7f7f7f7f7f7f7f7fL;
 	}
 
 	public static long shiftDownRight(long b) {
-		return (b >>> 7) & 0xfefefefefefefefeL;
+		return b >>> 7 & 0xfefefefefefefefeL;
 	}
 
 	public static long shiftLeft(long b) {
-		return (b >>> 1) & 0x7f7f7f7f7f7f7f7fL;
+		return b >>> 1 & 0x7f7f7f7f7f7f7f7fL;
 	}
 
 	// KoggeStone algorithm
 	public static long shiftRight(long b) {
-		return (b << 1) & 0xfefefefefefefefeL;
+		return b << 1 & 0xfefefefefefefefeL;
 	}
 
 	public static long shiftUp(long b) {
@@ -819,11 +847,11 @@ public class GameUtils implements GameConstants {
 	}
 
 	public static long shiftUpLeft(long b) {
-		return (b << 7) & 0x7f7f7f7f7f7f7f7fL;
+		return b << 7 & 0x7f7f7f7f7f7f7f7fL;
 	}
 
 	public static long shiftUpRight(long b) {
-		return (b << 9) & 0xfefefefefefefefeL;
+		return b << 9 & 0xfefefefefefefefeL;
 	}
 
 	public static long southOne(long bitboard) {
@@ -840,21 +868,78 @@ public class GameUtils implements GameConstants {
 		return result;
 	}
 
+	public static String toPgn(Game game) {
+		StringBuilder builder = new StringBuilder(2500);
+		PgnHeader[] requiredHeaders = PgnHeader.STR_HEADERS;
+		for (PgnHeader requiredHeader : requiredHeaders) {
+			String headerValue = game.getHeader(requiredHeader);
+
+			if (headerValue == null || headerValue.equals("")) {
+				headerValue = PgnHeader.UNKNOWN_VALUE;
+				game.setHeader(requiredHeader, headerValue);
+			}
+			PgnUtil.buildHeader(builder, requiredHeader.getName(), headerValue);
+			builder.append("\n");
+		}
+
+		Set<String> allHeaders = game.getAllHeaders();
+		for (String header : allHeaders) {
+			if (getIndex(requiredHeaders, header) == -1) {
+				String headerValue = game.getHeader(header);
+				if (headerValue == null || headerValue.equals("")) {
+					headerValue = PgnHeader.UNKNOWN_VALUE;
+					game.setHeader(header, headerValue);
+				}
+
+				PgnUtil.buildHeader(builder, header, headerValue);
+				builder.append("\n");
+			}
+		}
+		builder.append("\n");
+
+		boolean nextMoveRequiresNumber = true;
+		int charsInCurrentLine = 0;
+
+		// TO DO: add breaking up lines in comments.
+		for (int i = 0; i < game.getHalfMoveCount(); i++) {
+			int charsBefore = builder.length();
+			nextMoveRequiresNumber = PgnUtil.buildMoveInfo(builder, game
+					.getMoveList().get(i), nextMoveRequiresNumber);
+			charsInCurrentLine += builder.length() - charsBefore;
+
+			if (charsInCurrentLine > 75) {
+				charsInCurrentLine = 0;
+				builder.append("\n");
+			} else {
+				builder.append(" ");
+			}
+		}
+
+		if (game.isCheckmate() || game.isStalemate()) {
+			builder.append(game.getResult().getDescription());
+		} else {
+			builder.append(Result.ON_GOING.getDescription());
+		}
+
+		return builder.toString();
+	}
+
 	public static long whitePawnCaptureEast(long whitePawns, long empty) {
-		return ((whitePawns & 9187201950435737471L) << 9) & empty;
+		return (whitePawns & 9187201950435737471L) << 9 & empty;
 	}
 
 	public static long whitePawnCaptureWest(long whitePawns, long empty) {
-		return ((whitePawns & -72340172838076674L) << 7) & empty;
+		return (whitePawns & -72340172838076674L) << 7 & empty;
 	}
 
 	public static long whitePawnLegalDoublePush(long whitePawns, long empty) {
 		long rank4 = 0x00000000FF000000L;
 		long singlePush = whiteSinglePushTargets(whitePawns, empty);
-		return (northOne(singlePush) & empty & rank4);
+		return northOne(singlePush) & empty & rank4;
 	}
 
 	public static long whiteSinglePushTargets(long whitePawns, long empty) {
-		return (northOne(whitePawns) & empty);
+		return northOne(whitePawns) & empty;
 	}
+
 }

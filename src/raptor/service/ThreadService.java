@@ -59,8 +59,8 @@ public class ThreadService {
 					false));
 			printWriter.println("Raptor ThreadService initiated dump "
 					+ new Date());
-			for (int i = 0; i < threadIds.length; i++) {
-				ThreadInfo threadInfo = threads.getThreadInfo(threadIds[i], 10);
+			for (long threadId : threadIds) {
+				ThreadInfo threadInfo = threads.getThreadInfo(threadId, 10);
 				printWriter.println("Thread " + threadInfo.getThreadName()
 						+ " Block time:" + threadInfo.getBlockedTime()
 						+ " Block count:" + threadInfo.getBlockedCount()
@@ -69,8 +69,8 @@ public class ThreadService {
 						+ " Waited Time:" + threadInfo.getWaitedTime()
 						+ " Is Suspended:" + threadInfo.isSuspended());
 				StackTraceElement[] stackTrace = threadInfo.getStackTrace();
-				for (int j = 0; j < stackTrace.length; j++) {
-					printWriter.println(stackTrace[j]);
+				for (StackTraceElement element : stackTrace) {
+					printWriter.println(element);
 				}
 
 			}

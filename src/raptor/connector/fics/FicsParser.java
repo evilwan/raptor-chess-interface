@@ -54,7 +54,7 @@ import raptor.connector.ics.chat.TellEventParser;
 import raptor.connector.ics.chat.WhisperEventParser;
 import raptor.game.Game;
 import raptor.game.GameConstants;
-import raptor.game.Game.Result;
+import raptor.game.Result;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 

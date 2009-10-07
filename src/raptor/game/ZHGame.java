@@ -22,7 +22,6 @@ import static raptor.game.util.GameUtils.getString;
 import static raptor.game.util.GameUtils.rankFileToSquare;
 
 import java.util.Arrays;
-import java.util.Date;
 
 import org.apache.commons.lang.WordUtils;
 
@@ -291,14 +290,14 @@ public class ZHGame extends Game {
 						+ result);
 				break;
 			case 2:
-				result.append("Event: " + event + " Site=" + site + " Time="
-						+ new Date(startTime));
+				result.append("Event: " + getEvent() + " Site=" + getSite()
+						+ " Time=" + getDate());
 				break;
 			case 1:
-				result.append("WhiteName: " + whiteName + " BlackName="
-						+ blackName + " WhiteTime=" + whiteRemainingTimeMilis
-						+ " whiteLag=" + whiteLagMillis
-						+ " blackRemainingTImeMillis = "
+				result.append("WhiteName: " + getWhiteName() + " BlackName="
+						+ getBlackName() + " WhiteTime="
+						+ whiteRemainingTimeMilis + " whiteLag="
+						+ whiteLagMillis + " blackRemainingTImeMillis = "
 						+ blackRemainingTimeMillis + " blackLag="
 						+ blackLagMillis);
 

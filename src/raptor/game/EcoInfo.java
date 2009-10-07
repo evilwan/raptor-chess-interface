@@ -26,10 +26,10 @@ public class EcoInfo {
 	private String variationName = "";
 
 	public EcoInfo(String moves, String eco, String opening, String variation) {
-		this.moveSequence = moves;
-		this.ecoCode = eco;
-		this.openingName = opening;
-		this.variationName = variation;
+		moveSequence = moves;
+		ecoCode = eco;
+		openingName = opening;
+		variationName = variation;
 	}
 
 	/**

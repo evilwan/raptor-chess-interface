@@ -59,8 +59,8 @@ public class SWTUtils {
 	public static void clearToolbar(ToolBar toolbar) {
 		if (toolbar != null) {
 			ToolItem[] toolItems = toolbar.getItems();
-			for (int i = 0; i < toolItems.length; i++) {
-				toolItems[i].dispose();
+			for (ToolItem toolItem : toolItems) {
+				toolItem.dispose();
 			}
 		}
 	}

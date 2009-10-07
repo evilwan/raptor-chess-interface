@@ -323,7 +323,7 @@ public class ChessBoard extends Composite implements BoardConstants {
 	 * bottom.
 	 */
 	public boolean isWhitePieceJailOnTop() {
-		return this.isWhitePieceJailOnTop;
+		return isWhitePieceJailOnTop;
 	}
 
 	/**
@@ -377,9 +377,9 @@ public class ChessBoard extends Composite implements BoardConstants {
 				squares[i][j].unhighlight();
 			}
 		}
-		for (int i = 0; i < pieceJailSquares.length; i++) {
-			if (pieceJailSquares[i] != null) {
-				pieceJailSquares[i].unhighlight();
+		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+			if (pieceJailSquare != null) {
+				pieceJailSquare.unhighlight();
 			}
 		}
 	}
@@ -399,13 +399,13 @@ public class ChessBoard extends Composite implements BoardConstants {
 			}
 		}
 
-		for (int i = 0; i < pieceJailSquares.length; i++) {
-			if (pieceJailSquares[i] != null) {
-				pieceJailSquares[i].setForeground(preferences
+		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+			if (pieceJailSquare != null) {
+				pieceJailSquare.setForeground(preferences
 						.getColor(BOARD_HIGHLIGHT_COLOR));
-				pieceJailSquares[i].setBackground(preferences
+				pieceJailSquare.setBackground(preferences
 						.getColor(BOARD_PIECE_JAIL_BACKGROUND_COLOR));
-				pieceJailSquares[i].clearCache();
+				pieceJailSquare.clearCache();
 			}
 		}
 	}

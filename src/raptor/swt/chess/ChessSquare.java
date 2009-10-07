@@ -84,8 +84,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 					board.setData(DRAG_INITIATOR, ChessSquare.this);
 					board.setData(DROP_HANDLED, false);
 					updateCursorForDrag(piece);
-					board.controller.userInitiatedMove(ChessSquare.this.id,
-							true);
+					board.controller.userInitiatedMove(id, true);
 				} else {
 					board.setData(DRAG_INITIATOR, null);
 					board.setData(DROP_HANDLED, false);
@@ -136,7 +135,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			} else if (e.button == 1) {
 				Long lastDropTime = (Long) board.getData(LAST_DROP_TIME);
 				if (lastDropTime == null
-						|| (System.currentTimeMillis() - lastDropTime > 100)) {
+						|| System.currentTimeMillis() - lastDropTime > 100) {
 					ChessSquare initiator = (ChessSquare) board
 							.getData(CLICK_INITIATOR);
 
@@ -162,12 +161,10 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							// type.
 							board.controller.userCancelledMove(initiator.id,
 									false);
-							board.controller.userInitiatedMove(
-									ChessSquare.this.id, false);
+							board.controller.userInitiatedMove(id, false);
 							board.setData(CLICK_INITIATOR, ChessSquare.this);
 						} else {// A valid move
-							board.controller.userMadeMove(initiator.id,
-									ChessSquare.this.id);
+							board.controller.userMadeMove(initiator.id, id);
 							board.setData(CLICK_INITIATOR, null);
 						}
 					}
@@ -254,7 +251,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 */
 	public ChessSquare(ChessBoard chessBoard, int id, boolean isLight) {
 		super(chessBoard, SWT.DOUBLE_BUFFERED);
-		this.board = chessBoard;
+		board = chessBoard;
 		this.id = id;
 		this.isLight = isLight;
 		addPaintListener(paintListener);
@@ -445,7 +442,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * @param isLight
 	 */
 	public void setLight(boolean isLight) {
-		this.isHighlighted = isLight;
+		isHighlighted = isLight;
 	}
 
 	/**

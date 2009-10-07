@@ -25,6 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import raptor.Raptor;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
+import raptor.util.RaptorStringUtils;
 
 public class RaptorPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
@@ -84,8 +85,11 @@ public class RaptorPage extends FieldEditorPreferencePage {
 				"Timeseal Init String (Advanced):", getFieldEditorParent());
 		addField(timesealInitString);
 
-		labelButtonFieldEditor = new LabelButtonFieldEditor("NONE",
-				"Current image cache size: " + size / 1024 + "K",
+		labelButtonFieldEditor = new LabelButtonFieldEditor(
+				"NONE",
+				"Current image cache size: "
+						+ RaptorStringUtils.getMegs(size)
+						+ "\n (Advanced: This could negatively impact Raptor performance)",
 				getFieldEditorParent(), "Clear Cache", new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {

@@ -60,9 +60,9 @@ public class PartnerTellController extends ChatConsoleController {
 
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
-		return (inboundEvent.getType() == ChatType.PARTNER_TELL)
-				|| (inboundEvent.getType() == ChatType.OUTBOUND && connector
-						.isLikelyPartnerTell(inboundEvent.getMessage()));
+		return inboundEvent.getType() == ChatType.PARTNER_TELL
+				|| inboundEvent.getType() == ChatType.OUTBOUND
+				&& connector.isLikelyPartnerTell(inboundEvent.getMessage());
 	}
 
 	@Override

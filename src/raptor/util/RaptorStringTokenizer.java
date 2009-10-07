@@ -109,8 +109,8 @@ public class RaptorStringTokenizer {
 				for (int i = 0; i < delimiters.length(); i++) {
 					int delimiter = source.indexOf(delimiters.charAt(i),
 							currentIndex);
-					if (nearestDelimeter == -1
-							|| (delimiter != -1 && delimiter < nearestDelimeter)) {
+					if (nearestDelimeter == -1 || delimiter != -1
+							&& delimiter < nearestDelimeter) {
 						nearestDelimeter = delimiter;
 					}
 				}
@@ -131,6 +131,41 @@ public class RaptorStringTokenizer {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Returns null if there is nothing left.
+	 */
+	public String peek() {
+		String result = null;
+		if (isEmpty()) {
+			return null;
+		} else {
+			int cachedCurrentIndex = currentIndex;
+			if (isEatingBlocksOfDelimiters()) {
+				trimStartingDelimiters();
+			}
+
+			int nearestDelimeter = -1;
+			for (int i = 0; i < delimiters.length(); i++) {
+				int delimiter = source.indexOf(delimiters.charAt(i),
+						currentIndex);
+				if (nearestDelimeter == -1 || delimiter != -1
+						&& delimiter < nearestDelimeter) {
+					nearestDelimeter = delimiter;
+				}
+			}
+
+			if (nearestDelimeter == -1) {
+				result = source.substring(currentIndex);
+			} else {
+				result = source.substring(currentIndex, nearestDelimeter);
+			}
+
+			currentIndex = cachedCurrentIndex;
+		}
+		return result;
+
 	}
 
 	public void setCurrentIndex(int currentIndex) {

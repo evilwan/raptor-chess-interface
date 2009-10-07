@@ -59,8 +59,8 @@ public class GameScript implements Comparable<GameScript> {
 			}
 		});
 		if (files != null) {
-			for (int i = 0; i < files.length; i++) {
-				String name = RaptorStringUtils.replaceAll(files[i].getName(),
+			for (File file : files) {
+				String name = RaptorStringUtils.replaceAll(file.getName(),
 						".properties", "");
 				result.add(new GameScript(connector, name));
 			}
@@ -98,7 +98,7 @@ public class GameScript implements Comparable<GameScript> {
 	}
 
 	public int compareTo(GameScript o) {
-		return this.getName().compareTo(o.getName());
+		return getName().compareTo(o.getName());
 	}
 
 	public void delete() {
@@ -107,8 +107,7 @@ public class GameScript implements Comparable<GameScript> {
 	}
 
 	public boolean equals(GameScript script) {
-		return this.connector == script.connector
-				&& this.name.equals(script.name);
+		return connector == script.connector && name.equals(script.name);
 	}
 
 	public void execute(ChessBoard board) {
