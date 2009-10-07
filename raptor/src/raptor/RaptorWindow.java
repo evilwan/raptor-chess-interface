@@ -1003,7 +1003,7 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				RaptorTabItem selection = folder.getRaptorTabItemSelection();
-				selection.raptorItem.onActivate();
+				folder.passivateActiveateItems();
 				folder.setTopRight(selection.raptorItem.getToolbar(folder),
 						SWT.RIGHT);
 			}

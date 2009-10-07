@@ -54,8 +54,8 @@ public abstract class ChessBoardLayout extends Layout implements BoardConstants 
 		if (!board.isWhiteOnTop()) {
 			for (int i = 7; i > -1; i--) {
 				for (int j = 0; j < 8; j++) {
-					board.getSquare(i, j).setBounds(x, y, squareSideSize,
-							squareSideSize);
+					ChessSquare square = board.getSquare(i, j);
+					square.setBounds(x, y, squareSideSize, squareSideSize);
 					x += squareSideSize;
 				}
 				x = topLeft.x;
@@ -65,8 +65,8 @@ public abstract class ChessBoardLayout extends Layout implements BoardConstants 
 		} else {
 			for (int i = 0; i < 8; i++) {
 				for (int j = 7; j > -1; j--) {
-					board.getSquare(i, j).setBounds(x, y, squareSideSize,
-							squareSideSize);
+					ChessSquare square = board.getSquare(i, j);
+					square.setBounds(x, y, squareSideSize, squareSideSize);
 					x += squareSideSize;
 				}
 				x = topLeft.x;
