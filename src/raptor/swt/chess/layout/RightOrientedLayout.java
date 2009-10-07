@@ -98,6 +98,9 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	}
 
 	protected void adjustLabelFontsAndImages() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Adjusting name labels.");
+		}
 		board.getGameDescriptionLabel().setFont(
 				SWTUtils.getProportionalFont(board.getGameDescriptionLabel()
 						.getFont(), 80, topLabelHeight));
@@ -128,7 +131,6 @@ public class RightOrientedLayout extends ChessBoardLayout {
 				SWT.DEFAULT, true);
 
 		if (nameSize.y + lagSize.y <= squareSize) {
-			System.err.println("****Adjusted name labels****");
 			topNameLabelRect.height = nameSize.y;
 			bottomNameLabelRect.height = nameSize.y;
 
@@ -181,6 +183,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 	@Override
 	protected void layout(Composite composite, boolean flushCache) {
+
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("in layout(" + flushCache + ") " + composite.getSize().x
 					+ " " + composite.getSize().y);
@@ -308,6 +311,11 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	}
 
 	protected void setLayoutData() {
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Setting layout data.");
+		}
+
 		int width = board.getSize().x;
 		int height = board.getSize().y;
 

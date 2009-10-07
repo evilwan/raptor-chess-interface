@@ -106,7 +106,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public void onPassivate() {
-		board.setLayoutDeferred(true);
+		//board.setLayoutDeferred(true);
 		board.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				board.getController().onPassivate();

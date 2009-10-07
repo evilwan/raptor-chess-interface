@@ -570,19 +570,23 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * does nothing.
 	 */
 	public void onActivate() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("In onActivate : " + game.getId());
+		}
 	}
 
 	/**
 	 * Flips the ChessBoard object.
 	 */
 	public void onFlip() {
-		LOG.debug("onFlip");
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("onFlip");
+		}
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
 		board.redrawSquares();
 		board.layout();
 		board.redraw();
-		LOG.debug("isWhiteOnTop = " + board.isWhiteOnTop);
 	}
 
 	/**
@@ -590,6 +594,9 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * implementation does nothing.
 	 */
 	public void onPassivate() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("In onPassivate : " + game.getId());
+		}
 	}
 
 	/**
