@@ -8,25 +8,21 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
 import raptor.Raptor;
 import raptor.game.GameConstants;
-import raptor.game.Game.Result;
 import raptor.game.util.GameUtils;
-import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
-import raptor.swt.SWTUtils;
 import raptor.swt.chess.layout.RightOrientedLayout;
 
+/**
+ * A GUI representation of a chess board, and all controls associated with it
+ * (e.g. labels,piece jail, etc).. All ChessBoards should have a
+ * ChessBoardController which manages it.
+ */
 public class ChessBoard extends Composite implements BoardConstants {
-
-	public static final String SETUP_EXECUTE_FEN = "setup-execute-fen";
 
 	static final Log LOG = LogFactory.getLog(ChessBoard.class);
 
@@ -34,50 +30,56 @@ public class ChessBoard extends Composite implements BoardConstants {
 	protected CLabel blackLagLabel;
 	protected CLabel blackNameRatingLabel;
 
+	protected CLabel blackToMoveIndicatorLabel;
+	protected ChessBoardLayout chessBoardLayout;
 	protected ChessBoardController controller;
+
 	protected CLabel currentPremovesLabel;
 	protected CLabel gameDescriptionLabel;
 
 	protected boolean isWhiteOnTop = false;
 	protected boolean isWhitePieceJailOnTop = true;
 
-	protected CLabel statusLabel;
-	protected ChessBoardLayout chessBoardLayout;
-
 	protected CLabel openingDescriptionLabel;
 
 	// Piece jail is indexed by the colored piece constants in Constants.
-	// Some of the indexes will always be null.
-	protected LabeledChessSquare[] pieceJailSquares = new LabeledChessSquare[14];
-	
+	// The 0th index will always be null. (for the empty piece).
+	protected LabeledChessSquare[] pieceJailSquares = new LabeledChessSquare[13];
+
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent arg0) {
 			updateFromPrefs();
 		}
 	};
 
+	protected ResultChessBoardDecoration resultDecoration;
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
+	protected CLabel statusLabel;
 	protected CLabel whiteClockLabel;
 	protected CLabel whiteLagLabel;
-	protected CLabel whiteToMoveIndicatorLabel;
-	protected CLabel blackToMoveIndicatorLabel;
 
 	protected CLabel whiteNameRatingLabel;
 
-	protected int resultFontHeight;
-
-	protected Font resultFont;
+	protected CLabel whiteToMoveIndicatorLabel;
 
 	public ChessBoard(Composite parent) {
 		super(parent, SWT.DOUBLE_BUFFERED);
 	}
 
+	/**
+	 * Creates the chess board layout to use for this chess board.
+	 */
 	protected void createChessBoardLayout() {
 		chessBoardLayout = new RightOrientedLayout(this);
 	}
 
+	/**
+	 * Creates all of the ChessBoard's controls.
+	 */
 	public void createControls() {
-		LOG.info("Creating controls");
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Creating controls");
+		}
 
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -95,7 +97,9 @@ public class ChessBoard extends Composite implements BoardConstants {
 					chessBoardLayout.dispose();
 					chessBoardLayout = null;
 				}
-				LOG.debug("Disposed chessboard.");
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Disposed chessboard.");
+				}
 			}
 		});
 
@@ -104,8 +108,8 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 		setLayout(chessBoardLayout);
 
-		initSquares();
-		initPieceJail();
+		createSquares();
+		createPieceJailControls();
 
 		whiteNameRatingLabel = new CLabel(this, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
@@ -141,30 +145,53 @@ public class ChessBoard extends Composite implements BoardConstants {
 		Raptor.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
 
-		LOG.info("Created controls in "
-				+ (System.currentTimeMillis() - startTime));
+		resultDecoration = new ResultChessBoardDecoration(this);
 
 		updateFromPrefs();
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Created controls in "
+					+ (System.currentTimeMillis() - startTime));
+		}
 	}
 
-	/**
-	 * Draws the result text centered in the specified component.
-	 * 
-	 * @param e
-	 *            The paint event to draw in.
-	 * @param text
-	 *            The text to draw.
-	 */
-	protected void drawResultText(PaintEvent e, String text) {
-		if (text != null) {
-			e.gc.setForeground(Raptor.getInstance().getPreferences().getColor(
-					PreferenceKeys.BOARD_RESULT_COLOR));
+	protected void createPieceJailControls() {
+		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(this,
+				GameConstants.WP_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(this,
+				GameConstants.WN_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(this,
+				GameConstants.WB_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(this,
+				GameConstants.WR_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(this,
+				GameConstants.WQ_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(this,
+				GameConstants.WK_DROP_FROM_SQUARE);
 
-			e.gc.setFont(getResultFont(e.height));
+		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(this,
+				GameConstants.BP_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(this,
+				GameConstants.BN_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(this,
+				GameConstants.BB_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(this,
+				GameConstants.BR_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(this,
+				GameConstants.BQ_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(this,
+				GameConstants.BK_DROP_FROM_SQUARE);
+	}
 
-			Point extent = e.gc.stringExtent(text);
-			e.gc.drawString(text, e.width / 2 - extent.x / 2, e.height / 2
-					- extent.y / 2, true);
+	protected void createSquares() {
+		boolean isWhiteSquare = true;
+		for (int i = 0; i < 8; i++) {
+			isWhiteSquare = !isWhiteSquare;
+			for (int j = 0; j < squares[i].length; j++) {
+				squares[i][j] = new ChessSquare(this, GameUtils
+						.rankFileToSquare(i, j), isWhiteSquare);
+				isWhiteSquare = !isWhiteSquare;
+			}
 		}
 	}
 
@@ -204,37 +231,27 @@ public class ChessBoard extends Composite implements BoardConstants {
 		return pieceJailSquares[coloredPiece];
 	}
 
+	/**
+	 * Returns the array of LabeledChessSquares representing the piece jail
+	 * squares.
+	 * 
+	 * @return
+	 */
 	public LabeledChessSquare[] getPieceJailSquares() {
 		return pieceJailSquares;
 	}
 
 	/**
-	 * Returns the font to use for the result text drawn over the board. This
-	 * font grows and shrinks depending on the size of the square the text is
-	 * drawn in.
-	 * 
-	 * @param width
-	 *            The width of the square.
-	 * @param height
-	 *            The height of the square.
+	 * Returns the chess board result decoration for this chess board.
 	 */
-	protected synchronized Font getResultFont(int height) {
-		if (resultFont == null) {
-			resultFont = Raptor.getInstance().getPreferences().getFont(
-					PreferenceKeys.BOARD_RESULT_FONT);
-			resultFont = SWTUtils.getProportionalFont(resultFont, 80, height);
-			resultFontHeight = height;
-		} else {
-			if (resultFontHeight != height) {
-				Font newFont = SWTUtils.getProportionalFont(resultFont, 80,
-						height);
-				resultFontHeight = height;
-				resultFont = newFont;
-			}
-		}
-		return resultFont;
+	public ResultChessBoardDecoration getResultDecoration() {
+		return resultDecoration;
 	}
 
+	/**
+	 * Returns the ChessSquare at the specified square. Drop constants in
+	 * GameConstants are also supported.
+	 */
 	public ChessSquare getSquare(int square) {
 
 		if (BoardUtils.isPieceJailSquare(square)) {
@@ -246,10 +263,17 @@ public class ChessBoard extends Composite implements BoardConstants {
 		}
 	}
 
+	/**
+	 * Returns the ChessSquare at the specified 0 based rank and 0 based file.
+	 */
 	public ChessSquare getSquare(int rank, int file) {
 		return squares[rank][file];
 	}
 
+	/**
+	 * Returns the ChessSquares being managed in 0 based rank file order.
+	 * square[rank][file].
+	 */
 	public ChessSquare[][] getSquares() {
 		return squares;
 	}
@@ -274,178 +298,23 @@ public class ChessBoard extends Composite implements BoardConstants {
 		return whiteToMoveIndicatorLabel;
 	}
 
-	void initPieceJail() {
-		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(this,
-				GameConstants.WP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(this,
-				GameConstants.WN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(this,
-				GameConstants.WB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(this,
-				GameConstants.WR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(this,
-				GameConstants.WQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(this,
-				GameConstants.WK_DROP_FROM_SQUARE);
-
-		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(this,
-				GameConstants.BP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(this,
-				GameConstants.BN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(this,
-				GameConstants.BB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(this,
-				GameConstants.BR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(this,
-				GameConstants.BQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(this,
-				GameConstants.BK_DROP_FROM_SQUARE);
-	}
-
-	void initSquares() {
-		boolean isWhiteSquare = true;
-		for (int i = 0; i < 8; i++) {
-			isWhiteSquare = !isWhiteSquare;
-			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j] = new ChessSquare(this, GameUtils
-						.rankFileToSquare(i, j), isWhiteSquare);
-				isWhiteSquare = !isWhiteSquare;
-			}
-		}
-
-		// Add paint listeners to the squares to redraw the result.
-		squares[GameUtils.getRank(SQUARE_D4)][GameUtils.getFile(SQUARE_D4)]
-				.addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						if (!isWhiteOnTop
-								&& getController().getGame().getResult() != Result.IN_PROGRESS) {
-							String text = null;
-							if (getController().getGame().getResult() == Result.WHITE_WON) {
-								text = "1";
-							} else if (getController().getGame().getResult() == Result.BLACK_WON) {
-								text = "0";
-							} else if (getController().getGame().getResult() == Result.DRAW) {
-								text = ".5";
-							} else if (getController().getGame().getResult() == Result.UNDETERMINED) {
-
-							}
-							drawResultText(e, text);
-						}
-					}
-				});
-
-		squares[GameUtils.getRank(SQUARE_E4)][GameUtils.getFile(SQUARE_E4)]
-				.addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						if (!isWhiteOnTop
-								&& getController().getGame().getResult() != Result.IN_PROGRESS) {
-
-							String text = null;
-							if (getController().getGame().getResult() == Result.WHITE_WON) {
-								text = "-";
-							} else if (getController().getGame().getResult() == Result.BLACK_WON) {
-								text = "-";
-							} else if (getController().getGame().getResult() == Result.DRAW) {
-								text = "-";
-							} else if (getController().getGame().getResult() == Result.UNDETERMINED) {
-								text = "*";
-							}
-							drawResultText(e, text);
-						}
-					}
-				});
-
-		squares[GameUtils.getRank(SQUARE_F4)][GameUtils.getFile(SQUARE_F4)]
-				.addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						if (!isWhiteOnTop
-								&& getController().getGame().getResult() != Result.IN_PROGRESS) {
-
-							String text = null;
-							if (getController().getGame().getResult() == Result.WHITE_WON) {
-								text = "0";
-							} else if (getController().getGame().getResult() == Result.BLACK_WON) {
-								text = "1";
-							} else if (getController().getGame().getResult() == Result.DRAW) {
-								text = ".5";
-							}
-							drawResultText(e, text);
-						}
-					}
-				});
-
-		squares[GameUtils.getRank(SQUARE_E5)][GameUtils.getFile(SQUARE_E5)]
-				.addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						if (isWhiteOnTop
-								&& getController().getGame().getResult() != Result.IN_PROGRESS) {
-							String text = null;
-							if (getController().getGame().getResult() == Result.WHITE_WON) {
-								text = "1";
-							} else if (getController().getGame().getResult() == Result.BLACK_WON) {
-								text = "0";
-							} else if (getController().getGame().getResult() == Result.DRAW) {
-								text = ".5";
-							} else if (getController().getGame().getResult() == Result.UNDETERMINED) {
-
-							}
-							drawResultText(e, text);
-						}
-					}
-				});
-
-		squares[GameUtils.getRank(SQUARE_D5)][GameUtils.getFile(SQUARE_D5)]
-				.addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						if (isWhiteOnTop
-								&& getController().getGame().getResult() != Result.IN_PROGRESS) {
-
-							String text = null;
-							if (getController().getGame().getResult() == Result.WHITE_WON) {
-								text = "-";
-							} else if (getController().getGame().getResult() == Result.BLACK_WON) {
-								text = "-";
-							} else if (getController().getGame().getResult() == Result.DRAW) {
-								text = "-";
-							} else if (getController().getGame().getResult() == Result.UNDETERMINED) {
-								text = "*";
-							}
-							drawResultText(e, text);
-						}
-					}
-				});
-
-		squares[GameUtils.getRank(SQUARE_C5)][GameUtils.getFile(SQUARE_C5)]
-				.addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						if (isWhiteOnTop
-								&& getController().getGame().getResult() != Result.IN_PROGRESS) {
-
-							String text = null;
-							if (getController().getGame().getResult() == Result.WHITE_WON) {
-								text = "0";
-							} else if (getController().getGame().getResult() == Result.BLACK_WON) {
-								text = "1";
-							} else if (getController().getGame().getResult() == Result.DRAW) {
-								text = ".5";
-							}
-							drawResultText(e, text);
-						}
-					}
-				});
-
-	}
-
+	/**
+	 * Returns true if white is on top, false if white is on botton.
+	 */
 	public boolean isWhiteOnTop() {
 		return isWhiteOnTop;
 	}
 
+	/**
+	 * Returns true if the white pieces piece jail is on top. False if it is on
+	 * bottom.
+	 */
 	public boolean isWhitePieceJailOnTop() {
 		return this.isWhitePieceJailOnTop;
 	}
 
 	/**
-	 * Forces redraws on all of the squares.
+	 * Forces redraws on all of the squares and all of the pieceJailSquares.
 	 */
 	public void redrawSquares() {
 		for (int i = 0; i < 8; i++) {
@@ -453,21 +322,42 @@ public class ChessBoard extends Composite implements BoardConstants {
 			for (int j = 0; j < squares[i].length; j++) {
 				squares[i][j].redraw();
 			}
+
 		}
+
+		for (int i = 1; i < pieceJailSquares.length; i++) {
+			pieceJailSquares[i].redraw();
+		}
+
 	}
 
+	/**
+	 * Sets the controller managing this ChessBoard.
+	 */
 	public void setController(ChessBoardController controller) {
 		this.controller = controller;
 	}
 
+	/**
+	 * Sets the white on top flag. This method does not redraw or relayout. That
+	 * is left to the caller.
+	 */
 	public void setWhiteOnTop(boolean isWhiteOnTop) {
 		this.isWhiteOnTop = isWhiteOnTop;
 	}
 
+	/**
+	 * Sets the piece jail on top flag. This method does not redraw or relayout.
+	 * That is left to the caller.
+	 */
 	public void setWhitePieceJailOnTop(boolean isWhitePieceJailOnTop) {
 		this.isWhitePieceJailOnTop = isWhitePieceJailOnTop;
 	}
 
+	/**
+	 * Unhighlights all the squares. This method does not redraw them, that is
+	 * left to the caller.
+	 */
 	public void unhighlightAllSquares() {
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -481,7 +371,11 @@ public class ChessBoard extends Composite implements BoardConstants {
 		}
 	}
 
-	void updateBoardFromPrefs() {
+	/**
+	 * Updates only the board and piece jails from
+	 * Raptor.getInstance().getPreferences().
+	 */
+	protected void updateBoardFromPrefs() {
 		RaptorPreferenceStore preferences = Raptor.getInstance()
 				.getPreferences();
 		for (int i = 0; i < 8; i++) {
@@ -503,6 +397,10 @@ public class ChessBoard extends Composite implements BoardConstants {
 		}
 	}
 
+	/**
+	 * Updates all control settings to those in
+	 * Raptor.getInstance().getPreferences().
+	 */
 	public void updateFromPrefs() {
 		RaptorPreferenceStore preferences = Raptor.getInstance()
 				.getPreferences();

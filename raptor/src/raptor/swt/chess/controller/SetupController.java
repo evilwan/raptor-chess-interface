@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.game.GameConstants;
@@ -24,7 +25,6 @@ import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
-import raptor.swt.chess.LabeledChessSquare;
 
 /**
  * A controller used when setting up a position. When the controller receives a
@@ -36,11 +36,13 @@ import raptor.swt.chess.LabeledChessSquare;
  */
 public class SetupController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ExamineController.class);
+	protected Connector connector;
+
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
 		public void gameInactive(Game game) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -77,7 +79,7 @@ public class SetupController extends ChessBoardController {
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -93,7 +95,7 @@ public class SetupController extends ChessBoardController {
 
 		@Override
 		public void illegalMove(Game game, final String move) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -109,7 +111,7 @@ public class SetupController extends ChessBoardController {
 
 		@Override
 		public void setupGameBecameExamined(Game game) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -119,16 +121,16 @@ public class SetupController extends ChessBoardController {
 							examineController
 									.setItemChangedListeners(itemChangedListeners);
 							examineController.setBoard(board);
-							examineController.fireItemChanged();
 							board.setWhitePieceJailOnTop(true);
 							connector.getGameService()
 									.removeGameServiceListener(listener);
-							setItemChangedListeners(null);
-
-							examineController.init();
 
 							// Set the listeners to null so they wont get
 							// cleared and disposed
+							setItemChangedListeners(null);
+
+							examineController.init();
+							examineController.fireItemChanged();
 
 							unexamineOnDispose = false;
 							SetupController.this.dispose();
@@ -143,10 +145,8 @@ public class SetupController extends ChessBoardController {
 			}
 		}
 	};
-
-	protected Connector connector;
-	protected boolean unexamineOnDispose = true;
 	protected ToolBar toolbar;
+	protected boolean unexamineOnDispose = true;
 
 	public SetupController(Game game, Connector connector) {
 		super(game);
@@ -155,7 +155,7 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	protected void adjustClockColors() {
-		if (!isBeingUsed()) {
+		if (!isDisposed()) {
 			if (getGame().getColorToMove() == WHITE) {
 				board.getWhiteClockLabel().setForeground(
 						getPreferences().getColor(
@@ -176,62 +176,23 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void adjustGameDescriptionLabel() {
-		if (!isBeingUsed()) {
+		if (!isDisposed()) {
 			board.getGameDescriptionLabel().setText(
 					"Setting up a chess position");
 		}
 	}
 
-	// @Override
-	// protected void adjustCoolbarToInitial() {
-	// if (!isBeingReparented()) {
-	// board.addGameActionButtonsToCoolbar();
-	// board.addSetupToCoolbar();
-	// board.packCoolbar();
-	// }
-	// }
+	protected void adjustToDropMove(Move move, boolean isRedrawing) {
+		board.unhighlightAllSquares();
+		board.getSquare(move.getFrom()).highlight();
+		board.getSquare(move.getTo()).highlight();
 
-	@Override
-	protected void adjustPieceJailFromGame(Game game) {
-		if (!isBeingUsed()) {
-			for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
-				int color = DROPPABLE_PIECE_COLOR[i];
-				int coloredPiece = DROPPABLE_PIECES[i];
-				int uncoloredPiece = BoardUtils
-						.pieceFromColoredPiece(coloredPiece);
-				LabeledChessSquare square = getBoard().getPieceJailSquare(
-						coloredPiece);
-				int count = game.getPieceCount(color, uncoloredPiece);
+		board.getSquare(move.getTo()).setPiece(
+				BoardUtils
+						.getColoredPiece(move.getPiece(), move.isWhitesMove()));
 
-				if (count > 0) {
-					square.setPiece(coloredPiece);
-				} else {
-					square.setPiece(EMPTY);
-				}
-
-				square.setText(BoardUtils.pieceCountToString(count));
-				square.redraw();
-			}
-		}
-	}
-
-	// @Override
-	// protected void adjustNavButtonEnabledState() {
-	// if (!isBeingReparented()) {
-	// board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
-	// board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
-	// board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
-	// board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
-	// board.setCoolBarButtonEnabled(false, ChessBoard.COMMIT_NAV);
-	// board.setCoolBarButtonEnabled(false, ChessBoard.REVERT_NAV);
-	// }
-	// }
-
-	protected void adjustToDropMove(Move move) {
-		if (!isBeingUsed()) {
-			board.getSquare(move.getTo()).setPiece(
-					BoardUtils.getColoredPiece(move.getPiece(), move
-							.isWhitesMove()));
+		if (isRedrawing) {
+			board.redrawSquares();
 		}
 	}
 
@@ -278,109 +239,76 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void init() {
-		super.init();
 		board.setWhitePieceJailOnTop(false);
+		board.setWhiteOnTop(false);
+		refresh();
+		onPlayGameStartSound();
 		connector.getGameService().addGameServiceListener(listener);
 	}
 
-	@Override
-	public boolean isAutoDrawable() {
-		return false;
-	}
-
-	@Override
-	public boolean isCommitable() {
-		return false;
-	}
-
-	@Override
-	public boolean isMoveListTraversable() {
-		return false;
-	}
-
-	@Override
-	public boolean isNavigatable() {
-		return false;
-	}
-
-	@Override
-	public boolean isRevertable() {
-		return false;
-	}
-
-	@Override
 	protected void onPlayGameEndSound() {
 		SoundService.getInstance().playSound("obsGameEnd");
 	}
 
-	@Override
 	protected void onPlayGameStartSound() {
 		SoundService.getInstance().playSound("gameStart");
 	}
 
-	@Override
 	protected void onPlayMoveSound() {
 		SoundService.getInstance().playSound("move");
 	}
 
 	@Override
-	public void onSetupClear() {
-		if (!isBeingUsed()) {
+	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
+		switch (key) {
+		case FEN:
+			Raptor.getInstance().promptForText(
+					"FEN for game " + game.getWhiteName() + " vs "
+							+ game.getBlackName(), game.toFEN());
+			break;
+		case FLIP:
+			onFlip();
+			break;
+		case SETUP_CLEAR:
 			connector.onSetupClear(getGame());
-		}
-	}
-
-	@Override
-	public void onSetupDone() {
-		if (!isBeingUsed()) {
-			connector.onSetupComplete(getGame());
-		}
-	}
-
-	@Override
-	public void onSetupFen(String fen) {
-		if (!isBeingUsed()) {
-			connector.onSetupFromFEN(getGame(), fen);
-		}
-	}
-
-	@Override
-	public void onSetupStart() {
-		if (!isBeingUsed()) {
+			break;
+		case SETUP_START:
 			connector.onSetupStartPosition(getGame());
+			break;
+		case SETUP_DONE:
+			connector.onSetupComplete(getGame());
+			break;
+		case SETUP_FROM_FEN:
+			String result = Raptor.getInstance().promptForText(
+					"Enter the FEN to set the position to:");
+			if (result != null) {
+				connector.onSetupFromFEN(getGame(), result);
+			}
+			break;
+
 		}
 	}
 
 	public void setupOnIllegalMove(String move) {
-		if (!isBeingUsed()) {
-			LOG.info("bsetupOnIllegalMove " + getGame().getId() + " ...");
-			long startTime = System.currentTimeMillis();
-			SoundService.getInstance().playSound("illegalMove");
+		SoundService.getInstance().playSound("illegalMove");
+		if (move != null) {
 			board.getStatusLabel().setText("Illegal Move: " + move);
-			board.unhighlightAllSquares();
-			LOG.info("examineOnIllegalMove in " + getGame().getId() + "  "
-					+ (System.currentTimeMillis() - startTime));
 		}
+		board.unhighlightAllSquares();
+		refreshBoard();
 	}
 
 	public void setupPositionUpdated() {
-		if (!isBeingUsed()) {
+		if (LOG.isDebugEnabled()) {
 			LOG.info("besetupPositionUpdated " + getGame().getId() + " ...");
-			long startTime = System.currentTimeMillis();
+		}
+		long startTime = System.currentTimeMillis();
 
-			stopClocks();
+		board.unhighlightAllSquares();
+		refresh();
+		onPlayMoveSound();
 
-			adjustNameRatingLabels();
-			adjustGameDescriptionLabel();
-			adjustToGameChangeNotInvolvingMove();
-			adjustBoardToGame(getGame());
-			adjustPieceJailFromGame(getGame());
-			// adjustNavButtonEnabledState();
-			adjustClockColors();
-
-			board.layout();
-			onPlayMoveSound();
-			board.unhighlightAllSquares();
+		if (LOG.isDebugEnabled()) {
 			LOG.info("examinePositionUpdate in " + getGame().getId() + "  "
 					+ (System.currentTimeMillis() - startTime));
 		}
@@ -388,56 +316,53 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		if (!isBeingUsed()) {
-			board.unhighlightAllSquares();
-			adjustToGameMove();
-		}
+		board.unhighlightAllSquares();
+		refresh();
 	}
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		if (!isBeingUsed()) {
-			board.unhighlightAllSquares();
-			board.getSquare(square).highlight();
-			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
-				board.getSquare(square).setPiece(GameConstants.EMPTY);
-			}
+		board.unhighlightAllSquares();
+		board.getSquare(square).highlight();
+		if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
+			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
+		board.redrawSquares();
 	}
 
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-		if (!isBeingUsed()) {
+		if (LOG.isDebugEnabled()) {
 			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
 					+ toSquare);
+		}
+
+		board.unhighlightAllSquares();
+
+		if (fromSquare == toSquare || BoardUtils.isPieceJailSquare(toSquare)) {
 			board.unhighlightAllSquares();
+			refresh();
+			SoundService.getInstance().playSound("illegalMove");
+			return;
+		}
 
-			if (fromSquare == toSquare
-					|| BoardUtils.isPieceJailSquare(toSquare)) {
-				board.unhighlightAllSquares();
-				adjustToGameMove();
-				SoundService.getInstance().playSound("illegalMove");
-				return;
-			}
+		Game game = getGame();
+		Move move = null;
 
-			Game game = getGame();
-			Move move = null;
+		if (BoardUtils.isPieceJailSquare(fromSquare)) {
+			move = BoardUtils.createDropMove(fromSquare, toSquare);
+		} else {
+			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
+					game.getColorToMove(), game.getPiece(toSquare));
+		}
+		// Always make the move first. It appears faster this way to the user.
+		connector.makeMove(game, move);
 
-			if (BoardUtils.isPieceJailSquare(fromSquare)) {
-				move = BoardUtils.createDropMove(fromSquare, toSquare);
-				adjustToDropMove(move);
-			} else {
-				move = new Move(fromSquare, toSquare,
-						game.getPiece(fromSquare), game.getColorToMove(), game
-								.getPiece(toSquare));
-				board.getSquare(toSquare).setPiece(
-						BoardUtils.getColoredPiece(game.getPiece(fromSquare),
-								game.isWhitesMove()));
-			}
-
-			board.getSquare(fromSquare).highlight();
-			board.getSquare(toSquare).highlight();
-			connector.makeMove(game, move);
+		if (move != null) {
+			refreshForMove(move);
+		} else {
+			setupOnIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
+					toSquare));
 		}
 	}
 
@@ -450,7 +375,7 @@ public class SetupController extends ChessBoardController {
 	 */
 	@Override
 	public void userRightClicked(final int square) {
-		if (!isBeingUsed() && !BoardUtils.isPieceJailSquare(square)) {
+		if (!BoardUtils.isPieceJailSquare(square)) {
 
 			Menu menu = new Menu(board.getShell(), SWT.POP_UP);
 
@@ -464,129 +389,123 @@ public class SetupController extends ChessBoardController {
 				});
 			} else {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place white pawn on " + GameUtils.getSan(square));
+				item.setText("White P@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, PAWN, WHITE);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place white knight on "
-						+ GameUtils.getSan(square));
+				item.setText("White N@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, KNIGHT, WHITE);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place white bishop on "
-						+ GameUtils.getSan(square));
+				item.setText("White B@ " + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, BISHOP, WHITE);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place white rook on " + GameUtils.getSan(square));
+				item.setText("White R@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, ROOK, WHITE);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item
-						.setText("Place white queen on "
-								+ GameUtils.getSan(square));
+				item.setText("White Q@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, QUEEN, WHITE);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place white king on " + GameUtils.getSan(square));
+				item.setText("White K@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, KING, WHITE);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
+				item = new MenuItem(menu, SWT.SEPARATOR);
+
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place black pawn on " + GameUtils.getSan(square));
+				item.setText("Black P@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, PAWN, BLACK);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place black knight on "
-						+ GameUtils.getSan(square));
+				item.setText("Black N@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, KNIGHT, BLACK);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place black bishop on "
-						+ GameUtils.getSan(square));
+				item.setText("Black B@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, BISHOP, BLACK);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place black rook on " + GameUtils.getSan(square));
+				item.setText("Black R@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, ROOK, BLACK);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item
-						.setText("Place black queen on "
-								+ GameUtils.getSan(square));
+				item.setText("Black Q@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, QUEEN, BLACK);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});
 
 				item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Place black king on " + GameUtils.getSan(square));
+				item.setText("Black K@" + GameUtils.getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Move move = new Move(square, KING, BLACK);
-						adjustToDropMove(move);
+						adjustToDropMove(move, true);
 						connector.makeMove(getGame(), move);
 					}
 				});

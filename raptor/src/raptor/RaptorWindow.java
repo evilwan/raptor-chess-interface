@@ -409,7 +409,7 @@ public class RaptorWindow extends ApplicationWindow {
 			setText(item.getTitle());
 			setImage(item.getImage());
 			setShowClose(true);
-			parent.layout(true, true);
+			// parent.layout(true, true);
 			parent.setSelection(this);
 			activeItems.add(this);
 		}

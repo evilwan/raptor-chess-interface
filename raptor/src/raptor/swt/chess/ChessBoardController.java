@@ -8,65 +8,49 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
+import raptor.game.EcoInfo;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
-import raptor.game.Game.Result;
-import raptor.game.util.EcoInfo;
 import raptor.game.util.GameUtils;
 import raptor.game.util.MoveListTraverser;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.service.EcoService;
+import raptor.service.ThreadService;
 import raptor.swt.ItemChangedListener;
+import raptor.swt.chess.controller.ToolBarItemKey;
 
 /**
- * A chess board controller manages user adjustments to the ChessBoard and also
- * manages the Game its constructed with.
- * 
- * It manipulates both the game object and the ChessBoard object it is
- * controlling.
- * 
+ * A chess board controller handles updating a ChessBoard to a Game. It also
+ * handles user actions on a game. Subclasses will use a backing Connector to
+ * send and receive moves, and adjust the underlying ChessBoard accordingly.
  * 
  * This is the base controller class providing method implementations to do many
- * things. The idea is to override a method if you want to change the
- * functionality.
+ * things. The idea is to override a method an adjust* if you want to change the
+ * functionality, and utilize the refresh methods to update all of the controls
+ * on the ChessBoard.
  */
 public abstract class ChessBoardController implements BoardConstants,
 		GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 
-	public static final String LAST_NAV = "last_nav";
-	public static final String NEXT_NAV = "forward_nav";
-	public static final String BACK_NAV = "next_nav";
-	public static final String FIRST_NAV = "first_nav";
-	public static final String COMMIT_NAV = "commit_nav";
-	public static final String REVERT_NAV = "revert_nav";
-	public static final String AUTO_QUEEN = "auto-queen";
-	public static final String AUTO_ROOK = "auto-rook";
-	public static final String AUTO_BISHOP = "auto-bishop";
-	public static final String AUTO_KNIGHT = "auto-knight";
-	public static final String AUTO_DRAW = "auto-draw";
-	public static final String FLIP = "flip";
-	public static final String SETUP_DONE = "setup-done";
-	public static final String SETUP_START = "setup-start";
-	public static final String SETUP_CLEAR = "setup-done";
-	public static final String PREMOVE = "premoveia";
-
 	protected ClockLabelUpdater blackClockUpdater;
 	protected ChessBoard board;
-	protected MoveListTraverser traverser;
-	protected ClockLabelUpdater whiteClockUpdater;
 	protected Game game;
-	protected boolean storedIsWhiteOnTop;
-	protected boolean storedIsWhitePieceJailOnTop;
 	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
 			5);
-	protected Map<String, ToolItem> toolItemMap = new HashMap<String, ToolItem>();
+	protected boolean storedIsWhiteOnTop;
+	protected boolean storedIsWhitePieceJailOnTop;
+	protected Map<ToolBarItemKey, ToolItem> toolItemMap = new HashMap<ToolBarItemKey, ToolItem>();
+	protected MoveListTraverser traverser;
+	protected ClockLabelUpdater whiteClockUpdater;
 
 	/**
 	 * Constructs a ChessBoardController with the specified game.
@@ -94,121 +78,56 @@ public abstract class ChessBoardController implements BoardConstants,
 		itemChangedListeners.add(listener);
 	}
 
-	public void addToolItem(String key, ToolItem item) {
+	public void addToolItem(ToolBarItemKey key, ToolItem item) {
 		toolItemMap.put(key, item);
 	}
 
 	/**
 	 * Adjusts only the ChessBoard squares to match the squares in the game.
+	 * 
+	 * This method is provided so it can easily be overridden.
 	 */
-	protected void adjustBoardToGame(Game game) {
-		if (isBeingUsed()) {
+	protected void adjustBoard() {
+		if (isDisposed()) {
 			return;
 		}
-
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board.getSquare(i, j).setPiece(
-						BoardUtils.getColoredPiece(GameUtils.rankFileToSquare(
-								i, j), game));
+						GameUtils.getColoredPiece(GameUtils.rankFileToSquare(i,
+								j), game));
 			}
 		}
 	}
 
 	/**
-	 * Adjusts only the colors of the chess clocks. If the game is in an
-	 * IS_CLOCK_TICKING_STATE the colors are set to inactive/active based on
-	 * whose move it is in the game.
+	 * Adjusts only the colors of the chess clocks based on whose move it is in
+	 * the game.
 	 * 
-	 * Otherwise they are always set to the inactive color.
+	 * This method is provided so it can easily be overridden.
 	 */
 	protected void adjustClockColors() {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
 
-		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
-			if (getGame().getColorToMove() == WHITE) {
-				board.getWhiteClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-				board.getBlackClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			} else {
-				board.getBlackClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-				board.getWhiteClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			}
-		} else {
-			board.getWhiteClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			board.getBlackClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-		}
-	}
+		Color activeColor = getPreferences().getColor(
+				PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR);
+		Color inactiveColor = getPreferences().getColor(
+				PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR);
+		Color nameLabelInactive = getPreferences().getColor(
+				PreferenceKeys.BOARD_PLAYER_NAME_COLOR);
 
-	/**
-	 * Sets the times on the clock to the times in the game.
-	 * 
-	 * Sets the times in the whiteClockUpdater and blackClockUpdater to the
-	 * times of the game.
-	 * 
-	 * Does NOT start or stop the clocks.
-	 */
-	protected void adjustClockLabelsAndUpdaters() {
-		if (isBeingUsed()) {
-			return;
-		}
+		boolean isWhitesMove = getGame().getColorToMove() == WHITE;
 
-		board.whiteClockLabel.setText(BoardUtils.timeToString(getGame()
-				.getWhiteRemainingTimeMillis()));
-		board.blackClockLabel.setText(BoardUtils.timeToString(getGame()
-				.getBlackRemainingTimeMillis()));
-
-		whiteClockUpdater.setRemainingTimeMillis(getGame()
-				.getWhiteRemainingTimeMillis());
-		blackClockUpdater.setRemainingTimeMillis(getGame()
-				.getBlackRemainingTimeMillis());
-	}
-
-	/**
-	 * This class provides functionality for handling a nav button change.
-	 * 
-	 * Nav buttons adjust the traverser.
-	 * 
-	 * This method change the state of the ChessBoard to that of the traverser.
-	 */
-	protected void adjustFromNavigationChange() {
-		// if (isBeingReparented()) {
-		// return;
-		// }
-		//
-		// adjustPieceJailFromGame(traverser.getAdjustedGame());
-		// adjustBoardToGame(traverser.getAdjustedGame());
-		// adjustNavButtonEnabledState();
-		// if (traverser.getTraverserHalfMoveIndex() > 0) {
-		// Move move = traverser.getAdjustedGame().getMoveList().get(
-		// traverser.getTraverserHalfMoveIndex() - 1);
-		// String moveDescription = move.getSan();
-		//
-		// if (StringUtils.isBlank(moveDescription)) {
-		// moveDescription = move.getLan();
-		// }
-		// board.statusLabel.setText("Position after move "
-		// + BoardUtils.halfMoveIndexToDescription(traverser
-		// .getTraverserHalfMoveIndex(), GameUtils
-		// .getOppositeColor(traverser.getAdjustedGame()
-		// .getColorToMove())) + moveDescription);
-		// } else {
-		// board.statusLabel.setText("");
-		// }
-		// board.forceUpdate();
+		board.getWhiteClockLabel().setForeground(
+				isWhitesMove ? activeColor : inactiveColor);
+		board.getWhiteNameRatingLabel().setForeground(
+				isWhitesMove ? activeColor : nameLabelInactive);
+		board.getBlackClockLabel().setForeground(
+				!isWhitesMove ? activeColor : inactiveColor);
+		board.getBlackNameRatingLabel().setForeground(
+				!isWhitesMove ? activeColor : nameLabelInactive);
 	}
 
 	/**
@@ -218,15 +137,13 @@ public abstract class ChessBoardController implements BoardConstants,
 	public abstract void adjustGameDescriptionLabel();
 
 	/**
-	 * Adjusts the game status label. The status label should contain
-	 * information such as the last move made, and a detailed result of the game
-	 * if it is over.
+	 * Adjusts the game status label. If the game is not in an active state, the
+	 * status label sets itself to getResultDescription in the game. If the game
+	 * is in an active state, the status is set to the last move.
+	 * 
+	 * This method is provided so it can easily be overridden.
 	 */
 	public void adjustGameStatusLabel() {
-		if (isBeingUsed()) {
-			return;
-		}
-
 		if (getGame().isInState(Game.ACTIVE_STATE)) {
 			if (getGame().getMoveList().getSize() > 0) {
 				Move lastMove = getGame().getMoveList().get(
@@ -234,9 +151,12 @@ public abstract class ChessBoardController implements BoardConstants,
 				int moveNumber = (getGame().getHalfMoveCount() / 2) + 1;
 
 				board.getStatusLabel().setText(
-						"Last Move: " + moveNumber + ") "
-								+ (lastMove.isWhitesMove() ? "" : "...")
-								+ lastMove.toString());
+						"Last Move: "
+								+ moveNumber
+								+ ") "
+								+ (lastMove.isWhitesMove() ? "" : "... ")
+								+ GameUtils.convertSanToUseUnicode(lastMove
+										.toString(), !game.isWhitesMove()));
 
 			} else {
 				board.getStatusLabel().setText("");
@@ -251,14 +171,16 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Adjusts the colors of the lag labels based on the white lag and black lag
-	 * in the game object. If lag is over 20 seconds the color changes based on
-	 * the BOARD_LAG_OVER_20_SEC_COLOR preference.
+	 * Sets the values of the lag labels to match those of the game object. The
+	 * colors of the labels are changed if lag is greater than 20 seconds.
+	 * 
+	 * This method is provided so it can easily be overridden.
 	 */
-	public void adjustLagColors() {
-		if (isBeingUsed()) {
+	protected void adjustLagLabels() {
+		if (isDisposed()) {
 			return;
 		}
+
 		if (getGame().getWhiteLagMillis() > 20000) {
 			board.getWhiteLagLabel().setForeground(
 					getPreferences().getColor(
@@ -276,15 +198,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			board.getBlackLagLabel().setForeground(
 					getPreferences().getColor(PreferenceKeys.BOARD_LAG_COLOR));
 		}
-	}
 
-	/**
-	 * Sets the values of the lag labels to match those of the game object.
-	 */
-	protected void adjustLagLabels() {
-		if (isBeingUsed()) {
-			return;
-		}
 		board.whiteLagLabel.setText(BoardUtils.lagToString(getGame()
 				.getWhiteLagMillis()));
 		board.blackLagLabel.setText(BoardUtils.lagToString(getGame()
@@ -294,9 +208,11 @@ public abstract class ChessBoardController implements BoardConstants,
 	/**
 	 * Sets the values of the name and rating labels on the board to those of
 	 * the game object.
+	 * 
+	 * This method is provided so it can easily be overridden.
 	 */
 	protected void adjustNameRatingLabels() {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
 		String blackName = getGame().getBlackName();
@@ -328,91 +244,118 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Adjusts the state of the nav buttons. The default implementation uses the
-	 * traverser and enables/disables the buttons based on there being moves
-	 * available in the traverser (e.g. if the user is at the end of the game
-	 * LAST will no longer be available).
-	 */
-	// protected void adjustNavButtonEnabledState() {
-	// if (isBeingReparented()) {
-	// return;
-	// }
-	// if (isMoveListTraversable()) {
-	// board.setCoolBarButtonEnabled(traverser.hasFirst(),
-	// ChessBoard.FIRST_NAV);
-	// board.setCoolBarButtonEnabled(traverser.hasLast(),
-	// ChessBoard.LAST_NAV);
-	// board.setCoolBarButtonEnabled(traverser.hasNext(),
-	// ChessBoard.NEXT_NAV);
-	// board.setCoolBarButtonEnabled(traverser.hasBack(),
-	// ChessBoard.BACK_NAV);
-	// } else {
-	// board.setCoolBarButtonEnabled(false, ChessBoard.FIRST_NAV);
-	// board.setCoolBarButtonEnabled(false, ChessBoard.LAST_NAV);
-	// board.setCoolBarButtonEnabled(false, ChessBoard.NEXT_NAV);
-	// board.setCoolBarButtonEnabled(false, ChessBoard.BACK_NAV);
-	// }
-	// }
-	/**
 	 * Adjusts the opening description label on the chess board. The default
 	 * implementation uses the ECOParser to populate this field based on the
 	 * state of the game object.
+	 * 
+	 * This method is provided so it can easily be overridden.
 	 */
 	protected void adjustOpeningDescriptionLabel() {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
-		LOG.info("adjustOpeningDescriptionLabel()");
+		// EcoInfo may take a while to update.
+		// Run it on its own thread in 100 milliseconds so other adjustments
+		// are not held up by parsing the ECO info.
+		ThreadService.getInstance().scheduleOneShot(100, new Runnable() {
+			public void run() {
+				final EcoInfo ecoInfo = EcoService.getInstance().getEcoInfo(
+						getGame());
+				if (ecoInfo != null) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("ECOParser.getECOParser(getGame()) = "
+								+ ecoInfo.toString());
+					}
+					if (!isDisposed()) {
+						board.getDisplay().asyncExec(new Runnable() {
 
-		EcoInfo p = EcoInfo.getECOParser(getGame());
-		if (p != null) {
-			LOG.info("ECOParser.getECOParser(getGame()) = " + p.toString());
-			board.getOpeningDescriptionLabel().setText(p.toString());
-		}
+							public void run() {
+
+								board.getOpeningDescriptionLabel().setText(
+										ecoInfo.toString());
+							}
+						});
+					}
+				}
+			}
+		});
 	}
 
 	/**
-	 * Adjusts the contents of the piece jail based on the game.
+	 * Adjusts the contents of the piece jail based on the game state.
 	 * 
-	 * If the game is not droppable the piece jail contains the pieces the
-	 * player has captured during the game.
+	 * <pre>
+	 * SETUP_STATE:
+	 * The piece jail squares contain the game.PieceCounts for the respective piece.
+	 * 
+	 * DROPPABLE_STATE:
+	 * The piece jail squares contain the game.DropCounts for the respective piece.
+	 * 
+	 * DEFAULT:
+	 * The piece jail squares contain the captured piece counts of the respective piece.
+	 * </pre>
 	 * 
 	 * *TO DO add adjustments when game is droppable.
 	 */
-	protected void adjustPieceJailFromGame(Game game) {
-		if (isBeingUsed()) {
+	protected void adjustPieceJail() {
+		if (isDisposed()) {
 			return;
 		}
 
-		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
-			int color = DROPPABLE_PIECE_COLOR[i];
-			int count = 0;
-			if (game.isInState(Game.DROPPABLE_STATE)) {
-				count = getGame().getDropCount(color,
-						BoardUtils.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
-			} else {
+		if (game.isInState(Game.SETUP_STATE)) {
+			for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
+				int color = DROPPABLE_PIECE_COLOR[i];
+				int coloredPiece = DROPPABLE_PIECES[i];
+				int uncoloredPiece = BoardUtils
+						.pieceFromColoredPiece(coloredPiece);
+				LabeledChessSquare square = getBoard().getPieceJailSquare(
+						coloredPiece);
+				int count = game.getPieceCount(color, uncoloredPiece);
 
-				count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
-						- getGame()
-								.getPieceCount(
-										color,
-										BoardUtils
-												.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+				if (count > 0) {
+					square.setPiece(coloredPiece);
+				} else {
+					square.setPiece(EMPTY);
+				}
+
+				square.setText(BoardUtils.pieceCountToString(count));
+				square.redraw();
 			}
+		} else if (game.isInState(Game.DROPPABLE_STATE)) {
 
-			if (count == 0) {
-				board.pieceJailSquares[DROPPABLE_PIECES[i]]
-						.setPiece(GameConstants.EMPTY);
-			} else {
-				board.pieceJailSquares[DROPPABLE_PIECES[i]]
-						.setPiece(DROPPABLE_PIECES[i]);
+		} else {
+			for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
+				int color = DROPPABLE_PIECE_COLOR[i];
+				int count = 0;
+				if (game.isInState(Game.DROPPABLE_STATE)) {
+					count = getGame()
+							.getDropCount(
+									color,
+									BoardUtils
+											.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+				} else {
+
+					count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
+							- getGame()
+									.getPieceCount(
+											color,
+											BoardUtils
+													.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+				}
+
+				if (count == 0) {
+					board.pieceJailSquares[DROPPABLE_PIECES[i]]
+							.setPiece(GameConstants.EMPTY);
+				} else {
+					board.pieceJailSquares[DROPPABLE_PIECES[i]]
+							.setPiece(DROPPABLE_PIECES[i]);
+				}
+
+				board.pieceJailSquares[DROPPABLE_PIECES[i]].setText(BoardUtils
+						.pieceCountToString(count));
+				board.pieceJailSquares[DROPPABLE_PIECES[i]].redraw();
 			}
-
-			board.pieceJailSquares[DROPPABLE_PIECES[i]].setText(BoardUtils
-					.pieceCountToString(count));
-			board.pieceJailSquares[DROPPABLE_PIECES[i]].redraw();
 		}
-
 	}
 
 	/**
@@ -421,146 +364,16 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * support.
 	 */
 	protected void adjustPremoveLabel() {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
 		board.currentPremovesLabel.setText("");
 	}
 
 	/**
-	 * Adjusts the ChessBoard to a game change without modifying either the
-	 * boards position or the piece jails.
-	 */
-	protected void adjustToGameChangeNotInvolvingMove() {
-		if (isBeingUsed()) {
-			return;
-		}
-		// Adjust the clocks.
-		stopClocks();
-		adjustClockLabelsAndUpdaters();
-		adjustClockColors();
-		startClocks();
-
-		adjustToMoveIndicatorLabel();
-
-		if (getGame().getResult() != Result.IN_PROGRESS) {
-			onPlayGameEndSound();
-		}
-	}
-
-	/**
-	 * Adjusts all of the ChessBoard to the state of the board object.
-	 */
-	public void adjustToGameInitial() {
-		if (isBeingUsed()) {
-			return;
-		}
-
-		LOG.info("adjustToGameInitial " + getGame().getId() + " ...");
-		long startTime = System.currentTimeMillis();
-		initClockUpdaters();
-		adjustNameRatingLabels();
-		adjustGameDescriptionLabel();
-
-		adjustToGameChangeNotInvolvingMove();
-
-		adjustBoardToGame(getGame());
-		adjustPieceJailFromGame(getGame());
-
-		traverser.adjustHalfMoveIndex();
-		// adjustNavButtonEnabledState();
-
-		adjustLagLabels();
-		adjustLagColors();
-
-		adjustPremoveLabel();
-
-		adjustOpeningDescriptionLabel();
-		adjustGameStatusLabel();
-
-		board.layout();
-
-		LOG.info("Completed adjustToGameInitial in " + getGame().getId() + "  "
-				+ (System.currentTimeMillis() - startTime));
-
-	}
-
-	/**
-	 * Adjusts only the fields of the ChessBoard that change during a move. e.g.
-	 * the clocks/lag,board,piece jail,opening description,game status,nav
-	 * button state
-	 */
-	protected void adjustToGameMove() {
-		if (isBeingUsed()) {
-			return;
-		}
-
-		LOG.info("adjustToGameChange " + getGame().getId() + " ...");
-		long startTime = System.currentTimeMillis();
-
-		adjustToGameChangeNotInvolvingMove();
-
-		adjustBoardToGame(getGame());
-		adjustPieceJailFromGame(getGame());
-
-		traverser.adjustHalfMoveIndex();
-		// adjustNavButtonEnabledState();
-
-		adjustLagLabels();
-		adjustLagColors();
-
-		adjustPremoveLabel();
-
-		adjustOpeningDescriptionLabel();
-		adjustGameStatusLabel();
-
-		if (getGame().getResult() == Result.IN_PROGRESS) {
-			onPlayMoveSound();
-		}
-
-		board.layout();
-
-		LOG.info("adjustToGameChange " + getGame().getId() + "  n "
-				+ (System.currentTimeMillis() - startTime));
-
-	}
-
-	/**
-	 * Adjusts the to move indicator based on whose move it is in the game.
-	 */
-	public void adjustToMoveIndicatorLabel() {
-		if (isBeingUsed()) {
-			return;
-		}
-
-		int imageSize = board.getWhiteToMoveIndicatorLabel().getSize().x;
-		board.getWhiteToMoveIndicatorLabel().setImage(
-				BoardUtils.getToMoveIndicatorImage(
-						getGame().getColorToMove() == WHITE ? true : false,
-						imageSize));
-		board.getBlackToMoveIndicatorLabel().setImage(
-				BoardUtils.getToMoveIndicatorImage(
-						getGame().getColorToMove() == WHITE ? false : true,
-						imageSize));
-	}
-
-	/**
 	 * Returns true if a user can begin making a move from the specified square.
 	 */
 	public abstract boolean canUserInitiateMoveFrom(int squareId);
-
-	/**
-	 * Invoked when the user desires to clear out all premoves. The default
-	 * implementation is to set the text to "".
-	 * 
-	 * This method should be overridden if premove support is provided by the
-	 * controller.
-	 */
-	public void clearPremoves() {
-		if (!isBeingUsed()) {
-			board.currentPremovesLabel.setText("");
-		}
-	}
 
 	/**
 	 * Confirms closing of the window the game is being viewed in. Default is to
@@ -628,13 +441,13 @@ public abstract class ChessBoardController implements BoardConstants,
 	public int getAutoPromoteSelection() {
 		int result = QUEEN;
 
-		if (isToolItemSelected(AUTO_QUEEN)) {
+		if (isToolItemSelected(ToolBarItemKey.AUTO_QUEEN)) {
 			result = QUEEN;
-		} else if (isToolItemSelected(AUTO_KNIGHT)) {
+		} else if (isToolItemSelected(ToolBarItemKey.AUTO_KNIGHT)) {
 			result = KNIGHT;
-		} else if (isToolItemSelected(AUTO_BISHOP)) {
+		} else if (isToolItemSelected(ToolBarItemKey.AUTO_BISHOP)) {
 			result = BISHOP;
-		} else if (isToolItemSelected(AUTO_ROOK)) {
+		} else if (isToolItemSelected(ToolBarItemKey.AUTO_ROOK)) {
 			result = ROOK;
 		}
 		return result;
@@ -689,23 +502,15 @@ public abstract class ChessBoardController implements BoardConstants,
 		return null;
 	}
 
-	public ToolItem getToolItem(String key) {
+	public ToolItem getToolItem(ToolBarItemKey key) {
 		return toolItemMap.get(key);
 	}
 
 	/**
 	 * Initializes the ChessBoardController. A ChessBoard should be set on the
 	 * controller prior to calling this method.
-	 * 
-	 * The default behavior is: invoke adjustCooolbarToInitial (To add all of
-	 * the coolbar items) onPlayStartSound() (To play the sound associated with
-	 * a game starting) adjustToGameInitial (To adjust the ChessBoard to the
-	 * state of the game)
 	 */
-	public void init() {
-		onPlayGameStartSound();
-		adjustToGameInitial();
-	}
+	public abstract void init();
 
 	/**
 	 * If the clock updaters have not been intiailized, they are initialized.
@@ -720,16 +525,10 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Should return true if the game is auto-drawable. This method is used by
-	 * the ChessBoard class to determine if it will show the auto draw button.
-	 */
-	public abstract boolean isAutoDrawable();
-
-	/**
 	 * Returns true if this controller is being used on a chess board, false
 	 * otherwise.
 	 */
-	public boolean isBeingUsed() {
+	public boolean isDisposed() {
 		boolean result = false;
 		if (board == null) {
 			result = true;
@@ -738,35 +537,13 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Returns true if this game is commitable. This method is used by the
-	 * ChessBoard class to determine if it will show the commit button.
+	 * Returns true if the specified tool item is selected. Returns false if the
+	 * tool item is noexistant or not selected.
+	 * 
+	 * @param key
+	 *            They tool items key.
 	 */
-	public abstract boolean isCommitable();
-
-	/**
-	 * Returns true if this games move list is able to be traversed.
-	 */
-	public abstract boolean isMoveListTraversable();
-
-	/**
-	 * Returns true if the ChessBoard should show the navigation buttons.
-	 */
-	public abstract boolean isNavigatable();
-
-	/**
-	 * Returns true if this chess board controller handles premoves. The default
-	 * implementation returns false.
-	 */
-	public boolean isPremoveable() {
-		return false;
-	}
-
-	/**
-	 * Returns true if the ChessBoard should show the revert button.
-	 */
-	public abstract boolean isRevertable();
-
-	public boolean isToolItemSelected(String key) {
+	public boolean isToolItemSelected(ToolBarItemKey key) {
 		boolean result = false;
 		ToolItem item = getToolItem(key);
 		if (item != null) {
@@ -783,13 +560,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Invoked whent he user wants to clear premoves. The default implementation
-	 * does nothing.
-	 */
-	public void onClearPremoves() {
-	}
-
-	/**
 	 * Flips the ChessBoard object.
 	 */
 	public void onFlip() {
@@ -797,123 +567,132 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
 		board.layout();
+		board.redraw();
 		LOG.debug("isWhiteOnTop = " + board.isWhiteOnTop);
 	}
 
 	/**
-	 * Invoked when the back nav button is pressed. The default behavior is to
-	 * adjust the traverser and invoke adjustFromNavChange.
-	 */
-	public void onNavBack() {
-		if (traverser.hasBack()) {
-			traverser.back();
-			adjustFromNavigationChange();
-		} else {
-			LOG.error("Traverser did not have previous so ignoring action");
-		}
-	}
-
-	/**
-	 * Invoked when the user presses the commit nav button. The default behavior
-	 * is to do nothing.
-	 */
-	public void onNavCommit() {
-	}
-
-	/**
-	 * Invoked when the first nav button is pressed. The default behavior is to
-	 * adjust the traverser and invoke adjustFromNavChange.
-	 */
-	public void onNavFirst() {
-		if (traverser.hasFirst()) {
-			traverser.first();
-			adjustFromNavigationChange();
-		} else {
-			LOG.error("Traverser did not have first so ignoring action");
-		}
-
-	}
-
-	/**
-	 * Invoked when the forward nav button is pressed. The default behavior is
-	 * to adjust the traverser and invoke adjustFromNavChange.
-	 */
-	public void onNavForward() {
-		if (traverser.hasNext()) {
-			traverser.next();
-			adjustFromNavigationChange();
-		}
-	}
-
-	/**
-	 * Invoked when the last nav button is pressed. The default behavior is to
-	 * adjust the traverser and invoke adjustFromNavChange.
-	 */
-	public void onNavLast() {
-		if (traverser.hasLast()) {
-			traverser.last();
-			adjustFromNavigationChange();
-		}
-	}
-
-	/**
-	 * Invoked when the revert nav button is pressed. The default behavior is to
-	 * do nothing.
-	 */
-	public void onNavRevert() {
-	}
-
-	/**
-	 * Invoked when a chess board is no longer visible to a user, however can be
-	 * viewed in the future. The default behavior is to do nothing.
+	 * Invoked when the ChessBoard is being hidden from the user. The default
+	 * implementation does nothing.
 	 */
 	public void onPassivate() {
 	}
 
 	/**
-	 * Invoked when a game has ended. Should be implemented to play an
-	 * appropriate sound.
+	 * Invoked when a toolbar button is pressed.
 	 */
-	protected abstract void onPlayGameEndSound();
+	public abstract void onToolbarButtonAction(ToolBarItemKey key,
+			String... args);
 
 	/**
-	 * Invoked when a game has started. Should be implemented to play an
-	 * appropriate sound.
+	 * Adjusts all of the ChessBoard to the state of the board object. The
+	 * clocks are refreshed from the game.
 	 */
-	protected abstract void onPlayGameStartSound();
+	public void refresh() {
+		if (isDisposed()) {
+			return;
+		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("refresh " + getGame().getId() + " ...");
+		}
+		long startTime = System.currentTimeMillis();
 
-	/**
-	 * Invoked when a move is made during a game. Should be implemented to play
-	 * an appropriate sound.
-	 */
-	protected abstract void onPlayMoveSound();
+		adjustGameDescriptionLabel();
+		adjustPremoveLabel();
+		adjustGameStatusLabel();
+		adjustOpeningDescriptionLabel();
+		adjustNameRatingLabels();
+		adjustLagLabels();
+		refreshClocks(true);
+		adjustBoard();
+		adjustPieceJail();
+		board.redrawSquares();
 
-	/**
-	 * Invoked when the setup clear button is pressed. Default behavior is to do
-	 * nothing.
-	 */
-	public void onSetupClear() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Completed refresh in " + getGame().getId() + "  "
+					+ (System.currentTimeMillis() - startTime));
+		}
 	}
 
 	/**
-	 * Invoked when the setup done button is pressed. Default behavior is to do
-	 * nothing.
+	 * Refreshes only the board and the piece jail.
 	 */
-	public void onSetupDone() {
+	protected void refreshBoard() {
+		adjustBoard();
+		adjustPieceJail();
+		board.redrawSquares();
 	}
 
 	/**
-	 * Invoked when the setup fen button is pressed. Default behavior is to do
-	 * nothing.
+	 * Does a full refresh on the clocks adjusting the labels and colors.
+	 * 
+	 * @param updateClocksFromGame
+	 *            If true is passed in the values of the clocks are set to the
+	 *            values in the game. If false is passed in the values of the
+	 *            clocks are set to the values of the internal clock updaters
+	 *            managing the time remaining on each clock.
 	 */
-	public void onSetupFen(String fen) {
+	protected void refreshClocks(boolean updateClocksFromGame) {
+		if (isDisposed()) {
+			return;
+		}
+		initClockUpdaters();
+		whiteClockUpdater.stop();
+		blackClockUpdater.stop();
+
+		adjustClockColors();
+
+		if (updateClocksFromGame) {
+			board.whiteClockLabel.setText(BoardUtils.timeToString(getGame()
+					.getWhiteRemainingTimeMillis()));
+			board.blackClockLabel.setText(BoardUtils.timeToString(getGame()
+					.getBlackRemainingTimeMillis()));
+
+			whiteClockUpdater.setRemainingTimeMillis(getGame()
+					.getWhiteRemainingTimeMillis());
+			blackClockUpdater.setRemainingTimeMillis(getGame()
+					.getBlackRemainingTimeMillis());
+		} else {
+			board.whiteClockLabel.setText(BoardUtils
+					.timeToString(whiteClockUpdater.getRemainingTimeMillis()));
+			board.blackClockLabel.setText(BoardUtils
+					.timeToString(blackClockUpdater.getRemainingTimeMillis()));
+		}
+
+		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
+			initClockUpdaters();
+			if (getGame().getColorToMove() == WHITE) {
+				whiteClockUpdater.start();
+			} else {
+				blackClockUpdater.start();
+			}
+		}
 	}
 
 	/**
-	 * Invoked when the setup start button is pressed. Default behavior is to do
-	 * nothing.
+	 * Refreshes the board just for this move. Does not update the game object,
+	 * only refreshes the board squares.
 	 */
-	public void onSetupStart() {
+	protected void refreshForMove(Move move) {
+		int fromPiece = board.getSquare(move.getFrom()).getPiece();
+
+		if (move.isEnPassant()) {
+			board.getSquare(move.getFrom()).highlight();
+			board.getSquare(move.getEpSquare()).highlight();
+			board.getSquare(move.getTo()).setPiece(fromPiece);
+			board.getSquare(move.getEpSquare()).setPiece(EMPTY);
+			board.getSquare(move.getFrom()).setPiece(EMPTY);
+		} else if (move.isDrop()) {
+			board.getSquare(move.getFrom()).highlight();
+			board.getSquare(move.getTo()).highlight();
+			board.getSquare(move.getTo()).setPiece(fromPiece);
+		} else {
+			board.getSquare(move.getFrom()).highlight();
+			board.getSquare(move.getTo()).highlight();
+			board.getSquare(move.getFrom()).setPiece(EMPTY);
+			board.getSquare(move.getTo()).setPiece(fromPiece);
+		}
+		board.redrawSquares();
 	}
 
 	/**
@@ -941,7 +720,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	/**
 	 * Sets the enabled state of the tool item matching the specified key.
 	 */
-	public void setToolItemEnabled(String key, boolean isEnabled) {
+	public void setToolItemEnabled(ToolBarItemKey key, boolean isEnabled) {
 		ToolItem item = getToolItem(key);
 		if (item != null) {
 			item.setEnabled(isEnabled);
@@ -953,7 +732,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * This is useful for dealing with radio groups. The auto promotes are in a
 	 * radio group.
 	 */
-	public void setToolItemSelected(String key, boolean isSelected) {
+	public void setToolItemSelected(ToolBarItemKey key, boolean isSelected) {
 		ToolItem item = getToolItem(key);
 		if (item != null) {
 			item.setSelection(isSelected);
@@ -961,30 +740,11 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Starts the chess clocks. This method does NOT adjust the times or colors
-	 * of the clocks, nor does it adjust the clock updaters.
-	 */
-	protected void startClocks() {
-		if (isBeingUsed()) {
-			return;
-		}
-		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
-			initClockUpdaters();
-			if (getGame().getColorToMove() == WHITE) {
-				whiteClockUpdater.start();
-			} else {
-				blackClockUpdater.start();
-			}
-		}
-
-	}
-
-	/**
 	 * Stops the chess clocks. This method does NOT adjust the times or the
 	 * colors on the clocks.
 	 */
 	protected void stopClocks() {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
 

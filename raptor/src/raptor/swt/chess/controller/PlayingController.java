@@ -44,18 +44,22 @@ public class PlayingController extends ChessBoardController {
 	 * A class containing the details of a premove.
 	 */
 	protected static class PremoveInfo {
+		int fromPiece;
 		int fromSquare;
-		int toSquare;
 		int promotionColorlessPiece;
+		int toPiece;
+		int toSquare;
 	}
 
 	static final Log LOG = LogFactory.getLog(PlayingController.class);
 
+	protected Connector connector;
+	protected boolean isUserWhite;
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
 		public void gameInactive(Game game) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
@@ -102,17 +106,19 @@ public class PlayingController extends ChessBoardController {
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							if (isNewMove) {
 								handleAutoDraw();
 								if (!makePremove()) {
-									adjustToGameMove();
+									board.unhighlightAllSquares();
+									refresh();
+									onPlayMoveSound();
 								}
 							} else {
-								adjustToGameMove();
+								refresh();
 							}
 						} catch (Throwable t) {
 							connector.onError(
@@ -125,11 +131,11 @@ public class PlayingController extends ChessBoardController {
 
 		@Override
 		public void illegalMove(Game game, final String move) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-							adjustForIllegalMove(move);
+							adjustForIllegalMove(move, true);
 						} catch (Throwable t) {
 							connector.onError("PlayingController.illegalMove",
 									t);
@@ -139,13 +145,10 @@ public class PlayingController extends ChessBoardController {
 			}
 		}
 	};
-
-	protected Connector connector;
-	protected boolean isUserWhite;
-	protected Random random = new SecureRandom();
-	protected boolean isPlayingMoveSound = true;
+	protected int movingPiece;
 	protected List<PremoveInfo> premoves = Collections
 			.synchronizedList(new ArrayList<PremoveInfo>(10));
+	protected Random random = new SecureRandom();
 	protected ToolBar toolbar;
 
 	/**
@@ -184,7 +187,7 @@ public class PlayingController extends ChessBoardController {
 	 * If premove is enabled, and premove is not in queued mode then clear the
 	 * premoves on an illegal move.
 	 */
-	public void adjustForIllegalMove() {
+	public void adjustForIllegalMove(String move, boolean adjustClocks) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("adjustForIllegalMove ");
 		}
@@ -195,25 +198,20 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		board.unhighlightAllSquares();
-		isPlayingMoveSound = false;
-		adjustToGameMove();
-		isPlayingMoveSound = true;
-		SoundService.getInstance().playSound("illegalMove");
-	}
-
-	public void adjustForIllegalMove(String move) {
-		if (!isBeingUsed()) {
-			board.getStatusLabel().setText("Illegal Move: " + move);
-			adjustForIllegalMove();
+		if (adjustClocks) {
+			refresh();
+		} else {
+			refreshBoard();
 		}
+
+		board.getStatusLabel().setText("Illegal Move: " + move);
+		SoundService.getInstance().playSound("illegalMove");
 	}
 
 	@Override
 	public void adjustGameDescriptionLabel() {
-		if (!isBeingUsed()) {
-			board.getGameDescriptionLabel().setText(
-					"Playing " + getGame().getEvent());
-		}
+		board.getGameDescriptionLabel().setText(
+				"Playing " + getGame().getEvent());
 	}
 
 	/**
@@ -222,18 +220,12 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	protected void adjustPremoveLabel() {
-		if (isBeingUsed()) {
-			return;
-		}
-
-		String labelText = "";
+		String labelText = "Premoves: ";
 		synchronized (premoves) {
 			for (PremoveInfo info : premoves) {
 				String premove = ""
-						+ BoardUtils.getPieceRepresentation(BoardUtils
-								.getColoredPiece(info.fromSquare, game))
-						+ (board.getSquare(info.toSquare).getPiece() != EMPTY ? "x"
-								: "") + GameUtils.getSan(info.toSquare);
+						+ GameUtils.getPseudoSan(info.fromPiece, info.toPiece,
+								info.fromSquare, info.toSquare);
 				if (labelText.equals("")) {
 					labelText += premove;
 				} else {
@@ -241,27 +233,9 @@ public class PlayingController extends ChessBoardController {
 				}
 			}
 		}
-		// if (labelText.equals("")) {
-		// labelText = "Premoves: EMPTY";
-		// board.setCoolBarButtonEnabled(false, ChessBoard.PREMOVE);
-		// } else {
-		// labelText = "Premoves: " + labelText;
-		// board.setCoolBarButtonEnabled(true, ChessBoard.PREMOVE);
-		// }
+
 		board.getCurrentPremovesLabel().setText(labelText);
 	}
-
-	// @Override
-	// protected void adjustNavButtonEnabledState() {
-	// if (!isBeingReparented()) {
-	// // board.setCoolBarButtonEnabled(true, ChessBoard.FIRST_NAV);
-	// // board.setCoolBarButtonEnabled(true, ChessBoard.LAST_NAV);
-	// // board.setCoolBarButtonEnabled(true, ChessBoard.NEXT_NAV);
-	// // board.setCoolBarButtonEnabled(true, ChessBoard.BACK_NAV);
-	// // board.setCoolBarButtonEnabled(false, ChessBoard.COMMIT_NAV);
-	// // board.setCoolBarButtonEnabled(false, ChessBoard.REVERT_NAV);
-	// }
-	// }
 
 	/**
 	 * Invoked when the user tries to start a dnd or click click move operation
@@ -348,14 +322,16 @@ public class PlayingController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addNavIconsToToolbar(this, toolbar);
+			BoardUtils.addPromotionIconsToToolbar(this, toolbar, isUserWhite);
 			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addPromotionIconsToToolbar(true, this, toolbar);
+			BoardUtils.addPremoveClearAndAutoDrawToolbar(this, toolbar);
+			new ToolItem(toolbar, SWT.SEPARATOR);
+			BoardUtils.addNavIconsToToolbar(this, toolbar, false, false);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-		setToolItemSelected(AUTO_QUEEN, true);
+		setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
 		return toolbar;
 	}
 
@@ -367,16 +343,15 @@ public class PlayingController extends ChessBoardController {
 	 * a draw by three times in the same position or 50 move draw rule.
 	 */
 	protected void handleAutoDraw() {
-		// if (board.isCoolbarButtonSelectd(ChessBoard.AUTO_DRAW)) {
-		// getConnector().onDraw(getGame());
-		// }
+		if (isToolItemSelected(ToolBarItemKey.AUTO_DRAW)) {
+			getConnector().onDraw(getGame());
+		}
 	}
 
 	@Override
 	public void init() {
 
 		board.setWhiteOnTop(!isUserWhite());
-
 		/**
 		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail
 		 * since you can drop pieces from it.
@@ -389,7 +364,8 @@ public class PlayingController extends ChessBoardController {
 		} else {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
-		super.init();
+		refresh();
+		onPlayGameStartSound();
 
 		// Since the game object is updated while the game is being created,
 		// there
@@ -399,38 +375,12 @@ public class PlayingController extends ChessBoardController {
 		connector.getGameService().addGameServiceListener(listener);
 	}
 
-	@Override
-	public boolean isAutoDrawable() {
-		return true;
-	}
-
-	@Override
-	public boolean isCommitable() {
-		return false;
-	}
-
-	@Override
-	public boolean isMoveListTraversable() {
-		return true;
-	}
-
-	@Override
-	public boolean isNavigatable() {
-		return true;
-	}
-
 	/**
 	 * Returns true if the premove preference is enabled.
 	 */
-	@Override
 	public boolean isPremoveable() {
 		return Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.BOARD_PREMOVE_ENABLED);
-	}
-
-	@Override
-	public boolean isRevertable() {
-		return false;
 	}
 
 	public boolean isUsersMove() {
@@ -463,7 +413,7 @@ public class PlayingController extends ChessBoardController {
 					getConnector().makeMove(getGame(), move);
 					premoves.remove(move);
 					handleAutoDraw();
-					adjustToGameMove();
+					refreshForMove(move);
 					return true;
 				} catch (IllegalArgumentException iae) {
 					if (LOG.isDebugEnabled()) {
@@ -479,17 +429,11 @@ public class PlayingController extends ChessBoardController {
 		return false;
 	}
 
-	/**
-	 * Clears the premove queue and adjusts the premove label and clear premove
-	 * button.
-	 */
-	@Override
 	public void onClearPremoves() {
 		premoves.clear();
 		adjustPremoveLabel();
 	}
 
-	@Override
 	protected void onPlayGameEndSound() {
 		if (isUserWhite() && game.getResult() == Result.WHITE_WON) {
 			SoundService.getInstance().playSound("win");
@@ -504,15 +448,31 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
-	@Override
 	protected void onPlayGameStartSound() {
 		SoundService.getInstance().playSound("gameStart");
 	}
 
-	@Override
+	protected void onPlayIllegalMoveSound() {
+		SoundService.getInstance().playSound("illegalMove");
+	}
+
 	protected void onPlayMoveSound() {
-		if (isPlayingMoveSound) {
-			SoundService.getInstance().playSound("move");
+		SoundService.getInstance().playSound("move");
+	}
+
+	@Override
+	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
+		switch (key) {
+		case FEN:
+			Raptor.getInstance().promptForText(
+					"FEN for game " + game.getWhiteName() + " vs "
+							+ game.getBlackName(), game.toFEN());
+			break;
+		case FLIP:
+			onFlip();
+			break;
+		case CLEAR_PREMOVES:
+			onClearPremoves();
 		}
 	}
 
@@ -523,14 +483,17 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("userCancelledMove " + GameUtils.getSan(fromSquare)
 					+ " is drag and drop=" + isDnd);
 		}
-		adjustForIllegalMove();
+		board.unhighlightAllSquares();
+		movingPiece = EMPTY;
+		refresh();
+		onPlayIllegalMoveSound();
 	}
 
 	/**
@@ -544,23 +507,16 @@ public class PlayingController extends ChessBoardController {
 					+ " is drag and drop=" + isDnd);
 		}
 
-		if (!isBeingUsed()) {
+		if (!isDisposed()) {
 			board.unhighlightAllSquares();
 			board.getSquare(square).highlight();
 			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
+				movingPiece = board.getSquare(square).getPiece();
 				board.getSquare(square).setPiece(GameConstants.EMPTY);
 			}
+			board.redrawSquares();
 		}
 	}
-
-	// /**
-	// * This method doesnt update the clocks but updates the board and the
-	// piece jails.
-	// */
-	// public void adjustToMoveBeingSentToConnector() {
-	// adjustBoardToGame(getGame());
-	// adjustPieceJailFromGame(getGame());
-	// }
 
 	/**
 	 * Invoked when a user makes a dnd move or a click click move on the
@@ -568,7 +524,7 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
 
@@ -589,8 +545,8 @@ public class PlayingController extends ChessBoardController {
 					LOG
 							.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
 				}
-
-				adjustForIllegalMove();
+				adjustForIllegalMove(GameUtils.getPseudoSan(getGame(),
+						fromSquare, toSquare), false);
 			}
 
 			if (LOG.isDebugEnabled()) {
@@ -606,23 +562,21 @@ public class PlayingController extends ChessBoardController {
 			}
 
 			if (move == null) {
-				adjustForIllegalMove();
+				adjustForIllegalMove(GameUtils.getPseudoSan(getGame(),
+						fromSquare, toSquare), false);
 			} else {
 				board.getSquare(fromSquare).highlight();
 				board.getSquare(toSquare).highlight();
 
 				if (game.move(move)) {
 					connector.makeMove(game, move);
-					isPlayingMoveSound = false;
-					adjustToGameMove();
-					handleAutoDraw();
-					isPlayingMoveSound = true;
+					refreshForMove(move);
 				} else {
 					connector.onError(
 							"Game.move returned false for a move that should have been legal.Move: "
 									+ move + ".", new Throwable(getGame()
 									.toString()));
-					adjustForIllegalMove(move.toString());
+					adjustForIllegalMove(move.toString(), false);
 				}
 			}
 
@@ -639,7 +593,8 @@ public class PlayingController extends ChessBoardController {
 							.debug("User tried to make a premove that failed immediate validation.");
 				}
 
-				adjustForIllegalMove();
+				adjustForIllegalMove(GameUtils.getPseudoSan(getGame(),
+						fromSquare, toSquare), false);
 				return;
 			}
 			if (LOG.isDebugEnabled()) {
@@ -649,6 +604,8 @@ public class PlayingController extends ChessBoardController {
 			PremoveInfo premoveInfo = new PremoveInfo();
 			premoveInfo.fromSquare = fromSquare;
 			premoveInfo.toSquare = toSquare;
+			premoveInfo.fromPiece = movingPiece;
+			premoveInfo.toPiece = board.getSquare(toSquare).getPiece();
 			premoveInfo.promotionColorlessPiece = GameUtils.isPromotion(
 					isUserWhite(), getGame(), fromSquare, toSquare) ? getAutoPromoteSelection()
 					: EMPTY;
@@ -661,15 +618,24 @@ public class PlayingController extends ChessBoardController {
 			if (!getPreferences().getBoolean(
 					PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
 				premoves.clear();
+				premoves.add(premoveInfo);
+				adjustPremoveLabel();
+				board.unhighlightAllSquares();
+				board.getSquare(premoveInfo.fromSquare).highlight();
+				board.getSquare(premoveInfo.toSquare).highlight();
+				refreshBoard();
+			} else {
+				premoves.add(premoveInfo);
+				board.getSquare(premoveInfo.fromSquare).highlight();
+				board.getSquare(premoveInfo.toSquare).highlight();
+				adjustPremoveLabel();
+				refreshBoard();
 			}
-			premoves.add(premoveInfo);
-
-			adjustPremoveLabel();
-
-			board.unhighlightAllSquares();
-			adjustBoardToGame(getGame());
-
 		}
+
+		// Clear the moving piece.
+		movingPiece = EMPTY;
+
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("userMadeMove completed in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
@@ -682,7 +648,7 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userMiddleClicked(int square) {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
 
@@ -712,13 +678,8 @@ public class PlayingController extends ChessBoardController {
 								"Game rejected move in smart move. This is a bug.");
 					}
 					board.unhighlightAllSquares();
-					board.getSquare(move.getFrom()).highlight();
-					board.getSquare(move.getTo()).highlight();
-
 					// Turn off sound while the move is adjusted
-					isPlayingMoveSound = false;
-					adjustToGameMove();
-					isPlayingMoveSound = true;
+					refreshForMove(move);
 				}
 			} else {
 				if (LOG.isDebugEnabled()) {
@@ -735,153 +696,12 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userRightClicked(final int square) {
-		if (isBeingUsed()) {
+		if (isDisposed()) {
 			return;
 		}
 
 		if (!BoardUtils.isPieceJailSquare(square)
 				&& getGame().isInState(Game.DROPPABLE_STATE)) {
-
-			// TO DO:
-			// Also add premove drop for bughouse.
-			// Menu menu = new Menu(board.getShell(), SWT.POP_UP);
-			//
-			// if (getGame().getPiece(square) != EMPTY) {
-			// MenuItem item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place white pawn on " + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, PAWN, WHITE);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place white knight on "
-			// + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, KNIGHT, WHITE);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place white bishop on "
-			// + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, BISHOP, WHITE);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place white rook on " + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, ROOK, WHITE);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item
-			// .setText("Place white queen on "
-			// + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, QUEEN, WHITE);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place white king on " + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, KING, WHITE);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place black pawn on " + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, PAWN, BLACK);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place black knight on "
-			// + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, KNIGHT, BLACK);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place black bishop on "
-			// + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, BISHOP, BLACK);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place black rook on " + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, ROOK, BLACK);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item
-			// .setText("Place black queen on "
-			// + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, QUEEN, BLACK);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			//
-			// item = new MenuItem(menu, SWT.PUSH);
-			// item.setText("Place black king on " + GameUtils.getSan(square));
-			// item.addListener(SWT.Selection, new Listener() {
-			// public void handleEvent(Event e) {
-			// Move move = new Move(square, KING, BLACK);
-			// adjustToDropMove(move);
-			// connector.makeMove(getGame(), move);
-			// }
-			// });
-			// }
-			// menu.setLocation(board.getSquare(square).toDisplay(10, 10));
-			// menu.setVisible(true);
-			// while (!menu.isDisposed() && menu.isVisible()) {
-			// if (!board.getDisplay().readAndDispatch())
-			// board.getDisplay().sleep();
-			// }
-			// menu.dispose();
 		}
 	}
 

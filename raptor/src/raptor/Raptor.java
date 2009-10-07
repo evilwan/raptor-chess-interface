@@ -17,6 +17,7 @@ import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
+import raptor.service.EcoService;
 import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.InputDialog;
@@ -123,6 +124,10 @@ public class Raptor implements PreferenceKeys {
 	protected RaptorWindow raptorWindow;
 
 	public Raptor() {
+		// Make sure all of the Singleton services get loaded.
+		ThreadService.getInstance();
+		EcoService.getInstance();
+		ConnectorService.getInstance();
 	}
 
 	/**
@@ -331,6 +336,12 @@ public class Raptor implements PreferenceKeys {
 
 		try {
 			ThreadService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.error("Error shutting down raptor", t);
+		}
+
+		try {
+			EcoService.getInstance().dispose();
 		} catch (Throwable t) {
 			LOG.error("Error shutting down raptor", t);
 		}

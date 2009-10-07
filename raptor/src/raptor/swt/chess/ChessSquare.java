@@ -408,12 +408,12 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
-	 * Highlights this square.
+	 * Highlights this square. This method does not invoke redraw. That is left
+	 * to the caller
 	 */
 	public void highlight() {
 		if (!isHighlighted) {
 			isHighlighted = true;
-			redraw();
 		}
 	}
 
@@ -436,7 +436,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
-	 * Sets the colored chess piece.
+	 * Sets the colored chess piece. This method does not redraw after the piece
+	 * is set. It is up to the caller to invoke that.
 	 * 
 	 * @param piece
 	 *            An integer representing the colored piece type in
@@ -451,17 +452,16 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			}
 			this.piece = piece;
 			pieceImage = null;
-			redraw();
 		}
 	}
 
 	/**
-	 * Unhighlights this square.
+	 * Unhighlights this square. This method does not redraw after invoked. That
+	 * is up to the caller.
 	 */
 	public void unhighlight() {
 		if (isHighlighted) {
 			isHighlighted = false;
-			redraw();
 		}
 	}
 
