@@ -566,8 +566,8 @@ public abstract class ChessBoardController implements BoardConstants,
 		LOG.debug("onFlip");
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
-		board.layout();
 		board.redrawSquares();
+		board.layout();
 		board.redraw();
 		LOG.debug("isWhiteOnTop = " + board.isWhiteOnTop);
 	}
