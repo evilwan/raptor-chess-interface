@@ -4,6 +4,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
+import raptor.chat.ChatType;
 import raptor.game.Game;
 import raptor.game.Move;
 import raptor.script.GameScript;
@@ -331,7 +332,24 @@ public interface Connector {
 	public void removeGameScript(GameScript script);
 
 	/**
-	 * Sends a message to the connector.
+	 * Sends a message to the connector. A ChatEvent should be published with
+	 * the text being sent in the connectors ChatService.
 	 */
-	public void sendMessage(String msg);
+	public void sendMessage(String message);
+
+	/**
+	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
+	 * only be published if isHidingFromUser is false.
+	 */
+	public void sendMessage(String message, boolean isHidingFromUser);
+
+	/**
+	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
+	 * only be published containing the message if isHidingFromUser is false.
+	 * The next message the connector reads in that is of the specified type
+	 * should not be published to the ChatService.
+	 */
+	public void sendMessage(String message, boolean isHidingFromUser,
+			ChatType hideNextChatType);
+
 }

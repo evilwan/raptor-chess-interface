@@ -324,11 +324,11 @@ public class Raptor implements PreferenceKeys {
 	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
 	 */
 	public void shutdown() {
-//		try {
-//			imageRegistry.dispose();
-//		} catch (Throwable t) {
-//			LOG.error("Error shutting down raptor", t);
-//		}
+		// try {
+		// imageRegistry.dispose();
+		// } catch (Throwable t) {
+		// LOG.error("Error shutting down raptor", t);
+		// }
 
 		try {
 			ConnectorService.getInstance().dispose();
