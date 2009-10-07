@@ -115,11 +115,11 @@ public class PlayingController extends ChessBoardController {
 								if (!makePremove()) {
 									board.unhighlightAllSquares();
 									refresh();
-									onPlayMoveSound();
 								}
 							} else {
 								refresh();
 							}
+							onPlayMoveSound();
 						} catch (Throwable t) {
 							connector.onError(
 									"PlayingController.gameStateChanged", t);
