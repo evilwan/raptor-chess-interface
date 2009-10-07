@@ -33,59 +33,78 @@ import org.eclipse.swt.widgets.Shell;
  */
 public abstract class ProgressBarDialog extends Dialog {
 
+	class ProcessThread extends Thread {
+		private int max = 0;
+		private volatile boolean shouldStop = false;
+
+		ProcessThread(int max) {
+			this.max = max;
+		}
+
+		@Override
+		public void run() {
+			doBefore();
+			for (final int[] i = new int[] { 1 }; i[0] <= max; i[0]++) {
+				//
+				final String info = process(i[0]);
+				if (display.isDisposed()) {
+					return;
+				}
+				display.syncExec(new Runnable() {
+					public void run() {
+						if (progressBar.isDisposed()) {
+							return;
+						}
+						//
+						processMessageLabel.setText(info);
+						//
+						progressBar.setSelection(i[0]);
+						//
+						if (i[0] == max || isClosed) {
+							if (isClosed) {
+								shouldStop = true;//
+								cleanUp();//
+							}
+							shell.close();//
+						}
+					}
+				});
+
+				if (shouldStop) {
+					break;
+				}
+			}
+			doAfter();
+		}
+	}
+
 	private Label processMessageLabel; // info of process finish
 	private Button cancelButton; // cancel button
 	private Composite cancelComposite;
 	private Label lineLabel;//
 	private Composite progressBarComposite;//
 	private CLabel message;//
-	private ProgressBar progressBar = null; //
 
+	private ProgressBar progressBar = null; //
 	private Object result; //
 	private Shell shell; //
+
 	private Display display = null;
 
 	protected volatile boolean isClosed = false;// closed state
-
 	protected int executeTime = 50;// process times
 	protected String processMessage = "process......";// procress info
 	protected String shellTitle = "Progress..."; //
 	protected boolean mayCancel = true; // cancel
+
 	protected int processBarStyle = SWT.SMOOTH; // process bar style
-
-	public void setMayCancel(boolean mayCancel) {
-		this.mayCancel = mayCancel;
-	}
-
-	public void setExecuteTime(int executeTime) {
-		this.executeTime = executeTime;
-	}
-
-	public void setProcessMessage(String processInfo) {
-		this.processMessage = processInfo;
-	}
 
 	public ProgressBarDialog(Shell parent) {
 		super(parent);
 	}
 
-	public abstract void initGuage();
+	protected void cleanUp() {
 
-	public Object open() {
-		createContents(); // create window
-		shell.open();
-		shell.layout();
-
-		// start work
-		new ProcessThread(executeTime).start();
-
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
 	}
 
 	protected void createContents() {
@@ -132,6 +151,7 @@ public abstract class ProgressBarDialog extends Dialog {
 
 		cancelButton = new Button(cancelComposite, SWT.NONE);
 		cancelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				isClosed = true;
 				// System.out.println(isClosed);
@@ -143,9 +163,7 @@ public abstract class ProgressBarDialog extends Dialog {
 
 	}
 
-	protected abstract String process(int times);
-
-	protected void cleanUp() {
+	protected void doAfter() {
 
 	}
 
@@ -153,56 +171,33 @@ public abstract class ProgressBarDialog extends Dialog {
 
 	}
 
-	protected void doAfter() {
+	public abstract void initGuage();
 
-	}
+	public Object open() {
+		createContents(); // create window
+		shell.open();
+		shell.layout();
 
-	class ProcessThread extends Thread {
-		private int max = 0;
-		private volatile boolean shouldStop = false;
+		// start work
+		new ProcessThread(executeTime).start();
 
-		ProcessThread(int max) {
-			this.max = max;
-		}
-
-		public void run() {
-			doBefore();
-			for (final int[] i = new int[] { 1 }; i[0] <= max; i[0]++) {
-				//
-				final String info = process(i[0]);
-				if (display.isDisposed()) {
-					return;
-				}
-				display.syncExec(new Runnable() {
-					public void run() {
-						if (progressBar.isDisposed()) {
-							return;
-						}
-						//
-						processMessageLabel.setText(info);
-						//
-						progressBar.setSelection(i[0]);
-						//
-						if (i[0] == max || isClosed) {
-							if (isClosed) {
-								shouldStop = true;//
-								cleanUp();//
-							}
-							shell.close();//
-						}
-					}
-				});
-
-				if (shouldStop) {
-					break;
-				}
+		Display display = getParent().getDisplay();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
 			}
-			doAfter();
 		}
+		return result;
 	}
 
-	public void setShellTitle(String shellTitle) {
-		this.shellTitle = shellTitle;
+	protected abstract String process(int times);
+
+	public void setExecuteTime(int executeTime) {
+		this.executeTime = executeTime;
+	}
+
+	public void setMayCancel(boolean mayCancel) {
+		this.mayCancel = mayCancel;
 	}
 
 	public void setProcessBarStyle(boolean pStyle) {
@@ -211,5 +206,13 @@ public abstract class ProgressBarDialog extends Dialog {
 		else
 			this.processBarStyle = SWT.NONE;
 
+	}
+
+	public void setProcessMessage(String processInfo) {
+		this.processMessage = processInfo;
+	}
+
+	public void setShellTitle(String shellTitle) {
+		this.shellTitle = shellTitle;
 	}
 }

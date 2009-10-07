@@ -2,12 +2,14 @@ package raptor.game.util;
 
 import java.util.StringTokenizer;
 
+import raptor.Raptor;
 import raptor.game.FischerRandomGame;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.LosersGame;
 import raptor.game.SuicideGame;
 import raptor.game.Game.Type;
+import raptor.pref.PreferenceKeys;
 
 //KoggeStone
 //http://www.open-aurec.com/wbforum/viewtopic.php?f=4&t=49948&sid=abd6ee7224f34b11a5211aa167f01ac4
@@ -52,6 +54,48 @@ public class GameUtils implements GameConstants {
 
 	public static final long clearMulti(long bitboard, long squaresToClear) {
 		return bitboard & ~squaresToClear;
+	}
+
+	public static String convertSanToUseUnicode(String san, boolean isWhitesMove) {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+
+			StringBuilder result = new StringBuilder(san.length());
+			for (int i = 0; i < san.length(); i++) {
+				int piece = PIECE_TO_SAN.indexOf(san.charAt(i));
+				switch (piece) {
+				case -1:
+					result.append(san.charAt(i));
+					break;
+				case PAWN:
+					result.append(isWhitesMove ? "\u2659" : "\u265F");
+					break;
+				case KNIGHT:
+					result.append(isWhitesMove ? "\u2658" : "\u265E");
+					break;
+				case BISHOP:
+					result.append(isWhitesMove ? "\u2657" : "\u265D");
+					break;
+				case ROOK:
+					result.append(isWhitesMove ? "\u2656" : "\u265C");
+					break;
+				case QUEEN:
+					result.append(isWhitesMove ? "\u2655" : "\u265B");
+					break;
+				case KING:
+					result.append(isWhitesMove ? "\u2654" : "\u265A");
+					break;
+				default:
+					throw new IllegalArgumentException(
+							"Unknown piece cosntant: " + piece);
+				}
+			}
+
+			return result.toString();
+		} else {
+			return san;
+		}
+
 	}
 
 	public static final Game createFromFen(String fen, Type gameType) {
@@ -263,12 +307,173 @@ public class GameUtils implements GameConstants {
 		return SQUARE_TO_COORDINATE[square];
 	}
 
+	public static int getColoredPiece(int square, Game game) {
+		long squareBB = GameUtils.getBitboard(square);
+		int gamePiece = game.getPiece(square);
+
+		switch (gamePiece) {
+		case GameConstants.EMPTY:
+			return EMPTY;
+		case WP:
+		case BP:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BP
+					: WP;
+		case WN:
+		case BN:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BN
+					: WN;
+		case WB:
+		case BB:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BB
+					: WB;
+		case WR:
+		case BR:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BR
+					: WR;
+		case WQ:
+		case BQ:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BQ
+					: WQ;
+		case WK:
+		case BK:
+			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BK
+					: WK;
+		default:
+			throw new IllegalArgumentException("Invalid gamePiece" + gamePiece);
+
+		}
+	}
+
+	public static int getColoredPieceFromDropSquare(int dropSquare) {
+		return dropSquare - 100;
+	}
+
 	public static int getFile(int square) {
 		return square % 8;
 	}
 
 	public static final int getOppositeColor(int color) {
 		return OPPOSITE_COLOR[color];
+	}
+
+	public static String getPieceRepresentation(int coloredPiece) {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+			switch (coloredPiece) {
+			case WK:
+				return "\u2654";
+			case WQ:
+				return "\u2655";
+			case WR:
+				return "\u2656";
+			case WB:
+				return "\u2657";
+			case WN:
+				return "\u2658";
+			case WP:
+				return "\u2659";
+			case BK:
+				return "\u265A";
+			case BQ:
+				return "\u265B";
+			case BR:
+				return "\u265C";
+			case BB:
+				return "\u265D";
+			case BN:
+				return "\u265E";
+			case BP:
+				return "\u265F";
+			}
+		} else {
+			switch (coloredPiece) {
+			case WK:
+				return "N";
+			case WQ:
+				return "Q";
+			case WR:
+				return "R";
+			case WB:
+				return "B";
+			case WN:
+				return "N";
+			case WP:
+				return "P";
+			case BK:
+				return "k";
+			case BQ:
+				return "q";
+			case BR:
+				return "r";
+			case BB:
+				return "b";
+			case BN:
+				return "n";
+			case BP:
+				return "p";
+			}
+		}
+
+		throw new IllegalArgumentException("Invalid piece: " + coloredPiece);
+	}
+
+	/**
+	 * Returns a fake SAN (short algebraic notation) version of the move. The
+	 * SAN does not reflect ambiguity. Handles drop squares as from squares.
+	 */
+	public static String getPseudoSan(Game game, int fromSquare, int toSquare) {
+		boolean isDrop = isDropSquare(fromSquare);
+		boolean isToPieceEmpty = game.getPiece(toSquare) == EMPTY;
+
+		int fromPiece = -1;
+
+		if (isDrop) {
+			fromPiece = getColoredPieceFromDropSquare(fromSquare);
+		} else {
+			fromPiece = getColoredPiece(fromSquare, game);
+		}
+
+		if ((fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_G1)
+				|| (fromPiece == BK && fromSquare == SQUARE_E8 && toSquare == SQUARE_G8)) {
+			return "O-O";
+		} else if ((fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_C1)
+				|| (fromPiece == BK && fromSquare == SQUARE_E8 && toSquare == SQUARE_C8)) {
+			return "O-O-O";
+		} else if (isDrop) {
+			return getPieceRepresentation(fromPiece) + "@"
+					+ GameUtils.getSan(toSquare);
+		} else if ((fromPiece == WP || fromPiece == BP) && isToPieceEmpty) {
+			return GameUtils.getSan(toSquare);
+		} else {
+			return getPieceRepresentation(fromPiece)
+					+ (isToPieceEmpty ? "" : "x") + GameUtils.getSan(toSquare);
+		}
+	}
+
+	/**
+	 * Returns a fake SAN (short algebraic notation) version of the move. The
+	 * SAN does not reflect ambiguity. Handles drop squares as from squares.
+	 */
+	public static String getPseudoSan(int fromPiece, int toPiece,
+			int fromSquare, int toSquare) {
+		boolean isDrop = isDropSquare(fromSquare);
+		boolean isToPieceEmpty = toPiece == EMPTY;
+
+		if ((fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_G1)
+				|| (fromPiece == BK && fromSquare == SQUARE_E8 && toSquare == SQUARE_G8)) {
+			return "O-O";
+		} else if ((fromPiece == WK && fromSquare == SQUARE_E1 && toSquare == SQUARE_C1)
+				|| (fromPiece == BK && fromSquare == SQUARE_E8 && toSquare == SQUARE_C8)) {
+			return "O-O-O";
+		} else if (isDrop) {
+			return getPieceRepresentation(fromPiece) + "@"
+					+ GameUtils.getSan(toSquare);
+		} else if ((fromPiece == WP || fromPiece == BP) && isToPieceEmpty) {
+			return GameUtils.getSan(toSquare);
+		} else {
+			return getPieceRepresentation(fromPiece)
+					+ (isToPieceEmpty ? "" : "x") + GameUtils.getSan(toSquare);
+		}
 	}
 
 	public static int getRank(int square) {
@@ -456,6 +661,10 @@ public class GameUtils implements GameConstants {
 		return (game.getColorBB(BLACK) & getBitboard(square)) != 0;
 	}
 
+	public static boolean isDropSquare(int square) {
+		return square >= 100 && square <= 112;
+	}
+
 	public static final boolean isInBounds(int rank, int file) {
 		return rank >= 0 && rank <= 7 && file >= 0 && file <= 7;
 	}
@@ -467,7 +676,9 @@ public class GameUtils implements GameConstants {
 
 	public static boolean isPromotion(boolean isWhiteToMove, Game game,
 			int fromSquare, int toSquare) {
-		if (isWhiteToMove) {
+		if (isDropSquare(fromSquare)) {
+			return false;
+		} else if (isWhiteToMove) {
 			return game.getPiece(fromSquare) == PAWN && getRank(toSquare) == 7;
 		} else {
 			return game.getPiece(fromSquare) == PAWN && getRank(toSquare) == 0;

@@ -80,7 +80,7 @@ public class SWTUtils {
 		result.marginWidth = 0;
 		return result;
 	}
-	
+
 	/**
 	 * Returns a RowLayout without any margins or spacing.
 	 */

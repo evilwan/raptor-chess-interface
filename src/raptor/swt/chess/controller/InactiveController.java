@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import raptor.Raptor;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
@@ -32,22 +33,73 @@ public class InactiveController extends ChessBoardController implements
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
 	Random random = new SecureRandom();
 	ToolBar toolbar;
+	boolean userMadeAdjustment = false;
 
 	public InactiveController(Game game) {
 		super(game);
 	}
 
+	/**
+	 * If premove is enabled, and premove is not in queued mode then clear the
+	 * premoves on an illegal move.
+	 */
+	public void adjustForIllegalMove(String move) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("adjustForIllegalMove ");
+		}
+
+		board.unhighlightAllSquares();
+		refresh();
+		onPlayIllegalMoveSound();
+		board.getStatusLabel().setText("Illegal Move: " + move);
+	}
+
 	@Override
 	public void adjustGameDescriptionLabel() {
-		if (!isBeingUsed()) {
+		if (!isDisposed()) {
 			board.getGameDescriptionLabel().setText(
 					"Inactive " + getGame().getEvent());
 		}
 	}
 
+	/**
+	 * Adjusts the game status label. If the game is not in an active state, the
+	 * status label sets itself to getResultDescription in the game. If the game
+	 * is in an active state, the status is set to the last move.
+	 * 
+	 * This method is provided so it can easily be overridden.
+	 */
+	@Override
+	public void adjustGameStatusLabel() {
+		if (userMadeAdjustment || getGame().isInState(Game.ACTIVE_STATE)) {
+			if (getGame().getMoveList().getSize() > 0) {
+				Move lastMove = getGame().getMoveList().get(
+						getGame().getMoveList().getSize() - 1);
+				int moveNumber = (getGame().getHalfMoveCount() / 2) + 1;
+
+				board.getStatusLabel().setText(
+						"Last Move: "
+								+ moveNumber
+								+ ") "
+								+ (lastMove.isWhitesMove() ? "" : "... ")
+								+ GameUtils.convertSanToUseUnicode(lastMove
+										.toString(), !game.isWhitesMove()));
+
+			} else {
+				board.getStatusLabel().setText("");
+			}
+		} else {
+			String result = getGame().getResultDescription();
+			if (result != null) {
+				board.getStatusLabel()
+						.setText(getGame().getResultDescription());
+			}
+		}
+	}
+
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
-		if (!isBeingUsed()) {
+		if (!isDisposed()) {
 			if (BoardUtils.isPieceJailSquare(squareId)) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)) {
 					int pieceType = BoardUtils.pieceJailSquareToPiece(squareId);
@@ -90,66 +142,47 @@ public class InactiveController extends ChessBoardController implements
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addNavIconsToToolbar(this, toolbar);
+			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true);
 			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addPromotionIconsToToolbar(true, this, toolbar);
+			BoardUtils.addNavIconsToToolbar(this, toolbar, false, false);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-		setToolItemSelected(AUTO_QUEEN, true);
+		setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
 		return toolbar;
 	}
 
 	@Override
 	public void init() {
-		super.init();
 		if (getGame().isInState(Game.DROPPABLE_STATE)) {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
 		} else {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
-
-		fireItemChanged();
+		refresh();
 	}
 
-	@Override
-	public boolean isAutoDrawable() {
-		return false;
+	protected void onPlayIllegalMoveSound() {
+		SoundService.getInstance().playSound("illegalMove");
 	}
 
-	@Override
-	public boolean isCommitable() {
-		return false;
-	}
-
-	@Override
-	public boolean isMoveListTraversable() {
-		return true;
-	}
-
-	@Override
-	public boolean isNavigatable() {
-		return true;
-	}
-
-	@Override
-	public boolean isRevertable() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	protected void onPlayGameEndSound() {
-	}
-
-	@Override
-	protected void onPlayGameStartSound() {
-	}
-
-	@Override
 	protected void onPlayMoveSound() {
 		SoundService.getInstance().playSound("move");
+	}
+
+	@Override
+	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
+		switch (key) {
+		case FEN:
+			Raptor.getInstance().promptForText(
+					"FEN for game " + game.getWhiteName() + " vs "
+							+ game.getBlackName(), game.toFEN());
+			break;
+		case FLIP:
+			onFlip();
+			break;
+		}
 	}
 
 	/**
@@ -163,74 +196,80 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		if (!isBeingUsed()) {
+		if (!isDisposed()) {
 			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare
 					+ " " + isDnd);
 			board.unhighlightAllSquares();
-			adjustToGameMove();
+			refresh();
+			onPlayIllegalMoveSound();
 		}
 	}
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		if (!isBeingUsed()) {
+		if (!isDisposed()) {
 			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " "
 					+ isDnd);
+			userMadeAdjustment = true;
+			board.getResultDecoration().setHiding(true);
 
 			board.unhighlightAllSquares();
 			board.getSquare(square).highlight();
 			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
 				board.getSquare(square).setPiece(GameConstants.EMPTY);
 			}
+			board.redrawSquares();
 		}
 	}
 
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-		if (!isBeingUsed()) {
-			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
-					+ toSquare);
-			board.unhighlightAllSquares();
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("userMadeMove " + getGame().getId() + " "
+					+ GameUtils.getSan(fromSquare) + " "
+					+ GameUtils.getSan(toSquare));
+		}
 
-			if (fromSquare == toSquare
-					|| BoardUtils.isPieceJailSquare(toSquare)) {
-				board.unhighlightAllSquares();
-				adjustToGameMove();
-				SoundService.getInstance().playSound("illegalMove");
-				return;
+		board.unhighlightAllSquares();
+
+		// Non premoves flow through here
+		if (fromSquare == toSquare || BoardUtils.isPieceJailSquare(toSquare)) {
+			if (LOG.isDebugEnabled()) {
+				LOG
+						.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
 			}
+			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
+					toSquare));
+		}
 
-			Game game = getGame();
-			Move move = null;
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing user move..");
+		}
 
-			if (BoardUtils.isPieceJailSquare(fromSquare)) {
-				if (game.isInState(Game.DROPPABLE_STATE)) {
-					move = BoardUtils.createDropMove(fromSquare, toSquare);
-				} else {
-					board.unhighlightAllSquares();
-					adjustToGameMove();
-					SoundService.getInstance().playSound("illegalMove");
-					return;
-				}
-			} else if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
-				move = new Move(fromSquare, toSquare,
-						game.getPiece(fromSquare), game.getColorToMove(), game
-								.getPiece(toSquare), getAutoPromoteSelection(),
-						EMPTY, Move.PROMOTION_CHARACTERISTIC);
+		Move move = null;
+		if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
+			move = BoardUtils.createMove(getGame(), fromSquare, toSquare,
+					getAutoPromoteSelection());
+		} else {
+			move = BoardUtils.createMove(getGame(), fromSquare, toSquare);
+		}
+
+		if (move == null) {
+			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
+					toSquare));
+		} else {
+			board.getSquare(fromSquare).highlight();
+			board.getSquare(toSquare).highlight();
+
+			if (game.move(move)) {
+				refresh();
+				onPlayMoveSound();
 			} else {
-				move = new Move(fromSquare, toSquare,
-						game.getPiece(fromSquare), game.getColorToMove(), game
-								.getPiece(toSquare));
-			}
-
-			try {
-				game.move(move);
-				getBoard().getSquare(fromSquare).highlight();
-				getBoard().getSquare(toSquare).highlight();
-			} catch (IllegalArgumentException iae) {
-				board.unhighlightAllSquares();
-			} finally {
-				adjustToGameMove();
+				Raptor.getInstance().onError(
+						"Game.move returned false for a move that should have been legal.Move: "
+								+ move + ".",
+						new Throwable(getGame().toString()));
+				adjustForIllegalMove(move.toString());
 			}
 		}
 	}

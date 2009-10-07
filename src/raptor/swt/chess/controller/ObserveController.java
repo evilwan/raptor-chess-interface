@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.pref.PreferenceKeys;
@@ -27,15 +28,15 @@ import raptor.swt.chess.ChessBoardController;
 public class ObserveController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ObserveController.class);
 
+	protected Connector connector;
+
 	protected GameServiceListener listener = new GameServiceAdapter() {
 		@Override
 		public void gameInactive(Game game) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-
-							board.redrawSquares();
 							onPlayGameEndSound();
 
 							InactiveController inactiveController = new InactiveController(
@@ -43,13 +44,13 @@ public class ObserveController extends ChessBoardController {
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 
-							// board.clearCoolbar();
 							getConnector().getGameService()
 									.removeGameServiceListener(listener);
 
 							inactiveController.init();
 							inactiveController
 									.setItemChangedListeners(itemChangedListeners);
+
 							// Set the listeners to null so they wont get
 							// cleared and disposed
 							setItemChangedListeners(null);
@@ -66,14 +67,13 @@ public class ObserveController extends ChessBoardController {
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
-			if (!isBeingUsed() && game.getId().equals(getGame().getId())) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							refresh();
 							if (isNewMove) {
-								adjustToGameMove();
-							} else {
-								adjustToGameChangeNotInvolvingMove();
+								onPlayMoveSound();
 							}
 						} catch (Throwable t) {
 							connector.onError(
@@ -84,8 +84,6 @@ public class ObserveController extends ChessBoardController {
 			}
 		}
 	};
-
-	protected Connector connector;
 	protected ToolBar toolbar;
 
 	public ObserveController(Game game, Connector connector) {
@@ -93,32 +91,11 @@ public class ObserveController extends ChessBoardController {
 		this.connector = connector;
 	}
 
-	// @Override
-	// protected void adjustCoolbarToInitial() {
-	// try {
-	// LOG.error("Initing toolbar");
-	// // if (!isBeingReparented()) {
-	// // board.addGameActionButtonsToCoolbar();
-	// //board.addScripterCoolbar();
-	// // board.packCoolbar();
-	// // }
-	// } catch (Throwable t) {
-	// LOG.error("Error initing toolbar", t);
-	// }
-	// }
-
 	@Override
 	public void adjustGameDescriptionLabel() {
-		if (!isBeingUsed()) {
+		if (!isDisposed()) {
 			board.getGameDescriptionLabel().setText(
 					"Observing " + getGame().getEvent());
-		}
-	}
-
-	@Override
-	protected void adjustPremoveLabel() {
-		if (!isBeingUsed()) {
-			board.getCurrentPremovesLabel().setText("");
 		}
 	}
 
@@ -138,7 +115,6 @@ public class ObserveController extends ChessBoardController {
 			SWTUtils.clearToolbar(toolbar);
 			toolbar = null;
 		}
-
 		super.dispose();
 	}
 
@@ -155,7 +131,7 @@ public class ObserveController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addNavIconsToToolbar(this, toolbar);
+			BoardUtils.addNavIconsToToolbar(this, toolbar, false, false);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
@@ -165,7 +141,6 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void init() {
-		super.init();
 
 		/**
 		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail
@@ -180,49 +155,41 @@ public class ObserveController extends ChessBoardController {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
 
+		refresh();
+
+		onPlayGameStartSound();
+
+		// Add the service listener last so there are no synch problems.
+		// It is ok if we miss moves the GameService will update the game.
 		connector.getGameService().addGameServiceListener(listener);
 	}
 
-	@Override
-	public boolean isAutoDrawable() {
-		return false;
-	}
-
-	@Override
-	public boolean isCommitable() {
-		return false;
-	}
-
-	@Override
-	public boolean isMoveListTraversable() {
-		return true;
-	}
-
-	@Override
-	public boolean isNavigatable() {
-		return true;
-	}
-
-	@Override
-	public boolean isRevertable() {
-		return false;
-	}
-
-	@Override
 	protected void onPlayGameEndSound() {
 		SoundService.getInstance().playSound("obsGameEnd");
 	}
 
-	@Override
 	protected void onPlayGameStartSound() {
 		SoundService.getInstance().playSound("gameStart");
 	}
 
-	@Override
 	protected void onPlayMoveSound() {
 		if (getPreferences().getBoolean(
 				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING)) {
 			SoundService.getInstance().playSound("obsMove");
+		}
+	}
+
+	@Override
+	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
+		switch (key) {
+		case FEN:
+			Raptor.getInstance().promptForText(
+					"FEN for game " + game.getWhiteName() + " vs "
+							+ game.getBlackName(), game.toFEN());
+			break;
+		case FLIP:
+			onFlip();
+			break;
 		}
 	}
 

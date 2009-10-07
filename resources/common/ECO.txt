@@ -1,6 +1,6 @@
-A3|A00|Anderssen's Opening|Romford counter-gambit
-A4 E5 H4|A00|Crab Opening|Romford counter-gambit
-A4|A00|Ware (Meadow Hay) Opening|Romford counter-gambit
+A3|A00|Anderssen's Opening|
+A4 E5 H4|A00|Crab Opening|
+A4|A00|Ware (Meadow Hay) Opening|
 B3 B5|A01|Nimzovich-Larsen attack|Polish Variation 
 B3 B6|A01|Nimzovich-Larsen attack|Symmetrical Variation 
 B3 C5|A01|Nimzovich-Larsen attack|English Variation 
@@ -8,7 +8,7 @@ B3 D5|A01|Nimzovich-Larsen attack|Classical Variation
 B3 E5|A01|Nimzovich-Larsen attack|Modern Variation 
 B3 F5|A01|Nimzovich-Larsen attack|Dutch Variation 
 B3 NF6|A01|Nimzovich-Larsen attack|Indian Variation 
-B3|A01|Nimzovich-Larsen attack|Romford counter-gambit
+B3|A01|Nimzovich-Larsen attack|
 B4 C6|A00|Polish|Outflank Variation 
 B4 NH6|A00|Polish|Tuebingen Variation 
 B4|A00|Polish (Sokolsky) opening|
@@ -112,11 +112,11 @@ C4 NF6 NC3 E6|A17|English Opening|Anglo-Gruenfeld defense, Korchnoi Variation
 C4 NF6 NC3|A16|English Opening|Symmetrical, Keres defense
 C4 NF6 NF3|A15|English Opening|Symmetrical, Keres defense
 C4 NF6|A15|English, 1...Nf6 (Anglo-Indian defense)|Symmetrical, Keres defense
-C4|A10|English Opening|Keres Variation 
-D3 C5 NC3 NC6 G3|A00|Venezolana Opening|Romford counter-gambit
-D3 E5 ND2|A00|Valencia Opening|Romford counter-gambit
-D3 E5|A00|Mieses Opening|Romford counter-gambit
-D3|A00|Mieses Opening|Romford counter-gambit
+C4|A10|English Opening|
+D3 C5 NC3 NC6 G3|A00|Venezolana Opening|
+D3 E5 ND2|A00|Valencia Opening|
+D3 E5|A00|Mieses Opening|
+D3|A00|Mieses Opening|
 D4 B5|A40|Polish defense|English defense
 D4 B6|A40|Queen's pawn|English defense
 D4 C5 D5 D6 NC3 G6|A43|Old Benoni|Schmid's system
@@ -796,9 +796,9 @@ D4 NF6 NF3 G6|A48|King's Indian|East Indian defense
 D4 NF6 NF3 NE4|A46|Doery defense|Yusupov-Rubinstein system
 D4 NF6 NF3|A46|Queen's pawn game|Bronstein gambit
 D4 NF6|A45|Queen's pawn game|Schmid's system
-D4|A40|Queen's pawn|Symmetrical, Main line with d4
-E3 E5 C4 D6 NC3 NC6 B3 NF6|A00|Amsterdam attack|Romford counter-gambit
-E3|A00|Van't Kruijs Opening|Romford counter-gambit
+D4|A40|Queen's pawn|
+E3 E5 C4 D6 NC3 NC6 B3 NF6|A00|Amsterdam attack|
+E3|A00|Van't Kruijs Opening|
 E4 A5|B00|Corn stalk defense|
 E4 A6|B00|St. George (Baker) defense|
 E4 B6 D4 BA6|B00|Guatemala defense|
@@ -1058,7 +1058,7 @@ E4 D5 EXD5 QXD5 NC3 QA5 D4 E5|B01|Scandinavian|Anderssen counter-attack
 E4 D5 EXD5 QXD5 NC3 QA5 D4 NF6 NF3 BF5 NE5 C6 G4|B01|Scandinavian|Gruenfeld Variation
 E4 D5 EXD5 QXD5 NC3 QA5 D4 NF6 NF3 BG4 H3|B01|Scandinavian defense|Lasker Variation
 E4 D5 EXD5 QXD5 NC3 QD6|B01|Scandinavian|Pytel-Wade Variation 
-E4 D5|B01|Scandinavian|Center-counter defense
+E4 D5|B01|Scandinavian|
 E4 D6 D4 NF6 NC3 C6|B07|Pirc|Ufimtsev-Pytel Variation 
 E4 D6 D4 NF6 NC3 G6 BC4|B07|Pirc|Holmov system
 E4 D6 D4 NF6 NC3 G6 BE2 BG7 G4|B07|Pirc|Chinese Variation 
@@ -1953,8 +1953,8 @@ E4 NF6 NC3 D5|B02|Alekhine's defense|Scandinavian Variation
 E4 NF6|B02|Alekhine's defense|Richter Variation 
 E4 NH6 D4 G6 C4 F6|B00|Hippopotamus defense|
 E4|B00|King's pawn Opening|
-F3 E5 KF2|A00|Hammerschlag (Fried fox/Pork chop Opening)|Romford counter-gambit
-F3|A00|Gedult's Opening|Romford counter-gambit
+F3 E5 KF2|A00|Hammerschlag (Fried fox/Pork chop Opening)|
+F3|A00|Gedult's Opening|
 F4 D5 C4|A03|Mujannah Opening|Hobbs gambit
 F4 D5 E4|A03|Bird's Opening|Williams gambit
 F4 D5 NF3 NF6 E3 C5|A03|Bird's Opening|Lasker Variation 
@@ -1964,22 +1964,22 @@ F4 E5 FXE5 D6 EXD6 BXD6 NF3 NH6 D4|A02|Bird|From gambit, Lipke Variation
 F4 E5|A02|Bird|From gambit
 F4 F5 E4 FXE4 NC3 NF6 G4|A02|Bird's Opening, Swiss gambit|From gambit, Lipke Variation 
 F4 G5|A02|Bird|Hobbs gambit
-F4|A02|Bird's Opening|Symmetrical Variation 
+F4|A02|Bird's Opening|
 G3 E5 NF3|A00|Benko's Opening|reversed Alekhine
 G3 H5|A00|Lasker simul special|Outflank Variation 
 G3|A00|Benko's Opening|Outflank Variation 
-G4 D5 BG2 BXG4 C4 D4|A00|Grob|Romford counter-gambit
+G4 D5 BG2 BXG4 C4 D4|A00|Grob|
 G4 D5 BG2 BXG4 C4|A00|Grob|Fritz gambit
 G4 D5 BG2 C6 G5|A00|Grob|Spike attack
-G4|A00|Grob's attack|reversed Alekhine
-H3 E5 A3|A00|Global Opening|Romford counter-gambit
-H3|A00|Clemenz (Mead's, Basman's or de Klerk's) Opening|Romford counter-gambit
-H4|A00|Anti-Borg (Desprez) Opening|Romford counter-gambit
-NA3|A00|Durkin's attack|Romford counter-gambit
-NC3 C5 D4 CXD4 QXD4 NC6 QH4|A00|Novosibirsk Opening|Romford counter-gambit
-NC3 E5 A3|A00|Battambang Opening|Romford counter-gambit
-NC3 E5|A00|Dunst (Sleipner,Heinrichsen) Opening|Romford counter-gambit
-NC3|A00|Dunst (Sleipner, Heinrichsen) Opening|Romford counter-gambit
+G4|A00|Grob's attack|
+H3 E5 A3|A00|Global Opening|
+H3|A00|Clemenz (Mead's, Basman's or de Klerk's) Opening|
+H4|A00|Anti-Borg (Desprez) Opening|
+NA3|A00|Durkin's attack|
+NC3 C5 D4 CXD4 QXD4 NC6 QH4|A00|Novosibirsk Opening|
+NC3 E5 A3|A00|Battambang Opening|
+NC3 E5|A00|Dunst (Sleipner,Heinrichsen) Opening|
+NC3|A00|Dunst (Sleipner, Heinrichsen) Opening|
 NF3 D5 B3|A06|Reti|Nimzovich-Larsen attack
 NF3 D5 B4|A06|Santasiere's folly|Old Indian attack
 NF3 D5 C4 D4|A09|Reti|Advance Variation 
@@ -2008,5 +2008,5 @@ NF3 NF6 G3 G6 B4|A05|Reti|King's Indian attack, Reti-Smyslov Variation
 NF3 NF6 G3 G6|A05|Reti|King's Indian attack
 NF3 NF6|A05|Reti Opening|Herrstroem gambit
 NF3|A04|Reti Opening|Lasker Variation 
-NH3 D5 G3 E5 F4 BXH3 BXH3 EXF4|A00|Amar gambit|Romford counter-gambit
-NH3|A00|Amar (Paris) Opening|Romford counter-gambit
+NH3 D5 G3 E5 F4 BXH3 BXH3 EXF4|A00|Amar gambit|
+NH3|A00|Amar (Paris) Opening|

@@ -16,19 +16,16 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
 
 	ChessBoard board;
+
+	// This is just added as a member variable so it can be stored form the time
+	// its constructed until the time init is invoked.
+	// It should never be referenced after that. Always use
+	// board.getController()
+	// so controller swapping can occur.
 	ChessBoardController controller;
 
 	public ChessBoardWindowItem(ChessBoardController controller) {
 		this.controller = controller;
-
-		// When a controller change occurs it should always fire an
-		// itemStateChange.
-		// This listener will pick up the change and swap out the controllers.
-		controller.addItemChangedListener(new ItemChangedListener() {
-			public void itemStateChanged() {
-				ChessBoardWindowItem.this.controller = board.getController();
-			}
-		});
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -36,7 +33,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public boolean confirmClose() {
-		return controller.confirmClose();
+		return board.getController().confirmClose();
 	}
 
 	public boolean confirmQuadrantMove() {
@@ -61,11 +58,11 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public String getTitle() {
-		return controller.getTitle();
+		return board.getController().getTitle();
 	}
 
 	public Control getToolbar(Composite parent) {
-		return controller.getToolbar(parent);
+		return board.getController().getToolbar(parent);
 	}
 
 	public void init(Composite parent) {
@@ -90,7 +87,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		board.layout(true);
 		board.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				controller.onActivate();
+				board.getController().onActivate();
 			}
 		});
 	}
@@ -99,12 +96,12 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		board.setLayoutDeferred(true);
 		board.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				controller.onPassivate();
+				board.getController().onPassivate();
 			}
 		});
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
-		controller.removeItemChangedListener(listener);
+		board.getController().removeItemChangedListener(listener);
 	}
 }

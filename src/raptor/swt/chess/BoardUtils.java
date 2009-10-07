@@ -27,9 +27,9 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
-import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ThreadService;
+import raptor.swt.chess.controller.ToolBarItemKey;
 import raptor.util.RaptorStringUtils;
 import raptor.util.SVGUtil;
 
@@ -54,39 +54,37 @@ public class BoardUtils implements BoardConstants {
 	 *            The toolbar to add the items to.
 	 */
 	public static void addNavIconsToToolbar(
-			final ChessBoardController controller, ToolBar toolbar) {
+			final ChessBoardController controller, ToolBar toolbar,
+			boolean showNavDirectionButtons, boolean showRevertCommitButtons) {
 		LOG.debug("Adding addNavIconsToToolbar to toolbar");
 
-		if (controller.isNavigatable()) {
+		if (showNavDirectionButtons) {
 			ToolItem firstButtonItem = new ToolItem(toolbar, SWT.FLAT);
 			firstButtonItem.setImage(Raptor.getInstance().getIcon("first"));
 			firstButtonItem.setToolTipText("Go to the first move played");
 			firstButtonItem.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavFirst();
-
+					controller.onToolbarButtonAction(ToolBarItemKey.FIRST_NAV);
 				}
 			});
-			controller.addToolItem(ChessBoardController.BACK_NAV,
-					firstButtonItem);
+			controller.addToolItem(ToolBarItemKey.FIRST_NAV, firstButtonItem);
 		}
 
-		if (controller.isNavigatable()) {
+		if (showNavDirectionButtons) {
 			ToolItem backButton = new ToolItem(toolbar, SWT.FLAT);
 			backButton.setImage(Raptor.getInstance().getIcon("back"));
 			backButton.setToolTipText("Go to the previous move played");
 			backButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavBack();
-
+					controller.onToolbarButtonAction(ToolBarItemKey.BACK_NAV);
 				}
 			});
-			controller.addToolItem(ChessBoardController.BACK_NAV, backButton);
+			controller.addToolItem(ToolBarItemKey.BACK_NAV, backButton);
 		}
 
-		if (controller.isRevertable()) {
+		if (showRevertCommitButtons) {
 			ToolItem revertButton = new ToolItem(toolbar, SWT.FLAT);
 			revertButton.setImage(Raptor.getInstance().getIcon(
 					"counterClockwise"));
@@ -94,67 +92,59 @@ public class BoardUtils implements BoardConstants {
 			revertButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavRevert();
-
+					controller.onToolbarButtonAction(ToolBarItemKey.REVERT_NAV);
 				}
 			});
-			controller.addToolItem(ChessBoardController.REVERT_NAV,
-					revertButton);
-		}
+			controller.addToolItem(ToolBarItemKey.REVERT_NAV, revertButton);
 
-		if (controller.isCommitable()) {
 			ToolItem commitButton = new ToolItem(toolbar, SWT.FLAT);
 			commitButton.setImage(Raptor.getInstance().getIcon("clockwise"));
 			commitButton.setToolTipText("Commit sub-variation.");
 			commitButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavCommit();
-
+					controller.onToolbarButtonAction(ToolBarItemKey.COMMIT_NAV);
 				}
 			});
-			controller.addToolItem(ChessBoardController.COMMIT_NAV,
-					commitButton);
+			controller.addToolItem(ToolBarItemKey.COMMIT_NAV, commitButton);
 		}
 
-		if (controller.isNavigatable()) {
+		if (showNavDirectionButtons) {
 			ToolItem nextButton = new ToolItem(toolbar, SWT.FLAT);
 			nextButton.setImage(Raptor.getInstance().getIcon("next"));
 			nextButton.setToolTipText("Go to the next move played");
 			nextButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavForward();
-
+					controller.onToolbarButtonAction(ToolBarItemKey.NEXT_NAV);
 				}
 			});
-			controller.addToolItem(ChessBoardController.NEXT_NAV, nextButton);
+			controller.addToolItem(ToolBarItemKey.NEXT_NAV, nextButton);
 		}
 
-		if (controller.isNavigatable()) {
+		if (showNavDirectionButtons) {
 			ToolItem lastButton = new ToolItem(toolbar, SWT.FLAT);
 			lastButton.setImage(Raptor.getInstance().getIcon("last"));
 			lastButton.setToolTipText("Go to the last move played");
 			lastButton.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
-					controller.onNavLast();
-
+					controller.onToolbarButtonAction(ToolBarItemKey.LAST_NAV);
 				}
 			});
-			controller.addToolItem(ChessBoardController.LAST_NAV, lastButton);
+			controller.addToolItem(ToolBarItemKey.LAST_NAV, lastButton);
 		}
 
 		ToolItem flipButton = new ToolItem(toolbar, SWT.FLAT);
 		flipButton.setImage(Raptor.getInstance().getIcon("flip"));
 		flipButton.setToolTipText("Flips the chess board.");
-		controller.addToolItem(ChessBoardController.FLIP, flipButton);
 		flipButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				controller.onFlip();
+				controller.onToolbarButtonAction(ToolBarItemKey.FLIP);
 			}
 		});
+		controller.addToolItem(ToolBarItemKey.FLIP, flipButton);
 
 		ToolItem fenButton = new ToolItem(toolbar, SWT.FLAT);
 		fenButton.setText("FEN");
@@ -163,33 +153,31 @@ public class BoardUtils implements BoardConstants {
 		fenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				Raptor.getInstance().promptForText(
-						"FEN for game " + controller.getGame().getId() + ":",
-						controller.getGame().toFEN());
+				controller.onToolbarButtonAction(ToolBarItemKey.FEN);
+			}
+		});
+		controller.addToolItem(ToolBarItemKey.FEN, fenButton);
+	}
+
+	public static void addPremoveClearAndAutoDrawToolbar(
+			final ChessBoardController controller, ToolBar toolbar) {
+
+		ToolItem premoveButton = new ToolItem(toolbar, SWT.FLAT);
+		premoveButton.setImage(Raptor.getInstance().getIcon("redx"));
+		premoveButton.setToolTipText("Clears all premoves.");
+		premoveButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				controller.onToolbarButtonAction(ToolBarItemKey.CLEAR_PREMOVES);
 			}
 		});
 
-		if (controller.isPremoveable()) {
-			ToolItem premoveButton = new ToolItem(toolbar, SWT.FLAT);
-			premoveButton.setImage(Raptor.getInstance().getIcon("redx"));
-			premoveButton.setToolTipText("Clears all premoves.");
-			controller.addToolItem(ChessBoardController.PREMOVE, premoveButton);
-			premoveButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					controller.onClearPremoves();
-				}
-			});
-		}
-
-		if (controller.isAutoDrawable()) {
-			ToolItem autoDrawButton = new ToolItem(toolbar, SWT.CHECK);
-			autoDrawButton.setImage(Raptor.getInstance().getIcon("draw"));
-			autoDrawButton
-					.setToolTipText("Offer a draw after every move you make.");
-			controller.addToolItem(ChessBoardController.AUTO_DRAW,
-					autoDrawButton);
-		}
+		controller.addToolItem(ToolBarItemKey.CLEAR_PREMOVES, premoveButton);
+		ToolItem autoDrawButton = new ToolItem(toolbar, SWT.CHECK);
+		autoDrawButton.setImage(Raptor.getInstance().getIcon("draw"));
+		autoDrawButton
+				.setToolTipText("Offer a draw after every move you make.");
+		controller.addToolItem(ToolBarItemKey.AUTO_DRAW, autoDrawButton);
 	}
 
 	/**
@@ -202,37 +190,38 @@ public class BoardUtils implements BoardConstants {
 	 * @param toolbar
 	 *            The toolbar to add the items to.
 	 */
-	public static final void addPromotionIconsToToolbar(boolean isUserWhite,
-			ChessBoardController controller, ToolBar toolbar) {
+	public static final void addPromotionIconsToToolbar(
+			ChessBoardController controller, ToolBar toolbar,
+			boolean isUserWhite) {
 		ToolItem queenPromote = new ToolItem(toolbar, SWT.RADIO);
-		queenPromote
-				.setText(getPieceRepresentation(isUserWhite ? GameConstants.WQ
+		queenPromote.setText(GameUtils
+				.getPieceRepresentation(isUserWhite ? GameConstants.WQ
 						: GameConstants.BQ));
-		controller.addToolItem(ChessBoardController.AUTO_QUEEN, queenPromote);
+		controller.addToolItem(ToolBarItemKey.AUTO_QUEEN, queenPromote);
 		queenPromote.setToolTipText("Auto Queen");
 		queenPromote.setSelection(false);
 
 		ToolItem knightPromote = new ToolItem(toolbar, SWT.RADIO);
-		knightPromote
-				.setText(getPieceRepresentation(isUserWhite ? GameConstants.WN
+		knightPromote.setText(GameUtils
+				.getPieceRepresentation(isUserWhite ? GameConstants.WN
 						: GameConstants.BN));
-		controller.addToolItem(ChessBoardController.AUTO_KNIGHT, knightPromote);
+		controller.addToolItem(ToolBarItemKey.AUTO_KNIGHT, knightPromote);
 		knightPromote.setToolTipText("Auto Knight");
 		queenPromote.setSelection(false);
 
 		ToolItem bishopPromote = new ToolItem(toolbar, SWT.RADIO);
-		bishopPromote
-				.setText(getPieceRepresentation(isUserWhite ? GameConstants.WB
+		bishopPromote.setText(GameUtils
+				.getPieceRepresentation(isUserWhite ? GameConstants.WB
 						: GameConstants.BB));
-		controller.addToolItem(ChessBoardController.AUTO_BISHOP, bishopPromote);
+		controller.addToolItem(ToolBarItemKey.AUTO_BISHOP, bishopPromote);
 		knightPromote.setToolTipText("Auto Bishop");
 		bishopPromote.setSelection(false);
 
 		ToolItem rookPromote = new ToolItem(toolbar, SWT.RADIO);
-		rookPromote
-				.setText(getPieceRepresentation(isUserWhite ? GameConstants.WR
+		rookPromote.setText(GameUtils
+				.getPieceRepresentation(isUserWhite ? GameConstants.WR
 						: GameConstants.BR));
-		controller.addToolItem(ChessBoardController.AUTO_ROOK, rookPromote);
+		controller.addToolItem(ToolBarItemKey.AUTO_ROOK, rookPromote);
 		knightPromote.setToolTipText("Auto Rook");
 		rookPromote.setSelection(false);
 	}
@@ -246,11 +235,11 @@ public class BoardUtils implements BoardConstants {
 		setupInitial.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSetupStart();
+				controller.onToolbarButtonAction(ToolBarItemKey.SETUP_START);
 
 			}
 		});
-		controller.addToolItem(ChessBoardController.SETUP_START, setupInitial);
+		controller.addToolItem(ToolBarItemKey.SETUP_START, setupInitial);
 
 		ToolItem setupClear = new ToolItem(toolbar, SWT.FLAT);
 		setupClear.setText("Clear");
@@ -258,10 +247,10 @@ public class BoardUtils implements BoardConstants {
 		setupClear.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSetupClear();
+				controller.onToolbarButtonAction(ToolBarItemKey.SETUP_CLEAR);
 			}
 		});
-		controller.addToolItem(ChessBoardController.SETUP_CLEAR, setupClear);
+		controller.addToolItem(ToolBarItemKey.SETUP_CLEAR, setupClear);
 
 		ToolItem setupDone = new ToolItem(toolbar, SWT.FLAT);
 		setupDone.setText("Done");
@@ -269,10 +258,10 @@ public class BoardUtils implements BoardConstants {
 		setupDone.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSetupDone();
+				controller.onToolbarButtonAction(ToolBarItemKey.SETUP_DONE);
 			}
 		});
-		controller.addToolItem(ChessBoardController.SETUP_DONE, setupDone);
+		controller.addToolItem(ToolBarItemKey.SETUP_DONE, setupDone);
 
 		ToolItem fromFenButton = new ToolItem(toolbar, SWT.FLAT);
 		fromFenButton.setText("FromFEN");
@@ -281,13 +270,10 @@ public class BoardUtils implements BoardConstants {
 		fromFenButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String result = Raptor.getInstance().promptForText(
-						"Enter the FEN to set the position to:");
-				if (result != null) {
-					controller.onSetupFen(result);
-				}
+				controller.onToolbarButtonAction(ToolBarItemKey.SETUP_FROM_FEN);
 			}
 		});
+		controller.addToolItem(ToolBarItemKey.SETUP_FROM_FEN, fromFenButton);
 	}
 
 	public static boolean arePiecesSameColor(int piece1, int piece2) {
@@ -431,43 +417,6 @@ public class BoardUtils implements BoardConstants {
 		}
 	}
 
-	public static int getColoredPiece(int square, Game game) {
-		long squareBB = GameUtils.getBitboard(square);
-		int gamePiece = game.getPiece(square);
-
-		switch (gamePiece) {
-		case GameConstants.EMPTY:
-			return EMPTY;
-		case WP:
-		case BP:
-			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BP
-					: WP;
-		case WN:
-		case BN:
-			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BN
-					: WN;
-		case WB:
-		case BB:
-			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BB
-					: WB;
-		case WR:
-		case BR:
-			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BR
-					: WR;
-		case WQ:
-		case BQ:
-			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BQ
-					: WQ;
-		case WK:
-		case BK:
-			return (game.getColorBB(GameConstants.WHITE) & squareBB) == 0 ? BK
-					: WK;
-		default:
-			throw new IllegalArgumentException("Invalid gamePiece" + gamePiece);
-
-		}
-	}
-
 	/**
 	 * Returns the cursor for the specified piece type.
 	 * 
@@ -494,67 +443,6 @@ public class BoardUtils implements BoardConstants {
 			Raptor.getInstance().getCursorRegistry().put(key, result);
 		}
 		return result;
-	}
-
-	public static String getPieceRepresentation(int coloredPiece) {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
-			switch (coloredPiece) {
-			case WK:
-				return "\u2654";
-			case WQ:
-				return "\u2655";
-			case WR:
-				return "\u2656";
-			case WB:
-				return "\u2657";
-			case WN:
-				return "\u2658";
-			case WP:
-				return "\u2659";
-			case BK:
-				return "\u256A";
-			case BQ:
-				return "\u265B";
-			case BR:
-				return "\u265C";
-			case BB:
-				return "\u265D";
-			case BN:
-				return "\u265E";
-			case BP:
-				return "\u265F";
-			}
-		} else {
-			switch (coloredPiece) {
-			case WK:
-				return "N";
-			case WQ:
-				return "Q";
-			case WR:
-				return "R";
-			case WB:
-				return "B";
-			case WN:
-				return "N";
-			case WP:
-				return "P";
-			case BK:
-				return "k";
-			case BQ:
-				return "q";
-			case BR:
-				return "r";
-			case BB:
-				return "b";
-			case BN:
-				return "n";
-			case BP:
-				return "p";
-			}
-		}
-
-		throw new IllegalArgumentException("Invalid piece: " + coloredPiece);
 	}
 
 	/**
@@ -721,7 +609,7 @@ public class BoardUtils implements BoardConstants {
 	}
 
 	public static boolean isPieceJailSquare(int pieceJailSquare) {
-		return pieceJailSquare > 100 ? true : false;
+		return GameUtils.isDropSquare(pieceJailSquare);
 	}
 
 	public static boolean isWhitePiece(int setPieceType) {
