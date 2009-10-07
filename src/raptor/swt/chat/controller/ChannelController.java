@@ -48,7 +48,8 @@ public class ChannelController extends ChatConsoleController {
 			return "";
 		}
 
-		if (checkButton && isToolItemSelected(PREPEND_TEXT_BUTTON)) {
+		if (checkButton
+				&& isToolItemSelected(ToolBarItemKey.PREPEND_TEXT_BUTTON)) {
 			return connector.getChannelTabPrefix(channel);
 		} else if (!checkButton) {
 			return connector.getChannelTabPrefix(channel);

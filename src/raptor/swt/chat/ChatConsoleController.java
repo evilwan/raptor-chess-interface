@@ -67,24 +67,17 @@ import raptor.swt.ItemChangedListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PersonController;
+import raptor.swt.chat.controller.ToolBarItemKey;
 import raptor.util.LaunchBrowser;
 
 public abstract class ChatConsoleController implements PreferenceKeys {
 	public static final double CLEAN_PERCENTAGE = .33;
-	public static final int TEXT_CHUNK_SIZE = 1000;
 	private static final Log LOG = LogFactory
 			.getLog(ChatConsoleController.class);
+	public static final int TEXT_CHUNK_SIZE = 1000;
 
-	public static final String SEND_BUTTON = "send";
-	public static final String AWAY_BUTTON = "away";
-	public static final String SEARCH_BUTTON = "search";
-	public static final String PREPEND_TEXT_BUTTON = "prepend";
-	public static final String SAVE_BUTTON = "save";
-	public static final String AUTO_SCROLL_BUTTON = "autoScroll";
-
-	protected Connector connector;
+	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
 	protected ChatConsole chatConsole;
-	protected boolean isBeingReparented;
 	protected ChatListener chatServiceListener = new ChatListener() {
 		public void chatEventOccured(final ChatEvent event) {
 			if (chatConsole != null && !chatConsole.isDisposed()) {
@@ -104,184 +97,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		}
 	};
-
-	protected boolean hasUnseenText;
-	protected boolean ignoreAwayList;
-	protected boolean isDirty;
-	protected String sourceOfLastTellReceived;
-	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
-	protected List<ChatEvent> eventsWhileBeingReparented = Collections
-			.synchronizedList(new ArrayList<ChatEvent>(100));
-	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
-			5);
-	protected ToolBar toolbar;
-	protected Map<String, ToolItem> toolItemMap = new HashMap<String, ToolItem>();
-	protected List<String> sentText = new ArrayList<String>(50);
-	protected int sentTextIndex = 0;
-
-	protected KeyListener consoleOutputTextKeyListener = new KeyAdapter() {
-
-		@Override
-		public void keyReleased(KeyEvent event) {
-			processKeystroke(event);
-		}
-	};
-
-	protected KeyListener consoleInputTextKeyListener = new KeyAdapter() {
-		@Override
-		public void keyReleased(KeyEvent event) {
-			processKeystroke(event);
-		}
-	};
-
-	protected MouseListener inputTextClickListener = new MouseAdapter() {
-
-		@Override
-		public void mouseDoubleClick(MouseEvent e) {
-			int caretPosition = chatConsole.inputText.getCaretOffset();
-
-			String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
-			if (url != null) {
-				if (getPreferences().getBoolean(
-						APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
-					LaunchBrowser.openURL(url);
-					return;
-				} else {
-					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
-							new BrowserWindowItem(url, url));
-				}
-			}
-
-			String quotedText = ChatUtils.getQuotedText(chatConsole.inputText,
-					caretPosition);
-			if (quotedText != null) {
-				connector.sendMessage(quotedText);
-				return;
-			}
-		}
-
-		@Override
-		public void mouseUp(MouseEvent e) {
-			if (isIgnoringActions()) {
-				return;
-			}
-
-			if (e.button == 3) {
-				int caretPosition = 0;
-				try {
-					caretPosition = chatConsole.inputText
-							.getOffsetAtLocation(new Point(e.x, e.y));
-				} catch (IllegalArgumentException iae) {
-					return;
-				}
-
-				String word = ChatUtils.getWord(chatConsole.inputText,
-						caretPosition);
-
-				Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
-
-				// TO DO: move this down into the connector.
-				if (connector.isLikelyPerson(word)) {
-					final String person = connector.parsePerson(word);
-					MenuItem item = new MenuItem(menu, SWT.PUSH);
-					item.setText("Add a tab for person: " + person);
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-									new PersonController(connector, person));
-							Raptor.getInstance().getRaptorWindow()
-									.addRaptorWindowItem(windowItem, false);
-							ChatUtils
-									.appendPreviousChatsToController(windowItem.console);
-						}
-					});
-
-					final String[][] connectorPersonItems = connector
-							.getPersonActions(person);
-					if (connectorPersonItems != null) {
-						for (int i = 0; i < connectorPersonItems.length; i++) {
-							item = new MenuItem(menu, SWT.PUSH);
-							item.setText(connectorPersonItems[i][0]);
-							final int index = i;
-							item.addListener(SWT.Selection, new Listener() {
-								public void handleEvent(Event e) {
-									connector
-											.sendMessage(connectorPersonItems[index][1]);
-								}
-							});
-						}
-					}
-				}
-				if (connector.isLikelyChannel(word)) {
-					MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
-					final String channel = connector.parseChannel(word);
-
-					item = new MenuItem(menu, SWT.PUSH);
-					item.setText("Add a tab for channel: " + channel);
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-									new ChannelController(connector, channel));
-							Raptor.getInstance().getRaptorWindow()
-									.addRaptorWindowItem(windowItem, false);
-							ChatUtils
-									.appendPreviousChatsToController(windowItem.console);
-						}
-					});
-
-					final String[][] connectorChannelItems = connector
-							.getChannelActions(channel);
-					if (connectorChannelItems != null) {
-						for (int i = 0; i < connectorChannelItems.length; i++) {
-							item = new MenuItem(menu, SWT.PUSH);
-							item.setText(connectorChannelItems[i][0]);
-							final int index = i;
-							item.addListener(SWT.Selection, new Listener() {
-								public void handleEvent(Event e) {
-									connector
-											.sendMessage(connectorChannelItems[index][1]);
-								}
-							});
-						}
-					}
-				}
-				if (connector.isLikelyGameId(word)) {
-					MenuItem item = new MenuItem(menu, SWT.SEPARATOR);
-					String gameId = connector.parseGameId(word);
-
-					final String[][] gameIdItems = connector
-							.getGameIdActions(gameId);
-					if (gameIdItems != null) {
-						for (int i = 0; i < gameIdItems.length; i++) {
-							item = new MenuItem(menu, SWT.PUSH);
-							item.setText(gameIdItems[i][0]);
-							final int index = i;
-							item.addListener(SWT.Selection, new Listener() {
-								public void handleEvent(Event e) {
-									connector
-											.sendMessage(gameIdItems[index][1]);
-								}
-							});
-						}
-					}
-				}
-
-				if (menu.getItemCount() > 0) {
-					LOG.debug("Showing popup with " + menu.getItemCount()
-							+ " items. "
-							+ chatConsole.inputText.toDisplay(e.x, e.y));
-					menu.setLocation(chatConsole.inputText.toDisplay(e.x, e.y));
-					menu.setVisible(true);
-					while (!menu.isDisposed() && menu.isVisible()) {
-						if (!chatConsole.getDisplay().readAndDispatch())
-							chatConsole.getDisplay().sleep();
-					}
-				}
-				menu.dispose();
-			}
-		}
-
-	};
+	protected Connector connector;
 
 	protected ConnectorListener connectorListener = new ConnectorListener() {
 		public void onConnect() {
@@ -296,12 +112,136 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			fireItemChanged();
 		}
 	};
+	protected KeyListener consoleInputTextKeyListener = new KeyAdapter() {
+		@Override
+		public void keyReleased(KeyEvent event) {
+			processKeystroke(event);
+		}
+	};
+	protected KeyListener consoleOutputTextKeyListener = new KeyAdapter() {
 
+		@Override
+		public void keyReleased(KeyEvent event) {
+			processKeystroke(event);
+		}
+	};
+	protected List<ChatEvent> eventsWhileBeingReparented = Collections
+			.synchronizedList(new ArrayList<ChatEvent>(100));
+	protected boolean hasUnseenText;
+	protected boolean ignoreAwayList;
+	protected MouseListener inputTextClickListener = new MouseAdapter() {
+
+		@Override
+		public void mouseDoubleClick(MouseEvent e) {
+			onInputTextDoubleClick(e);
+		}
+
+		@Override
+		public void mouseUp(MouseEvent e) {
+			if (e.button == 3) {
+				onInputTextRightClick(e);
+			}
+		}
+
+	};
+	protected boolean isBeingReparented;
+	protected boolean isDirty;
 	protected boolean isSoundDisabled = false;
+	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
+			5);
+
+	protected List<String> sentText = new ArrayList<String>(50);
+
+	protected int sentTextIndex = 0;
+
+	protected String sourceOfLastTellReceived;
+
+	protected ToolBar toolbar;
+
+	protected Map<ToolBarItemKey, ToolItem> toolItemMap = new HashMap<ToolBarItemKey, ToolItem>();
 
 	public ChatConsoleController(Connector connector) {
 		this.connector = connector;
 		connector.addConnectorListener(connectorListener);
+	}
+
+	protected void addChannelMenuItems(Menu menu, String word) {
+		if (connector.isLikelyChannel(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String channel = connector.parseChannel(word);
+
+			MenuItem item = null;
+			item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add a tab for channel: " + channel);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+							new ChannelController(connector, channel));
+					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+							windowItem, false);
+					ChatUtils
+							.appendPreviousChatsToController(windowItem.console);
+				}
+			});
+
+			final String[][] connectorChannelItems = connector
+					.getChannelActions(channel);
+			if (connectorChannelItems != null) {
+				for (int i = 0; i < connectorChannelItems.length; i++) {
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText(connectorChannelItems[i][0]);
+					final int index = i;
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							connector
+									.sendMessage(connectorChannelItems[index][1]);
+						}
+					});
+				}
+			}
+		}
+	}
+
+	protected void addCommandMenuItems(Menu menu, String word) {
+		if (word.length() <= 40) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Send to " + connector.getShortName() + ": " + word);
+			final String finalWord = word;
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					connector.sendMessage(finalWord);
+				}
+			});
+		}
+	}
+
+	protected void addGameIdMenuItems(Menu menu, String word) {
+		if (connector.isLikelyGameId(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			MenuItem item = null;
+			String gameId = connector.parseGameId(word);
+
+			final String[][] gameIdItems = connector.getGameIdActions(gameId);
+			if (gameIdItems != null) {
+				for (int i = 0; i < gameIdItems.length; i++) {
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText(gameIdItems[i][0]);
+					final int index = i;
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							connector.sendMessage(gameIdItems[index][1]);
+						}
+					});
+				}
+			}
+		}
 	}
 
 	protected void addInputTextKeyListeners() {
@@ -321,13 +261,50 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
-	public void addToolItem(String key, ToolItem item) {
+	protected void addPersonMenuItems(Menu menu, String word) {
+		if (connector.isLikelyPerson(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String person = connector.parsePerson(word);
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add a tab for person: " + person);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+							new PersonController(connector, person));
+					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+							windowItem, false);
+					ChatUtils
+							.appendPreviousChatsToController(windowItem.console);
+				}
+			});
+
+			final String[][] connectorPersonItems = connector
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText(connectorPersonItems[i][0]);
+					final int index = i;
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							connector
+									.sendMessage(connectorPersonItems[index][1]);
+						}
+					});
+				}
+			}
+		}
+	}
+
+	public void addToolItem(ToolBarItemKey key, ToolItem item) {
 		toolItemMap.put(key, item);
 	}
 
 	protected void adjustAwayButtonEnabled() {
 		if (!isIgnoringActions()) {
-			setToolItemEnabled(AWAY_BUTTON, !awayList.isEmpty());
+			setToolItemEnabled(ToolBarItemKey.AWAY_BUTTON, !awayList.isEmpty());
 		}
 	}
 
@@ -642,7 +619,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						+ getPrependText(false)
 						+ " to the input text after sending a tell.");
 				prependTextButton.setSelection(true);
-				addToolItem(PREPEND_TEXT_BUTTON, prependTextButton);
+				addToolItem(ToolBarItemKey.PREPEND_TEXT_BUTTON,
+						prependTextButton);
 			}
 
 			ToolItem saveButton = new ToolItem(toolbar, SWT.FLAT);
@@ -656,7 +634,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 				}
 			});
-			addToolItem(SAVE_BUTTON, saveButton);
+			addToolItem(ToolBarItemKey.SAVE_BUTTON, saveButton);
 
 			if (isAwayable()) {
 				final ToolItem awayButton = new ToolItem(toolbar, SWT.FLAT);
@@ -672,7 +650,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				});
 				awayButton.setEnabled(!awayList.isEmpty());
-				addToolItem(AWAY_BUTTON, awayButton);
+				addToolItem(ToolBarItemKey.AWAY_BUTTON, awayButton);
 			}
 
 			if (isSearchable()) {
@@ -687,7 +665,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						onSearch();
 					}
 				});
-				addToolItem(SEARCH_BUTTON, searchButton);
+				addToolItem(ToolBarItemKey.SEARCH_BUTTON, searchButton);
 			}
 
 			final ToolItem autoScroll = new ToolItem(toolbar, SWT.FLAT);
@@ -700,7 +678,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 				}
 			});
-			addToolItem(AUTO_SCROLL_BUTTON, autoScroll);
+			addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, autoScroll);
 
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
@@ -711,7 +689,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	}
 
-	public ToolItem getToolItem(String key) {
+	public ToolItem getToolItem(ToolBarItemKey key) {
 		return toolItemMap.get(key);
 	}
 
@@ -766,7 +744,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		return isSoundDisabled;
 	}
 
-	public boolean isToolItemSelected(String key) {
+	public boolean isToolItemSelected(ToolBarItemKey key) {
 		boolean result = false;
 		ToolItem item = getToolItem(key);
 		if (item != null) {
@@ -899,6 +877,64 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		chatConsole.inputText.setSelection(new Point(chatConsole.inputText
 				.getCharCount(), chatConsole.inputText.getCharCount()));
 
+	}
+
+	protected void onInputTextDoubleClick(MouseEvent e) {
+		int caretPosition = chatConsole.inputText.getCaretOffset();
+
+		String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
+		if (StringUtils.isNotBlank(url)) {
+			if (getPreferences().getBoolean(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
+				LaunchBrowser.openURL(url);
+				return;
+			} else {
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						new BrowserWindowItem(url, url));
+			}
+		}
+
+		String quotedText = ChatUtils.getQuotedText(chatConsole.inputText,
+				caretPosition);
+		if (StringUtils.isNotBlank(quotedText)) {
+			connector.sendMessage(quotedText);
+			onForceAutoScroll();
+			return;
+		}
+	}
+
+	protected void onInputTextRightClick(MouseEvent e) {
+		int caretPosition = 0;
+		try {
+			caretPosition = chatConsole.inputText
+					.getOffsetAtLocation(new Point(e.x, e.y));
+		} catch (IllegalArgumentException iae) {
+			return;
+		}
+
+		String word = chatConsole.inputText.getSelectionText();
+
+		if (StringUtils.isBlank(word)) {
+			word = ChatUtils.getWord(chatConsole.inputText, caretPosition);
+		}
+
+		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
+
+		addCommandMenuItems(menu, word);
+		addPersonMenuItems(menu, word);
+		addChannelMenuItems(menu, word);
+		addGameIdMenuItems(menu, word);
+
+		if (menu.getItemCount() > 0) {
+			LOG.debug("Showing popup with " + menu.getItemCount() + " items. "
+					+ chatConsole.inputText.toDisplay(e.x, e.y));
+			menu.setLocation(chatConsole.inputText.toDisplay(e.x, e.y));
+			menu.setVisible(true);
+			while (!menu.isDisposed() && menu.isVisible()) {
+				if (!chatConsole.getDisplay().readAndDispatch())
+					chatConsole.getDisplay().sleep();
+			}
+		}
+		menu.dispose();
 	}
 
 	public void onPassivate() {
@@ -1168,7 +1204,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		this.sourceOfLastTellReceived = sourceOfLastTellReceived;
 	}
 
-	public void setToolItemEnabled(String key, boolean isEnabled) {
+	public void setToolItemEnabled(ToolBarItemKey key, boolean isEnabled) {
 		ToolItem item = getToolItem(key);
 		if (item != null) {
 			item.setEnabled(isEnabled);

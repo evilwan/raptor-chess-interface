@@ -1,0 +1,5 @@
+package raptor.swt.chat.controller;
+
+public enum ToolBarItemKey {
+	ADJUST_BUTTON, SEND_BUTTON, AWAY_BUTTON, SEARCH_BUTTON, PREPEND_TEXT_BUTTON, SAVE_BUTTON, AUTO_SCROLL_BUTTON;
+}
