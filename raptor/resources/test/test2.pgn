@@ -1,0 +1,57 @@
+[Event "ICC"]
+[Site "Internet Chess Club"]
+[Date "2009.03.20"]
+[Round "?"]
+[White "cday"]
+[Black "cday"]
+[Result "*"]
+[ECO "C01"]
+[Annotator ",carsonday"]
+[PlyCount "50"]
+[EventDate "2009.??.??"]
+
+1. e4 ({test} 1. g4 g5 $16) (1. g4) 1... e6 2. d4 {INSERTED TEXT[%csl Gg1]
+[%cal Gg2g4,Rg1f3]} d5 3. exd5 exd5 4. Nf3 Bg4 5. Be2 Bd6 6. Nc3 Ne7 7. O-O
+Nbc6 8. h3 Bh5 9. Re1 Qd7 10. Nb5 O-O-O 11. Nxd6+ Qxd6 12. Ne5 Bxe2 13. Qxe2
+Nxe5 14. Qxe5 Qxe5 15. dxe5 c5 16. Bg5 Rhe8 17. Rad1 h6 18. Bxe7 Rxe7 19. f4 d4
+20. Kf2 Kc7 21. Kf3 Kc6 22. g4 b5 23. f5 Rde8 24. f6 gxf6 25. Re4 fxe5 *
+
+[Event "ICC"]
+[Site "Internet Chess Club"]
+[Date "2009.03.20"]
+[Round "?"]
+[White "cday"]
+[Black "cday"]
+[Result "*"]
+[ECO "C01"]
+[Annotator ",carsonday"]
+[PlyCount "50"]
+[EventDate "2009.??.??"]
+
+1. e4 ({test} 1. g4 g5 $16) (1. g4) 1... e6 2. d4 {INSERTED TEXT[%csl Gg1]
+[%cal Gg2g4,Rg1f3]} d5 3. exd5 exd5 (3... h5 4. h4 g6 5. g3 f6 (5... exd5 6.
+Nh3 (6. a4 $44) 6... g5 7. hxg5) 6. f3) 4. Nf3 Bg4 5. Be2 Bd6 6. Nc3 Ne7 7. O-O
+Nbc6 8. h3 Bh5 9. Re1 Qd7 10. Nb5 O-O-O 11. Nxd6+ Qxd6 12. Ne5 Bxe2 13. Qxe2
+Nxe5 14. Qxe5 Qxe5 15. dxe5 c5 16. Bg5 Rhe8 17. Rad1 h6 18. Bxe7 Rxe7 19. f4 d4
+20. Kf2 Kc7 21. Kf3 Kc6 22. g4 b5 23. f5 Rde8 $16 24. f6 gxf6 25. Re4 fxe5 *
+
+[Event "ICC"]
+[Site "Internet Chess Club"]
+[Date "2009.03.20"]
+[Round "?"]
+[White "cday"]
+[Black "cday"]
+[Result "*"]
+[ECO "C01"]
+[Annotator ",carsonday"]
+[PlyCount "50"]
+[EventDate "2009.??.??"]
+
+{test} 1. e4 $1({test} 1. g4 g5 $16) (1. g4) 1... e6 2. d4 {INSERTED TEXT[%csl
+Gg1][%cal Gg2g4,Rg1f3]} d5 $15 $1 $124 3. exd5 exd5 (3... h5 4. h4 g6 5. g3 f6 (5... exd5
+6. Nh3 (6. a4 $44) 6... g5 7. hxg5) 6. f3) {test} 4. Nf3 Bg4 5. Be2 Bd6 {test}
+6. Nc3 {test} Ne7 7. O-O Nbc6 8. h3 Bh5 9. Re1 Qd7 10. Nb5 O-O-O 11. Nxd6+ Qxd6
+12. Ne5 Bxe2 13. Qxe2 Nxe5 14. Qxe5 Qxe5 15. dxe5 c5 16. Bg5 Rhe8 17. Rad1 h6
+18. Bxe7 Rxe7 19. f4 d4 20. Kf2 Kc7 21. Kf3 Kc6 22. g4 b5 23. f5 Rde8 24. f6
+gxf6 25. Re4 fxe5 *
+

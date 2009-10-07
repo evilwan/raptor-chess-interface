@@ -213,7 +213,7 @@ public class TextFieldEditor extends FieldEditor {
 
 		String txt = textField.getText();
 
-		result = (txt.trim().length() > 0) || emptyStringAllowed;
+		result = txt.trim().length() > 0 || emptyStringAllowed;
 
 		// call hook for subclasses
 		result = result && doCheckState();

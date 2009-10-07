@@ -33,7 +33,7 @@ import raptor.connector.Connector;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
-import raptor.game.Game.Result;
+import raptor.game.Result;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
@@ -270,15 +270,15 @@ public class PlayingController extends ChessBoardController {
 			if (isPremoveable()) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)
 						&& BoardUtils.isPieceJailSquare(squareId)) {
-					return (isUserWhite && BoardUtils
-							.isJailSquareWhitePiece(squareId))
-							|| (!isUserWhite && BoardUtils
-									.isJailSquareBlackPiece(squareId));
+					return isUserWhite
+							&& BoardUtils.isJailSquareWhitePiece(squareId)
+							|| !isUserWhite
+							&& BoardUtils.isJailSquareBlackPiece(squareId);
 				} else {
-					return (isUserWhite && GameUtils.isWhitePiece(getGame(),
-							squareId))
-							|| (!isUserWhite && GameUtils.isBlackPiece(game,
-									squareId));
+					return isUserWhite
+							&& GameUtils.isWhitePiece(getGame(), squareId)
+							|| !isUserWhite
+							&& GameUtils.isBlackPiece(game, squareId);
 				}
 			}
 			return false;
@@ -287,12 +287,12 @@ public class PlayingController extends ChessBoardController {
 			return false;
 		} else if (getGame().isInState(Game.DROPPABLE_STATE)
 				&& BoardUtils.isPieceJailSquare(squareId)) {
-			return (isUserWhite && BoardUtils.isJailSquareWhitePiece(squareId))
-					|| (!isUserWhite && BoardUtils
-							.isJailSquareBlackPiece(squareId));
+			return isUserWhite && BoardUtils.isJailSquareWhitePiece(squareId)
+					|| !isUserWhite
+					&& BoardUtils.isJailSquareBlackPiece(squareId);
 		} else {
-			return (isUserWhite && GameUtils.isWhitePiece(getGame(), squareId))
-					|| (!isUserWhite && GameUtils.isBlackPiece(game, squareId));
+			return isUserWhite && GameUtils.isWhitePiece(getGame(), squareId)
+					|| !isUserWhite && GameUtils.isBlackPiece(game, squareId);
 		}
 	}
 
@@ -397,8 +397,8 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	public boolean isUsersMove() {
-		return (isUserWhite() && game.isWhitesMove())
-				|| (!isUserWhite() && !game.isWhitesMove());
+		return isUserWhite() && game.isWhitesMove() || !isUserWhite()
+				&& !game.isWhitesMove();
 	}
 
 	public boolean isUserWhite() {

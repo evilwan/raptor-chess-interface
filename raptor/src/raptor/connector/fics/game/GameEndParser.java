@@ -54,20 +54,21 @@ public class GameEndParser {
 			String afterClosingBrace = message.substring(closingBraceIndex + 1,
 					message.length()).trim();
 
-			if (result.description.indexOf("aborted") != -1)
+			if (result.description.indexOf("aborted") != -1) {
 				result.type = GameEndMessage.ABORTED;
-			else if (result.description.indexOf("adjourned") != -1)
+			} else if (result.description.indexOf("adjourned") != -1) {
 				result.type = GameEndMessage.ADJOURNED;
-			else if (result.description.indexOf('*') != -1)
+			} else if (result.description.indexOf('*') != -1) {
 				result.type = GameEndMessage.UNDETERMINED;
-			else if (afterClosingBrace.startsWith("0-1"))
+			} else if (afterClosingBrace.startsWith("0-1")) {
 				result.type = GameEndMessage.BLACK_WON;
-			else if (afterClosingBrace.startsWith("1-0"))
+			} else if (afterClosingBrace.startsWith("1-0")) {
 				result.type = GameEndMessage.WHITE_WON;
-			else if (afterClosingBrace.startsWith("1/2"))
+			} else if (afterClosingBrace.startsWith("1/2")) {
 				result.type = GameEndMessage.DRAW;
-			else
+			} else {
 				result.type = GameEndMessage.UNDETERMINED;
+			}
 		}
 		return result;
 	}

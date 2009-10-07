@@ -251,13 +251,13 @@ class ChessBoardPage extends FieldEditorPreferencePage {
 	}
 
 	public void valuesChanged() {
-		for (int i = 0; i < squares.length; i++) {
-			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j].clearCache();
-				squares[i][j]
+		for (ChessBoardPageSquare[] square : squares) {
+			for (int j = 0; j < square.length; j++) {
+				square[j].clearCache();
+				square[j]
 						.setForeground(((RaptorPreferenceStore) getPreferenceStore())
 								.getColor(PreferenceKeys.BOARD_HIGHLIGHT_COLOR));
-				squares[i][j].redraw();
+				square[j].redraw();
 				miniBoard.layout(true, true);
 			}
 		}

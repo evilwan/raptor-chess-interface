@@ -52,7 +52,7 @@ public class BughouseGame extends ZHGame {
 	}
 
 	public void setOtherBoard(BughouseGame bughouseGame) {
-		this.otherBoard = bughouseGame;
+		otherBoard = bughouseGame;
 	}
 
 }

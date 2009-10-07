@@ -30,15 +30,21 @@ import static raptor.game.util.GameUtils.pawnEpCapture;
 import static raptor.game.util.GameUtils.pawnSinglePush;
 import static raptor.game.util.GameUtils.rankFileToSquare;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 import org.apache.commons.lang.WordUtils;
 
+import raptor.game.pgn.PgnHeader;
 import raptor.game.util.GameUtils;
 import raptor.game.util.SanUtil;
 import raptor.game.util.ZobristHash;
 import raptor.game.util.SanUtil.SanValidations;
+import raptor.util.RaptorStringUtils;
 
 /**
  * A game class which uses bitboards and Zobrist hashing.
@@ -70,10 +76,6 @@ public class Game implements GameConstants {
 		public long[][] pieceBB = new long[2][7];
 		public int[][] pieceCounts = new int[2][7];
 		public MoveList moves = new MoveList();
-	}
-
-	public static enum Result {
-		IN_PROGRESS, BLACK_WON, DRAW, UNDETERMINED, WHITE_WON
 	}
 
 	public static enum Type {
@@ -140,23 +142,15 @@ public class Game implements GameConstants {
 	protected long initialBlackTimeMillis;
 	protected PositionState positionState = new PositionState();
 	protected long blackLagMillis;
-	protected String blackName;
-	protected String blackRating;
 	protected long blackRemainingTimeMillis;
-	protected String gameDescription;
-	protected String event;
 	protected boolean isSettingMoveSan = false;
 	protected String id;
-	protected Result result = Result.IN_PROGRESS;
-	protected String resultDescription;
-	protected String site;
-	protected long startTime;
+	protected Result result = Result.ON_GOING;
 	protected int state;
 	protected Type type = Type.CLASSIC;
 	protected long whiteLagMillis;
-	protected String whiteName;
-	protected String whiteRating;
 	protected long whiteRemainingTimeMilis;
+	protected Map<String, String> pgnHeaderMap = new HashMap<String, String>();
 
 	/**
 	 * Currently places captures and promotions ahead of non captures.
@@ -181,6 +175,22 @@ public class Game implements GameConstants {
 	 */
 	public boolean areBothKingsOnBoard() {
 		return getPieceBB(WHITE, KING) != 0L && getPieceBB(BLACK, KING) != 0L;
+	}
+
+	public boolean canBlackCastleLong() {
+		return (positionState.castling[BLACK] & CASTLE_LONG) != 0;
+	}
+
+	public boolean canBlackCastleShort() {
+		return (positionState.castling[BLACK] & CASTLE_SHORT) != 0;
+	}
+
+	public boolean canWhiteCastleLong() {
+		return (positionState.castling[WHITE] & CASTLE_LONG) != 0;
+	}
+
+	public boolean canWhiteCastleShort() {
+		return (positionState.castling[WHITE] & CASTLE_SHORT) != 0;
 	}
 
 	/**
@@ -223,11 +233,6 @@ public class Game implements GameConstants {
 		result.id = id;
 		result.state = state;
 		result.type = type;
-		result.whiteName = whiteName;
-		result.blackName = blackName;
-		result.whiteRating = whiteRating;
-		result.blackRating = blackRating;
-		result.gameDescription = gameDescription;
 		result.initialWhiteTimeMillis = initialWhiteTimeMillis;
 		result.initialBlackTimeMillis = initialBlackTimeMillis;
 		result.initialWhiteIncMillis = initialWhiteIncMillis;
@@ -236,19 +241,13 @@ public class Game implements GameConstants {
 		result.blackRemainingTimeMillis = blackRemainingTimeMillis;
 		result.whiteLagMillis = whiteLagMillis;
 		result.blackLagMillis = blackLagMillis;
-		result.startTime = startTime;
-		result.site = site;
-		result.event = event;
-		result.resultDescription = resultDescription;
 		result.positionState.moves = positionState.moves.deepCopy();
 		result.positionState.halfMoveCount = positionState.halfMoveCount;
 		System.arraycopy(positionState.colorBB, 0,
 				result.positionState.colorBB, 0,
 				result.positionState.colorBB.length);
-		for (int i = 0; i < positionState.pieceBB.length; i++) {
-			System.arraycopy(positionState.pieceBB[i], 0,
-					result.positionState.pieceBB[i], 0,
-					positionState.pieceBB[i].length);
+		for (long[] element : positionState.pieceBB) {
+			System.arraycopy(element, 0, element, 0, element.length);
 		}
 		System.arraycopy(positionState.board, 0, result.positionState.board, 0,
 				result.positionState.board.length);
@@ -263,15 +262,11 @@ public class Game implements GameConstants {
 		result.positionState.epSquare = positionState.epSquare;
 		result.positionState.colorToMove = positionState.colorToMove;
 		result.positionState.fiftyMoveCount = positionState.fiftyMoveCount;
-		for (int i = 0; i < positionState.pieceCounts.length; i++) {
-			System.arraycopy(positionState.pieceCounts[i], 0,
-					result.positionState.pieceCounts[i], 0,
-					positionState.pieceCounts[i].length);
+		for (int[] pieceCount : positionState.pieceCounts) {
+			System.arraycopy(pieceCount, 0, pieceCount, 0, pieceCount.length);
 		}
-		for (int i = 0; i < positionState.dropCounts.length; i++) {
-			System.arraycopy(positionState.dropCounts[i], 0,
-					result.positionState.dropCounts[i], 0,
-					positionState.dropCounts[i].length);
+		for (int[] dropCount : positionState.dropCounts) {
+			System.arraycopy(dropCount, 0, dropCount, 0, dropCount.length);
 		}
 		result.positionState.zobristPositionHash = positionState.zobristGameHash;
 		result.positionState.zobristGameHash = positionState.zobristGameHash;
@@ -281,6 +276,7 @@ public class Game implements GameConstants {
 					result.positionState.moveRepHash, 0,
 					positionState.moveRepHash.length);
 		}
+		result.pgnHeaderMap = new HashMap<String, String>(pgnHeaderMap);
 		return result;
 	}
 
@@ -372,7 +368,7 @@ public class Game implements GameConstants {
 		// getMoves() are checked.
 
 		if (getColorToMove() == WHITE
-				&& (getCastling(getColorToMove()) & CASTLE_KINGSIDE) != 0
+				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
 				&& fromBB == E1 && getPiece(SQUARE_G1) == EMPTY
 				&& getPiece(SQUARE_F1) == EMPTY && !isInCheck(WHITE, E1)
 				&& !isInCheck(WHITE, F1)) {
@@ -382,7 +378,7 @@ public class Game implements GameConstants {
 		}
 
 		if (getColorToMove() == WHITE
-				&& (getCastling(getColorToMove()) & CASTLE_QUEENSIDE) != 0
+				&& (getCastling(getColorToMove()) & CASTLE_LONG) != 0
 				&& fromBB == E1 && getPiece(SQUARE_D1) == EMPTY
 				&& getPiece(SQUARE_C1) == EMPTY && getPiece(SQUARE_B1) == EMPTY
 				&& !isInCheck(WHITE, E1) && !isInCheck(WHITE, D1)) {
@@ -392,7 +388,7 @@ public class Game implements GameConstants {
 		}
 
 		if (getColorToMove() == BLACK
-				&& (getCastling(getColorToMove()) & CASTLE_KINGSIDE) != 0
+				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
 				&& fromBB == E8 && getPiece(SQUARE_G8) == EMPTY
 				&& getPiece(SQUARE_F8) == EMPTY && !isInCheck(BLACK, E8)
 				&& !isInCheck(BLACK, F8)) {
@@ -403,7 +399,7 @@ public class Game implements GameConstants {
 		}
 
 		if (getColorToMove() == BLACK
-				&& (getCastling(getColorToMove()) & CASTLE_QUEENSIDE) != 0
+				&& (getCastling(getColorToMove()) & CASTLE_LONG) != 0
 				&& fromBB == E8 && getPiece(SQUARE_D8) == EMPTY
 				&& getPiece(SQUARE_C8) == EMPTY && getPiece(SQUARE_B8) == EMPTY
 				&& !isInCheck(BLACK, E8) && !isInCheck(BLACK, D8)) {
@@ -485,7 +481,7 @@ public class Game implements GameConstants {
 
 		while (toBB != 0L) {
 			int toSquare = bitscanForward(toBB);
-			if ((toBB & (RANK8_OR_RANK1)) != 0L) {
+			if ((toBB & RANK8_OR_RANK1) != 0L) {
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
 						getPieceWithPromoteMask(toSquare), KNIGHT,
 						EMPTY_SQUARE, Move.PROMOTION_CHARACTERISTIC), moves);
@@ -600,7 +596,7 @@ public class Game implements GameConstants {
 		while (toBB != 0) {
 			int toSquare = bitscanForward(toBB);
 
-			if ((toBB & (RANK8_OR_RANK1)) != 0L) {
+			if ((toBB & RANK8_OR_RANK1) != 0L) {
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
 						EMPTY, KNIGHT, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
@@ -636,8 +632,8 @@ public class Game implements GameConstants {
 			int fromSquare = bitscanForward(fromBB);
 
 			long toBB = (orthogonalMove(fromSquare, getEmptyBB(),
-					getOccupiedBB()) | (diagonalMove(fromSquare, getEmptyBB(),
-					getOccupiedBB())))
+					getOccupiedBB()) | diagonalMove(fromSquare, getEmptyBB(),
+					getOccupiedBB()))
 					& getNotColorToMoveBB();
 
 			while (toBB != 0) {
@@ -683,6 +679,29 @@ public class Game implements GameConstants {
 		}
 	}
 
+	public HashSet<String> getAllHeaders() {
+		return new HashSet<String>(pgnHeaderMap.keySet());
+	}
+
+	public ArrayList<String> getAllNonStrHeaders() {
+		ArrayList<String> result = new ArrayList<String>(pgnHeaderMap.size());
+		PgnHeader[] strHeaders = PgnHeader.STR_HEADERS;
+
+		for (String key : pgnHeaderMap.keySet()) {
+			boolean isRequiredHeader = false;
+			for (PgnHeader header : strHeaders) {
+				if (header.getName().equals(key)) {
+					isRequiredHeader = true;
+				}
+			}
+			if (!isRequiredHeader) {
+				result.add(key);
+			}
+		}
+
+		return result;
+	}
+
 	/**
 	 * @return Black's lag in milliseconds.
 	 */
@@ -691,17 +710,21 @@ public class Game implements GameConstants {
 	}
 
 	/**
+	 * Returns the PgnHeader BLACK
+	 * 
 	 * @return Black's name.
 	 */
 	public String getBlackName() {
-		return blackName;
+		return getHeader(PgnHeader.BLACK);
 	}
 
 	/**
+	 * Returns the PgnHeader BLACK_ELO
+	 * 
 	 * @return Black's rating.
 	 */
 	public String getBlackRating() {
-		return blackRating;
+		return getHeader(PgnHeader.BLACK_ELO);
 	}
 
 	/**
@@ -752,6 +775,13 @@ public class Game implements GameConstants {
 	}
 
 	/**
+	 * Returns the PgnHeader DATE.
+	 */
+	public String getDate() {
+		return getHeader(PgnHeader.DATE);
+	}
+
+	/**
 	 * Returns the drop piece count for the specified color and piece. This is
 	 * useful for games such as bughouse or crazyhosue
 	 */
@@ -777,19 +807,19 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Returns the games event. This is useful for going to/from PGN.
+	 * Returns the games EVENT PgnHeader.
 	 */
 	public String getEvent() {
-		return event;
+		return getHeader(PgnHeader.EVENT);
 	}
 
 	protected String getFenCastle() {
 		String whiteCastlingFen = getCastling(WHITE) == CASTLE_NONE ? ""
 				: getCastling(WHITE) == CASTLE_BOTH ? "KQ"
-						: getCastling(WHITE) == CASTLE_KINGSIDE ? "K" : "Q";
+						: getCastling(WHITE) == CASTLE_SHORT ? "K" : "Q";
 		String blackCastlingFen = getCastling(BLACK) == CASTLE_NONE ? ""
 				: getCastling(BLACK) == CASTLE_BOTH ? "kq"
-						: getCastling(BLACK) == CASTLE_KINGSIDE ? "k" : "q";
+						: getCastling(BLACK) == CASTLE_SHORT ? "k" : "q";
 
 		return whiteCastlingFen.equals("") && blackCastlingFen.equals("") ? " -"
 				: whiteCastlingFen + blackCastlingFen;
@@ -811,17 +841,18 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Returns the games description. This is useful for going to/from PGN.
-	 */
-	public String getGameDescription() {
-		return gameDescription;
-	}
-
-	/**
 	 * Returns the number of half positionState.moves made.
 	 */
 	public int getHalfMoveCount() {
 		return positionState.halfMoveCount;
+	}
+
+	public String getHeader(PgnHeader header) {
+		return pgnHeaderMap.get(header.getName());
+	}
+
+	public String getHeader(String header) {
+		return pgnHeaderMap.get(header);
 	}
 
 	/**
@@ -861,6 +892,17 @@ public class Game implements GameConstants {
 	 */
 	public long getInitialWhiteTimeMillis() {
 		return initialWhiteTimeMillis;
+	}
+
+	/**
+	 * Returns the last move made, null if there was not one.
+	 */
+	public Move getLastMove() {
+		if (positionState.moves.getSize() != 0) {
+			return positionState.moves.get(positionState.moves.getSize() - 1);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -1016,28 +1058,26 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Returns the description of the result. Useful for going to/from PGN.
+	 * Returns the description of the result. Returns the PgnHeader
+	 * RESULT_DESCRIPTION
 	 */
 	public String getResultDescription() {
-		return resultDescription;
+		return getHeader(PgnHeader.RESULT_DESCRIPTION);
 	}
 
 	/**
-	 * Returns the site the game is being played at. Useful for going to/from
-	 * PGN.
+	 * Returns the site the game was played at. This is added so its easy to
+	 * parse to/from PGN. This sets the PgnHeader SITE
+	 */
+	public String getRound() {
+		return getHeader(PgnHeader.ROUND);
+	}
+
+	/**
+	 * Returns the PgnHeader SITE
 	 */
 	public String getSite() {
-		return site;
-	}
-
-	/**
-	 * Returns a long in UTC time represetening the time the game started.
-	 * Useful for going to/from PGN.
-	 * 
-	 * @return The start time in UTC.
-	 */
-	public long getStartTime() {
-		return startTime;
+		return getHeader(PgnHeader.SITE);
 	}
 
 	/**
@@ -1066,17 +1106,21 @@ public class Game implements GameConstants {
 	}
 
 	/**
+	 * Returns the PgnHeader WHITE
+	 * 
 	 * @return White's name.
 	 */
 	public String getWhiteName() {
-		return whiteName;
+		return getHeader(PgnHeader.WHITE);
 	}
 
 	/**
+	 * Returns the PgnHeader WHITE_ELO
+	 * 
 	 * @return White's rating.
 	 */
 	public String getWhiteRating() {
-		return whiteRating;
+		return getHeader(PgnHeader.WHITE_ELO);
 	}
 
 	/**
@@ -1149,6 +1193,16 @@ public class Game implements GameConstants {
 	}
 
 	/**
+	 * Returns true if the side to move is in check.
+	 * 
+	 * @return true if in check, otherwise false.
+	 */
+	public boolean isInCheck() {
+		return isInCheck(positionState.colorToMove, getPieceBB(
+				positionState.colorToMove, KING));
+	}
+
+	/**
 	 * Returns true if the specified color is in check in the specified
 	 * position.
 	 * 
@@ -1175,15 +1229,15 @@ public class Game implements GameConstants {
 		int kingSquare = bitscanForward(kingBB);
 		int oppositeColor = getOppositeColor(color);
 
-		return !(((pawnCapture(oppositeColor, getPieceBB(oppositeColor, PAWN),
-				kingBB) == 0L) && (orthogonalMove(kingSquare, getEmptyBB(),
-				getOccupiedBB()) & (getPieceBB(oppositeColor, ROOK) | getPieceBB(
-				oppositeColor, QUEEN))) == 0L)
-				&& ((diagonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
+		return !(pawnCapture(oppositeColor, getPieceBB(oppositeColor, PAWN),
+				kingBB) == 0L
+				&& (orthogonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
+						oppositeColor, ROOK) | getPieceBB(oppositeColor, QUEEN))) == 0L
+				&& (diagonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
 						oppositeColor, BISHOP) | getPieceBB(oppositeColor,
-						QUEEN))) == 0L)
-				&& ((kingMove(kingSquare) & getPieceBB(oppositeColor, KING)) == 0L) && ((knightMove(kingSquare) & getPieceBB(
-				oppositeColor, KNIGHT)) == 0L));
+						QUEEN))) == 0L
+				&& (kingMove(kingSquare) & getPieceBB(oppositeColor, KING)) == 0L && (knightMove(kingSquare) & getPieceBB(
+				oppositeColor, KNIGHT)) == 0L);
 	}
 
 	/**
@@ -1511,18 +1565,22 @@ public class Game implements GameConstants {
 			setCastling(getColorToMove(), CASTLE_NONE);
 			break;
 		default:
-			if ((move.getPiece() == ROOK && move.getFrom() == SQUARE_A1 && getColorToMove() == WHITE)
-					|| (move.getCapture() == ROOK && move.getTo() == SQUARE_A1 && getColorToMove() == BLACK)) {
-				setCastling(WHITE, getCastling(WHITE) & CASTLE_KINGSIDE);
-			} else if ((move.getPiece() == ROOK && move.getFrom() == SQUARE_H1 && getColorToMove() == WHITE)
-					|| (move.getCapture() == ROOK && move.getTo() == SQUARE_H1 && getColorToMove() == BLACK)) {
-				setCastling(WHITE, getCastling(WHITE) & CASTLE_QUEENSIDE);
-			} else if ((move.getPiece() == ROOK && move.getFrom() == SQUARE_A8 && getColorToMove() == BLACK)
-					|| (move.getCapture() == ROOK && move.getTo() == SQUARE_A8 && getColorToMove() == WHITE)) {
-				setCastling(BLACK, getCastling(BLACK) & CASTLE_KINGSIDE);
-			} else if ((move.getPiece() == ROOK && move.getFrom() == SQUARE_H8 && getColorToMove() == BLACK)
-					|| (move.getCapture() == ROOK && move.getTo() == SQUARE_H8 && getColorToMove() == WHITE)) {
-				setCastling(BLACK, getCastling(BLACK) & CASTLE_QUEENSIDE);
+			if (move.getPiece() == ROOK && move.getFrom() == SQUARE_A1
+					&& getColorToMove() == WHITE || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_A1 && getColorToMove() == BLACK) {
+				setCastling(WHITE, getCastling(WHITE) & CASTLE_SHORT);
+			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_H1
+					&& getColorToMove() == WHITE || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_H1 && getColorToMove() == BLACK) {
+				setCastling(WHITE, getCastling(WHITE) & CASTLE_LONG);
+			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_A8
+					&& getColorToMove() == BLACK || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_A8 && getColorToMove() == WHITE) {
+				setCastling(BLACK, getCastling(BLACK) & CASTLE_SHORT);
+			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_H8
+					&& getColorToMove() == BLACK || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_H8 && getColorToMove() == WHITE) {
+				setCastling(BLACK, getCastling(BLACK) & CASTLE_LONG);
 			}
 			break;
 		}
@@ -1804,6 +1862,10 @@ public class Game implements GameConstants {
 		return true;
 	}
 
+	public void removeHeader(String header) {
+		pgnHeaderMap.remove(header);
+	}
+
 	/**
 	 * Rolls back the last move made.
 	 */
@@ -1990,22 +2052,22 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Sets black's name.
+	 * Sets black's name. This sets the PgnHeader BLACK
 	 * 
 	 * @param blackName
 	 *            Name to set.
 	 */
 	public void setBlackName(String blackName) {
-		this.blackName = blackName;
+		setHeader(PgnHeader.BLACK, blackName);
 	}
 
 	/**
-	 * Sets black's rating.
+	 * Sets black's rating. This sets the PgnHeader BLACK_ELO
 	 * 
 	 * @param blackRating
 	 */
 	public void setBlackRating(String blackRating) {
-		this.blackRating = blackRating;
+		setHeader(PgnHeader.BLACK_ELO, blackRating);
 	}
 
 	/**
@@ -2014,7 +2076,7 @@ public class Game implements GameConstants {
 	 * @param blackTimeMillis
 	 */
 	public void setBlackRemainingTimeMillis(long blackTimeMillis) {
-		this.blackRemainingTimeMillis = blackTimeMillis;
+		blackRemainingTimeMillis = blackTimeMillis;
 	}
 
 	/**
@@ -2025,7 +2087,7 @@ public class Game implements GameConstants {
 	 *            The positiosn board.
 	 */
 	public void setBoard(int[] board) {
-		this.positionState.board = board;
+		positionState.board = board;
 	}
 
 	/**
@@ -2037,7 +2099,7 @@ public class Game implements GameConstants {
 	 *            The new castling state constant.
 	 */
 	public void setCastling(int color, int castling) {
-		this.positionState.castling[color] = castling;
+		positionState.castling[color] = castling;
 	}
 
 	/**
@@ -2057,7 +2119,15 @@ public class Game implements GameConstants {
 	 * Sets the color to move. WHITE or BLACK.
 	 */
 	public void setColorToMove(int color) {
-		this.positionState.colorToMove = color;
+		positionState.colorToMove = color;
+	}
+
+	/**
+	 * Sets the time in milliseconds the game was created. This is added so its
+	 * easy to parse to/from PGN.
+	 */
+	public void setDate(long startTime) {
+		setHeader(PgnHeader.DATE, new Date(startTime).toString());
 	}
 
 	/**
@@ -2101,9 +2171,11 @@ public class Game implements GameConstants {
 	/**
 	 * Sets the games event. Intended to be used with PGN headers when going
 	 * from/to PGN.
+	 * 
+	 * This sets the PgnHeader EVENT
 	 */
 	public void setEvent(String event) {
-		this.event = event;
+		setHeader(PgnHeader.EVENT, event);
 	}
 
 	/**
@@ -2112,15 +2184,7 @@ public class Game implements GameConstants {
 	 * rule.
 	 */
 	public void setFiftyMoveCount(int fiftyMoveCount) {
-		this.positionState.fiftyMoveCount = fiftyMoveCount;
-	}
-
-	/**
-	 * Sets the games description. Intended to be used with PGN headers when
-	 * going from/to PGN.
-	 */
-	public void setGameDescription(String gameDescription) {
-		this.gameDescription = gameDescription;
+		positionState.fiftyMoveCount = fiftyMoveCount;
 	}
 
 	/**
@@ -2129,7 +2193,22 @@ public class Game implements GameConstants {
 	 * @param halfMoveCount
 	 */
 	public void setHalfMoveCount(int halfMoveCount) {
-		this.positionState.halfMoveCount = halfMoveCount;
+		positionState.halfMoveCount = halfMoveCount;
+	}
+
+	public void setHeader(PgnHeader header, String value) {
+		value = RaptorStringUtils.removeAll(value, '`');
+		value = RaptorStringUtils.removeAll(value, '|');
+		value = value.trim();
+
+		pgnHeaderMap.put(header.getName(), value);
+	}
+
+	public void setHeader(String header, String value) {
+		value = RaptorStringUtils.removeAll(value, '`');
+		value = RaptorStringUtils.removeAll(value, '|');
+		value = value.trim();
+		pgnHeaderMap.put(header, value);
 	}
 
 	/**
@@ -2192,7 +2271,7 @@ public class Game implements GameConstants {
 	 * @param notColorToMoveBB
 	 */
 	public void setNotColorToMoveBB(long notColorToMoveBB) {
-		this.positionState.notColorToMoveBB = notColorToMoveBB;
+		positionState.notColorToMoveBB = notColorToMoveBB;
 	}
 
 	/**
@@ -2263,16 +2342,25 @@ public class Game implements GameConstants {
 	 */
 	public void setResult(Result result) {
 		this.result = result;
+		setHeader(PgnHeader.RESULT, result.toString());
 	}
 
 	/**
-	 * Sets the result description.
+	 * Sets the result description. This sets the PgnHeader RESULT_DESCRIPTION
 	 * 
 	 * @param resultDescription
 	 *            THe result description.
 	 */
 	public void setResultDescription(String resultDescription) {
-		this.resultDescription = resultDescription;
+		setHeader(PgnHeader.RESULT_DESCRIPTION, resultDescription);
+	}
+
+	/**
+	 * Returns the site the game was played at. This is added so its easy to
+	 * parse to/from PGN. This sets the PgnHeader SITE
+	 */
+	public void setRound(String round) {
+		setHeader(PgnHeader.ROUND, round);
 	}
 
 	/**
@@ -2382,12 +2470,13 @@ public class Game implements GameConstants {
 									& getNotColorToMoveBB() & toBB;
 							break;
 						case QUEEN:
-							resultBB = (orthogonalMove(fromSquare,
-									getEmptyBB(), getOccupiedBB())
-									& getNotColorToMoveBB() & toBB)
-									| (diagonalMove(fromSquare, getEmptyBB(),
+							resultBB = orthogonalMove(fromSquare, getEmptyBB(),
+									getOccupiedBB())
+									& getNotColorToMoveBB()
+									& toBB
+									| diagonalMove(fromSquare, getEmptyBB(),
 											getOccupiedBB())
-											& getNotColorToMoveBB() & toBB);
+									& getNotColorToMoveBB() & toBB;
 							break;
 						}
 
@@ -2441,18 +2530,10 @@ public class Game implements GameConstants {
 
 	/**
 	 * Returns the site the game was played at. This is added so its easy to
-	 * parse to/from PGN.
+	 * parse to/from PGN. This sets the PgnHeader SITE
 	 */
 	public void setSite(String site) {
-		this.site = site;
-	}
-
-	/**
-	 * Sets the time in milliseconds the game was created. This is added so its
-	 * easy to parse to/from PGN.
-	 */
-	public void setStartTime(long startTime) {
-		this.startTime = startTime;
+		setHeader(PgnHeader.SITE, site);
 	}
 
 	protected void setState(int state) {
@@ -2460,13 +2541,17 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Sets the game type to one of the game type constants.
+	 * Sets the game type to one of the game type constants. This sets the
+	 * PgnHeader VARIANT
 	 * 
 	 * @param type
 	 *            The games type.
 	 */
 	public void setType(Type type) {
 		this.type = type;
+		if (type != null) {
+			setHeader(PgnHeader.VARIANT, type.toString());
+		}
 	}
 
 	/**
@@ -2479,25 +2564,26 @@ public class Game implements GameConstants {
 	}
 
 	/**
-	 * Sets white's name.
+	 * Sets white's name. This sets the PgnHeader.WHITE
 	 * 
 	 * @param whiteName
 	 */
 	public void setWhiteName(String whiteName) {
-		this.whiteName = whiteName;
+		setHeader(PgnHeader.WHITE, whiteName);
 	}
 
 	/**
-	 * Sets white's rating.
+	 * Sets white's rating. This sets the PgnHeader.WHITE_ELO
 	 * 
 	 * @param whiteRating
 	 */
 	public void setWhiteRating(String whiteRating) {
-		this.whiteRating = whiteRating;
+		setHeader(PgnHeader.WHITE_ELO, whiteRating);
+
 	}
 
 	public void setWhiteRemainingeTimeMillis(long whiteTimeMillis) {
-		this.whiteRemainingTimeMilis = whiteTimeMillis;
+		whiteRemainingTimeMilis = whiteTimeMillis;
 	}
 
 	public void setZobristGameHash(long hash) {
@@ -2631,14 +2717,14 @@ public class Game implements GameConstants {
 						+ result);
 				break;
 			case 2:
-				result.append("Event: " + event + " Site=" + site + " Time="
-						+ new Date(startTime));
+				result.append("Event: " + getEvent() + " Site=" + getSite()
+						+ " Time=" + getDate());
 				break;
 			case 1:
-				result.append("WhiteName: " + whiteName + " BlackName="
-						+ blackName + " WhiteTime=" + whiteRemainingTimeMilis
-						+ " whiteLag=" + whiteLagMillis
-						+ " blackRemainingTImeMillis = "
+				result.append("WhiteName: " + getWhiteName() + " BlackName="
+						+ getBlackName() + " WhiteTime="
+						+ whiteRemainingTimeMilis + " whiteLag="
+						+ whiteLagMillis + " blackRemainingTImeMillis = "
 						+ blackRemainingTimeMillis + " blackLag="
 						+ blackLagMillis);
 

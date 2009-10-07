@@ -99,8 +99,8 @@ public class Benchmark {
 		if (depth < maxDepth) {
 			Move[] moves = game.getPseudoLegalMoves().asArray();
 
-			for (int j = 0; j < moves.length; j++) {
-				if (game.move(moves[j])) {
+			for (Move move : moves) {
+				if (game.move(move)) {
 					result += moveWalk(game, depth + 1, maxDepth);
 					game.rollback();
 				}

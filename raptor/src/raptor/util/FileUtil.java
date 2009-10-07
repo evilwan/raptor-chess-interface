@@ -78,9 +78,9 @@ public class FileUtil {
 			String list[] = src.list();
 
 			// copy all the files in the list.
-			for (int i = 0; i < list.length; i++) {
-				File dest1 = new File(dest, list[i]);
-				File src1 = new File(src, list[i]);
+			for (String element : list) {
+				File dest1 = new File(dest, element);
+				File src1 = new File(src, element);
 				copyFiles(src1, dest1);
 			}
 

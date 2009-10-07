@@ -70,11 +70,13 @@ public class TimesealingSocket extends Socket implements Runnable {
 			bytesInLength += abyte1.length;
 			buffer[bytesInLength++] = 25;
 			int j = bytesInLength;
-			for (bytesInLength += 12 - bytesInLength % 12; j < bytesInLength;)
+			for (bytesInLength += 12 - bytesInLength % 12; j < bytesInLength;) {
 				buffer[j++] = 49;
+			}
 
-			for (int k = 0; k < bytesInLength; k++)
+			for (int k = 0; k < bytesInLength; k++) {
 				buffer[k] = (byte) (buffer[k] | 0x80);
+			}
 
 			for (int i1 = 0; i1 < bytesInLength; i1 += 12) {
 				byte byte0 = buffer[i1 + 11];
@@ -94,8 +96,9 @@ public class TimesealingSocket extends Socket implements Runnable {
 				l1 = (l1 + 1) % timesealKey.length;
 			}
 
-			for (int k1 = 0; k1 < bytesInLength; k1++)
+			for (int k1 = 0; k1 < bytesInLength; k1++) {
 				buffer[k1] = (byte) (buffer[k1] - 32);
+			}
 
 			buffer[bytesInLength++] = -128;
 			buffer[bytesInLength++] = 10;
@@ -104,17 +107,18 @@ public class TimesealingSocket extends Socket implements Runnable {
 
 		@Override
 		public void write(int i) throws IOException {
-			if (i == 10)
+			if (i == 10) {
 				synchronized (TimesealingSocket.this) {
 					int resultLength = crypt(byteArrayOutputStream
 							.toByteArray(), System.currentTimeMillis()
-							- TimesealingSocket.this.initialTime);
+							- initialTime);
 					outputStreamToDecorate.write(buffer, 0, resultLength);
 					outputStreamToDecorate.flush();
 					byteArrayOutputStream.reset();
 				}
-			else
+			} else {
 				byteArrayOutputStream.write(i);
+			}
 		}
 	}
 
@@ -133,7 +137,7 @@ public class TimesealingSocket extends Socket implements Runnable {
 	public TimesealingSocket(InetAddress inetaddress, int i,
 			String intialTimestampString) throws IOException {
 		super(inetaddress, i);
-		this.initialTimesealString = intialTimestampString;
+		initialTimesealString = intialTimestampString;
 		timesealPipe = new TimesealPipe(10000);
 		init();
 	}
@@ -142,7 +146,7 @@ public class TimesealingSocket extends Socket implements Runnable {
 			throws IOException {
 		super(s, i);
 		timesealPipe = new TimesealPipe(10000);
-		this.initialTimesealString = intialTimestampString;
+		initialTimesealString = intialTimestampString;
 		init();
 	}
 
@@ -184,10 +188,12 @@ public class TimesealingSocket extends Socket implements Runnable {
 				int k;
 				if (i != 0) {
 					k = timesealRequestBytes[0];
-					if (k < 0)
+					if (k < 0) {
 						k += 256;
-					for (int l = 0; l < i; l++)
+					}
+					for (int l = 0; l < i; l++) {
 						timesealRequestBytes[l] = timesealRequestBytes[l + 1];
+					}
 
 					i--;
 				} else {

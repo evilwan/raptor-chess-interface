@@ -251,11 +251,13 @@ public abstract class ChannelIcsConnector implements Connector {
 			bytesInLength += abyte1.length;
 			cryptBuffer[bytesInLength++] = 25;
 			int j = bytesInLength;
-			for (bytesInLength += 12 - bytesInLength % 12; j < bytesInLength;)
+			for (bytesInLength += 12 - bytesInLength % 12; j < bytesInLength;) {
 				cryptBuffer[j++] = 49;
+			}
 
-			for (int k = 0; k < bytesInLength; k++)
+			for (int k = 0; k < bytesInLength; k++) {
 				cryptBuffer[k] = (byte) (cryptBuffer[k] | 0x80);
+			}
 
 			for (int i1 = 0; i1 < bytesInLength; i1 += 12) {
 				byte byte0 = cryptBuffer[i1 + 11];
@@ -275,8 +277,9 @@ public abstract class ChannelIcsConnector implements Connector {
 				l1 = (l1 + 1) % timesealKey.length;
 			}
 
-			for (int k1 = 0; k1 < bytesInLength; k1++)
+			for (int k1 = 0; k1 < bytesInLength; k1++) {
 				cryptBuffer[k1] = (byte) (cryptBuffer[k1] - 32);
+			}
 
 			cryptBuffer[bytesInLength++] = -128;
 			cryptBuffer[bytesInLength++] = 10;

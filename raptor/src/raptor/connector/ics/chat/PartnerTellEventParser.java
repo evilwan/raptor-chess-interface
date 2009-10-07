@@ -35,9 +35,10 @@ public class PartnerTellEventParser extends ChatEventParser {
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 						text, " ");
 				String s1 = stringtokenizer.nextToken();
-				if (stringtokenizer.nextToken().equals("(your"))
+				if (stringtokenizer.nextToken().equals("(your")) {
 					return new ChatEvent(IcsUtils.removeTitles(s1),
 							ChatType.PARTNER_TELL, text);
+				}
 			}
 			return null;
 		}

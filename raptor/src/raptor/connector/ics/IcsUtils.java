@@ -82,9 +82,10 @@ public class IcsUtils implements GameConstants {
 	 */
 	public static boolean addCurrentMove(Game game, Style12Message message) {
 		boolean result = false;
-		if ((!message.isWhitesMoveAfterMoveIsMade && game.getColorToMove() != WHITE)
-				|| (message.isWhitesMoveAfterMoveIsMade && game
-						.getColorToMove() == WHITE)) {
+		if (!message.isWhitesMoveAfterMoveIsMade
+				&& game.getColorToMove() != WHITE
+				|| message.isWhitesMoveAfterMoveIsMade
+				&& game.getColorToMove() == WHITE) {
 			// At the end of a game multiple <12> messages are sent.
 			// The are also sent when a refresh is sent.
 			game.setWhiteRemainingeTimeMillis(message.whiteRemainingTimeMillis);
@@ -231,9 +232,9 @@ public class IcsUtils implements GameConstants {
 		}
 
 		result.setId(g1.gameId);
-		result.setGameDescription(g1.gameTypeDescription);
 		result.setSettingMoveSan(true);
-		result.setStartTime(System.currentTimeMillis());
+		result.setDate(System.currentTimeMillis());
+		result.setRound("?");
 		result.setSite("freechess.org");
 		result.setInitialWhiteTimeMillis(g1.initialWhiteTimeMillis);
 		result.setInitialBlackTimeMillis(g1.initialBlackTimeMillis);
@@ -244,8 +245,7 @@ public class IcsUtils implements GameConstants {
 		result.setEvent(result.getInitialWhiteTimeMillis() / 60000 + " "
 				+ result.getInitialWhiteIncMillis() / 1000 + " "
 				+ (!g1.isRated ? "unrated" : "rated") + " "
-				+ (g1.isPrivate ? "private " : "")
-				+ result.getGameDescription());
+				+ (g1.isPrivate ? "private " : "") + g1.gameTypeDescription);
 
 		return result;
 	}
@@ -256,18 +256,17 @@ public class IcsUtils implements GameConstants {
 			boolean isSetup = entireMessage.contains("Entering setup mode.\n");
 			Game game = isSetup ? new SetupGame() : new Game();
 			game.setId(message.gameId);
-			game.setGameDescription(isSetup ? "Setting Up Position"
-					: "Examining Game");
+			game.setEvent(isSetup ? "Setting Up Position" : "Examining Game");
 			game.setSettingMoveSan(true);
-			game.setStartTime(System.currentTimeMillis());
+			game.setDate(System.currentTimeMillis());
 			game.setSite("freechess.org");
+			game.setRound("?");
 			game.setInitialWhiteTimeMillis(0);
 			game.setInitialWhiteIncMillis(0);
 			game.setInitialBlackTimeMillis(0);
 			game.setInitialBlackIncMillis(0);
 			game.setBlackRating("");
 			game.setWhiteRating("");
-			game.setEvent(game.getGameDescription());
 
 			updateNonPositionFields(game, message);
 			updatePosition(game, message);
@@ -313,32 +312,32 @@ public class IcsUtils implements GameConstants {
 	public static Type identifierToGameType(String identifier) {
 		Type result = null;
 
-		if (identifier.indexOf(SUICIDE_IDENTIFIER) != -1)
+		if (identifier.indexOf(SUICIDE_IDENTIFIER) != -1) {
 			result = Type.SUICIDE;
-		else if (identifier.indexOf(BUGHOUSE_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(BUGHOUSE_IDENTIFIER) != -1) {
 			result = Type.BUGHOUSE;
-		else if (identifier.indexOf(CRAZYHOUSE_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(CRAZYHOUSE_IDENTIFIER) != -1) {
 			result = Type.CRAZYHOUSE;
-		else if (identifier.indexOf(STANDARD_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(STANDARD_IDENTIFIER) != -1) {
 			result = Type.CLASSIC;
-		else if (identifier.indexOf(WILD_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(WILD_IDENTIFIER) != -1) {
 			result = Type.WILD;
-		else if (identifier.indexOf(LIGHTNING_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(LIGHTNING_IDENTIFIER) != -1) {
 			result = Type.CLASSIC;
-		else if (identifier.indexOf(BLITZ_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(BLITZ_IDENTIFIER) != -1) {
 			result = Type.CLASSIC;
-		else if (identifier.indexOf(ATOMIC_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(ATOMIC_IDENTIFIER) != -1) {
 			result = Type.ATOMIC;
-		else if (identifier.indexOf(LOSERS_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(LOSERS_IDENTIFIER) != -1) {
 			result = Type.LOSERS;
-		else if (identifier.indexOf(UNTIMED_IDENTIFIER) != -1)
+		} else if (identifier.indexOf(UNTIMED_IDENTIFIER) != -1) {
 			result = Type.CLASSIC;
-
-		else
+		} else {
 			throw new IllegalArgumentException("Unknown identifier "
 					+ identifier
 					+ " encountered. Please notify someone on the raptor team "
 					+ "so they can implement this new game type.");
+		}
 
 		return result;
 	}
@@ -414,7 +413,7 @@ public class IcsUtils implements GameConstants {
 		int unicodePrefix = 0;
 		while ((unicodePrefix = builder.indexOf("&#x", unicodePrefix)) != -1) {
 			int endIndex = builder.indexOf(";", unicodePrefix);
-			if (endIndex != -1 && (endIndex - unicodePrefix) <= 8) {
+			if (endIndex != -1 && endIndex - unicodePrefix <= 8) {
 				String unicodeHex = builder.substring(unicodePrefix + 3,
 						endIndex).toUpperCase();
 				try {
@@ -433,10 +432,11 @@ public class IcsUtils implements GameConstants {
 	public static String removeTitles(String playerName) {
 		StringTokenizer stringtokenizer = new StringTokenizer(playerName,
 				"()~!@#$%^&*_+|}{';/.,:[]");
-		if (stringtokenizer.hasMoreTokens())
+		if (stringtokenizer.hasMoreTokens()) {
 			return stringtokenizer.nextToken();
-		else
+		} else {
 			return playerName;
+		}
 	}
 
 	public static void resetGame(Game game, Style12Message message) {
@@ -488,10 +488,11 @@ public class IcsUtils implements GameConstants {
 		if (word != null) {
 			RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 					word, STRIP_CHARS, true);
-			if (stringtokenizer.hasMoreTokens())
+			if (stringtokenizer.hasMoreTokens()) {
 				return stringtokenizer.nextToken();
-			else
+			} else {
 				return word;
+			}
 		}
 		return null;
 	}
@@ -541,13 +542,13 @@ public class IcsUtils implements GameConstants {
 
 		game.setCastling(WHITE, message.canWhiteCastleKSide
 				&& message.canWhiteCastleQSide ? CASTLE_BOTH
-				: message.canWhiteCastleKSide ? CASTLE_KINGSIDE
-						: message.canWhiteCastleQSide ? CASTLE_QUEENSIDE
+				: message.canWhiteCastleKSide ? CASTLE_SHORT
+						: message.canWhiteCastleQSide ? CASTLE_LONG
 								: CASTLE_NONE);
 		game.setCastling(BLACK, message.canBlackCastleKSide
 				&& message.canBlackCastleQSide ? CASTLE_BOTH
-				: message.canBlackCastleKSide ? CASTLE_KINGSIDE
-						: message.canBlackCastleQSide ? CASTLE_QUEENSIDE
+				: message.canBlackCastleKSide ? CASTLE_SHORT
+						: message.canBlackCastleQSide ? CASTLE_LONG
 								: CASTLE_NONE);
 
 		if (message.doublePawnPushFile == -1) {

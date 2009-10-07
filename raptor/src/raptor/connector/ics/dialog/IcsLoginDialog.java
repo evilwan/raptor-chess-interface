@@ -244,7 +244,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	@Override
 	protected void initializeBounds() {
 		super.initializeBounds();
-		Shell shell = this.getShell();
+		Shell shell = getShell();
 		Monitor primary = shell.getMonitor();
 		Rectangle bounds = primary.getBounds();
 		Rectangle rect = shell.getBounds();

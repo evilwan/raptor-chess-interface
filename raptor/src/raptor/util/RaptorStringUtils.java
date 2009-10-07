@@ -13,6 +13,7 @@
  */
 package raptor.util;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,16 @@ public class RaptorStringUtils {
 					.charAt(random.nextInt(WORD_CHARS.length())));
 		}
 		return result.toString();
+	}
+
+	/**
+	 * Returns the value specified in bytes into megs. Currently only shows 2
+	 * digits after the decimal and rounds half up.
+	 */
+	public static String getMegs(long bytes) {
+		BigDecimal bigDecimal = new BigDecimal(bytes / 1048576.0);
+		bigDecimal = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP);
+		return bigDecimal.toString() + "Megs";
 	}
 
 	/**

@@ -50,8 +50,9 @@ public class FollowingEventParser extends ChatEventParser {
 				}
 			}
 
-		} else
+		} else {
 			return null;
+		}
 	}
 
 }

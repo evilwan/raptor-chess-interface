@@ -161,7 +161,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			if (getGame().getMoveList().getSize() > 0) {
 				Move lastMove = getGame().getMoveList().get(
 						getGame().getMoveList().getSize() - 1);
-				int moveNumber = (getGame().getHalfMoveCount() / 2) + 1;
+				int moveNumber = getGame().getHalfMoveCount() / 2 + 1;
 
 				board.getStatusLabel().setText(
 						"Last Move: "
@@ -531,9 +531,9 @@ public abstract class ChessBoardController implements BoardConstants,
 	protected void initClockUpdaters() {
 		if (whiteClockUpdater == null) {
 			whiteClockUpdater = new ClockLabelUpdater(board.whiteClockLabel,
-					this.board);
+					board);
 			blackClockUpdater = new ClockLabelUpdater(board.blackClockLabel,
-					this.board);
+					board);
 		}
 	}
 

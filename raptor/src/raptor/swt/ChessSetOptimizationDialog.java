@@ -55,9 +55,9 @@ public class ChessSetOptimizationDialog extends ProgressBarDialog {
 			messages.add("Creating pngs of size " + i + "x" + i);
 		}
 		info = messages.toArray(new String[0]);
-		this.setExecuteTime(info.length);
-		this.setMayCancel(true);
-		this.setProcessMessage("Converting set " + setName
+		setExecuteTime(info.length);
+		setMayCancel(true);
+		setProcessMessage("Converting set " + setName
 				+ ". This may take a few minutes ...");
 	}
 
@@ -71,7 +71,7 @@ public class ChessSetOptimizationDialog extends ProgressBarDialog {
 						.getUserImageCachePieceName(setName, i, size, size);
 
 				// Only execute if the file doesnt exist.
-				if (!(new File(userCacheFileName)).exists()) {
+				if (!new File(userCacheFileName).exists()) {
 					// Load the svg.
 					String svgFileName = BoardUtils.getSVGChessPieceName(
 							setName, i);

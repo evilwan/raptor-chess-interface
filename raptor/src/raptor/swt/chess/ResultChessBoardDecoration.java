@@ -19,7 +19,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 
 import raptor.Raptor;
-import raptor.game.Game.Result;
+import raptor.game.Result;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.SWTUtils;
 
@@ -94,7 +94,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 			public void paintControl(PaintEvent e) {
 				if (!isHiding
 						&& !board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.IN_PROGRESS) {
+						&& board.getController().getGame().getResult() != Result.ON_GOING) {
 					String text = null;
 					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
 						text = "1";
@@ -114,7 +114,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 			public void paintControl(PaintEvent e) {
 				if (!isHiding
 						&& !board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.IN_PROGRESS) {
+						&& board.getController().getGame().getResult() != Result.ON_GOING) {
 
 					String text = null;
 					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
@@ -135,7 +135,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 			public void paintControl(PaintEvent e) {
 				if (!isHiding
 						&& !board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.IN_PROGRESS) {
+						&& board.getController().getGame().getResult() != Result.ON_GOING) {
 
 					String text = null;
 					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
@@ -154,7 +154,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 			public void paintControl(PaintEvent e) {
 				if (!isHiding
 						&& board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.IN_PROGRESS) {
+						&& board.getController().getGame().getResult() != Result.ON_GOING) {
 					String text = null;
 					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
 						text = "1";
@@ -174,7 +174,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 			public void paintControl(PaintEvent e) {
 				if (!isHiding
 						&& board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.IN_PROGRESS) {
+						&& board.getController().getGame().getResult() != Result.ON_GOING) {
 
 					String text = null;
 					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
@@ -195,7 +195,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 			public void paintControl(PaintEvent e) {
 				if (!isHiding
 						&& board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.IN_PROGRESS) {
+						&& board.getController().getGame().getResult() != Result.ON_GOING) {
 
 					String text = null;
 					if (board.getController().getGame().getResult() == Result.WHITE_WON) {

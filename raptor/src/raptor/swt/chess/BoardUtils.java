@@ -290,8 +290,8 @@ public class BoardUtils implements BoardConstants {
 	}
 
 	public static boolean arePiecesSameColor(int piece1, int piece2) {
-		return (isWhitePiece(piece1) && isWhitePiece(piece2))
-				|| (isBlackPiece(piece1) && isBlackPiece(piece2));
+		return isWhitePiece(piece1) && isWhitePiece(piece2)
+				|| isBlackPiece(piece1) && isBlackPiece(piece2);
 	}
 
 	public static Move createDropMove(int fromSquare, int toSquare) {
@@ -400,8 +400,8 @@ public class BoardUtils implements BoardConstants {
 
 		});
 
-		for (int i = 0; i < files.length; i++) {
-			StringTokenizer tok = new StringTokenizer(files[i].getName(), ".");
+		for (File file2 : files) {
+			StringTokenizer tok = new StringTokenizer(file2.getName(), ".");
 			result.add(tok.nextToken());
 		}
 
@@ -534,8 +534,8 @@ public class BoardUtils implements BoardConstants {
 
 		});
 
-		for (int i = 0; i < files.length; i++) {
-			StringTokenizer tok = new StringTokenizer(files[i].getName(), ".");
+		for (File file2 : files) {
+			StringTokenizer tok = new StringTokenizer(file2.getName(), ".");
 			result.add(tok.nextToken());
 		}
 
@@ -603,7 +603,7 @@ public class BoardUtils implements BoardConstants {
 
 	public static String halfMoveIndexToDescription(int halfMoveIndex,
 			int colorToMove) {
-		int fullMoveIndex = (halfMoveIndex / 2) + 1;
+		int fullMoveIndex = halfMoveIndex / 2 + 1;
 
 		return colorToMove == WHITE ? fullMoveIndex + ") " : fullMoveIndex
 				+ ") ... ";

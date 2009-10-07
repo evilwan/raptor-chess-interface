@@ -43,9 +43,10 @@ public class PartnershipCreatedEventParser extends ChatEventParser {
 						text, " ");
 				String s1 = stringtokenizer1.nextToken();
 				String s2 = stringtokenizer1.nextToken();
-				if (s2.equals("agrees"))
+				if (s2.equals("agrees")) {
 					return new ChatEvent(IcsUtils.removeTitles(s1),
 							ChatType.PARTNERSHIP_CREATED, text);
+				}
 			}
 			return null;
 		}
