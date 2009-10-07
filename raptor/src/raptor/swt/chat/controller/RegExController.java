@@ -33,8 +33,6 @@ import raptor.swt.chat.ChatConsoleController;
 import raptor.swt.chat.ChatUtils;
 
 public class RegExController extends ChatConsoleController {
-	public static final String ADJUST_BUTTON = "";
-
 	protected Pattern pattern;
 
 	public RegExController(Connector connector, String regularExpression) {
@@ -88,7 +86,7 @@ public class RegExController extends ChatConsoleController {
 
 				}
 			});
-			addToolItem(ADJUST_BUTTON, adjustButton);
+			addToolItem(ToolBarItemKey.ADJUST_BUTTON, adjustButton);
 
 			ToolItem saveButton = new ToolItem(toolbar, SWT.FLAT);
 			saveButton.setImage(Raptor.getInstance().getIcon("save"));
@@ -101,7 +99,7 @@ public class RegExController extends ChatConsoleController {
 
 				}
 			});
-			addToolItem(SAVE_BUTTON, saveButton);
+			addToolItem(ToolBarItemKey.SAVE_BUTTON, saveButton);
 
 			if (isSearchable()) {
 				ToolItem searchButton = new ToolItem(toolbar, SWT.FLAT);
@@ -115,7 +113,7 @@ public class RegExController extends ChatConsoleController {
 						onSearch();
 					}
 				});
-				addToolItem(SEARCH_BUTTON, searchButton);
+				addToolItem(ToolBarItemKey.SEARCH_BUTTON, searchButton);
 			}
 
 			final ToolItem autoScroll = new ToolItem(toolbar, SWT.FLAT);
@@ -128,7 +126,7 @@ public class RegExController extends ChatConsoleController {
 
 				}
 			});
-			addToolItem(AUTO_SCROLL_BUTTON, autoScroll);
+			addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, autoScroll);
 
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {

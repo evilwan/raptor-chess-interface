@@ -43,7 +43,8 @@ public class PartnerTellController extends ChatConsoleController {
 			return "";
 		}
 
-		if (checkButton && isToolItemSelected(PREPEND_TEXT_BUTTON)) {
+		if (checkButton
+				&& isToolItemSelected(ToolBarItemKey.PREPEND_TEXT_BUTTON)) {
 			return connector.getPartnerTellPrefix();
 		} else if (!checkButton) {
 			return connector.getPartnerTellPrefix();

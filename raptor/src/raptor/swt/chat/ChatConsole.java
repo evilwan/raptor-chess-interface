@@ -19,6 +19,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -34,6 +36,10 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.RaptorStyledText;
 
+/**
+ * The ChatConsole GUI control. All ChatConsoles have a controller that manages
+ * sending/receiving of text to and from a connector.
+ */
 public class ChatConsole extends Composite implements PreferenceKeys {
 
 	static final Log LOG = LogFactory.getLog(ChatConsole.class);
@@ -69,6 +75,22 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 	}
 
 	public void createControls() {
+
+		addDisposeListener(new DisposeListener() {
+
+			public void widgetDisposed(DisposeEvent e) {
+				if (propertyChangeListener != null) {
+					Raptor.getInstance().getPreferences()
+							.removePropertyChangeListener(
+									propertyChangeListener);
+					propertyChangeListener = null;
+				}
+				if (controller != null) {
+					controller.dispose();
+				}
+				LOG.info("Disposed chat console.");
+			}
+		});
 		setLayout(new GridLayout(1, true));
 
 		Raptor.getInstance().getPreferences().addPropertyChangeListener(
@@ -112,24 +134,6 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		addButtons();
 
 		updateFromPrefs();
-	}
-
-	@Override
-	public void dispose() {
-		if (propertyChangeListener != null) {
-			Raptor.getInstance().getPreferences().removePropertyChangeListener(
-					propertyChangeListener);
-			propertyChangeListener = null;
-		}
-		if (controller != null) {
-			controller.dispose();
-		}
-
-		LOG.info("Disposed chat console.");
-
-		if (!isDisposed()) {
-			super.dispose();
-		}
 	}
 
 	public ChatConsoleController getController() {

@@ -68,60 +68,57 @@ public class ChatUtils {
 	}
 
 	/**
+	 * Returns the character at the specified position in the StyledText.
+	 */
+	public static char charAt(StyledText text, int position) {
+		return text.getText(position, position + 1).charAt(0);
+	}
+
+	/**
 	 * Returns null if the current position isn't quoted text, otherwise returns
 	 * the text in quotes. Both single and double quotes are supported.
 	 */
 	public static String getQuotedText(StyledText text, int position) {
 		try {
-			int quoteStart;
-			int quoteStop;
+			int quoteStart = -1;
+			int quoteEnd = -1;
 
 			int currentPosition = position;
-			char currentChar = text.getText(currentPosition,
-					currentPosition + 1).charAt(0);
+			char currentChar = charAt(text, currentPosition);
+
+			if (currentChar == '\"' || currentChar == '\'') {
+				quoteEnd = position;
+				currentChar = charAt(text, --currentPosition);
+			}
 
 			while (currentChar != '\"' && currentChar != '\'') {
 				if (currentChar == '\r' || currentChar == '\n') {
 					return null;
 				}
-				currentChar = text.getText(--currentPosition,
-						currentPosition + 1).charAt(0);
+				currentChar = charAt(text, --currentPosition);
 			}
 
 			quoteStart = currentPosition;
-			currentPosition = position;
-			currentChar = text.getText(currentPosition, currentPosition + 1)
-					.charAt(0);
 
-			while (currentChar != '\"' && currentChar != '\'') {
-				if (currentChar == '\r' || currentChar == '\n') {
-					return null;
+			if (quoteEnd == -1) {
+				currentPosition = position + 1;
+				currentChar = charAt(text, currentPosition);
+
+				while (currentChar != '\"' && currentChar != '\'') {
+					if (currentChar == '\r' || currentChar == '\n') {
+						return null;
+					}
+					currentChar = charAt(text, ++currentPosition);
 				}
-				currentChar = text.getText(++currentPosition,
-						currentPosition + 1).charAt(0);
+
+				quoteEnd = currentPosition;
 			}
-
-			quoteStop = currentPosition;
-
-			return text.getText(quoteStart + 1, quoteStop - 1);
+			return text.getText(quoteStart + 1, quoteEnd - 1);
 		} catch (Exception e) {
 			return null;
 		}
 	}
 
-	/**
-	 * Returns the stripped word at the specified position, null if there is not
-	 * one.
-	 */
-	// public static String getStrippedWord(StyledText text, int position) {
-	// String word = getWord(text, position);
-	//
-	// if (word != null) {
-	// return stripWord(word);
-	// } else {
-	// return null;
-	// }
-	// }
 	/**
 	 * Returns the url at the specified position, null if there is not one. This
 	 * method handles ICS wrapping and will remove it and return just the url.
@@ -156,24 +153,20 @@ public class ChatUtils {
 			int lineEnd;
 
 			int currentPosition = position;
-			char currentChar = text.getText(currentPosition,
-					currentPosition + 1).charAt(0);
+			char currentChar = charAt(text, currentPosition);
 
 			while (currentPosition > 0 && !Character.isWhitespace(currentChar)) {
-				currentChar = text.getText(--currentPosition,
-						currentPosition + 1).charAt(0);
+				currentChar = charAt(text, --currentPosition);
 			}
 
 			lineStart = currentPosition;
 
 			currentPosition = position;
-			currentChar = text.getText(currentPosition, currentPosition + 1)
-					.charAt(0);
+			currentChar = charAt(text, currentPosition);
 
 			while (currentPosition < text.getCharCount()
 					&& !Character.isWhitespace(currentChar)) {
-				currentChar = text.getText(++currentPosition,
-						currentPosition + 1).charAt(0);
+				currentChar = charAt(text, ++currentPosition);
 			}
 
 			lineEnd = currentPosition;
@@ -197,24 +190,20 @@ public class ChatUtils {
 			int lineEnd;
 
 			int currentPosition = position;
-			char currentChar = text.getText(currentPosition,
-					currentPosition + 1).charAt(0);
+			char currentChar = charAt(text, currentPosition);
 
 			while (currentPosition > 0 && !Character.isWhitespace(currentChar)) {
-				currentChar = text.getText(--currentPosition,
-						currentPosition + 1).charAt(0);
+				currentChar = charAt(text, --currentPosition);
 			}
 
 			lineStart = currentPosition;
 
 			currentPosition = position;
-			currentChar = text.getText(currentPosition, currentPosition + 1)
-					.charAt(0);
+			currentChar = charAt(text, currentPosition);
 
 			while (currentPosition < text.getCharCount()
 					&& !Character.isWhitespace(currentChar)) {
-				currentChar = text.getText(++currentPosition,
-						currentPosition + 1).charAt(0);
+				currentChar = charAt(text, ++currentPosition);
 			}
 			lineEnd = currentPosition;
 			result = text.getText(lineStart + 1, lineEnd - 1);
@@ -222,23 +211,19 @@ public class ChatUtils {
 			// now check to see if its a wrap
 			while (Character.isWhitespace(currentChar)
 					&& currentPosition < text.getCharCount()) {
-				currentChar = text.getText(++currentPosition,
-						currentPosition + 1).charAt(0);
+				currentChar = charAt(text, ++currentPosition);
 			}
 			while (currentChar == '\\') {
-				currentChar = text.getText(++currentPosition,
-						currentPosition + 1).charAt(0);
+				charAt(text, ++currentPosition);
 				while (Character.isWhitespace(currentChar)
 						&& currentPosition < text.getCharCount()) {
-					currentChar = text.getText(++currentPosition,
-							currentPosition + 1).charAt(0);
+					currentChar = charAt(text, ++currentPosition);
 				}
 
 				lineStart = currentPosition - 1;
 				while (!Character.isWhitespace(currentChar)
 						&& currentPosition < text.getCharCount()) {
-					currentChar = text.getText(++currentPosition,
-							currentPosition + 1).charAt(0);
+					currentChar = charAt(text, ++currentPosition);
 				}
 
 				lineEnd = currentPosition;
@@ -246,8 +231,7 @@ public class ChatUtils {
 
 				while (Character.isWhitespace(currentChar)
 						&& currentPosition < text.getCharCount()) {
-					currentChar = text.getText(++currentPosition,
-							currentPosition + 1).charAt(0);
+					currentChar = charAt(text, ++currentPosition);
 				}
 			}
 
