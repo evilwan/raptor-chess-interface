@@ -361,3 +361,112 @@ a3, g5, Bb2, Ng6, h3, g4, hxg4, Nxg4, g3, fxg3, fxg3, Ne3]
 	at raptor.connector.ics.IcsConnector$2$1.run(IcsConnector.java:203)
 	at java.lang.Thread.run(Thread.java:613)
 '	
+
+
+
+13:58:50,154 DEBUG BoardUtils:312 - IllegalArgumentException in game.makeMove()
+java.lang.IllegalArgumentException: Invalid move: d5 e5 
+ emptyBB            occupiedBB         notColorToMoveBB   color[WHITE]       color[BLACK]      
+ 1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 1 1 1 1 1 1    1 1 0 0 0 0 0 0    0 0 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 1 0 0 0 0 0 0   
+ 1 1 1 0 1 1 1 1    0 0 0 1 0 0 0 0    1 1 1 0 1 1 1 1    0 0 0 0 0 0 0 0    0 0 0 1 0 0 0 0   
+ 1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 1 1 1 1 1 0 0    0 0 0 0 0 0 1 1    1 1 1 1 1 1 1 1    0 0 0 0 0 0 1 1    0 0 0 0 0 0 0 0   
+ 0 1 1 1 1 1 1 1    1 0 0 0 0 0 0 0    1 1 1 1 1 1 1 1    1 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 0 1 1 1 0 1 1    0 1 0 0 0 1 0 0    1 1 1 1 1 1 1 1    0 1 0 0 0 1 0 0    0 0 0 0 0 0 0 0   
+ 1 1 1 1 0 0 0 1    0 0 0 0 1 1 1 0    1 1 1 1 1 1 1 1    0 0 0 0 1 1 1 0    0 0 0 0 0 0 0 0   
+
+ [WHITE][PAWN]      [WHITE][KNIGHT]    [WHITE][BISHOP]    [WHITE][ROOK]      [WHITE][QUEEN]     [WHITE][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 1 1    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 0 0 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 1 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0   
+
+ [BLACK][PAWN]      [BLACK][KNIGHT]    [BLACK][BISHOP]    [BLACK][ROOK]      [BLACK][QUEEN]     [BLACK][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 1 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 1 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+
+|*|*|*|*|*|*|*|*|   To Move: Black Last Move: g4
+|p|p|*|*|*|*|*|*|   Piece counts [5 0 2 0 0 1][2 0 0 0 0 1]
+|*|*|*|k|*|*|*|*|   Moves: 71 EP: g3 Castle:  -
+|*|*|*|*|*|*|*|*|   FEN: 8/pp6/3k4/8/6PP/P7/1P3P2/4BBK b  - g3 0 71
+|*|*|*|*|*|*|P|P|   State: 10 Type=CLASSIC Result= emptyBB            occupiedBB         notColorToMoveBB   color[WHITE]       color[BLACK]      
+ 1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 1 1 1 1 1 1    1 1 0 0 0 0 0 0    0 0 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 1 0 0 0 0 0 0   
+ 1 1 1 0 1 1 1 1    0 0 0 1 0 0 0 0    1 1 1 0 1 1 1 1    0 0 0 0 0 0 0 0    0 0 0 1 0 0 0 0   
+ 1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    1 1 1 1 1 1 1 1    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 1 1 1 1 1 0 0    0 0 0 0 0 0 1 1    1 1 1 1 1 1 1 1    0 0 0 0 0 0 1 1    0 0 0 0 0 0 0 0   
+ 0 1 1 1 1 1 1 1    1 0 0 0 0 0 0 0    1 1 1 1 1 1 1 1    1 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 0 1 1 1 0 1 1    0 1 0 0 0 1 0 0    1 1 1 1 1 1 1 1    0 1 0 0 0 1 0 0    0 0 0 0 0 0 0 0   
+ 1 1 1 1 0 0 0 1    0 0 0 0 1 1 1 0    1 1 1 1 1 1 1 1    0 0 0 0 1 1 1 0    0 0 0 0 0 0 0 0   
+
+ [WHITE][PAWN]      [WHITE][KNIGHT]    [WHITE][BISHOP]    [WHITE][ROOK]      [WHITE][QUEEN]     [WHITE][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 1 1    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 1 0 0 0 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 1 1 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 1 0   
+
+ [BLACK][PAWN]      [BLACK][KNIGHT]    [BLACK][BISHOP]    [BLACK][ROOK]      [BLACK][QUEEN]     [BLACK][KING]     
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 1 1 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 1 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+ 0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0    0 0 0 0 0 0 0 0   
+
+|*|*|*|*|*|*|*|*|   To Move: Black Last Move: g4
+|p|p|*|*|*|*|*|*|   Piece counts [5 0 2 0 0 1][2 0 0 0 0 1]
+|*|*|*|k|*|*|*|*|   Moves: 71 EP: g3 Castle:  -
+|*|*|*|*|*|*|*|*|   FEN: 8/pp6/3k4/8/6PP/P7/1P3P2/4BBK b  - g3 0 71
+|*|*|*|*|*|*|P|P|   
+|P|*|*|*|*|*|*|*|   Event: 1 0 unrated lightning Site=freechess.org Time=Wed Oct 07 13:56:23 MDT 2009
+|*|P|*|*|*|P|*|*|   WhiteName: GuestNBGZ BlackName=GuestPWVP WhiteTime=6119 whiteLag=10012 blackRemainingTImeMillis = -954 blackLag=0
+|*|*|*|*|B|B|K|*|   initialWhiteTimeMillis: 60000 initialBlackTimeMillis=60000 initialWhiteIncMillis=0 initialBlackIncMillis=0
+
+Legals=[a6, a5, b6, b5, Kc5, Kd5, Ke5, Kc6, Ke6, Kc7, Kd7, Ke7]Movelist=[e4, e6, d4, d5, e5, c5, c3, Nc6, Nf3, cxd, cxd4, Be7, Nc3, f6, exf6,
+Nxf6, Bd3, O-O, O-O, Bd6, Re1, Re8, a3, e5, dxe5, Nxe5, Nxe5, Bxe5, Bg5, h6,
+Bh4, Bg4, Qb3, Bd7, Nxd5, Be6, Nxf6+, Bxf6, Rxe6, Rxe6, Qxe6+, Kh8, Qf5, Kg8,
+Qh7+, Kf8, Qh8+, Kf7, Bc4+, Ke7, Qxg7+, Kd6, Rd1+, Kc6, Bxf6, Qxd1, Bf1, Re8,
+Qxh6, Re1, Bc3+, Kd5, Bxe1, Kc5, Qg5+, Qd5, Qxd5+, Kxd5, h4, Kd6, g4]
+	at raptor.game.Game.makeMove(Game.java:1412)
+	at raptor.swt.chess.BoardUtils.createMove(BoardUtils.java:307)
+	at raptor.swt.chess.controller.InactiveController.userMadeMove(InactiveController.java:267)
+	at raptor.swt.chess.ChessSquare$3.mouseUp(ChessSquare.java:169)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:825)
+	at org.eclipse.jface.window.Window.open(Window.java:801)
+	at raptor.Raptor.main(Raptor.java:117)
+java.lang.IllegalArgumentException: Invalid piece: 0
+	at raptor.game.util.GameUtils.getPieceRepresentation(GameUtils.java:430)
+	at raptor.game.util.GameUtils.getPseudoSan(GameUtils.java:461)
+	at raptor.swt.chess.controller.InactiveController.userMadeMove(InactiveController.java:272)
+	at raptor.swt.chess.ChessSquare$3.mouseUp(ChessSquare.java:169)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(Unknown Source)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(Unknown Source)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Unknown Source)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Unknown Source)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Unknown Source)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:825)
+	at org.eclipse.jface.window.Window.open(Window.java:801)
+	at raptor.Raptor.main(Raptor.java:117)
+	
