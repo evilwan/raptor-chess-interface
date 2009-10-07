@@ -609,8 +609,10 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.redrawSquares();
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Completed refresh in " + getGame().getId() + "  "
-					+ (System.currentTimeMillis() - startTime));
+			LOG
+					.debug("Completed refresh of game " + getGame().getId()
+							+ "  in "
+							+ (System.currentTimeMillis() - startTime) + "ms");
 		}
 	}
 

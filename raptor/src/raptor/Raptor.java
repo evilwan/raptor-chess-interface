@@ -18,6 +18,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
 import raptor.service.EcoService;
+import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.InputDialog;
@@ -128,6 +129,7 @@ public class Raptor implements PreferenceKeys {
 		ThreadService.getInstance();
 		EcoService.getInstance();
 		ConnectorService.getInstance();
+		SoundService.getInstance();
 	}
 
 	/**
@@ -322,11 +324,11 @@ public class Raptor implements PreferenceKeys {
 	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
 	 */
 	public void shutdown() {
-		try {
-			imageRegistry.dispose();
-		} catch (Throwable t) {
-			LOG.error("Error shutting down raptor", t);
-		}
+//		try {
+//			imageRegistry.dispose();
+//		} catch (Throwable t) {
+//			LOG.error("Error shutting down raptor", t);
+//		}
 
 		try {
 			ConnectorService.getInstance().dispose();
@@ -342,6 +344,12 @@ public class Raptor implements PreferenceKeys {
 
 		try {
 			EcoService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.error("Error shutting down raptor", t);
+		}
+
+		try {
+			SoundService.getInstance().dispose();
 		} catch (Throwable t) {
 			LOG.error("Error shutting down raptor", t);
 		}
