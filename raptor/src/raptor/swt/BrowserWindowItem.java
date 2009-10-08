@@ -17,6 +17,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
+import org.eclipse.swt.browser.LocationListener;
+import org.eclipse.swt.browser.OpenWindowListener;
+import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -154,6 +157,25 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		});
 
 		browser = new Browser(composite, SWT.NONE);
+		browser.addOpenWindowListener(new OpenWindowListener() {
+			public void open(WindowEvent event) {
+				if (!event.required)
+					return;
+				BrowserWindowItem newWindowItem = new BrowserWindowItem(
+						"Child", "");
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						newWindowItem, false);
+				event.browser = newWindowItem.browser;
+			}
+		});
+		browser.addLocationListener(new LocationListener() {
+			public void changed(LocationEvent event) {
+			}
+
+			public void changing(LocationEvent event) {
+				urlText.setText(event.location);
+			}
+		});
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		browser.setUrl(url);
 		browser.addLocationListener(new LocationAdapter() {
