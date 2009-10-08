@@ -139,15 +139,35 @@ public class TestPgnParsing {
 	}
 
 	@Test
+	public void testCrazyhosueFile() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"resources/test/crazyhouseGames.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+
+		System.err.println("Parsed " + listener.getGames().size() + " games "
+				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
+
+		System.err.println(listener.getErrors());
+	}
+
+	@Test
 	public void testLargeFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
 				"resources/test/Alekhine4Pawns.pgn"), Integer.MAX_VALUE);
 		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
 		parser.parse();
 
-		System.err.println("Parsed " + listener.getGames().size() + " games");
+		System.err.println("Parsed " + listener.getGames().size() + " games "
+				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
 	}
 
 	@Test

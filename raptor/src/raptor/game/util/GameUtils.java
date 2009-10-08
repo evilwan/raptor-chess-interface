@@ -16,7 +16,13 @@ package raptor.game.util;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import raptor.Raptor;
+import raptor.game.AtomicGame;
+import raptor.game.BughouseGame;
+import raptor.game.CrazyhouseGame;
 import raptor.game.FischerRandomGame;
 import raptor.game.Game;
 import raptor.game.GameConstants;
@@ -31,6 +37,8 @@ import raptor.pref.PreferenceKeys;
 //KoggeStone
 //http://www.open-aurec.com/wbforum/viewtopic.php?f=4&t=49948&sid=abd6ee7224f34b11a5211aa167f01ac4
 public class GameUtils implements GameConstants {
+	public static final Log LOG = LogFactory.getLog(GameUtils.class);
+
 	private static final long DE_BRUJIN = 0x03f79d71b4cb0a89L;
 	private static final int[] DE_BRUJIN_MAGICS_TABLE = { 0, 1, 48, 2, 57, 49,
 			28, 3, 61, 58, 50, 42, 38, 29, 17, 4, 62, 55, 59, 36, 53, 51, 43,
@@ -142,6 +150,9 @@ public class GameUtils implements GameConstants {
 		case LOSERS:
 			result = new LosersGame();
 			break;
+		case ATOMIC:
+			result = new AtomicGame();
+			break;
 		case SUICIDE:
 			result = new SuicideGame();
 			break;
@@ -149,7 +160,11 @@ public class GameUtils implements GameConstants {
 			result = new FischerRandomGame();
 			break;
 		case BUGHOUSE:
+			result = new BughouseGame();
+			break;
 		case CRAZYHOUSE:
+			result = new CrazyhouseGame();
+			break;
 		default:
 			throw new IllegalArgumentException("Type " + gameType
 					+ " is not supported");
@@ -229,8 +244,8 @@ public class GameUtils implements GameConstants {
 
 		if (!result.isLegalPosition()) {
 			throw new IllegalArgumentException(
-					"Resulting position was illegal for FEN: " + fen + "\n"
-							+ result);
+					"Resulting position was illegal for FEN: " + fen + " "
+							+ gameType);
 		}
 
 		result.setZobristPositionHash(ZobristHash
@@ -241,6 +256,51 @@ public class GameUtils implements GameConstants {
 						.getCastling(BLACK)));
 
 		result.incrementRepCount();
+
+		if (gameType == Game.Type.CRAZYHOUSE) {
+			// This wont work if setup from a FEN where promotions have
+			// occurred.
+			// There is no way of telling if a piece was promoted or not.
+
+			result.setDropCount(WHITE, PAWN, 8 - result.getPieceCount(BLACK,
+					PAWN));
+			result.setDropCount(WHITE, KNIGHT, 2 - result.getPieceCount(BLACK,
+					KNIGHT));
+			result.setDropCount(WHITE, BISHOP, 2 - result.getPieceCount(BLACK,
+					BISHOP));
+			result.setDropCount(WHITE, ROOK, 2 - result.getPieceCount(BLACK,
+					ROOK));
+			result.setDropCount(WHITE, QUEEN, 1 - result.getPieceCount(BLACK,
+					QUEEN));
+			result.setDropCount(WHITE, KING, 0);
+
+			result.setDropCount(BLACK, PAWN, 8 - result.getPieceCount(WHITE,
+					PAWN));
+			result.setDropCount(BLACK, KNIGHT, 2 - result.getPieceCount(WHITE,
+					KNIGHT));
+			result.setDropCount(BLACK, BISHOP, 2 - result.getPieceCount(WHITE,
+					BISHOP));
+			result.setDropCount(BLACK, ROOK, 2 - result.getPieceCount(WHITE,
+					ROOK));
+			result.setDropCount(BLACK, QUEEN, 1 - result.getPieceCount(WHITE,
+					QUEEN));
+			result.setDropCount(BLACK, KING, 0);
+
+			// If there are any negative values just set them to 0.
+			for (int i = 0; i < result.getPositionState().dropCounts.length; i++) {
+				for (int j = 0; j < result.getPositionState().dropCounts[i].length; j++) {
+
+					if (result.getPositionState().dropCounts[i][j] < 0) {
+						result.setDropCount(i, j, 0);
+						if (LOG.isWarnEnabled()) {
+							LOG
+									.warn("Set a zh drop value to 0 because it was less than 0 initially. "
+											+ fen);
+						}
+					}
+				}
+			}
+		}
 		return result;
 	}
 
@@ -373,8 +433,35 @@ public class GameUtils implements GameConstants {
 		}
 	}
 
+	public static int getColoredPiece(int uncoloredPiece, int color) {
+		switch (uncoloredPiece) {
+		case EMPTY:
+			return EMPTY;
+		case PAWN:
+			return color == WHITE ? WP : BP;
+		case KNIGHT:
+			return color == WHITE ? WN : BN;
+		case BISHOP:
+			return color == WHITE ? WB : BB;
+		case ROOK:
+			return color == WHITE ? WR : BR;
+		case QUEEN:
+			return color == WHITE ? WQ : BQ;
+		case KING:
+			return color == WHITE ? WK : BK;
+		default:
+			throw new IllegalArgumentException("Invalid uncolored piece: "
+					+ uncoloredPiece);
+
+		}
+	}
+
 	public static int getColoredPieceFromDropSquare(int dropSquare) {
 		return dropSquare - 100;
+	}
+
+	public static int getDropSquareFromColoredPiece(int coloredPiece) {
+		return coloredPiece + 100;
 	}
 
 	public static int getFile(int square) {

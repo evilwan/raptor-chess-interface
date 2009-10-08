@@ -1,5 +1,4 @@
-1) Support for zh,bughosue,and all variaints.
-2) Preference screens for all prefs.
+1) Support for bughosue,and all variaints.
 3) Add key mappings. (Function key + hot key support).
 4) Installer
 5) Build
@@ -15,4 +14,3 @@
 15) Graphical Arrows to show moves made.
 17) Bughouse suggestions.
 21) Voice support
-23) PGN support.

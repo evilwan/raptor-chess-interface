@@ -101,7 +101,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
 						text = "0";
 					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = ".5";
+						text = "\u00BD";
 					} else if (board.getController().getGame().getResult() == Result.UNDETERMINED) {
 
 					}
@@ -143,7 +143,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
 						text = "1";
 					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = ".5";
+						text = "\u00BD";
 					}
 					drawResultText(e, text);
 				}
@@ -161,7 +161,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
 						text = "0";
 					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = ".5";
+						text = "\u00BD";
 					} else if (board.getController().getGame().getResult() == Result.UNDETERMINED) {
 
 					}
@@ -203,7 +203,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
 						text = "1";
 					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = ".5";
+						text = "\u00BD";
 					}
 					drawResultText(e, text);
 				}

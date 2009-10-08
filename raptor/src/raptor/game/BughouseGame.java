@@ -18,7 +18,7 @@ package raptor.game;
  * bughouse games together. And setting the others droppable piece counts as
  * pieces are captured.
  */
-public class BughouseGame extends ZHGame {
+public class BughouseGame extends CrazyhouseGame {
 
 	protected BughouseGame otherBoard;
 

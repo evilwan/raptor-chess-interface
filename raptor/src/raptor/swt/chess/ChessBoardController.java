@@ -32,7 +32,6 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
-import raptor.game.util.MoveListTraverser;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.EcoService;
@@ -62,7 +61,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	protected boolean storedIsWhiteOnTop;
 	protected boolean storedIsWhitePieceJailOnTop;
 	protected Map<ToolBarItemKey, ToolItem> toolItemMap = new HashMap<ToolBarItemKey, ToolItem>();
-	protected MoveListTraverser traverser;
 	protected ClockLabelUpdater whiteClockUpdater;
 
 	/**
@@ -79,7 +77,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public ChessBoardController(Game game) {
 		this.game = game;
-		traverser = new MoveListTraverser(game);
 	}
 
 	/**
@@ -161,7 +158,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			if (getGame().getMoveList().getSize() > 0) {
 				Move lastMove = getGame().getMoveList().get(
 						getGame().getMoveList().getSize() - 1);
-				int moveNumber = getGame().getHalfMoveCount() / 2 + 1;
+				int moveNumber = getGame().getFullMoveCount();
 
 				board.getStatusLabel().setText(
 						"Last Move: "
@@ -315,59 +312,40 @@ public abstract class ChessBoardController implements BoardConstants,
 			return;
 		}
 
-		if (game.isInState(Game.SETUP_STATE)) {
-			for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
-				int color = DROPPABLE_PIECE_COLOR[i];
-				int coloredPiece = DROPPABLE_PIECES[i];
-				int uncoloredPiece = BoardUtils
-						.pieceFromColoredPiece(coloredPiece);
-				LabeledChessSquare square = getBoard().getPieceJailSquare(
-						coloredPiece);
-				int count = game.getPieceCount(color, uncoloredPiece);
+		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
+			int coloredPiece = DROPPABLE_PIECE_COLOR[i];
+			int count = 0;
+			LabeledChessSquare square = board.pieceJailSquares[DROPPABLE_PIECES[i]];
 
+			if (game.isInState(Game.DROPPABLE_STATE)
+					&& !game.isInState(Game.SETUP_STATE)) {
+				count = getGame().getDropCount(coloredPiece,
+						BoardUtils.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+			} else {
+
+				count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
+						- getGame()
+								.getPieceCount(
+										coloredPiece,
+										BoardUtils
+												.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+			}
+
+			if (game.isInState(Game.SETUP_STATE)) {
 				if (count > 0) {
 					square.setPiece(coloredPiece);
 				} else {
 					square.setPiece(EMPTY);
 				}
-
-				square.setText(BoardUtils.pieceCountToString(count));
-				square.redraw();
-			}
-		} else if (game.isInState(Game.DROPPABLE_STATE)) {
-
-		} else {
-			for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
-				int color = DROPPABLE_PIECE_COLOR[i];
-				int count = 0;
-				if (game.isInState(Game.DROPPABLE_STATE)) {
-					count = getGame()
-							.getDropCount(
-									color,
-									BoardUtils
-											.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
-				} else {
-
-					count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
-							- getGame()
-									.getPieceCount(
-											color,
-											BoardUtils
-													.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
-				}
-
+			} else {
 				if (count == 0) {
-					board.pieceJailSquares[DROPPABLE_PIECES[i]]
-							.setPiece(GameConstants.EMPTY);
+					square.setPiece(GameConstants.EMPTY);
 				} else {
-					board.pieceJailSquares[DROPPABLE_PIECES[i]]
-							.setPiece(DROPPABLE_PIECES[i]);
+					square.setPiece(DROPPABLE_PIECES[i]);
 				}
-
-				board.pieceJailSquares[DROPPABLE_PIECES[i]].setText(BoardUtils
-						.pieceCountToString(count));
-				board.pieceJailSquares[DROPPABLE_PIECES[i]].redraw();
+				square.setText(BoardUtils.pieceCountToString(count));
 			}
+			square.redraw();
 		}
 	}
 
@@ -406,11 +384,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * is no longer being used.
 	 */
 	public void dispose() {
-		if (traverser != null) {
-			traverser.dispose();
-			traverser = null;
-		}
-
 		// Don't dispose the board
 		// It is up to the caller to do that.
 		board = null;
@@ -478,15 +451,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public Game getGame() {
 		return game;
-	}
-
-	/**
-	 * Returns the MoveListTraverser this controller uses to handle nav changes.
-	 * 
-	 * @return
-	 */
-	public MoveListTraverser getGameTraverser() {
-		return traverser;
 	}
 
 	/**
@@ -730,6 +694,10 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void setBoard(ChessBoard board) {
 		this.board = board;
+	}
+
+	protected void setGame(Game game) {
+		this.game = game;
 	}
 
 	/**

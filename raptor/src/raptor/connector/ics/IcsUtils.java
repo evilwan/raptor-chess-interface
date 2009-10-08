@@ -24,12 +24,12 @@ import raptor.connector.fics.game.TakebackParser;
 import raptor.connector.fics.game.TakebackParser.TakebackMessage;
 import raptor.connector.fics.game.message.G1Message;
 import raptor.connector.fics.game.message.Style12Message;
+import raptor.game.CrazyhouseGame;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.LosersGame;
 import raptor.game.SetupGame;
 import raptor.game.SuicideGame;
-import raptor.game.ZHGame;
 import raptor.game.Game.PositionState;
 import raptor.game.Game.Type;
 import raptor.game.util.GameUtils;
@@ -219,10 +219,10 @@ public class IcsUtils implements GameConstants {
 			result = new LosersGame();
 			break;
 		case CRAZYHOUSE:
-			result = new ZHGame();
+			result = new CrazyhouseGame();
 			break;
 		case BUGHOUSE:
-			result = new ZHGame();
+			result = new CrazyhouseGame();
 			result.setType(Type.BUGHOUSE);
 			break;
 		default:

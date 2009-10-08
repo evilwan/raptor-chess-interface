@@ -229,7 +229,7 @@ public class TestClassical implements GameConstants {
 		// System.out.println("Game hash: " + gameHash);
 
 		Move g1f3 = new Move(SQUARE_G1, SQUARE_F3, KNIGHT, WHITE, EMPTY);
-		game.forceMove(g1f3);
+		game.move(g1f3);
 		game.rollback();
 
 		asserts(game.getZobristPositionHash() == positionOnlyHash,
@@ -556,62 +556,6 @@ public class TestClassical implements GameConstants {
 		asserts(game.getOccupiedBB() == game2.getOccupiedBB()
 				&& game.getEmptyBB() == game2.getEmptyBB(),
 				"Occupied is not the same.");
-	}
-
-	@Test
-	public void testPieceCounts() {
-		Game game = createStartingPosition(Type.CLASSIC);
-		asserts(game.getPieceCount(WHITE, PAWN) == 8, "Not 8 white pawns.");
-		asserts(game.getPieceCount(BLACK, PAWN) == 8, "Not 8 black pawns.");
-		asserts(game.getPieceCount(WHITE, KNIGHT) == 2, "Not 2 white knights.");
-		asserts(game.getPieceCount(BLACK, KNIGHT) == 2, "Not 2 black knights.");
-		asserts(game.getPieceCount(WHITE, BISHOP) == 2, "Not 2 white bishops.");
-		asserts(game.getPieceCount(BLACK, BISHOP) == 2, "Not 2 black bishops.");
-		asserts(game.getPieceCount(WHITE, ROOK) == 2, "Not 2 white rooks.");
-		asserts(game.getPieceCount(BLACK, ROOK) == 2, "Not 2 black rooks.");
-		asserts(game.getPieceCount(WHITE, QUEEN) == 1, "Not 1 white queen.");
-		asserts(game.getPieceCount(BLACK, QUEEN) == 1, "Not 1 black queen.");
-		asserts(game.getPieceCount(WHITE, KING) == 1, "Not 1 white king.");
-		asserts(game.getPieceCount(BLACK, KING) == 1, "Not 1 black king.");
-
-		game.makeLanMove("e2-e4");
-		game.makeLanMove("g8-f6");
-		game.makeLanMove("d2-d4");
-		game.makeLanMove("f6-e4");
-		asserts(game.getPieceCount(WHITE, PAWN) == 7, "Not 7 white pawns\n"
-				+ game);
-		game.makeLanMove("d4-d5");
-		game.makeLanMove("e4-c3");
-		game.makeLanMove("d5-d6");
-		game.makeLanMove("c3-b1");
-		game.makeLanMove("a1-b1");
-		asserts(game.getPieceCount(WHITE, KNIGHT) == 1, "Not 1 white knight\n"
-				+ game);
-		asserts(game.getPieceCount(BLACK, KNIGHT) == 1, "Not 1 black knight\n"
-				+ game);
-		game.makeLanMove("a7-a6");
-		game.makeLanMove("d6-c7");
-		game.makeLanMove("a6-a5");
-		game.makeLanMove("c7-b8=Q");
-		asserts(game.getPieceCount(WHITE, PAWN) == 6, "Not 6 white pawns "
-				+ game.getPieceCount(WHITE, PAWN) + "\n" + game);
-		asserts(game.getPieceCount(WHITE, QUEEN) == 2, "Not 2 white queens\n"
-				+ game);
-		asserts(game.getPieceCount(BLACK, KNIGHT) == 0, "Not 0 black knights\n"
-				+ game);
-		game.makeLanMove("a8-b8");
-		asserts(game.getPieceCount(WHITE, QUEEN) == 1, "Not 1 white queen\n"
-				+ game);
-		game.rollback();
-		asserts(game.getPieceCount(WHITE, QUEEN) == 2, "Not 2 white queen\n"
-				+ game);
-		game.rollback();
-		asserts(game.getPieceCount(WHITE, PAWN) == 7, "Not 7 white pawns\n"
-				+ game);
-		asserts(game.getPieceCount(WHITE, QUEEN) == 1, "Not 1 white queens\n"
-				+ game);
-		asserts(game.getPieceCount(BLACK, KNIGHT) == 1, "Not 1 black knights\n"
-				+ game);
 	}
 
 	@Test
