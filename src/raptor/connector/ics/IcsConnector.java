@@ -85,7 +85,7 @@ public abstract class IcsConnector implements Connector {
 				LOG.debug("In keepAlive.run()");
 			}
 			if (isConnected()
-					&& (System.currentTimeMillis() - lastSendTime) > 60000 * 50) {
+					&& System.currentTimeMillis() - lastSendTime > 60000 * 50) {
 				sendMessage("date", true);
 				publishEvent(new ChatEvent("", ChatType.INTERNAL,
 						"The \"date\" command was just sent as a keep alive."));

@@ -159,8 +159,9 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		browser = new Browser(composite, SWT.NONE);
 		browser.addOpenWindowListener(new OpenWindowListener() {
 			public void open(WindowEvent event) {
-				if (!event.required)
+				if (!event.required) {
 					return;
+				}
 				BrowserWindowItem newWindowItem = new BrowserWindowItem(
 						"Child", "");
 				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
