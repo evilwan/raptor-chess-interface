@@ -169,7 +169,7 @@ public interface PreferenceKeys {
 
 	// Connector preferences should always use the short name of the connector
 	// followed by the preference.
-	public static final String FICS_KEEP_ALIVE = "fics-keepalive";
+	public static final String FICS_KEEP_ALIVE = "fics-keep-alive";
 	public static final String FICS_AUTO_CONNECT = "fics-auto-connect";
 	public static final String FICS_LOGIN_SCRIPT = "fics-login-script";
 	public static final String FICS_IS_LOGGING_GAMES = "fics-is-logging-games";
@@ -204,7 +204,7 @@ public interface PreferenceKeys {
 	public static final String FICS_TERTIARY_IS_ANON_GUEST = "fics-Tertiary-is-anon-guest";
 	public static final String FICS_TERTIARY_TIMESEAL_ENABLED = "fics-Tertiary-timeseal-enabled";
 
-	public static final String BICS_KEEP_ALIVE = "bics-keepalive";
+	public static final String BICS_KEEP_ALIVE = "bics-keep-alive";
 	public static final String BICS_AUTO_CONNECT = "bics-auto-connect";
 	public static final String BICS_LOGIN_SCRIPT = "bics-login-script";
 	public static final String BICS_IS_LOGGING_GAMES = "bics-is-logging-games";

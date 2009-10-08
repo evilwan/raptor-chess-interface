@@ -461,7 +461,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_LAYOUT3_QUAD5_QUAD6_SASH_WEIGHTS, new int[] { 50, 50 });
 
 		// Fics
-		setDefault(FICS_KEEP_ALIVE, true);
+		setDefault(FICS_KEEP_ALIVE, false);
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(FICS_IS_LOGGING_GAMES, false);
@@ -500,7 +500,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_TERTIARY_TIMESEAL_ENABLED, true);
 
 		// Bics
-		setDefault(BICS_KEEP_ALIVE, true);
+		setDefault(BICS_KEEP_ALIVE, false);
 		setDefault(BICS_AUTO_CONNECT, false);
 		setDefault(BICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(BICS_IS_LOGGING_GAMES, false);
