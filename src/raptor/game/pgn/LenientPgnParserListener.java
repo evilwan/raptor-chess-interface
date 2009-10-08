@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -16,7 +17,7 @@ import raptor.game.util.GameUtils;
 /**
  * A Lenient PGN Parser Listener which creates Games from the PGN being handled.
  * 
- * Currently this only supports Classical.
+ * Currently sub-lines are disabled.
  * 
  */
 public abstract class LenientPgnParserListener implements PgnParserListener {
@@ -59,31 +60,79 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 	public LenientPgnParserListener() {
 	}
 
-	protected void createGameFromHeaders(PgnParser parser) {
-		if (currentHeaders.get(PgnHeader.FEN.getName()) != null) { // TO DO
-			// support
-			// other
-			// types.
-			try {
-				currentGame = GameUtils.createFromFen(currentHeaders
-						.get(PgnHeader.FEN.getName()), Game.Type.CLASSIC);
-				currentGame.setSettingMoveSan(true);
-			} catch (IllegalArgumentException ife) {
-				errorEncountered(new PgnParserError(
-						PgnParserError.Type.UNABLE_TO_PARSE_INITIAL_FEN,
-						PgnParserError.Action.IGNORING_CURRENT_GAME, parser
-								.getLineNumber()));
-				isIgnoringCurrentGame = true;
+	public Game createGameFromDescription() {
+		String fen = null;
+		Game.Type type = Game.Type.CLASSIC;
+		Game result = null;
+
+		if (currentHeaders.get(PgnHeader.FEN.getName()) != null) {
+			fen = currentHeaders.get(PgnHeader.FEN.getName());
+		}
+		if (currentHeaders.get(PgnHeader.EVENT.getName()) != null) {
+			if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.EVENT.getName()), "crazyhouse")) {
+				type = Game.Type.CRAZYHOUSE;
+				currentHeaders.put(PgnHeader.VARIANT.getName(),
+						Game.Type.CRAZYHOUSE.name());
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.EVENT.getName()), "atomic")) {
+				type = Game.Type.ATOMIC;
+				currentHeaders.put(PgnHeader.VARIANT.getName(),
+						Game.Type.ATOMIC.name());
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.EVENT.getName()), "suicide")) {
+				type = Game.Type.SUICIDE;
+				currentHeaders.put(PgnHeader.VARIANT.getName(),
+						Game.Type.SUICIDE.name());
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.EVENT.getName()), "losers")) {
+				type = Game.Type.LOSERS;
+				currentHeaders.put(PgnHeader.VARIANT.getName(),
+						Game.Type.LOSERS.name());
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.EVENT.getName()), "wild fr")) {
+				type = Game.Type.FISCHER_RANDOM;
+				currentHeaders.put(PgnHeader.VARIANT.getName(),
+						Game.Type.FISCHER_RANDOM.name());
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.EVENT.getName()), "bughouse")) {
+				type = Game.Type.BUGHOUSE;
+				currentHeaders.put(PgnHeader.VARIANT.getName(),
+						Game.Type.BUGHOUSE.name());
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.EVENT.getName()), "wild")) {
+				type = Game.Type.CLASSIC;
+				currentHeaders.put(PgnHeader.VARIANT.getName(), Game.Type.WILD
+						.name());
 			}
-		} else { // TO DO support other types.
-			currentGame = GameUtils.createStartingPosition(Game.Type.CLASSIC);
-			currentGame.setSettingMoveSan(true);
 		}
 
-		// Set all of the headers.
-		for (String header : currentHeaders.keySet()) {
-			currentGame.setHeader(header, currentHeaders.get(header));
+		if (fen != null) {
+			result = GameUtils.createFromFen(fen, type);
+		} else {
+			result = GameUtils.createStartingPosition(type);
 		}
+		return result;
+	}
+
+	protected void createGameFromHeaders(PgnParser parser) {
+		try {
+			currentGame = createGameFromDescription();
+			currentGame.setSettingMoveSan(true);
+
+			// Set all of the headers.
+			for (String header : currentHeaders.keySet()) {
+				currentGame.setHeader(header, currentHeaders.get(header));
+			}
+		} catch (IllegalArgumentException ife) {
+			LOG.warn("error setting up game", ife);
+			errorEncountered(new PgnParserError(
+					PgnParserError.Type.UNABLE_TO_PARSE_INITIAL_FEN,
+					PgnParserError.Action.IGNORING_CURRENT_GAME, parser
+							.getLineNumber()));
+			isIgnoringCurrentGame = true;
+		}
+
 	}
 
 	public abstract void errorEncountered(PgnParserError error);
@@ -93,6 +142,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 	protected Move makeGameMoveFromWord(String word)
 			throws IllegalArgumentException {
 		NagWordTrimResult trim = trimOutNag(word);
+
 		Move result = currentGame.makeSanMove(trim.move);
 
 		if (trim.nag != null) {
@@ -103,6 +153,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 			result.addAnnotation(annotation);
 		}
 		danglingAnnotations.clear();
+
 		return result;
 	}
 

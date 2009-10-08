@@ -13,14 +13,19 @@
  */
 package raptor.swt.chess.controller;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Random;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -29,6 +34,7 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
+import raptor.game.util.MoveListTraverser;
 import raptor.service.SoundService;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.BoardConstants;
@@ -44,12 +50,21 @@ import raptor.swt.chess.ChessBoardController;
 public class InactiveController extends ChessBoardController implements
 		BoardConstants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
-	Random random = new SecureRandom();
-	ToolBar toolbar;
-	boolean userMadeAdjustment = false;
+	protected Random random = new SecureRandom();
+	protected ToolBar toolbar;
+	protected boolean userMadeAdjustment = false;
+	protected MoveListTraverser traverser = null;
+	protected String title;
 
 	public InactiveController(Game game) {
+		this(game, "Inactive");
+
+	}
+
+	public InactiveController(Game game, String title) {
 		super(game);
+		traverser = new MoveListTraverser(game);
+		this.title = title;
 	}
 
 	/**
@@ -84,11 +99,11 @@ public class InactiveController extends ChessBoardController implements
 	 */
 	@Override
 	public void adjustGameStatusLabel() {
-		if (userMadeAdjustment || getGame().isInState(Game.ACTIVE_STATE)) {
+		if (userMadeAdjustment) {
 			if (getGame().getMoveList().getSize() > 0) {
 				Move lastMove = getGame().getMoveList().get(
 						getGame().getMoveList().getSize() - 1);
-				int moveNumber = getGame().getHalfMoveCount() / 2 + 1;
+				int moveNumber = getGame().getFullMoveCount();
 
 				board.getStatusLabel().setText(
 						"Last Move: "
@@ -120,18 +135,16 @@ public class InactiveController extends ChessBoardController implements
 							&& BoardUtils.isWhitePiece(pieceType)
 							|| !getGame().isWhitesMove()
 							&& BoardUtils.isBlackPiece(pieceType);
-				} else {
-					return getGame().isWhitesMove()
-							&& BoardUtils.isWhitePiece(board
-									.getSquare(squareId).getPiece())
-							|| !getGame().isWhitesMove()
-							&& BoardUtils.isBlackPiece(board
-									.getSquare(squareId).getPiece());
 				}
 			} else if (getGame().getPiece(squareId) == EMPTY) {
 				return false;
 			} else {
-				return board.getSquare(squareId).getPiece() != GameConstants.EMPTY;
+				return getGame().isWhitesMove()
+						&& BoardUtils.isWhitePiece(board.getSquare(squareId)
+								.getPiece())
+						|| !getGame().isWhitesMove()
+						&& BoardUtils.isBlackPiece(board.getSquare(squareId)
+								.getPiece());
 			}
 		}
 		return false;
@@ -145,20 +158,42 @@ public class InactiveController extends ChessBoardController implements
 			SWTUtils.clearToolbar(toolbar);
 			toolbar = null;
 		}
+
+		if (traverser != null) {
+			traverser.dispose();
+			traverser = null;
+		}
+	}
+
+	public void enableDisableNavButtons() {
+		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, traverser.hasNext());
+		setToolItemEnabled(ToolBarItemKey.BACK_NAV, traverser.hasBack());
+		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, traverser.hasFirst());
+		setToolItemEnabled(ToolBarItemKey.LAST_NAV, traverser.hasLast());
 	}
 
 	@Override
 	public String getTitle() {
-		return "Inactive";
+		return title == null ? "Inactive" : title;
 	}
 
 	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
+			ToolItem saveItem = new ToolItem(toolbar, SWT.PUSH);
+			saveItem.setImage(Raptor.getInstance().getIcon("save"));
+			saveItem.setToolTipText("Save to pgn.");
+			saveItem.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					onSave();
+				}
+			});
+			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true);
 			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addNavIconsToToolbar(this, toolbar, false, false);
+			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
@@ -185,6 +220,33 @@ public class InactiveController extends ChessBoardController implements
 		SoundService.getInstance().playSound("move");
 	}
 
+	public void onSave() {
+		FileDialog fd = new FileDialog(board.getShell(), SWT.SAVE);
+		fd.setText("Save To PGN");
+		fd.setFilterPath("");
+		String[] filterExt = { "*.pgn", "*.*" };
+		fd.setFilterExtensions(filterExt);
+		final String selected = fd.open();
+
+		if (selected != null) {
+			String pgn = GameUtils.toPgn(traverser.getSource());
+			FileWriter writer = null;
+
+			try {
+				writer = new FileWriter(selected);
+				writer.write(pgn);
+				writer.flush();
+			} catch (IOException ioe) {
+				Raptor.getInstance().onError("Error saving pgn file.", ioe);
+			} finally {
+				try {
+					writer.close();
+				} catch (Throwable t) {
+				}
+			}
+		}
+	}
+
 	@Override
 	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
 		switch (key) {
@@ -195,6 +257,30 @@ public class InactiveController extends ChessBoardController implements
 			break;
 		case FLIP:
 			onFlip();
+			break;
+		case NEXT_NAV:
+			traverser.next();
+			setGame(traverser.getAdjustedGame());
+			enableDisableNavButtons();
+			refresh();
+			break;
+		case BACK_NAV:
+			traverser.back();
+			setGame(traverser.getAdjustedGame());
+			enableDisableNavButtons();
+			refresh();
+			break;
+		case FIRST_NAV:
+			traverser.first();
+			setGame(traverser.getAdjustedGame());
+			enableDisableNavButtons();
+			refresh();
+			break;
+		case LAST_NAV:
+			traverser.last();
+			setGame(traverser.getAdjustedGame());
+			enableDisableNavButtons();
+			refresh();
 			break;
 		}
 	}

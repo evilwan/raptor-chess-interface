@@ -35,8 +35,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 
 import raptor.game.pgn.PgnHeader;
@@ -76,6 +79,43 @@ public class Game implements GameConstants {
 		public long[][] pieceBB = new long[2][7];
 		public int[][] pieceCounts = new int[2][7];
 		public MoveList moves = new MoveList();
+
+		public PositionState deepCopy(boolean ignoreHashes) {
+			PositionState result = new PositionState();
+			result.moves = moves.deepCopy();
+			result.halfMoveCount = halfMoveCount;
+			System.arraycopy(colorBB, 0, result.colorBB, 0,
+					result.colorBB.length);
+			for (int i = 0; i < pieceBB.length; i++) {
+				System.arraycopy(pieceBB[i], 0, result.pieceBB[i], 0,
+						pieceBB[i].length);
+			}
+			System.arraycopy(board, 0, result.board, 0, board.length);
+			result.occupiedBB = occupiedBB;
+			result.emptyBB = emptyBB;
+			result.notColorToMoveBB = notColorToMoveBB;
+			System.arraycopy(castling, 0, result.castling, 0, castling.length);
+			result.initialEpSquare = initialEpSquare;
+			result.epSquare = epSquare;
+			result.colorToMove = colorToMove;
+			result.fiftyMoveCount = fiftyMoveCount;
+			for (int i = 0; i < pieceCounts.length; i++) {
+				System.arraycopy(pieceCounts[i], 0, result.pieceCounts[i], 0,
+						pieceCounts[i].length);
+			}
+			for (int i = 0; i < dropCounts.length; i++) {
+				System.arraycopy(dropCounts[i], 0, result.dropCounts[i], 0,
+						dropCounts[i].length);
+			}
+			result.zobristPositionHash = zobristPositionHash;
+			result.zobristGameHash = zobristGameHash;
+
+			if (!ignoreHashes) {
+				System.arraycopy(moveRepHash, 0, result.moveRepHash, 0,
+						moveRepHash.length);
+			}
+			return result;
+		}
 	}
 
 	public static enum Type {
@@ -149,7 +189,7 @@ public class Game implements GameConstants {
 	protected int state;
 	protected Type type = Type.CLASSIC;
 	protected long whiteLagMillis;
-	protected long whiteRemainingTimeMilis;
+	protected long whiteRemainingTimeMillis;
 	protected Map<String, String> pgnHeaderMap = new HashMap<String, String>();
 
 	/**
@@ -201,6 +241,24 @@ public class Game implements GameConstants {
 	}
 
 	/**
+	 * Decrements the drop count for the specified piece. This method handles
+	 * promotion masks as well.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK.
+	 * @param piece
+	 *            The un-colored piece constant.
+	 */
+	public void decrementDropCount(int color, int piece) {
+
+		if ((piece & PROMOTED_MASK) != 0) {
+			piece = PAWN;
+
+		}
+		positionState.dropCounts[color][piece]--;
+	}
+
+	/**
 	 * Decrements the piece count for the specified piece. This method handles
 	 * promotion masks as well.
 	 * 
@@ -213,7 +271,7 @@ public class Game implements GameConstants {
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
 		}
-		positionState.pieceCounts[color][piece] = positionState.pieceCounts[color][piece] - 1;
+		positionState.pieceCounts[color][piece]--;
 	}
 
 	/**
@@ -230,71 +288,22 @@ public class Game implements GameConstants {
 	 */
 	public Game deepCopy(boolean ignoreHashes) {
 		Game result = new Game();
-		result.id = id;
-		result.state = state;
-		result.type = type;
-		result.initialWhiteTimeMillis = initialWhiteTimeMillis;
-		result.initialBlackTimeMillis = initialBlackTimeMillis;
-		result.initialWhiteIncMillis = initialWhiteIncMillis;
-		result.initialBlackIncMillis = initialBlackIncMillis;
-		result.whiteRemainingTimeMilis = whiteRemainingTimeMilis;
-		result.blackRemainingTimeMillis = blackRemainingTimeMillis;
-		result.whiteLagMillis = whiteLagMillis;
-		result.blackLagMillis = blackLagMillis;
-		result.positionState.moves = positionState.moves.deepCopy();
-		result.positionState.halfMoveCount = positionState.halfMoveCount;
-		System.arraycopy(positionState.colorBB, 0,
-				result.positionState.colorBB, 0,
-				result.positionState.colorBB.length);
-		for (long[] element : positionState.pieceBB) {
-			System.arraycopy(element, 0, element, 0, element.length);
-		}
-		System.arraycopy(positionState.board, 0, result.positionState.board, 0,
-				result.positionState.board.length);
-		result.positionState.occupiedBB = positionState.occupiedBB;
-		result.positionState.emptyBB = positionState.emptyBB;
-		result.positionState.notColorToMoveBB = positionState.notColorToMoveBB;
-		System
-				.arraycopy(positionState.castling, 0,
-						result.positionState.castling, 0,
-						positionState.castling.length);
-		result.positionState.initialEpSquare = positionState.initialEpSquare;
-		result.positionState.epSquare = positionState.epSquare;
-		result.positionState.colorToMove = positionState.colorToMove;
-		result.positionState.fiftyMoveCount = positionState.fiftyMoveCount;
-		for (int[] pieceCount : positionState.pieceCounts) {
-			System.arraycopy(pieceCount, 0, pieceCount, 0, pieceCount.length);
-		}
-		for (int[] dropCount : positionState.dropCounts) {
-			System.arraycopy(dropCount, 0, dropCount, 0, dropCount.length);
-		}
-		result.positionState.zobristPositionHash = positionState.zobristGameHash;
-		result.positionState.zobristGameHash = positionState.zobristGameHash;
-
-		if (!ignoreHashes) {
-			System.arraycopy(positionState.moveRepHash, 0,
-					result.positionState.moveRepHash, 0,
-					positionState.moveRepHash.length);
-		}
-		result.pgnHeaderMap = new HashMap<String, String>(pgnHeaderMap);
+		overwrite(result, ignoreHashes);
 		return result;
 	}
 
 	/**
-	 * Forces the board to make the move.
-	 * 
-	 * @param move
+	 * Makes a move with out any legality checking.
 	 */
 	public void forceMove(Move move) {
 		move.setLastCastleState(getCastling(getColorToMove()));
-
 		setSan(move);
 		switch (move.getMoveCharacteristic()) {
 		case Move.EN_PASSANT_CHARACTERISTIC:
 			makeEPMove(move);
 			break;
-		case Move.KINGSIDE_CASTLING_CHARACTERISTIC:
-		case Move.QUEENSIDE_CASTLING_CHARACTERISTIC:
+		case Move.SHORT_CASTLING_CHARACTERISTIC:
+		case Move.LONG_CASTLING_CHARACTERISTIC:
 			makeCastlingMove(move);
 			break;
 		case Move.DROP_CHARACTERISTIC:
@@ -310,6 +319,12 @@ public class Game implements GameConstants {
 		move.setPrevious50MoveCount(getFiftyMoveCount());
 		if (move.isCapture()) {
 			decrementPieceCount(oppToMove, move.getCaptureWithPromoteMask());
+			incrementDropCount(getColorToMove(), move
+					.getCaptureWithPromoteMask());
+			setFiftyMoveCount(0);
+		} else if (move.isDrop()) {
+			incrementPieceCount(getColorToMove(), move.getPiece());
+			decrementDropCount(getColorToMove(), move.getPiece());
 			setFiftyMoveCount(0);
 		} else if (move.getPiece() == PAWN) {
 			setFiftyMoveCount(0);
@@ -334,7 +349,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoBishopMoves(PriorityMoveList moves) {
+	public void generatePseudoBishopMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), BISHOP);
 
 		while (fromBB != 0) {
@@ -348,8 +363,9 @@ public class Game implements GameConstants {
 
 				int contents = getPieceWithPromoteMask(toSquare);
 
-				addMove(new Move(fromSquare, toSquare, BISHOP,
-						getColorToMove(), contents), moves);
+				addMove(new Move(fromSquare, toSquare,
+						getPieceWithPromoteMask(fromSquare), getColorToMove(),
+						contents), moves);
 				toBB = bitscanClear(toBB);
 			}
 			fromBB = bitscanClear(fromBB);
@@ -363,7 +379,8 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoKingCastlingMoves(long fromBB, PriorityMoveList moves) {
+	public void generatePseudoKingCastlingMoves(long fromBB,
+			PriorityMoveList moves) {
 		// The king destination square isnt checked, its checked when legal
 		// getMoves() are checked.
 
@@ -372,9 +389,10 @@ public class Game implements GameConstants {
 				&& fromBB == E1 && getPiece(SQUARE_G1) == EMPTY
 				&& getPiece(SQUARE_F1) == EMPTY && !isInCheck(WHITE, E1)
 				&& !isInCheck(WHITE, F1)) {
-			moves.appendLowPriority(new Move(SQUARE_E1, SQUARE_G1, KING,
-					getColorToMove(), EMPTY,
-					Move.KINGSIDE_CASTLING_CHARACTERISTIC));
+			moves
+					.appendLowPriority(new Move(SQUARE_E1, SQUARE_G1, KING,
+							getColorToMove(), EMPTY,
+							Move.SHORT_CASTLING_CHARACTERISTIC));
 		}
 
 		if (getColorToMove() == WHITE
@@ -382,9 +400,10 @@ public class Game implements GameConstants {
 				&& fromBB == E1 && getPiece(SQUARE_D1) == EMPTY
 				&& getPiece(SQUARE_C1) == EMPTY && getPiece(SQUARE_B1) == EMPTY
 				&& !isInCheck(WHITE, E1) && !isInCheck(WHITE, D1)) {
-			moves.appendLowPriority(new Move(SQUARE_E1, SQUARE_C1, KING,
-					getColorToMove(), EMPTY,
-					Move.QUEENSIDE_CASTLING_CHARACTERISTIC));
+			moves
+					.appendLowPriority(new Move(SQUARE_E1, SQUARE_C1, KING,
+							getColorToMove(), EMPTY,
+							Move.LONG_CASTLING_CHARACTERISTIC));
 		}
 
 		if (getColorToMove() == BLACK
@@ -392,9 +411,10 @@ public class Game implements GameConstants {
 				&& fromBB == E8 && getPiece(SQUARE_G8) == EMPTY
 				&& getPiece(SQUARE_F8) == EMPTY && !isInCheck(BLACK, E8)
 				&& !isInCheck(BLACK, F8)) {
-			moves.appendLowPriority(new Move(SQUARE_E8, SQUARE_G8, KING,
-					getColorToMove(), EMPTY,
-					Move.KINGSIDE_CASTLING_CHARACTERISTIC));
+			moves
+					.appendLowPriority(new Move(SQUARE_E8, SQUARE_G8, KING,
+							getColorToMove(), EMPTY,
+							Move.SHORT_CASTLING_CHARACTERISTIC));
 
 		}
 
@@ -403,9 +423,10 @@ public class Game implements GameConstants {
 				&& fromBB == E8 && getPiece(SQUARE_D8) == EMPTY
 				&& getPiece(SQUARE_C8) == EMPTY && getPiece(SQUARE_B8) == EMPTY
 				&& !isInCheck(BLACK, E8) && !isInCheck(BLACK, D8)) {
-			moves.appendLowPriority(new Move(SQUARE_E8, SQUARE_C8, KING,
-					getColorToMove(), EMPTY,
-					Move.QUEENSIDE_CASTLING_CHARACTERISTIC));
+			moves
+					.appendLowPriority(new Move(SQUARE_E8, SQUARE_C8, KING,
+							getColorToMove(), EMPTY,
+							Move.LONG_CASTLING_CHARACTERISTIC));
 		}
 	}
 
@@ -416,12 +437,12 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoKingMoves(PriorityMoveList moves) {
+	public void generatePseudoKingMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), KING);
 		int fromSquare = bitscanForward(fromBB);
 		long toBB = kingMove(fromSquare) & getNotColorToMoveBB();
 
-		genPseudoKingCastlingMoves(fromBB, moves);
+		generatePseudoKingCastlingMoves(fromBB, moves);
 
 		while (toBB != 0) {
 			int toSquare = bitscanForward(toBB);
@@ -442,7 +463,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoKnightMoves(PriorityMoveList moves) {
+	public void generatePseudoKnightMoves(PriorityMoveList moves) {
 
 		long fromBB = getPieceBB(getColorToMove(), KNIGHT);
 
@@ -455,8 +476,9 @@ public class Game implements GameConstants {
 				int toSquare = bitscanForward(toBB);
 				int contents = getPieceWithPromoteMask(toSquare);
 
-				addMove(new Move(fromSquare, toSquare, KNIGHT,
-						getColorToMove(), contents), moves);
+				addMove(new Move(fromSquare, toSquare,
+						getPieceWithPromoteMask(fromSquare), getColorToMove(),
+						contents), moves);
 
 				toBB = bitscanClear(toBB);
 				toSquare = bitscanForward(toBB);
@@ -473,7 +495,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoPawnCaptures(int fromSquare, long fromBB,
+	public void generatePseudoPawnCaptures(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
 
 		long toBB = pawnCapture(getColorToMove(), fromBB,
@@ -486,17 +508,17 @@ public class Game implements GameConstants {
 						getPieceWithPromoteMask(toSquare), KNIGHT,
 						EMPTY_SQUARE, Move.PROMOTION_CHARACTERISTIC), moves);
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						getPiece(toSquare), BISHOP, EMPTY_SQUARE,
+						getPieceWithPromoteMask(toSquare), BISHOP,
+						EMPTY_SQUARE, Move.PROMOTION_CHARACTERISTIC), moves);
+				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+						getPieceWithPromoteMask(toSquare), QUEEN, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						getPiece(toSquare), QUEEN, EMPTY_SQUARE,
-						Move.PROMOTION_CHARACTERISTIC), moves);
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						getPiece(toSquare), ROOK, EMPTY_SQUARE,
+						getPieceWithPromoteMask(toSquare), ROOK, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 			} else {
 				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
-						getPiece(toSquare)), moves);
+						getPieceWithPromoteMask(toSquare)), moves);
 			}
 			toBB = bitscanClear(toBB);
 		}
@@ -509,7 +531,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoPawnDoublePush(int fromSquare, long fromBB,
+	public void generatePseudoPawnDoublePush(int fromSquare, long fromBB,
 			int oppositeColor, int epModifier, PriorityMoveList moves) {
 
 		long toBB = pawnDoublePush(getColorToMove(), fromBB, getEmptyBB());
@@ -531,7 +553,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoPawnEPCaptures(int fromSquare, long fromBB,
+	public void generatePseudoPawnEPCaptures(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
 		if (getEpSquare() != EMPTY) {
 
@@ -555,7 +577,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoPawnMoves(PriorityMoveList moves) {
+	public void generatePseudoPawnMoves(PriorityMoveList moves) {
 		long pawnsBB = getPieceBB(getColorToMove(), PAWN);
 		int oppositeColor, epModifier;
 
@@ -571,10 +593,12 @@ public class Game implements GameConstants {
 			int fromSquare = bitscanForward(pawnsBB);
 			long fromBB = getBitboard(fromSquare);
 
-			genPseudoPawnEPCaptures(fromSquare, fromBB, oppositeColor, moves);
-			genPseudoPawnCaptures(fromSquare, fromBB, oppositeColor, moves);
-			genPseudoPawnSinglePush(fromSquare, fromBB, oppositeColor, moves);
-			genPseudoPawnDoublePush(fromSquare, fromBB, oppositeColor,
+			generatePseudoPawnEPCaptures(fromSquare, fromBB, oppositeColor,
+					moves);
+			generatePseudoPawnCaptures(fromSquare, fromBB, oppositeColor, moves);
+			generatePseudoPawnSinglePush(fromSquare, fromBB, oppositeColor,
+					moves);
+			generatePseudoPawnDoublePush(fromSquare, fromBB, oppositeColor,
 					epModifier, moves);
 
 			pawnsBB = bitscanClear(pawnsBB);
@@ -588,7 +612,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoPawnSinglePush(int fromSquare, long fromBB,
+	public void generatePseudoPawnSinglePush(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
 
 		long toBB = pawnSinglePush(getColorToMove(), fromBB, getEmptyBB());
@@ -625,7 +649,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoQueenMoves(PriorityMoveList moves) {
+	public void generatePseudoQueenMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), QUEEN);
 
 		while (fromBB != 0) {
@@ -640,7 +664,8 @@ public class Game implements GameConstants {
 				int toSquare = bitscanForward(toBB);
 
 				int contents = getPieceWithPromoteMask(toSquare);
-				addMove(new Move(fromSquare, toSquare, QUEEN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare,
+						getPieceWithPromoteMask(fromSquare), getColorToMove(),
 						contents), moves);
 				toBB = bitscanClear(toBB);
 			}
@@ -656,7 +681,7 @@ public class Game implements GameConstants {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void genPseudoRookMoves(PriorityMoveList moves) {
+	public void generatePseudoRookMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), ROOK);
 
 		while (fromBB != 0) {
@@ -670,7 +695,8 @@ public class Game implements GameConstants {
 				int toSquare = bitscanForward(toBB);
 
 				int contents = getPieceWithPromoteMask(toSquare);
-				addMove(new Move(fromSquare, toSquare, ROOK, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare,
+						getPieceWithPromoteMask(fromSquare), getColorToMove(),
 						contents), moves);
 				toBB = bitscanClear(toBB);
 			}
@@ -786,7 +812,22 @@ public class Game implements GameConstants {
 	 * useful for games such as bughouse or crazyhosue
 	 */
 	public int getDropCount(int color, int piece) {
-		return positionState.pieceCounts[color][piece];
+		return positionState.dropCounts[color][piece];
+	}
+
+	public String getDropCountsString() {
+		return "Drop counts [WP=" + getDropCount(WHITE, PAWN) + " WN="
+				+ getDropCount(WHITE, KNIGHT) + " WB="
+				+ getDropCount(WHITE, BISHOP) + " WR="
+				+ getDropCount(WHITE, ROOK) + " WQ="
+				+ getDropCount(WHITE, QUEEN) + " WK="
+				+ getDropCount(WHITE, KING) + "][BP="
+				+ getDropCount(BLACK, PAWN) + " BN= "
+				+ getDropCount(BLACK, KNIGHT) + " BB="
+				+ getDropCount(BLACK, BISHOP) + " BR="
+				+ getDropCount(BLACK, ROOK) + " BQ="
+				+ getDropCount(BLACK, QUEEN) + " BK="
+				+ getDropCount(BLACK, KING) + "]";
 	}
 
 	/**
@@ -1002,7 +1043,22 @@ public class Game implements GameConstants {
 	 *            The un-colored piece constant.
 	 */
 	public int getPieceCount(int color, int piece) {
-		return positionState.pieceCounts[color][piece];
+		return positionState.pieceCounts[color][piece & NOT_PROMOTED_MASK];
+	}
+
+	public String getPieceCountsString() {
+		return "Piece counts [WP=" + getPieceCount(WHITE, PAWN) + " WN="
+				+ getPieceCount(WHITE, KNIGHT) + " WB="
+				+ getPieceCount(WHITE, BISHOP) + " WR="
+				+ getPieceCount(WHITE, ROOK) + " WQ="
+				+ getPieceCount(WHITE, QUEEN) + " WK="
+				+ getPieceCount(WHITE, KING) + "][BP="
+				+ getPieceCount(BLACK, PAWN) + " BN= "
+				+ getPieceCount(BLACK, KNIGHT) + " BB="
+				+ getPieceCount(BLACK, BISHOP) + " BR="
+				+ getPieceCount(BLACK, ROOK) + " BQ="
+				+ getPieceCount(BLACK, QUEEN) + " BK="
+				+ getPieceCount(BLACK, KING) + "]";
 	}
 
 	/**
@@ -1024,12 +1080,12 @@ public class Game implements GameConstants {
 	 */
 	public PriorityMoveList getPseudoLegalMoves() {
 		PriorityMoveList result = new PriorityMoveList();
-		genPseudoQueenMoves(result);
-		genPseudoKnightMoves(result);
-		genPseudoBishopMoves(result);
-		genPseudoRookMoves(result);
-		genPseudoPawnMoves(result);
-		genPseudoKingMoves(result);
+		generatePseudoQueenMoves(result);
+		generatePseudoKnightMoves(result);
+		generatePseudoBishopMoves(result);
+		generatePseudoRookMoves(result);
+		generatePseudoPawnMoves(result);
+		generatePseudoKingMoves(result);
 		return result;
 	}
 
@@ -1059,10 +1115,14 @@ public class Game implements GameConstants {
 
 	/**
 	 * Returns the description of the result. Returns the PgnHeader
-	 * RESULT_DESCRIPTION
+	 * RESULT_DESCRIPTION if its empty then returns PgnHeader.RESULT.
 	 */
 	public String getResultDescription() {
-		return getHeader(PgnHeader.RESULT_DESCRIPTION);
+		String result = getHeader(PgnHeader.RESULT_DESCRIPTION);
+		if (StringUtils.isBlank(result)) {
+			result = getHeader(PgnHeader.RESULT);
+		}
+		return result;
 	}
 
 	/**
@@ -1127,7 +1187,7 @@ public class Game implements GameConstants {
 	 * @return White's remaining amount of time on the clock in milliseconds.
 	 */
 	public long getWhiteRemainingTimeMillis() {
-		return whiteRemainingTimeMilis;
+		return whiteRemainingTimeMillis;
 	}
 
 	/**
@@ -1151,6 +1211,40 @@ public class Game implements GameConstants {
 	}
 
 	/**
+	 * Returns true if the specified color has at least one drop piece.
+	 * 
+	 * @param color
+	 *            THe color to check,
+	 * @return True if the color has a drop piece, otherwise false.
+	 */
+	public boolean hasNonPawnDropPiece(int color) {
+		boolean result = false;
+		for (int i = 2; i < positionState.dropCounts[color].length; i++) {
+			if (positionState.dropCounts[color][i] > 0) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Increments the drop count. This method handles incrementing pieces with a
+	 * promote mask.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK
+	 * @param piece
+	 *            The uncolored piece constant.
+	 */
+	public void incrementDropCount(int color, int piece) {
+		if ((piece & PROMOTED_MASK) != 0) {
+			piece = PAWN;
+		}
+		positionState.dropCounts[color][piece]++;
+	}
+
+	/**
 	 * Increments the piece count. This method handles incrementing pieces with
 	 * a promote mask.
 	 * 
@@ -1160,13 +1254,15 @@ public class Game implements GameConstants {
 	 *            The uncolored piece constant.
 	 */
 	public void incrementPieceCount(int color, int piece) {
-		int pieceWithoutMask = piece;
-
 		if ((piece & PROMOTED_MASK) != 0) {
-			pieceWithoutMask = piece & NOT_PROMOTED_MASK;
-			positionState.pieceCounts[color][PAWN] = positionState.pieceCounts[color][PAWN] - 1;
+			piece &= NOT_PROMOTED_MASK;
+			// When a promoted piece is captured it is a pawn.
+			// So this is rolling back a promoted piece capture.
+			// Decrease the pawn to add it back to the piece counts.
+			// Then increase the piece count of the piece captured.
+			positionState.pieceCounts[color][PAWN]--;
 		}
-		positionState.pieceCounts[color][pieceWithoutMask] = positionState.pieceCounts[color][pieceWithoutMask] + 1;
+		positionState.pieceCounts[color][piece]++;
 	}
 
 	/**
@@ -1294,7 +1390,7 @@ public class Game implements GameConstants {
 
 		if (move.getColor() == WHITE) {
 			kingFromBB = E1;
-			if (move.getMoveCharacteristic() == Move.KINGSIDE_CASTLING_CHARACTERISTIC) {
+			if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
 				kingToBB = G1;
 				rookFromBB = H1;
 				rookToBB = F1;
@@ -1307,7 +1403,7 @@ public class Game implements GameConstants {
 			}
 		} else {
 			kingFromBB = E8;
-			if (move.getMoveCharacteristic() == Move.KINGSIDE_CASTLING_CHARACTERISTIC) {
+			if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
 				kingToBB = G8;
 				rookFromBB = H8;
 				rookToBB = F8;
@@ -1547,16 +1643,14 @@ public class Game implements GameConstants {
 			setPiece(move.getFrom(), EMPTY);
 
 			// capture is handled in forceMove.
-			setPieceCount(getColorToMove(), PAWN, getPieceCount(
-					getColorToMove(), PAWN) - 1);
-			setPieceCount(
-					getColorToMove(),
-					move.getPiecePromotedTo(),
-					getPieceCount(getColorToMove(), move.getPiecePromotedTo()) + 1);
+			// promoted piece never has a promote mask only captures do.
+			// Promotes do not effect drop pieces.
+			decrementPieceCount(getColorToMove(), PAWN);
+			incrementPieceCount(getColorToMove(), move.getPiecePromotedTo());
 		} else {
 			xor(move.getColor(), move.getPiece(), fromToBB);
 
-			setPiece(move.getTo(), move.getPiece());
+			setPiece(move.getTo(), move.getPieceWithPromoteMask());
 			setPiece(move.getFrom(), EMPTY);
 		}
 
@@ -1619,14 +1713,12 @@ public class Game implements GameConstants {
 					+ shortAlgebraic);
 		}
 
-		Move[] pseudoLegals = getPseudoLegalMoves().asArray();
-
 		int candidatePromotedPiece = EMPTY;
 
 		Move result = null;
 
 		if (validations.isDropMoveStrict()) {
-			for (Move move : pseudoLegals) {
+			for (Move move : getPseudoLegalMoves().asArray()) {
 				if ((move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) != 0
 						&& move.getPiece() == SanUtil.sanToPiece(validations
 								.getStrictSan().charAt(0))
@@ -1639,207 +1731,243 @@ public class Game implements GameConstants {
 					break;
 				}
 			}
-		} else if (validations.isCastleKSideStrict()) {
-			for (Move move : pseudoLegals) {
-				if ((move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
-					result = move;
-					break;
-				}
-			}
-		} else if (validations.isCastleQSideStrict()) {
-			for (Move move : pseudoLegals) {
-				if ((move.getMoveCharacteristic() & Move.QUEENSIDE_CASTLING_CHARACTERISTIC) != 0) {
-					result = move;
-					break;
-				}
-			}
 		} else {
-			MoveList matches = new MoveList(10);
-			if (validations.isPromotion()) {
-				char pieceChar = validations.getStrictSan().charAt(
-						validations.getStrictSan().length() - 1);
-				candidatePromotedPiece = SanUtil.sanToPiece(pieceChar);
+			PriorityMoveList moveList = getPseudoLegalMoves();
+			// Lots of removing in droppable games will occur here.
+			// If this code is ever used for a ZH or BUG bot you might want to
+			// rewrite this.
+			for (int i = 0; i < moveList.getHighPrioritySize(); i++) {
+				if (moveList.getHighPriority(i).isDrop()) {
+					moveList.removeHighPriority(i);
+					i--;
+				}
 			}
+			for (int i = 0; i < moveList.getLowPrioritySize(); i++) {
+				if (moveList.getLowPriority(i).isDrop()) {
+					moveList.removeLowPriority(i);
+					i--;
+				}
+			}
+			Move[] pseudoLegals = moveList.asArray();
 
-			if (validations.isPawnMove()) {
-				int candidatePieceMoving = PAWN;
-				if (validations.isEpOrAmbigPxStrict()
-						|| validations.isEpOrAmbigPxPromotionStrict()) {
+			if (validations.isCastleKSideStrict()) {
 
-					int end = GameUtils.rankFileToSquare(
-							GameConstants.RANK_FROM_SAN.indexOf(validations
-									.getStrictSan().charAt(2)),
-							GameConstants.FILE_FROM_SAN.indexOf(validations
-									.getStrictSan().charAt(1)));
-
-					int startRank = GameUtils.getRank(end)
-							+ (positionState.colorToMove == WHITE ? -1 : +1);
-
-					if (startRank > 7 || startRank < 0) {
-						throw new IllegalArgumentException(
-								"Invalid short algebraic: " + shortAlgebraic);
+				for (Move move : pseudoLegals) {
+					if ((move.getMoveCharacteristic() & Move.SHORT_CASTLING_CHARACTERISTIC) != 0) {
+						result = move;
+						break;
 					}
-
-					int start = GameUtils.rankFileToSquare(startRank,
-							GameConstants.FILE_FROM_SAN.indexOf(validations
-									.getStrictSan().charAt(0)));
-
-					for (Move move : pseudoLegals) {
-						if (move.getPiece() == candidatePieceMoving
-								&& move.isCapture()
-								&& move.getFrom() == start
-								&& move.getTo() == end
-								&& move.getPiecePromotedTo() == candidatePromotedPiece) {
-							matches.append(move);
-						}
+				}
+			} else if (validations.isCastleQSideStrict()) {
+				for (Move move : pseudoLegals) {
+					if ((move.getMoveCharacteristic() & Move.LONG_CASTLING_CHARACTERISTIC) != 0) {
+						result = move;
+						break;
 					}
-				} else {
-					// handle captures
-					if (validations.isPxStrict()
-							|| validations.isPxPPromotionStrict()) {
-						int startFile = GameConstants.FILE_FROM_SAN.indexOf(0);
-						int endFile = GameConstants.FILE_FROM_SAN.indexOf(1);
+				}
+			} else {
+				MoveList matches = new MoveList(10);
+				if (validations.isPromotion()) {
+					char pieceChar = validations.getStrictSan().charAt(
+							validations.getStrictSan().length() - 1);
+					candidatePromotedPiece = SanUtil.sanToPiece(pieceChar);
+				}
 
-						for (Move move : pseudoLegals) {
-							if (move.getPiece() == candidatePieceMoving
-									&& GameUtils.getFile(move.getFrom()) == startFile
-									&& GameUtils.getFile(move.getTo()) == endFile
-									&& move.isCapture()
-									&& move.getPiecePromotedTo() == candidatePromotedPiece) {
-								matches.append(move);
-							}
-						}
-					}
-					// handle non captures.
-					else {
+				if (validations.isPawnMove()) {
+					int candidatePieceMoving = PAWN;
+					if (validations.isEpOrAmbigPxStrict()
+							|| validations.isEpOrAmbigPxPromotionStrict()) {
+
 						int end = GameUtils.rankFileToSquare(
 								GameConstants.RANK_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(1)),
+										.getStrictSan().charAt(2)),
+								GameConstants.FILE_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(1)));
+
+						int startRank = GameUtils.getRank(end)
+								+ (positionState.colorToMove == WHITE ? -1 : +1);
+
+						if (startRank > 7 || startRank < 0) {
+							throw new IllegalArgumentException(
+									"Invalid short algebraic: "
+											+ shortAlgebraic);
+						}
+
+						int start = GameUtils.rankFileToSquare(startRank,
 								GameConstants.FILE_FROM_SAN.indexOf(validations
 										.getStrictSan().charAt(0)));
 
 						for (Move move : pseudoLegals) {
 							if (move.getPiece() == candidatePieceMoving
-									&& !move.isCapture()
+									&& move.isCapture()
+									&& move.getFrom() == start
 									&& move.getTo() == end
 									&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+								matches.append(move);
+							}
+						}
+					} else {
+						// handle captures
+						if (validations.isPxStrict()
+								|| validations.isPxPPromotionStrict()) {
+							int startFile = GameConstants.FILE_FROM_SAN
+									.indexOf(validations.getStrictSan().charAt(
+											0));
+							int endFile = GameConstants.FILE_FROM_SAN
+									.indexOf(validations.getStrictSan().charAt(
+											1));
+
+							for (Move move : pseudoLegals) {
+								if (move.getPiece() == candidatePieceMoving
+										&& GameUtils.getFile(move.getFrom()) == startFile
+										&& GameUtils.getFile(move.getTo()) == endFile
+										&& move.isCapture()
+										&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+									matches.append(move);
+								}
+							}
+						}
+						// handle non captures.
+						else {
+							int end = GameUtils.rankFileToSquare(
+									GameConstants.RANK_FROM_SAN
+											.indexOf(validations.getStrictSan()
+													.charAt(1)),
+									GameConstants.FILE_FROM_SAN
+											.indexOf(validations.getStrictSan()
+													.charAt(0)));
+
+							for (Move move : pseudoLegals) {
+								if (move.getPiece() == candidatePieceMoving
+										&& !move.isCapture()
+										&& move.getTo() == end
+										&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+									matches.append(move);
+								}
+							}
+						}
+					}
+
+				} else {
+					int candidatePieceMoving = SanUtil.sanToPiece(validations
+							.getStrictSan().charAt(0));
+					int end = GameUtils.rankFileToSquare(
+							GameConstants.RANK_FROM_SAN
+									.indexOf(validations.getStrictSan()
+											.charAt(
+													validations.getStrictSan()
+															.length() - 1)),
+							GameConstants.FILE_FROM_SAN
+									.indexOf(validations.getStrictSan()
+											.charAt(
+													validations.getStrictSan()
+															.length() - 2)));
+
+					if (validations.isDisambigPieceRankStrict()) {
+						int startRank = RANK_FROM_SAN.indexOf(validations
+								.getStrictSan().charAt(1));
+						for (Move move : pseudoLegals) {
+							if (move.getPiece() == candidatePieceMoving
+									&& move.getTo() == end
+									&& GameUtils.getRank(move.getFrom()) == startRank) {
+								matches.append(move);
+							}
+						}
+					} else if (validations.isDisambigPieceFileStrict()) {
+						int startFile = FILE_FROM_SAN.indexOf(validations
+								.getStrictSan().charAt(1));
+						for (Move move : pseudoLegals) {
+							if (move.getPiece() == candidatePieceMoving
+									&& move.getTo() == end
+									&& GameUtils.getFile(move.getFrom()) == startFile) {
+								matches.append(move);
+							}
+						}
+					} else if (validations.isDisambigPieceRankFileStrict()) {
+						int startSquare = GameUtils.rankFileToSquare(
+								GameConstants.RANK_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(2)),
+								GameConstants.FILE_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(1)));
+						FILE_FROM_SAN.indexOf(validations.getStrictSan()
+								.charAt(1));
+						for (Move move : pseudoLegals) {
+							if (move.getPiece() == candidatePieceMoving
+									&& move.getTo() == end
+									&& move.getFrom() == startSquare) {
+								matches.append(move);
+							}
+						}
+					} else {
+						for (Move move : pseudoLegals) {
+							if (move.getPiece() == candidatePieceMoving
+									&& move.getTo() == end) {
 								matches.append(move);
 							}
 						}
 					}
 				}
 
-			} else {
-				int candidatePieceMoving = SanUtil.sanToPiece(validations
-						.getStrictSan().charAt(0));
-				int end = GameUtils.rankFileToSquare(
-						GameConstants.RANK_FROM_SAN
-								.indexOf(validations.getStrictSan()
-										.charAt(
-												validations.getStrictSan()
-														.length() - 1)),
-						GameConstants.FILE_FROM_SAN
-								.indexOf(validations.getStrictSan()
-										.charAt(
-												validations.getStrictSan()
-														.length() - 2)));
-
-				if (validations.isDisambigPieceRankStrict()) {
-					int startRank = RANK_FROM_SAN.indexOf(validations
-							.getStrictSan().charAt(1));
-					for (Move move : pseudoLegals) {
-						if (move.getPiece() == candidatePieceMoving
-								&& move.getTo() == end
-								&& GameUtils.getRank(move.getFrom()) == startRank) {
-							matches.append(move);
-						}
-					}
-				} else if (validations.isDisambigPieceFileStrict()) {
-					int startFile = FILE_FROM_SAN.indexOf(validations
-							.getStrictSan().charAt(1));
-					for (Move move : pseudoLegals) {
-						if (move.getPiece() == candidatePieceMoving
-								&& move.getTo() == end
-								&& GameUtils.getFile(move.getFrom()) == startFile) {
-							matches.append(move);
-						}
-					}
-				} else if (validations.isDisambigPieceRankFileStrict()) {
-					int startSquare = GameUtils.rankFileToSquare(
-							GameConstants.RANK_FROM_SAN.indexOf(validations
-									.getStrictSan().charAt(2)),
-							GameConstants.FILE_FROM_SAN.indexOf(validations
-									.getStrictSan().charAt(1)));
-					FILE_FROM_SAN.indexOf(validations.getStrictSan().charAt(1));
-					for (Move move : pseudoLegals) {
-						if (move.getPiece() == candidatePieceMoving
-								&& move.getTo() == end
-								&& move.getFrom() == startSquare) {
-							matches.append(move);
-						}
-					}
+				if (matches.getSize() == 0) {
+					throw new IllegalArgumentException("Invalid move "
+							+ shortAlgebraic + "\n" + toString());
+				} else if (matches.getSize() == 1) {
+					result = matches.get(0);
 				} else {
-					for (Move move : pseudoLegals) {
-						if (move.getPiece() == candidatePieceMoving
-								&& move.getTo() == end) {
-							matches.append(move);
-						}
-					}
-				}
-			}
+					// now do legality checking on whats left.
+					int kingSquare = GameUtils.bitscanForward(getPieceBB(
+							positionState.colorToMove, KING));
+					int cachedColorToMove = positionState.colorToMove;
+					int matchesCount = 0;
 
-			if (matches.getSize() == 0) {
-				throw new IllegalArgumentException("Invalid move "
-						+ shortAlgebraic + "\n" + toString());
-			} else if (matches.getSize() == 1) {
-				result = matches.get(0);
-			} else {
-				// now do legality checking on whats left.
-				int kingSquare = GameUtils.bitscanForward(getPieceBB(
-						positionState.colorToMove, KING));
-				int cachedColorToMove = positionState.colorToMove;
-				int matchesCount = 0;
-
-				if (kingSquare != EMPTY_SQUARE) { // Now trim illegals
-					for (int i = 0; i < matches.getSize(); i++) {
-						Move current = matches.get(i);
-						synchronized (this) {
-							try {
-								forceMove(current);
-								if (current.getPiece() == KING) {
-									int newKingCoordinates = GameUtils
-											.bitscanForward(getPieceBB(
-													cachedColorToMove, KING));
-									if (!isInCheck(cachedColorToMove, GameUtils
-											.getBitboard(newKingCoordinates))) {
-										result = current;
-										matchesCount++;
+					if (kingSquare != EMPTY_SQUARE) { // Now trim illegals
+						for (int i = 0; i < matches.getSize(); i++) {
+							Move current = matches.get(i);
+							synchronized (this) {
+								try {
+									forceMove(current);
+									if (current.getPiece() == KING) {
+										int newKingCoordinates = GameUtils
+												.bitscanForward(getPieceBB(
+														cachedColorToMove, KING));
+										if (!isInCheck(
+												cachedColorToMove,
+												GameUtils
+														.getBitboard(newKingCoordinates))) {
+											result = current;
+											matchesCount++;
+										} else {
+										}
 									} else {
+										if (!isInCheck(cachedColorToMove,
+												getBitboard(kingSquare))) {
+											result = current;
+											matchesCount++;
+										} else {
+										}
 									}
-								} else {
-									if (!isInCheck(cachedColorToMove,
-											getBitboard(kingSquare))) {
-										result = current;
-										matchesCount++;
-									} else {
-									}
+									rollback();
+								} catch (IllegalArgumentException ie) {
 								}
-								rollback();
-							} catch (IllegalArgumentException ie) {
 							}
 						}
 					}
-				}
 
-				if (matchesCount == 0) {
-					throw new IllegalArgumentException("Invalid move "
-							+ shortAlgebraic + "\n" + toString());
-				} else if (matchesCount > 1) {
-					throw new IllegalArgumentException("Ambiguous move "
-							+ shortAlgebraic + "\n" + toString());
+					if (matchesCount == 0) {
+						throw new IllegalArgumentException("Invalid move "
+								+ shortAlgebraic + "\n" + toString());
+					} else if (matchesCount > 1) {
+						throw new IllegalArgumentException("Ambiguous move "
+								+ shortAlgebraic + "\n" + toString());
 
+					}
 				}
 			}
+		}
+
+		if (result == null) {
+			throw new IllegalArgumentException("Illegal move " + shortAlgebraic
+					+ "\n " + toString());
 		}
 
 		result.setSan(shortAlgebraic);
@@ -1864,6 +1992,26 @@ public class Game implements GameConstants {
 		return true;
 	}
 
+	/**
+	 * Copys the information from this game into the passed in game.
+	 */
+	public void overwrite(Game gameToOverwrite, boolean ignoreHashes) {
+		gameToOverwrite.id = id;
+		gameToOverwrite.state = state;
+		gameToOverwrite.type = type;
+		gameToOverwrite.initialWhiteTimeMillis = initialWhiteTimeMillis;
+		gameToOverwrite.initialBlackTimeMillis = initialBlackTimeMillis;
+		gameToOverwrite.initialWhiteIncMillis = initialWhiteIncMillis;
+		gameToOverwrite.initialBlackIncMillis = initialBlackIncMillis;
+		gameToOverwrite.whiteRemainingTimeMillis = whiteRemainingTimeMillis;
+		gameToOverwrite.blackRemainingTimeMillis = blackRemainingTimeMillis;
+		gameToOverwrite.whiteLagMillis = whiteLagMillis;
+		gameToOverwrite.blackLagMillis = blackLagMillis;
+		gameToOverwrite.isSettingMoveSan = isSettingMoveSan;
+		gameToOverwrite.pgnHeaderMap = new HashMap<String, String>(pgnHeaderMap);
+		gameToOverwrite.positionState = positionState.deepCopy(ignoreHashes);
+	}
+
 	public void removeHeader(String header) {
 		pgnHeaderMap.remove(header);
 	}
@@ -1880,8 +2028,8 @@ public class Game implements GameConstants {
 		case Move.EN_PASSANT_CHARACTERISTIC:
 			rollbackEpMove(move);
 			break;
-		case Move.KINGSIDE_CASTLING_CHARACTERISTIC:
-		case Move.QUEENSIDE_CASTLING_CHARACTERISTIC:
+		case Move.SHORT_CASTLING_CHARACTERISTIC:
+		case Move.LONG_CASTLING_CHARACTERISTIC:
 			rollbackCastlingMove(move);
 			break;
 		case Move.DROP_CHARACTERISTIC:
@@ -1892,12 +2040,18 @@ public class Game implements GameConstants {
 			break;
 		}
 
+		int oppositeToMove = getOppositeColor(getColorToMove());
+
 		if (move.isCapture()) {
 			incrementPieceCount(getColorToMove(), move
 					.getCaptureWithPromoteMask());
+			decrementDropCount(oppositeToMove, move.getCaptureWithPromoteMask());
+		} else if (move.isDrop()) {
+			decrementPieceCount(oppositeToMove, move.getPiece());
+			incrementDropCount(oppositeToMove, move.getPiece());
 		}
 
-		setColorToMove(getOppositeColor(getColorToMove()));
+		setColorToMove(oppositeToMove);
 		setNotColorToMoveBB(~getColorBB(getColorToMove()));
 		setHalfMoveCount(getHalfMoveCount() - 1);
 
@@ -1912,7 +2066,7 @@ public class Game implements GameConstants {
 
 		if (move.getColor() == WHITE) {
 			kingFromBB = E1;
-			if (move.getMoveCharacteristic() == Move.KINGSIDE_CASTLING_CHARACTERISTIC) {
+			if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
 				kingToBB = G1;
 				rookFromBB = H1;
 				rookToBB = F1;
@@ -1926,7 +2080,7 @@ public class Game implements GameConstants {
 			}
 		} else {
 			kingFromBB = E8;
-			if (move.getMoveCharacteristic() == Move.KINGSIDE_CASTLING_CHARACTERISTIC) {
+			if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
 				kingToBB = G8;
 				rookFromBB = H8;
 				rookToBB = F8;
@@ -2031,14 +2185,16 @@ public class Game implements GameConstants {
 					toBB);
 
 			// capture is handled in rollback.
+			// promoted pieces never have a promote mask.
+			// Promotions do not change drop counts.
 			incrementPieceCount(move.getColor(), PAWN);
 			decrementPieceCount(move.getColor(), move.getPiecePromotedTo());
 		} else {
 			xor(move.getColor(), move.getPiece(), fromToBB);
 		}
 
-		setPiece(move.getFrom(), move.getPiece());
-		setPiece(move.getTo(), move.getCapture());
+		setPiece(move.getFrom(), move.getPieceWithPromoteMask());
+		setPiece(move.getTo(), move.getCaptureWithPromoteMask());
 
 		setEpSquareFromPreviousMove();
 	}
@@ -2140,7 +2296,7 @@ public class Game implements GameConstants {
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
 		}
-		positionState.pieceCounts[color][piece] = count;
+		positionState.dropCounts[color][piece] = count;
 	}
 
 	/**
@@ -2376,9 +2532,9 @@ public class Game implements GameConstants {
 			if (move.isDrop()) {
 				move.setSan(PIECE_TO_SAN.charAt(move.getPiece()) + "@"
 						+ GameUtils.getSan(move.getTo()));
-			} else if ((move.getMoveCharacteristic() & Move.KINGSIDE_CASTLING_CHARACTERISTIC) != 0) {
+			} else if (move.isCastleShort()) {
 				shortAlgebraic = "O-O";
-			} else if ((move.getMoveCharacteristic() & Move.QUEENSIDE_CASTLING_CHARACTERISTIC) != 0) {
+			} else if (move.isCastleLong()) {
 				shortAlgebraic = "O-O-O";
 			} else if (move.getPiece() == PAWN
 					&& (move.getMoveCharacteristic() & Move.EN_PASSANT_CHARACTERISTIC) != 0) // e.p.
@@ -2590,7 +2746,7 @@ public class Game implements GameConstants {
 	}
 
 	public void setWhiteRemainingeTimeMillis(long whiteTimeMillis) {
-		whiteRemainingTimeMilis = whiteTimeMillis;
+		whiteRemainingTimeMillis = whiteTimeMillis;
 	}
 
 	public void setZobristGameHash(long hash) {
@@ -2698,18 +2854,7 @@ public class Game implements GameConstants {
 				break;
 
 			case 6:
-				result.append("Piece counts [" + getPieceCount(WHITE, PAWN)
-						+ " " + getPieceCount(WHITE, KNIGHT) + " "
-						+ getPieceCount(WHITE, BISHOP) + " "
-						+ getPieceCount(WHITE, ROOK) + " "
-						+ getPieceCount(WHITE, QUEEN) + " "
-						+ getPieceCount(WHITE, KING) + "]["
-						+ getPieceCount(BLACK, PAWN) + " "
-						+ getPieceCount(BLACK, KNIGHT) + " "
-						+ getPieceCount(BLACK, BISHOP) + " "
-						+ getPieceCount(BLACK, ROOK) + " "
-						+ getPieceCount(BLACK, QUEEN) + " "
-						+ getPieceCount(BLACK, KING) + "]");
+				result.append(getPieceCountsString());
 				break;
 			case 5:
 				result.append("Moves: " + positionState.halfMoveCount + " EP: "
@@ -2721,7 +2866,7 @@ public class Game implements GameConstants {
 				break;
 			case 3:
 				result.append("State: " + state + " Type=" + type + " Result="
-						+ result);
+						+ this.result);
 				break;
 			case 2:
 				result.append("Event: " + getEvent() + " Site=" + getSite()
@@ -2730,7 +2875,7 @@ public class Game implements GameConstants {
 			case 1:
 				result.append("WhiteName: " + getWhiteName() + " BlackName="
 						+ getBlackName() + " WhiteTime="
-						+ whiteRemainingTimeMilis + " whiteLag="
+						+ whiteRemainingTimeMillis + " whiteLag="
 						+ whiteLagMillis + " blackRemainingTImeMillis = "
 						+ blackRemainingTimeMillis + " blackLag="
 						+ blackLagMillis);
@@ -2754,6 +2899,14 @@ public class Game implements GameConstants {
 				true));
 		result.append(WordUtils.wrap("Movelist=" + positionState.moves, 80,
 				"\n", true));
+
+		List<String> squaresWithPromoteMasks = new LinkedList<String>();
+		for (int i = 0; i < positionState.board.length; i++) {
+			if ((getPieceWithPromoteMask(i) & PROMOTED_MASK) != 0) {
+				squaresWithPromoteMasks.add(getSan(i));
+			}
+		}
+		result.append("Squares with promote masks: " + squaresWithPromoteMasks);
 
 		return result.toString();
 	}

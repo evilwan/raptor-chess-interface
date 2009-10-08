@@ -13,6 +13,7 @@
  */
 package raptor;
 
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
@@ -57,16 +59,20 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.connector.Connector;
 import raptor.game.Game;
+import raptor.game.pgn.ListMaintainingPgnParserListener;
+import raptor.game.pgn.StreamingPgnParser;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtil;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
+import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardWindowItem;
+import raptor.swt.chess.PgnParseResultsWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 
 /**
@@ -697,25 +703,75 @@ public class RaptorWindow extends ApplicationWindow {
 	@Override
 	protected MenuManager createMenuManager() {
 		MenuManager menuBar = new MenuManager("Main");
-		MenuManager raptorMenu = new MenuManager("Raptor");
+		MenuManager fileMenu = new MenuManager("File");
 		MenuManager helpMenu = new MenuManager("&Help");
 
-		raptorMenu.add(new Action("Properties") {
+		fileMenu.add(new Action("View PGN") {
+			@Override
+			public void run() {
+				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
+				fd.setText("Select the pgn file to view");
+				fd.setFilterPath("");
+				String[] filterExt = { "*.pgn", "*.bpgn", "*.*" };
+				fd.setFilterExtensions(filterExt);
+				final String selected = fd.open();
+				if (!StringUtils.isBlank(selected)) {
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							try {
+								// TODO Move this into a progress dialog.
+								StreamingPgnParser parser = new StreamingPgnParser(
+										new FileReader(selected),
+										Integer.MAX_VALUE);
+								ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+								parser.addPgnParserListener(listener);
+
+								long startTime = System.currentTimeMillis();
+								parser.parse();
+
+								if (LOG.isDebugEnabled()) {
+									LOG
+											.debug("Parsed "
+													+ listener.getGames()
+															.size()
+													+ " games "
+													+ " in "
+													+ (System
+															.currentTimeMillis() - startTime)
+													+ "ms");
+								}
+								PgnParseResultsWindowItem windowItem = new PgnParseResultsWindowItem(
+										selected, listener.getErrors(),
+										listener.getGames());
+								Raptor.getInstance().getRaptorWindow()
+										.addRaptorWindowItem(windowItem);
+							} catch (Throwable t) {
+								LOG.error("Error parsing pgn file", t);
+								Raptor.getInstance().onError(
+										"Error parsing pgn file: " + selected,
+										t);
+							}
+						}
+					});
+				}
+			}
+		});
+		fileMenu.add(new Separator());
+		fileMenu.add(new Action("Properties") {
 			@Override
 			public void run() {
 				PreferenceUtil.launchPreferenceDialog();
 			}
 		});
-
-		raptorMenu.add(new Separator());
-		raptorMenu.add(new Action("Mini Profiler") {
+		fileMenu.add(new Separator());
+		fileMenu.add(new Action("Mini Profiler") {
 			@Override
 			public void run() {
 				ProfileDialog dialog = new ProfileDialog();
 				dialog.open();
 			}
 		});
-		raptorMenu.add(new Action("Create Test Board") {
+		fileMenu.add(new Action("Create Test Board") {
 			@Override
 			public void run() {
 				Game game = GameUtils.createStartingPosition(Game.Type.CLASSIC);
@@ -740,7 +796,34 @@ public class RaptorWindow extends ApplicationWindow {
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
 			}
 		});
-		menuBar.add(raptorMenu);
+		menuBar.add(fileMenu);
+		fileMenu.add(new Action("Create Test Crazyhouse Board") {
+			@Override
+			public void run() {
+				Game game = GameUtils
+						.createStartingPosition(Game.Type.CRAZYHOUSE);
+				game.setInitialWhiteTimeMillis(180000);
+				game.setInitialBlackTimeMillis(180000);
+				game.setInitialWhiteIncMillis(0);
+				game.setInitialBlackIncMillis(0);
+				game.setWhiteName("White");
+				game.setWhiteRating("----");
+				game.setBlackName("Black");
+				game.setBlackRating("----");
+				game.setWhiteLagMillis(23465);
+				game.setBlackLagMillis(580347);
+				game.setWhiteRemainingeTimeMillis(153857);
+				game.setBlackRemainingTimeMillis(46728);
+				game.setEvent("blitz 3 0 rated");
+				game.setRound("?");
+				game.setDate(System.currentTimeMillis());
+				game.setSite("raptortest");
+				game.setSettingMoveSan(true);
+				InactiveController controller = new InactiveController(game);
+				addRaptorWindowItem(new ChessBoardWindowItem(controller));
+			}
+		});
+		menuBar.add(fileMenu);
 
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();
 

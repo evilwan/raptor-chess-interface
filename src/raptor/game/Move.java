@@ -25,8 +25,8 @@ import raptor.game.pgn.SublineNode;
 import raptor.game.util.GameUtils;
 
 public class Move implements GameConstants {
-	public static final int KINGSIDE_CASTLING_CHARACTERISTIC = 1;
-	public static final int QUEENSIDE_CASTLING_CHARACTERISTIC = 2;
+	public static final int SHORT_CASTLING_CHARACTERISTIC = 1;
+	public static final int LONG_CASTLING_CHARACTERISTIC = 2;
 	public static final int DOUBLE_PAWN_PUSH_CHARACTERISTIC = 4;
 	public static final int PROMOTION_CHARACTERISTIC = 8;
 	public static final int EN_PASSANT_CHARACTERISTIC = 16;
@@ -36,25 +36,25 @@ public class Move implements GameConstants {
 	// need for the extra space.
 	protected byte from = EMPTY_SQUARE;
 	protected byte to = EMPTY_SQUARE;
-	protected byte piece;
-	protected byte capture;
-	protected byte piecePromotedTo;
-	protected byte color;
+	protected byte piece = EMPTY;
+	protected byte capture = EMPTY;
+	protected byte piecePromotedTo = EMPTY;
+	protected byte color = 0;
 	protected byte epSquare = EMPTY_SQUARE;
-	protected byte castlingType;
-	protected byte moveCharacteristic;
-	protected byte lastCastleState;
-	protected byte previous50MoveCount;
+	protected byte castlingType = CASTLE_NONE;
+	protected byte moveCharacteristic = 0;
+	protected byte lastCastleState = CASTLE_NONE;
+	protected byte previous50MoveCount = 0;
 
 	/**
 	 * May or may not be used.
 	 */
-	protected int fullMoveCount;
+	protected int fullMoveCount = 0;
 
 	/**
 	 * May or may not be used.
 	 */
-	protected int halfMoveCount;
+	protected int halfMoveCount = 0;
 
 	/**
 	 * May or may not be used. It is obviously not suitable to use this for a
@@ -68,18 +68,19 @@ public class Move implements GameConstants {
 	protected String san;
 
 	/**
-	 * Constructor for drop moves.
+	 * Constructor for drop moves. From square will be set to the drop square
+	 * for the piece.
 	 */
 	public Move(int to, int piece, int color) {
 		this.to = (byte) to;
 		this.piece = (byte) piece;
+		from = (byte) GameUtils.getDropSquareFromColoredPiece(GameUtils
+				.getColoredPiece(piece, color));
 		moveCharacteristic = DROP_CHARACTERISTIC;
 		this.color = (byte) color;
 	}
 
 	public Move(int from, int to, int piece, int color, int capture) {
-		super();
-
 		this.piece = (byte) piece;
 		this.color = (byte) color;
 		this.capture = (byte) capture;
@@ -89,7 +90,6 @@ public class Move implements GameConstants {
 
 	public Move(int from, int to, int piece, int color, int capture,
 			int moveCharacteristic) {
-		super();
 		this.piece = (byte) piece;
 		this.color = (byte) color;
 		this.capture = (byte) capture;
@@ -100,7 +100,6 @@ public class Move implements GameConstants {
 
 	public Move(int from, int to, int piece, int color, int capture,
 			int piecePromotedTo, int epSquare, int moveCharacteristic) {
-		super();
 		this.piece = (byte) piece;
 		this.color = (byte) color;
 		this.capture = (byte) capture;
@@ -207,15 +206,12 @@ public class Move implements GameConstants {
 	}
 
 	public String getLan() {
-		return isCastleKSide() ? "O-O" : isCastleQSide() ? "O-O-O"
+		return isCastleShort() ? "O-O" : isCastleLong() ? "O-O-O"
 				: isDrop() ? COLOR_PIECE_TO_CHAR[color].charAt(getPiece())
-						+ "@" + SQUARE_TO_FILE_SAN.charAt(getTo())
-						+ SQUARE_TO_RANK_SAN.charAt(getTo()) : ""
-						+ SQUARE_TO_FILE_SAN.charAt(getFrom())
-						+ SQUARE_TO_RANK_SAN.charAt(getFrom())
+						+ "@" + GameUtils.getSan(getTo()) : ""
+						+ GameUtils.getSan(getFrom())
 						+ "-"
-						+ SQUARE_TO_FILE_SAN.charAt(getTo())
-						+ SQUARE_TO_RANK_SAN.charAt(getTo())
+						+ GameUtils.getSan(getTo())
 						+ (isPromotion() ? "="
 								+ PIECE_TO_SAN.charAt(piecePromotedTo
 										& NOT_PROMOTED_MASK) : "");
@@ -259,11 +255,20 @@ public class Move implements GameConstants {
 	}
 
 	public int getPiece() {
-		return piece;
+		return piece & NOT_PROMOTED_MASK;
 	}
 
 	public int getPiecePromotedTo() {
 		return piecePromotedTo;
+	}
+
+	/**
+	 * Returns the piece with its promotion mask.
+	 * 
+	 * @return
+	 */
+	public int getPieceWithPromoteMask() {
+		return piece;
 	}
 
 	public int getPrevious50MoveCount() {
@@ -341,12 +346,12 @@ public class Move implements GameConstants {
 		return getCapture() != GameConstants.EMPTY;
 	}
 
-	public boolean isCastleKSide() {
-		return (moveCharacteristic & KINGSIDE_CASTLING_CHARACTERISTIC) != 0;
+	public boolean isCastleLong() {
+		return (moveCharacteristic & LONG_CASTLING_CHARACTERISTIC) != 0;
 	}
 
-	public boolean isCastleQSide() {
-		return (moveCharacteristic & QUEENSIDE_CASTLING_CHARACTERISTIC) != 0;
+	public boolean isCastleShort() {
+		return (moveCharacteristic & SHORT_CASTLING_CHARACTERISTIC) != 0;
 	}
 
 	public boolean isDrop() {
