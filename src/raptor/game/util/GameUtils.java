@@ -51,11 +51,15 @@ public class GameUtils implements GameConstants {
 		initKnightAttacks();
 	}
 
+	/**
+	 * Clears the next one bit in the bitboard.
+	 */
 	public static final long bitscanClear(long bitboard) {
 		return bitboard & bitboard - 1;
 	}
 
 	/**
+	 * Returns the next 1 bit in the bitboard.
 	 * Returns 0 if bitboard is 0.
 	 */
 	public static final int bitscanForward(long bitboard) {
