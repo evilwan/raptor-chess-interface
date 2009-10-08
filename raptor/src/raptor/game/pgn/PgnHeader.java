@@ -23,7 +23,7 @@ public enum PgnHeader implements Serializable {
 	FEN("FEN"), // The fen for the initial position.
 	ICC_RESULT("ICCResult"), // Descriptive like Black resigns.
 	RESULT_DESCRIPTION("ResultDescription"), WHITE_ELO("WhiteElo"), // Whites
-																	// ELO
+	// ELO
 	BLACK_ELO("BlackElo"), // Blacks ELO
 	OPENING("Opening"), // A description of the opening: Sicilian
 	// dragon,Yugoslav attack,7...O-O

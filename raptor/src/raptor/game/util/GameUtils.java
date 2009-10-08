@@ -59,8 +59,7 @@ public class GameUtils implements GameConstants {
 	}
 
 	/**
-	 * Returns the next 1 bit in the bitboard.
-	 * Returns 0 if bitboard is 0.
+	 * Returns the next 1 bit in the bitboard. Returns 0 if bitboard is 0.
 	 */
 	public static final int bitscanForward(long bitboard) {
 		// Slower on intel

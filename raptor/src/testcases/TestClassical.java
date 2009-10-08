@@ -74,8 +74,6 @@ public class TestClassical implements GameConstants {
 	private static final String[] IN_CHECK_TESTS = new String[] {};// "8/8/6Kk/8/8/8/8 b - - 0 805",
 	// "8/8/6Kk/8/8/8/8 w - - 0 805" };
 
-
-
 	private static final String[] NOT_CHECKMATE_TESTS = new String[] { "k7/2K5/8/8/8/8/8/7R b - - 0 0" };
 
 	private static final String[] PROMOTION_TEST = { "k7/7P/2K5/8/8/8/8/8 w - - 0 0|h7-h8=R|a8-a7" };
@@ -188,14 +186,6 @@ public class TestClassical implements GameConstants {
 		return result;
 
 	}
-	
-	@Test
-	public void testDisambiguityFromCheck() throws Exception {
-		String fen = "5r2/3qp1kp/1p1p1rp1/p1pP4/P4P2/2Q5/1P4PP/4RR1K b  - - 1 49";
-		Game game = GameUtils.createFromFen(fen, Game.Type.CLASSIC);
-		game.setSettingMoveSan(true);
-		game.makeSanMove("Rf7");
-	}
 
 	@Test
 	public void testAmbigPawnCaptures() throws Exception {
@@ -289,6 +279,14 @@ public class TestClassical implements GameConstants {
 			assertOnlyLegals(CHECK_FEN_LEGAL_MOVES[i], game.getLegalMoves()
 					.asList());
 		}
+	}
+
+	@Test
+	public void testDisambiguityFromCheck() throws Exception {
+		String fen = "5r2/3qp1kp/1p1p1rp1/p1pP4/P4P2/2Q5/1P4PP/4RR1K b  - - 1 49";
+		Game game = GameUtils.createFromFen(fen, Game.Type.CLASSIC);
+		game.setSettingMoveSan(true);
+		game.makeSanMove("Rf7");
 	}
 
 	@Test

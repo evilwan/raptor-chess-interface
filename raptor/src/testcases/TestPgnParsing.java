@@ -1,9 +1,7 @@
 package testcases;
 
 import java.io.BufferedReader;
-import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.ObjectOutputStream;
 
 import org.junit.Test;
 
@@ -11,7 +9,6 @@ import raptor.game.Game;
 import raptor.game.Result;
 import raptor.game.pgn.ListMaintainingPgnParserListener;
 import raptor.game.pgn.Nag;
-import raptor.game.pgn.PgnParseOutput;
 import raptor.game.pgn.PgnParser;
 import raptor.game.pgn.PgnParserError;
 import raptor.game.pgn.PgnParserListener;
