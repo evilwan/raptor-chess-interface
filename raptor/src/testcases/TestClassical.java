@@ -188,6 +188,14 @@ public class TestClassical implements GameConstants {
 		return result;
 
 	}
+	
+	@Test
+	public void testDisambiguityFromCheck() throws Exception {
+		String fen = "5r2/3qp1kp/1p1p1rp1/p1pP4/P4P2/2Q5/1P4PP/4RR1K b  - - 1 49";
+		Game game = GameUtils.createFromFen(fen, Game.Type.CLASSIC);
+		game.setSettingMoveSan(true);
+		game.makeSanMove("Rf7");
+	}
 
 	@Test
 	public void testAmbigPawnCaptures() throws Exception {

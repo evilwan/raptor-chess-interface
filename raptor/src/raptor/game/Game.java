@@ -1800,7 +1800,7 @@ public class Game implements GameConstants {
 				int cachedColorToMove = positionState.colorToMove;
 				int matchesCount = 0;
 
-				if (kingSquare != 0) { // Now trim illegals
+				if (kingSquare != EMPTY_SQUARE) { // Now trim illegals
 					for (int i = 0; i < matches.getSize(); i++) {
 						Move current = matches.get(i);
 						synchronized (this) {
@@ -1814,12 +1814,14 @@ public class Game implements GameConstants {
 											.getBitboard(newKingCoordinates))) {
 										result = current;
 										matchesCount++;
+									} else {
 									}
 								} else {
 									if (!isInCheck(cachedColorToMove,
-											kingSquare)) {
+											getBitboard(kingSquare))) {
 										result = current;
 										matchesCount++;
+									} else {
 									}
 								}
 								rollback();
