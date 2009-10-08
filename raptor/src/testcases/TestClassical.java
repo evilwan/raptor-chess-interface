@@ -51,12 +51,12 @@ public class TestClassical implements GameConstants {
 
 	private static final String[] CHECK_FEN_TESTS = {
 			"rk6/8/8/8/8/8/8/K5NN w - - 0 50",
-			"rk6/8/8/8/8/8/7Q/K5NN w - - 0 50" };
+			"r1k5/8/8/8/8/8/7Q/K5NN w - - 0 50" };
 
 	private static final String[] CHECKMATE_FEN_TESTS = {
 			"k6R/8/K7/8/8/8/8/8 b - - 0 50", "3k4/3Q4/3K4/8/8/8/8/8 b - - 0 50" };
 
-	private static boolean DEBUG = false;
+	private static boolean DEBUG = true;
 
 	private static final String[][] EP_FEN_LEAGALS = {
 			{ "Ka2", "Kb1", "Kb2", "g6", "gxh6" },
@@ -74,10 +74,7 @@ public class TestClassical implements GameConstants {
 	private static final String[] IN_CHECK_TESTS = new String[] {};// "8/8/6Kk/8/8/8/8 b - - 0 805",
 	// "8/8/6Kk/8/8/8/8 w - - 0 805" };
 
-	private static final String[] LEGAL_MOVE_TESTS = new String[] {
-			"k7/7p/8/pP6/8/8/8/7K w - a6 0 0|b5xa6|b5-b6|h1-g1|h1-g2|h1-h2",
-			"1BR1QR2/1n2P2k/2Q1R2P/1P3B2/4P1N1/2K5/8/1N1r b - - 0 185",
-			"k7/7P/2K5/8/8/8/8/8 w - - 0 0|c6-b5|c6-c5|c6-d5|c6-d6|c6-c7|c6-d7|c6-b6|h7-h8=Q|h7-h8=N|h7-h8=B|h7-h8=R" };
+
 
 	private static final String[] NOT_CHECKMATE_TESTS = new String[] { "k7/2K5/8/8/8/8/8/7R b - - 0 0" };
 
@@ -269,9 +266,10 @@ public class TestClassical implements GameConstants {
 
 	@Test
 	public void testCheckPart2() throws Exception {
-		assertTrue("This position is not in check.", GameUtils
+		Game game = GameUtils
 				.createFromFen("8/3k3p/4p3/4npK1/2PN4/1P6/7P/8 w - f6 0 42",
-						Game.Type.CLASSIC).isInCheck());
+						Game.Type.CLASSIC);
+		assertTrue("This position is not in check.\n" + game, !game.isInCheck());
 	}
 
 	@Test
@@ -317,9 +315,12 @@ public class TestClassical implements GameConstants {
 						"rn5r/pb2k3/2p5/P3Pppp/1p1pPNPP/bB1P4/2PK4/RNn1Q2R w - f6 0 32",
 						Game.Type.CLASSIC);
 		game.setSettingMoveSan(true);
-		game.makeSanMove("exd6");
+		dumpGame("Before move exf6", game);
+		game.makeSanMove("exf6");
 
 		dumpGame("", game);
+
+		game.rollback();
 		boolean containsexf5 = false;
 		boolean containsexf = false;
 		List<Move> legalMoves = game.getLegalMoves().asList();
@@ -387,36 +388,6 @@ public class TestClassical implements GameConstants {
 	}
 
 	@Test
-	public void testLegalMoves() {
-		for (String test : LEGAL_MOVE_TESTS) {
-			String[] split = test.split("\\|");
-
-			Game game = createFromFen(split[0], Type.CLASSIC);
-
-			Move[] moves = game.getPseudoLegalMoves().asArray();
-			for (Move move : moves) {
-				if (game.move(move)) {
-					game.rollback();
-				}
-			}
-
-			if (split.length == 1) {
-				asserts(game.getLegalMoves().asArray().length == 0,
-						"Game contained legal mvoes in checkmate");
-			} else {
-
-				List<Move> expectedMoves = new ArrayList<Move>(split.length - 1);
-				for (int i = 1; i < split.length; i++) {
-					expectedMoves.add(game.makeLanMove(split[i]));
-					game.rollback();
-				}
-
-				asserts(expectedMoves, game.getLegalMoves().asList(), game);
-			}
-		}
-	}
-
-	@Test
 	public void testLegals() {
 		for (String test : PSEUDO_LEGAL_MOVE_TESTS) {
 			String[] split = test.split("\\|");
@@ -474,11 +445,11 @@ public class TestClassical implements GameConstants {
 		game.makeLanMove("d2-d4");
 		game.makeLanMove("g7-g5");
 		game.makeLanMove("f2-f4");
-		game.makeLanMove("g5xf4");
-		game.makeLanMove("c1xf4");
+		game.makeLanMove("g5-f4");
+		game.makeLanMove("c1-f4");
 		game.makeLanMove("c7-c6");
-		game.makeLanMove("f4xh6");
-		game.makeLanMove("h8xh6");
+		game.makeLanMove("f4-h6");
+		game.makeLanMove("h8-h6");
 		game.rollback();
 		game.rollback();
 		game.rollback();
@@ -502,7 +473,7 @@ public class TestClassical implements GameConstants {
 		Game game = createStartingPosition(Type.CLASSIC);
 		game.makeLanMove("e2-e4");
 		game.makeLanMove("d7-d5");
-		game.makeLanMove("e4xd5");
+		game.makeLanMove("e4-d5");
 		game.rollback();
 		game.rollback();
 		game.rollback();
@@ -517,7 +488,7 @@ public class TestClassical implements GameConstants {
 		game.makeLanMove("d7-d5");
 		game.makeLanMove("e4-e5");
 		game.makeLanMove("f7-f5");
-		game.makeLanMove("e5xf6");
+		game.makeLanMove("e5-f6");
 		game.rollback();
 		game.rollback();
 		game.rollback();
@@ -533,7 +504,7 @@ public class TestClassical implements GameConstants {
 		game.makeLanMove("h7-h6");
 		game.makeLanMove("e4-e5");
 		game.makeLanMove("d7-d5");
-		game.makeLanMove("e5xd6");
+		game.makeLanMove("e5-d6");
 		game.rollback();
 		game.rollback();
 		game.rollback();
@@ -550,7 +521,7 @@ public class TestClassical implements GameConstants {
 		game.makeLanMove("h3-h4");
 		game.makeLanMove("d5-d4");
 		game.makeLanMove("e2-e4");
-		game.makeLanMove("d4xe3");
+		game.makeLanMove("d4-e3");
 		game.rollback();
 		game.rollback();
 		game.rollback();
@@ -568,7 +539,7 @@ public class TestClassical implements GameConstants {
 		game.makeLanMove("h3-h4");
 		game.makeLanMove("d5-d4");
 		game.makeLanMove("c2-c4");
-		game.makeLanMove("d4xc3");
+		game.makeLanMove("d4-c3");
 		game.rollback();
 		game.rollback();
 		game.rollback();
@@ -600,29 +571,29 @@ public class TestClassical implements GameConstants {
 		game.makeLanMove("e2-e4");
 		game.makeLanMove("g8-f6");
 		game.makeLanMove("d2-d4");
-		game.makeLanMove("f6xe4");
+		game.makeLanMove("f6-e4");
 		asserts(game.getPieceCount(WHITE, PAWN) == 7, "Not 7 white pawns\n"
 				+ game);
 		game.makeLanMove("d4-d5");
 		game.makeLanMove("e4-c3");
 		game.makeLanMove("d5-d6");
-		game.makeLanMove("c3xb1");
-		game.makeLanMove("a1xb1");
+		game.makeLanMove("c3-b1");
+		game.makeLanMove("a1-b1");
 		asserts(game.getPieceCount(WHITE, KNIGHT) == 1, "Not 1 white knight\n"
 				+ game);
 		asserts(game.getPieceCount(BLACK, KNIGHT) == 1, "Not 1 black knight\n"
 				+ game);
 		game.makeLanMove("a7-a6");
-		game.makeLanMove("d6xc7");
+		game.makeLanMove("d6-c7");
 		game.makeLanMove("a6-a5");
-		game.makeLanMove("c7xb8=Q");
+		game.makeLanMove("c7-b8=Q");
 		asserts(game.getPieceCount(WHITE, PAWN) == 6, "Not 6 white pawns "
 				+ game.getPieceCount(WHITE, PAWN) + "\n" + game);
 		asserts(game.getPieceCount(WHITE, QUEEN) == 2, "Not 2 white queens\n"
 				+ game);
 		asserts(game.getPieceCount(BLACK, KNIGHT) == 0, "Not 0 black knights\n"
 				+ game);
-		game.makeLanMove("a8xb8");
+		game.makeLanMove("a8-b8");
 		asserts(game.getPieceCount(WHITE, QUEEN) == 1, "Not 1 white queen\n"
 				+ game);
 		game.rollback();
@@ -643,7 +614,7 @@ public class TestClassical implements GameConstants {
 				"r1q1k2r/3ppppp/1pn5/p3N3/3PPB2/5Q2/PPP2PPP/R4bK1 w kq - 0 0",
 				Type.CLASSIC);
 		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
-		game.makeLanMove("a1xf1");
+		game.makeLanMove("a1-f1");
 		asserts(game.getPiece(SQUARE_C8) == QUEEN, "c8 wasnt a queen\n" + game);
 	}
 

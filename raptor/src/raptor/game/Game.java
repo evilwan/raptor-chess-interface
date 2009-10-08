@@ -2398,17 +2398,23 @@ public class Game implements GameConstants {
 			// ambiguous)
 			{
 				int oppositeColorToMove = GameUtils
-						.getOppositeColor(positionState.colorToMove);
+						.getOppositeColor(getColorToMove());
 				long fromBB = getPieceBB(getColorToMove(), PAWN);
-
 				int movesFound = 0;
 				while (fromBB != 0) {
 					int fromSquare = bitscanForward(fromBB);
-					if ((GameUtils.getBitboard(move.getTo()) & GameUtils
-							.pawnCapture(positionState.colorToMove,
-									getBitboard(fromSquare),
-									getColorBB(oppositeColorToMove))) != 0) {
-						movesFound++;
+
+					long allPawnCapturesBB = GameUtils.pawnCapture(
+							getColorToMove(), getBitboard(fromSquare),
+							getColorBB(oppositeColorToMove));
+
+					while (allPawnCapturesBB != 0) {
+						int toSquare = bitscanForward(allPawnCapturesBB);
+						if (GameUtils.getFile(toSquare) == GameUtils
+								.getFile(move.getTo())) {
+							movesFound++;
+						}
+						allPawnCapturesBB = bitscanClear(allPawnCapturesBB);
 					}
 					fromBB = bitscanClear(fromBB);
 				}
@@ -2437,14 +2443,8 @@ public class Game implements GameConstants {
 								+ PIECE_TO_SAN
 										.charAt(move.getPiecePromotedTo()) : "");
 			} else {
-
-				shortAlgebraic = "" + PIECE_TO_SAN.charAt(move.getPiece());
-
 				long fromBB = getPieceBB(getColorToMove(), move.getPiece());
 				long toBB = GameUtils.getBitboard(move.getTo());
-
-				int moveFromFile = GameUtils.getFile(move.getFrom());
-				int moveFromRank = GameUtils.getRank(move.getFrom());
 
 				int sameFilesFound = 0;
 				int sameRanksFound = 0;
@@ -2481,30 +2481,35 @@ public class Game implements GameConstants {
 						}
 
 						if (resultBB != 0) {
-							matchesFound++;
+							int toSquare = bitscanForward(resultBB);
 
-							if (GameUtils.getFile(fromSquare) == moveFromFile) {
-								sameFilesFound++;
-							}
-							if (GameUtils.getRank(fromSquare) == moveFromRank) {
-								sameRanksFound++;
+							if (toSquare == move.getTo()) {
+								matchesFound++;
+								if (GameUtils.getFile(fromSquare) == GameUtils
+										.getFile(move.getFrom())) {
+									sameFilesFound++;
+								}
+								if (GameUtils.getRank(fromSquare) == GameUtils
+										.getRank(move.getFrom())) {
+									sameRanksFound++;
+								}
 							}
 						}
 						fromBB = bitscanClear(fromBB);
 					}
 				}
 
-				boolean handledAmbiguity = false;
-
+				shortAlgebraic = "" + PIECE_TO_SAN.charAt(move.getPiece());
+				boolean hasHandledAmbiguity = false;
 				if (sameRanksFound > 1) {
 					shortAlgebraic += SanUtil.squareToFileSan(move.getFrom());
-					handledAmbiguity = true;
+					hasHandledAmbiguity = true;
 				}
 				if (sameFilesFound > 1) {
 					shortAlgebraic += SanUtil.squareToRankSan(move.getFrom());
-					handledAmbiguity = true;
+					hasHandledAmbiguity = true;
 				}
-				if (!handledAmbiguity && matchesFound > 1) {
+				if (matchesFound > 1 && !hasHandledAmbiguity) {
 					shortAlgebraic += SanUtil.squareToFileSan(move.getFrom());
 				}
 
