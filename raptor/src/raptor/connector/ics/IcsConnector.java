@@ -79,6 +79,20 @@ public abstract class IcsConnector implements Connector {
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
 	protected BughouseService bughouseService;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
+	protected Runnable keepAlive = new Runnable() {
+		public void run() {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("In keepAlive.run()");
+			}
+			if (isConnected()
+					&& (System.currentTimeMillis() - lastSendTime) > 60000 * 50) {
+				sendMessage("date", true);
+				publishEvent(new ChatEvent("", ChatType.INTERNAL,
+						"The \"date\" command was just sent as a keep alive."));
+				ThreadService.getInstance().scheduleOneShot(300000, this);
+			}
+		}
+	};
 
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
@@ -185,7 +199,6 @@ public abstract class IcsConnector implements Connector {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
 				try {
-
 					if (getPreferences().getBoolean(
 							profilePrefix + "timeseal-enabled")) {
 						// TO DO: rewrite TimesealingSocket to use a
@@ -229,10 +242,14 @@ public abstract class IcsConnector implements Connector {
 					disconnect();
 					return;
 				}
-
 			}
 		});
 		isConnecting = true;
+
+		if (getPreferences().getBoolean(
+				context.getPreferencePrefix() + "-keep-alive")) {
+			ThreadService.getInstance().scheduleOneShot(300000, keepAlive);
+		}
 
 		fireConnecting();
 	}
@@ -269,6 +286,10 @@ public abstract class IcsConnector implements Connector {
 							}
 						} catch (Throwable t) {
 						}
+					}
+					if (keepAlive != null) {
+						ThreadService.getInstance().getExecutor().remove(
+								keepAlive);
 					}
 				} catch (Throwable t) {
 				} finally {
@@ -325,6 +346,10 @@ public abstract class IcsConnector implements Connector {
 		if (inputBuffer != null) {
 			inputBuffer.clear();
 			inputBuffer = null;
+		}
+		if (keepAlive != null) {
+			ThreadService.getInstance().getExecutor().remove(keepAlive);
+			keepAlive = null;
 		}
 
 		if (inputChannel != null) {
