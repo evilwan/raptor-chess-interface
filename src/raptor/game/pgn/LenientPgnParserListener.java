@@ -16,6 +16,8 @@ import raptor.game.util.GameUtils;
 /**
  * A Lenient PGN Parser Listener which creates Games from the PGN being handled.
  * 
+ * Currently this only supports Classical.
+ * 
  */
 public abstract class LenientPgnParserListener implements PgnParserListener {
 	protected static class NagWordTrimResult {
@@ -58,11 +60,14 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 	}
 
 	protected void createGameFromHeaders(PgnParser parser) {
-		if (currentHeaders.get(PgnHeader.FEN.getName()) != null) {
+		if (currentHeaders.get(PgnHeader.FEN.getName()) != null) { // TO DO
+			// support
+			// other
+			// types.
 			try {
 				currentGame = GameUtils.createFromFen(currentHeaders
 						.get(PgnHeader.FEN.getName()), Game.Type.CLASSIC);
-
+				currentGame.setSettingMoveSan(true);
 			} catch (IllegalArgumentException ife) {
 				errorEncountered(new PgnParserError(
 						PgnParserError.Type.UNABLE_TO_PARSE_INITIAL_FEN,
@@ -70,8 +75,9 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 								.getLineNumber()));
 				isIgnoringCurrentGame = true;
 			}
-		} else {
-			currentGame = new Game();
+		} else { // TO DO support other types.
+			currentGame = GameUtils.createStartingPosition(Game.Type.CLASSIC);
+			currentGame.setSettingMoveSan(true);
 		}
 
 		// Set all of the headers.

@@ -138,32 +138,23 @@ public class TestPgnParsing {
 		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
 		parser.addPgnParserListener(new LoggingPgnParserListener());
 		parser.addPgnParserListener(listener);
-
-		// long time = System.currentTimeMillis();
 		parser.parse();
-
 	}
 
 	@Test
 	public void testLargeFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
 				"resources/test/Alekhine4Pawns.pgn"), Integer.MAX_VALUE);
-		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener() {
-
-			@Override
-			public void gameParsed(Game game, int rowNum) {
-				// Don't collect games because this causes memory problems when
-				// a larget number are collected.
-			}
-
-		};
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
 		parser.parse();
+
+		System.err.println("Parsed " + listener.getGames().size() + " games");
 	}
 
 	@Test
-	public void testTestFiiles() throws Exception {
+	public void testTestFiles() throws Exception {
 		for (String element : PGN_TEST_FILES) {
 			String pgn = pgnFileAsString(element);
 			SimplePgnParser parser = new SimplePgnParser(pgn);
@@ -185,14 +176,6 @@ public class TestPgnParsing {
 				System.out.println(game);
 				System.out.println(GameUtils.toPgn(game));
 			}
-
-			PgnParseOutput output = new PgnParseOutput(listener.getGames(),
-					listener.getErrors());
-			ObjectOutputStream objectOutputStream = new ObjectOutputStream(
-					new FileOutputStream("test.object", false));
-			objectOutputStream.writeObject(output);
-			objectOutputStream.flush();
-			objectOutputStream.close();
 		}
 	}
 
