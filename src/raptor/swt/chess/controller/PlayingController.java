@@ -211,6 +211,39 @@ public class PlayingController extends ChessBoardController {
 	 * If premove is enabled, and premove is not in queued mode then clear the
 	 * premoves on an illegal move.
 	 */
+	public void adjustForIllegalMove(int from, int to, boolean adjustClocks) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("adjustForIllegalMove ");
+		}
+
+		if (!getPreferences().getBoolean(
+				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
+			onClearPremoves();
+		}
+
+		board.unhighlightAllSquares();
+		if (adjustClocks) {
+			refresh();
+		} else {
+			refreshBoard();
+		}
+		try {
+			board.getStatusLabel().setText(
+					"Illegal Move: "
+							+ GameUtils.getPseudoSan(getGame(), from, to));
+		} catch (IllegalArgumentException iae) {
+			board.getStatusLabel().setText(
+					"Illegal Move: " + GameUtils.getSan(from) + "-"
+							+ GameUtils.getSan(to));
+		}
+
+		SoundService.getInstance().playSound("illegalMove");
+	}
+
+	/**
+	 * If premove is enabled, and premove is not in queued mode then clear the
+	 * premoves on an illegal move.
+	 */
 	public void adjustForIllegalMove(String move, boolean adjustClocks) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("adjustForIllegalMove ");
@@ -437,7 +470,7 @@ public class PlayingController extends ChessBoardController {
 								info.promotionColorlessPiece);
 					}
 					getConnector().makeMove(getGame(), move);
-					premoves.remove(move);
+					premoves.remove(info);
 					handleAutoDraw();
 					refreshForMove(move);
 					return true;
@@ -446,7 +479,7 @@ public class PlayingController extends ChessBoardController {
 						LOG.debug("Invalid premove trying next one in queue.",
 								iae);
 					}
-					premoves.remove(move);
+					premoves.remove(info);
 				}
 			}
 		}
@@ -533,7 +566,7 @@ public class PlayingController extends ChessBoardController {
 					+ " is drag and drop=" + isDnd);
 		}
 
-		if (!isDisposed()) {
+		if (!isDisposed() && board.getSquare(square).getPiece() != EMPTY) {
 			board.unhighlightAllSquares();
 			board.getSquare(square).highlight();
 			movingPiece = board.getSquare(square).getPiece();
@@ -560,6 +593,12 @@ public class PlayingController extends ChessBoardController {
 					+ GameUtils.getSan(toSquare));
 		}
 
+		if (movingPiece == 0) {
+			LOG.error("movingPiece is 0 this should never happen.",
+					new Exception());
+			return;
+		}
+
 		long startTime = System.currentTimeMillis();
 		board.unhighlightAllSquares();
 
@@ -571,8 +610,7 @@ public class PlayingController extends ChessBoardController {
 					LOG
 							.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
 				}
-				adjustForIllegalMove(GameUtils.getPseudoSan(getGame(),
-						fromSquare, toSquare), false);
+				adjustForIllegalMove(fromSquare, toSquare, false);
 			}
 
 			if (LOG.isDebugEnabled()) {
@@ -588,20 +626,15 @@ public class PlayingController extends ChessBoardController {
 			}
 
 			if (move == null) {
-				String san = "";
-				try {
-					san = GameUtils.getPseudoSan(getGame(), fromSquare,
-							toSquare);
-				} catch (IllegalArgumentException iae) {
-				}
-				adjustForIllegalMove(san, false);
+				adjustForIllegalMove(fromSquare, toSquare, false);
 			} else {
 				board.getSquare(fromSquare).highlight();
 				board.getSquare(toSquare).highlight();
 
 				if (game.move(move)) {
-					connector.makeMove(game, move);
+					board.getSquare(fromSquare).setPiece(movingPiece);
 					refreshForMove(move);
+					connector.makeMove(game, move);
 				} else {
 					connector.onError(
 							"Game.move returned false for a move that should have been legal.Move: "
@@ -624,8 +657,7 @@ public class PlayingController extends ChessBoardController {
 							.debug("User tried to make a premove that failed immediate validation.");
 				}
 
-				adjustForIllegalMove(GameUtils.getPseudoSan(getGame(),
-						fromSquare, toSquare), false);
+				adjustForIllegalMove(fromSquare, toSquare, false);
 				return;
 			}
 			if (LOG.isDebugEnabled()) {
@@ -641,6 +673,8 @@ public class PlayingController extends ChessBoardController {
 					isUserWhite(), getGame(), fromSquare, toSquare) ? getAutoPromoteSelection()
 					: EMPTY;
 
+			board.getSquare(fromSquare).setPiece(movingPiece);
+
 			/**
 			 * In queued premove mode you can have multiple premoves so just add
 			 * it to the queue. In non queued premove you can have only one, so
@@ -650,6 +684,7 @@ public class PlayingController extends ChessBoardController {
 					PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
 				premoves.clear();
 				premoves.add(premoveInfo);
+
 				adjustPremoveLabel();
 				board.unhighlightAllSquares();
 				board.getSquare(premoveInfo.fromSquare).highlight();
@@ -709,7 +744,6 @@ public class PlayingController extends ChessBoardController {
 								"Game rejected move in smart move. This is a bug.");
 					}
 					board.unhighlightAllSquares();
-					// Turn off sound while the move is adjusted
 					refreshForMove(move);
 				}
 			} else {
