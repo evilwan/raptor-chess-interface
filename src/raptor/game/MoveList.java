@@ -19,6 +19,7 @@ import java.util.List;
 public final class MoveList implements GameConstants {
 	private Move[] moves;
 	private int size = 0;
+	private int maxSize;
 
 	public MoveList() {
 		this(MAX_HALF_MOVES_IN_GAME);
@@ -26,6 +27,7 @@ public final class MoveList implements GameConstants {
 
 	public MoveList(int maxSize) {
 		moves = new Move[maxSize];
+		this.maxSize = maxSize;
 	}
 
 	public void append(Move move) {
@@ -69,6 +71,32 @@ public final class MoveList implements GameConstants {
 
 	public int getSize() {
 		return size;
+	}
+
+	/**
+	 * Prepends the moves to the beginning of this list.
+	 */
+	public void prepend(Move[] movesToPrepend) {
+		Move[] newMoves = new Move[maxSize];
+
+		System.err.println("Prepending " + movesToPrepend);
+
+		// Add all of the moves to prepend.
+		for (int i = 0; i < movesToPrepend.length; i++) {
+			newMoves[i] = movesToPrepend[i];
+		}
+
+		/**
+		 * If a move is appended while this is going on the move list will be
+		 * disrupted. Lets gamble and take that chance so we don't have to add
+		 * slow synchronized code
+		 */
+		for (int i = movesToPrepend.length; i < size + movesToPrepend.length; i++) {
+			newMoves[i] = moves[i - movesToPrepend.length];
+		}
+
+		moves = newMoves;
+		size = size + movesToPrepend.length;
 	}
 
 	public Move removeLast() {

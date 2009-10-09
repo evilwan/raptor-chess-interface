@@ -27,15 +27,13 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
-import raptor.game.EcoInfo;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
+import raptor.game.pgn.PgnHeader;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
-import raptor.service.EcoService;
-import raptor.service.ThreadService;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.chess.controller.ToolBarItemKey;
 
@@ -264,31 +262,13 @@ public abstract class ChessBoardController implements BoardConstants,
 		if (isDisposed()) {
 			return;
 		}
-		// EcoInfo may take a while to update.
-		// Run it on its own thread in 100 milliseconds so other adjustments
-		// are not held up by parsing the ECO info.
-		ThreadService.getInstance().scheduleOneShot(100, new Runnable() {
-			public void run() {
-				final EcoInfo ecoInfo = EcoService.getInstance().getEcoInfo(
-						getGame());
-				if (ecoInfo != null) {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("ECOParser.getECOParser(getGame()) = "
-								+ ecoInfo.toString());
-					}
-					if (!isDisposed()) {
-						board.getDisplay().asyncExec(new Runnable() {
 
-							public void run() {
+		String eco = getGame().getHeader(PgnHeader.ECO);
+		String opening = getGame().getHeader(PgnHeader.OPENING);
 
-								board.getOpeningDescriptionLabel().setText(
-										ecoInfo.toString());
-							}
-						});
-					}
-				}
-			}
-		});
+		String description = StringUtils.isBlank(eco) ? "" : eco + " ";
+		description += StringUtils.isBlank(opening) ? "" : opening;
+		board.getOpeningDescriptionLabel().setText(description);
 	}
 
 	/**
@@ -635,9 +615,9 @@ public abstract class ChessBoardController implements BoardConstants,
 		adjustClockColors();
 
 		if (updateClocksFromGame) {
-			board.whiteClockLabel.setText(BoardUtils.timeToString(getGame()
+			board.whiteClockLabel.setText(GameUtils.timeToString(getGame()
 					.getWhiteRemainingTimeMillis()));
-			board.blackClockLabel.setText(BoardUtils.timeToString(getGame()
+			board.blackClockLabel.setText(GameUtils.timeToString(getGame()
 					.getBlackRemainingTimeMillis()));
 
 			whiteClockUpdater.setRemainingTimeMillis(getGame()
@@ -645,9 +625,9 @@ public abstract class ChessBoardController implements BoardConstants,
 			blackClockUpdater.setRemainingTimeMillis(getGame()
 					.getBlackRemainingTimeMillis());
 		} else {
-			board.whiteClockLabel.setText(BoardUtils
+			board.whiteClockLabel.setText(GameUtils
 					.timeToString(whiteClockUpdater.getRemainingTimeMillis()));
-			board.blackClockLabel.setText(BoardUtils
+			board.blackClockLabel.setText(GameUtils
 					.timeToString(blackClockUpdater.getRemainingTimeMillis()));
 		}
 

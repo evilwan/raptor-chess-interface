@@ -813,7 +813,8 @@ public class RaptorWindow extends ApplicationWindow {
 				game.setRound("?");
 				game.setDate(System.currentTimeMillis());
 				game.setSite("raptortest");
-				game.setSettingMoveSan(true);
+				game.addState(Game.UPDATING_SAN_STATE);
+				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
 				InactiveController controller = new InactiveController(game);
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
 			}
@@ -840,7 +841,8 @@ public class RaptorWindow extends ApplicationWindow {
 				game.setRound("?");
 				game.setDate(System.currentTimeMillis());
 				game.setSite("raptortest");
-				game.setSettingMoveSan(true);
+				game.addState(Game.UPDATING_SAN_STATE);
+				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
 				InactiveController controller = new InactiveController(game);
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
 			}

@@ -17,11 +17,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -29,8 +25,6 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.game.EcoInfo;
 import raptor.game.Game;
-import raptor.game.Move;
-import raptor.game.MoveList;
 
 /**
  * A singleton service which can be used to lookup EcoInfo on a game.
@@ -52,16 +46,7 @@ public class EcoService {
 		return singletonInstance;
 	}
 
-	private Map<Game.Type, List<EcoInfo>> typeToInfoMap = new HashMap<Game.Type, List<EcoInfo>>();
-
-	private Comparator<EcoInfo> moveLengthComparator = new Comparator<EcoInfo>() {
-
-		public int compare(EcoInfo arg0, EcoInfo arg1) {
-			return arg0.getMoves().length() > arg1.getMoves().length() ? 1
-					: arg0.getMoves().length() == arg1.getMoves().length() ? 0
-							: -1;
-		}
-	};
+	private Map<Game.Type, Map<String, EcoInfo>> typeToInfoMap = new HashMap<Game.Type, Map<String, EcoInfo>>();
 
 	private EcoService() {
 		initClassic();
@@ -86,49 +71,25 @@ public class EcoService {
 		}
 		long startTime = System.currentTimeMillis();
 
-		List<EcoInfo> list = typeToInfoMap.get(game.getType());
+		Map<String, EcoInfo> map = typeToInfoMap.get(game.getType());
 		EcoInfo result = null;
 
-		if (list != null) {
-			MoveList m = game.getMoveList();
-			Move[] moves = m.asArray();
-
-			StringBuilder builder = new StringBuilder(100);
-			for (int i = 0; i < moves.length; i++) {
-				if (i >= 22) {
-					break;
-				}
-				builder.append(moves[i].getSan().toUpperCase() + " ");
-			}
-			String key = builder.toString().trim();
-
-			for (EcoInfo info : list) {
-				if (key.startsWith(info.getMoves())) {
-					if (result == null) {
-						result = info;
-					} else if (result.getMoves().length() < info.getMoves()
-							.length()) {
-						result = info;
-					}
-				}
-
-				// No need to continue searching we did'nt find anything.
-				// The list will always be sorted by moves length ascending.
-				if (info.getMoves().length() > key.length()) {
-					break;
-				}
-			}
+		if (map != null) {
+			result = map.get(game.toFENPosition());
+		} else {
+			result = null;
 		}
 
 		if (LOG.isDebugEnabled()) {
 			LOG.info("getEcoInfo() executed in "
-					+ (System.currentTimeMillis() - startTime) + "ms");
+					+ (System.currentTimeMillis() - startTime) + "ms" + " "
+					+ result);
 		}
 		return result;
 	}
 
 	private void initClassic() {
-		File file = new File(raptor.Raptor.RESOURCES_COMMON_DIR + "ECO.txt");
+		File file = new File(raptor.Raptor.RESOURCES_COMMON_DIR + "ECOFen.txt");
 		typeToInfoMap.put(Game.Type.CLASSIC, parse(file));
 	}
 
@@ -144,12 +105,12 @@ public class EcoService {
 	 * @throws IOException
 	 *             If something goes wrong during reading.
 	 */
-	private List<EcoInfo> parse(File file) {
+	private Map<String, EcoInfo> parse(File file) {
 		if (LOG.isDebugEnabled()) {
 			LOG.info("parse(" + file.getAbsolutePath() + ")");
 		}
 		long startTime = System.currentTimeMillis();
-		List<EcoInfo> result = new ArrayList<EcoInfo>(2000);
+		Map<String, EcoInfo> result = new HashMap<String, EcoInfo>();
 
 		BufferedReader reader = null;
 
@@ -165,8 +126,8 @@ public class EcoService {
 				if (arr.length < 3) {
 					continue;
 				}
-				EcoInfo parser = new EcoInfo(arr[0], arr[1], arr[2], varName);
-				result.add(parser);
+				EcoInfo info = new EcoInfo(arr[0], arr[1], arr[2], varName);
+				result.put(arr[0], info);
 			}
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
@@ -178,9 +139,6 @@ public class EcoService {
 				}
 			}
 		}
-
-		Collections.sort(result, moveLengthComparator);
-
 		if (LOG.isDebugEnabled()) {
 			LOG.info("parse( " + file.getAbsolutePath() + ") executed in "
 					+ (System.currentTimeMillis() - startTime) + "ms");

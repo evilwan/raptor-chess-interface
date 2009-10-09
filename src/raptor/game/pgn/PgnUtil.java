@@ -1,5 +1,6 @@
 package raptor.game.pgn;
 
+import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -127,6 +128,12 @@ public class PgnUtil {
 			}
 		}
 		return result;
+	}
 
+	public static String timeToEMTFormat(long elapsedTimeMillis) {
+		double elapsedTimeInSeconds = elapsedTimeMillis / 1000.0;
+		BigDecimal bigDecimal = new BigDecimal(elapsedTimeInSeconds);
+		bigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
+		return "[%emt " + bigDecimal.toString() + "]";
 	}
 }

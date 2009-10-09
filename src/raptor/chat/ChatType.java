@@ -81,5 +81,10 @@ public enum ChatType {
 	 * Used for messages sent from within Raptor. Error messages and
 	 * informational messages.
 	 */
-	INTERNAL
+	INTERNAL,
+
+	/**
+	 * Used for a message containing a game moves list.
+	 */
+	MOVES
 }
