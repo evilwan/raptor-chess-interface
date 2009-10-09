@@ -29,6 +29,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
 
 	ChessBoard board;
+	boolean isPassive = true;
 
 	// This is just added as a member variable so it can be stored form the time
 	// its constructed until the time init is invoked.
@@ -96,22 +97,28 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public void onActivate() {
-		board.setLayoutDeferred(false);
-		board.layout(true);
-		board.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				board.getController().onActivate();
-			}
-		});
+		if (isPassive) {
+			board.setLayoutDeferred(false);
+			board.layout(true);
+			board.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					board.getController().onActivate();
+				}
+			});
+			isPassive = false;
+		}
 	}
 
 	public void onPassivate() {
-		// board.setLayoutDeferred(true);
-		board.getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				board.getController().onPassivate();
-			}
-		});
+		if (!isPassive) {
+			board.setLayoutDeferred(true);
+			board.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					board.getController().onPassivate();
+				}
+			});
+			isPassive = true;
+		}
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {

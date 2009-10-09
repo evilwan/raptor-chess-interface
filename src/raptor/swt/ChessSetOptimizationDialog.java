@@ -33,7 +33,7 @@ public class ChessSetOptimizationDialog extends ProgressBarDialog {
 			.getLog(ChessSetOptimizationDialog.class);
 
 	public static final int END_SIZE = 100;
-	public static final int START_SIZE = 10;
+	public static final int START_SIZE = 6;
 
 	protected String[] info = null;
 	protected String setName;

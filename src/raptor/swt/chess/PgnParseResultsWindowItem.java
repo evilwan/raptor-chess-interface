@@ -38,6 +38,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	protected Composite composite;
 	protected TableColumn lastStortedColumn;
 	protected boolean wasLastSortAscending;
+	protected boolean isPassive = true;
 
 	public PgnParseResultsWindowItem(String title, List<PgnParserError> errors,
 			List<Game> games) {
@@ -309,12 +310,16 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	}
 
 	public void onActivate() {
-		if (composite != null && !composite.isDisposed()) {
-			composite.layout(true, true);
+		if (isPassive) {
+			if (composite != null && !composite.isDisposed()) {
+				composite.layout(true);
+			}
+			isPassive = false;
 		}
 	}
 
 	public void onPassivate() {
+		isPassive = true;
 	}
 
 	protected void openGame(int index) {

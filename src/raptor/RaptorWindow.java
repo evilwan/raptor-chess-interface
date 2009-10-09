@@ -325,7 +325,7 @@ public class RaptorWindow extends ApplicationWindow {
 		public void setSelection(int index) {
 			super.setSelection(index);
 			passivateActiveateItems();
-			updateToolbar();
+			updateToolbar(true);
 		}
 
 		@Override
@@ -340,21 +340,43 @@ public class RaptorWindow extends ApplicationWindow {
 					+ getRaptorTabItemSelection();
 		}
 
-		public void updateToolbar() {
-			RaptorTabItem currentSelection = (RaptorTabItem) getSelection();
-			Control existingControl = getTopRight();
-			if (existingControl != null && !existingControl.isDisposed()) {
-				existingControl.setVisible(false);
-				setTopRight(null);
-			}
-			if (currentSelection != null) {
-				Control newControl = currentSelection.raptorItem
-						.getToolbar(this);
-				if (newControl != null) {
-					newControl.setVisible(true);
-					setTopRight(newControl, SWT.RIGHT);
-					setTabHeight(Math.max(newControl.computeSize(SWT.DEFAULT,
-							SWT.DEFAULT).y, getTabHeight()));
+		public void updateToolbar(boolean force) {
+			if (!getMinimized() || force) {
+				long startTime = System.currentTimeMillis();
+				RaptorTabItem currentSelection = (RaptorTabItem) getSelection();
+				Control existingControl = getTopRight();
+				if (currentSelection != null) {
+					if (existingControl != currentSelection.raptorItem
+							.getToolbar(this)) {
+						if (existingControl != null
+								&& !existingControl.isDisposed()) {
+							existingControl.setVisible(false);
+							setTopRight(null);
+						}
+						if (currentSelection != null) {
+							Control newControl = currentSelection.raptorItem
+									.getToolbar(this);
+							if (newControl != null) {
+								newControl.setVisible(true);
+								setTopRight(newControl, SWT.RIGHT);
+								setTabHeight(Math.max(newControl.computeSize(
+										SWT.DEFAULT, SWT.DEFAULT).y,
+										getTabHeight()));
+							}
+						}
+					}
+					else if (existingControl != null && existingControl.isVisible() == false) {
+						existingControl.setVisible(true);
+						existingControl.redraw();
+					}
+				} else if (existingControl != null
+						&& !existingControl.isDisposed()) {
+					existingControl.setVisible(false);
+					setTopRight(null);
+				}
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Updated toolbar in "
+							+ (System.currentTimeMillis() - startTime));
 				}
 			}
 		}
@@ -408,7 +430,7 @@ public class RaptorWindow extends ApplicationWindow {
 									setImage(item.getImage());
 									setShowClose(true);
 									if (raptorParent.getSelection() == RaptorTabItem.this) {
-										raptorParent.updateToolbar();
+										raptorParent.updateToolbar(true);
 									}
 								} catch (SWTException swt) {
 									// Just eat it. It is probably a
@@ -611,8 +633,8 @@ public class RaptorWindow extends ApplicationWindow {
 			leftCoolbar.setVisible(true);
 		}
 
-		leftCoolbar.layout(true);
-		windowComposite.layout(true);
+		// leftCoolbar.layout(true);
+		// windowComposite.layout(true);
 	}
 
 	/**
@@ -814,7 +836,7 @@ public class RaptorWindow extends ApplicationWindow {
 				game.setBlackLagMillis(580347);
 				game.setWhiteRemainingeTimeMillis(153857);
 				game.setBlackRemainingTimeMillis(46728);
-				game.setEvent("blitz 3 0 rated");
+				game.setEvent("crazyhouse 3 0 rated");
 				game.setRound("?");
 				game.setDate(System.currentTimeMillis());
 				game.setSite("raptortest");
@@ -1357,7 +1379,7 @@ public class RaptorWindow extends ApplicationWindow {
 			if (folders[i].getItemCount() > 0 && !folders[i].getMinimized()) {
 				folders[i].setSelection(folders[i].getSelectionIndex());
 			} else {
-				folders[i].updateToolbar();
+				folders[i].updateToolbar(false);
 				folders[i].passivateActiveateItems();
 			}
 		}
