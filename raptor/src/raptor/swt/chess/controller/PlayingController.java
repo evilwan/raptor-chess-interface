@@ -292,7 +292,6 @@ public class PlayingController extends ChessBoardController {
 				hasAddedPremove = true;
 			}
 		}
-
 		board.getCurrentPremovesLabel().setText(labelText);
 	}
 
@@ -475,7 +474,6 @@ public class PlayingController extends ChessBoardController {
 					getConnector().makeMove(getGame(), move);
 					premovesToRemove.add(info);
 					handleAutoDraw();
-					refreshForMove(move);
 					result = true;
 					break;
 				} catch (IllegalArgumentException iae) {
@@ -492,7 +490,12 @@ public class PlayingController extends ChessBoardController {
 				premoves.removeAll(premovesToRemove);
 			}
 		}
-		adjustPremoveLabel();
+		if (result) {
+			board.unhighlightAllSquares();
+			refresh();
+		} else {
+			adjustPremoveLabel();
+		}
 		return result;
 	}
 
