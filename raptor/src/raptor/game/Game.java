@@ -2796,6 +2796,8 @@ public class Game implements GameConstants {
 			if (j != 0) {
 				result.append((consecutiveEmpty != 0 ? consecutiveEmpty : "")
 						+ "/");
+			} else if (j == 0) {
+				result.append(consecutiveEmpty != 0 ? consecutiveEmpty : "");
 			}
 		}
 
