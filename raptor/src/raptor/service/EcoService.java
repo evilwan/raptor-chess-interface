@@ -23,8 +23,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.game.EcoInfo;
-import raptor.game.Game;
+import raptor.chess.EcoInfo;
+import raptor.chess.Game;
 
 /**
  * A singleton service which can be used to lookup EcoInfo on a game.
@@ -66,10 +66,8 @@ public class EcoService {
 	 * @return ECOParser instance if found, <code>null</code> if not.
 	 */
 	public EcoInfo getEcoInfo(Game game) {
-		if (LOG.isDebugEnabled()) {
-			LOG.info("getEcoInfo()");
-		}
-		long startTime = System.currentTimeMillis();
+		// Don't add debug messages in here. It gets called so often they are
+		// annoying and really slow it down.
 
 		Map<String, EcoInfo> map = typeToInfoMap.get(game.getType());
 		EcoInfo result = null;
@@ -80,11 +78,6 @@ public class EcoService {
 			result = null;
 		}
 
-		if (LOG.isDebugEnabled()) {
-			LOG.info("getEcoInfo() executed in "
-					+ (System.currentTimeMillis() - startTime) + "ms" + " "
-					+ result);
-		}
 		return result;
 	}
 

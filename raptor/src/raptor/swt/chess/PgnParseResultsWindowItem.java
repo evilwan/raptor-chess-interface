@@ -15,6 +15,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -22,10 +23,10 @@ import org.eclipse.swt.widgets.TableItem;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
-import raptor.game.Game;
-import raptor.game.GameComparator;
-import raptor.game.pgn.PgnHeader;
-import raptor.game.pgn.PgnParserError;
+import raptor.chess.Game;
+import raptor.chess.GameComparator;
+import raptor.chess.pgn.PgnHeader;
+import raptor.chess.pgn.PgnParserError;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.chess.controller.InactiveController;
@@ -101,6 +102,11 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
+		Label gamesTotalLabel = new Label(composite, SWT.LEFT);
+		gamesTotalLabel.setText("Games: " + games.size());
+		gamesTotalLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+				false));
+
 		final Table gamesTable = new Table(composite, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		gamesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -110,6 +116,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		final TableColumn whiteElo = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn black = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn blackElo = new TableColumn(gamesTable, SWT.LEFT);
+		final TableColumn eco = new TableColumn(gamesTable, SWT.LEFT);
+		final TableColumn opening = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn event = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn site = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn round = new TableColumn(gamesTable, SWT.LEFT);
@@ -198,6 +206,36 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				populateGamesTable(gamesTable);
 			}
 		});
+		eco.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				wasLastSortAscending = lastStortedColumn == null ? true
+						: lastStortedColumn == eco ? !wasLastSortAscending
+								: true;
+				lastStortedColumn = eco;
+
+				Collections.sort(games, new GameComparator(PgnHeader.ECO
+						.getName(), wasLastSortAscending));
+				disposeAllItems(gamesTable);
+				populateGamesTable(gamesTable);
+			}
+		});
+		opening.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				wasLastSortAscending = lastStortedColumn == null ? true
+						: lastStortedColumn == opening ? !wasLastSortAscending
+								: true;
+				lastStortedColumn = opening;
+
+				Collections.sort(games, new GameComparator(PgnHeader.OPENING
+						.getName(), wasLastSortAscending));
+				disposeAllItems(gamesTable);
+				populateGamesTable(gamesTable);
+			}
+		});
 		event.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -250,6 +288,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		whiteElo.setText("White ELO");
 		black.setText("Black");
 		blackElo.setText("Black ELO");
+		eco.setText("ECO");
+		opening.setText("Opening");
 		event.setText("Event");
 		site.setText("Site");
 		round.setText("Round");
@@ -263,6 +303,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		whiteElo.setWidth(80);
 		black.setWidth(100);
 		blackElo.setWidth(80);
+		eco.setWidth(50);
+		opening.setWidth(100);
 		gamesTable.setHeaderVisible(true);
 
 		Collections.sort(games, new GameComparator(PgnHeader.DATE.getName(),
@@ -285,6 +327,12 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		});
 
 		if (!errors.isEmpty()) {
+
+			Label errorsLabel = new Label(composite, SWT.LEFT);
+			errorsLabel.setText("Errors: " + errors.size());
+			errorsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+					false));
+
 			Table errorTable = new Table(composite, SWT.BORDER | SWT.H_SCROLL
 					| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 
@@ -342,6 +390,10 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 					StringUtils.defaultString(game.getWhiteRating(), "?"),
 					StringUtils.defaultString(game.getBlackName(), "?"),
 					StringUtils.defaultString(game.getBlackRating(), "?"),
+					StringUtils
+							.defaultString(game.getHeader(PgnHeader.ECO), ""),
+					StringUtils.defaultString(
+							game.getHeader(PgnHeader.OPENING), ""),
 					StringUtils.defaultString(game.getEvent(), "?"),
 					StringUtils.defaultString(game.getSite(), "?"),
 					StringUtils.defaultString(game.getRound(), "?"), });

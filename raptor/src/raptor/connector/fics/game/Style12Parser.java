@@ -16,8 +16,8 @@ package raptor.connector.fics.game;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.chess.GameConstants;
 import raptor.connector.fics.game.message.Style12Message;
-import raptor.game.GameConstants;
 import raptor.util.RaptorStringTokenizer;
 
 /**

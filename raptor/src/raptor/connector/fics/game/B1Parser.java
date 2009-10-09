@@ -13,8 +13,8 @@
  */
 package raptor.connector.fics.game;
 
+import raptor.chess.GameConstants;
 import raptor.connector.fics.game.message.B1Message;
-import raptor.game.GameConstants;
 import raptor.util.RaptorStringTokenizer;
 
 public class B1Parser implements GameConstants {

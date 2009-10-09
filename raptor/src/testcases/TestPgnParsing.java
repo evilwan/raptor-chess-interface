@@ -5,16 +5,16 @@ import java.io.FileReader;
 
 import org.junit.Test;
 
-import raptor.game.Game;
-import raptor.game.Result;
-import raptor.game.pgn.ListMaintainingPgnParserListener;
-import raptor.game.pgn.Nag;
-import raptor.game.pgn.PgnParser;
-import raptor.game.pgn.PgnParserError;
-import raptor.game.pgn.PgnParserListener;
-import raptor.game.pgn.SimplePgnParser;
-import raptor.game.pgn.StreamingPgnParser;
-import raptor.game.util.GameUtils;
+import raptor.chess.Game;
+import raptor.chess.Result;
+import raptor.chess.pgn.ListMaintainingPgnParserListener;
+import raptor.chess.pgn.Nag;
+import raptor.chess.pgn.PgnParser;
+import raptor.chess.pgn.PgnParserError;
+import raptor.chess.pgn.PgnParserListener;
+import raptor.chess.pgn.SimplePgnParser;
+import raptor.chess.pgn.StreamingPgnParser;
+import raptor.chess.util.GameUtils;
 
 public class TestPgnParsing {
 

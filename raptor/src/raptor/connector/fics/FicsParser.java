@@ -24,6 +24,9 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.chess.Game;
+import raptor.chess.GameConstants;
+import raptor.chess.Result;
 import raptor.connector.fics.game.B1Parser;
 import raptor.connector.fics.game.G1Parser;
 import raptor.connector.fics.game.GameEndParser;
@@ -56,9 +59,6 @@ import raptor.connector.ics.chat.PartnershipEndedEventParser;
 import raptor.connector.ics.chat.ShoutEventParser;
 import raptor.connector.ics.chat.TellEventParser;
 import raptor.connector.ics.chat.WhisperEventParser;
-import raptor.game.Game;
-import raptor.game.GameConstants;
-import raptor.game.Result;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 

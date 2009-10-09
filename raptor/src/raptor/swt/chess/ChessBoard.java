@@ -25,8 +25,8 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 
 import raptor.Raptor;
-import raptor.game.GameConstants;
-import raptor.game.util.GameUtils;
+import raptor.chess.GameConstants;
+import raptor.chess.util.GameUtils;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.chess.layout.RightOrientedLayout;
 

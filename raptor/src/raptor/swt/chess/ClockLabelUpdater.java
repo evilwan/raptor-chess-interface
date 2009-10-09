@@ -17,7 +17,7 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Display;
 
 import raptor.Raptor;
-import raptor.game.util.GameUtils;
+import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 

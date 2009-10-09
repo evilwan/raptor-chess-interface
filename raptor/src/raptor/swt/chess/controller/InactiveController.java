@@ -30,12 +30,12 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
-import raptor.game.Game;
-import raptor.game.GameConstants;
-import raptor.game.Move;
-import raptor.game.Game.Type;
-import raptor.game.util.GameUtils;
-import raptor.game.util.MoveListTraverser;
+import raptor.chess.Game;
+import raptor.chess.GameConstants;
+import raptor.chess.Move;
+import raptor.chess.Game.Type;
+import raptor.chess.util.GameUtils;
+import raptor.chess.util.MoveListTraverser;
 import raptor.service.SoundService;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.BoardConstants;
