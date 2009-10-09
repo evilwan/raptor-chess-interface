@@ -459,7 +459,10 @@ public class PlayingController extends ChessBoardController {
 	 * If a move succeeded true is returned, otherwise false is returned.
 	 */
 	protected boolean makePremove() {
+		boolean result = false;
 		synchronized (premoves) {
+			List<PremoveInfo> premovesToRemove = new ArrayList<PremoveInfo>(
+					premoves.size());
 			for (PremoveInfo info : premoves) {
 				Move move = null;
 				try {
@@ -470,22 +473,27 @@ public class PlayingController extends ChessBoardController {
 								info.promotionColorlessPiece);
 					}
 					getConnector().makeMove(getGame(), move);
-					premoves.remove(info);
+					premovesToRemove.add(info);
 					handleAutoDraw();
 					refreshForMove(move);
-					return true;
+					result = true;
+					break;
 				} catch (IllegalArgumentException iae) {
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Invalid premove trying next one in queue.",
 								iae);
 					}
-					premoves.remove(info);
+					premovesToRemove.add(info);
 				}
 			}
+			if (!result) {
+				premoves.clear();
+			} else {
+				premoves.removeAll(premovesToRemove);
+			}
 		}
-		premoves.clear();
 		adjustPremoveLabel();
-		return false;
+		return result;
 	}
 
 	public void onClearPremoves() {
