@@ -536,10 +536,10 @@ public class PlayingController extends ChessBoardController {
 		if (!isDisposed()) {
 			board.unhighlightAllSquares();
 			board.getSquare(square).highlight();
+			movingPiece = board.getSquare(square).getPiece();
 			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
 				board.getSquare(square).setPiece(GameConstants.EMPTY);
 			}
-			movingPiece = board.getSquare(square).getPiece();
 			board.redrawSquares();
 		}
 	}
