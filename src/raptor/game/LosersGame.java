@@ -17,60 +17,65 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class LosersGame extends Game {
+	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(LosersGame.class);
 
 	public LosersGame() {
 		setType(Type.LOSERS);
 	}
 
+	/**
+	 * @param ignoreHashes
+	 *            Whether to include copying hash tables.
+	 * @return An deep clone copy of this Game object.
+	 */
+	@Override
+	public Game deepCopy(boolean ignoreHashes) {
+		LosersGame result = new LosersGame();
+		overwrite(result, ignoreHashes);
+		return result;
+	}
+
+	/**
+	 * In losers you must make a capture if its possible. This method narrows
+	 * down the list to only captures if there is one possible.
+	 */
 	@Override
 	public PriorityMoveList getLegalMoves() {
 		PriorityMoveList result = getPseudoLegalMoves();
-
-		LOG.debug("Possible Moves = "
-				+ java.util.Arrays.toString(result.asArray()));
-
-		boolean containsCaptures = false;
+		boolean hasCapture = false;
 		for (int i = 0; i < result.getHighPrioritySize(); i++) {
-			Move move = result.getHighPriority(i);
-			forceMove(move);
-
-			if (!isLegalPosition()) {
-				result.removeHighPriority(i);
-				i--;
-			} else {
-				if (move.isCapture()) {
-					containsCaptures = true;
+			setSan(result.getHighPriority(i));
+			if (result.getHighPriority(i).isCapture()) {
+				hasCapture = true;
+				break;
+			}
+		}
+		if (!hasCapture) {
+			for (int i = 0; i < result.getLowPrioritySize(); i++) {
+				setSan(result.getLowPriority(i));
+				if (result.getLowPriority(i).isCapture()) {
+					hasCapture = true;
+					break;
 				}
 			}
-
-			rollback();
 		}
 
-		LOG.debug("containsCapture = " + containsCaptures);
-
-		for (int i = 0; i < result.getLowPrioritySize(); i++) {
-			if (containsCaptures) {
-				result.removeLowPriority(i);
-				i--;
-				continue;
-			} // remove all, since there are no non-capture legal moves if can
-			// capture
-
-			Move move = result.getLowPriority(i);
-			forceMove(move);
-
-			if (!isLegalPosition()) {
-				result.removeLowPriority(i);
-				i--;
+		if (hasCapture) {
+			PriorityMoveList onlyCaptures = new PriorityMoveList();
+			for (int i = 0; i < result.getHighPrioritySize(); i++) {
+				if (result.getHighPriority(i).isCapture()) {
+					onlyCaptures.appendHighPriority(result.getHighPriority(i));
+				}
 			}
-
-			rollback();
+			for (int i = 0; i < result.getLowPrioritySize(); i++) {
+				if (result.getLowPriority(i).isCapture()) {
+					onlyCaptures.appendHighPriority(result.getHighPriority(i));
+				}
+			}
+			return onlyCaptures;
+		} else {
+			return result;
 		}
-
-		LOG.debug("Possible Moves = "
-				+ java.util.Arrays.toString(result.asArray()));
-
-		return result;
 	}
 }

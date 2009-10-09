@@ -50,7 +50,8 @@ import raptor.game.util.SanUtil.SanValidations;
 import raptor.util.RaptorStringUtils;
 
 /**
- * A game class which uses bitboards and Zobrist hashing.
+ * A game class which uses bitboards and Zobrist hashing. Always open for
+ * optimizations to this class. Branching is often avoided when possible.
  */
 public class Game implements GameConstants {
 
@@ -118,6 +119,10 @@ public class Game implements GameConstants {
 		}
 	}
 
+	/**
+	 * It may seem redundant to have a type and subclasses for different games.
+	 * However, it has worked out rather well and avoids instance of operations.
+	 */
 	public static enum Type {
 		CLASSIC, ATOMIC, BUGHOUSE, CRAZYHOUSE, LOSERS, SUICIDE, WILD, FISCHER_RANDOM
 	}
@@ -1694,73 +1699,46 @@ public class Game implements GameConstants {
 	public Move makeSanMove(String shortAlgebraic)
 			throws IllegalArgumentException {
 		SanValidations validations = SanUtil.getValidations(shortAlgebraic);
+		Move[] pseudoLegals = getPseudoLegalMoves().asArray();
 
-		// Examples:
-		// e4 (a pawn move to e4).
-		// e8=Q (a pawn promotion without a capture).
-		// de=Q (a pawn promotion from a capture).
-		// ed (e pawn captures d pawn).
-		// Ne3 (a Knight moving to e3).
-		// N5e3 (disambiguity for two knights which can move to e3, the 5th rank
-		// knight is the one that should move).
-		// Nfe3 (disambiguity for two knights which can move to e3, the knight
-		// on the f file is the one that should move).
-		// Nf1e3 (disambiguity for three knights which cam move to e3, the f1
-		// knight is the one that should move).
-
-		if (!validations.isValidStrict()) {
-			throw new IllegalArgumentException("Invalid short algebraic: "
-					+ shortAlgebraic);
-		}
-
-		int candidatePromotedPiece = EMPTY;
-
-		Move result = null;
-
-		if (validations.isDropMoveStrict()) {
-			for (Move move : getPseudoLegalMoves().asArray()) {
-				if ((move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) != 0
-						&& move.getPiece() == SanUtil.sanToPiece(validations
-								.getStrictSan().charAt(0))
-						&& move.getTo() == GameUtils.rankFileToSquare(
-								GameConstants.RANK_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(3)),
-								GameConstants.FILE_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(2)))) {
-					result = move;
-					break;
-				}
+		Move result = makeSanMoveOverride(shortAlgebraic, validations,
+				pseudoLegals);
+		if (result == null) {
+			// Examples:
+			// e4 (a pawn move to e4).
+			// e8=Q (a pawn promotion without a capture).
+			// de=Q (a pawn promotion from a capture).
+			// ed (e pawn captures d pawn).
+			// Ne3 (a Knight moving to e3).
+			// N5e3 (disambiguity for two knights which can move to e3, the 5th
+			// rank
+			// knight is the one that should move).
+			// Nfe3 (disambiguity for two knights which can move to e3, the
+			// knight
+			// on the f file is the one that should move).
+			// Nf1e3 (disambiguity for three knights which cam move to e3, the
+			// f1
+			// knight is the one that should move).
+			if (!validations.isValidStrict()) {
+				throw new IllegalArgumentException("Invalid short algebraic: "
+						+ shortAlgebraic);
 			}
-		} else {
-			PriorityMoveList moveList = getPseudoLegalMoves();
-			// Lots of removing in droppable games will occur here.
-			// If this code is ever used for a ZH or BUG bot you might want to
-			// rewrite this.
-			for (int i = 0; i < moveList.getHighPrioritySize(); i++) {
-				if (moveList.getHighPriority(i).isDrop()) {
-					moveList.removeHighPriority(i);
-					i--;
-				}
-			}
-			for (int i = 0; i < moveList.getLowPrioritySize(); i++) {
-				if (moveList.getLowPriority(i).isDrop()) {
-					moveList.removeLowPriority(i);
-					i--;
-				}
-			}
-			Move[] pseudoLegals = moveList.asArray();
+
+			int candidatePromotedPiece = EMPTY;
 
 			if (validations.isCastleKSideStrict()) {
 
 				for (Move move : pseudoLegals) {
-					if ((move.getMoveCharacteristic() & Move.SHORT_CASTLING_CHARACTERISTIC) != 0) {
+					if (move != null
+							&& (move.getMoveCharacteristic() & Move.SHORT_CASTLING_CHARACTERISTIC) != 0) {
 						result = move;
 						break;
 					}
 				}
 			} else if (validations.isCastleQSideStrict()) {
 				for (Move move : pseudoLegals) {
-					if ((move.getMoveCharacteristic() & Move.LONG_CASTLING_CHARACTERISTIC) != 0) {
+					if (move != null
+							&& (move.getMoveCharacteristic() & Move.LONG_CASTLING_CHARACTERISTIC) != 0) {
 						result = move;
 						break;
 					}
@@ -1776,7 +1754,7 @@ public class Game implements GameConstants {
 				if (validations.isPawnMove()) {
 					int candidatePieceMoving = PAWN;
 					if (validations.isEpOrAmbigPxStrict()
-							|| validations.isEpOrAmbigPxPromotionStrict()) {
+							|| validations.isAmbigPxPromotionStrict()) {
 
 						int end = GameUtils.rankFileToSquare(
 								GameConstants.RANK_FROM_SAN.indexOf(validations
@@ -1798,7 +1776,8 @@ public class Game implements GameConstants {
 										.getStrictSan().charAt(0)));
 
 						for (Move move : pseudoLegals) {
-							if (move.getPiece() == candidatePieceMoving
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
 									&& move.isCapture()
 									&& move.getFrom() == start
 									&& move.getTo() == end
@@ -1818,7 +1797,8 @@ public class Game implements GameConstants {
 											1));
 
 							for (Move move : pseudoLegals) {
-								if (move.getPiece() == candidatePieceMoving
+								if (move != null
+										&& move.getPiece() == candidatePieceMoving
 										&& GameUtils.getFile(move.getFrom()) == startFile
 										&& GameUtils.getFile(move.getTo()) == endFile
 										&& move.isCapture()
@@ -1838,7 +1818,8 @@ public class Game implements GameConstants {
 													.charAt(0)));
 
 							for (Move move : pseudoLegals) {
-								if (move.getPiece() == candidatePieceMoving
+								if (move != null
+										&& move.getPiece() == candidatePieceMoving
 										&& !move.isCapture()
 										&& move.getTo() == end
 										&& move.getPiecePromotedTo() == candidatePromotedPiece) {
@@ -1847,7 +1828,6 @@ public class Game implements GameConstants {
 							}
 						}
 					}
-
 				} else {
 					int candidatePieceMoving = SanUtil.sanToPiece(validations
 							.getStrictSan().charAt(0));
@@ -1867,7 +1847,8 @@ public class Game implements GameConstants {
 						int startRank = RANK_FROM_SAN.indexOf(validations
 								.getStrictSan().charAt(1));
 						for (Move move : pseudoLegals) {
-							if (move.getPiece() == candidatePieceMoving
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
 									&& move.getTo() == end
 									&& GameUtils.getRank(move.getFrom()) == startRank) {
 								matches.append(move);
@@ -1877,7 +1858,8 @@ public class Game implements GameConstants {
 						int startFile = FILE_FROM_SAN.indexOf(validations
 								.getStrictSan().charAt(1));
 						for (Move move : pseudoLegals) {
-							if (move.getPiece() == candidatePieceMoving
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
 									&& move.getTo() == end
 									&& GameUtils.getFile(move.getFrom()) == startFile) {
 								matches.append(move);
@@ -1892,7 +1874,8 @@ public class Game implements GameConstants {
 						FILE_FROM_SAN.indexOf(validations.getStrictSan()
 								.charAt(1));
 						for (Move move : pseudoLegals) {
-							if (move.getPiece() == candidatePieceMoving
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
 									&& move.getTo() == end
 									&& move.getFrom() == startSquare) {
 								matches.append(move);
@@ -1900,68 +1883,16 @@ public class Game implements GameConstants {
 						}
 					} else {
 						for (Move move : pseudoLegals) {
-							if (move.getPiece() == candidatePieceMoving
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
 									&& move.getTo() == end) {
 								matches.append(move);
 							}
 						}
 					}
 				}
-
-				if (matches.getSize() == 0) {
-					throw new IllegalArgumentException("Invalid move "
-							+ shortAlgebraic + "\n" + toString());
-				} else if (matches.getSize() == 1) {
-					result = matches.get(0);
-				} else {
-					// now do legality checking on whats left.
-					int kingSquare = GameUtils.bitscanForward(getPieceBB(
-							positionState.colorToMove, KING));
-					int cachedColorToMove = positionState.colorToMove;
-					int matchesCount = 0;
-
-					if (kingSquare != EMPTY_SQUARE) { // Now trim illegals
-						for (int i = 0; i < matches.getSize(); i++) {
-							Move current = matches.get(i);
-							synchronized (this) {
-								try {
-									forceMove(current);
-									if (current.getPiece() == KING) {
-										int newKingCoordinates = GameUtils
-												.bitscanForward(getPieceBB(
-														cachedColorToMove, KING));
-										if (!isInCheck(
-												cachedColorToMove,
-												GameUtils
-														.getBitboard(newKingCoordinates))) {
-											result = current;
-											matchesCount++;
-										} else {
-										}
-									} else {
-										if (!isInCheck(cachedColorToMove,
-												getBitboard(kingSquare))) {
-											result = current;
-											matchesCount++;
-										} else {
-										}
-									}
-									rollback();
-								} catch (IllegalArgumentException ie) {
-								}
-							}
-						}
-					}
-
-					if (matchesCount == 0) {
-						throw new IllegalArgumentException("Invalid move "
-								+ shortAlgebraic + "\n" + toString());
-					} else if (matchesCount > 1) {
-						throw new IllegalArgumentException("Ambiguous move "
-								+ shortAlgebraic + "\n" + toString());
-
-					}
-				}
+				result = testForSanDisambiguationFromCheck(shortAlgebraic,
+						matches);
 			}
 		}
 
@@ -1971,8 +1902,23 @@ public class Game implements GameConstants {
 		}
 
 		result.setSan(shortAlgebraic);
-		forceMove(result);
+		if (!move(result)) {
+			throw new IllegalArgumentException("Illegal move: " + result);
+		}
 		return result;
+	}
+
+	/**
+	 * A method that makeSanMove invokes with the SanValidations it created. If
+	 * a move can be made it should be returned. This method is provided so
+	 * subclasses can enhance utilize the SanValidations without having to
+	 * override makeSanMove and run the SAN validations again.
+	 * 
+	 * This method may also set certain pseudoLegals to ignore to null.
+	 */
+	public Move makeSanMoveOverride(String shortAlgebraic,
+			SanValidations validations, Move[] pseudoLegals) {
+		return null;
 	}
 
 	/**
@@ -2758,6 +2704,68 @@ public class Game implements GameConstants {
 	}
 
 	/**
+	 * If the match list contains no ambiguity after taking disambiguity by
+	 * check into consideration the move is returned. Otherwise an
+	 * IllegalArgumentException is raised
+	 */
+	protected Move testForSanDisambiguationFromCheck(String shortAlgebraic,
+			MoveList matches) throws IllegalArgumentException {
+		Move result = null;
+		if (matches.getSize() == 0) {
+			throw new IllegalArgumentException("Invalid move " + shortAlgebraic
+					+ "\n" + toString());
+		} else if (matches.getSize() == 1) {
+			result = matches.get(0);
+		} else {
+			// now do legality checking on whats left.
+			int kingSquare = GameUtils.bitscanForward(getPieceBB(
+					positionState.colorToMove, KING));
+			int cachedColorToMove = positionState.colorToMove;
+			int matchesCount = 0;
+
+			if (kingSquare != EMPTY_SQUARE) { // Now trim illegals
+				for (int i = 0; i < matches.getSize(); i++) {
+					Move current = matches.get(i);
+					synchronized (this) {
+						try {
+							forceMove(current);
+							if (current.getPiece() == KING) {
+								int newKingCoordinates = GameUtils
+										.bitscanForward(getPieceBB(
+												cachedColorToMove, KING));
+								if (!isInCheck(cachedColorToMove, GameUtils
+										.getBitboard(newKingCoordinates))) {
+									result = current;
+									matchesCount++;
+								} else {
+								}
+							} else {
+								if (!isInCheck(cachedColorToMove,
+										getBitboard(kingSquare))) {
+									result = current;
+									matchesCount++;
+								} else {
+								}
+							}
+							rollback();
+						} catch (IllegalArgumentException ie) {
+						}
+					}
+				}
+			}
+
+			if (matchesCount == 0) {
+				throw new IllegalArgumentException("Invalid move "
+						+ shortAlgebraic + "\n" + toString());
+			} else if (matchesCount > 1) {
+				throw new IllegalArgumentException("Ambiguous move "
+						+ shortAlgebraic + "\n" + toString());
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Returns the FEN, Forsyth Edwards notation, of the game.
 	 * 
 	 * @return The games position in FEN.
@@ -2895,9 +2903,9 @@ public class Game implements GameConstants {
 
 		String legalMovesString = Arrays.toString(getLegalMoves().asArray());
 		result.append("\n");
-		result.append(WordUtils.wrap("Legals=" + legalMovesString, 80, "\n",
+		result.append(WordUtils.wrap("\nLegals=" + legalMovesString, 80, "\n",
 				true));
-		result.append(WordUtils.wrap("Movelist=" + positionState.moves, 80,
+		result.append(WordUtils.wrap("\nMovelist=" + positionState.moves, 80,
 				"\n", true));
 
 		List<String> squaresWithPromoteMasks = new LinkedList<String>();
@@ -2906,7 +2914,8 @@ public class Game implements GameConstants {
 				squaresWithPromoteMasks.add(getSan(i));
 			}
 		}
-		result.append("Squares with promote masks: " + squaresWithPromoteMasks);
+		result.append("\nSquares with promote masks: "
+				+ squaresWithPromoteMasks);
 
 		return result.toString();
 	}

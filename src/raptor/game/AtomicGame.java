@@ -13,31 +13,54 @@
  */
 package raptor.game;
 
+/**
+ * TO DO: add in the blast radius on captures.
+ * 
+ * 
+ */
 public class AtomicGame extends Game {
 
 	public AtomicGame() {
 		setType(Type.ATOMIC);
 	}
 
+	/**
+	 * @param ignoreHashes
+	 *            Whether to include copying hash tables.
+	 * @return An deep clone copy of this Game object.
+	 */
+	@Override
+	public Game deepCopy(boolean ignoreHashes) {
+		AtomicGame result = new AtomicGame();
+		overwrite(result, ignoreHashes);
+		return result;
+	}
+
+	/**
+	 * Kings can't capture pieces in atomic or they explode. So remove all the
+	 * king captures
+	 */
 	@Override
 	public PriorityMoveList getLegalMoves() {
 		PriorityMoveList result = getPseudoLegalMoves();
 
+		PriorityMoveList onlyNonKingCaptures = new PriorityMoveList();
 		for (int i = 0; i < result.getHighPrioritySize(); i++) {
-			Move move = result.getHighPriority(i);
-			forceMove(move);
-
-			if (!isLegalPosition()) {
-				result.removeHighPriority(i);
-				i--;
+			setSan(result.getHighPriority(i));
+			if (result.getHighPriority(i).isCapture()
+					&& result.getHighPriority(i).getPiece() == KING) {
+			} else {
+				onlyNonKingCaptures.appendHighPriority(result
+						.getHighPriority(i));
 			}
 		}
-
-		return result;
-	}
-
-	@Override
-	public boolean isLegalPosition() {
-		return true;
+		for (int i = 0; i < result.getLowPrioritySize(); i++) {
+			if (result.getLowPriority(i).isCapture()
+					&& result.getLowPriority(i).getPiece() == KING) {
+			} else {
+				onlyNonKingCaptures.appendLowPriority(result.getLowPriority(i));
+			}
+		}
+		return onlyNonKingCaptures;
 	}
 }

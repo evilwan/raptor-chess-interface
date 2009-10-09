@@ -171,6 +171,40 @@ public class TestPgnParsing {
 	}
 
 	@Test
+	public void testLosersFile() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"resources/test/losersGames.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+
+		System.err.println("Parsed " + listener.getGames().size() + " games "
+				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
+
+		System.err.println(listener.getErrors());
+	}
+
+	@Test
+	public void testSuicideFile() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"resources/test/suicideGames.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+
+		System.err.println("Parsed " + listener.getGames().size() + " games "
+				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
+
+		System.err.println(listener.getErrors());
+	}
+
+	@Test
 	public void testTestFiles() throws Exception {
 		for (String element : PGN_TEST_FILES) {
 			String pgn = pgnFileAsString(element);
@@ -194,6 +228,23 @@ public class TestPgnParsing {
 				System.out.println(GameUtils.toPgn(game));
 			}
 		}
+	}
+
+	@Test
+	public void testWild5File() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"resources/test/wild5Games.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+
+		System.err.println("Parsed " + listener.getGames().size() + " games "
+				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
+
+		System.err.println(listener.getErrors());
 	}
 
 }

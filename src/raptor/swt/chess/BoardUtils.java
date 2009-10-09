@@ -205,7 +205,16 @@ public class BoardUtils implements BoardConstants {
 	 */
 	public static final void addPromotionIconsToToolbar(
 			ChessBoardController controller, ToolBar toolbar,
-			boolean isUserWhite) {
+			boolean isUserWhite, boolean isPromoteToKingAllowed) {
+		if (isPromoteToKingAllowed) {
+			ToolItem queenPromote = new ToolItem(toolbar, SWT.RADIO);
+			queenPromote.setText(GameUtils
+					.getPieceRepresentation(isUserWhite ? GameConstants.WK
+							: GameConstants.BK));
+			controller.addToolItem(ToolBarItemKey.AUTO_KING, queenPromote);
+			queenPromote.setToolTipText("Auto King");
+			queenPromote.setSelection(false);
+		}
 		ToolItem queenPromote = new ToolItem(toolbar, SWT.RADIO);
 		queenPromote.setText(GameUtils
 				.getPieceRepresentation(isUserWhite ? GameConstants.WQ

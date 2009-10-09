@@ -290,6 +290,7 @@ public interface GameConstants {
 	public static final String[] COLOR_PIECE_TO_CHAR = { "*PBNRQK", "*pbnrqk" };
 
 	public static final String STARTING_POSITION_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+	public static final String STARTING_SUICIDE_POSITION_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1";
 
 	public static final long[] ZERO_BASED_RANK_INDEX_TO_BB = { RANK1, RANK2,
 			RANK3, RANK4, RANK5, RANK6, RANK7, RANK8 };

@@ -33,6 +33,7 @@ import raptor.Raptor;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
+import raptor.game.Game.Type;
 import raptor.game.util.GameUtils;
 import raptor.game.util.MoveListTraverser;
 import raptor.service.SoundService;
@@ -191,14 +192,20 @@ public class InactiveController extends ChessBoardController implements
 				}
 			});
 			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true);
+			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true, game
+					.getType() == Type.SUICIDE);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-		setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+
+		if (game.getType() == Type.SUICIDE) {
+			setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
+		} else {
+			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+		}
 		return toolbar;
 	}
 

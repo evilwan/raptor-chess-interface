@@ -427,7 +427,9 @@ public abstract class ChessBoardController implements BoardConstants,
 	public int getAutoPromoteSelection() {
 		int result = QUEEN;
 
-		if (isToolItemSelected(ToolBarItemKey.AUTO_QUEEN)) {
+		if (isToolItemSelected(ToolBarItemKey.AUTO_KING)) {
+			result = KING;
+		} else if (isToolItemSelected(ToolBarItemKey.AUTO_QUEEN)) {
 			result = QUEEN;
 		} else if (isToolItemSelected(ToolBarItemKey.AUTO_KNIGHT)) {
 			result = KNIGHT;

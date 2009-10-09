@@ -35,6 +35,18 @@ public class BughouseGame extends CrazyhouseGame {
 		otherBoard.positionState.dropCounts[color][piece] = otherBoard.positionState.dropCounts[color][piece] - 1;
 	}
 
+	/**
+	 * @param ignoreHashes
+	 *            Whether to include copying hash tables.
+	 * @return An deep clone copy of this Game object.
+	 */
+	@Override
+	public Game deepCopy(boolean ignoreHashes) {
+		BughouseGame result = new BughouseGame();
+		overwrite(result, ignoreHashes);
+		return result;
+	}
+
 	public BughouseGame getOtherBoard() {
 		return otherBoard;
 	}
