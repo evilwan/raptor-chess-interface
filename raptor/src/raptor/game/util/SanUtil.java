@@ -29,7 +29,7 @@ public class SanUtil {
 
 		boolean isEpOrAmbigPxStrict;
 
-		boolean isEpOrAmbigPxPromotionStrict;
+		boolean isAmbigPxPromotionStrict;
 
 		boolean isUnambigPieceStrict;
 
@@ -53,10 +53,12 @@ public class SanUtil {
 
 		boolean isPromotion;
 
-		boolean isDropMoveStrict;
-
 		public String getStrictSan() {
 			return strictSan;
+		}
+
+		public boolean isAmbigPxPromotionStrict() {
+			return isAmbigPxPromotionStrict;
 		}
 
 		public boolean isCastleKSideStrict() {
@@ -77,14 +79,6 @@ public class SanUtil {
 
 		public boolean isDisambigPieceRankStrict() {
 			return isDisambigPieceRankStrict;
-		}
-
-		public boolean isDropMoveStrict() {
-			return isDropMoveStrict;
-		}
-
-		public boolean isEpOrAmbigPxPromotionStrict() {
-			return isEpOrAmbigPxPromotionStrict;
 		}
 
 		public boolean isEpOrAmbigPxStrict() {
@@ -123,6 +117,11 @@ public class SanUtil {
 			return isValidStrict;
 		}
 
+		public void setAmbigPxPromotionStrict(
+				boolean isEpOrAmbigPxPromotionStrict) {
+			isAmbigPxPromotionStrict = isEpOrAmbigPxPromotionStrict;
+		}
+
 		public void setCastleKSideStrict(boolean isCastleKSideStrict) {
 			this.isCastleKSideStrict = isCastleKSideStrict;
 		}
@@ -142,15 +141,6 @@ public class SanUtil {
 
 		public void setDisambigPieceRankStrict(boolean isDisambigPieceRankStrict) {
 			this.isDisambigPieceRankStrict = isDisambigPieceRankStrict;
-		}
-
-		public void setDropMoveStrict(boolean isDropMoveStrict) {
-			this.isDropMoveStrict = isDropMoveStrict;
-		}
-
-		public void setEpOrAmbigPxPromotionStrict(
-				boolean isEpOrAmbigPxPromotionStrict) {
-			this.isEpOrAmbigPxPromotionStrict = isEpOrAmbigPxPromotionStrict;
 		}
 
 		public void setEpOrAmbigPxStrict(boolean isEpOrAmbigPxStrict) {
@@ -201,6 +191,8 @@ public class SanUtil {
 	public static final String PIECES = "BKNQR";
 
 	public static final String PROMOTIONS = "BNQR";
+
+	public static final String SUICIDE_PROMOTIONS = "KBNQR";
 
 	public static final String DROPS = "PBNQR";
 
@@ -258,38 +250,51 @@ public class SanUtil {
 		result.isDisambigPieceFileStrict = isValidDisambigFileStrict(result.strictSan);
 		result.isDisambigPieceRankFileStrict = isValidDisambigRankFileStrict(result.strictSan);
 		result.isDisambigPieceRankStrict = isValidDisambigRankStrict(result.strictSan);
-		result.isEpOrAmbigPxPromotionStrict = isValidEpOrAmbigPxPromotionStrict(result.strictSan);
+		result.isAmbigPxPromotionStrict = isValidAmbigPxPromotionStrict(result.strictSan);
 		result.isEpOrAmbigPxStrict = isValidEpOrAmbigPCaptureStrict(result.strictSan);
 		result.isPMoveStrict = isValidPMoveStrict(result.strictSan);
 		result.isPPromotionStrict = isValidPPromotionStrict(result.strictSan);
 		result.isPxPPromotionStrict = isValidPxPromotionStrict(result.strictSan);
 		result.isPxStrict = isValidPxStrict(result.strictSan);
 		result.isUnambigPieceStrict = isValidUnambigPieceStrict(result.strictSan);
-		result.isDropMoveStrict = isValidDropStrict(result.strictSan);
 		result.isValidStrict = result.isEpOrAmbigPxStrict
-				|| result.isEpOrAmbigPxPromotionStrict
+				|| result.isAmbigPxPromotionStrict
 				|| result.isUnambigPieceStrict
 				|| result.isDisambigPieceRankStrict
 				|| result.isDisambigPieceFileStrict
 				|| result.isDisambigPieceRankFileStrict || result.isPxStrict
 				|| result.isPMoveStrict || result.isPxPPromotionStrict
 				|| result.isPPromotionStrict || result.isCastleKSideStrict
-				|| result.isCastleQSideStrict || result.isDropMoveStrict;
+				|| result.isCastleQSideStrict;
 
 		if (result.isValidStrict) {
 			result.isPawnMove = result.isPxStrict
 					|| result.isPxPPromotionStrict || result.isPMoveStrict
 					|| result.isPPromotionStrict || result.isEpOrAmbigPxStrict
-					|| result.isEpOrAmbigPxPromotionStrict;
+					|| result.isAmbigPxPromotionStrict;
 		}
 
 		if (result.isPawnMove) {
 			result.isPromotion = result.isPxPPromotionStrict
 					|| result.isPPromotionStrict
-					|| result.isEpOrAmbigPxPromotionStrict;
+					|| result.isAmbigPxPromotionStrict;
 		}
 
 		return result;
+	}
+
+	/**
+	 * VALID_EP_OR_AMBIG_P_CAPTURE_PROMOTION_REGEX = "[a-h][a-h][1-8][BNQR]"
+	 */
+	public static boolean isValidAmbigPxPromotionStrict(String san) {
+		if (san.length() == 4) {
+			return FILES.indexOf(san.charAt(0)) != -1
+					&& FILES.indexOf(san.charAt(1)) != -1
+					&& RANKS.indexOf(san.charAt(2)) != -1
+					&& PROMOTIONS.indexOf(san.charAt(3)) != -1;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -362,20 +367,6 @@ public class SanUtil {
 	}
 
 	/**
-	 * VALID_EP_OR_AMBIG_P_CAPTURE_PROMOTION_REGEX = "[a-h][a-h][1-8][BNQR]"
-	 */
-	public static boolean isValidEpOrAmbigPxPromotionStrict(String san) {
-		if (san.length() == 4) {
-			return FILES.indexOf(san.charAt(0)) != -1
-					&& FILES.indexOf(san.charAt(1)) != -1
-					&& RANKS.indexOf(san.charAt(2)) != -1
-					&& PROMOTIONS.indexOf(san.charAt(3)) != -1;
-		} else {
-			return false;
-		}
-	}
-
-	/**
 	 * VALID_CASTLE_KSIDE_REGEX = [O][-][O]
 	 */
 	public static boolean isValidKSideCastle(String san) {
@@ -437,6 +428,46 @@ public class SanUtil {
 	 */
 	public static boolean isValidQSideCastle(String san) {
 		return san.equals("O-O-O");
+	}
+
+	/**
+	 *[a-h][a-h][1-8][KBNQR]
+	 */
+	public static boolean isValidSuicideAmbigPxPromotion(String san) {
+		if (san.length() == 4) {
+			return FILES.indexOf(san.charAt(0)) != -1
+					&& FILES.indexOf(san.charAt(1)) != -1
+					&& RANKS.indexOf(san.charAt(2)) != -1
+					&& SUICIDE_PROMOTIONS.indexOf(san.charAt(3)) != -1;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * [a-h][1-8][KBNQR]
+	 */
+	public static boolean isValidSuicidePPromotionStrict(String san) {
+		if (san.length() == 3) {
+			return FILES.indexOf(san.charAt(0)) != -1
+					&& RANKS.indexOf(san.charAt(1)) != -1
+					&& SUICIDE_PROMOTIONS.indexOf(san.charAt(2)) != -1;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * [a-h][a-h][KBNQR]
+	 */
+	public static boolean isValidSuicidePxPromotionStrict(String san) {
+		if (san.length() == 3) {
+			return FILES.indexOf(san.charAt(0)) != -1
+					&& RANKS.indexOf(san.charAt(1)) != -1
+					&& SUICIDE_PROMOTIONS.indexOf(san.charAt(2)) != -1;
+		} else {
+			return false;
+		}
 	}
 
 	/**

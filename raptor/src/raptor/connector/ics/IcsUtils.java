@@ -24,6 +24,8 @@ import raptor.connector.fics.game.TakebackParser;
 import raptor.connector.fics.game.TakebackParser.TakebackMessage;
 import raptor.connector.fics.game.message.G1Message;
 import raptor.connector.fics.game.message.Style12Message;
+import raptor.game.AtomicGame;
+import raptor.game.BughouseGame;
 import raptor.game.CrazyhouseGame;
 import raptor.game.Game;
 import raptor.game.GameConstants;
@@ -73,8 +75,6 @@ public class IcsUtils implements GameConstants {
 	public static final String CRAZYHOUSE_IDENTIFIER = "crazyhouse";
 
 	public static final String UNTIMED_IDENTIFIER = "untimed";
-
-	public static final int UNTIMED_GAME_TYPE = 999;
 
 	/**
 	 * Returns true if a move was added, false if no move was added (This can
@@ -212,17 +212,23 @@ public class IcsUtils implements GameConstants {
 		case CLASSIC:
 			result = new Game();
 			break;
+		case WILD:
+			result = new Game();
+			result.setType(Type.WILD);
 		case SUICIDE:
 			result = new SuicideGame();
 			break;
 		case LOSERS:
 			result = new LosersGame();
 			break;
+		case ATOMIC:
+			result = new AtomicGame();
+			break;
 		case CRAZYHOUSE:
 			result = new CrazyhouseGame();
 			break;
 		case BUGHOUSE:
-			result = new CrazyhouseGame();
+			result = new BughouseGame();
 			result.setType(Type.BUGHOUSE);
 			break;
 		default:

@@ -21,6 +21,18 @@ public class SetupGame extends Game {
 		addState(Game.DROPPABLE_STATE);
 	}
 
+	/**
+	 * @param ignoreHashes
+	 *            Whether to include copying hash tables.
+	 * @return An deep clone copy of this Game object.
+	 */
+	@Override
+	public Game deepCopy(boolean ignoreHashes) {
+		SetupGame result = new SetupGame();
+		overwrite(result, ignoreHashes);
+		return result;
+	}
+
 	@Override
 	public boolean isLegalPosition() {
 		return isInState(Game.SETUP_STATE) ? true : super.isLegalPosition();

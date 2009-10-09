@@ -15,6 +15,9 @@ package raptor.game;
 
 import static raptor.game.util.GameUtils.bitscanClear;
 import static raptor.game.util.GameUtils.bitscanForward;
+import raptor.game.util.GameUtils;
+import raptor.game.util.SanUtil;
+import raptor.game.util.SanUtil.SanValidations;
 
 public class CrazyhouseGame extends Game {
 	public CrazyhouseGame() {
@@ -106,6 +109,38 @@ public class CrazyhouseGame extends Game {
 	public PriorityMoveList getPseudoLegalMoves() {
 		PriorityMoveList result = super.getPseudoLegalMoves();
 		generatePseudoDropMoves(result);
+		return result;
+	}
+
+	/**
+	 * Overridden to add in drops and remove all drop moves from pseudoLegals.
+	 */
+	@Override
+	public Move makeSanMoveOverride(String shortAlgebraic,
+			SanValidations validations, Move[] pseudoLegals) {
+		Move result = null;
+		if (SanUtil.isValidDropStrict(validations.getStrictSan())) {
+			for (Move move : getPseudoLegalMoves().asArray()) {
+				if ((move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) != 0
+						&& move.getPiece() == SanUtil.sanToPiece(validations
+								.getStrictSan().charAt(0))
+						&& move.getTo() == GameUtils.rankFileToSquare(
+								RANK_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(3)),
+								FILE_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(2)))) {
+					result = move;
+					move.setSan(shortAlgebraic);
+					break;
+				}
+			}
+		} else {
+			for (int i = 0; i < pseudoLegals.length; i++) {
+				if (pseudoLegals[i].isDrop()) {
+					pseudoLegals[i] = null;
+				}
+			}
+		}
 		return result;
 	}
 

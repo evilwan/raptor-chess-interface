@@ -305,7 +305,11 @@ public class GameUtils implements GameConstants {
 	}
 
 	public static final Game createStartingPosition(Type gameType) {
-		return createFromFen(STARTING_POSITION_FEN, gameType);
+		if (gameType == Type.SUICIDE) {
+			return createFromFen(STARTING_SUICIDE_POSITION_FEN, gameType);
+		} else {
+			return createFromFen(STARTING_POSITION_FEN, gameType);
+		}
 	}
 
 	public static final long diagonalMove(int square, long emptySquares,

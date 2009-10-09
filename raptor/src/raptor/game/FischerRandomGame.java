@@ -13,10 +13,62 @@
  */
 package raptor.game;
 
+/**
+ * <pre>
+ * White &quot;a&quot;-side castling (0-0-0):
+ * --------------------------------
+ * Before: Kg1; Rf1, e1, d1, c1, b1 or a1	     After: Kc1; Rd1.
+ * Before: Kf1; Re1, d1, c1, b1, or a1	     After: Kc1; Rd1.
+ * Before: Ke1; Rd1, c1, b1, or a1 	     After: Kc1; Rd1.
+ * Before: Kd1; Rc1, b1 or a1		     After: Kc1; Rd1.
+ * Before: Kc1; Rb1 or a1			     After: Kc1; Rd1.
+ * Before: Kb1; Ra1			     After: Kc1; Rd1.
+ * 
+ * White &quot;h&quot;-side castling (0-0):
+ * ------------------------------
+ * Before: Kb1; Rc1, d1, e1, f1, g1 or h1.      After: Kg1; Rf1.
+ * Before: Kc1; Rd1, e1, f1, g1 or h1	     After: Kg1; Rf1.
+ * Before: Kd1; Re1, f1, g1 or h1		     After: Kg1; Rf1.
+ * Before: Ke1; Rf1, g1 or h1		     After: Kg1; Rf1.
+ * Before: Kf1; Rg1 or h1			     After: Kg1; Rf1.
+ * Before: Kg1; Rh1			     After: Kg1; Rf1.
+ * Black &quot;a&quot;-side castling (... 0-0-0):
+ * ------------------------------------
+ * Before: Kg8; Rf8, e8, d8, c8, b8 or a8	     After: Kc8; Rd8.
+ * Before: Kf8; Re8, d8, c8, b8 or a8	     After: Kc8; Rd8.
+ * Before: Ke8; Rd8, c8, b8 or a8		     After: Kc8; Rd8.
+ * Before: Kd8; Rc8, b8 or a8		     After: Kc8; Rd8.
+ * Before: Kc8; Rb8 or a8			     After: Kc8; Rd8.
+ * Before: Kb8; Ra8			     After: Kc8; Rd8.
+ * 
+ * Black &quot;h&quot;-side castling (... 0-0): 
+ * ----------------------------------
+ * Before: Kb8; Rc8, d8, e8, f8, g8 or h8	     After: Kg8; Rf8.
+ * Before: Kc8; Rd8, e8, f8, g8 or h8	     After: Kg8; Rf8.
+ * Before: Kd8; Re8, f8, g8 or h8		     After: Kg8; Rf8.
+ * Before: Ke8; Rf8, g8 or h8		     After: Kg8; Rf8.
+ * Before: Kf8; Rg8 or h8			     After: Kg8; Rf8.
+ * Before: Kg8; Rh8			     After: Kg8; Rf8.
+ * </pre>
+ * 
+ * TO DO: add in castling support.
+ */
 public class FischerRandomGame extends Game {
 
 	public FischerRandomGame() {
 		setType(Type.FISCHER_RANDOM);
+	}
+
+	/**
+	 * @param ignoreHashes
+	 *            Whether to copying hash table or not.
+	 * @return An deep clone copy of this Game object.
+	 */
+	@Override
+	public Game deepCopy(boolean ignoreHashes) {
+		FischerRandomGame result = new FischerRandomGame();
+		overwrite(result, ignoreHashes);
+		return result;
 	}
 
 	@Override

@@ -34,6 +34,7 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.Result;
+import raptor.game.Game.Type;
 import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
@@ -380,7 +381,8 @@ public class PlayingController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addPromotionIconsToToolbar(this, toolbar, isUserWhite);
+			BoardUtils.addPromotionIconsToToolbar(this, toolbar, isUserWhite,
+					game.getType() == Type.SUICIDE);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addPremoveClearAndAutoDrawToolbar(this, toolbar);
 			new ToolItem(toolbar, SWT.SEPARATOR);
@@ -389,7 +391,11 @@ public class PlayingController extends ChessBoardController {
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-		setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+		if (game.getType() == Type.SUICIDE) {
+			setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
+		} else {
+			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+		}
 		return toolbar;
 	}
 
