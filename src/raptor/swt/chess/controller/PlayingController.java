@@ -71,6 +71,17 @@ public class PlayingController extends ChessBoardController {
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
+		public void droppablePiecesChanged(Game game) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				board.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						refreshBoard();
+					}
+				});
+			}
+		}
+
+		@Override
 		public void gameInactive(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
@@ -235,15 +246,17 @@ public class PlayingController extends ChessBoardController {
 	protected void adjustPremoveLabel() {
 		String labelText = "Premoves: ";
 		synchronized (premoves) {
+			boolean hasAddedPremove = false;
 			for (PremoveInfo info : premoves) {
 				String premove = ""
 						+ GameUtils.getPseudoSan(info.fromPiece, info.toPiece,
 								info.fromSquare, info.toSquare);
-				if (labelText.equals("")) {
+				if (!hasAddedPremove) {
 					labelText += premove;
 				} else {
 					labelText += " , " + premove;
 				}
+				hasAddedPremove = true;
 			}
 		}
 
@@ -524,9 +537,9 @@ public class PlayingController extends ChessBoardController {
 			board.unhighlightAllSquares();
 			board.getSquare(square).highlight();
 			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
-				movingPiece = board.getSquare(square).getPiece();
 				board.getSquare(square).setPiece(GameConstants.EMPTY);
 			}
+			movingPiece = board.getSquare(square).getPiece();
 			board.redrawSquares();
 		}
 	}
@@ -575,8 +588,13 @@ public class PlayingController extends ChessBoardController {
 			}
 
 			if (move == null) {
-				adjustForIllegalMove(GameUtils.getPseudoSan(getGame(),
-						fromSquare, toSquare), false);
+				String san = "";
+				try {
+					san = GameUtils.getPseudoSan(getGame(), fromSquare,
+							toSquare);
+				} catch (IllegalArgumentException iae) {
+				}
+				adjustForIllegalMove(san, false);
 			} else {
 				board.getSquare(fromSquare).highlight();
 				board.getSquare(toSquare).highlight();

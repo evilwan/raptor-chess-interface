@@ -364,8 +364,8 @@ public class RaptorWindow extends ApplicationWindow {
 										getTabHeight()));
 							}
 						}
-					}
-					else if (existingControl != null && existingControl.isVisible() == false) {
+					} else if (existingControl != null
+							&& existingControl.isVisible() == false) {
 						existingControl.setVisible(true);
 						existingControl.redraw();
 					}

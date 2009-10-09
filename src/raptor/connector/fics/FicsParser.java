@@ -220,7 +220,7 @@ public class FicsParser implements IcsParser, GameConstants {
 			for (int i = 1; i < message.blackHoldings.length; i++) {
 				game.setDropCount(BLACK, i, message.blackHoldings[i]);
 			}
-			service.fireGameStateChanged(message.gameId, false);
+			service.fireDroppablePiecesChanged(message.gameId);
 		}
 	}
 

@@ -30,6 +30,10 @@ public class GameService {
 	 * GameServiceListener interface.
 	 */
 	public static class GameServiceAdapter implements GameServiceListener {
+		public void droppablePiecesChanged(Game game) {
+
+		}
+
 		public void gameCreated(Game game) {
 		}
 
@@ -47,6 +51,14 @@ public class GameService {
 	}
 
 	public static interface GameServiceListener {
+
+		/**
+		 * Invoked when the drop pieces you are holding change in droppable
+		 * chess games.
+		 * 
+		 * @param game
+		 */
+		public void droppablePiecesChanged(Game game);
 
 		/**
 		 * Invoked when a game is created.
@@ -93,6 +105,20 @@ public class GameService {
 
 	public void dispose() {
 		gameMap.clear();
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 */
+	public void fireDroppablePiecesChanged(String gameId) {
+		Game game = getGame(gameId);
+		if (game != null) {
+			synchronized (listeners) {
+				for (GameServiceListener listener : listeners) {
+					listener.droppablePiecesChanged(game);
+				}
+			}
+		}
 	}
 
 	/**

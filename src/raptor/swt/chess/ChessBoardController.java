@@ -535,7 +535,9 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onActivate() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("In onActivate : " + game.getId() + " " + game.getEvent());
+			LOG
+					.debug("In onActivate : " + game.getId() + " "
+							+ game.getEvent());
 		}
 	}
 
@@ -559,7 +561,8 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onPassivate() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("In onPassivate : " + game.getId() + " " + game.getEvent());
+			LOG.debug("In onPassivate : " + game.getId() + " "
+					+ game.getEvent());
 		}
 	}
 
@@ -679,6 +682,14 @@ public abstract class ChessBoardController implements BoardConstants,
 			board.getSquare(move.getFrom()).setPiece(EMPTY);
 			board.getSquare(move.getTo()).setPiece(fromPiece);
 		}
+		board.redrawSquares();
+	}
+
+	/**
+	 * Refreshes only the piece jail.
+	 */
+	protected void refreshPieceJail() {
+		adjustPieceJail();
 		board.redrawSquares();
 	}
 
