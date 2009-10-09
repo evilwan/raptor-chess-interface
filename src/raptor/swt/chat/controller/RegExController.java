@@ -140,10 +140,8 @@ public class RegExController extends ChatConsoleController {
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent event) {
 		try {
-			System.err.println("Match");
 			return pattern.matcher(event.getMessage()).matches();
 		} catch (Throwable t) {
-			System.err.println("No Match");
 			return false;
 		}
 	}
