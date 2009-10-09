@@ -40,10 +40,8 @@ import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.Move;
 import raptor.game.util.GameUtils;
-import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ThreadService;
 import raptor.swt.chess.controller.ToolBarItemKey;
-import raptor.util.RaptorStringUtils;
 import raptor.util.SVGUtil;
 
 public class BoardUtils implements BoardConstants {
@@ -759,47 +757,6 @@ public class BoardUtils implements BoardConstants {
 
 	public static int pieceJailSquareToPiece(int pieceJailSquare) {
 		return pieceJailSquare - 100;
-	}
-
-	public static String timeToString(long timeMillis) {
-
-		long timeLeft = timeMillis;
-
-		if (timeLeft < 0) {
-			timeLeft = 0;
-		}
-
-		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
-
-		if (timeLeft >= prefs.getLong(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-			int hour = (int) (timeLeft / (60000L * 60));
-			timeLeft -= hour * 60 * 1000 * 60;
-			int minute = (int) (timeLeft / 60000L);
-			return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
-					+ RaptorStringUtils.defaultTimeString(minute, 2);
-
-		} else if (timeLeft >= prefs
-				.getLong(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
-			int hour = (int) (timeLeft / (60000L * 60));
-			timeLeft -= hour * 60 * 1000 * 60;
-			int minute = (int) (timeLeft / 60000L);
-			timeLeft -= minute * 60 * 1000;
-			int seconds = (int) (timeLeft / 1000L);
-			return RaptorStringUtils.defaultTimeString(minute, 2) + ":"
-					+ RaptorStringUtils.defaultTimeString(seconds, 2);
-
-		} else {
-			int hour = (int) (timeLeft / (60000L * 60));
-			timeLeft -= hour * 60 * 1000 * 60;
-			int minute = (int) (timeLeft / 60000L);
-			timeLeft -= minute * 60 * 1000;
-			int seconds = (int) (timeLeft / 1000L);
-			timeLeft -= seconds * 1000;
-			int tenths = (int) (timeLeft / 100L);
-			return RaptorStringUtils.defaultTimeString(minute, 2) + ":"
-					+ RaptorStringUtils.defaultTimeString(seconds, 2) + "."
-					+ RaptorStringUtils.defaultTimeString(tenths, 1);
-		}
 	}
 
 }

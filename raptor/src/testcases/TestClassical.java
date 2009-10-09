@@ -192,7 +192,7 @@ public class TestClassical implements GameConstants {
 		for (int i = 0; i < AMBIG_P_CAPTURE_FEN_TESTS.length; i++) {
 			Game game = GameUtils.createFromFen(AMBIG_P_CAPTURE_FEN_TESTS[i],
 					Game.Type.CLASSIC);
-			game.setSettingMoveSan(true);
+			game.addState(Game.UPDATING_SAN_STATE);
 			dumpGame("Test Ambig Pawn Captures: ", game);
 			assertOnlyLegals(AMBIG_P_CAPTURE_FEN_LEGAL_MOVESS[i], game
 					.getLegalMoves().asList());
@@ -211,7 +211,7 @@ public class TestClassical implements GameConstants {
 		for (int i = 0; i < AMBIG_FEN_TESTS.length; i++) {
 			Game game = GameUtils.createFromFen(AMBIG_FEN_TESTS[i],
 					Game.Type.CLASSIC);
-			game.setSettingMoveSan(true);
+			game.addState(Game.UPDATING_SAN_STATE);
 
 			dumpGame("Ambiguous move position: ", game);
 			assertOnlyLegals(AMBIG_FEN_MOVES[i], game.getLegalMoves().asList());
@@ -244,7 +244,7 @@ public class TestClassical implements GameConstants {
 				.createFromFen(
 						"r2q1rk1/1p2bppp/1p1p2b1/4P3/1P2N3/5N2/1P4PP/R2QKB1R b KQ - 0 16",
 						Game.Type.CLASSIC);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		game.makeSanMove("Rxa1");
 		assertTrue("Didnt change castle qside flag.", !game
 				.canWhiteCastleLong());
@@ -255,7 +255,7 @@ public class TestClassical implements GameConstants {
 	public void testCheckMate() throws Exception {
 		for (String element : CHECKMATE_FEN_TESTS) {
 			Game game = GameUtils.createFromFen(element, Game.Type.CLASSIC);
-			game.setSettingMoveSan(true);
+			game.addState(Game.UPDATING_SAN_STATE);
 			assertTrue("Position was not checkmate: "
 					+ game.getLegalMoves().asArray() + "\n" + game, game
 					.isCheckmate());
@@ -275,7 +275,7 @@ public class TestClassical implements GameConstants {
 		for (int i = 0; i < CHECK_FEN_TESTS.length; i++) {
 			Game game = GameUtils.createFromFen(CHECK_FEN_TESTS[i],
 					Game.Type.CLASSIC);
-			game.setSettingMoveSan(true);
+			game.addState(Game.UPDATING_SAN_STATE);
 			assertOnlyLegals(CHECK_FEN_LEGAL_MOVES[i], game.getLegalMoves()
 					.asList());
 		}
@@ -285,7 +285,7 @@ public class TestClassical implements GameConstants {
 	public void testDisambiguityFromCheck() throws Exception {
 		String fen = "5r2/3qp1kp/1p1p1rp1/p1pP4/P4P2/2Q5/1P4PP/4RR1K b  - - 1 49";
 		Game game = GameUtils.createFromFen(fen, Game.Type.CLASSIC);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		game.makeSanMove("Rf7");
 	}
 
@@ -294,7 +294,7 @@ public class TestClassical implements GameConstants {
 		for (int i = 0; i < EP_FEN_TESTS.length; i++) {
 			Game game = GameUtils.createFromFen(EP_FEN_TESTS[i],
 					Game.Type.CLASSIC);
-			game.setSettingMoveSan(true);
+			game.addState(Game.UPDATING_SAN_STATE);
 			dumpGame("Test EP: ", game);
 			assertOnlyLegals(EP_FEN_LEAGALS[i], game.getLegalMoves().asList());
 
@@ -312,7 +312,7 @@ public class TestClassical implements GameConstants {
 				.createFromFen(
 						"rnbqkbnr/1pp1pppp/p7/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 2",
 						Game.Type.CLASSIC);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		game.makeSanMove("exd6");
 		assertTrue("Didnt clear EP square", game.getPiece(SQUARE_D5) == 0);
 
@@ -320,7 +320,7 @@ public class TestClassical implements GameConstants {
 				.createFromFen(
 						"rn5r/pb2k3/2p5/P3Pppp/1p1pPNPP/bB1P4/2PK4/RNn1Q2R w - f6 0 32",
 						Game.Type.CLASSIC);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		dumpGame("Before move exf6", game);
 		game.makeSanMove("exf6");
 
@@ -347,7 +347,7 @@ public class TestClassical implements GameConstants {
 	@Test
 	public void testFromShortAlgebraic() throws Exception {
 		Game game = GameUtils.createStartingPosition(Game.Type.CLASSIC);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		dumpGame("Initial Position", game);
 		assertOnlyLegals(new String[] { "a3", "a4", "b3", "b4", "c3", "c4",
 				"d3", "d4", "e3", "e4", "f3", "f4", "g3", "g4", "h3", "h4",
@@ -376,7 +376,7 @@ public class TestClassical implements GameConstants {
 	@Test
 	public void testInitialPosition() throws Exception {
 		Game game = GameUtils.createStartingPosition(Game.Type.CLASSIC);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		dumpGame("Initial Position", game);
 		assertOnlyLegals(new String[] { "a3", "a4", "b3", "b4", "c3", "c4",
 				"d3", "d4", "e3", "e4", "f3", "f4", "g3", "g4", "h3", "h4",
@@ -642,7 +642,7 @@ public class TestClassical implements GameConstants {
 
 		for (int i = 0; i < runs; i++) {
 			Game game = GameUtils.createStartingPosition(Game.Type.CLASSIC);
-			game.setSettingMoveSan(true);
+			game.addState(Game.UPDATING_SAN_STATE);
 
 			for (int j = 0; j < numPositions; j++) {
 				List<Move> legals = game.getPseudoLegalMoves().asList();
@@ -671,7 +671,7 @@ public class TestClassical implements GameConstants {
 	public void testStaleMate() throws Exception {
 		for (String element : STALEMATE_FEN_TESTS) {
 			Game game = GameUtils.createFromFen(element, Game.Type.CLASSIC);
-			game.setSettingMoveSan(true);
+			game.addState(Game.UPDATING_SAN_STATE);
 			assertTrue("Position was not stalemate: "
 					+ getMoves(game.getLegalMoves().asList()) + " "
 					+ game.isInCheck() + "\n" + game, game.isStalemate());
@@ -720,7 +720,7 @@ public class TestClassical implements GameConstants {
 
 		for (int i = 0; i < runs; i++) {
 			Game game = GameUtils.createStartingPosition(Game.Type.CLASSIC);
-			game.setSettingMoveSan(false);
+			game.addState(Game.UPDATING_SAN_STATE);
 			long runStart = System.currentTimeMillis();
 
 			for (int j = 0; j < numMoves; j++) {

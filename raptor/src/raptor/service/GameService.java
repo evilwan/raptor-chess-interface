@@ -40,6 +40,9 @@ public class GameService {
 		public void gameInactive(Game game) {
 		}
 
+		public void gameMovesAdded(Game game) {
+		}
+
 		public void gameStateChanged(Game game, boolean isNewMove) {
 		}
 
@@ -71,6 +74,12 @@ public class GameService {
 		 * removed from the GameService.
 		 */
 		public void gameInactive(Game game);
+
+		/**
+		 * Invoked when the starting moves for this game are added to a game.
+		 * Usually occurs when a game is being observed or examined.
+		 */
+		public void gameMovesAdded(Game game);
 
 		/**
 		 * Invoked when the state of a game changes. This can be from a move
@@ -151,6 +160,20 @@ public class GameService {
 				}
 			}
 			removeGame(game);
+		}
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 */
+	public void fireGameMovesAdded(String gameId) {
+		Game game = getGame(gameId);
+		if (game != null) {
+			synchronized (listeners) {
+				for (GameServiceListener listener : listeners) {
+					listener.gameMovesAdded(game);
+				}
+			}
 		}
 	}
 

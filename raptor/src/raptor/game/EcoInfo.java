@@ -20,14 +20,15 @@ import org.apache.commons.lang.StringUtils;
  */
 public class EcoInfo {
 
-	private String moveSequence;
+	private String positionOnlyFen;
 	private String ecoCode;
 	private String openingName;
 	private String variationName = "";
 
-	public EcoInfo(String moves, String eco, String opening, String variation) {
-		moveSequence = moves;
-		ecoCode = eco;
+	public EcoInfo(String positionOnlyFen, String eco, String opening,
+			String variation) {
+		this.positionOnlyFen = positionOnlyFen;
+		ecoCode = eco.toUpperCase();
 		openingName = opening;
 		variationName = variation;
 	}
@@ -40,17 +41,17 @@ public class EcoInfo {
 	}
 
 	/**
-	 * @return The move sequence required to get to this ECO code.
-	 */
-	public String getMoves() {
-		return moveSequence;
-	}
-
-	/**
 	 * @return The name of the opening.
 	 */
 	public String getOpening() {
 		return openingName;
+	}
+
+	/**
+	 * @return The move sequence required to get to this ECO code.
+	 */
+	public String getPositionOnlyFen() {
+		return positionOnlyFen;
 	}
 
 	/**

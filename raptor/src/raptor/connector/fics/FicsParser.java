@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -27,6 +28,7 @@ import raptor.connector.fics.game.B1Parser;
 import raptor.connector.fics.game.G1Parser;
 import raptor.connector.fics.game.GameEndParser;
 import raptor.connector.fics.game.IllegalMoveParser;
+import raptor.connector.fics.game.MovesParser;
 import raptor.connector.fics.game.NoLongerExaminingGameParser;
 import raptor.connector.fics.game.RemovingObsGameParser;
 import raptor.connector.fics.game.Style12Parser;
@@ -35,9 +37,11 @@ import raptor.connector.fics.game.message.B1Message;
 import raptor.connector.fics.game.message.G1Message;
 import raptor.connector.fics.game.message.GameEndMessage;
 import raptor.connector.fics.game.message.IllegalMoveMessage;
+import raptor.connector.fics.game.message.MovesMessage;
 import raptor.connector.fics.game.message.NoLongerExaminingGameMessage;
 import raptor.connector.fics.game.message.RemovingObsGameMessage;
 import raptor.connector.fics.game.message.Style12Message;
+import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsParser;
 import raptor.connector.ics.IcsUtils;
 import raptor.connector.ics.chat.CShoutEventParser;
@@ -70,6 +74,8 @@ public class FicsParser implements IcsParser, GameConstants {
 	protected RemovingObsGameParser removingObsGameParser;
 	protected TakebackParser takebackParser;
 	protected NoLongerExaminingGameParser noLongerExaminingParser;
+	protected MovesParser movesParser;
+	protected IcsConnector connector;
 
 	protected List<ChatEventParser> nonGameEventParsers = new ArrayList<ChatEventParser>(
 			30);
@@ -90,6 +96,7 @@ public class FicsParser implements IcsParser, GameConstants {
 		removingObsGameParser = new RemovingObsGameParser();
 		takebackParser = new TakebackParser();
 		noLongerExaminingParser = new NoLongerExaminingGameParser();
+		movesParser = new MovesParser();
 
 		// handle user tell types of events first so others can't be spoofed
 		// nonGameEventParsers.add(new BugWhoGEventParser(icsId));
@@ -112,17 +119,39 @@ public class FicsParser implements IcsParser, GameConstants {
 		nonGameEventParsers.add(new FollowingEventParser());
 	}
 
-	public ChatEvent[] parse(String inboundEvent) {
+	public ChatEvent[] parse(String inboundMessage) {
+		LOG.debug("Raw message in: " + inboundMessage);
 		List<ChatEvent> events = new ArrayList<ChatEvent>(5);
-		for (ChatEventParser parser : nonGameEventParsers) {
-			ChatEvent event = parser.parse(inboundEvent);
-			if (event != null) {
-				events.add(event);
+
+		// First handle the Moves message.
+		String afterMovesMessage = parseMovesMessage(inboundMessage, events);
+		LOG.debug("After handling moves message: " + afterMovesMessage);
+
+		// Next handle game events.
+		if (StringUtils.isNotBlank(afterMovesMessage)) {
+			String afterGameEvents = parseGameEvents(afterMovesMessage);
+
+			LOG.debug("After handling game events: " + afterGameEvents);
+
+			// Now process what is left over as chat events.
+			// Don't send it if its only a prompt.
+			if (StringUtils.isNotBlank(afterGameEvents)
+					&& !afterGameEvents.trim().equals(
+							connector.getContext().getPrompt())) {
+
+				for (ChatEventParser parser : nonGameEventParsers) {
+					ChatEvent event = parser.parse(afterGameEvents);
+					if (event != null) {
+						events.add(event);
+					}
+				}
+				if (events.isEmpty()) {
+					events.add(new ChatEvent(null, ChatType.UNKNOWN,
+							afterGameEvents));
+				}
 			}
 		}
-		if (events.isEmpty()) {
-			events.add(new ChatEvent(null, ChatType.UNKNOWN, inboundEvent));
-		}
+
 		return events.toArray(new ChatEvent[0]);
 	}
 
@@ -130,17 +159,17 @@ public class FicsParser implements IcsParser, GameConstants {
 	 * Parses and removes all of the game events from inboundEvent. Adjusts the
 	 * games in service. Returns a String with the game events removed.
 	 */
-	public String parseOutAndProcessGameEvents(GameService service,
-			String inboundEvent) {
-		if (inboundEvent.length() > MAX_GAME_MESSAGE) {
-			return inboundEvent;
+	protected String parseGameEvents(String inboundMessage) {
+		if (inboundMessage.length() > MAX_GAME_MESSAGE) {
+			return inboundMessage;
 		} else {
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Raw message in: " + inboundEvent);
+				LOG.debug("Raw message in: " + inboundMessage);
 			}
-			StringBuilder result = new StringBuilder(inboundEvent.length());
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(inboundEvent,
-					"\n");
+
+			StringBuilder result = new StringBuilder(inboundMessage.length());
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(
+					inboundMessage, "\n");
 
 			while (tok.hasMoreTokens()) {
 				String line = tok.nextToken();
@@ -150,25 +179,26 @@ public class FicsParser implements IcsParser, GameConstants {
 
 				G1Message g1Message = g1Parser.parse(line);
 				if (g1Message != null) {
-					process(g1Message, service);
+					process(g1Message, connector.getGameService());
 					continue;
 				}
 
 				Style12Message style12Message = style12Parser.parse(line);
 				if (style12Message != null) {
-					process(style12Message, service, inboundEvent);
+					process(style12Message, connector.getGameService(),
+							inboundMessage);
 					continue;
 				}
 
 				B1Message b1Message = b1Parser.parse(line);
 				if (b1Message != null) {
-					process(b1Message, service);
+					process(b1Message, connector.getGameService());
 					continue;
 				}
 
 				GameEndMessage gameEndMessage = gameEndParser.parse(line);
 				if (gameEndMessage != null) {
-					process(gameEndMessage, service);
+					process(gameEndMessage, connector.getGameService());
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 					continue;
 				}
@@ -176,7 +206,7 @@ public class FicsParser implements IcsParser, GameConstants {
 				IllegalMoveMessage illegalMoveMessage = illegalMoveParser
 						.parse(line);
 				if (illegalMoveMessage != null) {
-					process(illegalMoveMessage, service);
+					process(illegalMoveMessage, connector.getGameService());
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 					continue;
 				}
@@ -184,7 +214,7 @@ public class FicsParser implements IcsParser, GameConstants {
 				RemovingObsGameMessage removingObsGameMessage = removingObsGameParser
 						.parse(line);
 				if (removingObsGameMessage != null) {
-					process(removingObsGameMessage, service);
+					process(removingObsGameMessage, connector.getGameService());
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 					continue;
 				}
@@ -192,7 +222,8 @@ public class FicsParser implements IcsParser, GameConstants {
 				NoLongerExaminingGameMessage noLonerExaminingGameMessage = noLongerExaminingParser
 						.parse(line);
 				if (noLonerExaminingGameMessage != null) {
-					process(noLonerExaminingGameMessage, service);
+					process(noLonerExaminingGameMessage, connector
+							.getGameService());
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 					continue;
 				}
@@ -202,6 +233,27 @@ public class FicsParser implements IcsParser, GameConstants {
 				result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 			}
 			return result.toString();
+		}
+	}
+
+	/**
+	 * Parses out the Moves message from inboundEvent. It is assumed moves
+	 * messages will never contain other messages.
+	 * 
+	 * @param inboundEvent
+	 *            The inbound message.
+	 * @param events
+	 *            The chatEvents
+	 */
+	protected String parseMovesMessage(String inboundMessage,
+			List<ChatEvent> events) {
+		MovesMessage movesMessage = movesParser.parse(inboundMessage);
+		if (movesMessage != null) {
+			process(movesMessage, connector.getGameService());
+			events.add(new ChatEvent(null, ChatType.MOVES, inboundMessage));
+			return null;
+		} else {
+			return inboundMessage;
 		}
 	}
 
@@ -275,6 +327,22 @@ public class FicsParser implements IcsParser, GameConstants {
 		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processed illegal move: " + message);
+		}
+	}
+
+	protected void process(MovesMessage message, GameService service) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing movesMessage: " + message);
+		}
+		Game game = service.getGame(message.gameId);
+		if (game == null) {
+			if (LOG.isWarnEnabled()) {
+				LOG
+						.warn("Received a MovesMessage for a game not being managed. This can occur if the user manually types in the moves command.");
+			}
+		} else {
+			IcsUtils.updateGamesMoves(game, message);
+			service.fireGameMovesAdded(game.getId());
 		}
 	}
 
@@ -408,6 +476,15 @@ public class FicsParser implements IcsParser, GameConstants {
 				IcsUtils.updatePosition(game, message);
 				IcsUtils.verifyLegal(game);
 
+				/**
+				 * Send a request for the moves.
+				 */
+				if (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
+						&& !message.isWhitesMoveAfterMoveIsMade) {
+					connector.sendMessage("moves " + message.gameId, true,
+							ChatType.MOVES);
+				}
+
 				service.addGame(game);
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Firing game created.");
@@ -415,10 +492,14 @@ public class FicsParser implements IcsParser, GameConstants {
 				service.fireGameCreated(game.getId());
 			}
 		}
+
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processed style 12: " + message + " in "
 					+ (System.currentTimeMillis() - startTime));
 		}
 	}
 
+	public void setConnector(IcsConnector connector) {
+		this.connector = connector;
+	}
 }

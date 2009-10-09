@@ -13,8 +13,9 @@
  */
 package raptor.game.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.game.GameConstants;
-import raptor.util.RaptorStringUtils;
 
 /**
  * A class containing validation methods for Short Algebraic Notation (SAN).
@@ -532,20 +533,18 @@ public class SanUtil {
 	}
 
 	/**
-	 * Removes all of the following characters (+,-,=,x,:,"e.p.").
+	 * Removes all of the following characters (+,-,=,x,:,"e.p."). Replaces
+	 * (ACDEFGH) with (acdefgh).
 	 * 
 	 * @param unstrictSan
 	 * @return
 	 */
 	public static String toStrictSan(String unstrictSan) {
-		// TO DO: write a utility method to do all of this in on loop.
-		String result = RaptorStringUtils.removeAll(unstrictSan, ',');
-		result = RaptorStringUtils.removeAll(result, '+');
-		result = RaptorStringUtils.removeAll(result, '#');
-		result = RaptorStringUtils.removeAll(result, '=');
-		result = RaptorStringUtils.removeAll(result, 'x');
-		result = RaptorStringUtils.removeAll(result, ':');
-		result = RaptorStringUtils.removeAll(result, "e.p.");
+		String result = StringUtils.replaceChars(unstrictSan, ",+#=x:X", null);
+		result = StringUtils.remove(result, "e.p.");
+		result = StringUtils.replaceChars(result, "ACDEFGH", "acdefgh");
+
+		// System.err.println("SAN IN = " + unstrictSan + " SAN OUT=" + result);
 		return result;
 	}
 }

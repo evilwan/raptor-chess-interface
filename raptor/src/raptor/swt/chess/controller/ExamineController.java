@@ -80,6 +80,22 @@ public class ExamineController extends ChessBoardController {
 		}
 
 		@Override
+		public void gameMovesAdded(Game game) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				board.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							refresh();
+						} catch (Throwable t) {
+							connector.onError(
+									"ExamineController.gameMovesAdded", t);
+						}
+					}
+				});
+			}
+		}
+
+		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {

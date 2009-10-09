@@ -19,10 +19,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.connector.fics.game.TakebackParser;
 import raptor.connector.fics.game.TakebackParser.TakebackMessage;
 import raptor.connector.fics.game.message.G1Message;
+import raptor.connector.fics.game.message.MovesMessage;
 import raptor.connector.fics.game.message.Style12Message;
 import raptor.game.AtomicGame;
 import raptor.game.BughouseGame;
@@ -30,10 +32,13 @@ import raptor.game.CrazyhouseGame;
 import raptor.game.Game;
 import raptor.game.GameConstants;
 import raptor.game.LosersGame;
+import raptor.game.Move;
 import raptor.game.SetupGame;
 import raptor.game.SuicideGame;
 import raptor.game.Game.PositionState;
 import raptor.game.Game.Type;
+import raptor.game.pgn.PgnHeader;
+import raptor.game.pgn.RemainingClockTime;
 import raptor.game.util.GameUtils;
 import raptor.game.util.ZobristHash;
 import raptor.swt.chess.BoardUtils;
@@ -91,11 +96,19 @@ public class IcsUtils implements GameConstants {
 			game.setWhiteRemainingeTimeMillis(message.whiteRemainingTimeMillis);
 			game.setBlackRemainingTimeMillis(message.blackRemainingTimeMillis);
 
+			if (message.timeTakenForLastMoveMillis != 0) {
+				game.getMoveList().get(game.getMoveList().getSize() - 1)
+						.addAnnotation(
+								new RemainingClockTime(
+										message.timeTakenForLastMoveMillis));
+			}
 		} else {
 			if (message.san.equals("none")) {
 				LOG.warn("Received a none for san in a style 12 event.");
 			} else {
-				game.makeSanMove(message.san);
+				Move move = game.makeSanMove(message.san);
+				move.addAnnotation(new RemainingClockTime(
+						message.timeTakenForLastMoveMillis));
 			}
 
 			game.setWhiteRemainingeTimeMillis(message.whiteRemainingTimeMillis);
@@ -238,7 +251,8 @@ public class IcsUtils implements GameConstants {
 		}
 
 		result.setId(g1.gameId);
-		result.setSettingMoveSan(true);
+		result.addState(Game.UPDATING_SAN_STATE);
+		result.addState(Game.UPDATING_ECO_HEADERS_STATE);
 		result.setDate(System.currentTimeMillis());
 		result.setRound("?");
 		result.setSite("freechess.org");
@@ -263,7 +277,8 @@ public class IcsUtils implements GameConstants {
 			Game game = isSetup ? new SetupGame() : new Game();
 			game.setId(message.gameId);
 			game.setEvent(isSetup ? "Setting Up Position" : "Examining Game");
-			game.setSettingMoveSan(true);
+			game.addState(Game.UPDATING_SAN_STATE);
+			game.addState(Game.UPDATING_ECO_HEADERS_STATE);
 			game.setDate(System.currentTimeMillis());
 			game.setSite("freechess.org");
 			game.setRound("?");
@@ -501,6 +516,69 @@ public class IcsUtils implements GameConstants {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Converts a time in: (0:00.000) mmm:ss.MMM format into a long value
+	 * representing milliseconds.
+	 * 
+	 * @param timeString
+	 *            The time string.
+	 * @return The result.
+	 */
+	public static final long timeToLong(String timeString) {
+		RaptorStringTokenizer tok = new RaptorStringTokenizer(timeString,
+				"(:.)", true);
+		long minutes = Integer.parseInt(tok.nextToken());
+		long seconds = Integer.parseInt(tok.nextToken());
+		long millis = Integer.parseInt(tok.nextToken());
+		return minutes * 1000 * 60 + seconds * 1000 + millis;
+	}
+
+	/**
+	 * Updates the moves that are missing in the game to the ones in the move
+	 * message.
+	 */
+	public static void updateGamesMoves(Game game, MovesMessage message) {
+		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
+				- game.getMoveList().getSize();
+
+		System.err.println("Half move count to start on = "
+				+ halfMoveCountGameStartedOn);
+
+		if (halfMoveCountGameStartedOn != 0) {
+			Game gameClone = GameUtils.createStartingPosition(game.getType());
+			gameClone.addState(Game.UPDATING_ECO_HEADERS_STATE);
+
+			for (int i = 0; i < halfMoveCountGameStartedOn; i++) {
+				try {
+					Move move = gameClone.makeSanMove(message.moves[i]);
+					move.addAnnotation(new RemainingClockTime(
+							message.timePerMove[i]));
+				} catch (IllegalArgumentException iae) {
+					LOG.error("Could not parse san", iae);
+					Raptor.getInstance().onError(
+							"Error update game with moves", iae);
+				}
+			}
+
+			Move[] moves = gameClone.getMoveList().asArray();
+			game.getMoveList().prepend(moves);
+			game.setInitialEpSquare(gameClone.getInitialEpSquare());
+			if (StringUtils.isBlank(game.getHeader(PgnHeader.ECO))
+					&& StringUtils.isNotBlank(gameClone
+							.getHeader(PgnHeader.ECO))) {
+				game.setHeader(PgnHeader.ECO, gameClone
+						.getHeader(PgnHeader.ECO));
+			}
+			if (StringUtils.isBlank(game.getHeader(PgnHeader.OPENING))
+					&& StringUtils.isNotBlank(gameClone
+							.getHeader(PgnHeader.OPENING))) {
+				game.setHeader(PgnHeader.OPENING, gameClone
+						.getHeader(PgnHeader.OPENING));
+			}
+
+		}
 	}
 
 	/**

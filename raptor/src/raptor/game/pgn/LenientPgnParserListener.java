@@ -118,7 +118,8 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 	protected void createGameFromHeaders(PgnParser parser) {
 		try {
 			currentGame = createGameFromDescription();
-			currentGame.setSettingMoveSan(true);
+			currentGame.addState(Game.UPDATING_SAN_STATE);
+			currentGame.addState(Game.UPDATING_ECO_HEADERS_STATE);
 
 			// Set all of the headers.
 			for (String header : currentHeaders.keySet()) {

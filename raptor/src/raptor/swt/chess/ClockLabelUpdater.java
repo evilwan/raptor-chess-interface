@@ -17,6 +17,7 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.widgets.Display;
 
 import raptor.Raptor;
+import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 
@@ -79,7 +80,7 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			remainingTimeMillis -= currentTime - lastSystemTime;
 			lastSystemTime = currentTime;
 
-			clockLabel.setText(BoardUtils.timeToString(remainingTimeMillis));
+			clockLabel.setText(GameUtils.timeToString(remainingTimeMillis));
 
 			if (remainingTimeMillis > 0) {
 				long nextUpdate = calculateNextUpdate();

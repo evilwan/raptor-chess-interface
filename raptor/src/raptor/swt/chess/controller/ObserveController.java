@@ -16,6 +16,8 @@ package raptor.swt.chess.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -24,6 +26,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.game.Game;
+import raptor.game.util.MoveListTraverser;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
@@ -79,12 +82,32 @@ public class ObserveController extends ChessBoardController {
 		}
 
 		@Override
-		public void gameStateChanged(Game game, final boolean isNewMove) {
+		public void gameMovesAdded(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							refresh();
+						} catch (Throwable t) {
+							connector.onError(
+									"ObserveController.gameMovesAdded", t);
+						}
+					}
+				});
+			}
+		}
+
+		@Override
+		public void gameStateChanged(Game game, final boolean isNewMove) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				board.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
+								setGame(traverser.getSource());
+								refresh();
+								enableDisableNavButtons();
+							}
 							if (isNewMove) {
 								onPlayMoveSound();
 							}
@@ -98,10 +121,12 @@ public class ObserveController extends ChessBoardController {
 		}
 	};
 	protected ToolBar toolbar;
+	protected MoveListTraverser traverser = null;
 
 	public ObserveController(Game game, Connector connector) {
 		super(game);
 		this.connector = connector;
+		traverser = new MoveListTraverser(game);
 	}
 
 	@Override
@@ -131,6 +156,13 @@ public class ObserveController extends ChessBoardController {
 		super.dispose();
 	}
 
+	public void enableDisableNavButtons() {
+		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, traverser.hasNext());
+		setToolItemEnabled(ToolBarItemKey.BACK_NAV, traverser.hasBack());
+		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, traverser.hasFirst());
+		setToolItemEnabled(ToolBarItemKey.LAST_NAV, traverser.hasLast());
+	}
+
 	public Connector getConnector() {
 		return connector;
 	}
@@ -144,7 +176,26 @@ public class ObserveController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addNavIconsToToolbar(this, toolbar, false, false);
+			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
+			ToolItem item = new ToolItem(toolbar, SWT.CHECK);
+			item.setText("UPDATE");
+			item
+					.setToolTipText("When selected, as moves are made in the game the board will be refreshed.\n"
+							+ "When unselected this will not occur, and you have to use the navigation\n"
+							+ "buttons to traverse the game. This is useful when you are looking at a previous\n"
+							+ "move and don't want the position to update as new moves are being made.");
+			item.setSelection(true);
+			addToolItem(ToolBarItemKey.FORCE_UPDATE, item);
+			item.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
+						setGame(traverser.getSource());
+						refresh();
+						enableDisableNavButtons();
+					}
+				}
+			});
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
@@ -202,6 +253,30 @@ public class ObserveController extends ChessBoardController {
 			break;
 		case FLIP:
 			onFlip();
+			break;
+		case NEXT_NAV:
+			traverser.next();
+			setGame(traverser.getAdjustedGame());
+			enableDisableNavButtons();
+			refresh();
+			break;
+		case BACK_NAV:
+			traverser.back();
+			setGame(traverser.getAdjustedGame());
+			enableDisableNavButtons();
+			refresh();
+			break;
+		case FIRST_NAV:
+			traverser.first();
+			setGame(traverser.getAdjustedGame());
+			enableDisableNavButtons();
+			refresh();
+			break;
+		case LAST_NAV:
+			traverser.last();
+			setGame(traverser.getAdjustedGame());
+			enableDisableNavButtons();
+			refresh();
 			break;
 		}
 	}

@@ -437,6 +437,10 @@ public abstract class IcsConnector implements Connector {
 		return chatService;
 	}
 
+	public IcsConnectorContext getContext() {
+		return context;
+	}
+
 	public String getDescription() {
 		return context.getDescription();
 	}
@@ -874,20 +878,11 @@ public abstract class IcsConnector implements Connector {
 	 * message will always use \n as the line delimiter.
 	 */
 	protected void parseMessage(String message) {
-		// Handle and remove game messages.
-		String afterGameMessages = context.parser.parseOutAndProcessGameEvents(
-				getGameService(), message);
-
-		// Don't send anything if the message is only the prompt.
-		if (!afterGameMessages.trim().equals(context.getPrompt())) {
-
-			// Parse what is left into ChatEvents and publish them.
-			ChatEvent[] events = context.getParser().parse(afterGameMessages);
-			for (ChatEvent event : events) {
-				event.setMessage(IcsUtils
-						.maciejgFormatToUnicode(afterGameMessages));
-				publishEvent(event);
-			}
+		ChatEvent[] events = context.getParser().parse(message);
+		for (ChatEvent event : events) {
+			event.setMessage(IcsUtils
+					.maciejgFormatToUnicode(event.getMessage()));
+			publishEvent(event);
 		}
 	}
 

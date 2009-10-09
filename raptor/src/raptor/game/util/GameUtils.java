@@ -33,6 +33,8 @@ import raptor.game.Game.Type;
 import raptor.game.pgn.PgnHeader;
 import raptor.game.pgn.PgnUtil;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.RaptorPreferenceStore;
+import raptor.util.RaptorStringUtils;
 
 //KoggeStone
 //http://www.open-aurec.com/wbforum/viewtopic.php?f=4&t=49948&sid=abd6ee7224f34b11a5211aa167f01ac4
@@ -960,6 +962,48 @@ public class GameUtils implements GameConstants {
 			bitboard &= bitboard - 1; // reset LS1B
 		}
 		return result;
+	}
+
+	public static String timeToString(long timeMillis) {
+
+		long timeLeft = timeMillis;
+
+		if (timeLeft < 0) {
+			timeLeft = 0;
+		}
+
+		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
+
+		if (timeLeft >= prefs
+				.getLong(PreferenceKeys.BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
+			int hour = (int) (timeLeft / (60000L * 60));
+			timeLeft -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeLeft / 60000L);
+			return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
+					+ RaptorStringUtils.defaultTimeString(minute, 2);
+
+		} else if (timeLeft >= prefs
+				.getLong(PreferenceKeys.BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
+			int hour = (int) (timeLeft / (60000L * 60));
+			timeLeft -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeLeft / 60000L);
+			timeLeft -= minute * 60 * 1000;
+			int seconds = (int) (timeLeft / 1000L);
+			return RaptorStringUtils.defaultTimeString(minute, 2) + ":"
+					+ RaptorStringUtils.defaultTimeString(seconds, 2);
+
+		} else {
+			int hour = (int) (timeLeft / (60000L * 60));
+			timeLeft -= hour * 60 * 1000 * 60;
+			int minute = (int) (timeLeft / 60000L);
+			timeLeft -= minute * 60 * 1000;
+			int seconds = (int) (timeLeft / 1000L);
+			timeLeft -= seconds * 1000;
+			int tenths = (int) (timeLeft / 100L);
+			return RaptorStringUtils.defaultTimeString(minute, 2) + ":"
+					+ RaptorStringUtils.defaultTimeString(seconds, 2) + "."
+					+ RaptorStringUtils.defaultTimeString(tenths, 1);
+		}
 	}
 
 	public static String toPgn(Game game) {

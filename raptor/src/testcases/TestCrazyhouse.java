@@ -16,7 +16,7 @@ public class TestCrazyhouse implements GameConstants {
 		Game game = GameUtils.createFromFen(
 				"rn2k2Q/ppp4p/5p2/4p3/1bnpP2n/8/PPPP1PPP/R2QK1R b Qq - 0 37",
 				Game.Type.CRAZYHOUSE);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		System.err.println(game.getDropCountsString());
 		game.makeSanMove("B@f8");
 
@@ -25,7 +25,7 @@ public class TestCrazyhouse implements GameConstants {
 	@Test
 	public void testInitial() {
 		Game game = GameUtils.createStartingPosition(Game.Type.CRAZYHOUSE);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		game.makeSanMove("e4");
 		System.err.println(game.getDropCountsString());
 		game.makeSanMove("d5");
@@ -54,7 +54,7 @@ public class TestCrazyhouse implements GameConstants {
 				"cxd3", "B@f3+", "N@e2", "R@f1+", "N@e1" };
 
 		Game game = GameUtils.createStartingPosition(Game.Type.CRAZYHOUSE);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		for (int i = 0; i < moves.length; i++) {
 			game.makeSanMove(moves[i]);
 		}
@@ -81,7 +81,7 @@ public class TestCrazyhouse implements GameConstants {
 				"Kxh7", "B@f2", "P@e2", "Bxe3", };
 
 		Game game = GameUtils.createStartingPosition(Game.Type.CRAZYHOUSE);
-		game.setSettingMoveSan(true);
+		game.addState(Game.UPDATING_SAN_STATE);
 		for (int i = 0; i < moves.length; i++) {
 			game.makeSanMove(moves[i]);
 		}
