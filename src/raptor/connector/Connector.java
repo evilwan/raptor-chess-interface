@@ -18,8 +18,8 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.chat.ChatType;
-import raptor.game.Game;
-import raptor.game.Move;
+import raptor.chess.Game;
+import raptor.chess.Move;
 import raptor.script.GameScript;
 import raptor.service.ChatService;
 import raptor.service.GameService;

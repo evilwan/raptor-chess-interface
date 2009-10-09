@@ -27,11 +27,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
-import raptor.game.Game;
-import raptor.game.GameConstants;
-import raptor.game.Move;
-import raptor.game.pgn.PgnHeader;
-import raptor.game.util.GameUtils;
+import raptor.chess.Game;
+import raptor.chess.GameConstants;
+import raptor.chess.Move;
+import raptor.chess.pgn.PgnHeader;
+import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.ItemChangedListener;

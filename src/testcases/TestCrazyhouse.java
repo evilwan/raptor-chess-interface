@@ -4,10 +4,10 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import raptor.game.Game;
-import raptor.game.GameConstants;
-import raptor.game.Move;
-import raptor.game.util.GameUtils;
+import raptor.chess.Game;
+import raptor.chess.GameConstants;
+import raptor.chess.Move;
+import raptor.chess.util.GameUtils;
 
 public class TestCrazyhouse implements GameConstants {
 

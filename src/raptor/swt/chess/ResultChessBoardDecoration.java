@@ -19,7 +19,7 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.Point;
 
 import raptor.Raptor;
-import raptor.game.Result;
+import raptor.chess.Result;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.SWTUtils;
 

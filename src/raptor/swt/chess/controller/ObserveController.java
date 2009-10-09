@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
+import raptor.chess.Game;
+import raptor.chess.util.MoveListTraverser;
 import raptor.connector.Connector;
-import raptor.game.Game;
-import raptor.game.util.MoveListTraverser;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;

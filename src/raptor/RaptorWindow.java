@@ -13,7 +13,6 @@
  */
 package raptor;
 
-import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,22 +56,19 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import raptor.chess.Game;
+import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
-import raptor.game.Game;
-import raptor.game.pgn.ListMaintainingPgnParserListener;
-import raptor.game.pgn.StreamingPgnParser;
-import raptor.game.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtil;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
-import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
+import raptor.swt.PgnProcessingDialog;
 import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardWindowItem;
-import raptor.swt.chess.PgnParseResultsWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 
 /**
@@ -728,7 +724,7 @@ public class RaptorWindow extends ApplicationWindow {
 		MenuManager fileMenu = new MenuManager("File");
 		MenuManager helpMenu = new MenuManager("&Help");
 
-		fileMenu.add(new Action("View PGN") {
+		fileMenu.add(new Action("Open PGN File") {
 			@Override
 			public void run() {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
@@ -738,43 +734,9 @@ public class RaptorWindow extends ApplicationWindow {
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
 				if (!StringUtils.isBlank(selected)) {
-					ThreadService.getInstance().run(new Runnable() {
-						public void run() {
-							try {
-								// TODO Move this into a progress dialog.
-								StreamingPgnParser parser = new StreamingPgnParser(
-										new FileReader(selected),
-										Integer.MAX_VALUE);
-								ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
-								parser.addPgnParserListener(listener);
-
-								long startTime = System.currentTimeMillis();
-								parser.parse();
-
-								if (LOG.isDebugEnabled()) {
-									LOG
-											.debug("Parsed "
-													+ listener.getGames()
-															.size()
-													+ " games "
-													+ " in "
-													+ (System
-															.currentTimeMillis() - startTime)
-													+ "ms");
-								}
-								PgnParseResultsWindowItem windowItem = new PgnParseResultsWindowItem(
-										selected, listener.getErrors(),
-										listener.getGames());
-								Raptor.getInstance().getRaptorWindow()
-										.addRaptorWindowItem(windowItem);
-							} catch (Throwable t) {
-								LOG.error("Error parsing pgn file", t);
-								Raptor.getInstance().onError(
-										"Error parsing pgn file: " + selected,
-										t);
-							}
-						}
-					});
+					PgnProcessingDialog dialog = new PgnProcessingDialog(
+							getShell(), selected);
+					dialog.open();
 				}
 			}
 		});

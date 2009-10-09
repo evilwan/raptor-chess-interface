@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import raptor.game.Game;
+import raptor.chess.Game;
 
 /**
  * A class which manages active games that belong to a connector.

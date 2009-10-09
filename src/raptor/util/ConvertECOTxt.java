@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
 
-import raptor.game.Game;
-import raptor.game.util.GameUtils;
+import raptor.chess.Game;
+import raptor.chess.util.GameUtils;
 
 /**
  * Converts resources/common/ECO.txt into resources/common/ECOFen.txt

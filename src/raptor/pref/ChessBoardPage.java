@@ -23,7 +23,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 
 import raptor.Raptor;
-import raptor.game.GameConstants;
+import raptor.chess.GameConstants;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.SWTUtils;

@@ -13,7 +13,7 @@
  */
 package raptor.swt.chess;
 
-import raptor.game.GameConstants;
+import raptor.chess.GameConstants;
 import raptor.pref.PreferenceKeys;
 
 public interface BoardConstants extends GameConstants, PreferenceKeys {

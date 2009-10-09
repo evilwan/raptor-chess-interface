@@ -32,8 +32,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import raptor.Raptor;
-import raptor.game.GameConstants;
-import raptor.game.util.GameUtils;
+import raptor.chess.GameConstants;
+import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.SWTUtils;
