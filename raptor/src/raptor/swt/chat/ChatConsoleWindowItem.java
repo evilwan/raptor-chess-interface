@@ -26,6 +26,7 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	public static final int TEXT_BLOCK = 5000;
 	ChatConsole console;
 	ChatConsoleController controller;
+	boolean isPassive = true;
 
 	public ChatConsoleWindowItem(ChatConsoleController controller) {
 		this.controller = controller;
@@ -74,6 +75,7 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 
 	public void init(Composite parent) {
 		console = new ChatConsole(parent, SWT.NONE);
+		console.setLayoutDeferred(true);
 		console.setController(controller);
 		controller.setChatConsole(console);
 		console.createControls();
@@ -85,17 +87,25 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	}
 
 	public void onActivate() {
-		if (console != null && !console.isDisposed() && controller != null) {
-			console.getDisplay().syncExec(new Runnable() {
-				public void run() {
-					controller.onForceAutoScroll();
-					controller.chatConsole.outputText.forceFocus();
-				}
-			});
+		if (isPassive) {
+			console.setLayoutDeferred(false);
+			if (console != null && !console.isDisposed() && controller != null) {
+				console.getDisplay().syncExec(new Runnable() {
+					public void run() {
+						controller.onForceAutoScroll();
+						controller.chatConsole.outputText.forceFocus();
+					}
+				});
+			}
+			isPassive = false;
 		}
 	}
 
 	public void onPassivate() {
+		if (!isPassive) {
+			console.setLayoutDeferred(true);
+			isPassive = true;
+		}
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {

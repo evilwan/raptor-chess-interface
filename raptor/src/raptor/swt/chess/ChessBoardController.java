@@ -535,7 +535,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onActivate() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("In onActivate : " + game.getId());
+			LOG.debug("In onActivate : " + game.getId() + " " + game.getEvent());
 		}
 	}
 
@@ -559,7 +559,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onPassivate() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("In onPassivate : " + game.getId());
+			LOG.debug("In onPassivate : " + game.getId() + " " + game.getEvent());
 		}
 	}
 
