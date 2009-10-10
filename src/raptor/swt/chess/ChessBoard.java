@@ -34,8 +34,13 @@ import raptor.swt.chess.movelist.SimpleMoveList;
 
 /**
  * A GUI representation of a chess board, and all controls associated with it
- * (e.g. labels,piece jail, etc).. All ChessBoards should have a
- * ChessBoardController which manages it.
+ * (e.g. labels,piece jail, etc).
+ * 
+ * ChessBoards have a ChessBoardLayout which lays out their
+ * components.ChessBoards have a ChessBoardController which manages user
+ * adjustments and events from a controller. ChessBoards have a move list which
+ * can be shown or hidden. ChessBoards have a piece jail which can be shown or
+ * hidden.
  */
 public class ChessBoard implements BoardConstants {
 
@@ -428,6 +433,28 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	/**
+	 * Hides the piece jail.
+	 */
+	public void hidePieceJail() {
+		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+			if (pieceJailSquare != null) {
+				pieceJailSquare.setVisible(false);
+			}
+		}
+	}
+
+	/**
+	 * Shows the piece jail.
+	 */
+	public void showPieceJail() {
+		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+			if (pieceJailSquare != null) {
+				pieceJailSquare.setVisible(true);
+			}
+		}
+	}
+
+	/**
 	 * Unhighlights all the squares. This method does not redraw them, that is
 	 * left to the caller.
 	 */
@@ -537,6 +564,7 @@ public class ChessBoard implements BoardConstants {
 
 		boardComposite.setBackground(preferences
 				.getColor(BOARD_BACKGROUND_COLOR));
+		controller.refresh();
 		sashForm.layout(true, true);
 		sashForm.redraw();
 	}

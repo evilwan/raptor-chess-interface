@@ -109,6 +109,27 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Adjusts the piece jail. The default behavior is to always show it if the
+	 * game is in a DROPPABLE_STATE, otherwise only show it if the
+	 * BOARD_IS_SHOWING_PIECE_JAIL preference is set to true.
+	 * 
+	 * This method is provided so it can easily be overridden.
+	 */
+	protected void adjustPieceJailVisibility() {
+		if (isDisposed()) {
+			return;
+		}
+
+		if (!getGame().isInState(Game.DROPPABLE_STATE)
+				&& !getPreferences().getBoolean(
+						PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL)) {
+			board.hidePieceJail();
+		} else {
+			board.showPieceJail();
+		}
+	}
+
+	/**
 	 * Adjusts only the colors of the chess clocks based on whose move it is in
 	 * the game.
 	 * 
@@ -574,6 +595,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		adjustNameRatingLabels();
 		adjustLagLabels();
 		refreshClocks(true);
+		adjustPieceJailVisibility();
 		adjustBoard();
 		adjustPieceJail();
 		board.redrawSquares();
