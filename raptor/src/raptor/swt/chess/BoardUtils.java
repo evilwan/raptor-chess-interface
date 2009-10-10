@@ -563,8 +563,6 @@ public class BoardUtils implements BoardConstants {
 	 * specified width/height this image will always be a square.
 	 */
 	public static Image getToMoveIndicatorImage(boolean isSideToMove, int width) {
-		System.err.println("getToMoveIndicatorImage(" + isSideToMove + ","
-				+ width + ")");
 		if (width < 5) {
 			width = 5;
 		}
