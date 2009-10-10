@@ -223,6 +223,8 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		board.unhighlightAllSquares();
+		board.unhidePieces();
+		refresh();
 		if (adjustClocks) {
 			refresh();
 		} else {
@@ -254,7 +256,7 @@ public class PlayingController extends ChessBoardController {
 				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
 			onClearPremoves();
 		}
-
+		board.unhidePieces();
 		board.unhighlightAllSquares();
 		if (adjustClocks) {
 			refresh();
@@ -567,6 +569,7 @@ public class PlayingController extends ChessBoardController {
 					+ " is drag and drop=" + isDnd);
 		}
 		board.unhighlightAllSquares();
+		board.unhidePieces();
 		movingPiece = EMPTY;
 		refresh();
 		onPlayIllegalMoveSound();
@@ -589,6 +592,7 @@ public class PlayingController extends ChessBoardController {
 			movingPiece = board.getSquare(square).getPiece();
 			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
 				board.getSquare(square).setPiece(GameConstants.EMPTY);
+				board.getSquare(square).setHidingPiece(true);
 			}
 			board.redrawSquares();
 		}
@@ -613,6 +617,9 @@ public class PlayingController extends ChessBoardController {
 		if (movingPiece == 0) {
 			LOG.error("movingPiece is 0 this should never happen.",
 					new Exception());
+			board.unhighlightAllSquares();
+			board.unhidePieces();
+			refresh();
 			return;
 		}
 
@@ -650,6 +657,7 @@ public class PlayingController extends ChessBoardController {
 
 				if (game.move(move)) {
 					board.getSquare(fromSquare).setPiece(movingPiece);
+					board.unhidePieces();
 					refreshForMove(move);
 					connector.makeMove(game, move);
 				} else {
@@ -704,6 +712,7 @@ public class PlayingController extends ChessBoardController {
 
 				adjustPremoveLabel();
 				board.unhighlightAllSquares();
+				board.unhidePieces();
 				board.getSquare(premoveInfo.fromSquare).highlight();
 				board.getSquare(premoveInfo.toSquare).highlight();
 				refreshBoard();
@@ -711,6 +720,7 @@ public class PlayingController extends ChessBoardController {
 				premoves.add(premoveInfo);
 				board.getSquare(premoveInfo.fromSquare).highlight();
 				board.getSquare(premoveInfo.toSquare).highlight();
+				board.unhidePieces();
 				adjustPremoveLabel();
 				refreshBoard();
 			}

@@ -56,6 +56,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	protected boolean isLight;
 	protected int piece;
 	protected Image pieceImage;
+	protected boolean isHidingPiece;
 
 	/**
 	 * Forces a layout when the size of the square changes.
@@ -200,7 +201,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				pieceImage = getChessPieceImage(piece, imageSide, imageSide);
 			}
 
-			if (pieceImage != null) {
+			if (pieceImage != null && !isHidingPiece()) {
 				int pieceImageX = (size.x - imageSide) / 2;
 				int pieceImageY = (size.y - imageSide) / 2;
 				e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
@@ -428,12 +429,31 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
+	 * Returns true if this square is hiding its piece, otherwise false. This is
+	 * useful during drag operations when the board is refreshed.
+	 */
+	public boolean isHidingPiece() {
+		return isHidingPiece;
+	}
+
+	/**
 	 * Returns true if this square has a light background, false otherwise.
 	 * 
 	 * @return
 	 */
 	public boolean isLight() {
 		return isHighlighted;
+	}
+
+	/**
+	 * Sets whether or not the piece is being hidden. This is useful during dnd
+	 * operations when you want to prevent board refreshes.
+	 * 
+	 * @param hidePiece
+	 *            True if the piece should be hidden, false otherwise.
+	 */
+	public void setHidingPiece(boolean isHidingPiece) {
+		this.isHidingPiece = isHidingPiece;
 	}
 
 	/**

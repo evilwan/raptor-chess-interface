@@ -412,6 +412,22 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	/**
+	 * Unhides the pieces on all of the squares.
+	 */
+	public void unhidePieces() {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				squares[i][j].setHidingPiece(false);
+			}
+		}
+		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+			if (pieceJailSquare != null) {
+				pieceJailSquare.setHidingPiece(false);
+			}
+		}
+	}
+
+	/**
 	 * Unhighlights all the squares. This method does not redraw them, that is
 	 * left to the caller.
 	 */
