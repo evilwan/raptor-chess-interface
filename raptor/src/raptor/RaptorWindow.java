@@ -33,6 +33,8 @@ import org.eclipse.swt.custom.CTabFolder2Adapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -176,6 +178,16 @@ public class RaptorWindow extends ApplicationWindow {
 			getPreferences().setCurrentLayoutSashWeights(key, getWeights());
 		}
 
+		public void storeSashWeights() {
+			try {
+				if (getMaximizedControl() == null && isVisible()) {
+					getPreferences().setCurrentLayoutSashWeights(key,
+							getWeights());
+				}
+			} catch (SWTException swet) {// Eat it its prob a disposed exception
+			}
+		}
+
 		@Override
 		public String toString() {
 			return "RaptorSashForm " + key + " isVisible=" + isVisible()
@@ -205,6 +217,16 @@ public class RaptorWindow extends ApplicationWindow {
 					SWT.COLOR_LIST_SELECTION));
 			setSelectionForeground(getDisplay().getSystemColor(
 					SWT.COLOR_LIST_SELECTION_TEXT));
+
+			addControlListener(new ControlListener() {
+
+				public void controlMoved(ControlEvent e) {
+				}
+
+				public void controlResized(ControlEvent e) {
+					storeAllSashWeights();
+				}
+			});
 		}
 
 		/**
@@ -492,28 +514,29 @@ public class RaptorWindow extends ApplicationWindow {
 	Log LOG = LogFactory.getLog(RaptorWindow.class);
 
 	protected RaptorTabFolder[] folders = new RaptorTabFolder[Quadrant.values().length];
-	protected RaptorSashForm[] sashes = new RaptorSashForm[6];
 
+	protected RaptorSashForm[] sashes = new RaptorSashForm[6];
 	protected RaptorSashForm quad1quad234567quad8Sash;
+
 	protected RaptorSashForm quad2quad34567Sash;
 	protected RaptorSashForm quad3quad4Sash;
 	protected RaptorSashForm quad34quad567Sash;
 	protected RaptorSashForm quad56quad7Sash;
 	protected RaptorSashForm quad5quad6Sash;
-
 	protected CoolBar topCoolbar;
+
 	protected CoolBar leftCoolbar;
 	protected ToolBar foldersMinimizedToolbar;
 	protected CoolItem foldersMinimiziedCoolItem;
-
 	protected Composite windowComposite;
+
 	protected Composite statusBar;
 	protected Label statusLabel;
 	protected Map<String, Label> pingLabelsMap = new HashMap<String, Label>();
 	protected List<RaptorTabItem> activeItems = Collections
 			.synchronizedList(new ArrayList<RaptorTabItem>());
-
 	protected RaptorTabItem dragStartItem;
+
 	protected boolean isInDrag = false;
 	protected boolean isExitDrag = false;
 
@@ -649,6 +672,15 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
+		getShell().addControlListener(new ControlListener() {
+			public void controlMoved(ControlEvent e) {
+				storeBounds();
+			}
+
+			public void controlResized(ControlEvent e) {
+				storeBounds();
+			}
+		});
 		getShell().addListener(SWT.Close, new Listener() {
 			public void handleEvent(Event e) {
 				Raptor.getInstance().shutdown();
@@ -1304,6 +1336,11 @@ public class RaptorWindow extends ApplicationWindow {
 		getShell().setLocation(screenBounds.x, screenBounds.y);
 	}
 
+	protected void storeBounds() {
+		getPreferences().setCurrentLayoutRectangle(
+				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
+	}
+
 	/**
 	 * Returns true if the item is being managed by the RaptorWindow. As items
 	 * are closed and disposed they are no longer managed.
@@ -1415,5 +1452,11 @@ public class RaptorWindow extends ApplicationWindow {
 						.setText(StringUtils.defaultString(newStatusMessage));
 			}
 		});
+	}
+
+	public void storeAllSashWeights() {
+		for (RaptorSashForm sash : sashes) {
+			sash.storeSashWeights();
+		}
 	}
 }

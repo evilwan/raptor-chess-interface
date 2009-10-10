@@ -110,10 +110,12 @@ public class MoveListTraverser {
 		traversrState = sourceGame.deepCopy(true);
 		LOG.debug("Before loop in sync:" + traverserHalfMoveIndex
 				+ " sourceHMI=" + traversrState.getHalfMoveCount());
-		while (traverserHalfMoveIndex < traversrState.getHalfMoveCount()) {
+		while (traverserHalfMoveIndex < traversrState.getHalfMoveCount()
+				&& traversrState.getMoveList().getSize() > 0) {
 			LOG.debug("Looping in sync:" + traverserHalfMoveIndex
 					+ " sourceHMI=" + traversrState.getHalfMoveCount());
 			traversrState.rollback();
 		}
+		traverserHalfMoveIndex = traversrState.getMoveList().getSize();
 	}
 }
