@@ -227,10 +227,6 @@ public class ObserveController extends ChessBoardController {
 		return toolbar;
 	}
 
-	protected void selectCurrentMove() {
-		board.getMoveList().select(traverser.getTraverserHalfMoveIndex());
-	}
-
 	@Override
 	public void init() {
 
@@ -247,8 +243,7 @@ public class ObserveController extends ChessBoardController {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
 
-		traverser.gotoHalfMove(getGame().getMoveList()
-				.getSize());
+		traverser.gotoHalfMove(getGame().getMoveList().getSize());
 		enableDisableNavButtons();
 		board.getMoveList().updateToGame();
 		selectCurrentMove();
@@ -274,20 +269,6 @@ public class ObserveController extends ChessBoardController {
 				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING)) {
 			SoundService.getInstance().playSound("obsMove");
 		}
-	}
-	
-	/**
-	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
-	 * selected.
-	 * 
-	 * The default implementation does nothing. It can be overridden to provide
-	 * functionality.
-	 */
-	public void userClickedOnMove(int halfMoveNumber) {
-		traverser.gotoHalfMove(halfMoveNumber);
-		setGame(traverser.getAdjustedGame());
-		enableDisableNavButtons();
-		refresh();
 	}
 
 	@Override
@@ -332,8 +313,27 @@ public class ObserveController extends ChessBoardController {
 		}
 	}
 
+	protected void selectCurrentMove() {
+		board.getMoveList().select(traverser.getTraverserHalfMoveIndex());
+	}
+
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
+	}
+
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	@Override
+	public void userClickedOnMove(int halfMoveNumber) {
+		traverser.gotoHalfMove(halfMoveNumber);
+		setGame(traverser.getAdjustedGame());
+		enableDisableNavButtons();
+		refresh();
 	}
 
 	@Override

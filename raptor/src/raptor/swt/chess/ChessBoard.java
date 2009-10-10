@@ -79,39 +79,11 @@ public class ChessBoard implements BoardConstants {
 	public ChessBoard() {
 	}
 
-	public void showMoveList() {
-		sashForm.setMaximizedControl(null);
-	}
-
-	public void hideMoveList() {
-		sashForm.setMaximizedControl(boardComposite);
-	}
-
 	/**
 	 * Creates the chess board layout to use for this chess board.
 	 */
 	protected void createChessBoardLayout() {
 		chessBoardLayout = new RightOrientedLayout(this);
-	}
-
-	protected void createMoveList() {
-		moveList = new SimpleMoveList();
-		moveList.setController(controller);
-	}
-
-	/**
-	 * Returns the panel containing the chess board. Should really be not be
-	 * used by anything outside of the swt.chess package.
-	 */
-	public Composite getBoardComposite() {
-		return boardComposite;
-	}
-
-	/**
-	 * Returns the control representing this chess board.
-	 */
-	public Composite getControl() {
-		return sashForm;
 	}
 
 	/**
@@ -205,6 +177,11 @@ public class ChessBoard implements BoardConstants {
 		return getControl();
 	}
 
+	protected void createMoveList() {
+		moveList = new SimpleMoveList();
+		moveList.setController(controller);
+	}
+
 	protected void createPieceJailControls() {
 		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(
 				boardComposite, this, GameConstants.WP_DROP_FROM_SQUARE);
@@ -245,10 +222,6 @@ public class ChessBoard implements BoardConstants {
 		}
 	}
 
-	public ChessBoardMoveList getMoveList() {
-		return moveList;
-	}
-
 	public CLabel getBlackClockLabel() {
 		return blackClockLabel;
 	}
@@ -265,6 +238,21 @@ public class ChessBoard implements BoardConstants {
 		return blackToMoveIndicatorLabel;
 	}
 
+	/**
+	 * Returns the panel containing the chess board. Should really be not be
+	 * used by anything outside of the swt.chess package.
+	 */
+	public Composite getBoardComposite() {
+		return boardComposite;
+	}
+
+	/**
+	 * Returns the control representing this chess board.
+	 */
+	public Composite getControl() {
+		return sashForm;
+	}
+
 	public ChessBoardController getController() {
 		return controller;
 	}
@@ -275,6 +263,10 @@ public class ChessBoard implements BoardConstants {
 
 	public CLabel getGameDescriptionLabel() {
 		return gameDescriptionLabel;
+	}
+
+	public ChessBoardMoveList getMoveList() {
+		return moveList;
 	}
 
 	public CLabel getOpeningDescriptionLabel() {
@@ -352,6 +344,10 @@ public class ChessBoard implements BoardConstants {
 		return whiteToMoveIndicatorLabel;
 	}
 
+	public void hideMoveList() {
+		sashForm.setMaximizedControl(boardComposite);
+	}
+
 	/**
 	 * Returns true if white is on top, false if white is on botton.
 	 */
@@ -409,6 +405,10 @@ public class ChessBoard implements BoardConstants {
 	 */
 	public void setWhitePieceJailOnTop(boolean isWhitePieceJailOnTop) {
 		this.isWhitePieceJailOnTop = isWhitePieceJailOnTop;
+	}
+
+	public void showMoveList() {
+		sashForm.setMaximizedControl(null);
 	}
 
 	/**

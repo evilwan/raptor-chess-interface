@@ -25,6 +25,39 @@ public class SimpleMoveList implements ChessBoardMoveList {
 	protected Table movesTable;
 	protected TableCursor cursor;
 
+	protected void createControls(Composite parent) {
+		movesTable = new Table(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.SINGLE);
+		TableColumn whiteMove = new TableColumn(movesTable, SWT.LEFT);
+		TableColumn blackMove = new TableColumn(movesTable, SWT.LEFT);
+
+		whiteMove.setWidth(80);
+		blackMove.setWidth(60);
+
+		whiteMove.setText("White");
+		blackMove.setText("Black");
+
+		movesTable.setHeaderVisible(false);
+
+		movesTable.addListener(SWT.EraseItem, new Listener() {
+			public void handleEvent(Event event) {
+				if ((event.detail & SWT.SELECTED) != 0) {
+					event.detail &= ~SWT.SELECTED;
+				}
+			}
+		});
+		cursor = new TableCursor(movesTable, SWT.NONE);
+		cursor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int halfMoveIndex = movesTable.getSelectionIndex() * 2
+						+ cursor.getColumn() + 1;
+				controller.userClickedOnMove(halfMoveIndex);
+			}
+
+		});
+	}
+
 	public ChessBoardController getChessBoardController() {
 		return controller;
 	}
@@ -38,6 +71,20 @@ public class SimpleMoveList implements ChessBoardMoveList {
 
 	public int getPreferredWeight() {
 		return 15;
+	}
+
+	public void select(int halfMoveIndex) {
+		if (movesTable.getItemCount() == 0) {
+			return;
+		} else if (halfMoveIndex < 0) {
+			halfMoveIndex = 0;
+		} else if (halfMoveIndex > movesTable.getItemCount()) {
+			halfMoveIndex = movesTable.getItemCount() - 1;
+		}
+
+		int row = halfMoveIndex / 2;
+		int column = halfMoveIndex % 2 == 0 ? 0 : 1;
+		cursor.setSelection(row, column);
 	}
 
 	public void setController(ChessBoardController controller) {
@@ -85,54 +132,5 @@ public class SimpleMoveList implements ChessBoardMoveList {
 
 		LOG.info("Updated to game in : "
 				+ (System.currentTimeMillis() - startTime));
-	}
-
-	public void select(int halfMoveIndex) {
-		if (movesTable.getItemCount() == 0) {
-			return;
-		} else if (halfMoveIndex < 0) {
-			halfMoveIndex = 0;
-		} else if (halfMoveIndex > movesTable.getItemCount()) {
-			halfMoveIndex = movesTable.getItemCount() - 1;
-		}
-
-		int row = halfMoveIndex / 2;
-		int column = halfMoveIndex % 2 == 0 ? 0 : 1;
-		cursor.setSelection(row, column);
-	}
-
-	protected void createControls(Composite parent) {
-		movesTable = new Table(parent, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
-				| SWT.SINGLE);
-		TableColumn whiteMove = new TableColumn(movesTable, SWT.LEFT);
-		TableColumn blackMove = new TableColumn(movesTable, SWT.LEFT);
-
-		whiteMove.setWidth(80);
-		blackMove.setWidth(60);
-
-		whiteMove.setText("White");
-		blackMove.setText("Black");
-
-		movesTable.setHeaderVisible(false);
-
-		movesTable.addListener(SWT.EraseItem, new Listener() {
-			public void handleEvent(Event event) {
-				if ((event.detail & SWT.SELECTED) != 0) {
-					event.detail &= ~SWT.SELECTED;
-				}
-			}
-		});
-		cursor = new TableCursor(movesTable, SWT.NONE);
-		cursor.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				System.err.println("In widget selected");
-				int halfMoveIndex = movesTable.getSelectionIndex() * 2
-						+ cursor.getColumn() + 1;
-				controller.userClickedOnMove(halfMoveIndex);
-			}
-
-		});
 	}
 }
