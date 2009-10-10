@@ -165,20 +165,6 @@ public class InactiveController extends ChessBoardController implements
 			traverser = null;
 		}
 	}
-	
-	/**
-	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
-	 * selected.
-	 * 
-	 * The default implementation does nothing. It can be overridden to provide
-	 * functionality.
-	 */
-	public void userClickedOnMove(int halfMoveNumber) {
-		traverser.gotoHalfMove(halfMoveNumber);
-		setGame(traverser.getAdjustedGame());
-		enableDisableNavButtons();
-		refresh();
-	}
 
 	public void enableDisableNavButtons() {
 		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, traverser.hasNext());
@@ -252,11 +238,6 @@ public class InactiveController extends ChessBoardController implements
 		selectCurrentMove();
 		refresh();
 	}
-	
-	protected void selectCurrentMove() {
-		board.getMoveList().select(traverser.getTraverserHalfMoveIndex() - 1);
-	}
-
 
 	protected void onPlayIllegalMoveSound() {
 		SoundService.getInstance().playSound("illegalMove");
@@ -335,6 +316,10 @@ public class InactiveController extends ChessBoardController implements
 		}
 	}
 
+	protected void selectCurrentMove() {
+		board.getMoveList().select(traverser.getTraverserHalfMoveIndex() - 1);
+	}
+
 	/**
 	 * Sets the toolbar. Useful when controllers are swapping out.
 	 * 
@@ -353,6 +338,21 @@ public class InactiveController extends ChessBoardController implements
 			refresh();
 			onPlayIllegalMoveSound();
 		}
+	}
+
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	@Override
+	public void userClickedOnMove(int halfMoveNumber) {
+		traverser.gotoHalfMove(halfMoveNumber);
+		setGame(traverser.getAdjustedGame());
+		enableDisableNavButtons();
+		refresh();
 	}
 
 	@Override

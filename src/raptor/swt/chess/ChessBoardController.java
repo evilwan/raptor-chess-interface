@@ -109,17 +109,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
-	 * selected.
-	 * 
-	 * The default implementation does nothing. It can be overridden to provide
-	 * functionality.
-	 */
-	public void userClickedOnMove(int halfMoveNumber) {
-
-	}
-
-	/**
 	 * Adjusts only the colors of the chess clocks based on whose move it is in
 	 * the game.
 	 * 
@@ -751,6 +740,17 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * Invoked when the user cancels a move.
 	 */
 	public abstract void userCancelledMove(int fromSquare, boolean isDnd);
+
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	public void userClickedOnMove(int halfMoveNumber) {
+
+	}
 
 	/**
 	 * Invoked when the user initiates a move.

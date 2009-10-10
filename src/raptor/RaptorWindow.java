@@ -674,10 +674,11 @@ public class RaptorWindow extends ApplicationWindow {
 	@Override
 	protected Control createContents(Composite parent) {
 		getShell().addControlListener(new ControlAdapter() {
-//			public void controlMoved(ControlEvent e) {
-//				storeBounds();
-//			}
+			// public void controlMoved(ControlEvent e) {
+			// storeBounds();
+			// }
 
+			@Override
 			public void controlResized(ControlEvent e) {
 				storeBounds();
 			}
@@ -1337,11 +1338,6 @@ public class RaptorWindow extends ApplicationWindow {
 		getShell().setLocation(screenBounds.x, screenBounds.y);
 	}
 
-	protected void storeBounds() {
-		getPreferences().setCurrentLayoutRectangle(
-				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
-	}
-
 	/**
 	 * Returns true if the item is being managed by the RaptorWindow. As items
 	 * are closed and disposed they are no longer managed.
@@ -1459,5 +1455,10 @@ public class RaptorWindow extends ApplicationWindow {
 		for (RaptorSashForm sash : sashes) {
 			sash.storeSashWeights();
 		}
+	}
+
+	protected void storeBounds() {
+		getPreferences().setCurrentLayoutRectangle(
+				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
 	}
 }

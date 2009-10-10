@@ -47,8 +47,8 @@ public class LabeledChessSquare extends ChessSquare {
 		}
 	};
 
-	public LabeledChessSquare(Composite parent,ChessBoard board, int id) {
-		super(parent,board, id, true);
+	public LabeledChessSquare(Composite parent, ChessBoard board, int id) {
+		super(parent, board, id, true);
 		ignoreBackgroundImage = true;
 		addPaintListener(paintListener);
 	}
