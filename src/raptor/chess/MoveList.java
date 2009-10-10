@@ -79,8 +79,6 @@ public final class MoveList implements GameConstants {
 	public void prepend(Move[] movesToPrepend) {
 		Move[] newMoves = new Move[maxSize];
 
-		System.err.println("Prepending " + movesToPrepend);
-
 		// Add all of the moves to prepend.
 		for (int i = 0; i < movesToPrepend.length; i++) {
 			newMoves[i] = movesToPrepend[i];

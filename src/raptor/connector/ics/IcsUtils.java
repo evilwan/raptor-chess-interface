@@ -543,9 +543,6 @@ public class IcsUtils implements GameConstants {
 		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
 				- game.getMoveList().getSize();
 
-		System.err.println("Half move count to start on = "
-				+ halfMoveCountGameStartedOn);
-
 		if (halfMoveCountGameStartedOn != 0) {
 			Game gameClone = GameUtils.createStartingPosition(game.getType());
 			gameClone.addState(Game.UPDATING_ECO_HEADERS_STATE);

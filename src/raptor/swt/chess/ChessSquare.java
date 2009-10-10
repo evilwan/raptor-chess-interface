@@ -77,9 +77,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		public void handleEvent(Event e) {
 			switch (e.type) {
 			case SWT.DragDetect: {
-				System.err.println("Drag Detect: "
-						+ board.getController().getGame().getId() + " "
-						+ GameUtils.getSan(id));
 				if (board.getController().canUserInitiateMoveFrom(id)) {
 					board.setData(DRAG_INITIATOR, ChessSquare.this);
 					board.setData(DROP_HANDLED, false);
@@ -92,9 +89,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				break;
 			}
 			case SWT.MouseUp: {
-				System.err.println("Mouse up Detect: "
-						+ board.getController().getGame().getId() + " "
-						+ GameUtils.getSan(id));
 				ChessSquare dragSource = (ChessSquare) board
 						.getData(DRAG_INITIATOR);
 				if (dragSource == null) {
