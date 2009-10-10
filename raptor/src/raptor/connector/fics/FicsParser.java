@@ -338,7 +338,7 @@ public class FicsParser implements IcsParser, GameConstants {
 		if (game == null) {
 			if (LOG.isWarnEnabled()) {
 				LOG
-						.warn("Received a MovesMessage for a game not being managed. This can occur if the user manually types in the moves command.");
+						.warn("Received a MovesMessage for a game not being managed. This can occur if the user manually types in the moves command. " + message.gameId);
 			}
 		} else {
 			IcsUtils.updateGamesMoves(game, message);
@@ -476,6 +476,12 @@ public class FicsParser implements IcsParser, GameConstants {
 				IcsUtils.updatePosition(game, message);
 				IcsUtils.verifyLegal(game);
 
+				service.addGame(game);
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Firing game created.");
+				}
+				service.fireGameCreated(game.getId());
+				
 				/**
 				 * Send a request for the moves.
 				 */
@@ -484,12 +490,6 @@ public class FicsParser implements IcsParser, GameConstants {
 					connector.sendMessage("moves " + message.gameId, true,
 							ChatType.MOVES);
 				}
-
-				service.addGame(game);
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Firing game created.");
-				}
-				service.fireGameCreated(game.getId());
 			}
 		}
 

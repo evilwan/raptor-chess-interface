@@ -131,8 +131,10 @@ public class MovesParser {
 		if (string.startsWith(EVENT_START) || string.startsWith(EVENT_START_2)) {
 			int lastDash = string.lastIndexOf("--");
 			int firstColon = string.indexOf(':', 0);
-			String gameNumber = string.substring(EVENT_START.length(),
-					firstColon);
+			boolean startsWithEventStart = string.startsWith(EVENT_START);
+			String gameNumber = string.substring(
+					startsWithEventStart ? EVENT_START.length() : EVENT_START_2
+							.length(), firstColon);
 
 			if (lastDash != -1) {
 				try {
