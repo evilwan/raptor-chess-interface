@@ -55,11 +55,11 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public void dispose() {
-		board.dispose();
+		board.getControl().dispose();
 	}
 
-	public Composite getControl() {
-		return board;
+	public Control getControl() {
+		return board.getControl();
 	}
 
 	public Image getImage() {
@@ -84,11 +84,11 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 			LOG.debug("Initing ChessBoardWindowItem");
 		}
 		long startTime = System.currentTimeMillis();
-		board = new ChessBoard(parent);
-		board.setLayoutDeferred(true);
+		board = new ChessBoard();
 		board.setController(controller);
 		controller.setBoard(board);
-		board.createControls();
+		board.createControls(parent);
+		board.getControl().setLayoutDeferred(true);
 		controller.init();
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Inited window item in "
@@ -98,9 +98,9 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 
 	public void onActivate() {
 		if (isPassive) {
-			board.setLayoutDeferred(false);
-			board.layout(true);
-			board.getDisplay().asyncExec(new Runnable() {
+			board.getControl().setLayoutDeferred(false);
+			board.getControl().layout(true);
+			board.getControl().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					board.getController().onActivate();
 				}
@@ -111,8 +111,8 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 
 	public void onPassivate() {
 		if (!isPassive) {
-			board.setLayoutDeferred(true);
-			board.getDisplay().asyncExec(new Runnable() {
+			board.getControl().setLayoutDeferred(true);
+			board.getControl().getDisplay().asyncExec(new Runnable() {
 				public void run() {
 					board.getController().onPassivate();
 				}

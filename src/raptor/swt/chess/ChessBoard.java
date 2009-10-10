@@ -19,6 +19,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
@@ -29,31 +30,31 @@ import raptor.chess.GameConstants;
 import raptor.chess.util.GameUtils;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.chess.layout.RightOrientedLayout;
+import raptor.swt.chess.movelist.SimpleMoveList;
 
 /**
  * A GUI representation of a chess board, and all controls associated with it
  * (e.g. labels,piece jail, etc).. All ChessBoards should have a
  * ChessBoardController which manages it.
  */
-public class ChessBoard extends Composite implements BoardConstants {
+public class ChessBoard implements BoardConstants {
 
 	static final Log LOG = LogFactory.getLog(ChessBoard.class);
 
 	protected CLabel blackClockLabel;
 	protected CLabel blackLagLabel;
 	protected CLabel blackNameRatingLabel;
-
 	protected CLabel blackToMoveIndicatorLabel;
 	protected ChessBoardLayout chessBoardLayout;
 	protected ChessBoardController controller;
-
 	protected CLabel currentPremovesLabel;
 	protected CLabel gameDescriptionLabel;
-
 	protected boolean isWhiteOnTop = false;
 	protected boolean isWhitePieceJailOnTop = true;
-
 	protected CLabel openingDescriptionLabel;
+	protected ChessBoardMoveList moveList;
+	protected Composite boardComposite;
+	protected SashForm sashForm;
 
 	// Piece jail is indexed by the colored piece constants in Constants.
 	// The 0th index will always be null. (for the empty piece).
@@ -75,8 +76,15 @@ public class ChessBoard extends Composite implements BoardConstants {
 
 	protected CLabel whiteToMoveIndicatorLabel;
 
-	public ChessBoard(Composite parent) {
-		super(parent, SWT.DOUBLE_BUFFERED);
+	public ChessBoard() {
+	}
+
+	public void showMoveList() {
+		sashForm.setMaximizedControl(null);
+	}
+
+	public void hideMoveList() {
+		sashForm.setMaximizedControl(boardComposite);
 	}
 
 	/**
@@ -86,15 +94,45 @@ public class ChessBoard extends Composite implements BoardConstants {
 		chessBoardLayout = new RightOrientedLayout(this);
 	}
 
+	protected void createMoveList() {
+		moveList = new SimpleMoveList();
+		moveList.setController(controller);
+	}
+
 	/**
-	 * Creates all of the ChessBoard's controls.
+	 * Returns the panel containing the chess board. Should really be not be
+	 * used by anything outside of the swt.chess package.
 	 */
-	public void createControls() {
+	public Composite getBoardComposite() {
+		return boardComposite;
+	}
+
+	/**
+	 * Returns the control representing this chess board.
+	 */
+	public Composite getControl() {
+		return sashForm;
+	}
+
+	/**
+	 * Creates the chess board with the specified parent.
+	 */
+	public Composite createControls(Composite parent) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Creating controls");
 		}
+		long startTime = System.currentTimeMillis();
 
-		addDisposeListener(new DisposeListener() {
+		sashForm = new SashForm(parent, SWT.HORIZONTAL);
+		boardComposite = new Composite(sashForm, SWT.NONE);
+		createMoveList();
+		moveList.getControl(sashForm);
+		int preferredWeight = moveList.getPreferredWeight();
+		sashForm
+				.setWeights(new int[] { 100 - preferredWeight, preferredWeight });
+		sashForm.setMaximizedControl(boardComposite);
+
+		sashForm.addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
 				if (propertyChangeListener != null) {
 					Raptor.getInstance().getPreferences()
@@ -116,41 +154,39 @@ public class ChessBoard extends Composite implements BoardConstants {
 			}
 		});
 
-		long startTime = System.currentTimeMillis();
 		createChessBoardLayout();
-
-		setLayout(chessBoardLayout);
+		boardComposite.setLayout(chessBoardLayout);
 
 		createSquares();
 		createPieceJailControls();
 
-		whiteNameRatingLabel = new CLabel(this, chessBoardLayout
+		whiteNameRatingLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
-		blackNameRatingLabel = new CLabel(this, chessBoardLayout
+		blackNameRatingLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
-		whiteClockLabel = new CLabel(this, chessBoardLayout
+		whiteClockLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.CLOCK_LABEL));
-		blackClockLabel = new CLabel(this, chessBoardLayout
+		blackClockLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.CLOCK_LABEL));
-		whiteLagLabel = new CLabel(this, chessBoardLayout
+		whiteLagLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.LAG_LABEL));
-		blackLagLabel = new CLabel(this, chessBoardLayout
+		blackLagLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.LAG_LABEL));
-		openingDescriptionLabel = new CLabel(this, chessBoardLayout
+		openingDescriptionLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.OPENING_DESCRIPTION_LABEL));
-		statusLabel = new CLabel(this, chessBoardLayout
+		statusLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.STATUS_LABEL));
-		gameDescriptionLabel = new CLabel(this, chessBoardLayout
+		gameDescriptionLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.GAME_DESCRIPTION_LABEL));
-		currentPremovesLabel = new CLabel(this, chessBoardLayout
+		currentPremovesLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.CURRENT_PREMOVE_LABEL));
 
-		whiteToMoveIndicatorLabel = new CLabel(this, chessBoardLayout
+		whiteToMoveIndicatorLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.TO_MOVE_INDICATOR));
 		whiteToMoveIndicatorLabel.setImage(BoardUtils.getToMoveIndicatorImage(
 				true, 30));
 
-		blackToMoveIndicatorLabel = new CLabel(this, chessBoardLayout
+		blackToMoveIndicatorLabel = new CLabel(boardComposite, chessBoardLayout
 				.getStyle(ChessBoardLayout.Field.TO_MOVE_INDICATOR));
 		blackToMoveIndicatorLabel.setImage(BoardUtils.getToMoveIndicatorImage(
 				false, 30));
@@ -166,34 +202,35 @@ public class ChessBoard extends Composite implements BoardConstants {
 			LOG.debug("Created controls in "
 					+ (System.currentTimeMillis() - startTime));
 		}
+		return getControl();
 	}
 
 	protected void createPieceJailControls() {
-		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(this,
-				GameConstants.WP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(this,
-				GameConstants.WN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(this,
-				GameConstants.WB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(this,
-				GameConstants.WR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(this,
-				GameConstants.WQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(this,
-				GameConstants.WK_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WP_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WN_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WB_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WR_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WQ_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WK_DROP_FROM_SQUARE);
 
-		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(this,
-				GameConstants.BP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(this,
-				GameConstants.BN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(this,
-				GameConstants.BB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(this,
-				GameConstants.BR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(this,
-				GameConstants.BQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(this,
-				GameConstants.BK_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BP_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BN_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BB_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BR_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BQ_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BK_DROP_FROM_SQUARE);
 	}
 
 	protected void createSquares() {
@@ -201,11 +238,15 @@ public class ChessBoard extends Composite implements BoardConstants {
 		for (int i = 0; i < 8; i++) {
 			isWhiteSquare = !isWhiteSquare;
 			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j] = new ChessSquare(this, GameUtils
+				squares[i][j] = new ChessSquare(boardComposite, this, GameUtils
 						.rankFileToSquare(i, j), isWhiteSquare);
 				isWhiteSquare = !isWhiteSquare;
 			}
 		}
+	}
+
+	public ChessBoardMoveList getMoveList() {
+		return moveList;
 	}
 
 	public CLabel getBlackClockLabel() {
@@ -349,6 +390,9 @@ public class ChessBoard extends Composite implements BoardConstants {
 	 */
 	public void setController(ChessBoardController controller) {
 		this.controller = controller;
+		if (moveList != null) {
+			moveList.setController(controller);
+		}
 	}
 
 	/**
@@ -417,7 +461,6 @@ public class ChessBoard extends Composite implements BoardConstants {
 	public void updateFromPrefs() {
 		RaptorPreferenceStore preferences = Raptor.getInstance()
 				.getPreferences();
-
 		updateBoardFromPrefs();
 
 		Color background = preferences.getColor(BOARD_BACKGROUND_COLOR);
@@ -476,9 +519,10 @@ public class ChessBoard extends Composite implements BoardConstants {
 				.getColor(BOARD_PREMOVES_COLOR));
 		currentPremovesLabel.setBackground(background);
 
-		setBackground(preferences.getColor(BOARD_BACKGROUND_COLOR));
-		layout(true, true);
-		redraw();
+		boardComposite.setBackground(preferences
+				.getColor(BOARD_BACKGROUND_COLOR));
+		sashForm.layout(true, true);
+		sashForm.redraw();
 	}
 
 }

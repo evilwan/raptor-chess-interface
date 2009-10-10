@@ -109,6 +109,17 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	public void userClickedOnMove(int halfMoveNumber) {
+
+	}
+
+	/**
 	 * Adjusts only the colors of the chess clocks based on whose move it is in
 	 * the game.
 	 * 
@@ -533,8 +544,8 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
 		board.redrawSquares();
-		board.layout();
-		board.redraw();
+		board.getControl();
+		board.getControl().redraw();
 	}
 
 	/**

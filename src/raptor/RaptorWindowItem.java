@@ -47,7 +47,7 @@ public interface RaptorWindowItem {
 	/**
 	 * Returns the window items control.
 	 */
-	public Composite getControl();
+	public Control getControl();
 
 	/**
 	 * Returns an image to display to represent the window item. Returns null if
