@@ -51,7 +51,7 @@ public class ExamineController extends ChessBoardController {
 		@Override
 		public void gameInactive(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							onPlayGameEndSound();
@@ -82,7 +82,7 @@ public class ExamineController extends ChessBoardController {
 		@Override
 		public void gameMovesAdded(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							refresh();
@@ -98,7 +98,7 @@ public class ExamineController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							examinePositionUpdate();
@@ -114,7 +114,7 @@ public class ExamineController extends ChessBoardController {
 		@Override
 		public void illegalMove(Game game, final String move) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							examineOnIllegalMove(move);

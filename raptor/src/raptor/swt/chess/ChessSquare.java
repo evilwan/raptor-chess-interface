@@ -78,18 +78,19 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			switch (e.type) {
 			case SWT.DragDetect: {
 				if (board.getController().canUserInitiateMoveFrom(id)) {
-					board.setData(DRAG_INITIATOR, ChessSquare.this);
-					board.setData(DROP_HANDLED, false);
+					board.getControl()
+							.setData(DRAG_INITIATOR, ChessSquare.this);
+					board.getControl().setData(DROP_HANDLED, false);
 					updateCursorForDrag(piece);
 					board.controller.userInitiatedMove(id, true);
 				} else {
-					board.setData(DRAG_INITIATOR, null);
-					board.setData(DROP_HANDLED, false);
+					board.getControl().setData(DRAG_INITIATOR, null);
+					board.getControl().setData(DROP_HANDLED, false);
 				}
 				break;
 			}
 			case SWT.MouseUp: {
-				ChessSquare dragSource = (ChessSquare) board
+				ChessSquare dragSource = (ChessSquare) board.getControl()
 						.getData(DRAG_INITIATOR);
 				if (dragSource == null) {
 					return;
@@ -100,14 +101,15 @@ public class ChessSquare extends Canvas implements BoardConstants {
 
 				if (dragEnd == null) {
 					board.controller.userCancelledMove(dragSource.id, true);
-					board.setData(LAST_DROP_TIME, System.currentTimeMillis());
-					board.setData(DROP_HANDLED, false);
+					board.getControl().setData(LAST_DROP_TIME,
+							System.currentTimeMillis());
+					board.getControl().setData(DROP_HANDLED, false);
 				} else {
 					board.controller.userMadeMove(dragSource.id, dragEnd.id);
-					board.setData(DROP_HANDLED, true);
+					board.getControl().setData(DROP_HANDLED, true);
 				}
-				board.setData(DRAG_INITIATOR, null);
-				board.setData(CLICK_INITIATOR, null);
+				board.getControl().setData(DRAG_INITIATOR, null);
+				board.getControl().setData(CLICK_INITIATOR, null);
 				break;
 			}
 			}
@@ -127,15 +129,17 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			if (e.button == 2) {
 				board.controller.userMiddleClicked(id);
 			} else if (e.button == 1) {
-				Long lastDropTime = (Long) board.getData(LAST_DROP_TIME);
+				Long lastDropTime = (Long) board.getControl().getData(
+						LAST_DROP_TIME);
 				if (lastDropTime == null
 						|| System.currentTimeMillis() - lastDropTime > 100) {
-					ChessSquare initiator = (ChessSquare) board
+					ChessSquare initiator = (ChessSquare) board.getControl()
 							.getData(CLICK_INITIATOR);
 
 					if (initiator == null) {// Start of move
 						if (board.controller.canUserInitiateMoveFrom(id)) {
-							board.setData(CLICK_INITIATOR, ChessSquare.this);
+							board.getControl().setData(CLICK_INITIATOR,
+									ChessSquare.this);
 							board.controller.userInitiatedMove(id, false);
 						}
 					} else {
@@ -146,7 +150,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							// twice.
 							board.controller.userCancelledMove(initiator.id,
 									false);
-							board.setData(CLICK_INITIATOR, null);
+							board.getControl().setData(CLICK_INITIATOR, null);
 						} else if (BoardUtils.arePiecesSameColor(piece,
 								initiator.piece)) {// Clicked
 							// on
@@ -156,10 +160,11 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							board.controller.userCancelledMove(initiator.id,
 									false);
 							board.controller.userInitiatedMove(id, false);
-							board.setData(CLICK_INITIATOR, ChessSquare.this);
+							board.getControl().setData(CLICK_INITIATOR,
+									ChessSquare.this);
 						} else {// A valid move
 							board.controller.userMadeMove(initiator.id, id);
-							board.setData(CLICK_INITIATOR, null);
+							board.getControl().setData(CLICK_INITIATOR, null);
 						}
 					}
 				}
@@ -243,8 +248,9 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 *            True if this is a square with a light background, false if its
 	 *            a square with a dark background.
 	 */
-	public ChessSquare(ChessBoard chessBoard, int id, boolean isLight) {
-		super(chessBoard, SWT.DOUBLE_BUFFERED);
+	public ChessSquare(Composite parent, ChessBoard chessBoard, int id,
+			boolean isLight) {
+		super(parent, SWT.DOUBLE_BUFFERED);
 		board = chessBoard;
 		this.id = id;
 		this.isLight = isLight;

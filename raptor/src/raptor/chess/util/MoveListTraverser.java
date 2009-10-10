@@ -68,6 +68,7 @@ public class MoveListTraverser {
 	public void gotoHalfMove(int moveNumber) {
 		if (moveNumber >= 0 && moveNumber <= sourceGame.getHalfMoveCount()) {
 			traverserHalfMoveIndex = moveNumber;
+			synch();
 		}
 	}
 

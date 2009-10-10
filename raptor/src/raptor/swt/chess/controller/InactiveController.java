@@ -165,6 +165,20 @@ public class InactiveController extends ChessBoardController implements
 			traverser = null;
 		}
 	}
+	
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	public void userClickedOnMove(int halfMoveNumber) {
+		traverser.gotoHalfMove(halfMoveNumber);
+		setGame(traverser.getAdjustedGame());
+		enableDisableNavButtons();
+		refresh();
+	}
 
 	public void enableDisableNavButtons() {
 		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, traverser.hasNext());
@@ -196,6 +210,24 @@ public class InactiveController extends ChessBoardController implements
 					.getType() == Type.SUICIDE);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
+			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
+			movesItem.setText("MOVES");
+			movesItem.setToolTipText("Shows or hides the move list.");
+			movesItem.setSelection(false);
+			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
+			movesItem.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
+						board.getMoveList().updateToGame();
+						board.getMoveList().select(
+								getGame().getMoveList().getSize() - 1);
+						board.showMoveList();
+					} else {
+						board.hideMoveList();
+					}
+				}
+			});
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
@@ -216,8 +248,15 @@ public class InactiveController extends ChessBoardController implements
 		} else {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
+		board.getMoveList().updateToGame();
+		selectCurrentMove();
 		refresh();
 	}
+	
+	protected void selectCurrentMove() {
+		board.getMoveList().select(traverser.getTraverserHalfMoveIndex() - 1);
+	}
+
 
 	protected void onPlayIllegalMoveSound() {
 		SoundService.getInstance().playSound("illegalMove");
@@ -228,7 +267,7 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	public void onSave() {
-		FileDialog fd = new FileDialog(board.getShell(), SWT.SAVE);
+		FileDialog fd = new FileDialog(board.getControl().getShell(), SWT.SAVE);
 		fd.setText("Save To PGN");
 		fd.setFilterPath("");
 		String[] filterExt = { "*.pgn", "*.*" };
@@ -269,24 +308,28 @@ public class InactiveController extends ChessBoardController implements
 			traverser.next();
 			setGame(traverser.getAdjustedGame());
 			enableDisableNavButtons();
+			selectCurrentMove();
 			refresh();
 			break;
 		case BACK_NAV:
 			traverser.back();
 			setGame(traverser.getAdjustedGame());
 			enableDisableNavButtons();
+			selectCurrentMove();
 			refresh();
 			break;
 		case FIRST_NAV:
 			traverser.first();
 			setGame(traverser.getAdjustedGame());
 			enableDisableNavButtons();
+			selectCurrentMove();
 			refresh();
 			break;
 		case LAST_NAV:
 			traverser.last();
 			setGame(traverser.getAdjustedGame());
 			enableDisableNavButtons();
+			selectCurrentMove();
 			refresh();
 			break;
 		}

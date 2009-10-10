@@ -56,7 +56,7 @@ public class SetupController extends ChessBoardController {
 		@Override
 		public void gameInactive(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							onPlayGameEndSound();
@@ -93,7 +93,7 @@ public class SetupController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							setupPositionUpdated();
@@ -109,7 +109,7 @@ public class SetupController extends ChessBoardController {
 		@Override
 		public void illegalMove(Game game, final String move) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							setupOnIllegalMove(move);
@@ -125,7 +125,7 @@ public class SetupController extends ChessBoardController {
 		@Override
 		public void setupGameBecameExamined(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							ExamineController examineController = new ExamineController(
@@ -390,7 +390,7 @@ public class SetupController extends ChessBoardController {
 	public void userRightClicked(final int square) {
 		if (!BoardUtils.isPieceJailSquare(square)) {
 
-			Menu menu = new Menu(board.getShell(), SWT.POP_UP);
+			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
 
 			if (getGame().getPiece(square) != EMPTY) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
@@ -526,8 +526,8 @@ public class SetupController extends ChessBoardController {
 			menu.setLocation(board.getSquare(square).toDisplay(10, 10));
 			menu.setVisible(true);
 			while (!menu.isDisposed() && menu.isVisible()) {
-				if (!board.getDisplay().readAndDispatch()) {
-					board.getDisplay().sleep();
+				if (!board.getControl().getDisplay().readAndDispatch()) {
+					board.getControl().getDisplay().sleep();
 				}
 			}
 			menu.dispose();

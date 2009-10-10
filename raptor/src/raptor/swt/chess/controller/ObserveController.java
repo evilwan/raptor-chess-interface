@@ -50,7 +50,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void gameInactive(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							onPlayGameEndSound();
@@ -84,7 +84,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void gameMovesAdded(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							refresh();
@@ -100,7 +100,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getDisplay().asyncExec(new Runnable() {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
 							if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
@@ -108,6 +108,8 @@ public class ObserveController extends ChessBoardController {
 								traverser.gotoHalfMove(getGame().getMoveList()
 										.getSize());
 								enableDisableNavButtons();
+								board.getMoveList().updateToGame();
+								selectCurrentMove();
 								refresh();
 							}
 							if (isNewMove) {
@@ -179,16 +181,16 @@ public class ObserveController extends ChessBoardController {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
 			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
-			ToolItem item = new ToolItem(toolbar, SWT.CHECK);
-			item.setText("UPDATE");
-			item
+			ToolItem forceUpdate = new ToolItem(toolbar, SWT.CHECK);
+			addToolItem(ToolBarItemKey.FORCE_UPDATE, forceUpdate);
+			forceUpdate.setText("UPDATE");
+			forceUpdate
 					.setToolTipText("When selected, as moves are made in the game the board will be refreshed.\n"
 							+ "When unselected this will not occur, and you have to use the navigation\n"
 							+ "buttons to traverse the game. This is useful when you are looking at a previous\n"
 							+ "move and don't want the position to update as new moves are being made.");
-			item.setSelection(true);
-			addToolItem(ToolBarItemKey.FORCE_UPDATE, item);
-			item.addSelectionListener(new SelectionAdapter() {
+			forceUpdate.setSelection(true);
+			forceUpdate.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
@@ -198,11 +200,35 @@ public class ObserveController extends ChessBoardController {
 					}
 				}
 			});
+
+			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
+			movesItem.setText("MOVES");
+			movesItem.setToolTipText("Shows or hides the move list.");
+			movesItem.setSelection(false);
+			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
+			movesItem.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
+						board.getMoveList().updateToGame();
+						board.getMoveList().select(
+								getGame().getMoveList().getSize() - 1);
+						board.showMoveList();
+					} else {
+						board.hideMoveList();
+					}
+				}
+			});
+
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
 		return toolbar;
+	}
+
+	protected void selectCurrentMove() {
+		board.getMoveList().select(traverser.getTraverserHalfMoveIndex());
 	}
 
 	@Override
@@ -221,6 +247,11 @@ public class ObserveController extends ChessBoardController {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
 
+		traverser.gotoHalfMove(getGame().getMoveList()
+				.getSize());
+		enableDisableNavButtons();
+		board.getMoveList().updateToGame();
+		selectCurrentMove();
 		refresh();
 
 		onPlayGameStartSound();
@@ -244,6 +275,20 @@ public class ObserveController extends ChessBoardController {
 			SoundService.getInstance().playSound("obsMove");
 		}
 	}
+	
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	public void userClickedOnMove(int halfMoveNumber) {
+		traverser.gotoHalfMove(halfMoveNumber);
+		setGame(traverser.getAdjustedGame());
+		enableDisableNavButtons();
+		refresh();
+	}
 
 	@Override
 	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
@@ -260,24 +305,28 @@ public class ObserveController extends ChessBoardController {
 			traverser.next();
 			setGame(traverser.getAdjustedGame());
 			enableDisableNavButtons();
+			selectCurrentMove();
 			refresh();
 			break;
 		case BACK_NAV:
 			traverser.back();
 			setGame(traverser.getAdjustedGame());
 			enableDisableNavButtons();
+			selectCurrentMove();
 			refresh();
 			break;
 		case FIRST_NAV:
 			traverser.first();
 			setGame(traverser.getAdjustedGame());
 			enableDisableNavButtons();
+			selectCurrentMove();
 			refresh();
 			break;
 		case LAST_NAV:
 			traverser.last();
 			setGame(traverser.getAdjustedGame());
 			enableDisableNavButtons();
+			selectCurrentMove();
 			refresh();
 			break;
 		}

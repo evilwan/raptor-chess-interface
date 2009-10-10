@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Composite;
 
 import raptor.swt.SWTUtils;
 
@@ -46,8 +47,8 @@ public class LabeledChessSquare extends ChessSquare {
 		}
 	};
 
-	public LabeledChessSquare(ChessBoard board, int id) {
-		super(board, id, true);
+	public LabeledChessSquare(Composite parent,ChessBoard board, int id) {
+		super(parent,board, id, true);
 		ignoreBackgroundImage = true;
 		addPaintListener(paintListener);
 	}

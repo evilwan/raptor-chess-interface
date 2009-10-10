@@ -33,6 +33,7 @@ import org.eclipse.swt.custom.CTabFolder2Adapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -657,7 +658,7 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Returns the number of items in the specified quad.
+	 * Returns the number of items in the specified quadrants.
 	 */
 	public int countItems(Quadrant... quads) {
 		int count = 0;
@@ -672,10 +673,10 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected Control createContents(Composite parent) {
-		getShell().addControlListener(new ControlListener() {
-			public void controlMoved(ControlEvent e) {
-				storeBounds();
-			}
+		getShell().addControlListener(new ControlAdapter() {
+//			public void controlMoved(ControlEvent e) {
+//				storeBounds();
+//			}
 
 			public void controlResized(ControlEvent e) {
 				storeBounds();

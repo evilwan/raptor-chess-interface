@@ -85,16 +85,17 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	public RightOrientedLayout(ChessBoard board) {
 		super(board);
 
-		board.addControlListener(controlListener = new ControlListener() {
+		board.getBoardComposite().addControlListener(
+				controlListener = new ControlListener() {
 
-			public void controlMoved(ControlEvent e) {
-			}
+					public void controlMoved(ControlEvent e) {
+					}
 
-			public void controlResized(ControlEvent e) {
-				setLayoutData();
-				adjustLabelFontsAndImages();
-			}
-		});
+					public void controlResized(ControlEvent e) {
+						setLayoutData();
+						adjustLabelFontsAndImages();
+					}
+				});
 	}
 
 	protected void adjustLabelFontsAndImages() {
@@ -151,7 +152,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	public void dispose() {
 		super.dispose();
 		LOG.debug("Disposed RightOrientedLayout");
-		board.removeControlListener(controlListener);
+		board.getControl().removeControlListener(controlListener);
 	}
 
 	@Override
@@ -316,8 +317,8 @@ public class RightOrientedLayout extends ChessBoardLayout {
 			LOG.debug("Setting layout data.");
 		}
 
-		int width = board.getSize().x;
-		int height = board.getSize().y;
+		int width = board.getBoardComposite().getSize().x;
+		int height = board.getBoardComposite().getSize().y;
 
 		hasHeightProblem = false;
 		hasSevereHeightProblem = false;
