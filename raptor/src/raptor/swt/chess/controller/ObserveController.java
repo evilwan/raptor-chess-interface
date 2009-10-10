@@ -105,8 +105,9 @@ public class ObserveController extends ChessBoardController {
 						try {
 							if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
 								setGame(traverser.getSource());
-								refresh();
+								traverser.gotoHalfMove(getGame().getMoveList().getSize());
 								enableDisableNavButtons();
+								refresh();
 							}
 							if (isNewMove) {
 								onPlayMoveSound();
