@@ -371,9 +371,11 @@ public class FicsParser implements IcsParser, GameConstants {
 	protected void process(RemovingObsGameMessage message, GameService service) {
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			LOG
-					.error("Received removing obs game message for a game not in the GameService. "
-							+ message);
+			if (LOG.isInfoEnabled()) {
+				LOG
+						.info("Received removing obs game message for a game not in the GameService. This can usually be ignored if a game end message was received first."
+								+ message);
+			}
 		} else {
 			game.setResultDescription("Interrupted by unobserve");
 			game.setResult(Result.UNDETERMINED);
