@@ -314,11 +314,11 @@ public class GameCursor implements Game {
 	}
 
 	public boolean hasNext() {
-		return cursorPosition + 1 < getMoveList().getSize();
+		return cursorPosition + 1 <= getMoveList().getSize();
 	}
 
 	public boolean hasPrevious() {
-		return cursorPosition - 1 > 0;
+		return cursorPosition  > 0;
 	}
 
 	public void incrementRepCount() {

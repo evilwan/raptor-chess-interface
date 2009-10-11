@@ -540,7 +540,6 @@ public class RaptorWindow extends ApplicationWindow {
 	protected RaptorSashForm[] sashes = new RaptorSashForm[6];
 	protected Composite statusBar;
 	protected Label statusLabel;
-	protected boolean hasLayedOutForMinimizedCoolbar = true;
 
 	protected CoolBar topCoolbar;
 	protected Composite windowComposite;
@@ -649,16 +648,11 @@ public class RaptorWindow extends ApplicationWindow {
 
 		if (!isAFolderMinimized) {
 			leftCoolbar.setVisible(false);
-			if (!!hasLayedOutForMinimizedCoolbar) {
-				windowComposite.layout(true);
-				hasLayedOutForMinimizedCoolbar = true;
-			}
 		} else {
 			leftCoolbar.setVisible(true);
-			leftCoolbar.layout(true);
-			windowComposite.layout(true);
-			hasLayedOutForMinimizedCoolbar = false;
 		}
+		windowComposite.layout();
+
 	}
 
 	/**

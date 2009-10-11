@@ -102,7 +102,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				board.getSquare(i, j).setPiece(
-						GameUtils.getColoredPiece(GameUtils.rankFileToSquare(i,
+						GameUtils.getColoredPiece(GameUtils.getSquare(i,
 								j), game));
 			}
 		}
