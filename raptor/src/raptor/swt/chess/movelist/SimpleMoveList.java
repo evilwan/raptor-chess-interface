@@ -146,7 +146,9 @@ public class SimpleMoveList implements ChessBoardMoveList {
 
 			item.setText(new String[] { move1, move2 });
 		}
-		LOG.info("Updated to game in : "
-				+ (System.currentTimeMillis() - startTime));
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Updated to game in : "
+					+ (System.currentTimeMillis() - startTime));
+		}
 	}
 }
