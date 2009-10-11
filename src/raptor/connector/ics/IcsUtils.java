@@ -663,7 +663,7 @@ public class IcsUtils implements GameConstants {
 			game.setEpSquare(EMPTY_SQUARE);
 			game.setInitialEpSquare(EMPTY_SQUARE);
 		} else {
-			int doublePawnPushSquare = GameUtils.rankFileToSquare(
+			int doublePawnPushSquare = GameUtils.getSquare(
 					message.isWhitesMoveAfterMoveIsMade ? 4 : 5,
 					message.doublePawnPushFile);
 			game.setEpSquare(doublePawnPushSquare);
@@ -687,7 +687,7 @@ public class IcsUtils implements GameConstants {
 		for (int i = 0; i < style12.position.length; i++) {
 			for (int j = 0; j < style12.position[i].length; j++) {
 				if (style12.position[i][j] != EMPTY) {
-					int square = GameUtils.rankFileToSquare(i, j);
+					int square = GameUtils.getSquare(i, j);
 					int pieceColor = BoardUtils
 							.isWhitePiece(style12.position[i][j]) ? WHITE
 							: BLACK;

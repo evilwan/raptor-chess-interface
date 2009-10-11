@@ -218,7 +218,7 @@ public class ChessBoard implements BoardConstants {
 			isWhiteSquare = !isWhiteSquare;
 			for (int j = 0; j < squares[i].length; j++) {
 				squares[i][j] = new ChessSquare(boardComposite, this, GameUtils
-						.rankFileToSquare(i, j), isWhiteSquare);
+						.getSquare(i, j), isWhiteSquare);
 				isWhiteSquare = !isWhiteSquare;
 			}
 		}

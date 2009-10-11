@@ -262,6 +262,13 @@ public class GameUtils implements GameConstants {
 
 		}
 	}
+	
+	/**
+	 * Returns the square representing the bit board.
+	 */
+	public static int getSquare(long bitboard) {
+		return bitscanForward(bitboard);
+	}
 
 	public static int getColoredPieceFromDropSquare(int dropSquare) {
 		return dropSquare - 100;
@@ -454,7 +461,7 @@ public class GameUtils implements GameConstants {
 	}
 
 	public static final int getSquare(String san) {
-		return rankFileToSquare(RANK_FROM_SAN.indexOf(san.charAt(1)),
+		return getSquare(RANK_FROM_SAN.indexOf(san.charAt(1)),
 				FILE_FROM_SAN.indexOf(san.charAt(0)));
 	}
 
@@ -464,7 +471,7 @@ public class GameUtils implements GameConstants {
 		for (int i = 7; i > -1; i--) {
 			result.append(" ");
 			for (int j = 0; j < 8; j++) {
-				result.append(((board & SQUARE_TO_COORDINATE[rankFileToSquare(
+				result.append(((board & SQUARE_TO_COORDINATE[getSquare(
 						i, j)]) == 0 ? 0 : 1)
 						+ " ");
 			}
@@ -496,7 +503,7 @@ public class GameUtils implements GameConstants {
 				result.append(" ");
 				for (int j = 0; j < 8; j++) {
 					result
-							.append(((bitBoard & SQUARE_TO_COORDINATE[rankFileToSquare(
+							.append(((bitBoard & SQUARE_TO_COORDINATE[getSquare(
 									i, j)]) == 0 ? 0 : 1)
 									+ " ");
 				}
@@ -516,33 +523,33 @@ public class GameUtils implements GameConstants {
 			for (int j = 0; j < 8; j++) {
 				long bitMap = 0L;
 				if (isInBounds(i, j + 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i, j + 1));
+					bitMap |= getBitboard(getSquare(i, j + 1));
 				}
 				if (isInBounds(i, j - 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i, j - 1));
+					bitMap |= getBitboard(getSquare(i, j - 1));
 				}
 
 				if (isInBounds(i + 1, j)) {
-					bitMap |= getBitboard(rankFileToSquare(i + 1, j));
+					bitMap |= getBitboard(getSquare(i + 1, j));
 				}
 				if (isInBounds(i + 1, j + 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i + 1, j + 1));
+					bitMap |= getBitboard(getSquare(i + 1, j + 1));
 				}
 				if (isInBounds(i + 1, j - 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i + 1, j - 1));
+					bitMap |= getBitboard(getSquare(i + 1, j - 1));
 				}
 
 				if (isInBounds(i - 1, j)) {
-					bitMap |= getBitboard(rankFileToSquare(i - 1, j));
+					bitMap |= getBitboard(getSquare(i - 1, j));
 				}
 				if (isInBounds(i - 1, j + 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i - 1, j + 1));
+					bitMap |= getBitboard(getSquare(i - 1, j + 1));
 				}
 				if (isInBounds(i - 1, j - 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i - 1, j - 1));
+					bitMap |= getBitboard(getSquare(i - 1, j - 1));
 				}
 
-				KING_ATTACKS[rankFileToSquare(i, j)] = bitMap;
+				KING_ATTACKS[getSquare(i, j)] = bitMap;
 			}
 		}
 	}
@@ -552,34 +559,34 @@ public class GameUtils implements GameConstants {
 			for (int j = 0; j < 8; j++) {
 				long bitMap = 0L;
 				if (isInBounds(i + 2, j + 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i + 2, j + 1));
+					bitMap |= getBitboard(getSquare(i + 2, j + 1));
 				}
 				if (isInBounds(i + 2, j - 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i + 2, j - 1));
+					bitMap |= getBitboard(getSquare(i + 2, j - 1));
 				}
 
 				if (isInBounds(i - 2, j + 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i - 2, j + 1));
+					bitMap |= getBitboard(getSquare(i - 2, j + 1));
 				}
 				if (isInBounds(i - 2, j - 1)) {
-					bitMap |= getBitboard(rankFileToSquare(i - 2, j - 1));
+					bitMap |= getBitboard(getSquare(i - 2, j - 1));
 				}
 
 				if (isInBounds(i + 1, j + 2)) {
-					bitMap |= getBitboard(rankFileToSquare(i + 1, j + 2));
+					bitMap |= getBitboard(getSquare(i + 1, j + 2));
 				}
 				if (isInBounds(i + 1, j - 2)) {
-					bitMap |= getBitboard(rankFileToSquare(i + 1, j - 2));
+					bitMap |= getBitboard(getSquare(i + 1, j - 2));
 				}
 
 				if (isInBounds(i - 1, j + 2)) {
-					bitMap |= getBitboard(rankFileToSquare(i - 1, j + 2));
+					bitMap |= getBitboard(getSquare(i - 1, j + 2));
 				}
 				if (isInBounds(i - 1, j - 2)) {
-					bitMap |= getBitboard(rankFileToSquare(i - 1, j - 2));
+					bitMap |= getBitboard(getSquare(i - 1, j - 2));
 				}
 
-				KNIGHT_ATTACKS[rankFileToSquare(i, j)] = bitMap;
+				KNIGHT_ATTACKS[getSquare(i, j)] = bitMap;
 			}
 		}
 	}
@@ -703,7 +710,7 @@ public class GameUtils implements GameConstants {
 	/**
 	 * Returns the square given a 0 based rank and file.
 	 */
-	public static final int rankFileToSquare(int rank, int file) {
+	public static final int getSquare(int rank, int file) {
 		return rank * 8 + file;
 	}
 

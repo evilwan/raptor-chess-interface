@@ -31,7 +31,7 @@ import static raptor.chess.util.GameUtils.pawnCapture;
 import static raptor.chess.util.GameUtils.pawnDoublePush;
 import static raptor.chess.util.GameUtils.pawnEpCapture;
 import static raptor.chess.util.GameUtils.pawnSinglePush;
-import static raptor.chess.util.GameUtils.rankFileToSquare;
+import static raptor.chess.util.GameUtils.getSquare;
 import static raptor.chess.util.ZobristUtils.zobrist;
 
 import java.util.ArrayList;
@@ -1465,7 +1465,7 @@ public class ClassicGame implements Game {
 					if (validations.isEpOrAmbigPxStrict()
 							|| validations.isAmbigPxPromotionStrict()) {
 
-						int end = rankFileToSquare(
+						int end = getSquare(
 								GameConstants.RANK_FROM_SAN.indexOf(validations
 										.getStrictSan().charAt(2)),
 								GameConstants.FILE_FROM_SAN.indexOf(validations
@@ -1480,7 +1480,7 @@ public class ClassicGame implements Game {
 											+ shortAlgebraic);
 						}
 
-						int start = rankFileToSquare(startRank,
+						int start = getSquare(startRank,
 								GameConstants.FILE_FROM_SAN.indexOf(validations
 										.getStrictSan().charAt(0)));
 
@@ -1518,7 +1518,7 @@ public class ClassicGame implements Game {
 						}
 						// handle non captures.
 						else {
-							int end = rankFileToSquare(
+							int end = getSquare(
 									GameConstants.RANK_FROM_SAN
 											.indexOf(validations.getStrictSan()
 													.charAt(1)),
@@ -1540,7 +1540,7 @@ public class ClassicGame implements Game {
 				} else {
 					int candidatePieceMoving = SanUtils.sanToPiece(validations
 							.getStrictSan().charAt(0));
-					int end = rankFileToSquare(
+					int end = getSquare(
 							GameConstants.RANK_FROM_SAN
 									.indexOf(validations.getStrictSan()
 											.charAt(
@@ -1575,7 +1575,7 @@ public class ClassicGame implements Game {
 							}
 						}
 					} else if (validations.isDisambigPieceRankFileStrict()) {
-						int startSquare = rankFileToSquare(
+						int startSquare = getSquare(
 								GameConstants.RANK_FROM_SAN.indexOf(validations
 										.getStrictSan().charAt(2)),
 								GameConstants.FILE_FROM_SAN.indexOf(validations
@@ -2277,7 +2277,7 @@ public class ClassicGame implements Game {
 		for (int j = 7; j > -1; j--) {
 			int consecutiveEmpty = 0;
 			for (int i = 0; i < 8; i++) {
-				int square = rankFileToSquare(j, i);
+				int square = getSquare(j, i);
 				int piece = getPiece(square);
 
 				if (piece == EMPTY) {
@@ -2387,7 +2387,7 @@ public class ClassicGame implements Game {
 
 		for (int i = 7; i > -1; i--) {
 			for (int j = 0; j < 8; j++) {
-				int square = rankFileToSquare(i, j);
+				int square = getSquare(i, j);
 				int piece = getPiece(square);
 				int color = (getBitboard(square) & getColorBB(colorToMove)) != 0L ? colorToMove
 						: getOppositeColor(colorToMove);

@@ -239,7 +239,7 @@ public class SuicideGame extends ClassicGame {
 			MoveList matches = new MoveList(10);
 
 			if (SanUtils.isValidSuicidePPromotionStrict(san)) {
-				int toSquare = GameUtils.rankFileToSquare(RANK_FROM_SAN
+				int toSquare = GameUtils.getSquare(RANK_FROM_SAN
 						.indexOf(san.charAt(1)), FILE_FROM_SAN.indexOf(san
 						.charAt(0)));
 
@@ -264,7 +264,7 @@ public class SuicideGame extends ClassicGame {
 				}
 			} else if (SanUtils.isValidSuicideAmbigPxPromotion(san)) {
 				int fromFile = FILE_FROM_SAN.indexOf(san.charAt(0));
-				int toSquare = GameUtils.rankFileToSquare(RANK_FROM_SAN
+				int toSquare = GameUtils.getSquare(RANK_FROM_SAN
 						.indexOf(san.charAt(2)), FILE_FROM_SAN.indexOf(san
 						.charAt(1)));
 				for (Move move : pseudoLegals) {
