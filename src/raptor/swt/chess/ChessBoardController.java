@@ -685,18 +685,18 @@ public abstract class ChessBoardController implements BoardConstants,
 		if (updateClocksFromGame) {
 
 			long[] remainingTimes = getRemainingTimes();
-			board.whiteClockLabel.setText(GameUtils
-					.timeToString(remainingTimes[WHITE]));
-			board.blackClockLabel.setText(GameUtils
-					.timeToString(remainingTimes[BLACK]));
+			board.whiteClockLabel.setText(GameUtils.timeToString(
+					remainingTimes[WHITE], false));
+			board.blackClockLabel.setText(GameUtils.timeToString(
+					remainingTimes[BLACK], false));
 
 			whiteClockUpdater.setRemainingTimeMillis(remainingTimes[WHITE]);
 			blackClockUpdater.setRemainingTimeMillis(remainingTimes[BLACK]);
 		} else {
-			board.whiteClockLabel.setText(GameUtils
-					.timeToString(whiteClockUpdater.getRemainingTimeMillis()));
-			board.blackClockLabel.setText(GameUtils
-					.timeToString(blackClockUpdater.getRemainingTimeMillis()));
+			board.whiteClockLabel.setText(GameUtils.timeToString(
+					whiteClockUpdater.getRemainingTimeMillis(), false));
+			board.blackClockLabel.setText(GameUtils.timeToString(
+					blackClockUpdater.getRemainingTimeMillis(), false));
 		}
 
 		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {

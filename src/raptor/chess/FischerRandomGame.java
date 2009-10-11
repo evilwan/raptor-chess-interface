@@ -104,7 +104,7 @@ public class FischerRandomGame extends ClassicGame {
 			PriorityMoveList moves) {
 		// The king destination square isnt checked, its checked when legal
 		// getMoves() are checked.
-		//int fromSquare = getSquare(fromBB);
+		// int fromSquare = getSquare(fromBB);
 
 		if (getColorToMove() == WHITE
 				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0

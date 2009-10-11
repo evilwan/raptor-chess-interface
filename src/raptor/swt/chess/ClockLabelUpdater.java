@@ -41,9 +41,9 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 		long result = 0L;
 		if (remainingTimeMillis >= getPreferences().getLong(
 				BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-			result = remainingTimeMillis % 30000L;
+			result = remainingTimeMillis % 950L;
 			if (result == 0L) {
-				result = 30000L;
+				result = 950L;
 			}
 		} else if (remainingTimeMillis >= getPreferences().getLong(
 				BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
@@ -80,7 +80,8 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			remainingTimeMillis -= currentTime - lastSystemTime;
 			lastSystemTime = currentTime;
 
-			clockLabel.setText(GameUtils.timeToString(remainingTimeMillis));
+			clockLabel.setText(GameUtils
+					.timeToString(remainingTimeMillis, true));
 
 			if (remainingTimeMillis > 0) {
 				long nextUpdate = calculateNextUpdate();
