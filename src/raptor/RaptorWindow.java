@@ -793,6 +793,7 @@ public class RaptorWindow extends ApplicationWindow {
 				Game game = GameFactory.createStartingPosition(Variant.classic);
 				game.addState(Game.UPDATING_SAN_STATE);
 				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+				game.addState(Game.IS_CLOCK_TICKING_STATE);
 				game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
 						.currentTimeMillis()));
 				game.setHeader(PgnHeader.Round, "?");
@@ -808,6 +809,12 @@ public class RaptorWindow extends ApplicationWindow {
 				game.setHeader(PgnHeader.BlackElo, "----");
 				game.setHeader(PgnHeader.WhiteElo, "----");
 				game.setHeader(PgnHeader.Event, "blitz 3 0 rated");
+				game.makeSanMove("e4");
+				game.makeSanMove("e5");
+				game.makeSanMove("Nf3");
+				game.makeSanMove("Nc6");
+				game.makeSanMove("Bb5");
+				game.makeSanMove("a6");
 				InactiveController controller = new InactiveController(game);
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
 			}
@@ -820,6 +827,7 @@ public class RaptorWindow extends ApplicationWindow {
 						.createStartingPosition(Variant.crazyhouse);
 				game.addState(Game.UPDATING_SAN_STATE);
 				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+				game.addState(Game.IS_CLOCK_TICKING_STATE);
 				game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
 						.currentTimeMillis()));
 				game.setHeader(PgnHeader.Round, "?");
@@ -835,6 +843,10 @@ public class RaptorWindow extends ApplicationWindow {
 				game.setHeader(PgnHeader.BlackElo, "----");
 				game.setHeader(PgnHeader.WhiteElo, "----");
 				game.setHeader(PgnHeader.Event, "crazyhouse 3 0 rated");
+				game.makeSanMove("e4");
+				game.makeSanMove("d5");
+				game.makeSanMove("ed");
+				game.makeSanMove("Qd5");
 				InactiveController controller = new InactiveController(game);
 
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));

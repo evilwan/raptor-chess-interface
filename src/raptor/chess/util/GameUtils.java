@@ -768,8 +768,8 @@ public class GameUtils implements GameConstants {
 		boolean isFlashing = false;
 
 		if (timeLeft < 0) {
+			isFlashing = (timeLeft / 999) % 2 == 0;
 			timeLeft = 0;
-			isFlashing = timeLeft / 950 % 2 == 0;
 		}
 		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
 
@@ -790,12 +790,9 @@ public class GameUtils implements GameConstants {
 				int minute = (int) (timeLeft / 60000L);
 				timeLeft -= minute * 60 * 1000;
 
-				System.err.println("timeToString " + timeMillis + " "
-						+ timeMillis / 1000 % 2);
-
 				if (allowFlash) {
 					return RaptorStringUtils.defaultTimeString(hour, 2)
-							+ (timeMillis / 1000 % 2 == 0 ? ":" : " ") // Adds
+							+ ((timeMillis / 1000) % 2 == 0 ? ":" : " ") // Adds
 							// the
 							// blinking :
 							+ RaptorStringUtils.defaultTimeString(minute, 2);

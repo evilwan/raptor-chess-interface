@@ -1457,7 +1457,7 @@ E4 E5 NF3 NC6 Bb5 A6 Ba4 NF6 QE2 b5 Bb3 Be7 D4 D6 C3 Bg4|C77|Ruy Lopez|Wormald a
 E4 E5 NF3 NC6 Bb5 A6 Ba4 NF6 QE2|C77|Ruy Lopez|Wormald (Alapin) attack
 E4 E5 NF3 NC6 Bb5 A6 Ba4 NF6|C77|Ruy Lopez|Morphy defense
 E4 E5 NF3 NC6 Bb5 A6 Ba4 NGE7|C70|Ruy Lopez|Cozio defense deferred
-E4 E5 NF3 NC6 Bb5 A6 Ba4|C70|Ruy Lopez|Exchange, bronstein Variation 
+E4 E5 NF3 NC6 Bb5 A6 Ba4|C70|Ruy Lopez|
 E4 E5 NF3 NC6 Bb5 A6 BXC6 DXC6 D4 EXD4 QXD4 QXD4 NXD4 Bd7|C68|Ruy Lopez|Exchange, Alekhine Variation 
 E4 E5 NF3 NC6 Bb5 A6 BXC6 DXC6 NC3 F6 D3|C68|Ruy Lopez|Exchange, Romanovsky Variation 
 E4 E5 NF3 NC6 Bb5 A6 BXC6 DXC6 NC3|C68|Ruy Lopez|Exchange, Keres Variation 
