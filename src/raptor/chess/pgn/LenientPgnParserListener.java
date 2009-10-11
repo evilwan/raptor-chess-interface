@@ -120,9 +120,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 
 		if (variant != Variant.classic) {
 			result.setHeader(PgnHeader.Variant, variant.toString());
-		} else {
-			result.removeHeader(PgnHeader.Variant);
-		}
+		} 
 		return result;
 	}
 
