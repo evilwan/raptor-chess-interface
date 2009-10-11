@@ -79,6 +79,10 @@ public enum ChatType {
 	TELL,
 
 	/**
+	 * Used for the told message after a tell. Source will be the person told.
+	 */
+	TOLD,
+	/**
 	 * Used to identify types that don't match any of the others.
 	 */
 	UNKNOWN,

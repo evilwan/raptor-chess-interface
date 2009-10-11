@@ -59,6 +59,7 @@ import raptor.connector.ics.chat.PartnershipCreatedEventParser;
 import raptor.connector.ics.chat.PartnershipEndedEventParser;
 import raptor.connector.ics.chat.ShoutEventParser;
 import raptor.connector.ics.chat.TellEventParser;
+import raptor.connector.ics.chat.ToldEventParser;
 import raptor.connector.ics.chat.WhisperEventParser;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
@@ -103,7 +104,7 @@ public class FicsParser implements IcsParser, GameConstants {
 		// nonGameEventParsers.add(new BugWhoGEventParser(icsId));
 		// nonGameEventParsers.add(new BugWhoPEventParser(icsId));
 		// nonGameEventParsers.add(new BugWhoUEventParser(icsId));
-		// nonGameEventParsers.add(new SoughtEventParser());
+		nonGameEventParsers.add(new ToldEventParser());
 		nonGameEventParsers.add(new ChannelTellEventParser());
 		nonGameEventParsers.add(new CShoutEventParser());
 		nonGameEventParsers.add(new ShoutEventParser());
@@ -144,6 +145,7 @@ public class FicsParser implements IcsParser, GameConstants {
 					ChatEvent event = parser.parse(afterGameEvents);
 					if (event != null) {
 						events.add(event);
+						break;
 					}
 				}
 				if (events.isEmpty()) {

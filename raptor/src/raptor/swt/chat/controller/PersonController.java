@@ -81,7 +81,9 @@ public class PersonController extends ChatConsoleController {
 
 	protected boolean isDirectTellFromPerson(ChatEvent event) {
 		return StringUtils.equalsIgnoreCase(event.getSource(), person)
-				&& (event.getType() == ChatType.TELL || event.getType() == ChatType.PARTNER_TELL);
+				&& (event.getType() == ChatType.TELL
+						|| event.getType() == ChatType.PARTNER_TELL || event
+						.getType() == ChatType.TOLD);
 	}
 
 	protected boolean isOutboundTellPertainingToPerson(ChatEvent event) {
