@@ -97,7 +97,6 @@ public class SimpleMoveList implements ChessBoardMoveList {
 					+ halfMoveIndex + " Set halfMoveIndex to 0");
 			halfMoveIndex = 0;
 		}
-		System.out.println("Adjusted Half move index = " + halfMoveIndex);
 		if (halfMoveIndex > 0) {
 			halfMoveIndex = halfMoveIndex - 1;
 		}

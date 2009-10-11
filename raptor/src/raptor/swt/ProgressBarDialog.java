@@ -167,7 +167,6 @@ public abstract class ProgressBarDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				isClosed = true;
-				// System.out.println(isClosed);
 			}
 		});
 		cancelButton.setLayoutData(new GridData(78, SWT.DEFAULT));

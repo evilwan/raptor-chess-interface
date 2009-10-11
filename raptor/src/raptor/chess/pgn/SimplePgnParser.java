@@ -236,8 +236,6 @@ public class SimplePgnParser extends AbstractPgnParser {
 					} else {
 						String[] nagSplit = splitOutNag(nextWord);
 						if (nagSplit != null) {
-							System.out.println(RaptorStringUtils
-									.toDelimitedString(nagSplit));
 							Nag nag = Nag.get(nagSplit[0]);
 							if (nag == null) {
 								fireUnknown(nagSplit[0]);
