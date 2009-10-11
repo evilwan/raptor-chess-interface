@@ -34,27 +34,28 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 	}
 
 	public long calculateNextUpdate() {
+		// The previous approach of trying to update at less frequent time
+		// controls depending
+		// on how the clock is setup didnt work so well.
 
-		// The timer is not always perfect.
-		// The following code adjusts the ideal durations in half to make up for
-		// the differences.
+		// For now make a check every 100 milliseconds if not in showing tenths
+		// and do it every 50 if showing tenths.
 		long result = 0L;
-		if (remainingTimeMillis >= getPreferences().getLong(
-				BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
-			result = remainingTimeMillis % 950L;
-			if (result == 0L) {
-				result = 950L;
-			}
-		} else if (remainingTimeMillis >= getPreferences().getLong(
-				BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
-			result = remainingTimeMillis % 500L;
-			if (result == 0L) {
-				result = 500L;
-			}
+		if (remainingTimeMillis < 0) {
+			// Just update every 100L to get the flashing behavior.
+			result = 100L;
 		} else {
-			result = remainingTimeMillis % 50L;
-			if (result == 0L) {
-				result = 50L;
+			if (remainingTimeMillis >= getPreferences().getLong(
+					BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN)) {
+				result = 100L;
+			} else if (remainingTimeMillis >= getPreferences().getLong(
+					BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
+				result = 100L;
+			} else {
+				result = remainingTimeMillis % 50L;
+				if (result == 0L) {
+					result = 50L;
+				}
 			}
 		}
 		return result;
@@ -83,12 +84,14 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			clockLabel.setText(GameUtils
 					.timeToString(remainingTimeMillis, true));
 
-			if (remainingTimeMillis > 0) {
-				long nextUpdate = calculateNextUpdate();
-				if (isRunning) {
-					Display.getCurrent().timerExec((int) nextUpdate, this);
-				}
+			// if (remainingTimeMillis > 0) {
+			// Continue running even if time has expired. This produces the
+			// flashing behavior.
+			long nextUpdate = calculateNextUpdate();
+			if (isRunning) {
+				Display.getCurrent().timerExec((int) nextUpdate, this);
 			}
+			// }
 		}
 	}
 
