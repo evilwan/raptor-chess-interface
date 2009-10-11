@@ -193,6 +193,7 @@ public class ObserveController extends ChessBoardController {
 				public void widgetSelected(SelectionEvent e) {
 					if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
 						cursor.setMode(Mode.MakeMovesOnMasterSetCursorToLast);
+						cursor.setCursorMasterLast();
 						refresh();
 					}
 					else {
