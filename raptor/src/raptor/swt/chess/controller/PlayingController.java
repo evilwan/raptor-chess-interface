@@ -23,6 +23,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -31,6 +33,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
+import raptor.chess.GameCursor;
 import raptor.chess.Move;
 import raptor.chess.Result;
 import raptor.chess.Variant;
@@ -70,6 +73,7 @@ public class PlayingController extends ChessBoardController {
 
 	protected Connector connector;
 	protected boolean isUserWhite;
+	protected GameCursor cursor = null;
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
@@ -187,7 +191,9 @@ public class PlayingController extends ChessBoardController {
 	 *            The backing connector.
 	 */
 	public PlayingController(Game game, Connector connector) {
-		super(game);
+		super(new GameCursor(game,
+				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast));
+		cursor = (GameCursor) getGame();
 		this.connector = connector;
 
 		if (StringUtils.equalsIgnoreCase(game.getHeader(PgnHeader.White),
@@ -206,7 +212,20 @@ public class PlayingController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("isUserWhite=" + isUserWhite);
 		}
-
+	}
+	
+	public void enableDisableNavButtons() {
+		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, cursor.hasNext());
+		setToolItemEnabled(ToolBarItemKey.BACK_NAV, cursor.hasPrevious());
+		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, cursor.hasFirst());
+		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
+	}
+	
+	public void refresh() {
+		board.getMoveList().updateToGame();
+		board.getMoveList().select(cursor.getCursorPosition());
+		enableDisableNavButtons();
+		super.refresh();
 	}
 
 	/**
@@ -389,7 +408,23 @@ public class PlayingController extends ChessBoardController {
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addPremoveClearAndAutoDrawToolbar(this, toolbar);
 			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addNavIconsToToolbar(this, toolbar, false, false);
+			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
+			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
+			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
+			movesItem.setToolTipText("Shows or hides the move list.");
+			movesItem.setSelection(false);
+			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
+			movesItem.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
+						board.showMoveList();
+					} else {
+						board.hideMoveList();
+					}
+				}
+			});
+			new ToolItem(toolbar, SWT.SEPARATOR);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
@@ -552,6 +587,22 @@ public class PlayingController extends ChessBoardController {
 			break;
 		case CLEAR_PREMOVES:
 			onClearPremoves();
+		case NEXT_NAV:
+			cursor.setCursorNext();
+			refresh();
+			break;
+		case BACK_NAV:
+			cursor.setCursorPrevious();
+			refresh();
+			break;
+		case FIRST_NAV:
+			cursor.setCursorFirst();
+			refresh();
+			break;
+		case LAST_NAV:
+			cursor.setCursorMasterLast();
+			refresh();
+			break;
 		}
 	}
 
