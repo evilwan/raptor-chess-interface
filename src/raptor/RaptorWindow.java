@@ -624,8 +624,6 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		if (isAFolderMinimized) {
-			System.err.println("A folder was minimized.");
-
 			for (Quadrant quadrant : Quadrant.values()) {
 				if (getTabFolder(quadrant).getMinimized()) {
 					ToolItem item = new ToolItem(foldersMinimizedToolbar,
@@ -640,8 +638,6 @@ public class RaptorWindow extends ApplicationWindow {
 							restoreFolders();
 						}
 					});
-
-					System.err.println("Adeed tool item for quad: " + quadrant);
 				}
 			}
 		}
@@ -656,8 +652,8 @@ public class RaptorWindow extends ApplicationWindow {
 			leftCoolbar.setVisible(true);
 		}
 
-		// leftCoolbar.layout(true);
-		// windowComposite.layout(true);
+		leftCoolbar.layout(true);
+		windowComposite.layout(true);
 	}
 
 	/**
