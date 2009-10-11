@@ -14,11 +14,11 @@ public class PgnParserWarning implements Serializable {
 
 	static final long serialVersionUID = 1;
 
+	private String[] args;
+
 	private int rowNumber;
 
 	private Type type;
-
-	private String[] args;
 
 	public PgnParserWarning(Type type, int rowNumber) {
 		args = new String[0];

@@ -31,8 +31,8 @@ public class ChatService {
 		public void chatEventOccured(ChatEvent e);
 	}
 
-	protected List<ChatListener> listeners = new ArrayList<ChatListener>(5);
 	protected Connector connector = null;
+	protected List<ChatListener> listeners = new ArrayList<ChatListener>(5);
 	protected ChatLogger logger = null;
 
 	/**

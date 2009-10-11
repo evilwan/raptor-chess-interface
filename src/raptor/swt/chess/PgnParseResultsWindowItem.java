@@ -33,13 +33,13 @@ import raptor.swt.chess.controller.InactiveController;
 
 public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
+	protected Composite composite;
 	protected List<PgnParserError> errors;
 	protected List<Game> games;
-	protected String title;
-	protected Composite composite;
-	protected TableColumn lastStortedColumn;
-	protected boolean wasLastSortAscending;
 	protected boolean isPassive = true;
+	protected TableColumn lastStortedColumn;
+	protected String title;
+	protected boolean wasLastSortAscending;
 
 	public PgnParseResultsWindowItem(String title, List<PgnParserError> errors,
 			List<Game> games) {
@@ -294,16 +294,16 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		site.setText("Site");
 		round.setText("Round");
 
-		type.setWidth(100);
-		date.setWidth(100);
-		event.setWidth(100);
+		type.setWidth(80);
+		date.setWidth(80);
+		event.setWidth(150);
 		site.setWidth(100);
 		round.setWidth(50);
 		white.setWidth(100);
-		whiteElo.setWidth(80);
+		whiteElo.setWidth(60);
 		black.setWidth(100);
-		blackElo.setWidth(80);
-		eco.setWidth(50);
+		blackElo.setWidth(60);
+		eco.setWidth(40);
 		opening.setWidth(100);
 		gamesTable.setHeaderVisible(true);
 

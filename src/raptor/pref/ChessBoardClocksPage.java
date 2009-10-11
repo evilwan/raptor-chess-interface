@@ -23,19 +23,19 @@ import org.eclipse.jface.preference.RadioGroupFieldEditor;
 import raptor.Raptor;
 
 public class ChessBoardClocksPage extends FieldEditorPreferencePage {
+	public static final String[][] SHOW_SECONDS_OPTIONS = {
+			{ "At 60 Minutes", "" + (60 * 60 * 1000 + 1) },
+			{ "At 30 Minutes", "" + (30 * 60 * 1000 + 1) },
+			{ "At 15 Minutes", "" + (15 * 60 * 1000 + 1) },
+			{ "At 10 Minutes", "" + (10 * 10 * 1000 + 1) },
+			{ "Always", "" + Long.MAX_VALUE } };
+
 	public static final String[][] SHOW_TENTHS_OPTIONS = {
 			{ "At 10 Seconds", "" + (10 * 1000 + 1) },
 			{ "At 1 Minute", "" + (60 * 1000 + 1) },
 			{ "At 3 Minute", "" + (3 * 60 * 1000 + 1) },
 			{ "At 5 Minute", "" + (5 * 60 * 1000 + 1) },
 			{ "At 10 Minute", "" + (10 * 60 * 1000 + 1) },
-			{ "Always", "" + Long.MAX_VALUE } };
-
-	public static final String[][] SHOW_SECONDS_OPTIONS = {
-			{ "At 60 Minutes", "" + (60 * 60 * 1000 + 1) },
-			{ "At 30 Minutes", "" + (30 * 60 * 1000 + 1) },
-			{ "At 15 Minutes", "" + (15 * 60 * 1000 + 1) },
-			{ "At 10 Minutes", "" + (10 * 10 * 1000 + 1) },
 			{ "Always", "" + Long.MAX_VALUE } };
 
 	public ChessBoardClocksPage() {

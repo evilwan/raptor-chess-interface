@@ -47,21 +47,21 @@ import raptor.util.FileUtil;
  * This classes main is the application main.
  */
 public class Raptor implements PreferenceKeys {
-	private static final Log LOG = LogFactory.getLog(Raptor.class);
-	public static final File DEFAULT_HOME_DIR = new File("defaultHomeDir/");
 	public static final String APP_HOME_DIR = ".raptor/";
+	public static final File DEFAULT_HOME_DIR = new File("defaultHomeDir/");
+	private static Display display;
+	public static final String ICONS_DIR = "resources/common/icons/";
+	public static final String IMAGES_DIR = "resources/common/images/";
+	private static Raptor instance;
+	private static final Log LOG = LogFactory.getLog(Raptor.class);
+	public static final String RESOURCES_COMMON_DIR = "resources/common/";
+
 	public static final File USER_RAPTOR_DIR = new File(System
 			.getProperty("user.home")
 			+ "/" + APP_HOME_DIR);
+
 	public static final String USER_RAPTOR_HOME_PATH = USER_RAPTOR_DIR
 			.getAbsolutePath();
-	public static final String ICONS_DIR = "resources/common/icons/";
-	public static final String IMAGES_DIR = "resources/common/images/";
-	public static final String RESOURCES_COMMON_DIR = "resources/common/";
-
-	private static Raptor instance;
-
-	private static Display display;
 
 	public static void createInstance() {
 		instance = new Raptor();
@@ -122,15 +122,15 @@ public class Raptor implements PreferenceKeys {
 		}
 	}
 
-	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
-			Display.getCurrent());
-
-	protected FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
-
 	protected ColorRegistry colorRegistry = new ColorRegistry(Display
 			.getCurrent());
 
 	protected RaptorCursorRegistry cursorRegistry = new RaptorCursorRegistry(
+			Display.getCurrent());
+
+	protected FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
+
+	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
 			Display.getCurrent());
 
 	protected RaptorPreferenceStore preferences;

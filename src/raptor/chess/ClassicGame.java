@@ -58,29 +58,29 @@ import raptor.service.EcoService;
  */
 public class ClassicGame implements Game {
 
-	protected String id;
-	protected Result result = Result.ON_GOING;
-	protected int state;
-	protected Map<PgnHeader, String> pgnHeaderMap = new HashMap<PgnHeader, String>();
-
 	protected int[] board = new int[64];
 	protected int[] castling = new int[2];
 	protected long[] colorBB = new long[2];
 	protected int colorToMove;
+
 	protected int[][] dropCounts = new int[2][7];
 	protected long emptyBB;
 	protected int epSquare = EMPTY_SQUARE;
 	protected int fiftyMoveCount;
 	protected int halfMoveCount;
+	protected String id;
 	protected int initialEpSquare = EMPTY_SQUARE;
-	protected long zobristGameHash;
-	protected long zobristPositionHash;
 	protected int[] moveRepHash = new int[MOVE_REP_CACHE_SIZE];
+	protected MoveList moves = new MoveList();
 	protected long notColorToMoveBB;
 	protected long occupiedBB;
+	protected Map<PgnHeader, String> pgnHeaderMap = new HashMap<PgnHeader, String>();
 	protected long[][] pieceBB = new long[2][7];
 	protected int[][] pieceCounts = new int[2][7];
-	protected MoveList moves = new MoveList();
+	protected Result result = Result.ON_GOING;
+	protected int state;
+	protected long zobristGameHash;
+	protected long zobristPositionHash;
 
 	public ClassicGame() {
 		setHeader(PgnHeader.Variant, Variant.classic.name());

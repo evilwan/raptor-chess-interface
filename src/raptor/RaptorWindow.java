@@ -409,10 +409,10 @@ public class RaptorWindow extends ApplicationWindow {
 	 * RaptorTabItems RaptorTabItems can only contain RaptorWindowItem controls.
 	 */
 	protected class RaptorTabItem extends CTabItem {
-		protected RaptorWindowItem raptorItem;
-		protected ItemChangedListener listener;
-		protected RaptorTabFolder raptorParent;
 		protected boolean disposed = false;
+		protected ItemChangedListener listener;
+		protected RaptorWindowItem raptorItem;
+		protected RaptorTabFolder raptorParent;
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				RaptorWindowItem item) {
@@ -515,34 +515,34 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 	}
 
-	Log LOG = LogFactory.getLog(RaptorWindow.class);
-
-	protected RaptorTabFolder[] folders = new RaptorTabFolder[Quadrant.values().length];
-
-	protected RaptorSashForm[] sashes = new RaptorSashForm[6];
-	protected RaptorSashForm quad1quad234567quad8Sash;
-
-	protected RaptorSashForm quad2quad34567Sash;
-	protected RaptorSashForm quad3quad4Sash;
-	protected RaptorSashForm quad34quad567Sash;
-	protected RaptorSashForm quad56quad7Sash;
-	protected RaptorSashForm quad5quad6Sash;
-	protected CoolBar topCoolbar;
-
-	protected CoolBar leftCoolbar;
-	protected ToolBar foldersMinimizedToolbar;
-	protected CoolItem foldersMinimiziedCoolItem;
-	protected Composite windowComposite;
-
-	protected Composite statusBar;
-	protected Label statusLabel;
-	protected Map<String, Label> pingLabelsMap = new HashMap<String, Label>();
 	protected List<RaptorTabItem> activeItems = Collections
 			.synchronizedList(new ArrayList<RaptorTabItem>());
+
 	protected RaptorTabItem dragStartItem;
 
-	protected boolean isInDrag = false;
+	protected RaptorTabFolder[] folders = new RaptorTabFolder[Quadrant.values().length];
+	protected ToolBar foldersMinimizedToolbar;
+
+	protected CoolItem foldersMinimiziedCoolItem;
 	protected boolean isExitDrag = false;
+	protected boolean isInDrag = false;
+	protected CoolBar leftCoolbar;
+	Log LOG = LogFactory.getLog(RaptorWindow.class);
+	protected Map<String, Label> pingLabelsMap = new HashMap<String, Label>();
+
+	protected RaptorSashForm quad1quad234567quad8Sash;
+	protected RaptorSashForm quad2quad34567Sash;
+	protected RaptorSashForm quad34quad567Sash;
+	protected RaptorSashForm quad3quad4Sash;
+
+	protected RaptorSashForm quad56quad7Sash;
+	protected RaptorSashForm quad5quad6Sash;
+	protected RaptorSashForm[] sashes = new RaptorSashForm[6];
+	protected Composite statusBar;
+	protected Label statusLabel;
+
+	protected CoolBar topCoolbar;
+	protected Composite windowComposite;
 
 	public RaptorWindow() {
 		super(null);

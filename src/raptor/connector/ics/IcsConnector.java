@@ -58,27 +58,35 @@ import raptor.swt.chess.ChessBoardWindowItem;
  */
 public abstract class IcsConnector implements Connector {
 	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
-	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
-	protected boolean isLoggedIn = false;
-	protected boolean hasSentLogin = false;
-	protected boolean hasSentPassword = false;
-	protected String currentProfileName;
-	protected IcsConnectorContext context;
+	protected BughouseService bughouseService;
 	protected ChatService chatService;
-	protected GameService gameService;
-	protected Thread daemonThread;
-	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();
 	protected List<ConnectorListener> connectorListeners = Collections
 			.synchronizedList(new ArrayList<ConnectorListener>(10));
+	protected IcsConnectorContext context;
+	protected String currentProfileName;
+	protected Thread daemonThread;
+	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();
+	protected GameService gameService;
+	/**
+	 * Adds the game windows to the RaptorAppWindow.
+	 */
+	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
+
+		@Override
+		public void gameCreated(Game game) {
+			Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+					new ChessBoardWindowItem(IcsUtils.buildController(game,
+							IcsConnector.this)));
+		}
+	};
+	protected boolean hasSentLogin = false;
+	protected boolean hasSentPassword = false;
+	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
+	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
 	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
 	protected ReadableByteChannel inputChannel;
-	protected Socket socket;
-	protected String userName;
-	protected long lastSendTime;
 	protected boolean isConnecting;
-	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
-	protected BughouseService bughouseService;
-	protected ChatConsoleWindowItem mainConsoleWindowItem;
+	protected boolean isLoggedIn = false;
 	protected Runnable keepAlive = new Runnable() {
 		public void run() {
 			if (LOG.isDebugEnabled()) {
@@ -93,19 +101,11 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 	};
+	protected long lastSendTime;
+	protected ChatConsoleWindowItem mainConsoleWindowItem;
+	protected Socket socket;
 
-	/**
-	 * Adds the game windows to the RaptorAppWindow.
-	 */
-	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
-
-		@Override
-		public void gameCreated(Game game) {
-			Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
-					new ChessBoardWindowItem(IcsUtils.buildController(game,
-							IcsConnector.this)));
-		}
-	};
+	protected String userName;
 
 	/**
 	 * Constructs an IcsConnector with the specified context.

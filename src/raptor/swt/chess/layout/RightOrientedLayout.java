@@ -32,55 +32,55 @@ import raptor.swt.chess.ChessBoardLayout;
  * labels.
  */
 public class RightOrientedLayout extends ChessBoardLayout {
-	private static final Log LOG = LogFactory.getLog(RightOrientedLayout.class);
-
-	public static final int NORTH = 0;
-	public static final int SOUTH = 1;
-	public static final int EAST = 1;
-	public static final int WEST = 0;
-
-	public static final int FONT_RESIZE_PERCENTAGE = 90;
-
-	public static final int TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
-	public static final int[] TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1, };
-	public static final int[] TOP_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
-
-	public static final int BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
-	public static final int[] BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1 };
-	public static final int[] BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
-
 	public static final int[] BOARD_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
 
+	public static final int BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
+	public static final int[] BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
+	public static final int[] BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1 };
 	public static final int CLOCK_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 100;
-	public static final int NAME_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 70;
+
+	public static final int EAST = 1;
+
+	public static final int FONT_RESIZE_PERCENTAGE = 90;
 	public static final int LAG_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 30;
+	private static final Log LOG = LogFactory.getLog(RightOrientedLayout.class);
+
+	public static final int NAME_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 70;
+	public static final int NORTH = 0;
+	public static final int SOUTH = 1;
+
 	public static final int TO_MOVE_INDICATOR_PERCENTAGE_OF_BOARD_SQUARE = 85;
 
+	public static final int[] TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1, };
+	public static final int TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
+	public static final int[] TOP_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
+	public static final int WEST = 0;
+
+	protected int boardHeight;
 	protected Point boardTopLeft;
-	protected Rectangle gameDescriptionLabelRect;
-	protected Rectangle currentPremovesLabelRect;
-	protected Rectangle openingDescriptionLabelRect;
-	protected Rectangle statusLabelRect;
-	protected Rectangle topNameLabelRect;
-	protected Rectangle bottomNameLabelRect;
-	protected Rectangle topClockRect;
 	protected Rectangle bottomClockRect;
-	protected Rectangle topLagRect;
+	protected int bottomLabelHeight;
 	protected Rectangle bottomLagRect;
-	protected Rectangle topToMoveIndicatorRect;
-	protected Rectangle bottomToMoveIndicatorRect;
-	protected Point topPieceJailRow1Point;
-	protected Point topPieceJailRow2Point;
+	protected Rectangle bottomNameLabelRect;
 	protected Point bottomPieceJailRow1Point;
 	protected Point bottomPieceJailRow2Point;
-	protected int topLabelHeight;
-	protected int bottomLabelHeight;
-	protected int squareSize;
-	protected int boardHeight;
-	protected int pieceJailSquareSize;
+	protected Rectangle bottomToMoveIndicatorRect;
+	protected ControlListener controlListener;
+	protected Rectangle currentPremovesLabelRect;
+	protected Rectangle gameDescriptionLabelRect;
 	protected boolean hasHeightProblem = false;
 	protected boolean hasSevereHeightProblem = false;
-	protected ControlListener controlListener;
+	protected Rectangle openingDescriptionLabelRect;
+	protected int pieceJailSquareSize;
+	protected int squareSize;
+	protected Rectangle statusLabelRect;
+	protected Rectangle topClockRect;
+	protected int topLabelHeight;
+	protected Rectangle topLagRect;
+	protected Rectangle topNameLabelRect;
+	protected Point topPieceJailRow1Point;
+	protected Point topPieceJailRow2Point;
+	protected Rectangle topToMoveIndicatorRect;
 
 	public RightOrientedLayout(ChessBoard board) {
 		super(board);

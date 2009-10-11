@@ -25,13 +25,13 @@ public class SimplePgnParser extends AbstractPgnParser {
 
 	protected int columnNumber;
 
-	protected int lineNumber;
-
-	protected String pgn;
-
 	protected String currentLine;
 
+	protected int lineNumber;
+
 	protected RaptorStringTokenizer lineTokenizer;
+
+	protected String pgn;
 
 	public SimplePgnParser(String pgn) {
 		if (pgn == null || pgn.length() == 0) {

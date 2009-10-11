@@ -52,36 +52,36 @@ import raptor.swt.chess.controller.SetupController;
 import raptor.util.RaptorStringTokenizer;
 
 public class IcsUtils implements GameConstants {
-	private static final Log LOG = LogFactory.getLog(IcsUtils.class);
+	public static final String ATOMIC_IDENTIFIER = "atomic";
+
+	public static final String BLITZ_IDENTIFIER = "blitz";
+
+	public static final String BUGHOUSE_IDENTIFIER = "bughouse";
+
+	public static final String CHANNEL_STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]";
+
+	public static final String CRAZYHOUSE_IDENTIFIER = "crazyhouse";
 
 	public static final String LEGAL_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
 			+ "!@#$%^&*()-=_+`~[{]}\\|;:'\",<.>/?";
 
-	public static final String VALID_PERSON_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-	public static final String STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]1234567890";
-
-	public static final String CHANNEL_STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]";
-
-	public static final String BLITZ_IDENTIFIER = "blitz";
-
 	public static final String LIGHTNING_IDENTIFIER = "lightning";
 
-	public static final String WILD_IDENTIFIER = "wild";
-
-	public static final String STANDARD_IDENTIFIER = "standard";
-
-	public static final String SUICIDE_IDENTIFIER = "suicide";
-
-	public static final String ATOMIC_IDENTIFIER = "atomic";
-
-	public static final String BUGHOUSE_IDENTIFIER = "bughouse";
+	private static final Log LOG = LogFactory.getLog(IcsUtils.class);
 
 	public static final String LOSERS_IDENTIFIER = "losers";
 
-	public static final String CRAZYHOUSE_IDENTIFIER = "crazyhouse";
+	public static final String STANDARD_IDENTIFIER = "standard";
+
+	public static final String STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]1234567890";
+
+	public static final String SUICIDE_IDENTIFIER = "suicide";
 
 	public static final String UNTIMED_IDENTIFIER = "untimed";
+
+	public static final String VALID_PERSON_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+	public static final String WILD_IDENTIFIER = "wild";
 
 	/**
 	 * Returns true if a move was added, false if no move was added (This can

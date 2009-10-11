@@ -45,25 +45,25 @@ import raptor.pref.RaptorPreferenceStore;
 public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
 	private static final Log LOG = LogFactory.getLog(IcsLoginDialog.class);
-	protected Combo profile;
-	protected Label profileLabel;
-	protected Label handleLabel;
-	protected Label passwordLabel;
-	protected Label serverLabel;
-	protected Label portLabel;
-	protected Text handleField;
-	protected Text serverField;
-	protected Text portField;
 	protected Button autoLoginCheckBox;
 	protected Button guestLoginCheckBox;
-	protected Button timesealEnabledCheckBox;
-	protected Text passwordField;
-	protected Button loginButton;
+	protected Text handleField;
+	protected Label handleLabel;
 	protected String lastSelection;
-
-	protected boolean wasLoginPressed;
+	protected Button loginButton;
+	protected Text passwordField;
+	protected Label passwordLabel;
+	protected Text portField;
+	protected Label portLabel;
+	protected Combo profile;
+	protected Label profileLabel;
 	protected String profilePrefix;
+	protected Text serverField;
+	protected Label serverLabel;
+
+	protected Button timesealEnabledCheckBox;
 	protected String title;
+	protected boolean wasLoginPressed;
 
 	public IcsLoginDialog(String profilePrefix, String title) {
 		super(Raptor.getInstance().getRaptorWindow().getShell());

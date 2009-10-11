@@ -32,13 +32,13 @@ import raptor.Raptor;
 import raptor.chat.ChatType;
 
 public class ChatConsoleChannelColorsPage extends PreferencePage {
-	Composite parent;
-	Combo channels;
 	Text channelName;
+	Combo channels;
 	ColorSelector colorSelector;
-	Button saveButton;
 	Button deleteButton;
+	Composite parent;
 	RaptorPreferenceStore raptorPreferenceStore;
+	Button saveButton;
 
 	public ChatConsoleChannelColorsPage() {
 		// Use the "flat" layout

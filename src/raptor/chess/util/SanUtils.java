@@ -22,37 +22,37 @@ import raptor.chess.GameConstants;
  */
 public class SanUtils {
 	public static class SanValidations {
-		String strictSan;
-
-		boolean isValidStrict;
-
-		boolean isPawnMove;
-
-		boolean isEpOrAmbigPxStrict;
-
 		boolean isAmbigPxPromotionStrict;
-
-		boolean isUnambigPieceStrict;
-
-		boolean isDisambigPieceRankStrict;
-
-		boolean isDisambigPieceFileStrict;
-
-		boolean isDisambigPieceRankFileStrict;
-
-		boolean isPxStrict;
-
-		boolean isPMoveStrict;
-
-		boolean isPxPPromotionStrict;
-
-		boolean isPPromotionStrict;
 
 		boolean isCastleKSideStrict;
 
 		boolean isCastleQSideStrict;
 
+		boolean isDisambigPieceFileStrict;
+
+		boolean isDisambigPieceRankFileStrict;
+
+		boolean isDisambigPieceRankStrict;
+
+		boolean isEpOrAmbigPxStrict;
+
+		boolean isPawnMove;
+
+		boolean isPMoveStrict;
+
+		boolean isPPromotionStrict;
+
 		boolean isPromotion;
+
+		boolean isPxPPromotionStrict;
+
+		boolean isPxStrict;
+
+		boolean isUnambigPieceStrict;
+
+		boolean isValidStrict;
+
+		String strictSan;
 
 		public String getStrictSan() {
 			return strictSan;
@@ -185,21 +185,21 @@ public class SanUtils {
 		}
 	}
 
-	public static final String FILES = "abcdefgh";
+	public static final String CAPTURES = "x:";
 
-	public static final String RANKS = "12345678";
+	public static final String CHECK_CHECKMATE = "+#";
+
+	public static final String DROPS = "PBNQR";
+
+	public static final String EQUALS = "=";
+
+	public static final String FILES = "abcdefgh";
 
 	public static final String PIECES = "BKNQR";
 
 	public static final String PROMOTIONS = "BNQR";
 
-	public static final String SUICIDE_PROMOTIONS = "KBNQR";
-
-	public static final String DROPS = "PBNQR";
-
-	public static final String CAPTURES = "x:";
-
-	public static final String EQUALS = "=";
+	public static final String RANKS = "12345678";
 
 	/*
 	 * OLD SLOW REGEX USED: DONT REMOVE MIGHT BE USEFUL FOR SOMETHING ELSE.
@@ -240,7 +240,7 @@ public class SanUtils {
 	 * "[O][-][O][-][O]";
 	 */
 
-	public static final String CHECK_CHECKMATE = "+#";
+	public static final String SUICIDE_PROMOTIONS = "KBNQR";
 
 	public static SanValidations getValidations(String unstrictShortAlg) {
 		SanValidations result = new SanValidations();

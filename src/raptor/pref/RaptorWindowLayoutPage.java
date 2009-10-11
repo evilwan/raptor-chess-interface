@@ -20,7 +20,6 @@ import raptor.Quadrant;
 import raptor.Raptor;
 
 public class RaptorWindowLayoutPage extends FieldEditorPreferencePage {
-	protected String layoutPrefix;
 	protected static final String[][] Quadrants = {
 			{ Quadrant.I.name(), Quadrant.I.name() },
 			{ Quadrant.II.name(), Quadrant.II.name() },
@@ -30,6 +29,7 @@ public class RaptorWindowLayoutPage extends FieldEditorPreferencePage {
 			{ Quadrant.VI.name(), Quadrant.VI.name() },
 			{ Quadrant.VII.name(), Quadrant.VII.name() },
 			{ Quadrant.VIII.name(), Quadrant.VIII.name() } };
+	protected String layoutPrefix;
 
 	public RaptorWindowLayoutPage(String layoutName, String layoutPrefix) {
 		super(GRID);

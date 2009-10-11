@@ -20,10 +20,10 @@ import raptor.connector.fics.game.message.IllegalMoveMessage;
 
 public class IllegalMoveParser {
 
+	public static final String ILLEGAL_MOVE_START = "Illegal move (";
+
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(IllegalMoveParser.class);
-
-	public static final String ILLEGAL_MOVE_START = "Illegal move (";
 
 	public IllegalMoveMessage parse(String message) {
 		IllegalMoveMessage result = null;

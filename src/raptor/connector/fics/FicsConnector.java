@@ -42,21 +42,21 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
-	protected MenuManager connectionsMenu;
-
-	protected Action connectAction;
 	protected Action autoConnectAction;
-	protected Action disconnectAction;
-	protected Action reconnectAction;
-	protected Action bughouseArenaAction;
-	protected Action seekGraphAction;
-	protected Action regexTabAction;
 
+	protected Action bughouseArenaAction;
+	protected Action connectAction;
+	protected MenuManager connectionsMenu;
+	protected Action disconnectAction;
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
 	 */
 	protected FicsConnector fics2 = null;
+	protected Action reconnectAction;
+	protected Action regexTabAction;
+
+	protected Action seekGraphAction;
 
 	public FicsConnector() {
 		this(new IcsConnectorContext(new FicsParser()));

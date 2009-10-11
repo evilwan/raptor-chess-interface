@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class StreamingPgnParser extends SimplePgnParser {
-	private BufferedReader reader;
 	int charsParsed = 0;
 	int maxChars = -1;
+	private BufferedReader reader;
 
 	public StreamingPgnParser(Reader reader, int maxChars) throws IOException {
 		super("garbage");

@@ -7,9 +7,9 @@ import raptor.chess.ClassicGame;
 
 public class PgnParseOutput implements Serializable {
 	static final long serialVersionUID = 1;
-	ArrayList<ClassicGame> games;
-
 	ArrayList<PgnParserError> errors;
+
+	ArrayList<ClassicGame> games;
 
 	/**
 	 * Don't use this its for gwt serizliation only.

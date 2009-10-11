@@ -33,9 +33,9 @@ import raptor.pref.PreferenceKeys;
  */
 public class SoundService {
 
-	private static final Log LOG = LogFactory.getLog(SoundService.class);
-
 	private static final SoundService instance = new SoundService();
+
+	private static final Log LOG = LogFactory.getLog(SoundService.class);
 
 	/**
 	 * Returns the singleton instance.

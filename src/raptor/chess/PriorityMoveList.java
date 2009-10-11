@@ -18,9 +18,9 @@ import java.util.List;
 
 public final class PriorityMoveList implements GameConstants {
 	private Move[] highPriorityMoves = new Move[MAX_LEGAL_MOVES];
-	private Move[] lowPriorityMoves = new Move[MAX_LEGAL_MOVES];
-
 	int highPrioritySize;
+
+	private Move[] lowPriorityMoves = new Move[MAX_LEGAL_MOVES];
 	int lowPrioritySize;
 
 	public void appendHighPriority(Move move) {

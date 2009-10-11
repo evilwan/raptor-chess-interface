@@ -26,8 +26,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 public class InputDialog extends Dialog {
-	protected String message;
 	protected String input;
+	protected String message;
 
 	public InputDialog(Shell parent, String title, String question) {
 		// Let users override the default styles

@@ -15,36 +15,45 @@ package raptor.chat;
 
 public enum ChatType {
 	/**
-	 * Used to identify types that don't match any of the others.
+	 * Message sent when someone challenges you to a match.
 	 */
-	UNKNOWN,
+	CHALLENGE,
 	/**
-	 * Used for direct tells and say. Source will be the person sending the
-	 * tell.
+	 * Channel tells. The source will be the person sending the tell. Will
+	 * always have a channel.
 	 */
-	TELL,
+	CHAN_TELL,
+	/**
+	 * Global c-shouts. Will always have a source.
+	 */
+	CSHOUT,
+	/**
+	 * Message sent when you are following a persons games. Source will be the
+	 * person you are following.
+	 */
+	FOLLOWING,
+	/**
+	 * Used for messages sent from within Raptor. Error messages and
+	 * informational messages.
+	 */
+	INTERNAL,
 	/**
 	 * Kibitzes pertaining to a game. Will always have a game id set and a
 	 * source.
 	 */
 	KIBITZ,
 	/**
-	 * Whispers pertaining to a game. Will always have a source and a game id.
+	 * Used for a message containing a game moves list.
 	 */
-	WHISPER,
+	MOVES,
 	/**
-	 * Global shouts. Will always have a source.
+	 * Message sent when you are no longer following a persons games.
 	 */
-	SHOUT,
+	NOT_FOLLOWING,
 	/**
-	 * Global c-shouts. Will always have a source.
+	 * Used for messages sent to a connector.
 	 */
-	CSHOUT,
-	/**
-	 * Channel tells. The source will be the person sending the tell. Will
-	 * always have a channel.
-	 */
-	CHAN_TELL,
+	OUTBOUND,
 	/**
 	 * Tells from a bughouse partner. Source will be the partners name.
 	 */
@@ -59,32 +68,23 @@ public enum ChatType {
 	 */
 	PARTNERSHIP_DESTROYED,
 	/**
-	 * Message sent when you are following a persons games. Source will be the
-	 * person you are following.
+	 * Global shouts. Will always have a source.
 	 */
-	FOLLOWING,
-	/**
-	 * Message sent when you are no longer following a persons games.
-	 */
-	NOT_FOLLOWING,
-	/**
-	 * Message sent when someone challenges you to a match.
-	 */
-	CHALLENGE,
+	SHOUT,
 
 	/**
-	 * Used for messages sent to a connector.
+	 * Used for direct tells and say. Source will be the person sending the
+	 * tell.
 	 */
-	OUTBOUND,
+	TELL,
 
 	/**
-	 * Used for messages sent from within Raptor. Error messages and
-	 * informational messages.
+	 * Used to identify types that don't match any of the others.
 	 */
-	INTERNAL,
+	UNKNOWN,
 
 	/**
-	 * Used for a message containing a game moves list.
+	 * Whispers pertaining to a game. Will always have a source and a game id.
 	 */
-	MOVES
+	WHISPER
 }

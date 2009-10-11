@@ -97,19 +97,19 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		}
 	}
 
-	protected MenuManager connectionsMenu;
-
-	protected Action connectAction;
 	protected Action autoConnectAction;
-	protected Action disconnectAction;
-	protected Action reconnectAction;
-	protected Action bughouseArenaAction;
 
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
 	 */
 	protected BicsConnector bics2 = null;
+	protected Action bughouseArenaAction;
+	protected Action connectAction;
+	protected MenuManager connectionsMenu;
+	protected Action disconnectAction;
+
+	protected Action reconnectAction;
 
 	public BicsConnector() {
 		this(new BicsConnectorContext());

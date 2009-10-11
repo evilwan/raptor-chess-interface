@@ -33,19 +33,19 @@ import raptor.swt.chess.ChessBoard;
 import raptor.util.RaptorStringUtils;
 
 public class GameScript implements Comparable<GameScript> {
-	static final Log LOG = LogFactory.getLog(GameScript.class);
+	public static final String DESCRIPTION = "description";
 
+	public static final String IS_AVAILABLE_IN_EXAMINE_STATE = "isAvailableInExamineState";
+
+	public static final String IS_AVAILABLE_IN_FREEFORM_STATE = "isAvailableInFreeformState";
+	public static final String IS_AVAILABLE_IN_OBSERVE_STATE = "isAvailableInObserveState";
+	public static final String IS_AVAILABLE_IN_PLAYING_STATE = "isAvailableInPlayingState";
+	public static final String IS_AVAILABLE_IN_SETUP_STATE = "isAvailableInSetupState";
+	static final Log LOG = LogFactory.getLog(GameScript.class);
+	public static final String SCRIPT = "script";
 	public static final String SCRIPT_DIR = Raptor.USER_RAPTOR_DIR
 			.getAbsolutePath()
 			+ "/scripts/";
-
-	public static final String DESCRIPTION = "description";
-	public static final String SCRIPT = "script";
-	public static final String IS_AVAILABLE_IN_EXAMINE_STATE = "isAvailableInExamineState";
-	public static final String IS_AVAILABLE_IN_PLAYING_STATE = "isAvailableInPlayingState";
-	public static final String IS_AVAILABLE_IN_OBSERVE_STATE = "isAvailableInObserveState";
-	public static final String IS_AVAILABLE_IN_SETUP_STATE = "isAvailableInSetupState";
-	public static final String IS_AVAILABLE_IN_FREEFORM_STATE = "isAvailableInFreeformState";
 
 	public static GameScript[] getGameScripts(Connector connector) {
 		String scriptDirectory = SCRIPT_DIR + connector.getShortName()
@@ -73,8 +73,8 @@ public class GameScript implements Comparable<GameScript> {
 		}
 	}
 
-	protected String name;
 	protected Connector connector;
+	protected String name;
 
 	protected PreferenceStore store;
 

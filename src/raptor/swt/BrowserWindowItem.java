@@ -38,11 +38,11 @@ import raptor.pref.PreferenceKeys;
 
 public class BrowserWindowItem implements RaptorWindowItem {
 
-	protected Composite composite;
 	protected Composite addressBar;
 	protected Browser browser;
-	protected String url;
+	protected Composite composite;
 	protected String title;
+	protected String url;
 
 	public BrowserWindowItem(String title, String url) {
 		this.url = url;

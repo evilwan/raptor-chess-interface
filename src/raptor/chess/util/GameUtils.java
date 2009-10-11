@@ -26,20 +26,20 @@ import raptor.util.RaptorStringUtils;
 //KoggeStone
 //http://www.open-aurec.com/wbforum/viewtopic.php?f=4&t=49948&sid=abd6ee7224f34b11a5211aa167f01ac4
 public class GameUtils implements GameConstants {
-	public static final Log LOG = LogFactory.getLog(GameUtils.class);
-
 	private static final long DE_BRUJIN = 0x03f79d71b4cb0a89L;
+
 	private static final int[] DE_BRUJIN_MAGICS_TABLE = { 0, 1, 48, 2, 57, 49,
 			28, 3, 61, 58, 50, 42, 38, 29, 17, 4, 62, 55, 59, 36, 53, 51, 43,
 			22, 45, 39, 33, 30, 24, 18, 12, 5, 63, 47, 56, 27, 60, 41, 37, 16,
 			54, 35, 52, 21, 44, 32, 23, 11, 46, 26, 40, 15, 34, 20, 31, 10, 25,
 			14, 19, 9, 13, 8, 7, 6, };
-
-	private static long[] KING_ATTACKS = new long[64];
-	private static long[] KNIGHT_ATTACKS = new long[64];
-
 	private static int[] EP_DIR = { SOUTH, NORTH };
+
 	private static int[] EP_OPP_DIR = { NORTH, SOUTH };
+	private static long[] KING_ATTACKS = new long[64];
+
+	private static long[] KNIGHT_ATTACKS = new long[64];
+	public static final Log LOG = LogFactory.getLog(GameUtils.class);
 
 	private static int[] OPPOSITE_COLOR = { BLACK, WHITE };
 

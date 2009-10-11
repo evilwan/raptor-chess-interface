@@ -25,47 +25,47 @@ import raptor.chess.pgn.SublineNode;
 import raptor.chess.util.GameUtils;
 
 public class Move implements GameConstants {
-	public static final int SHORT_CASTLING_CHARACTERISTIC = 1;
-	public static final int LONG_CASTLING_CHARACTERISTIC = 2;
 	public static final int DOUBLE_PAWN_PUSH_CHARACTERISTIC = 4;
-	public static final int PROMOTION_CHARACTERISTIC = 8;
-	public static final int EN_PASSANT_CHARACTERISTIC = 16;
 	public static final int DROP_CHARACTERISTIC = 32;
-
-	// Bytes are used because they take up less space than ints and there is no
-	// need for the extra space.
-	protected byte from = EMPTY_SQUARE;
-	protected byte to = EMPTY_SQUARE;
-	protected byte piece = EMPTY;
-	protected byte capture = EMPTY;
-	protected byte piecePromotedTo = EMPTY;
-	protected byte color = 0;
-	protected byte epSquare = EMPTY_SQUARE;
-	protected byte castlingType = CASTLE_NONE;
-	protected byte moveCharacteristic = 0;
-	protected byte lastCastleState = CASTLE_NONE;
-	protected byte previous50MoveCount = 0;
-
-	/**
-	 * May or may not be used.
-	 */
-	protected int fullMoveCount = 0;
-
-	/**
-	 * May or may not be used.
-	 */
-	protected int halfMoveCount = 0;
+	public static final int EN_PASSANT_CHARACTERISTIC = 16;
+	public static final int LONG_CASTLING_CHARACTERISTIC = 2;
+	public static final int PROMOTION_CHARACTERISTIC = 8;
+	public static final int SHORT_CASTLING_CHARACTERISTIC = 1;
 
 	/**
 	 * May or may not be used. It is obviously not suitable to use this for a
 	 * chess engine. That is why it starts out null.
 	 */
 	protected ArrayList<MoveAnnotation> annotations = null;
+	protected byte capture = EMPTY;
+	protected byte castlingType = CASTLE_NONE;
+	protected byte color = 0;
+	protected byte epSquare = EMPTY_SQUARE;
+	// Bytes are used because they take up less space than ints and there is no
+	// need for the extra space.
+	protected byte from = EMPTY_SQUARE;
+	/**
+	 * May or may not be used.
+	 */
+	protected int fullMoveCount = 0;
+	/**
+	 * May or may not be used.
+	 */
+	protected int halfMoveCount = 0;
+	protected byte lastCastleState = CASTLE_NONE;
+	protected byte moveCharacteristic = 0;
+	protected byte piece = EMPTY;
+
+	protected byte piecePromotedTo = EMPTY;
+
+	protected byte previous50MoveCount = 0;
 
 	/**
 	 * May or may not be used.
 	 */
 	protected String san;
+
+	protected byte to = EMPTY_SQUARE;
 
 	/**
 	 * Constructor for drop moves. From square will be set to the drop square

@@ -25,8 +25,9 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
 import raptor.chess.Game;
+import raptor.chess.GameCursor;
+import raptor.chess.GameCursor.Mode;
 import raptor.chess.pgn.PgnHeader;
-import raptor.chess.util.MoveListTraverser;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
@@ -47,6 +48,7 @@ public class ObserveController extends ChessBoardController {
 
 	protected Connector connector;
 
+	protected GameCursor cursor = null;
 	protected GameServiceListener listener = new GameServiceAdapter() {
 		@Override
 		public void gameInactive(Game game) {
@@ -105,14 +107,9 @@ public class ObserveController extends ChessBoardController {
 					public void run() {
 						try {
 							if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
-								setGame(traverser.getSource());
-								traverser.gotoHalfMove(getGame().getMoveList()
-										.getSize());
-								enableDisableNavButtons();
-								board.getMoveList().updateToGame();
-								selectCurrentMove();
-								refresh();
+								cursor.setCursorMasterLast();
 							}
+							refresh();
 							if (isNewMove) {
 								onPlayMoveSound();
 							}
@@ -126,14 +123,13 @@ public class ObserveController extends ChessBoardController {
 		}
 	};
 	protected ToolBar toolbar;
-	protected MoveListTraverser traverser = null;
 
 	public ObserveController(Game game, Connector connector) {
-		super(game);
+		super(new GameCursor(game,GameCursor.Mode.MakeMovesOnMasterSetCursorToLast));
+		cursor = (GameCursor) getGame();
 		this.connector = connector;
-		traverser = new MoveListTraverser(game);
 	}
-
+	
 	@Override
 	public void adjustGameDescriptionLabel() {
 		if (!isDisposed()) {
@@ -141,6 +137,7 @@ public class ObserveController extends ChessBoardController {
 					"Observing " + getGame().getHeader(PgnHeader.Event));
 		}
 	}
+
 
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
@@ -162,10 +159,10 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	public void enableDisableNavButtons() {
-		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, traverser.hasNext());
-		setToolItemEnabled(ToolBarItemKey.BACK_NAV, traverser.hasBack());
-		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, traverser.hasFirst());
-		setToolItemEnabled(ToolBarItemKey.LAST_NAV, traverser.hasLast());
+		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, cursor.hasNext());
+		setToolItemEnabled(ToolBarItemKey.BACK_NAV, cursor.hasPrevious());
+		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, cursor.hasFirst());
+		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
 	}
 
 	public Connector getConnector() {
@@ -195,15 +192,18 @@ public class ObserveController extends ChessBoardController {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
-						setGame(traverser.getSource());
+						cursor.setMode(Mode.MakeMovesOnMasterSetCursorToLast);
 						refresh();
-						enableDisableNavButtons();
 					}
+					else {
+						cursor.setMode(Mode.MakeMovesOnMaster);
+					}
+					refresh();
 				}
 			});
 
 			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
-			movesItem.setText("MOVES");
+			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
 			movesItem.setToolTipText("Shows or hides the move list.");
 			movesItem.setSelection(false);
 			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
@@ -211,9 +211,6 @@ public class ObserveController extends ChessBoardController {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
-						board.getMoveList().updateToGame();
-						board.getMoveList().select(
-								getGame().getMoveList().getSize() - 1);
 						board.showMoveList();
 					} else {
 						board.hideMoveList();
@@ -244,10 +241,7 @@ public class ObserveController extends ChessBoardController {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
 
-		traverser.gotoHalfMove(getGame().getMoveList().getSize());
-		enableDisableNavButtons();
-		board.getMoveList().updateToGame();
-		selectCurrentMove();
+		cursor.setCursorMasterLast();
 		refresh();
 
 		onPlayGameStartSound();
@@ -284,38 +278,30 @@ public class ObserveController extends ChessBoardController {
 			onFlip();
 			break;
 		case NEXT_NAV:
-			traverser.next();
-			setGame(traverser.getAdjustedGame());
-			enableDisableNavButtons();
-			selectCurrentMove();
+			cursor.setCursorNext();
 			refresh();
 			break;
 		case BACK_NAV:
-			traverser.back();
-			setGame(traverser.getAdjustedGame());
-			enableDisableNavButtons();
-			selectCurrentMove();
+			cursor.setCursorPrevious();
 			refresh();
 			break;
 		case FIRST_NAV:
-			traverser.first();
-			setGame(traverser.getAdjustedGame());
-			enableDisableNavButtons();
-			selectCurrentMove();
+			cursor.setCursorFirst();
 			refresh();
 			break;
 		case LAST_NAV:
-			traverser.last();
-			setGame(traverser.getAdjustedGame());
-			enableDisableNavButtons();
-			selectCurrentMove();
+			cursor.setCursorMasterLast();
+			setToolItemEnabled(ToolBarItemKey.FORCE_UPDATE, true);
 			refresh();
 			break;
 		}
 	}
 
-	protected void selectCurrentMove() {
-		board.getMoveList().select(traverser.getTraverserHalfMoveIndex());
+	public void refresh() {
+		board.getMoveList().updateToGame();
+		board.getMoveList().select(cursor.getCursorPosition());
+		enableDisableNavButtons();
+		super.refresh();
 	}
 
 	@Override
@@ -331,9 +317,7 @@ public class ObserveController extends ChessBoardController {
 	 */
 	@Override
 	public void userClickedOnMove(int halfMoveNumber) {
-		traverser.gotoHalfMove(halfMoveNumber);
-		setGame(traverser.getAdjustedGame());
-		enableDisableNavButtons();
+		cursor.setCursor(halfMoveNumber);
 		refresh();
 	}
 

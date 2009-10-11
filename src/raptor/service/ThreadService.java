@@ -36,8 +36,8 @@ import raptor.Raptor;
  * This service provides exception handling, and pooling
  */
 public class ThreadService {
-	private static final Log LOG = LogFactory.getLog(ThreadService.class);
 	private static final ThreadService instance = new ThreadService();
+	private static final Log LOG = LogFactory.getLog(ThreadService.class);
 	public static final String THREAD_DUMP_FILE_PATH = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/threaddump_" + System.currentTimeMillis() + ".txt";
 

@@ -32,21 +32,21 @@ import raptor.connector.Connector;
 import raptor.script.GameScript;
 
 public class ICSGameScriptsPage extends PreferencePage {
+	Button delete;
+	Text description;
+	Connector ficsConnector;
+	Button isAvailableInExamineState;
+	Button isAvailableInFreeFormState;
+	Button isAvailableInObserveState;
+	Button isAvailableInPlayingState;
+	Button isAvailableInSetupState;
+	Text name;
 	Composite parent;
+	Button save;
+	Text script;
 	Combo scriptName;
 	Composite scriptNameComposite;
-	Text name;
-	Text description;
-	Text script;
-	Button isAvailableInExamineState;
-	Button isAvailableInPlayingState;
-	Button isAvailableInObserveState;
-	Button isAvailableInSetupState;
-	Button isAvailableInFreeFormState;
-	Button save;
-	Button delete;
 	Button test;
-	Connector ficsConnector;
 
 	public ICSGameScriptsPage(Connector connector) {
 		// Use the "flat" layout

@@ -29,11 +29,11 @@ import raptor.swt.SWTUtils;
 public class ResultChessBoardDecoration implements BoardConstants {
 
 	protected ChessBoard board;
-	protected int resultFontHeight;
+	protected boolean isHiding = false;
 
 	protected Font resultFont;
 
-	protected boolean isHiding = false;
+	protected int resultFontHeight;
 
 	public ResultChessBoardDecoration(ChessBoard board) {
 		this.board = board;
