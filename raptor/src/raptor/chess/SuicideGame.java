@@ -239,9 +239,8 @@ public class SuicideGame extends ClassicGame {
 			MoveList matches = new MoveList(10);
 
 			if (SanUtils.isValidSuicidePPromotionStrict(san)) {
-				int toSquare = GameUtils.getSquare(RANK_FROM_SAN
-						.indexOf(san.charAt(1)), FILE_FROM_SAN.indexOf(san
-						.charAt(0)));
+				int toSquare = GameUtils.getSquare(RANK_FROM_SAN.indexOf(san
+						.charAt(1)), FILE_FROM_SAN.indexOf(san.charAt(0)));
 
 				for (Move move : pseudoLegals) {
 					if (move.getTo() == toSquare && move.getPiece() == PAWN
@@ -264,9 +263,8 @@ public class SuicideGame extends ClassicGame {
 				}
 			} else if (SanUtils.isValidSuicideAmbigPxPromotion(san)) {
 				int fromFile = FILE_FROM_SAN.indexOf(san.charAt(0));
-				int toSquare = GameUtils.getSquare(RANK_FROM_SAN
-						.indexOf(san.charAt(2)), FILE_FROM_SAN.indexOf(san
-						.charAt(1)));
+				int toSquare = GameUtils.getSquare(RANK_FROM_SAN.indexOf(san
+						.charAt(2)), FILE_FROM_SAN.indexOf(san.charAt(1)));
 				for (Move move : pseudoLegals) {
 					if (move.getTo() == toSquare
 							&& GameUtils.getFile(move.getFrom()) == fromFile

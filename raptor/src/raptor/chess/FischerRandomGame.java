@@ -13,7 +13,11 @@
  */
 package raptor.chess;
 
-import static raptor.chess.util.GameUtils.*;
+import static raptor.chess.util.GameUtils.bitscanClear;
+import static raptor.chess.util.GameUtils.bitscanForward;
+import static raptor.chess.util.GameUtils.getBitboard;
+import static raptor.chess.util.GameUtils.getFile;
+import static raptor.chess.util.GameUtils.getSquare;
 import raptor.chess.pgn.PgnHeader;
 
 /**
@@ -67,25 +71,6 @@ public class FischerRandomGame extends ClassicGame {
 	}
 
 	/**
-	 * This method should be invoked after the initial position is setup. It
-	 * handles setting castling information used later on during the game.
-	 */
-	public void initialPositionIsSet() {
-		initialKingFile = getFile(bitscanForward(getPieceBB(WHITE, KING)));
-		long rookBB = getPieceBB(WHITE, ROOK);
-		int firstRook = getFile(bitscanForward(rookBB));
-		rookBB = bitscanClear(rookBB);
-		int secondRook = getFile(bitscanForward(rookBB));
-		if (firstRook < initialKingFile) {
-			initialLongRookFile = firstRook;
-			initialShortRookFile = secondRook;
-		} else {
-			initialLongRookFile = firstRook;
-			initialShortRookFile = secondRook;
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -106,19 +91,6 @@ public class FischerRandomGame extends ClassicGame {
 		}
 		return result;
 	}
-	
-	protected boolean inCheckBetweenFiles(int rank, int startFile, int endFile,int color) {
-		// This is ugly should be rewritten using a bit board trick.
-		boolean result = false;
-		for (int i = startFile + 1; i < endFile; i++) {
-			int square = getSquare(rank,i);
-			result = isInCheck(color,square);
-			if (result) {
-				break;
-			}
-		}
-		return result;
-	}
 
 	/**
 	 * Generates all of the pseudo legal king castling moves in the position and
@@ -132,13 +104,14 @@ public class FischerRandomGame extends ClassicGame {
 			PriorityMoveList moves) {
 		// The king destination square isnt checked, its checked when legal
 		// getMoves() are checked.
-		int fromSquare = getSquare(fromBB);
+		//int fromSquare = getSquare(fromBB);
 
 		if (getColorToMove() == WHITE
 				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
 				&& fromBB == getBitboard(getSquare(0, initialKingFile))
-				&& emptyBetweenFiles(0,initialLongRookFile,initialKingFile)){
-		//		&& !inCheckBetweenFiles(initialLongRookFile, E1) && !isInCheck(WHITE, F1)) {
+				&& emptyBetweenFiles(0, initialLongRookFile, initialKingFile)) {
+			// && !inCheckBetweenFiles(initialLongRookFile, E1) &&
+			// !isInCheck(WHITE, F1)) {
 			moves
 					.appendLowPriority(new Move(SQUARE_E1, SQUARE_G1, KING,
 							getColorToMove(), EMPTY,
@@ -183,6 +156,39 @@ public class FischerRandomGame extends ClassicGame {
 	@Override
 	public PriorityMoveList getLegalMoves() {
 		return null;
+	}
+
+	protected boolean inCheckBetweenFiles(int rank, int startFile, int endFile,
+			int color) {
+		// This is ugly should be rewritten using a bit board trick.
+		boolean result = false;
+		for (int i = startFile + 1; i < endFile; i++) {
+			int square = getSquare(rank, i);
+			result = isInCheck(color, square);
+			if (result) {
+				break;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * This method should be invoked after the initial position is setup. It
+	 * handles setting castling information used later on during the game.
+	 */
+	public void initialPositionIsSet() {
+		initialKingFile = getFile(bitscanForward(getPieceBB(WHITE, KING)));
+		long rookBB = getPieceBB(WHITE, ROOK);
+		int firstRook = getFile(bitscanForward(rookBB));
+		rookBB = bitscanClear(rookBB);
+		int secondRook = getFile(bitscanForward(rookBB));
+		if (firstRook < initialKingFile) {
+			initialLongRookFile = firstRook;
+			initialShortRookFile = secondRook;
+		} else {
+			initialLongRookFile = firstRook;
+			initialShortRookFile = secondRook;
+		}
 	}
 
 	@Override

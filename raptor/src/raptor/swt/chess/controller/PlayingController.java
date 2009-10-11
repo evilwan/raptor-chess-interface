@@ -213,20 +213,6 @@ public class PlayingController extends ChessBoardController {
 			LOG.debug("isUserWhite=" + isUserWhite);
 		}
 	}
-	
-	public void enableDisableNavButtons() {
-		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, cursor.hasNext());
-		setToolItemEnabled(ToolBarItemKey.BACK_NAV, cursor.hasPrevious());
-		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, cursor.hasFirst());
-		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
-	}
-	
-	public void refresh() {
-		board.getMoveList().updateToGame();
-		board.getMoveList().select(cursor.getCursorPosition());
-		enableDisableNavButtons();
-		super.refresh();
-	}
 
 	/**
 	 * If premove is enabled, and premove is not in queued mode then clear the
@@ -388,6 +374,13 @@ public class PlayingController extends ChessBoardController {
 			SWTUtils.clearToolbar(toolbar);
 			toolbar = null;
 		}
+	}
+
+	public void enableDisableNavButtons() {
+		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, cursor.hasNext());
+		setToolItemEnabled(ToolBarItemKey.BACK_NAV, cursor.hasPrevious());
+		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, cursor.hasFirst());
+		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
 	}
 
 	public Connector getConnector() {
@@ -604,6 +597,14 @@ public class PlayingController extends ChessBoardController {
 			refresh();
 			break;
 		}
+	}
+
+	@Override
+	public void refresh() {
+		board.getMoveList().updateToGame();
+		board.getMoveList().select(cursor.getCursorPosition());
+		enableDisableNavButtons();
+		super.refresh();
 	}
 
 	/**

@@ -69,8 +69,8 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 		if (currentHeaders.get(PgnHeader.FEN.name()) != null) {
 			fen = currentHeaders.get(PgnHeader.FEN.name());
 		}
-		
-		//Check for the Variant header.
+
+		// Check for the Variant header.
 		if (currentHeaders.get(PgnHeader.Variant.name()) != null) {
 			try {
 				variant = Variant.valueOf(currentHeaders.get(PgnHeader.Variant
@@ -79,7 +79,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 			}
 		}
 
-		//Couldn't find it now check for keywords in event.
+		// Couldn't find it now check for keywords in event.
 		if (variant == null
 				&& currentHeaders.get(PgnHeader.Event.name()) != null) {
 			if (StringUtils.containsIgnoreCase(currentHeaders
@@ -106,7 +106,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 			}
 		}
 
-		//No variant detected, set it to classic.
+		// No variant detected, set it to classic.
 		if (variant == null) {
 			variant = Variant.classic;
 		}
