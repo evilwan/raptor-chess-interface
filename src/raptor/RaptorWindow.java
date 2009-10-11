@@ -650,10 +650,9 @@ public class RaptorWindow extends ApplicationWindow {
 			leftCoolbar.setVisible(false);
 		} else {
 			leftCoolbar.setVisible(true);
+			leftCoolbar.layout(true);
+			windowComposite.layout(true);
 		}
-
-		leftCoolbar.layout(true);
-		windowComposite.layout(true);
 	}
 
 	/**
