@@ -14,7 +14,6 @@ import raptor.chess.pgn.PgnParserError;
 import raptor.chess.pgn.PgnParserListener;
 import raptor.chess.pgn.SimplePgnParser;
 import raptor.chess.pgn.StreamingPgnParser;
-import raptor.chess.util.GameUtils;
 
 public class TestPgnParsing {
 
@@ -225,7 +224,7 @@ public class TestPgnParsing {
 			System.out.println("\n\nGames:");
 			for (Game game : listener.getGames()) {
 				System.out.println(game);
-				System.out.println(GameUtils.toPgn(game));
+				System.out.println(game.toPgn());
 			}
 		}
 	}

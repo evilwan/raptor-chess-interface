@@ -22,7 +22,7 @@ import java.util.Random;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 
-public final class ZobristHash implements GameConstants {
+public final class ZobristUtils implements GameConstants {
 
 	private static long[][][] ZOBRIST_POSITION = new long[2][7][64];
 	private static long[] ZOBRIST_TO_MOVE = new long[2];

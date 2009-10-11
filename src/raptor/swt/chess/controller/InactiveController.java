@@ -33,7 +33,8 @@ import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
-import raptor.chess.Game.Type;
+import raptor.chess.Variant;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.chess.util.MoveListTraverser;
 import raptor.service.SoundService;
@@ -87,7 +88,7 @@ public class InactiveController extends ChessBoardController implements
 	public void adjustGameDescriptionLabel() {
 		if (!isDisposed()) {
 			board.getGameDescriptionLabel().setText(
-					"Inactive " + getGame().getEvent());
+					"Inactive " + getGame().getHeader(PgnHeader.Event));
 		}
 	}
 
@@ -118,10 +119,9 @@ public class InactiveController extends ChessBoardController implements
 				board.getStatusLabel().setText("");
 			}
 		} else {
-			String result = getGame().getResultDescription();
+			String result = getGame().getHeader(PgnHeader.ResultDescription);
 			if (result != null) {
-				board.getStatusLabel()
-						.setText(getGame().getResultDescription());
+				board.getStatusLabel().setText(result);
 			}
 		}
 	}
@@ -193,7 +193,7 @@ public class InactiveController extends ChessBoardController implements
 			});
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true, game
-					.getType() == Type.SUICIDE);
+					.getVariant() == Variant.suicide);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
 			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
@@ -219,7 +219,7 @@ public class InactiveController extends ChessBoardController implements
 			toolbar.setParent(parent);
 		}
 
-		if (game.getType() == Type.SUICIDE) {
+		if (game.getVariant() == Variant.suicide) {
 			setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
 		} else {
 			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
@@ -256,7 +256,7 @@ public class InactiveController extends ChessBoardController implements
 		final String selected = fd.open();
 
 		if (selected != null) {
-			String pgn = GameUtils.toPgn(traverser.getSource());
+			String pgn = traverser.getSource().toPgn();
 			FileWriter writer = null;
 
 			try {
@@ -279,8 +279,8 @@ public class InactiveController extends ChessBoardController implements
 		switch (key) {
 		case FEN:
 			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getWhiteName() + " vs "
-							+ game.getBlackName(), game.toFEN());
+					"FEN for game " + game.getHeader(PgnHeader.White) + " vs "
+							+ game.getHeader(PgnHeader.Black), game.toFen());
 			break;
 		case FLIP:
 			onFlip();

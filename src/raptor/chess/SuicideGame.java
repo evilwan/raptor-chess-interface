@@ -22,25 +22,27 @@ import static raptor.chess.util.GameUtils.pawnSinglePush;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
-import raptor.chess.util.SanUtil;
-import raptor.chess.util.SanUtil.SanValidations;
+import raptor.chess.util.SanUtils;
+import raptor.chess.util.SanUtils.SanValidations;
 
-public class SuicideGame extends Game {
+/**
+ * Follows FICS suicide chess rules.
+ */
+public class SuicideGame extends ClassicGame {
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(SuicideGame.class);
 
 	public SuicideGame() {
-		setType(Type.SUICIDE);
+		setHeader(PgnHeader.Variant, Variant.suicide.name());
 	}
 
 	/**
-	 * @param ignoreHashes
-	 *            Whether to include copying hash tables.
-	 * @return An deep clone copy of this Game object.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Game deepCopy(boolean ignoreHashes) {
+	public SuicideGame deepCopy(boolean ignoreHashes) {
 		SuicideGame result = new SuicideGame();
 		overwrite(result, ignoreHashes);
 		return result;
@@ -50,20 +52,22 @@ public class SuicideGame extends Game {
 	 * Castling is'nt permitted in suicide. This method is overridden to remove
 	 * it.
 	 * 
-	 * @param moves
-	 *            A move list.
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void generatePseudoKingCastlingMoves(long fromBB,
+	protected void generatePseudoKingCastlingMoves(long fromBB,
 			PriorityMoveList moves) {
 	}
 
 	/**
 	 * There can be more than one king in suicide. So have to override
 	 * generatePseudoKingMove to check all kings.
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void generatePseudoKingMoves(PriorityMoveList moves) {
+	protected void generatePseudoKingMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(getColorToMove(), KING);
 		while (fromBB != 0) {
 			int fromSquare = bitscanForward(fromBB);
@@ -89,8 +93,7 @@ public class SuicideGame extends Game {
 	 * Pawns can promote to a king in suicide. This method is overridden to
 	 * supply that functionality.
 	 * 
-	 * @param moves
-	 *            A move list.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void generatePseudoPawnCaptures(int fromSquare, long fromBB,
@@ -129,8 +132,7 @@ public class SuicideGame extends Game {
 	 * Pawns can promote to a king in suicide. This method is overridden to
 	 * supply that functionality.
 	 * 
-	 * @param moves
-	 *            A move list.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void generatePseudoPawnSinglePush(int fromSquare, long fromBB,
@@ -169,6 +171,8 @@ public class SuicideGame extends Game {
 	/**
 	 * In suicide you must make a capture if its possible. This method narrows
 	 * down the list to only captures if there is one possible.
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public PriorityMoveList getLegalMoves() {
@@ -209,6 +213,11 @@ public class SuicideGame extends Game {
 		}
 	}
 
+	/**
+	 * All positions are legal in suicide.
+	 * 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isLegalPosition() {
 		return true;
@@ -216,6 +225,8 @@ public class SuicideGame extends Game {
 
 	/**
 	 * Needs to be overridden to support promotions to king.
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Move makeSanMoveOverride(String shortAlgebraic,
@@ -227,7 +238,7 @@ public class SuicideGame extends Game {
 		if (san.charAt(san.length() - 1) == 'K') {
 			MoveList matches = new MoveList(10);
 
-			if (SanUtil.isValidSuicidePPromotionStrict(san)) {
+			if (SanUtils.isValidSuicidePPromotionStrict(san)) {
 				int toSquare = GameUtils.rankFileToSquare(RANK_FROM_SAN
 						.indexOf(san.charAt(1)), FILE_FROM_SAN.indexOf(san
 						.charAt(0)));
@@ -239,7 +250,7 @@ public class SuicideGame extends Game {
 						matches.append(move);
 					}
 				}
-			} else if (SanUtil.isValidSuicidePxPromotionStrict(san)) {
+			} else if (SanUtils.isValidSuicidePxPromotionStrict(san)) {
 				int fromFile = FILE_FROM_SAN.indexOf(san.charAt(0));
 				int toFile = FILE_FROM_SAN.indexOf(san.charAt(1));
 
@@ -251,7 +262,7 @@ public class SuicideGame extends Game {
 						matches.append(move);
 					}
 				}
-			} else if (SanUtil.isValidSuicideAmbigPxPromotion(san)) {
+			} else if (SanUtils.isValidSuicideAmbigPxPromotion(san)) {
 				int fromFile = FILE_FROM_SAN.indexOf(san.charAt(0));
 				int toSquare = GameUtils.rankFileToSquare(RANK_FROM_SAN
 						.indexOf(san.charAt(2)), FILE_FROM_SAN.indexOf(san
@@ -277,8 +288,10 @@ public class SuicideGame extends Game {
 	}
 
 	/**
-	 *There is no disambiguation from check in suicide. So just throw an
+	 * There is no disambiguation from check in suicide. So just throw an
 	 * exception on more than 1 match.
+	 * 
+	 *{@inheritDoc}
 	 */
 	@Override
 	protected Move testForSanDisambiguationFromCheck(String shortAlgebraic,

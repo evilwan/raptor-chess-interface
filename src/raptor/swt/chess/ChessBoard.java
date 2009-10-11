@@ -50,17 +50,15 @@ public class ChessBoard implements BoardConstants {
 	protected CLabel blackLagLabel;
 	protected CLabel blackNameRatingLabel;
 	protected CLabel blackToMoveIndicatorLabel;
+	protected Composite boardComposite;
 	protected ChessBoardLayout chessBoardLayout;
 	protected ChessBoardController controller;
 	protected CLabel currentPremovesLabel;
 	protected CLabel gameDescriptionLabel;
 	protected boolean isWhiteOnTop = false;
 	protected boolean isWhitePieceJailOnTop = true;
-	protected CLabel openingDescriptionLabel;
 	protected ChessBoardMoveList moveList;
-	protected Composite boardComposite;
-	protected SashForm sashForm;
-
+	protected CLabel openingDescriptionLabel;
 	// Piece jail is indexed by the colored piece constants in Constants.
 	// The 0th index will always be null. (for the empty piece).
 	protected LabeledChessSquare[] pieceJailSquares = new LabeledChessSquare[13];
@@ -72,6 +70,8 @@ public class ChessBoard implements BoardConstants {
 	};
 
 	protected ResultChessBoardDecoration resultDecoration;
+
+	protected SashForm sashForm;
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
 	protected CLabel statusLabel;
 	protected CLabel whiteClockLabel;
@@ -354,6 +354,17 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	/**
+	 * Hides the piece jail.
+	 */
+	public void hidePieceJail() {
+		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+			if (pieceJailSquare != null) {
+				pieceJailSquare.setVisible(false);
+			}
+		}
+	}
+
+	/**
 	 * Returns true if white is on top, false if white is on botton.
 	 */
 	public boolean isWhiteOnTop() {
@@ -417,6 +428,17 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	/**
+	 * Shows the piece jail.
+	 */
+	public void showPieceJail() {
+		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+			if (pieceJailSquare != null) {
+				pieceJailSquare.setVisible(true);
+			}
+		}
+	}
+
+	/**
 	 * Unhides the pieces on all of the squares.
 	 */
 	public void unhidePieces() {
@@ -428,28 +450,6 @@ public class ChessBoard implements BoardConstants {
 		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
 			if (pieceJailSquare != null) {
 				pieceJailSquare.setHidingPiece(false);
-			}
-		}
-	}
-
-	/**
-	 * Hides the piece jail.
-	 */
-	public void hidePieceJail() {
-		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
-			if (pieceJailSquare != null) {
-				pieceJailSquare.setVisible(false);
-			}
-		}
-	}
-
-	/**
-	 * Shows the piece jail.
-	 */
-	public void showPieceJail() {
-		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
-			if (pieceJailSquare != null) {
-				pieceJailSquare.setVisible(true);
 			}
 		}
 	}

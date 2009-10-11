@@ -25,7 +25,8 @@ import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
-import raptor.chess.Game.Type;
+import raptor.chess.Variant;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -227,14 +228,14 @@ public class ExamineController extends ChessBoardController {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
 			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true, game
-					.getType() == Type.SUICIDE);
+					.getVariant() == Variant.suicide);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-		if (game.getType() == Type.SUICIDE) {
+		if (game.getVariant() == Variant.suicide) {
 			setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
 		} else {
 			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
@@ -266,8 +267,9 @@ public class ExamineController extends ChessBoardController {
 		switch (key) {
 		case FEN:
 			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getWhiteName() + " vs "
-							+ game.getBlackName(), getGame().toFEN());
+					"FEN for game " + game.getHeader(PgnHeader.Black) + " vs "
+							+ game.getHeader(PgnHeader.Black),
+					getGame().toFen());
 			break;
 		case FLIP:
 			onFlip();

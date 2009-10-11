@@ -16,21 +16,24 @@ package raptor.chess;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class LosersGame extends Game {
+import raptor.chess.pgn.PgnHeader;
+
+/**
+ * Follows FICS suicide chess rules.
+ */
+public class LosersGame extends ClassicGame {
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(LosersGame.class);
 
 	public LosersGame() {
-		setType(Type.LOSERS);
+		setHeader(PgnHeader.Variant, Variant.losers.name());
 	}
 
 	/**
-	 * @param ignoreHashes
-	 *            Whether to include copying hash tables.
-	 * @return An deep clone copy of this Game object.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Game deepCopy(boolean ignoreHashes) {
+	public LosersGame deepCopy(boolean ignoreHashes) {
 		LosersGame result = new LosersGame();
 		overwrite(result, ignoreHashes);
 		return result;
@@ -39,6 +42,10 @@ public class LosersGame extends Game {
 	/**
 	 * In losers you must make a capture if its possible. This method narrows
 	 * down the list to only captures if there is one possible.
+	 * 
+	 * 
+	 * {@inheritDoc}
+	 * 
 	 */
 	@Override
 	public PriorityMoveList getLegalMoves() {

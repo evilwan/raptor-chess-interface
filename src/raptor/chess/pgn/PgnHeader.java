@@ -1,60 +1,137 @@
 package raptor.chess.pgn;
 
-import java.io.Serializable;
+/**
+ * An enum containing frequently used PgnHeaders.
+ */
+public enum PgnHeader implements Comparable<PgnHeader> {
 
-public enum PgnHeader implements Serializable {
-
-	EVENT("Event"), // The name of the tournament or match.
-	SITE("Site"), // The location of the event City, Region COUNTRY
-	// where COUNTRY is the three letter international
-	// olympic committee code.
-	DATE("Date"), // YYYY.MM.DD format. ?? are used for unknown values.
-	ROUND("Round"), // The playing round ordinal of the game within the event. ?
-	// is used for unknown values.
-	WHITE("White"), // Player of white pieces in last,first name format.
-	BLACK("Black"), // Player of white pieces in last,first name format.
-	RESULT("Result"), // The result of the game. Possible values
-	// "1-0","0-1","1/2-1/2","*"(ongoing).
-	EVENTDATE("EventDate"), // The event date ? for unknown values.
-	PLYCOUNT("PlyCount"), // The half move count.
-	VARIANT("Variant"), // The variant of the game
-	TERMINATION("Termination"), // The termination reason
-	TIME_CONTROL("TimeControl"), // The time control ICC uses totalSecs+inc
-	FEN("FEN"), // The fen for the initial position.
-	ICC_RESULT("ICCResult"), // Descriptive like Black resigns.
-	RESULT_DESCRIPTION("ResultDescription"), WHITE_ELO("WhiteElo"), // Whites
-	// ELO
-	BLACK_ELO("BlackElo"), // Blacks ELO
-	OPENING("Opening"), // A description of the opening: Sicilian
-	// dragon,Yugoslav attack,7...O-O
-	ECO("ECO"), // The ECO code.
-	NIC("NIC"), // I have no idea something icc uses
-	TIME("Time"), // The time the game took place.
-	ANNOTATOR("Annotator");// The annotator of the game.
+	/**
+	 * A required PGN header. The name of the tournament or match.
+	 */
+	Event,
+	/**
+	 * A required PGN header. The location of the event City, Region COUNTRY
+	 * where COUNTRY is the three letter international olympic committee code.
+	 */
+	Site,
+	/**
+	 * A required PGN header. YYYY.MM.DD format. ?? are used for unknown values.
+	 */
+	Date,
+	/**
+	 * A required PGN header. The playing round ordinal of the game within the
+	 * event. ? is used for unknown values.
+	 */
+	Round,
+	/**
+	 * A required PGN header. Whites name in last,first name format.
+	 */
+	White,
+	/**
+	 * A required PGN header. Blacks name in last,first name format.
+	 */
+	Black,
+	/**
+	 * A required PGN header. The result of the game. Possible values
+	 * "1-0","0-1","1/2-1/2","*"(ongoing).
+	 */
+	Result,
+	/**
+	 * A required PGN header. Represents the date the game occured. Can be ? for
+	 * unknown. Should be in yyyy.mm.dd format (e.g. 2009.10.07).
+	 */
+	EventDate,
+	/**
+	 * The FEN , Forsyth Edwards Notation, of the initial starting position.
+	 */
+	FEN,
+	/**
+	 * A detailed description of the result (e.g. Black wins by white
+	 * discconection).
+	 */
+	ResultDescription,
+	/**
+	 * Whites rating or elo.
+	 */
+	WhiteElo,
+	/**
+	 * Blacks rating or elo.
+	 */
+	BlackElo,
+	/**
+	 * The number of half moves made in the game.
+	 */
+	PlyCount,
+	/**
+	 * The games ECO code.
+	 */
+	ECO,
+	/**
+	 * A description of the opening (e.g. Sicilian dragon,Yugoslav
+	 * attack,7...O-O)
+	 */
+	Opening,
+	/**
+	 * Denotes the variant of the game being played.
+	 * classic,suicide,crazyhouse,losers,atomic,etc.
+	 */
+	Variant,
+	/**
+	 * The terminiation reason (e.g. White had a heart attack).
+	 */
+	Termination,
+	/**
+	 * The time the game took place.
+	 * 
+	 */
+	Time,
+	/**
+	 * The time control of the game in MM+S format, e.g. (60+0). MM = minutes +0
+	 * == increment in seconds. TimeControl
+	 */
+	TimeControl,
+	/**
+	 * White CLocks starting time in 0:01:00.000 format.
+	 */
+	WhiteClock,
+	/**
+	 * Black CLock's initial time in 0:01:00.000 format.
+	 */
+	BlackClock,
+	/**
+	 * The annotator of the game.
+	 */
+	Annotator,
+	/**
+	 * Total white lag in milliseconds.
+	 */
+	WhiteLagMillis,
+	/**
+	 * Total black lag in milliseconds.
+	 */
+	BlackLagMillis,
+	/**
+	 * The amount of time remaining on whites clock in milliseconds.
+	 */
+	WhiteRemainingMillis,
+	/**
+	 * THe amount of time remaining on blacks clock in milliseconds.
+	 */
+	BlackRemainingMillis, ;
 
 	public static transient final String UNKNOWN_VALUE = "?";
 
-	public static transient final PgnHeader[] STR_HEADERS = new PgnHeader[] {
-			EVENT, SITE, DATE, ROUND, WHITE, BLACK, RESULT };
+	public static transient final PgnHeader[] REQUIRED_HEADERS = new PgnHeader[] {
+			Event, Site, Date, Round, White, Black, Result };
 
-	public static boolean isStrHeader(String header) {
+	public boolean isRequired() {
 		boolean result = false;
-		for (PgnHeader pgnHeader : STR_HEADERS) {
-			if (pgnHeader.getName().equals(header)) {
+		for (PgnHeader pgnHeader : REQUIRED_HEADERS) {
+			if (this == pgnHeader) {
 				result = true;
 				break;
 			}
 		}
 		return result;
-	}
-
-	private String tagName;
-
-	private PgnHeader(String tagName) {
-		this.tagName = tagName;
-	}
-
-	public String getName() {
-		return tagName;
 	}
 }

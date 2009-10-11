@@ -27,6 +27,7 @@ import raptor.chat.ChatType;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Result;
+import raptor.chess.pgn.PgnHeader;
 import raptor.connector.fics.game.B1Parser;
 import raptor.connector.fics.game.G1Parser;
 import raptor.connector.fics.game.GameEndParser;
@@ -290,22 +291,26 @@ public class FicsParser implements IcsParser, GameConstants {
 			case GameEndMessage.ABORTED:
 			case GameEndMessage.ADJOURNED:
 			case GameEndMessage.UNDETERMINED:
-				game.setResult(Result.UNDETERMINED);
+				game.setHeader(PgnHeader.ResultDescription, Result.UNDETERMINED
+						.getDescription());
 				break;
 			case GameEndMessage.BLACK_WON:
-				game.setResult(Result.BLACK_WON);
+				game.setHeader(PgnHeader.ResultDescription, Result.BLACK_WON
+						.getDescription());
 				break;
 			case GameEndMessage.WHITE_WON:
-				game.setResult(Result.WHITE_WON);
+				game.setHeader(PgnHeader.ResultDescription, Result.WHITE_WON
+						.getDescription());
 				break;
 			case GameEndMessage.DRAW:
-				game.setResult(Result.DRAW);
+				game.setHeader(PgnHeader.ResultDescription, Result.DRAW
+						.getDescription());
 				break;
 			default:
 				LOG.error("Undetermined game end type. " + message);
 				break;
 			}
-			game.setResultDescription(message.description);
+			game.setHeader(PgnHeader.ResultDescription, message.description);
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
@@ -355,8 +360,10 @@ public class FicsParser implements IcsParser, GameConstants {
 					.error("Received no longer examining game message for a game not in the GameService. "
 							+ message);
 		} else {
-			game.setResultDescription("Interrupted by uexamine.");
-			game.setResult(Result.UNDETERMINED);
+			game.setHeader(PgnHeader.ResultDescription,
+					"Interrupted by uexamine.");
+			game.setHeader(PgnHeader.Result, Result.UNDETERMINED
+					.getDescription());
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
@@ -377,8 +384,10 @@ public class FicsParser implements IcsParser, GameConstants {
 								+ message);
 			}
 		} else {
-			game.setResultDescription("Interrupted by unobserve");
-			game.setResult(Result.UNDETERMINED);
+			game.setHeader(PgnHeader.ResultDescription,
+					"Interrupted by unobserve");
+			game.setHeader(PgnHeader.Result, Result.UNDETERMINED
+					.getDescription());
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());

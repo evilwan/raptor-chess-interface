@@ -15,23 +15,25 @@ package raptor.chess;
 
 import static raptor.chess.util.GameUtils.bitscanClear;
 import static raptor.chess.util.GameUtils.bitscanForward;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
-import raptor.chess.util.SanUtil;
-import raptor.chess.util.SanUtil.SanValidations;
+import raptor.chess.util.SanUtils;
+import raptor.chess.util.SanUtils.SanValidations;
 
-public class CrazyhouseGame extends Game {
+/**
+ * Follows FICS crazyhosue rules.
+ */
+public class CrazyhouseGame extends ClassicGame {
 	public CrazyhouseGame() {
-		setType(Type.CRAZYHOUSE);
+		setHeader(PgnHeader.Variant, Variant.crazyhouse.name());
 		addState(Game.DROPPABLE_STATE);
 	}
 
 	/**
-	 * @param ignoreHashes
-	 *            Whether to include copying hash tables.
-	 * @return An deep clone copy of this Game object.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Game deepCopy(boolean ignoreHashes) {
+	public CrazyhouseGame deepCopy(boolean ignoreHashes) {
 		CrazyhouseGame result = new CrazyhouseGame();
 		overwrite(result, ignoreHashes);
 		return result;
@@ -44,7 +46,7 @@ public class CrazyhouseGame extends Game {
 	 * @param moves
 	 *            A move list.
 	 */
-	public void generatePseudoDropMoves(PriorityMoveList moves) {
+	protected void generatePseudoDropMoves(PriorityMoveList moves) {
 
 		if (getDropCount(getColorToMove(), PAWN) > 0) {
 
@@ -104,6 +106,9 @@ public class CrazyhouseGame extends Game {
 
 	/**
 	 * Overridden to invoke genDropMoves as well as super.getPseudoLegalMoves.
+	 * 
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public PriorityMoveList getPseudoLegalMoves() {
@@ -114,15 +119,17 @@ public class CrazyhouseGame extends Game {
 
 	/**
 	 * Overridden to add in drops and remove all drop moves from pseudoLegals.
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Move makeSanMoveOverride(String shortAlgebraic,
+	protected Move makeSanMoveOverride(String shortAlgebraic,
 			SanValidations validations, Move[] pseudoLegals) {
 		Move result = null;
-		if (SanUtil.isValidDropStrict(validations.getStrictSan())) {
+		if (SanUtils.isValidDropStrict(validations.getStrictSan())) {
 			for (Move move : getPseudoLegalMoves().asArray()) {
 				if ((move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) != 0
-						&& move.getPiece() == SanUtil.sanToPiece(validations
+						&& move.getPiece() == SanUtils.sanToPiece(validations
 								.getStrictSan().charAt(0))
 						&& move.getTo() == GameUtils.rankFileToSquare(
 								RANK_FROM_SAN.indexOf(validations
@@ -145,8 +152,7 @@ public class CrazyhouseGame extends Game {
 	}
 
 	/**
-	 * Returns a dump of the game class suitable for debugging. Quite a lot of
-	 * information is produced and its an expensive operation, use with care.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {

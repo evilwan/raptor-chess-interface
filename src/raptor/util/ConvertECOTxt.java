@@ -8,7 +8,8 @@ import java.io.IOException;
 import org.apache.commons.lang.StringUtils;
 
 import raptor.chess.Game;
-import raptor.chess.util.GameUtils;
+import raptor.chess.GameFactory;
+import raptor.chess.Variant;
 
 /**
  * Converts resources/common/ECO.txt into resources/common/ECOFen.txt
@@ -29,7 +30,7 @@ public class ConvertECOTxt {
 				RaptorStringTokenizer lineTok = new RaptorStringTokenizer(
 						currentLine, "|");
 				String moves = lineTok.nextToken();
-				Game game = GameUtils.createStartingPosition(Game.Type.CLASSIC);
+				Game game = GameFactory.createStartingPosition(Variant.classic);
 				RaptorStringTokenizer movesTokenizer = new RaptorStringTokenizer(
 						moves, " ", true);
 				while (movesTokenizer.hasMoreTokens()) {
@@ -49,7 +50,7 @@ public class ConvertECOTxt {
 						}
 					}
 				}
-				String fenPosition = game.toFENPosition();
+				String fenPosition = game.toFenPosition();
 				writer.write(fenPosition + "|");
 				while (lineTok.hasMoreTokens()) {
 					writer.write(lineTok.nextToken() + "|");

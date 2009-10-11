@@ -14,7 +14,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.Move;
+import raptor.util.RaptorStringUtils;
 
+/**
+ * A class containing PGN utils.
+ */
 public class PgnUtils {
 	private static final Log LOG = LogFactory.getLog(PgnUtils.class);
 
@@ -31,64 +35,6 @@ public class PgnUtils {
 					.parse("1500.01.01");
 		} catch (ParseException pe) {
 			throw new RuntimeException(pe);
-		}
-	}
-
-	public static void buildHeader(StringBuilder builder, String name,
-			String value) {
-		builder
-				.append("["
-						+ name
-						+ " \""
-						+ (value == null || value.length() == 0 ? PgnHeader.UNKNOWN_VALUE
-								: value) + "\"]");
-	}
-
-	/**
-	 * Returns true if a subline was built. This is useful to know if you should
-	 * force the next line number or not.
-	 */
-	public static boolean buildMoveInfo(StringBuilder builder, Move moveInfo,
-			boolean forceMoveNumber) {
-		boolean result = false;
-
-		if (forceMoveNumber || moveInfo.isWhitesMove()) {
-			int moveNumber = moveInfo.getFullMoveCount();
-			builder.append(moveNumber
-					+ (moveInfo.isWhitesMove() ? ". " : "... "));
-		}
-		builder.append(moveInfo.toString());
-
-		// First get all of the sublines.
-		for (SublineNode subline : moveInfo.getSublines()) {
-			result = true;
-			builder.append(" (");
-			buildSubline(builder, subline);
-			builder.append(")");
-		}
-
-		for (Comment comment : moveInfo.getComments()) {
-			builder.append(" {" + comment.getText() + "}");
-		}
-
-		for (Nag nag : moveInfo.getNags()) {
-			builder.append(" " + nag.getNagString());
-		}
-		return result;
-	}
-
-	/**
-	 * Builds the subline to the specified builder.
-	 */
-	public static void buildSubline(StringBuilder builder, SublineNode subline) {
-		boolean forceMoveNumber = buildMoveInfo(builder, subline.getMove(),
-				true);
-		SublineNode current = subline.getReply();
-		while (current != null) {
-			builder.append(" ");
-			forceMoveNumber = buildMoveInfo(builder, current.getMove(),
-					forceMoveNumber);
-			current = current.getReply();
 		}
 	}
 
@@ -118,6 +64,53 @@ public class PgnUtils {
 	}
 
 	/**
+	 * Returns the PgnHeader line for the specified header name and value.
+	 */
+	public static void getHeaderLine(StringBuilder builder,
+			String pgnHeaderName, String pgnHeaderValue) {
+		builder
+				.append("["
+						+ pgnHeaderName
+						+ " \""
+						+ (pgnHeaderValue == null
+								|| pgnHeaderValue.length() == 0 ? PgnHeader.UNKNOWN_VALUE
+								: pgnHeaderValue) + "\"]");
+	}
+
+	/**
+	 * Returns the string to use for the move in a Pgn file. This includes the
+	 * move number and all annotations.
+	 */
+	public static boolean getMove(StringBuilder builder, Move moveInfo,
+			boolean forceMoveNumber) {
+		boolean result = false;
+
+		if (forceMoveNumber || moveInfo.isWhitesMove()) {
+			int moveNumber = moveInfo.getFullMoveCount();
+			builder.append(moveNumber
+					+ (moveInfo.isWhitesMove() ? ". " : "... "));
+		}
+		builder.append(moveInfo.toString());
+
+		// First get all of the sublines.
+		for (SublineNode subline : moveInfo.getSublines()) {
+			result = true;
+			builder.append(" (");
+			getSubline(builder, subline);
+			builder.append(")");
+		}
+
+		for (Comment comment : moveInfo.getComments()) {
+			builder.append(" {" + comment.getText() + "}");
+		}
+
+		for (Nag nag : moveInfo.getNags()) {
+			builder.append(" " + nag.getNagString());
+		}
+		return result;
+	}
+
+	/**
 	 * Cuts off all information except for the position.
 	 */
 	public static String getPositionFromFen(String fen) {
@@ -125,19 +118,44 @@ public class PgnUtils {
 		return fen.substring(0, spaceIndex);
 	}
 
-	public static Date pgnDateHeaderToDate(String pgnDateHeader) {
+	/**
+	 * Returns the pgn representation of the specified subline including all
+	 * annotations.
+	 */
+	public static void getSubline(StringBuilder builder, SublineNode subline) {
+		boolean forceMoveNumber = getMove(builder, subline.getMove(), true);
+		SublineNode current = subline.getReply();
+		while (current != null) {
+			builder.append(" ");
+			forceMoveNumber = getMove(builder, current.getMove(),
+					forceMoveNumber);
+			current = current.getReply();
+		}
+	}
+
+	/**
+	 * [Date "2009.10.07"]
+	 */
+	public static String longToPgnDate(long time) {
+		return PGN_HEADER_DATE_FORMAT.format(new Date(time));
+	}
+
+	/**
+	 * Converts a PgnHeader.Date header into a date object.
+	 */
+	public static Date pgnDateHeaderToDate(String pgnDateValue) {
 		Date result = null;
 
-		if (pgnDateHeader.length() != 10) {
-			LOG.error("Invalid pgn header date format: " + pgnDateHeader
+		if (pgnDateValue.length() != 10) {
+			LOG.error("Invalid pgn header date format: " + pgnDateValue
 					+ " setting to default.");
 			result = DEFAULT_PGN_DATE_HEADER;
-		} else if (pgnDateHeader.startsWith("????")) {
+		} else if (pgnDateValue.startsWith("????")) {
 			result = DEFAULT_PGN_DATE_HEADER;
 		} else {
-			String year = pgnDateHeader.substring(0, 4);
-			String month = pgnDateHeader.substring(5, 7);
-			String day = pgnDateHeader.substring(8, 10);
+			String year = pgnDateValue.substring(0, 4);
+			String month = pgnDateValue.substring(5, 7);
+			String day = pgnDateValue.substring(8, 10);
 
 			if (month.equals("??")) {
 				month = "01";
@@ -150,7 +168,7 @@ public class PgnUtils {
 				result = PGN_HEADER_DATE_FORMAT.parse(year + "." + month + "."
 						+ day);
 			} catch (ParseException pe) {
-				LOG.error("Invalid pgn header date format: " + pgnDateHeader
+				LOG.error("Invalid pgn header date format: " + pgnDateValue
 						+ " " + year + "." + month + "." + day
 						+ " setting to default.");
 				result = DEFAULT_PGN_DATE_HEADER;
@@ -159,6 +177,45 @@ public class PgnUtils {
 		return result;
 	}
 
+	/**
+	 * [TimeControl "60+0"]
+	 */
+	public static String timeIncMillisToTimeControl(long startTimeMillis,
+			long startIncMillis) {
+		String minutes = "" + startTimeMillis / 60000;
+		String inc = "" + startIncMillis / 1000;
+
+		return minutes + "+" + inc;
+	}
+
+	/**
+	 * [WhiteClock "0:01:00.000"] [BlackClock "0:01:00.000"]
+	 */
+	public static String timeToClock(long timeMillis) {
+		long timeLeft = timeMillis;
+
+		if (timeLeft < 0) {
+			timeLeft = 0;
+		}
+
+		int hour = (int) (timeLeft / (60000L * 60));
+		timeLeft -= hour * 60 * 1000 * 60;
+		int minute = (int) (timeLeft / 60000L);
+		timeLeft -= minute * 60 * 1000;
+		int seconds = (int) (timeLeft / 1000L);
+		timeLeft -= seconds * 1000;
+		int millis = (int) timeLeft;
+
+		return RaptorStringUtils.defaultTimeString(hour, 2) + ":"
+				+ RaptorStringUtils.defaultTimeString(minute, 2) + ":"
+				+ RaptorStringUtils.defaultTimeString(seconds, 2) + "."
+				+ RaptorStringUtils.defaultTimeString(millis, 1);
+	}
+
+	/**
+	 * Chess base EMT format. 1. e4 {[%emt 0.0]} e6 {[%emt 0.0]} 2. Nc3 {[%emt
+	 * 1.398]} Nf6 {[%emt 0.1]}
+	 */
 	public static String timeToEMTFormat(long elapsedTimeMillis) {
 		double elapsedTimeInSeconds = elapsedTimeMillis / 1000.0;
 		BigDecimal bigDecimal = new BigDecimal(elapsedTimeInSeconds);

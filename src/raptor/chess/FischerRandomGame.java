@@ -13,6 +13,8 @@
  */
 package raptor.chess;
 
+import raptor.chess.pgn.PgnHeader;
+
 /**
  * <pre>
  * White &quot;a&quot;-side castling (0-0-0):
@@ -53,19 +55,17 @@ package raptor.chess;
  * 
  * TO DO: add in castling support.
  */
-public class FischerRandomGame extends Game {
+public class FischerRandomGame extends ClassicGame {
 
 	public FischerRandomGame() {
-		setType(Type.FISCHER_RANDOM);
+		setHeader(PgnHeader.Variant, Variant.fischerRandom.name());
 	}
 
 	/**
-	 * @param ignoreHashes
-	 *            Whether to copying hash table or not.
-	 * @return An deep clone copy of this Game object.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Game deepCopy(boolean ignoreHashes) {
+	public FischerRandomGame deepCopy(boolean ignoreHashes) {
 		FischerRandomGame result = new FischerRandomGame();
 		overwrite(result, ignoreHashes);
 		return result;

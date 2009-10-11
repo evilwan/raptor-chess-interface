@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.EcoInfo;
 import raptor.chess.Game;
+import raptor.chess.Variant;
 
 /**
  * A singleton service which can be used to lookup EcoInfo on a game.
@@ -46,7 +47,7 @@ public class EcoService {
 		return singletonInstance;
 	}
 
-	private Map<Game.Type, Map<String, EcoInfo>> typeToInfoMap = new HashMap<Game.Type, Map<String, EcoInfo>>();
+	private Map<Variant, Map<String, EcoInfo>> typeToInfoMap = new HashMap<Variant, Map<String, EcoInfo>>();
 
 	private EcoService() {
 		initClassic();
@@ -69,11 +70,11 @@ public class EcoService {
 		// Don't add debug messages in here. It gets called so often they are
 		// annoying and really slow it down.
 
-		Map<String, EcoInfo> map = typeToInfoMap.get(game.getType());
+		Map<String, EcoInfo> map = typeToInfoMap.get(game.getVariant());
 		EcoInfo result = null;
 
 		if (map != null) {
-			result = map.get(game.toFENPosition());
+			result = map.get(game.toFenPosition());
 		} else {
 			result = null;
 		}
@@ -83,7 +84,7 @@ public class EcoService {
 
 	private void initClassic() {
 		File file = new File(raptor.Raptor.RESOURCES_COMMON_DIR + "ECOFen.txt");
-		typeToInfoMap.put(Game.Type.CLASSIC, parse(file));
+		typeToInfoMap.put(Variant.classic, parse(file));
 	}
 
 	/**

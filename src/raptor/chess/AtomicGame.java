@@ -13,32 +13,35 @@
  */
 package raptor.chess;
 
+import raptor.chess.pgn.PgnHeader;
+
 /**
- * TO DO: add in the blast radius on captures.
- * 
- * 
+ * Follow FICS atomic rules. This code is still in progress and has not yet been
+ * completed. TO DO: add in the blast radius on captures.
  */
-public class AtomicGame extends Game {
+public class AtomicGame extends ClassicGame {
 
 	public AtomicGame() {
-		setType(Type.ATOMIC);
+		super();
+		setHeader(PgnHeader.Variant, Variant.atomic.name());
 	}
 
 	/**
-	 * @param ignoreHashes
-	 *            Whether to include copying hash tables.
-	 * @return An deep clone copy of this Game object.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Game deepCopy(boolean ignoreHashes) {
+	public AtomicGame deepCopy(boolean ignoreHashes) {
 		AtomicGame result = new AtomicGame();
 		overwrite(result, ignoreHashes);
 		return result;
 	}
 
 	/**
+	 * 
 	 * Kings can't capture pieces in atomic or they explode. So remove all the
 	 * king captures
+	 * 
+	 * {@inheritDoc}
 	 */
 	@Override
 	public PriorityMoveList getLegalMoves() {
