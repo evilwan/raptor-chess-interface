@@ -125,11 +125,12 @@ public class ObserveController extends ChessBoardController {
 	protected ToolBar toolbar;
 
 	public ObserveController(Game game, Connector connector) {
-		super(new GameCursor(game,GameCursor.Mode.MakeMovesOnMasterSetCursorToLast));
+		super(new GameCursor(game,
+				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast));
 		cursor = (GameCursor) getGame();
 		this.connector = connector;
 	}
-	
+
 	@Override
 	public void adjustGameDescriptionLabel() {
 		if (!isDisposed()) {
@@ -137,7 +138,6 @@ public class ObserveController extends ChessBoardController {
 					"Observing " + getGame().getHeader(PgnHeader.Event));
 		}
 	}
-
 
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
@@ -195,8 +195,7 @@ public class ObserveController extends ChessBoardController {
 						cursor.setMode(Mode.MakeMovesOnMasterSetCursorToLast);
 						cursor.setCursorMasterLast();
 						refresh();
-					}
-					else {
+					} else {
 						cursor.setMode(Mode.MakeMovesOnMaster);
 					}
 					refresh();
@@ -298,6 +297,7 @@ public class ObserveController extends ChessBoardController {
 		}
 	}
 
+	@Override
 	public void refresh() {
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(cursor.getCursorPosition());

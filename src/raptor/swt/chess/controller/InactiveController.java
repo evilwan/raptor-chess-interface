@@ -307,6 +307,7 @@ public class InactiveController extends ChessBoardController implements
 		}
 	}
 
+	@Override
 	public void refresh() {
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(cursor.getCursorPosition());

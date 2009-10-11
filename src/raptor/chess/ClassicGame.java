@@ -13,7 +13,6 @@
  */
 package raptor.chess;
 
-
 import static raptor.chess.util.GameUtils.bitscanClear;
 import static raptor.chess.util.GameUtils.bitscanForward;
 import static raptor.chess.util.GameUtils.diagonalMove;
@@ -22,6 +21,7 @@ import static raptor.chess.util.GameUtils.getFile;
 import static raptor.chess.util.GameUtils.getOppositeColor;
 import static raptor.chess.util.GameUtils.getRank;
 import static raptor.chess.util.GameUtils.getSan;
+import static raptor.chess.util.GameUtils.getSquare;
 import static raptor.chess.util.GameUtils.getString;
 import static raptor.chess.util.GameUtils.kingMove;
 import static raptor.chess.util.GameUtils.knightMove;
@@ -31,7 +31,6 @@ import static raptor.chess.util.GameUtils.pawnCapture;
 import static raptor.chess.util.GameUtils.pawnDoublePush;
 import static raptor.chess.util.GameUtils.pawnEpCapture;
 import static raptor.chess.util.GameUtils.pawnSinglePush;
-import static raptor.chess.util.GameUtils.getSquare;
 import static raptor.chess.util.ZobristUtils.zobrist;
 
 import java.util.ArrayList;
@@ -1280,8 +1279,8 @@ public class ClassicGame implements Game {
 
 		if (move == null) {
 			throw new IllegalArgumentException("Invalid move: "
-					+ getSan(startSquare) + " "
-					+ getSan(endSquare) + " \n" + toString());
+					+ getSan(startSquare) + " " + getSan(endSquare) + " \n"
+					+ toString());
 		} else {
 			forceMove(move);
 		}
@@ -1321,8 +1320,7 @@ public class ClassicGame implements Game {
 
 		if (move == null) {
 			throw new IllegalArgumentException("Invalid move: "
-					+ getSan(startSquare) + "-"
-					+ getSan(endSquare) + "="
+					+ getSan(startSquare) + "-" + getSan(endSquare) + "="
 					+ GameConstants.PIECE_TO_SAN.charAt(promotePiece) + "\n"
 					+ toString());
 		} else {
@@ -1465,9 +1463,8 @@ public class ClassicGame implements Game {
 					if (validations.isEpOrAmbigPxStrict()
 							|| validations.isAmbigPxPromotionStrict()) {
 
-						int end = getSquare(
-								GameConstants.RANK_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(2)),
+						int end = getSquare(GameConstants.RANK_FROM_SAN
+								.indexOf(validations.getStrictSan().charAt(2)),
 								GameConstants.FILE_FROM_SAN.indexOf(validations
 										.getStrictSan().charAt(1)));
 
@@ -1518,13 +1515,11 @@ public class ClassicGame implements Game {
 						}
 						// handle non captures.
 						else {
-							int end = getSquare(
-									GameConstants.RANK_FROM_SAN
-											.indexOf(validations.getStrictSan()
-													.charAt(1)),
-									GameConstants.FILE_FROM_SAN
-											.indexOf(validations.getStrictSan()
-													.charAt(0)));
+							int end = getSquare(GameConstants.RANK_FROM_SAN
+									.indexOf(validations.getStrictSan().charAt(
+											1)), GameConstants.FILE_FROM_SAN
+									.indexOf(validations.getStrictSan().charAt(
+											0)));
 
 							for (Move move : pseudoLegals) {
 								if (move != null
@@ -1540,12 +1535,9 @@ public class ClassicGame implements Game {
 				} else {
 					int candidatePieceMoving = SanUtils.sanToPiece(validations
 							.getStrictSan().charAt(0));
-					int end = getSquare(
-							GameConstants.RANK_FROM_SAN
-									.indexOf(validations.getStrictSan()
-											.charAt(
-													validations.getStrictSan()
-															.length() - 1)),
+					int end = getSquare(GameConstants.RANK_FROM_SAN
+							.indexOf(validations.getStrictSan().charAt(
+									validations.getStrictSan().length() - 1)),
 							GameConstants.FILE_FROM_SAN
 									.indexOf(validations.getStrictSan()
 											.charAt(
@@ -1575,9 +1567,8 @@ public class ClassicGame implements Game {
 							}
 						}
 					} else if (validations.isDisambigPieceRankFileStrict()) {
-						int startSquare = getSquare(
-								GameConstants.RANK_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(2)),
+						int startSquare = getSquare(GameConstants.RANK_FROM_SAN
+								.indexOf(validations.getStrictSan().charAt(2)),
 								GameConstants.FILE_FROM_SAN.indexOf(validations
 										.getStrictSan().charAt(1)));
 						FILE_FROM_SAN.indexOf(validations.getStrictSan()
@@ -2053,8 +2044,8 @@ public class ClassicGame implements Game {
 				while (fromBB != 0) {
 					int fromSquare = bitscanForward(fromBB);
 
-					long allPawnCapturesBB = pawnCapture(
-							getColorToMove(), getBitboard(fromSquare),
+					long allPawnCapturesBB = pawnCapture(getColorToMove(),
+							getBitboard(fromSquare),
 							getColorBB(oppositeColorToMove));
 
 					while (allPawnCapturesBB != 0) {
@@ -2203,8 +2194,7 @@ public class ClassicGame implements Game {
 			result = matches.get(0);
 		} else {
 			// now do legality checking on whats left.
-			int kingSquare = bitscanForward(getPieceBB(colorToMove,
-					KING));
+			int kingSquare = bitscanForward(getPieceBB(colorToMove, KING));
 			int cachedColorToMove = colorToMove;
 			int matchesCount = 0;
 

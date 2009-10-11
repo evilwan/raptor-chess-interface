@@ -20,7 +20,7 @@ public class ToldEventParser extends ChatEventParser {
 			tok.nextToken();
 			String source = tok.nextToken();
 			try {
-				//Ignore the told message to channels.
+				// Ignore the told message to channels.
 				Integer.parseInt(source);
 			} catch (NumberFormatException nfe) {
 				return new ChatEvent(source, ChatType.TOLD, text);

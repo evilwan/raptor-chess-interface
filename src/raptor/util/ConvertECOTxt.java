@@ -50,7 +50,8 @@ public class ConvertECOTxt {
 						}
 					}
 				}
-				String fenPosition = game.toFenPosition() + " " + (game.isWhitesMove() ? 'w' : 'b');
+				String fenPosition = game.toFenPosition() + " "
+						+ (game.isWhitesMove() ? 'w' : 'b');
 				writer.write(fenPosition + "|");
 				while (lineTok.hasMoreTokens()) {
 					writer.write(lineTok.nextToken() + "|");

@@ -15,6 +15,8 @@ package raptor.swt.chat;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -205,13 +207,81 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void addCommandMenuItems(Menu menu, String word) {
-		if (word.length() <= 40) {
+		if (word.length() <= 60) {
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
-			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Send to " + connector.getShortName() + ": " + word);
 			final String finalWord = word;
+			MenuItem googleItem = new MenuItem(menu, SWT.PUSH);
+			googleItem.setText("Google: '" + word + "'");
+			googleItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					try {
+						String encodedWord = URLEncoder.encode(finalWord,
+								"UTF-8");
+						String url = "http://www.google.com/search?q="
+								+ encodedWord;
+						if (getPreferences().getBoolean(
+								APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
+							LaunchBrowser.openURL(url);
+							return;
+						} else {
+							Raptor.getInstance().getRaptorWindow()
+									.addRaptorWindowItem(
+											new BrowserWindowItem(url, url));
+						}
+					} catch (UnsupportedEncodingException uee) {
+						LOG.error("Error encoding text", uee);
+					}
+				}
+			});
+			MenuItem defineItem = new MenuItem(menu, SWT.PUSH);
+			defineItem.setText("Define: '" + word + "'");
+			defineItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					try {
+						String encodedWord = URLEncoder.encode(finalWord,
+								"UTF-8");
+						String url = "http://www.google.com/search?q=define: "
+								+ encodedWord;
+						if (getPreferences().getBoolean(
+								APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
+							LaunchBrowser.openURL(url);
+							return;
+						} else {
+							Raptor.getInstance().getRaptorWindow()
+									.addRaptorWindowItem(
+											new BrowserWindowItem(url, url));
+						}
+					} catch (UnsupportedEncodingException uee) {
+						LOG.error("Error encoding text", uee);
+					}
+				}
+			});
+			MenuItem wikiItem = new MenuItem(menu, SWT.PUSH);
+			wikiItem.setText("Wikipedia: '" + word + "'");
+			wikiItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					try {
+						String encodedWord = URLEncoder.encode(finalWord,
+								"UTF-8");
+						String url = "http://wikipedia.org/wiki/" + encodedWord;
+						if (getPreferences().getBoolean(
+								APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
+							LaunchBrowser.openURL(url);
+							return;
+						} else {
+							Raptor.getInstance().getRaptorWindow()
+									.addRaptorWindowItem(
+											new BrowserWindowItem(url, url));
+						}
+					} catch (UnsupportedEncodingException uee) {
+						LOG.error("Error encoding text", uee);
+					}
+				}
+			});
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText(connector.getShortName() + ": '" + word + "'");
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					connector.sendMessage(finalWord);

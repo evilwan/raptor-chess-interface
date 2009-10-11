@@ -74,7 +74,8 @@ public class EcoService {
 		EcoInfo result = null;
 
 		if (map != null) {
-			result = map.get(game.toFenPosition() + " " + (game.isWhitesMove() ? 'w' : 'b'));
+			result = map.get(game.toFenPosition() + " "
+					+ (game.isWhitesMove() ? 'w' : 'b'));
 		} else {
 			result = null;
 		}

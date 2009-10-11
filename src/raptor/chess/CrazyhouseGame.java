@@ -131,9 +131,8 @@ public class CrazyhouseGame extends ClassicGame {
 				if ((move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) != 0
 						&& move.getPiece() == SanUtils.sanToPiece(validations
 								.getStrictSan().charAt(0))
-						&& move.getTo() == GameUtils.getSquare(
-								RANK_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(3)),
+						&& move.getTo() == GameUtils.getSquare(RANK_FROM_SAN
+								.indexOf(validations.getStrictSan().charAt(3)),
 								FILE_FROM_SAN.indexOf(validations
 										.getStrictSan().charAt(2)))) {
 					result = move;

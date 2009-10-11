@@ -19,9 +19,7 @@ public class PgnParserError implements Serializable {
 		 * String[0] = annotation (This can happen in chessbase and its a real
 		 * pain to support).
 		 */
-		DANGLING_SUBLINE, ILLEGAL_MOVE_ENCOUNTERED,
-		INVALID_SUBLINE_STATE,
-		UNABLE_TO_PARSE_INITIAL_FEN,
+		DANGLING_SUBLINE, ILLEGAL_MOVE_ENCOUNTERED, INVALID_SUBLINE_STATE, UNABLE_TO_PARSE_INITIAL_FEN,
 		/**
 		 * String[0] = annotation text.
 		 */
@@ -32,8 +30,7 @@ public class PgnParserError implements Serializable {
 		UNEXPECTED_MOVE_ANNOTATION, UNEXPECTED_MOVE_WORD, /**
 		 * String[0] =word.
 		 */
-		UNEXPECTED_SUBLINE_END,
-		UNEXPECTED_SUBLINE_START, /**
+		UNEXPECTED_SUBLINE_END, UNEXPECTED_SUBLINE_START, /**
 		 * String[0] = move
 		 **/
 		UNKNOWN_TEXT_ENCOUNTERED, /**

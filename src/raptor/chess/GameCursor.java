@@ -318,7 +318,7 @@ public class GameCursor implements Game {
 	}
 
 	public boolean hasPrevious() {
-		return cursorPosition  > 0;
+		return cursorPosition > 0;
 	}
 
 	public void incrementRepCount() {
@@ -565,7 +565,7 @@ public class GameCursor implements Game {
 					.warn("Half move index must be less than the master games move list size."
 							+ halfMoveIndex
 							+ " setting to "
-							+ (getMoveList().getSize()));
+							+ getMoveList().getSize());
 			halfMoveIndex = getMoveList().getSize();
 		}
 

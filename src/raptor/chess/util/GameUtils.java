@@ -262,13 +262,6 @@ public class GameUtils implements GameConstants {
 
 		}
 	}
-	
-	/**
-	 * Returns the square representing the bit board.
-	 */
-	public static int getSquare(long bitboard) {
-		return bitscanForward(bitboard);
-	}
 
 	public static int getColoredPieceFromDropSquare(int dropSquare) {
 		return dropSquare - 100;
@@ -460,9 +453,23 @@ public class GameUtils implements GameConstants {
 		}
 	}
 
+	/**
+	 * Returns the square given a 0 based rank and file.
+	 */
+	public static final int getSquare(int rank, int file) {
+		return rank * 8 + file;
+	}
+
+	/**
+	 * Returns the square representing the bit board.
+	 */
+	public static int getSquare(long bitboard) {
+		return bitscanForward(bitboard);
+	}
+
 	public static final int getSquare(String san) {
-		return getSquare(RANK_FROM_SAN.indexOf(san.charAt(1)),
-				FILE_FROM_SAN.indexOf(san.charAt(0)));
+		return getSquare(RANK_FROM_SAN.indexOf(san.charAt(1)), FILE_FROM_SAN
+				.indexOf(san.charAt(0)));
 	}
 
 	public static final String getString(long board) {
@@ -471,9 +478,10 @@ public class GameUtils implements GameConstants {
 		for (int i = 7; i > -1; i--) {
 			result.append(" ");
 			for (int j = 0; j < 8; j++) {
-				result.append(((board & SQUARE_TO_COORDINATE[getSquare(
-						i, j)]) == 0 ? 0 : 1)
-						+ " ");
+				result
+						.append(((board & SQUARE_TO_COORDINATE[getSquare(i, j)]) == 0 ? 0
+								: 1)
+								+ " ");
 			}
 
 			if (i != 0) {
@@ -502,10 +510,9 @@ public class GameUtils implements GameConstants {
 			for (long bitBoard : bitBoards) {
 				result.append(" ");
 				for (int j = 0; j < 8; j++) {
-					result
-							.append(((bitBoard & SQUARE_TO_COORDINATE[getSquare(
-									i, j)]) == 0 ? 0 : 1)
-									+ " ");
+					result.append(((bitBoard & SQUARE_TO_COORDINATE[getSquare(
+							i, j)]) == 0 ? 0 : 1)
+							+ " ");
 				}
 				result.append("  ");
 			}
@@ -705,13 +712,6 @@ public class GameUtils implements GameConstants {
 
 	public static final int populationCount(long bitboard) {
 		return Long.bitCount(bitboard);
-	}
-
-	/**
-	 * Returns the square given a 0 based rank and file.
-	 */
-	public static final int getSquare(int rank, int file) {
-		return rank * 8 + file;
 	}
 
 	public static long shiftDown(long b) {
