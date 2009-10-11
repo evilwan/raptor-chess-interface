@@ -982,13 +982,23 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 
 		String word = chatConsole.inputText.getSelectionText();
+		boolean wasSelectedText = true;
 
 		if (StringUtils.isBlank(word)) {
 			word = ChatUtils.getWord(chatConsole.inputText, caretPosition);
+			wasSelectedText = false;
 		}
 
 		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
-
+		if (wasSelectedText) {
+			MenuItem copyItem = new MenuItem(menu, SWT.PUSH);
+			copyItem.setText("copy");
+			copyItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					chatConsole.inputText.copy();
+				}
+			});
+		}
 		addCommandMenuItems(menu, word);
 		addPersonMenuItems(menu, word);
 		addChannelMenuItems(menu, word);
