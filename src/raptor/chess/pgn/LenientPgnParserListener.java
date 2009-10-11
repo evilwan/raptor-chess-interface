@@ -189,7 +189,6 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 						// support it its a pain in the ass.
 						MoveAnnotation[] annotations = pgnAnnotationToMoveAnnotations(annotation);
 						for (MoveAnnotation moveAnnotation : annotations) {
-							System.out.println("Added dangling annotation");
 							danglingAnnotations.add(moveAnnotation);
 						}
 					} else {
@@ -203,7 +202,6 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 					if (currentMoveInfo == null) {
 						MoveAnnotation[] annotations = pgnAnnotationToMoveAnnotations(annotation);
 						for (MoveAnnotation moveAnnotation : annotations) {
-							System.out.println("Added dangling annotation");
 							danglingAnnotations.add(moveAnnotation);
 						}
 					} else {
@@ -216,7 +214,6 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 			} else if (!isIgnoringSubline) {
 				MoveAnnotation[] annotations = pgnAnnotationToMoveAnnotations(annotation);
 				for (MoveAnnotation moveAnnotation : annotations) {
-					System.out.println("Added dangling annotation");
 					danglingAnnotations.add(moveAnnotation);
 				}
 			}
