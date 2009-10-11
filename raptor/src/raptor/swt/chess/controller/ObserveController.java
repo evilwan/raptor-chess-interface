@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
 import raptor.chess.Game;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.MoveListTraverser;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -137,7 +138,7 @@ public class ObserveController extends ChessBoardController {
 	public void adjustGameDescriptionLabel() {
 		if (!isDisposed()) {
 			board.getGameDescriptionLabel().setText(
-					"Observing " + getGame().getEvent());
+					"Observing " + getGame().getHeader(PgnHeader.Event));
 		}
 	}
 
@@ -276,8 +277,8 @@ public class ObserveController extends ChessBoardController {
 		switch (key) {
 		case FEN:
 			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getWhiteName() + " vs "
-							+ game.getBlackName(), game.toFEN());
+					"FEN for game " + game.getHeader(PgnHeader.White) + " vs "
+							+ game.getHeader(PgnHeader.Black), game.toFen());
 			break;
 		case FLIP:
 			onFlip();

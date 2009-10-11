@@ -60,7 +60,10 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.chess.Game;
-import raptor.chess.util.GameUtils;
+import raptor.chess.GameFactory;
+import raptor.chess.Variant;
+import raptor.chess.pgn.PgnHeader;
+import raptor.chess.pgn.PgnUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtil;
@@ -792,25 +795,24 @@ public class RaptorWindow extends ApplicationWindow {
 		fileMenu.add(new Action("Create Test Board") {
 			@Override
 			public void run() {
-				Game game = GameUtils.createStartingPosition(Game.Type.CLASSIC);
-				game.setInitialWhiteTimeMillis(180000);
-				game.setInitialBlackTimeMillis(180000);
-				game.setInitialWhiteIncMillis(0);
-				game.setInitialBlackIncMillis(0);
-				game.setWhiteName("White");
-				game.setWhiteRating("----");
-				game.setBlackName("Black");
-				game.setBlackRating("----");
-				game.setWhiteLagMillis(23465);
-				game.setBlackLagMillis(580347);
-				game.setWhiteRemainingeTimeMillis(153857);
-				game.setBlackRemainingTimeMillis(46728);
-				game.setEvent("blitz 3 0 rated");
-				game.setRound("?");
-				game.setDate(System.currentTimeMillis());
-				game.setSite("raptortest");
+				Game game = GameFactory.createStartingPosition(Variant.classic);
 				game.addState(Game.UPDATING_SAN_STATE);
 				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+				game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
+						.currentTimeMillis()));
+				game.setHeader(PgnHeader.Round, "?");
+				game.setHeader(PgnHeader.Site, "Test Game Site");
+				game.setHeader(PgnHeader.TimeControl, PgnUtils
+						.timeIncMillisToTimeControl(180000, 0));
+				game.setHeader(PgnHeader.BlackRemainingMillis, "" + 46728);
+				game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 153857);
+				game.setHeader(PgnHeader.WhiteClock, PgnUtils
+						.timeToClock(180000));
+				game.setHeader(PgnHeader.BlackClock, PgnUtils
+						.timeToClock(180000));
+				game.setHeader(PgnHeader.BlackElo, "----");
+				game.setHeader(PgnHeader.WhiteElo, "----");
+				game.setHeader(PgnHeader.Event, "blitz 3 0 rated");
 				InactiveController controller = new InactiveController(game);
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
 			}
@@ -819,27 +821,27 @@ public class RaptorWindow extends ApplicationWindow {
 		fileMenu.add(new Action("Create Test Crazyhouse Board") {
 			@Override
 			public void run() {
-				Game game = GameUtils
-						.createStartingPosition(Game.Type.CRAZYHOUSE);
-				game.setInitialWhiteTimeMillis(180000);
-				game.setInitialBlackTimeMillis(180000);
-				game.setInitialWhiteIncMillis(0);
-				game.setInitialBlackIncMillis(0);
-				game.setWhiteName("White");
-				game.setWhiteRating("----");
-				game.setBlackName("Black");
-				game.setBlackRating("----");
-				game.setWhiteLagMillis(23465);
-				game.setBlackLagMillis(580347);
-				game.setWhiteRemainingeTimeMillis(153857);
-				game.setBlackRemainingTimeMillis(46728);
-				game.setEvent("crazyhouse 3 0 rated");
-				game.setRound("?");
-				game.setDate(System.currentTimeMillis());
-				game.setSite("raptortest");
+				Game game = GameFactory
+						.createStartingPosition(Variant.crazyhouse);
 				game.addState(Game.UPDATING_SAN_STATE);
 				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+				game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
+						.currentTimeMillis()));
+				game.setHeader(PgnHeader.Round, "?");
+				game.setHeader(PgnHeader.Site, "Test Game Site");
+				game.setHeader(PgnHeader.TimeControl, PgnUtils
+						.timeIncMillisToTimeControl(180000, 0));
+				game.setHeader(PgnHeader.BlackRemainingMillis, "" + 46728);
+				game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 153857);
+				game.setHeader(PgnHeader.WhiteClock, PgnUtils
+						.timeToClock(180000));
+				game.setHeader(PgnHeader.BlackClock, PgnUtils
+						.timeToClock(180000));
+				game.setHeader(PgnHeader.BlackElo, "----");
+				game.setHeader(PgnHeader.WhiteElo, "----");
+				game.setHeader(PgnHeader.Event, "crazyhouse 3 0 rated");
 				InactiveController controller = new InactiveController(game);
+
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
 			}
 		});

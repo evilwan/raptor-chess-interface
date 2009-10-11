@@ -20,7 +20,7 @@ import raptor.chess.GameConstants;
 /**
  * A class containing validation methods for Short Algebraic Notation (SAN).
  */
-public class SanUtil {
+public class SanUtils {
 	public static class SanValidations {
 		String strictSan;
 

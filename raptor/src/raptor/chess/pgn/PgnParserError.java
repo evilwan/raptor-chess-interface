@@ -6,7 +6,7 @@ import raptor.util.RaptorStringUtils;
 
 public class PgnParserError implements Serializable {
 	public static enum Action {
-		NONE, IGNORING, IGNORING_CURRENT_GAME, IGNORING_CURRENT_SUBLINE
+		NONE, IGNORING, IGNORING_CURRENT_GAME, IGNORING_CURRENT_SUBLINE, IGNORIONG_HEADER,
 	}
 
 	/**
@@ -14,24 +14,35 @@ public class PgnParserError implements Serializable {
 	 * this enum and update the resource bundles which use it.
 	 */
 	public static enum Type {
-		UNEXPECTED_HEADER, UNABLE_TO_PARSE_INITIAL_FEN, ILLEGAL_MOVE_ENCOUNTERED, // String[0]
-		// =
-		// move
-		UNKNOWN_TEXT_ENCOUNTERED, // String[0] = text.
-		UNEXPECTED_MOVE_ANNOTATION, // String[0] = annotation text.
-		UNEXPECTED_GAME_END, UNEXPECTED_GAME_START, UNEXPECTED_MOVE_WORD, // String[0]
-		// =
-		// word.
-		UNEXPECTED_SUBLINE_END, UNEXPECTED_SUBLINE_START, DANGLING_ANNOTATION, // String[0]
-		// =
-		// annotation
-		// (This
-		// can
-		// happen
-		// in
-		// chessbase and its a real pain to support).
-		DANGLING_SUBLINE, INVALID_SUBLINE_STATE, DANGLING_NAG, // String[0] =
-		// nag
+		UNEXPECTED_HEADER, UNABLE_TO_PARSE_INITIAL_FEN,
+		/**
+		 * String[0] = header name. String[1] = header value.
+		 **/
+		UNSUPPORTED_PGN_HEADER, ILLEGAL_MOVE_ENCOUNTERED,
+		/**
+		 * String[0] = move
+		 **/
+		UNKNOWN_TEXT_ENCOUNTERED,
+		/**
+		 * String[0] = text.
+		 */
+		UNEXPECTED_MOVE_ANNOTATION,
+		/**
+		 * String[0] = annotation text.
+		 */
+		UNEXPECTED_GAME_END, UNEXPECTED_GAME_START, UNEXPECTED_MOVE_WORD,
+		/**
+		 * String[0] =word.
+		 */
+		UNEXPECTED_SUBLINE_END, UNEXPECTED_SUBLINE_START, DANGLING_ANNOTATION,
+		/**
+		 * String[0] = annotation (This can happen in chessbase and its a real
+		 * pain to support).
+		 */
+		DANGLING_SUBLINE, INVALID_SUBLINE_STATE, DANGLING_NAG,
+		/**
+		 * String[0] =nag
+		 */
 		UNKNWON_ERROR
 	}
 
@@ -52,7 +63,7 @@ public class PgnParserError implements Serializable {
 	}
 
 	public PgnParserError(Type type, Action action, int lineNumber,
-			String[] args) {
+			String... args) {
 		this(type, action, lineNumber);
 		this.args = args;
 	}

@@ -29,6 +29,7 @@ import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -276,8 +277,8 @@ public class SetupController extends ChessBoardController {
 		switch (key) {
 		case FEN:
 			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getWhiteName() + " vs "
-							+ game.getBlackName(), game.toFEN());
+					"FEN for game " + game.getHeader(PgnHeader.White) + " vs "
+							+ game.getHeader(PgnHeader.Black), game.toFen());
 			break;
 		case FLIP:
 			onFlip();

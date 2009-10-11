@@ -13,25 +13,12 @@
  */
 package raptor.chess.util;
 
-import java.util.Set;
-import java.util.StringTokenizer;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
-import raptor.chess.AtomicGame;
-import raptor.chess.BughouseGame;
-import raptor.chess.CrazyhouseGame;
-import raptor.chess.FischerRandomGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
-import raptor.chess.LosersGame;
-import raptor.chess.Result;
-import raptor.chess.SuicideGame;
-import raptor.chess.Game.Type;
-import raptor.chess.pgn.PgnHeader;
-import raptor.chess.pgn.PgnUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.util.RaptorStringUtils;
@@ -126,192 +113,6 @@ public class GameUtils implements GameConstants {
 			return san;
 		}
 
-	}
-
-	/**
-	 * Creates a game from fen of the specified type.
-	 * 
-	 * <pre>
-	 * rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-	 * </pre>
-	 * 
-	 * @param fen
-	 *            The FEN (Forsyth Edwards Notation)
-	 * @param gameType
-	 *            The game type.
-	 * @return The game.
-	 */
-	public static final Game createFromFen(String fen, Type gameType) {
-		Game result = null;
-
-		switch (gameType) {
-		case CLASSIC:
-		case WILD:
-			result = new Game();
-			break;
-		case LOSERS:
-			result = new LosersGame();
-			break;
-		case ATOMIC:
-			result = new AtomicGame();
-			break;
-		case SUICIDE:
-			result = new SuicideGame();
-			break;
-		case FISCHER_RANDOM:
-			result = new FischerRandomGame();
-			break;
-		case BUGHOUSE:
-			result = new BughouseGame();
-			break;
-		case CRAZYHOUSE:
-			result = new CrazyhouseGame();
-			break;
-		default:
-			throw new IllegalArgumentException("Type " + gameType
-					+ " is not supported");
-		}
-
-		StringTokenizer tok = new StringTokenizer(fen, " ");
-		String boardStr = tok.nextToken();
-		String toMoveStr = tok.nextToken();
-		String castlingInfoStr = tok.nextToken();
-		String epSquareStr = tok.nextToken();
-		String fiftyMoveRuleCountStr = tok.nextToken();
-		String fullMoveCountStr = tok.nextToken();
-
-		int boardIndex = 56;
-		for (int i = 0; i < boardStr.length(); i++) {
-			char piece = fen.charAt(i);
-			if (piece == '/') {
-				boardIndex -= 16;
-			} else if (Character.isDigit(piece)) {
-				boardIndex += Integer.parseInt("" + piece);
-			} else {
-				int pieceColor = Character.isUpperCase(piece) ? WHITE : BLACK;
-				int pieceInt = PIECE_TO_SAN.indexOf(new String(
-						new char[] { piece }).toUpperCase().charAt(0));
-				long pieceSquare = GameUtils.getBitboard(boardIndex);
-
-				result.setPieceCount(pieceColor, pieceInt, result
-						.getPieceCount(pieceColor, pieceInt) + 1);
-				result.getBoard()[boardIndex] = pieceInt;
-				result.setColorBB(pieceColor, result.getColorBB(pieceColor)
-						| pieceSquare);
-				result.setOccupiedBB(result.getOccupiedBB() | pieceSquare);
-				result.setPieceBB(pieceColor, pieceInt, result.getPieceBB(
-						pieceColor, pieceInt)
-						| pieceSquare);
-				boardIndex++;
-			}
-		}
-
-		result.setColorToMove(toMoveStr.equals("w") ? WHITE : BLACK);
-
-		boolean whiteCastleKSide = castlingInfoStr.indexOf('K') != -1;
-		boolean whiteCastleQSide = castlingInfoStr.indexOf('Q') != -1;
-		boolean blackCastleKSide = castlingInfoStr.indexOf('k') != -1;
-		boolean blackCastleQSide = castlingInfoStr.indexOf('q') != -1;
-
-		result.setCastling(WHITE,
-				whiteCastleKSide && whiteCastleQSide ? CASTLE_BOTH
-						: whiteCastleKSide ? CASTLE_SHORT
-								: whiteCastleQSide ? CASTLE_LONG : CASTLE_NONE);
-		result.setCastling(BLACK,
-				blackCastleKSide && blackCastleQSide ? CASTLE_BOTH
-						: blackCastleKSide ? CASTLE_SHORT
-								: blackCastleQSide ? CASTLE_LONG : CASTLE_NONE);
-
-		if (!epSquareStr.equals("-")) {
-			result.setEpSquare(GameUtils.getSquare(epSquareStr));
-			result.setInitialEpSquare(result.getEpSquare());
-		} else {
-			result.setEpSquare(EMPTY_SQUARE);
-			result.setInitialEpSquare(EMPTY_SQUARE);
-		}
-
-		if (!fiftyMoveRuleCountStr.equals("-")) {
-			result.setFiftyMoveCount(Integer.parseInt(fiftyMoveRuleCountStr));
-		}
-
-		if (!fullMoveCountStr.equals("-")) {
-			int fullMoveCount = Integer.parseInt(fullMoveCountStr);
-			result
-					.setHalfMoveCount(result.getColorToMove() == BLACK ? fullMoveCount * 2 - 1
-							: fullMoveCount * 2 - 2);
-		}
-
-		result.setEmptyBB(~result.getOccupiedBB());
-		result.setNotColorToMoveBB(~result.getColorBB(result.getColorToMove()));
-
-		if (!result.isLegalPosition()) {
-			throw new IllegalArgumentException(
-					"Resulting position was illegal for FEN: " + fen + " "
-							+ gameType);
-		}
-
-		result.setZobristPositionHash(ZobristHash
-				.zobristHashPositionOnly(result));
-		result.setZobristGameHash(result.getZobristPositionHash()
-				^ ZobristHash.zobrist(result.getColorToMove(), result
-						.getEpSquare(), result.getCastling(WHITE), result
-						.getCastling(BLACK)));
-
-		result.incrementRepCount();
-
-		if (gameType == Game.Type.CRAZYHOUSE) {
-			// This wont work if setup from a FEN where promotions have
-			// occurred.
-			// There is no way of telling if a piece was promoted or not.
-
-			result.setDropCount(WHITE, PAWN, 8 - result.getPieceCount(BLACK,
-					PAWN));
-			result.setDropCount(WHITE, KNIGHT, 2 - result.getPieceCount(BLACK,
-					KNIGHT));
-			result.setDropCount(WHITE, BISHOP, 2 - result.getPieceCount(BLACK,
-					BISHOP));
-			result.setDropCount(WHITE, ROOK, 2 - result.getPieceCount(BLACK,
-					ROOK));
-			result.setDropCount(WHITE, QUEEN, 1 - result.getPieceCount(BLACK,
-					QUEEN));
-			result.setDropCount(WHITE, KING, 0);
-
-			result.setDropCount(BLACK, PAWN, 8 - result.getPieceCount(WHITE,
-					PAWN));
-			result.setDropCount(BLACK, KNIGHT, 2 - result.getPieceCount(WHITE,
-					KNIGHT));
-			result.setDropCount(BLACK, BISHOP, 2 - result.getPieceCount(WHITE,
-					BISHOP));
-			result.setDropCount(BLACK, ROOK, 2 - result.getPieceCount(WHITE,
-					ROOK));
-			result.setDropCount(BLACK, QUEEN, 1 - result.getPieceCount(WHITE,
-					QUEEN));
-			result.setDropCount(BLACK, KING, 0);
-
-			// If there are any negative values just set them to 0.
-			for (int i = 0; i < result.getPositionState().dropCounts.length; i++) {
-				for (int j = 0; j < result.getPositionState().dropCounts[i].length; j++) {
-
-					if (result.getPositionState().dropCounts[i][j] < 0) {
-						result.setDropCount(i, j, 0);
-						if (LOG.isWarnEnabled()) {
-							LOG
-									.warn("Set a zh drop value to 0 because it was less than 0 initially. "
-											+ fen);
-						}
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	public static final Game createStartingPosition(Type gameType) {
-		if (gameType == Type.SUICIDE) {
-			return createFromFen(STARTING_SUICIDE_POSITION_FEN, gameType);
-		} else {
-			return createFromFen(STARTING_POSITION_FEN, gameType);
-		}
 	}
 
 	public static final long diagonalMove(int square, long emptySquares,
@@ -472,17 +273,6 @@ public class GameUtils implements GameConstants {
 
 	public static int getFile(int square) {
 		return square % 8;
-	}
-
-	private static int getIndex(PgnHeader[] headers, String header) {
-		int result = -1;
-		for (int i = 0; i < headers.length; i++) {
-			if (headers[i].getName().equals(header)) {
-				result = i;
-				break;
-			}
-		}
-		return result;
 	}
 
 	public static final int getOppositeColor(int color) {
@@ -1004,63 +794,6 @@ public class GameUtils implements GameConstants {
 					+ RaptorStringUtils.defaultTimeString(seconds, 2) + "."
 					+ RaptorStringUtils.defaultTimeString(tenths, 1);
 		}
-	}
-
-	public static String toPgn(Game game) {
-		StringBuilder builder = new StringBuilder(2500);
-		PgnHeader[] requiredHeaders = PgnHeader.STR_HEADERS;
-		for (PgnHeader requiredHeader : requiredHeaders) {
-			String headerValue = game.getHeader(requiredHeader);
-
-			if (headerValue == null || headerValue.equals("")) {
-				headerValue = PgnHeader.UNKNOWN_VALUE;
-				game.setHeader(requiredHeader, headerValue);
-			}
-			PgnUtils
-					.buildHeader(builder, requiredHeader.getName(), headerValue);
-			builder.append("\n");
-		}
-
-		Set<String> allHeaders = game.getAllHeaders();
-		for (String header : allHeaders) {
-			if (getIndex(requiredHeaders, header) == -1) {
-				String headerValue = game.getHeader(header);
-				if (headerValue == null || headerValue.equals("")) {
-					headerValue = PgnHeader.UNKNOWN_VALUE;
-					game.setHeader(header, headerValue);
-				}
-
-				PgnUtils.buildHeader(builder, header, headerValue);
-				builder.append("\n");
-			}
-		}
-		builder.append("\n");
-
-		boolean nextMoveRequiresNumber = true;
-		int charsInCurrentLine = 0;
-
-		// TO DO: add breaking up lines in comments.
-		for (int i = 0; i < game.getHalfMoveCount(); i++) {
-			int charsBefore = builder.length();
-			nextMoveRequiresNumber = PgnUtils.buildMoveInfo(builder, game
-					.getMoveList().get(i), nextMoveRequiresNumber);
-			charsInCurrentLine += builder.length() - charsBefore;
-
-			if (charsInCurrentLine > 75) {
-				charsInCurrentLine = 0;
-				builder.append("\n");
-			} else {
-				builder.append(" ");
-			}
-		}
-
-		if (game.isCheckmate() || game.isStalemate()) {
-			builder.append(game.getResult().getDescription());
-		} else {
-			builder.append(Result.ON_GOING.getDescription());
-		}
-
-		return builder.toString();
 	}
 
 	public static long whitePawnCaptureEast(long whitePawns, long empty) {

@@ -33,7 +33,8 @@ import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
 import raptor.chess.Result;
-import raptor.chess.Game.Type;
+import raptor.chess.Variant;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -189,17 +190,17 @@ public class PlayingController extends ChessBoardController {
 		super(game);
 		this.connector = connector;
 
-		if (StringUtils.equalsIgnoreCase(game.getWhiteName(), connector
-				.getUserName())) {
+		if (StringUtils.equalsIgnoreCase(game.getHeader(PgnHeader.White),
+				connector.getUserName())) {
 			isUserWhite = true;
-		} else if (StringUtils.equalsIgnoreCase(game.getBlackName(), connector
-				.getUserName())) {
+		} else if (StringUtils.equalsIgnoreCase(
+				game.getHeader(PgnHeader.Black), connector.getUserName())) {
 			isUserWhite = false;
 		} else {
 			throw new IllegalArgumentException(
 					"Could not deterimne user color " + connector.getUserName()
-							+ " " + game.getWhiteName() + " "
-							+ game.getBlackName());
+							+ " " + game.getHeader(PgnHeader.White) + " "
+							+ game.getHeader(PgnHeader.Black));
 		}
 
 		if (LOG.isDebugEnabled()) {
@@ -271,7 +272,7 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	public void adjustGameDescriptionLabel() {
 		board.getGameDescriptionLabel().setText(
-				"Playing " + getGame().getEvent());
+				"Playing " + getGame().getHeader(PgnHeader.Event));
 	}
 
 	/**
@@ -384,7 +385,7 @@ public class PlayingController extends ChessBoardController {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
 			BoardUtils.addPromotionIconsToToolbar(this, toolbar, isUserWhite,
-					game.getType() == Type.SUICIDE);
+					game.getVariant() == Variant.suicide);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			BoardUtils.addPremoveClearAndAutoDrawToolbar(this, toolbar);
 			new ToolItem(toolbar, SWT.SEPARATOR);
@@ -393,7 +394,7 @@ public class PlayingController extends ChessBoardController {
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
 		}
-		if (game.getType() == Type.SUICIDE) {
+		if (game.getVariant() == Variant.suicide) {
 			setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
 		} else {
 			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
@@ -543,8 +544,8 @@ public class PlayingController extends ChessBoardController {
 		switch (key) {
 		case FEN:
 			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getWhiteName() + " vs "
-							+ game.getBlackName(), game.toFEN());
+					"FEN for game " + game.getHeader(PgnHeader.White) + " vs "
+							+ game.getHeader(PgnHeader.White), game.toFen());
 			break;
 		case FLIP:
 			onFlip();

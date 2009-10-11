@@ -13,10 +13,10 @@
  */
 package raptor.chess.util;
 
-import static raptor.chess.util.GameUtils.createFromFen;
+import static raptor.chess.GameFactory.createFromFen;
 import raptor.chess.Game;
 import raptor.chess.Move;
-import raptor.chess.Game.Type;
+import raptor.chess.Variant;
 
 public class Benchmark {
 	// manyLegal2MoveTest: mean(nps): 794466 stdv 56010 removing bitboard ops.
@@ -57,7 +57,7 @@ public class Benchmark {
 		for (int i = 0; i < 5; i++) {
 			Game game = createFromFen(
 					"rnbqkbnr/p2ppp2/6pp/1pp5/1PP5/6PP/P2PPP2/RNBQKBNR w KQkq - 0 1",
-					Type.CLASSIC);
+					Variant.classic);
 			moveWalk(game);
 		}
 
@@ -68,7 +68,7 @@ public class Benchmark {
 		for (int i = 0; i < n; i++) {
 			Game game = createFromFen(
 					"rnbqkbnr/p2ppp2/6pp/1pp5/1PP5/6PP/P2PPP2/RNBQKBNR w KQkq - 0 1",
-					Type.CLASSIC);
+					Variant.classic);
 			long startTime = System.nanoTime();
 			long nodes = moveWalk(game);
 

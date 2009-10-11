@@ -13,7 +13,7 @@
  */
 package raptor.chess;
 
-public class SetupGame extends Game {
+public class SetupGame extends ClassicGame {
 
 	public SetupGame() {
 		super();
@@ -22,17 +22,20 @@ public class SetupGame extends Game {
 	}
 
 	/**
-	 * @param ignoreHashes
-	 *            Whether to include copying hash tables.
-	 * @return An deep clone copy of this Game object.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public Game deepCopy(boolean ignoreHashes) {
+	public SetupGame deepCopy(boolean ignoreHashes) {
 		SetupGame result = new SetupGame();
 		overwrite(result, ignoreHashes);
 		return result;
 	}
 
+	/**
+	 * Overridden to always return true.
+	 * 
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isLegalPosition() {
 		return isInState(Game.SETUP_STATE) ? true : super.isLegalPosition();

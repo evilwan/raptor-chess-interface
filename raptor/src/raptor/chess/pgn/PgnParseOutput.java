@@ -3,11 +3,11 @@ package raptor.chess.pgn;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import raptor.chess.Game;
+import raptor.chess.ClassicGame;
 
 public class PgnParseOutput implements Serializable {
 	static final long serialVersionUID = 1;
-	ArrayList<Game> games;
+	ArrayList<ClassicGame> games;
 
 	ArrayList<PgnParserError> errors;
 
@@ -18,7 +18,7 @@ public class PgnParseOutput implements Serializable {
 	private PgnParseOutput() {
 	}
 
-	public PgnParseOutput(ArrayList<Game> games,
+	public PgnParseOutput(ArrayList<ClassicGame> games,
 			ArrayList<PgnParserError> errors) {
 		super();
 		this.games = games;
@@ -29,7 +29,7 @@ public class PgnParseOutput implements Serializable {
 		return errors;
 	}
 
-	public ArrayList<Game> getGames() {
+	public ArrayList<ClassicGame> getGames() {
 		return games;
 	}
 

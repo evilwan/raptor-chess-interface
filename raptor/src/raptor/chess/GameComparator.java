@@ -4,11 +4,16 @@ import java.util.Comparator;
 
 import org.apache.commons.lang.StringUtils;
 
+import raptor.chess.pgn.PgnHeader;
+
+/**
+ * Compares games by PgnHeader values.
+ */
 public class GameComparator implements Comparator<Game> {
-	protected String pgnHeader;
+	protected PgnHeader pgnHeader;
 	protected boolean isAscending;
 
-	public GameComparator(String pgnHeader, boolean isAscending) {
+	public GameComparator(PgnHeader pgnHeader, boolean isAscending) {
 		this.pgnHeader = pgnHeader;
 		this.isAscending = isAscending;
 	}

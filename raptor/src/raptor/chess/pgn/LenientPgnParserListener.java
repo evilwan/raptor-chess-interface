@@ -10,9 +10,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.Game;
+import raptor.chess.GameFactory;
 import raptor.chess.Move;
 import raptor.chess.Result;
-import raptor.chess.util.GameUtils;
+import raptor.chess.Variant;
 
 /**
  * A Lenient PGN Parser Listener which creates Games from the PGN being handled.
@@ -62,55 +63,48 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 
 	public Game createGameFromDescription() {
 		String fen = null;
-		Game.Type type = Game.Type.CLASSIC;
+		Variant variant = Variant.classic;
 		Game result = null;
 
-		if (currentHeaders.get(PgnHeader.FEN.getName()) != null) {
-			fen = currentHeaders.get(PgnHeader.FEN.getName());
+		if (currentHeaders.get(PgnHeader.FEN.name()) != null) {
+			fen = currentHeaders.get(PgnHeader.FEN);
 		}
-		if (currentHeaders.get(PgnHeader.EVENT.getName()) != null) {
+		if (currentHeaders.get(PgnHeader.Event) != null) {
 			if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.EVENT.getName()), "crazyhouse")) {
-				type = Game.Type.CRAZYHOUSE;
-				currentHeaders.put(PgnHeader.VARIANT.getName(),
-						Game.Type.CRAZYHOUSE.name());
+					.get(PgnHeader.Event), "crazyhouse")) {
+				variant = Variant.crazyhouse;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.EVENT.getName()), "atomic")) {
-				type = Game.Type.ATOMIC;
-				currentHeaders.put(PgnHeader.VARIANT.getName(),
-						Game.Type.ATOMIC.name());
+					.get(PgnHeader.Event), "atomic")) {
+				variant = Variant.atomic;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.EVENT.getName()), "suicide")) {
-				type = Game.Type.SUICIDE;
-				currentHeaders.put(PgnHeader.VARIANT.getName(),
-						Game.Type.SUICIDE.name());
+					.get(PgnHeader.Event), "suicide")) {
+				variant = Variant.suicide;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.EVENT.getName()), "losers")) {
-				type = Game.Type.LOSERS;
-				currentHeaders.put(PgnHeader.VARIANT.getName(),
-						Game.Type.LOSERS.name());
+					.get(PgnHeader.Event), "losers")) {
+				variant = Variant.losers;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.EVENT.getName()), "wild fr")) {
-				type = Game.Type.FISCHER_RANDOM;
-				currentHeaders.put(PgnHeader.VARIANT.getName(),
-						Game.Type.FISCHER_RANDOM.name());
+					.get(PgnHeader.Event), "wild fr")) {
+				variant = Variant.fischerRandom;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.EVENT.getName()), "bughouse")) {
-				type = Game.Type.BUGHOUSE;
-				currentHeaders.put(PgnHeader.VARIANT.getName(),
-						Game.Type.BUGHOUSE.name());
+					.get(PgnHeader.Event), "bughouse")) {
+				variant = Variant.bughouse;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.EVENT.getName()), "wild")) {
-				type = Game.Type.CLASSIC;
-				currentHeaders.put(PgnHeader.VARIANT.getName(), Game.Type.WILD
-						.name());
+					.get(PgnHeader.Event), "wild")) {
+				variant = Variant.wild;
 			}
 		}
 
 		if (fen != null) {
-			result = GameUtils.createFromFen(fen, type);
+			result = GameFactory.createFromFen(fen, variant);
+			result.setHeader(PgnHeader.FEN, fen);
 		} else {
-			result = GameUtils.createStartingPosition(type);
+			result = GameFactory.createStartingPosition(variant);
+		}
+
+		if (variant != Variant.classic) {
+			result.setHeader(PgnHeader.Variant, variant.toString());
+		} else {
+			result.removeHeader(PgnHeader.Variant);
 		}
 		return result;
 	}
@@ -123,7 +117,17 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 
 			// Set all of the headers.
 			for (String header : currentHeaders.keySet()) {
-				currentGame.setHeader(header, currentHeaders.get(header));
+
+				try {
+					currentGame.setHeader(PgnHeader.valueOf(header),
+							currentHeaders.get(header));
+				} catch (IllegalArgumentException iae) {
+					errorEncountered(new PgnParserError(
+							PgnParserError.Type.UNSUPPORTED_PGN_HEADER,
+							PgnParserError.Action.IGNORIONG_HEADER, parser
+									.getLineNumber(), header, currentHeaders
+									.get(header)));
+				}
 			}
 		} catch (IllegalArgumentException ife) {
 			LOG.warn("error setting up game", ife);
@@ -215,7 +219,8 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 				}
 
 				// add the game
-				currentGame.setResult(result);
+				currentGame
+						.setHeader(PgnHeader.Result, result.getDescription());
 				currentGame.addState(Game.INACTIVE_STATE);
 				gameParsed(currentGame, parser.getLineNumber());
 			} else {

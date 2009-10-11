@@ -13,26 +13,30 @@
  */
 package raptor.chess;
 
+import raptor.chess.pgn.PgnHeader;
+
 /**
  * An implementation of a bughouse game. This approach involves linking two
  * bughouse games together. And setting the others droppable piece counts as
  * pieces are captured.
+ * 
+ * TO DO: add in the blast radius on captures.
  */
 public class BughouseGame extends CrazyhouseGame {
 
 	protected BughouseGame otherBoard;
 
 	public BughouseGame() {
-		setType(Type.BUGHOUSE);
+		setHeader(PgnHeader.Variant, Variant.bughouse.name());
 	}
 
 	/**
 	 * Decrements the drop count of the other game.
 	 */
 	@Override
-	public void decrementDropCount(int color, int piece) {
+	protected void decrementDropCount(int color, int piece) {
 		piece = piece & PROMOTED_MASK;
-		otherBoard.positionState.dropCounts[color][piece] = otherBoard.positionState.dropCounts[color][piece] - 1;
+		otherBoard.dropCounts[color][piece] = otherBoard.dropCounts[color][piece] - 1;
 	}
 
 	/**
@@ -41,7 +45,7 @@ public class BughouseGame extends CrazyhouseGame {
 	 * @return An deep clone copy of this Game object.
 	 */
 	@Override
-	public Game deepCopy(boolean ignoreHashes) {
+	public BughouseGame deepCopy(boolean ignoreHashes) {
 		BughouseGame result = new BughouseGame();
 		overwrite(result, ignoreHashes);
 		return result;
@@ -55,11 +59,11 @@ public class BughouseGame extends CrazyhouseGame {
 	 * Increments the drop count of the other game.
 	 */
 	@Override
-	public void incrementDropCount(int color, int piece) {
+	protected void incrementDropCount(int color, int piece) {
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece = PAWN;
 		} else {
-			otherBoard.positionState.dropCounts[color][piece] = otherBoard.positionState.dropCounts[color][piece] + 1;
+			otherBoard.dropCounts[color][piece] = otherBoard.dropCounts[color][piece] + 1;
 		}
 	}
 

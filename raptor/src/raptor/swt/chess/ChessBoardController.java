@@ -109,27 +109,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Adjusts the piece jail. The default behavior is to always show it if the
-	 * game is in a DROPPABLE_STATE, otherwise only show it if the
-	 * BOARD_IS_SHOWING_PIECE_JAIL preference is set to true.
-	 * 
-	 * This method is provided so it can easily be overridden.
-	 */
-	protected void adjustPieceJailVisibility() {
-		if (isDisposed()) {
-			return;
-		}
-
-		if (!getGame().isInState(Game.DROPPABLE_STATE)
-				&& !getPreferences().getBoolean(
-						PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL)) {
-			board.hidePieceJail();
-		} else {
-			board.showPieceJail();
-		}
-	}
-
-	/**
 	 * Adjusts only the colors of the chess clocks based on whose move it is in
 	 * the game.
 	 * 
@@ -191,10 +170,10 @@ public abstract class ChessBoardController implements BoardConstants,
 				board.getStatusLabel().setText("");
 			}
 		} else {
-			String result = getGame().getResultDescription();
+			String result = getGame().getHeader(PgnHeader.ResultDescription);
 			if (result != null) {
-				board.getStatusLabel()
-						.setText(getGame().getResultDescription());
+				board.getStatusLabel().setText(
+						getGame().getHeader(PgnHeader.ResultDescription));
 			}
 		}
 	}
@@ -210,7 +189,8 @@ public abstract class ChessBoardController implements BoardConstants,
 			return;
 		}
 
-		if (getGame().getWhiteLagMillis() > 20000) {
+		long[] lagTimes = getLagTimes();
+		if (lagTimes[WHITE] > 20000) {
 			board.getWhiteLagLabel().setForeground(
 					getPreferences().getColor(
 							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
@@ -219,7 +199,7 @@ public abstract class ChessBoardController implements BoardConstants,
 					getPreferences().getColor(PreferenceKeys.BOARD_LAG_COLOR));
 		}
 
-		if (getGame().getBlackLagMillis() > 20000) {
+		if (lagTimes[BLACK] > 20000) {
 			board.getBlackLagLabel().setForeground(
 					getPreferences().getColor(
 							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
@@ -228,10 +208,8 @@ public abstract class ChessBoardController implements BoardConstants,
 					getPreferences().getColor(PreferenceKeys.BOARD_LAG_COLOR));
 		}
 
-		board.whiteLagLabel.setText(BoardUtils.lagToString(getGame()
-				.getWhiteLagMillis()));
-		board.blackLagLabel.setText(BoardUtils.lagToString(getGame()
-				.getBlackLagMillis()));
+		board.whiteLagLabel.setText(BoardUtils.lagToString(lagTimes[WHITE]));
+		board.blackLagLabel.setText(BoardUtils.lagToString(lagTimes[BLACK]));
 	}
 
 	/**
@@ -244,10 +222,10 @@ public abstract class ChessBoardController implements BoardConstants,
 		if (isDisposed()) {
 			return;
 		}
-		String blackName = getGame().getBlackName();
-		String blackRating = getGame().getBlackRating();
-		String whiteName = getGame().getWhiteName();
-		String whiteRating = getGame().getWhiteRating();
+		String blackName = getGame().getHeader(PgnHeader.Black);
+		String blackRating = getGame().getHeader(PgnHeader.BlackElo);
+		String whiteName = getGame().getHeader(PgnHeader.White);
+		String whiteRating = getGame().getHeader(PgnHeader.WhiteElo);
 
 		String whiteNameRating = null;
 		String blackNameRating = null;
@@ -285,7 +263,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 
 		String eco = getGame().getHeader(PgnHeader.ECO);
-		String opening = getGame().getHeader(PgnHeader.OPENING);
+		String opening = getGame().getHeader(PgnHeader.Opening);
 
 		String description = StringUtils.isBlank(eco) ? "" : eco + " ";
 		description += StringUtils.isBlank(opening) ? "" : opening;
@@ -347,6 +325,27 @@ public abstract class ChessBoardController implements BoardConstants,
 				square.setText(BoardUtils.pieceCountToString(count));
 			}
 			square.redraw();
+		}
+	}
+
+	/**
+	 * Adjusts the piece jail. The default behavior is to always show it if the
+	 * game is in a DROPPABLE_STATE, otherwise only show it if the
+	 * BOARD_IS_SHOWING_PIECE_JAIL preference is set to true.
+	 * 
+	 * This method is provided so it can easily be overridden.
+	 */
+	protected void adjustPieceJailVisibility() {
+		if (isDisposed()) {
+			return;
+		}
+
+		if (!getGame().isInState(Game.DROPPABLE_STATE)
+				&& !getPreferences().getBoolean(
+						PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL)) {
+			board.hidePieceJail();
+		} else {
+			board.showPieceJail();
 		}
 	}
 
@@ -466,10 +465,58 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Returns an array indexed by color containing the accumulated lag in
+	 * milliseconds.
+	 */
+	protected long[] getLagTimes() {
+
+		long whiteLag = 0;
+		long blackLag = 0;
+
+		try {
+			whiteLag = Long.parseLong(game.getHeader(PgnHeader.WhiteLagMillis));
+		} catch (NumberFormatException nfe) {
+		} catch (NullPointerException npe) {
+		}
+
+		try {
+			blackLag = Long.parseLong(game.getHeader(PgnHeader.BlackLagMillis));
+		} catch (NumberFormatException nfe) {
+		} catch (NullPointerException npe) {
+		}
+		return new long[] { whiteLag, blackLag };
+	}
+
+	/**
 	 * Returns the preferences.
 	 */
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
+	}
+
+	/**
+	 * Returns an array indexed by color containing the remaining time in
+	 * milliseconds.
+	 */
+	protected long[] getRemainingTimes() {
+
+		long whiteTime = 0;
+		long blackTime = 0;
+
+		try {
+			whiteTime = Long.parseLong(game
+					.getHeader(PgnHeader.WhiteRemainingMillis));
+		} catch (NumberFormatException nfe) {
+		} catch (NullPointerException npe) {
+		}
+
+		try {
+			blackTime = Long.parseLong(game
+					.getHeader(PgnHeader.BlackRemainingMillis));
+		} catch (NumberFormatException nfe) {
+		} catch (NullPointerException npe) {
+		}
+		return new long[] { whiteTime, blackTime };
 	}
 
 	/**
@@ -538,9 +585,8 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onActivate() {
 		if (LOG.isDebugEnabled()) {
-			LOG
-					.debug("In onActivate : " + game.getId() + " "
-							+ game.getEvent());
+			LOG.debug("In onActivate : " + game.getId() + " "
+					+ game.getHeader(PgnHeader.Event));
 		}
 	}
 
@@ -554,7 +600,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
 		board.redrawSquares();
-		board.getControl();
+		board.getBoardComposite().layout(true);
 		board.getControl().redraw();
 	}
 
@@ -565,7 +611,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	public void onPassivate() {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("In onPassivate : " + game.getId() + " "
-					+ game.getEvent());
+					+ game.getHeader(PgnHeader.Event));
 		}
 	}
 
@@ -637,15 +683,15 @@ public abstract class ChessBoardController implements BoardConstants,
 		adjustClockColors();
 
 		if (updateClocksFromGame) {
-			board.whiteClockLabel.setText(GameUtils.timeToString(getGame()
-					.getWhiteRemainingTimeMillis()));
-			board.blackClockLabel.setText(GameUtils.timeToString(getGame()
-					.getBlackRemainingTimeMillis()));
 
-			whiteClockUpdater.setRemainingTimeMillis(getGame()
-					.getWhiteRemainingTimeMillis());
-			blackClockUpdater.setRemainingTimeMillis(getGame()
-					.getBlackRemainingTimeMillis());
+			long[] remainingTimes = getRemainingTimes();
+			board.whiteClockLabel.setText(GameUtils
+					.timeToString(remainingTimes[WHITE]));
+			board.blackClockLabel.setText(GameUtils
+					.timeToString(remainingTimes[BLACK]));
+
+			whiteClockUpdater.setRemainingTimeMillis(remainingTimes[WHITE]);
+			blackClockUpdater.setRemainingTimeMillis(remainingTimes[BLACK]);
 		} else {
 			board.whiteClockLabel.setText(GameUtils
 					.timeToString(whiteClockUpdater.getRemainingTimeMillis()));

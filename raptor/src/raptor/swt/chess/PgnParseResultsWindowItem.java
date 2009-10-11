@@ -140,8 +140,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = date;
 
-				Collections.sort(games, new GameComparator(PgnHeader.DATE
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.Date,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -155,8 +155,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = white;
 
-				Collections.sort(games, new GameComparator(PgnHeader.WHITE
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.White,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -170,8 +170,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = whiteElo;
 
-				Collections.sort(games, new GameComparator(PgnHeader.WHITE_ELO
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.WhiteElo,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -185,8 +185,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = black;
 
-				Collections.sort(games, new GameComparator(PgnHeader.BLACK
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.Black,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -200,8 +200,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = blackElo;
 
-				Collections.sort(games, new GameComparator(PgnHeader.BLACK_ELO
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.BlackElo,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -215,8 +215,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = eco;
 
-				Collections.sort(games, new GameComparator(PgnHeader.ECO
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.ECO,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -230,8 +230,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = opening;
 
-				Collections.sort(games, new GameComparator(PgnHeader.OPENING
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.Opening,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -245,8 +245,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = event;
 
-				Collections.sort(games, new GameComparator(PgnHeader.EVENT
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.Event,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -260,8 +260,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = site;
 
-				Collections.sort(games, new GameComparator(PgnHeader.SITE
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.Site,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -275,8 +275,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 								: true;
 				lastStortedColumn = round;
 
-				Collections.sort(games, new GameComparator(PgnHeader.ROUND
-						.getName(), wasLastSortAscending));
+				Collections.sort(games, new GameComparator(PgnHeader.Round,
+						wasLastSortAscending));
 				disposeAllItems(gamesTable);
 				populateGamesTable(gamesTable);
 			}
@@ -307,8 +307,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		opening.setWidth(100);
 		gamesTable.setHeaderVisible(true);
 
-		Collections.sort(games, new GameComparator(PgnHeader.DATE.getName(),
-				false));
+		Collections.sort(games, new GameComparator(PgnHeader.Date, false));
 		lastStortedColumn = date;
 		wasLastSortAscending = false;
 
@@ -374,9 +373,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		Game selectedGame = games.get(index);
 		Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
 				new ChessBoardWindowItem(new InactiveController(selectedGame,
-						selectedGame.getWhiteName() + " vs "
-								+ selectedGame.getBlackName())));
-
+						selectedGame.getHeader(PgnHeader.White) + " vs "
+								+ selectedGame.getHeader(PgnHeader.Black))));
 	}
 
 	protected void populateGamesTable(Table gamesTable) {
@@ -384,19 +382,28 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		for (Game game : games) {
 			TableItem item = new TableItem(gamesTable, SWT.NONE);
 			item.setText(new String[] {
-					StringUtils.defaultString(game.getType().name(), "?"),
-					StringUtils.defaultString(game.getDate(), "?"),
-					StringUtils.defaultString(game.getWhiteName(), "?"),
-					StringUtils.defaultString(game.getWhiteRating(), "?"),
-					StringUtils.defaultString(game.getBlackName(), "?"),
-					StringUtils.defaultString(game.getBlackRating(), "?"),
+					StringUtils.defaultString(
+							game.getHeader(PgnHeader.Variant), "?"),
+					StringUtils.defaultString(game.getHeader(PgnHeader.Date),
+							"?"),
+					StringUtils.defaultString(game.getHeader(PgnHeader.White),
+							"?"),
+					StringUtils.defaultString(game
+							.getHeader(PgnHeader.WhiteElo), "?"),
+					StringUtils.defaultString(game.getHeader(PgnHeader.Black),
+							"?"),
+					StringUtils.defaultString(game
+							.getHeader(PgnHeader.BlackElo), "?"),
 					StringUtils
 							.defaultString(game.getHeader(PgnHeader.ECO), ""),
 					StringUtils.defaultString(
-							game.getHeader(PgnHeader.OPENING), ""),
-					StringUtils.defaultString(game.getEvent(), "?"),
-					StringUtils.defaultString(game.getSite(), "?"),
-					StringUtils.defaultString(game.getRound(), "?"), });
+							game.getHeader(PgnHeader.Opening), ""),
+					StringUtils.defaultString(game.getHeader(PgnHeader.Event),
+							"?"),
+					StringUtils.defaultString(game.getHeader(PgnHeader.Site),
+							"?"),
+					StringUtils.defaultString(game.getHeader(PgnHeader.Round),
+							"?"), });
 		}
 	}
 
