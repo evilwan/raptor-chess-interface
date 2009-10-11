@@ -47,13 +47,13 @@ import org.apache.commons.logging.LogFactory;
 public class TimesealingSocket extends Socket implements Runnable {
 	private class CryptOutputStream extends OutputStream {
 
-		private final byte timesealKey[] = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
-				.getBytes();
-
 		private byte buffer[];
 
-		private final OutputStream outputStreamToDecorate;
 		private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+		private final OutputStream outputStreamToDecorate;
+		private final byte timesealKey[] = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
+				.getBytes();
 
 		public CryptOutputStream(OutputStream outputstream) {
 			buffer = new byte[10000];
@@ -124,15 +124,15 @@ public class TimesealingSocket extends Socket implements Runnable {
 
 	private static final Log LOG = LogFactory.getLog(TimesealingSocket.class);
 
+	private CryptOutputStream cryptedOutputStream;
+
 	private volatile long initialTime;
 
 	private String initialTimesealString = null;
 
-	private final TimesealPipe timesealPipe;
-
-	private CryptOutputStream cryptedOutputStream;
-
 	private volatile Thread thread;
+
+	private final TimesealPipe timesealPipe;
 
 	public TimesealingSocket(InetAddress inetaddress, int i,
 			String intialTimestampString) throws IOException {

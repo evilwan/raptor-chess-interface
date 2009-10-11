@@ -44,19 +44,19 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 
 	static final Log LOG = LogFactory.getLog(ChatConsole.class);
 
+	protected Composite buttonComposite;
+	protected ChatConsoleController controller;
 	protected StyledText inputText;
 	protected StyledText outputText;
-	protected Composite buttonComposite;
-	protected Composite southControlsComposite;
-	protected ChatConsoleController controller;
 	protected Label promptLabel;
-
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent arg0) {
 			updateFromPrefs();
 			redraw();
 		}
 	};
+
+	protected Composite southControlsComposite;
 
 	public ChatConsole(Composite parent, int style) {
 		super(parent, style);

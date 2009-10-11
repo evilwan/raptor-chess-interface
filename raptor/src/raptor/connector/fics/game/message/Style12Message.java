@@ -14,38 +14,38 @@
 package raptor.connector.fics.game.message;
 
 public class Style12Message {
+	public static final int EXAMINING_GAME_RELATION = 2;
 	public static final int ISOLATED_POSITION_RELATION = -3;
 	public static final int OBSERVING_EXAMINED_GAME_RELATION = -2;
-	public static final int EXAMINING_GAME_RELATION = 2;
-	public static final int PLAYING_OPPONENTS_MOVE_RELATION = -1;
-	public static final int PLAYING_MY_MOVE_RELATION = 1;
 	public static final int OBSERVING_GAME_RELATION = 0;
-	public String gameId;
-	public int[][] position;
-
-	public int numberOfMovesSinceLastIrreversible;
-	public String whiteName;
+	public static final int PLAYING_MY_MOVE_RELATION = 1;
+	public static final int PLAYING_OPPONENTS_MOVE_RELATION = -1;
 	public String blackName;
-	public int relation;
-	public long initialTimeMillis;
-	public long initialIncMillis;
-	public int whiteStrength;
-	public int blackStrength;
-	public long whiteRemainingTimeMillis;
 	public long blackRemainingTimeMillis;
-	public int fullMoveNumber;
-	public String lan;
-	public long timeTakenForLastMoveMillis;
-	public String san;
-	public boolean isWhiteOnTop;
-	public boolean isClockTicking;
-	public boolean isWhitesMoveAfterMoveIsMade;
-	public boolean canWhiteCastleKSide;
-	public boolean canWhiteCastleQSide;
+
+	public int blackStrength;
 	public boolean canBlackCastleKSide;
 	public boolean canBlackCastleQSide;
+	public boolean canWhiteCastleKSide;
+	public boolean canWhiteCastleQSide;
 	public int doublePawnPushFile;
+	public int fullMoveNumber;
+	public String gameId;
+	public long initialIncMillis;
+	public long initialTimeMillis;
+	public boolean isClockTicking;
+	public boolean isWhiteOnTop;
+	public boolean isWhitesMoveAfterMoveIsMade;
 	public int lagInMillis;
+	public String lan;
+	public int numberOfMovesSinceLastIrreversible;
+	public int[][] position;
+	public int relation;
+	public String san;
+	public long timeTakenForLastMoveMillis;
+	public String whiteName;
+	public long whiteRemainingTimeMillis;
+	public int whiteStrength;
 
 	public Style12Message() {
 	}

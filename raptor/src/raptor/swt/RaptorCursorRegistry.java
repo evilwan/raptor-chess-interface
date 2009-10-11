@@ -20,9 +20,9 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Display;
 
 public class RaptorCursorRegistry {
-	protected Map<String, Cursor> map = new HashMap<String, Cursor>();
-	protected Display display;
 	protected Cursor defaultCursor;
+	protected Display display;
+	protected Map<String, Cursor> map = new HashMap<String, Cursor>();
 
 	/**
 	 * Constructs a raptor registry using the specified display.

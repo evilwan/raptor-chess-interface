@@ -29,13 +29,13 @@ import raptor.swt.ItemChangedListener;
 public class BugArena implements RaptorWindowItem {
 
 	private enum myTabs {
-		TAB_UNPARTNERED, TAB_AVAILABLETEAMS, TAB_GAMES;
+		TAB_AVAILABLETEAMS, TAB_GAMES, TAB_UNPARTNERED;
 	}
 
 	Composite composite;
-	String title;
-
 	IcsConnector connector;
+
+	String title;
 
 	public BugArena(String title, IcsConnector connector) {
 		this.title = title;

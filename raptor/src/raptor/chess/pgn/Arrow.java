@@ -4,8 +4,8 @@ import raptor.chess.util.GameUtils;
 
 public class Arrow implements MoveAnnotation {
 	static final long serialVersionUID = 1;
-	int startSquare;
 	int endSquare;
+	int startSquare;
 
 	public Arrow(int startSquare, int endSquare) {
 		this.startSquare = startSquare;

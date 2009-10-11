@@ -29,13 +29,13 @@ package raptor.util;
  */
 public class RaptorStringTokenizer {
 
-	private String source;
+	private int currentIndex = 0;
 
 	private String delimiters;
 
 	private boolean isEatingBlocksOfDelimiters = false;
 
-	private int currentIndex = 0;
+	private String source;
 
 	public RaptorStringTokenizer(String string, String delimiters) {
 		source = string;

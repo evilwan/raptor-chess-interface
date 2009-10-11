@@ -67,10 +67,6 @@ public class TestClassical implements GameConstants {
 			"k7/8/8/6Pp/8/8/8/K7 w - h6 0 50",
 			"k7/8/8/6Pp/8/8/8/K7 w - - 0 50", "k7/8/8/8/6Pp/8/8/K7 b - g3 0 50" };
 
-	private static final String[] STALEMATE_FEN_TESTS = {
-			"k7/7R/K7/1R/8/8/8/8 b - - 0 50",
-			"3k4/3P4/3K4/8/8/8/8/8 b - - 0 50" };
-
 	private static final String[] IN_CHECK_TESTS = new String[] {};// "8/8/6Kk/8/8/8/8 b - - 0 805",
 	// "8/8/6Kk/8/8/8/8 w - - 0 805" };
 
@@ -81,6 +77,10 @@ public class TestClassical implements GameConstants {
 	private static final String[] PSEUDO_LEGAL_MOVE_TESTS = new String[] {
 			"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 0|a2-a3|a2-a4|b2-b3|b2-b4|c2-c3|c2-c4|d2-d3|d2-d4|e2-e3|e2-e4|f2-f3|f2-f4|g2-g3|g2-g4|h2-h3|h2-h4|b1-a3|b1-c3|g1-f3|g1-h3",
 			"rnbqkbnr/pppppppp/8/8/3P5/8/PPP8PPPP/RNBQKBNR b KQkq - 0 0|a7-a6|a7-a5|b7-b6|b7-b5|c7-c6|c7-c5|d7-d6|d7-d5|e7-e6|e7-e5|f7-f6|f7-f5|g7-g6|g7-g5|h7-h6|h7-h5|b8-a6|b8-c6|g8-f6|g8-h6" };
+
+	private static final String[] STALEMATE_FEN_TESTS = {
+			"k7/7R/K7/1R/8/8/8/8 b - - 0 50",
+			"3k4/3P4/3K4/8/8/8/8/8 b - - 0 50" };
 
 	private static final String[] VALID_CASTLE_TEST = {
 			"k7/8/8/8/8/8/PPPPPPPP/R3K2R w QK - 0 0|O-O-O|O-O",

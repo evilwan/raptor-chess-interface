@@ -17,8 +17,8 @@ import raptor.connector.fics.chat.john.Bugger;
 import raptor.connector.fics.chat.john.Partnership;
 
 public class BughouseService {
-	private Bugger[] unpartneredBuggers;
 	private Partnership[] availablePartnerships;
+	private Bugger[] unpartneredBuggers;
 
 	/*
 	 * public void buggersAvailableUpdated() {

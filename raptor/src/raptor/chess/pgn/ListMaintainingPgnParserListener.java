@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import raptor.chess.Game;
 
 public class ListMaintainingPgnParserListener extends LenientPgnParserListener {
-	private ArrayList<Game> games = new ArrayList<Game>();
-
 	private ArrayList<PgnParserError> errors = new ArrayList<PgnParserError>();
+
+	private ArrayList<Game> games = new ArrayList<Game>();
 
 	public ListMaintainingPgnParserListener() {
 		super();

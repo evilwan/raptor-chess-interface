@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class MoveList implements GameConstants {
+	private int maxSize;
 	private Move[] moves;
 	private int size = 0;
-	private int maxSize;
 
 	public MoveList() {
 		this(MAX_HALF_MOVES_IN_GAME);

@@ -20,13 +20,13 @@ import raptor.util.RaptorStringUtils;
  * A class containing PGN utils.
  */
 public class PgnUtils {
-	private static final Log LOG = LogFactory.getLog(PgnUtils.class);
+	public static Date DEFAULT_PGN_DATE_HEADER = null;
 
 	public static String DEFAULT_PGN_HEADER = "?";
 	public static String DEFAULT_PGN_RESULT_HEADER = "*";
+	private static final Log LOG = LogFactory.getLog(PgnUtils.class);
 	public static final DateFormat PGN_HEADER_DATE_FORMAT = new SimpleDateFormat(
 			"yyyy.MM.dd");
-	public static Date DEFAULT_PGN_DATE_HEADER = null;
 	public static final String PGN_MIME_TYPE = "application/x-chess-pgn";
 
 	static {

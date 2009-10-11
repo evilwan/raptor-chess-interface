@@ -27,8 +27,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 public class RegExDialog extends InputDialog {
-	protected StyledText textToTest;
 	protected StyledText regEx;
+	protected StyledText textToTest;
 
 	/**
 	 * InputDialog constructor

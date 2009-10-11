@@ -49,12 +49,10 @@ import org.eclipse.swt.widgets.Composite;
 public class TextFieldEditor extends FieldEditor {
 
 	/**
-	 * Validation strategy constant (value <code>0</code>) indicating that the
-	 * editor should perform validation after every key stroke.
-	 * 
-	 * @see #setValidateStrategy
+	 * Text limit constant (value <code>-1</code>) indicating unlimited text
+	 * limit and width.
 	 */
-	public static final int VALIDATE_ON_KEY_STROKE = 0;
+	public static int UNLIMITED = -1;
 
 	/**
 	 * Validation strategy constant (value <code>1</code>) indicating that the
@@ -65,10 +63,23 @@ public class TextFieldEditor extends FieldEditor {
 	public static final int VALIDATE_ON_FOCUS_LOST = 1;
 
 	/**
-	 * Text limit constant (value <code>-1</code>) indicating unlimited text
-	 * limit and width.
+	 * Validation strategy constant (value <code>0</code>) indicating that the
+	 * editor should perform validation after every key stroke.
+	 * 
+	 * @see #setValidateStrategy
 	 */
-	public static int UNLIMITED = -1;
+	public static final int VALIDATE_ON_KEY_STROKE = 0;
+
+	/**
+	 * Indicates whether the empty string is legal; <code>true</code> by
+	 * default.
+	 */
+	private boolean emptyStringAllowed = true;
+
+	/**
+	 * The error message, or <code>null</code> if none.
+	 */
+	private String errorMessage;
 
 	/**
 	 * Cached valid state.
@@ -86,30 +97,19 @@ public class TextFieldEditor extends FieldEditor {
 	StyledText textField;
 
 	/**
-	 * Width of text field in characters; initially unlimited.
-	 */
-	private int widthInChars = UNLIMITED;
-
-	/**
 	 * Text limit of text field in characters; initially unlimited.
 	 */
 	private int textLimit = UNLIMITED;
 
 	/**
-	 * The error message, or <code>null</code> if none.
-	 */
-	private String errorMessage;
-
-	/**
-	 * Indicates whether the empty string is legal; <code>true</code> by
-	 * default.
-	 */
-	private boolean emptyStringAllowed = true;
-
-	/**
 	 * The validation strategy; <code>VALIDATE_ON_KEY_STROKE</code> by default.
 	 */
 	private int validateStrategy = VALIDATE_ON_KEY_STROKE;
+
+	/**
+	 * Width of text field in characters; initially unlimited.
+	 */
+	private int widthInChars = UNLIMITED;
 
 	/**
 	 * Creates a new string field editor

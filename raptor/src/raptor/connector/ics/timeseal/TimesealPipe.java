@@ -26,25 +26,25 @@ import java.io.InterruptedIOException;
  */
 public class TimesealPipe {
 
-	private final TimesealInputStream timesealInputStream;
+	private int _fldbyte;
 
-	private final TimesealOutputStream timesealOutputStream;
+	private int _fldchar;
 
 	private volatile int _flddo;
 
 	private final byte buffer[];
 
-	private int _fldchar;
-
-	private int _fldbyte;
-
 	private boolean closedFlag;
 
 	private boolean closedFlag2;
 
-	private Object writeLock;
-
 	private Object readLock;
+
+	private final TimesealInputStream timesealInputStream;
+
+	private final TimesealOutputStream timesealOutputStream;
+
+	private Object writeLock;
 
 	public TimesealPipe() {
 		this(2048);

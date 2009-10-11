@@ -103,10 +103,7 @@ public class ChessBoard implements BoardConstants {
 		sashForm = new SashForm(parent, SWT.HORIZONTAL);
 		boardComposite = new Composite(sashForm, SWT.NONE);
 		createMoveList();
-		moveList.getControl(sashForm);
-		int preferredWeight = moveList.getPreferredWeight();
-		sashForm
-				.setWeights(new int[] { 100 - preferredWeight, preferredWeight });
+		moveList.create(sashForm);
 		sashForm.setMaximizedControl(boardComposite);
 
 		sashForm.addDisposeListener(new DisposeListener() {
@@ -424,7 +421,19 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	public void showMoveList() {
+		if (moveList.getControl().getHorizontalBar() != null) {
+			moveList.getControl().getHorizontalBar().setVisible(false);
+		}
+		int moveListWidth = moveList.getControl().computeSize(SWT.DEFAULT,
+				SWT.DEFAULT).x;
 		sashForm.setMaximizedControl(null);
+		sashForm.setWeights(new int[] { sashForm.getSize().x - moveListWidth,
+				moveListWidth });
+		if (moveList.getControl().getHorizontalBar() != null) {
+			moveList.getControl().getHorizontalBar().setVisible(false);
+		}
+		// moveList.getControl().layout(true, true);
+		moveList.forceRedraw();
 	}
 
 	/**

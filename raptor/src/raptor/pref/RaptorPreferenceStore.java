@@ -50,9 +50,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
 	private static final Log LOG = LogFactory
 			.getLog(RaptorPreferenceStore.class);
+	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 	public static final File RAPTOR_PROPERTIES = new File(
 			Raptor.USER_RAPTOR_DIR, "raptor.properties");
-	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 
 	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 

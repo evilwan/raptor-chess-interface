@@ -10,8 +10,8 @@ import raptor.chess.pgn.PgnHeader;
  * Compares games by PgnHeader values.
  */
 public class GameComparator implements Comparator<Game> {
-	protected PgnHeader pgnHeader;
 	protected boolean isAscending;
+	protected PgnHeader pgnHeader;
 
 	public GameComparator(PgnHeader pgnHeader, boolean isAscending) {
 		this.pgnHeader = pgnHeader;

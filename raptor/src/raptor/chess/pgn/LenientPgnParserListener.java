@@ -31,18 +31,20 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 	private static final Log LOG = LogFactory
 			.getLog(LenientPgnParserListener.class);
 
+	protected SublineNode currentAnalysisLine;
+
 	protected Game currentGame = null;
 
 	protected Map<String, String> currentHeaders = new HashMap<String, String>();
 
+	protected Move currentMoveInfo;
+
 	protected List<MoveAnnotation> danglingAnnotations = new ArrayList<MoveAnnotation>(
 			5);
 
-	protected Move currentMoveInfo;
+	protected boolean isIgnoringCurrentGame;
 
-	protected SublineNode currentAnalysisLine;
-
-	protected int nestedSublineCount = 0;
+	protected boolean isIgnoringSubline;
 
 	protected boolean isParsingGameHeaders;
 
@@ -50,48 +52,63 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 
 	protected boolean isParsingMove;
 
-	protected boolean isIgnoringCurrentGame;
-
-	protected boolean isIgnoringSubline;
-
 	protected boolean isParsingSubline;
 
 	protected boolean isSearchingForGameStart = true;
+
+	protected int nestedSublineCount = 0;
 
 	public LenientPgnParserListener() {
 	}
 
 	public Game createGameFromDescription() {
 		String fen = null;
-		Variant variant = Variant.classic;
+		Variant variant = null;
 		Game result = null;
 
 		if (currentHeaders.get(PgnHeader.FEN.name()) != null) {
-			fen = currentHeaders.get(PgnHeader.FEN);
+			fen = currentHeaders.get(PgnHeader.FEN.name());
 		}
-		if (currentHeaders.get(PgnHeader.Event) != null) {
+		
+		//Check for the Variant header.
+		if (currentHeaders.get(PgnHeader.Variant.name()) != null) {
+			try {
+				variant = Variant.valueOf(currentHeaders.get(PgnHeader.Variant
+						.name()));
+			} catch (IllegalArgumentException iae) {
+			}
+		}
+
+		//Couldn't find it now check for keywords in event.
+		if (variant == null
+				&& currentHeaders.get(PgnHeader.Event.name()) != null) {
 			if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.Event), "crazyhouse")) {
+					.get(PgnHeader.Event.name()), "crazyhouse")) {
 				variant = Variant.crazyhouse;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.Event), "atomic")) {
+					.get(PgnHeader.Event.name()), "atomic")) {
 				variant = Variant.atomic;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.Event), "suicide")) {
+					.get(PgnHeader.Event.name()), "suicide")) {
 				variant = Variant.suicide;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.Event), "losers")) {
+					.get(PgnHeader.Event.name()), "losers")) {
 				variant = Variant.losers;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.Event), "wild fr")) {
+					.get(PgnHeader.Event.name()), "wild fr")) {
 				variant = Variant.fischerRandom;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.Event), "bughouse")) {
+					.get(PgnHeader.Event.name()), "bughouse")) {
 				variant = Variant.bughouse;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.Event), "wild")) {
+					.get(PgnHeader.Event.name()), "wild")) {
 				variant = Variant.wild;
 			}
+		}
+
+		//No variant detected, set it to classic.
+		if (variant == null) {
+			variant = Variant.classic;
 		}
 
 		if (fen != null) {
@@ -122,11 +139,11 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 					currentGame.setHeader(PgnHeader.valueOf(header),
 							currentHeaders.get(header));
 				} catch (IllegalArgumentException iae) {
-					errorEncountered(new PgnParserError(
-							PgnParserError.Type.UNSUPPORTED_PGN_HEADER,
-							PgnParserError.Action.IGNORIONG_HEADER, parser
-									.getLineNumber(), header, currentHeaders
-									.get(header)));
+					// errorEncountered(new PgnParserError(
+					// PgnParserError.Type.UNSUPPORTED_PGN_HEADER,
+					// PgnParserError.Action.IGNORIONG_HEADER, parser
+					// .getLineNumber(), header, currentHeaders
+					// .get(header)));
 				}
 			}
 		} catch (IllegalArgumentException ife) {

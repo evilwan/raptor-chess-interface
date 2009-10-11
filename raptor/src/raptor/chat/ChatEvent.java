@@ -14,12 +14,12 @@
 package raptor.chat;
 
 public class ChatEvent {
-	protected String source;
-	protected ChatType type;
+	protected String channel;
 	protected String gameId;
 	protected String message;
-	protected String channel;
+	protected String source;
 	protected long time;
+	protected ChatType type;
 
 	public ChatEvent() {
 		time = System.currentTimeMillis();

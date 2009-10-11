@@ -43,24 +43,24 @@ package raptor.connector.fics.game.message;
  * m=0 n=0 were added to the end. I have yet to figure out what they are
  */
 public class G1Message {
-	public String gameId;
-
-	public String parterGameId;
-	public String gameTypeDescription;
-	public String whiteRating;
 	public String blackRating;
-	public boolean isRated;
-	public boolean isPrivate;
-	public boolean isWhtieRegistered;
-	public boolean isBlackRegistered;
-	public long initialWhiteTimeMillis;
+
+	public long blackRemainingTime;
+	public String gameId;
+	public String gameTypeDescription;
+	public long initialBlackIncMillis;
 	public long initialBlackTimeMillis;
 	public long initialWhiteIncMillis;
-	public long initialBlackIncMillis;
-	public long whiteRemainingTime;
-	public long blackRemainingTime;
+	public long initialWhiteTimeMillis;
+	public boolean isBlackRegistered;
 	public boolean isBlackUsingTimeseal;
+	public boolean isPrivate;
+	public boolean isRated;
 	public boolean isWhiteUsingTimeseal;
+	public boolean isWhtieRegistered;
+	public String parterGameId;
+	public String whiteRating;
+	public long whiteRemainingTime;
 
 	@Override
 	public String toString() {

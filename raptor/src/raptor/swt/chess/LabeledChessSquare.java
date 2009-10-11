@@ -28,7 +28,6 @@ import raptor.swt.SWTUtils;
 public class LabeledChessSquare extends ChessSquare {
 	public static final int LABEL_HEIGHT_PERCENTAGE = 30;
 
-	protected String text = "";
 	protected PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent arg0) {
 			if (StringUtils.isNotBlank(getText())) {
@@ -46,6 +45,7 @@ public class LabeledChessSquare extends ChessSquare {
 			}
 		}
 	};
+	protected String text = "";
 
 	public LabeledChessSquare(Composite parent, ChessBoard board, int id) {
 		super(parent, board, id, true);

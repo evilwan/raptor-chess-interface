@@ -68,17 +68,17 @@ public class RaptorImageRegistry {
 	 * Contains the data for an entry in the registry.
 	 */
 	private static class Entry {
-		/** the image */
-		protected Image image;
-
 		/** the descriptor */
 		protected ImageDescriptor descriptor;
+
+		/** the image */
+		protected Image image;
 	}
 
 	private static class OriginalImageDescriptor extends ImageDescriptor {
 		private Image original;
-		private int refCount = 0;
 		private Device originalDisplay;
+		private int refCount = 0;
 
 		/**
 		 * @param original
@@ -130,15 +130,15 @@ public class RaptorImageRegistry {
 	 */
 	private Display display;
 
-	private ResourceManager manager;
-
-	private Map<String, Entry> table;
-
 	private Runnable disposeRunnable = new Runnable() {
 		public void run() {
 			dispose();
 		}
 	};
+
+	private ResourceManager manager;
+
+	private Map<String, Entry> table;
 
 	/**
 	 * Creates an empty image registry.

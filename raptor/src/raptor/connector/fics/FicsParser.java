@@ -64,22 +64,22 @@ import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 
 public class FicsParser implements IcsParser, GameConstants {
-	public static final int MAX_GAME_MESSAGE = 1000;
 	private static final Log LOG = LogFactory.getLog(FicsParser.class);
+	public static final int MAX_GAME_MESSAGE = 1000;
 
-	protected Style12Parser style12Parser;
-	protected G1Parser g1Parser;
 	protected B1Parser b1Parser;
+	protected IcsConnector connector;
+	protected G1Parser g1Parser;
 	protected GameEndParser gameEndParser;
 	protected IllegalMoveParser illegalMoveParser;
-	protected RemovingObsGameParser removingObsGameParser;
-	protected TakebackParser takebackParser;
-	protected NoLongerExaminingGameParser noLongerExaminingParser;
 	protected MovesParser movesParser;
-	protected IcsConnector connector;
-
+	protected NoLongerExaminingGameParser noLongerExaminingParser;
 	protected List<ChatEventParser> nonGameEventParsers = new ArrayList<ChatEventParser>(
 			30);
+	protected RemovingObsGameParser removingObsGameParser;
+	protected Style12Parser style12Parser;
+
+	protected TakebackParser takebackParser;
 
 	/**
 	 * A map keyed by game id. Used to temporarily store G1 messages until the

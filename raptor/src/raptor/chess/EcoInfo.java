@@ -20,9 +20,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public class EcoInfo {
 
-	private String positionOnlyFen;
 	private String ecoCode;
 	private String openingName;
+	private String positionOnlyFen;
 	private String variationName = "";
 
 	public EcoInfo(String positionOnlyFen, String eco, String opening,

@@ -91,26 +91,26 @@ public abstract class ProgressBarDialog extends Dialog {
 		}
 	}
 
-	private Label processMessageLabel; // info of process finish
 	private Button cancelButton; // cancel button
 	private Composite cancelComposite;
+	private Display display = null;
+	protected int executeTime = 50;// process times
+	protected volatile boolean isClosed = false;// closed state
 	private Label lineLabel;//
-	private Composite progressBarComposite;//
-	private CLabel message;//
 
+	protected boolean mayCancel = true; // cancel
+	private CLabel message;//
+	protected int processBarStyle = SWT.SMOOTH; // process bar style
+
+	protected String processMessage = "process......";// procress info
+
+	private Label processMessageLabel; // info of process finish
 	private ProgressBar progressBar = null; //
+	private Composite progressBarComposite;//
 	private Object result; //
 	private Shell shell; //
 
-	private Display display = null;
-
-	protected volatile boolean isClosed = false;// closed state
-	protected int executeTime = 50;// process times
-	protected String processMessage = "process......";// procress info
 	protected String shellTitle = "Progress..."; //
-	protected boolean mayCancel = true; // cancel
-
-	protected int processBarStyle = SWT.SMOOTH; // process bar style
 
 	public ProgressBarDialog(Shell parent) {
 		super(parent);

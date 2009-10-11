@@ -29,10 +29,10 @@ import raptor.swt.chess.BoardUtils;
 import raptor.util.SVGUtil;
 
 public class ChessSetOptimizationDialog extends ProgressBarDialog {
+	public static final int END_SIZE = 100;
+
 	private static final Log LOG = LogFactory
 			.getLog(ChessSetOptimizationDialog.class);
-
-	public static final int END_SIZE = 100;
 	public static final int START_SIZE = 6;
 
 	protected String[] info = null;

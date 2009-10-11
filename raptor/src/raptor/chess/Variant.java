@@ -5,10 +5,6 @@ package raptor.chess;
  */
 public enum Variant {
 	/**
-	 * Normal chess.
-	 */
-	classic,
-	/**
 	 * Atomic chess.
 	 */
 	atomic,
@@ -17,10 +13,18 @@ public enum Variant {
 	 */
 	bughouse,
 	/**
+	 * Normal chess.
+	 */
+	classic,
+	/**
 	 * 
 	 * Crazyhouse chess.
 	 */
 	crazyhouse,
+	/**
+	 * Fischer random chess.
+	 */
+	fischerRandom,
 	/**
 	 * Losers chess.
 	 */
@@ -33,9 +37,5 @@ public enum Variant {
 	 * Wild Chess. Follow the classical chess rules but starts from different
 	 * positions.
 	 */
-	wild,
-	/**
-	 * Fischer random chess.
-	 */
-	fischerRandom;
+	wild;
 }

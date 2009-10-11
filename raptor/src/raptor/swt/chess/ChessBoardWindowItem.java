@@ -29,14 +29,14 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
 
 	ChessBoard board;
-	boolean isPassive = true;
-
 	// This is just added as a member variable so it can be stored form the time
 	// its constructed until the time init is invoked.
 	// It should never be referenced after that. Always use
 	// board.getController()
 	// so controller swapping can occur.
 	ChessBoardController controller;
+
+	boolean isPassive = true;
 
 	public ChessBoardWindowItem(ChessBoardController controller) {
 		this.controller = controller;

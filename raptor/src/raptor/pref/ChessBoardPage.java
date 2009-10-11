@@ -34,8 +34,8 @@ class ChessBoardPage extends FieldEditorPreferencePage {
 
 	protected class ChessBoardPageComboFieldEditor extends ComboFieldEditor {
 
-		String value = null;
 		String key = null;
+		String value = null;
 
 		public ChessBoardPageComboFieldEditor(String name, String labelText,
 				String[][] entryNamesAndValues, Composite parent) {
@@ -120,6 +120,12 @@ class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 	}
 
+	public static final String[][] HIGHLIGHT_BORDER_RESIZE_PERCENTAGE = {
+			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
+			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
+			{ "6%", "0.06" }, { "7.5%", "0.075" }, { "10%", "0.1" },
+			{ "12.5%", "0.125" } };
+
 	public static final String[][] LAYOUTS = { { "Right Oriented Layout",
 			"raptor.swt.chess.layout.RightOrientedLayout" } };
 
@@ -128,22 +134,16 @@ class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
 			{ "6%", "0.06" }, { "7.5%", "0.075" } };
 
-	public static final String[][] HIGHLIGHT_BORDER_RESIZE_PERCENTAGE = {
-			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
-			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
-			{ "6%", "0.06" }, { "7.5%", "0.075" }, { "10%", "0.1" },
-			{ "12.5%", "0.125" } };
-
 	public static final String[][] PIECE_WEIGHT_PERCENTAGE = { {
 			"Right Oriented Layout",
 			"raptor.swt.chess.layout.RightOrientedLayout" } };
 
-	ChessBoardPageSquare[][] squares = null;
 	ChessBoardPageComboFieldEditor backgroundFieldEditor;
-	ChessBoardPageComboFieldEditor setFieldEditor;
 	ChessBoardPageComboFieldEditor highlightPercentage;
-	ChessBoardPageComboFieldEditor pieceResize;
 	Composite miniBoard;
+	ChessBoardPageComboFieldEditor pieceResize;
+	ChessBoardPageComboFieldEditor setFieldEditor;
+	ChessBoardPageSquare[][] squares = null;
 
 	public ChessBoardPage() {
 		// Use the "grid" layout

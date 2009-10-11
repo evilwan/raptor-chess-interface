@@ -22,11 +22,11 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 
 class ClockLabelUpdater implements Runnable, PreferenceKeys {
+	ChessBoard board;
 	CLabel clockLabel;
-	long remainingTimeMillis;
 	boolean isRunning;
 	long lastSystemTime = 0;
-	ChessBoard board;
+	long remainingTimeMillis;
 
 	public ClockLabelUpdater(CLabel clockLabel, ChessBoard board) {
 		this.clockLabel = clockLabel;

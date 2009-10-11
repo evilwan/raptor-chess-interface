@@ -24,11 +24,11 @@ import raptor.chess.GameConstants;
 
 public final class ZobristUtils implements GameConstants {
 
-	private static long[][][] ZOBRIST_POSITION = new long[2][7][64];
-	private static long[] ZOBRIST_TO_MOVE = new long[2];
-	private static long[] ZOBRIST_EP = new long[65];
 	private static long[][] ZOBRIST_CASTLE = new long[2][4];
 	private static long[][][] ZOBRIST_DROP_COUNT = new long[2][7][18];
+	private static long[] ZOBRIST_EP = new long[65];
+	private static long[][][] ZOBRIST_POSITION = new long[2][7][64];
+	private static long[] ZOBRIST_TO_MOVE = new long[2];
 
 	static {
 		initZobrist();

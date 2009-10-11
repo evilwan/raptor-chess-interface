@@ -31,11 +31,11 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	 * The button control, or <code>null</code> if none.
 	 */
 	private Button button = null;
-	private Label label = null;
-
-	private String labelText;
-	private String buttonText;
 	private SelectionListener buttonSelectionListener;
+
+	private String buttonText;
+	private Label label = null;
+	private String labelText;
 
 	/**
 	 * Creates a label button field editor in the given style.

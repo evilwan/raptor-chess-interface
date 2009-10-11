@@ -43,21 +43,13 @@ import raptor.swt.SWTUtils;
  * used to represent a piece jail or drop square.
  */
 public class ChessSquare extends Canvas implements BoardConstants {
-	static final Log LOG = LogFactory.getLog(ChessSquare.class);
 	public static final String CLICK_INITIATOR = "CLICK_INITIATOR";
 	public static final String DRAG_INITIATOR = "DRAG_INITIATOR";
-	public static final String LAST_DROP_TIME = "LAST_DROP_TIME";
 	public static final String DROP_HANDLED = "DROP_HANNDLED";
+	public static final String LAST_DROP_TIME = "LAST_DROP_TIME";
+	static final Log LOG = LogFactory.getLog(ChessSquare.class);
 
 	protected ChessBoard board;
-	protected boolean ignoreBackgroundImage = false;
-	protected int id;
-	protected boolean isHighlighted;
-	protected boolean isLight;
-	protected int piece;
-	protected Image pieceImage;
-	protected boolean isHidingPiece;
-
 	/**
 	 * Forces a layout when the size of the square changes.
 	 */
@@ -70,7 +62,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			clearCache();
 		}
 	};
-
 	/**
 	 * Handles drags and drops.
 	 */
@@ -116,6 +107,12 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			}
 		}
 	};
+	protected int id;
+	protected boolean ignoreBackgroundImage = false;
+	protected boolean isHidingPiece;
+	protected boolean isHighlighted;
+	protected boolean isLight;
+
 	MouseListener mouseListener = new MouseListener() {
 		public void mouseDoubleClick(MouseEvent e) {
 		}
@@ -172,6 +169,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			}
 		}
 	};
+
 	PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent e) {
 			Point size = getSize();
@@ -234,6 +232,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 
 		}
 	};
+	protected int piece;
+	protected Image pieceImage;
 
 	/**
 	 * Creates a ChessSquare tied to the specified board.

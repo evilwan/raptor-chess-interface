@@ -18,8 +18,8 @@ import raptor.util.RaptorStringTokenizer;
 
 public class GameEndParser {
 
-	public static final String GAME_END = "{Game";
 	public static final String EXCLUDE = "Creating";
+	public static final String GAME_END = "{Game";
 
 	public GameEndMessage parse(String message) {
 		GameEndMessage result = null;

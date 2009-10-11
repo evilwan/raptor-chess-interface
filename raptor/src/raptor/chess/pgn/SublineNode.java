@@ -9,7 +9,11 @@ import raptor.chess.Move;
 public class SublineNode implements MoveAnnotation {
 	static final long serialVersionUID = 1;
 
+	private Move move;
+
 	private SublineNode parent;
+
+	private SublineNode reply;
 
 	/**
 	 * @deprecated
@@ -18,10 +22,6 @@ public class SublineNode implements MoveAnnotation {
 	 */
 	@Deprecated
 	private SublineNode sublineOwner;
-
-	private Move move;
-
-	private SublineNode reply;
 
 	public SublineNode() {
 

@@ -32,11 +32,11 @@ import org.eclipse.swt.widgets.ToolItem;
 import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
+import raptor.chess.GameCursor;
 import raptor.chess.Move;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
-import raptor.chess.util.MoveListTraverser;
 import raptor.service.SoundService;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.BoardConstants;
@@ -52,11 +52,11 @@ import raptor.swt.chess.ChessBoardController;
 public class InactiveController extends ChessBoardController implements
 		BoardConstants, GameConstants {
 	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
+	protected GameCursor cursor;
 	protected Random random = new SecureRandom();
+	protected String title;
 	protected ToolBar toolbar;
 	protected boolean userMadeAdjustment = false;
-	protected MoveListTraverser traverser = null;
-	protected String title;
 
 	public InactiveController(Game game) {
 		this(game, "Inactive");
@@ -64,8 +64,8 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	public InactiveController(Game game, String title) {
-		super(game);
-		traverser = new MoveListTraverser(game);
+		super(new GameCursor(game, GameCursor.Mode.MakeMovesOnCursor));
+		cursor = (GameCursor) getGame();
 		this.title = title;
 	}
 
@@ -88,7 +88,8 @@ public class InactiveController extends ChessBoardController implements
 	public void adjustGameDescriptionLabel() {
 		if (!isDisposed()) {
 			board.getGameDescriptionLabel().setText(
-					"Inactive " + getGame().getHeader(PgnHeader.Event));
+					title == null ? "Inactive "
+							+ getGame().getHeader(PgnHeader.Event) : title);
 		}
 	}
 
@@ -159,18 +160,15 @@ public class InactiveController extends ChessBoardController implements
 			SWTUtils.clearToolbar(toolbar);
 			toolbar = null;
 		}
-
-		if (traverser != null) {
-			traverser.dispose();
-			traverser = null;
-		}
 	}
 
 	public void enableDisableNavButtons() {
-		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, traverser.hasNext());
-		setToolItemEnabled(ToolBarItemKey.BACK_NAV, traverser.hasBack());
-		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, traverser.hasFirst());
-		setToolItemEnabled(ToolBarItemKey.LAST_NAV, traverser.hasLast());
+		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, cursor.hasNext());
+		setToolItemEnabled(ToolBarItemKey.BACK_NAV, cursor.hasPrevious());
+		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, cursor.hasFirst());
+		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
+		setToolItemEnabled(ToolBarItemKey.REVERT_NAV, cursor.canRevert());
+		setToolItemEnabled(ToolBarItemKey.COMMIT_NAV, cursor.canCommit());
 	}
 
 	@Override
@@ -182,6 +180,9 @@ public class InactiveController extends ChessBoardController implements
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
+			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true, game
+					.getVariant() == Variant.suicide);
+			new ToolItem(toolbar, SWT.SEPARATOR);
 			ToolItem saveItem = new ToolItem(toolbar, SWT.PUSH);
 			saveItem.setImage(Raptor.getInstance().getIcon("save"));
 			saveItem.setToolTipText("Save to pgn.");
@@ -191,13 +192,10 @@ public class InactiveController extends ChessBoardController implements
 					onSave();
 				}
 			});
-			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true, game
-					.getVariant() == Variant.suicide);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
+
+			BoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
 			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
-			movesItem.setText("MOVES");
+			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
 			movesItem.setToolTipText("Shows or hides the move list.");
 			movesItem.setSelection(false);
 			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
@@ -205,9 +203,6 @@ public class InactiveController extends ChessBoardController implements
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
-						board.getMoveList().updateToGame();
-						board.getMoveList().select(
-								getGame().getMoveList().getSize() - 1);
 						board.showMoveList();
 					} else {
 						board.hideMoveList();
@@ -235,7 +230,7 @@ public class InactiveController extends ChessBoardController implements
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
 		board.getMoveList().updateToGame();
-		selectCurrentMove();
+		cursor.setCursorMasterLast();
 		refresh();
 	}
 
@@ -256,7 +251,7 @@ public class InactiveController extends ChessBoardController implements
 		final String selected = fd.open();
 
 		if (selected != null) {
-			String pgn = traverser.getSource().toPgn();
+			String pgn = cursor.toPgn();
 			FileWriter writer = null;
 
 			try {
@@ -285,39 +280,38 @@ public class InactiveController extends ChessBoardController implements
 		case FLIP:
 			onFlip();
 			break;
+		case REVERT_NAV:
+			cursor.revert();
+			refresh();
+			break;
+		case COMMIT_NAV:
+			cursor.commit();
+			refresh();
+			break;
 		case NEXT_NAV:
-			traverser.next();
-			setGame(traverser.getAdjustedGame());
-			enableDisableNavButtons();
-			selectCurrentMove();
+			cursor.setCursorNext();
 			refresh();
 			break;
 		case BACK_NAV:
-			traverser.back();
-			setGame(traverser.getAdjustedGame());
-			enableDisableNavButtons();
-			selectCurrentMove();
+			cursor.setCursorPrevious();
 			refresh();
 			break;
 		case FIRST_NAV:
-			traverser.first();
-			setGame(traverser.getAdjustedGame());
-			enableDisableNavButtons();
-			selectCurrentMove();
+			cursor.setCursorFirst();
 			refresh();
 			break;
 		case LAST_NAV:
-			traverser.last();
-			setGame(traverser.getAdjustedGame());
-			enableDisableNavButtons();
-			selectCurrentMove();
+			cursor.setCursorLast();
 			refresh();
 			break;
 		}
 	}
 
-	protected void selectCurrentMove() {
-		board.getMoveList().select(traverser.getTraverserHalfMoveIndex() - 1);
+	public void refresh() {
+		board.getMoveList().updateToGame();
+		board.getMoveList().select(cursor.getCursorPosition());
+		enableDisableNavButtons();
+		super.refresh();
 	}
 
 	/**
@@ -349,8 +343,7 @@ public class InactiveController extends ChessBoardController implements
 	 */
 	@Override
 	public void userClickedOnMove(int halfMoveNumber) {
-		traverser.gotoHalfMove(halfMoveNumber);
-		setGame(traverser.getAdjustedGame());
+		cursor.setCursor(halfMoveNumber);
 		enableDisableNavButtons();
 		refresh();
 	}
@@ -382,7 +375,6 @@ public class InactiveController extends ChessBoardController implements
 
 		board.unhighlightAllSquares();
 
-		// Non premoves flow through here
 		if (fromSquare == toSquare || BoardUtils.isPieceJailSquare(toSquare)) {
 			if (LOG.isDebugEnabled()) {
 				LOG

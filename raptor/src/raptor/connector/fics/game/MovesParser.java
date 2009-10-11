@@ -117,11 +117,11 @@ import raptor.util.RaptorStringTokenizer;
  * </pre>
  */
 public class MovesParser {
-	private static final Log LOG = LogFactory.getLog(MovesParser.class);
-
 	private static final String EVENT_START = "\nMovelist for game ";
 
 	private static final String EVENT_START_2 = "fics% \nMovelist for game ";
+
+	private static final Log LOG = LogFactory.getLog(MovesParser.class);
 
 	public MovesParser() {
 		super();

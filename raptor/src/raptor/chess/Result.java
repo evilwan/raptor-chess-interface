@@ -1,8 +1,8 @@
 package raptor.chess;
 
 public enum Result {
-	WHITE_WON("1-0"), BLACK_WON("0-1"), DRAW("1/2-1/2"), ON_GOING("*"), UNDETERMINED(
-			"*");
+	BLACK_WON("0-1"), DRAW("1/2-1/2"), ON_GOING("*"), UNDETERMINED(
+			"*"), WHITE_WON("1-0");
 
 	public static Result get(String gameResult) {
 		for (Result result : Result.values()) {
