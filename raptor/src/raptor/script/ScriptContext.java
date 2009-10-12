@@ -14,4 +14,14 @@ public interface ScriptContext {
 	public void send(String message);
 
 	public void speak(String message);
+
+	public String getPartnerName();
+
+	public String getUserFollowing();
+
+	public int getUserIdleSeconds();
+
+	public long getUserLagMilliseconds();
+
+	public String getUserName();
 }

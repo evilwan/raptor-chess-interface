@@ -103,26 +103,6 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 
-		public String getPartnerName() {
-			return "";
-		}
-
-		public String getUserFollowing() {
-			return "";
-		}
-
-		public int getUserIdleSeconds() {
-			return 0;
-		}
-
-		public long getUserLagMilliseconds() {
-			return 0;
-		}
-
-		public String getUserName() {
-			return userName;
-		}
-
 		public void setIgnoreMessage(boolean isIgnoring) {
 			ignoreEvent = isIgnoring;
 
@@ -193,6 +173,26 @@ public abstract class IcsConnector implements Connector {
 
 		public void speak(String message) {
 			SoundService.getInstance().textToSpeech(message);
+		}
+		
+		public String getPartnerName() {
+			return "";
+		}
+
+		public String getUserFollowing() {
+			return "";
+		}
+
+		public int getUserIdleSeconds() {
+			return 0;
+		}
+
+		public long getUserLagMilliseconds() {
+			return 0;
+		}
+
+		public String getUserName() {
+			return userName;
 		}
 	}
 
