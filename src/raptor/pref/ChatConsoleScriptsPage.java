@@ -13,9 +13,6 @@
  */
 package raptor.pref;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -41,7 +38,7 @@ import raptor.script.ScriptConnectorType;
 import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.ScriptService;
 
-public class ChatScriptsPage extends PreferencePage {
+public class ChatConsoleScriptsPage extends PreferencePage {
 
 	protected Table activeScriptsTable;
 	protected Table inactiveScriptsTable;
@@ -51,19 +48,14 @@ public class ChatScriptsPage extends PreferencePage {
 	protected Text nameText;
 	protected Text descriptionText;
 	protected Button isActiveButton;
-	protected StyledText regExText;
 	protected StyledText scriptText;
 	protected Combo typeCombo;
 	protected Combo connectorTypeCombo;
-	protected Label regExLabel;
 
 	protected Button saveButton;
 	protected Button deleteButton;
 
-	protected Map<String, ChatScript> scriptsMap = new HashMap<String, ChatScript>();
-
-	public ChatScriptsPage() {
-		// Use the "flat" layout
+	public ChatConsoleScriptsPage() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 		setTitle("Chat Scripts");
@@ -129,7 +121,7 @@ public class ChatScriptsPage extends PreferencePage {
 		nameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		isActiveButton = new Button(nameComposite, SWT.CHECK);
-		isActiveButton.setText("Active");
+		isActiveButton.setText("Active (Takes effect on next connect)");
 		isActiveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 
@@ -153,26 +145,10 @@ public class ChatScriptsPage extends PreferencePage {
 		Label typeLabel = new Label(controlsComposite, SWT.NONE);
 		typeLabel.setText("Type:");
 		typeCombo = new Combo(controlsComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		for (ChatScriptType chatScriptType : ChatScriptType.values()) {
-			typeCombo.add(chatScriptType.name());
-		}
+		typeCombo.add(ChatScriptType.OnPersonTellMessages.name());
+		typeCombo.add(ChatScriptType.OnPartnerTellMessages.name());
+		typeCombo.add(ChatScriptType.onChannelTellMessages.name());
 		typeCombo.select(0);
-		typeCombo.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				ChatScriptType type = ChatScriptType.valueOf(typeCombo
-						.getItem(typeCombo.getSelectionIndex()));
-				if (type == ChatScriptType.OneShot) {
-					regExText.setVisible(false);
-					regExLabel.setVisible(false);
-				} else {
-					regExText.setVisible(true);
-					regExLabel.setVisible(true);
-				}
-			}
-
-		});
 
 		Label connectorTypeLabel = new Label(controlsComposite, SWT.NONE);
 		connectorTypeLabel.setText("Connector:");
@@ -184,16 +160,6 @@ public class ChatScriptsPage extends PreferencePage {
 			connectorTypeCombo.add(scriptConnectorType.name());
 		}
 		connectorTypeCombo.select(0);
-
-		regExLabel = new Label(composite, SWT.NONE);
-		regExLabel.setText("Regular Expression (For Non one shot scripts):");
-		regExLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 2, 1));
-		regExText = new StyledText(composite, SWT.BORDER);
-		regExText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-				2, 1));
-		regExText.setText("\n\n");
-		regExText.setWordWrap(true);
 
 		Label scriptLabel = new Label(composite, SWT.NONE);
 		scriptLabel.setText("Script:");
@@ -214,13 +180,15 @@ public class ChatScriptsPage extends PreferencePage {
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ChatScript newScript = new ChatScript();
+				ChatScript newScript = ScriptService.getInstance()
+						.getChatScript(nameText.getText());
+				if (newScript == null) {
+					newScript = new ChatScript();
+				}
 				newScript.setActive(isActiveButton.getSelection());
 				newScript.setName(nameText.getText());
 				newScript.setDescription(descriptionText.getText());
 				newScript.setScript(scriptText.getText().trim());
-				newScript.setInboundRegularExpression(regExText.getText()
-						.trim());
 				newScript.setScriptConnectorType(ScriptConnectorType
 						.valueOf(connectorTypeCombo.getItem(connectorTypeCombo
 								.getSelectionIndex())));
@@ -238,6 +206,7 @@ public class ChatScriptsPage extends PreferencePage {
 			public void widgetSelected(SelectionEvent e) {
 				ScriptService.getInstance()
 						.deleteChatScript(nameText.getText());
+				refreshTables();
 			}
 		});
 		refreshTables();
@@ -246,7 +215,8 @@ public class ChatScriptsPage extends PreferencePage {
 	}
 
 	protected void loadControls(String scriptName) {
-		ChatScript currentScript = scriptsMap.get(scriptName);
+		ChatScript currentScript = ScriptService.getInstance().getChatScript(
+				scriptName);
 		nameText.setText(currentScript.getName());
 		descriptionText.setText(currentScript.getDescription());
 		isActiveButton.setSelection(currentScript.isActive());
@@ -260,15 +230,6 @@ public class ChatScriptsPage extends PreferencePage {
 			}
 		}
 		typeCombo.select(scriptType);
-		if (currentScript.getChatScriptType() == ChatScriptType.OneShot) {
-			regExText.setVisible(true);
-			regExLabel.setVisible(true);
-			composite.layout(true, true);
-		} else {
-			regExText.setVisible(false);
-			regExLabel.setVisible(false);
-			composite.layout(true, true);
-		}
 
 		int connectorTypeSelection = 0;
 		String[] connectorTypeItems = connectorTypeCombo.getItems();
@@ -282,8 +243,6 @@ public class ChatScriptsPage extends PreferencePage {
 		connectorTypeCombo.select(connectorTypeSelection);
 
 		scriptText.setText(currentScript.getScript());
-		regExText.setText(currentScript.getInboundRegularExpression());
-		composite.layout(true, true);
 	}
 
 	protected void refreshTables() {
@@ -295,20 +254,20 @@ public class ChatScriptsPage extends PreferencePage {
 		for (TableItem item : inactiveItems) {
 			item.dispose();
 		}
-		scriptsMap.clear();
 
 		ChatScript[] allScripts = ScriptService.getInstance()
 				.getAllChatScripts();
 		for (ChatScript script : allScripts) {
-			scriptsMap.put(script.getName(), script);
-			if (script.isActive()) {
-				TableItem item = new TableItem(activeScriptsTable, SWT.NONE);
-				item.setText(new String[] { script.getName() });
-			} else {
-				TableItem item = new TableItem(inactiveScriptsTable, SWT.NONE);
-				item.setText(new String[] { script.getName() });
+			if (script.getChatScriptType() != ChatScriptType.OneShot) {
+				if (script.isActive()) {
+					TableItem item = new TableItem(activeScriptsTable, SWT.NONE);
+					item.setText(new String[] { script.getName() });
+				} else {
+					TableItem item = new TableItem(inactiveScriptsTable,
+							SWT.NONE);
+					item.setText(new String[] { script.getName() });
+				}
 			}
 		}
 	}
-
 }

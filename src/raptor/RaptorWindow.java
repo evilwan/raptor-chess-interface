@@ -74,6 +74,10 @@ import raptor.swt.ItemChangedListener;
 import raptor.swt.PgnProcessingDialog;
 import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
+import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.controller.ChannelController;
+import raptor.swt.chat.controller.PartnerTellController;
+import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 
@@ -652,6 +656,81 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 		windowComposite.layout();
 
+	}
+
+	/**
+	 * Returns true if this RaptorWindow is managing a channel tell tab for the
+	 * specified channel.
+	 */
+	public boolean containsChannelItem(Connector connector, String channel) {
+		boolean result = false;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChatConsoleWindowItem) {
+					ChatConsoleWindowItem item = (ChatConsoleWindowItem) folder
+							.getRaptorTabItemAt(i).raptorItem;
+					if (item.getController().getConnector() == connector
+							&& item.getController() instanceof ChannelController) {
+						ChannelController controller = (ChannelController) item
+								.getController();
+						if (StringUtils.equalsIgnoreCase(controller
+								.getChannel(), channel)) {
+							result = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns true if this RaptorWindow is managing a partner tell tab.
+	 */
+	public boolean containsPartnerTellItem(Connector connector) {
+		boolean result = false;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChatConsoleWindowItem) {
+					ChatConsoleWindowItem item = (ChatConsoleWindowItem) folder
+							.getRaptorTabItemAt(i).raptorItem;
+					if (item.getController().getConnector() == connector
+							&& item.getController() instanceof PartnerTellController) {
+						result = true;
+						break;
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns true if this RaptorWindow is managing a personal tell tab for the
+	 * specified person.
+	 */
+	public boolean containsPersonalTellItem(Connector connector, String person) {
+		boolean result = false;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChatConsoleWindowItem) {
+					ChatConsoleWindowItem item = (ChatConsoleWindowItem) folder
+							.getRaptorTabItemAt(i).raptorItem;
+					if (item.getController().getConnector() == connector
+							&& item.getController() instanceof PersonController) {
+						PersonController controller = (PersonController) item
+								.getController();
+						if (StringUtils.equalsIgnoreCase(
+								controller.getPerson(), person)) {
+							result = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	/**

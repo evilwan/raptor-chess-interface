@@ -108,7 +108,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		Color result = null;
 
 		String key = null;
-		if (event.getType() == ChatType.CHAN_TELL) {
+		if (event.getType() == ChatType.CHANNEL_TELL) {
 			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType() + "-"
 					+ event.getChannel() + "-color";
 		} else {
@@ -355,17 +355,17 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				.setDefault(this, CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.TELL + "-color", new RGB(255, 0, 0));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHAN_TELL + "-"
-						+ 1 + "-color", new RGB(255, 200, 0));
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
+						+ "-" + 1 + "-color", new RGB(255, 200, 0));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHAN_TELL + "-"
-						+ 4 + "-color", new RGB(0, 255, 0));
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
+						+ "-" + 4 + "-color", new RGB(0, 255, 0));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHAN_TELL + "-"
-						+ 50 + "-color", new RGB(255, 175, 175));
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
+						+ "-" + 50 + "-color", new RGB(255, 175, 175));
 		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHAN_TELL + "-"
-						+ 53 + "-color", new RGB(255, 0, 255));
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
+						+ "-" + 53 + "-color", new RGB(255, 0, 255));
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.INTERNAL
 						+ "-color", new RGB(255, 0, 0));

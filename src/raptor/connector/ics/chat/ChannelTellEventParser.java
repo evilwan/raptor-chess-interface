@@ -40,7 +40,7 @@ public class ChannelTellEventParser extends ChatEventParser {
 					if (k < j && k != -1 && j != -1) {
 
 						ChatEvent event = new ChatEvent(IcsUtils
-								.removeTitles(s1), ChatType.CHAN_TELL, text);
+								.removeTitles(s1), ChatType.CHANNEL_TELL, text);
 						event.setChannel(text.substring(k + 1, j));
 						return event;
 					}

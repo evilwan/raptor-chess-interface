@@ -51,8 +51,16 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 		}
 	}
 
+	public ChatConsole getConsole() {
+		return console;
+	}
+
 	public Composite getControl() {
 		return console;
+	}
+
+	public ChatConsoleController getController() {
+		return controller;
 	}
 
 	public Image getImage() {

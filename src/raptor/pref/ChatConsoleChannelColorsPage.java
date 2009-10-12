@@ -159,7 +159,7 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 
 	public String getKey(String channel) {
 		return PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-				+ ChatType.CHAN_TELL + "-" + channel + "-color";
+				+ ChatType.CHANNEL_TELL + "-" + channel + "-color";
 	}
 
 	public void updateChannelsCombo() {
