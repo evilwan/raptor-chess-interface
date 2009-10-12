@@ -32,6 +32,7 @@ import raptor.swt.ItemChangedListener;
 import raptor.swt.chess.controller.InactiveController;
 
 public class PgnParseResultsWindowItem implements RaptorWindowItem {
+	public static final int MAX_GAMES = 1000;
 
 	protected Composite composite;
 	protected List<PgnParserError> errors;
