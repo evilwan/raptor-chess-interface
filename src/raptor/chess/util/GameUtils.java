@@ -768,7 +768,7 @@ public class GameUtils implements GameConstants {
 		boolean isFlashing = false;
 
 		if (timeLeft < 0) {
-			isFlashing = (timeLeft / 999) % 2 == 0;
+			isFlashing = timeLeft / 1000 % 2 == 0;
 			timeLeft = 0;
 		}
 		RaptorPreferenceStore prefs = Raptor.getInstance().getPreferences();
@@ -781,6 +781,8 @@ public class GameUtils implements GameConstants {
 			} else {
 				return "  :    ";
 			}
+		} else if (timeLeft <= 0) {
+			return "00:00";
 		} else {
 
 			if (timeLeft >= prefs
@@ -792,7 +794,7 @@ public class GameUtils implements GameConstants {
 
 				if (allowFlash) {
 					return RaptorStringUtils.defaultTimeString(hour, 2)
-							+ ((timeMillis / 1000) % 2 == 0 ? ":" : " ") // Adds
+							+ (timeMillis / 1000 % 2 == 0 ? ":" : " ") // Adds
 							// the
 							// blinking :
 							+ RaptorStringUtils.defaultTimeString(minute, 2);
