@@ -20,7 +20,6 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +38,10 @@ import raptor.connector.ConnectorListener;
 import raptor.connector.ics.timeseal.TimesealingSocket;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
-import raptor.script.GameScript;
+import raptor.script.ChatScriptContext;
+import raptor.script.GameScriptContext;
+import raptor.script.ScriptConnectorType;
+import raptor.script.ScriptContext;
 import raptor.service.BughouseService;
 import raptor.service.ChatService;
 import raptor.service.GameService;
@@ -47,9 +49,11 @@ import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.swt.BrowserWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.controller.MainController;
 import raptor.swt.chess.ChessBoardWindowItem;
+import raptor.util.LaunchBrowser;
 
 /**
  * An ics (internet chess server) connector. You will need to supply yuor own
@@ -57,7 +61,143 @@ import raptor.swt.chess.ChessBoardWindowItem;
  * override some methods in order to get it working.
  */
 public abstract class IcsConnector implements Connector {
+	protected class IcsChatScriptContext extends IcsScriptContext implements
+			ChatScriptContext {
+		ChatEvent event;
+		boolean ignoreEvent = false;
+
+		public IcsChatScriptContext() {
+		}
+
+		public IcsChatScriptContext(ChatEvent event) {
+			this.event = event;
+		}
+
+		public String getMessage() {
+			if (event == null) {
+				Raptor.getInstance().alert(
+						"getMessage is not supported in toolbar scripts");
+				return null;
+			} else {
+				return event.getMessage();
+			}
+		}
+
+		public String getMessageSource() {
+			if (event == null) {
+				Raptor.getInstance().alert(
+						"getMessageSource is not supported in toolbar scripts");
+				return null;
+			} else {
+				return event.getSource();
+			}
+		}
+
+		public String getMessageType() {
+			if (event == null) {
+				Raptor.getInstance().alert(
+						"getMessageType is not supported in toolbar scripts");
+				return null;
+			} else {
+				return event.getType().name();
+			}
+		}
+
+		public String getPartnerName() {
+			return "";
+		}
+
+		public String getUserFollowing() {
+			return "";
+		}
+
+		public int getUserIdleSeconds() {
+			return 0;
+		}
+
+		public long getUserLagMilliseconds() {
+			return 0;
+		}
+
+		public String getUserName() {
+			return userName;
+		}
+
+		public void setIgnoreMessage(boolean isIgnoring) {
+			ignoreEvent = isIgnoring;
+
+		}
+
+		public void setMessage(String message) {
+			if (event == null) {
+				Raptor.getInstance().alert(
+						"setMessage is not supported in toolbar scripts");
+			} else {
+				event.setMessage(message);
+			}
+
+		}
+
+		public void setMessageSource(String source) {
+			if (event == null) {
+				Raptor.getInstance().alert(
+						"setMessageSource is not supported in toolbar scripts");
+			} else {
+				event.setSource(source);
+			}
+
+		}
+
+		public void setMessageType(String type) {
+			if (event == null) {
+				Raptor.getInstance().alert(
+						"setMessageType is not supported in toolbar scripts");
+			} else {
+				event.setType(ChatType.valueOf(type));
+			}
+		}
+	}
+
+	protected class IcsScriptContext implements ScriptContext {
+		public void alert(String message) {
+			Raptor.getInstance().alert(message);
+		}
+
+		public void openUrl(String url) {
+			if (Raptor.getInstance().getPreferences().getBoolean(
+					PreferenceKeys.APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
+				LaunchBrowser.openURL(url);
+				return;
+			} else {
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						new BrowserWindowItem(url, url));
+			}
+		}
+
+		public void playBughouseSound(String soundName) {
+			SoundService.getInstance().playBughouseSound(soundName);
+		}
+
+		public void playSound(String soundName) {
+			SoundService.getInstance().playSound(soundName);
+		}
+
+		public String prompt(String message) {
+			return Raptor.getInstance().promptForText(message);
+		}
+
+		public void send(String message) {
+			LOG.error("In send message " + message);
+			IcsConnector.this.sendMessage(message);
+		}
+
+		public void speak(String message) {
+			SoundService.getInstance().textToSpeech(message);
+		}
+	}
+
 	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
+
 	protected BughouseService bughouseService;
 	protected ChatService chatService;
 	protected List<ConnectorListener> connectorListeners = Collections
@@ -65,7 +205,6 @@ public abstract class IcsConnector implements Connector {
 	protected IcsConnectorContext context;
 	protected String currentProfileName;
 	protected Thread daemonThread;
-	protected HashMap<String, GameScript> gameScriptsMap = new HashMap<String, GameScript>();
 	protected GameService gameService;
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
@@ -104,7 +243,6 @@ public abstract class IcsConnector implements Connector {
 	protected long lastSendTime;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 	protected Socket socket;
-
 	protected String userName;
 
 	/**
@@ -116,7 +254,6 @@ public abstract class IcsConnector implements Connector {
 		this.context = context;
 		chatService = new ChatService(this);
 		gameService = new GameService();
-		refreshGameScripts();
 		gameService.addGameServiceListener(gameServiceListener);
 		setBughouseService(new BughouseService());
 	}
@@ -126,15 +263,6 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public void addConnectorListener(ConnectorListener listener) {
 		connectorListeners.add(listener);
-	}
-
-	/**
-	 * Adds a game script to the set of scripts this connector manages and saves
-	 * the script.
-	 */
-	public void addGameScript(GameScript script) {
-		gameScriptsMap.put(script.getName(), script);
-		script.save();
 	}
 
 	/**
@@ -328,11 +456,6 @@ public abstract class IcsConnector implements Connector {
 			connectorListeners = null;
 		}
 
-		if (gameScriptsMap != null) {
-			gameScriptsMap.clear();
-			gameScriptsMap = null;
-		}
-
 		if (chatService != null) {
 			chatService.dispose();
 			chatService = null;
@@ -433,6 +556,10 @@ public abstract class IcsConnector implements Connector {
 		return "tell " + channel + " ";
 	}
 
+	public ChatScriptContext getChatScriptContext() {
+		return new IcsChatScriptContext();
+	}
+
 	public ChatService getChatService() {
 		return chatService;
 	}
@@ -453,16 +580,12 @@ public abstract class IcsConnector implements Connector {
 				{ "Move list for game " + gameId, "moves " + gameId } };
 	}
 
-	public GameScript getGameScript(String name) {
-		return gameScriptsMap.get(name);
-	}
-
-	public GameScript[] getGameScripts() {
-		return gameScriptsMap.values().toArray(new GameScript[0]);
-	}
-
 	public GameService getGameService() {
 		return gameService;
+	}
+
+	public GameScriptContext getGametScriptContext() {
+		return null;
 	}
 
 	protected String getInitialTimesealString() {
@@ -498,6 +621,10 @@ public abstract class IcsConnector implements Connector {
 
 	public String getPrompt() {
 		return context.getPrompt();
+	}
+
+	public ScriptConnectorType getScriptConnectorType() {
+		return ScriptConnectorType.ICS;
 	}
 
 	public String getShortName() {
@@ -912,24 +1039,11 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
-	public void refreshGameScripts() {
-		gameScriptsMap.clear();
-		GameScript[] scripts = GameScript.getGameScripts(this);
-		for (GameScript script : scripts) {
-			gameScriptsMap.put(script.getName(), script);
-		}
-	}
-
 	/**
 	 * Removes a connector listener from the connector.
 	 */
 	public void removeConnectorListener(ConnectorListener listener) {
 		connectorListeners.remove(listener);
-	}
-
-	public void removeGameScript(GameScript script) {
-		script.delete();
-		gameScriptsMap.remove(script.getName());
 	}
 
 	/**

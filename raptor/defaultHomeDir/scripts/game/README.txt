@@ -1,0 +1,1 @@
+This folder contains your saved game scripts.

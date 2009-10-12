@@ -45,7 +45,7 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		super();
 		setPreferenceStore(raptorPreferenceStore = Raptor.getInstance()
 				.getPreferences());
-		setTitle("Channel Message Colors");
+		setTitle("Channel Colors");
 	}
 
 	@Override

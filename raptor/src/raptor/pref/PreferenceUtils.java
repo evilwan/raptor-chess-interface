@@ -25,7 +25,7 @@ import raptor.service.ConnectorService;
 /**
  * A class containing utility methods for Preferences.
  */
-public class PreferenceUtil {
+public class PreferenceUtils {
 
 	/**
 	 * Launches the preference dialog.
@@ -52,6 +52,8 @@ public class PreferenceUtil {
 				new ChatConsoleMessageColors()));
 		mgr.addTo("chatConsole", new PreferenceNode("channelColors",
 				new ChatConsoleChannelColorsPage()));
+		mgr.addTo("chatConsole", new PreferenceNode("toolbar",
+				new ChatConsoleToolbarPage()));
 
 		mgr.addToRoot(new PreferenceNode("chessBoard", new ChessBoardPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("behavior",
@@ -62,6 +64,9 @@ public class PreferenceUtil {
 				new ChessBoardColorsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("fonts",
 				new ChessBoardFontsPage()));
+
+		// mgr.addToRoot(new PreferenceNode("chatScripts", new
+		// ChatScriptsPage()));
 
 		// Add the connector preference nodes.
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();
