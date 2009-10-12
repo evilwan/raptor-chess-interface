@@ -31,6 +31,10 @@ public class ChannelController extends ChatConsoleController {
 		this.channel = channel;
 	}
 
+	public String getChannel() {
+		return channel;
+	}
+
 	@Override
 	public String getName() {
 		return channel;
@@ -65,7 +69,7 @@ public class ChannelController extends ChatConsoleController {
 
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
-		return inboundEvent.getType() == ChatType.CHAN_TELL
+		return inboundEvent.getType() == ChatType.CHANNEL_TELL
 				&& StringUtils.equals(inboundEvent.getChannel(), channel);
 	}
 

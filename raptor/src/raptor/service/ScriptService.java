@@ -58,7 +58,7 @@ public class ScriptService {
 	 * resources/script are never touched.
 	 */
 	public boolean deleteGameScript(String scriptName) {
-		chatScriptMap.remove(scriptName);
+		gameScriptMap.remove(scriptName);
 		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/game/"
 				+ scriptName + ".properties").delete();
 	}

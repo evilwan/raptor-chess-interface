@@ -38,20 +38,28 @@ import raptor.connector.ConnectorListener;
 import raptor.connector.ics.timeseal.TimesealingSocket;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.script.ChatScript;
 import raptor.script.ChatScriptContext;
 import raptor.script.GameScriptContext;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptContext;
+import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.BughouseService;
 import raptor.service.ChatService;
 import raptor.service.GameService;
+import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.ChatUtils;
+import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.MainController;
+import raptor.swt.chat.controller.PartnerTellController;
+import raptor.swt.chat.controller.PersonController;
+import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.util.LaunchBrowser;
 
@@ -83,6 +91,18 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 
+		public String getMessageChannel() {
+			if (event == null) {
+				Raptor
+						.getInstance()
+						.alert(
+								"getMessageChannel is not supported in toolbar scripts");
+				return null;
+			} else {
+				return event.getChannel();
+			}
+		}
+
 		public String getMessageSource() {
 			if (event == null) {
 				Raptor.getInstance().alert(
@@ -93,54 +113,78 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 
-		public String getMessageType() {
-			if (event == null) {
-				Raptor.getInstance().alert(
-						"getMessageType is not supported in toolbar scripts");
-				return null;
-			} else {
-				return event.getType().name();
-			}
-		}
-
-		public void setIgnoreMessage(boolean isIgnoring) {
-			ignoreEvent = isIgnoring;
-
-		}
-
-		public void setMessage(String message) {
-			if (event == null) {
-				Raptor.getInstance().alert(
-						"setMessage is not supported in toolbar scripts");
-			} else {
-				event.setMessage(message);
-			}
-
-		}
-
-		public void setMessageSource(String source) {
-			if (event == null) {
-				Raptor.getInstance().alert(
-						"setMessageSource is not supported in toolbar scripts");
-			} else {
-				event.setSource(source);
-			}
-
-		}
-
-		public void setMessageType(String type) {
-			if (event == null) {
-				Raptor.getInstance().alert(
-						"setMessageType is not supported in toolbar scripts");
-			} else {
-				event.setType(ChatType.valueOf(type));
-			}
-		}
 	}
 
 	protected class IcsScriptContext implements ScriptContext {
 		public void alert(String message) {
 			Raptor.getInstance().alert(message);
+		}
+
+		public long getPingMillis() {
+			return lastPingTime;
+		}
+
+		public String getUserFollowing() {
+			Raptor.getInstance().alert(
+					"getUserFollowing is not yet implemented.");
+			return "";
+		}
+
+		public int getUserIdleSeconds() {
+			return (int) (System.currentTimeMillis() - lastSendTime) / 1000;
+		}
+
+		public String getUserName() {
+			return userName;
+		}
+
+		public void openChannelTab(String channel) {
+			if (!Raptor.getInstance().getRaptorWindow().containsChannelItem(
+					IcsConnector.this, channel)) {
+				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+						new ChannelController(IcsConnector.this, channel));
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						windowItem, false);
+				ChatUtils.appendPreviousChatsToController(windowItem
+						.getConsole());
+			}
+		}
+
+		public void openPartnerTab() {
+			if (!Raptor.getInstance().getRaptorWindow()
+					.containsPartnerTellItem(IcsConnector.this)) {
+				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+						new PartnerTellController(IcsConnector.this));
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						windowItem, false);
+				ChatUtils.appendPreviousChatsToController(windowItem
+						.getConsole());
+			}
+		}
+
+		public void openPersonTab(String person) {
+			if (!Raptor.getInstance().getRaptorWindow()
+					.containsPersonalTellItem(IcsConnector.this, person)) {
+				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+						new PersonController(IcsConnector.this, person));
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						windowItem, false);
+				ChatUtils.appendPreviousChatsToController(windowItem
+						.getConsole());
+			}
+		}
+
+		public void openRegExTab(String regularExpression) {
+			if (!Raptor.getInstance().getRaptorWindow()
+					.containsPartnerTellItem(IcsConnector.this)) {
+				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+						new RegExController(IcsConnector.this,
+								regularExpression));
+				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+						windowItem, false);
+				ChatUtils.appendPreviousChatsToController(windowItem
+						.getConsole());
+			}
 		}
 
 		public void openUrl(String url) {
@@ -167,32 +211,11 @@ public abstract class IcsConnector implements Connector {
 		}
 
 		public void send(String message) {
-			LOG.error("In send message " + message);
 			IcsConnector.this.sendMessage(message);
 		}
 
 		public void speak(String message) {
 			SoundService.getInstance().textToSpeech(message);
-		}
-		
-		public String getPartnerName() {
-			return "";
-		}
-
-		public String getUserFollowing() {
-			return "";
-		}
-
-		public int getUserIdleSeconds() {
-			return 0;
-		}
-
-		public long getUserLagMilliseconds() {
-			return 0;
-		}
-
-		public String getUserName() {
-			return userName;
 		}
 	}
 
@@ -240,10 +263,16 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 	};
+	protected long lastPingTime;
 	protected long lastSendTime;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 	protected Socket socket;
 	protected String userName;
+	protected String[] bughouseSounds = SoundService.getInstance()
+			.getBughouseSoundKeys();
+	protected ChatScript[] personTellMessageScripts = null;
+	protected ChatScript[] channelTellMessageScripts = null;
+	protected ChatScript[] partnerTellMessageScripts = null;
 
 	/**
 	 * Constructs an IcsConnector with the specified context.
@@ -378,6 +407,13 @@ public abstract class IcsConnector implements Connector {
 				context.getPreferencePrefix() + "-keep-alive")) {
 			ThreadService.getInstance().scheduleOneShot(300000, keepAlive);
 		}
+
+		personTellMessageScripts = ScriptService.getInstance().getChatScripts(
+				this, ChatScriptType.OnPersonTellMessages);
+		channelTellMessageScripts = ScriptService.getInstance().getChatScripts(
+				this, ChatScriptType.onChannelTellMessages);
+		partnerTellMessageScripts = ScriptService.getInstance().getChatScripts(
+				this, ChatScriptType.OnPartnerTellMessages);
 
 		fireConnecting();
 	}
@@ -865,8 +901,9 @@ public abstract class IcsConnector implements Connector {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
 					long currentTime = System.currentTimeMillis();
+					lastPingTime = currentTime - lastSendTime;
 					Raptor.getInstance().getRaptorWindow().setPingTime(
-							IcsConnector.this, currentTime - lastSendTime);
+							IcsConnector.this, lastPingTime);
 					lastSendTime = 0;
 				}
 			});
@@ -1017,6 +1054,62 @@ public abstract class IcsConnector implements Connector {
 		return IcsUtils.stripWord(word);
 	}
 
+	protected void playBughouseSounds(final String ptell) {
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				int colonIndex = ptell.indexOf(":");
+				if (colonIndex != -1) {
+					String message = ptell.substring(colonIndex + 1,
+							ptell.length()).trim();
+					for (String bugSound : bughouseSounds) {
+						if (bugSound.equalsIgnoreCase(message)) {
+							SoundService.getInstance().playBughouseSound(
+									bugSound);
+							break;
+						}
+					}
+				} else {
+					LOG.error("Received a ptell event without a colon");
+				}
+			}
+		});
+	}
+
+	protected void processScripts(final ChatEvent event) {
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				if (personTellMessageScripts != null
+						&& event.getType() == ChatType.TELL) {
+					for (ChatScript script : personTellMessageScripts) {
+						ChatScript newScript = ScriptService.getInstance()
+								.getChatScript(script.getName());
+						if (newScript != null) {
+							newScript.execute(new IcsChatScriptContext(event));
+						}
+					}
+				} else if (channelTellMessageScripts != null
+						&& event.getType() == ChatType.CHANNEL_TELL) {
+					for (ChatScript script : channelTellMessageScripts) {
+						ChatScript newScript = ScriptService.getInstance()
+								.getChatScript(script.getName());
+						if (newScript != null) {
+							newScript.execute(new IcsChatScriptContext(event));
+						}
+					}
+				} else if (partnerTellMessageScripts != null
+						&& event.getType() == ChatType.PARTNER_TELL) {
+					for (ChatScript script : partnerTellMessageScripts) {
+						ChatScript newScript = ScriptService.getInstance()
+								.getChatScript(script.getName());
+						if (newScript != null) {
+							newScript.execute(new IcsChatScriptContext(event));
+						}
+					}
+				}
+			}
+		});
+	}
+
 	/**
 	 * Publishes the specified event to the chat service. Currently all messages
 	 * are published on separate threads via ThreadService.
@@ -1025,6 +1118,15 @@ public abstract class IcsConnector implements Connector {
 		if (chatService != null) { // Could have been disposed.
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Publishing event : " + event);
+			}
+
+			if (event.getType() == ChatType.PARTNER_TELL) {
+				playBughouseSounds(event.getMessage());
+			}
+			if (event.getType() == ChatType.PARTNER_TELL
+					|| event.getType() == ChatType.TELL
+					|| event.getType() == ChatType.CHANNEL_TELL) {
+				processScripts(event);
 			}
 
 			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());

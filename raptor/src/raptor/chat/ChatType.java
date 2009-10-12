@@ -22,7 +22,7 @@ public enum ChatType {
 	 * Channel tells. The source will be the person sending the tell. Will
 	 * always have a channel.
 	 */
-	CHAN_TELL,
+	CHANNEL_TELL,
 	/**
 	 * Global c-shouts. Will always have a source.
 	 */

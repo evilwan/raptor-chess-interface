@@ -39,7 +39,7 @@ public class ChatScript implements Comparable<ChatScript> {
 	}
 
 	public static enum ChatScriptType {
-		OneShot, OnAnyMessage, OnPartnerTellMessages, OnTellMessages
+		OneShot, onChannelTellMessages, OnPartnerTellMessages, OnPersonTellMessages
 	}
 
 	@SuppressWarnings("unused")
@@ -59,8 +59,6 @@ public class ChatScript implements Comparable<ChatScript> {
 				.getProperty("description"), "EmptyDescription");
 		result.script = StringUtils.defaultIfEmpty(properties
 				.getProperty("script"), "EmptyScript");
-		result.inboundRegularExpression = StringUtils.defaultIfEmpty(properties
-				.getProperty("inboundRegularExpression"), "EmptyRegEx");
 		result.chatScriptType = ChatScriptType.valueOf(StringUtils
 				.defaultIfEmpty(properties.getProperty("chatScriptType"),
 						"OneShot"));
@@ -77,15 +75,12 @@ public class ChatScript implements Comparable<ChatScript> {
 		properties.put("isActive", "" + script.isActive);
 		properties.put("description", script.description);
 		properties.put("script", script.script);
-		properties.put("inboundRegularExpression", StringUtils.defaultString(
-				script.inboundRegularExpression, ""));
 		properties.put("chatScriptType", script.chatScriptType.name());
 		properties
 				.put("scriptConnectorType", script.scriptConnectorType.name());
 		properties.store(new FileOutputStream(file), "Saved on " + new Date());
 	}
 
-	protected String inboundRegularExpression = "";
 	protected String name = "";
 	protected String description = "";
 	protected String script = "";
@@ -121,10 +116,6 @@ public class ChatScript implements Comparable<ChatScript> {
 
 	public String getDescription() {
 		return description;
-	}
-
-	public String getInboundRegularExpression() {
-		return inboundRegularExpression;
 	}
 
 	public String getName() {
@@ -163,10 +154,6 @@ public class ChatScript implements Comparable<ChatScript> {
 		this.description = description;
 	}
 
-	public void setInboundRegularExpression(String inboundRegularExpression) {
-		this.inboundRegularExpression = inboundRegularExpression;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -186,5 +173,4 @@ public class ChatScript implements Comparable<ChatScript> {
 	public void setSystemScript(boolean isSystemScript) {
 		this.isSystemScript = isSystemScript;
 	}
-
 }

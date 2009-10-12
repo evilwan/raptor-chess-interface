@@ -179,12 +179,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			item.setText("Add a tab for channel: " + channel);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-							new ChannelController(connector, channel));
-					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
-							windowItem, false);
-					ChatUtils
-							.appendPreviousChatsToController(windowItem.console);
+					if (!Raptor.getInstance().getRaptorWindow()
+							.containsChannelItem(connector, channel)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new ChannelController(connector, channel));
+						Raptor.getInstance().getRaptorWindow()
+								.addRaptorWindowItem(windowItem, false);
+						ChatUtils
+								.appendPreviousChatsToController(windowItem.console);
+					}
 				}
 			});
 
@@ -341,12 +344,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			item.setText("Add a tab for person: " + person);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-							new PersonController(connector, person));
-					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
-							windowItem, false);
-					ChatUtils
-							.appendPreviousChatsToController(windowItem.console);
+					if (!Raptor.getInstance().getRaptorWindow()
+							.containsPersonalTellItem(connector, person)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new PersonController(connector, person));
+						Raptor.getInstance().getRaptorWindow()
+								.addRaptorWindowItem(windowItem, false);
+						ChatUtils
+								.appendPreviousChatsToController(windowItem.console);
+					}
 				}
 			});
 
