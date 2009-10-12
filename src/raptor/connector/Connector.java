@@ -20,7 +20,9 @@ import org.eclipse.jface.preference.PreferencePage;
 import raptor.chat.ChatType;
 import raptor.chess.Game;
 import raptor.chess.Move;
-import raptor.script.GameScript;
+import raptor.script.ChatScriptContext;
+import raptor.script.GameScriptContext;
+import raptor.script.ScriptConnectorType;
 import raptor.service.ChatService;
 import raptor.service.GameService;
 
@@ -29,11 +31,6 @@ public interface Connector {
 	 * Adds a connector listener to the connector.
 	 */
 	public void addConnectorListener(ConnectorListener listener);
-
-	/**
-	 * TO DO: iron out what this is.
-	 */
-	public void addGameScript(GameScript script);
 
 	/**
 	 * Connects to the connector. The connection information should be stored as
@@ -66,6 +63,12 @@ public interface Connector {
 	public String getChannelTabPrefix(String channel);
 
 	/**
+	 * Returns the ChatScriptContext. Can return null if this connector does'nt
+	 * support scripting.
+	 */
+	public ChatScriptContext getChatScriptContext();
+
+	/**
 	 * Returns the chat service the connector maintains. All ChatEvents are
 	 * published through this service.
 	 */
@@ -84,20 +87,16 @@ public interface Connector {
 	public String[][] getGameIdActions(String gameId);
 
 	/**
-	 * TO DO: iron out what this is.
-	 */
-	public GameScript getGameScript(String name);
-
-	/**
-	 * TO DO: iron out what this is.
-	 */
-	public GameScript[] getGameScripts();
-
-	/**
 	 * Returns the game service the connector manages. All game events flow
 	 * through this service.
 	 */
 	public GameService getGameService();
+
+	/**
+	 * Returns the ChatScriptContext. Can return null if this connector does'nt
+	 * support scripting.
+	 */
+	public GameScriptContext getGametScriptContext();
 
 	/**
 	 * Returns the menu manager to use in the RaptorWindow menu bar for this
@@ -137,6 +136,12 @@ public interface Connector {
 	 * will show up below the root node.
 	 */
 	public PreferencePage getRootPreferencePage();
+
+	/**
+	 * Returns the ScriptConnectorType. Can return null if this connector
+	 * does'nt support scripting.
+	 */
+	public ScriptConnectorType getScriptConnectorType();
 
 	/**
 	 * Returns an array of the secondary preference nodes.
@@ -330,19 +335,9 @@ public interface Connector {
 	public String parsePerson(String word);
 
 	/**
-	 * TO DO: iron out what this really is.
-	 */
-	public void refreshGameScripts();
-
-	/**
 	 * Removes a connector listener from the connector.
 	 */
 	public void removeConnectorListener(ConnectorListener listener);
-
-	/**
-	 * TO DO: iron out what this really is.
-	 */
-	public void removeGameScript(GameScript script);
 
 	/**
 	 * Sends a message to the connector. A ChatEvent should be published with
@@ -364,5 +359,4 @@ public interface Connector {
 	 */
 	public void sendMessage(String message, boolean isHidingFromUser,
 			ChatType hideNextChatType);
-
 }

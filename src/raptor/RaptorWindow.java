@@ -66,7 +66,7 @@ import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.PgnUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.PreferenceUtil;
+import raptor.pref.PreferenceUtils;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
 import raptor.swt.BrowserWindowItem;
@@ -541,7 +541,6 @@ public class RaptorWindow extends ApplicationWindow {
 	protected Composite statusBar;
 	protected Label statusLabel;
 
-	protected CoolBar topCoolbar;
 	protected Composite windowComposite;
 
 	public RaptorWindow() {
@@ -702,7 +701,6 @@ public class RaptorWindow extends ApplicationWindow {
 		windowComposite
 				.setLayout(SWTUtils.createMarginlessGridLayout(2, false));
 
-		createTopCoolbar();
 		createLeftCoolbar();
 		createFolderAndSashControls();
 		createStatusBarControls();
@@ -776,7 +774,7 @@ public class RaptorWindow extends ApplicationWindow {
 		fileMenu.add(new Action("Properties") {
 			@Override
 			public void run() {
-				PreferenceUtil.launchPreferenceDialog();
+				PreferenceUtils.launchPreferenceDialog();
 			}
 		});
 		fileMenu.add(new Separator());
@@ -964,35 +962,6 @@ public class RaptorWindow extends ApplicationWindow {
 				PreferenceKeys.APP_STATUS_BAR_FONT));
 		statusLabel.setForeground(Raptor.getInstance().getPreferences()
 				.getColor(PreferenceKeys.APP_STATUS_BAR_COLOR));
-	}
-
-	protected void createTopCoolbar() {
-		topCoolbar = new CoolBar(windowComposite, SWT.FLAT);
-		topCoolbar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 2, 1));
-
-		ToolBar toolBar = new ToolBar(topCoolbar, SWT.FLAT);
-		ToolItem toolItem = new ToolItem(toolBar, SWT.PUSH);
-		toolItem.setText("TestTopCoolbar");
-		toolItem.addSelectionListener(new SelectionAdapter() {
-
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Raptor
-						.getInstance()
-						.alert(
-								"This is just to test out what a top toolbar would "
-										+ "look like. I am thinking about adding the decaf toolbar "
-										+ "like buttons up here");
-			}
-
-		});
-		toolBar.pack();
-
-		CoolItem coolItem = new CoolItem(topCoolbar, SWT.NONE);
-		coolItem.setControl(toolBar);
-		coolItem
-				.setPreferredSize(toolBar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 
 	/**

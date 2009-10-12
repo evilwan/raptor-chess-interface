@@ -681,6 +681,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
+			prependToolbarItems(toolbar);
 
 			if (isPrependable()) {
 				ToolItem prependTextButton = new ToolItem(toolbar, SWT.CHECK);
@@ -1068,7 +1069,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			});
 		}
-
 	}
 
 	protected void onSearch() {
@@ -1151,6 +1151,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				SoundService.getInstance().playSound("chat");
 			}
 		}
+	}
+
+	/**
+	 * Can be overridden to prepend items to the toolbar.
+	 * 
+	 * @param toolbar
+	 */
+	protected void prependToolbarItems(ToolBar toolbar) {
+
 	}
 
 	public void processKeystroke(KeyEvent event) {

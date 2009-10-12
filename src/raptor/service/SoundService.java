@@ -79,6 +79,10 @@ public class SoundService {
 				+ (System.currentTimeMillis() - startTime));
 	}
 
+	public void playBughouseSound(final String sound) {
+
+	}
+
 	/**
 	 * Specify the name of a file in resources/common/sounds without the .wav to
 	 * play the sound i.e. "alert".
@@ -124,29 +128,6 @@ public class SoundService {
 	 *            This method is not yet implemented.
 	 */
 	public void textToSpeech(String text) {
-
-		// list all available voices
-		// System.out.println();
-		// System.out.println("All voices available:");
-		// VoiceManager voiceManager = VoiceManager.getInstance();
-		// Voice[] voices = voiceManager.getVoices();
-		// for (int i = 0; i < voices.length; i++) {
-		// System.out.println("    " + voices[i].getName() + " ("
-		// + voices[i].getDomain() + " domain)");
-		// }
-		//
-		// String voiceName = "kevin16";
-		// Voice helloVoice = voiceManager.getVoice(voiceName);
-		// if (helloVoice == null) {
-		// System.err.println("Cannot find a voice named " + voiceName
-		// + ".  Please specify a different voice.");
-		// } else {
-		// System.out.println("allocate voice");
-		// helloVoice.allocate();
-		// System.out.println("speak text");
-		// helloVoice.speak(text);
-		// System.out.println("deallocate voice");
-		// helloVoice.deallocate();
-		// }
+		Raptor.getInstance().alert("Speech is not currently enabled");
 	}
 }

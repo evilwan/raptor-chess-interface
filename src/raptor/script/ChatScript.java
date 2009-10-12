@@ -23,26 +23,30 @@ import java.util.Properties;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public class GameScript implements Comparable<GameScript> {
+import raptor.Raptor;
+import bsh.EvalError;
+import bsh.Interpreter;
 
-	public enum GameScriptControllerType {
-		Examine, Playing, Observing, Inactive
+public class ChatScript implements Comparable<ChatScript> {
+	public static class ChatScriptNameComparator implements
+			Comparator<ChatScript> {
+		public int compare(ChatScript script1, ChatScript script2) {
+			return script1.getName().compareTo(script2.getName());
+		}
 	}
 
-	public static class GameScriptNameComparator implements
-			Comparator<GameScript> {
-		public int compare(GameScript script1, GameScript script2) {
-			return script1.name.compareTo(script2.name);
-		}
-	};
+	public static enum ChatScriptType {
+		OneShot, OnAnyMessage, OnPartnerTellMessages, OnTellMessages
+	}
 
-	public enum GameScriptType {
-		OneShot, GameStart, GameEnd, EveryMove
-	};
+	@SuppressWarnings("unused")
+	private static final Log LOG = LogFactory.getLog(ChatScript.class);;
 
-	public static GameScript load(String file) throws IOException {
-		GameScript result = new GameScript();
+	public static ChatScript load(String file) throws IOException {
+		ChatScript result = new ChatScript();
 		Properties properties = new Properties();
 		properties.load(new FileInputStream(file));
 		result.order = NumberUtils.toInt(properties.getProperty("order"),
@@ -55,41 +59,40 @@ public class GameScript implements Comparable<GameScript> {
 				.getProperty("description"), "EmptyDescription");
 		result.script = StringUtils.defaultIfEmpty(properties
 				.getProperty("script"), "EmptyScript");
-		result.gameScriptType = GameScriptType.valueOf(StringUtils
-				.defaultIfEmpty(properties.getProperty("gameScriptType"),
-						"Playing"));
-		result.gameScriptControllerType = GameScriptControllerType
-				.valueOf(StringUtils.defaultIfEmpty(properties
-						.getProperty("gameScriptControllerType"), "OneShot"));
+		result.inboundRegularExpression = StringUtils.defaultIfEmpty(properties
+				.getProperty("inboundRegularExpression"), "EmptyRegEx");
+		result.chatScriptType = ChatScriptType.valueOf(StringUtils
+				.defaultIfEmpty(properties.getProperty("chatScriptType"),
+						"OneShot"));
 		result.scriptConnectorType = ScriptConnectorType.valueOf(StringUtils
-				.defaultIfEmpty(properties.getProperty("scriptConnectorType"),
-						"ICS"));
+				.defaultIfEmpty(properties
+						.getProperty("chatScriptConnectorType"), "ICS"));
 		return result;
 	}
 
-	public static void store(GameScript script, String file) throws IOException {
+	public static void store(ChatScript script, String file) throws IOException {
 		Properties properties = new Properties();
 		properties.put("order", "" + script.order);
 		properties.put("name", script.name);
 		properties.put("isActive", "" + script.isActive);
 		properties.put("description", script.description);
 		properties.put("script", script.script);
-		properties.put("gameScriptType", script.gameScriptType.name());
-		properties.put("gameScriptControllerType",
-				script.gameScriptControllerType.name());
+		properties.put("inboundRegularExpression", StringUtils.defaultString(
+				script.inboundRegularExpression, ""));
+		properties.put("chatScriptType", script.chatScriptType.name());
 		properties
 				.put("scriptConnectorType", script.scriptConnectorType.name());
 		properties.store(new FileOutputStream(file), "Saved on " + new Date());
 	}
 
-	protected int order = Integer.MAX_VALUE;
+	protected String inboundRegularExpression = "";
 	protected String name = "";
 	protected String description = "";
+	protected String script = "";
 	protected boolean isActive = false;
-	protected String script;
-	protected GameScriptType gameScriptType;
-	protected GameScriptControllerType gameScriptControllerType;
-	protected ScriptConnectorType scriptConnectorType;
+	protected ChatScriptType chatScriptType = ChatScriptType.OneShot;
+	protected ScriptConnectorType scriptConnectorType = ScriptConnectorType.ICS;
+	protected int order = Integer.MAX_VALUE;
 
 	/**
 	 * The ScriptService managed this variable. It does not need to be
@@ -97,26 +100,31 @@ public class GameScript implements Comparable<GameScript> {
 	 */
 	protected transient boolean isSystemScript;
 
-	public GameScript() {
-	}
-
-	public int compareTo(GameScript script) {
+	public int compareTo(ChatScript script) {
 		return order == script.order ? 0 : order < script.order ? -1 : 1;
 	}
 
-	public void execute(GameScriptContext context) {
+	public void execute(ChatScriptContext context) {
+		try {
+			Interpreter interpeter = new Interpreter();
+			interpeter.set("context", context);
+			interpeter.eval(getScript());
+		} catch (EvalError e) {
+			Raptor.getInstance().onError("Error executing script " + getName(),
+					e);
+		}
+	}
+
+	public ChatScriptType getChatScriptType() {
+		return chatScriptType;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public GameScriptControllerType getGameScriptControllerType() {
-		return gameScriptControllerType;
-	}
-
-	public GameScriptType getGameScriptType() {
-		return gameScriptType;
+	public String getInboundRegularExpression() {
+		return inboundRegularExpression;
 	}
 
 	public String getName() {
@@ -147,17 +155,16 @@ public class GameScript implements Comparable<GameScript> {
 		this.isActive = isActive;
 	}
 
+	public void setChatScriptType(ChatScriptType chatScriptType) {
+		this.chatScriptType = chatScriptType;
+	}
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
-	public void setGameScriptControllerType(
-			GameScriptControllerType gameScriptControllerType) {
-		this.gameScriptControllerType = gameScriptControllerType;
-	}
-
-	public void setGameScriptType(GameScriptType gameScriptType) {
-		this.gameScriptType = gameScriptType;
+	public void setInboundRegularExpression(String inboundRegularExpression) {
+		this.inboundRegularExpression = inboundRegularExpression;
 	}
 
 	public void setName(String name) {
@@ -179,4 +186,5 @@ public class GameScript implements Comparable<GameScript> {
 	public void setSystemScript(boolean isSystemScript) {
 		this.isSystemScript = isSystemScript;
 	}
+
 }
