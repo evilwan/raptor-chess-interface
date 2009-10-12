@@ -30,6 +30,9 @@ import raptor.Raptor;
 import bsh.EvalError;
 import bsh.Interpreter;
 
+/**
+ * The chat script class. Currently uses BeanShell to execute scripts.
+ */
 public class ChatScript implements Comparable<ChatScript> {
 	public static class ChatScriptNameComparator implements
 			Comparator<ChatScript> {
@@ -39,12 +42,33 @@ public class ChatScript implements Comparable<ChatScript> {
 	}
 
 	public static enum ChatScriptType {
-		OneShot, onChannelTellMessages, OnPartnerTellMessages, OnPersonTellMessages
+		/**
+		 * Used for toolbar scripts. Scripts that are just executed on demand.
+		 */
+		OneShot,
+		/**
+		 * Used for ChatScripts which are processed on each channel tell
+		 * received.
+		 */
+		onChannelTellMessages,
+		/**
+		 * Used for ChatScripts which are processed on each partner tell, ptell
+		 * on ics servers.
+		 */
+		OnPartnerTellMessages,
+		/**
+		 * Used for ChatScripts which are processed on each person tell
+		 * received.
+		 */
+		OnPersonTellMessages
 	}
 
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(ChatScript.class);;
 
+	/**
+	 * Loads a ChatScript from a file.
+	 */
 	public static ChatScript load(String file) throws IOException {
 		ChatScript result = new ChatScript();
 		Properties properties = new Properties();
@@ -68,6 +92,9 @@ public class ChatScript implements Comparable<ChatScript> {
 		return result;
 	}
 
+	/**
+	 * Saves a ChatScript to a file.
+	 */
 	public static void store(ChatScript script, String file) throws IOException {
 		Properties properties = new Properties();
 		properties.put("order", "" + script.order);
@@ -99,6 +126,11 @@ public class ChatScript implements Comparable<ChatScript> {
 		return order == script.order ? 0 : order < script.order ? -1 : 1;
 	}
 
+	/**
+	 * Executes the script with the specified context.
+	 * 
+	 * @param context
+	 */
 	public void execute(ChatScriptContext context) {
 		try {
 			Interpreter interpeter = new Interpreter();
@@ -122,6 +154,9 @@ public class ChatScript implements Comparable<ChatScript> {
 		return name;
 	}
 
+	/**
+	 * Used for sorting scripts in toolbars. Not used for anything else.
+	 */
 	public int getOrder() {
 		return order;
 	}
@@ -134,10 +169,18 @@ public class ChatScript implements Comparable<ChatScript> {
 		return scriptConnectorType;
 	}
 
+	/**
+	 * Returns true if the current script is enabled.
+	 */
 	public boolean isActive() {
 		return isActive;
 	}
 
+	/**
+	 * Returns true if this script is a system script. System scripts can never
+	 * be deleted. They are the scripts contained in the resources/scripts/chat
+	 * folder.
+	 */
 	public boolean isSystemScript() {
 		return isSystemScript;
 	}
