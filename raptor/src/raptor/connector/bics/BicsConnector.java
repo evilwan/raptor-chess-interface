@@ -29,6 +29,7 @@ import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
+import raptor.swt.BugButtonsWindowItem;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -97,19 +98,22 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		}
 	}
 
-	protected Action autoConnectAction;
+
 
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
 	 */
 	protected BicsConnector bics2 = null;
+	protected MenuManager connectionsMenu;
+	
+	protected Action autoConnectAction;
 	protected Action bughouseArenaAction;
 	protected Action connectAction;
-	protected MenuManager connectionsMenu;
 	protected Action disconnectAction;
-
 	protected Action reconnectAction;
+	protected Action bugbuttonsAction;
+	protected Action isShowingBugButtonsOnConnectAction;
 
 	public BicsConnector() {
 		this(new BicsConnectorContext());
@@ -133,6 +137,18 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			disconnectAction.setEnabled(true);
 			reconnectAction.setEnabled(true);
 			bughouseArenaAction.setEnabled(true);
+			bugbuttonsAction.setEnabled(true);
+			isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
+					.getBoolean(
+							context.getPreferencePrefix()
+									+ "show-bugbuttons-on-connect"));
+
+			if (getPreferences().getBoolean(
+					context.getPreferencePrefix()
+							+ "show-bugbuttons-on-connect")) {
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
+						new BugButtonsWindowItem(this));
+			}
 		}
 	}
 
@@ -185,6 +201,28 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
 			}
 		};
+		
+		bugbuttonsAction = new Action("Show Bughouse &Buttons") {
+			@Override
+			public void run() {
+				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
+						BicsConnector.this)) {
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							new BugButtonsWindowItem(BicsConnector.this));
+				}
+			}
+		};
+
+		isShowingBugButtonsOnConnectAction = new Action(
+				"Show Bug Buttons On Connect", IAction.AS_CHECK_BOX) {
+			@Override
+			public void run() {
+				getPreferences().setValue(
+						context.getPreferencePrefix()
+								+ "show-bugbuttons-on-connect", isChecked());
+				getPreferences().save();
+			}
+		};
 
 		autoConnectAction = new Action("Auto &Login", IAction.AS_CHECK_BOX) {
 			@Override
@@ -201,12 +239,19 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
-
+		bugbuttonsAction.setEnabled(false);
+		isShowingBugButtonsOnConnectAction.setEnabled(true);
+		isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
+				.getBoolean(
+						context.getPreferencePrefix()
+								+ "show-bugbuttons-on-connect"));
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
 		connectionsMenu.add(reconnectAction);
 		connectionsMenu.add(autoConnectAction);
+		connectionsMenu.add(isShowingBugButtonsOnConnectAction);
 		connectionsMenu.add(new Separator());
+		connectionsMenu.add(bugbuttonsAction);
 		connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(new Separator());
 
@@ -256,16 +301,37 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			public void run() {
 			}
 		};
+		
+		bics2.bugbuttonsAction = new Action("Show Bughouse &Buttons") {
+			@Override
+			public void run() {
+				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
+						BicsConnector.this)) {
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							new BugButtonsWindowItem(BicsConnector.this));
+				}
+			}
+		};
+
+		bics2.isShowingBugButtonsOnConnectAction = new Action(
+				"Show Bug Buttons On Connect") {
+			@Override
+			public void run() {
+			}
+		};
 
 		bics2.connectAction.setEnabled(true);
 		bics2.disconnectAction.setEnabled(false);
 		bics2.reconnectAction.setEnabled(false);
 		bics2.bughouseArenaAction.setEnabled(false);
+		bics2.bugbuttonsAction.setEnabled(false);
+		bics2.isShowingBugButtonsOnConnectAction.setEnabled(true);
 
 		bics2Menu.add(bics2.connectAction);
 		bics2Menu.add(bics2.disconnectAction);
 		bics2Menu.add(bics2.reconnectAction);
 		bics2Menu.add(new Separator());
+		bics2Menu.add(bics2.bugbuttonsAction);
 		bics2Menu.add(bics2.bughouseArenaAction);
 		bics2Menu.add(new Separator());
 
@@ -281,6 +347,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
+		isShowingBugButtonsOnConnectAction.setEnabled(true);
+		bugbuttonsAction.setEnabled(false);
 	}
 
 	@Override
