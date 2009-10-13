@@ -14,6 +14,7 @@
 package raptor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,7 @@ import raptor.pref.PreferenceUtils;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
 import raptor.swt.BrowserWindowItem;
+import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.PgnProcessingDialog;
 import raptor.swt.ProfileDialog;
@@ -506,6 +508,7 @@ public class RaptorWindow extends ApplicationWindow {
 				raptorItem.getControl().setParent(newParent);
 				activeItems.remove(this);
 				new RaptorTabItem(newParent, getStyle(), raptorItem, false);
+				raptorItem.afterQuadrantMove(newParent.quad);
 				raptorItem = null;
 				dispose();
 				restoreFolders();
@@ -656,6 +659,27 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 		windowComposite.layout();
 
+	}
+
+	/**
+	 * Returns true if this RaptorWindow is managing a channel tell tab for the
+	 * specified channel.
+	 */
+	public boolean containsBugButtonsItem(Connector connector) {
+		boolean result = false;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof BugButtonsWindowItem) {
+					BugButtonsWindowItem item = (BugButtonsWindowItem) folder
+							.getRaptorTabItemAt(i).raptorItem;
+					if (item.getConnector() == connector) {
+						result = true;
+						break;
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -951,7 +975,7 @@ public class RaptorWindow extends ApplicationWindow {
 			public void run() {
 				Raptor
 						.getInstance()
-						.getRaptorWindow()
+						.getWindow()
 						.addRaptorWindowItem(
 								new BrowserWindowItem(
 										"Fics Commands Help",
@@ -1304,9 +1328,12 @@ public class RaptorWindow extends ApplicationWindow {
 
 					new MenuItem(menu, SWT.SEPARATOR);
 
-					for (int i = 0; i < Quadrant.values().length; i++) {
-						if (i != folder.quad.ordinal()) {
-							final Quadrant currentQuadrant = Quadrant.values()[i];
+					Quadrant[] availableQuadrants = folder
+							.getRaptorTabItemSelection().raptorItem
+							.getMoveToQuadrants();
+					for (int i = 0; i < availableQuadrants.length; i++) {
+						if (availableQuadrants[i] != folder.quad) {
+							final Quadrant currentQuadrant = availableQuadrants[i];
 							MenuItem item = new MenuItem(menu, SWT.PUSH);
 							item.setText("Move to " + currentQuadrant.name());
 							item.addListener(SWT.Selection, new Listener() {
@@ -1362,7 +1389,29 @@ public class RaptorWindow extends ApplicationWindow {
 					RaptorTabFolder dropFolder = getFolderContainingCursor();
 					if (dropFolder != null
 							&& dropFolder != dragStartItem.raptorParent) {
-						dragStartItem.onMoveTo(dropFolder);
+
+						boolean canMove = false;
+						for (int i = 0; i < dragStartItem.raptorItem
+								.getMoveToQuadrants().length; i++) {
+							if (dragStartItem.raptorItem.getMoveToQuadrants()[i] == dropFolder.quad) {
+								canMove = true;
+								break;
+							}
+						}
+
+						if (canMove) {
+							dragStartItem.onMoveTo(dropFolder);
+						} else {
+							Raptor
+									.getInstance()
+									.alert(
+											"You can't move this item to quadrant "
+													+ dropFolder.quad
+													+ ". You can only move it to quadrants: "
+													+ Arrays
+															.toString(dragStartItem.raptorItem
+																	.getMoveToQuadrants()));
+						}
 					}
 					isInDrag = false;
 					isExitDrag = false;

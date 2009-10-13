@@ -29,6 +29,7 @@ import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
+import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.RegExDialog;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleWindowItem;
@@ -41,21 +42,21 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
+	protected MenuManager connectionsMenu;
 	protected Action autoConnectAction;
-
 	protected Action bughouseArenaAction;
 	protected Action connectAction;
-	protected MenuManager connectionsMenu;
 	protected Action disconnectAction;
+	protected Action reconnectAction;
+	protected Action regexTabAction;
+	protected Action seekGraphAction;
+	protected Action bugbuttonsAction;
+	protected Action isShowingBugButtonsOnConnectAction;
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
 	 */
 	protected FicsConnector fics2 = null;
-	protected Action reconnectAction;
-	protected Action regexTabAction;
-
-	protected Action seekGraphAction;
 
 	public FicsConnector() {
 		this(new IcsConnectorContext(new FicsParser()));
@@ -82,6 +83,18 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			bughouseArenaAction.setEnabled(true);
 			seekGraphAction.setEnabled(true);
 			regexTabAction.setEnabled(true);
+			bugbuttonsAction.setEnabled(true);
+			isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
+					.getBoolean(
+							context.getPreferencePrefix()
+									+ "show-bugbuttons-on-connect"));
+
+			if (getPreferences().getBoolean(
+					context.getPreferencePrefix()
+							+ "show-bugbuttons-on-connect")) {
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
+						new BugButtonsWindowItem(this));
+			}
 		}
 	}
 
@@ -142,11 +155,33 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
+		bugbuttonsAction = new Action("Show Bughouse &Buttons") {
+			@Override
+			public void run() {
+				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
+						FicsConnector.this)) {
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							new BugButtonsWindowItem(FicsConnector.this));
+				}
+			}
+		};
+
+		isShowingBugButtonsOnConnectAction = new Action(
+				"Show Bug Buttons On Connect", IAction.AS_CHECK_BOX) {
+			@Override
+			public void run() {
+				getPreferences().setValue(
+						context.getPreferencePrefix()
+								+ "show-bugbuttons-on-connect", isChecked());
+				getPreferences().save();
+			}
+		};
+
 		regexTabAction = new Action("&Add Regular Expression Tab") {
 			@Override
 			public void run() {
 				RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
-						.getRaptorWindow().getShell(), getShortName()
+						.getWindow().getShell(), getShortName()
 						+ " Regular Expression Dialog",
 						"Enter the regular expression below:");
 				String regEx = regExDialog.open();
@@ -155,7 +190,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 							FicsConnector.this, regEx);
 					ChatConsoleWindowItem chatConsoleWindowItem = new ChatConsoleWindowItem(
 							controller);
-					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
 							chatConsoleWindowItem, false);
 					ChatUtils
 							.appendPreviousChatsToController((ChatConsole) chatConsoleWindowItem
@@ -167,7 +202,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		autoConnectAction = new Action("Auto &Login", IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
-				System.err.println("autoConnectAction clicked");
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "auto-connect",
 						isChecked());
@@ -182,12 +216,22 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		bughouseArenaAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
+		bugbuttonsAction.setEnabled(false);
+		isShowingBugButtonsOnConnectAction.setEnabled(true);
+		isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
+				.getBoolean(
+						context.getPreferencePrefix()
+								+ "show-bugbuttons-on-connect"));
+		autoConnectAction.setChecked(getPreferences().getBoolean(
+				context.getPreferencePrefix() + "auto-connect"));
 
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
 		connectionsMenu.add(reconnectAction);
 		connectionsMenu.add(autoConnectAction);
+		connectionsMenu.add(isShowingBugButtonsOnConnectAction);
 		connectionsMenu.add(new Separator());
+		connectionsMenu.add(bugbuttonsAction);
 		connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(seekGraphAction);
 		connectionsMenu.add(new Separator());
@@ -198,7 +242,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
 			@Override
 			public void run() {
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						new BrowserWindowItem("Adjudicate Games", Raptor
 								.getInstance().getPreferences().getString(
 										PreferenceKeys.FICS_ADJUDICATE_URL)));
@@ -210,7 +254,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			public void run() {
 				Raptor
 						.getInstance()
-						.getRaptorWindow()
+						.getWindow()
 						.addRaptorWindowItem(
 								new BrowserWindowItem(
 										"www.freechess.org",
@@ -225,7 +269,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
 			@Override
 			public void run() {
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						new BrowserWindowItem("www.ficsgames.com", Raptor
 								.getInstance().getPreferences().getString(
 										PreferenceKeys.FICS_FICS_GAMES_URL)));
@@ -235,7 +279,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
 			@Override
 			public void run() {
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						new BrowserWindowItem("Fics Team League", Raptor
 								.getInstance().getPreferences().getString(
 										PreferenceKeys.FICS_TEAM_LEAGUE_URL)));
@@ -301,7 +345,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			@Override
 			public void run() {
 				RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
-						.getRaptorWindow().getShell(), getShortName()
+						.getWindow().getShell(), getShortName()
 						+ " Regular Expression Dialog",
 						"Enter the regular expression below:");
 				String regEx = regExDialog.open();
@@ -310,12 +354,30 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 							FicsConnector.this, regEx);
 					ChatConsoleWindowItem chatConsoleWindowItem = new ChatConsoleWindowItem(
 							controller);
-					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
 							chatConsoleWindowItem, false);
 					ChatUtils
 							.appendPreviousChatsToController((ChatConsole) chatConsoleWindowItem
 									.getControl());
 				}
+			}
+		};
+
+		fics2.bugbuttonsAction = new Action("Show Bughouse &Buttons") {
+			@Override
+			public void run() {
+				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
+						FicsConnector.this)) {
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							new BugButtonsWindowItem(FicsConnector.this));
+				}
+			}
+		};
+
+		fics2.isShowingBugButtonsOnConnectAction = new Action(
+				"Show Bug Buttons On Connect") {
+			@Override
+			public void run() {
 			}
 		};
 
@@ -332,11 +394,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2.bughouseArenaAction.setEnabled(false);
 		fics2.seekGraphAction.setEnabled(false);
 		fics2.regexTabAction.setEnabled(false);
+		fics2.bugbuttonsAction.setEnabled(false);
+		fics2.isShowingBugButtonsOnConnectAction.setEnabled(true);
 
 		fics2Menu.add(fics2.connectAction);
 		fics2Menu.add(fics2.disconnectAction);
 		fics2Menu.add(fics2.reconnectAction);
 		fics2Menu.add(new Separator());
+		fics2Menu.add(fics2.bugbuttonsAction);
 		fics2Menu.add(fics2.bughouseArenaAction);
 		fics2Menu.add(fics2.seekGraphAction);
 		fics2Menu.add(new Separator());
@@ -354,6 +419,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		seekGraphAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
+		isShowingBugButtonsOnConnectAction.setEnabled(true);
+		bugbuttonsAction.setEnabled(false);
 	}
 
 	@Override

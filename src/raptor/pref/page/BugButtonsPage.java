@@ -1,4 +1,4 @@
-package raptor.pref;
+package raptor.pref.page;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +31,7 @@ import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.ScriptService;
 import raptor.swt.SWTUtils;
 
-public class ChatConsoleToolbarPage extends PreferencePage {
+public class BugButtonsPage extends PreferencePage {
 
 	protected Table icsActiveScriptsTable;
 	protected Table icsInactiveScriptsTable;
@@ -47,10 +47,10 @@ public class ChatConsoleToolbarPage extends PreferencePage {
 	protected Button saveButton;
 	protected Button deleteButton;
 
-	public ChatConsoleToolbarPage() {
+	public BugButtonsPage() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Toolbar Scripts");
+		setTitle("Bughouse Buttons");
 	}
 
 	@Override
@@ -58,13 +58,19 @@ public class ChatConsoleToolbarPage extends PreferencePage {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 
-		icsActiveScriptsTable = new Table(composite, SWT.BORDER | SWT.V_SCROLL
-				| SWT.SINGLE | SWT.FULL_SELECTION);
-		icsActiveScriptsTable.setLayoutData(new GridData(SWT.LEFT, SWT.FILL,
-				false, true));
+		Composite tableComposite = new Composite(composite, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
+				true));
+
+		icsActiveScriptsTable = new Table(tableComposite, SWT.BORDER
+				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		icsActiveScriptsTable.setSize(icsActiveScriptsTable.computeSize(160,
+				250));
+		icsActiveScriptsTable.setLocation(5, 5);
+
 		TableColumn activeName = new TableColumn(icsActiveScriptsTable,
 				SWT.LEFT);
-		activeName.setText("Active Toolbar Items");
+		activeName.setText("Active Buttons");
 		activeName.setWidth(150);
 		icsActiveScriptsTable.setHeaderVisible(true);
 
@@ -74,20 +80,25 @@ public class ChatConsoleToolbarPage extends PreferencePage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int selectedIndex = icsActiveScriptsTable.getSelectionIndex();
-				String selection = icsActiveScriptsTable.getItem(selectedIndex)
-						.getText(0);
-				loadControls(selection);
+				if (selectedIndex != -1) {
+					String selection = icsActiveScriptsTable.getItem(
+							selectedIndex).getText(0);
+					loadControls(selection);
+				}
 			}
 		});
 		activeCursor.setVisible(true);
 
-		icsInactiveScriptsTable = new Table(composite, SWT.BORDER
+		icsInactiveScriptsTable = new Table(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		icsInactiveScriptsTable.setSize(icsInactiveScriptsTable.computeSize(
+				160, 250));
+		icsInactiveScriptsTable.setLocation(5 + 20 + icsActiveScriptsTable
+				.getSize().x, 5);
+
 		TableColumn inactiveName = new TableColumn(icsInactiveScriptsTable,
 				SWT.LEFT);
-		icsInactiveScriptsTable.setLayoutData(new GridData(SWT.LEFT, SWT.FILL,
-				false, true));
-		inactiveName.setText("Inactive Toolbar Items");
+		inactiveName.setText("Inactive Buttons");
 		inactiveName.setWidth(150);
 		icsInactiveScriptsTable.setHeaderVisible(true);
 		TableCursor inactiveCursor = new TableCursor(icsInactiveScriptsTable,
@@ -96,9 +107,11 @@ public class ChatConsoleToolbarPage extends PreferencePage {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				int selectedIndex = icsInactiveScriptsTable.getSelectionIndex();
-				String selection = icsInactiveScriptsTable.getItem(
-						selectedIndex).getText(0);
-				loadControls(selection);
+				if (selectedIndex != -1) {
+					String selection = icsInactiveScriptsTable.getItem(
+							selectedIndex).getText(0);
+					loadControls(selection);
+				}
 			}
 		});
 		inactiveCursor.setVisible(true);
@@ -246,7 +259,7 @@ public class ChatConsoleToolbarPage extends PreferencePage {
 				newScript.setScriptConnectorType(ScriptConnectorType
 						.valueOf(connectorTypeCombo.getItem(connectorTypeCombo
 								.getSelectionIndex())));
-				newScript.setChatScriptType(ChatScriptType.OneShot);
+				newScript.setChatScriptType(ChatScriptType.BugButtonsOneShot);
 				ScriptService.getInstance().saveChatScript(newScript);
 				refreshTables();
 			}
@@ -315,7 +328,7 @@ public class ChatConsoleToolbarPage extends PreferencePage {
 		List<ChatScript> inactiveScripts = new ArrayList<ChatScript>(10);
 		List<ChatScript> activeScripts = new ArrayList<ChatScript>(10);
 		for (ChatScript script : allScripts) {
-			if (script.getChatScriptType() == ChatScriptType.OneShot) {
+			if (script.getChatScriptType() == ChatScriptType.BugButtonsOneShot) {
 				if (script.isActive()) {
 					activeScripts.add(script);
 				} else {

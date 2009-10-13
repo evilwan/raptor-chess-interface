@@ -27,6 +27,8 @@ import raptor.swt.ItemChangedListener;
 
 public class ChessBoardWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
+			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
 
 	ChessBoard board;
 	// This is just added as a member variable so it can be stored form the time
@@ -37,13 +39,27 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	ChessBoardController controller;
 
 	boolean isPassive = true;
+	boolean isBughouseOtherBoard = false;
 
 	public ChessBoardWindowItem(ChessBoardController controller) {
 		this.controller = controller;
 	}
 
+	public ChessBoardWindowItem(ChessBoardController controller,
+			boolean isBughouseOtherBoard) {
+		this(controller);
+		this.isBughouseOtherBoard = true;
+	}
+
 	public void addItemChangedListener(ItemChangedListener listener) {
 		controller.addItemChangedListener(listener);
+	}
+
+	/**
+	 * Invoked after this control is moved to a new quadrant.
+	 */
+	public void afterQuadrantMove(Quadrant newQuadrant) {
+
 	}
 
 	public boolean confirmClose() {
@@ -66,9 +82,19 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		return null;
 	}
 
+	/**
+	 * Returns a list of the quadrants this window item can move to.
+	 */
+	public Quadrant[] getMoveToQuadrants() {
+		return MOVE_TO_QUADRANTS;
+	}
+
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				PreferenceKeys.GAME_QUADRANT);
+		return !isBughouseOtherBoard ? Raptor.getInstance().getPreferences()
+				.getCurrentLayoutQuadrant(PreferenceKeys.GAME_QUADRANT)
+				: Raptor.getInstance().getPreferences()
+						.getCurrentLayoutQuadrant(
+								PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT);
 	}
 
 	public String getTitle() {

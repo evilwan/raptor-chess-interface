@@ -27,18 +27,21 @@ public class BughouseGame extends CrazyhouseGame {
 	protected BughouseGame otherBoard;
 
 	public BughouseGame() {
+		super();
 		setHeader(PgnHeader.Variant, Variant.bughouse.name());
 	}
 
 	/**
 	 * Decrements the drop count of the other game.
 	 */
-	@Override
-	protected void decrementDropCount(int color, int piece) {
-		piece = piece & PROMOTED_MASK;
-		otherBoard.dropCounts[color][piece] = otherBoard.dropCounts[color][piece] - 1;
-	}
-
+	// @Override
+	// protected void decrementDropCount(int color, int piece) {
+	// piece = piece & PROMOTED_MASK;
+	// if (otherBoard != null) {
+	// otherBoard.dropCounts[color][piece] = otherBoard.dropCounts[color][piece]
+	// - 1;
+	// }
+	// }
 	/**
 	 * @param ignoreHashes
 	 *            Whether to include copying hash tables.
@@ -58,15 +61,17 @@ public class BughouseGame extends CrazyhouseGame {
 	/**
 	 * Increments the drop count of the other game.
 	 */
-	@Override
-	protected void incrementDropCount(int color, int piece) {
-		if ((piece & PROMOTED_MASK) != 0) {
-			piece = PAWN;
-		} else {
-			otherBoard.dropCounts[color][piece] = otherBoard.dropCounts[color][piece] + 1;
-		}
-	}
-
+	// @Override
+	// protected void incrementDropCount(int color, int piece) {
+	// if ((piece & PROMOTED_MASK) != 0) {
+	// piece = PAWN;
+	// } else {
+	// if (otherBoard != null) {
+	// otherBoard.dropCounts[color][piece] = otherBoard.dropCounts[color][piece]
+	// + 1;
+	// }
+	// }
+	// }
 	public void setOtherBoard(BughouseGame bughouseGame) {
 		otherBoard = bughouseGame;
 	}

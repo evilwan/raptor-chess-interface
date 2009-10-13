@@ -98,7 +98,7 @@ public class MainController extends ChatConsoleController {
 	@Override
 	protected void prependToolbarItems(ToolBar toolbar) {
 		final ChatScript[] scripts = ScriptService.getInstance()
-				.getChatScripts(connector, ChatScriptType.OneShot);
+				.getChatScripts(connector, ChatScriptType.ToolbarOneShot);
 		boolean wasScriptAdded = false;
 		for (int i = 0; i < scripts.length; i++) {
 			final ChatScript script = scripts[i];

@@ -37,6 +37,8 @@ import raptor.RaptorWindowItem;
 import raptor.pref.PreferenceKeys;
 
 public class BrowserWindowItem implements RaptorWindowItem {
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
+			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
 
 	protected Composite addressBar;
 	protected Browser browser;
@@ -50,6 +52,13 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
+	}
+
+	/**
+	 * Invoked after this control is moved to a new quadrant.
+	 */
+	public void afterQuadrantMove(Quadrant newQuadrant) {
+
 	}
 
 	public boolean confirmClose() {
@@ -70,6 +79,13 @@ public class BrowserWindowItem implements RaptorWindowItem {
 
 	public Image getImage() {
 		return null;
+	}
+
+	/**
+	 * Returns a list of the quadrants this window item can move to.
+	 */
+	public Quadrant[] getMoveToQuadrants() {
+		return MOVE_TO_QUADRANTS;
 	}
 
 	public Quadrant getPreferredQuadrant() {
@@ -164,7 +180,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 				}
 				BrowserWindowItem newWindowItem = new BrowserWindowItem(
 						"Child", "");
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						newWindowItem, false);
 				event.browser = newWindowItem.browser;
 			}

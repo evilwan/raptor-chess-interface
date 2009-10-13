@@ -59,13 +59,18 @@ public class ChessBoard implements BoardConstants {
 	protected boolean isWhitePieceJailOnTop = true;
 	protected ChessBoardMoveList moveList;
 	protected CLabel openingDescriptionLabel;
-	// Piece jail is indexed by the colored piece constants in Constants.
-	// The 0th index will always be null. (for the empty piece).
+
+	/**
+	 * Piece jail is indexed by the colored piece constants in Constants. The
+	 * 0th index will always be null. (for the empty piece).
+	 */
 	protected LabeledChessSquare[] pieceJailSquares = new LabeledChessSquare[13];
 
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent arg0) {
-			updateFromPrefs();
+		public void propertyChange(PropertyChangeEvent arg) {
+			if (arg.getProperty().startsWith("board")) {
+				updateFromPrefs();
+			}
 		}
 	};
 

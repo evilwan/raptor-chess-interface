@@ -13,6 +13,11 @@
  */
 package raptor.pref;
 
+/**
+ * Contains all of the preference keys. In order to update entries in the font
+ * and color registries, all font properties must end in font and all color
+ * properties must end in color.
+ */
 public interface PreferenceKeys {
 	public static final String APP_HOME_URL = "app-home-url";
 	public static final String APP_LAYOUT = "app-layout";
@@ -84,10 +89,11 @@ public interface PreferenceKeys {
 	public static final String APP_SOUND_ENABLED = "sound-enabled";
 	public static final String APP_STATUS_BAR_COLOR = "app-starus-bar-color";
 	public static final String APP_STATUS_BAR_FONT = "app-status-bar-font";
+
 	public static final String BICS_AUTO_CONNECT = "bics-auto-connect";
+	public static final String BICS_SHOW_BUGBUTTONS_ON_CONNECT = "bics-show-bugbuttons-on-connect";
 	public static final String BICS_IS_LOGGING_GAMES = "bics-is-logging-games";
 	public static final String BICS_KEEP_ALIVE = "bics-keep-alive";
-
 	public static final String BICS_LOGIN_SCRIPT = "bics-login-script";
 	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
 	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";
@@ -106,16 +112,18 @@ public interface PreferenceKeys {
 	public static final String BICS_SECONDARY_USER_NAME = "bics-Secondary-user-name";
 	public static final String BICS_TERTIARY_IS_ANON_GUEST = "bics-Tertiary-is-anon-guest";
 	public static final String BICS_TERTIARY_IS_NAMED_GUEST = "bics-Tertiary-is-named-guest";
-
 	public static final String BICS_TERTIARY_PASSWORD = "bics-Tertiary-password";
 	public static final String BICS_TERTIARY_PORT = "bics-Tertiary-port";
 	public static final String BICS_TERTIARY_SERVER_URL = "bics-Tertiary-server-url";
 	public static final String BICS_TERTIARY_TIMESEAL_ENABLED = "bics-Tertiary-timeseal-enabled";
 	public static final String BICS_TERTIARY_USER_NAME = "bics-Tertiary-user-name";
+
+	public static final String BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD = "bughouse-playing-open-partner-board";
+	public static final String BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD = "bughouse-observing-open-partner-board";
+	public static final String BUG_BUTTONS_FONT = "bugbuttons-font";
+
 	public static final String BOARD_ACTIVE_CLOCK_COLOR = "board-active-clock-color";
 	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
-	// In order to update entries in the font and color registries, all font
-	// properties must end in font and all color properties must end in color.
 	public static final String BOARD_CHESS_SET_NAME = "board-chess-set-name";
 	public static final String BOARD_CLOCK_FONT = "board-clock-font";
 	public static final String BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN = "board-clock-show-millis-when-less-than";
@@ -127,7 +135,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_HIGHLIGHT_BORDER_WIDTH = "board-highlight-width-percentage";
 	public static final String BOARD_HIGHLIGHT_COLOR = "board-highlight-color";
 	public static final String BOARD_INACTIVE_CLOCK_COLOR = "board-inactive-clock-color";
-
 	public static final String BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS = "board-is-playing-10-second-countdown-sounds";
 	public static final String BOARD_IS_SHOW_COORDINATES = "board-show-coordinates";
 	public static final String BOARD_IS_SHOWING_PIECE_JAIL = "board-is-showing-piece-jail";
@@ -146,7 +153,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING = "board-play-move-sound-when-observing";
 	public static final String BOARD_PLAYER_NAME_COLOR = "board-player-name-color";
 	public static final String BOARD_PLAYER_NAME_FONT = "board-player-name-font";
-
 	public static final String BOARD_PREMOVE_ENABLED = "board-premove-enabled";
 	public static final String BOARD_PREMOVES_COLOR = "board-premoves-color";
 	public static final String BOARD_PREMOVES_FONT = "board-premoves-font";
@@ -157,15 +163,16 @@ public interface PreferenceKeys {
 	public static final String BOARD_SQUARE_BACKGROUND_NAME = "board-square-background-name";
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
 	public static final String BOARD_STATUS_FONT = "board-status-font";
+
 	public static final String BROWSER_QUADRANT = "browser-quadrant";
 	public static final String BUG_ARENA_QUADRANT = "bug-arena-quadrant";
 	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrant";
 	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrant";
 	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrant";
+
 	public static final String CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO = "chat-event-";
 	public static final String CHAT_CONSOLE_BACKGROUND_COLOR = "chat-console-background-color";
 	public static final String CHAT_INPUT_BACKGROUND_COLOR = "chat-input-background-color";
-
 	public static final String CHAT_INPUT_DEFAULT_TEXT_COLOR = "chat-input-default-text-color";
 	public static final String CHAT_INPUT_FONT = "chat-input-font";
 	public static final String CHAT_LINK_UNDERLINE_COLOR = "chat-link-underline-color";
@@ -176,62 +183,63 @@ public interface PreferenceKeys {
 	public static final String CHAT_PROMPT_COLOR = "chat-prompt-color";
 	public static final String CHAT_PROMPT_FONT = "chat-prompt-font";
 	public static final String CHAT_QUOTE_UNDERLINE_COLOR = "chat-quote-underline-color";
-
 	public static final String CHAT_TIMESTAMP_CONSOLE = "chat-timestamp-console";
 	public static final String CHAT_TIMESTAMP_CONSOLE_FORMAT = "chat-timestamp-console-format";
 	public static final String CHAT_UNDERLINE_SINGLE_QUOTES = "chat-underline-single-quotes";
+
+	// Connector preferences should always use the short name of the connector
+	// followed by the preference.
 	public static final String FICS_ADJUDICATE_URL = "fics-adjudicate-url";
 	public static final String FICS_AUTO_CONNECT = "fics-auto-connect";
 	public static final String FICS_COMMANDS_HELP_URL = "fics-commands-help-url";
 	public static final String FICS_FICS_GAMES_URL = "fics-games-url";
-
+	public static final String FICS_SHOW_BUGBUTTONS_ON_CONNECT = "fics-show-bugbuttons-on-connect";
 	public static final String FICS_FREECHESS_ORG_URL = "fics-freechess-org-url";
 	public static final String FICS_IS_LOGGING_GAMES = "fics-is-logging-games";
-	// Connector preferences should always use the short name of the connector
-	// followed by the preference.
 	public static final String FICS_KEEP_ALIVE = "fics-keep-alive";
 	public static final String FICS_LOGIN_SCRIPT = "fics-login-script";
+	public static final String FICS_PROFILE = "fics-profile";
+	public static final String FICS_TEAM_LEAGUE_URL = "fics-team-league-url";
+
 	public static final String FICS_PRIMARY_IS_ANON_GUEST = "fics-Primary-is-anon-guest";
 	public static final String FICS_PRIMARY_IS_NAMED_GUEST = "fics-Primary-is-named-guest";
 	public static final String FICS_PRIMARY_PASSWORD = "fics-Primary-password";
-
 	public static final String FICS_PRIMARY_PORT = "fics-Primary-port";
 	public static final String FICS_PRIMARY_SERVER_URL = "fics-Primary-server-url";
 	public static final String FICS_PRIMARY_TIMESEAL_ENABLED = "fics-Primary-timeseal-enabled";
 	public static final String FICS_PRIMARY_USER_NAME = "fics-Primary-user-name";
-	public static final String FICS_PROFILE = "fics-profile";
+
 	public static final String FICS_SECONDARY_IS_ANON_GUEST = "fics-Secondary-is-anon-guest";
 	public static final String FICS_SECONDARY_IS_NAMED_GUEST = "fics-Secondary-is-named-guest";
-
 	public static final String FICS_SECONDARY_PASSWORD = "fics-Secondary-password";
 	public static final String FICS_SECONDARY_PORT = "fics-Secondary-port";
 	public static final String FICS_SECONDARY_SERVER_URL = "fics-Secondary-server-url";
 	public static final String FICS_SECONDARY_TIMESEAL_ENABLED = "fics-Secondary-timeseal-enabled";
 	public static final String FICS_SECONDARY_USER_NAME = "fics-Secondary-user-name";
 
-	public static final String FICS_TEAM_LEAGUE_URL = "fics-team-league-url";
 	public static final String FICS_TERTIARY_IS_ANON_GUEST = "fics-Tertiary-is-anon-guest";
 	public static final String FICS_TERTIARY_IS_NAMED_GUEST = "fics-Tertiary-is-named-guest";
 	public static final String FICS_TERTIARY_PASSWORD = "fics-Tertiary-password";
 	public static final String FICS_TERTIARY_PORT = "fics-Tertiary-port";
 	public static final String FICS_TERTIARY_SERVER_URL = "fics-Tertiary-server-url";
 	public static final String FICS_TERTIARY_TIMESEAL_ENABLED = "fics-Tertiary-timeseal-enabled";
-
 	public static final String FICS_TERTIARY_USER_NAME = "fics-Tertiary-user-name";
+
 	public static final String GAME_QUADRANT = "game-quadrant";
 	public static final String MAIN_TAB_QUADRANT = "main-quadrant";
 	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrant";
 	public static final String PERSON_TAB_QUADRANT = "person-quadrant";
+	public static final String REGEX_TAB_QUADRANT = "regex-quadrant";
+	public static final String SEEK_GRAPH_QUADRANT = "seek-graph-quadrant";
+
 	// ONLY PASS THESE VALUES INTO get/set SashWeights and get/set Quad
 	public static final String QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "quad1-quad234567-quad8-sash-weights";
 	public static final String QUAD2_QUAD234567_SASH_WEIGHTS = "quad2-quad234567-sash-weights";
-
 	public static final String QUAD3_QUAD4_SASH_WEIGHTS = "quad3-quad4-sash-weights";
 	public static final String QUAD34_QUAD567_SASH_WEIGHTS = "quad34-quad567-sash-weights";
 	public static final String QUAD5_QUAD6_SASH_WEIGHTS = "quad5-quad6-sash-weights";
 	public static final String QUAD56_QUAD7_SASH_WEIGHTS = "quad56-quad7-sash-weights";
-	public static final String REGEX_TAB_QUADRANT = "regex-quadrant";
-	public static final String SEEK_GRAPH_QUADRANT = "seek-graph-quadrant";
+
 	public static final String TIMESEAL_INIT_STRING = "timeseal-init-string";
 
 	public static final String WINDOW_BOUNDS = "window-bounds";

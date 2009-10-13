@@ -11,7 +11,7 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor.pref;
+package raptor.pref.page;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
@@ -66,10 +66,14 @@ public class ChatConsoleScriptsPage extends PreferencePage {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 
-		activeScriptsTable = new Table(composite, SWT.BORDER | SWT.V_SCROLL
-				| SWT.SINGLE | SWT.FULL_SELECTION);
-		activeScriptsTable.setLayoutData(new GridData(SWT.CENTER, SWT.FILL,
-				false, true));
+		Composite tableComposite = new Composite(composite, SWT.NONE);
+		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
+				true));
+		activeScriptsTable = new Table(tableComposite, SWT.BORDER
+				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		activeScriptsTable.setSize(activeScriptsTable.computeSize(160, 250));
+		activeScriptsTable.setLocation(5, 5);
+
 		TableColumn activeName = new TableColumn(activeScriptsTable, SWT.LEFT);
 		activeName.setText("Active Script Name");
 		activeName.setWidth(150);
@@ -87,12 +91,15 @@ public class ChatConsoleScriptsPage extends PreferencePage {
 		});
 		activeCursor.setVisible(true);
 
-		inactiveScriptsTable = new Table(composite, SWT.BORDER | SWT.V_SCROLL
-				| SWT.SINGLE | SWT.FULL_SELECTION);
+		inactiveScriptsTable = new Table(tableComposite, SWT.BORDER
+				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		inactiveScriptsTable
+				.setSize(inactiveScriptsTable.computeSize(160, 250));
+		inactiveScriptsTable.setLocation(
+				5 + 20 + activeScriptsTable.getSize().x, 5);
+
 		TableColumn inactiveName = new TableColumn(inactiveScriptsTable,
 				SWT.LEFT);
-		inactiveScriptsTable.setLayoutData(new GridData(SWT.CENTER, SWT.FILL,
-				false, true));
 		inactiveName.setText("Inactive Script Name");
 		inactiveName.setWidth(150);
 		inactiveScriptsTable.setHeaderVisible(true);
@@ -258,7 +265,9 @@ public class ChatConsoleScriptsPage extends PreferencePage {
 		ChatScript[] allScripts = ScriptService.getInstance()
 				.getAllChatScripts();
 		for (ChatScript script : allScripts) {
-			if (script.getChatScriptType() != ChatScriptType.OneShot) {
+			if (script.getChatScriptType() == ChatScriptType.onChannelTellMessages
+					|| script.getChatScriptType() == ChatScriptType.OnPartnerTellMessages
+					|| script.getChatScriptType() == ChatScriptType.OnPersonTellMessages) {
 				if (script.isActive()) {
 					TableItem item = new TableItem(activeScriptsTable, SWT.NONE);
 					item.setText(new String[] { script.getName() });

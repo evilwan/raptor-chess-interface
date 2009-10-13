@@ -376,6 +376,14 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, CHAT_LINK_UNDERLINE_COLOR,
 				new RGB(0, 0, 238));
 
+		// Bug house buttons settings.
+		PreferenceConverter.setDefault(this, BUG_BUTTONS_FONT,
+				new FontData[] { new FontData(defaultFontName, 16, SWT.BOLD) });
+		// Bug house
+		setDefault(BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD, true);
+		setDefault(BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD, true);
+
+		// App settings.
 		setDefault(APP_NAME, "Raptor v.Alpha.1");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
@@ -465,6 +473,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(FICS_IS_LOGGING_GAMES, false);
+		setDefault(FICS_SHOW_BUGBUTTONS_ON_CONNECT, true);
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
 		setDefault(FICS_COMMANDS_HELP_URL,
@@ -505,6 +514,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(BICS_IS_LOGGING_GAMES, false);
 		setDefault(BICS_AUTO_CONNECT, false);
+		setDefault(BICS_SHOW_BUGBUTTONS_ON_CONNECT, true);
 		setDefault(BICS_PROFILE, "Primary");
 		// Bics Primary
 		setDefault(BICS_PRIMARY_USER_NAME, "");

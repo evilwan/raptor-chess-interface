@@ -45,8 +45,7 @@ public class ProfileDialog extends Dialog {
 			threads5, image1;
 
 	public ProfileDialog() {
-		super(Raptor.getInstance().getRaptorWindow().getShell(),
-				SWT.DIALOG_TRIM);
+		super(Raptor.getInstance().getWindow().getShell(), SWT.DIALOG_TRIM);
 		setText("Mini Profiler");
 	}
 

@@ -50,9 +50,11 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 	protected StyledText outputText;
 	protected Label promptLabel;
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
-		public void propertyChange(PropertyChangeEvent arg0) {
-			updateFromPrefs();
-			redraw();
+		public void propertyChange(PropertyChangeEvent event) {
+			if (event.getProperty().startsWith("chat")) {
+				updateFromPrefs();
+				redraw();
+			}
 		}
 	};
 

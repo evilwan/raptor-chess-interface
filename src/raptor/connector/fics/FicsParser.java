@@ -24,9 +24,11 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.chess.BughouseGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Result;
+import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.connector.fics.game.B1Parser;
 import raptor.connector.fics.game.G1Parser;
@@ -489,8 +491,23 @@ public class FicsParser implements IcsParser, GameConstants {
 				IcsUtils.updateNonPositionFields(game, message);
 				IcsUtils.updatePosition(game, message);
 				IcsUtils.verifyLegal(game);
-
 				service.addGame(game);
+
+				if (game.getVariant() == Variant.bughouse) {
+					if (StringUtils.isNotBlank(g1Message.parterGameId)
+							&& !service.isManaging(g1Message.parterGameId)) {
+						connector.sendMessage("observe "
+								+ g1Message.parterGameId, true);
+					} else {
+						Game otherBoard = service
+								.getGame(g1Message.parterGameId);
+						((BughouseGame) game)
+								.setOtherBoard((BughouseGame) otherBoard);
+						((BughouseGame) otherBoard)
+								.setOtherBoard((BughouseGame) game);
+					}
+				}
+
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Firing game created.");
 				}

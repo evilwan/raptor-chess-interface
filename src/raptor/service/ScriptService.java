@@ -64,7 +64,7 @@ public class ScriptService {
 	}
 
 	/**
-	 * Returns all chat scripts.
+	 * Returns all chat scripts sorted by name.
 	 */
 	public ChatScript[] getAllChatScripts() {
 		ArrayList<ChatScript> chatScripts = new ArrayList<ChatScript>(
@@ -75,7 +75,7 @@ public class ScriptService {
 	}
 
 	/**
-	 * Returns all game scripts.
+	 * Returns all game scripts sorted by name.
 	 */
 	public GameScript[] getAllGameScripts() {
 		ArrayList<GameScript> gameScripts = new ArrayList<GameScript>(
@@ -91,7 +91,7 @@ public class ScriptService {
 
 	/**
 	 * Returns all active chat scripts that match the specified connector and
-	 * chat script type.
+	 * chat script type. The result is sorted by the order field.
 	 */
 	public ChatScript[] getChatScripts(Connector connector, ChatScriptType type) {
 		ArrayList<ChatScript> chatScripts = new ArrayList<ChatScript>(20);

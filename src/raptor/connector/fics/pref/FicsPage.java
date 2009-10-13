@@ -44,6 +44,10 @@ public class FicsPage extends FieldEditorPreferencePage {
 		addField(new BooleanFieldEditor(PreferenceKeys.FICS_IS_LOGGING_GAMES,
 				"Log games in PGN (Comming Soon)", getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_CONNECT,
+				"Show bughouse buttons on connect", getFieldEditorParent()));
+
 		addField(new StringFieldEditor(PreferenceKeys.FICS_FREECHESS_ORG_URL,
 				"Fics url:", getFieldEditorParent()));
 

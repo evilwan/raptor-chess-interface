@@ -179,12 +179,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			item.setText("Add a tab for channel: " + channel);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					if (!Raptor.getInstance().getRaptorWindow()
-							.containsChannelItem(connector, channel)) {
+					if (!Raptor.getInstance().getWindow().containsChannelItem(
+							connector, channel)) {
 						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 								new ChannelController(connector, channel));
-						Raptor.getInstance().getRaptorWindow()
-								.addRaptorWindowItem(windowItem, false);
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
 						ChatUtils
 								.appendPreviousChatsToController(windowItem.console);
 					}
@@ -229,7 +229,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							LaunchBrowser.openURL(url);
 							return;
 						} else {
-							Raptor.getInstance().getRaptorWindow()
+							Raptor.getInstance().getWindow()
 									.addRaptorWindowItem(
 											new BrowserWindowItem(url, url));
 						}
@@ -252,7 +252,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							LaunchBrowser.openURL(url);
 							return;
 						} else {
-							Raptor.getInstance().getRaptorWindow()
+							Raptor.getInstance().getWindow()
 									.addRaptorWindowItem(
 											new BrowserWindowItem(url, url));
 						}
@@ -274,7 +274,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							LaunchBrowser.openURL(url);
 							return;
 						} else {
-							Raptor.getInstance().getRaptorWindow()
+							Raptor.getInstance().getWindow()
 									.addRaptorWindowItem(
 											new BrowserWindowItem(url, url));
 						}
@@ -344,12 +344,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			item.setText("Add a tab for person: " + person);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					if (!Raptor.getInstance().getRaptorWindow()
+					if (!Raptor.getInstance().getWindow()
 							.containsPersonalTellItem(connector, person)) {
 						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 								new PersonController(connector, person));
-						Raptor.getInstance().getRaptorWindow()
-								.addRaptorWindowItem(windowItem, false);
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
 						ChatUtils
 								.appendPreviousChatsToController(windowItem.console);
 					}
@@ -965,7 +965,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				LaunchBrowser.openURL(url);
 				return;
 			} else {
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						new BrowserWindowItem(url, url));
 			}
 		}

@@ -33,6 +33,11 @@ public interface RaptorWindowItem {
 	public void addItemChangedListener(ItemChangedListener listener);
 
 	/**
+	 * Invoked after this control is moved to a new quadrant.
+	 */
+	public void afterQuadrantMove(Quadrant newQuadrant);
+
+	/**
 	 * Returns true if the RaptorWindowItem can be closed, false otherwise. This
 	 * method can be used to prompt the user to determine if it should be
 	 * closed.
@@ -54,6 +59,11 @@ public interface RaptorWindowItem {
 	 * there is no image.
 	 */
 	public Image getImage();
+
+	/**
+	 * Returns a list of the quadrants this window item can move to.
+	 */
+	public Quadrant[] getMoveToQuadrants();
 
 	/**
 	 * Returns the preferred quadrant the window item would like to be added to.

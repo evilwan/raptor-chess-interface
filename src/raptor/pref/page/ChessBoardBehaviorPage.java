@@ -11,53 +11,54 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor.pref;
+package raptor.pref.page;
 
-import org.eclipse.jface.preference.ColorFieldEditor;
-import org.eclipse.jface.preference.ComboFieldEditor;
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FontFieldEditor;
 
 import raptor.Raptor;
+import raptor.pref.PreferenceKeys;
 
-public class RaptorWindowPage extends FieldEditorPreferencePage {
-	public RaptorWindowPage() {
+public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
+	public ChessBoardBehaviorPage() {
+		// Use the "flat" layout
 		super(GRID);
-		setTitle("Raptor Window");
+		setTitle("Behavior");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override
 	protected void createFieldEditors() {
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL, "Show Piece Jail",
+				getFieldEditorParent()));
 
-		String[][] sliderWidthPreferences = { { "Tiny", "3" },
-				{ "Small", "5" }, { "Medium", "8" }, { "Large", "11" },
-				{ "Extra Wide", "15" } };
-		ComboFieldEditor setFieldEditor = new ComboFieldEditor(
-				PreferenceKeys.APP_SASH_WIDTH, "Window Area Adjuster Width:",
-				sliderWidthPreferences, getFieldEditorParent());
-		addField(setFieldEditor);
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_SHOW_COORDINATES, "Show Coordinates",
+				getFieldEditorParent()));
 
-		ColorFieldEditor pingTimeColor = new ColorFieldEditor(
-				PreferenceKeys.APP_PING_COLOR, "Ping Time Font Color",
-				getFieldEditorParent());
-		addField(pingTimeColor);
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING,
+				"Play Move Sound When Observing", getFieldEditorParent()));
 
-		addField(pingTimeColor);
-		FontFieldEditor pingTimeFont = new FontFieldEditor(
-				PreferenceKeys.APP_PING_FONT, "Ping Time Font",
-				getFieldEditorParent());
-		addField(pingTimeFont);
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR,
+				"Invisible Move Enabled (Crosshairs cursor on drag and drops)",
+				getFieldEditorParent()));
 
-		ColorFieldEditor statusBarFontColor = new ColorFieldEditor(
-				PreferenceKeys.APP_STATUS_BAR_COLOR, "Status Bar Font Color",
-				getFieldEditorParent());
-		addField(statusBarFontColor);
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS,
+				"Show chess piece unicode chars (e.g. \u2654\u2655\u2656\u2657\u2658\u2659)",
+				getFieldEditorParent()));
 
-		FontFieldEditor statusBarFont = new FontFieldEditor(
-				PreferenceKeys.APP_STATUS_BAR_FONT, "Status Bar Font",
-				getFieldEditorParent());
-		addField(statusBarFont);
+		addField(new BooleanFieldEditor(PreferenceKeys.BOARD_PREMOVE_ENABLED,
+				"Premove Enabled", getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED,
+				"Queueing Premove Enabled", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(PreferenceKeys.BOARD_SMARTMOVE_ENABLED,
+				"Smartmove Enabled (Middle Click)", getFieldEditorParent()));
 	}
 }
