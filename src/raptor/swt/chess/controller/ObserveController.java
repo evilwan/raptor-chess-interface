@@ -123,12 +123,19 @@ public class ObserveController extends ChessBoardController {
 		}
 	};
 	protected ToolBar toolbar;
+	protected boolean initialWhiteOnTop;
 
-	public ObserveController(Game game, Connector connector) {
+	public ObserveController(Game game, boolean isWhiteOnTop,
+			Connector connector) {
 		super(new GameCursor(game,
 				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast));
 		cursor = (GameCursor) getGame();
 		this.connector = connector;
+		initialWhiteOnTop = isWhiteOnTop;
+	}
+
+	public ObserveController(Game game, Connector connector) {
+		this(game, false, connector);
 	}
 
 	@Override
@@ -227,6 +234,8 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void init() {
+
+		board.setWhiteOnTop(initialWhiteOnTop);
 
 		/**
 		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail

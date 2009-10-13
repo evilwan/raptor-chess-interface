@@ -45,6 +45,7 @@ import raptor.connector.fics.game.message.MovesMessage;
 import raptor.connector.fics.game.message.Style12Message;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.PlayingController;
@@ -204,7 +205,15 @@ public class IcsUtils implements GameConstants {
 
 		if (game.isInState(Game.OBSERVING_STATE)
 				|| game.isInState(Game.OBSERVING_EXAMINED_STATE)) {
-			controller = new ObserveController(game, connector);
+			if (isBughouseOtherBoard) {
+				ChessBoardWindowItem otherBoardItem = Raptor.getInstance()
+						.getWindow().getChessBoardWindowItem(
+								((BughouseGame) game).getOtherBoard().getId());
+				controller = new ObserveController(game, !otherBoardItem
+						.getController().getBoard().isWhiteOnTop(), connector);
+			} else {
+				controller = new ObserveController(game, connector);
+			}
 
 		} else if (game.isInState(Game.SETUP_STATE)) {
 			controller = new SetupController(game, connector);
@@ -216,6 +225,7 @@ public class IcsUtils implements GameConstants {
 			LOG.error("Could not find controller type for game state. "
 					+ "Ignoring game. state= " + game.getState());
 		}
+
 		return controller;
 	}
 
@@ -577,6 +587,18 @@ public class IcsUtils implements GameConstants {
 
 			for (int i = 0; i < halfMoveCountGameStartedOn; i++) {
 				try {
+					if (gameClone.isInState(Game.DROPPABLE_STATE)) {
+						gameClone.setDropCount(WHITE, PAWN, 1);
+						gameClone.setDropCount(WHITE, QUEEN, 1);
+						gameClone.setDropCount(WHITE, ROOK, 1);
+						gameClone.setDropCount(WHITE, KNIGHT, 1);
+						gameClone.setDropCount(WHITE, BISHOP, 1);
+						gameClone.setDropCount(BLACK, PAWN, 1);
+						gameClone.setDropCount(BLACK, QUEEN, 1);
+						gameClone.setDropCount(BLACK, ROOK, 1);
+						gameClone.setDropCount(BLACK, KNIGHT, 1);
+						gameClone.setDropCount(BLACK, BISHOP, 1);
+					}
 					Move move = gameClone.makeSanMove(message.moves[i]);
 					move.addAnnotation(new RemainingClockTime(
 							message.timePerMove[i]));
