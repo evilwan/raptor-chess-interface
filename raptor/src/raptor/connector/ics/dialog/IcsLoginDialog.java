@@ -66,7 +66,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	protected boolean wasLoginPressed;
 
 	public IcsLoginDialog(String profilePrefix, String title) {
-		super(Raptor.getInstance().getRaptorWindow().getShell());
+		super(Raptor.getInstance().getWindow().getShell());
 		this.profilePrefix = profilePrefix;
 		this.title = title;
 	}

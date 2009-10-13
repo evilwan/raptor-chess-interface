@@ -11,24 +11,20 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor.pref;
+package raptor.pref.page;
 
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.swt.BrowserWindowItem;
+import raptor.swt.BugButtonsWindowItem;
+import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chess.ChessBoardWindowItem;
 
 public class RaptorWindowLayoutPage extends FieldEditorPreferencePage {
-	protected static final String[][] Quadrants = {
-			{ Quadrant.I.name(), Quadrant.I.name() },
-			{ Quadrant.II.name(), Quadrant.II.name() },
-			{ Quadrant.III.name(), Quadrant.III.name() },
-			{ Quadrant.IV.name(), Quadrant.IV.name() },
-			{ Quadrant.V.name(), Quadrant.V.name() },
-			{ Quadrant.VI.name(), Quadrant.VI.name() },
-			{ Quadrant.VII.name(), Quadrant.VII.name() },
-			{ Quadrant.VIII.name(), Quadrant.VIII.name() } };
+
 	protected String layoutPrefix;
 
 	public RaptorWindowLayoutPage(String layoutName, String layoutPrefix) {
@@ -38,66 +34,86 @@ public class RaptorWindowLayoutPage extends FieldEditorPreferencePage {
 		this.layoutPrefix = layoutPrefix;
 	}
 
+	protected String[][] buildQuadrantArray(Quadrant[] quadrants) {
+		String[][] result = new String[quadrants.length][2];
+		for (int i = 0; i < quadrants.length; i++) {
+			result[i][0] = quadrants[i].name();
+			result[i][1] = quadrants[i].name();
+		}
+		return result;
+	}
+
 	@Override
 	protected void createFieldEditors() {
 
 		ComboFieldEditor mainQuad = new ComboFieldEditor(layoutPrefix
-				+ "-main-quadrant", "Main Chat Console Quadrant:", Quadrants,
+				+ "-main-quadrant", "Main Chat Console Quadrant:",
+				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(mainQuad);
 
 		ComboFieldEditor channelQuad = new ComboFieldEditor(layoutPrefix
 				+ "-channel-quadrant", "Channel Chat Console Quadrant:",
-				Quadrants, getFieldEditorParent());
+				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
+				getFieldEditorParent());
 		addField(channelQuad);
 
 		ComboFieldEditor personQuad = new ComboFieldEditor(layoutPrefix
 				+ "-person-quadrant", "Person Chat Console Quadrant:",
-				Quadrants, getFieldEditorParent());
+				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
+				getFieldEditorParent());
 		addField(personQuad);
 
 		ComboFieldEditor regexQuad = new ComboFieldEditor(layoutPrefix
 				+ "-regex-quadrant",
-				"Regular Expression Chat Console Quadrant:", Quadrants,
+				"Regular Expression Chat Console Quadrant:",
+				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(regexQuad);
 
 		ComboFieldEditor ptellQuad = new ComboFieldEditor(layoutPrefix
 				+ "-partner-quadrant", "Partner Tells Chat Console Quadrant:",
-				Quadrants, getFieldEditorParent());
+				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
+				getFieldEditorParent());
 		addField(ptellQuad);
 
 		ComboFieldEditor gameQuad = new ComboFieldEditor(layoutPrefix
 				+ "-game-quadrant",
 				"Chess Game (includes Bughouse primary Board) Quadrant:",
-				Quadrants, getFieldEditorParent());
+				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
+				getFieldEditorParent());
 		addField(gameQuad);
 
 		ComboFieldEditor bughosueQuad = new ComboFieldEditor(layoutPrefix
 				+ "-bughosue-game-2-quadrant",
-				"Bughosue Game Secondary Board Quadrant:", Quadrants,
+				"Bughosue Game Secondary Board Quadrant:",
+				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(bughosueQuad);
 
 		ComboFieldEditor internalBrowserQuad = new ComboFieldEditor(
 				layoutPrefix + "-browser-quadrant",
-				"Internal Web Browser Quadrant:", Quadrants,
+				"Internal Web Browser Quadrant:",
+				buildQuadrantArray(BrowserWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(internalBrowserQuad);
 
 		ComboFieldEditor bughouseArena = new ComboFieldEditor(layoutPrefix
-				+ "-bug-arena-quadrant", "Bughouse Arena Quadrant:", Quadrants,
+				+ "-bug-arena-quadrant", "Bughouse Arena Quadrant:",
+				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(bughouseArena);
 
 		ComboFieldEditor seekGraphQuad = new ComboFieldEditor(layoutPrefix
-				+ "-seek-graph-quadrant", "Seek Graph Quadrant:", Quadrants,
+				+ "-seek-graph-quadrant", "Seek Graph Quadrant:",
+				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(seekGraphQuad);
 
 		ComboFieldEditor bugButtonQuad = new ComboFieldEditor(layoutPrefix
 				+ "-seek-graph-quadrant",
-				"Bughosue Communication Buttons Quadrant:", Quadrants,
+				"Bughosue Communication Buttons Quadrant:",
+				buildQuadrantArray(BugButtonsWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(bugButtonQuad);
 	}

@@ -45,7 +45,12 @@ public class ChatScript implements Comparable<ChatScript> {
 		/**
 		 * Used for toolbar scripts. Scripts that are just executed on demand.
 		 */
-		OneShot,
+		ToolbarOneShot,
+		/**
+		 * Used for bughouse botton scripts. Scripts that are just executed on
+		 * demand.
+		 */
+		BugButtonsOneShot,
 		/**
 		 * Used for ChatScripts which are processed on each channel tell
 		 * received.
@@ -112,7 +117,7 @@ public class ChatScript implements Comparable<ChatScript> {
 	protected String description = "";
 	protected String script = "";
 	protected boolean isActive = false;
-	protected ChatScriptType chatScriptType = ChatScriptType.OneShot;
+	protected ChatScriptType chatScriptType = ChatScriptType.ToolbarOneShot;
 	protected ScriptConnectorType scriptConnectorType = ScriptConnectorType.ICS;
 	protected int order = Integer.MAX_VALUE;
 

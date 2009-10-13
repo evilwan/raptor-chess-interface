@@ -23,6 +23,9 @@ import raptor.RaptorWindowItem;
 import raptor.swt.ItemChangedListener;
 
 public class ChatConsoleWindowItem implements RaptorWindowItem {
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
+			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
+
 	public static final int TEXT_BLOCK = 5000;
 	ChatConsole console;
 	ChatConsoleController controller;
@@ -34,6 +37,13 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 
 	public void addItemChangedListener(ItemChangedListener listener) {
 		controller.addItemChangedListener(listener);
+	}
+
+	/**
+	 * Invoked after this control is moved to a new quadrant.
+	 */
+	public void afterQuadrantMove(Quadrant newQuadrant) {
+
 	}
 
 	public boolean confirmClose() {
@@ -65,6 +75,13 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 
 	public Image getImage() {
 		return controller != null ? controller.getIconImage() : null;
+	}
+
+	/**
+	 * Returns a list of the quadrants this window item can move to.
+	 */
+	public Quadrant[] getMoveToQuadrants() {
+		return MOVE_TO_QUADRANTS;
 	}
 
 	public Quadrant getPreferredQuadrant() {

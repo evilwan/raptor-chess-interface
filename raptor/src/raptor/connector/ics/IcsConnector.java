@@ -30,6 +30,7 @@ import org.apache.commons.logging.LogFactory;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.chess.BughouseGame;
 import raptor.chess.Game;
 import raptor.chess.Move;
 import raptor.chess.util.GameUtils;
@@ -139,11 +140,11 @@ public abstract class IcsConnector implements Connector {
 		}
 
 		public void openChannelTab(String channel) {
-			if (!Raptor.getInstance().getRaptorWindow().containsChannelItem(
+			if (!Raptor.getInstance().getWindow().containsChannelItem(
 					IcsConnector.this, channel)) {
 				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 						new ChannelController(IcsConnector.this, channel));
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						windowItem, false);
 				ChatUtils.appendPreviousChatsToController(windowItem
 						.getConsole());
@@ -151,11 +152,11 @@ public abstract class IcsConnector implements Connector {
 		}
 
 		public void openPartnerTab() {
-			if (!Raptor.getInstance().getRaptorWindow()
-					.containsPartnerTellItem(IcsConnector.this)) {
+			if (!Raptor.getInstance().getWindow().containsPartnerTellItem(
+					IcsConnector.this)) {
 				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 						new PartnerTellController(IcsConnector.this));
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						windowItem, false);
 				ChatUtils.appendPreviousChatsToController(windowItem
 						.getConsole());
@@ -163,11 +164,11 @@ public abstract class IcsConnector implements Connector {
 		}
 
 		public void openPersonTab(String person) {
-			if (!Raptor.getInstance().getRaptorWindow()
-					.containsPersonalTellItem(IcsConnector.this, person)) {
+			if (!Raptor.getInstance().getWindow().containsPersonalTellItem(
+					IcsConnector.this, person)) {
 				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 						new PersonController(IcsConnector.this, person));
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						windowItem, false);
 				ChatUtils.appendPreviousChatsToController(windowItem
 						.getConsole());
@@ -175,12 +176,12 @@ public abstract class IcsConnector implements Connector {
 		}
 
 		public void openRegExTab(String regularExpression) {
-			if (!Raptor.getInstance().getRaptorWindow()
-					.containsPartnerTellItem(IcsConnector.this)) {
+			if (!Raptor.getInstance().getWindow().containsPartnerTellItem(
+					IcsConnector.this)) {
 				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 						new RegExController(IcsConnector.this,
 								regularExpression));
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						windowItem, false);
 				ChatUtils.appendPreviousChatsToController(windowItem
 						.getConsole());
@@ -193,7 +194,7 @@ public abstract class IcsConnector implements Connector {
 				LaunchBrowser.openURL(url);
 				return;
 			} else {
-				Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						new BrowserWindowItem(url, url));
 			}
 		}
@@ -236,9 +237,21 @@ public abstract class IcsConnector implements Connector {
 
 		@Override
 		public void gameCreated(Game game) {
-			Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
-					new ChessBoardWindowItem(IcsUtils.buildController(game,
-							IcsConnector.this)));
+			if (game instanceof BughouseGame) {
+				if (((BughouseGame) game).getOtherBoard() == null) {
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							new ChessBoardWindowItem(IcsUtils.buildController(
+									game, IcsConnector.this)));
+				} else {
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							new ChessBoardWindowItem(IcsUtils.buildController(
+									game, IcsConnector.this, true), true));
+				}
+			} else {
+				Raptor.getInstance().getWindow().addRaptorWindowItem(
+						new ChessBoardWindowItem(IcsUtils.buildController(game,
+								IcsConnector.this)));
+			}
 		}
 	};
 	protected boolean hasSentLogin = false;
@@ -326,14 +339,14 @@ public abstract class IcsConnector implements Connector {
 		if (mainConsoleWindowItem == null) {
 			// Add the main console tab to the raptor window.
 			createMainConsoleWindowItem();
-			Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+			Raptor.getInstance().getWindow().addRaptorWindowItem(
 					mainConsoleWindowItem, false);
-		} else if (!Raptor.getInstance().getRaptorWindow().isBeingManaged(
+		} else if (!Raptor.getInstance().getWindow().isBeingManaged(
 				mainConsoleWindowItem)) {
 			// Add a new main console to the raptor window since the existing
 			// one is no longer being managed (it was already disposed).
 			createMainConsoleWindowItem();
-			Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+			Raptor.getInstance().getWindow().addRaptorWindowItem(
 					mainConsoleWindowItem, false);
 		}
 		// If its being managed no need to do anything it should adjust itself
@@ -476,7 +489,7 @@ public abstract class IcsConnector implements Connector {
 				publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 						"Disconnected"));
 
-				Raptor.getInstance().getRaptorWindow().setPingTime(this, -1);
+				Raptor.getInstance().getWindow().setPingTime(this, -1);
 				fireDisconnected();
 				LOG.error("Disconnected from " + getShortName());
 			}
@@ -902,7 +915,7 @@ public abstract class IcsConnector implements Connector {
 				public void run() {
 					long currentTime = System.currentTimeMillis();
 					lastPingTime = currentTime - lastSendTime;
-					Raptor.getInstance().getRaptorWindow().setPingTime(
+					Raptor.getInstance().getWindow().setPingTime(
 							IcsConnector.this, lastPingTime);
 					lastSendTime = 0;
 				}

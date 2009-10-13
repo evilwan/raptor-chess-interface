@@ -587,8 +587,8 @@ public class BoardUtils implements BoardConstants {
 
 		Image result = Raptor.getInstance().getImageRegistry().get(key);
 		if (result == null) {
-			result = new Image(Raptor.getInstance().getRaptorWindow()
-					.getShell().getDisplay(), Raptor.IMAGES_DIR + "circle_"
+			result = new Image(Raptor.getInstance().getWindow().getShell()
+					.getDisplay(), Raptor.IMAGES_DIR + "circle_"
 					+ (isSideToMove ? "green" : "gray") + "30x30.png");
 			Raptor.getInstance().getImageRegistry().put(key, result);
 		}

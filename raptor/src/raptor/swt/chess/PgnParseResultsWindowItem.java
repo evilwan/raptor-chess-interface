@@ -32,6 +32,9 @@ import raptor.swt.ItemChangedListener;
 import raptor.swt.chess.controller.InactiveController;
 
 public class PgnParseResultsWindowItem implements RaptorWindowItem {
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
+			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
+
 	public static final int MAX_GAMES = 1000;
 
 	protected Composite composite;
@@ -50,6 +53,13 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
+	}
+
+	/**
+	 * Invoked after this control is moved to a new quadrant.
+	 */
+	public void afterQuadrantMove(Quadrant newQuadrant) {
+
 	}
 
 	public boolean confirmClose() {
@@ -84,6 +94,13 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
 	public Image getImage() {
 		return null;
+	}
+
+	/**
+	 * Returns a list of the quadrants this window item can move to.
+	 */
+	public Quadrant[] getMoveToQuadrants() {
+		return MOVE_TO_QUADRANTS;
 	}
 
 	public Quadrant getPreferredQuadrant() {
@@ -372,7 +389,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
 	protected void openGame(int index) {
 		Game selectedGame = games.get(index);
-		Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+		Raptor.getInstance().getWindow().addRaptorWindowItem(
 				new ChessBoardWindowItem(new InactiveController(selectedGame,
 						selectedGame.getHeader(PgnHeader.White) + " vs "
 								+ selectedGame.getHeader(PgnHeader.Black))));

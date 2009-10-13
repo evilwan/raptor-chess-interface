@@ -45,6 +45,11 @@ public class BugArena implements RaptorWindowItem {
 	public void addItemChangedListener(ItemChangedListener listener) {
 	}
 
+	public void afterQuadrantMove(Quadrant newQuadrant) {
+		// TODO Auto-generated method stub
+
+	}
+
 	public boolean confirmClose() {
 		return !false;
 	}
@@ -62,6 +67,11 @@ public class BugArena implements RaptorWindowItem {
 	}
 
 	public Image getImage() {
+		return null;
+	}
+
+	public Quadrant[] getMoveToQuadrants() {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

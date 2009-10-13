@@ -39,6 +39,10 @@ public class BicsPage extends FieldEditorPreferencePage {
 		addField(new BooleanFieldEditor(PreferenceKeys.BICS_IS_LOGGING_GAMES,
 				"Log games in PGN (Comming Soon)", getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_CONNECT,
+				"Show bughouse buttons on connect", getFieldEditorParent()));
+
 		addField(new TextFieldEditor(PreferenceKeys.BICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
 	}

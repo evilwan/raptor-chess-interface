@@ -195,6 +195,11 @@ public class IcsUtils implements GameConstants {
 
 	public static ChessBoardController buildController(Game game,
 			Connector connector) {
+		return buildController(game, connector, false);
+	}
+
+	public static ChessBoardController buildController(Game game,
+			Connector connector, boolean isBughouseOtherBoard) {
 		ChessBoardController controller = null;
 
 		if (game.isInState(Game.OBSERVING_STATE)

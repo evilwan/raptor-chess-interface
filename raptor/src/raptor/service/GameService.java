@@ -246,6 +246,10 @@ public class GameService {
 		return gameMap.values().size();
 	}
 
+	public boolean isManaging(String gameId) {
+		return gameMap.containsKey(gameId);
+	}
+
 	/**
 	 * Removes a game from the game service.
 	 */

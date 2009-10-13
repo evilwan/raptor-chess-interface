@@ -31,6 +31,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ConnectorService;
 import raptor.service.EcoService;
+import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
@@ -103,13 +104,12 @@ public class Raptor implements PreferenceKeys {
 
 			display.timerExec(500, new Runnable() {
 				public void run() {
-					Raptor.getInstance().getRaptorWindow().addRaptorWindowItem(
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
 							new BrowserWindowItem("Raptor Home", Raptor
 									.getInstance().getPreferences().getString(
 											PreferenceKeys.APP_HOME_URL)));
 					Raptor.getInstance().cursorRegistry.setDefaultCursor(Raptor
-							.getInstance().getRaptorWindow().getShell()
-							.getCursor());
+							.getInstance().getWindow().getShell().getCursor());
 				}
 			});
 
@@ -138,24 +138,17 @@ public class Raptor implements PreferenceKeys {
 	protected RaptorWindow raptorWindow;
 
 	public Raptor() {
-		// Make sure all of the Singleton services get loaded.
-		ThreadService.getInstance();
-		EcoService.getInstance();
-		ConnectorService.getInstance();
-		SoundService.getInstance();
 	}
 
 	/**
 	 * Displays an alert message centered in the RaptorWindow.
 	 */
 	public void alert(final String message) {
-		getInstance().getRaptorWindow().getShell().getDisplay().asyncExec(
+		getInstance().getWindow().getShell().getDisplay().asyncExec(
 				new Runnable() {
 					public void run() {
-						MessageDialog
-								.openInformation(Raptor.getInstance()
-										.getRaptorWindow().getShell(), "Alert",
-										message);
+						MessageDialog.openInformation(Raptor.getInstance()
+								.getWindow().getShell(), "Alert", message);
 					}
 				});
 
@@ -166,7 +159,7 @@ public class Raptor implements PreferenceKeys {
 	 * presses yes true is returned, otherwise false.
 	 */
 	public boolean confirm(final String question) {
-		return MessageDialog.openConfirm(Raptor.getInstance().getRaptorWindow()
+		return MessageDialog.openConfirm(Raptor.getInstance().getWindow()
 				.getShell(), "Confirm", question);
 	}
 
@@ -247,7 +240,7 @@ public class Raptor implements PreferenceKeys {
 	/**
 	 * Returns the RaptorWindow (the main application window.
 	 */
-	public RaptorWindow getRaptorWindow() {
+	public RaptorWindow getWindow() {
 		return raptorWindow;
 	}
 
@@ -255,8 +248,16 @@ public class Raptor implements PreferenceKeys {
 	 * Initializes raptor.
 	 */
 	private void init() {
-		install();
 		preferences = new RaptorPreferenceStore();
+
+		// Make sure all of the Singleton services get loaded.
+		ThreadService.getInstance();
+		EcoService.getInstance();
+		ConnectorService.getInstance();
+		SoundService.getInstance();
+		ScriptService.getInstance();
+
+		install();
 	}
 
 	/**
@@ -289,19 +290,19 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public void onError(final String error, final Throwable throwable) {
 		LOG.error(error, throwable);
-		getInstance().getRaptorWindow().getShell().getDisplay().asyncExec(
+		getInstance().getWindow().getShell().getDisplay().asyncExec(
 				new Runnable() {
 					public void run() {
 						MessageDialog
 								.openError(
-										Raptor.getInstance().getRaptorWindow()
+										Raptor.getInstance().getWindow()
 												.getShell(),
 										"Error",
 										"Critical error occured! We are trying to make Raptor "
 												+ "bug free and we need your help! Please take a moment to report this "
 												+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
 												+ error + "\n" + throwable != null ? ExceptionUtils
-												.getFullStackTrace(throwable)
+												.getMessage(throwable)
 												: "");
 					}
 				});
@@ -313,8 +314,8 @@ public class Raptor implements PreferenceKeys {
 	 * text the user entered is returned.
 	 */
 	public String promptForText(final String question) {
-		InputDialog dialog = new InputDialog(Raptor.getInstance()
-				.getRaptorWindow().getShell(), "Enter Text", question);
+		InputDialog dialog = new InputDialog(Raptor.getInstance().getWindow()
+				.getShell(), "Enter Text", question);
 		return dialog.open();
 	}
 
@@ -325,8 +326,8 @@ public class Raptor implements PreferenceKeys {
 	 * @answer the initial text to place in the users answer.
 	 */
 	public String promptForText(final String question, String answer) {
-		InputDialog dialog = new InputDialog(Raptor.getInstance()
-				.getRaptorWindow().getShell(), "Enter Text", question);
+		InputDialog dialog = new InputDialog(Raptor.getInstance().getWindow()
+				.getShell(), "Enter Text", question);
 		if (answer != null) {
 			dialog.setInput(answer);
 		}

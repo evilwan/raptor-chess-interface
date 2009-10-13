@@ -37,7 +37,7 @@ public class SWTUtils {
 	 * Centers the shell in the RaptorWindow.
 	 */
 	public static void centerInRaptorWindow(Dialog dialog) {
-		Shell parent = Raptor.getInstance().getRaptorWindow().getShell();
+		Shell parent = Raptor.getInstance().getWindow().getShell();
 
 		Rectangle parentSize = parent.getBounds();
 		Point mySize = dialog.getShell().computeSize(0, 0);

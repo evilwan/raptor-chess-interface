@@ -20,6 +20,21 @@ import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
 import raptor.connector.Connector;
+import raptor.pref.page.BugButtonsPage;
+import raptor.pref.page.BughousePage;
+import raptor.pref.page.ChatConsoleChannelColorsPage;
+import raptor.pref.page.ChatConsoleMessageColorsPage;
+import raptor.pref.page.ChatConsolePage;
+import raptor.pref.page.ChatConsoleScriptsPage;
+import raptor.pref.page.ChatConsoleToolbarPage;
+import raptor.pref.page.ChessBoardBehaviorPage;
+import raptor.pref.page.ChessBoardClocksPage;
+import raptor.pref.page.ChessBoardColorsPage;
+import raptor.pref.page.ChessBoardFontsPage;
+import raptor.pref.page.ChessBoardPage;
+import raptor.pref.page.RaptorPage;
+import raptor.pref.page.RaptorWindowLayoutPage;
+import raptor.pref.page.RaptorWindowPage;
 import raptor.service.ConnectorService;
 
 /**
@@ -49,7 +64,7 @@ public class PreferenceUtils {
 
 		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
 		mgr.addTo("chatConsole", new PreferenceNode("messageColors",
-				new ChatConsoleMessageColors()));
+				new ChatConsoleMessageColorsPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("channelColors",
 				new ChatConsoleChannelColorsPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("toolbar",
@@ -67,8 +82,9 @@ public class PreferenceUtils {
 		mgr.addTo("chessBoard", new PreferenceNode("fonts",
 				new ChessBoardFontsPage()));
 
-		// mgr.addToRoot(new PreferenceNode("chatScripts", new
-		// ChatScriptsPage()));
+		mgr.addToRoot(new PreferenceNode("bughouse", new BughousePage()));
+		mgr.addTo("bughouse", new PreferenceNode("buttons",
+				new BugButtonsPage()));
 
 		// Add the connector preference nodes.
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();
@@ -91,7 +107,7 @@ public class PreferenceUtils {
 
 		// Create the preferences dialog
 		PreferenceDialog dlg = new PreferenceDialog(Raptor.getInstance()
-				.getRaptorWindow().getShell(), mgr);
+				.getWindow().getShell(), mgr);
 
 		// Open the dialog
 		dlg.open();

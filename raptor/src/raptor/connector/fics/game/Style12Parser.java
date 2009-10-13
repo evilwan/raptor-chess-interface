@@ -115,61 +115,122 @@ public class Style12Parser implements GameConstants {
 	 * [7][0] is a8 [7][7] is h8
 	 * </pre>
 	 */
-	public static int[][] parsePosition(StringBuilder positionString) {
+	public static int[][] parsePosition(StringBuilder positionString,
+			boolean isWhiteOnTop) {
 
 		int[][] result = new int[8][];
 		int positionCounter = 0;
-		for (int i = 7; i >= 0; i--) {
-			result[i] = new int[8];
 
-			for (int j = 0; j < 8; j++) {
-				switch (positionString.charAt(positionCounter++)) {
-				case '-':
-					result[i][j] = EMPTY;
-					break;
-				case 'p':
-					result[i][j] = BP;
-					break;
-				case 'n':
-					result[i][j] = BN;
-					break;
-				case 'b':
-					result[i][j] = BB;
-					break;
-				case 'r':
-					result[i][j] = BR;
-					break;
-				case 'q':
-					result[i][j] = BQ;
-					break;
-				case 'k':
-					result[i][j] = BK;
-					break;
-				case 'P':
-					result[i][j] = WP;
-					break;
-				case 'N':
-					result[i][j] = WN;
-					break;
-				case 'B':
-					result[i][j] = WB;
-					break;
-				case 'R':
-					result[i][j] = WR;
-					break;
-				case 'Q':
-					result[i][j] = WQ;
-					break;
-				case 'K':
-					result[i][j] = WK;
-					break;
-				default: {
-					throw new IllegalArgumentException(
-							"Invalid piece encountered. '"
-									+ positionString
-											.charAt(positionCounter - 1) + "' "
-									+ positionCounter + " " + positionString);
+		if (isWhiteOnTop) {
+			for (int i = 7; i >= 0; i--) {
+				result[7 - i] = new int[8];
+
+				for (int j = 0; j < 8; j++) {
+					switch (positionString.charAt(positionCounter++)) {
+					case '-':
+						result[7 - i][j] = EMPTY;
+						break;
+					case 'p':
+						result[7 - i][j] = BP;
+						break;
+					case 'n':
+						result[7 - i][j] = BN;
+						break;
+					case 'b':
+						result[7 - i][j] = BB;
+						break;
+					case 'r':
+						result[7 - i][j] = BR;
+						break;
+					case 'q':
+						result[7 - i][j] = BQ;
+						break;
+					case 'k':
+						result[7 - i][j] = BK;
+						break;
+					case 'P':
+						result[7 - i][j] = WP;
+						break;
+					case 'N':
+						result[7 - i][j] = WN;
+						break;
+					case 'B':
+						result[7 - i][j] = WB;
+						break;
+					case 'R':
+						result[7 - i][j] = WR;
+						break;
+					case 'Q':
+						result[7 - i][j] = WQ;
+						break;
+					case 'K':
+						result[7 - i][j] = WK;
+						break;
+					default: {
+						throw new IllegalArgumentException(
+								"Invalid piece encountered. '"
+										+ positionString
+												.charAt(positionCounter - 1)
+										+ "' " + positionCounter + " "
+										+ positionString);
+					}
+					}
 				}
+			}
+		} else {
+			for (int i = 7; i >= 0; i--) {
+				result[i] = new int[8];
+
+				for (int j = 0; j < 8; j++) {
+					switch (positionString.charAt(positionCounter++)) {
+					case '-':
+						result[i][j] = EMPTY;
+						break;
+					case 'p':
+						result[i][j] = BP;
+						break;
+					case 'n':
+						result[i][j] = BN;
+						break;
+					case 'b':
+						result[i][j] = BB;
+						break;
+					case 'r':
+						result[i][j] = BR;
+						break;
+					case 'q':
+						result[i][j] = BQ;
+						break;
+					case 'k':
+						result[i][j] = BK;
+						break;
+					case 'P':
+						result[i][j] = WP;
+						break;
+					case 'N':
+						result[i][j] = WN;
+						break;
+					case 'B':
+						result[i][j] = WB;
+						break;
+					case 'R':
+						result[i][j] = WR;
+						break;
+					case 'Q':
+						result[i][j] = WQ;
+						break;
+					case 'K':
+						result[i][j] = WK;
+						break;
+					default: {
+						throw new IllegalArgumentException(
+								"Invalid piece encountered. '"
+										+ positionString
+												.charAt(positionCounter - 1)
+										+ "' " + positionCounter + " "
+										+ positionString);
+					}
+					}
 				}
 			}
 		}
@@ -203,7 +264,6 @@ public class Style12Parser implements GameConstants {
 			for (int i = 0; i < 8; i++) {
 				positionString.append(tok.nextToken());
 			}
-			result.position = parsePosition(positionString);
 
 			result.isWhitesMoveAfterMoveIsMade = tok.nextToken().equals("W");
 
@@ -242,7 +302,9 @@ public class Style12Parser implements GameConstants {
 
 			result.san = tok.nextToken();
 
-			result.isWhiteOnTop = !tok.nextToken().equals("1");
+			result.isWhiteOnTop = tok.nextToken().equals("1");
+
+			result.position = parsePosition(positionString, result.isWhiteOnTop);
 
 			result.isClockTicking = tok.nextToken().equals("1");
 

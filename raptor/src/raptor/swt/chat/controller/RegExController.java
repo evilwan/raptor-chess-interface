@@ -70,9 +70,9 @@ public class RegExController extends ChatConsoleController {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					RegExDialog regExDialog = new RegExDialog(Raptor
-							.getInstance().getRaptorWindow().getShell(),
-							connector.getShortName()
-									+ " Adjust regular expression dialog",
+							.getInstance().getWindow().getShell(), connector
+							.getShortName()
+							+ " Adjust regular expression dialog",
 							"Enter the regular expression the new regular expression below:");
 					regExDialog.setInput(pattern.pattern());
 					String regEx = regExDialog.open();
