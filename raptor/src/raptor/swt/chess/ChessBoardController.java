@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
+import raptor.chess.BughouseGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
@@ -602,6 +603,15 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.redrawSquares();
 		board.getBoardComposite().layout(true);
 		board.getControl().redraw();
+
+		if (game instanceof BughouseGame) {
+			ChessBoardWindowItem otherBoardItem = Raptor.getInstance()
+					.getWindow().getChessBoardWindowItem(
+							((BughouseGame) getGame()).getOtherBoard().getId());
+			if (otherBoardItem != null) {
+				otherBoardItem.getController().onFlip();
+			}
+		}
 	}
 
 	/**

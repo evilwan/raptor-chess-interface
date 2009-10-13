@@ -78,6 +78,10 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		return board.getControl();
 	}
 
+	public ChessBoardController getController() {
+		return board.getController();
+	}
+
 	public Image getImage() {
 		return null;
 	}

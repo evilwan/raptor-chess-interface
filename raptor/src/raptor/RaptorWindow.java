@@ -1113,6 +1113,32 @@ public class RaptorWindow extends ApplicationWindow {
 		});
 	}
 
+	/**
+	 * Returns the ChessBoardWindowItem for the specified game id, null if its
+	 * not found.
+	 * 
+	 * @param gameId
+	 *            The game id.
+	 * @return null if not found, otherwise the ChessBoardWindowItem.
+	 */
+	public ChessBoardWindowItem getChessBoardWindowItem(String gameId) {
+		ChessBoardWindowItem result = null;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChessBoardWindowItem) {
+					ChessBoardWindowItem item = (ChessBoardWindowItem) folder
+							.getRaptorTabItemAt(i).raptorItem;
+					if (!(item.getController() instanceof InactiveController)
+							&& item.getController().getGame().getId().equals(
+									gameId)) {
+						result = item;
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 	protected RaptorTabFolder getFolderContainingCursor() {
 		Control control = getShell().getDisplay().getCursorControl();
 

@@ -98,15 +98,13 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		}
 	}
 
-
-
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
 	 */
 	protected BicsConnector bics2 = null;
 	protected MenuManager connectionsMenu;
-	
+
 	protected Action autoConnectAction;
 	protected Action bughouseArenaAction;
 	protected Action connectAction;
@@ -201,7 +199,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				Raptor.getInstance().alert("Bughouse Areana Comming soon");
 			}
 		};
-		
+
 		bugbuttonsAction = new Action("Show Bughouse &Buttons") {
 			@Override
 			public void run() {
@@ -301,7 +299,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			public void run() {
 			}
 		};
-		
+
 		bics2.bugbuttonsAction = new Action("Show Bughouse &Buttons") {
 			@Override
 			public void run() {
