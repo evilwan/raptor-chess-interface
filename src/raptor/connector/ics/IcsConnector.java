@@ -63,6 +63,7 @@ import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.util.LaunchBrowser;
+import raptor.util.RaptorStringTokenizer;
 
 /**
  * An ics (internet chess server) connector. You will need to supply yuor own
@@ -1067,25 +1068,29 @@ public abstract class IcsConnector implements Connector {
 		return IcsUtils.stripWord(word);
 	}
 
-	protected void playBughouseSounds(final String ptell) {
-		ThreadService.getInstance().run(new Runnable() {
-			public void run() {
-				int colonIndex = ptell.indexOf(":");
-				if (colonIndex != -1) {
-					String message = ptell.substring(colonIndex + 1,
-							ptell.length()).trim();
-					for (String bugSound : bughouseSounds) {
-						if (bugSound.equalsIgnoreCase(message)) {
-							SoundService.getInstance().playBughouseSound(
-									bugSound);
-							break;
-						}
+	protected boolean playBughouseSounds(final String ptell) {
+		boolean result = false;
+		if (getPreferences().getBoolean(PreferenceKeys.APP_SOUND_ENABLED)) {
+			int colonIndex = ptell.indexOf(":");
+			if (colonIndex != -1) {
+				String message = ptell
+						.substring(colonIndex + 1, ptell.length()).trim();
+				RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
+						"\n", true);
+				message = tok.nextToken().trim();
+				for (String bugSound : bughouseSounds) {
+					if (bugSound.equalsIgnoreCase(message)) {
+						// This creates its own thread.
+						SoundService.getInstance().playBughouseSound(bugSound);
+						result = true;
+						break;
 					}
-				} else {
-					LOG.error("Received a ptell event without a colon");
 				}
+			} else {
+				LOG.error("Received a ptell event without a colon");
 			}
-		});
+		}
+		return result;
 	}
 
 	protected void processScripts(final ChatEvent event) {
@@ -1133,13 +1138,20 @@ public abstract class IcsConnector implements Connector {
 				LOG.debug("Publishing event : " + event);
 			}
 
-			if (event.getType() == ChatType.PARTNER_TELL) {
-				playBughouseSounds(event.getMessage());
-			}
 			if (event.getType() == ChatType.PARTNER_TELL
 					|| event.getType() == ChatType.TELL
 					|| event.getType() == ChatType.CHANNEL_TELL) {
 				processScripts(event);
+			}
+
+			if (event.getType() == ChatType.PARTNER_TELL) {
+				if (playBughouseSounds(event.getMessage())) {
+					;
+				}
+				{
+					// No need to publish it we played the sound.
+					return;
+				}
 			}
 
 			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
