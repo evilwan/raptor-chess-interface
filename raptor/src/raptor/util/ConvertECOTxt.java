@@ -12,13 +12,13 @@ import raptor.chess.GameFactory;
 import raptor.chess.Variant;
 
 /**
- * Converts resources/common/ECO.txt into resources/common/ECOFen.txt
+ * Converts resources/ECO.txt into resources/ECOFen.txt
  */
 public class ConvertECOTxt {
 	public static void main(String args[]) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(
-				"resources/common/ECO.txt"));
-		FileWriter writer = new FileWriter("resources/common/ECOFen.txt");
+				"resources/ECO.txt"));
+		FileWriter writer = new FileWriter("resources/ECOFen.txt");
 
 		String currentLine = null;
 		int lineNumber = 0;

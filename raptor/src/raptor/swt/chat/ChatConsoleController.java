@@ -1153,14 +1153,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void playSounds(ChatEvent event) {
 		if (!isSoundDisabled) {
 			if (event.getType() == ChatType.TELL
-					&& getPreferences()
-							.getBoolean(
-									RaptorPreferenceStore.CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL)) {
+					&& getPreferences().getBoolean(
+							PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL)) {
 				SoundService.getInstance().playSound("chat");
 			} else if (event.getType() == ChatType.PARTNER_TELL
-					&& getPreferences()
-							.getBoolean(
-									RaptorPreferenceStore.CHAT_IS_PLAYING_CHAT_ON_PTELL)) {
+					&& getPreferences().getBoolean(
+							PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PTELL)) {
 				SoundService.getInstance().playSound("chat");
 			}
 		}

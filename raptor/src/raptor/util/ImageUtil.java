@@ -22,9 +22,9 @@ public class ImageUtil {
 
 	public static void main(String args[]) throws Exception {
 
-		scaleImage("resources/common/images/circle_green.jpg",
-				"resources/common/images/circle_green30x30.png", 255, 255, 255,
-				30, 30, SWT.IMAGE_PNG);
+		scaleImage("resources/images/circle_green.jpg",
+				"resources/images/circle_green30x30.png", 255, 255, 255, 30,
+				30, SWT.IMAGE_PNG);
 
 	}
 

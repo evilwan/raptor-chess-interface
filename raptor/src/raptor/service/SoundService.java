@@ -74,7 +74,7 @@ public class SoundService {
 		LOG.info("Initializing sound service.");
 		long startTime = System.currentTimeMillis();
 		try {
-			File file = new File("resources/common/sounds/");
+			File file = new File(Raptor.RESOURCES_DIR + "sounds/");
 			File[] files = file.listFiles(new FilenameFilter() {
 				public boolean accept(File dir, String name) {
 					return name.endsWith(".wav");
@@ -87,7 +87,7 @@ public class SoundService {
 						.getAbsolutePath());
 			}
 
-			file = new File("resources/common/sounds/bughouse");
+			file = new File(Raptor.RESOURCES_DIR + "sounds/bughouse");
 			files = file.listFiles(new FilenameFilter() {
 				public boolean accept(File dir, String name) {
 					return name.endsWith(".wav");
@@ -118,8 +118,8 @@ public class SoundService {
 	}
 
 	/**
-	 * Specify the name of a file in resources/common/sounds/bughouse without
-	 * the .wav to play the sound i.e. "+".
+	 * Specify the name of a file in resources/sounds/bughouse without the .wav
+	 * to play the sound i.e. "+".
 	 */
 	public void playBughouseSound(final String sound) {
 		/**

@@ -303,7 +303,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PTELL, false);
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL, true);
-		
+
 		PreferenceConverter
 				.setDefault(this, CHAT_INPUT_FONT,
 						new FontData[] { new FontData(
@@ -558,7 +558,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + SEEK_GRAPH_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 
-		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|Open Seal|");
+		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
 
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}

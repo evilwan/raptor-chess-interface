@@ -794,7 +794,7 @@ public class RaptorWindow extends ApplicationWindow {
 						PreferenceKeys.APP_NAME));
 		getShell().setImage(
 				Raptor.getInstance().getImage(
-						"resources/common/images/raptorIcon.gif"));
+						Raptor.RESOURCES_DIR + "images/raptorIcon.gif"));
 
 		parent.setLayout(SWTUtils.createMarginlessGridLayout(1, true));
 
