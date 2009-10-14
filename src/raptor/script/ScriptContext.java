@@ -97,6 +97,15 @@ public interface ScriptContext {
 	public void send(String message);
 
 	/**
+	 * Sends the specified message to the connector and hides the message from
+	 * the user.
+	 * 
+	 * @param message
+	 *            The message to send.
+	 */
+	public void sendHidden(String message);
+
+	/**
 	 * Speaks the specified message. Currently not enabled.
 	 */
 	public void speak(String message);

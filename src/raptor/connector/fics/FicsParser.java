@@ -106,12 +106,12 @@ public class FicsParser implements IcsParser, GameConstants {
 		// nonGameEventParsers.add(new BugWhoGEventParser(icsId));
 		// nonGameEventParsers.add(new BugWhoPEventParser(icsId));
 		// nonGameEventParsers.add(new BugWhoUEventParser(icsId));
+		nonGameEventParsers.add(new PartnerTellEventParser());
 		nonGameEventParsers.add(new ToldEventParser());
 		nonGameEventParsers.add(new ChannelTellEventParser());
 		nonGameEventParsers.add(new CShoutEventParser());
 		nonGameEventParsers.add(new ShoutEventParser());
 		nonGameEventParsers.add(new KibitzEventParser());
-		nonGameEventParsers.add(new PartnerTellEventParser());
 		nonGameEventParsers.add(new TellEventParser());
 		nonGameEventParsers.add(new WhisperEventParser());
 

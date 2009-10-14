@@ -30,14 +30,20 @@ public class PartnerTellEventParser extends ChatEventParser {
 	@Override
 	public ChatEvent parse(String text) {
 		if (text.length() < 1500) {
-			int i = text.indexOf(PTELL_IDENTIFIER);
-			if (i != -1) {
-				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
-						text, " ");
-				String s1 = stringtokenizer.nextToken();
-				if (stringtokenizer.nextToken().equals("(your")) {
-					return new ChatEvent(IcsUtils.removeTitles(s1),
-							ChatType.PARTNER_TELL, text);
+			text = text.trim();
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " \r\n");
+			if (tok.hasMoreTokens()) {
+				String source = tok.nextToken();
+				if (source.endsWith("%")) {
+					source = tok.nextToken();
+				}
+				if (tok.hasMoreTokens()) {
+					String s2 = tok.nextToken();
+					if (s2.equals("(your")) {
+						return new ChatEvent(IcsUtils.removeTitles(source),
+								ChatType.PARTNER_TELL, text);
+
+					}
 				}
 			}
 			return null;

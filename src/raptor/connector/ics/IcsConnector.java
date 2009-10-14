@@ -216,6 +216,14 @@ public abstract class IcsConnector implements Connector {
 			IcsConnector.this.sendMessage(message);
 		}
 
+		public void sendHidden(String message) {
+			if (message.contains("tell")) {
+				IcsConnector.this.sendMessage(message, true, ChatType.TOLD);
+			} else {
+				IcsConnector.this.sendMessage(message, true);
+			}
+		}
+
 		public void speak(String message) {
 			SoundService.getInstance().textToSpeech(message);
 		}
@@ -273,7 +281,7 @@ public abstract class IcsConnector implements Connector {
 				sendMessage("date", true);
 				publishEvent(new ChatEvent("", ChatType.INTERNAL,
 						"The \"date\" command was just sent as a keep alive."));
-				ThreadService.getInstance().scheduleOneShot(300000, this);
+				ThreadService.getInstance().scheduleOneShot(60000, this);
 			}
 		}
 	};
@@ -1146,9 +1154,6 @@ public abstract class IcsConnector implements Connector {
 
 			if (event.getType() == ChatType.PARTNER_TELL) {
 				if (playBughouseSounds(event.getMessage())) {
-					;
-				}
-				{
 					// No need to publish it we played the sound.
 					return;
 				}
