@@ -19,8 +19,6 @@ import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class PartnerTellEventParser extends ChatEventParser {
-	private static final String PTELL_IDENTIFIER = "(your partner) tells you: ";
-
 	public PartnerTellEventParser() {
 	}
 
@@ -31,7 +29,7 @@ public class PartnerTellEventParser extends ChatEventParser {
 	public ChatEvent parse(String text) {
 		if (text.length() < 1500) {
 			text = text.trim();
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " \r\n");
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " \r\n",true);
 			if (tok.hasMoreTokens()) {
 				String source = tok.nextToken();
 				if (source.endsWith("%")) {
