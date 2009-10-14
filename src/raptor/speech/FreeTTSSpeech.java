@@ -16,7 +16,6 @@ import com.sun.speech.freetts.jsapi.FreeTTSEngineCentral;
 public class FreeTTSSpeech implements Speech {
 	private static final Log LOG = LogFactory.getLog(FreeTTSSpeech.class);
 	private static final String VOICE_NAME = "kevin16";
-	private Synthesizer synthesizer;
 
 	public static void main(String[] args) {
 		FreeTTSSpeech speech = new FreeTTSSpeech();
@@ -24,7 +23,23 @@ public class FreeTTSSpeech implements Speech {
 		speech.speak("Hello this is a test");
 	}
 
+	private Synthesizer synthesizer;
+
 	public FreeTTSSpeech() {
+	}
+
+	public void dispose() {
+		if (synthesizer != null) {
+			try {
+				synthesizer.deallocate();
+			} catch (Exception e) {
+			}
+		}
+	}
+
+	@Override
+	public void finalize() throws Exception {
+		dispose();
 	}
 
 	public void init() {
@@ -88,19 +103,6 @@ public class FreeTTSSpeech implements Speech {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-	}
-
-	public void finalize() throws Exception {
-		dispose();
-	}
-
-	public void dispose() {
-		if (synthesizer != null) {
-			try {
-				synthesizer.deallocate();
-			} catch (Exception e) {
-			}
 		}
 	}
 

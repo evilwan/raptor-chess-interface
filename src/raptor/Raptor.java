@@ -56,9 +56,10 @@ public class Raptor implements PreferenceKeys {
 			+ "/" + APP_HOME_DIR);
 	public static final String USER_RAPTOR_HOME_PATH = USER_RAPTOR_DIR
 			.getAbsolutePath();
-	public static final String ICONS_DIR = "resources/common/icons/";
-	public static final String IMAGES_DIR = "resources/common/images/";
-	public static final String RESOURCES_COMMON_DIR = "resources/common/";
+	public static final String ICONS_DIR = "resources/icons/";
+	public static final String IMAGES_DIR = "resources/images/";
+	public static final String RESOURCES_SCRIPTS = "resources/scripts";
+	public static final String RESOURCES_DIR = "resources/";
 
 	private static Raptor instance;
 
@@ -202,8 +203,8 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	/**
-	 * The name of the file in the resources/common/icons directory to load. Do
-	 * not append the suffix. All files in this directory end in .png and this
+	 * The name of the file in the resources/icons directory to load. Do not
+	 * append the suffix. All files in this directory end in .png and this
 	 * method handles that for you.
 	 */
 	public Image getIcon(String nameOfFileInIconsWithoutPng) {

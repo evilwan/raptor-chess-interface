@@ -45,13 +45,14 @@ import raptor.swt.chess.controller.ToolBarItemKey;
 import raptor.util.SVGUtil;
 
 public class BoardUtils implements BoardConstants {
-	public static final String CHESS_SET_DIR = "resources/common/set/";
+	public static final String CHESS_SET_DIR = Raptor.RESOURCES_DIR + "set/";
 	public static final int DARK_IMAGE_INDEX = 1;
 	public static final int LIGHT_IMAGE_INDEX = 0;
 	private static final Log LOG = LogFactory.getLog(BoardUtils.class);
 	public static final String PIECE_IMAGE_SUFFIX = ".svg";
 	private static SecureRandom secureRandom = new SecureRandom();
-	public static final String SQUARE_BACKGROUND_DIR = "resources/common/square/";
+	public static final String SQUARE_BACKGROUND_DIR = Raptor.RESOURCES_DIR
+			+ "square/";
 	public static final String SQUARE_BACKGROUND_IMAGE_SUFFIX = ".png";
 
 	/**

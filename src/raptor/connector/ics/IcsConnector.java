@@ -264,7 +264,7 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 	};
-	
+
 	protected boolean hasSentLogin = false;
 	protected boolean hasSentPassword = false;
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
@@ -442,20 +442,12 @@ public abstract class IcsConnector implements Connector {
 				context.getPreferencePrefix() + "-keep-alive")) {
 			ThreadService.getInstance().scheduleOneShot(300000, keepAlive);
 		}
-		
-		ScriptService.getInstance().addScriptServiceListener(scriptServiceListener);
+
+		ScriptService.getInstance().addScriptServiceListener(
+				scriptServiceListener);
 		refreshChatScripts();
 
 		fireConnecting();
-	}
-	
-	protected void refreshChatScripts() {
-		personTellMessageScripts = ScriptService.getInstance().getChatScripts(
-				this, ChatScriptType.OnPersonTellMessages);
-		channelTellMessageScripts = ScriptService.getInstance().getChatScripts(
-				this, ChatScriptType.onChannelTellMessages);
-		partnerTellMessageScripts = ScriptService.getInstance().getChatScripts(
-				this, ChatScriptType.OnPartnerTellMessages);
 	}
 
 	protected void createMainConsoleWindowItem() {
@@ -470,7 +462,8 @@ public abstract class IcsConnector implements Connector {
 		synchronized (this) {
 			if (isConnected()) {
 				try {
-					ScriptService.getInstance().removeScriptServiceListener(scriptServiceListener);
+					ScriptService.getInstance().removeScriptServiceListener(
+							scriptServiceListener);
 					if (inputChannel != null) {
 						try {
 							inputChannel.close();
@@ -1188,6 +1181,15 @@ public abstract class IcsConnector implements Connector {
 				chatService.publishChatEvent(event);
 			}
 		}
+	}
+
+	protected void refreshChatScripts() {
+		personTellMessageScripts = ScriptService.getInstance().getChatScripts(
+				this, ChatScriptType.OnPersonTellMessages);
+		channelTellMessageScripts = ScriptService.getInstance().getChatScripts(
+				this, ChatScriptType.onChannelTellMessages);
+		partnerTellMessageScripts = ScriptService.getInstance().getChatScripts(
+				this, ChatScriptType.OnPartnerTellMessages);
 	}
 
 	/**

@@ -84,7 +84,7 @@ public class EcoService {
 	}
 
 	private void initClassic() {
-		File file = new File(raptor.Raptor.RESOURCES_COMMON_DIR + "ECOFen.txt");
+		File file = new File(raptor.Raptor.RESOURCES_DIR + "ECOFen.txt");
 		typeToInfoMap.put(Variant.classic, parse(file));
 	}
 

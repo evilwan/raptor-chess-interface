@@ -307,7 +307,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
 						BicsConnector.this)) {
 					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BugButtonsWindowItem(BicsConnector.this.bics2));
+							new BugButtonsWindowItem(bics2));
 				}
 			}
 		};

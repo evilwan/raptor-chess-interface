@@ -28,18 +28,18 @@ import raptor.script.GameScript.GameScriptType;
  * script.
  */
 public class ScriptService {
+	public static interface ScriptServiceListener {
+		public void onChatScriptsChanged();
+
+		public void onGameScriptsChanged();
+	}
+
 	private static final Log LOG = LogFactory.getLog(ScriptService.class);
 
 	private static final ScriptService singletonInstance = new ScriptService();
 
 	public static ScriptService getInstance() {
 		return singletonInstance;
-	}
-
-	public static interface ScriptServiceListener {
-		public void onChatScriptsChanged();
-
-		public void onGameScriptsChanged();
 	}
 
 	public Map<String, ChatScript> chatScriptMap = new HashMap<String, ChatScript>();
@@ -52,29 +52,9 @@ public class ScriptService {
 	private ScriptService() {
 		reload();
 	}
-	
+
 	public void addScriptServiceListener(ScriptServiceListener listener) {
 		listeners.add(listener);
-	}
-	
-	public void removeScriptServiceListener(ScriptServiceListener listener) {
-		listeners.remove(listener);
-	}
-
-	protected void fireGameScriptChanged() {
-		synchronized (listeners) {
-			for (ScriptServiceListener listener : listeners) {
-				listener.onGameScriptsChanged();
-			}
-		}
-	}
-
-	protected void fireChatScriptChanged() {
-		synchronized (listeners) {
-			for (ScriptServiceListener listener : listeners) {
-				listener.onChatScriptsChanged();
-			}
-		}
 	}
 
 	/**
@@ -97,6 +77,22 @@ public class ScriptService {
 		fireGameScriptChanged();
 		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/game/"
 				+ scriptName + ".properties").delete();
+	}
+
+	protected void fireChatScriptChanged() {
+		synchronized (listeners) {
+			for (ScriptServiceListener listener : listeners) {
+				listener.onChatScriptsChanged();
+			}
+		}
+	}
+
+	protected void fireGameScriptChanged() {
+		synchronized (listeners) {
+			for (ScriptServiceListener listener : listeners) {
+				listener.onGameScriptsChanged();
+			}
+		}
 	}
 
 	/**
@@ -273,6 +269,10 @@ public class ScriptService {
 		gameScriptMap.clear();
 		loadGameScripts();
 		loadChatScripts();
+	}
+
+	public void removeScriptServiceListener(ScriptServiceListener listener) {
+		listeners.remove(listener);
 	}
 
 	/**

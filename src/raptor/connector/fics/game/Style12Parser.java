@@ -104,10 +104,87 @@ public class Style12Parser implements GameConstants {
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(Style12Parser.class);
 	public static final String STYLE_12 = "<12>";
+
+	/**
+	 * Parses a string in (0:00.000) format into a long.
+	 */
+	public static long timeTakenStringToInt(String timeTakenString) {
+		RaptorStringTokenizer tok = new RaptorStringTokenizer(timeTakenString,
+				":().", true);
+		int minutes = Integer.parseInt(tok.nextToken());
+		int seconds = Integer.parseInt(tok.nextToken());
+		int millis = Integer.parseInt(tok.nextToken());
+
+		return (minutes * 60 + seconds) * 1000 + millis;
+	}
+
 	protected boolean isBicsStyle = false;
 
 	public Style12Parser(boolean isBicsStyle) {
 		this.isBicsStyle = isBicsStyle;
+	}
+
+	public Style12Message parse(String message) {
+		Style12Message result = null;
+		if (message.startsWith(STYLE_12)) {
+			result = new Style12Message();
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
+					" <>\n", true);
+
+			// parse past <12>.
+			tok.nextToken();
+
+			StringBuilder positionString = new StringBuilder(64);
+			for (int i = 0; i < 8; i++) {
+				positionString.append(tok.nextToken());
+			}
+
+			result.isWhitesMoveAfterMoveIsMade = tok.nextToken().equals("W");
+
+			result.doublePawnPushFile = Integer.parseInt(tok.nextToken());
+
+			result.canWhiteCastleKSide = tok.nextToken().equals("1");
+			result.canWhiteCastleQSide = tok.nextToken().equals("1");
+			result.canBlackCastleKSide = tok.nextToken().equals("1");
+			result.canBlackCastleQSide = tok.nextToken().equals("1");
+
+			result.numberOfMovesSinceLastIrreversible = Integer.parseInt(tok
+					.nextToken());
+
+			result.gameId = tok.nextToken();
+
+			result.whiteName = tok.nextToken();
+			result.blackName = tok.nextToken();
+
+			result.relation = Integer.parseInt(tok.nextToken());
+
+			result.initialTimeMillis = Integer.parseInt(tok.nextToken()) * 1000 * 60;
+			result.initialIncMillis = Integer.parseInt(tok.nextToken()) * 1000 * 60;
+
+			result.whiteStrength = Integer.parseInt(tok.nextToken());
+			result.blackStrength = Integer.parseInt(tok.nextToken());
+
+			result.whiteRemainingTimeMillis = Long.parseLong(tok.nextToken());
+			result.blackRemainingTimeMillis = Long.parseLong(tok.nextToken());
+
+			result.fullMoveNumber = Integer.parseInt(tok.nextToken());
+
+			result.lan = tok.nextToken();
+
+			result.timeTakenForLastMoveMillis = timeTakenStringToInt(tok
+					.nextToken());
+
+			result.san = tok.nextToken();
+
+			result.isWhiteOnTop = tok.nextToken().equals("1");
+
+			result.position = parsePosition(positionString, result.isWhiteOnTop);
+
+			result.isClockTicking = tok.nextToken().equals("1");
+
+			result.lagInMillis = Integer.parseInt(tok.nextToken());
+		}
+		return result;
 	}
 
 	/**
@@ -238,82 +315,6 @@ public class Style12Parser implements GameConstants {
 					}
 				}
 			}
-		}
-		return result;
-	}
-
-	/**
-	 * Parses a string in (0:00.000) format into a long.
-	 */
-	public static long timeTakenStringToInt(String timeTakenString) {
-		RaptorStringTokenizer tok = new RaptorStringTokenizer(timeTakenString,
-				":().", true);
-		int minutes = Integer.parseInt(tok.nextToken());
-		int seconds = Integer.parseInt(tok.nextToken());
-		int millis = Integer.parseInt(tok.nextToken());
-
-		return (minutes * 60 + seconds) * 1000 + millis;
-	}
-
-	public Style12Message parse(String message) {
-		Style12Message result = null;
-		if (message.startsWith(STYLE_12)) {
-			result = new Style12Message();
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
-					" <>\n", true);
-
-			// parse past <12>.
-			tok.nextToken();
-
-			StringBuilder positionString = new StringBuilder(64);
-			for (int i = 0; i < 8; i++) {
-				positionString.append(tok.nextToken());
-			}
-
-			result.isWhitesMoveAfterMoveIsMade = tok.nextToken().equals("W");
-
-			result.doublePawnPushFile = Integer.parseInt(tok.nextToken());
-
-			result.canWhiteCastleKSide = tok.nextToken().equals("1");
-			result.canWhiteCastleQSide = tok.nextToken().equals("1");
-			result.canBlackCastleKSide = tok.nextToken().equals("1");
-			result.canBlackCastleQSide = tok.nextToken().equals("1");
-
-			result.numberOfMovesSinceLastIrreversible = Integer.parseInt(tok
-					.nextToken());
-
-			result.gameId = tok.nextToken();
-
-			result.whiteName = tok.nextToken();
-			result.blackName = tok.nextToken();
-
-			result.relation = Integer.parseInt(tok.nextToken());
-
-			result.initialTimeMillis = Integer.parseInt(tok.nextToken()) * 1000 * 60;
-			result.initialIncMillis = Integer.parseInt(tok.nextToken()) * 1000 * 60;
-
-			result.whiteStrength = Integer.parseInt(tok.nextToken());
-			result.blackStrength = Integer.parseInt(tok.nextToken());
-
-			result.whiteRemainingTimeMillis = Long.parseLong(tok.nextToken());
-			result.blackRemainingTimeMillis = Long.parseLong(tok.nextToken());
-
-			result.fullMoveNumber = Integer.parseInt(tok.nextToken());
-
-			result.lan = tok.nextToken();
-
-			result.timeTakenForLastMoveMillis = timeTakenStringToInt(tok
-					.nextToken());
-
-			result.san = tok.nextToken();
-
-			result.isWhiteOnTop = tok.nextToken().equals("1");
-
-			result.position = parsePosition(positionString, result.isWhiteOnTop);
-
-			result.isClockTicking = tok.nextToken().equals("1");
-
-			result.lagInMillis = Integer.parseInt(tok.nextToken());
 		}
 		return result;
 	}
