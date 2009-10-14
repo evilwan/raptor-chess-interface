@@ -55,8 +55,12 @@ public class RaptorPage extends FieldEditorPreferencePage {
 				"Launch links in external browser", getFieldEditorParent());
 		addField(launchExternalLinkx);
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
+				"Launch startup browser", getFieldEditorParent()));
+
 		StringFieldEditor homePage = new StringFieldEditor(
-				PreferenceKeys.APP_HOME_URL, "Startup Url:",
+				PreferenceKeys.APP_HOME_URL, "Startup Browser Url:",
 				getFieldEditorParent());
 		addField(homePage);
 

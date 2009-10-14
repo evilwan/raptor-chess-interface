@@ -90,6 +90,7 @@ public class FicsParser implements IcsParser, GameConstants {
 	 * well as a G1.
 	 */
 	protected Map<String, G1Message> unprocessedG1Messages = new HashMap<String, G1Message>();
+	protected List<String> bugGamesWithoutBoard2 = new ArrayList<String>(10);
 
 	public FicsParser() {
 		style12Parser = new Style12Parser();
@@ -494,17 +495,24 @@ public class FicsParser implements IcsParser, GameConstants {
 				service.addGame(game);
 
 				if (game.getVariant() == Variant.bughouse) {
-					if (StringUtils.isNotBlank(g1Message.parterGameId)
-							&& !service.isManaging(g1Message.parterGameId)) {
-						connector.sendMessage("observe "
-								+ g1Message.parterGameId, true);
+					if (bugGamesWithoutBoard2.isEmpty()) {
+						bugGamesWithoutBoard2.add(message.gameId);
+						connector.sendMessage("pobserve " + message.whiteName,
+								true);
 					} else {
-						Game otherBoard = service
-								.getGame(g1Message.parterGameId);
-						((BughouseGame) game)
-								.setOtherBoard((BughouseGame) otherBoard);
-						((BughouseGame) otherBoard)
-								.setOtherBoard((BughouseGame) game);
+						Game otherBoard = service.getGame(bugGamesWithoutBoard2
+								.get(0));
+						if (otherBoard == null) {
+							connector.onError("Could not find game with id "
+									+ bugGamesWithoutBoard2.get(0)
+									+ " in the GameService.", new Exception());
+						} else {
+							((BughouseGame) game)
+									.setOtherBoard((BughouseGame) otherBoard);
+							((BughouseGame) otherBoard)
+									.setOtherBoard((BughouseGame) game);
+						}
+						bugGamesWithoutBoard2.clear();
 					}
 				}
 

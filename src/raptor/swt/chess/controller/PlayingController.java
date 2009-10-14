@@ -71,7 +71,6 @@ public class PlayingController extends ChessBoardController {
 
 	static final Log LOG = LogFactory.getLog(PlayingController.class);
 
-	protected Connector connector;
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
 	protected GameServiceListener listener = new GameServiceAdapter() {
@@ -192,9 +191,8 @@ public class PlayingController extends ChessBoardController {
 	 */
 	public PlayingController(Game game, Connector connector) {
 		super(new GameCursor(game,
-				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast));
+				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast), connector);
 		cursor = (GameCursor) getGame();
-		this.connector = connector;
 
 		if (StringUtils.equalsIgnoreCase(game.getHeader(PgnHeader.White),
 				connector.getUserName())) {
@@ -383,6 +381,7 @@ public class PlayingController extends ChessBoardController {
 		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
 	}
 
+	@Override
 	public Connector getConnector() {
 		return connector;
 	}

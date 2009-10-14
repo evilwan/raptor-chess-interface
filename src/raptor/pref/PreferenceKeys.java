@@ -19,68 +19,26 @@ package raptor.pref;
  * properties must end in color.
  */
 public interface PreferenceKeys {
-	public static final String APP_HOME_URL = "app-home-url";
-	public static final String APP_LAYOUT = "app-layout";
-	public static final String APP_LAYOUT1_BROWSER_QUADRANT = "app-Layout1-browser-quadrant";
-	public static final String APP_LAYOUT1_BUG_ARENA_QUADRANT = "app-Layout1-bug-arena-quadrant";
-	public static final String APP_LAYOUT1_BUG_BUTTONS_QUADRANT = "app-Layout1-bug-buttons-quadrant";
-	public static final String APP_LAYOUT1_BUGHOUSE_GAME_2_QUADRANT = "app-Layout1-bughouse-game-2-quadrant";
-	public static final String APP_LAYOUT1_CHANNEL_TAB_QUADRANT = "app-Layout1-channel-quadrant";
-	public static final String APP_LAYOUT1_GAME_QUADRANT = "app-Layout1-game-quadrant";
-	public static final String APP_LAYOUT1_MAIN_TAB_QUADRANT = "app-Layout1-main-quadrant";
-	public static final String APP_LAYOUT1_PARTNER_TELL_TAB_QUADRANT = "app-Layout1-partner-quadrant";
-	public static final String APP_LAYOUT1_PERSON_TAB_QUADRANT = "app-Layout1-person-quadrant";
-	public static final String APP_LAYOUT1_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout1-quad1-quad234567-quad8-sash-weights";
-	public static final String APP_LAYOUT1_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout1-quad2-quad234567-sash-weights";
-	public static final String APP_LAYOUT1_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout1-quad3-quad4-sash-weights";
-	public static final String APP_LAYOUT1_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout1-quad34-quad567-sash-weights";
-	public static final String APP_LAYOUT1_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout1-quad5-quad6-sash-weights";
+	// THe following are not preference names but suffixes of preference names.
+	public static final String CHESS_BOARD_QUADRANT = "chess-board-quadrant";
+	public static final String MAIN_TAB_QUADRANT = "main-quadrant";
+	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrant";
+	public static final String PERSON_TAB_QUADRANT = "person-quadrant";
+	public static final String REGEX_TAB_QUADRANT = "regex-quadrant";
+	public static final String SEEK_GRAPH_QUADRANT = "seek-graph-quadrant";
+	public static final String BUG_ARENA_QUADRANT = "bug-arena-quadrant";
+	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrant";
+	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrant";
+	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrant";
+	public static final String QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "quad1-quad234567-quad8-sash-weights";
+	public static final String QUAD2_QUAD234567_SASH_WEIGHTS = "quad2-quad234567-sash-weights";
+	public static final String QUAD3_QUAD4_SASH_WEIGHTS = "quad3-quad4-sash-weights";
+	public static final String QUAD34_QUAD567_SASH_WEIGHTS = "quad34-quad567-sash-weights";
+	public static final String QUAD5_QUAD6_SASH_WEIGHTS = "quad5-quad6-sash-weights";
+	public static final String QUAD56_QUAD7_SASH_WEIGHTS = "quad56-quad7-sash-weights";
+	public static final String WINDOW_BOUNDS = "window-bounds";
 
-	public static final String APP_LAYOUT1_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout1-quad56-quad7-sash-weights";
-	public static final String APP_LAYOUT1_REGEX_TAB_QUADRANT = "app-Layout1-regex-quadrant";
-	public static final String APP_LAYOUT1_SEEK_GRAPH_QUADRANT = "app-Layout1-seek-graph-quadrant";
-	public static final String APP_LAYOUT1_WINDOW_BOUNDS = "app-Layout1-window-bounds";
-	public static final String APP_LAYOUT2_BROWSER_QUADRANT = "app-Layout2-browser-quadrant";
-	public static final String APP_LAYOUT2_BUG_ARENA_QUADRANT = "app-Layout2-bug-arena-quadrant";
-	public static final String APP_LAYOUT2_BUG_BUTTONS_QUADRANT = "app-Layout2-bug-buttons-quadrant";
-	public static final String APP_LAYOUT2_BUGHOUSE_GAME2_QUADRANT = "app-Layout2-bughouse-game-2-quadrant";
-	public static final String APP_LAYOUT2_CHANNEL_TAB_QUADRANT = "app-Layout2-channel-quadrant";
-	public static final String APP_LAYOUT2_GAME_QUADRANT = "app-Layout2-game-quadrant";
-	public static final String APP_LAYOUT2_MAIN_TAB_QUADRANT = "app-Layout2-main-quadrant";
-	public static final String APP_LAYOUT2_PARTNER_TELL_TAB_QUADRANT = "app-Layout2-partner-quadrant";
-	public static final String APP_LAYOUT2_PERSON_TAB_QUADRANT = "app-Layout2-person-quadrant";
-	public static final String APP_LAYOUT2_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout2-quad1-quad234567-quad8-sash-weights";
-	public static final String APP_LAYOUT2_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout2-quad2-quad234567-sash-weights";
-
-	public static final String APP_LAYOUT2_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout2-quad3-quad4-sash-weights";
-	public static final String APP_LAYOUT2_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout2-quad34-quad567-sash-weights";
-	public static final String APP_LAYOUT2_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout2-quad5-quad6-sash-weights";
-	public static final String APP_LAYOUT2_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout2-quad56-quad7-sash-weights";
-	public static final String APP_LAYOUT2_REGEX_TAB_QUADRANT = "app-Layout2-regex-tab-quadrant";
-	public static final String APP_LAYOUT2_SEEK_GRAPH_QUADRANT = "app-Layout2-seek-graph-quadrant";
-	public static final String APP_LAYOUT2_WINDOW_BOUNDS = "app-Layout2-window-bounds";
-	public static final String APP_LAYOUT3_BROWSER_QUADRANT = "app-Layout3-browser-quadrant";
-	public static final String APP_LAYOUT3_BUG_ARENA_QUADRANT = "app-Layout3-bug-arena-quadrant";
-	public static final String APP_LAYOUT3_BUG_BUTTONS_QUADRANT = "app-Layout3-bug-buttons-quadrant";
-
-	public static final String APP_LAYOUT3_BUGHUOSE_GAME_2_QUADRANT = "app-Layout3-bughouse-game-2-quadrant";
-	public static final String APP_LAYOUT3_CHANNEL_TAB_QUADRANT = "app-Layout3-channel-quadrant";
-	public static final String APP_LAYOUT3_GAME_QUADRANT = "app-Layout3-game-quadrant";
-	public static final String APP_LAYOUT3_MAIN_TAB_QUADRANT = "app-Layout3-main-quadrant";
-	public static final String APP_LAYOUT3_PARTNER_TELL_TAB_QUADRANT = "app-Layout3-partner-quadrant";
-	public static final String APP_LAYOUT3_PERSON_TAB_QUADRANT = "app-Layout3-person-quadrant";
-	public static final String APP_LAYOUT3_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout3-quad1-quad234567-quad8-sash-weights";
-	public static final String APP_LAYOUT3_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout3-quad2-quad234567-sash-weights";
-
-	public static final String APP_LAYOUT3_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout3-quad3-quad4-sash-weights";
-	public static final String APP_LAYOUT3_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout3-quad34-quad567-sash-weights";
-	public static final String APP_LAYOUT3_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout3-quad5-quad6-sash-weights";
-	public static final String APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout3-quad56-quad7-sash-weights";
-	public static final String APP_LAYOUT3_REGEX_TAB_QUADRANT = "app-Layout3-regex-tab-quadrant";
-	public static final String APP_LAYOUT3_SEEK_GRAPH_QUADRANT = "app-Layout3-seek-graph-quadrant";
-	public static final String APP_LAYOUT3_WINDOW_BOUNDS = "app-Layout3-window-bounds";
-	public static final String APP_LINUX_UNIX_BROWSER_NAME = "app-linux-unix-browser-name";
-
+	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";
 	public static final String APP_OPEN_LINKS_IN_EXTERNAL_BROWSER = "app-open-links-in-external-browser";
 	public static final String APP_PING_COLOR = "app-lag-color";
@@ -89,37 +47,44 @@ public interface PreferenceKeys {
 	public static final String APP_SOUND_ENABLED = "sound-enabled";
 	public static final String APP_STATUS_BAR_COLOR = "app-starus-bar-color";
 	public static final String APP_STATUS_BAR_FONT = "app-status-bar-font";
+	public static final String APP_HOME_URL = "app-home-url";
+	public static final String APP_LAYOUT = "app-layout";
+	public static final String APP_BROWSER_QUADRANT = "app-browser-quadrant";
+	public static final String APP_PGN_RESULTS_QUADRANT = "app-pgn-results-quadrant";
+	public static final String APP_CHESS_BOARD_QUADRANT = "app-"
+			+ CHESS_BOARD_QUADRANT;
+	public static final String APP_BUGHOUSE_GAME_2_QUADRANT = "app-"
+			+ BUGHOUSE_GAME_2_QUADRANT;
+	public static final String APP_LINUX_UNIX_BROWSER_NAME = "app-linux-unix-browser-name";
+	public static final String APP_IS_LAUNCHNG_HOME_PAGE = "app-is-launching-home-page";
 
-	public static final String BICS_AUTO_CONNECT = "bics-auto-connect";
-	public static final String BICS_SHOW_BUGBUTTONS_ON_CONNECT = "bics-show-bugbuttons-on-connect";
-	public static final String BICS_IS_LOGGING_GAMES = "bics-is-logging-games";
-	public static final String BICS_KEEP_ALIVE = "bics-keep-alive";
-	public static final String BICS_LOGIN_SCRIPT = "bics-login-script";
-	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
-	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";
-	public static final String BICS_PRIMARY_PASSWORD = "bics-Primary-password";
-	public static final String BICS_PRIMARY_PORT = "bics-Primary-port";
-	public static final String BICS_PRIMARY_SERVER_URL = "bics-Primary-server-url";
-	public static final String BICS_PRIMARY_TIMESEAL_ENABLED = "bics-Primary-timeseal-enabled";
-	public static final String BICS_PRIMARY_USER_NAME = "bics-Primary-user-name";
-	public static final String BICS_PROFILE = "bics-profile";
-	public static final String BICS_SECONDARY_IS_ANON_GUEST = "bics-Secondary-is-anon-guest";
-	public static final String BICS_SECONDARY_IS_NAMED_GUEST = "bics-Secondary-is-named-guest";
-	public static final String BICS_SECONDARY_PASSWORD = "bics-Secondary-password";
-	public static final String BICS_SECONDARY_PORT = "bics-Secondary-port";
-	public static final String BICS_SECONDARY_SERVER_URL = "bics-Secondary-server-url";
-	public static final String BICS_SECONDARY_TIMESEAL_ENABLED = "bics-Secondary-timeseal-enabled";
-	public static final String BICS_SECONDARY_USER_NAME = "bics-Secondary-user-name";
-	public static final String BICS_TERTIARY_IS_ANON_GUEST = "bics-Tertiary-is-anon-guest";
-	public static final String BICS_TERTIARY_IS_NAMED_GUEST = "bics-Tertiary-is-named-guest";
-	public static final String BICS_TERTIARY_PASSWORD = "bics-Tertiary-password";
-	public static final String BICS_TERTIARY_PORT = "bics-Tertiary-port";
-	public static final String BICS_TERTIARY_SERVER_URL = "bics-Tertiary-server-url";
-	public static final String BICS_TERTIARY_TIMESEAL_ENABLED = "bics-Tertiary-timeseal-enabled";
-	public static final String BICS_TERTIARY_USER_NAME = "bics-Tertiary-user-name";
+	public static final String APP_LAYOUT1_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout1-quad1-quad234567-quad8-sash-weights";
+	public static final String APP_LAYOUT1_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout1-quad2-quad234567-sash-weights";
+	public static final String APP_LAYOUT1_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout1-quad3-quad4-sash-weights";
+	public static final String APP_LAYOUT1_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout1-quad34-quad567-sash-weights";
+	public static final String APP_LAYOUT1_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout1-quad5-quad6-sash-weights";
+	public static final String APP_LAYOUT1_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout1-quad56-quad7-sash-weights";
+	public static final String APP_LAYOUT1_WINDOW_BOUNDS = "app-Layout1-window-bounds";
+
+	public static final String APP_LAYOUT2_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout2-quad1-quad234567-quad8-sash-weights";
+	public static final String APP_LAYOUT2_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout2-quad2-quad234567-sash-weights";
+	public static final String APP_LAYOUT2_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout2-quad3-quad4-sash-weights";
+	public static final String APP_LAYOUT2_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout2-quad34-quad567-sash-weights";
+	public static final String APP_LAYOUT2_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout2-quad5-quad6-sash-weights";
+	public static final String APP_LAYOUT2_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout2-quad56-quad7-sash-weights";
+	public static final String APP_LAYOUT2_WINDOW_BOUNDS = "app-Layout2-window-bounds";
+
+	public static final String APP_LAYOUT3_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout3-quad1-quad234567-quad8-sash-weights";
+	public static final String APP_LAYOUT3_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout3-quad2-quad234567-sash-weights";
+	public static final String APP_LAYOUT3_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout3-quad3-quad4-sash-weights";
+	public static final String APP_LAYOUT3_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout3-quad34-quad567-sash-weights";
+	public static final String APP_LAYOUT3_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout3-quad5-quad6-sash-weights";
+	public static final String APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout3-quad56-quad7-sash-weights";
+	public static final String APP_LAYOUT3_WINDOW_BOUNDS = "app-Layout3-window-bounds";
 
 	public static final String BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD = "bughouse-playing-open-partner-board";
 	public static final String BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD = "bughouse-observing-open-partner-board";
+
 	public static final String BUG_BUTTONS_FONT = "bugbuttons-font";
 
 	public static final String BOARD_ACTIVE_CLOCK_COLOR = "board-active-clock-color";
@@ -163,12 +128,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_SQUARE_BACKGROUND_NAME = "board-square-background-name";
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
 	public static final String BOARD_STATUS_FONT = "board-status-font";
-
-	public static final String BROWSER_QUADRANT = "browser-quadrant";
-	public static final String BUG_ARENA_QUADRANT = "bug-arena-quadrant";
-	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrant";
-	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrant";
-	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrant";
 
 	public static final String CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO = "chat-event-";
 	public static final String CHAT_CONSOLE_BACKGROUND_COLOR = "chat-console-background-color";
@@ -225,22 +184,36 @@ public interface PreferenceKeys {
 	public static final String FICS_TERTIARY_TIMESEAL_ENABLED = "fics-Tertiary-timeseal-enabled";
 	public static final String FICS_TERTIARY_USER_NAME = "fics-Tertiary-user-name";
 
-	public static final String GAME_QUADRANT = "game-quadrant";
-	public static final String MAIN_TAB_QUADRANT = "main-quadrant";
-	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrant";
-	public static final String PERSON_TAB_QUADRANT = "person-quadrant";
-	public static final String REGEX_TAB_QUADRANT = "regex-quadrant";
-	public static final String SEEK_GRAPH_QUADRANT = "seek-graph-quadrant";
+	public static final String BICS_AUTO_CONNECT = "bics-auto-connect";
+	public static final String BICS_SHOW_BUGBUTTONS_ON_CONNECT = "bics-show-bugbuttons-on-connect";
+	public static final String BICS_IS_LOGGING_GAMES = "bics-is-logging-games";
+	public static final String BICS_KEEP_ALIVE = "bics-keep-alive";
+	public static final String BICS_LOGIN_SCRIPT = "bics-login-script";
+	public static final String BICS_PROFILE = "bics-profile";
 
-	// ONLY PASS THESE VALUES INTO get/set SashWeights and get/set Quad
-	public static final String QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "quad1-quad234567-quad8-sash-weights";
-	public static final String QUAD2_QUAD234567_SASH_WEIGHTS = "quad2-quad234567-sash-weights";
-	public static final String QUAD3_QUAD4_SASH_WEIGHTS = "quad3-quad4-sash-weights";
-	public static final String QUAD34_QUAD567_SASH_WEIGHTS = "quad34-quad567-sash-weights";
-	public static final String QUAD5_QUAD6_SASH_WEIGHTS = "quad5-quad6-sash-weights";
-	public static final String QUAD56_QUAD7_SASH_WEIGHTS = "quad56-quad7-sash-weights";
+	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
+	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";
+	public static final String BICS_PRIMARY_PASSWORD = "bics-Primary-password";
+	public static final String BICS_PRIMARY_PORT = "bics-Primary-port";
+	public static final String BICS_PRIMARY_SERVER_URL = "bics-Primary-server-url";
+	public static final String BICS_PRIMARY_TIMESEAL_ENABLED = "bics-Primary-timeseal-enabled";
+	public static final String BICS_PRIMARY_USER_NAME = "bics-Primary-user-name";
+
+	public static final String BICS_SECONDARY_IS_ANON_GUEST = "bics-Secondary-is-anon-guest";
+	public static final String BICS_SECONDARY_IS_NAMED_GUEST = "bics-Secondary-is-named-guest";
+	public static final String BICS_SECONDARY_PASSWORD = "bics-Secondary-password";
+	public static final String BICS_SECONDARY_PORT = "bics-Secondary-port";
+	public static final String BICS_SECONDARY_SERVER_URL = "bics-Secondary-server-url";
+	public static final String BICS_SECONDARY_TIMESEAL_ENABLED = "bics-Secondary-timeseal-enabled";
+	public static final String BICS_SECONDARY_USER_NAME = "bics-Secondary-user-name";
+
+	public static final String BICS_TERTIARY_IS_ANON_GUEST = "bics-Tertiary-is-anon-guest";
+	public static final String BICS_TERTIARY_IS_NAMED_GUEST = "bics-Tertiary-is-named-guest";
+	public static final String BICS_TERTIARY_PASSWORD = "bics-Tertiary-password";
+	public static final String BICS_TERTIARY_PORT = "bics-Tertiary-port";
+	public static final String BICS_TERTIARY_SERVER_URL = "bics-Tertiary-server-url";
+	public static final String BICS_TERTIARY_TIMESEAL_ENABLED = "bics-Tertiary-timeseal-enabled";
+	public static final String BICS_TERTIARY_USER_NAME = "bics-Tertiary-user-name";
 
 	public static final String TIMESEAL_INIT_STRING = "timeseal-init-string";
-
-	public static final String WINDOW_BOUNDS = "window-bounds";
 }

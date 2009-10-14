@@ -42,8 +42,8 @@ public class ChannelController extends ChatConsoleController {
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				CHANNEL_TAB_QUADRANT);
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				getConnector().getShortName() + "-" + CHANNEL_TAB_QUADRANT);
 	}
 
 	@Override

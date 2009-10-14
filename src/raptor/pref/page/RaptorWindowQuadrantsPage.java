@@ -18,20 +18,18 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.BrowserWindowItem;
-import raptor.swt.BugButtonsWindowItem;
-import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chess.ChessBoardWindowItem;
 
-public class RaptorWindowLayoutPage extends FieldEditorPreferencePage {
+public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 
 	protected String layoutPrefix;
 
-	public RaptorWindowLayoutPage(String layoutName, String layoutPrefix) {
+	public RaptorWindowQuadrantsPage(String layoutName) {
 		super(GRID);
-		setTitle("Layout " + layoutName);
+		setTitle("Quadrants");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		this.layoutPrefix = layoutPrefix;
 	}
 
 	protected String[][] buildQuadrantArray(Quadrant[] quadrants) {
@@ -45,76 +43,28 @@ public class RaptorWindowLayoutPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
-
-		ComboFieldEditor mainQuad = new ComboFieldEditor(layoutPrefix
-				+ "-main-quadrant", "Main Chat Console Quadrant:",
-				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(mainQuad);
-
-		ComboFieldEditor channelQuad = new ComboFieldEditor(layoutPrefix
-				+ "-channel-quadrant", "Channel Chat Console Quadrant:",
-				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(channelQuad);
-
-		ComboFieldEditor personQuad = new ComboFieldEditor(layoutPrefix
-				+ "-person-quadrant", "Person Chat Console Quadrant:",
-				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(personQuad);
-
-		ComboFieldEditor regexQuad = new ComboFieldEditor(layoutPrefix
-				+ "-regex-quadrant",
-				"Regular Expression Chat Console Quadrant:",
-				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(regexQuad);
-
-		ComboFieldEditor ptellQuad = new ComboFieldEditor(layoutPrefix
-				+ "-partner-quadrant", "Partner Tells Chat Console Quadrant:",
-				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(ptellQuad);
-
-		ComboFieldEditor gameQuad = new ComboFieldEditor(layoutPrefix
-				+ "-game-quadrant",
-				"Chess Game (includes Bughouse primary Board) Quadrant:",
-				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(gameQuad);
-
-		ComboFieldEditor bughosueQuad = new ComboFieldEditor(layoutPrefix
-				+ "-bughosue-game-2-quadrant",
-				"Bughosue Game Secondary Board Quadrant:",
-				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(bughosueQuad);
-
 		ComboFieldEditor internalBrowserQuad = new ComboFieldEditor(
-				layoutPrefix + "-browser-quadrant",
+				PreferenceKeys.APP_BROWSER_QUADRANT,
 				"Internal Web Browser Quadrant:",
 				buildQuadrantArray(BrowserWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(internalBrowserQuad);
 
-		ComboFieldEditor bughouseArena = new ComboFieldEditor(layoutPrefix
-				+ "-bug-arena-quadrant", "Bughouse Arena Quadrant:",
+		ComboFieldEditor bughouseArena = new ComboFieldEditor(
+				PreferenceKeys.APP_PGN_RESULTS_QUADRANT, "PGN Game List:",
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(bughouseArena);
 
-		ComboFieldEditor seekGraphQuad = new ComboFieldEditor(layoutPrefix
-				+ "-seek-graph-quadrant", "Seek Graph Quadrant:",
+		addField(new ComboFieldEditor(PreferenceKeys.APP_CHESS_BOARD_QUADRANT,
+				"PGN Game Quadrant:",
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(seekGraphQuad);
+				getFieldEditorParent()));
 
-		ComboFieldEditor bugButtonQuad = new ComboFieldEditor(layoutPrefix
-				+ "-seek-graph-quadrant",
-				"Bughosue Communication Buttons Quadrant:",
-				buildQuadrantArray(BugButtonsWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent());
-		addField(bugButtonQuad);
+		addField(new ComboFieldEditor(
+				PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT,
+				"PGN Bughouse Game 2 Quadrant:",
+				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
+				getFieldEditorParent()));
 	}
 }

@@ -33,8 +33,10 @@ public class PartnerTellController extends ChatConsoleController {
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				PARTNER_TELL_TAB_QUADRANT);
+		return Raptor.getInstance().getPreferences()
+				.getQuadrant(
+						getConnector().getShortName() + "-"
+								+ PARTNER_TELL_TAB_QUADRANT);
 	}
 
 	@Override

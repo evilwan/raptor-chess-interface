@@ -209,8 +209,18 @@ public class IcsUtils implements GameConstants {
 				ChessBoardWindowItem otherBoardItem = Raptor.getInstance()
 						.getWindow().getChessBoardWindowItem(
 								((BughouseGame) game).getOtherBoard().getId());
-				controller = new ObserveController(game, !otherBoardItem
-						.getController().getBoard().isWhiteOnTop(), connector);
+
+				if (otherBoardItem == null) {
+					connector.onError(
+							"Could not find other board with game id "
+									+ ((BughouseGame) game).getOtherBoard()
+											.getId(), new Exception());
+					controller = new ObserveController(game, true, connector);
+				} else {
+					controller = new ObserveController(game, !otherBoardItem
+							.getController().getBoard().isWhiteOnTop(),
+							connector);
+				}
 			} else {
 				controller = new ObserveController(game, connector);
 			}

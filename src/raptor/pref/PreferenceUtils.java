@@ -33,8 +33,8 @@ import raptor.pref.page.ChessBoardColorsPage;
 import raptor.pref.page.ChessBoardFontsPage;
 import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.RaptorPage;
-import raptor.pref.page.RaptorWindowLayoutPage;
 import raptor.pref.page.RaptorWindowPage;
+import raptor.pref.page.RaptorWindowQuadrantsPage;
 import raptor.service.ConnectorService;
 
 /**
@@ -56,11 +56,7 @@ public class PreferenceUtils {
 				.addToRoot(new PreferenceNode("raptorWindow",
 						new RaptorWindowPage()));
 		mgr.addTo("raptorWindow", new PreferenceNode("layout1",
-				new RaptorWindowLayoutPage("1", "app-Layout1")));
-		mgr.addTo("raptorWindow", new PreferenceNode("layout2",
-				new RaptorWindowLayoutPage("2", "app-Layout2")));
-		mgr.addTo("raptorWindow", new PreferenceNode("layout3",
-				new RaptorWindowLayoutPage("3", "app-Layout3")));
+				new RaptorWindowQuadrantsPage("1")));
 
 		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
 		mgr.addTo("chatConsole", new PreferenceNode("messageColors",

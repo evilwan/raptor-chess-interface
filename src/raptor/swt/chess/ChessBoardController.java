@@ -33,6 +33,7 @@ import raptor.chess.GameConstants;
 import raptor.chess.Move;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
+import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.ItemChangedListener;
@@ -61,6 +62,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	protected boolean storedIsWhitePieceJailOnTop;
 	protected Map<ToolBarItemKey, ToolItem> toolItemMap = new HashMap<ToolBarItemKey, ToolItem>();
 	protected ClockLabelUpdater whiteClockUpdater;
+	protected Connector connector;
 
 	/**
 	 * Constructs a ChessBoardController with the specified game.
@@ -75,7 +77,26 @@ public abstract class ChessBoardController implements BoardConstants,
 	 *            The game this controller manages.
 	 */
 	public ChessBoardController(Game game) {
+		this(game, null);
+	}
+
+	/**
+	 * Constructs a ChessBoardController with the specified game.
+	 * 
+	 * It is important to note that upon construction a controller will not have
+	 * a ChessBoard.
+	 * 
+	 * To set a chess board, construct a controller, then call setChessBoard and
+	 * when the ChessBoard has had its controls created invoke init().
+	 * 
+	 * @param game
+	 *            The game this controller manages.
+	 * @param connector
+	 *            The backing connector, man be null.
+	 */
+	public ChessBoardController(Game game, Connector connector) {
 		this.game = game;
+		this.connector = connector;
 	}
 
 	/**
@@ -449,6 +470,10 @@ public abstract class ChessBoardController implements BoardConstants,
 		return board;
 	}
 
+	public Connector getConnector() {
+		return connector;
+	}
+
 	/**
 	 * Returns the game class this controller is controlling.
 	 */
@@ -765,6 +790,10 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void setBoard(ChessBoard board) {
 		this.board = board;
+	}
+
+	public void setConnector(Connector connector) {
+		this.connector = connector;
 	}
 
 	protected void setGame(Game game) {

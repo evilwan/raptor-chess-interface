@@ -79,7 +79,8 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public ChessBoardController getController() {
-		return board.getController();
+		return board == null || board.getController() == null ? controller
+				: board.getController();
 	}
 
 	public Image getImage() {
@@ -94,11 +95,27 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		return !isBughouseOtherBoard ? Raptor.getInstance().getPreferences()
-				.getCurrentLayoutQuadrant(PreferenceKeys.GAME_QUADRANT)
-				: Raptor.getInstance().getPreferences()
-						.getCurrentLayoutQuadrant(
-								PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT);
+
+		if (getController().getConnector() == null) {
+			if (isBughouseOtherBoard) {
+				return Raptor.getInstance().getPreferences().getQuadrant(
+						PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT);
+			} else {
+				return Raptor.getInstance().getPreferences().getQuadrant(
+						PreferenceKeys.APP_CHESS_BOARD_QUADRANT);
+			}
+		} else {
+			if (isBughouseOtherBoard) {
+				return Raptor.getInstance().getPreferences().getQuadrant(
+						getController().getConnector().getShortName() + "-"
+								+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT);
+
+			} else {
+				return Raptor.getInstance().getPreferences().getQuadrant(
+						getController().getConnector().getShortName() + "-"
+								+ PreferenceKeys.CHESS_BOARD_QUADRANT);
+			}
+		}
 	}
 
 	public String getTitle() {
