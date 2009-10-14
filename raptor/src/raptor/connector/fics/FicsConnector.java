@@ -370,7 +370,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
 						FicsConnector.this)) {
 					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BugButtonsWindowItem(FicsConnector.this));
+							new BugButtonsWindowItem(FicsConnector.this.fics2));
 				}
 			}
 		};
