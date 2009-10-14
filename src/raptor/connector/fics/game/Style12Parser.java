@@ -104,6 +104,11 @@ public class Style12Parser implements GameConstants {
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(Style12Parser.class);
 	public static final String STYLE_12 = "<12>";
+	protected boolean isBicsStyle = false;
+
+	public Style12Parser(boolean isBicsStyle) {
+		this.isBicsStyle = isBicsStyle;
+	}
 
 	/**
 	 * Parses a style 12 position string without the spaces between the ranks.
@@ -115,13 +120,13 @@ public class Style12Parser implements GameConstants {
 	 * [7][0] is a8 [7][7] is h8
 	 * </pre>
 	 */
-	public static int[][] parsePosition(StringBuilder positionString,
+	public int[][] parsePosition(StringBuilder positionString,
 			boolean isWhiteOnTop) {
 
 		int[][] result = new int[8][];
 		int positionCounter = 0;
 
-		if (isWhiteOnTop) {
+		if (!isBicsStyle && isWhiteOnTop) {
 			for (int i = 7; i >= 0; i--) {
 				result[7 - i] = new int[8];
 

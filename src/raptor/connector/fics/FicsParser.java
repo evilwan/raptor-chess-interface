@@ -30,6 +30,7 @@ import raptor.chess.GameConstants;
 import raptor.chess.Result;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
+import raptor.connector.bics.BicsConnector;
 import raptor.connector.fics.game.B1Parser;
 import raptor.connector.fics.game.G1Parser;
 import raptor.connector.fics.game.GameEndParser;
@@ -93,7 +94,6 @@ public class FicsParser implements IcsParser, GameConstants {
 	protected List<String> bugGamesWithoutBoard2 = new ArrayList<String>(10);
 
 	public FicsParser() {
-		style12Parser = new Style12Parser();
 		gameEndParser = new GameEndParser();
 		b1Parser = new B1Parser();
 		g1Parser = new G1Parser();
@@ -540,5 +540,6 @@ public class FicsParser implements IcsParser, GameConstants {
 
 	public void setConnector(IcsConnector connector) {
 		this.connector = connector;
+		style12Parser = new Style12Parser(connector instanceof BicsConnector);
 	}
 }
