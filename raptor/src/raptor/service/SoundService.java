@@ -14,6 +14,7 @@
 package raptor.service;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,8 +43,9 @@ public class SoundService {
 		return instance;
 	}
 
-	protected Map<String, Clip> soundToClip = new HashMap<String, Clip>();
-	protected Map<String, Clip> bugSoundToClip = new HashMap<String, Clip>();
+	protected Map<String, String> soundToClip = new HashMap<String, String>();
+
+	protected Map<String, String> bugSoundToClip = new HashMap<String, String>();
 
 	private SoundService() {
 		init();
@@ -58,6 +60,10 @@ public class SoundService {
 		return bugSoundToClip.keySet().toArray(new String[0]);
 	}
 
+	/**
+	 * I have tried caching the Clips. However i ran out of lines. So now i just
+	 * create a new clip each time.
+	 */
 	protected void init() {
 		LOG.info("Initializing sound service.");
 		long startTime = System.currentTimeMillis();
@@ -69,63 +75,70 @@ public class SoundService {
 				}
 			});
 			for (File currentFile : files) {
-				Clip clip = AudioSystem.getClip();
-				AudioInputStream stream = AudioSystem
-						.getAudioInputStream(currentFile);
-				clip.open(stream);
 				String key = currentFile.getName();
 				int dotIndex = key.indexOf(".");
-				soundToClip.put(key.substring(0, dotIndex), clip);
-				LOG.debug("Loaded sound " + currentFile.getName());
+				soundToClip.put(key.substring(0, dotIndex), currentFile
+						.getAbsolutePath());
 			}
 
 			file = new File("resources/common/sounds/bughouse");
 			files = file.listFiles(new FilenameFilter() {
 				public boolean accept(File dir, String name) {
+					System.out.println("Testing " + dir.getAbsolutePath() + " "
+							+ name + " " + name.endsWith(".wav"));
 					return name.endsWith(".wav");
 				}
 			});
 			for (File currentFile : files) {
-				Clip clip = AudioSystem.getClip();
-				AudioInputStream stream = AudioSystem
-						.getAudioInputStream(currentFile);
-				clip.open(stream);
+
 				String key = currentFile.getName();
 				int dotIndex = key.indexOf(".");
-				bugSoundToClip.put(key.substring(0, dotIndex), clip);
-				LOG.debug("Loaded sound " + currentFile.getName());
+				bugSoundToClip.put(key.substring(0, dotIndex), currentFile
+						.getAbsolutePath());
 			}
 
 		} catch (Throwable t) {
+			LOG.error("Error loading sounds", t);
 		}
 		LOG.info("Initializing sound service complete: "
 				+ (System.currentTimeMillis() - startTime));
 	}
 
+	/**
+	 * Specify the name of a file in resources/common/sounds/bughouse without
+	 * the .wav to play the sound i.e. "+".
+	 */
 	public void playBughouseSound(final String sound) {
+		/**
+		 * I have tried caching the Clips. However i ran out of lines. So now i
+		 * just create a new clip each time.
+		 */
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_SOUND_ENABLED)) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
-
-					Clip clip = soundToClip.get(sound);
-					if (clip == null) {
-						throw new IllegalArgumentException("Unknown sound "
-								+ sound);
+					String soundFile = bugSoundToClip.get(sound);
+					if (soundFile == null) {
+						Raptor.getInstance().onError("Unknown sound " + sound);
 					}
-					synchronized (clip) {
-						if (!clip.isRunning()) {
-							if (LOG.isDebugEnabled()) {
-								LOG.debug("Playing Sound " + sound + ".");
-							}
-							clip.setFramePosition(0);
-							clip.start();
-						} else {
-							if (LOG.isDebugEnabled()) {
-								LOG.debug("Sound " + sound
-										+ " is already playing.");
-							}
+					try {
+
+						Clip clip = AudioSystem.getClip();
+						AudioInputStream stream = AudioSystem
+								.getAudioInputStream(new FileInputStream(
+										soundFile));
+						clip.open(stream);
+						clip.setFramePosition(0);
+						clip.start();
+						Thread.sleep(100);
+						while (clip.isRunning()) {
+							Thread.sleep(100);
 						}
+						clip.close();
+
+					} catch (Throwable t) {
+						Raptor.getInstance().onError(
+								"Error playing sound " + sound, t);
 					}
 				}
 			});
@@ -135,33 +148,38 @@ public class SoundService {
 	/**
 	 * Specify the name of a file in resources/common/sounds without the .wav to
 	 * play the sound i.e. "alert".
-	 * 
-	 * @param sound
 	 */
 	public void playSound(final String sound) {
+		/**
+		 * I have tried caching the Clips. However i ran out of lines. So now i
+		 * just create a new clip each time.
+		 */
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_SOUND_ENABLED)) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
-
-					Clip clip = soundToClip.get(sound);
-					if (clip == null) {
-						throw new IllegalArgumentException("Unknown sound "
-								+ sound);
+					String soundFile = soundToClip.get(sound);
+					if (soundFile == null) {
+						Raptor.getInstance().onError("Unknown sound " + sound);
 					}
-					synchronized (clip) {
-						if (!clip.isRunning()) {
-							if (LOG.isDebugEnabled()) {
-								LOG.debug("Playing Sound " + sound + ".");
-							}
-							clip.setFramePosition(0);
-							clip.start();
-						} else {
-							if (LOG.isDebugEnabled()) {
-								LOG.debug("Sound " + sound
-										+ " is already playing.");
-							}
+					try {
+
+						Clip clip = AudioSystem.getClip();
+						AudioInputStream stream = AudioSystem
+								.getAudioInputStream(new FileInputStream(
+										soundFile));
+						clip.open(stream);
+						clip.setFramePosition(0);
+						clip.start();
+						Thread.sleep(100);
+						while (clip.isRunning()) {
+							Thread.sleep(100);
 						}
+						clip.close();
+
+					} catch (Throwable t) {
+						Raptor.getInstance().onError(
+								"Error playing sound " + sound, t);
 					}
 				}
 			});
