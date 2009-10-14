@@ -104,8 +104,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				PreferenceKeys.GAME_QUADRANT);
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				PreferenceKeys.APP_PGN_RESULTS_QUADRANT);
 	}
 
 	public String getTitle() {

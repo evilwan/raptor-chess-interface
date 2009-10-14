@@ -48,8 +48,9 @@ public class RegExController extends ChatConsoleController {
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				REGEX_TAB_QUADRANT);
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				getConnector().getShortName() + "-" + REGEX_TAB_QUADRANT);
+
 	}
 
 	@Override

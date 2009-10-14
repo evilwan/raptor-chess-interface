@@ -122,8 +122,9 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				PreferenceKeys.BUG_BUTTONS_QUADRANT);
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				connector.getShortName() + "-"
+						+ PreferenceKeys.BUG_BUTTONS_QUADRANT);
 	}
 
 	public String getTitle() {

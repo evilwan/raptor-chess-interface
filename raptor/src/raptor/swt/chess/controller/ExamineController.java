@@ -45,8 +45,6 @@ import raptor.swt.chess.ChessBoardController;
  */
 public class ExamineController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ExamineController.class);
-	protected Connector connector;
-
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
@@ -132,8 +130,7 @@ public class ExamineController extends ChessBoardController {
 	protected ToolBar toolbar;
 
 	public ExamineController(Game game, Connector connector) {
-		super(game);
-		this.connector = connector;
+		super(game, connector);
 	}
 
 	@Override
@@ -214,6 +211,7 @@ public class ExamineController extends ChessBoardController {
 		onPlayMoveSound();
 	}
 
+	@Override
 	public Connector getConnector() {
 		return connector;
 	}

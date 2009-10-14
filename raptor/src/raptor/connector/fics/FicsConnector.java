@@ -27,6 +27,7 @@ import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.page.ConnectorQuadrants;
 import raptor.service.ThreadService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.BugButtonsWindowItem;
@@ -453,7 +454,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	 * Returns an array of the secondary preference nodes.
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
-		return null;
+		return new PreferenceNode[] {
+				new PreferenceNode("fics", new ConnectorQuadrants("fics")),
+				new PreferenceNode("fics", new ConnectorQuadrants("fics2")) };
 
 	}
 

@@ -89,8 +89,8 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				PreferenceKeys.BROWSER_QUADRANT);
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				PreferenceKeys.APP_BROWSER_QUADRANT);
 	}
 
 	public String getTitle() {

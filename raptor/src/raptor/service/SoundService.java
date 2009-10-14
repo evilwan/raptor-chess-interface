@@ -84,8 +84,6 @@ public class SoundService {
 			file = new File("resources/common/sounds/bughouse");
 			files = file.listFiles(new FilenameFilter() {
 				public boolean accept(File dir, String name) {
-					System.out.println("Testing " + dir.getAbsolutePath() + " "
-							+ name + " " + name.endsWith(".wav"));
 					return name.endsWith(".wav");
 				}
 			});

@@ -46,8 +46,6 @@ import raptor.swt.chess.ChessBoardController;
 public class ObserveController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ObserveController.class);
 
-	protected Connector connector;
-
 	protected GameCursor cursor = null;
 	protected GameServiceListener listener = new GameServiceAdapter() {
 		@Override
@@ -128,9 +126,8 @@ public class ObserveController extends ChessBoardController {
 	public ObserveController(Game game, boolean isWhiteOnTop,
 			Connector connector) {
 		super(new GameCursor(game,
-				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast));
+				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast), connector);
 		cursor = (GameCursor) getGame();
-		this.connector = connector;
 		initialWhiteOnTop = isWhiteOnTop;
 	}
 
@@ -172,6 +169,7 @@ public class ObserveController extends ChessBoardController {
 		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
 	}
 
+	@Override
 	public Connector getConnector() {
 		return connector;
 	}

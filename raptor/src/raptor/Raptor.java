@@ -104,10 +104,20 @@ public class Raptor implements PreferenceKeys {
 
 			display.timerExec(500, new Runnable() {
 				public void run() {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BrowserWindowItem("Raptor Home", Raptor
-									.getInstance().getPreferences().getString(
-											PreferenceKeys.APP_HOME_URL)));
+					if (Raptor.getInstance().getPreferences().getBoolean(
+							APP_IS_LAUNCHNG_HOME_PAGE)) {
+						Raptor
+								.getInstance()
+								.getWindow()
+								.addRaptorWindowItem(
+										new BrowserWindowItem(
+												"Raptor Home",
+												Raptor
+														.getInstance()
+														.getPreferences()
+														.getString(
+																PreferenceKeys.APP_HOME_URL)));
+					}
 					Raptor.getInstance().cursorRegistry.setDefaultCursor(Raptor
 							.getInstance().getWindow().getShell().getCursor());
 				}
@@ -301,9 +311,11 @@ public class Raptor implements PreferenceKeys {
 										"Critical error occured! We are trying to make Raptor "
 												+ "bug free and we need your help! Please take a moment to report this "
 												+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
-												+ error + "\n" + throwable != null ? ExceptionUtils
-												.getMessage(throwable)
-												: "");
+												+ error
+												+ "\n"
+												+ (throwable != null ? ExceptionUtils
+														.getMessage(throwable)
+														: ""));
 					}
 				});
 

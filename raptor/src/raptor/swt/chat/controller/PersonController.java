@@ -42,8 +42,9 @@ public class PersonController extends ChatConsoleController {
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getCurrentLayoutQuadrant(
-				PERSON_TAB_QUADRANT);
+		return Raptor.getInstance().getPreferences().getQuadrant(
+				getConnector().getShortName() + "-" + PERSON_TAB_QUADRANT);
+
 	}
 
 	@Override

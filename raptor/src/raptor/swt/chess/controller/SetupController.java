@@ -50,7 +50,6 @@ import raptor.swt.chess.ChessBoardController;
  */
 public class SetupController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(ExamineController.class);
-	protected Connector connector;
 
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
@@ -163,8 +162,7 @@ public class SetupController extends ChessBoardController {
 	protected boolean unexamineOnDispose = true;
 
 	public SetupController(Game game, Connector connector) {
-		super(game);
-		this.connector = connector;
+		super(game, connector);
 	}
 
 	@Override
@@ -230,6 +228,7 @@ public class SetupController extends ChessBoardController {
 		super.dispose();
 	}
 
+	@Override
 	public Connector getConnector() {
 		return connector;
 	}

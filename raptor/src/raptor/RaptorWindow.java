@@ -1128,11 +1128,17 @@ public class RaptorWindow extends ApplicationWindow {
 				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChessBoardWindowItem) {
 					ChessBoardWindowItem item = (ChessBoardWindowItem) folder
 							.getRaptorTabItemAt(i).raptorItem;
+
+					System.err.println("CHecking to see if " + gameId + "="
+							+ item.getController().getGame().getId());
 					if (!(item.getController() instanceof InactiveController)
 							&& item.getController().getGame().getId().equals(
 									gameId)) {
 						result = item;
+						System.err.println("Match");
+						break;
 					}
+					System.err.println("No Match");
 				}
 			}
 		}
