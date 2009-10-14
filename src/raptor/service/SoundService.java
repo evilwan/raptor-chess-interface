@@ -28,6 +28,8 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
+import raptor.speech.Speech;
+import raptor.speech.SpeechUtils;
 
 /**
  * A Singleton service that plays sounds.
@@ -47,13 +49,17 @@ public class SoundService {
 
 	protected Map<String, String> bugSoundToClip = new HashMap<String, String>();
 
+	protected Speech speech = null;
+
 	private SoundService() {
 		init();
 	}
 
 	public void dispose() {
 		soundToClip.clear();
-		// Trying to close all of the clips results in noises in OSX 10.4
+		if (speech != null) {
+			speech.dispose();
+		}
 	}
 
 	public String[] getBughouseSoundKeys() {
@@ -97,6 +103,15 @@ public class SoundService {
 
 		} catch (Throwable t) {
 			LOG.error("Error loading sounds", t);
+		}
+
+		try {
+			speech = SpeechUtils.getSpeech();
+			speech.init();
+			LOG.info("Initialized speech: " + speech);
+		} catch (Throwable t) {
+			LOG.error("Error initializing speech", t);
+			speech = null;
 		}
 		LOG.info("Initializing sound service complete: "
 				+ (System.currentTimeMillis() - startTime));
@@ -193,6 +208,12 @@ public class SoundService {
 	 *            This method is not yet implemented.
 	 */
 	public void textToSpeech(String text) {
-		Raptor.getInstance().alert("Speech is not currently enabled");
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.APP_SOUND_ENABLED)) {
+			LOG.info("Speaking " + text);
+			if (speech != null) {
+				speech.speak(text);
+			}
+		}
 	}
 }

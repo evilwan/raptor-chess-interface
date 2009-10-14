@@ -10,10 +10,10 @@ import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chess.ChessBoardWindowItem;
 
-public class ConnectorQuadrants extends FieldEditorPreferencePage {
+public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 	protected String connectorShortName;
 
-	public ConnectorQuadrants(String connectorShortName) {
+	public ConnectorQuadrantsPage(String connectorShortName) {
 		super(FLAT);
 		setTitle(connectorShortName + " Quadrants");
 		setPreferenceStore(Raptor.getInstance().getPreferences());

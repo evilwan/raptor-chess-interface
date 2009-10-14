@@ -26,6 +26,7 @@ import raptor.pref.page.ChatConsoleChannelColorsPage;
 import raptor.pref.page.ChatConsoleMessageColorsPage;
 import raptor.pref.page.ChatConsolePage;
 import raptor.pref.page.ChatConsoleScriptsPage;
+import raptor.pref.page.ChatConsoleSoundsPage;
 import raptor.pref.page.ChatConsoleToolbarPage;
 import raptor.pref.page.ChessBoardBehaviorPage;
 import raptor.pref.page.ChessBoardClocksPage;
@@ -67,6 +68,8 @@ public class PreferenceUtils {
 				new ChatConsoleToolbarPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("scripts",
 				new ChatConsoleScriptsPage()));
+		mgr.addTo("chatConsole", new PreferenceNode("sounds",
+				new ChatConsoleSoundsPage()));
 
 		mgr.addToRoot(new PreferenceNode("chessBoard", new ChessBoardPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("behavior",
