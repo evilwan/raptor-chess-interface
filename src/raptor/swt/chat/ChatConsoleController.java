@@ -898,12 +898,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onAppendOutputText(String string) {
-
 		chatConsole.outputText.append(string);
-		chatConsole.outputText.setSelection(chatConsole.outputText
-				.getCharCount());
 		setCaretToOutputTextEnd();
-
 	}
 
 	public void onAway() {
@@ -1232,6 +1228,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				&& IcsUtils.LEGAL_CHARACTERS.indexOf(event.character) != -1
 				&& event.stateMask == 0) {
 			onAppendOutputText("" + event.character);
+			if (!isConsoleOutputText) {
+				chatConsole.getDisplay().timerExec(750, new Runnable() {
+					public void run() {
+						chatConsole.outputText.forceFocus();
+					}
+				});
+			}
 		} else if (!isConsoleOutputText) {
 			chatConsole.getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -1278,7 +1281,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void setCaretToOutputTextEnd() {
 		if (!isIgnoringActions()) {
-			// chatConsole.outputText.forceFocus();
 			getChatConsole().getOutputText().setSelection(
 					getChatConsole().getOutputText().getCharCount());
 		}
