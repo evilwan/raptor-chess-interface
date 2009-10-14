@@ -28,7 +28,7 @@ import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.page.ConnectorQuadrants;
+import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.util.RaptorStringTokenizer;
@@ -381,8 +381,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] {
-				new PreferenceNode("bics", new ConnectorQuadrants("bics")),
-				new PreferenceNode("bics", new ConnectorQuadrants("bics2")) };
+				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics")),
+				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics2")) };
 
 	}
 

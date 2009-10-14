@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
@@ -35,12 +36,45 @@ public class ScriptService {
 		return singletonInstance;
 	}
 
+	public static interface ScriptServiceListener {
+		public void onChatScriptsChanged();
+
+		public void onGameScriptsChanged();
+	}
+
 	public Map<String, ChatScript> chatScriptMap = new HashMap<String, ChatScript>();
 
 	public Map<String, GameScript> gameScriptMap = new HashMap<String, GameScript>();
 
+	public List<ScriptServiceListener> listeners = Collections
+			.synchronizedList(new ArrayList<ScriptServiceListener>(5));
+
 	private ScriptService() {
 		reload();
+	}
+	
+	public void addScriptServiceListener(ScriptServiceListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void removeScriptServiceListener(ScriptServiceListener listener) {
+		listeners.remove(listener);
+	}
+
+	protected void fireGameScriptChanged() {
+		synchronized (listeners) {
+			for (ScriptServiceListener listener : listeners) {
+				listener.onGameScriptsChanged();
+			}
+		}
+	}
+
+	protected void fireChatScriptChanged() {
+		synchronized (listeners) {
+			for (ScriptServiceListener listener : listeners) {
+				listener.onChatScriptsChanged();
+			}
+		}
 	}
 
 	/**
@@ -49,6 +83,7 @@ public class ScriptService {
 	 */
 	public boolean deleteChatScript(String scriptName) {
 		chatScriptMap.remove(scriptName);
+		fireChatScriptChanged();
 		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/chat/"
 				+ scriptName + ".properties").delete();
 	}
@@ -59,6 +94,7 @@ public class ScriptService {
 	 */
 	public boolean deleteGameScript(String scriptName) {
 		gameScriptMap.remove(scriptName);
+		fireGameScriptChanged();
 		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/game/"
 				+ scriptName + ".properties").delete();
 	}
@@ -253,6 +289,7 @@ public class ScriptService {
 			Raptor.getInstance().onError("Error saving chat script", ioe);
 		}
 		chatScriptMap.put(script.getName(), script);
+		fireChatScriptChanged();
 	}
 
 	/**
@@ -270,5 +307,6 @@ public class ScriptService {
 		}
 
 		gameScriptMap.put(script.getName(), script);
+		fireGameScriptChanged();
 	}
 }

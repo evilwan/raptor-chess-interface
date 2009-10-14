@@ -53,6 +53,7 @@ import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.service.ScriptService.ScriptServiceListener;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
@@ -263,6 +264,7 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 	};
+	
 	protected boolean hasSentLogin = false;
 	protected boolean hasSentPassword = false;
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
@@ -295,6 +297,17 @@ public abstract class IcsConnector implements Connector {
 	protected ChatScript[] personTellMessageScripts = null;
 	protected ChatScript[] channelTellMessageScripts = null;
 	protected ChatScript[] partnerTellMessageScripts = null;
+	protected ScriptServiceListener scriptServiceListener = new ScriptServiceListener() {
+
+		public void onChatScriptsChanged() {
+			if (isConnected()) {
+				refreshChatScripts();
+			}
+		}
+
+		public void onGameScriptsChanged() {
+		}
+	};
 
 	/**
 	 * Constructs an IcsConnector with the specified context.
@@ -429,15 +442,20 @@ public abstract class IcsConnector implements Connector {
 				context.getPreferencePrefix() + "-keep-alive")) {
 			ThreadService.getInstance().scheduleOneShot(300000, keepAlive);
 		}
+		
+		ScriptService.getInstance().addScriptServiceListener(scriptServiceListener);
+		refreshChatScripts();
 
+		fireConnecting();
+	}
+	
+	protected void refreshChatScripts() {
 		personTellMessageScripts = ScriptService.getInstance().getChatScripts(
 				this, ChatScriptType.OnPersonTellMessages);
 		channelTellMessageScripts = ScriptService.getInstance().getChatScripts(
 				this, ChatScriptType.onChannelTellMessages);
 		partnerTellMessageScripts = ScriptService.getInstance().getChatScripts(
 				this, ChatScriptType.OnPartnerTellMessages);
-
-		fireConnecting();
 	}
 
 	protected void createMainConsoleWindowItem() {
@@ -452,6 +470,7 @@ public abstract class IcsConnector implements Connector {
 		synchronized (this) {
 			if (isConnected()) {
 				try {
+					ScriptService.getInstance().removeScriptServiceListener(scriptServiceListener);
 					if (inputChannel != null) {
 						try {
 							inputChannel.close();
