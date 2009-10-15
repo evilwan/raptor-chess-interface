@@ -22,7 +22,6 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
@@ -110,7 +109,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	protected int id;
 	protected boolean ignoreBackgroundImage = false;
 	protected boolean isHidingPiece;
-	protected boolean isHighlighted;
 	protected boolean isLight;
 
 	MouseListener mouseListener = new MouseListener() {
@@ -183,17 +181,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				e.gc.fillRectangle(0, 0, size.x, size.y);
 			}
 
-			int borderHighlightWidth = getHighlightBorderWidth();
-
-			e.gc.setForeground(getForeground());
-			if (isHighlighted) {
-				for (int i = 0; i < getHighlightBorderWidth(); i++) {
-					e.gc.drawRectangle(i, i, size.x - 1 - i * 2, size.x - 1 - i
-							* 2);
-				}
-			}
-
-			int imageSide = getImageSize(borderHighlightWidth);
+			int imageSide = getImageSize();
 
 			if (pieceImage == null && piece != EMPTY) {
 				pieceImage = getChessPieceImage(piece, imageSide, imageSide);
@@ -321,23 +309,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
-	 * Provided so it can easily be overridden.By default uses the
-	 * RaptorPreferenceStore setting.
-	 */
-	protected int getHighlightBorderWidth() {
-		return (int) (getSize().x * getPreferences().getDouble(
-				BOARD_HIGHLIGHT_BORDER_WIDTH));
-	}
-
-	/**
-	 * Provided so it can easily be overridden.By default uses the
-	 * RaptorPreferenceStore setting.
-	 */
-	protected Color getHighlightColor() {
-		return getForeground();
-	}
-
-	/**
 	 * An integer representing the squares index in GameConstants (e.g.
 	 * GameConstants.SQUARE_A1,GameConstants.SQUARE_A2, etc). Drop/Piece Jail
 	 * squares should use the constants (GameConstants
@@ -351,10 +322,11 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * Provided so it can easily be overridden.By default uses the
 	 * RaptorPreferenceStore setting.
 	 */
-	protected int getImageSize(int borderWidth) {
+	protected int getImageSize() {
 		double imageSquareSideAdjustment = getPreferences().getDouble(
 				BOARD_PIECE_SIZE_ADJUSTMENT);
-		int imageSide = (int) ((getSize().x - borderWidth * 2) * (1.0 - imageSquareSideAdjustment));
+
+		int imageSide = (int) (getSize().x * (1.0 - imageSquareSideAdjustment));
 		if (imageSide % 2 != 0) {
 			imageSide = imageSide - 1;
 		}
@@ -419,16 +391,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
-	 * Highlights this square. This method does not invoke redraw. That is left
-	 * to the caller
-	 */
-	public void highlight() {
-		if (!isHighlighted) {
-			isHighlighted = true;
-		}
-	}
-
-	/**
 	 * Returns true if this square is hiding its piece, otherwise false. This is
 	 * useful during drag operations when the board is refreshed.
 	 */
@@ -442,7 +404,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * @return
 	 */
 	public boolean isLight() {
-		return isHighlighted;
+		return isLight;
 	}
 
 	/**
@@ -462,7 +424,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * @param isLight
 	 */
 	public void setLight(boolean isLight) {
-		isHighlighted = isLight;
+		this.isLight = isLight;
 	}
 
 	/**
@@ -486,16 +448,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
-	 * Unhighlights this square. This method does not redraw after invoked. That
-	 * is up to the caller.
-	 */
-	public void unhighlight() {
-		if (isHighlighted) {
-			isHighlighted = false;
-		}
-	}
-
-	/**
 	 * Updates the cursor for a drag with the specified piece.
 	 */
 	protected void updateCursorForDrag(int piece) {
@@ -505,7 +457,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 					Raptor.getInstance().getDisplay().getSystemCursor(
 							SWT.CURSOR_CROSS));
 		} else {
-			int imageSide = getImageSize(getHighlightBorderWidth());
+			int imageSide = getImageSize();
 			getShell().setCursor(
 					BoardUtils.getCursorForPiece(piece, imageSide, imageSide));
 		}

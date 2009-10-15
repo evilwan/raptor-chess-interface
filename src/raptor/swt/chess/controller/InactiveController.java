@@ -37,11 +37,14 @@ import raptor.chess.Move;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
+import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.swt.SWTUtils;
+import raptor.swt.chess.Arrow;
 import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.Highlight;
 
 /**
  * This controller is used when a game is no longer active. It allows the user
@@ -69,16 +72,11 @@ public class InactiveController extends ChessBoardController implements
 		this.title = title;
 	}
 
-	/**
-	 * If premove is enabled, and premove is not in queued mode then clear the
-	 * premoves on an illegal move.
-	 */
 	public void adjustForIllegalMove(String move) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("adjustForIllegalMove ");
 		}
 
-		board.unhighlightAllSquares();
 		refresh();
 		onPlayIllegalMoveSound();
 		board.getStatusLabel().setText("Illegal Move: " + move);
@@ -150,6 +148,41 @@ public class InactiveController extends ChessBoardController implements
 			}
 		}
 		return false;
+	}
+
+	public void decorateForLastMoveListMove() {
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
+
+		Move lastMove = getGame().getLastMove();
+
+		if (lastMove != null) {
+			if (getPreferences().getBoolean(
+					PreferenceKeys.HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										lastMove.getFrom(),
+										lastMove.getTo(),
+										getPreferences()
+												.getColor(
+														PreferenceKeys.HIGHLIGHT_OBS_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
+				board.getArrowDecorator().drawArrow(
+						new Arrow(lastMove.getFrom(), lastMove.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_OBS_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
+		}
 	}
 
 	@Override
@@ -283,6 +316,7 @@ public class InactiveController extends ChessBoardController implements
 		case REVERT_NAV:
 			cursor.revert();
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		case COMMIT_NAV:
 			cursor.commit();
@@ -291,18 +325,22 @@ public class InactiveController extends ChessBoardController implements
 		case NEXT_NAV:
 			cursor.setCursorNext();
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		case BACK_NAV:
 			cursor.setCursorPrevious();
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		case FIRST_NAV:
 			cursor.setCursorFirst();
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		case LAST_NAV:
 			cursor.setCursorLast();
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		}
 	}
@@ -329,7 +367,8 @@ public class InactiveController extends ChessBoardController implements
 		if (!isDisposed()) {
 			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare
 					+ " " + isDnd);
-			board.unhighlightAllSquares();
+			board.getSquareHighlighter().removeAllHighlights();
+			board.getArrowDecorator().removeAllArrows();
 			refresh();
 			onPlayIllegalMoveSound();
 		}
@@ -347,6 +386,7 @@ public class InactiveController extends ChessBoardController implements
 		cursor.setCursor(halfMoveNumber);
 		enableDisableNavButtons();
 		refresh();
+		decorateForLastMoveListMove();
 	}
 
 	@Override
@@ -355,10 +395,18 @@ public class InactiveController extends ChessBoardController implements
 			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " "
 					+ isDnd);
 			userMadeAdjustment = true;
-			board.getResultDecoration().setHiding(true);
+			board.getResultDecorator().setHiding(true);
 
-			board.unhighlightAllSquares();
-			board.getSquare(square).highlight();
+			board.getSquareHighlighter().removeAllHighlights();
+			board.getArrowDecorator().removeAllArrows();
+
+			if (getPreferences().getBoolean(
+					PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+				board.getSquareHighlighter().addHighlight(
+						new Highlight(square, getPreferences().getColor(
+								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
+			}
+
 			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
 				board.getSquare(square).setPiece(GameConstants.EMPTY);
 			}
@@ -373,8 +421,8 @@ public class InactiveController extends ChessBoardController implements
 					+ GameUtils.getSan(fromSquare) + " "
 					+ GameUtils.getSan(toSquare));
 		}
-
-		board.unhighlightAllSquares();
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
 
 		if (fromSquare == toSquare || BoardUtils.isPieceJailSquare(toSquare)) {
 			if (LOG.isDebugEnabled()) {
@@ -401,8 +449,31 @@ public class InactiveController extends ChessBoardController implements
 			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
 					toSquare));
 		} else {
-			board.getSquare(fromSquare).highlight();
-			board.getSquare(toSquare).highlight();
+			if (getPreferences().getBoolean(
+					PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										move.getFrom(),
+										move.getTo(),
+										getPreferences()
+												.getColor(
+														PreferenceKeys.HIGHLIGHT_MY_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
+				board.getArrowDecorator().drawArrow(
+						new Arrow(move.getFrom(), move.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_MY_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
 
 			if (game.move(move)) {
 				refresh();

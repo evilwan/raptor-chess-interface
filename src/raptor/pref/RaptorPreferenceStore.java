@@ -229,7 +229,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "Wood2");
 		setDefault(BOARD_IS_SHOW_COORDINATES, true);
 		setDefault(BOARD_PIECE_SIZE_ADJUSTMENT, .03);
-		setDefault(BOARD_HIGHLIGHT_BORDER_WIDTH, .05);
 		setDefault(BOARD_IS_SHOWING_PIECE_JAIL, true);
 		setDefault(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN, 1000L * 10L + 1L);
 		setDefault(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
@@ -247,8 +246,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				0, 0));
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_COLOR, new RGB(
 				0, 0, 0));
-		PreferenceConverter.setDefault(this, BOARD_HIGHLIGHT_COLOR, new RGB(0,
-				255, 255));
 		PreferenceConverter.setDefault(this, BOARD_ACTIVE_CLOCK_COLOR, new RGB(
 				0, 255, 0));
 		PreferenceConverter.setDefault(this, BOARD_INACTIVE_CLOCK_COLOR,
@@ -295,6 +292,34 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_RESULT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName, 40,
 						SWT.BOLD) });
+
+		PreferenceConverter.setDefault(this, ARROW_OPPONENT_COLOR, new RGB(255,
+				0, 255));
+		PreferenceConverter
+				.setDefault(this, ARROW_MY_COLOR, new RGB(0, 0, 255));
+		PreferenceConverter.setDefault(this, ARROW_OBS_COLOR,
+				new RGB(0, 0, 255));
+		setDefault(ARROW_SHOW_ON_OBS_MOVES, true);
+		setDefault(ARROW_SHOW_ON_MOVE_LIST_MOVES, true);
+		setDefault(ARROW_SHOW_ON_MY_PREMOVES, true);
+		setDefault(ARROW_SHOW_ON_MY_MOVES, false);
+		setDefault(ARROW_ANIMATION_DELAY, 300L);
+		setDefault(ARROW_FADE_AWAY_MODE, true);
+		setDefault(ARROW_WIDTH_PERCENTAGE, 15);
+
+		PreferenceConverter.setDefault(this, HIGHLIGHT_OPPONENT_COLOR, new RGB(
+				255, 0, 255));
+		PreferenceConverter.setDefault(this, HIGHLIGHT_MY_COLOR, new RGB(0, 0,
+				255));
+		PreferenceConverter.setDefault(this, HIGHLIGHT_OBS_COLOR, new RGB(0, 0,
+				255));
+		setDefault(HIGHLIGHT_SHOW_ON_OBS_MOVES, true);
+		setDefault(HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES, true);
+		setDefault(HIGHLIGHT_SHOW_ON_MY_PREMOVES, true);
+		setDefault(HIGHLIGHT_SHOW_ON_MY_MOVES, false);
+		setDefault(HIGHLIGHT_FADE_AWAY_MODE, false);
+		setDefault(HIGHLIGHT_ANIMATION_DELAY, 300L);
+		setDefault(HIGHLIGHT_WIDTH_PERCENTAGE, 3);
 
 		// Chat
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);

@@ -34,8 +34,10 @@ import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
+import raptor.swt.chess.Arrow;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.Highlight;
 
 /**
  * Examines a game on a backing connector. When examining a game the user is
@@ -192,7 +194,7 @@ public class ExamineController extends ChessBoardController {
 			LOG.info("examineOnIllegalMove " + getGame().getId() + " " + move);
 		}
 
-		board.unhighlightAllSquares();
+		// board.unhighlightAllSquares();
 		refresh();
 		SoundService.getInstance().playSound("illegalMove");
 
@@ -206,7 +208,7 @@ public class ExamineController extends ChessBoardController {
 			LOG.debug("examinePositionUpdate " + getGame().getId());
 		}
 
-		board.unhighlightAllSquares();
+		// board.unhighlightAllSquares();
 		refresh();
 		onPlayMoveSound();
 	}
@@ -295,14 +297,22 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		board.unhighlightAllSquares();
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
 		refreshBoard();
 	}
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		board.unhighlightAllSquares();
-		board.getSquare(square).highlight();
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
+		if (getPreferences().getBoolean(
+				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+			board.getSquareHighlighter().addHighlight(
+					new Highlight(square, getPreferences().getColor(
+							PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
+		}
+
 		if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
 			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
@@ -315,7 +325,9 @@ public class ExamineController extends ChessBoardController {
 			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
 					+ toSquare);
 		}
-		board.unhighlightAllSquares();
+
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
 
 		if (BoardUtils.isPieceJailSquare(toSquare)) {
 			SoundService.getInstance().playSound("illegalMove");
@@ -333,6 +345,32 @@ public class ExamineController extends ChessBoardController {
 
 		if (move != null) {
 			connector.makeMove(game, move);
+			if (getPreferences().getBoolean(
+					PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										move.getFrom(),
+										move.getTo(),
+										getPreferences()
+												.getColor(
+														PreferenceKeys.HIGHLIGHT_MY_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
+				board.getArrowDecorator().drawArrow(
+						new Arrow(move.getFrom(), move.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_MY_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
+
 			refreshForMove(move);
 		} else {
 			examineOnIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,

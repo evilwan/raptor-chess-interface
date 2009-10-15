@@ -26,7 +26,7 @@ import raptor.swt.SWTUtils;
 /**
  * Paints the game result over the chess board if it is inactive.
  */
-public class ResultChessBoardDecoration implements BoardConstants {
+public class ResultDecorator implements BoardConstants {
 
 	protected ChessBoard board;
 	protected boolean isHiding = false;
@@ -35,7 +35,7 @@ public class ResultChessBoardDecoration implements BoardConstants {
 
 	protected int resultFontHeight;
 
-	public ResultChessBoardDecoration(ChessBoard board) {
+	public ResultDecorator(ChessBoard board) {
 		this.board = board;
 		init();
 	}

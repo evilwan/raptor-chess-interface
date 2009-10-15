@@ -81,8 +81,8 @@ import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PartnerTellController;
 import raptor.swt.chat.controller.PersonController;
+import raptor.swt.chess.Arrow;
 import raptor.swt.chess.ChessBoardWindowItem;
-import raptor.swt.chess.ArrowChessBoardDecoration.Arrow;
 import raptor.swt.chess.controller.InactiveController;
 
 /**
@@ -921,100 +921,95 @@ public class RaptorWindow extends ApplicationWindow {
 				InactiveController controller = new InactiveController(game);
 				ChessBoardWindowItem item = new ChessBoardWindowItem(controller);
 				addRaptorWindowItem(item, false);
-				item.getBoard().getArrowDecoration().drawArrow(
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_E2,
 								GameConstants.SQUARE_E7, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
-				
-				item.getBoard().getArrowDecoration().drawArrow(
+
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_D7,
 								GameConstants.SQUARE_D1, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
-				item.getBoard().getArrowDecoration().drawArrow(
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_A8,
 								GameConstants.SQUARE_D8, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_BLACK)));
-				item.getBoard().getArrowDecoration().drawArrow(
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_H8,
 								GameConstants.SQUARE_E8, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_CYAN)));
-				
-				
-				item.getBoard().getArrowDecoration().drawArrow(
-				new Arrow(GameConstants.SQUARE_B1,
-						GameConstants.SQUARE_A3, Raptor.getInstance()
-								.getDisplay().getSystemColor(
-										SWT.COLOR_RED)));
-				
-				item.getBoard().getArrowDecoration().drawArrow(
+
+				item.getBoard().getArrowDecorator().drawArrow(
+						new Arrow(GameConstants.SQUARE_B1,
+								GameConstants.SQUARE_A3, Raptor.getInstance()
+										.getDisplay().getSystemColor(
+												SWT.COLOR_RED)));
+
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_B1,
 								GameConstants.SQUARE_D2, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
-				
-				item.getBoard().getArrowDecoration().drawArrow(
-				new Arrow(GameConstants.SQUARE_G1,
-						GameConstants.SQUARE_H3, Raptor.getInstance()
-								.getDisplay().getSystemColor(
-										SWT.COLOR_GREEN)));
-				
-				item.getBoard().getArrowDecoration().drawArrow(
+
+				item.getBoard().getArrowDecorator().drawArrow(
+						new Arrow(GameConstants.SQUARE_G1,
+								GameConstants.SQUARE_H3, Raptor.getInstance()
+										.getDisplay().getSystemColor(
+												SWT.COLOR_GREEN)));
+
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_G1,
 								GameConstants.SQUARE_E2, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
-				
-				
-				item.getBoard().getArrowDecoration().drawArrow(
+
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_E7,
 								GameConstants.SQUARE_C6, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
-						
-						item.getBoard().getArrowDecoration().drawArrow(
-								new Arrow(GameConstants.SQUARE_E7,
-										GameConstants.SQUARE_G6, Raptor.getInstance()
-												.getDisplay().getSystemColor(
-														SWT.COLOR_RED)));
-						
-						item.getBoard().getArrowDecoration().drawArrow(
+
+				item.getBoard().getArrowDecorator().drawArrow(
+						new Arrow(GameConstants.SQUARE_E7,
+								GameConstants.SQUARE_G6, Raptor.getInstance()
+										.getDisplay().getSystemColor(
+												SWT.COLOR_RED)));
+
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_B7,
 								GameConstants.SQUARE_A5, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
-						
-						item.getBoard().getArrowDecoration().drawArrow(
-								new Arrow(GameConstants.SQUARE_G7,
-										GameConstants.SQUARE_H5, Raptor.getInstance()
-												.getDisplay().getSystemColor(
-														SWT.COLOR_GREEN)));
-				
-				
-				
-				
-				item.getBoard().getArrowDecoration().drawArrow(
-				new Arrow(GameConstants.SQUARE_E4,
-						GameConstants.SQUARE_H7, Raptor.getInstance()
-								.getDisplay().getSystemColor(
-										SWT.COLOR_RED)));
-				
-				item.getBoard().getArrowDecoration().drawArrow(
+
+				item.getBoard().getArrowDecorator().drawArrow(
+						new Arrow(GameConstants.SQUARE_G7,
+								GameConstants.SQUARE_H5, Raptor.getInstance()
+										.getDisplay().getSystemColor(
+												SWT.COLOR_GREEN)));
+
+				item.getBoard().getArrowDecorator().drawArrow(
+						new Arrow(GameConstants.SQUARE_E4,
+								GameConstants.SQUARE_H7, Raptor.getInstance()
+										.getDisplay().getSystemColor(
+												SWT.COLOR_RED)));
+
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_E4,
 								GameConstants.SQUARE_A8, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
-				
-				item.getBoard().getArrowDecoration().drawArrow(
-				new Arrow(GameConstants.SQUARE_E4,
-						GameConstants.SQUARE_H1, Raptor.getInstance()
-								.getDisplay().getSystemColor(
-										SWT.COLOR_BLUE)));
-				
-				item.getBoard().getArrowDecoration().drawArrow(
+
+				item.getBoard().getArrowDecorator().drawArrow(
+						new Arrow(GameConstants.SQUARE_E4,
+								GameConstants.SQUARE_H1, Raptor.getInstance()
+										.getDisplay().getSystemColor(
+												SWT.COLOR_BLUE)));
+
+				item.getBoard().getArrowDecorator().drawArrow(
 						new Arrow(GameConstants.SQUARE_E4,
 								GameConstants.SQUARE_B1, Raptor.getInstance()
 										.getDisplay().getSystemColor(

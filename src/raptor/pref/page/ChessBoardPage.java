@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Composite;
 import raptor.Raptor;
 import raptor.chess.GameConstants;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.RaptorPreferenceStore;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.SWTUtils;
@@ -92,21 +91,11 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 
 		@Override
-		protected int getHighlightBorderWidth() {
-			try {
-				return (int) (getSize().x * Double
-						.parseDouble(highlightPercentage.getValue().toString()));
-			} catch (Exception e) {
-				return 0;
-			}
-		}
-
-		@Override
-		protected int getImageSize(int borderWidth) {
+		protected int getImageSize() {
 			try {
 				double imageSquareSideAdjustment = Double
 						.parseDouble(pieceResize.getValue().toString());
-				int imageSide = (int) ((getSize().x - borderWidth * 2) * (1.0 - imageSquareSideAdjustment));
+				int imageSide = (int) (getSize().x * (1.0 - imageSquareSideAdjustment));
 				if (imageSide % 2 != 0) {
 					imageSide = imageSide - 1;
 				}
@@ -194,12 +183,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				PIECE_RESIZE_PERCENTAGE, getFieldEditorParent());
 		addField(pieceResize);
 
-		highlightPercentage = new ChessBoardPageComboFieldEditor(
-				PreferenceKeys.BOARD_HIGHLIGHT_BORDER_WIDTH,
-				"Highlight percentage:\n(Higher values increase border size.)",
-				HIGHLIGHT_BORDER_RESIZE_PERCENTAGE, getFieldEditorParent());
-		addField(highlightPercentage);
-
 		squares = new ChessBoardPageSquare[3][3];
 		miniBoard = new Composite(getFieldEditorParent(), SWT.NONE);
 		miniBoard.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
@@ -212,9 +195,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				squares[i][j] = new ChessBoardPageSquare(miniBoard, j * i,
 						isLight);
 				squares[i][j].setLayoutData(new GridData(50, 50));
-				squares[i][j]
-						.setForeground(((RaptorPreferenceStore) getPreferenceStore())
-								.getColor(PreferenceKeys.BOARD_HIGHLIGHT_COLOR));
 				isLight = !isLight;
 			}
 		}
@@ -231,8 +211,8 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		squares[2][1].setPiece(GameConstants.WR);
 		squares[2][2].setPiece(GameConstants.WK);
 
-		squares[1][1].highlight();
-		squares[0][2].highlight();
+		// squares[1][1].highlight();
+		// squares[0][2].highlight();
 
 		LabelButtonFieldEditor labelButtonFieldEditor = new LabelButtonFieldEditor(
 				"NONE",
@@ -256,9 +236,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		for (ChessBoardPageSquare[] square : squares) {
 			for (ChessBoardPageSquare element : square) {
 				element.clearCache();
-				element
-						.setForeground(((RaptorPreferenceStore) getPreferenceStore())
-								.getColor(PreferenceKeys.BOARD_HIGHLIGHT_COLOR));
 				element.redraw();
 				miniBoard.layout(true, true);
 			}

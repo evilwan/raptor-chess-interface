@@ -28,10 +28,12 @@ import raptor.pref.page.ChatConsolePage;
 import raptor.pref.page.ChatConsoleScriptsPage;
 import raptor.pref.page.ChatConsoleSoundsPage;
 import raptor.pref.page.ChatConsoleToolbarPage;
+import raptor.pref.page.ChessBoardArrowsPage;
 import raptor.pref.page.ChessBoardBehaviorPage;
 import raptor.pref.page.ChessBoardClocksPage;
 import raptor.pref.page.ChessBoardColorsPage;
 import raptor.pref.page.ChessBoardFontsPage;
+import raptor.pref.page.ChessBoardHighlightsPage;
 import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.RaptorPage;
 import raptor.pref.page.RaptorWindowPage;
@@ -80,6 +82,10 @@ public class PreferenceUtils {
 				new ChessBoardColorsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("fonts",
 				new ChessBoardFontsPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("arrows",
+				new ChessBoardArrowsPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("highlights",
+				new ChessBoardHighlightsPage()));
 
 		mgr.addToRoot(new PreferenceNode("bughouse", new BughousePage()));
 		mgr.addTo("bughouse", new PreferenceNode("buttons",
