@@ -75,6 +75,7 @@ public class ChessBoard implements BoardConstants {
 	};
 
 	protected ResultChessBoardDecoration resultDecoration;
+	protected ArrowChessBoardDecoration arrowDecoration;
 
 	protected SashForm sashForm;
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
@@ -87,6 +88,10 @@ public class ChessBoard implements BoardConstants {
 	protected CLabel whiteToMoveIndicatorLabel;
 
 	public ChessBoard() {
+	}
+
+	public ArrowChessBoardDecoration getArrowDecoration() {
+		return arrowDecoration;
 	}
 
 	/**
@@ -174,6 +179,8 @@ public class ChessBoard implements BoardConstants {
 				propertyChangeListener);
 
 		resultDecoration = new ResultChessBoardDecoration(this);
+
+		arrowDecoration = new ArrowChessBoardDecoration(this);
 
 		updateFromPrefs();
 

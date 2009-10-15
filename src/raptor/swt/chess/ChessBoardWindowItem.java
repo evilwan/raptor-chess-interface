@@ -73,6 +73,10 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	public void dispose() {
 		board.getControl().dispose();
 	}
+	
+	public ChessBoard getBoard() {
+		return board;
+	}
 
 	public Control getControl() {
 		return board.getControl();
