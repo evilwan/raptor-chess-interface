@@ -428,7 +428,7 @@ public abstract class IcsConnector implements Connector {
 					if (LOG.isInfoEnabled()) {
 						LOG.info(getShortName() + " Connection successful");
 					}
-				} catch (Exception ce) {
+				} catch (Throwable ce) {
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Error: " + ce.getMessage()));
 					disconnect();
@@ -505,16 +505,17 @@ public abstract class IcsConnector implements Connector {
 				} catch (Throwable t) {
 				} finally {
 				}
-				isConnecting = false;
-
-				publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-						"Disconnected"));
-
-				Raptor.getInstance().getWindow().setPingTime(this, -1);
-				fireDisconnected();
-				LOG.error("Disconnected from " + getShortName());
 			}
+
+			isConnecting = false;
+
+			publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Disconnected"));
+
+			Raptor.getInstance().getWindow().setPingTime(this, -1);
+			fireDisconnected();
+			LOG.error("Disconnected from " + getShortName());
 		}
+
 	}
 
 	public void dispose() {

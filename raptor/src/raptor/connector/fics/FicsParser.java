@@ -91,6 +91,11 @@ public class FicsParser implements IcsParser, GameConstants {
 	 * well as a G1.
 	 */
 	protected Map<String, G1Message> unprocessedG1Messages = new HashMap<String, G1Message>();
+
+	/**
+	 * Bics doesnt support the partner board in G1 messages so you have to
+	 * resort to this to link the bug games together.
+	 */
 	protected List<String> bugGamesWithoutBoard2 = new ArrayList<String>(10);
 
 	public FicsParser() {
@@ -495,24 +500,49 @@ public class FicsParser implements IcsParser, GameConstants {
 				service.addGame(game);
 
 				if (game.getVariant() == Variant.bughouse) {
-					if (bugGamesWithoutBoard2.isEmpty()) {
-						bugGamesWithoutBoard2.add(message.gameId);
-						connector.sendMessage("pobserve " + message.whiteName,
-								true);
-					} else {
-						Game otherBoard = service.getGame(bugGamesWithoutBoard2
-								.get(0));
-						if (otherBoard == null) {
-							connector.onError("Could not find game with id "
-									+ bugGamesWithoutBoard2.get(0)
-									+ " in the GameService.", new Exception());
+
+					if (g1Message.parterGameId.equals("0")) {
+						// BICS mode its ugly buggy and i hate it. Please ask
+						// them
+						// to add
+						// a damn partnerGameId its a pain without it.
+						if (bugGamesWithoutBoard2.isEmpty()) {
+							bugGamesWithoutBoard2.add(message.gameId);
+							connector.sendMessage("pobserve "
+									+ message.whiteName, true);
 						} else {
+							Game otherBoard = service
+									.getGame(bugGamesWithoutBoard2.get(0));
+							if (otherBoard == null) {
+								connector
+										.onError(
+												"Could not find game with id "
+														+ bugGamesWithoutBoard2
+																.get(0)
+														+ " in the GameService. Please get BICS to add a partner game id to its G1 message.\n"
+														+ " You can complain to both johnthegreat and aramen.",
+												new Exception());
+							} else {
+								((BughouseGame) game)
+										.setOtherBoard((BughouseGame) otherBoard);
+								((BughouseGame) otherBoard)
+										.setOtherBoard((BughouseGame) game);
+							}
+							bugGamesWithoutBoard2.clear();
+						}
+					} else { // Fics mode, nice and clean.
+						if (!connector.getGameService().isManaging(
+								g1Message.parterGameId)) {
+							connector.sendMessage("observe "
+									+ g1Message.parterGameId, true);
+						} else {
+							Game otherBoard = service
+									.getGame(g1Message.parterGameId);
 							((BughouseGame) game)
 									.setOtherBoard((BughouseGame) otherBoard);
 							((BughouseGame) otherBoard)
 									.setOtherBoard((BughouseGame) game);
 						}
-						bugGamesWithoutBoard2.clear();
 					}
 				}
 
