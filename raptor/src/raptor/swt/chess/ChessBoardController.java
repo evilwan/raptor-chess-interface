@@ -752,18 +752,80 @@ public abstract class ChessBoardController implements BoardConstants,
 		int fromPiece = board.getSquare(move.getFrom()).getPiece();
 
 		if (move.isEnPassant()) {
-			board.getSquare(move.getFrom()).highlight();
-			board.getSquare(move.getEpSquare()).highlight();
+			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										move.getFrom(),
+										move.getEpSquare(),
+										getPreferences().getColor(
+												HIGHLIGHT_MY_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+
+			}
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
+				board.getArrowDecorator().drawArrow(
+						new Arrow(move.getFrom(), move.getEpSquare(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_MY_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
+
 			board.getSquare(move.getTo()).setPiece(fromPiece);
 			board.getSquare(move.getEpSquare()).setPiece(EMPTY);
 			board.getSquare(move.getFrom()).setPiece(EMPTY);
 		} else if (move.isDrop()) {
-			board.getSquare(move.getFrom()).highlight();
-			board.getSquare(move.getTo()).highlight();
+			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										move.getFrom(),
+										move.getTo(),
+										getPreferences().getColor(
+												HIGHLIGHT_MY_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
+				board.getArrowDecorator().drawArrow(
+						new Arrow(move.getFrom(), move.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_MY_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
 			board.getSquare(move.getTo()).setPiece(fromPiece);
 		} else {
-			board.getSquare(move.getFrom()).highlight();
-			board.getSquare(move.getTo()).highlight();
+			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										move.getFrom(),
+										move.getTo(),
+										getPreferences().getColor(
+												HIGHLIGHT_MY_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
+				board.getArrowDecorator().drawArrow(
+						new Arrow(move.getFrom(), move.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_MY_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
 			board.getSquare(move.getFrom()).setPiece(EMPTY);
 			board.getSquare(move.getTo()).setPiece(fromPiece);
 		}

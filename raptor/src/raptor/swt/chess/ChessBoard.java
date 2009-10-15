@@ -74,8 +74,9 @@ public class ChessBoard implements BoardConstants {
 		}
 	};
 
-	protected ResultChessBoardDecoration resultDecoration;
-	protected ArrowChessBoardDecoration arrowDecoration;
+	protected SquareHighlighter squareHighlighter;
+	protected ResultDecorator resultDecorator;
+	protected ArrowDecorator arrowDecorator;
 
 	protected SashForm sashForm;
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
@@ -88,10 +89,6 @@ public class ChessBoard implements BoardConstants {
 	protected CLabel whiteToMoveIndicatorLabel;
 
 	public ChessBoard() {
-	}
-
-	public ArrowChessBoardDecoration getArrowDecoration() {
-		return arrowDecoration;
 	}
 
 	/**
@@ -178,9 +175,9 @@ public class ChessBoard implements BoardConstants {
 		Raptor.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
 
-		resultDecoration = new ResultChessBoardDecoration(this);
-
-		arrowDecoration = new ArrowChessBoardDecoration(this);
+		resultDecorator = new ResultDecorator(this);
+		arrowDecorator = new ArrowDecorator(this);
+		squareHighlighter = new SquareHighlighter(this);
 
 		updateFromPrefs();
 
@@ -234,6 +231,10 @@ public class ChessBoard implements BoardConstants {
 				isWhiteSquare = !isWhiteSquare;
 			}
 		}
+	}
+
+	public ArrowDecorator getArrowDecorator() {
+		return arrowDecorator;
 	}
 
 	public CLabel getBlackClockLabel() {
@@ -302,10 +303,11 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	/**
-	 * Returns the chess board result decoration for this chess board.
+	 * Returns the result decorator. Used to decorate a games results over the
+	 * chess board..
 	 */
-	public ResultChessBoardDecoration getResultDecoration() {
-		return resultDecoration;
+	public ResultDecorator getResultDecorator() {
+		return resultDecorator;
 	}
 
 	/**
@@ -328,6 +330,14 @@ public class ChessBoard implements BoardConstants {
 	 */
 	public ChessSquare getSquare(int rank, int file) {
 		return squares[rank][file];
+	}
+
+	/**
+	 * Returns the square highlighter, used to highlight squares on the chess
+	 * board.
+	 */
+	public SquareHighlighter getSquareHighlighter() {
+		return squareHighlighter;
 	}
 
 	/**
@@ -476,23 +486,6 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	/**
-	 * Unhighlights all the squares. This method does not redraw them, that is
-	 * left to the caller.
-	 */
-	public void unhighlightAllSquares() {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				squares[i][j].unhighlight();
-			}
-		}
-		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
-			if (pieceJailSquare != null) {
-				pieceJailSquare.unhighlight();
-			}
-		}
-	}
-
-	/**
 	 * Updates only the board and piece jails from
 	 * Raptor.getInstance().getPreferences().
 	 */
@@ -501,16 +494,12 @@ public class ChessBoard implements BoardConstants {
 				.getPreferences();
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
-				squares[i][j].setForeground(preferences
-						.getColor(BOARD_HIGHLIGHT_COLOR));
 				squares[i][j].clearCache();
 			}
 		}
 
 		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
 			if (pieceJailSquare != null) {
-				pieceJailSquare.setForeground(preferences
-						.getColor(BOARD_HIGHLIGHT_COLOR));
 				pieceJailSquare.setBackground(preferences
 						.getColor(BOARD_PIECE_JAIL_BACKGROUND_COLOR));
 				pieceJailSquare.clearCache();

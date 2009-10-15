@@ -29,7 +29,8 @@ public class PartnerTellEventParser extends ChatEventParser {
 	public ChatEvent parse(String text) {
 		if (text.length() < 1500) {
 			text = text.trim();
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " \r\n",true);
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(text,
+					" \r\n", true);
 			if (tok.hasMoreTokens()) {
 				String source = tok.nextToken();
 				if (source.endsWith("%")) {

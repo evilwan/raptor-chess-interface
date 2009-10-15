@@ -37,8 +37,10 @@ import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
+import raptor.swt.chess.Arrow;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.Highlight;
 
 /**
  * A controller used when setting up a position. When the controller receives a
@@ -195,10 +197,24 @@ public class SetupController extends ChessBoardController {
 	}
 
 	protected void adjustToDropMove(Move move, boolean isRedrawing) {
-		board.unhighlightAllSquares();
-		board.getSquare(move.getFrom()).highlight();
-		board.getSquare(move.getTo()).highlight();
-
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
+		if (getPreferences().getBoolean(
+				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+			board.getSquareHighlighter().addHighlight(
+					new Highlight(move.getFrom(), move.getTo(),
+							getPreferences().getColor(
+									PreferenceKeys.HIGHLIGHT_MY_COLOR),
+							getPreferences().getBoolean(
+									PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+		}
+		if (getPreferences().getBoolean(PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
+			board.getArrowDecorator().drawArrow(
+					new Arrow(move.getFrom(), move.getTo(), getPreferences()
+							.getColor(PreferenceKeys.ARROW_MY_COLOR),
+							getPreferences().getBoolean(
+									PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+		}
 		board.getSquare(move.getTo()).setPiece(
 				BoardUtils
 						.getColoredPiece(move.getPiece(), move.isWhitesMove()));
@@ -307,7 +323,7 @@ public class SetupController extends ChessBoardController {
 		if (move != null) {
 			board.getStatusLabel().setText("Illegal Move: " + move);
 		}
-		board.unhighlightAllSquares();
+
 		refreshBoard();
 	}
 
@@ -317,7 +333,6 @@ public class SetupController extends ChessBoardController {
 		}
 		long startTime = System.currentTimeMillis();
 
-		board.unhighlightAllSquares();
 		refresh();
 		onPlayMoveSound();
 
@@ -329,14 +344,13 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-		board.unhighlightAllSquares();
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
 		refresh();
 	}
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		board.unhighlightAllSquares();
-		board.getSquare(square).highlight();
 		if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
 			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
@@ -350,10 +364,7 @@ public class SetupController extends ChessBoardController {
 					+ toSquare);
 		}
 
-		board.unhighlightAllSquares();
-
 		if (fromSquare == toSquare || BoardUtils.isPieceJailSquare(toSquare)) {
-			board.unhighlightAllSquares();
 			refresh();
 			SoundService.getInstance().playSound("illegalMove");
 			return;

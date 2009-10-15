@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.GameCursor;
+import raptor.chess.Move;
 import raptor.chess.GameCursor.Mode;
 import raptor.chess.pgn.PgnHeader;
 import raptor.connector.Connector;
@@ -34,8 +35,10 @@ import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
+import raptor.swt.chess.Arrow;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.Highlight;
 
 /**
  * A controller used when observing a game.
@@ -110,6 +113,52 @@ public class ObserveController extends ChessBoardController {
 							refresh();
 							if (isNewMove) {
 								onPlayMoveSound();
+
+								board.getSquareHighlighter()
+										.removeAllHighlights();
+								board.getArrowDecorator().removeAllArrows();
+
+								Move lastMove = getGame().getLastMove();
+
+								if (lastMove != null) {
+									if (getPreferences()
+											.getBoolean(
+													PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
+										board
+												.getSquareHighlighter()
+												.addHighlight(
+														new Highlight(
+																lastMove
+																		.getFrom(),
+																lastMove
+																		.getTo(),
+																getPreferences()
+																		.getColor(
+																				PreferenceKeys.HIGHLIGHT_OBS_COLOR),
+																getPreferences()
+																		.getBoolean(
+																				PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+									}
+
+									if (getPreferences()
+											.getBoolean(
+													PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
+										board
+												.getArrowDecorator()
+												.drawArrow(
+														new Arrow(
+																lastMove
+																		.getFrom(),
+																lastMove
+																		.getTo(),
+																getPreferences()
+																		.getColor(
+																				PreferenceKeys.ARROW_OBS_COLOR),
+																getPreferences()
+																		.getBoolean(
+																				PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+									}
+								}
 							}
 						} catch (Throwable t) {
 							connector.onError(
@@ -146,6 +195,41 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		return false;
+	}
+
+	public void decorateForLastMoveListMove() {
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
+
+		Move lastMove = getGame().getLastMove();
+
+		if (lastMove != null) {
+			if (getPreferences().getBoolean(
+					PreferenceKeys.HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										lastMove.getFrom(),
+										lastMove.getTo(),
+										getPreferences()
+												.getColor(
+														PreferenceKeys.HIGHLIGHT_OBS_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
+				board.getArrowDecorator().drawArrow(
+						new Arrow(lastMove.getFrom(), lastMove.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_OBS_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
+		}
 	}
 
 	@Override
@@ -287,19 +371,23 @@ public class ObserveController extends ChessBoardController {
 		case NEXT_NAV:
 			cursor.setCursorNext();
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		case BACK_NAV:
 			cursor.setCursorPrevious();
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		case FIRST_NAV:
 			cursor.setCursorFirst();
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		case LAST_NAV:
 			cursor.setCursorMasterLast();
 			setToolItemEnabled(ToolBarItemKey.FORCE_UPDATE, true);
 			refresh();
+			decorateForLastMoveListMove();
 			break;
 		}
 	}
@@ -327,6 +415,7 @@ public class ObserveController extends ChessBoardController {
 	public void userClickedOnMove(int halfMoveNumber) {
 		cursor.setCursor(halfMoveNumber);
 		refresh();
+		decorateForLastMoveListMove();
 	}
 
 	@Override

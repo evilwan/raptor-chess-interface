@@ -45,11 +45,6 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(coordinatesColor);
 
-		ColorFieldEditor highlightColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_HIGHLIGHT_COLOR, "Highlight Color:",
-				getFieldEditorParent());
-		addField(highlightColor);
-
 		ColorFieldEditor lagLabelColor = new ColorFieldEditor(
 				PreferenceKeys.BOARD_LAG_COLOR, "Lag Color:",
 				getFieldEditorParent());

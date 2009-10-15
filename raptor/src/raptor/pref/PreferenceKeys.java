@@ -97,8 +97,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_COORDINATES_FONT = "board-coordinates-font";
 	public static final String BOARD_GAME_DESCRIPTION_COLOR = "board-game-description-color";
 	public static final String BOARD_GAME_DESCRIPTION_FONT = "board-game-description-font";
-	public static final String BOARD_HIGHLIGHT_BORDER_WIDTH = "board-highlight-width-percentage";
-	public static final String BOARD_HIGHLIGHT_COLOR = "board-highlight-color";
 	public static final String BOARD_INACTIVE_CLOCK_COLOR = "board-inactive-clock-color";
 	public static final String BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS = "board-is-playing-10-second-countdown-sounds";
 	public static final String BOARD_IS_SHOW_COORDINATES = "board-show-coordinates";
@@ -128,6 +126,28 @@ public interface PreferenceKeys {
 	public static final String BOARD_SQUARE_BACKGROUND_NAME = "board-square-background-name";
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
 	public static final String BOARD_STATUS_FONT = "board-status-font";
+
+	public static final String ARROW_OPPONENT_COLOR = "arrow-opponent-color";
+	public static final String ARROW_MY_COLOR = "arrow-my-color";
+	public static final String ARROW_OBS_COLOR = "arrow-obs-color";
+	public static final String ARROW_SHOW_ON_OBS_MOVES = "arrow-show-on-obs-moves";
+	public static final String ARROW_SHOW_ON_MOVE_LIST_MOVES = "arrow-show-on-move-list-moves";
+	public static final String ARROW_SHOW_ON_MY_PREMOVES = "arrow-show-on-my-premoves";
+	public static final String ARROW_SHOW_ON_MY_MOVES = "arrow-show-on-my-moves";
+	public static final String ARROW_ANIMATION_DELAY = "arrow-animotion-delay";
+	public static final String ARROW_WIDTH_PERCENTAGE = "arrow-width-percentage";
+	public static final String ARROW_FADE_AWAY_MODE = "arrow-fade-away-mode";
+
+	public static final String HIGHLIGHT_OPPONENT_COLOR = "hilight-opponent-color";
+	public static final String HIGHLIGHT_MY_COLOR = "hilight-my-color";
+	public static final String HIGHLIGHT_OBS_COLOR = "hilight-obs-color";
+	public static final String HIGHLIGHT_SHOW_ON_OBS_MOVES = "hilight-show-on-obs-moves";
+	public static final String HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES = "hilight-show-on-move-list-moves";
+	public static final String HIGHLIGHT_SHOW_ON_MY_PREMOVES = "hilight-show-on-my-premoves";
+	public static final String HIGHLIGHT_SHOW_ON_MY_MOVES = "hilight-show-on-my-moves";
+	public static final String HIGHLIGHT_FADE_AWAY_MODE = "hilight-fade-away-mode";
+	public static final String HIGHLIGHT_ANIMATION_DELAY = "highlight-animation-delay";
+	public static final String HIGHLIGHT_WIDTH_PERCENTAGE = "highlight-width-percentage";
 
 	public static final String CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO = "chat-event-";
 	public static final String CHAT_CONSOLE_BACKGROUND_COLOR = "chat-console-background-color";
