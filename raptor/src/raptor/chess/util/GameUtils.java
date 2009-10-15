@@ -779,10 +779,15 @@ public class GameUtils implements GameConstants {
 					.getLong(PreferenceKeys.BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
 				return "  :  . ";
 			} else {
-				return "  :    ";
+				return "  :  ";
 			}
 		} else if (timeLeft <= 0) {
-			return "00:00";
+			if (timeLeft < prefs
+					.getLong(PreferenceKeys.BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN)) {
+				return "00:00.0";
+			} else {
+				return "00:00";
+			}
 		} else {
 
 			if (timeLeft >= prefs
