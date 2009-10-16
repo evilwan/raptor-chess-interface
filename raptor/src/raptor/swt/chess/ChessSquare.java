@@ -272,43 +272,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
-	 * Provided so it can easily be overridden.By default uses the
-	 * RaptorPreferenceStore setting.
-	 */
-	protected Image getBackgrondImage(boolean isLight, int width, int height) {
-		return BoardUtils.getSquareBackgroundImage(isLight, width, height);
-	}
-
-	/**
-	 * Provided so it can easily be overridden.By default uses the
-	 * RaptorPreferenceStore setting.
-	 */
-	protected Image getChessPieceImage(int piece, int width, int height) {
-		return BoardUtils.getChessPieceImage(piece, width, height);
-	}
-
-	/**
-	 * Provided so it can easily be overridden.By default uses the
-	 * RaptorPreferenceStore setting.
-	 */
-	protected String getFileLabel() {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				BOARD_IS_SHOW_COORDINATES)
-				&& !BoardUtils.isPieceJailSquare(id)) {
-			if (board.isWhiteOnTop) {
-				if ((GameUtils.getBitboard(id) & GameConstants.RANK8) != 0) {
-					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
-				}
-			} else {
-				if ((GameUtils.getBitboard(id) & GameConstants.RANK1) != 0) {
-					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * An integer representing the squares index in GameConstants (e.g.
 	 * GameConstants.SQUARE_A1,GameConstants.SQUARE_A2, etc). Drop/Piece Jail
 	 * squares should use the constants (GameConstants
@@ -319,75 +282,12 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
-	 * Provided so it can easily be overridden.By default uses the
-	 * RaptorPreferenceStore setting.
-	 */
-	protected int getImageSize() {
-		double imageSquareSideAdjustment = getPreferences().getDouble(
-				BOARD_PIECE_SIZE_ADJUSTMENT);
-
-		int imageSide = (int) (getSize().x * (1.0 - imageSquareSideAdjustment));
-		if (imageSide % 2 != 0) {
-			imageSide = imageSide - 1;
-		}
-
-		return imageSide;
-	}
-
-	/**
 	 * An integer representing the colored piece type in GameConstants. (e.g.
 	 * GameConstants.WP,GameConstants.WN,GameConstants.WQ,GameConstants.EMPTY,
 	 * etc).
 	 */
 	public int getPiece() {
 		return piece;
-	}
-
-	/**
-	 * Provided so it can easily be overridden.By default returns the preference
-	 * store in Raptor.getInstance.
-	 */
-	protected RaptorPreferenceStore getPreferences() {
-		return Raptor.getInstance().getPreferences();
-	}
-
-	protected String getRankLabel() {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				BOARD_IS_SHOW_COORDINATES)
-				&& !BoardUtils.isPieceJailSquare(id)) {
-			if (board.isWhiteOnTop) {
-				if ((GameUtils.getBitboard(id) & GameConstants.HFILE) != 0) {
-					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
-				}
-			} else {
-				if ((GameUtils.getBitboard(id) & GameConstants.AFILE) != 0) {
-					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
-				}
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Returns the square the cursor is at if its ChessBoard is equal to this
-	 * ChessSquares ChessBoard. Otherwise returns null.
-	 */
-	protected ChessSquare getSquareCursorIsAt() {
-		Control control = getDisplay().getCursorControl();
-
-		while (control != null && !(control instanceof ChessSquare)) {
-			control = control.getParent();
-		}
-
-		ChessSquare result = null;
-
-		if (control instanceof ChessSquare) {
-			result = (ChessSquare) control;
-			if (result.board != board) {
-				result = null;
-			}
-		}
-		return result;
 	}
 
 	/**
@@ -445,6 +345,106 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			this.piece = piece;
 			pieceImage = null;
 		}
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
+	protected Image getBackgrondImage(boolean isLight, int width, int height) {
+		return BoardUtils.getSquareBackgroundImage(isLight, width, height);
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
+	protected Image getChessPieceImage(int piece, int width, int height) {
+		return BoardUtils.getChessPieceImage(piece, width, height);
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
+	protected String getFileLabel() {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				BOARD_IS_SHOW_COORDINATES)
+				&& !BoardUtils.isPieceJailSquare(id)) {
+			if (board.isWhiteOnTop) {
+				if ((GameUtils.getBitboard(id) & GameConstants.RANK8) != 0) {
+					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
+				}
+			} else {
+				if ((GameUtils.getBitboard(id) & GameConstants.RANK1) != 0) {
+					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
+	protected int getImageSize() {
+		double imageSquareSideAdjustment = getPreferences().getDouble(
+				BOARD_PIECE_SIZE_ADJUSTMENT);
+
+		int imageSide = (int) (getSize().x * (1.0 - imageSquareSideAdjustment));
+		if (imageSide % 2 != 0) {
+			imageSide = imageSide - 1;
+		}
+
+		return imageSide;
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default returns the preference
+	 * store in Raptor.getInstance.
+	 */
+	protected RaptorPreferenceStore getPreferences() {
+		return Raptor.getInstance().getPreferences();
+	}
+
+	protected String getRankLabel() {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				BOARD_IS_SHOW_COORDINATES)
+				&& !BoardUtils.isPieceJailSquare(id)) {
+			if (board.isWhiteOnTop) {
+				if ((GameUtils.getBitboard(id) & GameConstants.HFILE) != 0) {
+					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
+				}
+			} else {
+				if ((GameUtils.getBitboard(id) & GameConstants.AFILE) != 0) {
+					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the square the cursor is at if its ChessBoard is equal to this
+	 * ChessSquares ChessBoard. Otherwise returns null.
+	 */
+	protected ChessSquare getSquareCursorIsAt() {
+		Control control = getDisplay().getCursorControl();
+
+		while (control != null && !(control instanceof ChessSquare)) {
+			control = control.getParent();
+		}
+
+		ChessSquare result = null;
+
+		if (control instanceof ChessSquare) {
+			result = (ChessSquare) control;
+			if (result.board != board) {
+				result = null;
+			}
+		}
+		return result;
 	}
 
 	/**

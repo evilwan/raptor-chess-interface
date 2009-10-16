@@ -28,18 +28,14 @@ import raptor.script.GameScript.GameScriptType;
  * script.
  */
 public class ScriptService {
-	public static interface ScriptServiceListener {
-		public void onChatScriptsChanged();
-
-		public void onGameScriptsChanged();
-	}
-
 	private static final Log LOG = LogFactory.getLog(ScriptService.class);
 
 	private static final ScriptService singletonInstance = new ScriptService();
 
-	public static ScriptService getInstance() {
-		return singletonInstance;
+	public static interface ScriptServiceListener {
+		public void onChatScriptsChanged();
+
+		public void onGameScriptsChanged();
 	}
 
 	public Map<String, ChatScript> chatScriptMap = new HashMap<String, ChatScript>();
@@ -48,6 +44,10 @@ public class ScriptService {
 
 	public List<ScriptServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<ScriptServiceListener>(5));
+
+	public static ScriptService getInstance() {
+		return singletonInstance;
+	}
 
 	private ScriptService() {
 		reload();
@@ -77,22 +77,6 @@ public class ScriptService {
 		fireGameScriptChanged();
 		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/game/"
 				+ scriptName + ".properties").delete();
-	}
-
-	protected void fireChatScriptChanged() {
-		synchronized (listeners) {
-			for (ScriptServiceListener listener : listeners) {
-				listener.onChatScriptsChanged();
-			}
-		}
-	}
-
-	protected void fireGameScriptChanged() {
-		synchronized (listeners) {
-			for (ScriptServiceListener listener : listeners) {
-				listener.onGameScriptsChanged();
-			}
-		}
 	}
 
 	/**
@@ -161,6 +145,71 @@ public class ScriptService {
 		}
 		Collections.sort(gameScripts);
 		return gameScripts.toArray(new GameScript[0]);
+	}
+
+	/**
+	 * Reloads all of the scripts.
+	 */
+	public void reload() {
+		chatScriptMap.clear();
+		gameScriptMap.clear();
+		loadGameScripts();
+		loadChatScripts();
+	}
+
+	public void removeScriptServiceListener(ScriptServiceListener listener) {
+		listeners.remove(listener);
+	}
+
+	/**
+	 * Saves the chat script. Scripts are always saved in the users home
+	 * directory. System scripts , or the scripts in resources/script are never
+	 * touched.
+	 */
+	public void saveChatScript(ChatScript script) {
+		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/scripts/chat/"
+				+ script.getName() + ".properties";
+		try {
+			ChatScript.store(script, fileName);
+		} catch (IOException ioe) {
+			Raptor.getInstance().onError("Error saving chat script", ioe);
+		}
+		chatScriptMap.put(script.getName(), script);
+		fireChatScriptChanged();
+	}
+
+	/**
+	 * Saves the game script. Scripts are always saved in the users home
+	 * directory. System scripts, or the scripts in resources/script are never
+	 * touched.
+	 */
+	public void saveGameScript(GameScript script) {
+		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/scripts/game/"
+				+ script.getName() + ".properties";
+		try {
+			GameScript.store(script, fileName);
+		} catch (IOException ioe) {
+			Raptor.getInstance().onError("Error saving game script", ioe);
+		}
+
+		gameScriptMap.put(script.getName(), script);
+		fireGameScriptChanged();
+	}
+
+	protected void fireChatScriptChanged() {
+		synchronized (listeners) {
+			for (ScriptServiceListener listener : listeners) {
+				listener.onChatScriptsChanged();
+			}
+		}
+	}
+
+	protected void fireGameScriptChanged() {
+		synchronized (listeners) {
+			for (ScriptServiceListener listener : listeners) {
+				listener.onGameScriptsChanged();
+			}
+		}
 	}
 
 	protected void loadChatScripts() {
@@ -259,54 +308,5 @@ public class ScriptService {
 			LOG.info("Loaded " + count + " game scripts in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
 		}
-	}
-
-	/**
-	 * Reloads all of the scripts.
-	 */
-	public void reload() {
-		chatScriptMap.clear();
-		gameScriptMap.clear();
-		loadGameScripts();
-		loadChatScripts();
-	}
-
-	public void removeScriptServiceListener(ScriptServiceListener listener) {
-		listeners.remove(listener);
-	}
-
-	/**
-	 * Saves the chat script. Scripts are always saved in the users home
-	 * directory. System scripts , or the scripts in resources/script are never
-	 * touched.
-	 */
-	public void saveChatScript(ChatScript script) {
-		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/scripts/chat/"
-				+ script.getName() + ".properties";
-		try {
-			ChatScript.store(script, fileName);
-		} catch (IOException ioe) {
-			Raptor.getInstance().onError("Error saving chat script", ioe);
-		}
-		chatScriptMap.put(script.getName(), script);
-		fireChatScriptChanged();
-	}
-
-	/**
-	 * Saves the game script. Scripts are always saved in the users home
-	 * directory. System scripts, or the scripts in resources/script are never
-	 * touched.
-	 */
-	public void saveGameScript(GameScript script) {
-		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/scripts/game/"
-				+ script.getName() + ".properties";
-		try {
-			GameScript.store(script, fileName);
-		} catch (IOException ioe) {
-			Raptor.getInstance().onError("Error saving game script", ioe);
-		}
-
-		gameScriptMap.put(script.getName(), script);
-		fireGameScriptChanged();
 	}
 }

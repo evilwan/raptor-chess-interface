@@ -34,6 +34,17 @@ public interface ScriptContext {
 	public String getUserName();
 
 	/**
+	 * Launches the process with the specified arguments. This can be used to
+	 * tie external scripts to Raptor.
+	 * 
+	 * @param commandAndArgs
+	 *            can be just a command name or you can pass in the command and
+	 *            multiple arguments i.e.
+	 *            launchProcess("say","this is the text to say").
+	 */
+	public void launchProcess(String... commandAndArgs);
+
+	/**
 	 * Opens a channel tab for the specified channel if one is not already
 	 * opened.
 	 */
@@ -109,15 +120,4 @@ public interface ScriptContext {
 	 * Speaks the specified message. Currently not enabled.
 	 */
 	public void speak(String message);
-
-	/**
-	 * Launches the process with the specified arguments. This can be used to
-	 * tie external scripts to Raptor.
-	 * 
-	 * @param commandAndArgs
-	 *            can be just a command name or you can pass in the command and
-	 *            multiple arguments i.e.
-	 *            launchProcess("say","this is the text to say").
-	 */
-	public void launchProcess(String... commandAndArgs);
 }

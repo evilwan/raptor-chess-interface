@@ -57,7 +57,7 @@ public class ExamineController extends ChessBoardController {
 						try {
 							onPlayGameEndSound();
 							InactiveController inactiveController = new InactiveController(
-									getGame());
+									getGame(), board.isWhiteOnTop());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 
@@ -133,25 +133,6 @@ public class ExamineController extends ChessBoardController {
 
 	public ExamineController(Game game, Connector connector) {
 		super(game, connector);
-	}
-
-	@Override
-	protected void adjustClockColors() {
-		if (getGame().getColorToMove() == WHITE) {
-			board.getWhiteClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-			board.getBlackClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-		} else {
-			board.getBlackClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-			board.getWhiteClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-		}
 	}
 
 	@Override
@@ -245,21 +226,11 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void init() {
+		board.setWhiteOnTop(false);
+		board.setWhitePieceJailOnTop(true);
 		refresh();
 		onPlayGameStartSound();
 		connector.getGameService().addGameServiceListener(listener);
-	}
-
-	protected void onPlayGameEndSound() {
-		SoundService.getInstance().playSound("obsGameEnd");
-	}
-
-	protected void onPlayGameStartSound() {
-		SoundService.getInstance().playSound("gameStart");
-	}
-
-	protected void onPlayMoveSound() {
-		SoundService.getInstance().playSound("move");
 	}
 
 	@Override
@@ -384,5 +355,36 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void userRightClicked(int square) {
+	}
+
+	@Override
+	protected void adjustClockColors() {
+		if (getGame().getColorToMove() == WHITE) {
+			board.getWhiteClockLabel().setForeground(
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+			board.getBlackClockLabel().setForeground(
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+		} else {
+			board.getBlackClockLabel().setForeground(
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+			board.getWhiteClockLabel().setForeground(
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+		}
+	}
+
+	protected void onPlayGameEndSound() {
+		SoundService.getInstance().playSound("obsGameEnd");
+	}
+
+	protected void onPlayGameStartSound() {
+		SoundService.getInstance().playSound("gameStart");
+	}
+
+	protected void onPlayMoveSound() {
+		SoundService.getInstance().playSound("move");
 	}
 }

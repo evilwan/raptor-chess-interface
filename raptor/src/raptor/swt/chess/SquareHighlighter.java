@@ -26,11 +26,15 @@ public class SquareHighlighter {
 			highlights.add(highlight);
 		}
 
-		public void clear() {
-			for (int i = 0; i < highlights.size(); i++) {
-				if (!highlights.get(i).isFadeAway()) {
-					highlights.remove(i);
-					i--;
+		public void clear(boolean isForcing) {
+			if (isForcing) {
+				highlights.clear();
+			} else {
+				for (int i = 0; i < highlights.size(); i++) {
+					if (!highlights.get(i).isFadeAway()) {
+						highlights.remove(i);
+						i--;
+					}
 				}
 			}
 		}
@@ -83,9 +87,13 @@ public class SquareHighlighter {
 			decorators[i] = new HighlightDecorator(board.getSquare(i));
 		}
 
-		for (int i = 1; i < 13; i++) {
-			dropSquareDecorators[i] = new HighlightDecorator(board
-					.getPieceJailSquares()[i]);
+		for (int i = 0; i < 13; i++) {
+			// Not all piece jail squares contain objects some indexes are null
+			// so you need to check.
+			if (board.getPieceJailSquares()[i] != null) {
+				dropSquareDecorators[i] = new HighlightDecorator(board
+						.getPieceJailSquares()[i]);
+			}
 		}
 	}
 
@@ -139,19 +147,36 @@ public class SquareHighlighter {
 		}
 	}
 
+	public void dispose() {
+		if (decorators != null) {
+			removeAllHighlights(true);
+			if (!board.getControl().isDisposed()) {
+				for (int i = 0; i < decorators.length; i++) {
+					decorators[i].square.removePaintListener(decorators[i]);
+					decorators[i] = null;
+				}
+				for (int i = 0; i < dropSquareDecorators.length; i++) {
+					// Not all piece jail squares contain objects some indexes
+					// are null
+					// so you need to check.
+					if (dropSquareDecorators[i] != null) {
+						dropSquareDecorators[i].square
+								.removePaintListener(decorators[i]);
+					}
+					dropSquareDecorators[i] = null;
+				}
+				decorators = null;
+				dropSquareDecorators = null;
+				board = null;
+			}
+		}
+	}
+
 	/**
 	 * Removes all non fade away highlights.
 	 */
 	public void removeAllHighlights() {
-		for (HighlightDecorator decorator : decorators) {
-			decorator.clear();
-		}
-
-		for (HighlightDecorator decorator : dropSquareDecorators) {
-			if (decorator != null) {
-				decorator.clear();
-			}
-		}
+		removeAllHighlights(false);
 	}
 
 	/**
@@ -160,6 +185,21 @@ public class SquareHighlighter {
 	 */
 	public void removeHighlight(Highlight highlight) {
 		removeHighlight(highlight, true);
+	}
+
+	/**
+	 * Removes all non fade away highlights.
+	 */
+	protected void removeAllHighlights(boolean isForcing) {
+		for (HighlightDecorator decorator : decorators) {
+			decorator.clear(true);
+		}
+
+		for (HighlightDecorator decorator : dropSquareDecorators) {
+			if (decorator != null) {
+				decorator.clear(true);
+			}
+		}
 	}
 
 	/**

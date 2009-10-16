@@ -17,6 +17,9 @@ import raptor.chess.pgn.StreamingPgnParser;
 
 public class TestPgnParsing {
 
+	public static final String[] PGN_TEST_FILES = new String[] {// "error.pgn"};//,
+	"nestedsublines.pgn" };// , "test2.pgn" };
+
 	public static class LoggingPgnParserListener implements PgnParserListener {
 
 		public void onAnnotation(PgnParser parser, String annotation) {
@@ -108,23 +111,6 @@ public class TestPgnParsing {
 
 		public void onUnknown(PgnParser parser, String unknown) {
 		}
-	}
-
-	public static final String[] PGN_TEST_FILES = new String[] {// "error.pgn"};//,
-	"nestedsublines.pgn" };// , "test2.pgn" };
-
-	private String pgnFileAsString(String fileName) throws Exception {
-		StringBuilder builder = new StringBuilder();
-		BufferedReader reader = new BufferedReader(new FileReader(
-				"resources/test/" + fileName));
-
-		String currentLine = reader.readLine();
-		while (currentLine != null) {
-			builder.append(currentLine + "\n");
-			currentLine = reader.readLine();
-		}
-
-		return builder.toString();
 	}
 
 	@Test
@@ -244,6 +230,20 @@ public class TestPgnParsing {
 				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
 
 		System.err.println(listener.getErrors());
+	}
+
+	private String pgnFileAsString(String fileName) throws Exception {
+		StringBuilder builder = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new FileReader(
+				"resources/test/" + fileName));
+
+		String currentLine = reader.readLine();
+		while (currentLine != null) {
+			builder.append(currentLine + "\n");
+			currentLine = reader.readLine();
+		}
+
+		return builder.toString();
 	}
 
 }

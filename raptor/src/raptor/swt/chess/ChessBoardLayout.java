@@ -29,12 +29,6 @@ public abstract class ChessBoardLayout extends Layout implements BoardConstants 
 		this.board = board;
 	}
 
-	@Override
-	protected Point computeSize(Composite composite, int hint, int hint2,
-			boolean flushCache) {
-		return composite.getSize();
-	}
-
 	public void dispose() {
 		board = null;
 	}
@@ -46,6 +40,12 @@ public abstract class ChessBoardLayout extends Layout implements BoardConstants 
 	public abstract String getName();
 
 	public abstract int getStyle(Field field);
+
+	@Override
+	protected Point computeSize(Composite composite, int hint, int hint2,
+			boolean flushCache) {
+		return composite.getSize();
+	}
 
 	protected void layoutChessBoard(Point topLeft, int squareSideSize) {
 		int x = topLeft.x;

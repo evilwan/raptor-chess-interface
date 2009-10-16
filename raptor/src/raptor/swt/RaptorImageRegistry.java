@@ -285,19 +285,8 @@ public class RaptorImageRegistry {
 		return entry.descriptor;
 	}
 
-	private Entry getEntry(String key) {
-		return getTable().get(key);
-	}
-
 	public int getSize() {
 		return table.size();
-	}
-
-	private Map<String, Entry> getTable() {
-		if (table == null) {
-			table = new HashMap<String, Entry>(10);
-		}
-		return table;
 	}
 
 	/**
@@ -372,10 +361,6 @@ public class RaptorImageRegistry {
 		entry.descriptor = descriptor;
 	}
 
-	private void putEntry(String key, Entry entry) {
-		getTable().put(key, entry);
-	}
-
 	/**
 	 * Removes an image from this registry. If an SWT image was allocated, it is
 	 * disposed. This method has no effect if there is no image or descriptor
@@ -390,5 +375,20 @@ public class RaptorImageRegistry {
 			manager.destroy(descriptor);
 			getTable().remove(key);
 		}
+	}
+
+	private Entry getEntry(String key) {
+		return getTable().get(key);
+	}
+
+	private Map<String, Entry> getTable() {
+		if (table == null) {
+			table = new HashMap<String, Entry>(10);
+		}
+		return table;
+	}
+
+	private void putEntry(String key, Entry entry) {
+		getTable().put(key, entry);
 	}
 }

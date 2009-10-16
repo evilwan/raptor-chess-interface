@@ -46,6 +46,31 @@ public class RegExDialog extends InputDialog {
 	}
 
 	/**
+	 * Opens the dialog and returns the input
+	 * 
+	 * @return String
+	 */
+	@Override
+	public String open() {
+		// Create the dialog window
+		Shell shell = new Shell(getParent(), getStyle());
+		shell.setText(getText());
+		createContents(shell);
+		shell.pack();
+		textToTest.setText("");
+		regEx.setText(regEx.getText().trim());
+		shell.open();
+		Display display = getParent().getDisplay();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		// Return the entered value, or null
+		return input;
+	}
+
+	/**
 	 * Creates the dialog's contents
 	 * 
 	 * @param shell
@@ -166,30 +191,5 @@ public class RegExDialog extends InputDialog {
 		// user can type input and press Enter
 		// to dismiss
 		// shell.setDefaultButton(test);
-	}
-
-	/**
-	 * Opens the dialog and returns the input
-	 * 
-	 * @return String
-	 */
-	@Override
-	public String open() {
-		// Create the dialog window
-		Shell shell = new Shell(getParent(), getStyle());
-		shell.setText(getText());
-		createContents(shell);
-		shell.pack();
-		textToTest.setText("");
-		regEx.setText(regEx.getText().trim());
-		shell.open();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		// Return the entered value, or null
-		return input;
 	}
 }

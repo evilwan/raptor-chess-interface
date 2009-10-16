@@ -33,6 +33,24 @@ import raptor.swt.chess.ChessSquare;
 
 public class ChessBoardPage extends FieldEditorPreferencePage {
 
+	public static final String[][] HIGHLIGHT_BORDER_RESIZE_PERCENTAGE = {
+			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
+			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
+			{ "6%", "0.06" }, { "7.5%", "0.075" }, { "10%", "0.1" },
+			{ "12.5%", "0.125" } };
+
+	public static final String[][] LAYOUTS = { { "Right Oriented Layout",
+			"raptor.swt.chess.layout.RightOrientedLayout" } };
+
+	public static final String[][] PIECE_RESIZE_PERCENTAGE = {
+			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
+			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
+			{ "6%", "0.06" }, { "7.5%", "0.075" } };
+
+	public static final String[][] PIECE_WEIGHT_PERCENTAGE = { {
+			"Right Oriented Layout",
+			"raptor.swt.chess.layout.RightOrientedLayout" } };
+
 	protected class ChessBoardPageComboFieldEditor extends ComboFieldEditor {
 
 		String key = null;
@@ -44,16 +62,16 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			key = name;
 		}
 
+		public String getValue() {
+			return value == null ? getPreferenceStore().getString(key) : value;
+		}
+
 		@Override
 		protected void fireValueChanged(String property, Object oldValue,
 				Object newValue) {
 			value = newValue.toString();
 			super.fireValueChanged(property, oldValue, newValue);
 			valuesChanged();
-		}
-
-		public String getValue() {
-			return value == null ? getPreferenceStore().getString(key) : value;
 		}
 	}
 
@@ -111,24 +129,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 	}
 
-	public static final String[][] HIGHLIGHT_BORDER_RESIZE_PERCENTAGE = {
-			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
-			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
-			{ "6%", "0.06" }, { "7.5%", "0.075" }, { "10%", "0.1" },
-			{ "12.5%", "0.125" } };
-
-	public static final String[][] LAYOUTS = { { "Right Oriented Layout",
-			"raptor.swt.chess.layout.RightOrientedLayout" } };
-
-	public static final String[][] PIECE_RESIZE_PERCENTAGE = {
-			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
-			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
-			{ "6%", "0.06" }, { "7.5%", "0.075" } };
-
-	public static final String[][] PIECE_WEIGHT_PERCENTAGE = { {
-			"Right Oriented Layout",
-			"raptor.swt.chess.layout.RightOrientedLayout" } };
-
 	ChessBoardPageComboFieldEditor backgroundFieldEditor;
 	ChessBoardPageComboFieldEditor highlightPercentage;
 	Composite miniBoard;
@@ -141,6 +141,16 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		super(GRID);
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 		setTitle("Chess Board");
+	}
+
+	public void valuesChanged() {
+		for (ChessBoardPageSquare[] square : squares) {
+			for (ChessBoardPageSquare element : square) {
+				element.clearCache();
+				element.redraw();
+				miniBoard.layout(true, true);
+			}
+		}
 	}
 
 	@Override
@@ -230,15 +240,5 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 					}
 				});
 		addField(labelButtonFieldEditor);
-	}
-
-	public void valuesChanged() {
-		for (ChessBoardPageSquare[] square : squares) {
-			for (ChessBoardPageSquare element : square) {
-				element.clearCache();
-				element.redraw();
-				miniBoard.layout(true, true);
-			}
-		}
 	}
 }

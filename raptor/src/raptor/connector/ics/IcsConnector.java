@@ -72,6 +72,8 @@ import raptor.util.RaptorStringTokenizer;
  * override some methods in order to get it working.
  */
 public abstract class IcsConnector implements Connector {
+	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
+
 	protected class IcsChatScriptContext extends IcsScriptContext implements
 			ChatScriptContext {
 		ChatEvent event;
@@ -139,6 +141,15 @@ public abstract class IcsConnector implements Connector {
 
 		public String getUserName() {
 			return userName;
+		}
+
+		public void launchProcess(String... commandAndArgs) {
+			try {
+				Runtime.getRuntime().exec(commandAndArgs);
+			} catch (Throwable t) {
+				onError("Error launching process: "
+						+ Arrays.toString(commandAndArgs), t);
+			}
 		}
 
 		public void openChannelTab(String channel) {
@@ -222,18 +233,7 @@ public abstract class IcsConnector implements Connector {
 			SoundService.getInstance().textToSpeech(message);
 		}
 
-		public void launchProcess(String... commandAndArgs) {
-			try {
-				Runtime.getRuntime().exec(commandAndArgs);
-			} catch (Throwable t) {
-				onError("Error launching process: "
-						+ Arrays.toString(commandAndArgs), t);
-			}
-		}
-
 	}
-
-	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
 
 	protected BughouseService bughouseService;
 	protected ChatService chatService;
@@ -338,6 +338,417 @@ public abstract class IcsConnector implements Connector {
 	public void connect() {
 		connect(Raptor.getInstance().getPreferences().getString(
 				context.getPreferencePrefix() + "profile"));
+	}
+
+	/**
+	 * Disconnects from the ics.
+	 */
+	public void disconnect() {
+		synchronized (this) {
+			if (isConnected()) {
+				try {
+					ScriptService.getInstance().removeScriptServiceListener(
+							scriptServiceListener);
+					if (inputChannel != null) {
+						try {
+							inputChannel.close();
+						} catch (Throwable t) {
+						}
+					}
+					if (socket != null) {
+						try {
+							socket.close();
+						} catch (Throwable t) {
+						}
+					}
+
+					if (daemonThread != null) {
+						try {
+							if (daemonThread.isAlive()) {
+								daemonThread.interrupt();
+							}
+						} catch (Throwable t) {
+						}
+					}
+					if (keepAlive != null) {
+						ThreadService.getInstance().getExecutor().remove(
+								keepAlive);
+					}
+				} catch (Throwable t) {
+				} finally {
+					socket = null;
+					inputChannel = null;
+					daemonThread = null;
+				}
+
+				try {
+					String messageLeftInBuffer = drainInboundMessageBuffer();
+					if (StringUtils.isNotBlank(messageLeftInBuffer)) {
+						parseMessage(messageLeftInBuffer);
+					}
+
+				} catch (Throwable t) {
+				} finally {
+				}
+			}
+
+			isConnecting = false;
+
+			publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Disconnected"));
+
+			Raptor.getInstance().getWindow().setPingTime(this, -1);
+			fireDisconnected();
+			LOG.error("Disconnected from " + getShortName());
+		}
+
+	}
+
+	public void dispose() {
+		if (isConnected()) {
+			disconnect();
+		}
+		if (connectorListeners != null) {
+			connectorListeners.clear();
+			connectorListeners = null;
+		}
+
+		if (chatService != null) {
+			chatService.dispose();
+			chatService = null;
+		}
+		if (gameService != null) {
+			gameService.removeGameServiceListener(gameServiceListener);
+			gameService.dispose();
+			gameService = null;
+		}
+
+		if (inputBuffer != null) {
+			inputBuffer.clear();
+			inputBuffer = null;
+		}
+		if (keepAlive != null) {
+			ThreadService.getInstance().getExecutor().remove(keepAlive);
+			keepAlive = null;
+		}
+
+		if (inputChannel != null) {
+			try {
+				inputChannel.close();
+			} catch (Throwable t) {
+			}
+			inputChannel = null;
+		}
+
+		LOG.info("Disposed " + getShortName() + "Connector");
+	}
+
+	public BughouseService getBughouseService() {
+		return bughouseService;
+	}
+
+	public String[][] getChannelActions(String channel) {
+		return new String[][] {
+				new String[] { "Add Channel " + channel, "+channel " + channel },
+				new String[] { "Remove Channel " + channel,
+						"-channel " + channel },
+				new String[] { "In Channel " + channel, "in " + channel } };
+	}
+
+	public String getChannelTabPrefix(String channel) {
+		return "tell " + channel + " ";
+	}
+
+	public ChatScriptContext getChatScriptContext() {
+		return new IcsChatScriptContext();
+	}
+
+	public ChatService getChatService() {
+		return chatService;
+	}
+
+	public IcsConnectorContext getContext() {
+		return context;
+	}
+
+	public String getDescription() {
+		return context.getDescription();
+	}
+
+	public String[][] getGameIdActions(String gameId) {
+		return new String[][] {
+				new String[] { "Observe game " + gameId, "observe " + gameId },
+				new String[] { "All observers in game " + gameId,
+						"allobs " + gameId },
+				{ "Move list for game " + gameId, "moves " + gameId } };
+	}
+
+	public GameService getGameService() {
+		return gameService;
+	}
+
+	public GameScriptContext getGametScriptContext() {
+		return null;
+	}
+
+	public String getPartnerTellPrefix() {
+		return "ptell ";
+	}
+
+	public String[][] getPersonActions(String person) {
+		return new String[][] {
+				new String[] { "Finger " + person, "finger " + person },
+				new String[] { "Observe " + person, "observe " + person },
+				new String[] { "History " + person, "history " + person },
+				new String[] { "Follow " + person, "follow " + person },
+				new String[] { "Partner " + person, "partner " + person },
+				new String[] { "Vars " + person, "vars " + person },
+				new String[] { "Censor " + person, "+censor " + person },
+				new String[] { "Uncensor " + person, "-censor " + person },
+				new String[] { "Noplay " + person, "+noplay " + person },
+				new String[] { "Unnoplay " + person, "noplay " + person } };
+	}
+
+	public String getPersonTabPrefix(String person) {
+		return "tell " + person + " ";
+	}
+
+	public RaptorPreferenceStore getPreferences() {
+		return Raptor.getInstance().getPreferences();
+	}
+
+	public String getPrompt() {
+		return context.getPrompt();
+	}
+
+	public ScriptConnectorType getScriptConnectorType() {
+		return ScriptConnectorType.ICS;
+	}
+
+	public String getShortName() {
+		return context.getShortName();
+	}
+
+	public String getTellToString(String handle) {
+		return "tell " + handle + " ";
+	}
+
+	/**
+	 * Returns the name of the current user logged in.
+	 */
+	public String getUserName() {
+		return userName;
+	}
+
+	public boolean isConnected() {
+		return socket != null && inputChannel != null && daemonThread != null;
+	}
+
+	public boolean isConnecting() {
+		return isConnecting;
+	}
+
+	public boolean isLikelyChannel(String word) {
+		return IcsUtils.isLikelyChannel(word);
+	}
+
+	public boolean isLikelyGameId(String word) {
+		return IcsUtils.isLikelyGameId(word);
+	}
+
+	public boolean isLikelyPartnerTell(String outboundMessage) {
+		return StringUtils.startsWithIgnoreCase(outboundMessage, "pt");
+	}
+
+	public boolean isLikelyPerson(String word) {
+		return IcsUtils.isLikelyPerson(word);
+	}
+
+	public void makeMove(Game game, Move move) {
+		sendMessage(move.getLan(), true);
+	}
+
+	public void onAbortKeyPress() {
+		sendMessage("abort", true);
+	}
+
+	public void onAcceptKeyPress() {
+		sendMessage("accept", true);
+	}
+
+	/**
+	 * Auto logs in if that is configured.
+	 */
+	public void onAutoConnect() {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				context.getPreferencePrefix() + "auto-connect")) {
+			connect();
+		}
+	}
+
+	public void onDeclineKeyPress() {
+		sendMessage("decline", true);
+	}
+
+	public void onDraw(Game game) {
+		sendMessage("draw", true);
+	}
+
+	public void onError(String message) {
+		onError(message, null);
+	}
+
+	public void onError(String message, Throwable t) {
+		String errorMessage = IcsUtils
+				.cleanupMessage("Critical error occured! We are trying to make Raptor "
+						+ "bug free and we need your help! Please take a moment to report this "
+						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
+						+ message
+						+ (t == null ? "" : "\n"
+								+ ExceptionUtils.getFullStackTrace(t)));
+		publishEvent(new ChatEvent(null, ChatType.INTERNAL, errorMessage));
+	}
+
+	public void onExamineModeBack(Game game) {
+		sendMessage("back", true);
+	}
+
+	public void onExamineModeCommit(Game game) {
+		sendMessage("commit", true);
+	}
+
+	public void onExamineModeFirst(Game game) {
+		sendMessage("back 300", true);
+	}
+
+	public void onExamineModeForward(Game game) {
+		sendMessage("forward 1", true);
+	}
+
+	public void onExamineModeLast(Game game) {
+		sendMessage("forward 300", true);
+	}
+
+	public void onExamineModeRevert(Game game) {
+		sendMessage("revert", true);
+	}
+
+	public void onRematchKeyPress() {
+		sendMessage("rematch", true);
+	}
+
+	/**
+	 * Resigns the specified game.
+	 */
+	public void onResign(Game game) {
+		sendMessage("resign", true);
+	}
+
+	public void onSetupClear(Game game) {
+		sendMessage("bsetup clear", true);
+	}
+
+	public void onSetupClearSquare(Game game, int square) {
+		sendMessage("x@" + GameUtils.getSan(square), true);
+	}
+
+	public void onSetupComplete(Game game) {
+		sendMessage("bsetup done", true);
+	}
+
+	public void onSetupFromFEN(Game game, String fen) {
+		sendMessage("bsetup fen " + fen, true);
+	}
+
+	public void onSetupStartPosition(Game game) {
+		sendMessage("bsetup start", true);
+	}
+
+	public void onUnexamine(Game game) {
+		sendMessage("unexamine", true);
+	}
+
+	public void onUnobserve(Game game) {
+		sendMessage("unobs " + game.getId(), true);
+	}
+
+	public String parseChannel(String word) {
+		return IcsUtils.stripChannel(word);
+	}
+
+	public String parseGameId(String word) {
+		return IcsUtils.stripGameId(word);
+	}
+
+	public String parsePerson(String word) {
+		return IcsUtils.stripWord(word);
+	}
+
+	/**
+	 * Removes a connector listener from the connector.
+	 */
+	public void removeConnectorListener(ConnectorListener listener) {
+		connectorListeners.remove(listener);
+	}
+
+	public void sendMessage(String message) {
+		sendMessage(message, false, null);
+	}
+
+	/**
+	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
+	 * only be published if isHidingFromUser is false.
+	 */
+	public void sendMessage(String message, boolean isHidingFromUser) {
+		sendMessage(message, isHidingFromUser, null);
+	}
+
+	/**
+	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
+	 * only be published containing the message if isHidingFromUser is false.
+	 * The next message the connector reads in that is of the specified type
+	 * should not be published to the ChatService.
+	 */
+	public void sendMessage(String message, boolean isHidingFromUser,
+			ChatType hideNextChatType) {
+		if (isConnected()) {
+			StringBuilder builder = new StringBuilder(message);
+			IcsUtils.filterOutbound(builder);
+			message = builder.toString();
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug(context.getShortName() + "Connector Sending: "
+						+ message.trim());
+			}
+
+			if (hideNextChatType != null) {
+				ignoringChatTypes.add(hideNextChatType);
+			}
+
+			// Only one thread at a time should write to the socket.
+			synchronized (socket) {
+				try {
+					socket.getOutputStream().write(message.getBytes());
+					socket.getOutputStream().flush();
+					lastSendTime = System.currentTimeMillis();
+
+				} catch (Throwable t) {
+					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
+							"Error: " + t.getMessage()));
+					disconnect();
+				}
+			}
+
+			if (!isHidingFromUser) {
+				// Wrap the text before publishing an outbound event.
+				publishEvent(new ChatEvent(null, ChatType.OUTBOUND, message
+						.trim()));
+			}
+		} else {
+			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
+					"Error: Unable to send " + message + " to "
+							+ getShortName()
+							+ ". There is currently no connection."));
+		}
 	}
 
 	/**
@@ -459,108 +870,6 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	/**
-	 * Disconnects from the ics.
-	 */
-	public void disconnect() {
-		synchronized (this) {
-			if (isConnected()) {
-				try {
-					ScriptService.getInstance().removeScriptServiceListener(
-							scriptServiceListener);
-					if (inputChannel != null) {
-						try {
-							inputChannel.close();
-						} catch (Throwable t) {
-						}
-					}
-					if (socket != null) {
-						try {
-							socket.close();
-						} catch (Throwable t) {
-						}
-					}
-
-					if (daemonThread != null) {
-						try {
-							if (daemonThread.isAlive()) {
-								daemonThread.interrupt();
-							}
-						} catch (Throwable t) {
-						}
-					}
-					if (keepAlive != null) {
-						ThreadService.getInstance().getExecutor().remove(
-								keepAlive);
-					}
-				} catch (Throwable t) {
-				} finally {
-					socket = null;
-					inputChannel = null;
-					daemonThread = null;
-				}
-
-				try {
-					String messageLeftInBuffer = drainInboundMessageBuffer();
-					if (StringUtils.isNotBlank(messageLeftInBuffer)) {
-						parseMessage(messageLeftInBuffer);
-					}
-
-				} catch (Throwable t) {
-				} finally {
-				}
-			}
-
-			isConnecting = false;
-
-			publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Disconnected"));
-
-			Raptor.getInstance().getWindow().setPingTime(this, -1);
-			fireDisconnected();
-			LOG.error("Disconnected from " + getShortName());
-		}
-
-	}
-
-	public void dispose() {
-		if (isConnected()) {
-			disconnect();
-		}
-		if (connectorListeners != null) {
-			connectorListeners.clear();
-			connectorListeners = null;
-		}
-
-		if (chatService != null) {
-			chatService.dispose();
-			chatService = null;
-		}
-		if (gameService != null) {
-			gameService.removeGameServiceListener(gameServiceListener);
-			gameService.dispose();
-			gameService = null;
-		}
-
-		if (inputBuffer != null) {
-			inputBuffer.clear();
-			inputBuffer = null;
-		}
-		if (keepAlive != null) {
-			ThreadService.getInstance().getExecutor().remove(keepAlive);
-			keepAlive = null;
-		}
-
-		if (inputChannel != null) {
-			try {
-				inputChannel.close();
-			} catch (Throwable t) {
-			}
-			inputChannel = null;
-		}
-
-		LOG.info("Disposed " + getShortName() + "Connector");
-	}
-
-	/**
 	 * Removes all of the characters from inboundMessageBuffer and returns the
 	 * string removed.
 	 */
@@ -614,134 +923,9 @@ public abstract class IcsConnector implements Connector {
 		});
 	}
 
-	public BughouseService getBughouseService() {
-		return bughouseService;
-	}
-
-	public String[][] getChannelActions(String channel) {
-		return new String[][] {
-				new String[] { "Add Channel " + channel, "+channel " + channel },
-				new String[] { "Remove Channel " + channel,
-						"-channel " + channel },
-				new String[] { "In Channel " + channel, "in " + channel } };
-	}
-
-	public String getChannelTabPrefix(String channel) {
-		return "tell " + channel + " ";
-	}
-
-	public ChatScriptContext getChatScriptContext() {
-		return new IcsChatScriptContext();
-	}
-
-	public ChatService getChatService() {
-		return chatService;
-	}
-
-	public IcsConnectorContext getContext() {
-		return context;
-	}
-
-	public String getDescription() {
-		return context.getDescription();
-	}
-
-	public String[][] getGameIdActions(String gameId) {
-		return new String[][] {
-				new String[] { "Observe game " + gameId, "observe " + gameId },
-				new String[] { "All observers in game " + gameId,
-						"allobs " + gameId },
-				{ "Move list for game " + gameId, "moves " + gameId } };
-	}
-
-	public GameService getGameService() {
-		return gameService;
-	}
-
-	public GameScriptContext getGametScriptContext() {
-		return null;
-	}
-
 	protected String getInitialTimesealString() {
 		return Raptor.getInstance().getPreferences().getString(
 				PreferenceKeys.TIMESEAL_INIT_STRING);
-	}
-
-	public String getPartnerTellPrefix() {
-		return "ptell ";
-	}
-
-	public String[][] getPersonActions(String person) {
-		return new String[][] {
-				new String[] { "Finger " + person, "finger " + person },
-				new String[] { "Observe " + person, "observe " + person },
-				new String[] { "History " + person, "history " + person },
-				new String[] { "Follow " + person, "follow " + person },
-				new String[] { "Partner " + person, "partner " + person },
-				new String[] { "Vars " + person, "vars " + person },
-				new String[] { "Censor " + person, "+censor " + person },
-				new String[] { "Uncensor " + person, "-censor " + person },
-				new String[] { "Noplay " + person, "+noplay " + person },
-				new String[] { "Unnoplay " + person, "noplay " + person } };
-	}
-
-	public String getPersonTabPrefix(String person) {
-		return "tell " + person + " ";
-	}
-
-	public RaptorPreferenceStore getPreferences() {
-		return Raptor.getInstance().getPreferences();
-	}
-
-	public String getPrompt() {
-		return context.getPrompt();
-	}
-
-	public ScriptConnectorType getScriptConnectorType() {
-		return ScriptConnectorType.ICS;
-	}
-
-	public String getShortName() {
-		return context.getShortName();
-	}
-
-	public String getTellToString(String handle) {
-		return "tell " + handle + " ";
-	}
-
-	/**
-	 * Returns the name of the current user logged in.
-	 */
-	public String getUserName() {
-		return userName;
-	}
-
-	public boolean isConnected() {
-		return socket != null && inputChannel != null && daemonThread != null;
-	}
-
-	public boolean isConnecting() {
-		return isConnecting;
-	}
-
-	public boolean isLikelyChannel(String word) {
-		return IcsUtils.isLikelyChannel(word);
-	}
-
-	public boolean isLikelyGameId(String word) {
-		return IcsUtils.isLikelyGameId(word);
-	}
-
-	public boolean isLikelyPartnerTell(String outboundMessage) {
-		return StringUtils.startsWithIgnoreCase(outboundMessage, "pt");
-	}
-
-	public boolean isLikelyPerson(String word) {
-		return IcsUtils.isLikelyPerson(word);
-	}
-
-	public void makeMove(Game game, Move move) {
-		sendMessage(move.getLan(), true);
 	}
 
 	/**
@@ -804,71 +988,6 @@ public abstract class IcsConnector implements Connector {
 		} finally {
 			LOG.debug(context.getShortName() + "Connector Leaving readInput");
 		}
-	}
-
-	public void onAbortKeyPress() {
-		sendMessage("abort", true);
-	}
-
-	public void onAcceptKeyPress() {
-		sendMessage("accept", true);
-	}
-
-	/**
-	 * Auto logs in if that is configured.
-	 */
-	public void onAutoConnect() {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				context.getPreferencePrefix() + "auto-connect")) {
-			connect();
-		}
-	}
-
-	public void onDeclineKeyPress() {
-		sendMessage("decline", true);
-	}
-
-	public void onDraw(Game game) {
-		sendMessage("draw", true);
-	}
-
-	public void onError(String message) {
-		onError(message, null);
-	}
-
-	public void onError(String message, Throwable t) {
-		String errorMessage = IcsUtils
-				.cleanupMessage("Critical error occured! We are trying to make Raptor "
-						+ "bug free and we need your help! Please take a moment to report this "
-						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
-						+ message
-						+ (t == null ? "" : "\n"
-								+ ExceptionUtils.getFullStackTrace(t)));
-		publishEvent(new ChatEvent(null, ChatType.INTERNAL, errorMessage));
-	}
-
-	public void onExamineModeBack(Game game) {
-		sendMessage("back", true);
-	}
-
-	public void onExamineModeCommit(Game game) {
-		sendMessage("commit", true);
-	}
-
-	public void onExamineModeFirst(Game game) {
-		sendMessage("back 300", true);
-	}
-
-	public void onExamineModeForward(Game game) {
-		sendMessage("forward 1", true);
-	}
-
-	public void onExamineModeLast(Game game) {
-		sendMessage("forward 300", true);
-	}
-
-	public void onExamineModeRevert(Game game) {
-		sendMessage("revert", true);
 	}
 
 	/**
@@ -1023,54 +1142,7 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
-	public void onRematchKeyPress() {
-		sendMessage("rematch", true);
-	}
-
-	/**
-	 * Resigns the specified game.
-	 */
-	public void onResign(Game game) {
-		sendMessage("resign", true);
-	}
-
-	public void onSetupClear(Game game) {
-		sendMessage("bsetup clear", true);
-	}
-
-	public void onSetupClearSquare(Game game, int square) {
-		sendMessage("x@" + GameUtils.getSan(square), true);
-	}
-
-	public void onSetupComplete(Game game) {
-		sendMessage("bsetup done", true);
-	}
-
-	public void onSetupFromFEN(Game game, String fen) {
-		sendMessage("bsetup fen " + fen, true);
-	}
-
-	public void onSetupStartPosition(Game game) {
-		sendMessage("bsetup start", true);
-	}
-
 	protected abstract void onSuccessfulLogin();
-
-	public void onUnexamine(Game game) {
-		sendMessage("unexamine", true);
-	}
-
-	public void onUnobserve(Game game) {
-		sendMessage("unobs " + game.getId(), true);
-	}
-
-	public String parseChannel(String word) {
-		return IcsUtils.stripChannel(word);
-	}
-
-	public String parseGameId(String word) {
-		return IcsUtils.stripGameId(word);
-	}
 
 	/**
 	 * Processes a message. If the user is logged in, message will be all of the
@@ -1086,10 +1158,6 @@ public abstract class IcsConnector implements Connector {
 					.maciejgFormatToUnicode(event.getMessage()));
 			publishEvent(event);
 		}
-	}
-
-	public String parsePerson(String word) {
-		return IcsUtils.stripWord(word);
 	}
 
 	/**
@@ -1206,13 +1274,6 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	/**
-	 * Removes a connector listener from the connector.
-	 */
-	public void removeConnectorListener(ConnectorListener listener) {
-		connectorListeners.remove(listener);
-	}
-
-	/**
 	 * Resets state variables related to the connection state.
 	 */
 	protected void resetConnectionStateVars() {
@@ -1220,67 +1281,6 @@ public abstract class IcsConnector implements Connector {
 		hasSentLogin = false;
 		hasSentPassword = false;
 		ignoringChatTypes.clear();
-	}
-
-	public void sendMessage(String message) {
-		sendMessage(message, false, null);
-	}
-
-	/**
-	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
-	 * only be published if isHidingFromUser is false.
-	 */
-	public void sendMessage(String message, boolean isHidingFromUser) {
-		sendMessage(message, isHidingFromUser, null);
-	}
-
-	/**
-	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
-	 * only be published containing the message if isHidingFromUser is false.
-	 * The next message the connector reads in that is of the specified type
-	 * should not be published to the ChatService.
-	 */
-	public void sendMessage(String message, boolean isHidingFromUser,
-			ChatType hideNextChatType) {
-		if (isConnected()) {
-			StringBuilder builder = new StringBuilder(message);
-			IcsUtils.filterOutbound(builder);
-			message = builder.toString();
-
-			if (LOG.isDebugEnabled()) {
-				LOG.debug(context.getShortName() + "Connector Sending: "
-						+ message.trim());
-			}
-
-			if (hideNextChatType != null) {
-				ignoringChatTypes.add(hideNextChatType);
-			}
-
-			// Only one thread at a time should write to the socket.
-			synchronized (socket) {
-				try {
-					socket.getOutputStream().write(message.getBytes());
-					socket.getOutputStream().flush();
-					lastSendTime = System.currentTimeMillis();
-
-				} catch (Throwable t) {
-					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-							"Error: " + t.getMessage()));
-					disconnect();
-				}
-			}
-
-			if (!isHidingFromUser) {
-				// Wrap the text before publishing an outbound event.
-				publishEvent(new ChatEvent(null, ChatType.OUTBOUND, message
-						.trim()));
-			}
-		} else {
-			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-					"Error: Unable to send " + message + " to "
-							+ getShortName()
-							+ ". There is currently no connection."));
-		}
 	}
 
 	private void setBughouseService(BughouseService bughouseService) {

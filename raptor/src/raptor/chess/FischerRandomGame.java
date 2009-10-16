@@ -80,6 +80,35 @@ public class FischerRandomGame extends ClassicGame {
 		return result;
 	}
 
+	@Override
+	public PriorityMoveList getLegalMoves() {
+		return null;
+	}
+
+	/**
+	 * This method should be invoked after the initial position is setup. It
+	 * handles setting castling information used later on during the game.
+	 */
+	public void initialPositionIsSet() {
+		initialKingFile = getFile(bitscanForward(getPieceBB(WHITE, KING)));
+		long rookBB = getPieceBB(WHITE, ROOK);
+		int firstRook = getFile(bitscanForward(rookBB));
+		rookBB = bitscanClear(rookBB);
+		int secondRook = getFile(bitscanForward(rookBB));
+		if (firstRook < initialKingFile) {
+			initialLongRookFile = firstRook;
+			initialShortRookFile = secondRook;
+		} else {
+			initialLongRookFile = firstRook;
+			initialShortRookFile = secondRook;
+		}
+	}
+
+	@Override
+	public boolean isLegalPosition() {
+		return false;
+	}
+
 	protected boolean emptyBetweenFiles(int rank, int startFile, int endFile) {
 		// This is ugly should be rewritten using a bit board trick.
 		boolean result = true;
@@ -153,11 +182,6 @@ public class FischerRandomGame extends ClassicGame {
 		}
 	}
 
-	@Override
-	public PriorityMoveList getLegalMoves() {
-		return null;
-	}
-
 	protected boolean inCheckBetweenFiles(int rank, int startFile, int endFile,
 			int color) {
 		// This is ugly should be rewritten using a bit board trick.
@@ -170,30 +194,6 @@ public class FischerRandomGame extends ClassicGame {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * This method should be invoked after the initial position is setup. It
-	 * handles setting castling information used later on during the game.
-	 */
-	public void initialPositionIsSet() {
-		initialKingFile = getFile(bitscanForward(getPieceBB(WHITE, KING)));
-		long rookBB = getPieceBB(WHITE, ROOK);
-		int firstRook = getFile(bitscanForward(rookBB));
-		rookBB = bitscanClear(rookBB);
-		int secondRook = getFile(bitscanForward(rookBB));
-		if (firstRook < initialKingFile) {
-			initialLongRookFile = firstRook;
-			initialShortRookFile = secondRook;
-		} else {
-			initialLongRookFile = firstRook;
-			initialShortRookFile = secondRook;
-		}
-	}
-
-	@Override
-	public boolean isLegalPosition() {
-		return false;
 	}
 
 	@Override

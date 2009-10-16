@@ -60,6 +60,8 @@ import raptor.swt.chess.Highlight;
  * 
  */
 public class PlayingController extends ChessBoardController {
+	static final Log LOG = LogFactory.getLog(PlayingController.class);
+
 	/**
 	 * A class containing the details of a premove.
 	 */
@@ -72,8 +74,6 @@ public class PlayingController extends ChessBoardController {
 		Highlight highlight;
 		Arrow arrow;
 	}
-
-	static final Log LOG = LogFactory.getLog(PlayingController.class);
 
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
@@ -102,7 +102,7 @@ public class PlayingController extends ChessBoardController {
 
 							// Now swap controllers to the inactive controller.
 							InactiveController inactiveController = new InactiveController(
-									getGame());
+									getGame(), board.isWhiteOnTop());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 							inactiveController
@@ -327,30 +327,6 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	/**
-	 * Adds all premoves to the premoves label. Also updates the clear premove
-	 * button if there are moves in the premove queue.
-	 */
-	@Override
-	protected void adjustPremoveLabel() {
-		String labelText = "Premoves: ";
-		synchronized (premoves) {
-			boolean hasAddedPremove = false;
-			for (PremoveInfo info : premoves) {
-				String premove = ""
-						+ GameUtils.getPseudoSan(info.fromPiece, info.toPiece,
-								info.fromSquare, info.toSquare);
-				if (!hasAddedPremove) {
-					labelText += premove;
-				} else {
-					labelText += " , " + premove;
-				}
-				hasAddedPremove = true;
-			}
-		}
-		board.getCurrentPremovesLabel().setText(labelText);
-	}
-
-	/**
 	 * Invoked when the user tries to start a dnd or click click move operation
 	 * on the board. This method returns false if its not allowed.
 	 * 
@@ -511,19 +487,6 @@ public class PlayingController extends ChessBoardController {
 		return toolbar;
 	}
 
-	/**
-	 * If auto draw is enabled, a draw request is sent. This method should be
-	 * invoked when receiving a move and right after sending one.
-	 * 
-	 * In the future this will become smarter and only draw when the game shows
-	 * a draw by three times in the same position or 50 move draw rule.
-	 */
-	protected void handleAutoDraw() {
-		if (isToolItemSelected(ToolBarItemKey.AUTO_DRAW)) {
-			getConnector().onDraw(getGame());
-		}
-	}
-
 	@Override
 	public void init() {
 
@@ -568,160 +531,9 @@ public class PlayingController extends ChessBoardController {
 		return isUserWhite;
 	}
 
-	/**
-	 * Runs through the premove queue and tries to make each move. If a move
-	 * succeeds it is made and the rest of the queue is left intact. If a move
-	 * fails it is removed from the queue and the next move is tried.
-	 * 
-	 * If a move succeeded true is returned, otherwise false is returned.
-	 */
-	protected boolean makePremove() {
-		boolean result = false;
-		Move moveMade = null;
-		Move moveBeforePremove = getGame().getLastMove();
-		synchronized (premoves) {
-			List<PremoveInfo> premovesToRemove = new ArrayList<PremoveInfo>(
-					premoves.size());
-			for (PremoveInfo info : premoves) {
-				Move move = null;
-				try {
-					if (info.promotionColorlessPiece == EMPTY) {
-						move = game.makeMove(info.fromSquare, info.toSquare);
-					} else {
-						move = game.makeMove(info.fromSquare, info.toSquare,
-								info.promotionColorlessPiece);
-					}
-					getConnector().makeMove(getGame(), move);
-					premovesToRemove.add(info);
-					handleAutoDraw();
-					result = true;
-					moveMade = move;
-
-					break;
-				} catch (IllegalArgumentException iae) {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Invalid premove trying next one in queue.",
-								iae);
-					}
-					premovesToRemove.add(info);
-				}
-			}
-			if (!result) {
-				premoves.clear();
-			} else {
-				premoves.removeAll(premovesToRemove);
-			}
-		}
-		if (result) {
-			refresh();
-
-			if (moveBeforePremove != null) {
-				board.getSquareHighlighter().removeAllHighlights();
-				board.getArrowDecorator().removeAllArrows();
-
-				Move lastMove = getGame().getLastMove();
-
-				if (lastMove != null) {
-					if (getPreferences().getBoolean(
-							PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
-						board
-								.getSquareHighlighter()
-								.addHighlight(
-										new Highlight(
-												lastMove.getFrom(),
-												lastMove.getTo(),
-												getPreferences()
-														.getColor(
-																PreferenceKeys.HIGHLIGHT_OPPONENT_COLOR),
-												getPreferences()
-														.getBoolean(
-																PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-					}
-
-					if (getPreferences().getBoolean(
-							PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
-						board
-								.getArrowDecorator()
-								.addArrow(
-										new Arrow(
-												lastMove.getFrom(),
-												lastMove.getTo(),
-												getPreferences()
-														.getColor(
-																PreferenceKeys.ARROW_OPPONENT_COLOR),
-												getPreferences()
-														.getBoolean(
-																PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-					}
-				}
-			}
-
-			if (moveMade != null) {
-				if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_PREMOVES)) {
-					board
-							.getSquareHighlighter()
-							.addHighlight(
-									new Highlight(
-											moveMade.getFrom(),
-											moveMade.getTo(),
-											getPreferences().getColor(
-													HIGHLIGHT_MY_COLOR),
-											getPreferences()
-													.getBoolean(
-															PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-				}
-				if (getPreferences().getBoolean(
-						PreferenceKeys.ARROW_SHOW_ON_MY_PREMOVES)) {
-					board
-							.getArrowDecorator()
-							.addArrow(
-									new Arrow(
-											moveMade.getFrom(),
-											moveMade.getTo(),
-											getPreferences()
-													.getColor(
-															PreferenceKeys.ARROW_MY_COLOR),
-											getPreferences()
-													.getBoolean(
-															PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-				}
-			}
-
-		} else {
-			adjustPremoveLabel();
-		}
-		return result;
-	}
-
 	public void onClearPremoves() {
 		premoves.clear();
 		adjustPremoveLabel();
-	}
-
-	protected void onPlayGameEndSound() {
-		if (isUserWhite() && game.getResult() == Result.WHITE_WON) {
-			SoundService.getInstance().playSound("win");
-		} else if (!isUserWhite() && game.getResult() == Result.BLACK_WON) {
-			SoundService.getInstance().playSound("win");
-		} else if (isUserWhite() && game.getResult() == Result.BLACK_WON) {
-			SoundService.getInstance().playSound("lose");
-		} else if (!isUserWhite() && game.getResult() == Result.WHITE_WON) {
-			SoundService.getInstance().playSound("lose");
-		} else {
-			SoundService.getInstance().playSound("obsGameEnd");
-		}
-	}
-
-	protected void onPlayGameStartSound() {
-		SoundService.getInstance().playSound("gameStart");
-	}
-
-	protected void onPlayIllegalMoveSound() {
-		SoundService.getInstance().playSound("illegalMove");
-	}
-
-	protected void onPlayMoveSound() {
-		SoundService.getInstance().playSound("move");
 	}
 
 	@Override
@@ -1017,6 +829,194 @@ public class PlayingController extends ChessBoardController {
 		if (!BoardUtils.isPieceJailSquare(square)
 				&& getGame().isInState(Game.DROPPABLE_STATE)) {
 		}
+	}
+
+	/**
+	 * Adds all premoves to the premoves label. Also updates the clear premove
+	 * button if there are moves in the premove queue.
+	 */
+	@Override
+	protected void adjustPremoveLabel() {
+		String labelText = "Premoves: ";
+		synchronized (premoves) {
+			boolean hasAddedPremove = false;
+			for (PremoveInfo info : premoves) {
+				String premove = ""
+						+ GameUtils.getPseudoSan(info.fromPiece, info.toPiece,
+								info.fromSquare, info.toSquare);
+				if (!hasAddedPremove) {
+					labelText += premove;
+				} else {
+					labelText += " , " + premove;
+				}
+				hasAddedPremove = true;
+			}
+		}
+		board.getCurrentPremovesLabel().setText(labelText);
+	}
+
+	/**
+	 * If auto draw is enabled, a draw request is sent. This method should be
+	 * invoked when receiving a move and right after sending one.
+	 * 
+	 * In the future this will become smarter and only draw when the game shows
+	 * a draw by three times in the same position or 50 move draw rule.
+	 */
+	protected void handleAutoDraw() {
+		if (isToolItemSelected(ToolBarItemKey.AUTO_DRAW)) {
+			getConnector().onDraw(getGame());
+		}
+	}
+
+	/**
+	 * Runs through the premove queue and tries to make each move. If a move
+	 * succeeds it is made and the rest of the queue is left intact. If a move
+	 * fails it is removed from the queue and the next move is tried.
+	 * 
+	 * If a move succeeded true is returned, otherwise false is returned.
+	 */
+	protected boolean makePremove() {
+		boolean result = false;
+		Move moveMade = null;
+		Move moveBeforePremove = getGame().getLastMove();
+		synchronized (premoves) {
+			List<PremoveInfo> premovesToRemove = new ArrayList<PremoveInfo>(
+					premoves.size());
+			for (PremoveInfo info : premoves) {
+				Move move = null;
+				try {
+					if (info.promotionColorlessPiece == EMPTY) {
+						move = game.makeMove(info.fromSquare, info.toSquare);
+					} else {
+						move = game.makeMove(info.fromSquare, info.toSquare,
+								info.promotionColorlessPiece);
+					}
+					getConnector().makeMove(getGame(), move);
+					premovesToRemove.add(info);
+					handleAutoDraw();
+					result = true;
+					moveMade = move;
+
+					break;
+				} catch (IllegalArgumentException iae) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Invalid premove trying next one in queue.",
+								iae);
+					}
+					premovesToRemove.add(info);
+				}
+			}
+			if (!result) {
+				premoves.clear();
+			} else {
+				premoves.removeAll(premovesToRemove);
+			}
+		}
+		if (result) {
+			refresh();
+
+			if (moveBeforePremove != null) {
+				board.getSquareHighlighter().removeAllHighlights();
+				board.getArrowDecorator().removeAllArrows();
+
+				Move lastMove = getGame().getLastMove();
+
+				if (lastMove != null) {
+					if (getPreferences().getBoolean(
+							PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
+						board
+								.getSquareHighlighter()
+								.addHighlight(
+										new Highlight(
+												lastMove.getFrom(),
+												lastMove.getTo(),
+												getPreferences()
+														.getColor(
+																PreferenceKeys.HIGHLIGHT_OPPONENT_COLOR),
+												getPreferences()
+														.getBoolean(
+																PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+					}
+
+					if (getPreferences().getBoolean(
+							PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
+						board
+								.getArrowDecorator()
+								.addArrow(
+										new Arrow(
+												lastMove.getFrom(),
+												lastMove.getTo(),
+												getPreferences()
+														.getColor(
+																PreferenceKeys.ARROW_OPPONENT_COLOR),
+												getPreferences()
+														.getBoolean(
+																PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+					}
+				}
+			}
+
+			if (moveMade != null) {
+				if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_PREMOVES)) {
+					board
+							.getSquareHighlighter()
+							.addHighlight(
+									new Highlight(
+											moveMade.getFrom(),
+											moveMade.getTo(),
+											getPreferences().getColor(
+													HIGHLIGHT_MY_COLOR),
+											getPreferences()
+													.getBoolean(
+															PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+				}
+				if (getPreferences().getBoolean(
+						PreferenceKeys.ARROW_SHOW_ON_MY_PREMOVES)) {
+					board
+							.getArrowDecorator()
+							.addArrow(
+									new Arrow(
+											moveMade.getFrom(),
+											moveMade.getTo(),
+											getPreferences()
+													.getColor(
+															PreferenceKeys.ARROW_MY_COLOR),
+											getPreferences()
+													.getBoolean(
+															PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+				}
+			}
+
+		} else {
+			adjustPremoveLabel();
+		}
+		return result;
+	}
+
+	protected void onPlayGameEndSound() {
+		if (isUserWhite() && game.getResult() == Result.WHITE_WON) {
+			SoundService.getInstance().playSound("win");
+		} else if (!isUserWhite() && game.getResult() == Result.BLACK_WON) {
+			SoundService.getInstance().playSound("win");
+		} else if (isUserWhite() && game.getResult() == Result.BLACK_WON) {
+			SoundService.getInstance().playSound("lose");
+		} else if (!isUserWhite() && game.getResult() == Result.WHITE_WON) {
+			SoundService.getInstance().playSound("lose");
+		} else {
+			SoundService.getInstance().playSound("obsGameEnd");
+		}
+	}
+
+	protected void onPlayGameStartSound() {
+		SoundService.getInstance().playSound("gameStart");
+	}
+
+	protected void onPlayIllegalMoveSound() {
+		SoundService.getInstance().playSound("illegalMove");
+	}
+
+	protected void onPlayMoveSound() {
+		SoundService.getInstance().playSound("move");
 	}
 
 }

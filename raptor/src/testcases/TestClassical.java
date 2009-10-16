@@ -171,22 +171,6 @@ public class TestClassical implements GameConstants {
 		return result;
 	}
 
-	private void dumpGame(String message, Game position) {
-		if (DEBUG) {
-			System.out.println(message);
-			System.out.println(position);
-		}
-	}
-
-	private String getMoves(List<Move> moves) {
-		String result = "";
-		for (Move move : moves) {
-			result += "'" + move.getSan() + "',";
-		}
-		return result;
-
-	}
-
 	@Test
 	public void testAmbigPawnCaptures() throws Exception {
 		for (int i = 0; i < AMBIG_P_CAPTURE_FEN_TESTS.length; i++) {
@@ -787,5 +771,21 @@ public class TestClassical implements GameConstants {
 				assertsDoesntContains(moveList, "O-O-O");
 			}
 		}
+	}
+
+	private void dumpGame(String message, Game position) {
+		if (DEBUG) {
+			System.out.println(message);
+			System.out.println(position);
+		}
+	}
+
+	private String getMoves(List<Move> moves) {
+		String result = "";
+		for (Move move : moves) {
+			result += "'" + move.getSan() + "',";
+		}
+		return result;
+
 	}
 }

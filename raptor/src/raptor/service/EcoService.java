@@ -43,11 +43,11 @@ public class EcoService {
 
 	private static final EcoService singletonInstance = new EcoService();
 
+	private Map<Variant, Map<String, EcoInfo>> typeToInfoMap = new HashMap<Variant, Map<String, EcoInfo>>();
+
 	public static EcoService getInstance() {
 		return singletonInstance;
 	}
-
-	private Map<Variant, Map<String, EcoInfo>> typeToInfoMap = new HashMap<Variant, Map<String, EcoInfo>>();
 
 	private EcoService() {
 		initClassic();

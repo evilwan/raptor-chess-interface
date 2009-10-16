@@ -33,42 +33,6 @@ public class SimpleMoveList implements ChessBoardMoveList {
 		return movesTable;
 	}
 
-	protected void createControls(Composite parent) {
-		movesTable = new Table(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
-		final TableColumn whiteMove = new TableColumn(movesTable, SWT.LEFT);
-		final TableColumn blackMove = new TableColumn(movesTable, SWT.LEFT);
-
-		whiteMove.setWidth(90);
-		blackMove.setWidth(70);
-
-		whiteMove.setText("White");
-		blackMove.setText("Black");
-
-		movesTable.setHeaderVisible(true);
-
-		movesTable.addListener(SWT.EraseItem, new Listener() {
-			public void handleEvent(Event event) {
-				if ((event.detail & SWT.SELECTED) != 0) {
-					event.detail &= ~SWT.SELECTED;
-				}
-			}
-		});
-
-		cursor = new TableCursor(movesTable, SWT.NONE);
-		cursor.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (!ignoreSelection) {
-					int halfMoveIndex = movesTable.getSelectionIndex() * 2
-							+ cursor.getColumn() + 1;
-					controller.userClickedOnMove(halfMoveIndex);
-				}
-			}
-
-		});
-		cursor.setVisible(true);
-	}
-
 	public void forceRedraw() {
 		cursor.setVisible(true);
 		cursor.redraw();
@@ -149,5 +113,41 @@ public class SimpleMoveList implements ChessBoardMoveList {
 			LOG.debug("Updated to game in : "
 					+ (System.currentTimeMillis() - startTime));
 		}
+	}
+
+	protected void createControls(Composite parent) {
+		movesTable = new Table(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+		final TableColumn whiteMove = new TableColumn(movesTable, SWT.LEFT);
+		final TableColumn blackMove = new TableColumn(movesTable, SWT.LEFT);
+
+		whiteMove.setWidth(90);
+		blackMove.setWidth(70);
+
+		whiteMove.setText("White");
+		blackMove.setText("Black");
+
+		movesTable.setHeaderVisible(true);
+
+		movesTable.addListener(SWT.EraseItem, new Listener() {
+			public void handleEvent(Event event) {
+				if ((event.detail & SWT.SELECTED) != 0) {
+					event.detail &= ~SWT.SELECTED;
+				}
+			}
+		});
+
+		cursor = new TableCursor(movesTable, SWT.NONE);
+		cursor.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (!ignoreSelection) {
+					int halfMoveIndex = movesTable.getSelectionIndex() * 2
+							+ cursor.getColumn() + 1;
+					controller.userClickedOnMove(halfMoveIndex);
+				}
+			}
+
+		});
+		cursor.setVisible(true);
 	}
 }

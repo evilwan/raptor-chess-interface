@@ -64,6 +64,14 @@ public class Bugger {
 		return status == '^'; // playing
 	}
 
+	/**
+	 * @return <code>getUsername();</code>
+	 */
+	@Override
+	public String toString() {
+		return getUsername();
+	}
+
 	protected void setRating(String rating) {
 		this.rating = rating;
 	}
@@ -74,14 +82,6 @@ public class Bugger {
 
 	protected void setUsername(String username) {
 		this.username = username;
-	}
-
-	/**
-	 * @return <code>getUsername();</code>
-	 */
-	@Override
-	public String toString() {
-		return getUsername();
 	}
 
 }

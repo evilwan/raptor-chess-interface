@@ -163,6 +163,13 @@ public class IcsParserImpl implements IcsParser, GameConstants {
 		return events.toArray(new ChatEvent[0]);
 	}
 
+	public void setConnector(IcsConnector connector) {
+		this.connector = connector;
+		// style12Parser = new Style12Parser(connector instanceof
+		// BicsConnector);
+		style12Parser = new Style12Parser();
+	}
+
 	/**
 	 * Parses and removes all of the game events from inboundEvent. Adjusts the
 	 * games in service. Returns a String with the game events removed.
@@ -566,12 +573,5 @@ public class IcsParserImpl implements IcsParser, GameConstants {
 			LOG.debug("Processed style 12: " + message + " in "
 					+ (System.currentTimeMillis() - startTime));
 		}
-	}
-
-	public void setConnector(IcsConnector connector) {
-		this.connector = connector;
-		// style12Parser = new Style12Parser(connector instanceof
-		// BicsConnector);
-		style12Parser = new Style12Parser();
 	}
 }

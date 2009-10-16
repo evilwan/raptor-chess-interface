@@ -47,23 +47,6 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 		this.connector = connector;
 	}
 
-	protected void addButtons(ChatScript[] scripts) {
-
-		for (final ChatScript script : scripts) {
-			Button button = new Button(composite, SWT.FLAT);
-			button.setText(script.getName());
-			button.setToolTipText(script.getDescription());
-			button.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-			button.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					ScriptService.getInstance().getChatScript(script.getName())
-							.execute(connector.getChatScriptContext());
-				}
-			});
-		}
-	}
-
 	public void addItemChangedListener(ItemChangedListener listener) {
 	}
 
@@ -161,15 +144,32 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 	public void onPassivate() {
 	}
 
+	public void removeItemChangedListener(ItemChangedListener listener) {
+	}
+
+	protected void addButtons(ChatScript[] scripts) {
+
+		for (final ChatScript script : scripts) {
+			Button button = new Button(composite, SWT.FLAT);
+			button.setText(script.getName());
+			button.setToolTipText(script.getDescription());
+			button.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			button.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					ScriptService.getInstance().getChatScript(script.getName())
+							.execute(connector.getChatScriptContext());
+				}
+			});
+		}
+	}
+
 	protected void removeButtons() {
 		Control[] children = composite.getTabList();
 		for (Control control : children) {
 			control.setVisible(false);
 			control.dispose();
 		}
-	}
-
-	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 
 	protected void updateFromPrefs() {

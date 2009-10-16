@@ -20,23 +20,16 @@ import raptor.util.RaptorStringUtils;
  * A class containing PGN utils.
  */
 public class PgnUtils {
-	public static Date DEFAULT_PGN_DATE_HEADER = null;
+	private static Date DEFAULT_PGN_DATE_HEADER = null;
+
+	public static final DateFormat PGN_HEADER_DATE_FORMAT = new SimpleDateFormat(
+			"yyyy.MM.dd");
 
 	public static String DEFAULT_PGN_HEADER = "?";
 	public static String DEFAULT_PGN_RESULT_HEADER = "*";
 	private static final Log LOG = LogFactory.getLog(PgnUtils.class);
-	public static final DateFormat PGN_HEADER_DATE_FORMAT = new SimpleDateFormat(
-			"yyyy.MM.dd");
-	public static final String PGN_MIME_TYPE = "application/x-chess-pgn";
 
-	static {
-		try {
-			DEFAULT_PGN_DATE_HEADER = PGN_HEADER_DATE_FORMAT
-					.parse("1500.01.01");
-		} catch (ParseException pe) {
-			throw new RuntimeException(pe);
-		}
-	}
+	public static final String PGN_MIME_TYPE = "application/x-chess-pgn";
 
 	/**
 	 * Returns the approximate number of games in the specified file.
@@ -145,6 +138,7 @@ public class PgnUtils {
 	 */
 	public static Date pgnDateHeaderToDate(String pgnDateValue) {
 		Date result = null;
+		initPgnDateHeader();
 
 		if (pgnDateValue.length() != 10) {
 			LOG.error("Invalid pgn header date format: " + pgnDateValue
@@ -221,6 +215,17 @@ public class PgnUtils {
 		BigDecimal bigDecimal = new BigDecimal(elapsedTimeInSeconds);
 		bigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
 		return "[%emt " + bigDecimal.toString() + "]";
+	}
+
+	private static void initPgnDateHeader() {
+		if (DEFAULT_PGN_DATE_HEADER == null) {
+			try {
+				DEFAULT_PGN_DATE_HEADER = PGN_HEADER_DATE_FORMAT
+						.parse("1500.01.01");
+			} catch (ParseException pe) {
+				throw new RuntimeException(pe);
+			}
+		}
 	}
 
 }

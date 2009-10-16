@@ -33,17 +33,19 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class TakebackParser {
 
+	public static final String ACCEPTD_TAKE_BACK = "accepts the takeback request";
+
+	public static final String IDENTIFIER = "Game";
+
+	private static final Log LOG = LogFactory.getLog(TakebackParser.class);
+	public static final String REQUEST_TAKE_BACK = "take back";
+
 	public static class TakebackMessage {
 		public String gameId = "";
 		public int halfMovesRequested = -1;
 		public boolean wasAccepted;
 	}
 
-	public static final String ACCEPTD_TAKE_BACK = "accepts the takeback request";
-
-	public static final String IDENTIFIER = "Game";
-	private static final Log LOG = LogFactory.getLog(TakebackParser.class);
-	public static final String REQUEST_TAKE_BACK = "take back";
 	protected Map<String, TakebackMessage> gameToTakebackMessages = new HashMap<String, TakebackMessage>();
 
 	/**

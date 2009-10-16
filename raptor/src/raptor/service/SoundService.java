@@ -38,13 +38,6 @@ public class SoundService {
 	private static final Log LOG = LogFactory.getLog(SoundService.class);
 	private static final SoundService instance = new SoundService();
 
-	/**
-	 * Returns the singleton instance.
-	 */
-	public static SoundService getInstance() {
-		return instance;
-	}
-
 	protected Map<String, Clip> soundToClip = new HashMap<String, Clip>();
 
 	protected Map<String, String> bugSoundToClip = new HashMap<String, String>();
@@ -52,6 +45,13 @@ public class SoundService {
 	protected Map<String, Boolean> bugSoundsPlaying = new HashMap<String, Boolean>();
 
 	protected Speech speech = null;
+
+	/**
+	 * Returns the singleton instance.
+	 */
+	public static SoundService getInstance() {
+		return instance;
+	}
 
 	private SoundService() {
 		init();
@@ -69,67 +69,6 @@ public class SoundService {
 
 	public String[] getBughouseSoundKeys() {
 		return bugSoundToClip.keySet().toArray(new String[0]);
-	}
-
-	/**
-	 * I have tried caching the Clips. However i ran out of lines. So now i just
-	 * create a new clip each time.
-	 */
-	protected void init() {
-		LOG.info("Initializing sound service.");
-		long startTime = System.currentTimeMillis();
-		try {
-			File file = new File(Raptor.RESOURCES_DIR + "sounds/");
-			File[] files = file.listFiles(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.endsWith(".wav");
-				}
-			});
-			for (File currentFile : files) {
-				String key = currentFile.getName();
-				int dotIndex = key.indexOf(".");
-				Clip clip = AudioSystem.getClip();
-
-				AudioInputStream stream = AudioSystem
-						.getAudioInputStream(new FileInputStream(currentFile));
-				clip.open(stream);
-
-				soundToClip.put(key.substring(0, dotIndex), clip);
-			}
-
-			file = new File(Raptor.RESOURCES_DIR + "sounds/bughouse");
-			files = file.listFiles(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.endsWith(".wav");
-				}
-			});
-			for (File currentFile : files) {
-
-				String key = currentFile.getName();
-				int dotIndex = key.indexOf(".");
-				key = key.substring(0, dotIndex);
-				bugSoundToClip.put(key, currentFile.getAbsolutePath());
-				bugSoundsPlaying.put(key, false);
-			}
-
-		} catch (Throwable t) {
-			LOG.error("Error loading sounds", t);
-		}
-
-		try {
-			speech = SpeechUtils.getSpeech();
-			if (speech != null) {
-				speech.init();
-				LOG.info("Initialized speech: " + speech);
-			} else {
-				LOG.info("No speech is currently configured.");
-			}
-		} catch (Throwable t) {
-			Raptor.getInstance().onError("Error initializing speech", t);
-			speech = null;
-		}
-		LOG.info("Initializing sound service complete: "
-				+ (System.currentTimeMillis() - startTime) + "ms");
 	}
 
 	/**
@@ -225,5 +164,66 @@ public class SoundService {
 				}
 			}
 		}
+	}
+
+	/**
+	 * I have tried caching the Clips. However i ran out of lines. So now i just
+	 * create a new clip each time.
+	 */
+	protected void init() {
+		LOG.info("Initializing sound service.");
+		long startTime = System.currentTimeMillis();
+		try {
+			File file = new File(Raptor.RESOURCES_DIR + "sounds/");
+			File[] files = file.listFiles(new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return name.endsWith(".wav");
+				}
+			});
+			for (File currentFile : files) {
+				String key = currentFile.getName();
+				int dotIndex = key.indexOf(".");
+				Clip clip = AudioSystem.getClip();
+
+				AudioInputStream stream = AudioSystem
+						.getAudioInputStream(new FileInputStream(currentFile));
+				clip.open(stream);
+
+				soundToClip.put(key.substring(0, dotIndex), clip);
+			}
+
+			file = new File(Raptor.RESOURCES_DIR + "sounds/bughouse");
+			files = file.listFiles(new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return name.endsWith(".wav");
+				}
+			});
+			for (File currentFile : files) {
+
+				String key = currentFile.getName();
+				int dotIndex = key.indexOf(".");
+				key = key.substring(0, dotIndex);
+				bugSoundToClip.put(key, currentFile.getAbsolutePath());
+				bugSoundsPlaying.put(key, false);
+			}
+
+		} catch (Throwable t) {
+			LOG.error("Error loading sounds", t);
+		}
+
+		try {
+			speech = SpeechUtils.getSpeech();
+			if (speech != null) {
+				speech.init();
+				LOG.info("Initialized speech: " + speech);
+			} else {
+				LOG.info("No speech is currently configured.");
+			}
+		} catch (Throwable t) {
+			Raptor.getInstance().onError("Error initializing speech", t);
+			speech = null;
+		}
+		LOG.info("Initializing sound service complete: "
+				+ (System.currentTimeMillis() - startTime) + "ms");
 	}
 }

@@ -95,13 +95,6 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
 	}
 
-	protected void disposeAllItems(Table table) {
-		TableItem[] items = table.getItems();
-		for (TableItem item : items) {
-			item.dispose();
-		}
-	}
-
 	public Composite getControl() {
 		return composite;
 	}
@@ -401,11 +394,21 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		isPassive = true;
 	}
 
+	public void removeItemChangedListener(ItemChangedListener listener) {
+	}
+
+	protected void disposeAllItems(Table table) {
+		TableItem[] items = table.getItems();
+		for (TableItem item : items) {
+			item.dispose();
+		}
+	}
+
 	protected void openGame(int index) {
 		Game selectedGame = games.get(index);
 		Raptor.getInstance().getWindow().addRaptorWindowItem(
 				new ChessBoardWindowItem(new InactiveController(selectedGame,
-						selectedGame.getHeader(PgnHeader.White) + " vs "
+						false, selectedGame.getHeader(PgnHeader.White) + " vs "
 								+ selectedGame.getHeader(PgnHeader.Black))));
 	}
 
@@ -437,9 +440,6 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 					StringUtils.defaultString(game.getHeader(PgnHeader.Round),
 							"?"), });
 		}
-	}
-
-	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 
 }

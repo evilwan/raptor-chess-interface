@@ -116,6 +116,50 @@ public abstract class ProgressBarDialog extends Dialog {
 		super(parent);
 	}
 
+	public abstract void initGuage();
+
+	public Object open() {
+		createContents(); // create window
+		shell.open();
+		shell.layout();
+
+		// start work
+		new ProcessThread(executeTime).start();
+
+		Display display = getParent().getDisplay();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		return result;
+	}
+
+	public void setExecuteTime(int executeTime) {
+		this.executeTime = executeTime;
+	}
+
+	public void setMayCancel(boolean mayCancel) {
+		this.mayCancel = mayCancel;
+	}
+
+	public void setProcessBarStyle(boolean pStyle) {
+		if (pStyle) {
+			processBarStyle = SWT.SMOOTH;
+		} else {
+			processBarStyle = SWT.NONE;
+		}
+
+	}
+
+	public void setProcessMessage(String processInfo) {
+		processMessage = processInfo;
+	}
+
+	public void setShellTitle(String shellTitle) {
+		this.shellTitle = shellTitle;
+	}
+
 	protected void cleanUp() {
 
 	}
@@ -183,49 +227,5 @@ public abstract class ProgressBarDialog extends Dialog {
 
 	}
 
-	public abstract void initGuage();
-
-	public Object open() {
-		createContents(); // create window
-		shell.open();
-		shell.layout();
-
-		// start work
-		new ProcessThread(executeTime).start();
-
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
-		return result;
-	}
-
 	protected abstract String process(int times);
-
-	public void setExecuteTime(int executeTime) {
-		this.executeTime = executeTime;
-	}
-
-	public void setMayCancel(boolean mayCancel) {
-		this.mayCancel = mayCancel;
-	}
-
-	public void setProcessBarStyle(boolean pStyle) {
-		if (pStyle) {
-			processBarStyle = SWT.SMOOTH;
-		} else {
-			processBarStyle = SWT.NONE;
-		}
-
-	}
-
-	public void setProcessMessage(String processInfo) {
-		processMessage = processInfo;
-	}
-
-	public void setShellTitle(String shellTitle) {
-		this.shellTitle = shellTitle;
-	}
 }

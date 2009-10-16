@@ -112,12 +112,6 @@ public class TextFieldEditor extends FieldEditor {
 	private int widthInChars = UNLIMITED;
 
 	/**
-	 * Creates a new string field editor
-	 */
-	protected TextFieldEditor() {
-	}
-
-	/**
 	 * Creates a string field editor of unlimited width. Use the method
 	 * <code>setTextLimit</code> to limit the text.
 	 * 
@@ -180,6 +174,236 @@ public class TextFieldEditor extends FieldEditor {
 		errorMessage = JFaceResources
 				.getString("StringFieldEditor.errorMessage");//$NON-NLS-1$
 		createControl(parent);
+	}
+
+	/**
+	 * Creates a new string field editor
+	 */
+	protected TextFieldEditor() {
+	}
+
+	/**
+	 * Returns the error message that will be displayed when and if an error
+	 * occurs.
+	 * 
+	 * @return the error message, or <code>null</code> if none
+	 */
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
+	 */
+	@Override
+	public int getNumberOfControls() {
+		return 2;
+	}
+
+	/**
+	 * Returns the field editor's value.
+	 * 
+	 * @return the current value
+	 */
+	public String getStringValue() {
+		if (textField != null) {
+			return textField.getText();
+		}
+
+		return getPreferenceStore().getString(getPreferenceName());
+	}
+
+	/**
+	 * Returns this field editor's text control.
+	 * <p>
+	 * The control is created if it does not yet exist
+	 * </p>
+	 * 
+	 * @param parent
+	 *            the parent
+	 * @return the text control
+	 */
+	public StyledText getTextControl(Composite parent) {
+		if (textField == null) {
+			textField = new StyledText(parent, SWT.MULTI | SWT.BORDER
+					| SWT.V_SCROLL | SWT.H_SCROLL);
+			textField.setFont(parent.getFont());
+			textField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+					true, 1, 4));
+			switch (validateStrategy) {
+			case VALIDATE_ON_KEY_STROKE:
+				textField.addKeyListener(new KeyAdapter() {
+
+					/*
+					 * (non-Javadoc)
+					 * 
+					 * @see
+					 * org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse
+					 * .swt.events.KeyEvent)
+					 */
+					@Override
+					public void keyReleased(KeyEvent e) {
+						valueChanged();
+					}
+				});
+
+				break;
+			case VALIDATE_ON_FOCUS_LOST:
+				textField.addKeyListener(new KeyAdapter() {
+					@Override
+					public void keyPressed(KeyEvent e) {
+						clearErrorMessage();
+					}
+				});
+				textField.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusGained(FocusEvent e) {
+						refreshValidState();
+					}
+
+					@Override
+					public void focusLost(FocusEvent e) {
+						valueChanged();
+						clearErrorMessage();
+					}
+				});
+				break;
+			default:
+				Assert.isTrue(false, "Unknown validate strategy");//$NON-NLS-1$
+			}
+			textField.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent event) {
+					textField = null;
+				}
+			});
+			if (textLimit > 0) {// Only set limits above 0 - see SWT spec
+				textField.setTextLimit(textLimit);
+			}
+		} else {
+			checkParent(textField, parent);
+		}
+		return textField;
+	}
+
+	/**
+	 * Returns whether an empty string is a valid value.
+	 * 
+	 * @return <code>true</code> if an empty string is a valid value, and
+	 *         <code>false</code> if an empty string is invalid
+	 * @see #setEmptyStringAllowed
+	 */
+	public boolean isEmptyStringAllowed() {
+		return emptyStringAllowed;
+	}
+
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
+	 */
+	@Override
+	public boolean isValid() {
+		return isValid;
+	}
+
+	/**
+	 * Sets whether the empty string is a valid value or not.
+	 * 
+	 * @param b
+	 *            <code>true</code> if the empty string is allowed, and
+	 *            <code>false</code> if it is considered invalid
+	 */
+	public void setEmptyStringAllowed(boolean b) {
+		emptyStringAllowed = b;
+	}
+
+	/*
+	 * @see FieldEditor.setEnabled(boolean,Composite).
+	 */
+	@Override
+	public void setEnabled(boolean enabled, Composite parent) {
+		super.setEnabled(enabled, parent);
+		getTextControl(parent).setEnabled(enabled);
+	}
+
+	/**
+	 * Sets the error message that will be displayed when and if an error
+	 * occurs.
+	 * 
+	 * @param message
+	 *            the error message
+	 */
+	public void setErrorMessage(String message) {
+		errorMessage = message;
+	}
+
+	/*
+	 * (non-Javadoc) Method declared on FieldEditor.
+	 */
+	@Override
+	public void setFocus() {
+		if (textField != null) {
+			textField.setFocus();
+		}
+	}
+
+	/**
+	 * Sets this field editor's value.
+	 * 
+	 * @param value
+	 *            the new value, or <code>null</code> meaning the empty string
+	 */
+	public void setStringValue(String value) {
+		if (textField != null) {
+			if (value == null) {
+				value = "";//$NON-NLS-1$
+			}
+			oldValue = textField.getText();
+			if (!oldValue.equals(value)) {
+				textField.setText(value);
+				valueChanged();
+			}
+		}
+	}
+
+	/**
+	 * Sets this text field's text limit.
+	 * 
+	 * @param limit
+	 *            the limit on the number of character in the text input field,
+	 *            or <code>UNLIMITED</code> for no limit
+	 */
+	public void setTextLimit(int limit) {
+		textLimit = limit;
+		if (textField != null) {
+			textField.setTextLimit(limit);
+		}
+	}
+
+	/**
+	 * Sets the strategy for validating the text.
+	 * <p>
+	 * Calling this method has no effect after <code>createPartControl</code> is
+	 * called. Thus this method is really only useful for subclasses to call in
+	 * their constructor. However, it has public visibility for backward
+	 * compatibility.
+	 * </p>
+	 * 
+	 * @param value
+	 *            either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the
+	 *            fly checking (the default), or
+	 *            <code>VALIDATE_ON_FOCUS_LOST</code> to perform validation only
+	 *            after the text has been typed in
+	 */
+	public void setValidateStrategy(int value) {
+		Assert.isTrue(value == VALIDATE_ON_FOCUS_LOST
+				|| value == VALIDATE_ON_KEY_STROKE);
+		validateStrategy = value;
+	}
+
+	/**
+	 * Shows the error message set via <code>setErrorMessage</code>.
+	 */
+	public void showErrorMessage() {
+		showErrorMessage(errorMessage);
 	}
 
 	/*
@@ -308,37 +532,6 @@ public class TextFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Returns the error message that will be displayed when and if an error
-	 * occurs.
-	 * 
-	 * @return the error message, or <code>null</code> if none
-	 */
-	public String getErrorMessage() {
-		return errorMessage;
-	}
-
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
-	 */
-	@Override
-	public int getNumberOfControls() {
-		return 2;
-	}
-
-	/**
-	 * Returns the field editor's value.
-	 * 
-	 * @return the current value
-	 */
-	public String getStringValue() {
-		if (textField != null) {
-			return textField.getText();
-		}
-
-		return getPreferenceStore().getString(getPreferenceName());
-	}
-
-	/**
 	 * Returns this field editor's text control.
 	 * 
 	 * @return the text control, or <code>null</code> if no text field is
@@ -348,205 +541,12 @@ public class TextFieldEditor extends FieldEditor {
 		return textField;
 	}
 
-	/**
-	 * Returns this field editor's text control.
-	 * <p>
-	 * The control is created if it does not yet exist
-	 * </p>
-	 * 
-	 * @param parent
-	 *            the parent
-	 * @return the text control
-	 */
-	public StyledText getTextControl(Composite parent) {
-		if (textField == null) {
-			textField = new StyledText(parent, SWT.MULTI | SWT.BORDER
-					| SWT.V_SCROLL | SWT.H_SCROLL);
-			textField.setFont(parent.getFont());
-			textField.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-					true, 1, 4));
-			switch (validateStrategy) {
-			case VALIDATE_ON_KEY_STROKE:
-				textField.addKeyListener(new KeyAdapter() {
-
-					/*
-					 * (non-Javadoc)
-					 * 
-					 * @see
-					 * org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse
-					 * .swt.events.KeyEvent)
-					 */
-					@Override
-					public void keyReleased(KeyEvent e) {
-						valueChanged();
-					}
-				});
-
-				break;
-			case VALIDATE_ON_FOCUS_LOST:
-				textField.addKeyListener(new KeyAdapter() {
-					@Override
-					public void keyPressed(KeyEvent e) {
-						clearErrorMessage();
-					}
-				});
-				textField.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusGained(FocusEvent e) {
-						refreshValidState();
-					}
-
-					@Override
-					public void focusLost(FocusEvent e) {
-						valueChanged();
-						clearErrorMessage();
-					}
-				});
-				break;
-			default:
-				Assert.isTrue(false, "Unknown validate strategy");//$NON-NLS-1$
-			}
-			textField.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent event) {
-					textField = null;
-				}
-			});
-			if (textLimit > 0) {// Only set limits above 0 - see SWT spec
-				textField.setTextLimit(textLimit);
-			}
-		} else {
-			checkParent(textField, parent);
-		}
-		return textField;
-	}
-
-	/**
-	 * Returns whether an empty string is a valid value.
-	 * 
-	 * @return <code>true</code> if an empty string is a valid value, and
-	 *         <code>false</code> if an empty string is invalid
-	 * @see #setEmptyStringAllowed
-	 */
-	public boolean isEmptyStringAllowed() {
-		return emptyStringAllowed;
-	}
-
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
-	 */
-	@Override
-	public boolean isValid() {
-		return isValid;
-	}
-
 	/*
 	 * (non-Javadoc) Method declared on FieldEditor.
 	 */
 	@Override
 	protected void refreshValidState() {
 		isValid = checkState();
-	}
-
-	/**
-	 * Sets whether the empty string is a valid value or not.
-	 * 
-	 * @param b
-	 *            <code>true</code> if the empty string is allowed, and
-	 *            <code>false</code> if it is considered invalid
-	 */
-	public void setEmptyStringAllowed(boolean b) {
-		emptyStringAllowed = b;
-	}
-
-	/*
-	 * @see FieldEditor.setEnabled(boolean,Composite).
-	 */
-	@Override
-	public void setEnabled(boolean enabled, Composite parent) {
-		super.setEnabled(enabled, parent);
-		getTextControl(parent).setEnabled(enabled);
-	}
-
-	/**
-	 * Sets the error message that will be displayed when and if an error
-	 * occurs.
-	 * 
-	 * @param message
-	 *            the error message
-	 */
-	public void setErrorMessage(String message) {
-		errorMessage = message;
-	}
-
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
-	 */
-	@Override
-	public void setFocus() {
-		if (textField != null) {
-			textField.setFocus();
-		}
-	}
-
-	/**
-	 * Sets this field editor's value.
-	 * 
-	 * @param value
-	 *            the new value, or <code>null</code> meaning the empty string
-	 */
-	public void setStringValue(String value) {
-		if (textField != null) {
-			if (value == null) {
-				value = "";//$NON-NLS-1$
-			}
-			oldValue = textField.getText();
-			if (!oldValue.equals(value)) {
-				textField.setText(value);
-				valueChanged();
-			}
-		}
-	}
-
-	/**
-	 * Sets this text field's text limit.
-	 * 
-	 * @param limit
-	 *            the limit on the number of character in the text input field,
-	 *            or <code>UNLIMITED</code> for no limit
-	 */
-	public void setTextLimit(int limit) {
-		textLimit = limit;
-		if (textField != null) {
-			textField.setTextLimit(limit);
-		}
-	}
-
-	/**
-	 * Sets the strategy for validating the text.
-	 * <p>
-	 * Calling this method has no effect after <code>createPartControl</code> is
-	 * called. Thus this method is really only useful for subclasses to call in
-	 * their constructor. However, it has public visibility for backward
-	 * compatibility.
-	 * </p>
-	 * 
-	 * @param value
-	 *            either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the
-	 *            fly checking (the default), or
-	 *            <code>VALIDATE_ON_FOCUS_LOST</code> to perform validation only
-	 *            after the text has been typed in
-	 */
-	public void setValidateStrategy(int value) {
-		Assert.isTrue(value == VALIDATE_ON_FOCUS_LOST
-				|| value == VALIDATE_ON_KEY_STROKE);
-		validateStrategy = value;
-	}
-
-	/**
-	 * Shows the error message set via <code>setErrorMessage</code>.
-	 */
-	public void showErrorMessage() {
-		showErrorMessage(errorMessage);
 	}
 
 	/**

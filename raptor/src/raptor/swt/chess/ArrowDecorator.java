@@ -123,6 +123,70 @@ public class ArrowDecorator {
 			}
 		}
 
+		public ArrowSegment rotate180() {
+			switch (this) {
+			case UpwardTurnLeft:
+				return DownwardTurnRight;
+			case UpwardTurnRight:
+				return DownwardTurnLeft;
+			case DownwardTurnLeft:
+				return UpwardTurnRight;
+			case DownwardTurnRight:
+				return UpwardTurnLeft;
+			case DiagIncreasing:
+				return DiagIncreasing;
+			case DiagDecreasing:
+				return DiagDecreasing;
+			case Horizontal:
+				return Horizontal;
+			case Vertical:
+				return Vertical;
+			case DiagNorthEastCorner:
+				return DiagSouthWestCorner;
+			case DiagNorthWestCorner:
+				return DiagSouthEastCorner;
+			case DiagSouthEastCorner:
+				return DiagNorthWestCorner;
+			case DiagSouthWestCorner:
+				return DiagNorthEastCorner;
+			case OriginVerticalUp:
+				return OriginVerticalDown;
+			case OriginVerticalDown:
+				return OriginVerticalUp;
+			case OriginHorizontalLeft:
+				return OriginHorizontalRight;
+			case OriginHorizontalRight:
+				return OriginHorizontalLeft;
+			case OriginDiagIncreasingLeft:
+				return OriginDiagIncreasingRight;
+			case OriginDiagIncreasingRight:
+				return OriginDiagIncreasingLeft;
+			case OriginDiagDecreasingLeft:
+				return OriginDiagDecreasingRight;
+			case OriginDiagDecreasingRight:
+				return OriginDiagDecreasingLeft;
+			case DestinationVerticalUp:
+				return DestinationVerticalDown;
+			case DestinationVerticalDown:
+				return DestinationVerticalUp;
+			case DestinationHorizontalLeft:
+				return DestinationHorizontalRight;
+			case DestinationHorizontalRight:
+				return DestinationHorizontalLeft;
+			case DestinationDiagIncreasingLeft:
+				return DestinationDiagIncreasingRight;
+			case DestinationDiagIncreasingRight:
+				return DestinationDiagIncreasingLeft;
+			case DestinationDiagDecreasingLeft:
+				return DestinationDiagDecreasingRight;
+			case DestinationDiagDecreasingRight:
+				return DestinationDiagDecreasingLeft;
+			default:
+				throw new IllegalArgumentException("Invalid ArrowSegment: "
+						+ this);
+			}
+		}
+
 		private void drawDestinationDiagDecreasingLeft(ChessSquare square,
 				Color color, int width, GC gc) {
 			int squareSide = square.getSize().x;
@@ -601,70 +665,6 @@ public class ArrowDecorator {
 		private int pythag(int a, int b) {
 			return (int) Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 		}
-
-		public ArrowSegment rotate180() {
-			switch (this) {
-			case UpwardTurnLeft:
-				return DownwardTurnRight;
-			case UpwardTurnRight:
-				return DownwardTurnLeft;
-			case DownwardTurnLeft:
-				return UpwardTurnRight;
-			case DownwardTurnRight:
-				return UpwardTurnLeft;
-			case DiagIncreasing:
-				return DiagIncreasing;
-			case DiagDecreasing:
-				return DiagDecreasing;
-			case Horizontal:
-				return Horizontal;
-			case Vertical:
-				return Vertical;
-			case DiagNorthEastCorner:
-				return DiagSouthWestCorner;
-			case DiagNorthWestCorner:
-				return DiagSouthEastCorner;
-			case DiagSouthEastCorner:
-				return DiagNorthWestCorner;
-			case DiagSouthWestCorner:
-				return DiagNorthEastCorner;
-			case OriginVerticalUp:
-				return OriginVerticalDown;
-			case OriginVerticalDown:
-				return OriginVerticalUp;
-			case OriginHorizontalLeft:
-				return OriginHorizontalRight;
-			case OriginHorizontalRight:
-				return OriginHorizontalLeft;
-			case OriginDiagIncreasingLeft:
-				return OriginDiagIncreasingRight;
-			case OriginDiagIncreasingRight:
-				return OriginDiagIncreasingLeft;
-			case OriginDiagDecreasingLeft:
-				return OriginDiagDecreasingRight;
-			case OriginDiagDecreasingRight:
-				return OriginDiagDecreasingLeft;
-			case DestinationVerticalUp:
-				return DestinationVerticalDown;
-			case DestinationVerticalDown:
-				return DestinationVerticalUp;
-			case DestinationHorizontalLeft:
-				return DestinationHorizontalRight;
-			case DestinationHorizontalRight:
-				return DestinationHorizontalLeft;
-			case DestinationDiagIncreasingLeft:
-				return DestinationDiagIncreasingRight;
-			case DestinationDiagIncreasingRight:
-				return DestinationDiagIncreasingLeft;
-			case DestinationDiagDecreasingLeft:
-				return DestinationDiagDecreasingRight;
-			case DestinationDiagDecreasingRight:
-				return DestinationDiagDecreasingLeft;
-			default:
-				throw new IllegalArgumentException("Invalid ArrowSegment: "
-						+ this);
-			}
-		}
 	}
 
 	/**
@@ -694,11 +694,15 @@ public class ArrowDecorator {
 			specs.add(spec);
 		}
 
-		public void clear() {
-			for (int i = 0; i < specs.size(); i++) {
-				if (!specs.get(i).arrow.isFadeAway) {
-					specs.remove(i);
-					i--;
+		public void clear(boolean isForcing) {
+			if (isForcing) {
+				specs.clear();
+			} else {
+				for (int i = 0; i < specs.size(); i++) {
+					if (!specs.get(i).arrow.isFadeAway) {
+						specs.remove(i);
+						i--;
+					}
 				}
 			}
 		}
@@ -804,6 +808,34 @@ public class ArrowDecorator {
 						}
 					});
 		}
+	}
+
+	public void dispose() {
+		if (decorators != null) {
+			removeAllArrows();
+			if (!board.getControl().isDisposed()) {
+				for (int i = 0; i < decorators.length; i++) {
+					decorators[i].square.removePaintListener(decorators[i]);
+					decorators[i] = null;
+				}
+			}
+			decorators = null;
+			board = null;
+		}
+	}
+
+	/**
+	 * Removes all non fade away arrows on the chess board.
+	 */
+	public void removeAllArrows() {
+		removeAllArrows(false);
+	}
+
+	/**
+	 * Removes an arrow.
+	 */
+	public void removeArrow(Arrow arrow) {
+		removeArrow(arrow, false);
 	}
 
 	protected void addDecoratorsForArrowStartGreaterThanEnd(Arrow arrow) {
@@ -1199,17 +1231,10 @@ public class ArrowDecorator {
 	/**
 	 * Removes all non fade away arrows on the chess board.
 	 */
-	public void removeAllArrows() {
+	protected void removeAllArrows(boolean isForcing) {
 		for (SquareArrowDecorator decorator : decorators) {
-			decorator.clear();
+			decorator.clear(isForcing);
 		}
-	}
-
-	/**
-	 * Removes an arrow.
-	 */
-	public void removeArrow(Arrow arrow) {
-		removeArrow(arrow, false);
 	}
 
 	/**

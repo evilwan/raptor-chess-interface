@@ -86,17 +86,6 @@ public class ClassicGame implements Game {
 	}
 
 	/**
-	 * Currently places captures and promotions ahead of non captures.
-	 */
-	protected void addMove(Move move, PriorityMoveList moves) {
-		if (move.isCapture() || move.isPromotion()) {
-			moves.appendHighPriority(move);
-		} else {
-			moves.appendLowPriority(move);
-		}
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public void addState(int state) {
@@ -171,47 +160,6 @@ public class ClassicGame implements Game {
 	}
 
 	/**
-	 * Decrements the drop count for the specified piece. This method handles
-	 * promotion masks as well.
-	 * 
-	 * @param color
-	 *            WHITE or BLACK.
-	 * @param piece
-	 *            The un-colored piece constant.
-	 */
-	protected void decrementDropCount(int color, int piece) {
-
-		if ((piece & PROMOTED_MASK) != 0) {
-			piece = PAWN;
-
-		}
-		dropCounts[color][piece]--;
-	}
-
-	/**
-	 * Decrements the piece count for the specified piece. This method handles
-	 * promotion masks as well.
-	 * 
-	 * @param color
-	 *            WHITE or BLACK.
-	 * @param piece
-	 *            The un-colored piece constant.
-	 */
-	protected void decrementPieceCount(int color, int piece) {
-		if ((piece & PROMOTED_MASK) != 0) {
-			piece = PAWN;
-		}
-		pieceCounts[color][piece]--;
-	}
-
-	/**
-	 * Decrements the current positions repetition count.
-	 */
-	protected void decrementRepCount() {
-		moveRepHash[getRepHash()]--;
-	}
-
-	/**
 	 * {@inheritDoc}
 	 */
 	public ClassicGame deepCopy(boolean ignoreHashes) {
@@ -270,6 +218,1179 @@ public class ClassicGame implements Game {
 		incrementRepCount();
 
 		updateEcoHeaders();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public PgnHeader[] getAllHeaders() {
+		return pgnHeaderMap.keySet().toArray(new PgnHeader[0]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public PgnHeader[] getAllNonRequiredHeaders() {
+		List<PgnHeader> result = new ArrayList<PgnHeader>(pgnHeaderMap.size());
+		for (PgnHeader key : pgnHeaderMap.keySet()) {
+			if (!key.isRequired()) {
+				result.add(key);
+			}
+		}
+		return result.toArray(new PgnHeader[0]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int[] getBoard() {
+		return board;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getCastling(int color) {
+		return castling[color];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getColorBB(int color) {
+		return colorBB[color];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getColorToMove() {
+		return colorToMove;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getDropCount(int color, int piece) {
+		return dropCounts[color][piece];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getEmptyBB() {
+		return emptyBB;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getEpSquare() {
+		return epSquare;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getFiftyMoveCount() {
+		return fiftyMoveCount;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getFullMoveCount() {
+		return getHalfMoveCount() / 2 + 1;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getHalfMoveCount() {
+		return halfMoveCount;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getHeader(PgnHeader header) {
+		return pgnHeaderMap.get(header);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getId() {
+		return id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getInitialEpSquare() {
+		return initialEpSquare;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Move getLastMove() {
+		if (moves.getSize() != 0) {
+			return moves.get(moves.getSize() - 1);
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public PriorityMoveList getLegalMoves() {
+		PriorityMoveList result = getPseudoLegalMoves();
+
+		for (int i = 0; i < result.getHighPrioritySize(); i++) {
+			Move move = result.getHighPriority(i);
+			forceMove(move);
+
+			if (!isLegalPosition()) {
+				result.removeHighPriority(i);
+				i--;
+			}
+
+			rollback();
+		}
+
+		for (int i = 0; i < result.getLowPrioritySize(); i++) {
+			Move move = result.getLowPriority(i);
+			forceMove(move);
+
+			if (!isLegalPosition()) {
+				result.removeLowPriority(i);
+				i--;
+			}
+
+			rollback();
+		}
+
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public MoveList getMoveList() {
+		return moves;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getNotColorToMoveBB() {
+		return notColorToMoveBB;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getOccupiedBB() {
+		return occupiedBB;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getPiece(int square) {
+		return board[square] & NOT_PROMOTED_MASK;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getPieceBB(int piece) {
+		return pieceBB[0][piece] | pieceBB[1][piece];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getPieceBB(int color, int piece) {
+		return pieceBB[color][piece];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getPieceCount(int color, int piece) {
+		return pieceCounts[color][piece & NOT_PROMOTED_MASK];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getPieceWithPromoteMask(int square) {
+		return board[square];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public PriorityMoveList getPseudoLegalMoves() {
+		PriorityMoveList result = new PriorityMoveList();
+		generatePseudoQueenMoves(result);
+		generatePseudoKnightMoves(result);
+		generatePseudoBishopMoves(result);
+		generatePseudoRookMoves(result);
+		generatePseudoPawnMoves(result);
+		generatePseudoKingMoves(result);
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getRepCount() {
+		return moveRepHash[getRepHash()];
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getRepHash() {
+		return (int) (zobristPositionHash & MOVE_REP_CACHE_SIZE_MINUS_1);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Result getResult() {
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public int getState() {
+		return state;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Variant getVariant() {
+		Variant result = Variant.classic;
+		String variant = getHeader(PgnHeader.Variant);
+		if (StringUtils.isNotBlank(variant)) {
+			try {
+				result = Variant.valueOf(variant);
+			} catch (IllegalArgumentException iae) {
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getZobristGameHash() {
+		return zobristGameHash;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getZobristPositionHash() {
+		return zobristPositionHash;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void incrementRepCount() {
+		moveRepHash[getRepHash()]++;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isCheckmate() {
+		return isCheckmate(getLegalMoves());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isCheckmate(PriorityMoveList moveList) {
+		return moveList.getSize() == 0 && isInCheck(getColorToMove());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isInCheck() {
+		return isInCheck(colorToMove, getPieceBB(colorToMove, KING));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isInCheck(int color) {
+		return isInCheck(color, getPieceBB(color, KING));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isInCheck(int color, long pieceBB) {
+		long kingBB = pieceBB;
+		int kingSquare = bitscanForward(kingBB);
+		int oppositeColor = getOppositeColor(color);
+
+		return !(pawnCapture(oppositeColor, getPieceBB(oppositeColor, PAWN),
+				kingBB) == 0L
+				&& (orthogonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
+						oppositeColor, ROOK) | getPieceBB(oppositeColor, QUEEN))) == 0L
+				&& (diagonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
+						oppositeColor, BISHOP) | getPieceBB(oppositeColor,
+						QUEEN))) == 0L
+				&& (kingMove(kingSquare) & getPieceBB(oppositeColor, KING)) == 0L && (knightMove(kingSquare) & getPieceBB(
+				oppositeColor, KNIGHT)) == 0L);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isInState(int state) {
+		return (getState() & state) != 0;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isLegalPosition() {
+		return areBothKingsOnBoard()
+				&& !isInCheck(getOppositeColor(getColorToMove()));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSettingEcoHeaders() {
+		return isInState(UPDATING_ECO_HEADERS_STATE);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSettingMoveSan() {
+		return isInState(UPDATING_SAN_STATE);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isStalemate() {
+		return isStalemate(getLegalMoves());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isStalemate(PriorityMoveList moveList) {
+		return moveList.getSize() == 0 && !isInCheck(getColorToMove());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isWhitesMove() {
+		return colorToMove == WHITE;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Move makeDropMove(int piece, int destination)
+			throws IllegalArgumentException {
+		throw new UnsupportedOperationException("Not supported in classical");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Move makeLanMove(String lan) throws IllegalArgumentException {
+		Move move = null;
+
+		Move[] legals = getLegalMoves().asArray();
+
+		for (int i = 0; move == null && i < legals.length; i++) {
+			Move candidate = legals[i];
+			if (candidate.getLan().equals(lan)) {
+				move = candidate;
+			}
+		}
+
+		if (move == null) {
+			throw new IllegalArgumentException("Invalid move: " + lan + " \n"
+					+ toString());
+		} else {
+			forceMove(move);
+		}
+
+		return move;
+	}
+
+	/**
+	 * Makes a move using the start/end square.
+	 * 
+	 * @param startSquare
+	 *            The start square.
+	 * @param endSquare
+	 *            The end square.
+	 * @return The move made.
+	 * @throws IllegalArgumentException
+	 *             Thrown if the move is illegal.
+	 */
+	public Move makeMove(int startSquare, int endSquare)
+			throws IllegalArgumentException {
+		Move move = null;
+
+		Move[] legals = getLegalMoves().asArray();
+
+		for (int i = 0; move == null && i < legals.length; i++) {
+			Move candidate = legals[i];
+			if (candidate.getFrom() == startSquare
+					&& candidate.getTo() == endSquare) {
+				move = candidate;
+			}
+		}
+
+		if (move == null) {
+			throw new IllegalArgumentException("Invalid move: "
+					+ getSan(startSquare) + " " + getSan(endSquare) + " \n"
+					+ toString());
+		} else {
+			forceMove(move);
+		}
+
+		return move;
+	}
+
+	/**
+	 * Makes a move using the start/end square and the specified promotion
+	 * piece.
+	 * 
+	 * @param startSquare
+	 *            The start square.
+	 * @param endSquare
+	 *            The end square.
+	 * @param promotionPiece
+	 *            The non colored piece constant representing the promoted
+	 *            piece.
+	 * @return The move made.
+	 * @throws IllegalArgumentException
+	 *             Thrown if the move is illegal.
+	 */
+	public Move makeMove(int startSquare, int endSquare, int promotePiece)
+			throws IllegalArgumentException {
+		Move move = null;
+
+		Move[] legals = getLegalMoves().asArray();
+
+		for (int i = 0; move == null && i < legals.length; i++) {
+			Move candidate = legals[i];
+			if (candidate.getFrom() == startSquare
+					&& candidate.getTo() == endSquare
+					&& candidate.getPiecePromotedTo() == promotePiece) {
+				move = candidate;
+			}
+		}
+
+		if (move == null) {
+			throw new IllegalArgumentException("Invalid move: "
+					+ getSan(startSquare) + "-" + getSan(endSquare) + "="
+					+ GameConstants.PIECE_TO_SAN.charAt(promotePiece) + "\n"
+					+ toString());
+		} else {
+			forceMove(move);
+		}
+
+		return move;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Move makeSanMove(String shortAlgebraic)
+			throws IllegalArgumentException {
+		SanValidations validations = SanUtils.getValidations(shortAlgebraic);
+		Move[] pseudoLegals = getPseudoLegalMoves().asArray();
+
+		Move result = makeSanMoveOverride(shortAlgebraic, validations,
+				pseudoLegals);
+		if (result == null) {
+			// Examples:
+			// e4 (a pawn move to e4).
+			// e8=Q (a pawn promotion without a capture).
+			// de=Q (a pawn promotion from a capture).
+			// ed (e pawn captures d pawn).
+			// Ne3 (a Knight moving to e3).
+			// N5e3 (disambiguity for two knights which can move to e3, the 5th
+			// rank
+			// knight is the one that should move).
+			// Nfe3 (disambiguity for two knights which can move to e3, the
+			// knight
+			// on the f file is the one that should move).
+			// Nf1e3 (disambiguity for three knights which cam move to e3, the
+			// f1
+			// knight is the one that should move).
+			if (!validations.isValidStrict()) {
+				throw new IllegalArgumentException("Invalid short algebraic: "
+						+ shortAlgebraic);
+			}
+
+			int candidatePromotedPiece = EMPTY;
+
+			if (validations.isCastleKSideStrict()) {
+
+				for (Move move : pseudoLegals) {
+					if (move != null
+							&& (move.getMoveCharacteristic() & Move.SHORT_CASTLING_CHARACTERISTIC) != 0) {
+						result = move;
+						break;
+					}
+				}
+			} else if (validations.isCastleQSideStrict()) {
+				for (Move move : pseudoLegals) {
+					if (move != null
+							&& (move.getMoveCharacteristic() & Move.LONG_CASTLING_CHARACTERISTIC) != 0) {
+						result = move;
+						break;
+					}
+				}
+			} else {
+				MoveList matches = new MoveList(10);
+				if (validations.isPromotion()) {
+					char pieceChar = validations.getStrictSan().charAt(
+							validations.getStrictSan().length() - 1);
+					candidatePromotedPiece = SanUtils.sanToPiece(pieceChar);
+				}
+
+				if (validations.isPawnMove()) {
+					int candidatePieceMoving = PAWN;
+					if (validations.isEpOrAmbigPxStrict()
+							|| validations.isAmbigPxPromotionStrict()) {
+
+						int end = getSquare(GameConstants.RANK_FROM_SAN
+								.indexOf(validations.getStrictSan().charAt(2)),
+								GameConstants.FILE_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(1)));
+
+						int startRank = getRank(end)
+								+ (colorToMove == WHITE ? -1 : +1);
+
+						if (startRank > 7 || startRank < 0) {
+							throw new IllegalArgumentException(
+									"Invalid short algebraic: "
+											+ shortAlgebraic);
+						}
+
+						int start = getSquare(startRank,
+								GameConstants.FILE_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(0)));
+
+						for (Move move : pseudoLegals) {
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
+									&& move.isCapture()
+									&& move.getFrom() == start
+									&& move.getTo() == end
+									&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+								matches.append(move);
+							}
+						}
+					} else {
+						// handle captures
+						if (validations.isPxStrict()
+								|| validations.isPxPPromotionStrict()) {
+							int startFile = GameConstants.FILE_FROM_SAN
+									.indexOf(validations.getStrictSan().charAt(
+											0));
+							int endFile = GameConstants.FILE_FROM_SAN
+									.indexOf(validations.getStrictSan().charAt(
+											1));
+
+							for (Move move : pseudoLegals) {
+								if (move != null
+										&& move.getPiece() == candidatePieceMoving
+										&& getFile(move.getFrom()) == startFile
+										&& getFile(move.getTo()) == endFile
+										&& move.isCapture()
+										&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+									matches.append(move);
+								}
+							}
+						}
+						// handle non captures.
+						else {
+							int end = getSquare(GameConstants.RANK_FROM_SAN
+									.indexOf(validations.getStrictSan().charAt(
+											1)), GameConstants.FILE_FROM_SAN
+									.indexOf(validations.getStrictSan().charAt(
+											0)));
+
+							for (Move move : pseudoLegals) {
+								if (move != null
+										&& move.getPiece() == candidatePieceMoving
+										&& !move.isCapture()
+										&& move.getTo() == end
+										&& move.getPiecePromotedTo() == candidatePromotedPiece) {
+									matches.append(move);
+								}
+							}
+						}
+					}
+				} else {
+					int candidatePieceMoving = SanUtils.sanToPiece(validations
+							.getStrictSan().charAt(0));
+					int end = getSquare(GameConstants.RANK_FROM_SAN
+							.indexOf(validations.getStrictSan().charAt(
+									validations.getStrictSan().length() - 1)),
+							GameConstants.FILE_FROM_SAN
+									.indexOf(validations.getStrictSan()
+											.charAt(
+													validations.getStrictSan()
+															.length() - 2)));
+
+					if (validations.isDisambigPieceRankStrict()) {
+						int startRank = RANK_FROM_SAN.indexOf(validations
+								.getStrictSan().charAt(1));
+						for (Move move : pseudoLegals) {
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
+									&& move.getTo() == end
+									&& getRank(move.getFrom()) == startRank) {
+								matches.append(move);
+							}
+						}
+					} else if (validations.isDisambigPieceFileStrict()) {
+						int startFile = FILE_FROM_SAN.indexOf(validations
+								.getStrictSan().charAt(1));
+						for (Move move : pseudoLegals) {
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
+									&& move.getTo() == end
+									&& getFile(move.getFrom()) == startFile) {
+								matches.append(move);
+							}
+						}
+					} else if (validations.isDisambigPieceRankFileStrict()) {
+						int startSquare = getSquare(GameConstants.RANK_FROM_SAN
+								.indexOf(validations.getStrictSan().charAt(2)),
+								GameConstants.FILE_FROM_SAN.indexOf(validations
+										.getStrictSan().charAt(1)));
+						FILE_FROM_SAN.indexOf(validations.getStrictSan()
+								.charAt(1));
+						for (Move move : pseudoLegals) {
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
+									&& move.getTo() == end
+									&& move.getFrom() == startSquare) {
+								matches.append(move);
+							}
+						}
+					} else {
+						for (Move move : pseudoLegals) {
+							if (move != null
+									&& move.getPiece() == candidatePieceMoving
+									&& move.getTo() == end) {
+								matches.append(move);
+							}
+						}
+					}
+				}
+				result = testForSanDisambiguationFromCheck(shortAlgebraic,
+						matches);
+			}
+		}
+
+		if (result == null) {
+			throw new IllegalArgumentException("Illegal move " + shortAlgebraic
+					+ "\n " + toString());
+		}
+
+		result.setSan(shortAlgebraic);
+		if (!move(result)) {
+			throw new IllegalArgumentException("Illegal move: " + result);
+		}
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean move(Move move) {
+		// first make the move.
+		forceMove(move);
+		if (!isLegalPosition()) {
+			rollback();
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void removeHeader(PgnHeader headerName) {
+		pgnHeaderMap.remove(headerName);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void rollback() {
+
+		Move move = getMoveList().removeLast();
+		decrementRepCount();
+
+		switch (move.getMoveCharacteristic()) {
+		case Move.EN_PASSANT_CHARACTERISTIC:
+			rollbackEpMove(move);
+			break;
+		case Move.SHORT_CASTLING_CHARACTERISTIC:
+		case Move.LONG_CASTLING_CHARACTERISTIC:
+			rollbackCastlingMove(move);
+			break;
+		case Move.DROP_CHARACTERISTIC:
+			rollbackDropMove(move);
+			break;
+		default:
+			rollbackNonEpNonCastlingMove(move);
+			break;
+		}
+
+		int oppositeToMove = getOppositeColor(getColorToMove());
+
+		if (move.isCapture()) {
+			incrementPieceCount(getColorToMove(), move
+					.getCaptureWithPromoteMask());
+			decrementDropCount(oppositeToMove, move.getCaptureWithPromoteMask());
+		} else if (move.isDrop()) {
+			decrementPieceCount(oppositeToMove, move.getPiece());
+			incrementDropCount(oppositeToMove, move.getPiece());
+		}
+
+		setColorToMove(oppositeToMove);
+		setNotColorToMoveBB(~getColorBB(getColorToMove()));
+		setHalfMoveCount(getHalfMoveCount() - 1);
+
+		setFiftyMoveCount(move.getPrevious50MoveCount());
+		setCastling(getColorToMove(), move.getLastCastleState());
+
+		updateZobristHash();
+
+		updateEcoHeaders();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setBoard(int[] board) {
+		this.board = board;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setCastling(int color, int castling) {
+		this.castling[color] = castling;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setColorBB(int color, long bb) {
+		colorBB[color] = bb;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setColorToMove(int color) {
+		colorToMove = color;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setDropCount(int color, int piece, int count) {
+		if ((piece & PROMOTED_MASK) != 0) {
+			piece = PAWN;
+		}
+		dropCounts[color][piece] = count;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setEmptyBB(long emptyBB) {
+		this.emptyBB = emptyBB;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setEpSquare(int epSquare) {
+		this.epSquare = epSquare;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setFiftyMoveCount(int fiftyMoveCount) {
+		this.fiftyMoveCount = fiftyMoveCount;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setHalfMoveCount(int halfMoveCount) {
+		this.halfMoveCount = halfMoveCount;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setHeader(PgnHeader header, String value) {
+		pgnHeaderMap.put(header, value);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setInitialEpSquare(int initialEpSquare) {
+		this.initialEpSquare = initialEpSquare;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setNotColorToMoveBB(long notColorToMoveBB) {
+		this.notColorToMoveBB = notColorToMoveBB;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setOccupiedBB(long occupiedBB) {
+		this.occupiedBB = occupiedBB;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setPiece(int square, int piece) {
+		board[square] = piece;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setPieceBB(int color, int piece, long bb) {
+		pieceBB[color][piece] = bb;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setPieceCount(int color, int piece, int count) {
+		pieceCounts[color][piece & NOT_PROMOTED_MASK] = count;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setZobristGameHash(long hash) {
+		zobristGameHash = hash;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setZobristPositionHash(long hash) {
+		zobristPositionHash = hash;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toFen() {
+		// 
+
+		StringBuilder result = new StringBuilder(77);
+		result.append(toFenPosition());
+
+		result.append(colorToMove == WHITE ? " w" : " b");
+
+		result.append(" " + getFenCastle());
+		result.append(" " + getSan(epSquare));
+		result.append(" " + fiftyMoveCount);
+		result.append(" " + halfMoveCount);
+
+		return result.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toFenPosition() {
+		StringBuilder result = new StringBuilder(77);
+		for (int j = 7; j > -1; j--) {
+			int consecutiveEmpty = 0;
+			for (int i = 0; i < 8; i++) {
+				int square = getSquare(j, i);
+				int piece = getPiece(square);
+
+				if (piece == EMPTY) {
+					consecutiveEmpty++;
+				} else {
+					long squareBB = getBitboard(square);
+					int color = (getPieceBB(WHITE, piece) & squareBB) != 0L ? WHITE
+							: BLACK;
+					if (consecutiveEmpty > 0) {
+						result.append(consecutiveEmpty);
+						consecutiveEmpty = 0;
+					}
+					result.append(COLOR_PIECE_TO_CHAR[color].charAt(piece));
+				}
+			}
+			if (j != 0) {
+				result.append((consecutiveEmpty != 0 ? consecutiveEmpty : "")
+						+ "/");
+			} else if (j == 0) {
+				result.append(consecutiveEmpty != 0 ? consecutiveEmpty : "");
+			}
+		}
+		return result.toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String toPgn() {
+		StringBuilder builder = new StringBuilder(2500);
+
+		// Set all of the required headers.
+		for (PgnHeader requiredHeader : PgnHeader.REQUIRED_HEADERS) {
+			String headerValue = getHeader(requiredHeader);
+			if (StringUtils.isBlank(headerValue)) {
+				headerValue = PgnHeader.UNKNOWN_VALUE;
+				setHeader(requiredHeader, headerValue);
+			}
+		}
+
+		List<PgnHeader> pgnHeaders = new ArrayList<PgnHeader>(pgnHeaderMap
+				.keySet());
+		Collections.sort(pgnHeaders);
+
+		for (PgnHeader header : pgnHeaders) {
+			PgnUtils.getHeaderLine(builder, header.name(), getHeader(header));
+			builder.append("\n");
+		}
+		builder.append("\n");
+
+		boolean nextMoveRequiresNumber = true;
+		int charsInCurrentLine = 0;
+
+		// TO DO: add breaking up lines in comments.
+		for (int i = 0; i < getHalfMoveCount(); i++) {
+			int charsBefore = builder.length();
+			nextMoveRequiresNumber = PgnUtils.getMove(builder, getMoveList()
+					.get(i), nextMoveRequiresNumber);
+			charsInCurrentLine += builder.length() - charsBefore;
+
+			if (charsInCurrentLine > 75) {
+				charsInCurrentLine = 0;
+				builder.append("\n");
+			} else {
+				builder.append(" ");
+			}
+		}
+
+		if (isCheckmate() || isStalemate()) {
+			builder.append(getResult().getDescription());
+		} else {
+			builder.append(Result.ON_GOING.getDescription());
+		}
+
+		return builder.toString();
+	}
+
+	/**
+	 * Returns a dump of the game class suitable for debugging. Quite a lot of
+	 * information is produced and its an expensive operation, use with care.
+	 */
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder(1000);
+
+		result.append(getString(new String[] { "emptyBB", "occupiedBB",
+				"notColorToMoveBB", "color[WHITE]", "color[BLACK]" },
+				new long[] { emptyBB, occupiedBB, notColorToMoveBB,
+						getColorBB(WHITE), getColorBB(BLACK) })
+				+ "\n\n");
+
+		result.append(getString(new String[] { "[WHITE][PAWN]",
+				"[WHITE][KNIGHT]", "[WHITE][BISHOP]", "[WHITE][ROOK]",
+				"[WHITE][QUEEN]", "[WHITE][KING]" }, new long[] {
+				getPieceBB(WHITE, PAWN), getPieceBB(WHITE, KNIGHT),
+				getPieceBB(WHITE, BISHOP), getPieceBB(WHITE, ROOK),
+				getPieceBB(WHITE, QUEEN), getPieceBB(WHITE, KING) })
+				+ "\n\n");
+
+		result.append(getString(new String[] { "[BLACK][PAWN]",
+				"[BLACK][KNIGHT]", "[BLACK][BISHOP]", "[BLACK][ROOK]",
+				"[BLACK][QUEEN]", "[BLACK][KING]" }, new long[] {
+				getPieceBB(BLACK, PAWN), getPieceBB(BLACK, KNIGHT),
+				getPieceBB(BLACK, BISHOP), getPieceBB(BLACK, ROOK),
+				getPieceBB(BLACK, QUEEN), getPieceBB(BLACK, KING) })
+				+ "\n\n");
+
+		for (int i = 7; i > -1; i--) {
+			for (int j = 0; j < 8; j++) {
+				int square = getSquare(i, j);
+				int piece = getPiece(square);
+				int color = (getBitboard(square) & getColorBB(colorToMove)) != 0L ? colorToMove
+						: getOppositeColor(colorToMove);
+
+				result.append("|" + COLOR_PIECE_TO_CHAR[color].charAt(piece));
+			}
+			result.append("|   ");
+
+			switch (i) {
+			case 7:
+				result.append("To Move: " + COLOR_DESCRIPTION[colorToMove]
+						+ " " + "Last Move: "
+						+ (moves.getSize() == 0 ? "" : moves.getLast()));
+				break;
+
+			case 6:
+				result.append(getPieceCountsString());
+				break;
+			case 5:
+				result.append("Moves: " + halfMoveCount + " EP: "
+						+ getSan(epSquare) + " Castle: " + getFenCastle());
+				break;
+			case 4:
+				result.append("FEN: " + toFen());
+				break;
+			case 3:
+				result.append("State: " + state + " Variant="
+						+ getHeader(PgnHeader.Variant) + " Result="
+						+ this.result);
+				break;
+			case 2:
+				result.append("Event: " + getHeader(PgnHeader.Event) + " Site="
+						+ getHeader(PgnHeader.Site) + " Date="
+						+ getHeader(PgnHeader.Date));
+				break;
+			case 1:
+				result.append("WhiteName: " + getHeader(PgnHeader.White)
+						+ " BlackName=" + getHeader(PgnHeader.Black)
+						+ " WhiteTime="
+						+ getHeader(PgnHeader.WhiteRemainingMillis)
+						+ " whiteLag=" + getHeader(PgnHeader.WhiteLagMillis)
+						+ " blackRemainingTImeMillis = "
+						+ getHeader(PgnHeader.BlackRemainingMillis)
+						+ " blackLag=" + getHeader(PgnHeader.BlackLagMillis));
+
+				break;
+			default:
+				result.append("initialWhiteClock: "
+						+ getHeader(PgnHeader.WhiteClock)
+						+ " initialBlackClocks="
+						+ getHeader(PgnHeader.BlackClock));
+				break;
+			}
+
+			result.append("\n");
+		}
+
+		String legalMovesString = Arrays.toString(getLegalMoves().asArray());
+		result.append("\n");
+		result.append(WordUtils.wrap("\nLegals=" + legalMovesString, 80, "\n",
+				true));
+		result.append(WordUtils.wrap("\nMovelist=" + moves, 80, "\n", true));
+
+		List<String> squaresWithPromoteMasks = new LinkedList<String>();
+		for (int i = 0; i < board.length; i++) {
+			if ((getPieceWithPromoteMask(i) & PROMOTED_MASK) != 0) {
+				squaresWithPromoteMasks.add(getSan(i));
+			}
+		}
+		result.append("\nSquares with promote masks: "
+				+ squaresWithPromoteMasks);
+
+		return result.toString();
+	}
+
+	/**
+	 * Currently places captures and promotions ahead of non captures.
+	 */
+	protected void addMove(Move move, PriorityMoveList moves) {
+		if (move.isCapture() || move.isPromotion()) {
+			moves.appendHighPriority(move);
+		} else {
+			moves.appendLowPriority(move);
+		}
+	}
+
+	/**
+	 * Decrements the drop count for the specified piece. This method handles
+	 * promotion masks as well.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK.
+	 * @param piece
+	 *            The un-colored piece constant.
+	 */
+	protected void decrementDropCount(int color, int piece) {
+
+		if ((piece & PROMOTED_MASK) != 0) {
+			piece = PAWN;
+
+		}
+		dropCounts[color][piece]--;
+	}
+
+	/**
+	 * Decrements the piece count for the specified piece. This method handles
+	 * promotion masks as well.
+	 * 
+	 * @param color
+	 *            WHITE or BLACK.
+	 * @param piece
+	 *            The un-colored piece constant.
+	 */
+	protected void decrementPieceCount(int color, int piece) {
+		if ((piece & PROMOTED_MASK) != 0) {
+			piece = PAWN;
+		}
+		pieceCounts[color][piece]--;
+	}
+
+	/**
+	 * Decrements the current positions repetition count.
+	 */
+	protected void decrementRepCount() {
+		moveRepHash[getRepHash()]--;
 	}
 
 	/**
@@ -635,61 +1756,6 @@ public class ClassicGame implements Game {
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public PgnHeader[] getAllHeaders() {
-		return pgnHeaderMap.keySet().toArray(new PgnHeader[0]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public PgnHeader[] getAllNonRequiredHeaders() {
-		List<PgnHeader> result = new ArrayList<PgnHeader>(pgnHeaderMap.size());
-		for (PgnHeader key : pgnHeaderMap.keySet()) {
-			if (!key.isRequired()) {
-				result.add(key);
-			}
-		}
-		return result.toArray(new PgnHeader[0]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int[] getBoard() {
-		return board;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getCastling(int color) {
-		return castling[color];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getColorBB(int color) {
-		return colorBB[color];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getColorToMove() {
-		return colorToMove;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getDropCount(int color, int piece) {
-		return dropCounts[color][piece];
-	}
-
 	protected String getDropCountsString() {
 		return "Drop counts [WP=" + getDropCount(WHITE, PAWN) + " WN="
 				+ getDropCount(WHITE, KNIGHT) + " WB="
@@ -705,20 +1771,6 @@ public class ClassicGame implements Game {
 				+ getDropCount(BLACK, KING) + "]";
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getEmptyBB() {
-		return emptyBB;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getEpSquare() {
-		return epSquare;
-	}
-
 	protected String getFenCastle() {
 		String whiteCastlingFen = getCastling(WHITE) == CASTLE_NONE ? ""
 				: getCastling(WHITE) == CASTLE_BOTH ? "KQ"
@@ -729,141 +1781,6 @@ public class ClassicGame implements Game {
 
 		return whiteCastlingFen.equals("") && blackCastlingFen.equals("") ? " -"
 				: whiteCastlingFen + blackCastlingFen;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getFiftyMoveCount() {
-		return fiftyMoveCount;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getFullMoveCount() {
-		return getHalfMoveCount() / 2 + 1;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getHalfMoveCount() {
-		return halfMoveCount;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getHeader(PgnHeader header) {
-		return pgnHeaderMap.get(header);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getId() {
-		return id;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getInitialEpSquare() {
-		return initialEpSquare;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Move getLastMove() {
-		if (moves.getSize() != 0) {
-			return moves.get(moves.getSize() - 1);
-		} else {
-			return null;
-		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public PriorityMoveList getLegalMoves() {
-		PriorityMoveList result = getPseudoLegalMoves();
-
-		for (int i = 0; i < result.getHighPrioritySize(); i++) {
-			Move move = result.getHighPriority(i);
-			forceMove(move);
-
-			if (!isLegalPosition()) {
-				result.removeHighPriority(i);
-				i--;
-			}
-
-			rollback();
-		}
-
-		for (int i = 0; i < result.getLowPrioritySize(); i++) {
-			Move move = result.getLowPriority(i);
-			forceMove(move);
-
-			if (!isLegalPosition()) {
-				result.removeLowPriority(i);
-				i--;
-			}
-
-			rollback();
-		}
-
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public MoveList getMoveList() {
-		return moves;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getNotColorToMoveBB() {
-		return notColorToMoveBB;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getOccupiedBB() {
-		return occupiedBB;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getPiece(int square) {
-		return board[square] & NOT_PROMOTED_MASK;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getPieceBB(int piece) {
-		return pieceBB[0][piece] | pieceBB[1][piece];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getPieceBB(int color, int piece) {
-		return pieceBB[color][piece];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getPieceCount(int color, int piece) {
-		return pieceCounts[color][piece & NOT_PROMOTED_MASK];
 	}
 
 	protected String getPieceCountsString() {
@@ -879,84 +1796,6 @@ public class ClassicGame implements Game {
 				+ getPieceCount(BLACK, ROOK) + " BQ="
 				+ getPieceCount(BLACK, QUEEN) + " BK="
 				+ getPieceCount(BLACK, KING) + "]";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getPieceWithPromoteMask(int square) {
-		return board[square];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public PriorityMoveList getPseudoLegalMoves() {
-		PriorityMoveList result = new PriorityMoveList();
-		generatePseudoQueenMoves(result);
-		generatePseudoKnightMoves(result);
-		generatePseudoBishopMoves(result);
-		generatePseudoRookMoves(result);
-		generatePseudoPawnMoves(result);
-		generatePseudoKingMoves(result);
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getRepCount() {
-		return moveRepHash[getRepHash()];
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getRepHash() {
-		return (int) (zobristPositionHash & MOVE_REP_CACHE_SIZE_MINUS_1);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Result getResult() {
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public int getState() {
-		return state;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Variant getVariant() {
-		Variant result = Variant.classic;
-		String variant = getHeader(PgnHeader.Variant);
-		if (StringUtils.isNotBlank(variant)) {
-			try {
-				result = Variant.valueOf(variant);
-			} catch (IllegalArgumentException iae) {
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getZobristGameHash() {
-		return zobristGameHash;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public long getZobristPositionHash() {
-		return zobristPositionHash;
 	}
 
 	/**
@@ -1014,110 +1853,6 @@ public class ClassicGame implements Game {
 		pieceCounts[color][piece]++;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void incrementRepCount() {
-		moveRepHash[getRepHash()]++;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isCheckmate() {
-		return isCheckmate(getLegalMoves());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isCheckmate(PriorityMoveList moveList) {
-		return moveList.getSize() == 0 && isInCheck(getColorToMove());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isInCheck() {
-		return isInCheck(colorToMove, getPieceBB(colorToMove, KING));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isInCheck(int color) {
-		return isInCheck(color, getPieceBB(color, KING));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isInCheck(int color, long pieceBB) {
-		long kingBB = pieceBB;
-		int kingSquare = bitscanForward(kingBB);
-		int oppositeColor = getOppositeColor(color);
-
-		return !(pawnCapture(oppositeColor, getPieceBB(oppositeColor, PAWN),
-				kingBB) == 0L
-				&& (orthogonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
-						oppositeColor, ROOK) | getPieceBB(oppositeColor, QUEEN))) == 0L
-				&& (diagonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
-						oppositeColor, BISHOP) | getPieceBB(oppositeColor,
-						QUEEN))) == 0L
-				&& (kingMove(kingSquare) & getPieceBB(oppositeColor, KING)) == 0L && (knightMove(kingSquare) & getPieceBB(
-				oppositeColor, KNIGHT)) == 0L);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isInState(int state) {
-		return (getState() & state) != 0;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isLegalPosition() {
-		return areBothKingsOnBoard()
-				&& !isInCheck(getOppositeColor(getColorToMove()));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isSettingEcoHeaders() {
-		return isInState(UPDATING_ECO_HEADERS_STATE);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isSettingMoveSan() {
-		return isInState(UPDATING_SAN_STATE);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isStalemate() {
-		return isStalemate(getLegalMoves());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isStalemate(PriorityMoveList moveList) {
-		return moveList.getSize() == 0 && !isInCheck(getColorToMove());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isWhitesMove() {
-		return colorToMove == WHITE;
-	}
-
 	protected void makeCastlingMove(Move move) {
 		long kingFromBB, kingToBB, rookFromBB, rookToBB;
 
@@ -1173,14 +1908,6 @@ public class ClassicGame implements Game {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public Move makeDropMove(int piece, int destination)
-			throws IllegalArgumentException {
-		throw new UnsupportedOperationException("Not supported in classical");
-	}
-
-	/**
 	 * Makes a drop move.
 	 * 
 	 * @param move
@@ -1225,109 +1952,6 @@ public class ClassicGame implements Game {
 
 		updateZobristEP(move, captureSquare);
 		setEpSquare(EMPTY_SQUARE);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Move makeLanMove(String lan) throws IllegalArgumentException {
-		Move move = null;
-
-		Move[] legals = getLegalMoves().asArray();
-
-		for (int i = 0; move == null && i < legals.length; i++) {
-			Move candidate = legals[i];
-			if (candidate.getLan().equals(lan)) {
-				move = candidate;
-			}
-		}
-
-		if (move == null) {
-			throw new IllegalArgumentException("Invalid move: " + lan + " \n"
-					+ toString());
-		} else {
-			forceMove(move);
-		}
-
-		return move;
-	}
-
-	/**
-	 * Makes a move using the start/end square.
-	 * 
-	 * @param startSquare
-	 *            The start square.
-	 * @param endSquare
-	 *            The end square.
-	 * @return The move made.
-	 * @throws IllegalArgumentException
-	 *             Thrown if the move is illegal.
-	 */
-	public Move makeMove(int startSquare, int endSquare)
-			throws IllegalArgumentException {
-		Move move = null;
-
-		Move[] legals = getLegalMoves().asArray();
-
-		for (int i = 0; move == null && i < legals.length; i++) {
-			Move candidate = legals[i];
-			if (candidate.getFrom() == startSquare
-					&& candidate.getTo() == endSquare) {
-				move = candidate;
-			}
-		}
-
-		if (move == null) {
-			throw new IllegalArgumentException("Invalid move: "
-					+ getSan(startSquare) + " " + getSan(endSquare) + " \n"
-					+ toString());
-		} else {
-			forceMove(move);
-		}
-
-		return move;
-	}
-
-	/**
-	 * Makes a move using the start/end square and the specified promotion
-	 * piece.
-	 * 
-	 * @param startSquare
-	 *            The start square.
-	 * @param endSquare
-	 *            The end square.
-	 * @param promotionPiece
-	 *            The non colored piece constant representing the promoted
-	 *            piece.
-	 * @return The move made.
-	 * @throws IllegalArgumentException
-	 *             Thrown if the move is illegal.
-	 */
-	public Move makeMove(int startSquare, int endSquare, int promotePiece)
-			throws IllegalArgumentException {
-		Move move = null;
-
-		Move[] legals = getLegalMoves().asArray();
-
-		for (int i = 0; move == null && i < legals.length; i++) {
-			Move candidate = legals[i];
-			if (candidate.getFrom() == startSquare
-					&& candidate.getTo() == endSquare
-					&& candidate.getPiecePromotedTo() == promotePiece) {
-				move = candidate;
-			}
-		}
-
-		if (move == null) {
-			throw new IllegalArgumentException("Invalid move: "
-					+ getSan(startSquare) + "-" + getSan(endSquare) + "="
-					+ GameConstants.PIECE_TO_SAN.charAt(promotePiece) + "\n"
-					+ toString());
-		} else {
-			forceMove(move);
-		}
-
-		return move;
 	}
 
 	protected void makeNonEpNonCastlingMove(Move move) {
@@ -1401,214 +2025,6 @@ public class ClassicGame implements Game {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public Move makeSanMove(String shortAlgebraic)
-			throws IllegalArgumentException {
-		SanValidations validations = SanUtils.getValidations(shortAlgebraic);
-		Move[] pseudoLegals = getPseudoLegalMoves().asArray();
-
-		Move result = makeSanMoveOverride(shortAlgebraic, validations,
-				pseudoLegals);
-		if (result == null) {
-			// Examples:
-			// e4 (a pawn move to e4).
-			// e8=Q (a pawn promotion without a capture).
-			// de=Q (a pawn promotion from a capture).
-			// ed (e pawn captures d pawn).
-			// Ne3 (a Knight moving to e3).
-			// N5e3 (disambiguity for two knights which can move to e3, the 5th
-			// rank
-			// knight is the one that should move).
-			// Nfe3 (disambiguity for two knights which can move to e3, the
-			// knight
-			// on the f file is the one that should move).
-			// Nf1e3 (disambiguity for three knights which cam move to e3, the
-			// f1
-			// knight is the one that should move).
-			if (!validations.isValidStrict()) {
-				throw new IllegalArgumentException("Invalid short algebraic: "
-						+ shortAlgebraic);
-			}
-
-			int candidatePromotedPiece = EMPTY;
-
-			if (validations.isCastleKSideStrict()) {
-
-				for (Move move : pseudoLegals) {
-					if (move != null
-							&& (move.getMoveCharacteristic() & Move.SHORT_CASTLING_CHARACTERISTIC) != 0) {
-						result = move;
-						break;
-					}
-				}
-			} else if (validations.isCastleQSideStrict()) {
-				for (Move move : pseudoLegals) {
-					if (move != null
-							&& (move.getMoveCharacteristic() & Move.LONG_CASTLING_CHARACTERISTIC) != 0) {
-						result = move;
-						break;
-					}
-				}
-			} else {
-				MoveList matches = new MoveList(10);
-				if (validations.isPromotion()) {
-					char pieceChar = validations.getStrictSan().charAt(
-							validations.getStrictSan().length() - 1);
-					candidatePromotedPiece = SanUtils.sanToPiece(pieceChar);
-				}
-
-				if (validations.isPawnMove()) {
-					int candidatePieceMoving = PAWN;
-					if (validations.isEpOrAmbigPxStrict()
-							|| validations.isAmbigPxPromotionStrict()) {
-
-						int end = getSquare(GameConstants.RANK_FROM_SAN
-								.indexOf(validations.getStrictSan().charAt(2)),
-								GameConstants.FILE_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(1)));
-
-						int startRank = getRank(end)
-								+ (colorToMove == WHITE ? -1 : +1);
-
-						if (startRank > 7 || startRank < 0) {
-							throw new IllegalArgumentException(
-									"Invalid short algebraic: "
-											+ shortAlgebraic);
-						}
-
-						int start = getSquare(startRank,
-								GameConstants.FILE_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(0)));
-
-						for (Move move : pseudoLegals) {
-							if (move != null
-									&& move.getPiece() == candidatePieceMoving
-									&& move.isCapture()
-									&& move.getFrom() == start
-									&& move.getTo() == end
-									&& move.getPiecePromotedTo() == candidatePromotedPiece) {
-								matches.append(move);
-							}
-						}
-					} else {
-						// handle captures
-						if (validations.isPxStrict()
-								|| validations.isPxPPromotionStrict()) {
-							int startFile = GameConstants.FILE_FROM_SAN
-									.indexOf(validations.getStrictSan().charAt(
-											0));
-							int endFile = GameConstants.FILE_FROM_SAN
-									.indexOf(validations.getStrictSan().charAt(
-											1));
-
-							for (Move move : pseudoLegals) {
-								if (move != null
-										&& move.getPiece() == candidatePieceMoving
-										&& getFile(move.getFrom()) == startFile
-										&& getFile(move.getTo()) == endFile
-										&& move.isCapture()
-										&& move.getPiecePromotedTo() == candidatePromotedPiece) {
-									matches.append(move);
-								}
-							}
-						}
-						// handle non captures.
-						else {
-							int end = getSquare(GameConstants.RANK_FROM_SAN
-									.indexOf(validations.getStrictSan().charAt(
-											1)), GameConstants.FILE_FROM_SAN
-									.indexOf(validations.getStrictSan().charAt(
-											0)));
-
-							for (Move move : pseudoLegals) {
-								if (move != null
-										&& move.getPiece() == candidatePieceMoving
-										&& !move.isCapture()
-										&& move.getTo() == end
-										&& move.getPiecePromotedTo() == candidatePromotedPiece) {
-									matches.append(move);
-								}
-							}
-						}
-					}
-				} else {
-					int candidatePieceMoving = SanUtils.sanToPiece(validations
-							.getStrictSan().charAt(0));
-					int end = getSquare(GameConstants.RANK_FROM_SAN
-							.indexOf(validations.getStrictSan().charAt(
-									validations.getStrictSan().length() - 1)),
-							GameConstants.FILE_FROM_SAN
-									.indexOf(validations.getStrictSan()
-											.charAt(
-													validations.getStrictSan()
-															.length() - 2)));
-
-					if (validations.isDisambigPieceRankStrict()) {
-						int startRank = RANK_FROM_SAN.indexOf(validations
-								.getStrictSan().charAt(1));
-						for (Move move : pseudoLegals) {
-							if (move != null
-									&& move.getPiece() == candidatePieceMoving
-									&& move.getTo() == end
-									&& getRank(move.getFrom()) == startRank) {
-								matches.append(move);
-							}
-						}
-					} else if (validations.isDisambigPieceFileStrict()) {
-						int startFile = FILE_FROM_SAN.indexOf(validations
-								.getStrictSan().charAt(1));
-						for (Move move : pseudoLegals) {
-							if (move != null
-									&& move.getPiece() == candidatePieceMoving
-									&& move.getTo() == end
-									&& getFile(move.getFrom()) == startFile) {
-								matches.append(move);
-							}
-						}
-					} else if (validations.isDisambigPieceRankFileStrict()) {
-						int startSquare = getSquare(GameConstants.RANK_FROM_SAN
-								.indexOf(validations.getStrictSan().charAt(2)),
-								GameConstants.FILE_FROM_SAN.indexOf(validations
-										.getStrictSan().charAt(1)));
-						FILE_FROM_SAN.indexOf(validations.getStrictSan()
-								.charAt(1));
-						for (Move move : pseudoLegals) {
-							if (move != null
-									&& move.getPiece() == candidatePieceMoving
-									&& move.getTo() == end
-									&& move.getFrom() == startSquare) {
-								matches.append(move);
-							}
-						}
-					} else {
-						for (Move move : pseudoLegals) {
-							if (move != null
-									&& move.getPiece() == candidatePieceMoving
-									&& move.getTo() == end) {
-								matches.append(move);
-							}
-						}
-					}
-				}
-				result = testForSanDisambiguationFromCheck(shortAlgebraic,
-						matches);
-			}
-		}
-
-		if (result == null) {
-			throw new IllegalArgumentException("Illegal move " + shortAlgebraic
-					+ "\n " + toString());
-		}
-
-		result.setSan(shortAlgebraic);
-		if (!move(result)) {
-			throw new IllegalArgumentException("Illegal move: " + result);
-		}
-		return result;
-	}
-
-	/**
 	 * A method that makeSanMove invokes with the SanValidations it created. If
 	 * a move can be made it should be returned. This method is provided so
 	 * subclasses can enhance utilize the SanValidations without having to
@@ -1619,19 +2035,6 @@ public class ClassicGame implements Game {
 	protected Move makeSanMoveOverride(String shortAlgebraic,
 			SanValidations validations, Move[] pseudoLegals) {
 		return null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean move(Move move) {
-		// first make the move.
-		forceMove(move);
-		if (!isLegalPosition()) {
-			rollback();
-			return false;
-		}
-		return true;
 	}
 
 	/**
@@ -1676,60 +2079,6 @@ public class ClassicGame implements Game {
 			System.arraycopy(moveRepHash, 0, gameToOverwrite.moveRepHash, 0,
 					moveRepHash.length);
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void removeHeader(PgnHeader headerName) {
-		pgnHeaderMap.remove(headerName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void rollback() {
-
-		Move move = getMoveList().removeLast();
-		decrementRepCount();
-
-		switch (move.getMoveCharacteristic()) {
-		case Move.EN_PASSANT_CHARACTERISTIC:
-			rollbackEpMove(move);
-			break;
-		case Move.SHORT_CASTLING_CHARACTERISTIC:
-		case Move.LONG_CASTLING_CHARACTERISTIC:
-			rollbackCastlingMove(move);
-			break;
-		case Move.DROP_CHARACTERISTIC:
-			rollbackDropMove(move);
-			break;
-		default:
-			rollbackNonEpNonCastlingMove(move);
-			break;
-		}
-
-		int oppositeToMove = getOppositeColor(getColorToMove());
-
-		if (move.isCapture()) {
-			incrementPieceCount(getColorToMove(), move
-					.getCaptureWithPromoteMask());
-			decrementDropCount(oppositeToMove, move.getCaptureWithPromoteMask());
-		} else if (move.isDrop()) {
-			decrementPieceCount(oppositeToMove, move.getPiece());
-			incrementDropCount(oppositeToMove, move.getPiece());
-		}
-
-		setColorToMove(oppositeToMove);
-		setNotColorToMoveBB(~getColorBB(getColorToMove()));
-		setHalfMoveCount(getHalfMoveCount() - 1);
-
-		setFiftyMoveCount(move.getPrevious50MoveCount());
-		setCastling(getColorToMove(), move.getLastCastleState());
-
-		updateZobristHash();
-
-		updateEcoHeaders();
 	}
 
 	protected void rollbackCastlingMove(Move move) {
@@ -1870,58 +2219,6 @@ public class ClassicGame implements Game {
 		setEpSquareFromPreviousMove();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setBoard(int[] board) {
-		this.board = board;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setCastling(int color, int castling) {
-		this.castling[color] = castling;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setColorBB(int color, long bb) {
-		colorBB[color] = bb;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setColorToMove(int color) {
-		colorToMove = color;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setDropCount(int color, int piece, int count) {
-		if ((piece & PROMOTED_MASK) != 0) {
-			piece = PAWN;
-		}
-		dropCounts[color][piece] = count;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setEmptyBB(long emptyBB) {
-		this.emptyBB = emptyBB;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setEpSquare(int epSquare) {
-		this.epSquare = epSquare;
-	}
-
 	protected void setEpSquareFromPreviousMove() {
 		switch (getMoveList().getSize()) {
 		case 0:
@@ -1931,76 +2228,6 @@ public class ClassicGame implements Game {
 			setEpSquare(getMoveList().getLast().getEpSquare());
 			break;
 		}
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setFiftyMoveCount(int fiftyMoveCount) {
-		this.fiftyMoveCount = fiftyMoveCount;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setHalfMoveCount(int halfMoveCount) {
-		this.halfMoveCount = halfMoveCount;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setHeader(PgnHeader header, String value) {
-		pgnHeaderMap.put(header, value);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setInitialEpSquare(int initialEpSquare) {
-		this.initialEpSquare = initialEpSquare;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setNotColorToMoveBB(long notColorToMoveBB) {
-		this.notColorToMoveBB = notColorToMoveBB;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setOccupiedBB(long occupiedBB) {
-		this.occupiedBB = occupiedBB;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setPiece(int square, int piece) {
-		board[square] = piece;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setPieceBB(int color, int piece, long bb) {
-		pieceBB[color][piece] = bb;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setPieceCount(int color, int piece, int count) {
-		pieceCounts[color][piece & NOT_PROMOTED_MASK] = count;
 	}
 
 	/**
@@ -2166,20 +2393,6 @@ public class ClassicGame implements Game {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public void setZobristGameHash(long hash) {
-		zobristGameHash = hash;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setZobristPositionHash(long hash) {
-		zobristPositionHash = hash;
-	}
-
-	/**
 	 * If the match list contains no ambiguity after taking disambiguity by
 	 * check into consideration the move is returned. Otherwise an
 	 * IllegalArgumentException is raised
@@ -2238,219 +2451,6 @@ public class ClassicGame implements Game {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toFen() {
-		// 
-
-		StringBuilder result = new StringBuilder(77);
-		result.append(toFenPosition());
-
-		result.append(colorToMove == WHITE ? " w" : " b");
-
-		result.append(" " + getFenCastle());
-		result.append(" " + getSan(epSquare));
-		result.append(" " + fiftyMoveCount);
-		result.append(" " + halfMoveCount);
-
-		return result.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toFenPosition() {
-		StringBuilder result = new StringBuilder(77);
-		for (int j = 7; j > -1; j--) {
-			int consecutiveEmpty = 0;
-			for (int i = 0; i < 8; i++) {
-				int square = getSquare(j, i);
-				int piece = getPiece(square);
-
-				if (piece == EMPTY) {
-					consecutiveEmpty++;
-				} else {
-					long squareBB = getBitboard(square);
-					int color = (getPieceBB(WHITE, piece) & squareBB) != 0L ? WHITE
-							: BLACK;
-					if (consecutiveEmpty > 0) {
-						result.append(consecutiveEmpty);
-						consecutiveEmpty = 0;
-					}
-					result.append(COLOR_PIECE_TO_CHAR[color].charAt(piece));
-				}
-			}
-			if (j != 0) {
-				result.append((consecutiveEmpty != 0 ? consecutiveEmpty : "")
-						+ "/");
-			} else if (j == 0) {
-				result.append(consecutiveEmpty != 0 ? consecutiveEmpty : "");
-			}
-		}
-		return result.toString();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String toPgn() {
-		StringBuilder builder = new StringBuilder(2500);
-
-		// Set all of the required headers.
-		for (PgnHeader requiredHeader : PgnHeader.REQUIRED_HEADERS) {
-			String headerValue = getHeader(requiredHeader);
-			if (StringUtils.isBlank(headerValue)) {
-				headerValue = PgnHeader.UNKNOWN_VALUE;
-				setHeader(requiredHeader, headerValue);
-			}
-		}
-
-		List<PgnHeader> pgnHeaders = new ArrayList<PgnHeader>(pgnHeaderMap
-				.keySet());
-		Collections.sort(pgnHeaders);
-
-		for (PgnHeader header : pgnHeaders) {
-			PgnUtils.getHeaderLine(builder, header.name(), getHeader(header));
-			builder.append("\n");
-		}
-		builder.append("\n");
-
-		boolean nextMoveRequiresNumber = true;
-		int charsInCurrentLine = 0;
-
-		// TO DO: add breaking up lines in comments.
-		for (int i = 0; i < getHalfMoveCount(); i++) {
-			int charsBefore = builder.length();
-			nextMoveRequiresNumber = PgnUtils.getMove(builder, getMoveList()
-					.get(i), nextMoveRequiresNumber);
-			charsInCurrentLine += builder.length() - charsBefore;
-
-			if (charsInCurrentLine > 75) {
-				charsInCurrentLine = 0;
-				builder.append("\n");
-			} else {
-				builder.append(" ");
-			}
-		}
-
-		if (isCheckmate() || isStalemate()) {
-			builder.append(getResult().getDescription());
-		} else {
-			builder.append(Result.ON_GOING.getDescription());
-		}
-
-		return builder.toString();
-	}
-
-	/**
-	 * Returns a dump of the game class suitable for debugging. Quite a lot of
-	 * information is produced and its an expensive operation, use with care.
-	 */
-	@Override
-	public String toString() {
-		StringBuilder result = new StringBuilder(1000);
-
-		result.append(getString(new String[] { "emptyBB", "occupiedBB",
-				"notColorToMoveBB", "color[WHITE]", "color[BLACK]" },
-				new long[] { emptyBB, occupiedBB, notColorToMoveBB,
-						getColorBB(WHITE), getColorBB(BLACK) })
-				+ "\n\n");
-
-		result.append(getString(new String[] { "[WHITE][PAWN]",
-				"[WHITE][KNIGHT]", "[WHITE][BISHOP]", "[WHITE][ROOK]",
-				"[WHITE][QUEEN]", "[WHITE][KING]" }, new long[] {
-				getPieceBB(WHITE, PAWN), getPieceBB(WHITE, KNIGHT),
-				getPieceBB(WHITE, BISHOP), getPieceBB(WHITE, ROOK),
-				getPieceBB(WHITE, QUEEN), getPieceBB(WHITE, KING) })
-				+ "\n\n");
-
-		result.append(getString(new String[] { "[BLACK][PAWN]",
-				"[BLACK][KNIGHT]", "[BLACK][BISHOP]", "[BLACK][ROOK]",
-				"[BLACK][QUEEN]", "[BLACK][KING]" }, new long[] {
-				getPieceBB(BLACK, PAWN), getPieceBB(BLACK, KNIGHT),
-				getPieceBB(BLACK, BISHOP), getPieceBB(BLACK, ROOK),
-				getPieceBB(BLACK, QUEEN), getPieceBB(BLACK, KING) })
-				+ "\n\n");
-
-		for (int i = 7; i > -1; i--) {
-			for (int j = 0; j < 8; j++) {
-				int square = getSquare(i, j);
-				int piece = getPiece(square);
-				int color = (getBitboard(square) & getColorBB(colorToMove)) != 0L ? colorToMove
-						: getOppositeColor(colorToMove);
-
-				result.append("|" + COLOR_PIECE_TO_CHAR[color].charAt(piece));
-			}
-			result.append("|   ");
-
-			switch (i) {
-			case 7:
-				result.append("To Move: " + COLOR_DESCRIPTION[colorToMove]
-						+ " " + "Last Move: "
-						+ (moves.getSize() == 0 ? "" : moves.getLast()));
-				break;
-
-			case 6:
-				result.append(getPieceCountsString());
-				break;
-			case 5:
-				result.append("Moves: " + halfMoveCount + " EP: "
-						+ getSan(epSquare) + " Castle: " + getFenCastle());
-				break;
-			case 4:
-				result.append("FEN: " + toFen());
-				break;
-			case 3:
-				result.append("State: " + state + " Variant="
-						+ getHeader(PgnHeader.Variant) + " Result="
-						+ this.result);
-				break;
-			case 2:
-				result.append("Event: " + getHeader(PgnHeader.Event) + " Site="
-						+ getHeader(PgnHeader.Site) + " Date="
-						+ getHeader(PgnHeader.Date));
-				break;
-			case 1:
-				result.append("WhiteName: " + getHeader(PgnHeader.White)
-						+ " BlackName=" + getHeader(PgnHeader.Black)
-						+ " WhiteTime="
-						+ getHeader(PgnHeader.WhiteRemainingMillis)
-						+ " whiteLag=" + getHeader(PgnHeader.WhiteLagMillis)
-						+ " blackRemainingTImeMillis = "
-						+ getHeader(PgnHeader.BlackRemainingMillis)
-						+ " blackLag=" + getHeader(PgnHeader.BlackLagMillis));
-
-				break;
-			default:
-				result.append("initialWhiteClock: "
-						+ getHeader(PgnHeader.WhiteClock)
-						+ " initialBlackClocks="
-						+ getHeader(PgnHeader.BlackClock));
-				break;
-			}
-
-			result.append("\n");
-		}
-
-		String legalMovesString = Arrays.toString(getLegalMoves().asArray());
-		result.append("\n");
-		result.append(WordUtils.wrap("\nLegals=" + legalMovesString, 80, "\n",
-				true));
-		result.append(WordUtils.wrap("\nMovelist=" + moves, 80, "\n", true));
-
-		List<String> squaresWithPromoteMasks = new LinkedList<String>();
-		for (int i = 0; i < board.length; i++) {
-			if ((getPieceWithPromoteMask(i) & PROMOTED_MASK) != 0) {
-				squaresWithPromoteMasks.add(getSan(i));
-			}
-		}
-		result.append("\nSquares with promote masks: "
-				+ squaresWithPromoteMasks);
-
-		return result.toString();
 	}
 
 	protected void updateEcoHeaders() {

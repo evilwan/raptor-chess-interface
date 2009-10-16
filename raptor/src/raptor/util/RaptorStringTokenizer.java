@@ -88,10 +88,6 @@ public class RaptorStringTokenizer {
 		return isEatingBlocksOfDelimiters;
 	}
 
-	private boolean isEmpty() {
-		return currentIndex >= source.length();
-	}
-
 	/**
 	 * Returns null if there is nothing left.
 	 */
@@ -178,6 +174,10 @@ public class RaptorStringTokenizer {
 
 	public String substringSource(int start, int end) {
 		return source.substring(start, end);
+	}
+
+	private boolean isEmpty() {
+		return currentIndex >= source.length();
 	}
 
 	private void trimStartingDelimiters() {

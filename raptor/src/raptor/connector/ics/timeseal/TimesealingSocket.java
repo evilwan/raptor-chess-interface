@@ -45,6 +45,8 @@ import org.apache.commons.logging.LogFactory;
  * I would like to rewrite this using ChannelSocket in Raptor to speed it up.
  */
 public class TimesealingSocket extends Socket implements Runnable {
+	private static final Log LOG = LogFactory.getLog(TimesealingSocket.class);
+
 	private class CryptOutputStream extends OutputStream {
 
 		private byte buffer[];
@@ -58,6 +60,22 @@ public class TimesealingSocket extends Socket implements Runnable {
 		public CryptOutputStream(OutputStream outputstream) {
 			buffer = new byte[10000];
 			outputStreamToDecorate = outputstream;
+		}
+
+		@Override
+		public void write(int i) throws IOException {
+			if (i == 10) {
+				synchronized (TimesealingSocket.this) {
+					int resultLength = crypt(byteArrayOutputStream
+							.toByteArray(), System.currentTimeMillis()
+							- initialTime);
+					outputStreamToDecorate.write(buffer, 0, resultLength);
+					outputStreamToDecorate.flush();
+					byteArrayOutputStream.reset();
+				}
+			} else {
+				byteArrayOutputStream.write(i);
+			}
 		}
 
 		private int crypt(byte stringToWriteBytes[], long timestamp) {
@@ -104,25 +122,7 @@ public class TimesealingSocket extends Socket implements Runnable {
 			buffer[bytesInLength++] = 10;
 			return bytesInLength;
 		}
-
-		@Override
-		public void write(int i) throws IOException {
-			if (i == 10) {
-				synchronized (TimesealingSocket.this) {
-					int resultLength = crypt(byteArrayOutputStream
-							.toByteArray(), System.currentTimeMillis()
-							- initialTime);
-					outputStreamToDecorate.write(buffer, 0, resultLength);
-					outputStreamToDecorate.flush();
-					byteArrayOutputStream.reset();
-				}
-			} else {
-				byteArrayOutputStream.write(i);
-			}
-		}
 	}
-
-	private static final Log LOG = LogFactory.getLog(TimesealingSocket.class);
 
 	private CryptOutputStream cryptedOutputStream;
 
@@ -164,14 +164,6 @@ public class TimesealingSocket extends Socket implements Runnable {
 	@Override
 	public CryptOutputStream getOutputStream() throws IOException {
 		return cryptedOutputStream;
-	}
-
-	private void init() throws IOException {
-		initialTime = System.currentTimeMillis();
-		cryptedOutputStream = new CryptOutputStream(super.getOutputStream());
-		writeInitialTimesealString();
-		thread = new Thread(this, "Timeseal thread");
-		thread.start();
 	}
 
 	public void run() {
@@ -241,6 +233,14 @@ public class TimesealingSocket extends Socket implements Runnable {
 			} catch (IOException _ex) {
 			}
 		}
+	}
+
+	private void init() throws IOException {
+		initialTime = System.currentTimeMillis();
+		cryptedOutputStream = new CryptOutputStream(super.getOutputStream());
+		writeInitialTimesealString();
+		thread = new Thread(this, "Timeseal thread");
+		thread.start();
 	}
 
 	private void writeInitialTimesealString() throws IOException {

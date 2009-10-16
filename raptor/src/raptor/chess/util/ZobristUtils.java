@@ -24,49 +24,15 @@ import raptor.chess.GameConstants;
 
 public final class ZobristUtils implements GameConstants {
 
+	static {
+		initZobrist();
+	}
 	private static long[][] ZOBRIST_CASTLE = new long[2][4];
 	private static long[][][] ZOBRIST_DROP_COUNT = new long[2][7][18];
 	private static long[] ZOBRIST_EP = new long[65];
 	private static long[][][] ZOBRIST_POSITION = new long[2][7][64];
+
 	private static long[] ZOBRIST_TO_MOVE = new long[2];
-
-	static {
-		initZobrist();
-	}
-
-	private static void initZobrist() {
-		Random random = new SecureRandom();
-
-		for (int i = 0; i < ZOBRIST_DROP_COUNT.length; i++) {
-			for (int j = 0; j < ZOBRIST_DROP_COUNT[i].length; j++) {
-				for (int k = 0; k < ZOBRIST_DROP_COUNT[i][j].length; k++) {
-					ZOBRIST_DROP_COUNT[i][j][k] = random.nextLong();
-				}
-			}
-		}
-
-		for (int i = 0; i < ZOBRIST_POSITION.length; i++) {
-			for (int j = 0; j < ZOBRIST_POSITION[i].length; j++) {
-				for (int k = 0; k < ZOBRIST_POSITION[i][j].length; k++) {
-					ZOBRIST_POSITION[i][j][k] = random.nextLong();
-				}
-			}
-		}
-
-		for (int i = 0; i < ZOBRIST_TO_MOVE.length; i++) {
-			ZOBRIST_TO_MOVE[i] = random.nextLong();
-		}
-
-		for (int i = 0; i < ZOBRIST_EP.length; i++) {
-			ZOBRIST_EP[i] = random.nextLong();
-		}
-
-		for (int i = 0; i < ZOBRIST_CASTLE.length; i++) {
-			for (int j = 0; j < ZOBRIST_CASTLE[i].length; j++) {
-				ZOBRIST_CASTLE[i][j] = random.nextLong();
-			}
-		}
-	}
 
 	public static long zobrist(int color, int piece, int square) {
 		return ZOBRIST_POSITION[color][piece][square];
@@ -120,6 +86,40 @@ public final class ZobristUtils implements GameConstants {
 				^ zobristPiece(BLACK, ROOK, game)
 				^ zobristPiece(BLACK, QUEEN, game)
 				^ zobristPiece(BLACK, KING, game);
+	}
+
+	private static void initZobrist() {
+		Random random = new SecureRandom();
+
+		for (int i = 0; i < ZOBRIST_DROP_COUNT.length; i++) {
+			for (int j = 0; j < ZOBRIST_DROP_COUNT[i].length; j++) {
+				for (int k = 0; k < ZOBRIST_DROP_COUNT[i][j].length; k++) {
+					ZOBRIST_DROP_COUNT[i][j][k] = random.nextLong();
+				}
+			}
+		}
+
+		for (int i = 0; i < ZOBRIST_POSITION.length; i++) {
+			for (int j = 0; j < ZOBRIST_POSITION[i].length; j++) {
+				for (int k = 0; k < ZOBRIST_POSITION[i][j].length; k++) {
+					ZOBRIST_POSITION[i][j][k] = random.nextLong();
+				}
+			}
+		}
+
+		for (int i = 0; i < ZOBRIST_TO_MOVE.length; i++) {
+			ZOBRIST_TO_MOVE[i] = random.nextLong();
+		}
+
+		for (int i = 0; i < ZOBRIST_EP.length; i++) {
+			ZOBRIST_EP[i] = random.nextLong();
+		}
+
+		for (int i = 0; i < ZOBRIST_CASTLE.length; i++) {
+			for (int j = 0; j < ZOBRIST_CASTLE[i].length; j++) {
+				ZOBRIST_CASTLE[i][j] = random.nextLong();
+			}
+		}
 	}
 
 	private static long zobristPiece(int color, int piece, Game game) {

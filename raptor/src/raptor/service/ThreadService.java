@@ -41,6 +41,18 @@ public class ThreadService {
 	public static final String THREAD_DUMP_FILE_PATH = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/threaddump_" + System.currentTimeMillis() + ".txt";
 
+	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(20) {
+		@Override
+		protected void afterExecute(Runnable arg0, Throwable arg1) {
+			if (arg1 != null) {
+				LOG.error("Error executing runnable: ", arg1);
+				Raptor.getInstance().onError(
+						"Error in ThreadService Runnable.", arg1);
+			}
+			super.afterExecute(arg0, arg1);
+		}
+	};
+
 	public static ThreadService getInstance() {
 		return instance;
 	}
@@ -86,18 +98,6 @@ public class ThreadService {
 			}
 		}
 	}
-
-	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(20) {
-		@Override
-		protected void afterExecute(Runnable arg0, Throwable arg1) {
-			if (arg1 != null) {
-				LOG.error("Error executing runnable: ", arg1);
-				Raptor.getInstance().onError(
-						"Error in ThreadService Runnable.", arg1);
-			}
-			super.afterExecute(arg0, arg1);
-		}
-	};
 
 	private ThreadService() {
 		executor.setCorePoolSize(20);

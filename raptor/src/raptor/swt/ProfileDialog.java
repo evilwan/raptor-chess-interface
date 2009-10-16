@@ -49,6 +49,26 @@ public class ProfileDialog extends Dialog {
 		setText("Mini Profiler");
 	}
 
+	/**
+	 * Opens the dialog and returns the input
+	 * 
+	 * @return String
+	 */
+	public void open() {
+		// Create the dialog window
+		Shell shell = new Shell(getParent(), getStyle());
+		shell.setText(getText());
+		createContents(shell);
+		shell.pack();
+		shell.open();
+		Display display = getParent().getDisplay();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+	}
+
 	protected void createContents(final Shell parent) {
 		parent.setLayout(new FillLayout());
 		final MemoryUsage heap = ManagementFactory.getMemoryMXBean()
@@ -218,25 +238,5 @@ public class ProfileDialog extends Dialog {
 			}
 
 		});
-	}
-
-	/**
-	 * Opens the dialog and returns the input
-	 * 
-	 * @return String
-	 */
-	public void open() {
-		// Create the dialog window
-		Shell shell = new Shell(getParent(), getStyle());
-		shell.setText(getText());
-		createContents(shell);
-		shell.pack();
-		shell.open();
-		Display display = getParent().getDisplay();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
-			}
-		}
 	}
 }

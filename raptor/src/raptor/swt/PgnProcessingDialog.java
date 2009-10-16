@@ -31,6 +31,10 @@ import raptor.service.ThreadService;
 import raptor.swt.chess.PgnParseResultsWindowItem;
 
 public class PgnProcessingDialog extends Dialog {
+	public static final int MAX_CHARS_IN_FILE = 1048576;
+
+	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);
+
 	public class ProfressPgnParserListener extends LenientPgnParserListener {
 		private ArrayList<PgnParserError> errors = new ArrayList<PgnParserError>();
 
@@ -77,11 +81,7 @@ public class PgnProcessingDialog extends Dialog {
 			return games;
 		}
 
-	}
-
-	public static final int MAX_CHARS_IN_FILE = 1048576;
-
-	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);;
+	};
 
 	private Button cancelButton;
 	private Composite cancelComposite;
@@ -114,66 +114,6 @@ public class PgnProcessingDialog extends Dialog {
 									+ " characters from this file. Future support is planned for large pgn files.");
 
 		}
-	}
-
-	protected void cleanUp() {
-
-	}
-
-	protected void createContents() {
-		shell = new Shell(getParent(), SWT.TITLE | SWT.PRIMARY_MODAL);
-		final GridLayout gridLayout = new GridLayout();
-		gridLayout.verticalSpacing = 10;
-
-		shell.setLayout(gridLayout);
-		shell.setSize(483, 181);
-		shell.setText("Parsing " + file.getName());
-
-		final Composite composite = new Composite(shell, SWT.NONE);
-		composite.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
-				true, false));
-		composite.setLayout(new GridLayout());
-
-		message = new CLabel(composite, SWT.NONE);
-		message.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
-				true, false));
-		message.setText(processMessage);
-
-		progressBarComposite = new Composite(shell, SWT.NONE);
-		progressBarComposite.setLayoutData(new GridData(GridData.FILL,
-				GridData.CENTER, false, false));
-		progressBarComposite.setLayout(new FillLayout());
-
-		progressBar = new ProgressBar(progressBarComposite, processBarStyle);
-		progressBar.setMaximum(PgnUtils.getApproximateGameCount(file
-				.getAbsolutePath()));
-
-		processMessageLabel = new Label(shell, SWT.NONE);
-		processMessageLabel.setLayoutData(new GridData(GridData.FILL,
-				GridData.CENTER, false, false));
-		lineLabel = new Label(shell, SWT.HORIZONTAL | SWT.SEPARATOR);
-		lineLabel.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
-				false, false));
-		processMessageLabel.setText("                                     ");
-
-		cancelComposite = new Composite(shell, SWT.NONE);
-		cancelComposite.setLayoutData(new GridData(GridData.END,
-				GridData.CENTER, false, false));
-		final GridLayout gridLayout_1 = new GridLayout();
-		gridLayout_1.numColumns = 2;
-		cancelComposite.setLayout(gridLayout_1);
-
-		cancelButton = new Button(cancelComposite, SWT.NONE);
-		cancelButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				isClosed = true;
-			}
-		});
-		cancelButton.setLayoutData(new GridData(78, SWT.DEFAULT));
-		cancelButton.setText("Cancel");
-		cancelButton.setEnabled(mayCancel);
-
 	}
 
 	public void open() {
@@ -236,6 +176,66 @@ public class PgnProcessingDialog extends Dialog {
 		} else {
 			processBarStyle = SWT.NONE;
 		}
+
+	}
+
+	protected void cleanUp() {
+
+	}
+
+	protected void createContents() {
+		shell = new Shell(getParent(), SWT.TITLE | SWT.PRIMARY_MODAL);
+		final GridLayout gridLayout = new GridLayout();
+		gridLayout.verticalSpacing = 10;
+
+		shell.setLayout(gridLayout);
+		shell.setSize(483, 181);
+		shell.setText("Parsing " + file.getName());
+
+		final Composite composite = new Composite(shell, SWT.NONE);
+		composite.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
+				true, false));
+		composite.setLayout(new GridLayout());
+
+		message = new CLabel(composite, SWT.NONE);
+		message.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
+				true, false));
+		message.setText(processMessage);
+
+		progressBarComposite = new Composite(shell, SWT.NONE);
+		progressBarComposite.setLayoutData(new GridData(GridData.FILL,
+				GridData.CENTER, false, false));
+		progressBarComposite.setLayout(new FillLayout());
+
+		progressBar = new ProgressBar(progressBarComposite, processBarStyle);
+		progressBar.setMaximum(PgnUtils.getApproximateGameCount(file
+				.getAbsolutePath()));
+
+		processMessageLabel = new Label(shell, SWT.NONE);
+		processMessageLabel.setLayoutData(new GridData(GridData.FILL,
+				GridData.CENTER, false, false));
+		lineLabel = new Label(shell, SWT.HORIZONTAL | SWT.SEPARATOR);
+		lineLabel.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
+				false, false));
+		processMessageLabel.setText("                                     ");
+
+		cancelComposite = new Composite(shell, SWT.NONE);
+		cancelComposite.setLayoutData(new GridData(GridData.END,
+				GridData.CENTER, false, false));
+		final GridLayout gridLayout_1 = new GridLayout();
+		gridLayout_1.numColumns = 2;
+		cancelComposite.setLayout(gridLayout_1);
+
+		cancelButton = new Button(cancelComposite, SWT.NONE);
+		cancelButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				isClosed = true;
+			}
+		});
+		cancelButton.setLayoutData(new GridData(78, SWT.DEFAULT));
+		cancelButton.setText("Cancel");
+		cancelButton.setEnabled(mayCancel);
 
 	}
 }

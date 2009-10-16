@@ -14,6 +14,10 @@ public abstract class AbstractPgnParser implements PgnParser {
 		listeners.add(listener);
 	}
 
+	public void removePgnParserListener(PgnParserListener listener) {
+		listeners.remove(listener);
+	}
+
 	protected void fireAnnotation(String annotation) {
 		for (PgnParserListener listener : listeners) {
 			listener.onAnnotation(this, annotation);
@@ -72,9 +76,5 @@ public abstract class AbstractPgnParser implements PgnParser {
 		for (PgnParserListener listener : listeners) {
 			listener.onUnknown(this, unknown);
 		}
-	}
-
-	public void removePgnParserListener(PgnParserListener listener) {
-		listeners.remove(listener);
 	}
 }

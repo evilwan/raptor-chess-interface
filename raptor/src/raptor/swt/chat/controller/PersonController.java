@@ -84,6 +84,16 @@ public class PersonController extends ChatConsoleController {
 		return true;
 	}
 
+	@Override
+	public boolean isPrependable() {
+		return true;
+	}
+
+	@Override
+	public boolean isSearchable() {
+		return true;
+	}
+
 	protected boolean isDirectTellFromPerson(ChatEvent event) {
 		return StringUtils.equalsIgnoreCase(event.getSource(), person)
 				&& (event.getType() == ChatType.TELL
@@ -94,16 +104,6 @@ public class PersonController extends ChatConsoleController {
 	protected boolean isOutboundTellPertainingToPerson(ChatEvent event) {
 		return StringUtils.containsIgnoreCase(event.getMessage(), person)
 				&& event.getType() == ChatType.OUTBOUND;
-	}
-
-	@Override
-	public boolean isPrependable() {
-		return true;
-	}
-
-	@Override
-	public boolean isSearchable() {
-		return true;
 	}
 
 }

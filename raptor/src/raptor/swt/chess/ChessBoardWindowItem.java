@@ -13,9 +13,6 @@
  */
 package raptor.swt.chess;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.graphics.Image;
@@ -26,17 +23,11 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.pref.PreferenceKeys;
+import raptor.service.ChessBoardCacheService;
 import raptor.swt.ItemChangedListener;
 
 public class ChessBoardWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
-
-	/**
-	 * A cache of chess boards. Instead of disposing chess board a maximim of
-	 * CHESS_BOARD_CACHE_SIZE are cached and reused. This is experimental.
-	 */
-	protected static List<ChessBoardWindowItem> chessBoardCache = new ArrayList<ChessBoardWindowItem>(
-			10);
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
@@ -63,7 +54,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
-		controller.addItemChangedListener(listener);
+		getController().addItemChangedListener(listener);
 	}
 
 	/**
@@ -82,7 +73,11 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public void dispose() {
-		board.getControl().dispose();
+		if (board != null) {
+			ChessBoardCacheService.getInstance().recycle(board);
+			controller = null;
+			board = null;
+		}
 	}
 
 	public ChessBoard getBoard() {
@@ -146,10 +141,19 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 			LOG.debug("Initing ChessBoardWindowItem");
 		}
 		long startTime = System.currentTimeMillis();
-		board = new ChessBoard();
-		board.setController(controller);
-		controller.setBoard(board);
-		board.createControls(parent);
+
+		board = ChessBoardCacheService.getInstance().getChessBoard();
+		if (board == null) {
+			board = new ChessBoard();
+			board.setController(controller);
+			controller.setBoard(board);
+			board.createControls(parent);
+		} else {
+			board.getControl().setParent(parent);
+			board.setController(controller);
+			controller.setBoard(board);
+		}
+
 		board.getControl().setLayoutDeferred(true);
 		controller.init();
 		if (LOG.isDebugEnabled()) {
