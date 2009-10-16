@@ -118,8 +118,12 @@ public class SoundService {
 
 		try {
 			speech = SpeechUtils.getSpeech();
-			speech.init();
-			LOG.info("Initialized speech: " + speech);
+			if (speech != null) {
+				speech.init();
+				LOG.info("Initialized speech: " + speech);
+			} else {
+				LOG.info("No speech is currently configured.");
+			}
 		} catch (Throwable t) {
 			Raptor.getInstance().onError("Error initializing speech", t);
 			speech = null;
@@ -210,15 +214,15 @@ public class SoundService {
 	 * 
 	 * @param text
 	 *            text to speak.
-	 * 
-	 *            This method is not yet implemented.
 	 */
 	public void textToSpeech(String text) {
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_SOUND_ENABLED)) {
-			LOG.info("Speaking " + text);
 			if (speech != null) {
 				speech.speak(text);
+				if (LOG.isDebugEnabled()) {
+					LOG.info("Spoke " + text);
+				}
 			}
 		}
 	}
