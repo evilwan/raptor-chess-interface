@@ -175,7 +175,7 @@ public class InactiveController extends ChessBoardController implements
 
 			if (getPreferences().getBoolean(
 					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
-				board.getArrowDecorator().drawArrow(
+				board.getArrowDecorator().addArrow(
 						new Arrow(lastMove.getFrom(), lastMove.getTo(),
 								getPreferences().getColor(
 										PreferenceKeys.ARROW_OBS_COLOR),
@@ -467,7 +467,7 @@ public class InactiveController extends ChessBoardController implements
 
 			if (getPreferences().getBoolean(
 					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().drawArrow(
+				board.getArrowDecorator().addArrow(
 						new Arrow(move.getFrom(), move.getTo(),
 								getPreferences().getColor(
 										PreferenceKeys.ARROW_MY_COLOR),

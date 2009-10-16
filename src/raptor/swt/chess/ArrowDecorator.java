@@ -16,14 +16,23 @@ import raptor.pref.PreferenceKeys;
 /**
  * A class which manages GUI arrow decorations between squares on a chess board.
  * Currently drop or piece jail squares are not supported.
+ * 
+ * All arrow segments are from the perspective of the white pieces being placed
+ * on the bottom.
  */
 public class ArrowDecorator {
 	/**
-	 * Contains the code to draw an arrow segment on a square.
+	 * Contains the code to draw an arrow segment on a square. Arrow segments
+	 * are always drawn from the perspective of what being on the bottom. The
+	 * rotate180 will return the segment to use if white is on the top.
 	 */
 	protected static enum ArrowSegment {
 
 		UpwardTurnLeft, UpwardTurnRight, DownwardTurnLeft, DownwardTurnRight, DiagIncreasing, DiagDecreasing, Horizontal, Vertical, DiagNorthEastCorner, DiagNorthWestCorner, DiagSouthEastCorner, DiagSouthWestCorner, OriginVerticalUp, OriginVerticalDown, OriginHorizontalLeft, OriginHorizontalRight, OriginDiagIncreasingLeft, OriginDiagIncreasingRight, OriginDiagDecreasingLeft, OriginDiagDecreasingRight, DestinationVerticalUp, DestinationVerticalDown, DestinationHorizontalLeft, DestinationHorizontalRight, DestinationDiagIncreasingLeft, DestinationDiagIncreasingRight, DestinationDiagDecreasingLeft, DestinationDiagDecreasingRight;
+
+		private ArrowSegment() {
+
+		}
 
 		public void draw(ChessSquare square, Color color, int width, GC gc) {
 			switch (this) {
@@ -253,11 +262,7 @@ public class ArrowDecorator {
 		private void drawDiagDecreasing(ChessSquare square, Color color,
 				int width, GC gc) {
 			int squareSide = square.getSize().x;
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
 
 			gc.setBackground(color);
 			gc.fillPolygon(new int[] { 0, halfWidth, squareSide - halfWidth,
@@ -268,11 +273,7 @@ public class ArrowDecorator {
 		private void drawDiagIncreasing(ChessSquare square, Color color,
 				int width, GC gc) {
 			int squareSide = square.getSize().x;
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
 
 			gc.setBackground(color);
 			gc.fillPolygon(new int[] { 0, squareSide - halfWidth,
@@ -283,11 +284,7 @@ public class ArrowDecorator {
 		private void drawDiagNorthEastCorner(ChessSquare square, Color color,
 				int width, GC gc) {
 			int squareSide = square.getSize().x;
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
 
 			gc.setBackground(color);
 			gc.fillPolygon(new int[] { squareSide - halfWidth, 0, squareSide,
@@ -296,11 +293,7 @@ public class ArrowDecorator {
 
 		private void drawDiagNorthWestCorner(ChessSquare square, Color color,
 				int width, GC gc) {
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
-
+			int halfWidth = getHalfWidth(width);
 			gc.setBackground(color);
 			gc.fillPolygon(new int[] { 0, halfWidth, halfWidth, 0, 0, 0 });
 		}
@@ -309,11 +302,7 @@ public class ArrowDecorator {
 				int width, GC gc) {
 
 			int squareSide = square.getSize().x;
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
 
 			gc.setBackground(color);
 			gc
@@ -325,11 +314,7 @@ public class ArrowDecorator {
 		private void drawDiagSouthWestCorner(ChessSquare square, Color color,
 				int width, GC gc) {
 			int squareSide = square.getSize().x;
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
 
 			gc.setBackground(color);
 			gc.fillPolygon(new int[] { 0, squareSide - halfWidth, halfWidth,
@@ -339,15 +324,8 @@ public class ArrowDecorator {
 		private void drawDownwardTurnLeft(ChessSquare square, Color color,
 				int width, GC gc) {
 			int squareSide = square.getSize().y;
-			int halfSquareSide = squareSide / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
-			}
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
 
 			gc.setForeground(color);
 			for (int i = 0; i < width; i++) {
@@ -361,15 +339,8 @@ public class ArrowDecorator {
 		private void drawDownwardTurnRight(ChessSquare square, Color color,
 				int width, GC gc) {
 			int squareSide = square.getSize().y;
-			int halfSquareSide = squareSide / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
-			}
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
 
 			gc.setForeground(color);
 			for (int i = 0; i < width; i++) {
@@ -383,15 +354,8 @@ public class ArrowDecorator {
 		private void drawHorizontal(ChessSquare square, Color color, int width,
 				GC gc) {
 			int squareSide = square.getSize().y;
-			int halfSquareSide = squareSide / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
-			}
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
 
 			gc.setBackground(color);
 			gc.fillRectangle(0, halfSquareSide - halfWidth, squareSide, width);
@@ -469,8 +433,10 @@ public class ArrowDecorator {
 		private void drawOriginHorizontalLeft(ChessSquare square, Color color,
 				int width, GC gc) {
 			gc.setBackground(color);
-			int halfSquareSide = square.getSize().y / 2;
-			gc.fillRectangle(0, halfSquareSide - width / 2, halfSquareSide + 1,
+			int squareSide = square.getSize().y;
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
+			gc.fillRectangle(0, halfSquareSide - halfWidth, halfSquareSide + 1,
 					width);
 
 		}
@@ -478,24 +444,31 @@ public class ArrowDecorator {
 		private void drawOriginHorizontalRight(ChessSquare square, Color color,
 				int width, GC gc) {
 			gc.setBackground(color);
-			int halfSquareSide = square.getSize().y / 2;
-			gc.fillRectangle(halfSquareSide, halfSquareSide - width / 2,
+			int squareSide = square.getSize().y;
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
+			gc.fillRectangle(halfSquareSide, halfSquareSide - halfWidth,
 					halfSquareSide + 1, width);
 		}
 
 		private void drawOriginVerticalDown(ChessSquare square, Color color,
 				int width, GC gc) {
 			gc.setBackground(color);
-			int halfSquareSide = square.getSize().y / 2;
-			gc.fillRectangle(halfSquareSide - width / 2, halfSquareSide + 1,
+			int squareSide = square.getSize().y;
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
+
+			gc.fillRectangle(halfSquareSide - halfWidth, halfSquareSide + 1,
 					width, halfSquareSide);
 		}
 
 		private void drawOriginVerticalUp(ChessSquare square, Color color,
 				int width, GC gc) {
 			gc.setBackground(color);
-			int halfSquareSide = square.getSize().y / 2;
-			gc.fillRectangle(halfSquareSide - width / 2, 0, width,
+			int squareSide = square.getSize().y;
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
+			gc.fillRectangle(halfSquareSide - halfWidth, 0, width,
 					halfSquareSide + 1);
 
 		}
@@ -503,15 +476,8 @@ public class ArrowDecorator {
 		private void drawUpwardTurnLeft(ChessSquare square, Color color,
 				int width, GC gc) {
 			int squareSide = square.getSize().y;
-			int halfSquareSide = squareSide / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
-			}
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
 
 			gc.setForeground(color);
 			for (int i = 0; i < width; i++) {
@@ -525,15 +491,8 @@ public class ArrowDecorator {
 		private void drawUpwardTurnRight(ChessSquare square, Color color,
 				int width, GC gc) {
 			int squareSide = square.getSize().y;
-			int halfSquareSide = squareSide / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
-			}
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
 
 			gc.setForeground(color);
 			for (int i = 0; i < width; i++) {
@@ -547,15 +506,8 @@ public class ArrowDecorator {
 		private void drawVertical(ChessSquare square, Color color, int width,
 				GC gc) {
 			int squareSide = square.getSize().y;
-			int halfSquareSide = squareSide / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
-			}
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
 
 			gc.setBackground(color);
 			gc.fillRectangle(halfSquareSide - halfWidth, 0, width, squareSide);
@@ -585,15 +537,8 @@ public class ArrowDecorator {
 		 * Creates the destination polygon with the origin at 0,0
 		 */
 		private int[] getDestinationPolygon(int squareSide, int width) {
-			int halfSquareSide = squareSide / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
-			}
-
-			int halfWidth = width / 2;
-			if (halfWidth % 2 != 0) {
-				halfWidth++;
-			}
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
 
 			int arrowRectWidth = getArrowRectWidth(squareSide);
 			int arrowBaseHeight = getArrowBaseHeight(squareSide, width);
@@ -610,16 +555,10 @@ public class ArrowDecorator {
 		 * Creates the diag destination polygon with the origin at 0,0
 		 */
 		private int[] getDiagDestinationPolygon(int squareSide, int width) {
-			int halfWidth = width / 2;
-			if (halfWidth % 2 == 0) {
-				halfWidth--;
-			}
+			int halfWidth = getHalfWidth(width);
 
 			int c2 = pythag(squareSide, squareSide);
-			int halfSquareSide = c2 / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
-			}
+			int halfSquareSide = getHalfSquareSide(c2);
 
 			int arrowRectWidth = getArrowRectWidth(c2);
 			int arrowBaseHeight = getArrowBaseHeight(squareSide, width);
@@ -632,16 +571,25 @@ public class ArrowDecorator {
 					arrowRectWidth, halfWidth, 0, halfWidth };
 		}
 
-		private int[] getOriginDiagPolygon(int squareSide, int width) {
-			int halfWidth = width / 2;
-			if (halfWidth % 2 == 0) {
-				halfWidth--;
+		private int getHalfSquareSide(int squareSide) {
+			int result = squareSide / 2;
+			if (result % 2 != 0) {
+				result++;
 			}
+			return result;
+		}
 
-			int halfSquareSide = squareSide / 2;
-			if (halfSquareSide % 2 != 0) {
-				halfSquareSide++;
+		private int getHalfWidth(int width) {
+			int result = width / 2;
+			if (result % 2 == 0) {
+				result--;
 			}
+			return result;
+		}
+
+		private int[] getOriginDiagPolygon(int squareSide, int width) {
+			int halfWidth = getHalfWidth(width);
+			int halfSquareSide = getHalfSquareSide(squareSide);
 
 			int c2 = pythag(halfSquareSide + halfWidth, halfSquareSide
 					+ halfWidth);
@@ -652,6 +600,70 @@ public class ArrowDecorator {
 
 		private int pythag(int a, int b) {
 			return (int) Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+		}
+
+		public ArrowSegment rotate180() {
+			switch (this) {
+			case UpwardTurnLeft:
+				return DownwardTurnRight;
+			case UpwardTurnRight:
+				return DownwardTurnLeft;
+			case DownwardTurnLeft:
+				return UpwardTurnRight;
+			case DownwardTurnRight:
+				return UpwardTurnLeft;
+			case DiagIncreasing:
+				return DiagIncreasing;
+			case DiagDecreasing:
+				return DiagDecreasing;
+			case Horizontal:
+				return Horizontal;
+			case Vertical:
+				return Vertical;
+			case DiagNorthEastCorner:
+				return DiagSouthWestCorner;
+			case DiagNorthWestCorner:
+				return DiagSouthEastCorner;
+			case DiagSouthEastCorner:
+				return DiagNorthWestCorner;
+			case DiagSouthWestCorner:
+				return DiagNorthEastCorner;
+			case OriginVerticalUp:
+				return OriginVerticalDown;
+			case OriginVerticalDown:
+				return OriginVerticalUp;
+			case OriginHorizontalLeft:
+				return OriginHorizontalRight;
+			case OriginHorizontalRight:
+				return OriginHorizontalLeft;
+			case OriginDiagIncreasingLeft:
+				return OriginDiagIncreasingRight;
+			case OriginDiagIncreasingRight:
+				return OriginDiagIncreasingLeft;
+			case OriginDiagDecreasingLeft:
+				return OriginDiagDecreasingRight;
+			case OriginDiagDecreasingRight:
+				return OriginDiagDecreasingLeft;
+			case DestinationVerticalUp:
+				return DestinationVerticalDown;
+			case DestinationVerticalDown:
+				return DestinationVerticalUp;
+			case DestinationHorizontalLeft:
+				return DestinationHorizontalRight;
+			case DestinationHorizontalRight:
+				return DestinationHorizontalLeft;
+			case DestinationDiagIncreasingLeft:
+				return DestinationDiagIncreasingRight;
+			case DestinationDiagIncreasingRight:
+				return DestinationDiagIncreasingLeft;
+			case DestinationDiagDecreasingLeft:
+				return DestinationDiagDecreasingRight;
+			case DestinationDiagDecreasingRight:
+				return DestinationDiagDecreasingLeft;
+			default:
+				throw new IllegalArgumentException("Invalid ArrowSegment: "
+						+ this);
+			}
 		}
 	}
 
@@ -700,7 +712,14 @@ public class ArrowDecorator {
 					if (width % 2 != 0) {
 						width++;
 					}
-					spec.segment.draw(square, spec.arrow.color, width, e.gc);
+					ArrowSegment segment = board.isWhiteOnTop() ? spec.segment
+							.rotate180() : spec.segment;
+
+					System.err.println("Square "
+							+ GameUtils.getSan(square.getId()) + " spec: "
+							+ spec.segment.name());
+
+					segment.draw(square, spec.arrow.color, width, e.gc);
 				} else if (spec.arrow.frame != 0) {
 					int width = (int) (Raptor.getInstance().getPreferences()
 							.getInt(PreferenceKeys.ARROW_WIDTH_PERCENTAGE) / 100.0 * square
@@ -711,7 +730,16 @@ public class ArrowDecorator {
 
 					e.gc.setAdvanced(true);
 					e.gc.setAlpha(50 * spec.arrow.frame);
-					spec.segment.draw(square, spec.arrow.color, width, e.gc);
+
+					ArrowSegment segment = board.isWhiteOnTop() ? spec.segment
+							.rotate180() : spec.segment;
+
+					System.err.println("Square "
+							+ GameUtils.getSan(square.getId()) + " spec: "
+							+ spec.segment.name());
+
+					segment.draw(square, spec.arrow.color, width, e.gc);
+
 					e.gc.setAlpha(255);
 				}
 			}
@@ -748,353 +776,15 @@ public class ArrowDecorator {
 	 * Draws the specified arrow. Currently arrows are not supported to or from
 	 * drop squares.
 	 */
-	public void drawArrow(final Arrow arrow) {
+	public void addArrow(final Arrow arrow) {
 		if (arrow.startSquare == arrow.endSquare
 				|| GameUtils.isDropSquare(arrow.startSquare)
 				|| GameUtils.isDropSquare(arrow.endSquare)) {
 			return;
 		} else if (arrow.startSquare < arrow.endSquare) {
-			if (GameUtils.getFile(arrow.startSquare) == GameUtils
-					.getFile(arrow.endSquare)) {
-				decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
-						ArrowSegment.OriginVerticalUp));
-
-				int startRank = GameUtils.getRank(arrow.startSquare);
-				int endRank = GameUtils.getRank(arrow.endSquare);
-				int file = GameUtils.getFile(arrow.startSquare);
-
-				for (int i = startRank + 1; i < endRank; i++) {
-					decorators[GameUtils.getSquare(i, file)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.Vertical));
-				}
-
-				decorators[arrow.endSquare].addArrowSpec(new ArrowSpec(arrow,
-						ArrowSegment.DestinationVerticalUp));
-			} else if (GameUtils.getRank(arrow.startSquare) == GameUtils
-					.getRank(arrow.endSquare)) {
-				decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
-						ArrowSegment.OriginHorizontalRight));
-
-				int startFile = GameUtils.getFile(arrow.startSquare);
-				int endFile = GameUtils.getFile(arrow.endSquare);
-				int rank = GameUtils.getRank(arrow.startSquare);
-
-				for (int i = startFile + 1; i < endFile; i++) {
-					decorators[GameUtils.getSquare(rank, i)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.Horizontal));
-				}
-
-				decorators[arrow.endSquare].addArrowSpec(new ArrowSpec(arrow,
-						ArrowSegment.DestinationHorizontalRight));
-			} else {
-				int rankDelta = Math.abs(GameUtils.getRank(arrow.startSquare)
-						- GameUtils.getRank(arrow.endSquare));
-				int fileDelta = Math.abs(GameUtils.getFile(arrow.startSquare)
-						- GameUtils.getFile(arrow.endSquare));
-
-				if (rankDelta != fileDelta) {
-					if (GameUtils.getFile(arrow.startSquare) < GameUtils
-							.getFile(arrow.endSquare)) {
-						decorators[arrow.startSquare]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.OriginVerticalUp));
-
-						int startRank = GameUtils.getRank(arrow.startSquare) + 1;
-
-						while (startRank < GameUtils.getRank(arrow.endSquare)) {
-							decorators[GameUtils.getSquare(startRank++,
-									GameUtils.getFile(arrow.startSquare))]
-									.addArrowSpec(new ArrowSpec(arrow,
-											ArrowSegment.Vertical));
-						}
-
-						decorators[GameUtils.getSquare(startRank, GameUtils
-								.getFile(arrow.startSquare))]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.UpwardTurnRight));
-
-						int startFile = GameUtils.getFile(arrow.startSquare) + 1;
-						while (startFile < GameUtils.getFile(arrow.endSquare)) {
-							decorators[GameUtils.getSquare(startRank,
-									startFile++)].addArrowSpec(new ArrowSpec(
-									arrow, ArrowSegment.Horizontal));
-						}
-
-						decorators[GameUtils.getSquare(startRank, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DestinationHorizontalRight));
-
-					} else {
-						decorators[arrow.startSquare]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.OriginVerticalUp));
-
-						int startRank = GameUtils.getRank(arrow.startSquare) + 1;
-
-						while (startRank < GameUtils.getRank(arrow.endSquare)) {
-							decorators[GameUtils.getSquare(startRank++,
-									GameUtils.getFile(arrow.startSquare))]
-									.addArrowSpec(new ArrowSpec(arrow,
-											ArrowSegment.Vertical));
-						}
-
-						decorators[GameUtils.getSquare(startRank, GameUtils
-								.getFile(arrow.startSquare))]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.UpwardTurnLeft));
-
-						int startFile = GameUtils.getFile(arrow.startSquare) - 1;
-						while (startFile > GameUtils.getFile(arrow.endSquare)) {
-							decorators[GameUtils.getSquare(startRank,
-									startFile--)].addArrowSpec(new ArrowSpec(
-									arrow, ArrowSegment.Horizontal));
-						}
-
-						decorators[GameUtils.getSquare(startRank, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DestinationHorizontalLeft));
-					}
-				} else if (GameUtils.getFile(arrow.startSquare) > GameUtils
-						.getFile(arrow.endSquare)) {
-					decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(
-							arrow, ArrowSegment.OriginDiagDecreasingLeft));
-
-					int startRank = GameUtils.getRank(arrow.startSquare) + 1;
-					int startFile = GameUtils.getFile(arrow.startSquare) - 1;
-					while (startRank < GameUtils.getRank(arrow.endSquare)
-							&& startFile > GameUtils.getFile(arrow.endSquare)) {
-						decorators[GameUtils.getSquare(startRank, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagDecreasing));
-						decorators[GameUtils
-								.getSquare(startRank, startFile + 1)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagSouthWestCorner));
-						decorators[GameUtils
-								.getSquare(startRank - 1, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagNorthEastCorner));
-						startRank++;
-						startFile--;
-					}
-
-					decorators[GameUtils.getSquare(startRank, startFile)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DestinationDiagDecreasingLeft));
-					decorators[GameUtils.getSquare(startRank, startFile + 1)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DiagSouthWestCorner));
-					decorators[GameUtils.getSquare(startRank - 1, startFile)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DiagNorthEastCorner));
-
-				} else { // getFile(startSquare) < getFile(endSquare)
-					decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(
-							arrow, ArrowSegment.OriginDiagIncreasingRight));
-
-					int startRank = GameUtils.getRank(arrow.startSquare) + 1;
-					int startFile = GameUtils.getFile(arrow.startSquare) + 1;
-					while (startRank < GameUtils.getRank(arrow.endSquare)
-							&& startFile < GameUtils.getFile(arrow.endSquare)) {
-						decorators[GameUtils.getSquare(startRank, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagIncreasing));
-						decorators[GameUtils
-								.getSquare(startRank, startFile - 1)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagSouthEastCorner));
-						decorators[GameUtils
-								.getSquare(startRank - 1, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagNorthWestCorner));
-						startRank++;
-						startFile++;
-					}
-
-					decorators[GameUtils.getSquare(startRank, startFile)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DestinationDiagIncreasingRight));
-					decorators[GameUtils.getSquare(startRank, startFile - 1)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DiagSouthEastCorner));
-					decorators[GameUtils.getSquare(startRank - 1, startFile)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DiagNorthWestCorner));
-				}
-			}
+			addDecoratorsForArrowStartLessThanEnd(arrow);
 		} else {
-			if (GameUtils.getFile(arrow.startSquare) == GameUtils
-					.getFile(arrow.endSquare)) {
-				decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
-						ArrowSegment.OriginVerticalDown));
-
-				int startRank = GameUtils.getRank(arrow.endSquare);
-				int endRank = GameUtils.getRank(arrow.startSquare);
-				int file = GameUtils.getFile(arrow.startSquare);
-
-				for (int i = startRank + 1; i < endRank; i++) {
-					decorators[GameUtils.getSquare(i, file)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.Vertical));
-				}
-
-				decorators[arrow.endSquare].addArrowSpec(new ArrowSpec(arrow,
-						ArrowSegment.DestinationVerticalDown));
-			} else if (GameUtils.getRank(arrow.startSquare) == GameUtils
-					.getRank(arrow.endSquare)) {
-				decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
-						ArrowSegment.OriginHorizontalLeft));
-
-				int startFile = GameUtils.getFile(arrow.endSquare);
-				int endFile = GameUtils.getFile(arrow.startSquare);
-				int rank = GameUtils.getRank(arrow.startSquare);
-
-				for (int i = startFile + 1; i < endFile; i++) {
-					decorators[GameUtils.getSquare(rank, i)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.Horizontal));
-				}
-
-				decorators[arrow.endSquare].addArrowSpec(new ArrowSpec(arrow,
-						ArrowSegment.DestinationHorizontalLeft));
-			} else {
-				int rankDelta = Math.abs(GameUtils.getRank(arrow.startSquare)
-						- GameUtils.getRank(arrow.endSquare));
-				int fileDelta = Math.abs(GameUtils.getFile(arrow.startSquare)
-						- GameUtils.getFile(arrow.endSquare));
-
-				if (rankDelta != fileDelta) {
-					if (GameUtils.getFile(arrow.startSquare) < GameUtils
-							.getFile(arrow.endSquare)) {
-						decorators[arrow.startSquare]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.OriginVerticalDown));
-
-						int startRank = GameUtils.getRank(arrow.startSquare) - 1;
-
-						while (startRank > GameUtils.getRank(arrow.endSquare)) {
-							decorators[GameUtils.getSquare(startRank--,
-									GameUtils.getFile(arrow.startSquare))]
-									.addArrowSpec(new ArrowSpec(arrow,
-											ArrowSegment.Vertical));
-						}
-
-						decorators[GameUtils.getSquare(startRank, GameUtils
-								.getFile(arrow.startSquare))]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DownwardTurnRight));
-
-						int startFile = GameUtils.getFile(arrow.startSquare) + 1;
-						while (startFile < GameUtils.getFile(arrow.endSquare)) {
-							decorators[GameUtils.getSquare(startRank,
-									startFile++)].addArrowSpec(new ArrowSpec(
-									arrow, ArrowSegment.Horizontal));
-						}
-
-						decorators[GameUtils.getSquare(startRank, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DestinationHorizontalRight));
-
-					} else {
-						decorators[arrow.startSquare]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.OriginVerticalDown));
-
-						int startRank = GameUtils.getRank(arrow.startSquare) - 1;
-
-						while (startRank > GameUtils.getRank(arrow.endSquare)) {
-							decorators[GameUtils.getSquare(startRank--,
-									GameUtils.getFile(arrow.startSquare))]
-									.addArrowSpec(new ArrowSpec(arrow,
-											ArrowSegment.Vertical));
-						}
-
-						decorators[GameUtils.getSquare(startRank, GameUtils
-								.getFile(arrow.startSquare))]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DownwardTurnLeft));
-
-						int startFile = GameUtils.getFile(arrow.startSquare) - 1;
-						while (startFile > GameUtils.getFile(arrow.endSquare)) {
-							decorators[GameUtils.getSquare(startRank,
-									startFile--)].addArrowSpec(new ArrowSpec(
-									arrow, ArrowSegment.Horizontal));
-						}
-
-						decorators[GameUtils.getSquare(startRank, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DestinationHorizontalLeft));
-					}
-				} else if (GameUtils.getFile(arrow.startSquare) > GameUtils
-						.getFile(arrow.endSquare)) {
-					decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(
-							arrow, ArrowSegment.OriginDiagIncreasingLeft));
-
-					int startRank = GameUtils.getRank(arrow.startSquare) - 1;
-					int startFile = GameUtils.getFile(arrow.startSquare) - 1;
-					while (startRank > GameUtils.getRank(arrow.endSquare)
-							&& startFile > GameUtils.getFile(arrow.endSquare)) {
-						decorators[GameUtils.getSquare(startRank, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagIncreasing));
-						decorators[GameUtils
-								.getSquare(startRank + 1, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagSouthEastCorner));
-						decorators[GameUtils
-								.getSquare(startRank, startFile + 1)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagNorthWestCorner));
-						startRank--;
-						startFile--;
-					}
-
-					decorators[GameUtils.getSquare(startRank, startFile)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DestinationDiagIncreasingLeft));
-					decorators[GameUtils.getSquare(startRank + 1, startFile)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DiagSouthEastCorner));
-					decorators[GameUtils.getSquare(startRank, startFile + 1)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DiagNorthWestCorner));
-
-				} else { // getFile(startSquare) < getFile(endSquare)
-					decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(
-							arrow, ArrowSegment.OriginDiagDecreasingRight));
-
-					int startRank = GameUtils.getRank(arrow.startSquare) - 1;
-					int startFile = GameUtils.getFile(arrow.startSquare) + 1;
-					while (startRank > GameUtils.getRank(arrow.endSquare)
-							&& startFile < GameUtils.getFile(arrow.endSquare)) {
-						decorators[GameUtils.getSquare(startRank, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagDecreasing));
-						decorators[GameUtils
-								.getSquare(startRank + 1, startFile)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagSouthWestCorner));
-						decorators[GameUtils
-								.getSquare(startRank, startFile - 1)]
-								.addArrowSpec(new ArrowSpec(arrow,
-										ArrowSegment.DiagNorthEastCorner));
-						startRank--;
-						startFile++;
-					}
-
-					decorators[GameUtils.getSquare(startRank, startFile)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DestinationDiagDecreasingRight));
-					decorators[GameUtils.getSquare(startRank + 1, startFile)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DiagSouthWestCorner));
-					decorators[GameUtils.getSquare(startRank, startFile - 1)]
-							.addArrowSpec(new ArrowSpec(arrow,
-									ArrowSegment.DiagNorthEastCorner));
-				}
-			}
+			addDecoratorsForArrowStartGreaterThanEnd(arrow);
 		}
 		board.redrawSquares();
 		if (arrow.isFadeAway) {
@@ -1121,6 +811,396 @@ public class ArrowDecorator {
 							}
 						}
 					});
+		}
+	}
+
+	protected void addDecoratorsForArrowStartGreaterThanEnd(Arrow arrow) {
+		if (GameUtils.getFile(arrow.startSquare) == GameUtils
+				.getFile(arrow.endSquare)) {
+			addDecoratorsForStartGreaterThanEndEqualFiles(arrow);
+
+		} else if (GameUtils.getRank(arrow.startSquare) == GameUtils
+				.getRank(arrow.endSquare)) {
+			addDecoratorsForStartGreaterThanEndEqualRanks(arrow);
+
+		} else {
+			int rankDelta = Math.abs(GameUtils.getRank(arrow.startSquare)
+					- GameUtils.getRank(arrow.endSquare));
+			int fileDelta = Math.abs(GameUtils.getFile(arrow.startSquare)
+					- GameUtils.getFile(arrow.endSquare));
+
+			if (rankDelta != fileDelta) {
+				addDecoratorsForStartGreaterThanEndKnightMoves(arrow);
+			} else {
+				addDecoratorsForStartGreaterThanEndDiagMoves(arrow);
+			}
+		}
+	}
+
+	protected void addDecoratorsForArrowStartLessThanEnd(Arrow arrow) {
+		if (GameUtils.getFile(arrow.startSquare) == GameUtils
+				.getFile(arrow.endSquare)) {
+			addDecoratorsForStartLessThaneEndEqualFiles(arrow);
+		} else if (GameUtils.getRank(arrow.startSquare) == GameUtils
+				.getRank(arrow.endSquare)) {
+			addDecoratorsForStartLessThanEndEuqlRanks(arrow);
+
+		} else {
+			int rankDelta = Math.abs(GameUtils.getRank(arrow.startSquare)
+					- GameUtils.getRank(arrow.endSquare));
+			int fileDelta = Math.abs(GameUtils.getFile(arrow.startSquare)
+					- GameUtils.getFile(arrow.endSquare));
+
+			if (rankDelta != fileDelta) {
+				addDecoratorsForStartLessThanEndKnightMoves(arrow);
+			} else {
+				addDecoratorsForStartLessThanEndDiagMoves(arrow);
+			}
+		}
+	}
+
+	protected void addDecoratorsForStartGreaterThanEndDiagMoves(Arrow arrow) {
+		if (GameUtils.getFile(arrow.startSquare) > GameUtils
+				.getFile(arrow.endSquare)) {
+
+			decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+					ArrowSegment.OriginDiagIncreasingLeft));
+
+			int startRank = GameUtils.getRank(arrow.startSquare) - 1;
+			int startFile = GameUtils.getFile(arrow.startSquare) - 1;
+			while (startRank > GameUtils.getRank(arrow.endSquare)
+					&& startFile > GameUtils.getFile(arrow.endSquare)) {
+
+				decorators[GameUtils.getSquare(startRank, startFile)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagIncreasing));
+
+				decorators[GameUtils.getSquare(startRank + 1, startFile)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagSouthEastCorner));
+				decorators[GameUtils.getSquare(startRank, startFile + 1)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagNorthWestCorner));
+				startRank--;
+				startFile--;
+			}
+
+			decorators[GameUtils.getSquare(startRank, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DestinationDiagIncreasingLeft));
+
+			decorators[GameUtils.getSquare(startRank + 1, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DiagSouthEastCorner));
+			decorators[GameUtils.getSquare(startRank, startFile + 1)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DiagNorthWestCorner));
+
+		} else { // getFile(startSquare) < getFile(endSquare)
+
+			decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+					ArrowSegment.OriginDiagDecreasingRight));
+
+			int startRank = GameUtils.getRank(arrow.startSquare) - 1;
+			int startFile = GameUtils.getFile(arrow.startSquare) + 1;
+			while (startRank > GameUtils.getRank(arrow.endSquare)
+					&& startFile < GameUtils.getFile(arrow.endSquare)) {
+
+				decorators[GameUtils.getSquare(startRank, startFile)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagDecreasing));
+
+				decorators[GameUtils.getSquare(startRank + 1, startFile)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagSouthWestCorner));
+				decorators[GameUtils.getSquare(startRank, startFile - 1)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagNorthEastCorner));
+				startRank--;
+				startFile++;
+			}
+
+			decorators[GameUtils.getSquare(startRank, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DestinationDiagDecreasingRight));
+
+			decorators[GameUtils.getSquare(startRank + 1, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DiagSouthWestCorner));
+			decorators[GameUtils.getSquare(startRank, startFile - 1)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DiagNorthEastCorner));
+		}
+	}
+
+	protected void addDecoratorsForStartGreaterThanEndEqualFiles(Arrow arrow) {
+
+		decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+				ArrowSegment.OriginVerticalDown));
+
+		int startRank = GameUtils.getRank(arrow.endSquare);
+		int endRank = GameUtils.getRank(arrow.startSquare);
+		int file = GameUtils.getFile(arrow.startSquare);
+
+		for (int i = startRank + 1; i < endRank; i++) {
+			decorators[GameUtils.getSquare(i, file)]
+					.addArrowSpec(new ArrowSpec(arrow, ArrowSegment.Vertical));
+		}
+
+		decorators[arrow.endSquare].addArrowSpec(new ArrowSpec(arrow,
+				ArrowSegment.DestinationVerticalDown));
+
+	}
+
+	protected void addDecoratorsForStartGreaterThanEndEqualRanks(Arrow arrow) {
+		decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+				ArrowSegment.OriginHorizontalLeft));
+
+		int startFile = GameUtils.getFile(arrow.endSquare);
+		int endFile = GameUtils.getFile(arrow.startSquare);
+		int rank = GameUtils.getRank(arrow.startSquare);
+
+		for (int i = startFile + 1; i < endFile; i++) {
+			decorators[GameUtils.getSquare(rank, i)]
+					.addArrowSpec(new ArrowSpec(arrow, ArrowSegment.Horizontal));
+		}
+
+		decorators[arrow.endSquare].addArrowSpec(new ArrowSpec(arrow,
+				ArrowSegment.DestinationHorizontalLeft));
+	}
+
+	protected void addDecoratorsForStartGreaterThanEndKnightMoves(Arrow arrow) {
+		if (GameUtils.getFile(arrow.startSquare) < GameUtils
+				.getFile(arrow.endSquare)) {
+
+			decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+					ArrowSegment.OriginVerticalDown));
+
+			int startRank = GameUtils.getRank(arrow.startSquare) - 1;
+
+			while (startRank > GameUtils.getRank(arrow.endSquare)) {
+				decorators[GameUtils.getSquare(startRank--, GameUtils
+						.getFile(arrow.startSquare))]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.Vertical));
+			}
+
+			decorators[GameUtils.getSquare(startRank, GameUtils
+					.getFile(arrow.startSquare))].addArrowSpec(new ArrowSpec(
+					arrow, ArrowSegment.DownwardTurnRight));
+
+			int startFile = GameUtils.getFile(arrow.startSquare) + 1;
+			while (startFile < GameUtils.getFile(arrow.endSquare)) {
+				decorators[GameUtils.getSquare(startRank, startFile++)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.Horizontal));
+			}
+
+			decorators[GameUtils.getSquare(startRank, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DestinationHorizontalRight));
+
+		} else {
+
+			decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+					ArrowSegment.OriginVerticalDown));
+
+			int startRank = GameUtils.getRank(arrow.startSquare) - 1;
+
+			while (startRank > GameUtils.getRank(arrow.endSquare)) {
+				decorators[GameUtils.getSquare(startRank--, GameUtils
+						.getFile(arrow.startSquare))]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.Vertical));
+			}
+
+			decorators[GameUtils.getSquare(startRank, GameUtils
+					.getFile(arrow.startSquare))].addArrowSpec(new ArrowSpec(
+					arrow, ArrowSegment.DownwardTurnLeft));
+
+			int startFile = GameUtils.getFile(arrow.startSquare) - 1;
+			while (startFile > GameUtils.getFile(arrow.endSquare)) {
+				decorators[GameUtils.getSquare(startRank, startFile--)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.Horizontal));
+			}
+
+			decorators[GameUtils.getSquare(startRank, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DestinationHorizontalLeft));
+		}
+	}
+
+	protected void addDecoratorsForStartLessThaneEndEqualFiles(Arrow arrow) {
+
+		decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+				ArrowSegment.OriginVerticalUp));
+
+		int startRank = GameUtils.getRank(arrow.startSquare);
+		int endRank = GameUtils.getRank(arrow.endSquare);
+		int file = GameUtils.getFile(arrow.startSquare);
+
+		for (int i = startRank + 1; i < endRank; i++) {
+			decorators[GameUtils.getSquare(i, file)]
+					.addArrowSpec(new ArrowSpec(arrow, ArrowSegment.Vertical));
+		}
+
+		decorators[arrow.endSquare].addArrowSpec(new ArrowSpec(arrow,
+				ArrowSegment.DestinationVerticalUp));
+
+	}
+
+	protected void addDecoratorsForStartLessThanEndDiagMoves(Arrow arrow) {
+		if (GameUtils.getFile(arrow.startSquare) > GameUtils
+				.getFile(arrow.endSquare)) {
+
+			decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+					ArrowSegment.OriginDiagDecreasingLeft));
+
+			int startRank = GameUtils.getRank(arrow.startSquare) + 1;
+			int startFile = GameUtils.getFile(arrow.startSquare) - 1;
+
+			while (startRank < GameUtils.getRank(arrow.endSquare)
+					&& startFile > GameUtils.getFile(arrow.endSquare)) {
+
+				decorators[GameUtils.getSquare(startRank, startFile)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagDecreasing));
+
+				decorators[GameUtils.getSquare(startRank, startFile + 1)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagSouthWestCorner));
+				decorators[GameUtils.getSquare(startRank - 1, startFile)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagNorthEastCorner));
+				startRank++;
+				startFile--;
+			}
+
+			decorators[GameUtils.getSquare(startRank, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DestinationDiagDecreasingLeft));
+
+			decorators[GameUtils.getSquare(startRank, startFile + 1)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DiagSouthWestCorner));
+			decorators[GameUtils.getSquare(startRank - 1, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DiagNorthEastCorner));
+
+		} else { // getFile(startSquare) < getFile(endSquare)
+
+			decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+					ArrowSegment.OriginDiagIncreasingRight));
+
+			int startRank = GameUtils.getRank(arrow.startSquare) + 1;
+			int startFile = GameUtils.getFile(arrow.startSquare) + 1;
+			while (startRank < GameUtils.getRank(arrow.endSquare)
+					&& startFile < GameUtils.getFile(arrow.endSquare)) {
+
+				decorators[GameUtils.getSquare(startRank, startFile)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagIncreasing));
+
+				decorators[GameUtils.getSquare(startRank, startFile - 1)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagSouthEastCorner));
+				decorators[GameUtils.getSquare(startRank - 1, startFile)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.DiagNorthWestCorner));
+				startRank++;
+				startFile++;
+			}
+
+			decorators[GameUtils.getSquare(startRank, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DestinationDiagIncreasingRight));
+
+			decorators[GameUtils.getSquare(startRank, startFile - 1)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DiagSouthEastCorner));
+			decorators[GameUtils.getSquare(startRank - 1, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DiagNorthWestCorner));
+		}
+	}
+
+	protected void addDecoratorsForStartLessThanEndEuqlRanks(Arrow arrow) {
+		decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+				ArrowSegment.OriginHorizontalRight));
+
+		int startFile = GameUtils.getFile(arrow.startSquare);
+		int endFile = GameUtils.getFile(arrow.endSquare);
+		int rank = GameUtils.getRank(arrow.startSquare);
+
+		for (int i = startFile + 1; i < endFile; i++) {
+			decorators[GameUtils.getSquare(rank, i)]
+					.addArrowSpec(new ArrowSpec(arrow, ArrowSegment.Horizontal));
+		}
+
+		decorators[arrow.endSquare].addArrowSpec(new ArrowSpec(arrow,
+				ArrowSegment.DestinationHorizontalRight));
+	}
+
+	protected void addDecoratorsForStartLessThanEndKnightMoves(Arrow arrow) {
+		if (GameUtils.getFile(arrow.startSquare) < GameUtils
+				.getFile(arrow.endSquare)) {
+
+			decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+					ArrowSegment.OriginVerticalUp));
+
+			int startRank = GameUtils.getRank(arrow.startSquare) + 1;
+
+			while (startRank < GameUtils.getRank(arrow.endSquare)) {
+				decorators[GameUtils.getSquare(startRank++, GameUtils
+						.getFile(arrow.startSquare))]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.Vertical));
+			}
+
+			decorators[GameUtils.getSquare(startRank, GameUtils
+					.getFile(arrow.startSquare))].addArrowSpec(new ArrowSpec(
+					arrow, ArrowSegment.UpwardTurnRight));
+
+			int startFile = GameUtils.getFile(arrow.startSquare) + 1;
+			while (startFile < GameUtils.getFile(arrow.endSquare)) {
+				decorators[GameUtils.getSquare(startRank, startFile++)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.Horizontal));
+			}
+
+			decorators[GameUtils.getSquare(startRank, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DestinationHorizontalRight));
+
+		} else {
+
+			decorators[arrow.startSquare].addArrowSpec(new ArrowSpec(arrow,
+					ArrowSegment.OriginVerticalUp));
+
+			int startRank = GameUtils.getRank(arrow.startSquare) + 1;
+
+			while (startRank < GameUtils.getRank(arrow.endSquare)) {
+				decorators[GameUtils.getSquare(startRank++, GameUtils
+						.getFile(arrow.startSquare))]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.Vertical));
+			}
+
+			decorators[GameUtils.getSquare(startRank, GameUtils
+					.getFile(arrow.startSquare))].addArrowSpec(new ArrowSpec(
+					arrow, ArrowSegment.UpwardTurnLeft));
+
+			int startFile = GameUtils.getFile(arrow.startSquare) - 1;
+			while (startFile > GameUtils.getFile(arrow.endSquare)) {
+				decorators[GameUtils.getSquare(startRank, startFile--)]
+						.addArrowSpec(new ArrowSpec(arrow,
+								ArrowSegment.Horizontal));
+			}
+
+			decorators[GameUtils.getSquare(startRank, startFile)]
+					.addArrowSpec(new ArrowSpec(arrow,
+							ArrowSegment.DestinationHorizontalLeft));
 		}
 	}
 

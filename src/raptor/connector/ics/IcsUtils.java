@@ -211,10 +211,15 @@ public class IcsUtils implements GameConstants {
 								((BughouseGame) game).getOtherBoard().getId());
 
 				if (otherBoardItem == null) {
-					connector.onError(
-							"Could not find other board with game id "
-									+ ((BughouseGame) game).getOtherBoard()
-											.getId(), new Exception());
+					LOG
+							.warn(
+									"Could not find other board with game id "
+											+ ((BughouseGame) game)
+													.getOtherBoard().getId()
+											+ ", This can occur if the other game "
+											+ "opened slower than the next G1 message arrived. "
+											+ "Can probably be ignored.",
+									new Exception());
 					controller = new ObserveController(game, true, connector);
 				} else {
 					controller = new ObserveController(game, !otherBoardItem
@@ -235,7 +240,6 @@ public class IcsUtils implements GameConstants {
 			LOG.error("Could not find controller type for game state. "
 					+ "Ignoring game. state= " + game.getState());
 		}
-
 		return controller;
 	}
 

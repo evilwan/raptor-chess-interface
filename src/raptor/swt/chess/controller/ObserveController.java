@@ -145,7 +145,7 @@ public class ObserveController extends ChessBoardController {
 													PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
 										board
 												.getArrowDecorator()
-												.drawArrow(
+												.addArrow(
 														new Arrow(
 																lastMove
 																		.getFrom(),
@@ -222,7 +222,7 @@ public class ObserveController extends ChessBoardController {
 
 			if (getPreferences().getBoolean(
 					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
-				board.getArrowDecorator().drawArrow(
+				board.getArrowDecorator().addArrow(
 						new Arrow(lastMove.getFrom(), lastMove.getTo(),
 								getPreferences().getColor(
 										PreferenceKeys.ARROW_OBS_COLOR),
