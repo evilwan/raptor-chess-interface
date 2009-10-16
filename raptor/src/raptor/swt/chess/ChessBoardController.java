@@ -768,7 +768,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			}
 			if (getPreferences().getBoolean(
 					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().drawArrow(
+				board.getArrowDecorator().addArrow(
 						new Arrow(move.getFrom(), move.getEpSquare(),
 								getPreferences().getColor(
 										PreferenceKeys.ARROW_MY_COLOR),
@@ -795,7 +795,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			}
 			if (getPreferences().getBoolean(
 					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().drawArrow(
+				board.getArrowDecorator().addArrow(
 						new Arrow(move.getFrom(), move.getTo(),
 								getPreferences().getColor(
 										PreferenceKeys.ARROW_MY_COLOR),
@@ -819,7 +819,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			}
 			if (getPreferences().getBoolean(
 					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().drawArrow(
+				board.getArrowDecorator().addArrow(
 						new Arrow(move.getFrom(), move.getTo(),
 								getPreferences().getColor(
 										PreferenceKeys.ARROW_MY_COLOR),

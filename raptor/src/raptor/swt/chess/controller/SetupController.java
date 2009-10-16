@@ -209,7 +209,7 @@ public class SetupController extends ChessBoardController {
 									PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
 		}
 		if (getPreferences().getBoolean(PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-			board.getArrowDecorator().drawArrow(
+			board.getArrowDecorator().addArrow(
 					new Arrow(move.getFrom(), move.getTo(), getPreferences()
 							.getColor(PreferenceKeys.ARROW_MY_COLOR),
 							getPreferences().getBoolean(

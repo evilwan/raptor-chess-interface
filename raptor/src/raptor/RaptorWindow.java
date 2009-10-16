@@ -921,95 +921,95 @@ public class RaptorWindow extends ApplicationWindow {
 				InactiveController controller = new InactiveController(game);
 				ChessBoardWindowItem item = new ChessBoardWindowItem(controller);
 				addRaptorWindowItem(item, false);
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_E2,
 								GameConstants.SQUARE_E7, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_D7,
 								GameConstants.SQUARE_D1, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_A8,
 								GameConstants.SQUARE_D8, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_BLACK)));
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_H8,
 								GameConstants.SQUARE_E8, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_CYAN)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_B1,
 								GameConstants.SQUARE_A3, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_B1,
 								GameConstants.SQUARE_D2, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_G1,
 								GameConstants.SQUARE_H3, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_G1,
 								GameConstants.SQUARE_E2, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_E7,
 								GameConstants.SQUARE_C6, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_E7,
 								GameConstants.SQUARE_G6, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_B7,
 								GameConstants.SQUARE_A5, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_G7,
 								GameConstants.SQUARE_H5, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_E4,
 								GameConstants.SQUARE_H7, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_RED)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_E4,
 								GameConstants.SQUARE_A8, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_GREEN)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_E4,
 								GameConstants.SQUARE_H1, Raptor.getInstance()
 										.getDisplay().getSystemColor(
 												SWT.COLOR_BLUE)));
 
-				item.getBoard().getArrowDecorator().drawArrow(
+				item.getBoard().getArrowDecorator().addArrow(
 						new Arrow(GameConstants.SQUARE_E4,
 								GameConstants.SQUARE_B1, Raptor.getInstance()
 										.getDisplay().getSystemColor(
@@ -1634,6 +1634,11 @@ public class RaptorWindow extends ApplicationWindow {
 					+ pingTime);
 		}
 
+		if (getShell() == null || getShell().getDisplay() == null
+				|| getShell().getDisplay().isDisposed()) {
+			return;
+		}
+
 		getShell().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				Label label = pingLabelsMap.get(connector.getShortName());
@@ -1675,6 +1680,11 @@ public class RaptorWindow extends ApplicationWindow {
 	public void setStatusMessage(final String newStatusMessage) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("setStatusMessage " + newStatusMessage);
+		}
+
+		if (getShell() == null || getShell().getDisplay() == null
+				|| getShell().getDisplay().isDisposed()) {
+			return;
 		}
 
 		getShell().getDisplay().syncExec(new Runnable() {

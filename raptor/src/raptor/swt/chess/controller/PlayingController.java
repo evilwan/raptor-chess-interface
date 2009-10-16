@@ -173,7 +173,7 @@ public class PlayingController extends ChessBoardController {
 													PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
 										board
 												.getArrowDecorator()
-												.drawArrow(
+												.addArrow(
 														new Arrow(
 																getGame()
 																		.getLastMove()
@@ -435,7 +435,7 @@ public class PlayingController extends ChessBoardController {
 			}
 			if (getPreferences().getBoolean(
 					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
-				board.getArrowDecorator().drawArrow(
+				board.getArrowDecorator().addArrow(
 						new Arrow(lastMove.getFrom(), lastMove.getTo(),
 								getPreferences().getColor(
 										PreferenceKeys.ARROW_OBS_COLOR),
@@ -642,7 +642,7 @@ public class PlayingController extends ChessBoardController {
 							PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
 						board
 								.getArrowDecorator()
-								.drawArrow(
+								.addArrow(
 										new Arrow(
 												lastMove.getFrom(),
 												lastMove.getTo(),
@@ -674,7 +674,7 @@ public class PlayingController extends ChessBoardController {
 						PreferenceKeys.ARROW_SHOW_ON_MY_PREMOVES)) {
 					board
 							.getArrowDecorator()
-							.drawArrow(
+							.addArrow(
 									new Arrow(
 											moveMade.getFrom(),
 											moveMade.getTo(),
