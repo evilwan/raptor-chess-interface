@@ -50,15 +50,6 @@ import raptor.util.FileUtil;
  * This classes main is the application main.
  */
 public class Raptor implements PreferenceKeys {
-	static {
-		// Forces log4j to check for changes to its properties file and reload
-		// them every 5 seconds.
-		// This must always be called before any other code or it will not work.
-		PropertyConfigurator.configureAndWatch("resources/log4j.properties",
-				5000);
-	}
-
-	private static final Log LOG = LogFactory.getLog(Raptor.class);
 
 	public static final File DEFAULT_HOME_DIR = new File("defaultHomeDir/");
 	public static final String APP_HOME_DIR = ".raptor/";
@@ -72,8 +63,20 @@ public class Raptor implements PreferenceKeys {
 	public static final String RESOURCES_SCRIPTS = "resources/scripts";
 	public static final String RESOURCES_DIR = "resources/";
 	private static Raptor instance;
-
 	private static Display display;
+
+	static {
+		// Forces log4j to check for changes to its properties file and reload
+		// them every 5 seconds.
+		// This must always be called before any other code or it will not work.
+		PropertyConfigurator.configureAndWatch("resources/log4j.properties",
+				5000);
+	}
+
+	/**
+	 * Don't make this static.
+	 */
+	private final Log LOG = LogFactory.getLog(Raptor.class);
 
 	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
 			Display.getCurrent());
@@ -153,7 +156,7 @@ public class Raptor implements PreferenceKeys {
 			// Open the app window
 			instance.raptorWindow.open();
 		} catch (Throwable t) {
-			LOG.error("Error occured in main:", t);
+			instance.LOG.error("Error occured in main:", t);
 		} finally {
 			instance.shutdown();
 		}
