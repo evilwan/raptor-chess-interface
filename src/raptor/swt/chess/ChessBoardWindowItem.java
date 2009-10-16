@@ -129,11 +129,11 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public String getTitle() {
-		return board.getController().getTitle();
+		return getController().getTitle();
 	}
 
 	public Control getToolbar(Composite parent) {
-		return board.getController().getToolbar(parent);
+		return getController().getToolbar(parent);
 	}
 
 	public void init(Composite parent) {
@@ -188,6 +188,6 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
-		board.getController().removeItemChangedListener(listener);
+		getController().removeItemChangedListener(listener);
 	}
 }
