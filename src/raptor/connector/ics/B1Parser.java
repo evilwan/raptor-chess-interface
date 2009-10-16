@@ -11,65 +11,76 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor.connector.fics.game;
+package raptor.connector.ics;
 
-import raptor.connector.fics.game.message.GameEndMessage;
+import raptor.chess.GameConstants;
+import raptor.connector.ics.game.message.B1Message;
 import raptor.util.RaptorStringTokenizer;
 
-public class GameEndParser {
+public class B1Parser implements GameConstants {
+	public static final String B1_START = "<b1>";
 
-	public static final String EXCLUDE = "Creating";
-	public static final String GAME_END = "{Game";
+	public static int[] buildPieceHoldingsArray(String s) {
+		int[] result = new int[6];
 
-	public GameEndMessage parse(String message) {
-		GameEndMessage result = null;
-		if (message.startsWith(GAME_END) && !message.contains(EXCLUDE)) {
-			result = new GameEndMessage();
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
-					" ()", true);
+		for (int i = 0; i < s.length(); i++) {
+			switch (s.charAt(i)) {
+			case 'P':
+			case 'p':
+				result[PAWN] = result[PAWN] + 1;
+				break;
 
-			// parse past {Game
-			tok.nextToken();
+			case 'N':
+			case 'n':
+				result[KNIGHT] = result[KNIGHT] + 1;
+				break;
 
-			result.gameId = tok.nextToken();
+			case 'B':
+			case 'b':
+				result[BISHOP] = result[BISHOP] + 1;
+				break;
 
-			result.whiteName = tok.nextToken();
+			case 'R':
+			case 'r':
+				result[ROOK] = result[ROOK] + 1;
+				break;
 
-			// parse past vs.
-			tok.nextToken();
-
-			result.blackName = tok.nextToken();
-
-			// find description. Its between ) and }
-			int closingParenIndex = message.indexOf(")");
-			int closingBraceIndex = message.indexOf("}");
-
-			if (closingParenIndex == -1 || closingBraceIndex == -1) {
-				throw new IllegalArgumentException(
-						"Could not find description in gameEndEvent:" + message);
-			}
-			result.description = message.substring(closingParenIndex + 1,
-					closingBraceIndex).trim();
-
-			String afterClosingBrace = message.substring(closingBraceIndex + 1,
-					message.length()).trim();
-
-			if (result.description.indexOf("aborted") != -1) {
-				result.type = GameEndMessage.ABORTED;
-			} else if (result.description.indexOf("adjourned") != -1) {
-				result.type = GameEndMessage.ADJOURNED;
-			} else if (result.description.indexOf('*') != -1) {
-				result.type = GameEndMessage.UNDETERMINED;
-			} else if (afterClosingBrace.startsWith("0-1")) {
-				result.type = GameEndMessage.BLACK_WON;
-			} else if (afterClosingBrace.startsWith("1-0")) {
-				result.type = GameEndMessage.WHITE_WON;
-			} else if (afterClosingBrace.startsWith("1/2")) {
-				result.type = GameEndMessage.DRAW;
-			} else {
-				result.type = GameEndMessage.UNDETERMINED;
+			case 'Q':
+			case 'q':
+				result[QUEEN] = result[QUEEN] + 1;
+				break;
+			case 'K':
+			case 'k':
+				result[KING] = result[KING] + 1;
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid piece "
+						+ s.charAt(i));
 			}
 		}
+
 		return result;
+	}
+
+	public B1Message parse(String message) {
+		if (message.startsWith(B1_START)) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
+					" {}><-\n", true);
+			B1Message result = new B1Message();
+
+			tok.nextToken();
+			tok.nextToken();
+			result.gameId = tok.nextToken();
+			tok.nextToken();
+			String whiteHoldings = tok.nextToken();
+			result.whiteHoldings = buildPieceHoldingsArray(whiteHoldings
+					.substring(1, whiteHoldings.length() - 1));
+			tok.nextToken();
+			String blackHoldings = tok.nextToken();
+			result.blackHoldings = buildPieceHoldingsArray(blackHoldings
+					.substring(1, blackHoldings.length() - 1));
+			return result;
+		}
+		return null;
 	}
 }

@@ -13,6 +13,8 @@
  */
 package raptor.swt;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationAdapter;
@@ -36,19 +38,23 @@ import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.pref.PreferenceKeys;
 
+/**
+ * Please use BrowserUtils.openUrl instead of this class unless you specifically
+ * want a new browser window opened.
+ */
 public class BrowserWindowItem implements RaptorWindowItem {
+	private static final Log LOG = LogFactory.getLog(BrowserWindowItem.class);
+
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
 
 	protected Composite addressBar;
 	protected Browser browser;
 	protected Composite composite;
-	protected String title;
 	protected String url;
 
-	public BrowserWindowItem(String title, String url) {
+	public BrowserWindowItem(String url) {
 		this.url = url;
-		this.title = title;
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -58,7 +64,6 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
-
 	}
 
 	public boolean confirmClose() {
@@ -70,7 +75,17 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public void dispose() {
-		browser.dispose();
+		try {
+			browser.close();
+		} catch (Throwable t) {
+		}
+		try {
+			browser.dispose();
+		} catch (Throwable t) {
+		}
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Disposed BrowserWindowItem");
+		}
 	}
 
 	public Composite getControl() {
@@ -94,7 +109,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public String getTitle() {
-		return title;
+		return "Browser";
 	}
 
 	public Control getToolbar(Composite parent) {
@@ -178,8 +193,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 				if (!event.required) {
 					return;
 				}
-				BrowserWindowItem newWindowItem = new BrowserWindowItem(
-						"Child", "");
+				BrowserWindowItem newWindowItem = new BrowserWindowItem("");
 				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						newWindowItem, false);
 				event.browser = newWindowItem.browser;
@@ -201,7 +215,6 @@ public class BrowserWindowItem implements RaptorWindowItem {
 				urlText.setText(browser.getUrl());
 			}
 		});
-
 	}
 
 	public void onActivate() {
@@ -211,5 +224,9 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
+	}
+
+	public void setUrl(String url) {
+		browser.setUrl(url);
 	}
 }

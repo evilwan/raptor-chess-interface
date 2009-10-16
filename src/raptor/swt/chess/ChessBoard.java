@@ -130,8 +130,8 @@ public class ChessBoard implements BoardConstants {
 						chessBoardLayout.dispose();
 						chessBoardLayout = null;
 					}
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Disposed chessboard.");
+					if (LOG.isInfoEnabled()) {
+						LOG.info("Disposed ChessBoard");
 					}
 				}
 			});

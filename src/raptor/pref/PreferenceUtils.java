@@ -38,6 +38,7 @@ import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.RaptorPage;
 import raptor.pref.page.RaptorWindowPage;
 import raptor.pref.page.RaptorWindowQuadrantsPage;
+import raptor.pref.page.SpeechPage;
 import raptor.service.ConnectorService;
 
 /**
@@ -90,6 +91,8 @@ public class PreferenceUtils {
 		mgr.addToRoot(new PreferenceNode("bughouse", new BughousePage()));
 		mgr.addTo("bughouse", new PreferenceNode("buttons",
 				new BugButtonsPage()));
+
+		mgr.addToRoot(new PreferenceNode("speech", new SpeechPage()));
 
 		// Add the connector preference nodes.
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();

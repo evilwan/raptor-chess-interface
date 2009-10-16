@@ -97,8 +97,8 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 		composite.dispose();
 		Raptor.getInstance().getPreferences().removePropertyChangeListener(
 				propertyChangeListener);
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Disposed BugButtonsWindowItem.");
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Disposed BugButtonsWindowItem.");
 		}
 	}
 

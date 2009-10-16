@@ -128,7 +128,7 @@ public class ChatConsoleScriptsPage extends PreferencePage {
 		nameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		isActiveButton = new Button(nameComposite, SWT.CHECK);
-		isActiveButton.setText("Active (Takes effect on next connect)");
+		isActiveButton.setText("Active");
 		isActiveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 

@@ -14,16 +14,6 @@
 	<classpathentry kind="lib" path="lib/common/org.eclipse.core.commands_3.4.0.I20080509-2000.jar"/>
 	<classpathentry kind="lib" path="lib/common/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar"/>
 	<classpathentry kind="lib" path="lib/common/junit4_4.3.1jar"/>
-	<classpathentry kind="lib" path="lib/freetts/cmu_time_awb.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/cmu_us_kal.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/cmudict04.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/cmulex.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/cmutimelex.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/en_us.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/freetts-jsapi10.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/freetts.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/mbrola.jar"/>
-	<classpathentry kind="lib" path="lib/freetts/jsapi.jar"/>
 	<classpathentry kind="lib" path="lib/common/bsh-2.0b4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
 	<classpathentry kind="output" path="bin"/>

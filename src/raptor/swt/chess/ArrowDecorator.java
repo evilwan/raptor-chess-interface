@@ -715,10 +715,6 @@ public class ArrowDecorator {
 					ArrowSegment segment = board.isWhiteOnTop() ? spec.segment
 							.rotate180() : spec.segment;
 
-					System.err.println("Square "
-							+ GameUtils.getSan(square.getId()) + " spec: "
-							+ spec.segment.name());
-
 					segment.draw(square, spec.arrow.color, width, e.gc);
 				} else if (spec.arrow.frame != 0) {
 					int width = (int) (Raptor.getInstance().getPreferences()
@@ -733,10 +729,6 @@ public class ArrowDecorator {
 
 					ArrowSegment segment = board.isWhiteOnTop() ? spec.segment
 							.rotate180() : spec.segment;
-
-					System.err.println("Square "
-							+ GameUtils.getSan(square.getId()) + " spec: "
-							+ spec.segment.name());
 
 					segment.draw(square, spec.arrow.color, width, e.gc);
 

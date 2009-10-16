@@ -1,4 +1,4 @@
-package raptor.connector.fics.game.message;
+package raptor.connector.ics.game.message;
 
 import java.util.Arrays;
 
