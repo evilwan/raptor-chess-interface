@@ -49,47 +49,6 @@ public class SuicideGame extends ClassicGame {
 	}
 
 	/**
-	 * Castling is'nt permitted in suicide. This method is overridden to remove
-	 * it.
-	 * 
-	 * 
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void generatePseudoKingCastlingMoves(long fromBB,
-			PriorityMoveList moves) {
-	}
-
-	/**
-	 * There can be more than one king in suicide. So have to override
-	 * generatePseudoKingMove to check all kings.
-	 * 
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected void generatePseudoKingMoves(PriorityMoveList moves) {
-		long fromBB = getPieceBB(getColorToMove(), KING);
-		while (fromBB != 0) {
-			int fromSquare = bitscanForward(fromBB);
-			long toBB = kingMove(fromSquare) & getNotColorToMoveBB();
-
-			generatePseudoKingCastlingMoves(fromBB, moves);
-
-			while (toBB != 0) {
-				int toSquare = bitscanForward(toBB);
-
-				int contents = getPieceWithPromoteMask(toSquare);
-
-				addMove(new Move(fromSquare, toSquare, KING, getColorToMove(),
-						contents), moves);
-				toBB = bitscanClear(toBB);
-				toSquare = bitscanForward(toBB);
-			}
-			fromBB = bitscanClear(fromBB);
-		}
-	}
-
-	/**
 	 * Pawns can promote to a king in suicide. This method is overridden to
 	 * supply that functionality.
 	 * 
@@ -283,6 +242,47 @@ public class SuicideGame extends ClassicGame {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Castling is'nt permitted in suicide. This method is overridden to remove
+	 * it.
+	 * 
+	 * 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void generatePseudoKingCastlingMoves(long fromBB,
+			PriorityMoveList moves) {
+	}
+
+	/**
+	 * There can be more than one king in suicide. So have to override
+	 * generatePseudoKingMove to check all kings.
+	 * 
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected void generatePseudoKingMoves(PriorityMoveList moves) {
+		long fromBB = getPieceBB(getColorToMove(), KING);
+		while (fromBB != 0) {
+			int fromSquare = bitscanForward(fromBB);
+			long toBB = kingMove(fromSquare) & getNotColorToMoveBB();
+
+			generatePseudoKingCastlingMoves(fromBB, moves);
+
+			while (toBB != 0) {
+				int toSquare = bitscanForward(toBB);
+
+				int contents = getPieceWithPromoteMask(toSquare);
+
+				addMove(new Move(fromSquare, toSquare, KING, getColorToMove(),
+						contents), moves);
+				toBB = bitscanClear(toBB);
+				toSquare = bitscanForward(toBB);
+			}
+			fromBB = bitscanClear(fromBB);
+		}
 	}
 
 	/**

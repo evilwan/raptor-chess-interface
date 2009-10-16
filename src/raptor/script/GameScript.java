@@ -41,6 +41,22 @@ public class GameScript implements Comparable<GameScript> {
 		OneShot, GameStart, GameEnd, EveryMove
 	};
 
+	protected int order = Integer.MAX_VALUE;
+
+	protected String name = "";
+
+	protected String description = "";
+	protected boolean isActive = false;
+	protected String script;
+	protected GameScriptType gameScriptType;
+	protected GameScriptControllerType gameScriptControllerType;
+	protected ScriptConnectorType scriptConnectorType;
+	/**
+	 * The ScriptService managed this variable. It does not need to be
+	 * serialized.
+	 */
+	protected transient boolean isSystemScript;
+
 	public static GameScript load(String file) throws IOException {
 		GameScript result = new GameScript();
 		Properties properties = new Properties();
@@ -81,21 +97,6 @@ public class GameScript implements Comparable<GameScript> {
 				.put("scriptConnectorType", script.scriptConnectorType.name());
 		properties.store(new FileOutputStream(file), "Saved on " + new Date());
 	}
-
-	protected int order = Integer.MAX_VALUE;
-	protected String name = "";
-	protected String description = "";
-	protected boolean isActive = false;
-	protected String script;
-	protected GameScriptType gameScriptType;
-	protected GameScriptControllerType gameScriptControllerType;
-	protected ScriptConnectorType scriptConnectorType;
-
-	/**
-	 * The ScriptService managed this variable. It does not need to be
-	 * serialized.
-	 */
-	protected transient boolean isSystemScript;
 
 	public GameScript() {
 	}

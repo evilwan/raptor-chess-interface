@@ -127,6 +127,54 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	}
 
 	@Override
+	public void disconnect() {
+		super.disconnect();
+		connectAction.setEnabled(true);
+		disconnectAction.setEnabled(false);
+		reconnectAction.setEnabled(false);
+		bughouseArenaAction.setEnabled(false);
+		autoConnectAction.setEnabled(true);
+		isShowingBugButtonsOnConnectAction.setEnabled(true);
+		bugbuttonsAction.setEnabled(false);
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (bics2 != null) {
+			bics2.dispose();
+			bics2 = null;
+		}
+	}
+
+	/**
+	 * Returns the menu manager for this connector.
+	 */
+	public MenuManager getMenuManager() {
+		return connectionsMenu;
+	}
+
+	/**
+	 * Return the preference node to add to the root preference dialog. This
+	 * preference node will show up with the connectors first name. You can add
+	 * secondary nodes by implementing getSecondaryPreferenceNodes. These nodes
+	 * will show up below the root node.
+	 */
+	public PreferencePage getRootPreferencePage() {
+		return new BicsPage();
+	}
+
+	/**
+	 * Returns an array of the secondary preference nodes.
+	 */
+	public PreferenceNode[] getSecondaryPreferenceNodes() {
+		return new PreferenceNode[] {
+				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics")),
+				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics2")) };
+
+	}
+
+	@Override
 	protected void connect(final String profileName) {
 		super.connect(profileName);
 		if (isConnecting) {
@@ -338,54 +386,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 	}
 
-	@Override
-	public void disconnect() {
-		super.disconnect();
-		connectAction.setEnabled(true);
-		disconnectAction.setEnabled(false);
-		reconnectAction.setEnabled(false);
-		bughouseArenaAction.setEnabled(false);
-		autoConnectAction.setEnabled(true);
-		isShowingBugButtonsOnConnectAction.setEnabled(true);
-		bugbuttonsAction.setEnabled(false);
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		if (bics2 != null) {
-			bics2.dispose();
-			bics2 = null;
-		}
-	}
-
-	/**
-	 * Returns the menu manager for this connector.
-	 */
-	public MenuManager getMenuManager() {
-		return connectionsMenu;
-	}
-
-	/**
-	 * Return the preference node to add to the root preference dialog. This
-	 * preference node will show up with the connectors first name. You can add
-	 * secondary nodes by implementing getSecondaryPreferenceNodes. These nodes
-	 * will show up below the root node.
-	 */
-	public PreferencePage getRootPreferencePage() {
-		return new BicsPage();
-	}
-
-	/**
-	 * Returns an array of the secondary preference nodes.
-	 */
-	public PreferenceNode[] getSecondaryPreferenceNodes() {
-		return new PreferenceNode[] {
-				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics")),
-				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics2")) };
-
-	}
-
 	protected void initBics2() {
 		bics2 = new BicsConnector(new BicsConnectorContext() {
 			@Override
@@ -403,13 +403,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			 * Override not needed.
 			 */
 			@Override
-			protected void createMenuActions() {
-			}
-
-			/**
-			 * Override not needed.
-			 */
-			@Override
 			public PreferencePage getRootPreferencePage() {
 				return null;
 			}
@@ -420,6 +413,13 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			@Override
 			public PreferenceNode[] getSecondaryPreferenceNodes() {
 				return null;
+			}
+
+			/**
+			 * Override not needed.
+			 */
+			@Override
+			protected void createMenuActions() {
 			}
 
 			/**

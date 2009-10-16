@@ -29,6 +29,8 @@ import raptor.chess.pgn.PgnHeader;
  */
 public class GameCursor implements Game {
 
+	static final Log LOG = LogFactory.getLog(GameCursor.class);
+
 	public enum Mode {
 		/**
 		 * All moves and are made on the cursor game. The move list reflects the
@@ -52,8 +54,6 @@ public class GameCursor implements Game {
 		MakeMovesOnMasterSetCursorToLast
 	}
 
-	static final Log LOG = LogFactory.getLog(GameCursor.class);
-
 	protected Game cursor;
 	protected int cursorPosition;
 	protected int cursorPositionBeforeCursorMoves;
@@ -71,16 +71,6 @@ public class GameCursor implements Game {
 	public void addState(int state) {
 		throw new UnsupportedOperationException(
 				"This operation is not supported in GameCursor");
-	}
-
-	protected void adjustToCursorMove() {
-		if (!isInCursorSubline) {
-			masterBackup = master;
-			master = cursor;
-			cursorPositionBeforeCursorMoves = cursorPosition;
-		}
-		cursorPosition = cursor.getMoveList().getSize();
-		isInCursorSubline = true;
 	}
 
 	public boolean areBothKingsOnBoard() {
@@ -709,5 +699,15 @@ public class GameCursor implements Game {
 
 	public String toPgn() {
 		return master.toPgn();
+	}
+
+	protected void adjustToCursorMove() {
+		if (!isInCursorSubline) {
+			masterBackup = master;
+			master = cursor;
+			cursorPositionBeforeCursorMoves = cursorPosition;
+		}
+		cursorPosition = cursor.getMoveList().getSize();
+		isInCursorSubline = true;
 	}
 }

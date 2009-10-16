@@ -21,6 +21,63 @@ import raptor.chess.GameConstants;
  * A class containing validation methods for Short Algebraic Notation (SAN).
  */
 public class SanUtils {
+	public static final String CAPTURES = "x:";
+
+	public static final String CHECK_CHECKMATE = "+#";
+
+	public static final String DROPS = "PBNQR";
+
+	public static final String EQUALS = "=";
+
+	public static final String FILES = "abcdefgh";
+
+	public static final String PIECES = "BKNQR";
+
+	public static final String PROMOTIONS = "BNQR";
+
+	public static final String RANKS = "12345678";
+
+	public static final String SUICIDE_PROMOTIONS = "KBNQR";
+
+	/*
+	 * OLD SLOW REGEX USED: DONT REMOVE MIGHT BE USEFUL FOR SOMETHING ELSE.
+	 * protected static final String VALID_SHORT_ALG_REGEX =
+	 * "(([a-h]([x]?)[a-h][1-8](([=]?)[BNQR]?)([+#]?))|([a-h][1-8]((([=]?)[BNQR])?)([+#]?))|([a-h]([x:]?)[a-h]((([=]?)[BNQR])?)([+#]?))|(([BKNQR])([a-h]?)([1-8]?)([x:]?)([a-h][1-8])([+#:]?))|([O][-][O][+#]?)|([O][-][O][-][O][+#]?))"
+	 * ;
+	 * 
+	 * protected static final String VALID_EP_OR_AMBIG_P_CAPTURE_REGEX =
+	 * "[a-h][a-h][1-8]";
+	 * 
+	 * protected static final String VALID_EP_OR_AMBIG_P_CAPTURE_PROMOTION_REGEX
+	 * = "[a-h][a-h][1-8][BNQR]";
+	 * 
+	 * protected static final String VALID_UNAMBIG_REGEX = "[BKNQR][a-h][1-8]";
+	 * 
+	 * protected static final String VALID_DISAMBIG_RANK_REGEX =
+	 * "[BKNQR][1-8][a-h][1-8]";
+	 * 
+	 * protected static final String VALID_DISAMBIG_FILE_REGEX =
+	 * "[BKNQR][a-h][a-h][1-8]";
+	 * 
+	 * protected static final String VALID_DISAMBIG_RANK_FILE_REGEX =
+	 * "[BKNQR][a-h][1-8][a-h][1-8]";
+	 * 
+	 * protected static final String VALID_P_X_REGEX = "[a-h][a-h]";
+	 * 
+	 * protected static final String VALID_P_MOVE_REGEX = "[a-h][1-8]";
+	 * 
+	 * protected static final String VALID_PXP_PROMOTION_REGEX =
+	 * "[a-h][a-h][BNQR]";
+	 * 
+	 * protected static final String VALID_P_PROMOTION_REGEX =
+	 * "[a-h][1-8][BNQR]";
+	 * 
+	 * protected static final String VALID_CASTLE_KSIDE_REGEX = "[O][-][O]";
+	 * 
+	 * protected static final String VALID_CASTLE_QSIDE_REGEX =
+	 * "[O][-][O][-][O]";
+	 */
+
 	public static class SanValidations {
 		boolean isAmbigPxPromotionStrict;
 
@@ -184,63 +241,6 @@ public class SanUtils {
 			this.isValidStrict = isValidStrict;
 		}
 	}
-
-	public static final String CAPTURES = "x:";
-
-	public static final String CHECK_CHECKMATE = "+#";
-
-	public static final String DROPS = "PBNQR";
-
-	public static final String EQUALS = "=";
-
-	public static final String FILES = "abcdefgh";
-
-	public static final String PIECES = "BKNQR";
-
-	public static final String PROMOTIONS = "BNQR";
-
-	public static final String RANKS = "12345678";
-
-	/*
-	 * OLD SLOW REGEX USED: DONT REMOVE MIGHT BE USEFUL FOR SOMETHING ELSE.
-	 * protected static final String VALID_SHORT_ALG_REGEX =
-	 * "(([a-h]([x]?)[a-h][1-8](([=]?)[BNQR]?)([+#]?))|([a-h][1-8]((([=]?)[BNQR])?)([+#]?))|([a-h]([x:]?)[a-h]((([=]?)[BNQR])?)([+#]?))|(([BKNQR])([a-h]?)([1-8]?)([x:]?)([a-h][1-8])([+#:]?))|([O][-][O][+#]?)|([O][-][O][-][O][+#]?))"
-	 * ;
-	 * 
-	 * protected static final String VALID_EP_OR_AMBIG_P_CAPTURE_REGEX =
-	 * "[a-h][a-h][1-8]";
-	 * 
-	 * protected static final String VALID_EP_OR_AMBIG_P_CAPTURE_PROMOTION_REGEX
-	 * = "[a-h][a-h][1-8][BNQR]";
-	 * 
-	 * protected static final String VALID_UNAMBIG_REGEX = "[BKNQR][a-h][1-8]";
-	 * 
-	 * protected static final String VALID_DISAMBIG_RANK_REGEX =
-	 * "[BKNQR][1-8][a-h][1-8]";
-	 * 
-	 * protected static final String VALID_DISAMBIG_FILE_REGEX =
-	 * "[BKNQR][a-h][a-h][1-8]";
-	 * 
-	 * protected static final String VALID_DISAMBIG_RANK_FILE_REGEX =
-	 * "[BKNQR][a-h][1-8][a-h][1-8]";
-	 * 
-	 * protected static final String VALID_P_X_REGEX = "[a-h][a-h]";
-	 * 
-	 * protected static final String VALID_P_MOVE_REGEX = "[a-h][1-8]";
-	 * 
-	 * protected static final String VALID_PXP_PROMOTION_REGEX =
-	 * "[a-h][a-h][BNQR]";
-	 * 
-	 * protected static final String VALID_P_PROMOTION_REGEX =
-	 * "[a-h][1-8][BNQR]";
-	 * 
-	 * protected static final String VALID_CASTLE_KSIDE_REGEX = "[O][-][O]";
-	 * 
-	 * protected static final String VALID_CASTLE_QSIDE_REGEX =
-	 * "[O][-][O][-][O]";
-	 */
-
-	public static final String SUICIDE_PROMOTIONS = "KBNQR";
 
 	public static SanValidations getValidations(String unstrictShortAlg) {
 		SanValidations result = new SanValidations();

@@ -66,6 +66,40 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	 * (non-) Method declared on FieldEditor.
 	 */
 	@Override
+	public int getNumberOfControls() {
+		return 2;
+	}
+
+	/*
+	 * @see FieldEditor.setEnabled
+	 */
+	@Override
+	public void setEnabled(boolean enabled, Composite parent) {
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
+	public void setFocus() {
+		if (button != null) {
+			button.setFocus();
+		}
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
+	public void setLabelText(String text) {
+		super.setLabelText(text);
+		label.setText(text);
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
 	protected void adjustForNumColumns(int numColumns) {
 		((GridData) label.getLayoutData()).horizontalSpan = numColumns - 1;
 	}
@@ -107,40 +141,6 @@ public class LabelButtonFieldEditor extends FieldEditor {
 	@Override
 	protected void doStore() {
 
-	}
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	public int getNumberOfControls() {
-		return 2;
-	}
-
-	/*
-	 * @see FieldEditor.setEnabled
-	 */
-	@Override
-	public void setEnabled(boolean enabled, Composite parent) {
-	}
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	public void setFocus() {
-		if (button != null) {
-			button.setFocus();
-		}
-	}
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	public void setLabelText(String text) {
-		super.setLabelText(text);
-		label.setText(text);
 	}
 
 	/**

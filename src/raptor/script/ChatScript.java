@@ -34,6 +34,9 @@ import bsh.Interpreter;
  * The chat script class. Currently uses BeanShell to execute scripts.
  */
 public class ChatScript implements Comparable<ChatScript> {
+	@SuppressWarnings("unused")
+	private static final Log LOG = LogFactory.getLog(ChatScript.class);
+
 	public static class ChatScriptNameComparator implements
 			Comparator<ChatScript> {
 		public int compare(ChatScript script1, ChatScript script2) {
@@ -66,10 +69,22 @@ public class ChatScript implements Comparable<ChatScript> {
 		 * received.
 		 */
 		OnPersonTellMessages
-	}
+	};
 
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(ChatScript.class);;
+	protected String name = "";
+
+	protected String description = "";
+
+	protected String script = "";
+	protected boolean isActive = false;
+	protected ChatScriptType chatScriptType = ChatScriptType.ToolbarOneShot;
+	protected ScriptConnectorType scriptConnectorType = ScriptConnectorType.ICS;
+	protected int order = Integer.MAX_VALUE;
+	/**
+	 * The ScriptService managed this variable. It does not need to be
+	 * serialized.
+	 */
+	protected transient boolean isSystemScript;
 
 	/**
 	 * Loads a ChatScript from a file.
@@ -112,20 +127,6 @@ public class ChatScript implements Comparable<ChatScript> {
 				.put("scriptConnectorType", script.scriptConnectorType.name());
 		properties.store(new FileOutputStream(file), "Saved on " + new Date());
 	}
-
-	protected String name = "";
-	protected String description = "";
-	protected String script = "";
-	protected boolean isActive = false;
-	protected ChatScriptType chatScriptType = ChatScriptType.ToolbarOneShot;
-	protected ScriptConnectorType scriptConnectorType = ScriptConnectorType.ICS;
-	protected int order = Integer.MAX_VALUE;
-
-	/**
-	 * The ScriptService managed this variable. It does not need to be
-	 * serialized.
-	 */
-	protected transient boolean isSystemScript;
 
 	public int compareTo(ChatScript script) {
 		return order == script.order ? 0 : order < script.order ? -1 : 1;

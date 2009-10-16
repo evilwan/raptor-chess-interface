@@ -60,14 +60,16 @@ public class InactiveController extends ChessBoardController implements
 	protected String title;
 	protected ToolBar toolbar;
 	protected boolean userMadeAdjustment = false;
+	protected boolean beforeInitIsWhiteOnTop = false;
 
-	public InactiveController(Game game) {
-		this(game, "Inactive");
+	public InactiveController(Game game, boolean isWhiteOnTop) {
+		this(game, isWhiteOnTop, "Inactive");
 
 	}
 
-	public InactiveController(Game game, String title) {
+	public InactiveController(Game game, boolean isWhiteOnTop, String title) {
 		super(new GameCursor(game, GameCursor.Mode.MakeMovesOnCursor));
+		beforeInitIsWhiteOnTop = isWhiteOnTop;
 		cursor = (GameCursor) getGame();
 		this.title = title;
 	}
@@ -257,6 +259,7 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void init() {
+		board.setWhiteOnTop(beforeInitIsWhiteOnTop);
 		if (getGame().isInState(Game.DROPPABLE_STATE)) {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
 		} else {
@@ -265,14 +268,6 @@ public class InactiveController extends ChessBoardController implements
 		board.getMoveList().updateToGame();
 		cursor.setCursorMasterLast();
 		refresh();
-	}
-
-	protected void onPlayIllegalMoveSound() {
-		SoundService.getInstance().playSound("illegalMove");
-	}
-
-	protected void onPlayMoveSound() {
-		SoundService.getInstance().playSound("move");
 	}
 
 	public void onSave() {
@@ -496,5 +491,13 @@ public class InactiveController extends ChessBoardController implements
 	@Override
 	public void userRightClicked(int square) {
 		LOG.debug("On right click " + getGame().getId() + " " + square);
+	}
+
+	protected void onPlayIllegalMoveSound() {
+		SoundService.getInstance().playSound("illegalMove");
+	}
+
+	protected void onPlayMoveSound() {
+		SoundService.getInstance().playSound("move");
 	}
 }

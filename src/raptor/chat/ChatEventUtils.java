@@ -36,12 +36,6 @@ public class ChatEventUtils {
 		return result;
 	}
 
-	protected static String deserializeField(String field) {
-		String result = StringUtils.defaultString(field);
-		result = StringUtils.replaceChars(result, NEW_LINE_REPLACEMENT, '\n');
-		return result;
-	}
-
 	public static String serializeChatEvent(ChatEvent e) {
 		StringBuilder result = new StringBuilder(1000);
 		result.append(serializeField("" + e.time) + FIELD_SEPARATOR);
@@ -51,6 +45,12 @@ public class ChatEventUtils {
 		result.append(serializeField(e.source) + FIELD_SEPARATOR);
 		result.append(serializeField(e.message));
 		return result.toString();
+	}
+
+	protected static String deserializeField(String field) {
+		String result = StringUtils.defaultString(field);
+		result = StringUtils.replaceChars(result, NEW_LINE_REPLACEMENT, '\n');
+		return result;
 	}
 
 	protected static String serializeField(String field) {

@@ -616,55 +616,6 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Adjusts the left coolbar for quadrants minimized.
-	 */
-	protected void adjustToFoldersItemsMinimizied() {
-		ToolItem[] folderMinItems = foldersMinimizedToolbar.getItems();
-		for (ToolItem item : folderMinItems) {
-			item.dispose();
-		}
-
-		boolean isAFolderMinimized = false;
-		for (RaptorTabFolder folder : folders) {
-			if (folder.getMinimized()) {
-				isAFolderMinimized = true;
-				break;
-			}
-		}
-
-		if (isAFolderMinimized) {
-			for (Quadrant quadrant : Quadrant.values()) {
-				if (getTabFolder(quadrant).getMinimized()) {
-					ToolItem item = new ToolItem(foldersMinimizedToolbar,
-							SWT.PUSH);
-					item.setText(quadrant.name());
-					item.setToolTipText("Restore quadrant " + quadrant.name());
-					final Quadrant finalQuad = quadrant;
-					item.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							getTabFolder(finalQuad).setMinimized(false);
-							restoreFolders();
-						}
-					});
-				}
-			}
-		}
-
-		foldersMinimizedToolbar.pack();
-		foldersMinimiziedCoolItem.setPreferredSize(foldersMinimizedToolbar
-				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-		if (!isAFolderMinimized) {
-			leftCoolbar.setVisible(false);
-		} else {
-			leftCoolbar.setVisible(true);
-		}
-		windowComposite.layout();
-
-	}
-
-	/**
 	 * Returns true if this RaptorWindow is managing a channel tell tab for the
 	 * specified channel.
 	 */
@@ -769,6 +720,281 @@ public class RaptorWindow extends ApplicationWindow {
 			count += getTabFolder(quad).getItemCount();
 		}
 		return count;
+	}
+
+	/**
+	 * Disposes all the resources that will not be cleaned up when this window
+	 * is closed.
+	 */
+	public void dispose() {
+		if (pingLabelsMap != null) {
+			pingLabelsMap.clear();
+			pingLabelsMap = null;
+		}
+		if (activeItems != null) {
+			activeItems.clear();
+			activeItems = null;
+		}
+		if (folders != null) {
+			folders = null;
+		}
+		if (sashes != null) {
+			sashes = null;
+		}
+	}
+
+	/**
+	 * Disposes an item and removes it from the RaptorWindow. After this method
+	 * is invoked the item passed in is disposed.
+	 */
+	public void disposeRaptorWindowItem(final RaptorWindowItem item) {
+		getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				RaptorTabItem tabItem = null;
+				synchronized (activeItems) {
+					for (RaptorTabItem currentTabItem : activeItems) {
+						if (currentTabItem.raptorItem == item) {
+							tabItem = currentTabItem;
+							break;
+						}
+					}
+				}
+				if (item != null) {
+					tabItem.dispose();
+					item.dispose();
+					restoreFolders();
+				}
+			}
+		});
+	}
+
+	/**
+	 * If a browser window items is currently being displayed it is returned.
+	 * Otherwise null is returned.
+	 */
+	public BrowserWindowItem getBrowserWindowItem() {
+		BrowserWindowItem result = null;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof BrowserWindowItem) {
+					result = (BrowserWindowItem) folder.getRaptorTabItemAt(i).raptorItem;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the ChessBoardWindowItem for the specified game id, null if its
+	 * not found.
+	 * 
+	 * @param gameId
+	 *            The game id.
+	 * @return null if not found, otherwise the ChessBoardWindowItem.
+	 */
+	public ChessBoardWindowItem getChessBoardWindowItem(String gameId) {
+		ChessBoardWindowItem result = null;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChessBoardWindowItem) {
+					ChessBoardWindowItem item = (ChessBoardWindowItem) folder
+							.getRaptorTabItemAt(i).raptorItem;
+
+					System.err.println("CHecking to see if " + gameId + "="
+							+ item.getController().getGame().getId());
+					if (!(item.getController() instanceof InactiveController)
+							&& item.getController().getGame().getId().equals(
+									gameId)) {
+						result = item;
+						System.err.println("Match");
+						break;
+					}
+					System.err.println("No Match");
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the quad the current window item is in. Null if the windowItem is
+	 * not being managed.
+	 */
+	public Quadrant getQuadrant(RaptorWindowItem windowItem) {
+		Quadrant result = null;
+		synchronized (activeItems) {
+			for (RaptorTabItem currentTabItem : activeItems) {
+				if (currentTabItem.raptorItem == windowItem) {
+					result = currentTabItem.raptorParent.quad;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns an array of all RaptorWindowItems currently active.
+	 */
+	public RaptorWindowItem[] getRaptorWindowItems() {
+		return activeItems.toArray(new RaptorWindowItem[0]);
+	}
+
+	/**
+	 * Returns the RaptorTabFolder at the specified 0 based index.
+	 */
+	public RaptorTabFolder getTabFolder(int index) {
+		return folders[index];
+	}
+
+	/**
+	 * Returns the RaptorTabFolder at the quad.
+	 */
+	public RaptorTabFolder getTabFolder(Quadrant quad) {
+		return folders[quad.ordinal()];
+	}
+
+	/**
+	 * Returns true if the item is being managed by the RaptorWindow. As items
+	 * are closed and disposed they are no longer managed.
+	 */
+	public boolean isBeingManaged(final RaptorWindowItem item) {
+		boolean result = false;
+		synchronized (activeItems) {
+			for (RaptorTabItem currentTabItem : activeItems) {
+				if (currentTabItem.raptorItem == item) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Sets the ping time on the window for the specified connector. If time is
+	 * -1 the label will disappear.
+	 */
+	public void setPingTime(final Connector connector, final long pingTime) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("setPingTime " + connector.getShortName() + " "
+					+ pingTime);
+		}
+
+		if (getShell() == null || getShell().getDisplay() == null
+				|| getShell().getDisplay().isDisposed()) {
+			return;
+		}
+
+		getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				Label label = pingLabelsMap.get(connector.getShortName());
+				if (label == null) {
+					if (pingTime == -1) {
+						return;
+					}
+					label = new Label(statusBar, SWT.NONE);
+					GridData gridData = new GridData();
+					gridData.grabExcessHorizontalSpace = false;
+					gridData.grabExcessVerticalSpace = false;
+					gridData.horizontalAlignment = SWT.END;
+					gridData.verticalAlignment = SWT.CENTER;
+					label.setLayoutData(gridData);
+					pingLabelsMap.put(connector.getShortName(), label);
+					label.setFont(Raptor.getInstance().getPreferences()
+							.getFont(PreferenceKeys.APP_PING_FONT));
+					label.setForeground(Raptor.getInstance().getPreferences()
+							.getColor(PreferenceKeys.APP_PING_COLOR));
+				}
+				if (pingTime == -1) {
+					label.setVisible(false);
+					label.dispose();
+					pingLabelsMap.remove(connector.getShortName());
+					statusBar.layout(true, true);
+				} else {
+					label.setText(connector.getShortName() + " ping "
+							+ pingTime + "ms");
+					statusBar.layout(true, true);
+					label.redraw();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Sets the windows status message.
+	 */
+	public void setStatusMessage(final String newStatusMessage) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("setStatusMessage " + newStatusMessage);
+		}
+
+		if (getShell() == null || getShell().getDisplay() == null
+				|| getShell().getDisplay().isDisposed()) {
+			return;
+		}
+
+		getShell().getDisplay().syncExec(new Runnable() {
+			public void run() {
+				statusLabel
+						.setText(StringUtils.defaultString(newStatusMessage));
+			}
+		});
+	}
+
+	public void storeAllSashWeights() {
+		for (RaptorSashForm sash : sashes) {
+			sash.storeSashWeights();
+		}
+	}
+
+	/**
+	 * Adjusts the left coolbar for quadrants minimized.
+	 */
+	protected void adjustToFoldersItemsMinimizied() {
+		ToolItem[] folderMinItems = foldersMinimizedToolbar.getItems();
+		for (ToolItem item : folderMinItems) {
+			item.dispose();
+		}
+
+		boolean isAFolderMinimized = false;
+		for (RaptorTabFolder folder : folders) {
+			if (folder.getMinimized()) {
+				isAFolderMinimized = true;
+				break;
+			}
+		}
+
+		if (isAFolderMinimized) {
+			for (Quadrant quadrant : Quadrant.values()) {
+				if (getTabFolder(quadrant).getMinimized()) {
+					ToolItem item = new ToolItem(foldersMinimizedToolbar,
+							SWT.PUSH);
+					item.setText(quadrant.name());
+					item.setToolTipText("Restore quadrant " + quadrant.name());
+					final Quadrant finalQuad = quadrant;
+					item.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							getTabFolder(finalQuad).setMinimized(false);
+							restoreFolders();
+						}
+					});
+				}
+			}
+		}
+
+		foldersMinimizedToolbar.pack();
+		foldersMinimiziedCoolItem.setPreferredSize(foldersMinimizedToolbar
+				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+
+		if (!isAFolderMinimized) {
+			leftCoolbar.setVisible(false);
+		} else {
+			leftCoolbar.setVisible(true);
+		}
+		windowComposite.layout();
+
 	}
 
 	/**
@@ -919,7 +1145,8 @@ public class RaptorWindow extends ApplicationWindow {
 				game.makeSanMove("Nc6");
 				game.makeSanMove("Bb5");
 				game.makeSanMove("a6");
-				InactiveController controller = new InactiveController(game);
+				InactiveController controller = new InactiveController(game,
+						false);
 				ChessBoardWindowItem item = new ChessBoardWindowItem(controller);
 				addRaptorWindowItem(item, false);
 				item.getBoard().getArrowDecorator().addArrow(
@@ -1045,7 +1272,8 @@ public class RaptorWindow extends ApplicationWindow {
 				game.makeSanMove("d5");
 				game.makeSanMove("ed");
 				game.makeSanMove("Qd5");
-				InactiveController controller = new InactiveController(game);
+				InactiveController controller = new InactiveController(game,
+						false);
 
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
 			}
@@ -1154,100 +1382,6 @@ public class RaptorWindow extends ApplicationWindow {
 				.getColor(PreferenceKeys.APP_STATUS_BAR_COLOR));
 	}
 
-	/**
-	 * Disposes all the resources that will not be cleaned up when this window
-	 * is closed.
-	 */
-	public void dispose() {
-		if (pingLabelsMap != null) {
-			pingLabelsMap.clear();
-			pingLabelsMap = null;
-		}
-		if (activeItems != null) {
-			activeItems.clear();
-			activeItems = null;
-		}
-		if (folders != null) {
-			folders = null;
-		}
-		if (sashes != null) {
-			sashes = null;
-		}
-	}
-
-	/**
-	 * Disposes an item and removes it from the RaptorWindow. After this method
-	 * is invoked the item passed in is disposed.
-	 */
-	public void disposeRaptorWindowItem(final RaptorWindowItem item) {
-		getShell().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				RaptorTabItem tabItem = null;
-				synchronized (activeItems) {
-					for (RaptorTabItem currentTabItem : activeItems) {
-						if (currentTabItem.raptorItem == item) {
-							tabItem = currentTabItem;
-							break;
-						}
-					}
-				}
-				if (item != null) {
-					tabItem.dispose();
-					item.dispose();
-					restoreFolders();
-				}
-			}
-		});
-	}
-
-	/**
-	 * If a browser window items is currently being displayed it is returned.
-	 * Otherwise null is returned.
-	 */
-	public BrowserWindowItem getBrowserWindowItem() {
-		BrowserWindowItem result = null;
-		for (RaptorTabFolder folder : folders) {
-			for (int i = 0; i < folder.getItemCount(); i++) {
-				if (folder.getRaptorTabItemAt(i).raptorItem instanceof BrowserWindowItem) {
-					result = (BrowserWindowItem) folder.getRaptorTabItemAt(i).raptorItem;
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Returns the ChessBoardWindowItem for the specified game id, null if its
-	 * not found.
-	 * 
-	 * @param gameId
-	 *            The game id.
-	 * @return null if not found, otherwise the ChessBoardWindowItem.
-	 */
-	public ChessBoardWindowItem getChessBoardWindowItem(String gameId) {
-		ChessBoardWindowItem result = null;
-		for (RaptorTabFolder folder : folders) {
-			for (int i = 0; i < folder.getItemCount(); i++) {
-				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChessBoardWindowItem) {
-					ChessBoardWindowItem item = (ChessBoardWindowItem) folder
-							.getRaptorTabItemAt(i).raptorItem;
-
-					System.err.println("CHecking to see if " + gameId + "="
-							+ item.getController().getGame().getId());
-					if (!(item.getController() instanceof InactiveController)
-							&& item.getController().getGame().getId().equals(
-									gameId)) {
-						result = item;
-						System.err.println("Match");
-						break;
-					}
-					System.err.println("No Match");
-				}
-			}
-		}
-		return result;
-	}
-
 	protected RaptorTabFolder getFolderContainingCursor() {
 		Control control = getShell().getDisplay().getCursorControl();
 
@@ -1265,44 +1399,6 @@ public class RaptorWindow extends ApplicationWindow {
 
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
-	}
-
-	/**
-	 * Returns the quad the current window item is in. Null if the windowItem is
-	 * not being managed.
-	 */
-	public Quadrant getQuadrant(RaptorWindowItem windowItem) {
-		Quadrant result = null;
-		synchronized (activeItems) {
-			for (RaptorTabItem currentTabItem : activeItems) {
-				if (currentTabItem.raptorItem == windowItem) {
-					result = currentTabItem.raptorParent.quad;
-					break;
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Returns an array of all RaptorWindowItems currently active.
-	 */
-	public RaptorWindowItem[] getRaptorWindowItems() {
-		return activeItems.toArray(new RaptorWindowItem[0]);
-	}
-
-	/**
-	 * Returns the RaptorTabFolder at the specified 0 based index.
-	 */
-	public RaptorTabFolder getTabFolder(int index) {
-		return folders[index];
-	}
-
-	/**
-	 * Returns the RaptorTabFolder at the quad.
-	 */
-	public RaptorTabFolder getTabFolder(Quadrant quad) {
-		return folders[quad.ordinal()];
 	}
 
 	/**
@@ -1580,23 +1676,6 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Returns true if the item is being managed by the RaptorWindow. As items
-	 * are closed and disposed they are no longer managed.
-	 */
-	public boolean isBeingManaged(final RaptorWindowItem item) {
-		boolean result = false;
-		synchronized (activeItems) {
-			for (RaptorTabItem currentTabItem : activeItems) {
-				if (currentTabItem.raptorItem == item) {
-					result = true;
-					break;
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
 	 * Restores the window to a non maximized state. If a Quadrant contains no
 	 * items, it is not visible.
 	 */
@@ -1628,83 +1707,6 @@ public class RaptorWindow extends ApplicationWindow {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Leaving restoreFolders execution in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
-		}
-	}
-
-	/**
-	 * Sets the ping time on the window for the specified connector. If time is
-	 * -1 the label will disappear.
-	 */
-	public void setPingTime(final Connector connector, final long pingTime) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("setPingTime " + connector.getShortName() + " "
-					+ pingTime);
-		}
-
-		if (getShell() == null || getShell().getDisplay() == null
-				|| getShell().getDisplay().isDisposed()) {
-			return;
-		}
-
-		getShell().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				Label label = pingLabelsMap.get(connector.getShortName());
-				if (label == null) {
-					if (pingTime == -1) {
-						return;
-					}
-					label = new Label(statusBar, SWT.NONE);
-					GridData gridData = new GridData();
-					gridData.grabExcessHorizontalSpace = false;
-					gridData.grabExcessVerticalSpace = false;
-					gridData.horizontalAlignment = SWT.END;
-					gridData.verticalAlignment = SWT.CENTER;
-					label.setLayoutData(gridData);
-					pingLabelsMap.put(connector.getShortName(), label);
-					label.setFont(Raptor.getInstance().getPreferences()
-							.getFont(PreferenceKeys.APP_PING_FONT));
-					label.setForeground(Raptor.getInstance().getPreferences()
-							.getColor(PreferenceKeys.APP_PING_COLOR));
-				}
-				if (pingTime == -1) {
-					label.setVisible(false);
-					label.dispose();
-					pingLabelsMap.remove(connector.getShortName());
-					statusBar.layout(true, true);
-				} else {
-					label.setText(connector.getShortName() + " ping "
-							+ pingTime + "ms");
-					statusBar.layout(true, true);
-					label.redraw();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Sets the windows status message.
-	 */
-	public void setStatusMessage(final String newStatusMessage) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("setStatusMessage " + newStatusMessage);
-		}
-
-		if (getShell() == null || getShell().getDisplay() == null
-				|| getShell().getDisplay().isDisposed()) {
-			return;
-		}
-
-		getShell().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				statusLabel
-						.setText(StringUtils.defaultString(newStatusMessage));
-			}
-		});
-	}
-
-	public void storeAllSashWeights() {
-		for (RaptorSashForm sash : sashes) {
-			sash.storeSashWeights();
 		}
 	}
 

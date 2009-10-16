@@ -113,6 +113,386 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Adjusts the games description label. Should be overridden to provide a
+	 * description of the game.
+	 */
+	public abstract void adjustGameDescriptionLabel();
+
+	/**
+	 * Adjusts the game status label. If the game is not in an active state, the
+	 * status label sets itself to getResultDescription in the game. If the game
+	 * is in an active state, the status is set to the last move.
+	 * 
+	 * This method is provided so it can easily be overridden.
+	 */
+	public void adjustGameStatusLabel() {
+		if (getGame().isInState(Game.ACTIVE_STATE)) {
+			if (getGame().getMoveList().getSize() > 0) {
+				Move lastMove = getGame().getMoveList().get(
+						getGame().getMoveList().getSize() - 1);
+				int moveNumber = getGame().getFullMoveCount();
+
+				board.getStatusLabel().setText(
+						"Last Move: "
+								+ moveNumber
+								+ ") "
+								+ (lastMove.isWhitesMove() ? "" : "... ")
+								+ GameUtils.convertSanToUseUnicode(lastMove
+										.toString(), !game.isWhitesMove()));
+
+			} else {
+				board.getStatusLabel().setText("");
+			}
+		} else {
+			String result = getGame().getHeader(PgnHeader.ResultDescription);
+			if (result != null) {
+				board.getStatusLabel().setText(
+						getGame().getHeader(PgnHeader.ResultDescription));
+			}
+		}
+	}
+
+	/**
+	 * Returns true if a user can begin making a move from the specified square.
+	 */
+	public abstract boolean canUserInitiateMoveFrom(int squareId);
+
+	/**
+	 * Confirms closing of the window the game is being viewed in. Default is to
+	 * always return true indicating to go ahead and close it. Can be overridden
+	 * to provide other behavior.
+	 */
+	public boolean confirmClose() {
+		return true;
+	}
+
+	/**
+	 * Disposes this controller. The ChessBoard this controller is managing
+	 * should NEVER be disposed. However, all other resources such as the
+	 * traverser,and clock updaters must be disposed.
+	 * 
+	 * This method can also be overridden to remove listeners when a controller
+	 * is no longer being used.
+	 */
+	public void dispose() {
+		// Don't dispose the board
+		// It is up to the caller to do that.
+
+		if (blackClockUpdater != null) {
+			blackClockUpdater.stop();
+			blackClockUpdater.dispose();
+			blackClockUpdater = null;
+		}
+		if (whiteClockUpdater != null) {
+			whiteClockUpdater.stop();
+			whiteClockUpdater.dispose();
+			whiteClockUpdater = null;
+		}
+
+		if (itemChangedListeners != null) {
+			itemChangedListeners.clear();
+		}
+
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Disposed ChessBoardController");
+		}
+	}
+
+	/**
+	 * Should be invoked when meta information about a game changes. This
+	 * information includes, whether or not the game is closable,its title, its
+	 * icon.
+	 */
+	public void fireItemChanged() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Firing itemChanged");
+		}
+		for (ItemChangedListener listener : itemChangedListeners) {
+			listener.itemStateChanged();
+		}
+	}
+
+	/**
+	 * Returns the non-colored promotion piece selected. EMPTY if none.
+	 */
+	public int getAutoPromoteSelection() {
+		int result = QUEEN;
+
+		if (isToolItemSelected(ToolBarItemKey.AUTO_KING)) {
+			result = KING;
+		} else if (isToolItemSelected(ToolBarItemKey.AUTO_QUEEN)) {
+			result = QUEEN;
+		} else if (isToolItemSelected(ToolBarItemKey.AUTO_KNIGHT)) {
+			result = KNIGHT;
+		} else if (isToolItemSelected(ToolBarItemKey.AUTO_BISHOP)) {
+			result = BISHOP;
+		} else if (isToolItemSelected(ToolBarItemKey.AUTO_ROOK)) {
+			result = ROOK;
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the ChessBoard this controller is controlling.
+	 */
+	public ChessBoard getBoard() {
+		return board;
+	}
+
+	public Connector getConnector() {
+		return connector;
+	}
+
+	/**
+	 * Returns the game class this controller is controlling.
+	 */
+	public Game getGame() {
+		return game;
+	}
+
+	/**
+	 * Returns the list of ItemChangedListeners added to this controller.
+	 * 
+	 * @return
+	 */
+	public List<ItemChangedListener> getItemChangedListeners() {
+		return itemChangedListeners;
+	}
+
+	/**
+	 * Should be overridden to show a suitable title for the game. The result
+	 * should be short 10-12 chars max.
+	 */
+	public abstract String getTitle();
+
+	public Control getToolbar(Composite parent) {
+		return null;
+	}
+
+	public ToolItem getToolItem(ToolBarItemKey key) {
+		return toolItemMap.get(key);
+	}
+
+	/**
+	 * Initializes the ChessBoardController. A ChessBoard should be set on the
+	 * controller prior to calling this method.
+	 */
+	public abstract void init();
+
+	/**
+	 * Returns true if this controller is being used on a chess board, false
+	 * otherwise.
+	 */
+	public boolean isDisposed() {
+		boolean result = false;
+		if (board == null) {
+			result = true;
+		}
+		return result;
+	}
+
+	/**
+	 * Returns true if the specified tool item is selected. Returns false if the
+	 * tool item is noexistant or not selected.
+	 * 
+	 * @param key
+	 *            They tool items key.
+	 */
+	public boolean isToolItemSelected(ToolBarItemKey key) {
+		boolean result = false;
+		ToolItem item = getToolItem(key);
+		if (item != null) {
+			return item.getSelection();
+		}
+		return result;
+	}
+
+	/**
+	 * Invoked when the ChessBoard is being viewed. The default implementation
+	 * does nothing.
+	 */
+	public void onActivate() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("In onActivate : " + game.getId() + " "
+					+ game.getHeader(PgnHeader.Event));
+		}
+	}
+
+	/**
+	 * Flips the ChessBoard object.
+	 */
+	public void onFlip() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("onFlip");
+		}
+		board.setWhiteOnTop(!board.isWhiteOnTop());
+		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
+		board.redrawSquares();
+		board.getBoardComposite().layout(true);
+		board.getControl().redraw();
+
+		if (game instanceof BughouseGame) {
+			ChessBoardWindowItem otherBoardItem = Raptor.getInstance()
+					.getWindow().getChessBoardWindowItem(
+							((BughouseGame) getGame()).getOtherBoard().getId());
+			if (otherBoardItem != null) {
+				otherBoardItem.getController().onFlip();
+			}
+		}
+	}
+
+	/**
+	 * Invoked when the ChessBoard is being hidden from the user. The default
+	 * implementation does nothing.
+	 */
+	public void onPassivate() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("In onPassivate : " + game.getId() + " "
+					+ game.getHeader(PgnHeader.Event));
+		}
+	}
+
+	/**
+	 * Invoked when a toolbar button is pressed.
+	 */
+	public abstract void onToolbarButtonAction(ToolBarItemKey key,
+			String... args);
+
+	/**
+	 * Adjusts all of the ChessBoard to the state of the board object. The
+	 * clocks are refreshed from the game.
+	 */
+	public void refresh() {
+		if (isDisposed()) {
+			return;
+		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("refresh " + getGame().getId() + " ...");
+		}
+		long startTime = System.currentTimeMillis();
+
+		adjustGameDescriptionLabel();
+		adjustPremoveLabel();
+		adjustGameStatusLabel();
+		adjustOpeningDescriptionLabel();
+		adjustNameRatingLabels();
+		adjustLagLabels();
+		refreshClocks(true);
+		adjustPieceJailVisibility();
+		adjustBoard();
+		adjustPieceJail();
+		board.redrawSquares();
+
+		if (LOG.isDebugEnabled()) {
+			LOG
+					.debug("Completed refresh of game " + getGame().getId()
+							+ "  in "
+							+ (System.currentTimeMillis() - startTime) + "ms");
+		}
+	}
+
+	/**
+	 * Removes an item change listener from this controller.
+	 */
+	public void removeItemChangedListener(ItemChangedListener listener) {
+		itemChangedListeners.remove(listener);
+	}
+
+	/**
+	 * Sets the ChessBoard this controller is controlling.
+	 */
+	public void setBoard(ChessBoard board) {
+		this.board = board;
+	}
+
+	public void setConnector(Connector connector) {
+		this.connector = connector;
+	}
+
+	/**
+	 * Sets the list of ItemChangeListeners on this controller.
+	 */
+	public void setItemChangedListeners(
+			List<ItemChangedListener> itemChangedListeners) {
+		this.itemChangedListeners = itemChangedListeners;
+	}
+
+	/**
+	 * Sets the enabled state of the tool item matching the specified key.
+	 */
+	public void setToolItemEnabled(ToolBarItemKey key, boolean isEnabled) {
+		ToolItem item = getToolItem(key);
+		if (item != null) {
+			item.setEnabled(isEnabled);
+		}
+	}
+
+	/**
+	 * Sets the selection state of the tool item matching the specified key.
+	 * This is useful for dealing with radio groups. The auto promotes are in a
+	 * radio group.
+	 */
+	public void setToolItemSelected(ToolBarItemKey key, boolean isSelected) {
+		ToolItem item = getToolItem(key);
+		if (item != null) {
+			item.setSelection(isSelected);
+		}
+	}
+
+	/**
+	 * Invoked when the user cancels a move.
+	 */
+	public abstract void userCancelledMove(int fromSquare, boolean isDnd);
+
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	public void userClickedOnMove(int halfMoveNumber) {
+
+	}
+
+	/**
+	 * Invoked when the user initiates a move.
+	 * 
+	 * @param square
+	 *            The square the move starts from.
+	 * @param isDnd
+	 *            True if this is a drag and drop move, false if its a click
+	 *            click move.
+	 */
+	public abstract void userInitiatedMove(int square, boolean isDnd);
+
+	/**
+	 * Invoked when the user has made a move.
+	 * 
+	 * @param fromSquare
+	 *            The from square.
+	 * @param toSquare
+	 *            The two square.
+	 */
+	public abstract void userMadeMove(int fromSquare, int toSquare);
+
+	/**
+	 * Invoked when the user middle clicks on a square.
+	 * 
+	 * @param square
+	 *            The square middle clicked on.
+	 */
+	public abstract void userMiddleClicked(int square);
+
+	/**
+	 * Invoked when the user right clicks on a square.
+	 * 
+	 * @param square
+	 *            The square right clicked on.
+	 */
+	public abstract void userRightClicked(int square);
+
+	/**
 	 * Adjusts only the ChessBoard squares to match the squares in the game.
 	 * 
 	 * This method is provided so it can easily be overridden.
@@ -158,46 +538,6 @@ public abstract class ChessBoardController implements BoardConstants,
 				!isWhitesMove ? activeColor : inactiveColor);
 		board.getBlackNameRatingLabel().setForeground(
 				!isWhitesMove ? activeColor : nameLabelInactive);
-	}
-
-	/**
-	 * Adjusts the games description label. Should be overridden to provide a
-	 * description of the game.
-	 */
-	public abstract void adjustGameDescriptionLabel();
-
-	/**
-	 * Adjusts the game status label. If the game is not in an active state, the
-	 * status label sets itself to getResultDescription in the game. If the game
-	 * is in an active state, the status is set to the last move.
-	 * 
-	 * This method is provided so it can easily be overridden.
-	 */
-	public void adjustGameStatusLabel() {
-		if (getGame().isInState(Game.ACTIVE_STATE)) {
-			if (getGame().getMoveList().getSize() > 0) {
-				Move lastMove = getGame().getMoveList().get(
-						getGame().getMoveList().getSize() - 1);
-				int moveNumber = getGame().getFullMoveCount();
-
-				board.getStatusLabel().setText(
-						"Last Move: "
-								+ moveNumber
-								+ ") "
-								+ (lastMove.isWhitesMove() ? "" : "... ")
-								+ GameUtils.convertSanToUseUnicode(lastMove
-										.toString(), !game.isWhitesMove()));
-
-			} else {
-				board.getStatusLabel().setText("");
-			}
-		} else {
-			String result = getGame().getHeader(PgnHeader.ResultDescription);
-			if (result != null) {
-				board.getStatusLabel().setText(
-						getGame().getHeader(PgnHeader.ResultDescription));
-			}
-		}
 	}
 
 	/**
@@ -384,113 +724,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Returns true if a user can begin making a move from the specified square.
-	 */
-	public abstract boolean canUserInitiateMoveFrom(int squareId);
-
-	/**
-	 * Confirms closing of the window the game is being viewed in. Default is to
-	 * always return true indicating to go ahead and close it. Can be overridden
-	 * to provide other behavior.
-	 */
-	public boolean confirmClose() {
-		return true;
-	}
-
-	/**
-	 * Disposes this controller. The ChessBoard this controller is managing
-	 * should NEVER be disposed. However, all other resources such as the
-	 * traverser,and clock updaters must be disposed.
-	 * 
-	 * This method can also be overridden to remove listeners when a controller
-	 * is no longer being used.
-	 */
-	public void dispose() {
-		// Don't dispose the board
-		// It is up to the caller to do that.
-		board = null;
-
-		if (blackClockUpdater != null) {
-			blackClockUpdater.stop();
-			blackClockUpdater.dispose();
-		}
-		if (whiteClockUpdater != null) {
-			whiteClockUpdater.stop();
-			whiteClockUpdater.dispose();
-		}
-
-		if (itemChangedListeners != null) {
-			itemChangedListeners.clear();
-			itemChangedListeners = null;
-		}
-
-		game = null;
-
-		LOG.debug("Disposed ChessBoardController");
-	}
-
-	/**
-	 * Should be invoked when meta information about a game changes. This
-	 * information includes, whether or not the game is closable,its title, its
-	 * icon.
-	 */
-	public void fireItemChanged() {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Firing itemChanged");
-		}
-		for (ItemChangedListener listener : itemChangedListeners) {
-			listener.itemStateChanged();
-		}
-	}
-
-	/**
-	 * Returns the non-colored promotion piece selected. EMPTY if none.
-	 */
-	public int getAutoPromoteSelection() {
-		int result = QUEEN;
-
-		if (isToolItemSelected(ToolBarItemKey.AUTO_KING)) {
-			result = KING;
-		} else if (isToolItemSelected(ToolBarItemKey.AUTO_QUEEN)) {
-			result = QUEEN;
-		} else if (isToolItemSelected(ToolBarItemKey.AUTO_KNIGHT)) {
-			result = KNIGHT;
-		} else if (isToolItemSelected(ToolBarItemKey.AUTO_BISHOP)) {
-			result = BISHOP;
-		} else if (isToolItemSelected(ToolBarItemKey.AUTO_ROOK)) {
-			result = ROOK;
-		}
-		return result;
-	}
-
-	/**
-	 * Returns the ChessBoard this controller is controlling.
-	 */
-	public ChessBoard getBoard() {
-		return board;
-	}
-
-	public Connector getConnector() {
-		return connector;
-	}
-
-	/**
-	 * Returns the game class this controller is controlling.
-	 */
-	public Game getGame() {
-		return game;
-	}
-
-	/**
-	 * Returns the list of ItemChangedListeners added to this controller.
-	 * 
-	 * @return
-	 */
-	public List<ItemChangedListener> getItemChangedListeners() {
-		return itemChangedListeners;
-	}
-
-	/**
 	 * Returns an array indexed by color containing the accumulated lag in
 	 * milliseconds.
 	 */
@@ -546,26 +779,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Should be overridden to show a suitable title for the game. The result
-	 * should be short 10-12 chars max.
-	 */
-	public abstract String getTitle();
-
-	public Control getToolbar(Composite parent) {
-		return null;
-	}
-
-	public ToolItem getToolItem(ToolBarItemKey key) {
-		return toolItemMap.get(key);
-	}
-
-	/**
-	 * Initializes the ChessBoardController. A ChessBoard should be set on the
-	 * controller prior to calling this method.
-	 */
-	public abstract void init();
-
-	/**
 	 * If the clock updaters have not been intiailized, they are initialized.
 	 */
 	protected void initClockUpdaters() {
@@ -574,118 +787,6 @@ public abstract class ChessBoardController implements BoardConstants,
 					board);
 			blackClockUpdater = new ClockLabelUpdater(board.blackClockLabel,
 					board);
-		}
-	}
-
-	/**
-	 * Returns true if this controller is being used on a chess board, false
-	 * otherwise.
-	 */
-	public boolean isDisposed() {
-		boolean result = false;
-		if (board == null) {
-			result = true;
-		}
-		return result;
-	}
-
-	/**
-	 * Returns true if the specified tool item is selected. Returns false if the
-	 * tool item is noexistant or not selected.
-	 * 
-	 * @param key
-	 *            They tool items key.
-	 */
-	public boolean isToolItemSelected(ToolBarItemKey key) {
-		boolean result = false;
-		ToolItem item = getToolItem(key);
-		if (item != null) {
-			return item.getSelection();
-		}
-		return result;
-	}
-
-	/**
-	 * Invoked when the ChessBoard is being viewed. The default implementation
-	 * does nothing.
-	 */
-	public void onActivate() {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("In onActivate : " + game.getId() + " "
-					+ game.getHeader(PgnHeader.Event));
-		}
-	}
-
-	/**
-	 * Flips the ChessBoard object.
-	 */
-	public void onFlip() {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("onFlip");
-		}
-		board.setWhiteOnTop(!board.isWhiteOnTop());
-		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
-		board.redrawSquares();
-		board.getBoardComposite().layout(true);
-		board.getControl().redraw();
-
-		if (game instanceof BughouseGame) {
-			ChessBoardWindowItem otherBoardItem = Raptor.getInstance()
-					.getWindow().getChessBoardWindowItem(
-							((BughouseGame) getGame()).getOtherBoard().getId());
-			if (otherBoardItem != null) {
-				otherBoardItem.getController().onFlip();
-			}
-		}
-	}
-
-	/**
-	 * Invoked when the ChessBoard is being hidden from the user. The default
-	 * implementation does nothing.
-	 */
-	public void onPassivate() {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("In onPassivate : " + game.getId() + " "
-					+ game.getHeader(PgnHeader.Event));
-		}
-	}
-
-	/**
-	 * Invoked when a toolbar button is pressed.
-	 */
-	public abstract void onToolbarButtonAction(ToolBarItemKey key,
-			String... args);
-
-	/**
-	 * Adjusts all of the ChessBoard to the state of the board object. The
-	 * clocks are refreshed from the game.
-	 */
-	public void refresh() {
-		if (isDisposed()) {
-			return;
-		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("refresh " + getGame().getId() + " ...");
-		}
-		long startTime = System.currentTimeMillis();
-
-		adjustGameDescriptionLabel();
-		adjustPremoveLabel();
-		adjustGameStatusLabel();
-		adjustOpeningDescriptionLabel();
-		adjustNameRatingLabels();
-		adjustLagLabels();
-		refreshClocks(true);
-		adjustPieceJailVisibility();
-		adjustBoard();
-		adjustPieceJail();
-		board.redrawSquares();
-
-		if (LOG.isDebugEnabled()) {
-			LOG
-					.debug("Completed refresh of game " + getGame().getId()
-							+ "  in "
-							+ (System.currentTimeMillis() - startTime) + "ms");
 		}
 	}
 
@@ -840,56 +941,8 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.redrawSquares();
 	}
 
-	/**
-	 * Removes an item change listener from this controller.
-	 */
-	public void removeItemChangedListener(ItemChangedListener listener) {
-		itemChangedListeners.remove(listener);
-	}
-
-	/**
-	 * Sets the ChessBoard this controller is controlling.
-	 */
-	public void setBoard(ChessBoard board) {
-		this.board = board;
-	}
-
-	public void setConnector(Connector connector) {
-		this.connector = connector;
-	}
-
 	protected void setGame(Game game) {
 		this.game = game;
-	}
-
-	/**
-	 * Sets the list of ItemChangeListeners on this controller.
-	 */
-	public void setItemChangedListeners(
-			List<ItemChangedListener> itemChangedListeners) {
-		this.itemChangedListeners = itemChangedListeners;
-	}
-
-	/**
-	 * Sets the enabled state of the tool item matching the specified key.
-	 */
-	public void setToolItemEnabled(ToolBarItemKey key, boolean isEnabled) {
-		ToolItem item = getToolItem(key);
-		if (item != null) {
-			item.setEnabled(isEnabled);
-		}
-	}
-
-	/**
-	 * Sets the selection state of the tool item matching the specified key.
-	 * This is useful for dealing with radio groups. The auto promotes are in a
-	 * radio group.
-	 */
-	public void setToolItemSelected(ToolBarItemKey key, boolean isSelected) {
-		ToolItem item = getToolItem(key);
-		if (item != null) {
-			item.setSelection(isSelected);
-		}
 	}
 
 	/**
@@ -904,57 +957,4 @@ public abstract class ChessBoardController implements BoardConstants,
 		whiteClockUpdater.stop();
 		blackClockUpdater.stop();
 	}
-
-	/**
-	 * Invoked when the user cancels a move.
-	 */
-	public abstract void userCancelledMove(int fromSquare, boolean isDnd);
-
-	/**
-	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
-	 * selected.
-	 * 
-	 * The default implementation does nothing. It can be overridden to provide
-	 * functionality.
-	 */
-	public void userClickedOnMove(int halfMoveNumber) {
-
-	}
-
-	/**
-	 * Invoked when the user initiates a move.
-	 * 
-	 * @param square
-	 *            The square the move starts from.
-	 * @param isDnd
-	 *            True if this is a drag and drop move, false if its a click
-	 *            click move.
-	 */
-	public abstract void userInitiatedMove(int square, boolean isDnd);
-
-	/**
-	 * Invoked when the user has made a move.
-	 * 
-	 * @param fromSquare
-	 *            The from square.
-	 * @param toSquare
-	 *            The two square.
-	 */
-	public abstract void userMadeMove(int fromSquare, int toSquare);
-
-	/**
-	 * Invoked when the user middle clicks on a square.
-	 * 
-	 * @param square
-	 *            The square middle clicked on.
-	 */
-	public abstract void userMiddleClicked(int square);
-
-	/**
-	 * Invoked when the user right clicks on a square.
-	 * 
-	 * @param square
-	 *            The square right clicked on.
-	 */
-	public abstract void userRightClicked(int square);
 }

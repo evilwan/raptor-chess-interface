@@ -98,6 +98,45 @@ public class RightOrientedLayout extends ChessBoardLayout {
 				});
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		if (board != null && board.getControl() != null
+				&& !board.getControl().isDisposed()) {
+			board.getControl().removeControlListener(controlListener);
+		}
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Dispoed RightOrientedLayout");
+		}
+	}
+
+	@Override
+	public String getName() {
+		return "Right Oriented";
+	}
+
+	@Override
+	public int getStyle(Field field) {
+		switch (field) {
+		case GAME_DESCRIPTION_LABEL:
+			return SWT.LEFT;
+		case CURRENT_PREMOVE_LABEL:
+			return SWT.RIGHT;
+		case STATUS_LABEL:
+			return SWT.LEFT;
+		case OPENING_DESCRIPTION_LABEL:
+			return SWT.RIGHT;
+		case NAME_RATING_LABEL:
+			return SWT.LEFT;
+		case CLOCK_LABEL:
+			return SWT.LEFT;
+		case LAG_LABEL:
+			return SWT.LEFT;
+		default:
+			return SWT.NONE;
+		}
+	}
+
 	protected void adjustLabelFontsAndImages() {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Adjusting name labels.");
@@ -146,40 +185,6 @@ public class RightOrientedLayout extends ChessBoardLayout {
 				.getWhiteClockLabel().getFont(), 80, topClockRect.height);
 		board.getWhiteClockLabel().setFont(clockFont);
 		board.getBlackClockLabel().setFont(clockFont);
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		LOG.debug("Disposed RightOrientedLayout");
-		board.getControl().removeControlListener(controlListener);
-	}
-
-	@Override
-	public String getName() {
-		return "Right Oriented";
-	}
-
-	@Override
-	public int getStyle(Field field) {
-		switch (field) {
-		case GAME_DESCRIPTION_LABEL:
-			return SWT.LEFT;
-		case CURRENT_PREMOVE_LABEL:
-			return SWT.RIGHT;
-		case STATUS_LABEL:
-			return SWT.LEFT;
-		case OPENING_DESCRIPTION_LABEL:
-			return SWT.RIGHT;
-		case NAME_RATING_LABEL:
-			return SWT.LEFT;
-		case CLOCK_LABEL:
-			return SWT.LEFT;
-		case LAG_LABEL:
-			return SWT.LEFT;
-		default:
-			return SWT.NONE;
-		}
 	}
 
 	@Override

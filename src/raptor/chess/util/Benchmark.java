@@ -92,6 +92,18 @@ public class Benchmark {
 		return moveWalk(game, 0, 3);
 	}
 
+	public static long stdv(long[] samples) {
+		long mean = mean(samples);
+
+		long accum = 0;
+
+		for (long sample : samples) {
+			accum += (long) Math.pow(sample - mean, 2);
+		}
+
+		return (long) Math.sqrt(accum / samples.length);
+	}
+
 	private static long moveWalk(Game game, int depth, int maxDepth) {
 		counter++;
 		long result = 1;
@@ -130,17 +142,5 @@ public class Benchmark {
 		}
 
 		return result;
-	}
-
-	public static long stdv(long[] samples) {
-		long mean = mean(samples);
-
-		long accum = 0;
-
-		for (long sample : samples) {
-			accum += (long) Math.pow(sample - mean, 2);
-		}
-
-		return (long) Math.sqrt(accum / samples.length);
 	}
 }

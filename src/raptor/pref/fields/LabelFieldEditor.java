@@ -54,6 +54,36 @@ public class LabelFieldEditor extends FieldEditor {
 	 * (non-) Method declared on FieldEditor.
 	 */
 	@Override
+	public int getNumberOfControls() {
+		return 1;
+	}
+
+	/*
+	 * @see FieldEditor.setEnabled
+	 */
+	@Override
+	public void setEnabled(boolean enabled, Composite parent) {
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
+	public void setFocus() {
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
+	public void setLabelText(String text) {
+		super.setLabelText(text);
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
 	protected void adjustForNumColumns(int numColumns) {
 		((GridData) label.getLayoutData()).horizontalSpan = numColumns - 1;
 	}
@@ -90,36 +120,6 @@ public class LabelFieldEditor extends FieldEditor {
 	@Override
 	protected void doStore() {
 
-	}
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	public int getNumberOfControls() {
-		return 1;
-	}
-
-	/*
-	 * @see FieldEditor.setEnabled
-	 */
-	@Override
-	public void setEnabled(boolean enabled, Composite parent) {
-	}
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	public void setFocus() {
-	}
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	public void setLabelText(String text) {
-		super.setLabelText(text);
 	}
 
 	/**

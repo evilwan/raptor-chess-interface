@@ -1,3 +1,9 @@
-1) Add in code to change observe controller to examine controller when someone mexes you.
-
-2) Add in when following someone to always put them on bottom.
+Add in when following someone to always put them on bottom.
+win sound not playing.
+figure out how to handle focusing on main tab when others pop up (optional)
+figure out how to fix the focus problem when typing in a console and not losing any typed characters.
+figure out how to shut down flash if its running in a browser page.
+issues that are outstanding on the raptor site.
+figure out how to fix the move list scrolling all the way to the right sometimes.
+fix some issues related to the arrows and move lists.
+fix lag not being set correctly when you are playing.

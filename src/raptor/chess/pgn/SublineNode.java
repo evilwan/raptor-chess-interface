@@ -126,16 +126,6 @@ public class SublineNode implements MoveAnnotation {
 		this.move = move;
 	}
 
-	/**
-	 * @deprecated
-	 * @param move
-	 * @return
-	 */
-	@Deprecated
-	private void setSublineOwner(SublineNode node) {
-		sublineOwner = node;
-	}
-
 	@Override
 	public String toString() {
 		if (getMove() == null) {
@@ -151,5 +141,15 @@ public class SublineNode implements MoveAnnotation {
 					+ (reply != null ? " " + reply.toString() : ""));
 			return result.toString();
 		}
+	}
+
+	/**
+	 * @deprecated
+	 * @param move
+	 * @return
+	 */
+	@Deprecated
+	private void setSublineOwner(SublineNode node) {
+		sublineOwner = node;
 	}
 }

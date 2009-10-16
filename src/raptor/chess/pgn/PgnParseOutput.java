@@ -11,18 +11,18 @@ public class PgnParseOutput implements Serializable {
 
 	ArrayList<ClassicGame> games;
 
-	/**
-	 * Don't use this its for gwt serizliation only.
-	 */
-	@SuppressWarnings("unused")
-	private PgnParseOutput() {
-	}
-
 	public PgnParseOutput(ArrayList<ClassicGame> games,
 			ArrayList<PgnParserError> errors) {
 		super();
 		this.games = games;
 		this.errors = errors;
+	}
+
+	/**
+	 * Don't use this its for gwt serizliation only.
+	 */
+	@SuppressWarnings("unused")
+	private PgnParseOutput() {
 	}
 
 	public ArrayList<PgnParserError> getErrors() {

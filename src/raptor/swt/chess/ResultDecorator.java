@@ -27,6 +27,8 @@ import raptor.swt.SWTUtils;
  * Paints the game result over the chess board if it is inactive.
  */
 public class ResultDecorator implements BoardConstants {
+	// To do write a dispose for this class and call it from ChessBoard when its
+	// disposed.
 
 	protected ChessBoard board;
 	protected boolean isHiding = false;
@@ -38,6 +40,24 @@ public class ResultDecorator implements BoardConstants {
 	public ResultDecorator(ChessBoard board) {
 		this.board = board;
 		init();
+	}
+
+	/**
+	 * TO DO
+	 */
+	public void dispose() {
+		// WRITE ME
+	}
+
+	/**
+	 * If is hiding = true, hides the result being painted over the chess board.
+	 * Otherwise shows it.
+	 * 
+	 * isHiding is false by default.
+	 */
+	public void setHiding(boolean isHiding) {
+		this.isHiding = isHiding;
+		board.redrawSquares();
 	}
 
 	/**
@@ -209,17 +229,6 @@ public class ResultDecorator implements BoardConstants {
 				}
 			}
 		});
-	}
-
-	/**
-	 * If is hiding = true, hides the result being painted over the chess board.
-	 * Otherwise shows it.
-	 * 
-	 * isHiding is false by default.
-	 */
-	public void setHiding(boolean isHiding) {
-		this.isHiding = isHiding;
-		board.redrawSquares();
 	}
 
 }

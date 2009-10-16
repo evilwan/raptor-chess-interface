@@ -63,16 +63,30 @@ public class TimesealPipe {
 		buffer = new byte[i];
 	}
 
+	public int _mthdo() {
+		return _flddo;
+	}
+
+	public void _mthif(int i) {
+		synchronized (readLock) {
+			_flddo = i;
+		}
+	}
+
+	public TimesealInputStream getTimesealInputStream() {
+		return timesealInputStream;
+	}
+
+	public TimesealOutputStream getTimesealOutputStream() {
+		return timesealOutputStream;
+	}
+
 	synchronized int _mthcase() {
 		if (closedFlag2) {
 			return 0;
 		} else {
 			return _mthint();
 		}
-	}
-
-	public int _mthdo() {
-		return _flddo;
 	}
 
 	synchronized int _mthfor() throws IOException {
@@ -155,20 +169,6 @@ public class TimesealPipe {
 		}
 	}
 
-	public void _mthif(int i) {
-		synchronized (readLock) {
-			_flddo = i;
-		}
-	}
-
-	private int _mthint() {
-		if (_fldbyte >= _fldchar) {
-			return _fldbyte - _fldchar;
-		} else {
-			return _fldbyte + buffer.length - _fldchar;
-		}
-	}
-
 	synchronized void _mthnew() {
 		if (closedFlag2) {
 			throw new IllegalStateException("Already closed");
@@ -212,18 +212,6 @@ public class TimesealPipe {
 		}
 	}
 
-	private int duno() {
-		return buffer.length - _mthint() - 1;
-	}
-
-	public TimesealInputStream getTimesealInputStream() {
-		return timesealInputStream;
-	}
-
-	public TimesealOutputStream getTimesealOutputStream() {
-		return timesealOutputStream;
-	}
-
 	synchronized void write(byte bytes[], int i, int j) throws IOException {
 		synchronized (writeLock) {
 			if (closedFlag2 || closedFlag) {
@@ -250,5 +238,17 @@ public class TimesealPipe {
 				notifyAll();
 			}
 		}
+	}
+
+	private int _mthint() {
+		if (_fldbyte >= _fldchar) {
+			return _fldbyte - _fldchar;
+		} else {
+			return _fldbyte + buffer.length - _fldchar;
+		}
+	}
+
+	private int duno() {
+		return buffer.length - _mthint() - 1;
 	}
 }

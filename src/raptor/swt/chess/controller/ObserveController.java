@@ -60,7 +60,7 @@ public class ObserveController extends ChessBoardController {
 							onPlayGameEndSound();
 
 							InactiveController inactiveController = new InactiveController(
-									getGame());
+									getGame(), board.isWhiteOnTop());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 
@@ -342,21 +342,6 @@ public class ObserveController extends ChessBoardController {
 		connector.getGameService().addGameServiceListener(listener);
 	}
 
-	protected void onPlayGameEndSound() {
-		SoundService.getInstance().playSound("obsGameEnd");
-	}
-
-	protected void onPlayGameStartSound() {
-		SoundService.getInstance().playSound("gameStart");
-	}
-
-	protected void onPlayMoveSound() {
-		if (getPreferences().getBoolean(
-				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING)) {
-			SoundService.getInstance().playSound("obsMove");
-		}
-	}
-
 	@Override
 	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
 		switch (key) {
@@ -432,5 +417,20 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void userRightClicked(int square) {
+	}
+
+	protected void onPlayGameEndSound() {
+		SoundService.getInstance().playSound("obsGameEnd");
+	}
+
+	protected void onPlayGameStartSound() {
+		SoundService.getInstance().playSound("gameStart");
+	}
+
+	protected void onPlayMoveSound() {
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING)) {
+			SoundService.getInstance().playSound("obsMove");
+		}
 	}
 }

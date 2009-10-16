@@ -92,13 +92,6 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	/**
-	 * Creates the chess board layout to use for this chess board.
-	 */
-	protected void createChessBoardLayout() {
-		chessBoardLayout = new RightOrientedLayout(this);
-	}
-
-	/**
 	 * Creates the chess board with the specified parent.
 	 */
 	public Composite createControls(Composite parent) {
@@ -129,6 +122,18 @@ public class ChessBoard implements BoardConstants {
 					if (chessBoardLayout != null) {
 						chessBoardLayout.dispose();
 						chessBoardLayout = null;
+					}
+					if (arrowDecorator != null) {
+						arrowDecorator.dispose();
+						arrowDecorator = null;
+					}
+					if (squareHighlighter != null) {
+						squareHighlighter.dispose();
+						squareHighlighter = null;
+					}
+					if (resultDecorator != null) {
+						resultDecorator.dispose();
+						resultDecorator = null;
 					}
 					if (LOG.isInfoEnabled()) {
 						LOG.info("Disposed ChessBoard");
@@ -191,51 +196,6 @@ public class ChessBoard implements BoardConstants {
 						+ (System.currentTimeMillis() - startTime));
 			}
 			return getControl();
-		}
-	}
-
-	protected void createMoveList() {
-		moveList = new SimpleMoveList();
-		moveList.setController(controller);
-	}
-
-	protected void createPieceJailControls() {
-		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WK_DROP_FROM_SQUARE);
-
-		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BK_DROP_FROM_SQUARE);
-	}
-
-	protected void createSquares() {
-		boolean isWhiteSquare = true;
-		for (int i = 0; i < 8; i++) {
-			isWhiteSquare = !isWhiteSquare;
-			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j] = new ChessSquare(boardComposite, this, GameUtils
-						.getSquare(i, j), isWhiteSquare);
-				isWhiteSquare = !isWhiteSquare;
-			}
 		}
 	}
 
@@ -492,28 +452,6 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	/**
-	 * Updates only the board and piece jails from
-	 * Raptor.getInstance().getPreferences().
-	 */
-	protected void updateBoardFromPrefs() {
-		RaptorPreferenceStore preferences = Raptor.getInstance()
-				.getPreferences();
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				squares[i][j].clearCache();
-			}
-		}
-
-		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
-			if (pieceJailSquare != null) {
-				pieceJailSquare.setBackground(preferences
-						.getColor(BOARD_PIECE_JAIL_BACKGROUND_COLOR));
-				pieceJailSquare.clearCache();
-			}
-		}
-	}
-
-	/**
 	 * Updates all control settings to those in
 	 * Raptor.getInstance().getPreferences().
 	 */
@@ -583,6 +521,80 @@ public class ChessBoard implements BoardConstants {
 		controller.refresh();
 		sashForm.layout(true, true);
 		sashForm.redraw();
+	}
+
+	/**
+	 * Creates the chess board layout to use for this chess board.
+	 */
+	protected void createChessBoardLayout() {
+		chessBoardLayout = new RightOrientedLayout(this);
+	}
+
+	protected void createMoveList() {
+		moveList = new SimpleMoveList();
+		moveList.setController(controller);
+	}
+
+	protected void createPieceJailControls() {
+		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WP_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WN_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WB_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WR_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WQ_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.WK_DROP_FROM_SQUARE);
+
+		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BP_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BN_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BB_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BR_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BQ_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(
+				boardComposite, this, GameConstants.BK_DROP_FROM_SQUARE);
+	}
+
+	protected void createSquares() {
+		boolean isWhiteSquare = true;
+		for (int i = 0; i < 8; i++) {
+			isWhiteSquare = !isWhiteSquare;
+			for (int j = 0; j < squares[i].length; j++) {
+				squares[i][j] = new ChessSquare(boardComposite, this, GameUtils
+						.getSquare(i, j), isWhiteSquare);
+				isWhiteSquare = !isWhiteSquare;
+			}
+		}
+	}
+
+	/**
+	 * Updates only the board and piece jails from
+	 * Raptor.getInstance().getPreferences().
+	 */
+	protected void updateBoardFromPrefs() {
+		RaptorPreferenceStore preferences = Raptor.getInstance()
+				.getPreferences();
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				squares[i][j].clearCache();
+			}
+		}
+
+		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+			if (pieceJailSquare != null) {
+				pieceJailSquare.setBackground(preferences
+						.getColor(BOARD_PIECE_JAIL_BACKGROUND_COLOR));
+				pieceJailSquare.clearCache();
+			}
+		}
 	}
 
 }

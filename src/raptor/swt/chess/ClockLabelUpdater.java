@@ -66,10 +66,6 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 		clockLabel = null;
 	}
 
-	protected RaptorPreferenceStore getPreferences() {
-		return Raptor.getInstance().getPreferences();
-	}
-
 	public long getRemainingTimeMillis() {
 		return remainingTimeMillis;
 	}
@@ -111,5 +107,9 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 	public void stop() {
 		isRunning = false;
 		Display.getCurrent().timerExec(-1, this);
+	}
+
+	protected RaptorPreferenceStore getPreferences() {
+		return Raptor.getInstance().getPreferences();
 	}
 }

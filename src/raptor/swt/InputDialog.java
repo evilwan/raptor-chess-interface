@@ -37,66 +37,6 @@ public class InputDialog extends Dialog {
 	}
 
 	/**
-	 * Creates the dialog's contents
-	 * 
-	 * @param shell
-	 *            the dialog window
-	 */
-	protected void createContents(final Shell shell) {
-		shell.setLayout(new GridLayout(2, false));
-
-		// Show the message
-		Label label = new Label(shell, SWT.NONE);
-		label.setText(message);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2,
-				1));
-
-		// Display the input box
-		final Text text = new Text(shell, SWT.BORDER);
-		text
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-						2, 1));
-		if (getInput() != null) {
-			text.setText(getInput());
-		}
-
-		// Create the OK button and add a handler
-		// so that pressing it will set input
-		// to the entered value
-		Button ok = new Button(shell, SWT.PUSH);
-		ok.setText("OK");
-		ok
-				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false,
-						1, 1));
-		ok.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				input = text.getText();
-				shell.close();
-			}
-		});
-
-		// Create the cancel button and add a handler
-		// so that pressing it will set input to null
-		Button cancel = new Button(shell, SWT.PUSH);
-		cancel.setText("Cancel");
-		cancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
-				1, 1));
-		cancel.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				input = null;
-				shell.close();
-			}
-		});
-
-		// Set the OK button as the default, so
-		// user can type input and press Enter
-		// to dismiss
-		shell.setDefaultButton(ok);
-	}
-
-	/**
 	 * Gets the input
 	 * 
 	 * @return String
@@ -154,5 +94,65 @@ public class InputDialog extends Dialog {
 	 */
 	public void setMessage(String message) {
 		this.message = message;
+	}
+
+	/**
+	 * Creates the dialog's contents
+	 * 
+	 * @param shell
+	 *            the dialog window
+	 */
+	protected void createContents(final Shell shell) {
+		shell.setLayout(new GridLayout(2, false));
+
+		// Show the message
+		Label label = new Label(shell, SWT.NONE);
+		label.setText(message);
+		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2,
+				1));
+
+		// Display the input box
+		final Text text = new Text(shell, SWT.BORDER);
+		text
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+						2, 1));
+		if (getInput() != null) {
+			text.setText(getInput());
+		}
+
+		// Create the OK button and add a handler
+		// so that pressing it will set input
+		// to the entered value
+		Button ok = new Button(shell, SWT.PUSH);
+		ok.setText("OK");
+		ok
+				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false,
+						1, 1));
+		ok.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				input = text.getText();
+				shell.close();
+			}
+		});
+
+		// Create the cancel button and add a handler
+		// so that pressing it will set input to null
+		Button cancel = new Button(shell, SWT.PUSH);
+		cancel.setText("Cancel");
+		cancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
+				1, 1));
+		cancel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				input = null;
+				shell.close();
+			}
+		});
+
+		// Set the OK button as the default, so
+		// user can type input and press Enter
+		// to dismiss
+		shell.setDefaultButton(ok);
 	}
 }

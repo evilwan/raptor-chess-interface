@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.service.ChessBoardCacheService;
 import raptor.service.ConnectorService;
 import raptor.service.EcoService;
 import raptor.service.ScriptService;
@@ -49,6 +50,14 @@ import raptor.util.FileUtil;
  * This classes main is the application main.
  */
 public class Raptor implements PreferenceKeys {
+	static {
+		// Forces log4j to check for changes to its properties file and reload
+		// them every 5 seconds.
+		// This must always be called before any other code or it will not work.
+		PropertyConfigurator.configureAndWatch("resources/log4j.properties",
+				5000);
+	}
+
 	private static final Log LOG = LogFactory.getLog(Raptor.class);
 
 	public static final File DEFAULT_HOME_DIR = new File("defaultHomeDir/");
@@ -66,12 +75,20 @@ public class Raptor implements PreferenceKeys {
 
 	private static Display display;
 
-	static {
-		// Forces log4j to check for changes to its properties file and reload
-		// them every 5 seconds.
-		PropertyConfigurator.configureAndWatch("resources/log4j.properties",
-				5000);
-	}
+	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
+			Display.getCurrent());
+
+	protected FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
+
+	protected ColorRegistry colorRegistry = new ColorRegistry(Display
+			.getCurrent());
+
+	protected RaptorCursorRegistry cursorRegistry = new RaptorCursorRegistry(
+			Display.getCurrent());
+
+	protected RaptorPreferenceStore preferences;
+
+	protected RaptorWindow raptorWindow;
 
 	public static void createInstance() {
 		instance = new Raptor();
@@ -103,6 +120,8 @@ public class Raptor implements PreferenceKeys {
 			Connector[] connectors = ConnectorService.getInstance()
 					.getConnectors();
 			for (final Connector connector : connectors) {
+				// Wait 750 milliseconds so the RaptorWindow has time to be
+				// created.
 				ThreadService.getInstance().scheduleOneShot(750,
 						new Runnable() {
 							public void run() {
@@ -113,12 +132,21 @@ public class Raptor implements PreferenceKeys {
 
 			display.timerExec(500, new Runnable() {
 				public void run() {
+					// Launch the home page after a half second it requires a
+					// RaptorWindow.
 					if (Raptor.getInstance().getPreferences().getBoolean(
 							APP_IS_LAUNCHNG_HOME_PAGE)) {
 						BrowserUtils.openUrl(PreferenceKeys.APP_HOME_URL);
 					}
+
+					// Initialize this after a half second it requires a
+					// RaptorWindow.
 					Raptor.getInstance().cursorRegistry.setDefaultCursor(Raptor
 							.getInstance().getWindow().getShell().getCursor());
+
+					// Initialize this after a half second. It requires a
+					// RaptorWindow.
+					ChessBoardCacheService.getInstance();
 				}
 			});
 
@@ -130,21 +158,6 @@ public class Raptor implements PreferenceKeys {
 			instance.shutdown();
 		}
 	}
-
-	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
-			Display.getCurrent());
-
-	protected FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
-
-	protected ColorRegistry colorRegistry = new ColorRegistry(Display
-			.getCurrent());
-
-	protected RaptorCursorRegistry cursorRegistry = new RaptorCursorRegistry(
-			Display.getCurrent());
-
-	protected RaptorPreferenceStore preferences;
-
-	protected RaptorWindow raptorWindow;
 
 	public Raptor() {
 	}
@@ -254,35 +267,6 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	/**
-	 * Initializes raptor.
-	 */
-	private void init() {
-		preferences = new RaptorPreferenceStore();
-
-		// Make sure all of the Singleton services get loaded.
-		ThreadService.getInstance();
-		EcoService.getInstance();
-		ConnectorService.getInstance();
-		SoundService.getInstance();
-		ScriptService.getInstance();
-
-		install();
-	}
-
-	/**
-	 * Installs raptor. Currently this places everything in the default home
-	 * directory in the users raptor directory. This is so new releases will
-	 * always take effect.
-	 */
-	private void install() {
-		try {
-			FileUtil.copyFiles(DEFAULT_HOME_DIR, USER_RAPTOR_DIR);
-		} catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
-	}
-
-	/**
 	 * Handles an error in a way the user is notified and can report an issue.
 	 * If possible try and use a connectors on error if you have access to one,
 	 * otherwise you can use this.
@@ -354,25 +338,31 @@ public class Raptor implements PreferenceKeys {
 		try {
 			ConnectorService.getInstance().dispose();
 		} catch (Throwable t) {
-			LOG.error("Error shutting down raptor", t);
+			LOG.warn("Error shutting down ConnectorService", t);
 		}
 
 		try {
 			ThreadService.getInstance().dispose();
 		} catch (Throwable t) {
-			LOG.error("Error shutting down raptor", t);
+			LOG.warn("Error shutting down ThreadService", t);
 		}
 
 		try {
 			EcoService.getInstance().dispose();
 		} catch (Throwable t) {
-			LOG.error("Error shutting down raptor", t);
+			LOG.warn("Error shutting down EcoService", t);
 		}
 
 		try {
 			SoundService.getInstance().dispose();
 		} catch (Throwable t) {
-			LOG.error("Error shutting down raptor", t);
+			LOG.warn("Error shutting down SoundService", t);
+		}
+
+		try {
+			ChessBoardCacheService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting ChessBoardCacheService", t);
 		}
 
 		try {
@@ -380,7 +370,7 @@ public class Raptor implements PreferenceKeys {
 				raptorWindow.close();
 			}
 		} catch (Throwable t) {
-			LOG.error("Error shutting down raptor", t);
+			LOG.warn("Error shutting down raptor window", t);
 		}
 
 		try {
@@ -388,11 +378,40 @@ public class Raptor implements PreferenceKeys {
 				display.dispose();
 			}
 		} catch (Throwable t) {
-			LOG.error("Error shutting down raptor", t);
+			LOG.warn("Error shutting down display", t);
 		}
 
 		LOG.info("Shutdown Raptor");
 		System.exit(1);
+	}
+
+	/**
+	 * Initializes raptor.
+	 */
+	private void init() {
+		preferences = new RaptorPreferenceStore();
+
+		// Make sure all of the Singleton services get loaded.
+		ThreadService.getInstance();
+		EcoService.getInstance();
+		ConnectorService.getInstance();
+		SoundService.getInstance();
+		ScriptService.getInstance();
+
+		install();
+	}
+
+	/**
+	 * Installs raptor. Currently this places everything in the default home
+	 * directory in the users raptor directory. This is so new releases will
+	 * always take effect.
+	 */
+	private void install() {
+		try {
+			FileUtil.copyFiles(DEFAULT_HOME_DIR, USER_RAPTOR_DIR);
+		} catch (IOException ioe) {
+			throw new RuntimeException(ioe);
+		}
 	}
 
 }

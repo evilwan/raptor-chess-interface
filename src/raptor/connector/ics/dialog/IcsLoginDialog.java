@@ -71,21 +71,6 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		this.title = title;
 	}
 
-	protected void adjustToCheckBoxControls() {
-		if (guestLoginCheckBox.getSelection()) {
-			passwordField.setText("");
-			passwordLabel.setEnabled(false);
-			passwordField.setEnabled(false);
-			handleLabel.setEnabled(true);
-			handleField.setEnabled(true);
-		} else {
-			passwordLabel.setEnabled(true);
-			passwordField.setEnabled(true);
-			handleLabel.setEnabled(true);
-			handleField.setEnabled(true);
-		}
-	}
-
 	@Override
 	public Composite createContents(Composite parent) {
 		getShell().setText(title);
@@ -242,6 +227,30 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	}
 
 	@Override
+	public int open() {
+		return super.open();
+	}
+
+	public boolean wasLoginPressed() {
+		return wasLoginPressed;
+	}
+
+	protected void adjustToCheckBoxControls() {
+		if (guestLoginCheckBox.getSelection()) {
+			passwordField.setText("");
+			passwordLabel.setEnabled(false);
+			passwordField.setEnabled(false);
+			handleLabel.setEnabled(true);
+			handleField.setEnabled(true);
+		} else {
+			passwordLabel.setEnabled(true);
+			passwordField.setEnabled(true);
+			handleLabel.setEnabled(true);
+			handleField.setEnabled(true);
+		}
+	}
+
+	@Override
 	protected void initializeBounds() {
 		super.initializeBounds();
 		Shell shell = getShell();
@@ -269,11 +278,6 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 				+ "auto-connect"));
 		LOG.info("Loaded loadFromProfile " + profileName);
 		adjustToCheckBoxControls();
-	}
-
-	@Override
-	public int open() {
-		return super.open();
 	}
 
 	protected void storeProfile(String profileName) {
@@ -308,9 +312,5 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		// It should'nt be stored for fics2/bics2 logins.
 		prefs.save();
 		LOG.info("Saved " + profileName);
-	}
-
-	public boolean wasLoginPressed() {
-		return wasLoginPressed;
 	}
 }

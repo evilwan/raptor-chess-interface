@@ -50,6 +50,30 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		setTitle("Channel Colors");
 	}
 
+	public String getKey(String channel) {
+		return PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+				+ ChatType.CHANNEL_TELL + "-" + channel + "-color";
+	}
+
+	public void updateChannelsCombo() {
+		for (int i = 0; i < 255; i++) {
+			String key = getKey("" + i);
+			if (raptorPreferenceStore.contains(key)) {
+				boolean contains = false;
+				for (int j = 0; j < channels.getItemCount(); j++) {
+					if (channels.getItem(j).equals("" + i)) {
+						contains = true;
+						break;
+					}
+				}
+
+				if (!contains) {
+					channels.add("" + i);
+				}
+			}
+		}
+	}
+
 	@Override
 	protected Control createContents(Composite parent) {
 		parent = new Composite(parent, SWT.NONE);
@@ -157,29 +181,5 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		}
 
 		return parent;
-	}
-
-	public String getKey(String channel) {
-		return PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-				+ ChatType.CHANNEL_TELL + "-" + channel + "-color";
-	}
-
-	public void updateChannelsCombo() {
-		for (int i = 0; i < 255; i++) {
-			String key = getKey("" + i);
-			if (raptorPreferenceStore.contains(key)) {
-				boolean contains = false;
-				for (int j = 0; j < channels.getItemCount(); j++) {
-					if (channels.getItem(j).equals("" + i)) {
-						contains = true;
-						break;
-					}
-				}
-
-				if (!contains) {
-					channels.add("" + i);
-				}
-			}
-		}
 	}
 }

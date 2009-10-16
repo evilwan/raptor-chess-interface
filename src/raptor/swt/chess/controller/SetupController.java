@@ -63,7 +63,7 @@ public class SetupController extends ChessBoardController {
 						try {
 							onPlayGameEndSound();
 							InactiveController inactiveController = new InactiveController(
-									getGame());
+									getGame(), board.isWhiteOnTop());
 							getBoard().setController(inactiveController);
 
 							inactiveController.setBoard(board);
@@ -168,59 +168,10 @@ public class SetupController extends ChessBoardController {
 	}
 
 	@Override
-	protected void adjustClockColors() {
-		if (!isDisposed()) {
-			if (getGame().getColorToMove() == WHITE) {
-				board.getWhiteClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-				board.getBlackClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			} else {
-				board.getBlackClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-				board.getWhiteClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			}
-		}
-	}
-
-	@Override
 	public void adjustGameDescriptionLabel() {
 		if (!isDisposed()) {
 			board.getGameDescriptionLabel().setText(
 					"Setting up a chess position");
-		}
-	}
-
-	protected void adjustToDropMove(Move move, boolean isRedrawing) {
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
-		if (getPreferences().getBoolean(
-				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-			board.getSquareHighlighter().addHighlight(
-					new Highlight(move.getFrom(), move.getTo(),
-							getPreferences().getColor(
-									PreferenceKeys.HIGHLIGHT_MY_COLOR),
-							getPreferences().getBoolean(
-									PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-		}
-		if (getPreferences().getBoolean(PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-			board.getArrowDecorator().addArrow(
-					new Arrow(move.getFrom(), move.getTo(), getPreferences()
-							.getColor(PreferenceKeys.ARROW_MY_COLOR),
-							getPreferences().getBoolean(
-									PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-		}
-		board.getSquare(move.getTo()).setPiece(
-				BoardUtils
-						.getColoredPiece(move.getPiece(), move.isWhitesMove()));
-
-		if (isRedrawing) {
-			board.redrawSquares();
 		}
 	}
 
@@ -273,18 +224,6 @@ public class SetupController extends ChessBoardController {
 		refresh();
 		onPlayGameStartSound();
 		connector.getGameService().addGameServiceListener(listener);
-	}
-
-	protected void onPlayGameEndSound() {
-		SoundService.getInstance().playSound("obsGameEnd");
-	}
-
-	protected void onPlayGameStartSound() {
-		SoundService.getInstance().playSound("gameStart");
-	}
-
-	protected void onPlayMoveSound() {
-		SoundService.getInstance().playSound("move");
 	}
 
 	@Override
@@ -543,5 +482,66 @@ public class SetupController extends ChessBoardController {
 			}
 			menu.dispose();
 		}
+	}
+
+	@Override
+	protected void adjustClockColors() {
+		if (!isDisposed()) {
+			if (getGame().getColorToMove() == WHITE) {
+				board.getWhiteClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getBlackClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			} else {
+				board.getBlackClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getWhiteClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			}
+		}
+	}
+
+	protected void adjustToDropMove(Move move, boolean isRedrawing) {
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
+		if (getPreferences().getBoolean(
+				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+			board.getSquareHighlighter().addHighlight(
+					new Highlight(move.getFrom(), move.getTo(),
+							getPreferences().getColor(
+									PreferenceKeys.HIGHLIGHT_MY_COLOR),
+							getPreferences().getBoolean(
+									PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+		}
+		if (getPreferences().getBoolean(PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
+			board.getArrowDecorator().addArrow(
+					new Arrow(move.getFrom(), move.getTo(), getPreferences()
+							.getColor(PreferenceKeys.ARROW_MY_COLOR),
+							getPreferences().getBoolean(
+									PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+		}
+		board.getSquare(move.getTo()).setPiece(
+				BoardUtils
+						.getColoredPiece(move.getPiece(), move.isWhitesMove()));
+
+		if (isRedrawing) {
+			board.redrawSquares();
+		}
+	}
+
+	protected void onPlayGameEndSound() {
+		SoundService.getInstance().playSound("obsGameEnd");
+	}
+
+	protected void onPlayGameStartSound() {
+		SoundService.getInstance().playSound("gameStart");
+	}
+
+	protected void onPlayMoveSound() {
+		SoundService.getInstance().playSound("move");
 	}
 }

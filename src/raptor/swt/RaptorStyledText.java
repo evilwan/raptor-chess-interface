@@ -69,11 +69,6 @@ public class RaptorStyledText extends StyledText {
 		}
 	}
 
-	Object getMyClipboardContent(final int clipboardType) {
-		TextTransfer plainTextTransfer = TextTransfer.getInstance();
-		return clipBoard.getContents(plainTextTransfer, clipboardType);
-	}
-
 	@Override
 	public void paste() {
 		if ((getStyle() & SWT.SINGLE) != 0) {
@@ -98,5 +93,10 @@ public class RaptorStyledText extends StyledText {
 				super.paste();
 			}
 		}
+	}
+
+	Object getMyClipboardContent(final int clipboardType) {
+		TextTransfer plainTextTransfer = TextTransfer.getInstance();
+		return clipBoard.getContents(plainTextTransfer, clipboardType);
 	}
 }

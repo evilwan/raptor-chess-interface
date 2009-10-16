@@ -26,27 +26,27 @@ import raptor.util.RaptorStringUtils;
 //KoggeStone
 //http://www.open-aurec.com/wbforum/viewtopic.php?f=4&t=49948&sid=abd6ee7224f34b11a5211aa167f01ac4
 public class GameUtils implements GameConstants {
-	private static final long DE_BRUJIN = 0x03f79d71b4cb0a89L;
+	static {
+		initKingAttacks();
+		initKnightAttacks();
+	}
 
+	private static final long DE_BRUJIN = 0x03f79d71b4cb0a89L;
 	private static final int[] DE_BRUJIN_MAGICS_TABLE = { 0, 1, 48, 2, 57, 49,
 			28, 3, 61, 58, 50, 42, 38, 29, 17, 4, 62, 55, 59, 36, 53, 51, 43,
 			22, 45, 39, 33, 30, 24, 18, 12, 5, 63, 47, 56, 27, 60, 41, 37, 16,
 			54, 35, 52, 21, 44, 32, 23, 11, 46, 26, 40, 15, 34, 20, 31, 10, 25,
 			14, 19, 9, 13, 8, 7, 6, };
+
 	private static int[] EP_DIR = { SOUTH, NORTH };
-
 	private static int[] EP_OPP_DIR = { NORTH, SOUTH };
-	private static long[] KING_ATTACKS = new long[64];
 
+	private static long[] KING_ATTACKS = new long[64];
 	private static long[] KNIGHT_ATTACKS = new long[64];
+
 	public static final Log LOG = LogFactory.getLog(GameUtils.class);
 
 	private static int[] OPPOSITE_COLOR = { BLACK, WHITE };
-
-	static {
-		initKingAttacks();
-		initKnightAttacks();
-	}
 
 	/**
 	 * Clears the next one bit in the bitboard.
@@ -525,79 +525,6 @@ public class GameUtils implements GameConstants {
 		return result.toString();
 	}
 
-	private static final void initKingAttacks() {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				long bitMap = 0L;
-				if (isInBounds(i, j + 1)) {
-					bitMap |= getBitboard(getSquare(i, j + 1));
-				}
-				if (isInBounds(i, j - 1)) {
-					bitMap |= getBitboard(getSquare(i, j - 1));
-				}
-
-				if (isInBounds(i + 1, j)) {
-					bitMap |= getBitboard(getSquare(i + 1, j));
-				}
-				if (isInBounds(i + 1, j + 1)) {
-					bitMap |= getBitboard(getSquare(i + 1, j + 1));
-				}
-				if (isInBounds(i + 1, j - 1)) {
-					bitMap |= getBitboard(getSquare(i + 1, j - 1));
-				}
-
-				if (isInBounds(i - 1, j)) {
-					bitMap |= getBitboard(getSquare(i - 1, j));
-				}
-				if (isInBounds(i - 1, j + 1)) {
-					bitMap |= getBitboard(getSquare(i - 1, j + 1));
-				}
-				if (isInBounds(i - 1, j - 1)) {
-					bitMap |= getBitboard(getSquare(i - 1, j - 1));
-				}
-
-				KING_ATTACKS[getSquare(i, j)] = bitMap;
-			}
-		}
-	}
-
-	private static final void initKnightAttacks() {
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
-				long bitMap = 0L;
-				if (isInBounds(i + 2, j + 1)) {
-					bitMap |= getBitboard(getSquare(i + 2, j + 1));
-				}
-				if (isInBounds(i + 2, j - 1)) {
-					bitMap |= getBitboard(getSquare(i + 2, j - 1));
-				}
-
-				if (isInBounds(i - 2, j + 1)) {
-					bitMap |= getBitboard(getSquare(i - 2, j + 1));
-				}
-				if (isInBounds(i - 2, j - 1)) {
-					bitMap |= getBitboard(getSquare(i - 2, j - 1));
-				}
-
-				if (isInBounds(i + 1, j + 2)) {
-					bitMap |= getBitboard(getSquare(i + 1, j + 2));
-				}
-				if (isInBounds(i + 1, j - 2)) {
-					bitMap |= getBitboard(getSquare(i + 1, j - 2));
-				}
-
-				if (isInBounds(i - 1, j + 2)) {
-					bitMap |= getBitboard(getSquare(i - 1, j + 2));
-				}
-				if (isInBounds(i - 1, j - 2)) {
-					bitMap |= getBitboard(getSquare(i - 1, j - 2));
-				}
-
-				KNIGHT_ATTACKS[getSquare(i, j)] = bitMap;
-			}
-		}
-	}
-
 	public static boolean isBlackPiece(Game game, int square) {
 		return (game.getColorBB(BLACK) & getBitboard(square)) != 0;
 	}
@@ -849,6 +776,79 @@ public class GameUtils implements GameConstants {
 
 	public static long whiteSinglePushTargets(long whitePawns, long empty) {
 		return northOne(whitePawns) & empty;
+	}
+
+	private static final void initKingAttacks() {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				long bitMap = 0L;
+				if (isInBounds(i, j + 1)) {
+					bitMap |= getBitboard(getSquare(i, j + 1));
+				}
+				if (isInBounds(i, j - 1)) {
+					bitMap |= getBitboard(getSquare(i, j - 1));
+				}
+
+				if (isInBounds(i + 1, j)) {
+					bitMap |= getBitboard(getSquare(i + 1, j));
+				}
+				if (isInBounds(i + 1, j + 1)) {
+					bitMap |= getBitboard(getSquare(i + 1, j + 1));
+				}
+				if (isInBounds(i + 1, j - 1)) {
+					bitMap |= getBitboard(getSquare(i + 1, j - 1));
+				}
+
+				if (isInBounds(i - 1, j)) {
+					bitMap |= getBitboard(getSquare(i - 1, j));
+				}
+				if (isInBounds(i - 1, j + 1)) {
+					bitMap |= getBitboard(getSquare(i - 1, j + 1));
+				}
+				if (isInBounds(i - 1, j - 1)) {
+					bitMap |= getBitboard(getSquare(i - 1, j - 1));
+				}
+
+				KING_ATTACKS[getSquare(i, j)] = bitMap;
+			}
+		}
+	}
+
+	private static final void initKnightAttacks() {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				long bitMap = 0L;
+				if (isInBounds(i + 2, j + 1)) {
+					bitMap |= getBitboard(getSquare(i + 2, j + 1));
+				}
+				if (isInBounds(i + 2, j - 1)) {
+					bitMap |= getBitboard(getSquare(i + 2, j - 1));
+				}
+
+				if (isInBounds(i - 2, j + 1)) {
+					bitMap |= getBitboard(getSquare(i - 2, j + 1));
+				}
+				if (isInBounds(i - 2, j - 1)) {
+					bitMap |= getBitboard(getSquare(i - 2, j - 1));
+				}
+
+				if (isInBounds(i + 1, j + 2)) {
+					bitMap |= getBitboard(getSquare(i + 1, j + 2));
+				}
+				if (isInBounds(i + 1, j - 2)) {
+					bitMap |= getBitboard(getSquare(i + 1, j - 2));
+				}
+
+				if (isInBounds(i - 1, j + 2)) {
+					bitMap |= getBitboard(getSquare(i - 1, j + 2));
+				}
+				if (isInBounds(i - 1, j - 2)) {
+					bitMap |= getBitboard(getSquare(i - 1, j - 2));
+				}
+
+				KNIGHT_ATTACKS[getSquare(i, j)] = bitMap;
+			}
+		}
 	}
 
 }

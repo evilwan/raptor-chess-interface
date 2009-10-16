@@ -22,14 +22,14 @@ import raptor.chess.Variant;
  * 
  */
 public abstract class LenientPgnParserListener implements PgnParserListener {
+	private static final Log LOG = LogFactory
+			.getLog(LenientPgnParserListener.class);
+
 	protected static class NagWordTrimResult {
 		String move;
 
 		Nag nag;
 	}
-
-	private static final Log LOG = LogFactory
-			.getLog(LenientPgnParserListener.class);
 
 	protected SublineNode currentAnalysisLine;
 
@@ -124,58 +124,9 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 		return result;
 	}
 
-	protected void createGameFromHeaders(PgnParser parser) {
-		try {
-			currentGame = createGameFromDescription();
-			currentGame.addState(Game.UPDATING_SAN_STATE);
-			currentGame.addState(Game.UPDATING_ECO_HEADERS_STATE);
-
-			// Set all of the headers.
-			for (String header : currentHeaders.keySet()) {
-
-				try {
-					currentGame.setHeader(PgnHeader.valueOf(header),
-							currentHeaders.get(header));
-				} catch (IllegalArgumentException iae) {
-					// errorEncountered(new PgnParserError(
-					// PgnParserError.Type.UNSUPPORTED_PGN_HEADER,
-					// PgnParserError.Action.IGNORIONG_HEADER, parser
-					// .getLineNumber(), header, currentHeaders
-					// .get(header)));
-				}
-			}
-		} catch (IllegalArgumentException ife) {
-			LOG.warn("error setting up game", ife);
-			errorEncountered(new PgnParserError(
-					PgnParserError.Type.UNABLE_TO_PARSE_INITIAL_FEN,
-					PgnParserError.Action.IGNORING_CURRENT_GAME, parser
-							.getLineNumber()));
-			isIgnoringCurrentGame = true;
-		}
-
-	}
-
 	public abstract void errorEncountered(PgnParserError error);
 
 	public abstract void gameParsed(Game game, int lineNumber);
-
-	protected Move makeGameMoveFromWord(String word)
-			throws IllegalArgumentException {
-		NagWordTrimResult trim = trimOutNag(word);
-
-		Move result = currentGame.makeSanMove(trim.move);
-
-		if (trim.nag != null) {
-			result.addAnnotation(trim.nag);
-		}
-
-		for (MoveAnnotation annotation : danglingAnnotations) {
-			result.addAnnotation(annotation);
-		}
-		danglingAnnotations.clear();
-
-		return result;
-	}
 
 	public void onAnnotation(PgnParser parser, String annotation) {
 		if (!isIgnoringCurrentGame) {
@@ -466,37 +417,6 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 		}
 	}
 
-	// SUBLINES are currently disabled.
-	// THis needs to be fixed.
-	// Disabled when converted from an old project of mine
-	// into Raptor.
-	// protected ActivePosition makeSublineMoveFromWord(String word,
-	// ActivePosition fromPosition, boolean isReply)
-	// throws IllegalMoveException {
-	// NagWordTrimResult trim = trimOutNag(word);
-	//
-	// ActivePosition nextPosition = fromPosition.makeMove(trim.move);
-	//
-	// if (isReply) {
-	// currentAnalysisLine = currentAnalysisLine
-	// .createReply(new ChessGameMove(nextPosition, nextPosition
-	// .getLastMove(), currentAnalysisLine.getMove()
-	// .getHalfMoveIndex() + 1));
-	// } else {
-	// currentAnalysisLine.setMove(new ChessGameMove(nextPosition,
-	// nextPosition.getLastMove(),
-	// currentGame.getNumHalfMoves() + 1));
-	// }
-	// if (trim.nag != null) {
-	// currentAnalysisLine.getMove().addAnnotation(trim.nag);
-	// }
-	// for (MoveAnnotation annotation : danglingAnnotations) {
-	// currentAnalysisLine.getMove().addAnnotation(annotation);
-	// }
-	// danglingAnnotations.clear();
-	// return nextPosition;
-	// }
-
 	public void onMoveWord(PgnParser parser, String word) {
 		if (!isIgnoringCurrentGame) {
 			if (!isParsingGameMoves) {
@@ -644,6 +564,86 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 					PgnParserError.Action.IGNORING, parser.getLineNumber(),
 					new String[] { unknown }));
 		}
+	}
+
+	// SUBLINES are currently disabled.
+	// THis needs to be fixed.
+	// Disabled when converted from an old project of mine
+	// into Raptor.
+	// protected ActivePosition makeSublineMoveFromWord(String word,
+	// ActivePosition fromPosition, boolean isReply)
+	// throws IllegalMoveException {
+	// NagWordTrimResult trim = trimOutNag(word);
+	//
+	// ActivePosition nextPosition = fromPosition.makeMove(trim.move);
+	//
+	// if (isReply) {
+	// currentAnalysisLine = currentAnalysisLine
+	// .createReply(new ChessGameMove(nextPosition, nextPosition
+	// .getLastMove(), currentAnalysisLine.getMove()
+	// .getHalfMoveIndex() + 1));
+	// } else {
+	// currentAnalysisLine.setMove(new ChessGameMove(nextPosition,
+	// nextPosition.getLastMove(),
+	// currentGame.getNumHalfMoves() + 1));
+	// }
+	// if (trim.nag != null) {
+	// currentAnalysisLine.getMove().addAnnotation(trim.nag);
+	// }
+	// for (MoveAnnotation annotation : danglingAnnotations) {
+	// currentAnalysisLine.getMove().addAnnotation(annotation);
+	// }
+	// danglingAnnotations.clear();
+	// return nextPosition;
+	// }
+
+	protected void createGameFromHeaders(PgnParser parser) {
+		try {
+			currentGame = createGameFromDescription();
+			currentGame.addState(Game.UPDATING_SAN_STATE);
+			currentGame.addState(Game.UPDATING_ECO_HEADERS_STATE);
+
+			// Set all of the headers.
+			for (String header : currentHeaders.keySet()) {
+
+				try {
+					currentGame.setHeader(PgnHeader.valueOf(header),
+							currentHeaders.get(header));
+				} catch (IllegalArgumentException iae) {
+					// errorEncountered(new PgnParserError(
+					// PgnParserError.Type.UNSUPPORTED_PGN_HEADER,
+					// PgnParserError.Action.IGNORIONG_HEADER, parser
+					// .getLineNumber(), header, currentHeaders
+					// .get(header)));
+				}
+			}
+		} catch (IllegalArgumentException ife) {
+			LOG.warn("error setting up game", ife);
+			errorEncountered(new PgnParserError(
+					PgnParserError.Type.UNABLE_TO_PARSE_INITIAL_FEN,
+					PgnParserError.Action.IGNORING_CURRENT_GAME, parser
+							.getLineNumber()));
+			isIgnoringCurrentGame = true;
+		}
+
+	}
+
+	protected Move makeGameMoveFromWord(String word)
+			throws IllegalArgumentException {
+		NagWordTrimResult trim = trimOutNag(word);
+
+		Move result = currentGame.makeSanMove(trim.move);
+
+		if (trim.nag != null) {
+			result.addAnnotation(trim.nag);
+		}
+
+		for (MoveAnnotation annotation : danglingAnnotations) {
+			result.addAnnotation(annotation);
+		}
+		danglingAnnotations.clear();
+
+		return result;
 	}
 
 	protected MoveAnnotation[] pgnAnnotationToMoveAnnotations(

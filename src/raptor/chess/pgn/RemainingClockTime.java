@@ -49,6 +49,11 @@ public class RemainingClockTime implements MoveAnnotation {
 		return text;
 	}
 
+	@Override
+	public String toString() {
+		return text;
+	}
+
 	private void setText(String text) {
 		this.text = text;
 		this.text = RaptorStringUtils.removeAll(this.text, '\r');
@@ -56,10 +61,5 @@ public class RemainingClockTime implements MoveAnnotation {
 		this.text = RaptorStringUtils.removeAll(this.text, '`');
 		this.text = RaptorStringUtils.removeAll(this.text, '|');
 		this.text = text.trim();
-	}
-
-	@Override
-	public String toString() {
-		return text;
 	}
 }

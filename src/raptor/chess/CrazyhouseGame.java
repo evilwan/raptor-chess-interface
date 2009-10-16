@@ -40,6 +40,27 @@ public class CrazyhouseGame extends ClassicGame {
 	}
 
 	/**
+	 * Overridden to invoke genDropMoves as well as super.getPseudoLegalMoves.
+	 * 
+	 * 
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PriorityMoveList getPseudoLegalMoves() {
+		PriorityMoveList result = super.getPseudoLegalMoves();
+		generatePseudoDropMoves(result);
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return super.toString() + "\n" + getDropCountsString();
+	}
+
+	/**
 	 * Generates all of the pseudo legal drop moves in the position and adds
 	 * them to the specified move list.
 	 * 
@@ -105,19 +126,6 @@ public class CrazyhouseGame extends ClassicGame {
 	}
 
 	/**
-	 * Overridden to invoke genDropMoves as well as super.getPseudoLegalMoves.
-	 * 
-	 * 
-	 * {@inheritDoc}
-	 */
-	@Override
-	public PriorityMoveList getPseudoLegalMoves() {
-		PriorityMoveList result = super.getPseudoLegalMoves();
-		generatePseudoDropMoves(result);
-		return result;
-	}
-
-	/**
 	 * Overridden to add in drops and remove all drop moves from pseudoLegals.
 	 * 
 	 * {@inheritDoc}
@@ -148,14 +156,6 @@ public class CrazyhouseGame extends ClassicGame {
 			}
 		}
 		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return super.toString() + "\n" + getDropCountsString();
 	}
 
 }

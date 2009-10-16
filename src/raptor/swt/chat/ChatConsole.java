@@ -64,18 +64,6 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		super(parent, style);
 	}
 
-	protected void addButtons() {
-		Button sendButton = new Button(buttonComposite, SWT.FLAT);
-		sendButton.setImage(Raptor.getInstance().getIcon("enter"));
-		sendButton.setToolTipText("Sends the message in the input field.");
-		sendButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				controller.onSendOutputText();
-			}
-		});
-	}
-
 	public void createControls() {
 
 		addDisposeListener(new DisposeListener() {
@@ -150,10 +138,6 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		return outputText;
 	}
 
-	protected RaptorPreferenceStore getPreferences() {
-		return Raptor.getInstance().getPreferences();
-	}
-
 	public void setController(ChatConsoleController controller) {
 		this.controller = controller;
 	}
@@ -178,6 +162,22 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		promptLabel.setForeground(prefs.getColor(CHAT_PROMPT_COLOR));
 		promptLabel
 				.setBackground(prefs.getColor(CHAT_CONSOLE_BACKGROUND_COLOR));
+	}
+
+	protected void addButtons() {
+		Button sendButton = new Button(buttonComposite, SWT.FLAT);
+		sendButton.setImage(Raptor.getInstance().getIcon("enter"));
+		sendButton.setToolTipText("Sends the message in the input field.");
+		sendButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				controller.onSendOutputText();
+			}
+		});
+	}
+
+	protected RaptorPreferenceStore getPreferences() {
+		return Raptor.getInstance().getPreferences();
 	}
 
 }
