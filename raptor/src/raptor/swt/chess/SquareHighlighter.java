@@ -161,7 +161,7 @@ public class SquareHighlighter {
 					// so you need to check.
 					if (dropSquareDecorators[i] != null) {
 						dropSquareDecorators[i].square
-								.removePaintListener(decorators[i]);
+								.removePaintListener(dropSquareDecorators[i]);
 					}
 					dropSquareDecorators[i] = null;
 				}
