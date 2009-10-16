@@ -19,6 +19,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -220,6 +221,16 @@ public abstract class IcsConnector implements Connector {
 		public void speak(String message) {
 			SoundService.getInstance().textToSpeech(message);
 		}
+
+		public void launchProcess(String... commandAndArgs) {
+			try {
+				Runtime.getRuntime().exec(commandAndArgs);
+			} catch (Throwable t) {
+				onError("Error launching process: "
+						+ Arrays.toString(commandAndArgs), t);
+			}
+		}
+
 	}
 
 	private static final Log LOG = LogFactory.getLog(IcsConnector.class);

@@ -2,11 +2,14 @@ package raptor.pref.page;
 
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
+import raptor.speech.ProcessSpeech;
 
 public class SpeechPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
@@ -31,9 +34,25 @@ public class SpeechPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(userHomeDir);
 
-		StringFieldEditor timesealInitString = new StringFieldEditor(
+		final StringFieldEditor speechProcessName = new StringFieldEditor(
 				PreferenceKeys.SPEECH_PROCESS_NAME, "Speech process name:",
 				getFieldEditorParent());
-		addField(timesealInitString);
+		addField(speechProcessName);
+
+		labelButtonFieldEditor = new LabelButtonFieldEditor(
+				"NONE",
+				"You can use this button to test the setting; however,\n"
+						+ "to use speech with scripts you will need to restart raptor for it to take effect.: ",
+				getFieldEditorParent(), "Test", new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						ProcessSpeech processSpeech = new ProcessSpeech(
+								speechProcessName.getStringValue());
+						processSpeech.init();
+						processSpeech
+								.speak("Your speech process setting is set correctly.");
+					}
+				});
+		addField(labelButtonFieldEditor);
 	}
 }
