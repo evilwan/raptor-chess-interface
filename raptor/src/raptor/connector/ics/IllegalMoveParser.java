@@ -11,76 +11,28 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor.connector.fics.game;
+package raptor.connector.ics;
 
-import raptor.chess.GameConstants;
-import raptor.connector.fics.game.message.B1Message;
-import raptor.util.RaptorStringTokenizer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-public class B1Parser implements GameConstants {
-	public static final String B1_START = "<b1>";
+import raptor.connector.ics.game.message.IllegalMoveMessage;
 
-	public static int[] buildPieceHoldingsArray(String s) {
-		int[] result = new int[6];
+public class IllegalMoveParser {
 
-		for (int i = 0; i < s.length(); i++) {
-			switch (s.charAt(i)) {
-			case 'P':
-			case 'p':
-				result[PAWN] = result[PAWN] + 1;
-				break;
+	public static final String ILLEGAL_MOVE_START = "Illegal move (";
 
-			case 'N':
-			case 'n':
-				result[KNIGHT] = result[KNIGHT] + 1;
-				break;
+	@SuppressWarnings("unused")
+	private static final Log LOG = LogFactory.getLog(IllegalMoveParser.class);
 
-			case 'B':
-			case 'b':
-				result[BISHOP] = result[BISHOP] + 1;
-				break;
-
-			case 'R':
-			case 'r':
-				result[ROOK] = result[ROOK] + 1;
-				break;
-
-			case 'Q':
-			case 'q':
-				result[QUEEN] = result[QUEEN] + 1;
-				break;
-			case 'K':
-			case 'k':
-				result[KING] = result[KING] + 1;
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid piece "
-						+ s.charAt(i));
-			}
+	public IllegalMoveMessage parse(String message) {
+		IllegalMoveMessage result = null;
+		if (message.startsWith(ILLEGAL_MOVE_START)) {
+			result = new IllegalMoveMessage();
+			int closingParenIndex = message.indexOf(")");
+			result.move = message.substring(ILLEGAL_MOVE_START.length(),
+					closingParenIndex);
 		}
-
 		return result;
-	}
-
-	public B1Message parse(String message) {
-		if (message.startsWith(B1_START)) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
-					" {}><-\n", true);
-			B1Message result = new B1Message();
-
-			tok.nextToken();
-			tok.nextToken();
-			result.gameId = tok.nextToken();
-			tok.nextToken();
-			String whiteHoldings = tok.nextToken();
-			result.whiteHoldings = buildPieceHoldingsArray(whiteHoldings
-					.substring(1, whiteHoldings.length() - 1));
-			tok.nextToken();
-			String blackHoldings = tok.nextToken();
-			result.blackHoldings = buildPieceHoldingsArray(blackHoldings
-					.substring(1, blackHoldings.length() - 1));
-			return result;
-		}
-		return null;
 	}
 }

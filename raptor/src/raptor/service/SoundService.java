@@ -45,9 +45,11 @@ public class SoundService {
 		return instance;
 	}
 
-	protected Map<String, String> soundToClip = new HashMap<String, String>();
+	protected Map<String, Clip> soundToClip = new HashMap<String, Clip>();
 
 	protected Map<String, String> bugSoundToClip = new HashMap<String, String>();
+
+	protected Map<String, Boolean> bugSoundsPlaying = new HashMap<String, Boolean>();
 
 	protected Speech speech = null;
 
@@ -56,7 +58,10 @@ public class SoundService {
 	}
 
 	public void dispose() {
+		// Don't bother closing the clips. You get screeching noises if you do.
 		soundToClip.clear();
+		bugSoundToClip.clear();
+		bugSoundsPlaying.clear();
 		if (speech != null) {
 			speech.dispose();
 		}
@@ -83,8 +88,13 @@ public class SoundService {
 			for (File currentFile : files) {
 				String key = currentFile.getName();
 				int dotIndex = key.indexOf(".");
-				soundToClip.put(key.substring(0, dotIndex), currentFile
-						.getAbsolutePath());
+				Clip clip = AudioSystem.getClip();
+
+				AudioInputStream stream = AudioSystem
+						.getAudioInputStream(new FileInputStream(currentFile));
+				clip.open(stream);
+
+				soundToClip.put(key.substring(0, dotIndex), clip);
 			}
 
 			file = new File(Raptor.RESOURCES_DIR + "sounds/bughouse");
@@ -97,8 +107,9 @@ public class SoundService {
 
 				String key = currentFile.getName();
 				int dotIndex = key.indexOf(".");
-				bugSoundToClip.put(key.substring(0, dotIndex), currentFile
-						.getAbsolutePath());
+				key = key.substring(0, dotIndex);
+				bugSoundToClip.put(key, currentFile.getAbsolutePath());
+				bugSoundsPlaying.put(key, false);
 			}
 
 		} catch (Throwable t) {
@@ -110,11 +121,11 @@ public class SoundService {
 			speech.init();
 			LOG.info("Initialized speech: " + speech);
 		} catch (Throwable t) {
-			LOG.error("Error initializing speech", t);
+			Raptor.getInstance().onError("Error initializing speech", t);
 			speech = null;
 		}
 		LOG.info("Initializing sound service complete: "
-				+ (System.currentTimeMillis() - startTime));
+				+ (System.currentTimeMillis() - startTime) + "ms");
 	}
 
 	/**
@@ -134,24 +145,31 @@ public class SoundService {
 					if (soundFile == null) {
 						Raptor.getInstance().onError("Unknown sound " + sound);
 					}
-					try {
 
-						Clip clip = AudioSystem.getClip();
-						AudioInputStream stream = AudioSystem
-								.getAudioInputStream(new FileInputStream(
-										soundFile));
-						clip.open(stream);
-						clip.setFramePosition(0);
-						clip.start();
-						Thread.sleep(100);
-						while (clip.isRunning()) {
+					// This prevents excessive bug sounds from being played.
+					// That can result in maxing out the number of lines
+					// available and cause all kinds of problems in OSX 10.4
+					if (!bugSoundsPlaying.get(sound)) {
+						try {
+							bugSoundsPlaying.put(sound, true);
+							Clip clip = AudioSystem.getClip();
+							AudioInputStream stream = AudioSystem
+									.getAudioInputStream(new FileInputStream(
+											soundFile));
+							clip.open(stream);
+							clip.setFramePosition(0);
+							clip.start();
 							Thread.sleep(100);
+							while (clip.isRunning()) {
+								Thread.sleep(100);
+							}
+							clip.close();
+						} catch (Throwable t) {
+							Raptor.getInstance().onError(
+									"Error playing sound " + sound, t);
+						} finally {
+							bugSoundsPlaying.put(sound, false);
 						}
-						clip.close();
-
-					} catch (Throwable t) {
-						Raptor.getInstance().onError(
-								"Error playing sound " + sound, t);
 					}
 				}
 			});
@@ -163,36 +181,24 @@ public class SoundService {
 	 * play the sound i.e. "alert".
 	 */
 	public void playSound(final String sound) {
-		/**
-		 * I have tried caching the Clips. However i ran out of lines. So now i
-		 * just create a new clip each time.
-		 */
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_SOUND_ENABLED)) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
-					String soundFile = soundToClip.get(sound);
-					if (soundFile == null) {
+					Clip clip = soundToClip.get(sound);
+
+					if (clip == null) {
 						Raptor.getInstance().onError("Unknown sound " + sound);
 					}
-					try {
 
-						Clip clip = AudioSystem.getClip();
-						AudioInputStream stream = AudioSystem
-								.getAudioInputStream(new FileInputStream(
-										soundFile));
-						clip.open(stream);
-						clip.setFramePosition(0);
-						clip.start();
-						Thread.sleep(100);
-						while (clip.isRunning()) {
-							Thread.sleep(100);
+					if (!clip.isRunning()) {
+						try {
+							clip.setFramePosition(0);
+							clip.start();
+						} catch (Throwable t) {
+							Raptor.getInstance().onError(
+									"Error playing sound " + sound, t);
 						}
-						clip.close();
-
-					} catch (Throwable t) {
-						Raptor.getInstance().onError(
-								"Error playing sound " + sound, t);
 					}
 				}
 			});

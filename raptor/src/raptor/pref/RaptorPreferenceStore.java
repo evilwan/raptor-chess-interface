@@ -470,7 +470,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(FICS_IS_LOGGING_GAMES, false);
-		setDefault(FICS_SHOW_BUGBUTTONS_ON_CONNECT, true);
+		setDefault(FICS_SHOW_BUGBUTTONS_ON_CONNECT, false);
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
 		setDefault(FICS_COMMANDS_HELP_URL,
@@ -511,7 +511,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(BICS_IS_LOGGING_GAMES, false);
 		setDefault(BICS_AUTO_CONNECT, false);
-		setDefault(BICS_SHOW_BUGBUTTONS_ON_CONNECT, true);
+		setDefault(BICS_SHOW_BUGBUTTONS_ON_CONNECT, false);
 		setDefault(BICS_PROFILE, "Primary");
 		// Bics Primary
 		setDefault(BICS_PRIMARY_USER_NAME, "");

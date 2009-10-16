@@ -11,28 +11,47 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor.connector.fics.game;
+package raptor.connector.ics.game.message;
 
-import raptor.connector.fics.game.message.RemovingObsGameMessage;
-import raptor.util.RaptorStringTokenizer;
+public class Style12Message {
+	public static final int EXAMINING_GAME_RELATION = 2;
+	public static final int ISOLATED_POSITION_RELATION = -3;
+	public static final int OBSERVING_EXAMINED_GAME_RELATION = -2;
+	public static final int OBSERVING_GAME_RELATION = 0;
+	public static final int PLAYING_MY_MOVE_RELATION = 1;
+	public static final int PLAYING_OPPONENTS_MOVE_RELATION = -1;
+	public String blackName;
+	public long blackRemainingTimeMillis;
 
-public class RemovingObsGameParser {
+	public int blackStrength;
+	public boolean canBlackCastleKSide;
+	public boolean canBlackCastleQSide;
+	public boolean canWhiteCastleKSide;
+	public boolean canWhiteCastleQSide;
+	public int doublePawnPushFile;
+	public int fullMoveNumber;
+	public String gameId;
+	public long initialIncMillis;
+	public long initialTimeMillis;
+	public boolean isClockTicking;
+	public boolean isWhiteOnTop;
+	public boolean isWhitesMoveAfterMoveIsMade;
+	public int lagInMillis;
+	public String lan;
+	public int numberOfMovesSinceLastIrreversible;
+	public int[][] position;
+	public int relation;
+	public String san;
+	public long timeTakenForLastMoveMillis;
+	public String whiteName;
+	public long whiteRemainingTimeMillis;
+	public int whiteStrength;
 
-	public static final String REMOVING_GAME = "Removing game ";
+	public Style12Message() {
+	}
 
-	public RemovingObsGameMessage parse(String message) {
-		RemovingObsGameMessage result = null;
-		if (message.startsWith(REMOVING_GAME)) {
-			result = new RemovingObsGameMessage();
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(message, " ",
-					true);
-
-			// parse past Removing game
-			tok.nextToken();
-			tok.nextToken();
-
-			result.gameId = tok.nextToken();
-		}
-		return result;
+	@Override
+	public String toString() {
+		return "Style12: gameId=" + gameId + " " + san;
 	}
 }

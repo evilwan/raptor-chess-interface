@@ -13,6 +13,9 @@
  */
 package raptor.swt.chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.graphics.Image;
@@ -27,6 +30,14 @@ import raptor.swt.ItemChangedListener;
 
 public class ChessBoardWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
+
+	/**
+	 * A cache of chess boards. Instead of disposing chess board a maximim of
+	 * CHESS_BOARD_CACHE_SIZE are cached and reused. This is experimental.
+	 */
+	protected static List<ChessBoardWindowItem> chessBoardCache = new ArrayList<ChessBoardWindowItem>(
+			10);
+
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
 

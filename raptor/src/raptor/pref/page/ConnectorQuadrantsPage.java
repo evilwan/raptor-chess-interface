@@ -54,11 +54,6 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.MAIN_TAB_QUADRANT, "Main Console Quadrant:",
-				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent()));
-
-		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.CHANNEL_TAB_QUADRANT,
 				"Channel Console Quadrant:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),

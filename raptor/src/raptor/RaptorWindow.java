@@ -84,6 +84,7 @@ import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chess.Arrow;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
+import raptor.util.BrowserUtils;
 
 /**
  * A Raptor window is broken up into quadrants. Each quadrant is tabbed. You can
@@ -1069,17 +1070,7 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(new Action("&Fics Commands Help") {
 			@Override
 			public void run() {
-				Raptor
-						.getInstance()
-						.getWindow()
-						.addRaptorWindowItem(
-								new BrowserWindowItem(
-										"Fics Commands Help",
-										Raptor
-												.getInstance()
-												.getPreferences()
-												.getString(
-														PreferenceKeys.FICS_COMMANDS_HELP_URL)));
+				BrowserUtils.openUrl(PreferenceKeys.FICS_COMMANDS_HELP_URL);
 			}
 		});
 		menuBar.add(helpMenu);
@@ -1207,6 +1198,22 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
+	}
+
+	/**
+	 * If a browser window items is currently being displayed it is returned.
+	 * Otherwise null is returned.
+	 */
+	public BrowserWindowItem getBrowserWindowItem() {
+		BrowserWindowItem result = null;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof BrowserWindowItem) {
+					result = (BrowserWindowItem) folder.getRaptorTabItemAt(i).raptorItem;
+				}
+			}
+		}
+		return result;
 	}
 
 	/**

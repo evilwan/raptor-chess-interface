@@ -11,13 +11,13 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor.connector.fics.game;
+package raptor.connector.ics;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.GameConstants;
-import raptor.connector.fics.game.message.Style12Message;
+import raptor.connector.ics.game.message.Style12Message;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -118,10 +118,18 @@ public class Style12Parser implements GameConstants {
 		return (minutes * 60 + seconds) * 1000 + millis;
 	}
 
-	protected boolean isBicsStyle = false;
+	// protected boolean isBicsStyle = false;
 
-	public Style12Parser(boolean isBicsStyle) {
-		this.isBicsStyle = isBicsStyle;
+	/**
+	 * BICS always sends the positions in the style 12 with white on the bottom
+	 * even if it says it does'nt. If is white on bottom is set on fics then the
+	 * white pieces are on bottom, otherwise its flipped.
+	 * 
+	 * @param isBicsStyle
+	 */
+	public Style12Parser()// boolean isBicsStyle)
+	{
+		// this.isBicsStyle = isBicsStyle;
 	}
 
 	public Style12Message parse(String message) {
@@ -203,116 +211,61 @@ public class Style12Parser implements GameConstants {
 		int[][] result = new int[8][];
 		int positionCounter = 0;
 
-		if (!isBicsStyle && isWhiteOnTop) {
-			for (int i = 7; i >= 0; i--) {
-				result[7 - i] = new int[8];
+		// if (isWhiteOnTop) {
+		// positionString = positionString.reverse();
+		// }
 
-				for (int j = 0; j < 8; j++) {
-					switch (positionString.charAt(positionCounter++)) {
-					case '-':
-						result[7 - i][j] = EMPTY;
-						break;
-					case 'p':
-						result[7 - i][j] = BP;
-						break;
-					case 'n':
-						result[7 - i][j] = BN;
-						break;
-					case 'b':
-						result[7 - i][j] = BB;
-						break;
-					case 'r':
-						result[7 - i][j] = BR;
-						break;
-					case 'q':
-						result[7 - i][j] = BQ;
-						break;
-					case 'k':
-						result[7 - i][j] = BK;
-						break;
-					case 'P':
-						result[7 - i][j] = WP;
-						break;
-					case 'N':
-						result[7 - i][j] = WN;
-						break;
-					case 'B':
-						result[7 - i][j] = WB;
-						break;
-					case 'R':
-						result[7 - i][j] = WR;
-						break;
-					case 'Q':
-						result[7 - i][j] = WQ;
-						break;
-					case 'K':
-						result[7 - i][j] = WK;
-						break;
-					default: {
-						throw new IllegalArgumentException(
-								"Invalid piece encountered. '"
-										+ positionString
-												.charAt(positionCounter - 1)
-										+ "' " + positionCounter + " "
-										+ positionString);
-					}
-					}
+		for (int i = 7; i >= 0; i--) {
+			result[i] = new int[8];
+
+			for (int j = 0; j < 8; j++) {
+				switch (positionString.charAt(positionCounter++)) {
+				case '-':
+					result[i][j] = EMPTY;
+					break;
+				case 'p':
+					result[i][j] = BP;
+					break;
+				case 'n':
+					result[i][j] = BN;
+					break;
+				case 'b':
+					result[i][j] = BB;
+					break;
+				case 'r':
+					result[i][j] = BR;
+					break;
+				case 'q':
+					result[i][j] = BQ;
+					break;
+				case 'k':
+					result[i][j] = BK;
+					break;
+				case 'P':
+					result[i][j] = WP;
+					break;
+				case 'N':
+					result[i][j] = WN;
+					break;
+				case 'B':
+					result[i][j] = WB;
+					break;
+				case 'R':
+					result[i][j] = WR;
+					break;
+				case 'Q':
+					result[i][j] = WQ;
+					break;
+				case 'K':
+					result[i][j] = WK;
+					break;
+				default: {
+					throw new IllegalArgumentException(
+							"Invalid piece encountered. '"
+									+ positionString
+											.charAt(positionCounter - 1) + "' "
+									+ positionCounter + " " + positionString);
 				}
-			}
-		} else {
-			for (int i = 7; i >= 0; i--) {
-				result[i] = new int[8];
-
-				for (int j = 0; j < 8; j++) {
-					switch (positionString.charAt(positionCounter++)) {
-					case '-':
-						result[i][j] = EMPTY;
-						break;
-					case 'p':
-						result[i][j] = BP;
-						break;
-					case 'n':
-						result[i][j] = BN;
-						break;
-					case 'b':
-						result[i][j] = BB;
-						break;
-					case 'r':
-						result[i][j] = BR;
-						break;
-					case 'q':
-						result[i][j] = BQ;
-						break;
-					case 'k':
-						result[i][j] = BK;
-						break;
-					case 'P':
-						result[i][j] = WP;
-						break;
-					case 'N':
-						result[i][j] = WN;
-						break;
-					case 'B':
-						result[i][j] = WB;
-						break;
-					case 'R':
-						result[i][j] = WR;
-						break;
-					case 'Q':
-						result[i][j] = WQ;
-						break;
-					case 'K':
-						result[i][j] = WK;
-						break;
-					default: {
-						throw new IllegalArgumentException(
-								"Invalid piece encountered. '"
-										+ positionString
-												.charAt(positionCounter - 1)
-										+ "' " + positionCounter + " "
-										+ positionString);
-					}
-					}
 				}
 			}
 		}

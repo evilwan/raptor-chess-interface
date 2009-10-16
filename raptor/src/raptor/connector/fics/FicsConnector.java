@@ -25,17 +25,18 @@ import raptor.Raptor;
 import raptor.connector.fics.pref.FicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
+import raptor.connector.ics.IcsParserImpl;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ThreadService;
-import raptor.swt.BrowserWindowItem;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.RegExDialog;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.RegExController;
+import raptor.util.BrowserUtils;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -60,12 +61,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected FicsConnector fics2 = null;
 
 	public FicsConnector() {
-		this(new IcsConnectorContext(new FicsParser()));
+		this(new IcsConnectorContext(new IcsParserImpl()));
 	}
 
 	public FicsConnector(IcsConnectorContext context) {
 		super(context);
-		((FicsParser) context.getParser()).setConnector(this);
+		((IcsParserImpl) context.getParser()).setConnector(this);
 		initFics2();
 		createMenuActions();
 
@@ -243,47 +244,33 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
 			@Override
 			public void run() {
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						new BrowserWindowItem("Adjudicate Games", Raptor
-								.getInstance().getPreferences().getString(
-										PreferenceKeys.FICS_ADJUDICATE_URL)));
+				BrowserUtils.openUrl(getPreferences().getString(
+						PreferenceKeys.FICS_ADJUDICATE_URL));
 			}
 		};
-		Action ficsSite = new Action("www.freechess.org") {
+		Action ficsSite = new Action(getPreferences().getString(
+				PreferenceKeys.FICS_FREECHESS_ORG_URL)) {
 
 			@Override
 			public void run() {
-				Raptor
-						.getInstance()
-						.getWindow()
-						.addRaptorWindowItem(
-								new BrowserWindowItem(
-										"www.freechess.org",
-										Raptor
-												.getInstance()
-												.getPreferences()
-												.getString(
-														PreferenceKeys.FICS_FREECHESS_ORG_URL)));
+				BrowserUtils.openUrl(getPreferences().getString(
+						PreferenceKeys.FICS_FREECHESS_ORG_URL));
 			}
 		};
-		Action ficsGamesSite = new Action("www.ficsgames.com") {
-
+		Action ficsGamesSite = new Action(getPreferences().getString(
+				PreferenceKeys.FICS_FICS_GAMES_URL)) {
 			@Override
 			public void run() {
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						new BrowserWindowItem("www.ficsgames.com", Raptor
-								.getInstance().getPreferences().getString(
-										PreferenceKeys.FICS_FICS_GAMES_URL)));
+				BrowserUtils.openUrl(getPreferences().getString(
+						PreferenceKeys.FICS_FICS_GAMES_URL));
 			}
 		};
 		Action ficsTeamLeague = new Action("Fics Team League") {
 
 			@Override
 			public void run() {
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						new BrowserWindowItem("Fics Team League", Raptor
-								.getInstance().getPreferences().getString(
-										PreferenceKeys.FICS_TEAM_LEAGUE_URL)));
+				BrowserUtils.openUrl(getPreferences().getString(
+						PreferenceKeys.FICS_TEAM_LEAGUE_URL));
 			}
 		};
 		connectionsMenu.add(adjudicateAGame);
@@ -461,7 +448,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	}
 
 	protected void initFics2() {
-		fics2 = new FicsConnector(new IcsConnectorContext(new FicsParser()) {
+		fics2 = new FicsConnector(new IcsConnectorContext(new IcsParserImpl()) {
 			@Override
 			public String getDescription() {
 				return "Free Internet Chess Server Another Simultaneous Connection";

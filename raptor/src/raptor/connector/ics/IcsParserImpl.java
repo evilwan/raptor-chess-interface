@@ -11,7 +11,7 @@
  * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package raptor.connector.fics;
+package raptor.connector.ics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,27 +30,6 @@ import raptor.chess.GameConstants;
 import raptor.chess.Result;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
-import raptor.connector.bics.BicsConnector;
-import raptor.connector.fics.game.B1Parser;
-import raptor.connector.fics.game.G1Parser;
-import raptor.connector.fics.game.GameEndParser;
-import raptor.connector.fics.game.IllegalMoveParser;
-import raptor.connector.fics.game.MovesParser;
-import raptor.connector.fics.game.NoLongerExaminingGameParser;
-import raptor.connector.fics.game.RemovingObsGameParser;
-import raptor.connector.fics.game.Style12Parser;
-import raptor.connector.fics.game.TakebackParser;
-import raptor.connector.fics.game.message.B1Message;
-import raptor.connector.fics.game.message.G1Message;
-import raptor.connector.fics.game.message.GameEndMessage;
-import raptor.connector.fics.game.message.IllegalMoveMessage;
-import raptor.connector.fics.game.message.MovesMessage;
-import raptor.connector.fics.game.message.NoLongerExaminingGameMessage;
-import raptor.connector.fics.game.message.RemovingObsGameMessage;
-import raptor.connector.fics.game.message.Style12Message;
-import raptor.connector.ics.IcsConnector;
-import raptor.connector.ics.IcsParser;
-import raptor.connector.ics.IcsUtils;
 import raptor.connector.ics.chat.CShoutEventParser;
 import raptor.connector.ics.chat.ChallengeEventParser;
 import raptor.connector.ics.chat.ChannelTellEventParser;
@@ -64,11 +43,22 @@ import raptor.connector.ics.chat.ShoutEventParser;
 import raptor.connector.ics.chat.TellEventParser;
 import raptor.connector.ics.chat.ToldEventParser;
 import raptor.connector.ics.chat.WhisperEventParser;
+import raptor.connector.ics.game.message.B1Message;
+import raptor.connector.ics.game.message.G1Message;
+import raptor.connector.ics.game.message.GameEndMessage;
+import raptor.connector.ics.game.message.IllegalMoveMessage;
+import raptor.connector.ics.game.message.MovesMessage;
+import raptor.connector.ics.game.message.NoLongerExaminingGameMessage;
+import raptor.connector.ics.game.message.RemovingObsGameMessage;
+import raptor.connector.ics.game.message.Style12Message;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 
-public class FicsParser implements IcsParser, GameConstants {
-	private static final Log LOG = LogFactory.getLog(FicsParser.class);
+/**
+ * An implementation of IcsParser that is both BICS and FICS friendly.
+ */
+public class IcsParserImpl implements IcsParser, GameConstants {
+	private static final Log LOG = LogFactory.getLog(IcsParserImpl.class);
 	public static final int MAX_GAME_MESSAGE = 1000;
 
 	protected B1Parser b1Parser;
@@ -93,12 +83,12 @@ public class FicsParser implements IcsParser, GameConstants {
 	protected Map<String, G1Message> unprocessedG1Messages = new HashMap<String, G1Message>();
 
 	/**
-	 * Bics doesnt support the partner board in G1 messages so you have to
+	 * BICS does'nt support the partner board in G1 messages so you have to
 	 * resort to this to link the bug games together.
 	 */
 	protected List<String> bugGamesWithoutBoard2 = new ArrayList<String>(10);
 
-	public FicsParser() {
+	public IcsParserImpl() {
 		gameEndParser = new GameEndParser();
 		b1Parser = new B1Parser();
 		g1Parser = new G1Parser();
@@ -130,18 +120,25 @@ public class FicsParser implements IcsParser, GameConstants {
 	}
 
 	public ChatEvent[] parse(String inboundMessage) {
-		LOG.debug("Raw message in: " + inboundMessage);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Raw message in: " + inboundMessage);
+		}
 		List<ChatEvent> events = new ArrayList<ChatEvent>(5);
 
 		// First handle the Moves message.
 		String afterMovesMessage = parseMovesMessage(inboundMessage, events);
-		LOG.debug("After handling moves message: " + afterMovesMessage);
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("After handling moves message: " + afterMovesMessage);
+		}
 
 		// Next handle game events.
 		if (StringUtils.isNotBlank(afterMovesMessage)) {
 			String afterGameEvents = parseGameEvents(afterMovesMessage);
 
-			LOG.debug("After handling game events: " + afterGameEvents);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("After handling game events: " + afterGameEvents);
+			}
 
 			// Now process what is left over as chat events.
 			// Don't send it if its only a prompt.
@@ -274,8 +271,8 @@ public class FicsParser implements IcsParser, GameConstants {
 		}
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			LOG.error("Received B1 for a game not in the GameService. "
-					+ message);
+			connector.onError("Received B1 for a game not in the GameService. "
+					+ message, new Exception());
 		} else {
 			for (int i = 1; i < message.whiteHoldings.length; i++) {
 				game.setDropCount(WHITE, i, message.whiteHoldings[i]);
@@ -294,8 +291,9 @@ public class FicsParser implements IcsParser, GameConstants {
 	protected void process(GameEndMessage message, GameService service) {
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			LOG.error("Received game end for a game not in the GameService. "
-					+ message);
+			connector.onError(
+					"Received game end for a game not in the GameService. "
+							+ message, new Exception());
 		} else {
 			switch (message.type) {
 			case GameEndMessage.ABORTED:
@@ -366,9 +364,9 @@ public class FicsParser implements IcsParser, GameConstants {
 			GameService service) {
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			LOG
-					.error("Received no longer examining game message for a game not in the GameService. "
-							+ message);
+			connector.onError(
+					"Received no longer examining game message for a game not in the GameService. "
+							+ message, new Exception());
 		} else {
 			game.setHeader(PgnHeader.ResultDescription,
 					"Interrupted by uexamine.");
@@ -479,7 +477,9 @@ public class FicsParser implements IcsParser, GameConstants {
 			G1Message g1Message = unprocessedG1Messages.get(message.gameId);
 			if (g1Message == null) {
 				// Examined/Bsetup game starts flow through here
-				LOG.debug("Processing new ex or bsetup game.");
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Processing new ex or bsetup game.");
+				}
 				game = IcsUtils.createGame(message, entireMessage);
 				service.addGame(game);
 				if (LOG.isDebugEnabled()) {
@@ -570,6 +570,8 @@ public class FicsParser implements IcsParser, GameConstants {
 
 	public void setConnector(IcsConnector connector) {
 		this.connector = connector;
-		style12Parser = new Style12Parser(connector instanceof BicsConnector);
+		// style12Parser = new Style12Parser(connector instanceof
+		// BicsConnector);
+		style12Parser = new Style12Parser();
 	}
 }

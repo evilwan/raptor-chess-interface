@@ -38,30 +38,25 @@ public class SquareHighlighter {
 		public void paintControl(PaintEvent e) {
 			int squareSide = square.getSize().x;
 			for (Highlight highlight : highlights) {
-				int width = -1;
+				int width = (int) (Raptor.getInstance().getPreferences()
+						.getInt(PreferenceKeys.HIGHLIGHT_WIDTH_PERCENTAGE) / 100.0 * square
+						.getSize().x);
+				if (width % 2 != 0) {
+					width++;
+				}
+
 				if (highlight.frame != -1) {
-					width = (int) (Raptor.getInstance().getPreferences()
-							.getInt(PreferenceKeys.HIGHLIGHT_WIDTH_PERCENTAGE) / 100.0 * square
-							.getSize().x);
-					if (width % 2 != 0) {
-						width++;
-					}
-				} else if (highlight.frame != 0) {
-					width = (int) (Raptor.getInstance().getPreferences()
-							.getInt(PreferenceKeys.HIGHLIGHT_WIDTH_PERCENTAGE) / 100.0 * square
-							.getSize().x);
-					if (width % 2 != 0) {
-						width++;
-					}
 					e.gc.setAdvanced(true);
 					e.gc.setAlpha(50 * highlight.frame);
 				}
-				if (width != -1) {
-					e.gc.setForeground(highlight.getColor());
-					for (int i = 0; i < width; i++) {
-						e.gc.drawRectangle(i, i, squareSide - 1 - i * 2,
-								squareSide - 1 - i * 2);
-					}
+
+				e.gc.setForeground(highlight.getColor());
+				for (int i = 0; i < width; i++) {
+					e.gc.drawRectangle(i, i, squareSide - 1 - i * 2, squareSide
+							- 1 - i * 2);
+				}
+
+				if (highlight.frame != -1) {
 					e.gc.setAlpha(255);
 				}
 			}

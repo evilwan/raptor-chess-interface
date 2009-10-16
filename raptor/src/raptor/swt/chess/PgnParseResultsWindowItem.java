@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -31,7 +33,16 @@ import raptor.pref.PreferenceKeys;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.chess.controller.InactiveController;
 
+/**
+ * A window item that displays a list of games from a PGN file.
+ * 
+ * @author mindspan
+ * 
+ */
 public class PgnParseResultsWindowItem implements RaptorWindowItem {
+	private static final Log LOG = LogFactory
+			.getLog(PgnParseResultsWindowItem.class);;
+
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
 
@@ -77,6 +88,9 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		}
 		if (composite != null && !composite.isDisposed()) {
 			composite.dispose();
+		}
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Disposed PgnParseResultsWindowItem");
 		}
 
 	}

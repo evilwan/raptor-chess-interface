@@ -43,8 +43,10 @@ public class FileUtil {
 	 */
 	public static void copyFiles(File src, File dest) throws IOException {
 		if (src.getName().startsWith(".")) {
-			LOG.info("Ignoring " + src.getAbsolutePath()
-					+ " because name started with .");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Ignoring " + src.getAbsolutePath()
+						+ " because name started with .");
+			}
 			return;
 		}
 
@@ -71,7 +73,9 @@ public class FileUtil {
 							"copyFiles: Could not create direcotry: "
 									+ dest.getAbsolutePath() + ".");
 				}
-				LOG.debug("Created directory " + dest.getAbsolutePath());
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Created directory " + dest.getAbsolutePath());
+				}
 			}
 			// get a listing of files...
 
@@ -106,8 +110,10 @@ public class FileUtil {
 
 					fout.write(buffer, 0, bytesRead);
 				}
-				LOG.debug("Copied " + src.getAbsolutePath() + " to "
-						+ dest.getAbsolutePath());
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Copied " + src.getAbsolutePath() + " to "
+							+ dest.getAbsolutePath());
+				}
 
 			} catch (IOException e) { // Error copying file...
 

@@ -237,5 +237,7 @@ public interface PreferenceKeys {
 	public static final String BICS_TERTIARY_TIMESEAL_ENABLED = "bics-Tertiary-timeseal-enabled";
 	public static final String BICS_TERTIARY_USER_NAME = "bics-Tertiary-user-name";
 
+	public static final String SPEECH_PROCESS_NAME = "speech_process_name";
+
 	public static final String TIMESEAL_INIT_STRING = "timeseal-init-string";
 }

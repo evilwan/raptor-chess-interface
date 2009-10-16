@@ -19,6 +19,7 @@ import java.io.IOException;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
@@ -34,10 +35,10 @@ import raptor.service.EcoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
-import raptor.swt.BrowserWindowItem;
 import raptor.swt.InputDialog;
 import raptor.swt.RaptorCursorRegistry;
 import raptor.swt.RaptorImageRegistry;
+import raptor.util.BrowserUtils;
 import raptor.util.FileUtil;
 
 /**
@@ -49,6 +50,7 @@ import raptor.util.FileUtil;
  */
 public class Raptor implements PreferenceKeys {
 	private static final Log LOG = LogFactory.getLog(Raptor.class);
+
 	public static final File DEFAULT_HOME_DIR = new File("defaultHomeDir/");
 	public static final String APP_HOME_DIR = ".raptor/";
 	public static final File USER_RAPTOR_DIR = new File(System
@@ -60,10 +62,16 @@ public class Raptor implements PreferenceKeys {
 	public static final String IMAGES_DIR = "resources/images/";
 	public static final String RESOURCES_SCRIPTS = "resources/scripts";
 	public static final String RESOURCES_DIR = "resources/";
-
 	private static Raptor instance;
 
 	private static Display display;
+
+	static {
+		// Forces log4j to check for changes to its properties file and reload
+		// them every 5 seconds.
+		PropertyConfigurator.configureAndWatch("resources/log4j.properties",
+				5000);
+	}
 
 	public static void createInstance() {
 		instance = new Raptor();
@@ -107,17 +115,7 @@ public class Raptor implements PreferenceKeys {
 				public void run() {
 					if (Raptor.getInstance().getPreferences().getBoolean(
 							APP_IS_LAUNCHNG_HOME_PAGE)) {
-						Raptor
-								.getInstance()
-								.getWindow()
-								.addRaptorWindowItem(
-										new BrowserWindowItem(
-												"Raptor Home",
-												Raptor
-														.getInstance()
-														.getPreferences()
-														.getString(
-																PreferenceKeys.APP_HOME_URL)));
+						BrowserUtils.openUrl(PreferenceKeys.APP_HOME_URL);
 					}
 					Raptor.getInstance().cursorRegistry.setDefaultCursor(Raptor
 							.getInstance().getWindow().getShell().getCursor());

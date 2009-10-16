@@ -54,7 +54,6 @@ import raptor.service.ThreadService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.service.ScriptService.ScriptServiceListener;
-import raptor.swt.BrowserWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.ChannelController;
@@ -63,7 +62,7 @@ import raptor.swt.chat.controller.PartnerTellController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardWindowItem;
-import raptor.util.LaunchBrowser;
+import raptor.util.BrowserUtils;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -191,14 +190,7 @@ public abstract class IcsConnector implements Connector {
 		}
 
 		public void openUrl(String url) {
-			if (Raptor.getInstance().getPreferences().getBoolean(
-					PreferenceKeys.APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
-				LaunchBrowser.openURL(url);
-				return;
-			} else {
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						new BrowserWindowItem(url, url));
-			}
+			BrowserUtils.openUrl(url);
 		}
 
 		public void playBughouseSound(String soundName) {
@@ -1089,6 +1081,10 @@ public abstract class IcsConnector implements Connector {
 		return IcsUtils.stripWord(word);
 	}
 
+	/**
+	 * Plays the bughouse sound for the specified ptell. Returns true if a
+	 * bughouse sound was played.
+	 */
 	protected boolean playBughouseSounds(final String ptell) {
 		boolean result = false;
 		if (getPreferences().getBoolean(PreferenceKeys.APP_SOUND_ENABLED)) {
@@ -1108,12 +1104,17 @@ public abstract class IcsConnector implements Connector {
 					}
 				}
 			} else {
-				LOG.error("Received a ptell event without a colon");
+				onError("Received a ptell event without a colon",
+						new Exception());
 			}
 		}
 		return result;
 	}
 
+	/**
+	 * Processes the scripts for the specified chat event. Script processing is
+	 * kicked off on a different thread.
+	 */
 	protected void processScripts(final ChatEvent event) {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {

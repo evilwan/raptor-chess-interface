@@ -64,13 +64,12 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
-import raptor.swt.BrowserWindowItem;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.ToolBarItemKey;
-import raptor.util.LaunchBrowser;
+import raptor.util.BrowserUtils;
 
 public abstract class ChatConsoleController implements PreferenceKeys {
 	public static final double CLEAN_PERCENTAGE = .33;
@@ -224,15 +223,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								"UTF-8");
 						String url = "http://www.google.com/search?q="
 								+ encodedWord;
-						if (getPreferences().getBoolean(
-								APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
-							LaunchBrowser.openURL(url);
-							return;
-						} else {
-							Raptor.getInstance().getWindow()
-									.addRaptorWindowItem(
-											new BrowserWindowItem(url, url));
-						}
+						BrowserUtils.openUrl(url);
 					} catch (UnsupportedEncodingException uee) {
 						LOG.error("Error encoding text", uee);
 					}
@@ -247,15 +238,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								"UTF-8");
 						String url = "http://www.google.com/search?q=define: "
 								+ encodedWord;
-						if (getPreferences().getBoolean(
-								APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
-							LaunchBrowser.openURL(url);
-							return;
-						} else {
-							Raptor.getInstance().getWindow()
-									.addRaptorWindowItem(
-											new BrowserWindowItem(url, url));
-						}
+						BrowserUtils.openUrl(url);
 					} catch (UnsupportedEncodingException uee) {
 						LOG.error("Error encoding text", uee);
 					}
@@ -269,15 +252,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						String encodedWord = URLEncoder.encode(finalWord,
 								"UTF-8");
 						String url = "http://wikipedia.org/wiki/" + encodedWord;
-						if (getPreferences().getBoolean(
-								APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
-							LaunchBrowser.openURL(url);
-							return;
-						} else {
-							Raptor.getInstance().getWindow()
-									.addRaptorWindowItem(
-											new BrowserWindowItem(url, url));
-						}
+						BrowserUtils.openUrl(url);
 					} catch (UnsupportedEncodingException uee) {
 						LOG.error("Error encoding text", uee);
 					}
@@ -618,7 +593,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			eventsWhileBeingReparented = null;
 		}
 
-		LOG.debug("Disposed ChatConsoleController");
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Disposed ChatConsoleController");
+		}
 	}
 
 	/**
@@ -957,13 +934,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
 		if (StringUtils.isNotBlank(url)) {
-			if (getPreferences().getBoolean(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
-				LaunchBrowser.openURL(url);
-				return;
-			} else {
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						new BrowserWindowItem(url, url));
-			}
+			BrowserUtils.openUrl(url);
 		}
 
 		String quotedText = ChatUtils.getQuotedText(chatConsole.inputText,
