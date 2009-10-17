@@ -751,7 +751,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				}
 			});
-			
+
 			MenuItem googleTranslate = new MenuItem(menu, SWT.PUSH);
 			googleTranslate.setText("Google Translate: '" + word + "'");
 			googleTranslate.addListener(SWT.Selection, new Listener() {
@@ -766,10 +766,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						LOG.error("Error encoding text", uee);
 					}
 				}
-			});			
-				
+			});
+
 			MenuItem defineItem = new MenuItem(menu, SWT.PUSH);
-			defineItem.setText("Define: '" + word + "'");
+			defineItem.setText("Google Define: '" + word + "'");
 			defineItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					try {
@@ -1147,6 +1147,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (StringUtils.isBlank(word)) {
 			word = ChatUtils.getWord(chatConsole.inputText, caretPosition);
 			wasSelectedText = false;
+		} else {
+			word = connector.removeLineBreaks(word);
 		}
 
 		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);

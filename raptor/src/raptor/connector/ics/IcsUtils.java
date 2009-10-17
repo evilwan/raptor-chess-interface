@@ -482,6 +482,26 @@ public class IcsUtils implements GameConstants {
 		return builder.toString();
 	}
 
+	/**
+	 * Removes all line breaks and excessive spaces from the specified message.
+	 * 
+	 * @param msg
+	 *            THe message to remove line breaks from.
+	 * @return The message without any line breaks.
+	 */
+	public static String removeLineBreaks(String msg) {
+		StringBuilder result = new StringBuilder(msg.length());
+		RaptorStringTokenizer tok = new RaptorStringTokenizer(msg, "\n\\ ",
+				true);
+		if (tok.hasMoreTokens()) {
+			result.append(tok.nextToken());
+		}
+		while (tok.hasMoreTokens()) {
+			result.append(" " + tok.nextToken());
+		}
+		return result.toString();
+	}
+
 	public static String removeTitles(String playerName) {
 		StringTokenizer stringtokenizer = new StringTokenizer(playerName,
 				"()~!@#$%^&*_+|}{';/.,:[]");
