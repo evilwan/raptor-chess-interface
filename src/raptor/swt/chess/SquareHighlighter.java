@@ -176,7 +176,7 @@ public class SquareHighlighter {
 	 * Removes all non fade away highlights.
 	 */
 	public void removeAllHighlights() {
-		removeAllHighlights(false);
+		removeAllHighlights(true);
 	}
 
 	/**

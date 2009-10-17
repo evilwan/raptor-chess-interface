@@ -24,7 +24,7 @@ import raptor.swt.chess.controller.InactiveController;
 public class ChessBoardCacheService {
 	static final Log LOG = LogFactory.getLog(ChessBoardCacheService.class);
 
-	protected static final int CHESS_BOARD_CACHE_SIZE = 10;
+	protected static final int CHESS_BOARD_CACHE_SIZE = 15;
 
 	protected static final ChessBoardCacheService singletonInstance = new ChessBoardCacheService();
 
@@ -64,24 +64,36 @@ public class ChessBoardCacheService {
 			if (LOG.isInfoEnabled()) {
 				LOG.info("Returned a cached chess board.");
 			}
-			return chessBoardCache.remove(chessBoardCache.size() - 1);
+			ChessBoard board = chessBoardCache
+					.remove(chessBoardCache.size() - 1);
+			board.getControl().setLayoutDeferred(false);
+			return board;
 		}
 	}
 
 	/**
 	 * Recycles the chess board. Disposes of it if the cache is already full.
 	 */
-	public void recycle(ChessBoard board) {
+	public void recycle(final ChessBoard board) {
 		long startTime = System.currentTimeMillis();
 		if (chessBoardCache.size() < CHESS_BOARD_CACHE_SIZE) {
 			if (board.getControl().getParent() != composite) {
-				board.getControl().setParent(composite);
-				// Always dispose the controller so it can clean up anything
+				// Always dispose the controller so it can clean
+				// up anything
 				// being used on the board.
-				// It will also possibly send messages to a connector on
+				// It will also possibly send messages to a
+				// connector on
 				// dispose.
 				board.getController().dispose();
-				chessBoardCache.add(board);
+				ThreadService.getInstance().scheduleOneShot(3000,
+						new Runnable() {
+							public void run() {
+								board.getControl().setLayoutDeferred(true);
+								board.getControl().setParent(composite);
+								board.hideMoveList();
+								chessBoardCache.add(0, board);
+							}
+						});
 			}
 		} else {
 			// It is'nt being cached so kill it off.
@@ -102,8 +114,7 @@ public class ChessBoardCacheService {
 			ChessBoard board = new ChessBoard();
 			Game emptyGame = GameFactory
 					.createStartingPosition(Variant.classic);
-			ChessBoardController controller = new InactiveController(emptyGame,
-					false);
+			ChessBoardController controller = new InactiveController(emptyGame);
 			board.setController(controller);
 			controller.setBoard(board);
 			board.createControls(composite);

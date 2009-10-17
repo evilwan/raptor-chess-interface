@@ -381,7 +381,8 @@ public class Raptor implements PreferenceKeys {
 				display.dispose();
 			}
 		} catch (Throwable t) {
-			LOG.warn("Error shutting down display", t);
+			// Eat this one its prob an already disposed exception.
+			// LOG.warn("Error shutting down display", t);
 		}
 
 		LOG.info("Shutdown Raptor");

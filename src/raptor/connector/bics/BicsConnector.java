@@ -25,7 +25,7 @@ import raptor.Raptor;
 import raptor.connector.bics.pref.BicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
-import raptor.connector.ics.IcsParserImpl;
+import raptor.connector.ics.IcsParser;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ConnectorQuadrantsPage;
@@ -40,7 +40,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 	public static class BicsConnectorContext extends IcsConnectorContext {
 		public BicsConnectorContext() {
-			super(new IcsParserImpl());
+			super(new IcsParser());
 		}
 
 		@Override
@@ -120,7 +120,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 	public BicsConnector(BicsConnectorContext context) {
 		super(context);
-		((IcsParserImpl) context.getParser()).setConnector(this);
+		(context.getParser()).setConnector(this);
 		initBics2();
 		createMenuActions();
 

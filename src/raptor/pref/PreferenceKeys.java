@@ -137,6 +137,8 @@ public interface PreferenceKeys {
 	public static final String ARROW_ANIMATION_DELAY = "arrow-animotion-delay";
 	public static final String ARROW_WIDTH_PERCENTAGE = "arrow-width-percentage";
 	public static final String ARROW_FADE_AWAY_MODE = "arrow-fade-away-mode";
+	// public static final String ARROW_PLAY_ANIMATIONS_UNTIL_COMPETED =
+	// "arrow-play-animations-until-completed";
 
 	public static final String HIGHLIGHT_OPPONENT_COLOR = "hilight-opponent-color";
 	public static final String HIGHLIGHT_MY_COLOR = "hilight-my-color";
@@ -148,6 +150,8 @@ public interface PreferenceKeys {
 	public static final String HIGHLIGHT_FADE_AWAY_MODE = "hilight-fade-away-mode";
 	public static final String HIGHLIGHT_ANIMATION_DELAY = "highlight-animation-delay";
 	public static final String HIGHLIGHT_WIDTH_PERCENTAGE = "highlight-width-percentage";
+	// public static final String HIGHLIGHT_PLAY_ANMIATIONS_UNTIL_COMPLETED =
+	// "highlight-play-animations-until-completed";
 
 	public static final String CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO = "chat-event-";
 	public static final String CHAT_CONSOLE_BACKGROUND_COLOR = "chat-console-background-color";

@@ -49,6 +49,7 @@ import raptor.swt.chess.Arrow;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.Highlight;
+import raptor.util.RaptorStringUtils;
 
 /**
  * The controller used when a user is playing a game. Supports premove,queued
@@ -102,7 +103,7 @@ public class PlayingController extends ChessBoardController {
 
 							// Now swap controllers to the inactive controller.
 							InactiveController inactiveController = new InactiveController(
-									getGame(), board.isWhiteOnTop());
+									getGame());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 							inactiveController
@@ -227,6 +228,9 @@ public class PlayingController extends ChessBoardController {
 	/**
 	 * Creates a playing controller. One of the players white or black playing
 	 * the game must match the name of connector.getUserName.
+	 * 
+	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
+	 * displayed on top or not.
 	 * 
 	 * @param game
 	 *            The game to control.
@@ -423,13 +427,16 @@ public class PlayingController extends ChessBoardController {
 
 	@Override
 	public void dispose() {
-		connector.getGameService().removeGameServiceListener(listener);
-		super.dispose();
-		if (toolbar != null) {
-			toolbar.setVisible(false);
-			SWTUtils.clearToolbar(toolbar);
-			toolbar = null;
-		}
+		try {
+			connector.getGameService().removeGameServiceListener(listener);
+			super.dispose();
+			if (toolbar != null) {
+				toolbar.setVisible(false);
+				SWTUtils.clearToolbar(toolbar);
+				toolbar = null;
+			}
+		} catch (Throwable t) {
+		} // Eat it its prob a disposed exception
 	}
 
 	public void enableDisableNavButtons() {
@@ -489,8 +496,9 @@ public class PlayingController extends ChessBoardController {
 
 	@Override
 	public void init() {
+		board.setWhiteOnTop(RaptorStringUtils.getBooleanValue(game
+				.getHeader(PgnHeader.WhiteOnTop)));
 
-		board.setWhiteOnTop(!isUserWhite());
 		/**
 		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail
 		 * since you can drop pieces from it.

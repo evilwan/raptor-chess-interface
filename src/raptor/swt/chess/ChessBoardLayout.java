@@ -30,7 +30,6 @@ public abstract class ChessBoardLayout extends Layout implements BoardConstants 
 	}
 
 	public void dispose() {
-		board = null;
 	}
 
 	public ChessBoard getBoard() {

@@ -347,7 +347,8 @@ public class GameUtils implements GameConstants {
 	 */
 	public static String getPseudoSan(Game game, int fromSquare, int toSquare) {
 		boolean isDrop = isDropSquare(fromSquare);
-		boolean isToPieceEmpty = game.getPiece(toSquare) == EMPTY;
+		boolean isToPieceEmpty = GameUtils.isDropSquare(toSquare) ? true : game
+				.getPiece(toSquare) == EMPTY;
 
 		int fromPiece = -1;
 

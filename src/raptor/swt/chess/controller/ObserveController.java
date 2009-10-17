@@ -39,6 +39,7 @@ import raptor.swt.chess.Arrow;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.Highlight;
+import raptor.util.RaptorStringUtils;
 
 /**
  * A controller used when observing a game.
@@ -60,7 +61,7 @@ public class ObserveController extends ChessBoardController {
 							onPlayGameEndSound();
 
 							InactiveController inactiveController = new InactiveController(
-									getGame(), board.isWhiteOnTop());
+									getGame());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 
@@ -91,6 +92,7 @@ public class ObserveController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							cursor.setCursorMasterLast();
 							refresh();
 						} catch (Throwable t) {
 							connector.onError(
@@ -170,18 +172,15 @@ public class ObserveController extends ChessBoardController {
 		}
 	};
 	protected ToolBar toolbar;
-	protected boolean initialWhiteOnTop;
 
-	public ObserveController(Game game, boolean isWhiteOnTop,
-			Connector connector) {
+	/**
+	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
+	 * displayed on top or not.
+	 */
+	public ObserveController(Game game, Connector connector) {
 		super(new GameCursor(game,
 				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast), connector);
 		cursor = (GameCursor) getGame();
-		initialWhiteOnTop = isWhiteOnTop;
-	}
-
-	public ObserveController(Game game, Connector connector) {
-		this(game, false, connector);
 	}
 
 	@Override
@@ -234,16 +233,20 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void dispose() {
-		connector.getGameService().removeGameServiceListener(listener);
-		if (connector.isConnected() && getGame().isInState(Game.ACTIVE_STATE)) {
-			connector.onUnobserve(getGame());
+		try {
+			connector.getGameService().removeGameServiceListener(listener);
+			if (connector.isConnected()
+					&& getGame().isInState(Game.ACTIVE_STATE)) {
+				connector.onUnobserve(getGame());
+			}
+			if (toolbar != null) {
+				toolbar.setVisible(false);
+				SWTUtils.clearToolbar(toolbar);
+				toolbar = null;
+			}
+			super.dispose();
+		} catch (Throwable t) {// Eat it its prob a disposed exception.
 		}
-		if (toolbar != null) {
-			toolbar.setVisible(false);
-			SWTUtils.clearToolbar(toolbar);
-			toolbar = null;
-		}
-		super.dispose();
 	}
 
 	public void enableDisableNavButtons() {
@@ -316,8 +319,8 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void init() {
-
-		board.setWhiteOnTop(initialWhiteOnTop);
+		board.setWhiteOnTop(RaptorStringUtils.getBooleanValue(game
+				.getHeader(PgnHeader.WhiteOnTop)));
 
 		/**
 		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail

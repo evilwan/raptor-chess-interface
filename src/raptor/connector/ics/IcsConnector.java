@@ -295,6 +295,7 @@ public abstract class IcsConnector implements Connector {
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 	protected Socket socket;
 	protected String userName;
+	protected String userFollowing;
 	protected String[] bughouseSounds = SoundService.getInstance()
 			.getBughouseSoundKeys();
 	protected ChatScript[] personTellMessageScripts = null;
@@ -1239,6 +1240,14 @@ public abstract class IcsConnector implements Connector {
 				LOG.debug("Publishing event : " + event);
 			}
 
+			// Sets the user following. This is used in the IcsParser to
+			// determine if white is on top or not.
+			if (event.getType() == ChatType.FOLLOWING) {
+				userFollowing = event.getSource();
+			} else if (event.getType() == ChatType.NOT_FOLLOWING) {
+				userFollowing = null;
+			}
+
 			if (event.getType() == ChatType.PARTNER_TELL
 					|| event.getType() == ChatType.TELL
 					|| event.getType() == ChatType.CHANNEL_TELL) {
@@ -1280,7 +1289,12 @@ public abstract class IcsConnector implements Connector {
 		isLoggedIn = false;
 		hasSentLogin = false;
 		hasSentPassword = false;
+		userFollowing = null;
 		ignoringChatTypes.clear();
+	}
+
+	protected void setUserFollowing(String userFollowing) {
+		this.userFollowing = userFollowing;
 	}
 
 	private void setBughouseService(BughouseService bughouseService) {

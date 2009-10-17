@@ -9,6 +9,9 @@ import raptor.chess.pgn.PgnHeader;
  * 
  * Games also contain a state. The state is a bitmask of the various *_STATE
  * constants in this class. You can add to or remove a games state flag.
+ * 
+ * PgnHeaders can effect the way a game is displayed. You can set various
+ * headers to effect the clocks, if white pieces are on top, the result, etc.
  */
 public interface Game extends GameConstants {
 	/**

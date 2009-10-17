@@ -193,6 +193,10 @@ public abstract class ChessBoardController implements BoardConstants,
 			itemChangedListeners.clear();
 		}
 
+		if (toolItemMap != null) {
+			toolItemMap.clear();
+		}
+
 		if (LOG.isInfoEnabled()) {
 			LOG.info("Disposed ChessBoardController");
 		}
@@ -301,7 +305,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	public boolean isToolItemSelected(ToolBarItemKey key) {
 		boolean result = false;
 		ToolItem item = getToolItem(key);
-		if (item != null) {
+		if (item != null && !item.isDisposed()) {
 			return item.getSelection();
 		}
 		return result;
@@ -328,7 +332,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
 		board.redrawSquares();
-		board.getBoardComposite().layout(true);
+		board.getControl().layout(true, true);
 		board.getControl().redraw();
 
 		if (game instanceof BughouseGame) {

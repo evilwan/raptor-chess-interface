@@ -44,7 +44,6 @@ import raptor.connector.ics.game.message.MovesMessage;
 import raptor.connector.ics.game.message.Style12Message;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
-import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.PlayingController;
@@ -205,26 +204,9 @@ public class IcsUtils implements GameConstants {
 		if (game.isInState(Game.OBSERVING_STATE)
 				|| game.isInState(Game.OBSERVING_EXAMINED_STATE)) {
 			if (isBughouseOtherBoard) {
-				ChessBoardWindowItem otherBoardItem = Raptor.getInstance()
-						.getWindow().getChessBoardWindowItem(
-								((BughouseGame) game).getOtherBoard().getId());
-
-				if (otherBoardItem == null) {
-					LOG
-							.warn(
-									"Could not find other board with game id "
-											+ ((BughouseGame) game)
-													.getOtherBoard().getId()
-											+ ", This can occur if the other game "
-											+ "opened slower than the next G1 message arrived. "
-											+ "Can probably be ignored.",
-									new Exception());
-					controller = new ObserveController(game, true, connector);
-				} else {
-					controller = new ObserveController(game, !otherBoardItem
-							.getController().getBoard().isWhiteOnTop(),
-							connector);
-				}
+				// In the future this will contain a controller that allows
+				// suggestions.
+				controller = new ObserveController(game, connector);
 			} else {
 				controller = new ObserveController(game, connector);
 			}

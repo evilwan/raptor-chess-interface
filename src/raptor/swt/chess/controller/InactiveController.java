@@ -45,6 +45,7 @@ import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.Highlight;
+import raptor.util.RaptorStringUtils;
 
 /**
  * This controller is used when a game is no longer active. It allows the user
@@ -60,16 +61,21 @@ public class InactiveController extends ChessBoardController implements
 	protected String title;
 	protected ToolBar toolbar;
 	protected boolean userMadeAdjustment = false;
-	protected boolean beforeInitIsWhiteOnTop = false;
 
-	public InactiveController(Game game, boolean isWhiteOnTop) {
-		this(game, isWhiteOnTop, "Inactive");
-
+	/**
+	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
+	 * displayed on top or not.
+	 */
+	public InactiveController(Game game) {
+		this(game, "Inactive");
 	}
 
-	public InactiveController(Game game, boolean isWhiteOnTop, String title) {
+	/**
+	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
+	 * displayed on top or not.
+	 */
+	public InactiveController(Game game, String title) {
 		super(new GameCursor(game, GameCursor.Mode.MakeMovesOnCursor));
-		beforeInitIsWhiteOnTop = isWhiteOnTop;
 		cursor = (GameCursor) getGame();
 		this.title = title;
 	}
@@ -259,7 +265,9 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void init() {
-		board.setWhiteOnTop(beforeInitIsWhiteOnTop);
+		board.setWhiteOnTop(RaptorStringUtils.getBooleanValue(game
+				.getHeader(PgnHeader.WhiteOnTop)));
+
 		if (getGame().isInState(Game.DROPPABLE_STATE)) {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
 		} else {

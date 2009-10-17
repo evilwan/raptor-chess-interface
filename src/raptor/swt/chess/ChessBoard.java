@@ -199,6 +199,10 @@ public class ChessBoard implements BoardConstants {
 		}
 	}
 
+	public void dispose() {
+		sashForm.dispose();
+	}
+
 	public synchronized ArrowDecorator getArrowDecorator() {
 		return arrowDecorator;
 	}
@@ -347,6 +351,10 @@ public class ChessBoard implements BoardConstants {
 				pieceJailSquare.setVisible(false);
 			}
 		}
+	}
+
+	public boolean isDisposed() {
+		return sashForm.isDisposed();
 	}
 
 	/**
