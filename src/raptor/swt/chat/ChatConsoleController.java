@@ -730,14 +730,14 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
-	protected void addCommandMenuItems(Menu menu, String word) {
-		if (word.length() <= 120) {
+	protected void addCommandMenuItems(Menu menu, String message) {
+		if (message.length() <= 200) {
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
-			final String finalWord = word;
+			final String finalWord = message;
 			MenuItem googleItem = new MenuItem(menu, SWT.PUSH);
-			googleItem.setText("Google: '" + word + "'");
+			googleItem.setText("Google: '" + message + "'");
 			googleItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					try {
@@ -753,7 +753,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			});
 
 			MenuItem googleTranslate = new MenuItem(menu, SWT.PUSH);
-			googleTranslate.setText("Google Translate: '" + word + "'");
+			googleTranslate.setText("Google Translate: '" + message + "'");
 			googleTranslate.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					try {
@@ -768,23 +768,26 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			});
 
-			MenuItem defineItem = new MenuItem(menu, SWT.PUSH);
-			defineItem.setText("Google Define: '" + word + "'");
-			defineItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					try {
-						String encodedWord = URLEncoder.encode(finalWord,
-								"UTF-8");
-						String url = "http://www.google.com/search?q=define: "
-								+ encodedWord;
-						BrowserUtils.openUrl(url);
-					} catch (UnsupportedEncodingException uee) {
-						LOG.error("Error encoding text", uee);
+			if (message.length() < 30) {
+				MenuItem defineItem = new MenuItem(menu, SWT.PUSH);
+				defineItem.setText("Google Define: '" + message + "'");
+				defineItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						try {
+							String encodedWord = URLEncoder.encode(finalWord,
+									"UTF-8");
+							String url = "http://www.google.com/search?q=define: "
+									+ encodedWord;
+							BrowserUtils.openUrl(url);
+						} catch (UnsupportedEncodingException uee) {
+							LOG.error("Error encoding text", uee);
+						}
 					}
-				}
-			});
+				});
+			}
+			
 			MenuItem wikiItem = new MenuItem(menu, SWT.PUSH);
-			wikiItem.setText("Wikipedia: '" + word + "'");
+			wikiItem.setText("Wikipedia: '" + message + "'");
 			wikiItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					try {
@@ -797,13 +800,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				}
 			});
-			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText(connector.getShortName() + ": '" + word + "'");
-			item.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					connector.sendMessage(finalWord);
-				}
-			});
+
+			if (message.length() < 30) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(connector.getShortName() + ": '" + message + "'");
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						connector.sendMessage(finalWord);
+					}
+				});
+			}
 		}
 	}
 
