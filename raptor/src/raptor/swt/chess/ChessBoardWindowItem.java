@@ -185,6 +185,9 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		// This prevents them from getting cleared.
 		board.getController().setItemChangedListeners(null);
 		board.getController().dispose();
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getResultDecorator().setHiding(true);
+		board.getArrowDecorator().removeAllArrows();
 		board.setController(newController);
 		controller.setBoard(board);
 		board.getController().init();

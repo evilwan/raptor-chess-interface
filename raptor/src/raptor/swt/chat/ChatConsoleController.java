@@ -731,7 +731,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void addCommandMenuItems(Menu menu, String word) {
-		if (word.length() <= 60) {
+		if (word.length() <= 120) {
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
@@ -751,6 +751,23 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				}
 			});
+			
+			MenuItem googleTranslate = new MenuItem(menu, SWT.PUSH);
+			googleTranslate.setText("Google Translate: '" + word + "'");
+			googleTranslate.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					try {
+						String encodedWord = URLEncoder.encode(finalWord,
+								"UTF-8");
+						String url = "http://www.translate.google.com/translate_t#auto|en|"
+								+ encodedWord;
+						BrowserUtils.openUrl(url);
+					} catch (UnsupportedEncodingException uee) {
+						LOG.error("Error encoding text", uee);
+					}
+				}
+			});			
+				
 			MenuItem defineItem = new MenuItem(menu, SWT.PUSH);
 			defineItem.setText("Define: '" + word + "'");
 			defineItem.addListener(SWT.Selection, new Listener() {
