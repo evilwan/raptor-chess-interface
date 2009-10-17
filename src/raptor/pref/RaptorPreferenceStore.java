@@ -228,7 +228,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_CHESS_SET_NAME, "Fantasy");
 		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "Wood2");
 		setDefault(BOARD_IS_SHOW_COORDINATES, true);
-		setDefault(BOARD_PIECE_SIZE_ADJUSTMENT, .03);
+		setDefault(BOARD_PIECE_SIZE_ADJUSTMENT, .06);
 		setDefault(BOARD_IS_SHOWING_PIECE_JAIL, true);
 		setDefault(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN, 1000L * 10L + 1L);
 		setDefault(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
