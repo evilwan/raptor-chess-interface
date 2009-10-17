@@ -340,6 +340,12 @@ public interface Connector {
 	public void removeConnectorListener(ConnectorListener listener);
 
 	/**
+	 * Should remove any line breaks from the message (remove any wrapping the
+	 * connector put in).
+	 */
+	public String removeLineBreaks(String message);
+
+	/**
 	 * Sends a message to the connector. A ChatEvent should be published with
 	 * the text being sent in the connectors ChatService.
 	 */

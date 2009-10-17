@@ -22,6 +22,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.widgets.Composite;
 
+import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -44,28 +45,35 @@ public class RaptorStyledText extends StyledText {
 		if ((getStyle() & SWT.SINGLE) != 0) {
 			super.copy();
 		} else {
-
 			String text = getSelectionText();
 			if (!StringUtils.isEmpty(text)) {
-				StringBuilder builder = new StringBuilder(text);
-				int newLineIndex = builder.indexOf("\n\\");
+				// TO DO: This really should be moved down into the connector.
+				// Currently, however, that is not needed .
+				if (text.startsWith("http")) {
+					StringBuilder builder = new StringBuilder(text);
+					int newLineIndex = builder.indexOf("\n\\");
 
-				while (newLineIndex != -1) {
-					int cursor = newLineIndex + 2;
-					while (Character.isWhitespace(builder.charAt(cursor))) {
-						cursor++;
+					while (newLineIndex != -1) {
+						int cursor = newLineIndex + 2;
+						while (Character.isWhitespace(builder.charAt(cursor))) {
+							cursor++;
+						}
+						if (cursor > newLineIndex + 2) {
+							builder.delete(newLineIndex, cursor);
+						}
+						newLineIndex = builder
+								.indexOf("\n\\", newLineIndex + 1);
 					}
-					if (cursor > newLineIndex + 2) {
-						builder.delete(newLineIndex, cursor);
-					}
-					newLineIndex = builder.indexOf("\n\\", newLineIndex + 1);
+					text = builder.toString();
+
+				} else {
+					text = IcsUtils.removeLineBreaks(text);
 				}
 
-				clipBoard.setContents(new Object[] { builder.toString() },
+				clipBoard.setContents(new Object[] { text },
 						new Transfer[] { TextTransfer.getInstance() },
 						DND.CLIPBOARD);
 			}
-
 		}
 	}
 

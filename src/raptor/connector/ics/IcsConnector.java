@@ -688,6 +688,10 @@ public abstract class IcsConnector implements Connector {
 		connectorListeners.remove(listener);
 	}
 
+	public String removeLineBreaks(String message) {
+		return IcsUtils.removeLineBreaks(message);
+	}
+
 	public void sendMessage(String message) {
 		sendMessage(message, false, null);
 	}
