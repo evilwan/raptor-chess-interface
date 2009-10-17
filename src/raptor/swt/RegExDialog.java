@@ -141,7 +141,6 @@ public class RegExDialog extends InputDialog {
 				input = regEx.getText();
 				String testText = textToTest.getText();
 				boolean isSuccessful = false;
-				System.err.println("REGEX: " + input + " testText=" + testText);
 
 				try {
 					Pattern pattern = Pattern.compile(input, Pattern.MULTILINE

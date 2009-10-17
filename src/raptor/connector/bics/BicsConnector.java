@@ -120,7 +120,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 	public BicsConnector(BicsConnectorContext context) {
 		super(context);
-		(context.getParser()).setConnector(this);
+		context.getParser().setConnector(this);
 		initBics2();
 		createMenuActions();
 

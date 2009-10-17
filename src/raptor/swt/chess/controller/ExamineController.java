@@ -35,8 +35,8 @@ import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.Arrow;
-import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.Highlight;
 
 /**
@@ -63,14 +63,13 @@ public class ExamineController extends ChessBoardController {
 
 							connector.getGameService()
 									.removeGameServiceListener(listener);
-
-							inactiveController.init();
-
 							inactiveController
 									.setItemChangedListeners(itemChangedListeners);
+							inactiveController.init();
+
 							setItemChangedListeners(null);
 							ExamineController.this.dispose();
-							inactiveController.fireItemChanged();
+
 						} catch (Throwable t) {
 							connector.onError("ExamineController.gameInactive",
 									t);
@@ -143,13 +142,13 @@ public class ExamineController extends ChessBoardController {
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!isDisposed()) {
-			if (BoardUtils.isPieceJailSquare(squareId)) {
+			if (ChessBoardUtils.isPieceJailSquare(squareId)) {
 				return false;
 			} else {
 				int piece = GameUtils.getColoredPiece(squareId, getGame());
-				return BoardUtils.isWhitePiece(piece)
+				return ChessBoardUtils.isWhitePiece(piece)
 						&& getGame().isWhitesMove()
-						|| BoardUtils.isBlackPiece(piece)
+						|| ChessBoardUtils.isBlackPiece(piece)
 						&& !getGame().isWhitesMove();
 			}
 		}
@@ -212,10 +211,10 @@ public class ExamineController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true, game
-					.getVariant() == Variant.suicide);
+			ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar, true,
+					game.getVariant() == Variant.suicide);
 			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
+			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
@@ -235,6 +234,7 @@ public class ExamineController extends ChessBoardController {
 		refresh();
 		onPlayGameStartSound();
 		connector.getGameService().addGameServiceListener(listener);
+		fireItemChanged();
 	}
 
 	@Override
@@ -288,7 +288,7 @@ public class ExamineController extends ChessBoardController {
 							PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
 		}
 
-		if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
+		if (isDnd && !ChessBoardUtils.isPieceJailSquare(square)) {
 			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
 		board.redrawSquares();
@@ -304,7 +304,7 @@ public class ExamineController extends ChessBoardController {
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
 
-		if (BoardUtils.isPieceJailSquare(toSquare)) {
+		if (ChessBoardUtils.isPieceJailSquare(toSquare)) {
 			SoundService.getInstance().playSound("illegalMove");
 			return;
 		}
@@ -312,10 +312,10 @@ public class ExamineController extends ChessBoardController {
 		Game game = getGame();
 		Move move = null;
 		if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
-			move = BoardUtils.createMove(getGame(), fromSquare, toSquare,
+			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare,
 					getAutoPromoteSelection());
 		} else {
-			move = BoardUtils.createMove(getGame(), fromSquare, toSquare);
+			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare);
 		}
 
 		if (move != null) {

@@ -14,7 +14,6 @@
 package raptor.swt.chess;
 
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.widgets.Display;
 
 import raptor.Raptor;
 import raptor.chess.util.GameUtils;
@@ -85,7 +84,8 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			// flashing behavior.
 			long nextUpdate = calculateNextUpdate();
 			if (isRunning) {
-				Display.getCurrent().timerExec((int) nextUpdate, this);
+				Raptor.getInstance().getDisplay().timerExec((int) nextUpdate,
+						this);
 			}
 			// }
 		}
@@ -100,13 +100,13 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 		if (remainingTimeMillis > 0) {
 			lastSystemTime = System.currentTimeMillis();
 			long nextUpdate = calculateNextUpdate();
-			Display.getCurrent().timerExec((int) nextUpdate, this);
+			Raptor.getInstance().getDisplay().timerExec((int) nextUpdate, this);
 		}
 	}
 
 	public void stop() {
 		isRunning = false;
-		Display.getCurrent().timerExec(-1, this);
+		Raptor.getInstance().getDisplay().timerExec(-1, this);
 	}
 
 	protected RaptorPreferenceStore getPreferences() {

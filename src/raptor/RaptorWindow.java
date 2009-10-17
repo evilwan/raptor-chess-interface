@@ -155,7 +155,7 @@ public class RaptorWindow extends ApplicationWindow {
 						RaptorTabFolder childFolder = (RaptorTabFolder) element;
 						lastChildToShow = childFolder;
 						childFolder.setVisible(true);
-						childFolder.setMaximized(activeItems.size() == 1);
+						childFolder.setMaximized(itemsManaged.size() == 1);
 						childFolder.activate();
 						numberOfChildrenShowing++;
 					} else {
@@ -482,12 +482,13 @@ public class RaptorWindow extends ApplicationWindow {
 			setShowClose(true);
 			// parent.layout(true, true);
 			parent.setSelection(this);
-			activeItems.add(this);
+			itemsManaged.add(this);
 		}
 
 		@Override
 		public void dispose() {
 			super.dispose();
+			itemsManaged.remove(this);
 			try {
 				if (raptorItem != null) {
 					raptorItem.dispose();
@@ -509,7 +510,6 @@ public class RaptorWindow extends ApplicationWindow {
 				raptorItem.removeItemChangedListener(listener);
 				setControl(null);
 				raptorItem.getControl().setParent(newParent);
-				activeItems.remove(this);
 				new RaptorTabItem(newParent, getStyle(), raptorItem, false);
 				raptorItem.afterQuadrantMove(newParent.quad);
 				raptorItem = null;
@@ -525,7 +525,7 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 	}
 
-	protected List<RaptorTabItem> activeItems = Collections
+	protected List<RaptorTabItem> itemsManaged = Collections
 			.synchronizedList(new ArrayList<RaptorTabItem>());
 
 	protected RaptorTabItem dragStartItem;
@@ -596,7 +596,7 @@ public class RaptorWindow extends ApplicationWindow {
 		if (!isAsynch) {
 			getShell().getDisplay().syncExec(new Runnable() {
 				public void run() {
-					RaptorTabFolder folder = getTabFolder(item
+					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
 					new RaptorTabItem(folder, SWT.NONE, item);
 					restoreFolders();
@@ -605,7 +605,7 @@ public class RaptorWindow extends ApplicationWindow {
 		} else {
 			getShell().getDisplay().asyncExec(new Runnable() {
 				public void run() {
-					RaptorTabFolder folder = getTabFolder(item
+					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
 					new RaptorTabItem(folder, SWT.NONE, item);
 					restoreFolders();
@@ -717,7 +717,7 @@ public class RaptorWindow extends ApplicationWindow {
 	public int countItems(Quadrant... quads) {
 		int count = 0;
 		for (Quadrant quad : quads) {
-			count += getTabFolder(quad).getItemCount();
+			count += getRaptorTabFolder(quad).getItemCount();
 		}
 		return count;
 	}
@@ -731,9 +731,9 @@ public class RaptorWindow extends ApplicationWindow {
 			pingLabelsMap.clear();
 			pingLabelsMap = null;
 		}
-		if (activeItems != null) {
-			activeItems.clear();
-			activeItems = null;
+		if (itemsManaged != null) {
+			itemsManaged.clear();
+			itemsManaged = null;
 		}
 		if (folders != null) {
 			folders = null;
@@ -751,8 +751,8 @@ public class RaptorWindow extends ApplicationWindow {
 		getShell().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				RaptorTabItem tabItem = null;
-				synchronized (activeItems) {
-					for (RaptorTabItem currentTabItem : activeItems) {
+				synchronized (itemsManaged) {
+					for (RaptorTabItem currentTabItem : itemsManaged) {
 						if (currentTabItem.raptorItem == item) {
 							tabItem = currentTabItem;
 							break;
@@ -766,6 +766,23 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Forces the current window item in view.
+	 */
+	public void forceFocus(RaptorWindowItem windowItem) {
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
+				if (currentTabItem.raptorItem == windowItem) {
+					currentTabItem.raptorParent.setSelection(currentTabItem);
+					if (currentTabItem.raptorParent.getMinimized()) {
+						restoreFolders();
+					}
+					break;
+				}
+			}
+		}
 	}
 
 	/**
@@ -812,13 +829,45 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
+	 * Searches in the specified quadrant for an inactive game which can be
+	 * taken over. If one is found taht game is returned. Otherwise null is
+	 * returned.
+	 * 
+	 * @param gameId
+	 *            The quadrant to search in.
+	 * @return null if not found, otherwise the ChessBoardWindowItem.
+	 */
+	public ChessBoardWindowItem getChessBoardWindowItemToTakeOver(
+			Quadrant quadrant) {
+		ChessBoardWindowItem result = null;
+
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
+				if (currentTabItem.raptorParent.quad == quadrant
+						&& currentTabItem.raptorItem instanceof ChessBoardWindowItem) {
+					ChessBoardWindowItem item = (ChessBoardWindowItem) currentTabItem.raptorItem;
+
+					if (item.getController() instanceof InactiveController) {
+						if (((InactiveController) item.getController())
+								.canBeTakenOver()) {
+							result = item;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Returns the quad the current window item is in. Null if the windowItem is
 	 * not being managed.
 	 */
 	public Quadrant getQuadrant(RaptorWindowItem windowItem) {
 		Quadrant result = null;
-		synchronized (activeItems) {
-			for (RaptorTabItem currentTabItem : activeItems) {
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
 				if (currentTabItem.raptorItem == windowItem) {
 					result = currentTabItem.raptorParent.quad;
 					break;
@@ -829,10 +878,18 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
+	 * Returns the RaptorTabFolder at the quad.
+	 */
+	public RaptorTabFolder getRaptorTabFolder(Quadrant quad) {
+		RaptorTabFolder result = folders[quad.ordinal()];
+		return result;
+	}
+
+	/**
 	 * Returns an array of all RaptorWindowItems currently active.
 	 */
 	public RaptorWindowItem[] getRaptorWindowItems() {
-		return activeItems.toArray(new RaptorWindowItem[0]);
+		return itemsManaged.toArray(new RaptorWindowItem[0]);
 	}
 
 	/**
@@ -843,20 +900,13 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Returns the RaptorTabFolder at the quad.
-	 */
-	public RaptorTabFolder getTabFolder(Quadrant quad) {
-		return folders[quad.ordinal()];
-	}
-
-	/**
 	 * Returns true if the item is being managed by the RaptorWindow. As items
 	 * are closed and disposed they are no longer managed.
 	 */
 	public boolean isBeingManaged(final RaptorWindowItem item) {
 		boolean result = false;
-		synchronized (activeItems) {
-			for (RaptorTabItem currentTabItem : activeItems) {
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
 				if (currentTabItem.raptorItem == item) {
 					result = true;
 					break;
@@ -962,7 +1012,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 		if (isAFolderMinimized) {
 			for (Quadrant quadrant : Quadrant.values()) {
-				if (getTabFolder(quadrant).getMinimized()) {
+				if (getRaptorTabFolder(quadrant).getMinimized()) {
 					ToolItem item = new ToolItem(foldersMinimizedToolbar,
 							SWT.PUSH);
 					item.setText(quadrant.name());
@@ -971,7 +1021,7 @@ public class RaptorWindow extends ApplicationWindow {
 					item.addSelectionListener(new SelectionAdapter() {
 						@Override
 						public void widgetSelected(SelectionEvent e) {
-							getTabFolder(finalQuad).setMinimized(false);
+							getRaptorTabFolder(finalQuad).setMinimized(false);
 							restoreFolders();
 						}
 					});

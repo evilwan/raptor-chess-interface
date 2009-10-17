@@ -3,6 +3,8 @@ package raptor.swt.chess;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -21,6 +23,8 @@ import raptor.pref.PreferenceKeys;
  * on the bottom.
  */
 public class ArrowDecorator {
+	static final Log LOG = LogFactory.getLog(ArrowDecorator.class);
+
 	/**
 	 * Contains the code to draw an arrow segment on a square. Arrow segments
 	 * are always drawn from the perspective of what being on the bottom. The
@@ -707,7 +711,8 @@ public class ArrowDecorator {
 			}
 		}
 
-		public void paintControl(PaintEvent e) {
+		public void paintControl(final PaintEvent e) {
+			// Don't put log statements in here it gets called quite often.
 			for (ArrowSpec spec : specs) {
 				if (spec.arrow.frame == -1) {
 					int width = (int) (Raptor.getInstance().getPreferences()
@@ -782,7 +787,7 @@ public class ArrowDecorator {
 		} else {
 			addDecoratorsForArrowStartGreaterThanEnd(arrow);
 		}
-		board.redrawSquares();
+		redrawSquares();
 		if (arrow.isFadeAway) {
 			Raptor.getInstance().getDisplay().timerExec(
 					Raptor.getInstance().getPreferences().getInt(
@@ -790,7 +795,7 @@ public class ArrowDecorator {
 					new Runnable() {
 						public void run() {
 							arrow.frame--;
-							board.redrawSquares();
+							redrawSquares();
 							if (arrow.frame != 0) {
 								Raptor
 										.getInstance()
@@ -1225,6 +1230,19 @@ public class ArrowDecorator {
 			decorators[GameUtils.getSquare(startRank, startFile)]
 					.addArrowSpec(new ArrowSpec(arrow,
 							ArrowSegment.DestinationHorizontalLeft));
+		}
+	}
+
+	/**
+	 * Redraws all squares that have arrow segments.
+	 */
+	protected void redrawSquares() {
+		// Use for loops here with int. If you dont you can get concurrent
+		// modification errors.
+		for (int i = 0; i < decorators.length; i++) {
+			if (!decorators[i].specs.isEmpty()) {
+				decorators[i].square.redraw();
+			}
 		}
 	}
 

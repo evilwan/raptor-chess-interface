@@ -409,7 +409,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		Raptor.getInstance().getWindow().addRaptorWindowItem(
 				new ChessBoardWindowItem(new InactiveController(selectedGame,
 						selectedGame.getHeader(PgnHeader.White) + " vs "
-								+ selectedGame.getHeader(PgnHeader.Black))));
+								+ selectedGame.getHeader(PgnHeader.Black),
+						false)));
 	}
 
 	protected void populateGamesTable(Table gamesTable) {

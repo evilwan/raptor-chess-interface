@@ -62,7 +62,7 @@ import raptor.swt.chat.controller.MainController;
 import raptor.swt.chat.controller.PartnerTellController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
-import raptor.swt.chess.ChessBoardWindowItem;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.BrowserUtils;
 import raptor.util.RaptorStringTokenizer;
 
@@ -252,18 +252,15 @@ public abstract class IcsConnector implements Connector {
 		public void gameCreated(Game game) {
 			if (game instanceof BughouseGame) {
 				if (((BughouseGame) game).getOtherBoard() == null) {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new ChessBoardWindowItem(IcsUtils.buildController(
-									game, IcsConnector.this)));
+					ChessBoardUtils.openBoard(IcsUtils.buildController(game,
+							IcsConnector.this));
 				} else {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new ChessBoardWindowItem(IcsUtils.buildController(
-									game, IcsConnector.this, true), true));
+					ChessBoardUtils.openBoard(IcsUtils.buildController(game,
+							IcsConnector.this, true), true);
 				}
 			} else {
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						new ChessBoardWindowItem(IcsUtils.buildController(game,
-								IcsConnector.this)));
+				ChessBoardUtils.openBoard(IcsUtils.buildController(game,
+						IcsConnector.this));
 			}
 		}
 	};

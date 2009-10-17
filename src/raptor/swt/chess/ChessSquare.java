@@ -147,7 +147,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							board.controller.userCancelledMove(initiator.id,
 									false);
 							board.getControl().setData(CLICK_INITIATOR, null);
-						} else if (BoardUtils.arePiecesSameColor(piece,
+						} else if (ChessBoardUtils.arePiecesSameColor(piece,
 								initiator.piece)) {// Clicked
 							// on
 							// same
@@ -352,7 +352,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * RaptorPreferenceStore setting.
 	 */
 	protected Image getBackgrondImage(boolean isLight, int width, int height) {
-		return BoardUtils.getSquareBackgroundImage(isLight, width, height);
+		return ChessBoardUtils.getSquareBackgroundImage(isLight, width, height);
 	}
 
 	/**
@@ -360,7 +360,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * RaptorPreferenceStore setting.
 	 */
 	protected Image getChessPieceImage(int piece, int width, int height) {
-		return BoardUtils.getChessPieceImage(piece, width, height);
+		return ChessBoardUtils.getChessPieceImage(piece, width, height);
 	}
 
 	/**
@@ -370,7 +370,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	protected String getFileLabel() {
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				BOARD_IS_SHOW_COORDINATES)
-				&& !BoardUtils.isPieceJailSquare(id)) {
+				&& !ChessBoardUtils.isPieceJailSquare(id)) {
 			if (board.isWhiteOnTop) {
 				if ((GameUtils.getBitboard(id) & GameConstants.RANK8) != 0) {
 					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
@@ -411,7 +411,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	protected String getRankLabel() {
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				BOARD_IS_SHOW_COORDINATES)
-				&& !BoardUtils.isPieceJailSquare(id)) {
+				&& !ChessBoardUtils.isPieceJailSquare(id)) {
 			if (board.isWhiteOnTop) {
 				if ((GameUtils.getBitboard(id) & GameConstants.HFILE) != 0) {
 					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
@@ -459,7 +459,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		} else {
 			int imageSide = getImageSize();
 			getShell().setCursor(
-					BoardUtils.getCursorForPiece(piece, imageSide, imageSide));
+					ChessBoardUtils.getCursorForPiece(piece, imageSide,
+							imageSide));
 		}
 	}
 
