@@ -127,6 +127,8 @@ public interface PreferenceKeys {
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
 	public static final String BOARD_STATUS_FONT = "board-status-font";
 	public static final String BOARD_TAKEOVER_INACTIVE_GAMES = "board-takeover-inactive-games";
+	public static final String BOARD_PIECE_SHADOW_ALPHA = "board-hiding_alpha";
+	public static final String BOARD_PIECE_JAIL_SHADOW_ALPHA = "board-piece-jail-empty-alpha";
 
 	public static final String ARROW_OPPONENT_COLOR = "arrow-opponent-color";
 	public static final String ARROW_MY_COLOR = "arrow-my-color";

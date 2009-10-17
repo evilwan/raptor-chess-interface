@@ -32,7 +32,6 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
 import raptor.chess.Game;
-import raptor.chess.GameConstants;
 import raptor.chess.GameCursor;
 import raptor.chess.Move;
 import raptor.chess.Result;
@@ -633,8 +632,7 @@ public class PlayingController extends ChessBoardController {
 			}
 
 			movingPiece = board.getSquare(square).getPiece();
-			if (isDnd && !ChessBoardUtils.isPieceJailSquare(square)) {
-				board.getSquare(square).setPiece(GameConstants.EMPTY);
+			if (isDnd) {
 				board.getSquare(square).setHidingPiece(true);
 			}
 			board.redrawSquares();
@@ -656,14 +654,13 @@ public class PlayingController extends ChessBoardController {
 					+ GameUtils.getSan(fromSquare) + " "
 					+ GameUtils.getSan(toSquare));
 		}
-
+		board.unhidePieces();
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
 
 		if (movingPiece == 0) {
-			LOG.error("movingPiece is 0 this should never happen.",
+			connector.onError("movingPiece is 0 this should never happen.",
 					new Exception());
-			board.unhidePieces();
 			refresh();
 			return;
 		}

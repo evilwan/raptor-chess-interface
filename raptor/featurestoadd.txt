@@ -13,6 +13,5 @@
  Saving tab layouts per connection and reloading them at next login.
  Bughouse suggest.
  Simul bughouse.
- A reuse inactive games feature.
  
  

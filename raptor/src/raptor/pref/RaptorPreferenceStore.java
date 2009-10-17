@@ -242,6 +242,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_IS_USING_CROSSHAIRS_CURSOR, false);
 		setDefault(BOARD_LAYOUT, "raptor.swt.chess.layout.RightOrientedLayout");
 		setDefault(BOARD_TAKEOVER_INACTIVE_GAMES, true);
+		setDefault(BOARD_PIECE_JAIL_SHADOW_ALPHA, 60);
+		setDefault(BOARD_PIECE_SHADOW_ALPHA, 60);
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));

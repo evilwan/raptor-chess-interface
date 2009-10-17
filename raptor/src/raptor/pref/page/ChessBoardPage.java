@@ -13,11 +13,15 @@
  */
 package raptor.pref.page;
 
+import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -30,6 +34,7 @@ import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.ChessSquare;
+import raptor.swt.chess.PieceJailChessSquare;
 
 public class ChessBoardPage extends FieldEditorPreferencePage {
 
@@ -47,9 +52,62 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
 			{ "6%", "0.06" }, { "7.5%", "0.075" } };
 
+	public static final String[][] ALPHAS = { { "0", "0" }, { "30", "30" },
+			{ "40", "40" }, { "50", "50" }, { "60", "60" }, { "70", "70" },
+			{ "80", "80" }, { "90", "90" }, { "100", "100" }, { "125", "125" },
+			{ "150", "150" } };
+
 	public static final String[][] PIECE_WEIGHT_PERCENTAGE = { {
 			"Right Oriented Layout",
 			"raptor.swt.chess.layout.RightOrientedLayout" } };
+
+	public class PieceJailSquarePageSquare extends PieceJailChessSquare {
+
+		public PieceJailSquarePageSquare(Composite parent, int id,
+				int pieceJailPiece) {
+			super(parent, id, pieceJailPiece);
+		}
+
+		@Override
+		protected Image getChessPieceImage(int piece, int width, int height) {
+			try {
+				return ChessBoardUtils.getChessPieceImage(setFieldEditor
+						.getValue(), piece, width, height);
+			} catch (Exception e) {
+				return null;
+			}
+		}
+
+		@Override
+		protected String getFileLabel() {
+			return null;
+		}
+
+		@Override
+		protected int getImageSize() {
+			try {
+				double imageSquareSideAdjustment = Double
+						.parseDouble(pieceResize.getValue().toString());
+				int imageSide = (int) (getSize().x * (1.0 - imageSquareSideAdjustment));
+				if (imageSide % 2 != 0) {
+					imageSide = imageSide - 1;
+				}
+				return imageSide;
+			} catch (Exception e) {
+				return getSize().y;
+			}
+		}
+
+		@Override
+		protected int getPieceJailShadowAlpha() {
+			return Integer.parseInt(pieceJailHidingAlphaCombo.getValue());
+		}
+
+		@Override
+		protected String getRankLabel() {
+			return null;
+		}
+	}
 
 	protected class ChessBoardPageComboFieldEditor extends ComboFieldEditor {
 
@@ -109,6 +167,11 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 
 		@Override
+		protected int getHidingAlpha() {
+			return Integer.parseInt(boardHidingAlphaCombo.getValue());
+		}
+
+		@Override
 		protected int getImageSize() {
 			try {
 				double imageSquareSideAdjustment = Double
@@ -132,9 +195,16 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	ChessBoardPageComboFieldEditor backgroundFieldEditor;
 	ChessBoardPageComboFieldEditor highlightPercentage;
 	Composite miniBoard;
+	Composite pieceJailAlphasComposite;
+	Composite boardHidingAlphasComposite;
 	ChessBoardPageComboFieldEditor pieceResize;
 	ChessBoardPageComboFieldEditor setFieldEditor;
+	ChessBoardPageComboFieldEditor boardHidingAlphaCombo;
+	ChessBoardPageComboFieldEditor pieceJailHidingAlphaCombo;
+	ColorFieldEditor pieceJailBackground;
 	ChessBoardPageSquare[][] squares = null;
+	ChessBoardPageSquare[] hiddenPieceAlphas;
+	PieceJailSquarePageSquare[] pieceJailAlphas;
 
 	public ChessBoardPage() {
 		// Use the "grid" layout
@@ -148,13 +218,44 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			for (ChessBoardPageSquare element : square) {
 				element.clearCache();
 				element.redraw();
-				miniBoard.layout(true, true);
 			}
 		}
+		miniBoard.layout(true, true);
+
+		for (ChessBoardPageSquare element : hiddenPieceAlphas) {
+			element.clearCache();
+			element.redraw();
+		}
+		pieceJailAlphasComposite.layout(true, true);
+
+		for (PieceJailSquarePageSquare element : pieceJailAlphas) {
+			element.clearCache();
+			element.setBackground(new Color(Raptor.getInstance().getDisplay(),
+					pieceJailBackground.getColorSelector().getColorValue()));
+			element.redraw();
+		}
+		boardHidingAlphasComposite.layout(true, true);
 	}
 
 	@Override
 	protected void createFieldEditors() {
+
+		LabelButtonFieldEditor labelButtonFieldEditor = new LabelButtonFieldEditor(
+				"NONE",
+				"Optimize chess set (Convert from svg to pgns)\n"
+						+ "This may take a few minutes but is highly recommended.",
+				getFieldEditorParent(), "Optimize", new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						ChessSetOptimizationDialog dialog = new ChessSetOptimizationDialog(
+								getShell(), "Chess Set "
+										+ setFieldEditor.getValue()
+										+ " Optimization.", setFieldEditor
+										.getValue());
+						dialog.open();
+					}
+				});
+		addField(labelButtonFieldEditor);
 
 		String[] sets = ChessBoardUtils.getChessSetNames();
 		String[][] setNameValues = new String[sets.length][2];
@@ -221,24 +322,60 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		squares[2][1].setPiece(GameConstants.WR);
 		squares[2][2].setPiece(GameConstants.WK);
 
-		// squares[1][1].highlight();
-		// squares[0][2].highlight();
+		boardHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
+				PreferenceKeys.BOARD_PIECE_SHADOW_ALPHA,
+				"Piece Shadow (0 is transparent, 255 is opaque):", ALPHAS,
+				getFieldEditorParent());
+		boardHidingAlphasComposite = new Composite(getFieldEditorParent(),
+				SWT.NONE);
+		boardHidingAlphasComposite.setLayoutData(new GridData(SWT.LEFT,
+				SWT.CENTER, false, false, 2, 1));
+		boardHidingAlphasComposite.setLayout(SWTUtils
+				.createMarginlessGridLayout(2, true));
+		addField(boardHidingAlphaCombo);
 
-		LabelButtonFieldEditor labelButtonFieldEditor = new LabelButtonFieldEditor(
-				"NONE",
-				"Optimize chess set (Convert from svg to pgns)\n"
-						+ "This may take a few minutes but is highly recommended.",
-				getFieldEditorParent(), "Optimize", new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						ChessSetOptimizationDialog dialog = new ChessSetOptimizationDialog(
-								getShell(), "Chess Set "
-										+ setFieldEditor.getValue()
-										+ " Optimization.", setFieldEditor
-										.getValue());
-						dialog.open();
+		hiddenPieceAlphas = new ChessBoardPageSquare[] {
+				new ChessBoardPageSquare(boardHidingAlphasComposite, 1, true),
+				new ChessBoardPageSquare(boardHidingAlphasComposite, 2, false) };
+		hiddenPieceAlphas[0].setLayoutData(new GridData(50, 50));
+		hiddenPieceAlphas[1].setLayoutData(new GridData(50, 50));
+		hiddenPieceAlphas[0].setPiece(GameConstants.WP);
+		hiddenPieceAlphas[1].setPiece(GameConstants.BP);
+		hiddenPieceAlphas[0].setHidingPiece(true);
+		hiddenPieceAlphas[1].setHidingPiece(true);
+
+		pieceJailHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
+				PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA,
+				"Piece Jail shadow (0 is transparent, 255 is opaque):", ALPHAS,
+				getFieldEditorParent());
+		addField(pieceJailHidingAlphaCombo);
+		pieceJailBackground = new ColorFieldEditor(
+				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
+				"Piece Jail Background Color:", getFieldEditorParent());
+		pieceJailBackground.getColorSelector().addListener(
+				new IPropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent arg0) {
+						valuesChanged();
 					}
 				});
-		addField(labelButtonFieldEditor);
+		addField(pieceJailBackground);
+
+		pieceJailAlphasComposite = new Composite(getFieldEditorParent(),
+				SWT.NONE);
+		pieceJailAlphasComposite.setLayoutData(new GridData(SWT.LEFT,
+				SWT.CENTER, false, false, 2, 1));
+		pieceJailAlphasComposite.setLayout(SWTUtils.createMarginlessGridLayout(
+				2, true));
+		pieceJailAlphas = new PieceJailSquarePageSquare[] {
+				new PieceJailSquarePageSquare(pieceJailAlphasComposite, 1,
+						GameConstants.WR),
+				new PieceJailSquarePageSquare(pieceJailAlphasComposite, 2,
+						GameConstants.BR) };
+		pieceJailAlphas[0].setLayoutData(new GridData(50, 50));
+		pieceJailAlphas[1].setLayoutData(new GridData(50, 50));
+		pieceJailAlphas[0].setBackground(Raptor.getInstance().getPreferences()
+				.getColor(PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
+		pieceJailAlphas[1].setBackground(Raptor.getInstance().getPreferences()
+				.getColor(PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
 	}
 }
