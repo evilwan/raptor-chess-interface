@@ -64,7 +64,7 @@ public class ChessBoard implements BoardConstants {
 	 * Piece jail is indexed by the colored piece constants in Constants. The
 	 * 0th index will always be null. (for the empty piece).
 	 */
-	protected LabeledChessSquare[] pieceJailSquares = new LabeledChessSquare[13];
+	protected PieceJailChessSquare[] pieceJailSquares = new PieceJailChessSquare[13];
 
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent arg) {
@@ -258,7 +258,7 @@ public class ChessBoard implements BoardConstants {
 		return openingDescriptionLabel;
 	}
 
-	public synchronized LabeledChessSquare getPieceJailSquare(int coloredPiece) {
+	public synchronized PieceJailChessSquare getPieceJailSquare(int coloredPiece) {
 		return pieceJailSquares[coloredPiece];
 	}
 
@@ -268,7 +268,7 @@ public class ChessBoard implements BoardConstants {
 	 * 
 	 * @return
 	 */
-	public synchronized LabeledChessSquare[] getPieceJailSquares() {
+	public synchronized PieceJailChessSquare[] getPieceJailSquares() {
 		return pieceJailSquares;
 	}
 
@@ -347,7 +347,7 @@ public class ChessBoard implements BoardConstants {
 	 * Hides the piece jail.
 	 */
 	public void hidePieceJail() {
-		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+		for (PieceJailChessSquare pieceJailSquare : pieceJailSquares) {
 			if (pieceJailSquare != null) {
 				pieceJailSquare.setVisible(false);
 			}
@@ -437,7 +437,7 @@ public class ChessBoard implements BoardConstants {
 	 * Shows the piece jail.
 	 */
 	public void showPieceJail() {
-		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+		for (PieceJailChessSquare pieceJailSquare : pieceJailSquares) {
 			if (pieceJailSquare != null) {
 				pieceJailSquare.setVisible(true);
 			}
@@ -453,7 +453,7 @@ public class ChessBoard implements BoardConstants {
 				squares[i][j].setHidingPiece(false);
 			}
 		}
-		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+		for (PieceJailChessSquare pieceJailSquare : pieceJailSquares) {
 			if (pieceJailSquare != null) {
 				pieceJailSquare.setHidingPiece(false);
 			}
@@ -545,31 +545,31 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	protected void createPieceJailControls() {
-		pieceJailSquares[GameConstants.WP] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WN] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WB] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WR] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WQ] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.WK] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.WK_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WP] = new PieceJailChessSquare(
+				boardComposite, this, WP, GameConstants.WP_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WN] = new PieceJailChessSquare(
+				boardComposite, this, WN, GameConstants.WN_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WB] = new PieceJailChessSquare(
+				boardComposite, this, WB, GameConstants.WB_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WR] = new PieceJailChessSquare(
+				boardComposite, this, WR, GameConstants.WR_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WQ] = new PieceJailChessSquare(
+				boardComposite, this, WQ, GameConstants.WQ_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.WK] = new PieceJailChessSquare(
+				boardComposite, this, WK, GameConstants.WK_DROP_FROM_SQUARE);
 
-		pieceJailSquares[GameConstants.BP] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BP_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BN] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BN_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BB] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BB_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BR] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BR_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BQ] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BQ_DROP_FROM_SQUARE);
-		pieceJailSquares[GameConstants.BK] = new LabeledChessSquare(
-				boardComposite, this, GameConstants.BK_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BP] = new PieceJailChessSquare(
+				boardComposite, this, BP, GameConstants.BP_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BN] = new PieceJailChessSquare(
+				boardComposite, this, BN, GameConstants.BN_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BB] = new PieceJailChessSquare(
+				boardComposite, this, BB, GameConstants.BB_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BR] = new PieceJailChessSquare(
+				boardComposite, this, BR, GameConstants.BR_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BQ] = new PieceJailChessSquare(
+				boardComposite, this, BQ, GameConstants.BQ_DROP_FROM_SQUARE);
+		pieceJailSquares[GameConstants.BK] = new PieceJailChessSquare(
+				boardComposite, this, BK, GameConstants.BK_DROP_FROM_SQUARE);
 	}
 
 	protected void createSquares() {
@@ -597,7 +597,7 @@ public class ChessBoard implements BoardConstants {
 			}
 		}
 
-		for (LabeledChessSquare pieceJailSquare : pieceJailSquares) {
+		for (PieceJailChessSquare pieceJailSquare : pieceJailSquares) {
 			if (pieceJailSquare != null) {
 				pieceJailSquare.setBackground(preferences
 						.getColor(BOARD_PIECE_JAIL_BACKGROUND_COLOR));

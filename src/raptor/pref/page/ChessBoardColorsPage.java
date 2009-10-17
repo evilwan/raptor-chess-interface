@@ -34,12 +34,6 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(defaultMessages);
 
-		ColorFieldEditor pieceJailBackground = new ColorFieldEditor(
-				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
-				"Piece Jail/Drop Square Background Color:",
-				getFieldEditorParent());
-		addField(pieceJailBackground);
-
 		ColorFieldEditor coordinatesColor = new ColorFieldEditor(
 				PreferenceKeys.BOARD_COORDINATES_COLOR, "Coordinates Color:",
 				getFieldEditorParent());

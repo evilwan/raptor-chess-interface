@@ -663,7 +663,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
 			int coloredPiece = DROPPABLE_PIECE_COLOR[i];
 			int count = 0;
-			LabeledChessSquare square = board.pieceJailSquares[DROPPABLE_PIECES[i]];
+			PieceJailChessSquare square = board.pieceJailSquares[DROPPABLE_PIECES[i]];
 
 			if (game.isInState(Game.DROPPABLE_STATE)
 					&& !game.isInState(Game.SETUP_STATE)) {

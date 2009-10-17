@@ -392,6 +392,7 @@ public class InactiveController extends ChessBoardController implements
 		if (!isDisposed()) {
 			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare
 					+ " " + isDnd);
+			board.unhidePieces();
 			board.getSquareHighlighter().removeAllHighlights();
 			board.getArrowDecorator().removeAllArrows();
 			refresh();
@@ -432,10 +433,10 @@ public class InactiveController extends ChessBoardController implements
 								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
 			}
 
-			if (isDnd && !ChessBoardUtils.isPieceJailSquare(square)) {
-				board.getSquare(square).setPiece(GameConstants.EMPTY);
+			if (isDnd) {
+				board.getSquare(square).setHidingPiece(true);
 			}
-			board.redrawSquares();
+			board.getSquare(square).redraw();
 		}
 	}
 
@@ -446,6 +447,7 @@ public class InactiveController extends ChessBoardController implements
 					+ GameUtils.getSan(fromSquare) + " "
 					+ GameUtils.getSan(toSquare));
 		}
+		board.unhidePieces();
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
 

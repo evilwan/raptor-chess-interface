@@ -23,7 +23,6 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
 import raptor.chess.Game;
-import raptor.chess.GameConstants;
 import raptor.chess.Move;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
@@ -272,6 +271,7 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
+		board.unhidePieces();
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
 		refreshBoard();
@@ -288,10 +288,10 @@ public class ExamineController extends ChessBoardController {
 							PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
 		}
 
-		if (isDnd && !ChessBoardUtils.isPieceJailSquare(square)) {
-			board.getSquare(square).setPiece(GameConstants.EMPTY);
+		if (isDnd) {
+			board.getSquare(square).setHidingPiece(true);
 		}
-		board.redrawSquares();
+		board.getSquare(square).redraw();
 	}
 
 	@Override
@@ -301,6 +301,7 @@ public class ExamineController extends ChessBoardController {
 					+ toSquare);
 		}
 
+		board.unhidePieces();
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
 

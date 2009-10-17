@@ -107,7 +107,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		}
 	};
 	protected int id;
-	protected boolean ignoreBackgroundImage = false;
+	protected boolean ignorePaint = false;
 	protected boolean isHidingPiece;
 	protected boolean isLight;
 
@@ -171,53 +171,57 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent e) {
 			Point size = getSize();
-			if (!ignoreBackgroundImage) {
+			if (!ignorePaint) {
+				e.gc.setAdvanced(true);
 				Image backgroundImage = getBackgrondImage(isLight, size.x,
 						size.y);
 				if (backgroundImage != null) {
 					e.gc.drawImage(backgroundImage, 0, 0);
 				}
-			} else {
-				e.gc.fillRectangle(0, 0, size.x, size.y);
+
+				int imageSide = getImageSize();
+
+				if (pieceImage == null && piece != EMPTY) {
+					pieceImage = getChessPieceImage(piece, imageSide, imageSide);
+				}
+
+				if (pieceImage != null) {
+					int pieceImageX = (size.x - imageSide) / 2;
+					int pieceImageY = (size.y - imageSide) / 2;
+					if (isHidingPiece) {
+						e.gc.setAlpha(getHidingAlpha());
+						e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
+						e.gc.setAlpha(255);
+					} else {
+						e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
+					}
+				}
+
+				String fileLabel = getFileLabel();
+				if (fileLabel != null) {
+					e.gc.setForeground(getPreferences().getColor(
+							BOARD_COORDINATES_COLOR));
+					e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
+							.getFont(BOARD_COORDINATES_FONT), 20, size.y));
+
+					int fontHeight = e.gc.getFontMetrics().getAscent()
+							+ e.gc.getFontMetrics().getDescent() + 0;
+
+					e.gc.drawString(fileLabel, size.x
+							- e.gc.getFontMetrics().getAverageCharWidth() - 2,
+							size.y - fontHeight, true);
+				}
+
+				String rankLabel = getRankLabel();
+				if (rankLabel != null) {
+					e.gc.setForeground(getPreferences().getColor(
+							BOARD_COORDINATES_COLOR));
+					e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
+							.getFont(BOARD_COORDINATES_FONT), 20, size.y));
+
+					e.gc.drawString(rankLabel, 0, 0, true);
+				}
 			}
-
-			int imageSide = getImageSize();
-
-			if (pieceImage == null && piece != EMPTY) {
-				pieceImage = getChessPieceImage(piece, imageSide, imageSide);
-			}
-
-			if (pieceImage != null && !isHidingPiece()) {
-				int pieceImageX = (size.x - imageSide) / 2;
-				int pieceImageY = (size.y - imageSide) / 2;
-				e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
-			}
-
-			String fileLabel = getFileLabel();
-			if (fileLabel != null) {
-				e.gc.setForeground(getPreferences().getColor(
-						BOARD_COORDINATES_COLOR));
-				e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
-						.getFont(BOARD_COORDINATES_FONT), 20, size.y));
-
-				int fontHeight = e.gc.getFontMetrics().getAscent()
-						+ e.gc.getFontMetrics().getDescent() + 0;
-
-				e.gc.drawString(fileLabel, size.x
-						- e.gc.getFontMetrics().getAverageCharWidth() - 2,
-						size.y - fontHeight, true);
-			}
-
-			String rankLabel = getRankLabel();
-			if (rankLabel != null) {
-				e.gc.setForeground(getPreferences().getColor(
-						BOARD_COORDINATES_COLOR));
-				e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
-						.getFont(BOARD_COORDINATES_FONT), 20, size.y));
-
-				e.gc.drawString(rankLabel, 0, 0, true);
-			}
-
 		}
 	};
 	protected int piece;
@@ -382,6 +386,10 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			}
 		}
 		return null;
+	}
+
+	protected int getHidingAlpha() {
+		return getPreferences().getInt(BOARD_PIECE_SHADOW_ALPHA);
 	}
 
 	/**

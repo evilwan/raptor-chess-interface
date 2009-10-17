@@ -25,31 +25,66 @@ import raptor.swt.SWTUtils;
  * A labeled chess square. Contains a label in the top right. Currently used for
  * piece jails and drop squares to show the number of pieces.
  */
-public class LabeledChessSquare extends ChessSquare {
+public class PieceJailChessSquare extends ChessSquare {
 	public static final int LABEL_HEIGHT_PERCENTAGE = 30;
 
 	protected PaintListener paintListener = new PaintListener() {
-		public void paintControl(PaintEvent arg0) {
-			if (StringUtils.isNotBlank(getText())) {
-				Point size = getSize();
-				arg0.gc.setForeground(getPreferences().getColor(
-						BOARD_PIECE_JAIL_LABEL_COLOR));
-				arg0.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
-						.getFont(BOARD_PIECE_JAIL_FONT),
-						LABEL_HEIGHT_PERCENTAGE, size.y));
+		public void paintControl(PaintEvent e) {
+			e.gc.setAdvanced(true);
 
-				int width = arg0.gc.getFontMetrics().getAverageCharWidth()
-						* text.length() + 2;
+			Point size = getSize();
+			e.gc.fillRectangle(0, 0, size.x, size.y);
 
-				arg0.gc.drawString(getText(), size.x - width, 0, true);
+			int imageSide = getImageSize();
+			if (pieceImage == null) {
+				pieceImage = getChessPieceImage(pieceJailPiece, imageSide,
+						imageSide);
+			}
+
+			int pieceImageX = (size.x - imageSide) / 2;
+			int pieceImageY = (size.y - imageSide) / 2;
+
+			if (piece != EMPTY && !isHidingPiece()) {
+				e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
+
+				if (StringUtils.isNotBlank(getText())) {
+					e.gc.setForeground(getPreferences().getColor(
+							BOARD_PIECE_JAIL_LABEL_COLOR));
+					e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
+							.getFont(BOARD_PIECE_JAIL_FONT),
+							LABEL_HEIGHT_PERCENTAGE, size.y));
+
+					int width = e.gc.getFontMetrics().getAverageCharWidth()
+							* text.length() + 2;
+
+					e.gc.drawString(getText(), size.x - width, 0, true);
+				}
+			} else {
+				e.gc.setAlpha(getPieceJailShadowAlpha());
+				e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
+				e.gc.setAlpha(255);
 			}
 		}
 	};
 	protected String text = "";
+	protected int pieceJailPiece;
 
-	public LabeledChessSquare(Composite parent, ChessBoard board, int id) {
+	public PieceJailChessSquare(Composite parent, ChessBoard board,
+			int pieceJailPiece, int id) {
 		super(parent, board, id, true);
-		ignoreBackgroundImage = true;
+		this.pieceJailPiece = pieceJailPiece;
+		ignorePaint = true;
+		addPaintListener(paintListener);
+	}
+
+	/**
+	 * Creates a ChessSquare not tied to a board. Useful in preferences. Use
+	 * with care, this does'nt add any listeners besides the PaointListener and
+	 * board will be null.
+	 */
+	public PieceJailChessSquare(Composite parent, int id, int pieceJailPiece) {
+		super(parent, id, true);
+		this.pieceJailPiece = pieceJailPiece;
 		addPaintListener(paintListener);
 	}
 
@@ -67,5 +102,9 @@ public class LabeledChessSquare extends ChessSquare {
 	 */
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	protected int getPieceJailShadowAlpha() {
+		return getPreferences().getInt(BOARD_PIECE_JAIL_SHADOW_ALPHA);
 	}
 }
