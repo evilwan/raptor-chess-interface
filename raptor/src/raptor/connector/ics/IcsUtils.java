@@ -42,8 +42,8 @@ import raptor.connector.ics.TakebackParser.TakebackMessage;
 import raptor.connector.ics.game.message.G1Message;
 import raptor.connector.ics.game.message.MovesMessage;
 import raptor.connector.ics.game.message.Style12Message;
-import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.PlayingController;
@@ -710,10 +710,10 @@ public class IcsUtils implements GameConstants {
 			for (int j = 0; j < style12.position[i].length; j++) {
 				if (style12.position[i][j] != EMPTY) {
 					int square = GameUtils.getSquare(i, j);
-					int pieceColor = BoardUtils
+					int pieceColor = ChessBoardUtils
 							.isWhitePiece(style12.position[i][j]) ? WHITE
 							: BLACK;
-					int piece = BoardUtils
+					int piece = ChessBoardUtils
 							.pieceFromColoredPiece(style12.position[i][j]);
 					long squareBB = GameUtils.getBitboard(square);
 

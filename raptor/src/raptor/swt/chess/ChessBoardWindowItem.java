@@ -20,18 +20,17 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
-import raptor.Raptor;
 import raptor.RaptorWindowItem;
-import raptor.pref.PreferenceKeys;
 import raptor.service.ChessBoardCacheService;
 import raptor.swt.ItemChangedListener;
 
 /**
- * You should really not create instances of this. Instead use
- * BoardUtils.buildChessBoardWindowItem
+ * You should only use this class directly when you don't want to use the
+ * optimizations put in place to take over inactive games. This might be the
+ * case when observing a PGN game for instance.
  * 
- * @author mindspan
- * 
+ * If you want the window item to be able to take over inactive games use
+ * BoardUtils.openGame(ChessBoardController).
  */
 public class ChessBoardWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
@@ -57,7 +56,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	public ChessBoardWindowItem(ChessBoardController controller,
 			boolean isBughouseOtherBoard) {
 		this(controller);
-		this.isBughouseOtherBoard = true;
+		this.isBughouseOtherBoard = isBughouseOtherBoard;
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -112,27 +111,9 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-
-		if (getController().getConnector() == null) {
-			if (isBughouseOtherBoard) {
-				return Raptor.getInstance().getPreferences().getQuadrant(
-						PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT);
-			} else {
-				return Raptor.getInstance().getPreferences().getQuadrant(
-						PreferenceKeys.APP_CHESS_BOARD_QUADRANT);
-			}
-		} else {
-			if (isBughouseOtherBoard) {
-				return Raptor.getInstance().getPreferences().getQuadrant(
-						getController().getConnector().getShortName() + "-"
-								+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT);
-
-			} else {
-				return Raptor.getInstance().getPreferences().getQuadrant(
-						getController().getConnector().getShortName() + "-"
-								+ PreferenceKeys.CHESS_BOARD_QUADRANT);
-			}
-		}
+		Quadrant result = ChessBoardUtils.getQuadrantForController(
+				getController(), isBughouseOtherBoard);
+		return result;
 	}
 
 	public String getTitle() {
@@ -155,14 +136,16 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 			board.setController(controller);
 			controller.setBoard(board);
 			board.createControls(parent);
+			board.getController().init();
 		} else {
 			board.getControl().setParent(parent);
 			board.setController(controller);
 			controller.setBoard(board);
+			board.getController().init();
 		}
 
 		// board.getControl().setLayoutDeferred(true);
-		board.getController().init();
+
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Inited window item in "
 					+ (System.currentTimeMillis() - startTime));
@@ -186,5 +169,25 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
 		getController().removeItemChangedListener(listener);
+	}
+
+	/**
+	 * Takes over this ChessBoardWindow and tie it to the new controller. This
+	 * should really only be used by BoardUtils.openGame
+	 */
+	public void takeOver(ChessBoardController newController,
+			boolean isOtherBughouseBoard) {
+		isBughouseOtherBoard = isOtherBughouseBoard;
+		controller = newController;
+		controller.setItemChangedListeners(board.getController()
+				.getItemChangedListeners());
+		// Set the boards item changed listeners to null before it is disposed.
+		// This prevents them from getting cleared.
+		board.getController().setItemChangedListeners(null);
+		board.getController().dispose();
+		board.setController(newController);
+		controller.setBoard(board);
+		board.getController().init();
+		board.getControl().layout(true, true);
 	}
 }

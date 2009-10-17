@@ -28,7 +28,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.SWTUtils;
-import raptor.swt.chess.BoardUtils;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.ChessSquare;
 
 public class ChessBoardPage extends FieldEditorPreferencePage {
@@ -84,7 +84,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		@Override
 		protected Image getBackgrondImage(boolean isLight, int width, int height) {
 			try {
-				return BoardUtils.getSquareBackgroundImage(
+				return ChessBoardUtils.getSquareBackgroundImage(
 						backgroundFieldEditor.getValue(), isLight, width,
 						height);
 			} catch (Exception e) {
@@ -96,8 +96,8 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		@Override
 		protected Image getChessPieceImage(int piece, int width, int height) {
 			try {
-				return BoardUtils.getChessPieceImage(setFieldEditor.getValue(),
-						piece, width, height);
+				return ChessBoardUtils.getChessPieceImage(setFieldEditor
+						.getValue(), piece, width, height);
 			} catch (Exception e) {
 				return null;
 			}
@@ -156,7 +156,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 
-		String[] sets = BoardUtils.getChessSetNames();
+		String[] sets = ChessBoardUtils.getChessSetNames();
 		String[][] setNameValues = new String[sets.length][2];
 
 		for (int i = 0; i < sets.length; i++) {
@@ -169,7 +169,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				setNameValues, getFieldEditorParent());
 		addField(setFieldEditor);
 
-		String[] backgrounds = BoardUtils.getSquareBackgroundNames();
+		String[] backgrounds = ChessBoardUtils.getSquareBackgroundNames();
 		String[][] backgroundNameValues = new String[backgrounds.length][2];
 		for (int i = 0; i < backgrounds.length; i++) {
 			backgroundNameValues[i][0] = backgrounds[i];

@@ -66,7 +66,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
 	public FicsConnector(IcsConnectorContext context) {
 		super(context);
-		(context.getParser()).setConnector(this);
+		context.getParser().setConnector(this);
 		initFics2();
 		createMenuActions();
 

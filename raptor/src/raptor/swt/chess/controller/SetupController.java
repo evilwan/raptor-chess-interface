@@ -38,8 +38,8 @@ import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.Arrow;
-import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.Highlight;
 
 /**
@@ -145,7 +145,6 @@ public class SetupController extends ChessBoardController {
 							setItemChangedListeners(null);
 
 							examineController.init();
-							examineController.fireItemChanged();
 
 							unexamineOnDispose = false;
 							SetupController.this.dispose();
@@ -212,7 +211,7 @@ public class SetupController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addSetupIconsToToolbar(this, toolbar);
+			ChessBoardUtils.addSetupIconsToToolbar(this, toolbar);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 		} else if (toolbar.getParent() != parent) {
 			toolbar.setParent(parent);
@@ -227,6 +226,7 @@ public class SetupController extends ChessBoardController {
 		refresh();
 		onPlayGameStartSound();
 		connector.getGameService().addGameServiceListener(listener);
+		fireItemChanged();
 	}
 
 	@Override
@@ -293,7 +293,7 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
-		if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
+		if (isDnd && !ChessBoardUtils.isPieceJailSquare(square)) {
 			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
 		board.redrawSquares();
@@ -306,7 +306,8 @@ public class SetupController extends ChessBoardController {
 					+ toSquare);
 		}
 
-		if (fromSquare == toSquare || BoardUtils.isPieceJailSquare(toSquare)) {
+		if (fromSquare == toSquare
+				|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
 			refresh();
 			SoundService.getInstance().playSound("illegalMove");
 			return;
@@ -315,8 +316,8 @@ public class SetupController extends ChessBoardController {
 		Game game = getGame();
 		Move move = null;
 
-		if (BoardUtils.isPieceJailSquare(fromSquare)) {
-			move = BoardUtils.createDropMove(fromSquare, toSquare);
+		if (ChessBoardUtils.isPieceJailSquare(fromSquare)) {
+			move = ChessBoardUtils.createDropMove(fromSquare, toSquare);
 		} else {
 			move = new Move(fromSquare, toSquare, game.getPiece(fromSquare),
 					game.getColorToMove(), game.getPiece(toSquare));
@@ -341,7 +342,7 @@ public class SetupController extends ChessBoardController {
 	 */
 	@Override
 	public void userRightClicked(final int square) {
-		if (!BoardUtils.isPieceJailSquare(square)) {
+		if (!ChessBoardUtils.isPieceJailSquare(square)) {
 
 			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
 
@@ -528,8 +529,8 @@ public class SetupController extends ChessBoardController {
 									PreferenceKeys.ARROW_FADE_AWAY_MODE)));
 		}
 		board.getSquare(move.getTo()).setPiece(
-				BoardUtils
-						.getColoredPiece(move.getPiece(), move.isWhitesMove()));
+				ChessBoardUtils.getColoredPiece(move.getPiece(), move
+						.isWhitesMove()));
 
 		if (isRedrawing) {
 			board.redrawSquares();

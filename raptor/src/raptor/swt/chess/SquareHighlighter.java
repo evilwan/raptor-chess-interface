@@ -40,6 +40,7 @@ public class SquareHighlighter {
 		}
 
 		public void paintControl(PaintEvent e) {
+			// Don't put log statements in here it gets called quite often.
 			int squareSide = square.getSize().x;
 			for (Highlight highlight : highlights) {
 				int width = (int) (Raptor.getInstance().getPreferences()
@@ -102,16 +103,17 @@ public class SquareHighlighter {
 	 * are not fade away will need to be removed to clear them.
 	 */
 	public void addHighlight(final Highlight highlight) {
-		if (BoardUtils.isPieceJailSquare(highlight.getStartSquare())) {
-			dropSquareDecorators[BoardUtils.pieceJailSquareToPiece(highlight
-					.getStartSquare())].add(highlight);
+		if (ChessBoardUtils.isPieceJailSquare(highlight.getStartSquare())) {
+			dropSquareDecorators[ChessBoardUtils
+					.pieceJailSquareToPiece(highlight.getStartSquare())]
+					.add(highlight);
 		} else {
 			decorators[highlight.getStartSquare()].add(highlight);
 		}
 
 		if (highlight.getEndSquare() != -1) {
-			if (BoardUtils.isPieceJailSquare(highlight.getEndSquare())) {
-				dropSquareDecorators[BoardUtils
+			if (ChessBoardUtils.isPieceJailSquare(highlight.getEndSquare())) {
+				dropSquareDecorators[ChessBoardUtils
 						.pieceJailSquareToPiece(highlight.getEndSquare())]
 						.add(highlight);
 			} else {
@@ -119,7 +121,7 @@ public class SquareHighlighter {
 			}
 		}
 
-		board.redrawSquares();
+		redrawSquares();
 		if (highlight.isFadeAway) {
 			Raptor.getInstance().getDisplay().timerExec(
 					Raptor.getInstance().getPreferences().getInt(
@@ -127,7 +129,7 @@ public class SquareHighlighter {
 					new Runnable() {
 						public void run() {
 							highlight.frame--;
-							board.redrawSquares();
+							redrawSquares();
 							if (highlight.frame != 0) {
 								Raptor
 										.getInstance()
@@ -185,6 +187,26 @@ public class SquareHighlighter {
 	 */
 	public void removeHighlight(Highlight highlight) {
 		removeHighlight(highlight, true);
+	}
+
+	/**
+	 * Redraws all squares that have arrow segments.
+	 */
+	protected void redrawSquares() {
+		// Use for loops hwere with int. If you dont you can get concurrent
+		// modification errors.
+		for (int i = 0; i < decorators.length; i++) {
+			if (!decorators[i].highlights.isEmpty()) {
+				decorators[i].square.redraw();
+			}
+		}
+
+		for (int i = 0; i < dropSquareDecorators.length; i++) {
+			if (dropSquareDecorators[i] != null
+					&& !dropSquareDecorators[i].highlights.isEmpty()) {
+				dropSquareDecorators[i].square.redraw();
+			}
+		}
 	}
 
 	/**

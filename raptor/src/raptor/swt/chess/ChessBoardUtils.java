@@ -35,20 +35,22 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
+import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
 import raptor.chess.util.GameUtils;
+import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.swt.chess.controller.ToolBarItemKey;
 import raptor.util.SVGUtil;
 
-public class BoardUtils implements BoardConstants {
+public class ChessBoardUtils implements BoardConstants {
 	public static final String CHESS_SET_DIR = Raptor.RESOURCES_DIR + "set/";
 	public static final int DARK_IMAGE_INDEX = 1;
 	public static final int LIGHT_IMAGE_INDEX = 0;
-	private static final Log LOG = LogFactory.getLog(BoardUtils.class);
+	private static final Log LOG = LogFactory.getLog(ChessBoardUtils.class);
 	public static final String PIECE_IMAGE_SUFFIX = ".svg";
 	private static SecureRandom secureRandom = new SecureRandom();
 	public static final String SQUARE_BACKGROUND_DIR = Raptor.RESOURCES_DIR
@@ -303,10 +305,11 @@ public class BoardUtils implements BoardConstants {
 	}
 
 	public static Move createDropMove(int fromSquare, int toSquare) {
-		int coloredPiece = BoardUtils.pieceJailSquareToPiece(fromSquare);
-		int colorlessPiece = BoardUtils.pieceFromColoredPiece(coloredPiece);
+		int coloredPiece = ChessBoardUtils.pieceJailSquareToPiece(fromSquare);
+		int colorlessPiece = ChessBoardUtils
+				.pieceFromColoredPiece(coloredPiece);
 
-		return new Move(toSquare, colorlessPiece, BoardUtils
+		return new Move(toSquare, colorlessPiece, ChessBoardUtils
 				.isWhitePiece(coloredPiece) ? WHITE : BLACK);
 	}
 
@@ -464,6 +467,40 @@ public class BoardUtils implements BoardConstants {
 			Raptor.getInstance().getCursorRegistry().put(key, result);
 		}
 		return result;
+	}
+
+	/**
+	 * Returns the quadrant to use for the specified controller. This should not
+	 * be used if its the "other" bughouse board. Use
+	 * getQuadrantForController(controller,true) for that.
+	 */
+	public static Quadrant getQuadrantForController(
+			ChessBoardController controller) {
+		return getQuadrantForController(controller, false);
+	}
+
+	public static Quadrant getQuadrantForController(
+			ChessBoardController controller, boolean isBughouseOtherBoard) {
+		if (controller.getConnector() == null) {
+			if (isBughouseOtherBoard) {
+				return Raptor.getInstance().getPreferences().getQuadrant(
+						PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT);
+			} else {
+				return Raptor.getInstance().getPreferences().getQuadrant(
+						PreferenceKeys.APP_CHESS_BOARD_QUADRANT);
+			}
+		} else {
+			if (isBughouseOtherBoard) {
+				return Raptor.getInstance().getPreferences().getQuadrant(
+						controller.getConnector().getShortName() + "-"
+								+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT);
+
+			} else {
+				return Raptor.getInstance().getPreferences().getQuadrant(
+						controller.getConnector().getShortName() + "-"
+								+ PreferenceKeys.CHESS_BOARD_QUADRANT);
+			}
+		}
 	}
 
 	/**
@@ -715,6 +752,47 @@ public class BoardUtils implements BoardConstants {
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
+	}
+
+	/**
+	 * Opens a ChessBoardWindowItem for the specified controller. It is
+	 * preferred that you use this method and not create a ChessBoardWindowItem
+	 * and add it to RaptorWindow, as it contains code to take-over inactive
+	 * window items if they are available. This can greatly increase
+	 * performance.
+	 * 
+	 * This method only handles controllers that are not the "other" bughosue
+	 * board. Use openBoard(controller,true) to do that.
+	 */
+	public static void openBoard(ChessBoardController controller) {
+		openBoard(controller, false);
+	}
+
+	/**
+	 * Opens a ChessBoardWindowItem for the specified controller. It is
+	 * preferred that you use this method, as it contains code to take-over
+	 * inactive window items if they are available. This can greatly increase
+	 * performance.
+	 */
+	public static void openBoard(final ChessBoardController controller,
+			final boolean isBughouseOtherBoard) {
+		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				Quadrant quadrant = getQuadrantForController(controller,
+						isBughouseOtherBoard);
+				ChessBoardWindowItem item = Raptor.getInstance().getWindow()
+						.getChessBoardWindowItemToTakeOver(quadrant);
+
+				if (item == null) {
+					item = new ChessBoardWindowItem(controller,
+							isBughouseOtherBoard);
+					Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				} else {
+					item.takeOver(controller, isBughouseOtherBoard);
+					Raptor.getInstance().getWindow().forceFocus(item);
+				}
+			}
+		});
 	}
 
 	public static String pieceCountToString(int count) {

@@ -46,8 +46,8 @@ import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.Arrow;
-import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.Highlight;
 import raptor.util.RaptorStringUtils;
 
@@ -121,10 +121,6 @@ public class PlayingController extends ChessBoardController {
 							// Set the listeners to null so they wont get
 							// cleared and we wont get notified.
 							setItemChangedListeners(null);
-
-							// Fire item changed from the inactive controller
-							// so they tab information gets adjusted.
-							inactiveController.fireItemChanged();
 
 							// And finally dispose.
 							PlayingController.this.dispose();
@@ -349,11 +345,11 @@ public class PlayingController extends ChessBoardController {
 		if (!isUsersMove()) {
 			if (isPremoveable()) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)
-						&& BoardUtils.isPieceJailSquare(squareId)) {
+						&& ChessBoardUtils.isPieceJailSquare(squareId)) {
 					return isUserWhite
-							&& BoardUtils.isJailSquareWhitePiece(squareId)
+							&& ChessBoardUtils.isJailSquareWhitePiece(squareId)
 							|| !isUserWhite
-							&& BoardUtils.isJailSquareBlackPiece(squareId);
+							&& ChessBoardUtils.isJailSquareBlackPiece(squareId);
 				} else {
 					return isUserWhite
 							&& GameUtils.isWhitePiece(getGame(), squareId)
@@ -362,14 +358,15 @@ public class PlayingController extends ChessBoardController {
 				}
 			}
 			return false;
-		} else if (BoardUtils.isPieceJailSquare(squareId)
+		} else if (ChessBoardUtils.isPieceJailSquare(squareId)
 				&& !getGame().isInState(Game.DROPPABLE_STATE)) {
 			return false;
 		} else if (getGame().isInState(Game.DROPPABLE_STATE)
-				&& BoardUtils.isPieceJailSquare(squareId)) {
-			return isUserWhite && BoardUtils.isJailSquareWhitePiece(squareId)
+				&& ChessBoardUtils.isPieceJailSquare(squareId)) {
+			return isUserWhite
+					&& ChessBoardUtils.isJailSquareWhitePiece(squareId)
 					|| !isUserWhite
-					&& BoardUtils.isJailSquareBlackPiece(squareId);
+					&& ChessBoardUtils.isJailSquareBlackPiece(squareId);
 		} else {
 			return isUserWhite && GameUtils.isWhitePiece(getGame(), squareId)
 					|| !isUserWhite && GameUtils.isBlackPiece(game, squareId);
@@ -460,12 +457,12 @@ public class PlayingController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addPromotionIconsToToolbar(this, toolbar, isUserWhite,
-					game.getVariant() == Variant.suicide);
+			ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar,
+					isUserWhite, game.getVariant() == Variant.suicide);
 			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addPremoveClearAndAutoDrawToolbar(this, toolbar);
+			ChessBoardUtils.addPremoveClearAndAutoDrawToolbar(this, toolbar);
 			new ToolItem(toolbar, SWT.SEPARATOR);
-			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
+			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
 			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
 			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
 			movesItem.setToolTipText("Shows or hides the move list.");
@@ -520,6 +517,7 @@ public class PlayingController extends ChessBoardController {
 		// the position
 		// of the game since it will always be udpated.
 		connector.getGameService().addGameServiceListener(listener);
+		fireItemChanged();
 	}
 
 	/**
@@ -635,7 +633,7 @@ public class PlayingController extends ChessBoardController {
 			}
 
 			movingPiece = board.getSquare(square).getPiece();
-			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
+			if (isDnd && !ChessBoardUtils.isPieceJailSquare(square)) {
 				board.getSquare(square).setPiece(GameConstants.EMPTY);
 				board.getSquare(square).setHidingPiece(true);
 			}
@@ -675,7 +673,7 @@ public class PlayingController extends ChessBoardController {
 		if (isUsersMove()) {
 			// Non premoves flow through here
 			if (fromSquare == toSquare
-					|| BoardUtils.isPieceJailSquare(toSquare)) {
+					|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
 				if (LOG.isDebugEnabled()) {
 					LOG
 							.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
@@ -689,10 +687,11 @@ public class PlayingController extends ChessBoardController {
 
 			Move move = null;
 			if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
-				move = BoardUtils.createMove(getGame(), fromSquare, toSquare,
-						getAutoPromoteSelection());
+				move = ChessBoardUtils.createMove(getGame(), fromSquare,
+						toSquare, getAutoPromoteSelection());
 			} else {
-				move = BoardUtils.createMove(getGame(), fromSquare, toSquare);
+				move = ChessBoardUtils.createMove(getGame(), fromSquare,
+						toSquare);
 			}
 
 			if (move == null) {
@@ -716,7 +715,7 @@ public class PlayingController extends ChessBoardController {
 			// Premove logic flows through here
 
 			if (fromSquare == toSquare
-					|| BoardUtils.isPieceJailSquare(toSquare)) {
+					|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
 				// No need to check other conditions they are checked in
 				// canUserInitiateMoveFrom
 
@@ -834,7 +833,7 @@ public class PlayingController extends ChessBoardController {
 			return;
 		}
 
-		if (!BoardUtils.isPieceJailSquare(square)
+		if (!ChessBoardUtils.isPieceJailSquare(square)
 				&& getGame().isInState(Game.DROPPABLE_STATE)) {
 		}
 	}

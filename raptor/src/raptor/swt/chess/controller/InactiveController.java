@@ -42,8 +42,8 @@ import raptor.service.SoundService;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.Arrow;
 import raptor.swt.chess.BoardConstants;
-import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.Highlight;
 import raptor.util.RaptorStringUtils;
 
@@ -61,23 +61,34 @@ public class InactiveController extends ChessBoardController implements
 	protected String title;
 	protected ToolBar toolbar;
 	protected boolean userMadeAdjustment = false;
+	protected boolean canBeTakenOver;
 
 	/**
 	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
 	 * displayed on top or not.
+	 * 
+	 * isReusable will be set to the users preference
+	 * BOARD_TAKEOVER_INACTIVE_GAMES
 	 */
 	public InactiveController(Game game) {
-		this(game, "Inactive");
+		this(game, "Inactive", Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES));
 	}
 
 	/**
 	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
 	 * displayed on top or not.
+	 * 
+	 * @param canBeTakenOver
+	 *            Means if another game needs to be displayed, it can take over
+	 *            this game and remove it from being displayed. This may not
+	 *            always be desirable for instance when viewing a PGN game.
 	 */
-	public InactiveController(Game game, String title) {
+	public InactiveController(Game game, String title, boolean canBeTakenOver) {
 		super(new GameCursor(game, GameCursor.Mode.MakeMovesOnCursor));
 		cursor = (GameCursor) getGame();
 		this.title = title;
+		this.canBeTakenOver = canBeTakenOver;
 	}
 
 	public void adjustForIllegalMove(String move) {
@@ -133,26 +144,36 @@ public class InactiveController extends ChessBoardController implements
 		}
 	}
 
+	/**
+	 * Inactive games can be taken over by other games that need to be displayed
+	 * for efficientcy. This is an optimization feature. See the constructors
+	 * for more information on how this is set.
+	 */
+	public boolean canBeTakenOver() {
+		return canBeTakenOver;
+	}
+
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!isDisposed()) {
-			if (BoardUtils.isPieceJailSquare(squareId)) {
+			if (ChessBoardUtils.isPieceJailSquare(squareId)) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)) {
-					int pieceType = BoardUtils.pieceJailSquareToPiece(squareId);
+					int pieceType = ChessBoardUtils
+							.pieceJailSquareToPiece(squareId);
 					return getGame().isWhitesMove()
-							&& BoardUtils.isWhitePiece(pieceType)
+							&& ChessBoardUtils.isWhitePiece(pieceType)
 							|| !getGame().isWhitesMove()
-							&& BoardUtils.isBlackPiece(pieceType);
+							&& ChessBoardUtils.isBlackPiece(pieceType);
 				}
 			} else if (getGame().getPiece(squareId) == EMPTY) {
 				return false;
 			} else {
 				return getGame().isWhitesMove()
-						&& BoardUtils.isWhitePiece(board.getSquare(squareId)
-								.getPiece())
+						&& ChessBoardUtils.isWhitePiece(board.getSquare(
+								squareId).getPiece())
 						|| !getGame().isWhitesMove()
-						&& BoardUtils.isBlackPiece(board.getSquare(squareId)
-								.getPiece());
+						&& ChessBoardUtils.isBlackPiece(board.getSquare(
+								squareId).getPiece());
 			}
 		}
 		return false;
@@ -221,8 +242,8 @@ public class InactiveController extends ChessBoardController implements
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addPromotionIconsToToolbar(this, toolbar, true, game
-					.getVariant() == Variant.suicide);
+			ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar, true,
+					game.getVariant() == Variant.suicide);
 			new ToolItem(toolbar, SWT.SEPARATOR);
 			ToolItem saveItem = new ToolItem(toolbar, SWT.PUSH);
 			saveItem.setImage(Raptor.getInstance().getIcon("save"));
@@ -234,7 +255,7 @@ public class InactiveController extends ChessBoardController implements
 				}
 			});
 
-			BoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
+			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
 			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
 			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
 			movesItem.setToolTipText("Shows or hides the move list.");
@@ -276,6 +297,7 @@ public class InactiveController extends ChessBoardController implements
 		board.getMoveList().updateToGame();
 		cursor.setCursorMasterLast();
 		refresh();
+		fireItemChanged();
 	}
 
 	public void onSave() {
@@ -410,7 +432,7 @@ public class InactiveController extends ChessBoardController implements
 								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
 			}
 
-			if (isDnd && !BoardUtils.isPieceJailSquare(square)) {
+			if (isDnd && !ChessBoardUtils.isPieceJailSquare(square)) {
 				board.getSquare(square).setPiece(GameConstants.EMPTY);
 			}
 			board.redrawSquares();
@@ -427,7 +449,8 @@ public class InactiveController extends ChessBoardController implements
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
 
-		if (fromSquare == toSquare || BoardUtils.isPieceJailSquare(toSquare)) {
+		if (fromSquare == toSquare
+				|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
 			if (LOG.isDebugEnabled()) {
 				LOG
 						.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
@@ -442,10 +465,10 @@ public class InactiveController extends ChessBoardController implements
 
 		Move move = null;
 		if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
-			move = BoardUtils.createMove(getGame(), fromSquare, toSquare,
+			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare,
 					getAutoPromoteSelection());
 		} else {
-			move = BoardUtils.createMove(getGame(), fromSquare, toSquare);
+			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare);
 		}
 
 		if (move == null) {

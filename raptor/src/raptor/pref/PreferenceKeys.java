@@ -126,6 +126,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_SQUARE_BACKGROUND_NAME = "board-square-background-name";
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
 	public static final String BOARD_STATUS_FONT = "board-status-font";
+	public static final String BOARD_TAKEOVER_INACTIVE_GAMES = "board-takeover-inactive-games";
 
 	public static final String ARROW_OPPONENT_COLOR = "arrow-opponent-color";
 	public static final String ARROW_MY_COLOR = "arrow-my-color";

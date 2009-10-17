@@ -108,6 +108,7 @@ public class BrowserUtils {
 							new BrowserWindowItem(url));
 				} else {
 					item.setUrl(url);
+					Raptor.getInstance().getWindow().forceFocus(item);
 				}
 			}
 		}

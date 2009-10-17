@@ -30,6 +30,11 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES,
+				"Inactive games can be taken over by new games",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL, "Show Piece Jail",
 				getFieldEditorParent()));
 

@@ -196,6 +196,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		if (toolItemMap != null) {
 			toolItemMap.clear();
 		}
+		board = null;
 
 		if (LOG.isInfoEnabled()) {
 			LOG.info("Disposed ChessBoardController");
@@ -574,8 +575,10 @@ public abstract class ChessBoardController implements BoardConstants,
 					getPreferences().getColor(PreferenceKeys.BOARD_LAG_COLOR));
 		}
 
-		board.whiteLagLabel.setText(BoardUtils.lagToString(lagTimes[WHITE]));
-		board.blackLagLabel.setText(BoardUtils.lagToString(lagTimes[BLACK]));
+		board.whiteLagLabel.setText(ChessBoardUtils
+				.lagToString(lagTimes[WHITE]));
+		board.blackLagLabel.setText(ChessBoardUtils
+				.lagToString(lagTimes[BLACK]));
 	}
 
 	/**
@@ -664,15 +667,17 @@ public abstract class ChessBoardController implements BoardConstants,
 
 			if (game.isInState(Game.DROPPABLE_STATE)
 					&& !game.isInState(Game.SETUP_STATE)) {
-				count = getGame().getDropCount(coloredPiece,
-						BoardUtils.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+				count = getGame().getDropCount(
+						coloredPiece,
+						ChessBoardUtils
+								.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
 			} else {
 
 				count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
 						- getGame()
 								.getPieceCount(
 										coloredPiece,
-										BoardUtils
+										ChessBoardUtils
 												.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
 			}
 
@@ -688,7 +693,7 @@ public abstract class ChessBoardController implements BoardConstants,
 				} else {
 					square.setPiece(DROPPABLE_PIECES[i]);
 				}
-				square.setText(BoardUtils.pieceCountToString(count));
+				square.setText(ChessBoardUtils.pieceCountToString(count));
 			}
 			square.redraw();
 		}

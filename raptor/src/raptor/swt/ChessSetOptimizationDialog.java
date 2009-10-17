@@ -25,7 +25,7 @@ import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.widgets.Shell;
 
 import raptor.Raptor;
-import raptor.swt.chess.BoardUtils;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.SVGUtil;
 
 public class ChessSetOptimizationDialog extends ProgressBarDialog {
@@ -67,13 +67,13 @@ public class ChessSetOptimizationDialog extends ProgressBarDialog {
 			int size = START_SIZE + 2 * (executionTime - 1);
 
 			for (int i = 1; i < 13; i++) {
-				String userCacheFileName = BoardUtils
+				String userCacheFileName = ChessBoardUtils
 						.getUserImageCachePieceName(setName, i, size, size);
 
 				// Only execute if the file doesnt exist.
 				if (!new File(userCacheFileName).exists()) {
 					// Load the svg.
-					String svgFileName = BoardUtils.getSVGChessPieceName(
+					String svgFileName = ChessBoardUtils.getSVGChessPieceName(
 							setName, i);
 					ImageData svgImageData = SVGUtil.loadSVG(svgFileName, size,
 							size);

@@ -173,13 +173,13 @@ public class ChessBoard implements BoardConstants {
 			whiteToMoveIndicatorLabel = new CLabel(boardComposite,
 					chessBoardLayout
 							.getStyle(ChessBoardLayout.Field.TO_MOVE_INDICATOR));
-			whiteToMoveIndicatorLabel.setImage(BoardUtils
+			whiteToMoveIndicatorLabel.setImage(ChessBoardUtils
 					.getToMoveIndicatorImage(true, 30));
 
 			blackToMoveIndicatorLabel = new CLabel(boardComposite,
 					chessBoardLayout
 							.getStyle(ChessBoardLayout.Field.TO_MOVE_INDICATOR));
-			blackToMoveIndicatorLabel.setImage(BoardUtils
+			blackToMoveIndicatorLabel.setImage(ChessBoardUtils
 					.getToMoveIndicatorImage(false, 30));
 
 			Raptor.getInstance().getPreferences().addPropertyChangeListener(
@@ -286,8 +286,9 @@ public class ChessBoard implements BoardConstants {
 	 */
 	public synchronized ChessSquare getSquare(int square) {
 
-		if (BoardUtils.isPieceJailSquare(square)) {
-			return pieceJailSquares[BoardUtils.pieceJailSquareToPiece(square)];
+		if (ChessBoardUtils.isPieceJailSquare(square)) {
+			return pieceJailSquares[ChessBoardUtils
+					.pieceJailSquareToPiece(square)];
 		} else {
 			int rank = square / 8;
 			int file = square % 8;

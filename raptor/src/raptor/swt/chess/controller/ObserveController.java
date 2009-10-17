@@ -36,8 +36,8 @@ import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.Arrow;
-import raptor.swt.chess.BoardUtils;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.Highlight;
 import raptor.util.RaptorStringUtils;
 
@@ -67,16 +67,13 @@ public class ObserveController extends ChessBoardController {
 
 							getConnector().getGameService()
 									.removeGameServiceListener(listener);
-
-							inactiveController.init();
 							inactiveController
 									.setItemChangedListeners(itemChangedListeners);
-
+							inactiveController.init();
 							// Set the listeners to null so they wont get
 							// cleared and disposed
 							setItemChangedListeners(null);
 							ObserveController.this.dispose();
-							inactiveController.fireItemChanged();
 						} catch (Throwable t) {
 							getConnector().onError(
 									"ExamineController.gameInactive", t);
@@ -234,10 +231,10 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public void dispose() {
 		try {
-			connector.getGameService().removeGameServiceListener(listener);
-			if (connector.isConnected()
+			getConnector().getGameService().removeGameServiceListener(listener);
+			if (getConnector().isConnected()
 					&& getGame().isInState(Game.ACTIVE_STATE)) {
-				connector.onUnobserve(getGame());
+				getConnector().onUnobserve(getGame());
 			}
 			if (toolbar != null) {
 				toolbar.setVisible(false);
@@ -257,20 +254,16 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	@Override
-	public Connector getConnector() {
-		return connector;
-	}
-
-	@Override
 	public String getTitle() {
-		return connector.getShortName() + "(Obs " + getGame().getId() + ")";
+		return getConnector().getShortName() + "(Obs " + getGame().getId()
+				+ ")";
 	}
 
 	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			BoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
+			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
 			ToolItem forceUpdate = new ToolItem(toolbar, SWT.CHECK);
 			addToolItem(ToolBarItemKey.FORCE_UPDATE, forceUpdate);
 			forceUpdate.setText("UPDATE");
@@ -343,6 +336,7 @@ public class ObserveController extends ChessBoardController {
 		// Add the service listener last so there are no synch problems.
 		// It is ok if we miss moves the GameService will update the game.
 		connector.getGameService().addGameServiceListener(listener);
+		fireItemChanged();
 	}
 
 	@Override
