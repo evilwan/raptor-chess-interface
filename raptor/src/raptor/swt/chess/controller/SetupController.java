@@ -63,7 +63,7 @@ public class SetupController extends ChessBoardController {
 						try {
 							onPlayGameEndSound();
 							InactiveController inactiveController = new InactiveController(
-									getGame(), board.isWhiteOnTop());
+									getGame());
 							getBoard().setController(inactiveController);
 
 							inactiveController.setBoard(board);
@@ -182,17 +182,20 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void dispose() {
-		connector.getGameService().removeGameServiceListener(listener);
-		if (unexamineOnDispose && getGame().isInState(Game.ACTIVE_STATE)) {
-			connector.onUnexamine(getGame());
-		}
+		try {
+			connector.getGameService().removeGameServiceListener(listener);
+			if (unexamineOnDispose && getGame().isInState(Game.ACTIVE_STATE)) {
+				connector.onUnexamine(getGame());
+			}
 
-		if (toolbar != null) {
-			toolbar.setVisible(false);
-			SWTUtils.clearToolbar(toolbar);
-			toolbar = null;
-		}
-		super.dispose();
+			if (toolbar != null) {
+				toolbar.setVisible(false);
+				SWTUtils.clearToolbar(toolbar);
+				toolbar = null;
+			}
+			super.dispose();
+		} catch (Throwable t) {
+		}// Eat it its prob a disposed exception
 	}
 
 	@Override

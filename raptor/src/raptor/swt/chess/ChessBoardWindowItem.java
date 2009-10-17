@@ -26,6 +26,13 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.ChessBoardCacheService;
 import raptor.swt.ItemChangedListener;
 
+/**
+ * You should really not create instances of this. Instead use
+ * BoardUtils.buildChessBoardWindowItem
+ * 
+ * @author mindspan
+ * 
+ */
 public class ChessBoardWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
 
@@ -154,8 +161,8 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 			controller.setBoard(board);
 		}
 
-		board.getControl().setLayoutDeferred(true);
-		controller.init();
+		// board.getControl().setLayoutDeferred(true);
+		board.getController().init();
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Inited window item in "
 					+ (System.currentTimeMillis() - startTime));
@@ -164,25 +171,15 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 
 	public void onActivate() {
 		if (isPassive) {
-			board.getControl().setLayoutDeferred(false);
 			board.getControl().layout(true);
-			board.getControl().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					board.getController().onActivate();
-				}
-			});
+			board.getController().onActivate();
 			isPassive = false;
 		}
 	}
 
 	public void onPassivate() {
 		if (!isPassive) {
-			board.getControl().setLayoutDeferred(true);
-			board.getControl().getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					board.getController().onPassivate();
-				}
-			});
+			board.getController().onPassivate();
 			isPassive = true;
 		}
 	}

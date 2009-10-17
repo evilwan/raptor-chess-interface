@@ -25,7 +25,7 @@ import raptor.Raptor;
 import raptor.connector.fics.pref.FicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
-import raptor.connector.ics.IcsParserImpl;
+import raptor.connector.ics.IcsParser;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ConnectorQuadrantsPage;
@@ -61,12 +61,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected FicsConnector fics2 = null;
 
 	public FicsConnector() {
-		this(new IcsConnectorContext(new IcsParserImpl()));
+		this(new IcsConnectorContext(new IcsParser()));
 	}
 
 	public FicsConnector(IcsConnectorContext context) {
 		super(context);
-		((IcsParserImpl) context.getParser()).setConnector(this);
+		(context.getParser()).setConnector(this);
 		initFics2();
 		createMenuActions();
 
@@ -448,7 +448,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	}
 
 	protected void initFics2() {
-		fics2 = new FicsConnector(new IcsConnectorContext(new IcsParserImpl()) {
+		fics2 = new FicsConnector(new IcsConnectorContext(new IcsParser()) {
 			@Override
 			public String getDescription() {
 				return "Free Internet Chess Server Another Simultaneous Connection";

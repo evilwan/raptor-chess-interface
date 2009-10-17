@@ -77,6 +77,16 @@ public class RaptorStringUtils {
 	}
 
 	/**
+	 * Returns the boolean value for the specified value. If value is
+	 * 'true','1',or 'on' true is returned. Otherwise false is returned.
+	 */
+	public static boolean getBooleanValue(String value) {
+		return StringUtils.equals(value, "true")
+				|| StringUtils.equals(value, "on")
+				|| StringUtils.equals(value, "1");
+	}
+
+	/**
 	 * Returns the value specified in bytes into megs. Currently only shows 2
 	 * digits after the decimal and rounds half up.
 	 */

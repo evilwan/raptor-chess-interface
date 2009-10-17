@@ -799,17 +799,12 @@ public class RaptorWindow extends ApplicationWindow {
 				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChessBoardWindowItem) {
 					ChessBoardWindowItem item = (ChessBoardWindowItem) folder
 							.getRaptorTabItemAt(i).raptorItem;
-
-					System.err.println("CHecking to see if " + gameId + "="
-							+ item.getController().getGame().getId());
 					if (!(item.getController() instanceof InactiveController)
 							&& item.getController().getGame().getId().equals(
 									gameId)) {
 						result = item;
-						System.err.println("Match");
 						break;
 					}
-					System.err.println("No Match");
 				}
 			}
 		}
@@ -1145,8 +1140,7 @@ public class RaptorWindow extends ApplicationWindow {
 				game.makeSanMove("Nc6");
 				game.makeSanMove("Bb5");
 				game.makeSanMove("a6");
-				InactiveController controller = new InactiveController(game,
-						false);
+				InactiveController controller = new InactiveController(game);
 				ChessBoardWindowItem item = new ChessBoardWindowItem(controller);
 				addRaptorWindowItem(item, false);
 				item.getBoard().getArrowDecorator().addArrow(
@@ -1272,8 +1266,7 @@ public class RaptorWindow extends ApplicationWindow {
 				game.makeSanMove("d5");
 				game.makeSanMove("ed");
 				game.makeSanMove("Qd5");
-				InactiveController controller = new InactiveController(game,
-						false);
+				InactiveController controller = new InactiveController(game);
 
 				addRaptorWindowItem(new ChessBoardWindowItem(controller));
 			}

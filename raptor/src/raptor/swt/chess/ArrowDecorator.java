@@ -828,7 +828,7 @@ public class ArrowDecorator {
 	 * Removes all non fade away arrows on the chess board.
 	 */
 	public void removeAllArrows() {
-		removeAllArrows(false);
+		removeAllArrows(true);
 	}
 
 	/**

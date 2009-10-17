@@ -117,7 +117,12 @@ public enum PgnHeader implements Comparable<PgnHeader> {
 	/**
 	 * THe amount of time remaining on blacks clock in milliseconds.
 	 */
-	BlackRemainingMillis, ;
+	BlackRemainingMillis,
+	/**
+	 * A header that is set to 1 if white should be placed on the top when
+	 * viewing the game, 0 if white should be placed on bottom.
+	 */
+	WhiteOnTop;
 
 	public static transient final String UNKNOWN_VALUE = "?";
 
