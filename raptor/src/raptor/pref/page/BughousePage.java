@@ -41,7 +41,7 @@ public class BughousePage extends FieldEditorPreferencePage {
 
 		ComboFieldEditor layoutsFieldEditor = new ComboFieldEditor(
 				PreferenceKeys.BUG_ARENA_REFRESH_SECONDS,
-				"Bug Who Screens Refresn Interval:", BUG_ARENA_REFRESH,
+				"Bug Who Screens Refresh Interval:", BUG_ARENA_REFRESH,
 				getFieldEditorParent());
 		addField(layoutsFieldEditor);
 
