@@ -99,5 +99,9 @@ public enum ChatType {
 	/**
 	 * A message indicating this is a bughouse games message.
 	 */
-	BUGWHO_GAMES
+	BUGWHO_GAMES,
+	/**
+	 * A message indicating this is a message containing seeks.
+	 */
+	SEEKS
 }

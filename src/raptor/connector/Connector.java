@@ -25,8 +25,11 @@ import raptor.script.GameScriptContext;
 import raptor.script.ScriptConnectorType;
 import raptor.service.ChatService;
 import raptor.service.GameService;
+import raptor.service.SeekService;
 
 public interface Connector {
+	public void acceptSeek(String adId);
+
 	/**
 	 * Adds a connector listener to the connector.
 	 */
@@ -149,6 +152,8 @@ public interface Connector {
 	 * Returns an array of the secondary preference nodes.
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes();
+
+	public SeekService getSeekService();
 
 	/**
 	 * Returns a short name describing this connector.
@@ -359,6 +364,8 @@ public interface Connector {
 	public void sendBugGamesMessage();
 
 	public void sendBugUnpartneredBuggersMessage();
+
+	public void sendGetSeeksMessage();
 
 	/**
 	 * Sends a message to the connector. A ChatEvent should be published with

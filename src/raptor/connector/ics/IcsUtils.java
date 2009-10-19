@@ -20,7 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
-import raptor.bughouse.Bugger.BuggerStatus;
+import raptor.chat.Bugger.BuggerStatus;
 import raptor.chess.AtomicGame;
 import raptor.chess.BughouseGame;
 import raptor.chess.ClassicGame;

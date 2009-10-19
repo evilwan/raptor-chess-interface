@@ -35,6 +35,7 @@ import raptor.swt.BugGamesWindowItem;
 import raptor.swt.BugPartnersWindowItem;
 import raptor.swt.BugTeamsWindowItem;
 import raptor.swt.RegExDialog;
+import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
@@ -56,7 +57,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected Action disconnectAction;
 	protected Action reconnectAction;
 	protected Action regexTabAction;
-	protected Action seekGraphAction;
+	protected Action seekTableAction;
 	protected Action bugbuttonsAction;
 	protected Action isShowingBugButtonsOnConnectAction;
 	/**
@@ -86,7 +87,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		bughouseArenaAvailPartnersAction.setEnabled(false);
 		bughouseArenaPartnershipsAction.setEnabled(false);
 		bughouseArenaGamesAction.setEnabled(false);
-		seekGraphAction.setEnabled(false);
+		seekTableAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
 		isShowingBugButtonsOnConnectAction.setEnabled(true);
@@ -142,7 +143,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			bughouseArenaAvailPartnersAction.setEnabled(true);
 			bughouseArenaPartnershipsAction.setEnabled(true);
 			bughouseArenaGamesAction.setEnabled(true);
-			seekGraphAction.setEnabled(true);
+			seekTableAction.setEnabled(true);
 			regexTabAction.setEnabled(true);
 			bugbuttonsAction.setEnabled(true);
 			isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
@@ -202,10 +203,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		seekGraphAction = new Action("Show &Seek Graph") {
+		seekTableAction = new Action("Show &Seek Table") {
 			@Override
 			public void run() {
-				Raptor.getInstance().alert("Seek Graph Comming soon");
+				SeekTableWindowItem item = new SeekTableWindowItem(
+						getSeekService());
+				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 			}
 		};
 
@@ -299,7 +302,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		bughouseArenaPartnershipsAction.setEnabled(false);
 		bughouseArenaAvailPartnersAction.setEnabled(false);
 		bughouseArenaGamesAction.setEnabled(false);
-		seekGraphAction.setEnabled(false);
+		seekTableAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		bugbuttonsAction.setEnabled(false);
 		isShowingBugButtonsOnConnectAction.setEnabled(true);
@@ -316,11 +319,11 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(autoConnectAction);
 		connectionsMenu.add(isShowingBugButtonsOnConnectAction);
 		connectionsMenu.add(new Separator());
+		connectionsMenu.add(seekTableAction);
 		connectionsMenu.add(bugbuttonsAction);
 		connectionsMenu.add(bughouseArenaAvailPartnersAction);
 		connectionsMenu.add(bughouseArenaPartnershipsAction);
 		connectionsMenu.add(bughouseArenaGamesAction);
-		connectionsMenu.add(seekGraphAction);
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(regexTabAction);
 		connectionsMenu.add(new Separator());
@@ -400,10 +403,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		fics2.seekGraphAction = new Action("Show &Seek Graph") {
+		fics2.seekTableAction = new Action("Show &Seek Table") {
 			@Override
 			public void run() {
-				Raptor.getInstance().alert("Seek Graph Comming soon");
+				SeekTableWindowItem item = new SeekTableWindowItem(fics2
+						.getSeekService());
+				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 			}
 		};
 
@@ -486,10 +491,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2.connectAction.setEnabled(true);
 		fics2.disconnectAction.setEnabled(false);
 		fics2.reconnectAction.setEnabled(false);
+		fics2.seekTableAction.setEnabled(false);
 		fics2.bughouseArenaPartnershipsAction.setEnabled(false);
 		fics2.bughouseArenaAvailPartnersAction.setEnabled(false);
 		fics2.bughouseArenaGamesAction.setEnabled(false);
-		fics2.seekGraphAction.setEnabled(false);
 		fics2.regexTabAction.setEnabled(false);
 		fics2.bugbuttonsAction.setEnabled(false);
 		fics2.isShowingBugButtonsOnConnectAction.setEnabled(true);
@@ -498,11 +503,11 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2Menu.add(fics2.disconnectAction);
 		fics2Menu.add(fics2.reconnectAction);
 		fics2Menu.add(new Separator());
+		fics2Menu.add(fics2.seekTableAction);
 		fics2Menu.add(fics2.bugbuttonsAction);
 		fics2Menu.add(fics2.bughouseArenaAvailPartnersAction);
 		fics2Menu.add(fics2.bughouseArenaPartnershipsAction);
 		fics2Menu.add(fics2.bughouseArenaGamesAction);
-		fics2Menu.add(fics2.seekGraphAction);
 		fics2Menu.add(new Separator());
 		fics2Menu.add(fics2.regexTabAction);
 		connectionsMenu.add(fics2Menu);

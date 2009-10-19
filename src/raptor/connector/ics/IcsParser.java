@@ -22,10 +22,11 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.bughouse.Bugger;
-import raptor.bughouse.Partnership;
+import raptor.chat.Bugger;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.chat.Partnership;
+import raptor.chat.Seek;
 import raptor.chess.BughouseGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
@@ -78,6 +79,7 @@ public class IcsParser implements GameConstants {
 	protected RemovingObsGameParser removingObsGameParser;
 	protected FollowingEventParser followingParser;
 	protected Style12Parser style12Parser;
+	protected SoughtParser soughtParser;
 
 	protected BugWhoGParser bugWhoGParser;
 	protected BugWhoPParser bugWhoPParser;
@@ -111,6 +113,7 @@ public class IcsParser implements GameConstants {
 		movesParser = new MovesParser();
 		followingParser = new FollowingEventParser();
 		style12Parser = new Style12Parser();
+		soughtParser = new SoughtParser();
 
 		if (!isBicsParser) {
 			bugWhoGParser = new BugWhoGParser();
@@ -161,18 +164,29 @@ public class IcsParser implements GameConstants {
 					&& !afterGameEvents.trim().equals(
 							connector.getContext().getPrompt())) {
 
+				// Now process bug who events.
 				ChatEvent bugWhoEvent = processBugWho(afterGameEvents);
 				if (bugWhoEvent == null) {
-					for (ChatEventParser parser : nonGameEventParsers) {
-						ChatEvent event = parser.parse(afterGameEvents);
-						if (event != null) {
-							events.add(event);
-							break;
+					// Now process sought events.
+					ChatEvent soughtEvent = processSought(afterGameEvents);
+
+					if (soughtEvent == null) {
+						// Its not a game,bugwho,or sought event so now try the
+						// other parsers.
+						for (ChatEventParser parser : nonGameEventParsers) {
+							ChatEvent event = parser.parse(afterGameEvents);
+							if (event != null) {
+								events.add(event);
+								break;
+							}
 						}
-					}
-					if (events.isEmpty()) {
-						events.add(new ChatEvent(null, ChatType.UNKNOWN,
-								afterGameEvents));
+						// Its an unhandled event
+						if (events.isEmpty()) {
+							events.add(new ChatEvent(null, ChatType.UNKNOWN,
+									afterGameEvents));
+						}
+					} else {
+						events.add(soughtEvent);
 					}
 				} else {
 					events.add(bugWhoEvent);
@@ -652,8 +666,7 @@ public class IcsParser implements GameConstants {
 		if (buggers == null) {
 			Partnership[] partnerships = bugWhoPParser.parse(message);
 			if (partnerships == null) {
-				raptor.bughouse.BughouseGame[] bugGames = bugWhoGParser
-						.parse(message);
+				raptor.chat.BugGame[] bugGames = bugWhoGParser.parse(message);
 				if (bugGames != null) {
 					connector.getBughouseService().setGamesInProgress(bugGames);
 					result = new ChatEvent(null, ChatType.BUGWHO_GAMES, message);
@@ -671,4 +684,16 @@ public class IcsParser implements GameConstants {
 		}
 		return result;
 	}
+
+	protected ChatEvent processSought(String message) {
+		ChatEvent result = null;
+
+		Seek[] seeks = soughtParser.parse(message);
+		if (seeks != null) {
+			connector.getSeekService().setSeeks(seeks);
+			result = new ChatEvent(null, ChatType.SEEKS, message);
+		}
+		return result;
+	}
+
 }

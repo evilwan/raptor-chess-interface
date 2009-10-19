@@ -1,6 +1,9 @@
-package raptor.bughouse;
+package raptor.chat;
 
-public class BughouseGame {
+/**
+ * This code was adapted from some code johnthegreat for Raptor.
+ */
+public class BugGame {
 	public boolean isRated;
 	public String timeControl;
 	public String game1Id;

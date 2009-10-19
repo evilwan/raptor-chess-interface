@@ -24,9 +24,9 @@ import org.eclipse.swt.widgets.TableItem;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
-import raptor.bughouse.Bugger;
-import raptor.bughouse.BughouseGame;
-import raptor.bughouse.Partnership;
+import raptor.chat.BugGame;
+import raptor.chat.Bugger;
+import raptor.chat.Partnership;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
@@ -62,7 +62,7 @@ public class BugTeamsWindowItem implements RaptorWindowItem {
 										.getInstance()
 										.getPreferences()
 										.getInt(
-												PreferenceKeys.BUG_ARENA_REFRESH_SECONDS) * 1000,
+												PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
 								this);
 			}
 		}
@@ -77,7 +77,7 @@ public class BugTeamsWindowItem implements RaptorWindowItem {
 			}
 		}
 
-		public void gamesInProgressChanged(BughouseGame[] newGamesInProgress) {
+		public void gamesInProgressChanged(BugGame[] newGamesInProgress) {
 		}
 
 		public void unpartneredBuggersChanged(Bugger[] newUnpartneredBuggers) {
@@ -431,10 +431,15 @@ public class BugTeamsWindowItem implements RaptorWindowItem {
 		if (!isActive) {
 			isActive = true;
 			service.getAvailablePartnerships();
-			ThreadService.getInstance().scheduleOneShot(
-					Raptor.getInstance().getPreferences().getInt(
-							PreferenceKeys.BUG_ARENA_REFRESH_SECONDS) * 1000,
-					timer);
+			ThreadService
+					.getInstance()
+					.scheduleOneShot(
+							Raptor
+									.getInstance()
+									.getPreferences()
+									.getInt(
+											PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
+							timer);
 		}
 
 	}
