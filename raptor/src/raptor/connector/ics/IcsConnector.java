@@ -14,14 +14,18 @@
 package raptor.connector.ics;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -79,7 +83,8 @@ public abstract class IcsConnector implements Connector {
 		ChatEvent event;
 		boolean ignoreEvent = false;
 
-		public IcsChatScriptContext() {
+		public IcsChatScriptContext(String...params) {
+			super(params);
 		}
 
 		public IcsChatScriptContext(ChatEvent event) {
@@ -121,6 +126,13 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	protected class IcsScriptContext implements ScriptContext {
+
+		protected String[] parameters;
+
+		protected IcsScriptContext(String... parameters) {
+			this.parameters = parameters;
+		}
+
 		public void alert(String message) {
 			Raptor.getInstance().alert(message);
 		}
@@ -233,6 +245,25 @@ public abstract class IcsConnector implements Connector {
 			SoundService.getInstance().textToSpeech(message);
 		}
 
+		public String[] getParameters() {
+			return parameters;
+		}
+
+		public String getValue(String key) {
+			return scriptHash.get(key);
+		}
+
+		public String urlEncode(String stringToEncode) {
+			try {
+				return URLEncoder.encode(stringToEncode, "UTF-8");
+			} catch (UnsupportedEncodingException uee) {
+			}// Eat it wont happen.
+			return stringToEncode;
+		}
+
+		public void storeValue(String key, String value) {
+			scriptHash.put(key, value);
+		}
 	}
 
 	protected BughouseService bughouseService;
@@ -243,6 +274,8 @@ public abstract class IcsConnector implements Connector {
 	protected String currentProfileName;
 	protected Thread daemonThread;
 	protected GameService gameService;
+	protected Map<String, String> scriptHash = new HashMap<String, String>();
+
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
 	 */
@@ -459,8 +492,8 @@ public abstract class IcsConnector implements Connector {
 		return "tell " + channel + " ";
 	}
 
-	public ChatScriptContext getChatScriptContext() {
-		return new IcsChatScriptContext();
+	public ChatScriptContext getChatScriptContext(String...params) {
+		return new IcsChatScriptContext(params);
 	}
 
 	public ChatService getChatService() {

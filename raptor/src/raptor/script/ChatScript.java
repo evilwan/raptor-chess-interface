@@ -46,6 +46,11 @@ public class ChatScript implements Comparable<ChatScript> {
 
 	public static enum ChatScriptType {
 		/**
+		 * Used for right clicks or selected text right clicks in the chat
+		 * consoles. Scripts that are just executed on demand.
+		 */
+		RightClickOneShot,
+		/**
 		 * Used for toolbar scripts. Scripts that are just executed on demand.
 		 */
 		ToolbarOneShot,
@@ -142,9 +147,9 @@ public class ChatScript implements Comparable<ChatScript> {
 			Interpreter interpeter = new Interpreter();
 			interpeter.set("context", context);
 			interpeter.eval(getScript());
-		} catch (EvalError e) {
+		} catch (Throwable t) {
 			Raptor.getInstance().onError("Error executing script " + getName(),
-					e);
+					t);
 		}
 	}
 

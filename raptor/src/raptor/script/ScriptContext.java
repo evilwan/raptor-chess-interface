@@ -6,6 +6,14 @@ package raptor.script;
  * on the request page or post in the Google groups page.
  */
 public interface ScriptContext {
+	
+	/**
+	 * MIME encodes the passed in string.
+	 * @param stringToEncode The string to encode.
+	 * @return The encoded string.
+	 */
+	public String urlEncode(String stringToEncode);
+	
 	/**
 	 * Displays an alert message to the user.
 	 */
@@ -120,4 +128,31 @@ public interface ScriptContext {
 	 * Speaks the specified message. Currently not enabled.
 	 */
 	public void speak(String message);
+
+	/**
+	 * Stores a value which can be obtained later in another script.
+	 * 
+	 * @param key
+	 *            The key of the value to store.
+	 * @param value
+	 *            The value to store.
+	 */
+	public void storeValue(String key, String value);
+
+	/**
+	 * Retrieves a stored value.
+	 * 
+	 * @param key
+	 *            The key to retrieve.
+	 * @return May return null if there is no value stored.
+	 */
+	public String getValue(String key);
+
+	/**
+	 * Some scripts use parameters. This will return the parameters if any were
+	 * passed in.
+	 * 
+	 * @return The parameters. An empty String[] if there are no parameters.
+	 */
+	public String[] getParameters();
 }
