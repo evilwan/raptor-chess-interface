@@ -103,7 +103,7 @@ public class Seek {
 	}
 
 	public static enum GameType {
-		standard, blitz, lightning, wild, crazyhouse, suicide, fischerRandom, losers, atomic
+		untimed,standard, blitz, lightning, wild, crazyhouse, suicide, fischerRandom, losers, atomic
 	}
 
 	protected String ad;

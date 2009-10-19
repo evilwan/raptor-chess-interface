@@ -99,6 +99,7 @@ public interface PreferenceKeys {
 	public static final String SEEK_TABLE_SHOW_ATOMIC = "seek-table-show-atomic";
 	public static final String SEEK_TABLE_SHOW_SUICIDE = "seek-table-show-suicide";
 	public static final String SEEK_TABLE_SHOW_LOSERS = "seek-table-show-losers";
+	public static final String SEEK_TABLE_SHOW_UNTIMED = "seek-table-show-untimed";
 
 	public static final String BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD = "bughouse-playing-open-partner-board";
 	public static final String BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD = "bughouse-observing-open-partner-board";

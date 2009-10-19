@@ -315,6 +315,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(SEEK_TABLE_SHOW_ATOMIC, true);
 		setDefault(SEEK_TABLE_SHOW_SUICIDE, true);
 		setDefault(SEEK_TABLE_SHOW_LOSERS, true);
+		setDefault(SEEK_TABLE_SHOW_UNTIMED, true);
+		
 
 		PreferenceConverter.setDefault(this, ARROW_OPPONENT_COLOR, new RGB(255,
 				0, 255));
