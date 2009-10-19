@@ -808,8 +808,10 @@ public abstract class IcsConnector implements Connector {
 				try {
 					socket.getOutputStream().write(message.getBytes());
 					socket.getOutputStream().flush();
-					lastSendTime = lastSendPingTime = System
-							.currentTimeMillis();
+					if (!message.startsWith("$$")) {
+						lastSendTime = lastSendPingTime = System
+								.currentTimeMillis();
+					}
 
 				} catch (Throwable t) {
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
