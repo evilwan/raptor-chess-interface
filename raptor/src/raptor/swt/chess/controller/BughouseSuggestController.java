@@ -51,24 +51,10 @@ public class BughouseSuggestController extends ObserveController {
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!isDisposed()) {
-			if (ChessBoardUtils.isPieceJailSquare(squareId)) {
-				if (getGame().isInState(Game.DROPPABLE_STATE)) {
-					int pieceType = ChessBoardUtils
-							.pieceJailSquareToPiece(squareId);
-					return getGame().isWhitesMove()
-							&& ChessBoardUtils.isWhitePiece(pieceType)
-							|| !getGame().isWhitesMove()
-							&& ChessBoardUtils.isBlackPiece(pieceType);
-				}
-			} else if (getGame().getPiece(squareId) == EMPTY) {
+			if (getGame().getPiece(squareId) == EMPTY) {
 				return false;
 			} else {
-				return getGame().isWhitesMove()
-						&& ChessBoardUtils.isWhitePiece(board.getSquare(
-								squareId).getPiece())
-						|| !getGame().isWhitesMove()
-						&& ChessBoardUtils.isBlackPiece(board.getSquare(
-								squareId).getPiece());
+				return true;
 			}
 		}
 		return false;

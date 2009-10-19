@@ -847,6 +847,7 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = GameUtils
 									.getDropSquareFromColoredPiece(GameUtils
 											.getColoredPiece(PAWN, color));
+							premoveInfo.fromPiece = isUserWhite() ? WP : BP;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
 									premoveInfo.toSquare, getPreferences()
@@ -870,6 +871,7 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = GameUtils
 									.getDropSquareFromColoredPiece(GameUtils
 											.getColoredPiece(KNIGHT, color));
+							premoveInfo.fromPiece = isUserWhite() ? WN : BN;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
 									premoveInfo.toSquare, getPreferences()
@@ -893,6 +895,7 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = GameUtils
 									.getDropSquareFromColoredPiece(GameUtils
 											.getColoredPiece(BISHOP, color));
+							premoveInfo.fromPiece = isUserWhite() ? WB : BB;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
 									premoveInfo.toSquare, getPreferences()
@@ -916,6 +919,7 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = GameUtils
 									.getDropSquareFromColoredPiece(GameUtils
 											.getColoredPiece(ROOK, color));
+							premoveInfo.fromPiece = isUserWhite() ? WR : BR;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
 									premoveInfo.toSquare, getPreferences()
@@ -939,6 +943,7 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = GameUtils
 									.getDropSquareFromColoredPiece(GameUtils
 											.getColoredPiece(QUEEN, color));
+							premoveInfo.fromPiece = isUserWhite() ? WQ : BQ;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
 									premoveInfo.toSquare, getPreferences()

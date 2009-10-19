@@ -382,7 +382,7 @@ public class Raptor implements PreferenceKeys {
 		} catch (Throwable t) {
 			LOG.warn("Error shutting ChessBoardCacheService", t);
 		}
-		
+
 		try {
 			ThreadService.getInstance().dispose();
 		} catch (Throwable t) {
