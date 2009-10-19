@@ -103,6 +103,8 @@ public class SoughtParser {
 					seek.setType(GameType.crazyhouse);
 				} else if (seek.getTypeDescription().contains("wild")) {
 					seek.setType(GameType.wild);
+				} else if (seek.getTypeDescription().contains("untimed")) {
+					seek.setType(GameType.untimed);
 				} else {
 					Raptor.getInstance().onError(
 							"Unkown game type encountered in seek: "

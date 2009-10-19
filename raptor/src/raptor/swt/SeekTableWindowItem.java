@@ -51,6 +51,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 	protected Button isShowingAtomic;
 	protected Button isShowingSuicide;
 	protected Button isShowingLosers;
+	protected Button isShowingUntimed;
 	protected Table seeksTable;
 	protected boolean isActive = false;
 	protected TableColumn lastStortedColumn;
@@ -372,6 +373,24 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 				refreshTable();
 			}
 		});
+		isShowingUntimed = new Button(typeFilterComposite, SWT.CHECK);
+		isShowingUntimed.setText("Show Untimed");
+		isShowingUntimed.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_UNTIMED));
+		isShowingUntimed.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance().getPreferences().setValue(
+						PreferenceKeys.SEEK_TABLE_SHOW_UNTIMED,
+						isShowingUntimed.getSelection());
+				Raptor.getInstance().getPreferences().save();
+				refreshTable();
+			}
+		});
+		
+		
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true,
@@ -682,6 +701,9 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 						break;
 					case crazyhouse:
 						result = isShowingCrazyhouse.getSelection();
+						break;
+					case untimed:
+						result = isShowingUntimed.getSelection();
 						break;
 					}
 				}
