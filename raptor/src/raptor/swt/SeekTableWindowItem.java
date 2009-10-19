@@ -148,7 +148,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 				true, false));
 		ratingFilterComposite.setLayout(new RowLayout());
 		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("Rating >= ");
+		label.setText("Rating >=");
 		ratingsFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
 		ratingsFilter.add("0");
@@ -182,7 +182,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 			}
 		});
 		label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("Rated");
+		label.setText("Rated:");
 		ratedFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
 		ratedFilter.add("Either");
@@ -202,6 +202,10 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 				refreshTable();
 			}
 		});
+	
+		Composite typeFilterComposite = new Composite(composite, SWT.NONE);
+		typeFilterComposite.setLayout(new GridLayout(3, false));
+		
 		isShowingComputers = new Button(ratingFilterComposite, SWT.CHECK);
 		isShowingComputers.setText("Show Computers");
 		isShowingComputers.setSelection(Raptor.getInstance().getPreferences()
@@ -218,9 +222,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 				refreshTable();
 			}
 		});
-
-		Composite typeFilterComposite = new Composite(composite, SWT.NONE);
-		typeFilterComposite.setLayout(new GridLayout(3, false));
+		
 		isShowingLightning = new Button(typeFilterComposite, SWT.CHECK);
 		isShowingLightning.setText("Show Lightning");
 		isShowingLightning.setSelection(Raptor.getInstance().getPreferences()
