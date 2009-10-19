@@ -393,7 +393,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 		});
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true,
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true));
 		tableComposite.setLayout(new FillLayout());
 		seeksTable = new Table(tableComposite, SWT.BORDER | SWT.H_SCROLL

@@ -58,7 +58,6 @@ public class BugWhoGParser {
 	}
 
 	private BugGame[] process(String text) {
-		System.err.println(text);
 		if (text.equals("")) {
 			return new BugGame[0];
 		}
