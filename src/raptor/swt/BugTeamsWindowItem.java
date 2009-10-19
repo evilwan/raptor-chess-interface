@@ -32,7 +32,7 @@ import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
 
-public class BugArenaAvailableTeamsWindowItem implements RaptorWindowItem {
+public class BugTeamsWindowItem implements RaptorWindowItem {
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
@@ -84,7 +84,7 @@ public class BugArenaAvailableTeamsWindowItem implements RaptorWindowItem {
 		}
 	};
 
-	public BugArenaAvailableTeamsWindowItem(BughouseService service) {
+	public BugTeamsWindowItem(BughouseService service) {
 		this.service = service;
 		service.addBughouseServiceListener(listener);
 	}
@@ -124,7 +124,7 @@ public class BugArenaAvailableTeamsWindowItem implements RaptorWindowItem {
 	}
 
 	public String getTitle() {
-		return service.getConnector().getShortName() + "(Available Buggers)";
+		return service.getConnector().getShortName() + "(Bug Teams)";
 	}
 
 	public Control getToolbar(Composite parent) {

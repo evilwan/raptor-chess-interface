@@ -92,6 +92,9 @@ public class BugWhoPParser {
 	}
 
 	private Partnership[] process(String text) {
+		if (text.equals("")) {
+			return new Partnership[0];
+		}
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " /\n",
 				true);
 		ArrayList<Partnership> result = new ArrayList<Partnership>();

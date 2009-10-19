@@ -278,6 +278,8 @@ public interface Connector {
 	 */
 	public void onExamineModeRevert(Game game);
 
+	public void onObserveGame(String gameId);
+
 	public void onPartner(String bugger);
 
 	/**

@@ -1,9 +1,7 @@
 package raptor.connector.ics.bughouse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -11,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import raptor.bughouse.Bugger;
 import raptor.bughouse.BughouseGame;
 import raptor.bughouse.Bugger.BuggerStatus;
+import raptor.util.RaptorStringTokenizer;
 
 public class BugWhoGParser {
 
@@ -42,17 +41,26 @@ public class BugWhoGParser {
 		if (message.startsWith(ID) && !message.contains(BugWhoPParser.ID)) {
 			message = message.substring(ID.length(), message.length());
 			message = message.replaceAll("[0-9]+ games displayed.", "");
+			message = message.replaceAll("1 game displayed.", "");
+			message = message.replaceAll("\nfics%", "");
 			return process(message.trim());
 		} else if (message.startsWith(ID2)
 				&& !message.contains(BugWhoPParser.ID)) {
 			message = message.replaceAll("[0-9]+ games displayed.", "");
+			message = message.replaceAll("1 game displayed.", "");
+			message = message.replaceAll("\nfics%", "");
 			return process(message.trim());
 		}
 		return null;
 	}
 
 	private BughouseGame[] process(String text) {
-		StringTokenizer tok = new StringTokenizer(text, "^~:#.& \n[]-", true);
+		System.err.println(text);
+		if (text.equals("")) {
+			return new BughouseGame[0];
+		}
+		RaptorStringTokenizer tok = new RaptorStringTokenizer(text,
+				" \n[]-():", true);
 		List<BughouseGame> result = new ArrayList<BughouseGame>(10);
 		while (tok.hasMoreTokens()) {
 			BughouseGame game = new BughouseGame();
@@ -65,7 +73,6 @@ public class BugWhoGParser {
 			game.getGame1Black().setRating(tok.nextToken());
 			game.getGame1Black().setName(tok.nextToken());
 			game.getGame1Black().setStatus(BuggerStatus.Available);
-			tok.nextToken();
 			game.setRated(tok.nextToken().indexOf('r') != -1);
 			game.setTimeControl(tok.nextToken() + " " + tok.nextToken());
 			for (int i = 0; i < 8; i++) {
@@ -84,12 +91,13 @@ public class BugWhoGParser {
 			for (int i = 0; i < 11; i++) {
 				tok.nextToken();
 			}
+			result.add(game);
 
 		}
-		BughouseGame[] out = result.toArray(new BughouseGame[0]);
+
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Games = " + Arrays.toString(out));
+			LOG.debug("Games = " + result);
 		}
-		return out;
+		return result.toArray(new BughouseGame[0]);
 	}
 }
