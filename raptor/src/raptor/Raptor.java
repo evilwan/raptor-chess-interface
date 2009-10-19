@@ -275,9 +275,9 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	public boolean isDisposed() {
-		return getInstance() != null && getInstance().getWindow() != null
-				&& getInstance().getWindow().getShell() != null
-				&& !getInstance().getWindow().getShell().isDisposed();
+		return getInstance() == null || getInstance().getWindow() == null
+				|| getInstance().getWindow().getShell() == null
+				|| getInstance().getWindow().getShell().isDisposed();
 	}
 
 	/**
@@ -325,9 +325,13 @@ public class Raptor implements PreferenceKeys {
 	 * text the user entered is returned.
 	 */
 	public String promptForText(final String question) {
-		InputDialog dialog = new InputDialog(Raptor.getInstance().getWindow()
-				.getShell(), "Enter Text", question);
-		return dialog.open();
+		if (!isDisposed()) {
+			InputDialog dialog = new InputDialog(Raptor.getInstance()
+					.getWindow().getShell(), "Enter Text", question);
+			return dialog.open();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -337,12 +341,16 @@ public class Raptor implements PreferenceKeys {
 	 * @answer the initial text to place in the users answer.
 	 */
 	public String promptForText(final String question, String answer) {
-		InputDialog dialog = new InputDialog(Raptor.getInstance().getWindow()
-				.getShell(), "Enter Text", question);
-		if (answer != null) {
-			dialog.setInput(answer);
+		if (!isDisposed()) {
+			InputDialog dialog = new InputDialog(Raptor.getInstance()
+					.getWindow().getShell(), "Enter Text", question);
+			if (answer != null) {
+				dialog.setInput(answer);
+			}
+			return dialog.open();
+		} else {
+			return null;
 		}
-		return dialog.open();
 	}
 
 	/**
@@ -355,12 +363,6 @@ public class Raptor implements PreferenceKeys {
 			ConnectorService.getInstance().dispose();
 		} catch (Throwable t) {
 			LOG.warn("Error shutting down ConnectorService", t);
-		}
-
-		try {
-			ThreadService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down ThreadService", t);
 		}
 
 		try {
@@ -379,6 +381,12 @@ public class Raptor implements PreferenceKeys {
 			ChessBoardCacheService.getInstance().dispose();
 		} catch (Throwable t) {
 			LOG.warn("Error shutting ChessBoardCacheService", t);
+		}
+		
+		try {
+			ThreadService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting down ThreadService", t);
 		}
 
 		try {
