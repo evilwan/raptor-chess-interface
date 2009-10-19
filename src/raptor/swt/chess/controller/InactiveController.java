@@ -49,7 +49,6 @@ import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.Highlight;
-import raptor.swt.chess.controller.PlayingController.PremoveInfo;
 import raptor.util.RaptorStringUtils;
 
 /**

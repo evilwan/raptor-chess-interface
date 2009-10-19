@@ -152,7 +152,8 @@ public class ThreadService {
 				executor.schedule(runnable, delay, TimeUnit.MILLISECONDS);
 			} catch (RejectedExecutionException rej) {
 				if (!Raptor.getInstance().isDisposed()) {
-					LOG.error("Error executing runnable in scheduleOneShot: ", rej);
+					LOG.error("Error executing runnable in scheduleOneShot: ",
+							rej);
 					threadDump();
 					Raptor.getInstance().onError(
 							"ThreadServie has no more threads. A thread dump can be found at "
