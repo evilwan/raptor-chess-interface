@@ -25,7 +25,7 @@ public class Seek {
 		}
 	};
 
-	public static final Comparator<Seek> TYPE_DESCRIPTIONE_DESCENDING_COMPARATOR = new Comparator<Seek>() {
+	public static final Comparator<Seek> TYPE_DESCRIPTION_DESCENDING_COMPARATOR = new Comparator<Seek>() {
 		public int compare(Seek seek1, Seek seek2) {
 			return seek1.getTypeDescription().compareTo(
 					seek2.getTypeDescription())

@@ -389,8 +389,6 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 				refreshTable();
 			}
 		});
-		
-		
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, true,
@@ -495,7 +493,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 							.sort(
 									currentSeeks,
 									wasLastSortAscending ? Seek.TYPE_DESCRIPTION_ASCENDING_COMPARATOR
-											: Seek.TYPE_DESCRIPTIONE_DESCENDING_COMPARATOR);
+											: Seek.TYPE_DESCRIPTION_DESCENDING_COMPARATOR);
 					refreshTable();
 				}
 			}
@@ -634,26 +632,26 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 			wasLastSortAscending = false;
 		} else {
 			if (lastStortedColumn == ratingColumn) {
-				comparator = wasLastSortAscending ? Seek.RATING_DESCENDING_COMPARATOR
-						: Seek.RATING_ASCENDING_COMPARATOR;
+				comparator = wasLastSortAscending ? Seek.RATING_ASCENDING_COMPARATOR
+						: Seek.RATING_DESCENDING_COMPARATOR;
 			} else if (lastStortedColumn == nameColumn) {
-				comparator = wasLastSortAscending ? Seek.NAME_DESCENDING_COMPARATOR
-						: Seek.NAME_ASCENDING_COMPARATOR;
+				comparator = wasLastSortAscending ? Seek.NAME_ASCENDING_COMPARATOR
+						: Seek.NAME_DESCENDING_COMPARATOR;
 			} else if (lastStortedColumn == adColumn) {
-				comparator = wasLastSortAscending ? Seek.AD_DESCENDING_COMPARATOR
-						: Seek.AD_ASCENDING_COMPARATOR;
+				comparator = wasLastSortAscending ? Seek.AD_ASCENDING_COMPARATOR
+						: Seek.AD_DESCENDING_COMPARATOR;
 			} else if (lastStortedColumn == flagsColumn) {
-				comparator = wasLastSortAscending ? Seek.FLAGS_DESCENDING_COMPARATOR
-						: Seek.FLAGS_ASCENDING_COMPARATOR;
+				comparator = wasLastSortAscending ? Seek.FLAGS_ASCENDING_COMPARATOR
+						: Seek.FLAGS_DESCENDING_COMPARATOR;
 			} else if (lastStortedColumn == ratingRangeColumn) {
-				comparator = wasLastSortAscending ? Seek.RATING_RANGE_DESCENDING_COMPARATOR
-						: Seek.RATING_RANGE_ASCENDING_COMPARATOR;
+				comparator = wasLastSortAscending ? Seek.RATING_RANGE_ASCENDING_COMPARATOR
+						: Seek.RATING_RANGE_DESCENDING_COMPARATOR;
 			} else if (lastStortedColumn == timeControlColumn) {
-				comparator = wasLastSortAscending ? Seek.TIME_CONTROL_DESCENDING_COMPARATOR
-						: Seek.TIME_CONTROL_ASCENDING_COMPARATOR;
+				comparator = wasLastSortAscending ? Seek.TIME_CONTROL_ASCENDING_COMPARATOR
+						: Seek.TIME_CONTROL_DESCENDING_COMPARATOR;
 			} else if (lastStortedColumn == typeDescriptionColumn) {
-				comparator = wasLastSortAscending ? Seek.TYPE_DESCRIPTIONE_DESCENDING_COMPARATOR
-						: Seek.TYPE_DESCRIPTION_ASCENDING_COMPARATOR;
+				comparator = wasLastSortAscending ? Seek.TYPE_DESCRIPTION_ASCENDING_COMPARATOR
+						: Seek.TYPE_DESCRIPTION_DESCENDING_COMPARATOR;
 			}
 		}
 		return comparator;
@@ -723,7 +721,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 							selectedIndexes.length);
 
 					for (int index : selectedIndexes) {
-						String name = seeksTable.getItem(index).getText(1);
+						String name = seeksTable.getItem(index).getText(0);
 						selectedAdsBeforeRefresh.add(name);
 					}
 
