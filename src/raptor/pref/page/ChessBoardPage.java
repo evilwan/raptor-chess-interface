@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 
 import raptor.Raptor;
 import raptor.chess.GameConstants;
+import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.swt.ChessSetOptimizationDialog;
@@ -53,6 +54,11 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "8%", "0.08" }, { "9%", "0.09" }, { "10%", "0.1" },
 			{ "11%", "0.09" }, { "12%", "0.12" }, { "14%", "0.14" },
 			{ "16%", "0.16" }, { "18%", "0.18" } };
+
+	public static final String[][] COORDINATES_SIZE_PERCENTAGE = {
+			{ "18%", "18" }, { "20%", "20" }, { "22%", "22" }, { "24%", "24" },
+			{ "26%", "26" }, { "28%", "28" }, { "30%", "30" }, { "32%", "32" },
+			{ "34%", "34" }, { "36%", "36" }, { "38%", "38" }, { "40%", "40" } };
 
 	public static final String[][] ALPHAS = { { "0", "0" }, { "5", "5" },
 			{ "10", "10" }, { "15", "15" }, { "25", "25" }, { "30", "30" },
@@ -165,8 +171,17 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 
 		@Override
+		protected int getCoordinatesSizePercentage() {
+			return Integer.parseInt(coordinatesPercentageCombo.getValue());
+		}
+
+		@Override
 		protected String getFileLabel() {
-			return null;
+			if ((GameUtils.getBitboard(id) & GameConstants.RANK1) != 0) {
+				return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
+			} else {
+				return null;
+			}
 		}
 
 		@Override
@@ -191,8 +206,18 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		@Override
 		protected String getRankLabel() {
-			return null;
+			if ((GameUtils.getBitboard(id) & GameConstants.AFILE) != 0) {
+				return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
+			} else {
+				return null;
+			}
 		}
+
+		@Override
+		protected boolean isShowingCoordinates() {
+			return true;
+		}
+
 	}
 
 	ChessBoardPageComboFieldEditor backgroundFieldEditor;
@@ -204,6 +229,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	ChessBoardPageComboFieldEditor setFieldEditor;
 	ChessBoardPageComboFieldEditor boardHidingAlphaCombo;
 	ChessBoardPageComboFieldEditor pieceJailHidingAlphaCombo;
+	ChessBoardPageComboFieldEditor coordinatesPercentageCombo;
 	ColorFieldEditor pieceJailBackground;
 	ChessBoardPageSquare[][] squares = null;
 	ChessBoardPageSquare[] hiddenPieceAlphas;
@@ -297,6 +323,12 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				PIECE_RESIZE_PERCENTAGE, getFieldEditorParent());
 		addField(pieceResize);
 
+		coordinatesPercentageCombo = new ChessBoardPageComboFieldEditor(
+				PreferenceKeys.BOARD_COORDINATES_SIZE_PERCENTAGE,
+				"Coordinates size as a percentage of square size:",
+				COORDINATES_SIZE_PERCENTAGE, getFieldEditorParent());
+		addField(coordinatesPercentageCombo);
+
 		squares = new ChessBoardPageSquare[3][3];
 		miniBoard = new Composite(getFieldEditorParent(), SWT.NONE);
 		miniBoard.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
@@ -304,9 +336,9 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		miniBoard.setLayout(SWTUtils.createMarginlessGridLayout(3, true));
 
 		boolean isLight = true;
-		for (int i = 0; i < squares.length; i++) {
+		for (int i = 2; i >= 0; i--) {
 			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j] = new ChessBoardPageSquare(miniBoard, j * i,
+				squares[i][j] = new ChessBoardPageSquare(miniBoard, j + i * 8,
 						isLight);
 				squares[i][j].setLayoutData(new GridData(50, 50));
 				isLight = !isLight;
@@ -338,8 +370,8 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		addField(boardHidingAlphaCombo);
 
 		hiddenPieceAlphas = new ChessBoardPageSquare[] {
-				new ChessBoardPageSquare(boardHidingAlphasComposite, 1, true),
-				new ChessBoardPageSquare(boardHidingAlphasComposite, 2, false) };
+				new ChessBoardPageSquare(boardHidingAlphasComposite, 9, true),
+				new ChessBoardPageSquare(boardHidingAlphasComposite, 10, false) };
 		hiddenPieceAlphas[0].setLayoutData(new GridData(50, 50));
 		hiddenPieceAlphas[1].setLayoutData(new GridData(50, 50));
 		hiddenPieceAlphas[0].setPiece(GameConstants.WP);
@@ -370,9 +402,9 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		pieceJailAlphasComposite.setLayout(SWTUtils.createMarginlessGridLayout(
 				2, true));
 		pieceJailAlphas = new PieceJailSquarePageSquare[] {
-				new PieceJailSquarePageSquare(pieceJailAlphasComposite, 1,
+				new PieceJailSquarePageSquare(pieceJailAlphasComposite, 9,
 						GameConstants.WR),
-				new PieceJailSquarePageSquare(pieceJailAlphasComposite, 2,
+				new PieceJailSquarePageSquare(pieceJailAlphasComposite, 10,
 						GameConstants.BR) };
 		pieceJailAlphas[0].setLayoutData(new GridData(50, 50));
 		pieceJailAlphas[1].setLayoutData(new GridData(50, 50));

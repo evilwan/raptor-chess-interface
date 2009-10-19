@@ -202,7 +202,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 					e.gc.setForeground(getPreferences().getColor(
 							BOARD_COORDINATES_COLOR));
 					e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
-							.getFont(BOARD_COORDINATES_FONT), 20, size.y));
+							.getFont(BOARD_COORDINATES_FONT),
+							getCoordinatesSizePercentage(), size.y));
 
 					int fontHeight = e.gc.getFontMetrics().getAscent()
 							+ e.gc.getFontMetrics().getDescent() + 0;
@@ -217,7 +218,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 					e.gc.setForeground(getPreferences().getColor(
 							BOARD_COORDINATES_COLOR));
 					e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
-							.getFont(BOARD_COORDINATES_FONT), 20, size.y));
+							.getFont(BOARD_COORDINATES_FONT),
+							getCoordinatesSizePercentage(), size.y));
 
 					e.gc.drawString(rankLabel, 0, 0, true);
 				}
@@ -371,10 +373,17 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * Provided so it can easily be overridden.By default uses the
 	 * RaptorPreferenceStore setting.
 	 */
+	protected int getCoordinatesSizePercentage() {
+		return Raptor.getInstance().getPreferences().getInt(
+				BOARD_COORDINATES_SIZE_PERCENTAGE);
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
 	protected String getFileLabel() {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				BOARD_IS_SHOW_COORDINATES)
-				&& !ChessBoardUtils.isPieceJailSquare(id)) {
+		if (isShowingCoordinates() && !ChessBoardUtils.isPieceJailSquare(id)) {
 			if (board.isWhiteOnTop) {
 				if ((GameUtils.getBitboard(id) & GameConstants.RANK8) != 0) {
 					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
@@ -453,6 +462,15 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Provided so it can easily be overridden.By default uses the
+	 * RaptorPreferenceStore setting.
+	 */
+	protected boolean isShowingCoordinates() {
+		return Raptor.getInstance().getPreferences().getBoolean(
+				BOARD_IS_SHOW_COORDINATES);
 	}
 
 	/**
