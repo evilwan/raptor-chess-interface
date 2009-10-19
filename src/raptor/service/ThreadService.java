@@ -122,15 +122,17 @@ public class ThreadService {
 	 * and displayed if they occur.
 	 */
 	public void run(Runnable runnable) {
-		if (!isDisposed) {
+		if (!Raptor.getInstance().isDisposed() && !isDisposed) {
 			try {
 				executor.execute(runnable);
 			} catch (RejectedExecutionException rej) {
-				LOG.error("Error executing runnable: ", rej);
-				threadDump();
-				Raptor.getInstance().onError(
-						"ThreadServie has no more threads. A thread dump can be found at "
-								+ THREAD_DUMP_FILE_PATH, rej);
+				if (!Raptor.getInstance().isDisposed()) {
+					LOG.error("Error executing runnable: ", rej);
+					threadDump();
+					Raptor.getInstance().onError(
+							"ThreadServie has no more threads. A thread dump can be found at "
+									+ THREAD_DUMP_FILE_PATH, rej);
+				}
 			}
 		}
 	}
@@ -145,15 +147,17 @@ public class ThreadService {
 	 *            The runnable.
 	 */
 	public void scheduleOneShot(long delay, Runnable runnable) {
-		if (!isDisposed) {
+		if (!Raptor.getInstance().isDisposed() && !isDisposed) {
 			try {
 				executor.schedule(runnable, delay, TimeUnit.MILLISECONDS);
 			} catch (RejectedExecutionException rej) {
-				LOG.error("Error executing runnable in scheduleOneShot: ", rej);
-				threadDump();
-				Raptor.getInstance().onError(
-						"ThreadServie has no more threads. A thread dump can be found at "
-								+ THREAD_DUMP_FILE_PATH);
+				if (!Raptor.getInstance().isDisposed()) {
+					LOG.error("Error executing runnable in scheduleOneShot: ", rej);
+					threadDump();
+					Raptor.getInstance().onError(
+							"ThreadServie has no more threads. A thread dump can be found at "
+									+ THREAD_DUMP_FILE_PATH);
+				}
 			}
 		}
 	}
