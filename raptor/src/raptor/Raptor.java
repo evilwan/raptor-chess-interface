@@ -170,8 +170,7 @@ public class Raptor implements PreferenceKeys {
 	 * Displays an alert message centered in the RaptorWindow.
 	 */
 	public void alert(final String message) {
-		if (!isDisposed())
-		{
+		if (!isDisposed()) {
 			getInstance().getWindow().getShell().getDisplay().asyncExec(
 					new Runnable() {
 						public void run() {
@@ -187,8 +186,7 @@ public class Raptor implements PreferenceKeys {
 	 * presses yes true is returned, otherwise false.
 	 */
 	public boolean confirm(final String question) {
-		if (!isDisposed())
-		{
+		if (!isDisposed()) {
 			return MessageDialog.openConfirm(Raptor.getInstance().getWindow()
 					.getShell(), "Confirm", question);
 		}
@@ -276,16 +274,6 @@ public class Raptor implements PreferenceKeys {
 		return raptorWindow;
 	}
 
-	/**
-	 * Handles an error in a way the user is notified and can report an issue.
-	 * If possible try and use a connectors on error if you have access to one,
-	 * otherwise you can use this.
-	 */
-	public void onError(final String error) {
-		onError(error, null);
-
-	}
-
 	public boolean isDisposed() {
 		return getInstance() != null && getInstance().getWindow() != null
 				&& getInstance().getWindow().getShell() != null
@@ -297,9 +285,18 @@ public class Raptor implements PreferenceKeys {
 	 * If possible try and use a connectors on error if you have access to one,
 	 * otherwise you can use this.
 	 */
+	public void onError(final String error) {
+		onError(error, null);
+
+	}
+
+	/**
+	 * Handles an error in a way the user is notified and can report an issue.
+	 * If possible try and use a connectors on error if you have access to one,
+	 * otherwise you can use this.
+	 */
 	public void onError(final String error, final Throwable throwable) {
-		if (!isDisposed())
-		{
+		if (!isDisposed()) {
 			LOG.error(error, throwable);
 			getInstance().getWindow().getShell().getDisplay().asyncExec(
 					new Runnable() {
