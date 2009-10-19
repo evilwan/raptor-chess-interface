@@ -137,9 +137,10 @@ public class Raptor implements PreferenceKeys {
 				public void run() {
 					// Launch the home page after a half second it requires a
 					// RaptorWindow.
-					if (Raptor.getInstance().getPreferences().getBoolean(
+					if (getInstance().getPreferences().getBoolean(
 							APP_IS_LAUNCHNG_HOME_PAGE)) {
-						BrowserUtils.openUrl(PreferenceKeys.APP_HOME_URL);
+						BrowserUtils.openUrl(getInstance().getPreferences()
+								.getString(PreferenceKeys.APP_HOME_URL));
 					}
 
 					// Initialize this after a half second it requires a

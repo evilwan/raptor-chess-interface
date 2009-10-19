@@ -785,7 +785,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				});
 			}
-			
+
 			MenuItem wikiItem = new MenuItem(menu, SWT.PUSH);
 			wikiItem.setText("Wikipedia: '" + message + "'");
 			wikiItem.addListener(SWT.Selection, new Listener() {

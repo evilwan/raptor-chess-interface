@@ -275,20 +275,23 @@ public abstract class IcsConnector implements Connector {
 	protected boolean isLoggedIn = false;
 	protected Runnable keepAlive = new Runnable() {
 		public void run() {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("In keepAlive.run()");
-			}
+			LOG.error("In keepAlive.run() "
+					+ (System.currentTimeMillis() - lastSendTime > 60000 * 50));
+
 			if (isConnected()
+					&& getPreferences().getBoolean(
+							context.getShortName() + "-keep-alive")
 					&& System.currentTimeMillis() - lastSendTime > 60000 * 50) {
 				sendMessage("date", true);
 				publishEvent(new ChatEvent("", ChatType.INTERNAL,
 						"The \"date\" command was just sent as a keep alive."));
-				ThreadService.getInstance().scheduleOneShot(60000, this);
+				ThreadService.getInstance().scheduleOneShot(60000 * 30, this);
 			}
 		}
 	};
 	protected long lastPingTime;
 	protected long lastSendTime;
+	protected long lastSendPingTime;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 	protected Socket socket;
 	protected String userName;
@@ -731,7 +734,8 @@ public abstract class IcsConnector implements Connector {
 				try {
 					socket.getOutputStream().write(message.getBytes());
 					socket.getOutputStream().flush();
-					lastSendTime = System.currentTimeMillis();
+					lastSendTime = lastSendPingTime = System
+							.currentTimeMillis();
 
 				} catch (Throwable t) {
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
@@ -1056,14 +1060,14 @@ public abstract class IcsConnector implements Connector {
 	 */
 	protected void onNewInput() {
 
-		if (lastSendTime != 0) {
+		if (lastSendPingTime != 0) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
 					long currentTime = System.currentTimeMillis();
-					lastPingTime = currentTime - lastSendTime;
+					lastPingTime = currentTime - lastSendPingTime;
 					Raptor.getInstance().getWindow().setPingTime(
 							IcsConnector.this, lastPingTime);
-					lastSendTime = 0;
+					lastSendPingTime = 0;
 				}
 			});
 		}
