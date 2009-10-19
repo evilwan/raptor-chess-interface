@@ -68,7 +68,7 @@ public interface Connector {
 	 * 
 	 * Params are optional.
 	 */
-	public ChatScriptContext getChatScriptContext(String...params);
+	public ChatScriptContext getChatScriptContext(String... params);
 
 	/**
 	 * Returns the chat service the connector maintains. All ChatEvents are

@@ -6,18 +6,19 @@ package raptor.script;
  * on the request page or post in the Google groups page.
  */
 public interface ScriptContext {
-	
-	/**
-	 * MIME encodes the passed in string.
-	 * @param stringToEncode The string to encode.
-	 * @return The encoded string.
-	 */
-	public String urlEncode(String stringToEncode);
-	
+
 	/**
 	 * Displays an alert message to the user.
 	 */
 	public void alert(String message);
+
+	/**
+	 * Some scripts use parameters. This will return the parameters if any were
+	 * passed in.
+	 * 
+	 * @return The parameters. An empty String[] if there are no parameters.
+	 */
+	public String[] getParameters();
 
 	/**
 	 * Returns the current ping time in milliseconds.
@@ -40,6 +41,15 @@ public interface ScriptContext {
 	 * Returns the logged in user name.
 	 */
 	public String getUserName();
+
+	/**
+	 * Retrieves a stored value.
+	 * 
+	 * @param key
+	 *            The key to retrieve.
+	 * @return May return null if there is no value stored.
+	 */
+	public String getValue(String key);
 
 	/**
 	 * Launches the process with the specified arguments. This can be used to
@@ -140,19 +150,11 @@ public interface ScriptContext {
 	public void storeValue(String key, String value);
 
 	/**
-	 * Retrieves a stored value.
+	 * MIME encodes the passed in string.
 	 * 
-	 * @param key
-	 *            The key to retrieve.
-	 * @return May return null if there is no value stored.
+	 * @param stringToEncode
+	 *            The string to encode.
+	 * @return The encoded string.
 	 */
-	public String getValue(String key);
-
-	/**
-	 * Some scripts use parameters. This will return the parameters if any were
-	 * passed in.
-	 * 
-	 * @return The parameters. An empty String[] if there are no parameters.
-	 */
-	public String[] getParameters();
+	public String urlEncode(String stringToEncode);
 }

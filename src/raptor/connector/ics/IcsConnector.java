@@ -83,12 +83,12 @@ public abstract class IcsConnector implements Connector {
 		ChatEvent event;
 		boolean ignoreEvent = false;
 
-		public IcsChatScriptContext(String...params) {
-			super(params);
-		}
-
 		public IcsChatScriptContext(ChatEvent event) {
 			this.event = event;
+		}
+
+		public IcsChatScriptContext(String... params) {
+			super(params);
 		}
 
 		public String getMessage() {
@@ -137,6 +137,10 @@ public abstract class IcsConnector implements Connector {
 			Raptor.getInstance().alert(message);
 		}
 
+		public String[] getParameters() {
+			return parameters;
+		}
+
 		public long getPingMillis() {
 			return lastPingTime;
 		}
@@ -153,6 +157,10 @@ public abstract class IcsConnector implements Connector {
 
 		public String getUserName() {
 			return userName;
+		}
+
+		public String getValue(String key) {
+			return scriptHash.get(key);
 		}
 
 		public void launchProcess(String... commandAndArgs) {
@@ -245,12 +253,8 @@ public abstract class IcsConnector implements Connector {
 			SoundService.getInstance().textToSpeech(message);
 		}
 
-		public String[] getParameters() {
-			return parameters;
-		}
-
-		public String getValue(String key) {
-			return scriptHash.get(key);
+		public void storeValue(String key, String value) {
+			scriptHash.put(key, value);
 		}
 
 		public String urlEncode(String stringToEncode) {
@@ -259,10 +263,6 @@ public abstract class IcsConnector implements Connector {
 			} catch (UnsupportedEncodingException uee) {
 			}// Eat it wont happen.
 			return stringToEncode;
-		}
-
-		public void storeValue(String key, String value) {
-			scriptHash.put(key, value);
 		}
 	}
 
@@ -492,7 +492,7 @@ public abstract class IcsConnector implements Connector {
 		return "tell " + channel + " ";
 	}
 
-	public ChatScriptContext getChatScriptContext(String...params) {
+	public ChatScriptContext getChatScriptContext(String... params) {
 		return new IcsChatScriptContext(params);
 	}
 
