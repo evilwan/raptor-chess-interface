@@ -1273,7 +1273,6 @@ public abstract class IcsConnector implements Connector {
 				// It is interesting to note messages are handled sequentially
 				// up to this point. chatService will publish the event
 				// asynchronously.
-				System.err.println("Publishing chat event");
 				chatService.publishChatEvent(event);
 			}
 		}
