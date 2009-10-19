@@ -65,8 +65,10 @@ public interface Connector {
 	/**
 	 * Returns the ChatScriptContext. Can return null if this connector does'nt
 	 * support scripting.
+	 * 
+	 * Params are optional.
 	 */
-	public ChatScriptContext getChatScriptContext();
+	public ChatScriptContext getChatScriptContext(String...params);
 
 	/**
 	 * Returns the chat service the connector maintains. All ChatEvents are

@@ -25,6 +25,7 @@ import raptor.pref.page.BughousePage;
 import raptor.pref.page.ChatConsoleChannelColorsPage;
 import raptor.pref.page.ChatConsoleMessageColorsPage;
 import raptor.pref.page.ChatConsolePage;
+import raptor.pref.page.ChatConsoleRightClickScripts;
 import raptor.pref.page.ChatConsoleScriptsPage;
 import raptor.pref.page.ChatConsoleSoundsPage;
 import raptor.pref.page.ChatConsoleToolbarPage;
@@ -69,6 +70,8 @@ public class PreferenceUtils {
 				new ChatConsoleChannelColorsPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("toolbar",
 				new ChatConsoleToolbarPage()));
+		mgr.addTo("chatConsole", new PreferenceNode("rightClickScripts",
+				new ChatConsoleRightClickScripts()));
 		mgr.addTo("chatConsole", new PreferenceNode("scripts",
 				new ChatConsoleScriptsPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("sounds",

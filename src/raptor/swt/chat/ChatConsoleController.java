@@ -15,8 +15,6 @@ package raptor.swt.chat;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,6 +60,9 @@ import raptor.connector.ConnectorListener;
 import raptor.connector.ics.IcsUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.script.ChatScript;
+import raptor.script.ChatScript.ChatScriptType;
+import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
 import raptor.swt.ItemChangedListener;
@@ -730,83 +731,21 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
-	protected void addCommandMenuItems(Menu menu, String message) {
+	protected void addCommandMenuItems(Menu menu, final String message) {
 		if (message.length() <= 200) {
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
-			final String finalWord = message;
-			MenuItem googleItem = new MenuItem(menu, SWT.PUSH);
-			googleItem.setText("Google: '" + message + "'");
-			googleItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					try {
-						String encodedWord = URLEncoder.encode(finalWord,
-								"UTF-8");
-						String url = "http://www.google.com/search?q="
-								+ encodedWord;
-						BrowserUtils.openUrl(url);
-					} catch (UnsupportedEncodingException uee) {
-						LOG.error("Error encoding text", uee);
-					}
-				}
-			});
 
-			MenuItem googleTranslate = new MenuItem(menu, SWT.PUSH);
-			googleTranslate.setText("Google Translate: '" + message + "'");
-			googleTranslate.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					try {
-						String encodedWord = URLEncoder.encode(finalWord,
-								"UTF-8");
-						String url = "http://www.translate.google.com/translate_t#auto|en|"
-								+ encodedWord;
-						BrowserUtils.openUrl(url);
-					} catch (UnsupportedEncodingException uee) {
-						LOG.error("Error encoding text", uee);
-					}
-				}
-			});
+			ChatScript[] scripts = ScriptService.getInstance().getChatScripts(
+					getConnector(), ChatScriptType.RightClickOneShot);
 
-			if (message.length() < 30) {
-				MenuItem defineItem = new MenuItem(menu, SWT.PUSH);
-				defineItem.setText("Google Define: '" + message + "'");
-				defineItem.addListener(SWT.Selection, new Listener() {
+			for (final ChatScript script : scripts) {
+				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+				menuItem.setText(script.getName() + ": '" + message + "'");
+				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						try {
-							String encodedWord = URLEncoder.encode(finalWord,
-									"UTF-8");
-							String url = "http://www.google.com/search?q=define: "
-									+ encodedWord;
-							BrowserUtils.openUrl(url);
-						} catch (UnsupportedEncodingException uee) {
-							LOG.error("Error encoding text", uee);
-						}
-					}
-				});
-			}
-
-			MenuItem wikiItem = new MenuItem(menu, SWT.PUSH);
-			wikiItem.setText("Wikipedia: '" + message + "'");
-			wikiItem.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					try {
-						String encodedWord = URLEncoder.encode(finalWord,
-								"UTF-8");
-						String url = "http://wikipedia.org/wiki/" + encodedWord;
-						BrowserUtils.openUrl(url);
-					} catch (UnsupportedEncodingException uee) {
-						LOG.error("Error encoding text", uee);
-					}
-				}
-			});
-
-			if (message.length() < 30) {
-				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(connector.getShortName() + ": '" + message + "'");
-				item.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						connector.sendMessage(finalWord);
+						script.execute(connector.getChatScriptContext(message));
 					}
 				});
 			}
