@@ -140,7 +140,7 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 				true, false));
 		ratingFilterComposite.setLayout(new RowLayout());
 		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("Rating >= ");
+		label.setText("Rating >=");
 		availablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
 		availablePartnersFilter.add("0");
