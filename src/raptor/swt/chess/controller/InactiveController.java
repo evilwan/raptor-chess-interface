@@ -25,7 +25,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
@@ -45,6 +49,7 @@ import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.Highlight;
+import raptor.swt.chess.controller.PlayingController.PremoveInfo;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -521,9 +526,101 @@ public class InactiveController extends ChessBoardController implements
 		LOG.debug("On middle click " + getGame().getId() + " " + square);
 	}
 
+	/**
+	 * In droppable games this shows a menu of the pieces available for
+	 * dropping. In bughouse the menu includes the premove drop features which
+	 * drops a move when the piece becomes available.
+	 */
 	@Override
-	public void userRightClicked(int square) {
-		LOG.debug("On right click " + getGame().getId() + " " + square);
+	public void userRightClicked(final int square) {
+		if (isDisposed()) {
+			return;
+		}
+
+		if (!ChessBoardUtils.isPieceJailSquare(square)
+				&& getGame().isInState(Game.DROPPABLE_STATE)
+				&& getGame().getPiece(square) == EMPTY) {
+			final int color = getGame().getColorToMove();
+			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
+
+			if (getGame().getDropCount(color, PAWN) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(GameUtils.getPieceRepresentation(GameUtils
+						.getColoredPiece(PAWN, color))
+						+ "@" + GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(GameUtils
+								.getDropSquareFromColoredPiece(GameUtils
+										.getColoredPiece(PAWN, color)), square);
+
+					}
+				});
+			}
+			if (getGame().getDropCount(color, KNIGHT) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(GameUtils.getPieceRepresentation(GameUtils
+						.getColoredPiece(KNIGHT, color))
+						+ "@" + GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(GameUtils
+								.getDropSquareFromColoredPiece(GameUtils
+										.getColoredPiece(KNIGHT, color)),
+								square);
+					}
+				});
+			}
+			if (getGame().getDropCount(color, BISHOP) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(GameUtils.getPieceRepresentation(GameUtils
+						.getColoredPiece(BISHOP, color))
+						+ "@" + GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(GameUtils
+								.getDropSquareFromColoredPiece(GameUtils
+										.getColoredPiece(BISHOP, color)),
+								square);
+					}
+				});
+			}
+			if (getGame().getDropCount(color, ROOK) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(GameUtils.getPieceRepresentation(GameUtils
+						.getColoredPiece(ROOK, color))
+						+ "@" + GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(GameUtils
+								.getDropSquareFromColoredPiece(GameUtils
+										.getColoredPiece(ROOK, color)), square);
+					}
+				});
+			}
+			if (getGame().getDropCount(color, QUEEN) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(GameUtils.getPieceRepresentation(GameUtils
+						.getColoredPiece(QUEEN, color))
+						+ "@" + GameUtils.getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(GameUtils
+								.getDropSquareFromColoredPiece(GameUtils
+										.getColoredPiece(QUEEN, color)), square);
+					}
+				});
+			}
+
+			menu.setLocation(board.getSquare(square).toDisplay(10, 10));
+			menu.setVisible(true);
+			while (!menu.isDisposed() && menu.isVisible()) {
+				if (!board.getControl().getDisplay().readAndDispatch()) {
+					board.getControl().getDisplay().sleep();
+				}
+			}
+			menu.dispose();
+		}
 	}
 
 	protected void onPlayIllegalMoveSound() {
