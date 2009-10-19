@@ -44,6 +44,7 @@ import raptor.connector.ics.game.message.MovesMessage;
 import raptor.connector.ics.game.message.Style12Message;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.swt.chess.controller.BughouseSuggestController;
 import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.PlayingController;
@@ -204,9 +205,17 @@ public class IcsUtils implements GameConstants {
 		if (game.isInState(Game.OBSERVING_STATE)
 				|| game.isInState(Game.OBSERVING_EXAMINED_STATE)) {
 			if (isBughouseOtherBoard) {
-				// In the future this will contain a controller that allows
-				// suggestions.
-				controller = new ObserveController(game, connector);
+				if (((BughouseGame) game).getOtherBoard().isInState(
+						Game.PLAYING_STATE)) {
+					Game otherGame = ((BughouseGame) game).getOtherBoard();
+					boolean isPartnerWhite = !StringUtils.equals(otherGame
+							.getHeader(PgnHeader.White), connector
+							.getUserName());
+					controller = new BughouseSuggestController(game, connector,
+							isPartnerWhite);
+				} else {
+					controller = new ObserveController(game, connector);
+				}
 			} else {
 				controller = new ObserveController(game, connector);
 			}

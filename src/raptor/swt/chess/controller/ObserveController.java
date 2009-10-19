@@ -430,4 +430,5 @@ public class ObserveController extends ChessBoardController {
 			SoundService.getInstance().playSound("obsMove");
 		}
 	}
+
 }
