@@ -415,6 +415,8 @@ public class Raptor implements PreferenceKeys {
 	 */
 	private void init() {
 		preferences = new RaptorPreferenceStore();
+		
+		install();
 
 		// Make sure all of the Singleton services get loaded.
 		ThreadService.getInstance();
@@ -422,8 +424,6 @@ public class Raptor implements PreferenceKeys {
 		ConnectorService.getInstance();
 		SoundService.getInstance();
 		ScriptService.getInstance();
-
-		install();
 	}
 
 	/**
