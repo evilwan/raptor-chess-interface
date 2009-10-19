@@ -614,16 +614,16 @@ public abstract class IcsConnector implements Connector {
 
 	public void matchBughouse(String playerName, boolean isRated, int time,
 			int inc) {
-		sendMessage("match " + playerName + " " + time + " " + inc
+		sendMessage("$$match " + playerName + " " + time + " " + inc
 				+ (isRated ? "rated" : "unrated"));
 	}
 
 	public void onAbortKeyPress() {
-		sendMessage("abort", true);
+		sendMessage("$$abort", true);
 	}
 
 	public void onAcceptKeyPress() {
-		sendMessage("accept", true);
+		sendMessage("$$accept", true);
 	}
 
 	/**
@@ -637,11 +637,11 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onDeclineKeyPress() {
-		sendMessage("decline", true);
+		sendMessage("$$decline", true);
 	}
 
 	public void onDraw(Game game) {
-		sendMessage("draw", true);
+		sendMessage("$$draw", true);
 	}
 
 	public void onError(String message) {
@@ -660,54 +660,54 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onExamineModeBack(Game game) {
-		sendMessage("back", true);
+		sendMessage("$$back", true);
 	}
 
 	public void onExamineModeCommit(Game game) {
-		sendMessage("commit", true);
+		sendMessage("$$commit", true);
 	}
 
 	public void onExamineModeFirst(Game game) {
-		sendMessage("back 300", true);
+		sendMessage("$$back 300", true);
 	}
 
 	public void onExamineModeForward(Game game) {
-		sendMessage("forward 1", true);
+		sendMessage("$$forward 1", true);
 	}
 
 	public void onExamineModeLast(Game game) {
-		sendMessage("forward 300", true);
+		sendMessage("$$forward 300", true);
 	}
 
 	public void onExamineModeRevert(Game game) {
-		sendMessage("revert", true);
+		sendMessage("$$revert", true);
 	}
 
 	public void onObserveGame(String gameId) {
-		sendMessage("observe " + gameId, true);
+		sendMessage("$$observe " + gameId, true);
 	}
 
 	public void onPartner(String bugger) {
-		sendMessage("partner " + bugger, true);
+		sendMessage("$$partner " + bugger, true);
 	}
 
 	public void onRematchKeyPress() {
-		sendMessage("rematch", true);
+		sendMessage("$$rematch", true);
 	}
 
 	/**
 	 * Resigns the specified game.
 	 */
 	public void onResign(Game game) {
-		sendMessage("resign", true);
+		sendMessage("$$resign", true);
 	}
 
 	public void onSetupClear(Game game) {
-		sendMessage("bsetup clear", true);
+		sendMessage("$$bsetup clear", true);
 	}
 
 	public void onSetupClearSquare(Game game, int square) {
-		sendMessage("x@" + GameUtils.getSan(square), true);
+		sendMessage("$$x@" + GameUtils.getSan(square), true);
 	}
 
 	public void onSetupComplete(Game game) {
@@ -715,19 +715,19 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onSetupFromFEN(Game game, String fen) {
-		sendMessage("bsetup fen " + fen, true);
+		sendMessage("$$bsetup fen " + fen, true);
 	}
 
 	public void onSetupStartPosition(Game game) {
-		sendMessage("bsetup start", true);
+		sendMessage("$$bsetup start", true);
 	}
 
 	public void onUnexamine(Game game) {
-		sendMessage("unexamine", true);
+		sendMessage("$$unexamine", true);
 	}
 
 	public void onUnobserve(Game game) {
-		sendMessage("unobs " + game.getId(), true);
+		sendMessage("$$unobs " + game.getId(), true);
 	}
 
 	public String parseChannel(String word) {
@@ -754,19 +754,19 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void sendBugAvailableTeamsMessage() {
-		sendMessage("bugwho p", true, ChatType.BUGWHO_AVAILABLE_TEAMS);
+		sendMessage("$$bugwho p", true, ChatType.BUGWHO_AVAILABLE_TEAMS);
 	}
 
 	public void sendBugGamesMessage() {
-		sendMessage("bugwho g", true, ChatType.BUGWHO_GAMES);
+		sendMessage("$$bugwho g", true, ChatType.BUGWHO_GAMES);
 	}
 
 	public void sendBugUnpartneredBuggersMessage() {
-		sendMessage("bugwho u", true, ChatType.BUGWHO_UNPARTNERED_BUGGERS);
+		sendMessage("$$bugwho u", true, ChatType.BUGWHO_UNPARTNERED_BUGGERS);
 	}
 
 	public void sendGetSeeksMessage() {
-		sendMessage("sought", true, ChatType.SEEKS);
+		sendMessage("$$sought all", true, ChatType.SEEKS);
 	}
 
 	public void sendMessage(String message) {

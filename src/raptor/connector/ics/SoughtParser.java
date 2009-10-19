@@ -3,6 +3,7 @@ package raptor.connector.ics;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -39,10 +40,14 @@ public class SoughtParser {
 				}
 
 				Seek seek = new Seek();
+				line = StringUtils.replace(line, "----", "****");
 				RaptorStringTokenizer tok = new RaptorStringTokenizer(line,
 						" -[]", true);
 				seek.setAd(tok.nextToken());
 				seek.setRating(tok.nextToken());
+				if (seek.getRating().equals("****")) {
+					seek.setRating("----");
+				}
 				seek.setName(tok.nextToken());
 				seek.setMinutes(Integer.parseInt(tok.nextToken()));
 				seek.setIncrement(Integer.parseInt(tok.nextToken()));
