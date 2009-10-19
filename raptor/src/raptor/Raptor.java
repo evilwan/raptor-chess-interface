@@ -170,14 +170,16 @@ public class Raptor implements PreferenceKeys {
 	 * Displays an alert message centered in the RaptorWindow.
 	 */
 	public void alert(final String message) {
-		getInstance().getWindow().getShell().getDisplay().asyncExec(
-				new Runnable() {
-					public void run() {
-						MessageDialog.openInformation(Raptor.getInstance()
-								.getWindow().getShell(), "Alert", message);
-					}
-				});
-
+		if (!isDisposed())
+		{
+			getInstance().getWindow().getShell().getDisplay().asyncExec(
+					new Runnable() {
+						public void run() {
+							MessageDialog.openInformation(Raptor.getInstance()
+									.getWindow().getShell(), "Alert", message);
+						}
+					});
+		}
 	}
 
 	/**
@@ -185,8 +187,12 @@ public class Raptor implements PreferenceKeys {
 	 * presses yes true is returned, otherwise false.
 	 */
 	public boolean confirm(final String question) {
-		return MessageDialog.openConfirm(Raptor.getInstance().getWindow()
-				.getShell(), "Confirm", question);
+		if (!isDisposed())
+		{
+			return MessageDialog.openConfirm(Raptor.getInstance().getWindow()
+					.getShell(), "Confirm", question);
+		}
+		return false;
 	}
 
 	/**
@@ -280,31 +286,40 @@ public class Raptor implements PreferenceKeys {
 
 	}
 
+	public boolean isDisposed() {
+		return getInstance() != null && getInstance().getWindow() != null
+				&& getInstance().getWindow().getShell() != null
+				&& !getInstance().getWindow().getShell().isDisposed();
+	}
+
 	/**
 	 * Handles an error in a way the user is notified and can report an issue.
 	 * If possible try and use a connectors on error if you have access to one,
 	 * otherwise you can use this.
 	 */
 	public void onError(final String error, final Throwable throwable) {
-		LOG.error(error, throwable);
-		getInstance().getWindow().getShell().getDisplay().asyncExec(
-				new Runnable() {
-					public void run() {
-						MessageDialog
-								.openError(
-										Raptor.getInstance().getWindow()
-												.getShell(),
-										"Error",
-										"Critical error occured! We are trying to make Raptor "
-												+ "bug free and we need your help! Please take a moment to report this "
-												+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
-												+ error
-												+ "\n"
-												+ (throwable != null ? ExceptionUtils
-														.getMessage(throwable)
-														: ""));
-					}
-				});
+		if (!isDisposed())
+		{
+			LOG.error(error, throwable);
+			getInstance().getWindow().getShell().getDisplay().asyncExec(
+					new Runnable() {
+						public void run() {
+							MessageDialog
+									.openError(
+											Raptor.getInstance().getWindow()
+													.getShell(),
+											"Error",
+											"Critical error occured! We are trying to make Raptor "
+													+ "bug free and we need your help! Please take a moment to report this "
+													+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
+													+ error
+													+ "\n"
+													+ (throwable != null ? ExceptionUtils
+															.getMessage(throwable)
+															: ""));
+						}
+					});
+		}
 
 	}
 
