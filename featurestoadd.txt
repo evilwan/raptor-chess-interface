@@ -9,9 +9,7 @@
  More Chess Sets.
  Redo sounds
  Making music while moves are made on the chessboard.
- Bughouse suggestions.
  Saving tab layouts per connection and reloading them at next login.
- Bughouse suggest.
  Simul bughouse.
  
  
