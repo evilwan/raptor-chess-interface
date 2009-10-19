@@ -113,9 +113,9 @@ public class IcsParser implements GameConstants {
 		movesParser = new MovesParser();
 		followingParser = new FollowingEventParser();
 		style12Parser = new Style12Parser();
-		soughtParser = new SoughtParser();
 
 		if (!isBicsParser) {
+			soughtParser = new SoughtParser();
 			bugWhoGParser = new BugWhoGParser();
 			bugWhoPParser = new BugWhoPParser();
 			bugWhoUParser = new BugWhoUParser();
@@ -662,36 +662,44 @@ public class IcsParser implements GameConstants {
 	protected ChatEvent processBugWho(String message) {
 		ChatEvent result = null;
 
-		Bugger[] buggers = bugWhoUParser.parse(message);
-		if (buggers == null) {
-			Partnership[] partnerships = bugWhoPParser.parse(message);
-			if (partnerships == null) {
-				raptor.chat.BugGame[] bugGames = bugWhoGParser.parse(message);
-				if (bugGames != null) {
-					connector.getBughouseService().setGamesInProgress(bugGames);
-					result = new ChatEvent(null, ChatType.BUGWHO_GAMES, message);
+		// Bics bugwho is different. Someone needs to write bics bugwho to get
+		// it working.
+		if (bugWhoUParser != null) {
+			Bugger[] buggers = bugWhoUParser.parse(message);
+			if (buggers == null) {
+				Partnership[] partnerships = bugWhoPParser.parse(message);
+				if (partnerships == null) {
+					raptor.chat.BugGame[] bugGames = bugWhoGParser
+							.parse(message);
+					if (bugGames != null) {
+						connector.getBughouseService().setGamesInProgress(
+								bugGames);
+						result = new ChatEvent(null, ChatType.BUGWHO_GAMES,
+								message);
+					}
+				} else {
+					connector.getBughouseService().setAvailablePartnerships(
+							partnerships);
+					result = new ChatEvent(null,
+							ChatType.BUGWHO_AVAILABLE_TEAMS, message);
 				}
 			} else {
-				connector.getBughouseService().setAvailablePartnerships(
-						partnerships);
-				result = new ChatEvent(null, ChatType.BUGWHO_AVAILABLE_TEAMS,
-						message);
+				connector.getBughouseService().setUnpartneredBuggers(buggers);
+				result = new ChatEvent(null,
+						ChatType.BUGWHO_UNPARTNERED_BUGGERS, message);
 			}
-		} else {
-			connector.getBughouseService().setUnpartneredBuggers(buggers);
-			result = new ChatEvent(null, ChatType.BUGWHO_UNPARTNERED_BUGGERS,
-					message);
 		}
 		return result;
 	}
 
 	protected ChatEvent processSought(String message) {
 		ChatEvent result = null;
-
-		Seek[] seeks = soughtParser.parse(message);
-		if (seeks != null) {
-			connector.getSeekService().setSeeks(seeks);
-			result = new ChatEvent(null, ChatType.SEEKS, message);
+		if (soughtParser != null) {
+			Seek[] seeks = soughtParser.parse(message);
+			if (seeks != null) {
+				connector.getSeekService().setSeeks(seeks);
+				result = new ChatEvent(null, ChatType.SEEKS, message);
+			}
 		}
 		return result;
 	}
