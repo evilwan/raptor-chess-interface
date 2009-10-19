@@ -2,6 +2,8 @@ package raptor.chat;
 
 import java.util.Comparator;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This code was adapted from code written for Decaf by kozyr.
  */
@@ -103,7 +105,7 @@ public class Seek {
 	}
 
 	public static enum GameType {
-		untimed,standard, blitz, lightning, wild, crazyhouse, suicide, fischerRandom, losers, atomic
+		untimed, standard, blitz, lightning, wild, crazyhouse, suicide, fischerRandom, losers, atomic
 	}
 
 	protected String ad;
@@ -188,7 +190,8 @@ public class Seek {
 	public int getRatingAsInt() {
 		int result = 0;
 		try {
-			result = Integer.parseInt(rating);
+			result = Integer.parseInt(StringUtils
+					.replaceChars(rating, "PE", ""));
 		} catch (NumberFormatException nfe) {
 		}
 		return result;
