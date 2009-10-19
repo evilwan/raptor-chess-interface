@@ -51,6 +51,7 @@ public interface PreferenceKeys {
 	public static final String APP_LAYOUT = "app-layout";
 	public static final String APP_BROWSER_QUADRANT = "app-browser-quadrant";
 	public static final String APP_PGN_RESULTS_QUADRANT = "app-pgn-results-quadrant";
+	public static final String APP_WINDOW_ITEM_POLL_INTERVAL = "app-window-item-poll-interval";
 	public static final String APP_CHESS_BOARD_QUADRANT = "app-"
 			+ CHESS_BOARD_QUADRANT;
 	public static final String APP_BUGHOUSE_GAME_2_QUADRANT = "app-"
@@ -82,10 +83,22 @@ public interface PreferenceKeys {
 	public static final String APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout3-quad56-quad7-sash-weights";
 	public static final String APP_LAYOUT3_WINDOW_BOUNDS = "app-Layout3-window-bounds";
 
-	public static final String BUG_ARENA_REFRESH_SECONDS = "bughouse-arena-refresh";
 	public static final String BUG_ARENA_PARTNERS_INDEX = "bughouse-arena-partners-index";
 	public static final String BUG_ARENA_TEAMS_INDEX = "bughouse-arena-teams-index";
 	public static final String BUG_ARENA_TEAMS_IS_RATED = "bughosue-arena-teams-is-rated";
+
+	public static final String SEEK_TABLE_RATINGS_INDEX = "seek-table-ratings-index";
+	public static final String SEEK_TABLE_RATED_INDEX = "seek-table-rated-index";
+	public static final String SEEK_TABLE_SHOW_COMPUTERS = "seek-table-show-computers";
+	public static final String SEEK_TABLE_SHOW_LIGHTNING = "seek-table-show-lightning";
+	public static final String SEEK_TABLE_SHOW_BLITZ = "seek-table-show-blitz";
+	public static final String SEEK_TABLE_SHOW_STANDARD = "seek-table-show-standard";
+	public static final String SEEK_TABLE_SHOW_CRAZYHOUSE = "seek-table-show-crazyhouse";
+	public static final String SEEK_TABLE_SHOW_FR = "seek-table-show-fr";
+	public static final String SEEK_TABLE_SHOW_WILD = "seek-table-show-wild";
+	public static final String SEEK_TABLE_SHOW_ATOMIC = "seek-table-show-atomic";
+	public static final String SEEK_TABLE_SHOW_SUICIDE = "seek-table-show-suicide";
+	public static final String SEEK_TABLE_SHOW_LOSERS = "seek-table-show-losers";
 
 	public static final String BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD = "bughouse-playing-open-partner-board";
 	public static final String BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD = "bughouse-observing-open-partner-board";

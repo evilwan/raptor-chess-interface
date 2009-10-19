@@ -298,10 +298,23 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						SWT.BOLD) });
 
 		// BugArena
-		setDefault(BUG_ARENA_REFRESH_SECONDS, 3);
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
 		setDefault(BUG_ARENA_TEAMS_INDEX, 0);
 		setDefault(BUG_ARENA_TEAMS_IS_RATED, true);
+
+		// SeekTable
+		setDefault(SEEK_TABLE_RATINGS_INDEX, 0);
+		setDefault(SEEK_TABLE_RATED_INDEX, 0);
+		setDefault(SEEK_TABLE_SHOW_COMPUTERS, true);
+		setDefault(SEEK_TABLE_SHOW_LIGHTNING, true);
+		setDefault(SEEK_TABLE_SHOW_BLITZ, true);
+		setDefault(SEEK_TABLE_SHOW_STANDARD, true);
+		setDefault(SEEK_TABLE_SHOW_CRAZYHOUSE, true);
+		setDefault(SEEK_TABLE_SHOW_FR, true);
+		setDefault(SEEK_TABLE_SHOW_WILD, true);
+		setDefault(SEEK_TABLE_SHOW_ATOMIC, true);
+		setDefault(SEEK_TABLE_SHOW_SUICIDE, true);
+		setDefault(SEEK_TABLE_SHOW_LOSERS, true);
 
 		PreferenceConverter.setDefault(this, ARROW_OPPONENT_COLOR, new RGB(255,
 				0, 255));
@@ -438,6 +451,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
+		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 3);
 
 		// Layout 1 settings.
 		setDefault(APP_LAYOUT1_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));

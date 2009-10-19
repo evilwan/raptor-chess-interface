@@ -54,6 +54,7 @@ import raptor.service.BughouseService;
 import raptor.service.ChatService;
 import raptor.service.GameService;
 import raptor.service.ScriptService;
+import raptor.service.SeekService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.service.GameService.GameServiceAdapter;
@@ -275,6 +276,7 @@ public abstract class IcsConnector implements Connector {
 	protected Thread daemonThread;
 	protected GameService gameService;
 	protected Map<String, String> scriptHash = new HashMap<String, String>();
+	protected SeekService seekService;
 
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
@@ -354,9 +356,14 @@ public abstract class IcsConnector implements Connector {
 	protected IcsConnector(IcsConnectorContext context) {
 		this.context = context;
 		chatService = new ChatService(this);
+		seekService = new SeekService(this);
 		gameService = new GameService();
 		gameService.addGameServiceListener(gameServiceListener);
 		setBughouseService(new BughouseService(this));
+	}
+
+	public void acceptSeek(String adId) {
+		sendMessage("play " + adId, true);
 	}
 
 	/**
@@ -558,6 +565,10 @@ public abstract class IcsConnector implements Connector {
 		return ScriptConnectorType.ICS;
 	}
 
+	public SeekService getSeekService() {
+		return seekService;
+	}
+
 	public String getShortName() {
 		return context.getShortName();
 	}
@@ -752,6 +763,10 @@ public abstract class IcsConnector implements Connector {
 
 	public void sendBugUnpartneredBuggersMessage() {
 		sendMessage("bugwho u", true, ChatType.BUGWHO_UNPARTNERED_BUGGERS);
+	}
+
+	public void sendGetSeeksMessage() {
+		sendMessage("sought", true, ChatType.SEEKS);
 	}
 
 	public void sendMessage(String message) {

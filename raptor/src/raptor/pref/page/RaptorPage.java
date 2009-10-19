@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -30,6 +31,12 @@ import raptor.util.RaptorStringUtils;
 
 public class RaptorPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
+
+	public static final String[][] POLLING_REFRESH = {
+			{ "Every 2 Seconds", "" + 2 }, { "Every 3 Seconds", "" + 3 },
+			{ "Every 4 Seconds", "" + 4 }, { "Every 5 Seconds", "" + 5 },
+			{ "Every 6 Seconds", "" + 6 }, { "Every 7 Seconds", "" + 7 },
+			{ "Every 8 Seconds", "" + 8 }, };
 
 	public RaptorPage() {
 		super(FLAT);
@@ -125,5 +132,10 @@ public class RaptorPage extends FieldEditorPreferencePage {
 
 				});
 		addField(labelButtonFieldEditor);
+
+		addField(new ComboFieldEditor(
+				PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL,
+				"Polling Refresh Interval (Seek Table,Bug Partners,Bug Teams,etc):",
+				POLLING_REFRESH, getFieldEditorParent()));
 	}
 }

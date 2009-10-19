@@ -16,21 +16,21 @@ package raptor.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import raptor.bughouse.Bugger;
-import raptor.bughouse.BughouseGame;
-import raptor.bughouse.Partnership;
+import raptor.chat.BugGame;
+import raptor.chat.Bugger;
+import raptor.chat.Partnership;
 import raptor.connector.Connector;
 
 public class BughouseService {
 	public static interface BughouseServiceListener {
 		public void availablePartnershipsChanged(Partnership[] newPartnerships);
 
-		public void gamesInProgressChanged(BughouseGame[] newGamesInProgress);
+		public void gamesInProgressChanged(BugGame[] newGamesInProgress);
 
 		public void unpartneredBuggersChanged(Bugger[] newUnpartneredBuggers);
 	}
 
-	private BughouseGame[] gamesInProgress = new BughouseGame[0];
+	private BugGame[] gamesInProgress = new BugGame[0];
 	private Partnership[] availablePartnerships = new Partnership[0];
 	private Bugger[] unpartneredBuggers = new Bugger[0];
 	private Connector connector;
@@ -54,7 +54,7 @@ public class BughouseService {
 		return connector;
 	}
 
-	public BughouseGame[] getGamesInProgress() {
+	public BugGame[] getGamesInProgress() {
 		return gamesInProgress;
 	}
 
@@ -83,7 +83,7 @@ public class BughouseService {
 		fireAvaialblePartnershipsChanged();
 	}
 
-	public void setGamesInProgress(BughouseGame[] gamesInProgress) {
+	public void setGamesInProgress(BugGame[] gamesInProgress) {
 		this.gamesInProgress = gamesInProgress;
 		fireGamesInProgressChanged();
 	}

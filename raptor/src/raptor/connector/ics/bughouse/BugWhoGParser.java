@@ -6,11 +6,14 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.bughouse.Bugger;
-import raptor.bughouse.BughouseGame;
-import raptor.bughouse.Bugger.BuggerStatus;
+import raptor.chat.BugGame;
+import raptor.chat.Bugger;
+import raptor.chat.Bugger.BuggerStatus;
 import raptor.util.RaptorStringTokenizer;
 
+/**
+ * This code was adapted from some code johnthegreat for Raptor.
+ */
 public class BugWhoGParser {
 
 	/**
@@ -37,7 +40,7 @@ public class BugWhoGParser {
 	public BugWhoGParser() {
 	}
 
-	public BughouseGame[] parse(String message) {
+	public BugGame[] parse(String message) {
 		if (message.startsWith(ID) && !message.contains(BugWhoPParser.ID)) {
 			message = message.substring(ID.length(), message.length());
 			message = message.replaceAll("[0-9]+ games displayed.", "");
@@ -54,16 +57,16 @@ public class BugWhoGParser {
 		return null;
 	}
 
-	private BughouseGame[] process(String text) {
+	private BugGame[] process(String text) {
 		System.err.println(text);
 		if (text.equals("")) {
-			return new BughouseGame[0];
+			return new BugGame[0];
 		}
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(text,
 				" \n[]-():", true);
-		List<BughouseGame> result = new ArrayList<BughouseGame>(10);
+		List<BugGame> result = new ArrayList<BugGame>(10);
 		while (tok.hasMoreTokens()) {
-			BughouseGame game = new BughouseGame();
+			BugGame game = new BugGame();
 			game.setGame1Id(tok.nextToken());
 			game.setGame1White(new Bugger());
 			game.getGame1White().setRating(tok.nextToken());
@@ -98,6 +101,6 @@ public class BugWhoGParser {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Games = " + result);
 		}
-		return result.toArray(new BughouseGame[0]);
+		return result.toArray(new BugGame[0]);
 	}
 }

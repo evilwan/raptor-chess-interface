@@ -20,11 +20,14 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.bughouse.Bugger;
-import raptor.bughouse.Bugger.BuggerStatus;
+import raptor.chat.Bugger;
+import raptor.chat.Bugger.BuggerStatus;
 import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
+/**
+ * This code was adapted from some code johnthegreat for Raptor.
+ */
 public class BugWhoUParser {
 	private static final Log LOG = LogFactory.getLog(BugWhoUParser.class);
 

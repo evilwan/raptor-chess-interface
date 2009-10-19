@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.TableItem;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
-import raptor.bughouse.Bugger;
-import raptor.bughouse.BughouseGame;
-import raptor.bughouse.Partnership;
+import raptor.chat.BugGame;
+import raptor.chat.Bugger;
+import raptor.chat.Partnership;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
@@ -35,7 +35,7 @@ public class BugGamesWindowItem implements RaptorWindowItem {
 	protected Composite composite;
 	protected Table bugGamesTable;
 	protected boolean isActive = false;
-	protected BughouseGame[] currentGames;
+	protected BugGame[] currentGames;
 	protected TableColumn gameId;
 	protected TableColumn whiteRating;
 	protected TableColumn whiteName;
@@ -53,7 +53,7 @@ public class BugGamesWindowItem implements RaptorWindowItem {
 										.getInstance()
 										.getPreferences()
 										.getInt(
-												PreferenceKeys.BUG_ARENA_REFRESH_SECONDS) * 1000,
+												PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
 								this);
 			}
 		}
@@ -63,7 +63,7 @@ public class BugGamesWindowItem implements RaptorWindowItem {
 		public void availablePartnershipsChanged(Partnership[] newPartnerships) {
 		}
 
-		public void gamesInProgressChanged(BughouseGame[] newGamesInProgress) {
+		public void gamesInProgressChanged(BugGame[] newGamesInProgress) {
 			synchronized (bugGamesTable) {
 				currentGames = newGamesInProgress;
 				refreshTable();
@@ -197,10 +197,15 @@ public class BugGamesWindowItem implements RaptorWindowItem {
 		if (!isActive) {
 			isActive = true;
 			service.refreshGamesInProgress();
-			ThreadService.getInstance().scheduleOneShot(
-					Raptor.getInstance().getPreferences().getInt(
-							PreferenceKeys.BUG_ARENA_REFRESH_SECONDS) * 1000,
-					timer);
+			ThreadService
+					.getInstance()
+					.scheduleOneShot(
+							Raptor
+									.getInstance()
+									.getPreferences()
+									.getInt(
+											PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
+							timer);
 		}
 
 	}
@@ -231,7 +236,7 @@ public class BugGamesWindowItem implements RaptorWindowItem {
 						item.dispose();
 					}
 
-					for (BughouseGame game : currentGames) {
+					for (BugGame game : currentGames) {
 						TableItem item = new TableItem(bugGamesTable, SWT.NONE);
 						item.setText(new String[] {
 								game.getGame1Id(),
