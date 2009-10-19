@@ -672,6 +672,10 @@ public abstract class IcsConnector implements Connector {
 		sendMessage("revert", true);
 	}
 
+	public void onObserveGame(String gameId) {
+		sendMessage("observe " + gameId, true);
+	}
+
 	public void onPartner(String bugger) {
 		sendMessage("partner " + bugger, true);
 	}

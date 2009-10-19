@@ -30,9 +30,10 @@ import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ThreadService;
-import raptor.swt.BugArenaAvailablePartnersWindowItem;
-import raptor.swt.BugArenaAvailableTeamsWindowItem;
 import raptor.swt.BugButtonsWindowItem;
+import raptor.swt.BugGamesWindowItem;
+import raptor.swt.BugPartnersWindowItem;
+import raptor.swt.BugTeamsWindowItem;
 import raptor.swt.RegExDialog;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleWindowItem;
@@ -212,7 +213,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"Show Bughouse Available &Partners") {
 			@Override
 			public void run() {
-				BugArenaAvailablePartnersWindowItem item = new BugArenaAvailablePartnersWindowItem(
+				BugPartnersWindowItem item = new BugPartnersWindowItem(
 						getBughouseService());
 				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 			}
@@ -222,7 +223,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"Show Bughouse Available &Teams") {
 			@Override
 			public void run() {
-				BugArenaAvailableTeamsWindowItem item = new BugArenaAvailableTeamsWindowItem(
+				BugTeamsWindowItem item = new BugTeamsWindowItem(
 						getBughouseService());
 				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 			}
@@ -231,8 +232,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		bughouseArenaGamesAction = new Action("Show Bughouse &Games") {
 			@Override
 			public void run() {
-				Raptor.getInstance().alert(
-						"You can't have your cake and eat it too, sorry.");
+				BugGamesWindowItem item = new BugGamesWindowItem(
+						getBughouseService());
+				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 			}
 		};
 
@@ -409,8 +411,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"Show Bughouse Available &Partners") {
 			@Override
 			public void run() {
-				BugArenaAvailablePartnersWindowItem item = new BugArenaAvailablePartnersWindowItem(
-						fics2.getBughouseService());
+				BugPartnersWindowItem item = new BugPartnersWindowItem(fics2
+						.getBughouseService());
 				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 			}
 		};
@@ -419,8 +421,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"Show Bughouse Available &Teams") {
 			@Override
 			public void run() {
-				BugArenaAvailableTeamsWindowItem item = new BugArenaAvailableTeamsWindowItem(
-						fics2.getBughouseService());
+				BugTeamsWindowItem item = new BugTeamsWindowItem(fics2
+						.getBughouseService());
 				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 			}
 		};
@@ -428,10 +430,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2.bughouseArenaGamesAction = new Action("Show Bughouse &Games") {
 			@Override
 			public void run() {
-				Raptor
-						.getInstance()
-						.alert(
-								"There are 10 types of people in this world, those that understand binary and those that do not.");
+				BugGamesWindowItem item = new BugGamesWindowItem(fics2
+						.getBughouseService());
+				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 			}
 		};
 
