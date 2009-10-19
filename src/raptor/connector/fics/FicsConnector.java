@@ -30,6 +30,8 @@ import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ThreadService;
+import raptor.swt.BugArenaAvailablePartnersWindowItem;
+import raptor.swt.BugArenaAvailableTeamsWindowItem;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.RegExDialog;
 import raptor.swt.chat.ChatConsole;
@@ -46,7 +48,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 
 	protected MenuManager connectionsMenu;
 	protected Action autoConnectAction;
-	protected Action bughouseArenaAction;
+	protected Action bughouseArenaAvailPartnersAction;
+	protected Action bughouseArenaPartnershipsAction;
+	protected Action bughouseArenaGamesAction;
 	protected Action connectAction;
 	protected Action disconnectAction;
 	protected Action reconnectAction;
@@ -61,7 +65,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected FicsConnector fics2 = null;
 
 	public FicsConnector() {
-		this(new IcsConnectorContext(new IcsParser()));
+		this(new IcsConnectorContext(new IcsParser(false)));
 	}
 
 	public FicsConnector(IcsConnectorContext context) {
@@ -78,7 +82,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectAction.setEnabled(true);
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
-		bughouseArenaAction.setEnabled(false);
+		bughouseArenaAvailPartnersAction.setEnabled(false);
+		bughouseArenaPartnershipsAction.setEnabled(false);
+		bughouseArenaGamesAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
@@ -132,7 +138,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			autoConnectAction.setEnabled(true);
 			disconnectAction.setEnabled(true);
 			reconnectAction.setEnabled(true);
-			bughouseArenaAction.setEnabled(true);
+			bughouseArenaAvailPartnersAction.setEnabled(true);
+			bughouseArenaPartnershipsAction.setEnabled(true);
+			bughouseArenaGamesAction.setEnabled(true);
 			seekGraphAction.setEnabled(true);
 			regexTabAction.setEnabled(true);
 			bugbuttonsAction.setEnabled(true);
@@ -200,10 +208,31 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bughouseArenaAction = new Action("Show &Bughouse Arena") {
+		bughouseArenaAvailPartnersAction = new Action(
+				"Show Bughouse Available &Partners") {
 			@Override
 			public void run() {
-				Raptor.getInstance().alert("Bughouse Areana Comming soon");
+				BugArenaAvailablePartnersWindowItem item = new BugArenaAvailablePartnersWindowItem(
+						getBughouseService());
+				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+			}
+		};
+
+		bughouseArenaPartnershipsAction = new Action(
+				"Show Bughouse Available &Teams") {
+			@Override
+			public void run() {
+				BugArenaAvailableTeamsWindowItem item = new BugArenaAvailableTeamsWindowItem(
+						getBughouseService());
+				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+			}
+		};
+
+		bughouseArenaGamesAction = new Action("Show Bughouse &Games") {
+			@Override
+			public void run() {
+				Raptor.getInstance().alert(
+						"You can't have your cake and eat it too, sorry.");
 			}
 		};
 
@@ -265,7 +294,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
-		bughouseArenaAction.setEnabled(false);
+		bughouseArenaPartnershipsAction.setEnabled(false);
+		bughouseArenaAvailPartnersAction.setEnabled(false);
+		bughouseArenaGamesAction.setEnabled(false);
 		seekGraphAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		bugbuttonsAction.setEnabled(false);
@@ -284,7 +315,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(isShowingBugButtonsOnConnectAction);
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bugbuttonsAction);
-		connectionsMenu.add(bughouseArenaAction);
+		connectionsMenu.add(bughouseArenaAvailPartnersAction);
+		connectionsMenu.add(bughouseArenaPartnershipsAction);
+		connectionsMenu.add(bughouseArenaGamesAction);
 		connectionsMenu.add(seekGraphAction);
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(regexTabAction);
@@ -372,10 +405,33 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		fics2.bughouseArenaAction = new Action("Show &Bughouse Arena") {
+		fics2.bughouseArenaAvailPartnersAction = new Action(
+				"Show Bughouse Available &Partners") {
 			@Override
 			public void run() {
-				Raptor.getInstance().alert("Bughouse Areana Comming soon");
+				BugArenaAvailablePartnersWindowItem item = new BugArenaAvailablePartnersWindowItem(
+						fics2.getBughouseService());
+				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+			}
+		};
+
+		fics2.bughouseArenaPartnershipsAction = new Action(
+				"Show Bughouse Available &Teams") {
+			@Override
+			public void run() {
+				BugArenaAvailableTeamsWindowItem item = new BugArenaAvailableTeamsWindowItem(
+						fics2.getBughouseService());
+				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+			}
+		};
+
+		fics2.bughouseArenaGamesAction = new Action("Show Bughouse &Games") {
+			@Override
+			public void run() {
+				Raptor
+						.getInstance()
+						.alert(
+								"There are 10 types of people in this world, those that understand binary and those that do not.");
 			}
 		};
 
@@ -389,7 +445,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				String regEx = regExDialog.open();
 				if (StringUtils.isNotBlank(regEx)) {
 					final RegExController controller = new RegExController(
-							FicsConnector.this, regEx);
+							fics2, regEx);
 					ChatConsoleWindowItem chatConsoleWindowItem = new ChatConsoleWindowItem(
 							controller);
 					Raptor.getInstance().getWindow().addRaptorWindowItem(
@@ -405,7 +461,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			@Override
 			public void run() {
 				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
-						FicsConnector.this)) {
+						fics2)) {
 					Raptor.getInstance().getWindow().addRaptorWindowItem(
 							new BugButtonsWindowItem(fics2));
 				}
@@ -429,7 +485,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2.connectAction.setEnabled(true);
 		fics2.disconnectAction.setEnabled(false);
 		fics2.reconnectAction.setEnabled(false);
-		fics2.bughouseArenaAction.setEnabled(false);
+		fics2.bughouseArenaPartnershipsAction.setEnabled(false);
+		fics2.bughouseArenaAvailPartnersAction.setEnabled(false);
+		fics2.bughouseArenaGamesAction.setEnabled(false);
 		fics2.seekGraphAction.setEnabled(false);
 		fics2.regexTabAction.setEnabled(false);
 		fics2.bugbuttonsAction.setEnabled(false);
@@ -440,25 +498,28 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2Menu.add(fics2.reconnectAction);
 		fics2Menu.add(new Separator());
 		fics2Menu.add(fics2.bugbuttonsAction);
-		fics2Menu.add(fics2.bughouseArenaAction);
+		fics2Menu.add(fics2.bughouseArenaAvailPartnersAction);
+		fics2Menu.add(fics2.bughouseArenaPartnershipsAction);
+		fics2Menu.add(fics2.bughouseArenaGamesAction);
 		fics2Menu.add(fics2.seekGraphAction);
 		fics2Menu.add(new Separator());
-		fics2Menu.add(regexTabAction);
+		fics2Menu.add(fics2.regexTabAction);
 		connectionsMenu.add(fics2Menu);
 	}
 
 	protected void initFics2() {
-		fics2 = new FicsConnector(new IcsConnectorContext(new IcsParser()) {
-			@Override
-			public String getDescription() {
-				return "Free Internet Chess Server Another Simultaneous Connection";
-			}
+		fics2 = new FicsConnector(
+				new IcsConnectorContext(new IcsParser(false)) {
+					@Override
+					public String getDescription() {
+						return "Free Internet Chess Server Another Simultaneous Connection";
+					}
 
-			@Override
-			public String getShortName() {
-				return "fics2";
-			}
-		}) {
+					@Override
+					public String getShortName() {
+						return "fics2";
+					}
+				}) {
 
 			/**
 			 * Override not needed.

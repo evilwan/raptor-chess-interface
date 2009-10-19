@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
+import raptor.bughouse.Bugger.BuggerStatus;
 import raptor.chess.AtomicGame;
 import raptor.chess.BughouseGame;
 import raptor.chess.ClassicGame;
@@ -367,6 +368,24 @@ public class IcsUtils implements GameConstants {
 		message.append('\n');
 	}
 
+	public static BuggerStatus getBuggserStatus(String status) {
+		if (status.equals(":")) {
+			return BuggerStatus.Closed;
+		} else if (status.equals("^")) {
+			return BuggerStatus.Playing;
+		} else if (status.equals(".")) {
+			return BuggerStatus.Idle;
+		} else if (status.equals("~")) {
+			return BuggerStatus.Simul;
+		} else if (status.equals("#")) {
+			return BuggerStatus.Examining;
+		} else if (status.equals("&")) {
+			return BuggerStatus.InTourney;
+		} else {
+			return BuggerStatus.Available;
+		}
+	}
+
 	/**
 	 * Returns the game type constant for the specified identifier.
 	 * 
@@ -511,16 +530,6 @@ public class IcsUtils implements GameConstants {
 		return result.toString();
 	}
 
-	public static String removeTitles(String playerName) {
-		StringTokenizer stringtokenizer = new StringTokenizer(playerName,
-				"()~!@#$%^&*_+|}{';/.,:[]");
-		if (stringtokenizer.hasMoreTokens()) {
-			return stringtokenizer.nextToken();
-		} else {
-			return playerName;
-		}
-	}
-
 	public static void resetGame(Game game, Style12Message message) {
 		IcsUtils.clearGamePosition(game);
 		IcsUtils.updateNonPositionFields(game, message);
@@ -560,6 +569,16 @@ public class IcsUtils implements GameConstants {
 
 	public static String stripGameId(String gameId) {
 		return gameId;
+	}
+
+	public static String stripTitles(String playerName) {
+		StringTokenizer stringtokenizer = new StringTokenizer(playerName,
+				"()~!@#$%^&*_+|}{';/.,:[]");
+		if (stringtokenizer.hasMoreTokens()) {
+			return stringtokenizer.nextToken();
+		} else {
+			return playerName;
+		}
 	}
 
 	/**
@@ -685,10 +704,12 @@ public class IcsUtils implements GameConstants {
 
 		game.addState(Game.ACTIVE_STATE);
 
-		game.setHeader(PgnHeader.Black, IcsUtils
-				.removeTitles(message.blackName));
-		game.setHeader(PgnHeader.White, IcsUtils
-				.removeTitles(message.whiteName));
+		game
+				.setHeader(PgnHeader.Black, IcsUtils
+						.stripTitles(message.blackName));
+		game
+				.setHeader(PgnHeader.White, IcsUtils
+						.stripTitles(message.whiteName));
 
 		game.setHeader(PgnHeader.WhiteRemainingMillis, ""
 				+ message.whiteRemainingTimeMillis);

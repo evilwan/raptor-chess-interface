@@ -71,13 +71,11 @@ public enum ChatType {
 	 * Global shouts. Will always have a source.
 	 */
 	SHOUT,
-
 	/**
 	 * Used for direct tells and say. Source will be the person sending the
 	 * tell.
 	 */
 	TELL,
-
 	/**
 	 * Used for the told message after a tell. Source will be the person told.
 	 */
@@ -86,9 +84,20 @@ public enum ChatType {
 	 * Used to identify types that don't match any of the others.
 	 */
 	UNKNOWN,
-
 	/**
 	 * Whispers pertaining to a game. Will always have a source and a game id.
 	 */
-	WHISPER
+	WHISPER,
+	/**
+	 * A message indicating this is a bugwho unpartnered buggers message.
+	 */
+	BUGWHO_UNPARTNERED_BUGGERS,
+	/**
+	 * A message indicating this is an available teams bugger message.
+	 */
+	BUGWHO_AVAILABLE_TEAMS,
+	/**
+	 * A message indicating this is a bughouse games message.
+	 */
+	BUGWHO_GAMES
 }

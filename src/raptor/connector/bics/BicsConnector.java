@@ -40,7 +40,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 	public static class BicsConnectorContext extends IcsConnectorContext {
 		public BicsConnectorContext() {
-			super(new IcsParser());
+			super(new IcsParser(true));
 		}
 
 		@Override
@@ -299,7 +299,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(isShowingBugButtonsOnConnectAction);
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bugbuttonsAction);
-		connectionsMenu.add(bughouseArenaAction);
+		// connectionsMenu.add(bughouseArenaAction);
 		connectionsMenu.add(new Separator());
 
 		MenuManager bics2Menu = new MenuManager(
@@ -370,7 +370,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bics2.connectAction.setEnabled(true);
 		bics2.disconnectAction.setEnabled(false);
 		bics2.reconnectAction.setEnabled(false);
-		bics2.bughouseArenaAction.setEnabled(false);
+		// bics2.bughouseArenaAction.setEnabled(false);
 		bics2.bugbuttonsAction.setEnabled(false);
 		bics2.isShowingBugButtonsOnConnectAction.setEnabled(true);
 

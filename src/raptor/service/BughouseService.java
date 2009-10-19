@@ -13,47 +13,102 @@
  */
 package raptor.service;
 
-import raptor.connector.fics.chat.john.Bugger;
-import raptor.connector.fics.chat.john.Partnership;
+import java.util.ArrayList;
+import java.util.List;
+
+import raptor.bughouse.Bugger;
+import raptor.bughouse.BughouseGame;
+import raptor.bughouse.Partnership;
+import raptor.connector.Connector;
 
 public class BughouseService {
-	private Partnership[] availablePartnerships;
-	private Bugger[] unpartneredBuggers;
+	public static interface BughouseServiceListener {
+		public void availablePartnershipsChanged(Partnership[] newPartnerships);
 
-	/*
-	 * public void buggersAvailableUpdated() {
-	 * 
-	 * }
-	 * 
-	 * public void bugGamesPlayingUpdated() {
-	 * 
-	 * }
-	 * 
-	 * public void bugTeamsAvailableUpdated() {
-	 * 
-	 * }
-	 */
+		public void gamesInProgressChanged(BughouseGame[] newGamesInProgress);
+
+		public void unpartneredBuggersChanged(Bugger[] newUnpartneredBuggers);
+	}
+
+	private BughouseGame[] gamesInProgress = new BughouseGame[0];
+	private Partnership[] availablePartnerships = new Partnership[0];
+	private Bugger[] unpartneredBuggers = new Bugger[0];
+	private Connector connector;
+
+	private List<BughouseServiceListener> listeners = new ArrayList<BughouseServiceListener>(
+			10);
+
+	public BughouseService(Connector connector) {
+		this.connector = connector;
+	}
+
+	public void addBughouseServiceListener(BughouseServiceListener listener) {
+		listeners.add(listener);
+	}
 
 	public Partnership[] getAvailablePartnerships() {
 		return availablePartnerships;
+	}
+
+	public Connector getConnector() {
+		return connector;
+	}
+
+	public BughouseGame[] getGamesInProgress() {
+		return gamesInProgress;
 	}
 
 	public Bugger[] getUnpartneredBuggers() {
 		return unpartneredBuggers;
 	}
 
-	/**
-	 * This method should only be called by BugWhoPParser.parse().
-	 */
-	public void setAvailablePartnerships(Partnership[] availablePartnerships) {
-		this.availablePartnerships = availablePartnerships;
+	public void refreshAvailablePartnerships() {
+		connector.sendBugAvailableTeamsMessage();
 	}
 
-	/**
-	 * This method should only be called by BugWhoUParser.parse().
-	 */
+	public void refreshGamesInProgress() {
+		connector.sendBugGamesMessage();
+	}
+
+	public void refreshUnpartneredBuggers() {
+		connector.sendBugUnpartneredBuggersMessage();
+	}
+
+	public void removeBughouseServiceListener(BughouseServiceListener listener) {
+		listeners.remove(listener);
+	}
+
+	public void setAvailablePartnerships(Partnership[] availablePartnerships) {
+		this.availablePartnerships = availablePartnerships;
+		fireAvaialblePartnershipsChanged();
+	}
+
+	public void setGamesInProgress(BughouseGame[] gamesInProgress) {
+		this.gamesInProgress = gamesInProgress;
+		fireGamesInProgressChanged();
+	}
+
 	public void setUnpartneredBuggers(Bugger[] unpartneredBuggers) {
 		this.unpartneredBuggers = unpartneredBuggers;
+		fireUnpartneredBuggersChanged();
+	}
+
+	protected void fireAvaialblePartnershipsChanged() {
+		for (BughouseServiceListener listener : listeners) {
+			listener.availablePartnershipsChanged(availablePartnerships);
+		}
+	}
+
+	protected void fireGamesInProgressChanged() {
+		for (BughouseServiceListener listener : listeners) {
+			listener.gamesInProgressChanged(gamesInProgress);
+		}
+	}
+
+	protected void fireUnpartneredBuggersChanged() {
+		for (BughouseServiceListener listener : listeners) {
+			listener.unpartneredBuggersChanged(unpartneredBuggers);
+		}
 	}
 
 }

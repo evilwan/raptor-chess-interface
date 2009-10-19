@@ -39,7 +39,7 @@ public class KibitzEventParser extends ChatEventParser {
 						int j = text.indexOf("[") + 1;
 						int k = text.indexOf("]");
 						try {
-							return new ChatEvent(IcsUtils.removeTitles(s1),
+							return new ChatEvent(IcsUtils.stripTitles(s1),
 									ChatType.KIBITZ, text, text.substring(j, k));
 						} catch (Exception exception) {
 							exception.printStackTrace();

@@ -323,7 +323,7 @@ public abstract class IcsConnector implements Connector {
 		chatService = new ChatService(this);
 		gameService = new GameService();
 		gameService.addGameServiceListener(gameServiceListener);
-		setBughouseService(new BughouseService());
+		setBughouseService(new BughouseService(this));
 	}
 
 	/**
@@ -568,6 +568,12 @@ public abstract class IcsConnector implements Connector {
 		sendMessage(move.getLan(), true);
 	}
 
+	public void matchBughouse(String playerName, boolean isRated, int time,
+			int inc) {
+		sendMessage("match " + playerName + " " + time + " " + inc
+				+ (isRated ? "rated" : "unrated"));
+	}
+
 	public void onAbortKeyPress() {
 		sendMessage("abort", true);
 	}
@@ -633,6 +639,10 @@ public abstract class IcsConnector implements Connector {
 		sendMessage("revert", true);
 	}
 
+	public void onPartner(String bugger) {
+		sendMessage("partner " + bugger, true);
+	}
+
 	public void onRematchKeyPress() {
 		sendMessage("rematch", true);
 	}
@@ -693,6 +703,18 @@ public abstract class IcsConnector implements Connector {
 
 	public String removeLineBreaks(String message) {
 		return IcsUtils.removeLineBreaks(message);
+	}
+
+	public void sendBugAvailableTeamsMessage() {
+		sendMessage("bugwho p", true, ChatType.BUGWHO_AVAILABLE_TEAMS);
+	}
+
+	public void sendBugGamesMessage() {
+		sendMessage("bugwho g", true, ChatType.BUGWHO_GAMES);
+	}
+
+	public void sendBugUnpartneredBuggersMessage() {
+		sendMessage("bugwho u", true, ChatType.BUGWHO_UNPARTNERED_BUGGERS);
 	}
 
 	public void sendMessage(String message) {
@@ -1098,7 +1120,7 @@ public abstract class IcsConnector implements Connector {
 				int endIndex = inboundMessageBuffer.indexOf("****",
 						nameStartIndex);
 				if (endIndex != -1) {
-					userName = IcsUtils.removeTitles(inboundMessageBuffer
+					userName = IcsUtils.stripTitles(inboundMessageBuffer
 							.substring(nameStartIndex, endIndex).trim());
 					LOG.info(context.getShortName() + "Connector "
 							+ "login complete. userName=" + userName);

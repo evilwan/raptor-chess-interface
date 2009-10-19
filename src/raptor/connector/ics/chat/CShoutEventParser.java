@@ -37,7 +37,7 @@ public class CShoutEventParser extends ChatEventParser {
 			if (stringtokenizer.hasMoreTokens()) {
 				String s2 = stringtokenizer.nextToken();
 				if (s2.equals(IDENTIFIER)) {
-					return new ChatEvent(IcsUtils.removeTitles(s1),
+					return new ChatEvent(IcsUtils.stripTitles(s1),
 							ChatType.CSHOUT, text);
 				}
 			}

@@ -36,7 +36,7 @@ public class ShoutEventParser extends ChatEventParser {
 				String name = text.substring(SHOUT_1.length()).trim();
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 						name, " ");
-				String s1 = IcsUtils.removeTitles(stringtokenizer.nextToken());
+				String s1 = IcsUtils.stripTitles(stringtokenizer.nextToken());
 				return new ChatEvent(s1, ChatType.SHOUT, text);
 
 			}
@@ -47,7 +47,7 @@ public class ShoutEventParser extends ChatEventParser {
 				if (stringtokenizer1.hasMoreTokens()) {
 					String s3 = stringtokenizer1.nextToken();
 					if (s3.equals(SHOUT_2)) {
-						return new ChatEvent(IcsUtils.removeTitles(s2),
+						return new ChatEvent(IcsUtils.stripTitles(s2),
 								ChatType.SHOUT, text);
 					}
 				}

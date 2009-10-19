@@ -82,6 +82,11 @@ public interface PreferenceKeys {
 	public static final String APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout3-quad56-quad7-sash-weights";
 	public static final String APP_LAYOUT3_WINDOW_BOUNDS = "app-Layout3-window-bounds";
 
+	public static final String BUG_ARENA_REFRESH_SECONDS = "bughouse-arena-refresh";
+	public static final String BUG_ARENA_PARTNERS_INDEX = "bughouse-arena-partners-index";
+	public static final String BUG_ARENA_TEAMS_INDEX = "bughouse-arena-teams-index";
+	public static final String BUG_ARENA_TEAMS_IS_RATED = "bughosue-arena-teams-is-rated";
+
 	public static final String BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD = "bughouse-playing-open-partner-board";
 	public static final String BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD = "bughouse-observing-open-partner-board";
 
