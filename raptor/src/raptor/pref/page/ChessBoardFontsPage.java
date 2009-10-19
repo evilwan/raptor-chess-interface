@@ -72,15 +72,5 @@ public class ChessBoardFontsPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_RESULT_FONT, "Result Font:",
 				getFieldEditorParent());
 		addField(resultFont);
-
-		FontFieldEditor outputFont = new FontFieldEditor(
-				PreferenceKeys.CHAT_OUTPUT_FONT, "Text To Send Font:",
-				getFieldEditorParent());
-		addField(outputFont);
-
-		FontFieldEditor promptFont = new FontFieldEditor(
-				PreferenceKeys.CHAT_PROMPT_FONT,
-				"Text To Send Prompt Label Font:", getFieldEditorParent());
-		addField(promptFont);
 	}
 }
