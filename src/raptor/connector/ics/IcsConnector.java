@@ -809,6 +809,8 @@ public abstract class IcsConnector implements Connector {
 					socket.getOutputStream().write(message.getBytes());
 					socket.getOutputStream().flush();
 					if (!message.startsWith("$$")) {
+						lastSendPingTime = System.currentTimeMillis();
+					} else {
 						lastSendTime = lastSendPingTime = System
 								.currentTimeMillis();
 					}
