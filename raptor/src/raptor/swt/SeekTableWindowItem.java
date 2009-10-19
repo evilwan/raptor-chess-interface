@@ -206,7 +206,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 		Composite typeFilterComposite = new Composite(composite, SWT.NONE);
 		typeFilterComposite.setLayout(new GridLayout(3, false));
 		
-		isShowingComputers = new Button(ratingFilterComposite, SWT.CHECK);
+		isShowingComputers = new Button(typeFilterComposite, SWT.CHECK);
 		isShowingComputers.setText("Show Computers");
 		isShowingComputers.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_COMPUTERS));
@@ -418,8 +418,8 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 		adColumn.setWidth(40);
 		ratingColumn.setWidth(50);
 		timeControlColumn.setWidth(50);
-		typeDescriptionColumn.setWidth(60);
-		nameColumn.setWidth(75);
+		typeDescriptionColumn.setWidth(75);
+		nameColumn.setWidth(90);
 		ratingRangeColumn.setWidth(78);
 		flagsColumn.setWidth(40);
 
