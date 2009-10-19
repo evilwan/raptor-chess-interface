@@ -34,7 +34,7 @@ public class PartnershipCreatedEventParser extends ChatEventParser {
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 						text.substring(i + "You agree to be".length(), text
 								.length()), " '");
-				return new ChatEvent(IcsUtils.removeTitles(stringtokenizer
+				return new ChatEvent(IcsUtils.stripTitles(stringtokenizer
 						.nextToken()), ChatType.PARTNERSHIP_CREATED, text);
 			}
 			int j = text.indexOf(IDENTIFIER_2);
@@ -44,7 +44,7 @@ public class PartnershipCreatedEventParser extends ChatEventParser {
 				String s1 = stringtokenizer1.nextToken();
 				String s2 = stringtokenizer1.nextToken();
 				if (s2.equals("agrees")) {
-					return new ChatEvent(IcsUtils.removeTitles(s1),
+					return new ChatEvent(IcsUtils.stripTitles(s1),
 							ChatType.PARTNERSHIP_CREATED, text);
 				}
 			}

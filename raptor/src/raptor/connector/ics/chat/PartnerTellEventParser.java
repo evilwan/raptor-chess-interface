@@ -39,7 +39,7 @@ public class PartnerTellEventParser extends ChatEventParser {
 				if (tok.hasMoreTokens()) {
 					String s2 = tok.nextToken();
 					if (s2.equals("(your")) {
-						return new ChatEvent(IcsUtils.removeTitles(source),
+						return new ChatEvent(IcsUtils.stripTitles(source),
 								ChatType.PARTNER_TELL, text);
 
 					}

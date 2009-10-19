@@ -22,6 +22,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.bughouse.Bugger;
+import raptor.bughouse.Partnership;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.chess.BughouseGame;
@@ -30,6 +32,9 @@ import raptor.chess.GameConstants;
 import raptor.chess.Result;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
+import raptor.connector.ics.bughouse.BugWhoGParser;
+import raptor.connector.ics.bughouse.BugWhoPParser;
+import raptor.connector.ics.bughouse.BugWhoUParser;
 import raptor.connector.ics.chat.CShoutEventParser;
 import raptor.connector.ics.chat.ChallengeEventParser;
 import raptor.connector.ics.chat.ChannelTellEventParser;
@@ -74,7 +79,12 @@ public class IcsParser implements GameConstants {
 	protected FollowingEventParser followingParser;
 	protected Style12Parser style12Parser;
 
+	protected BugWhoGParser bugWhoGParser;
+	protected BugWhoPParser bugWhoPParser;
+	protected BugWhoUParser bugWhoUParser;
+
 	protected TakebackParser takebackParser;
+	protected boolean isBicsParser = false;
 
 	/**
 	 * A map keyed by game id. Used to temporarily store G1 messages until the
@@ -89,7 +99,8 @@ public class IcsParser implements GameConstants {
 	 */
 	protected List<String> bugGamesWithoutBoard2 = new ArrayList<String>(10);
 
-	public IcsParser() {
+	public IcsParser(boolean isBicsParser) {
+		this.isBicsParser = isBicsParser;
 		gameEndParser = new GameEndParser();
 		b1Parser = new B1Parser();
 		g1Parser = new G1Parser();
@@ -99,11 +110,14 @@ public class IcsParser implements GameConstants {
 		noLongerExaminingParser = new NoLongerExaminingGameParser();
 		movesParser = new MovesParser();
 		followingParser = new FollowingEventParser();
+		style12Parser = new Style12Parser();
 
-		// handle user tell types of events first so others can't be spoofed
-		// nonGameEventParsers.add(new BugWhoGEventParser(icsId));
-		// nonGameEventParsers.add(new BugWhoPEventParser(icsId));
-		// nonGameEventParsers.add(new BugWhoUEventParser(icsId));
+		if (!isBicsParser) {
+			bugWhoGParser = new BugWhoGParser();
+			bugWhoPParser = new BugWhoPParser();
+			bugWhoUParser = new BugWhoUParser();
+		}
+
 		nonGameEventParsers.add(new PartnerTellEventParser());
 		nonGameEventParsers.add(new ToldEventParser());
 		nonGameEventParsers.add(new ChannelTellEventParser());
@@ -114,7 +128,6 @@ public class IcsParser implements GameConstants {
 		nonGameEventParsers.add(new WhisperEventParser());
 
 		// Non tell types of events.
-		// nonGameEventParsers.add(new MoveListParser(icsId));
 		nonGameEventParsers.add(new ChallengeEventParser());
 		nonGameEventParsers.add(new PartnershipCreatedEventParser());
 		nonGameEventParsers.add(new PartnershipEndedEventParser());
@@ -148,16 +161,21 @@ public class IcsParser implements GameConstants {
 					&& !afterGameEvents.trim().equals(
 							connector.getContext().getPrompt())) {
 
-				for (ChatEventParser parser : nonGameEventParsers) {
-					ChatEvent event = parser.parse(afterGameEvents);
-					if (event != null) {
-						events.add(event);
-						break;
+				ChatEvent bugWhoEvent = processBugWho(afterGameEvents);
+				if (bugWhoEvent == null) {
+					for (ChatEventParser parser : nonGameEventParsers) {
+						ChatEvent event = parser.parse(afterGameEvents);
+						if (event != null) {
+							events.add(event);
+							break;
+						}
 					}
-				}
-				if (events.isEmpty()) {
-					events.add(new ChatEvent(null, ChatType.UNKNOWN,
-							afterGameEvents));
+					if (events.isEmpty()) {
+						events.add(new ChatEvent(null, ChatType.UNKNOWN,
+								afterGameEvents));
+					}
+				} else {
+					events.add(bugWhoEvent);
 				}
 			}
 		}
@@ -167,9 +185,7 @@ public class IcsParser implements GameConstants {
 
 	public void setConnector(IcsConnector connector) {
 		this.connector = connector;
-		// style12Parser = new Style12Parser(connector instanceof
-		// BicsConnector);
-		style12Parser = new Style12Parser();
+
 	}
 
 	/**
@@ -627,5 +643,32 @@ public class IcsParser implements GameConstants {
 			LOG.debug("Processed style 12: " + message + " in "
 					+ (System.currentTimeMillis() - startTime));
 		}
+	}
+
+	protected ChatEvent processBugWho(String message) {
+		ChatEvent result = null;
+
+		Bugger[] buggers = bugWhoUParser.parse(message);
+		if (buggers == null) {
+			Partnership[] partnerships = bugWhoPParser.parse(message);
+			if (partnerships == null) {
+				raptor.bughouse.BughouseGame[] bugGames = bugWhoGParser
+						.parse(message);
+				if (bugGames != null) {
+					connector.getBughouseService().setGamesInProgress(bugGames);
+					result = new ChatEvent(null, ChatType.BUGWHO_GAMES, message);
+				}
+			} else {
+				connector.getBughouseService().setAvailablePartnerships(
+						partnerships);
+				result = new ChatEvent(null, ChatType.BUGWHO_AVAILABLE_TEAMS,
+						message);
+			}
+		} else {
+			connector.getBughouseService().setUnpartneredBuggers(buggers);
+			result = new ChatEvent(null, ChatType.BUGWHO_UNPARTNERED_BUGGERS,
+					message);
+		}
+		return result;
 	}
 }

@@ -40,7 +40,7 @@ public class WhisperEventParser extends ChatEventParser {
 						int j = text.indexOf("[");
 						int k = text.indexOf("]");
 
-						return new ChatEvent(IcsUtils.removeTitles(source),
+						return new ChatEvent(IcsUtils.stripTitles(source),
 								ChatType.WHISPER, text, text
 										.substring(j + 1, k));
 					}

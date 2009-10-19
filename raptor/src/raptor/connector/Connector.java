@@ -204,6 +204,9 @@ public interface Connector {
 	 */
 	public void makeMove(Game game, Move move);
 
+	public void matchBughouse(String playerName, boolean isRated, int time,
+			int inc);
+
 	/**
 	 * Handles sending an abort.
 	 */
@@ -272,6 +275,8 @@ public interface Connector {
 	 * game.
 	 */
 	public void onExamineModeRevert(Game game);
+
+	public void onPartner(String bugger);
 
 	/**
 	 * Sends a rematch request. On Fics this would be the rematch command.
@@ -344,6 +349,12 @@ public interface Connector {
 	 * connector put in).
 	 */
 	public String removeLineBreaks(String message);
+
+	public void sendBugAvailableTeamsMessage();
+
+	public void sendBugGamesMessage();
+
+	public void sendBugUnpartneredBuggersMessage();
 
 	/**
 	 * Sends a message to the connector. A ChatEvent should be published with

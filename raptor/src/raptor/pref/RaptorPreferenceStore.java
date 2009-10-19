@@ -297,6 +297,12 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new FontData[] { new FontData(defaultMonospacedFontName, 40,
 						SWT.BOLD) });
 
+		// BugArena
+		setDefault(BUG_ARENA_REFRESH_SECONDS, 3);
+		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
+		setDefault(BUG_ARENA_TEAMS_INDEX, 0);
+		setDefault(BUG_ARENA_TEAMS_IS_RATED, true);
+
 		PreferenceConverter.setDefault(this, ARROW_OPPONENT_COLOR, new RGB(255,
 				0, 255));
 		PreferenceConverter

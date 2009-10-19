@@ -36,7 +36,7 @@ public class TellEventParser extends ChatEventParser {
 				if (tok.hasMoreTokens()) {
 					String s2 = tok.nextToken();
 					if (s2.equals("says:")) {
-						return new ChatEvent(IcsUtils.removeTitles(source),
+						return new ChatEvent(IcsUtils.stripTitles(source),
 								ChatType.TELL, text);
 
 					} else if (s2.equals("tells")) {
@@ -44,7 +44,7 @@ public class TellEventParser extends ChatEventParser {
 							String s3 = tok.nextToken();
 							if (s3.equals("you:")) {
 								return new ChatEvent(IcsUtils
-										.removeTitles(source), ChatType.TELL,
+										.stripTitles(source), ChatType.TELL,
 										text);
 							}
 						}

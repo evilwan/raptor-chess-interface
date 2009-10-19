@@ -40,7 +40,7 @@ public class FollowingEventParser extends ChatEventParser {
 				StringTokenizer tok = new StringTokenizer(text.substring(
 						identifierIndex + IDENTIFIER.length(), text.length()),
 						" '(");
-				return new ChatEvent(IcsUtils.removeTitles(tok.nextToken()),
+				return new ChatEvent(IcsUtils.stripTitles(tok.nextToken()),
 						ChatType.FOLLOWING, text);
 			} else {
 				if (text.indexOf(IDENTIFIER2) != -1) {
