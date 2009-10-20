@@ -60,7 +60,7 @@ public class ChatConsoleToolbarPage extends PreferencePage {
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
-				true));
+				false));
 		icsActiveScriptsTable = new Table(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		icsActiveScriptsTable.setSize(icsActiveScriptsTable.computeSize(160,
@@ -228,11 +228,12 @@ public class ChatConsoleToolbarPage extends PreferencePage {
 		scriptLabel.setText("Script:");
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 2, 1));
-		scriptText = new StyledText(composite, SWT.BORDER);
+		scriptText = new StyledText(composite, SWT.BORDER | SWT.V_SCROLL
+				| SWT.H_SCROLL);
 		scriptText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 2, 1));
-		scriptText.setText("\n\n\n\n");
-		scriptText.setWordWrap(true);
+		scriptText.setText("\n\n\n\n\n\n");
+		scriptText.setWordWrap(false);
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		buttonComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true,

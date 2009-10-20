@@ -24,7 +24,9 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
 import raptor.chess.GameConstants;
@@ -222,9 +224,9 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 	ChessBoardPageComboFieldEditor backgroundFieldEditor;
 	ChessBoardPageComboFieldEditor highlightPercentage;
+	Composite dropSquaresBoard;
 	Composite miniBoard;
-	Composite pieceJailAlphasComposite;
-	Composite boardHidingAlphasComposite;
+	Composite shadowsComposite;
 	ChessBoardPageComboFieldEditor pieceResize;
 	ChessBoardPageComboFieldEditor setFieldEditor;
 	ChessBoardPageComboFieldEditor boardHidingAlphaCombo;
@@ -232,6 +234,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	ChessBoardPageComboFieldEditor coordinatesPercentageCombo;
 	ColorFieldEditor pieceJailBackground;
 	ChessBoardPageSquare[][] squares = null;
+	PieceJailSquarePageSquare[] dropSquares = null;
 	ChessBoardPageSquare[] hiddenPieceAlphas;
 	PieceJailSquarePageSquare[] pieceJailAlphas;
 
@@ -251,19 +254,25 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 		miniBoard.layout(true, true);
 
+		for (PieceJailSquarePageSquare element : dropSquares) {
+			element.clearCache();
+			element.setBackground(new Color(Raptor.getInstance().getDisplay(),
+					pieceJailBackground.getColorSelector().getColorValue()));
+			element.redraw();
+		}
+		dropSquaresBoard.layout(true, true);
+
 		for (ChessBoardPageSquare element : hiddenPieceAlphas) {
 			element.clearCache();
 			element.redraw();
 		}
-		pieceJailAlphasComposite.layout(true, true);
-
 		for (PieceJailSquarePageSquare element : pieceJailAlphas) {
 			element.clearCache();
 			element.setBackground(new Color(Raptor.getInstance().getDisplay(),
 					pieceJailBackground.getColorSelector().getColorValue()));
 			element.redraw();
 		}
-		boardHidingAlphasComposite.layout(true, true);
+		shadowsComposite.layout(true, true);
 	}
 
 	@Override
@@ -317,6 +326,17 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				LAYOUTS, getFieldEditorParent());
 		addField(layoutsFieldEditor);
 
+		pieceJailBackground = new ColorFieldEditor(
+				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
+				"Piece Jail Background Color:", getFieldEditorParent());
+		pieceJailBackground.getColorSelector().addListener(
+				new IPropertyChangeListener() {
+					public void propertyChange(PropertyChangeEvent arg0) {
+						valuesChanged();
+					}
+				});
+		addField(pieceJailBackground);
+
 		pieceResize = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_SIZE_ADJUSTMENT,
 				"Piece size reduction percentage:\n(Higher values decrease piece size.)",
@@ -329,10 +349,13 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				COORDINATES_SIZE_PERCENTAGE, getFieldEditorParent());
 		addField(coordinatesPercentageCombo);
 
+		Composite boards = new Composite(getFieldEditorParent(), SWT.NONE);
+		boards.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false,
+				3, 1));
+		boards.setLayout(new GridLayout(3, false));
 		squares = new ChessBoardPageSquare[3][3];
-		miniBoard = new Composite(getFieldEditorParent(), SWT.NONE);
-		miniBoard.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 2, 1));
+		miniBoard = new Composite(boards, SWT.NONE);
+
 		miniBoard.setLayout(SWTUtils.createMarginlessGridLayout(3, true));
 
 		boolean isLight = true;
@@ -357,21 +380,49 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		squares[2][1].setPiece(GameConstants.WR);
 		squares[2][2].setPiece(GameConstants.WK);
 
+		Label boardStrut = new Label(boards, SWT.NONE);
+		boardStrut.setText("          ");
+
+		dropSquaresBoard = new Composite(boards, SWT.NONE);
+		dropSquaresBoard.setLayoutData(new GridData(SWT.CENTER, SWT.TOP, false,
+				false));
+		dropSquaresBoard
+				.setLayout(SWTUtils.createMarginlessGridLayout(1, true));
+		dropSquares = new PieceJailSquarePageSquare[] {
+				new PieceJailSquarePageSquare(dropSquaresBoard, 9,
+						GameConstants.WN),
+				new PieceJailSquarePageSquare(dropSquaresBoard, 10,
+						GameConstants.BN) };
+		dropSquares[0].setLayoutData(new GridData(50, 50));
+		dropSquares[1].setLayoutData(new GridData(50, 50));
+		dropSquares[0].setBackground(Raptor.getInstance().getPreferences()
+				.getColor(PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
+		dropSquares[1].setBackground(Raptor.getInstance().getPreferences()
+				.getColor(PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
+		dropSquares[0].setPiece(GameConstants.WN);
+		dropSquares[1].setPiece(GameConstants.BN);
+
 		boardHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_SHADOW_ALPHA,
 				"Piece Shadow (0 is transparent, 255 is opaque):", ALPHAS,
 				getFieldEditorParent());
-		boardHidingAlphasComposite = new Composite(getFieldEditorParent(),
-				SWT.NONE);
-		boardHidingAlphasComposite.setLayoutData(new GridData(SWT.LEFT,
-				SWT.CENTER, false, false, 2, 1));
-		boardHidingAlphasComposite.setLayout(SWTUtils
-				.createMarginlessGridLayout(2, true));
 		addField(boardHidingAlphaCombo);
 
+		pieceJailHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
+				PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA,
+				"Piece Jail shadow (0 is transparent, 255 is opaque):", ALPHAS,
+				getFieldEditorParent());
+		addField(pieceJailHidingAlphaCombo);
+
+		shadowsComposite = new Composite(getFieldEditorParent(), SWT.NONE);
+		shadowsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
+				false, false, 5, 1));
+		shadowsComposite
+				.setLayout(SWTUtils.createMarginlessGridLayout(5, true));
+
 		hiddenPieceAlphas = new ChessBoardPageSquare[] {
-				new ChessBoardPageSquare(boardHidingAlphasComposite, 9, true),
-				new ChessBoardPageSquare(boardHidingAlphasComposite, 10, false) };
+				new ChessBoardPageSquare(shadowsComposite, 9, true),
+				new ChessBoardPageSquare(shadowsComposite, 10, false) };
 		hiddenPieceAlphas[0].setLayoutData(new GridData(50, 50));
 		hiddenPieceAlphas[1].setLayoutData(new GridData(50, 50));
 		hiddenPieceAlphas[0].setPiece(GameConstants.WP);
@@ -379,32 +430,13 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		hiddenPieceAlphas[0].setHidingPiece(true);
 		hiddenPieceAlphas[1].setHidingPiece(true);
 
-		pieceJailHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
-				PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA,
-				"Piece Jail shadow (0 is transparent, 255 is opaque):", ALPHAS,
-				getFieldEditorParent());
-		addField(pieceJailHidingAlphaCombo);
-		pieceJailBackground = new ColorFieldEditor(
-				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
-				"Piece Jail Background Color:", getFieldEditorParent());
-		pieceJailBackground.getColorSelector().addListener(
-				new IPropertyChangeListener() {
-					public void propertyChange(PropertyChangeEvent arg0) {
-						valuesChanged();
-					}
-				});
-		addField(pieceJailBackground);
+		Label strut = new Label(shadowsComposite, SWT.NONE);
+		strut.setText("          ");
 
-		pieceJailAlphasComposite = new Composite(getFieldEditorParent(),
-				SWT.NONE);
-		pieceJailAlphasComposite.setLayoutData(new GridData(SWT.LEFT,
-				SWT.CENTER, false, false, 2, 1));
-		pieceJailAlphasComposite.setLayout(SWTUtils.createMarginlessGridLayout(
-				2, true));
 		pieceJailAlphas = new PieceJailSquarePageSquare[] {
-				new PieceJailSquarePageSquare(pieceJailAlphasComposite, 9,
+				new PieceJailSquarePageSquare(shadowsComposite, 9,
 						GameConstants.WR),
-				new PieceJailSquarePageSquare(pieceJailAlphasComposite, 10,
+				new PieceJailSquarePageSquare(shadowsComposite, 10,
 						GameConstants.BR) };
 		pieceJailAlphas[0].setLayoutData(new GridData(50, 50));
 		pieceJailAlphas[1].setLayoutData(new GridData(50, 50));
