@@ -63,59 +63,59 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 				Raptor.RESOURCES_DIR + "/images/quadrants.png"));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.CHESS_BOARD_QUADRANT, "Chess Board Quadrant:",
+				+ PreferenceKeys.CHESS_BOARD_QUADRANT, "Chess Board:",
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT,
-				"Bughouse Board 2 Quadrant:",
+				"Bughouse Board 2:",
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.BUG_BUTTONS_QUADRANT,
-				"BughouseButtons Quadrant:",
+				"BughouseButtons:",
 				buildQuadrantArray(BugButtonsWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.MAIN_TAB_QUADRANT, "Main Console Quadrant:",
+				+ PreferenceKeys.MAIN_TAB_QUADRANT, "Main Console:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.CHANNEL_TAB_QUADRANT,
-				"Channel Console Quadrant:",
+				"Channel Console:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.PERSON_TAB_QUADRANT,
-				"Person Console Quadrant:",
+				"Person Console:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.PARTNER_TELL_TAB_QUADRANT,
-				"Bughouse Partner Console Quadrant:",
+				"Bughouse Partner Console:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.REGEX_TAB_QUADRANT,
-				"Regular Expression Console Quadrant:",
+				"Regular Expression Console:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.BUG_WHO_QUADRANT,
-				"Bug Who (Partners,Teams,Games) Quadrant:",
+				"Bug Who (Partners,Teams,Games):",
 				buildQuadrantArray(BugGamesWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.SEEK_TABLE_QUADRANT, "Seek Table Quadrant:",
+				+ PreferenceKeys.SEEK_TABLE_QUADRANT, "Seek Table:",
 				buildQuadrantArray(SeekTableWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 	}
