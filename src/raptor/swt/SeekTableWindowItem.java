@@ -39,7 +39,8 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 
 	protected SeekService service;
 	protected Composite composite;
-	protected Combo ratingsFilter;
+	protected Combo minRatingsFilter;
+	protected Combo maxRatingsFilter;
 	protected Combo ratedFilter;
 	protected Button isShowingComputers;
 	protected Button isShowingLightning;
@@ -139,6 +140,11 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 		return null;
 	}
 
+	public static final String[] getRatings() {
+		return new String[] {"0","1","700","1000","1100","1200","1300","1400",
+				"1500","1600","1700","1800","1900","2000","2100","2200","2300","2400"};
+	}
+	
 	public void init(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
@@ -149,38 +155,46 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 		ratingFilterComposite.setLayout(new RowLayout());
 		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
 		label.setText("Rating >=");
-		ratingsFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
+		minRatingsFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
-		ratingsFilter.add("0");
-		ratingsFilter.add("700");
-		ratingsFilter.add("1000");
-		ratingsFilter.add("1100");
-		ratingsFilter.add("1200");
-		ratingsFilter.add("1300");
-		ratingsFilter.add("1400");
-		ratingsFilter.add("1500");
-		ratingsFilter.add("1600");
-		ratingsFilter.add("1700");
-		ratingsFilter.add("1800");
-		ratingsFilter.add("1900");
-		ratingsFilter.add("2000");
-		ratingsFilter.add("2100");
-		ratingsFilter.add("2200");
-		ratingsFilter.add("2300");
-		ratingsFilter.select(Raptor.getInstance().getPreferences().getInt(
+		
+		for(String rating : getRatings()) {
+			minRatingsFilter.add(rating);
+		}
+		
+		minRatingsFilter.select(Raptor.getInstance().getPreferences().getInt(
 				PreferenceKeys.SEEK_TABLE_RATINGS_INDEX));
-		ratingsFilter.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
+		minRatingsFilter.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) { }
 			public void widgetSelected(SelectionEvent e) {
 				Raptor.getInstance().getPreferences().setValue(
 						PreferenceKeys.SEEK_TABLE_RATINGS_INDEX,
-						ratingsFilter.getSelectionIndex());
+						minRatingsFilter.getSelectionIndex());
 				Raptor.getInstance().getPreferences().save();
 				refreshTable();
 			}
 		});
+		
+		label = new CLabel(ratingFilterComposite, SWT.LEFT);
+		label.setText("Rating <=");
+		maxRatingsFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
+				| SWT.READ_ONLY);
+		for(String rating : getRatings()) {
+			maxRatingsFilter.add(rating);
+		}
+		maxRatingsFilter.select(Raptor.getInstance().getPreferences().getInt(
+				PreferenceKeys.SEEK_TABLE_MAX_RATINGS_INDEX));
+		maxRatingsFilter.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) { }
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance().getPreferences().setValue(
+						PreferenceKeys.SEEK_TABLE_MAX_RATINGS_INDEX,
+						maxRatingsFilter.getSelectionIndex());
+				Raptor.getInstance().getPreferences().save();
+				refreshTable();
+			}
+		});
+		
 		label = new CLabel(ratingFilterComposite, SWT.LEFT);
 		label.setText("Rated:");
 		ratedFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
@@ -661,9 +675,10 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 
 	protected boolean passesFilterCriteria(Seek seek) {
 		boolean result = true;
-		int filterRating = Integer.parseInt(ratingsFilter.getText());
+		int minFilterRating = Integer.parseInt(minRatingsFilter.getText());
+		int maxFilterRating = Integer.parseInt(maxRatingsFilter.getText());
 		int seekRating = seek.getRatingAsInt();
-		if (seekRating >= filterRating) {
+		if (seekRating >= minFilterRating && seekRating <= maxFilterRating) {
 			if (ratedFilter.getSelectionIndex() == 1) {
 				result = seek.isRated();
 			} else if (ratedFilter.getSelectionIndex() == 2) {

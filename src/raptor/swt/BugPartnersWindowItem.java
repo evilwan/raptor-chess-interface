@@ -41,7 +41,8 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 
 	protected BughouseService service;
 	protected Composite composite;
-	protected Combo availablePartnersFilter;
+	protected Combo minAvailablePartnersFilter;
+	protected Combo maxAvailablePartnersFilter;
 	protected Table availablePartnersTable;
 	protected boolean isActive = false;
 	protected TableColumn lastStortedColumn;
@@ -130,6 +131,11 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 	public Control getToolbar(Composite parent) {
 		return null;
 	}
+	
+	public static final String[] getRatings() {
+		return new String[] {"0","1","700","1000","1100","1200","1300","1400",
+				"1500","1600","1700","1800","1900","2000","2100","2200","2300","2400"};
+	}
 
 	public void init(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
@@ -140,31 +146,43 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 				true, false));
 		ratingFilterComposite.setLayout(new RowLayout());
 		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("Rating >=");
-		availablePartnersFilter = new Combo(ratingFilterComposite,
+		label.setText("Rating >= ");
+		minAvailablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
-		availablePartnersFilter.add("0");
-		availablePartnersFilter.add("1000");
-		availablePartnersFilter.add("1200");
-		availablePartnersFilter.add("1400");
-		availablePartnersFilter.add("1500");
-		availablePartnersFilter.add("1600");
-		availablePartnersFilter.add("1700");
-		availablePartnersFilter.add("1800");
-		availablePartnersFilter.add("1900");
-		availablePartnersFilter.add("2000");
-		availablePartnersFilter.add("2100");
-		availablePartnersFilter.add("2200");
-		availablePartnersFilter.select(Raptor.getInstance().getPreferences()
+		
+		for(String rating : getRatings()) {
+			minAvailablePartnersFilter.add(rating);
+		}
+		minAvailablePartnersFilter.select(Raptor.getInstance().getPreferences()
 				.getInt(PreferenceKeys.BUG_ARENA_PARTNERS_INDEX));
-		availablePartnersFilter.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
+		minAvailablePartnersFilter.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) { }
 
 			public void widgetSelected(SelectionEvent e) {
 				Raptor.getInstance().getPreferences().setValue(
 						PreferenceKeys.BUG_ARENA_PARTNERS_INDEX,
-						availablePartnersFilter.getSelectionIndex());
+						minAvailablePartnersFilter.getSelectionIndex());
+				Raptor.getInstance().getPreferences().save();
+				refreshTable();
+			}
+		});
+		
+		label = new CLabel(ratingFilterComposite, SWT.LEFT);
+		label.setText("Rating <= ");
+		maxAvailablePartnersFilter = new Combo(ratingFilterComposite,
+				SWT.DROP_DOWN | SWT.READ_ONLY);
+		for(String rating : getRatings()) {
+			maxAvailablePartnersFilter.add(rating);
+		}
+		maxAvailablePartnersFilter.select(Raptor.getInstance().getPreferences()
+				.getInt(PreferenceKeys.BUG_ARENA_MAX_PARTNERS_INDEX));
+		maxAvailablePartnersFilter.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) { }
+
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance().getPreferences().setValue(
+						PreferenceKeys.BUG_ARENA_MAX_PARTNERS_INDEX,
+						maxAvailablePartnersFilter.getSelectionIndex());
 				Raptor.getInstance().getPreferences().save();
 				refreshTable();
 			}
@@ -348,9 +366,10 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 	}
 
 	protected boolean passesFilterCriteria(Bugger bugger) {
-		int filterRating = Integer.parseInt(availablePartnersFilter.getText());
+		int minFilterRating = Integer.parseInt(minAvailablePartnersFilter.getText());
+		int maxFilterRating = Integer.parseInt(maxAvailablePartnersFilter.getText());
 		int buggerRating = bugger.getRatingAsInt();
-		return buggerRating >= filterRating;
+		return buggerRating >= minFilterRating && buggerRating <= maxFilterRating;
 	}
 
 	protected void refreshTable() {
