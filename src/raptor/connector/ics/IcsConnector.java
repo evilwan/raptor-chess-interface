@@ -618,7 +618,7 @@ public abstract class IcsConnector implements Connector {
 
 	public void matchBughouse(String playerName, boolean isRated, int time,
 			int inc) {
-		sendMessage("$$match " + playerName + " " + time + " " + inc
+		sendMessage("$$match " + playerName + " " + time + " " + inc + " "
 				+ (isRated ? "rated" : "unrated"));
 	}
 
