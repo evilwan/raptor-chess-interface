@@ -66,6 +66,16 @@ public class Move implements GameConstants {
 	protected String san;
 
 	protected byte to = EMPTY_SQUARE;
+	
+	/**
+	 * Used during rollbacks.
+	 */
+	protected String previousEcoHeader;
+	
+	/**
+	 * Used during rollbacks.
+	 */
+	protected String previousOpeningHeader;
 
 	/**
 	 * Constructor for drop moves. From square will be set to the drop square
@@ -434,4 +444,35 @@ public class Move implements GameConstants {
 		return getSan() != null ? getSan() : getLan();
 	}
 
+	/**
+	 * Used to reset the header during a rollback.
+	 * @param previousOpeningHeader
+	 */
+	public String getPreviousEcoHeader() {
+		return previousEcoHeader;
+	}
+
+	/**
+	 * Used to reset the header during a rollback.
+	 * @param previousOpeningHeader
+	 */
+	public void setPreviousEcoHeader(String previousEcoHeader) {
+		this.previousEcoHeader = previousEcoHeader;
+	}
+
+	/**
+	 * Used to reset the header during a rollback.
+	 * @param previousOpeningHeader
+	 */
+	public String getPreviousOpeningHeader() {
+		return previousOpeningHeader;
+	}
+
+	/**
+	 * Used to reset the header during a rollback.
+	 * @param previousOpeningHeader
+	 */
+	public void setPreviousOpeningHeader(String previousOpeningHeader) {
+		this.previousOpeningHeader = previousOpeningHeader;
+	}
 }

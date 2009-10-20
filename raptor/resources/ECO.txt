@@ -1899,9 +1899,9 @@ E4 G6 D4 Bg7 NC3 D6|B06|Robatsch (Modern) defense|Gurgenidze Variation
 E4 G6 D4 Bg7 NC3|B06|Robatsch defense|Three pawns attack
 E4 G6 D4 Bg7 NF3 D6 C3|B07|Robatsch defense|Geller's system
 E4 G6 D4 Bg7 NF3 D6 C4 Bg4|A41|Robatsch defense|Rossolimo Variation 
-E4 G6 D4 Bg7|B06|Robatsch (Modern) defense|Modern, Vitolins attack
-E4 G6 D4 NF6 E5 NH5 G4 NG7|B06|Norwegian defense|Modern, Vitolins attack
-E4 G6|B06|Robatsch (Modern) defense|Modern, Vitolins attack
+E4 G6 D4 Bg7|B06|Robatsch (Modern) defense|
+E4 G6 D4 NF6 E5 NH5 G4 NG7|B06|Norwegian defense|
+E4 G6|B06|Robatsch (Modern) defense|
 E4 H6|B00|Carr's defense|
 E4 NA6|B00|Lemming defense|
 E4 NC6 b4 NXb4 C3 NC6 D4|B00|KP|Nimzovich defense, Wheeler gambit
