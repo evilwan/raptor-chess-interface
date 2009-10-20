@@ -186,7 +186,7 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 		board.getController().setItemChangedListeners(null);
 		board.getController().dispose();
 		board.getSquareHighlighter().removeAllHighlights();
-		board.getResultDecorator().setHiding(true);
+		board.getResultDecorator().setDecoration(null);
 		board.getArrowDecorator().removeAllArrows();
 		board.setController(newController);
 		controller.setBoard(board);

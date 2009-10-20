@@ -46,7 +46,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	private static final Log LOG = LogFactory.getLog(BrowserWindowItem.class);
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
-			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
+			Quadrant.IV, Quadrant.V, Quadrant.VI };
 
 	protected Composite addressBar;
 	protected Browser browser;

@@ -250,6 +250,10 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 
+		public void sendToConsole(String message) {
+			publishEvent(new ChatEvent(null, ChatType.INTERNAL, message));
+		}
+
 		public void speak(String message) {
 			SoundService.getInstance().textToSpeech(message);
 		}

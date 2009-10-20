@@ -20,14 +20,13 @@ import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
 import raptor.connector.Connector;
-import raptor.pref.page.BugButtonsPage;
+import raptor.pref.page.BugButtonScriptsPage;
 import raptor.pref.page.BughousePage;
+import raptor.pref.page.ChatConsoleBehaviorPage;
 import raptor.pref.page.ChatConsoleChannelColorsPage;
 import raptor.pref.page.ChatConsoleMessageColorsPage;
 import raptor.pref.page.ChatConsolePage;
 import raptor.pref.page.ChatConsoleRightClickScripts;
-import raptor.pref.page.ChatConsoleScriptsPage;
-import raptor.pref.page.ChatConsoleSoundsPage;
 import raptor.pref.page.ChatConsoleToolbarPage;
 import raptor.pref.page.ChessBoardArrowsPage;
 import raptor.pref.page.ChessBoardBehaviorPage;
@@ -36,6 +35,7 @@ import raptor.pref.page.ChessBoardColorsPage;
 import raptor.pref.page.ChessBoardFontsPage;
 import raptor.pref.page.ChessBoardHighlightsPage;
 import raptor.pref.page.ChessBoardPage;
+import raptor.pref.page.MessageEventScripts;
 import raptor.pref.page.RaptorPage;
 import raptor.pref.page.RaptorWindowPage;
 import raptor.pref.page.RaptorWindowQuadrantsPage;
@@ -64,6 +64,8 @@ public class PreferenceUtils {
 				new RaptorWindowQuadrantsPage("1")));
 
 		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
+		mgr.addTo("chatConsole", new PreferenceNode("behavior",
+				new ChatConsoleBehaviorPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("messageColors",
 				new ChatConsoleMessageColorsPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("channelColors",
@@ -72,10 +74,6 @@ public class PreferenceUtils {
 				new ChatConsoleToolbarPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("rightClickScripts",
 				new ChatConsoleRightClickScripts()));
-		mgr.addTo("chatConsole", new PreferenceNode("scripts",
-				new ChatConsoleScriptsPage()));
-		mgr.addTo("chatConsole", new PreferenceNode("sounds",
-				new ChatConsoleSoundsPage()));
 
 		mgr.addToRoot(new PreferenceNode("chessBoard", new ChessBoardPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("behavior",
@@ -93,7 +91,9 @@ public class PreferenceUtils {
 
 		mgr.addToRoot(new PreferenceNode("bughouse", new BughousePage()));
 		mgr.addTo("bughouse", new PreferenceNode("buttons",
-				new BugButtonsPage()));
+				new BugButtonScriptsPage()));
+
+		mgr.addToRoot(new PreferenceNode("scripts", new MessageEventScripts()));
 
 		mgr.addToRoot(new PreferenceNode("speech", new SpeechPage()));
 

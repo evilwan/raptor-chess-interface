@@ -157,10 +157,15 @@ public class SoundService {
 	public void textToSpeech(String text) {
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_SOUND_ENABLED)) {
+			if (speech == null
+					&& Raptor.getInstance().getPreferences().contains(
+							PreferenceKeys.SPEECH_PROCESS_NAME)) {
+				initSpeech();
+			}
 			if (speech != null) {
 				speech.speak(text);
 				if (LOG.isDebugEnabled()) {
-					LOG.info("Spoke " + text);
+					LOG.debug("Spoke " + text);
 				}
 			}
 		}
@@ -211,6 +216,13 @@ public class SoundService {
 			LOG.error("Error loading sounds", t);
 		}
 
+		initSpeech();
+
+		LOG.info("Initializing sound service complete: "
+				+ (System.currentTimeMillis() - startTime) + "ms");
+	}
+
+	protected void initSpeech() {
 		try {
 			speech = SpeechUtils.getSpeech();
 			if (speech != null) {
@@ -223,7 +235,5 @@ public class SoundService {
 			Raptor.getInstance().onError("Error initializing speech", t);
 			speech = null;
 		}
-		LOG.info("Initializing sound service complete: "
-				+ (System.currentTimeMillis() - startTime) + "ms");
 	}
 }

@@ -135,7 +135,18 @@ public interface ScriptContext {
 	public void sendHidden(String message);
 
 	/**
-	 * Speaks the specified message. Currently not enabled.
+	 * Displays a message to the user in the chat console. The message will not
+	 * be sent to the connector.
+	 * 
+	 * @param message
+	 *            The message to display to the user.
+	 */
+	public void sendToConsole(String message);
+
+	/**
+	 * Speaks the specified message. Requires that you have speech setup. OS X
+	 * users have speech enabled automatically; however, other users must
+	 * configure speech in the Speech preferences.
 	 */
 	public void speak(String message);
 
@@ -157,4 +168,5 @@ public interface ScriptContext {
 	 * @return The encoded string.
 	 */
 	public String urlEncode(String stringToEncode);
+
 }

@@ -90,8 +90,8 @@ public interface PreferenceKeys {
 
 	public static final String SEEK_TABLE_RATINGS_INDEX = "seek-table-ratings-index";
 	public static final String SEEK_TABLE_MAX_RATINGS_INDEX = "seek-table-max-ratings-index"; // added
-																								// by
-																								// johnthegreat
+	// by
+	// johnthegreat
 	public static final String SEEK_TABLE_RATED_INDEX = "seek-table-rated-index";
 	public static final String SEEK_TABLE_SHOW_COMPUTERS = "seek-table-show-computers";
 	public static final String SEEK_TABLE_SHOW_LIGHTNING = "seek-table-show-lightning";

@@ -9,7 +9,7 @@ import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
-import raptor.speech.ProcessSpeech;
+import raptor.service.SoundService;
 
 public class SpeechPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
@@ -29,8 +29,7 @@ public class SpeechPage extends FieldEditorPreferencePage {
 						+ "However other operating systems may desire to specify the process to use for speech.\n"
 						+ "Linux/Unix users may want to configure say for instance.\n"
 						+ "Windows users may want to take a look at this link to configure speech using a process:\n"
-						+ "http://krolik.net/post/Say-exe-a-simple-command-line-text-to-speech-program-for-Windows.aspx.\n"
-						+ "A restart will be required after setting this command.",
+						+ "http://krolik.net/post/Say-exe-a-simple-command-line-text-to-speech-program-for-Windows.aspx.",
 				getFieldEditorParent());
 		addField(userHomeDir);
 
@@ -41,16 +40,12 @@ public class SpeechPage extends FieldEditorPreferencePage {
 
 		labelButtonFieldEditor = new LabelButtonFieldEditor(
 				"NONE",
-				"You can use this button to test the setting; however,\n"
-						+ "to use speech with scripts you will need to restart raptor for it to take effect.: ",
+				"You can use this button to test the setting (Requires an apply): ",
 				getFieldEditorParent(), "Test", new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
-						ProcessSpeech processSpeech = new ProcessSpeech(
-								speechProcessName.getStringValue());
-						processSpeech.init();
-						processSpeech
-								.speak("Your speech process setting is set correctly.");
+						SoundService.getInstance().textToSpeech(
+								"Speech is setup correctly.");
 					}
 				});
 		addField(labelButtonFieldEditor);

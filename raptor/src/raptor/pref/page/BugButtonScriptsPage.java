@@ -31,7 +31,7 @@ import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.ScriptService;
 import raptor.swt.SWTUtils;
 
-public class BugButtonsPage extends PreferencePage {
+public class BugButtonScriptsPage extends PreferencePage {
 
 	protected Table icsActiveScriptsTable;
 	protected Table icsInactiveScriptsTable;
@@ -47,10 +47,10 @@ public class BugButtonsPage extends PreferencePage {
 	protected Button saveButton;
 	protected Button deleteButton;
 
-	public BugButtonsPage() {
+	public BugButtonScriptsPage() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Bughouse Buttons");
+		setTitle("Button Scripts");
 	}
 
 	@Override

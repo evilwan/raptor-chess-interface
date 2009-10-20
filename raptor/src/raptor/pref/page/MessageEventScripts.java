@@ -38,7 +38,7 @@ import raptor.script.ScriptConnectorType;
 import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.ScriptService;
 
-public class ChatConsoleScriptsPage extends PreferencePage {
+public class MessageEventScripts extends PreferencePage {
 
 	protected Table activeScriptsTable;
 	protected Table inactiveScriptsTable;
@@ -55,10 +55,10 @@ public class ChatConsoleScriptsPage extends PreferencePage {
 	protected Button saveButton;
 	protected Button deleteButton;
 
-	public ChatConsoleScriptsPage() {
+	public MessageEventScripts() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Chat Scripts");
+		setTitle("Message Event Scripts");
 	}
 
 	@Override
