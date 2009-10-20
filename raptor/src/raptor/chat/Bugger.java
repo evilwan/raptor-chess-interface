@@ -18,7 +18,7 @@ import java.util.Comparator;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * This code was adapted from some code johnthegreat for Raptor.
+ * This code was adapted from some code that johnthegreat wrote for Raptor.
  */
 public class Bugger {
 	public static Comparator<Bugger> BY_STATUS_ASCENDING = new Comparator<Bugger>() {

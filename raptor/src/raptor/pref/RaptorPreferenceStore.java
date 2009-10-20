@@ -40,6 +40,8 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.swt.BugPartnersWindowItem;
+import raptor.swt.SeekTableWindowItem;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -299,11 +301,13 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// BugArena
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
+		setDefault(BUG_ARENA_MAX_PARTNERS_INDEX,BugPartnersWindowItem.getRatings());
 		setDefault(BUG_ARENA_TEAMS_INDEX, 0);
 		setDefault(BUG_ARENA_TEAMS_IS_RATED, true);
 
 		// SeekTable
 		setDefault(SEEK_TABLE_RATINGS_INDEX, 0);
+		setDefault(SEEK_TABLE_MAX_RATINGS_INDEX,SeekTableWindowItem.getRatings().length-1);
 		setDefault(SEEK_TABLE_RATED_INDEX, 0);
 		setDefault(SEEK_TABLE_SHOW_COMPUTERS, true);
 		setDefault(SEEK_TABLE_SHOW_LIGHTNING, true);
