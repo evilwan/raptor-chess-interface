@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -57,6 +58,18 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 	protected Control createContents(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
+
+		Label textLabel = new Label(composite, SWT.WRAP);
+		textLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 2, 1));
+		textLabel
+				.setText(WordUtils
+						.wrap(
+								"\tRight-Click Scripts scripts have one parameter, the text selected when "
+										+ "the console was right clicked. "
+										+ "See the Scripting wiki on the raptor site "
+										+ "http://code.google.com/p/raptor-chess-interface/wiki/Scripting for more details.",
+								70));
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,

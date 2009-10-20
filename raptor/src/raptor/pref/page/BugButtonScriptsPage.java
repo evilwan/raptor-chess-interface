@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -58,9 +59,19 @@ public class BugButtonScriptsPage extends PreferencePage {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 
+		Label textLabel = new Label(composite, SWT.WRAP);
+		textLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 2, 1));
+		textLabel
+				.setText(WordUtils
+						.wrap("\tBughouse button scripts have no parameters and can only use the methods "
+										+ "in the context. See the Scripting wiki on the raptor site "
+										+ "http://code.google.com/p/raptor-chess-interface/wiki/Scripting for more details.",
+								70));
+
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
-				true));
+				false));
 
 		icsActiveScriptsTable = new Table(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
@@ -232,10 +243,11 @@ public class BugButtonScriptsPage extends PreferencePage {
 		scriptLabel.setText("Script:");
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 2, 1));
-		scriptText = new StyledText(composite, SWT.BORDER);
+		scriptText = new StyledText(composite, SWT.BORDER | SWT.V_SCROLL
+				| SWT.H_SCROLL);
 		scriptText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 2, 1));
-		scriptText.setText("\n\n\n\n");
+		scriptText.setText("\n\n\n\n\n");
 		scriptText.setWordWrap(true);
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);

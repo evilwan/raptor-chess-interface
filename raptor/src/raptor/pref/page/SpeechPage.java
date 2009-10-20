@@ -1,5 +1,6 @@
 package raptor.pref.page;
 
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -24,13 +25,15 @@ public class SpeechPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		LabelFieldEditor userHomeDir = new LabelFieldEditor(
 				"NONE",
-				"Raptor uses speech in scripting.\n"
-						+ "By default OSX will be automatically configured for speech. \n"
-						+ "However other operating systems may desire to specify the process to use for speech.\n"
-						+ "Linux/Unix users may want to configure say for instance.\n"
-						+ "Windows users may want to take a look at this link to configure speech using a process:\n"
-						+ "http://krolik.net/post/Say-exe-a-simple-command-line-text-to-speech-program-for-Windows.aspx.",
-				getFieldEditorParent());
+				WordUtils
+						.wrap(
+								"Raptor uses speech in scripting. "
+										+ "By default OSX will be automatically configured for speech. "
+										+ "However other operating systems may desire to specify the process to use for speech. "
+										+ "Linux/Unix users may want to configure say for instance. "
+										+ "Windows users may want to take a look at this link to configure speech using a process: "
+										+ "http://krolik.net/post/Say-exe-a-simple-command-line-text-to-speech-program-for-Windows.aspx.",
+								70), getFieldEditorParent());
 		addField(userHomeDir);
 
 		final StringFieldEditor speechProcessName = new StringFieldEditor(
