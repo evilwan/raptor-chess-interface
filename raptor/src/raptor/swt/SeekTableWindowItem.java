@@ -135,7 +135,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
 				service.getConnector().getShortName() + "-"
-						+ PreferenceKeys.SEEK_GRAPH_QUADRANT);
+						+ PreferenceKeys.SEEK_TABLE_QUADRANT);
 	}
 
 	public String getTitle() {

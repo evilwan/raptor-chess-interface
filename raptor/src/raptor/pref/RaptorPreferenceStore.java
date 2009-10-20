@@ -577,8 +577,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.V);
 		setDefault("fics-" + CHESS_BOARD_QUADRANT, Quadrant.III);
 		setDefault("fics-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
-		setDefault("fics-" + BUG_ARENA_QUADRANT, Quadrant.VII);
-		setDefault("fics-" + SEEK_GRAPH_QUADRANT, Quadrant.VII);
+		setDefault("fics-" + BUG_WHO_QUADRANT, Quadrant.VII);
+		setDefault("fics-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
 		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 
 		setDefault("fics2-" + MAIN_TAB_QUADRANT, Quadrant.VI);
@@ -588,8 +588,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics2-" + CHESS_BOARD_QUADRANT, Quadrant.III);
 		setDefault("fics2-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
-		setDefault("fics2-" + BUG_ARENA_QUADRANT, Quadrant.VII);
-		setDefault("fics2-" + SEEK_GRAPH_QUADRANT, Quadrant.VII);
+		setDefault("fics2-" + BUG_WHO_QUADRANT, Quadrant.VII);
+		setDefault("fics2-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 
 		setDefault("bics-" + MAIN_TAB_QUADRANT, Quadrant.V);
@@ -599,8 +599,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.V);
 		setDefault("bics-" + CHESS_BOARD_QUADRANT, Quadrant.III);
 		setDefault("bics-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
-		setDefault("bics-" + BUG_ARENA_QUADRANT, Quadrant.VII);
-		setDefault("bics-" + SEEK_GRAPH_QUADRANT, Quadrant.VII);
+		setDefault("bics-" + BUG_WHO_QUADRANT, Quadrant.VII);
+		setDefault("bics-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
 		setDefault("bics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 
 		setDefault("bics2-" + MAIN_TAB_QUADRANT, Quadrant.VI);
@@ -610,8 +610,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics2-" + CHESS_BOARD_QUADRANT, Quadrant.III);
 		setDefault("bics2-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
-		setDefault("bics2-" + BUG_ARENA_QUADRANT, Quadrant.VII);
-		setDefault("bics2-" + SEEK_GRAPH_QUADRANT, Quadrant.VII);
+		setDefault("bics2-" + BUG_WHO_QUADRANT, Quadrant.VII);
+		setDefault("bics2-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 
 		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
