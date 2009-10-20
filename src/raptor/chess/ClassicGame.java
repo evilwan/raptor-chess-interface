@@ -217,7 +217,7 @@ public class ClassicGame implements Game {
 		updateZobristHash();
 		incrementRepCount();
 
-		updateEcoHeaders();
+		updateEcoHeaders(move);
 	}
 
 	/**
@@ -949,7 +949,6 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public void rollback() {
-
 		Move move = getMoveList().removeLast();
 		decrementRepCount();
 
@@ -989,7 +988,7 @@ public class ClassicGame implements Game {
 
 		updateZobristHash();
 
-		updateEcoHeaders();
+		rollbackEcoHeaders(move);
 	}
 
 	/**
@@ -2453,7 +2452,14 @@ public class ClassicGame implements Game {
 		return result;
 	}
 
-	protected void updateEcoHeaders() {
+	protected void rollbackEcoHeaders(Move move) {
+		if (isSettingEcoHeaders()) {
+			setHeader(PgnHeader.ECO, move.getPreviousEcoHeader());
+			setHeader(PgnHeader.Opening, move.getPreviousOpeningHeader());
+		}
+	}
+
+	protected void updateEcoHeaders(Move move) {
 		if (isSettingEcoHeaders()) {
 			EcoInfo info = EcoService.getInstance().getEcoInfo(this);
 			if (info != null) {
@@ -2472,6 +2478,8 @@ public class ClassicGame implements Game {
 					removeHeader(PgnHeader.Opening);
 				}
 			}
+			move.setPreviousEcoHeader(getHeader(PgnHeader.ECO));
+			move.setPreviousOpeningHeader(getHeader(PgnHeader.Opening));
 		}
 	}
 
