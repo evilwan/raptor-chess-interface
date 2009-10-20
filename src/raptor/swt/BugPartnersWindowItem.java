@@ -85,6 +85,12 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 		}
 	};
 
+	public static final String[] getRatings() {
+		return new String[] { "0", "1", "700", "1000", "1100", "1200", "1300",
+				"1400", "1500", "1600", "1700", "1800", "1900", "2000", "2100",
+				"2200", "2300", "2400" };
+	}
+
 	public BugPartnersWindowItem(BughouseService service) {
 		this.service = service;
 		service.addBughouseServiceListener(listener);
@@ -131,11 +137,6 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 	public Control getToolbar(Composite parent) {
 		return null;
 	}
-	
-	public static final String[] getRatings() {
-		return new String[] {"0","1","700","1000","1100","1200","1300","1400",
-				"1500","1600","1700","1800","1900","2000","2100","2200","2300","2400"};
-	}
 
 	public void init(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
@@ -147,44 +148,48 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 		ratingFilterComposite.setLayout(new RowLayout());
 		minAvailablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
-		
-		for(String rating : getRatings()) {
+
+		for (String rating : getRatings()) {
 			minAvailablePartnersFilter.add(rating);
 		}
 		minAvailablePartnersFilter.select(Raptor.getInstance().getPreferences()
 				.getInt(PreferenceKeys.BUG_ARENA_PARTNERS_INDEX));
-		minAvailablePartnersFilter.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) { }
+		minAvailablePartnersFilter
+				.addSelectionListener(new SelectionListener() {
+					public void widgetDefaultSelected(SelectionEvent e) {
+					}
 
-			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.BUG_ARENA_PARTNERS_INDEX,
-						minAvailablePartnersFilter.getSelectionIndex());
-				Raptor.getInstance().getPreferences().save();
-				refreshTable();
-			}
-		});
-		
+					public void widgetSelected(SelectionEvent e) {
+						Raptor.getInstance().getPreferences().setValue(
+								PreferenceKeys.BUG_ARENA_PARTNERS_INDEX,
+								minAvailablePartnersFilter.getSelectionIndex());
+						Raptor.getInstance().getPreferences().save();
+						refreshTable();
+					}
+				});
+
 		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
 		label.setText("<= Rating <= ");
 		maxAvailablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
-		for(String rating : getRatings()) {
+		for (String rating : getRatings()) {
 			maxAvailablePartnersFilter.add(rating);
 		}
 		maxAvailablePartnersFilter.select(Raptor.getInstance().getPreferences()
 				.getInt(PreferenceKeys.BUG_ARENA_MAX_PARTNERS_INDEX));
-		maxAvailablePartnersFilter.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) { }
+		maxAvailablePartnersFilter
+				.addSelectionListener(new SelectionListener() {
+					public void widgetDefaultSelected(SelectionEvent e) {
+					}
 
-			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.BUG_ARENA_MAX_PARTNERS_INDEX,
-						maxAvailablePartnersFilter.getSelectionIndex());
-				Raptor.getInstance().getPreferences().save();
-				refreshTable();
-			}
-		});
+					public void widgetSelected(SelectionEvent e) {
+						Raptor.getInstance().getPreferences().setValue(
+								PreferenceKeys.BUG_ARENA_MAX_PARTNERS_INDEX,
+								maxAvailablePartnersFilter.getSelectionIndex());
+						Raptor.getInstance().getPreferences().save();
+						refreshTable();
+					}
+				});
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
@@ -362,10 +367,13 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 	}
 
 	protected boolean passesFilterCriteria(Bugger bugger) {
-		int minFilterRating = Integer.parseInt(minAvailablePartnersFilter.getText());
-		int maxFilterRating = Integer.parseInt(maxAvailablePartnersFilter.getText());
+		int minFilterRating = Integer.parseInt(minAvailablePartnersFilter
+				.getText());
+		int maxFilterRating = Integer.parseInt(maxAvailablePartnersFilter
+				.getText());
 		int buggerRating = bugger.getRatingAsInt();
-		return buggerRating >= minFilterRating && buggerRating <= maxFilterRating;
+		return buggerRating >= minFilterRating
+				&& buggerRating <= maxFilterRating;
 	}
 
 	protected void refreshTable() {

@@ -301,13 +301,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// BugArena
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
-		setDefault(BUG_ARENA_MAX_PARTNERS_INDEX,BugPartnersWindowItem.getRatings().length - 1);
+		setDefault(BUG_ARENA_MAX_PARTNERS_INDEX, BugPartnersWindowItem
+				.getRatings().length - 1);
 		setDefault(BUG_ARENA_TEAMS_INDEX, 0);
 		setDefault(BUG_ARENA_TEAMS_IS_RATED, true);
 
 		// SeekTable
 		setDefault(SEEK_TABLE_RATINGS_INDEX, 0);
-		setDefault(SEEK_TABLE_MAX_RATINGS_INDEX,SeekTableWindowItem.getRatings().length-1);
+		setDefault(SEEK_TABLE_MAX_RATINGS_INDEX, SeekTableWindowItem
+				.getRatings().length - 1);
 		setDefault(SEEK_TABLE_RATED_INDEX, 0);
 		setDefault(SEEK_TABLE_SHOW_COMPUTERS, true);
 		setDefault(SEEK_TABLE_SHOW_LIGHTNING, true);
@@ -320,7 +322,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(SEEK_TABLE_SHOW_SUICIDE, true);
 		setDefault(SEEK_TABLE_SHOW_LOSERS, true);
 		setDefault(SEEK_TABLE_SHOW_UNTIMED, true);
-		
 
 		PreferenceConverter.setDefault(this, ARROW_OPPONENT_COLOR, new RGB(255,
 				0, 255));
@@ -355,7 +356,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_TIMESTAMP_CONSOLE, false);
 		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['hh:mma']'");
 		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
-		setDefault(CHAT_IS_PLAYING_CHAT_ON_PTELL, false);
+		setDefault(CHAT_IS_PLAYING_CHAT_ON_PTELL, true);
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL, true);
 
 		PreferenceConverter

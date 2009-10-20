@@ -155,7 +155,7 @@ public class BugGamesWindowItem implements RaptorWindowItem {
 		timeControl.setWidth(60);
 
 		bugGamesTable.setHeaderVisible(true);
-		
+
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
 				false));

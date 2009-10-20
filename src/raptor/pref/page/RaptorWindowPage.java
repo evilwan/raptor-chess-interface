@@ -35,7 +35,7 @@ public class RaptorWindowPage extends FieldEditorPreferencePage {
 				{ "Small", "5" }, { "Medium", "8" }, { "Large", "11" },
 				{ "Extra Wide", "15" } };
 		ComboFieldEditor setFieldEditor = new ComboFieldEditor(
-				PreferenceKeys.APP_SASH_WIDTH, "Window Area Adjuster Width:",
+				PreferenceKeys.APP_SASH_WIDTH, "Divider Sash Width:",
 				sliderWidthPreferences, getFieldEditorParent());
 		addField(setFieldEditor);
 
