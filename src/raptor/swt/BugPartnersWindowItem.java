@@ -169,7 +169,7 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 				});
 
 		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("<= Rating <= ");
+		label.setText(">= Rating <= ");
 		maxAvailablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (String rating : getRatings()) {
@@ -371,6 +371,11 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 				.getText());
 		int maxFilterRating = Integer.parseInt(maxAvailablePartnersFilter
 				.getText());
+		if (minFilterRating >= maxFilterRating) {
+			int tmp = maxFilterRating;
+			maxFilterRating = minFilterRating;
+			minFilterRating = tmp;
+		}
 		int buggerRating = bugger.getRatingAsInt();
 		return buggerRating >= minFilterRating
 				&& buggerRating <= maxFilterRating;

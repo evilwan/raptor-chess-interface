@@ -177,7 +177,7 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 		});
 
 		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("<= Rating <=");
+		label.setText(">= Rating <=");
 		maxRatingsFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
 		for (String rating : getRatings()) {
@@ -680,6 +680,11 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 		boolean result = true;
 		int minFilterRating = Integer.parseInt(minRatingsFilter.getText());
 		int maxFilterRating = Integer.parseInt(maxRatingsFilter.getText());
+		if (minFilterRating >= maxFilterRating) {
+			int tmp = maxFilterRating;
+			maxFilterRating = minFilterRating;
+			minFilterRating = tmp;
+		}
 		int seekRating = seek.getRatingAsInt();
 		if (seekRating >= minFilterRating && seekRating <= maxFilterRating) {
 			if (ratedFilter.getSelectionIndex() == 1) {
