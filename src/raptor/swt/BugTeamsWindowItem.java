@@ -120,7 +120,7 @@ public class BugTeamsWindowItem implements RaptorWindowItem {
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
 				service.getConnector().getShortName() + "-"
-						+ PreferenceKeys.BUG_ARENA_QUADRANT);
+						+ PreferenceKeys.BUG_WHO_QUADRANT);
 	}
 
 	public String getTitle() {

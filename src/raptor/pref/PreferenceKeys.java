@@ -25,8 +25,8 @@ public interface PreferenceKeys {
 	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrant";
 	public static final String PERSON_TAB_QUADRANT = "person-quadrant";
 	public static final String REGEX_TAB_QUADRANT = "regex-quadrant";
-	public static final String SEEK_GRAPH_QUADRANT = "seek-graph-quadrant";
-	public static final String BUG_ARENA_QUADRANT = "bug-arena-quadrant";
+	public static final String SEEK_TABLE_QUADRANT = "seek-table-quadrant";
+	public static final String BUG_WHO_QUADRANT = "bug-who-quadrant";
 	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrant";
 	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrant";
 	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrant";

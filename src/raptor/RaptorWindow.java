@@ -1602,6 +1602,11 @@ public class RaptorWindow extends ApplicationWindow {
 
 					new MenuItem(menu, SWT.SEPARATOR);
 
+					MenuItem imageMenuItem = new MenuItem(menu, SWT.CASCADE);
+					imageMenuItem.setImage(Raptor.getInstance().getImage(
+							Raptor.RESOURCES_DIR + "/images/quadrantsSmall"
+									+ folder.quad.toString() + ".png"));
+
 					Quadrant[] availableQuadrants = folder
 							.getRaptorTabItemSelection().raptorItem
 							.getMoveToQuadrants();
