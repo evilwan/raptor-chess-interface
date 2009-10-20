@@ -13,6 +13,10 @@
  */
 package raptor.swt.chess;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Font;
@@ -27,37 +31,200 @@ import raptor.swt.SWTUtils;
  * Paints the game result over the chess board if it is inactive.
  */
 public class ResultDecorator implements BoardConstants {
-	// To do write a dispose for this class and call it from ChessBoard when its
-	// disposed.
+	public static enum ResultDecoration {
+		WhiteWin, BlackWin, Draw, Undetermined
+	}
+
+	protected class SquareDecorator implements PaintListener {
+		protected ChessSquare square;
+
+		public SquareDecorator(ChessSquare square) {
+			this.square = square;
+			square.addPaintListener(this);
+		}
+
+		public void dispose() {
+			square.removePaintListener(this);
+		}
+
+		public void paintControl(PaintEvent e) {
+			if (decoration != null) {
+				String text = null;
+				switch (square.getId()) {
+				case SQUARE_D4:
+					if (!board.isWhiteOnTop()) {
+						switch (decoration) {
+						case WhiteWin:
+							text = "1";
+							break;
+						case BlackWin:
+							text = "0";
+							break;
+						case Draw:
+							text = "\u00BD";
+							break;
+						default:
+							break;
+						}
+					}
+					break;
+				case SQUARE_E4:
+					if (!board.isWhiteOnTop()) {
+						switch (decoration) {
+						case WhiteWin:
+							text = "-";
+							break;
+						case BlackWin:
+							text = "-";
+							break;
+						case Draw:
+							text = "-";
+							break;
+						default:
+							text = "*";
+							break;
+						}
+					}
+					break;
+				case SQUARE_F4:
+					if (!board.isWhiteOnTop()) {
+						switch (decoration) {
+						case WhiteWin:
+							text = "0";
+							break;
+						case BlackWin:
+							text = "1";
+							break;
+						case Draw:
+							text = "\u00BD";
+							break;
+						default:
+							break;
+						}
+					}
+					break;
+				case SQUARE_E5:
+					if (board.isWhiteOnTop()) {
+						switch (decoration) {
+						case WhiteWin:
+							text = "1";
+							break;
+						case BlackWin:
+							text = "0";
+							break;
+						case Draw:
+							text = "\u00BD";
+							break;
+						default:
+							break;
+						}
+					}
+				case SQUARE_D5:
+					if (board.isWhiteOnTop()) {
+						switch (decoration) {
+						case WhiteWin:
+							text = "-";
+							break;
+						case BlackWin:
+							text = "-";
+							break;
+						case Draw:
+							text = "-";
+							break;
+						default:
+							text = "*";
+							break;
+						}
+					}
+					break;
+				case SQUARE_C5:
+					if (board.isWhiteOnTop()) {
+						switch (decoration) {
+						case WhiteWin:
+							text = "0";
+							break;
+						case BlackWin:
+							text = "1";
+							break;
+						case Draw:
+							text = "\u00BD";
+							break;
+						default:
+							break;
+						}
+					}
+					break;
+
+				}
+
+				if (StringUtils.isNotBlank(text)) {
+					drawResultText(e, text);
+				}
+			}
+		}
+	}
 
 	protected ChessBoard board;
 	protected boolean isHiding = false;
-
 	protected Font resultFont;
-
 	protected int resultFontHeight;
+	protected ResultDecoration decoration;
+
+	protected List<SquareDecorator> decorators = new ArrayList<SquareDecorator>(
+			6);
 
 	public ResultDecorator(ChessBoard board) {
 		this.board = board;
-		init();
+		decorators.add(new SquareDecorator(board.getSquare(SQUARE_E4)));
+		decorators.add(new SquareDecorator(board.getSquare(SQUARE_D4)));
+		decorators.add(new SquareDecorator(board.getSquare(SQUARE_F4)));
+		decorators.add(new SquareDecorator(board.getSquare(SQUARE_E5)));
+		decorators.add(new SquareDecorator(board.getSquare(SQUARE_D5)));
+		decorators.add(new SquareDecorator(board.getSquare(SQUARE_F5)));
 	}
 
-	/**
-	 * TO DO
-	 */
 	public void dispose() {
-		// WRITE ME
+		for (SquareDecorator decorator : decorators) {
+			decorator.dispose();
+		}
+		decorators.clear();
+	};
+
+	public ChessBoard getBoard() {
+		return board;
+	}
+
+	public ResultDecoration getDecoration() {
+		return decoration;
 	}
 
 	/**
-	 * If is hiding = true, hides the result being painted over the chess board.
-	 * Otherwise shows it.
+	 * Can be set to null to hide the decoration.
 	 * 
-	 * isHiding is false by default.
+	 * @param decoration
 	 */
-	public void setHiding(boolean isHiding) {
-		this.isHiding = isHiding;
-		board.redrawSquares();
+	public void setDecoration(ResultDecoration decoration) {
+		this.decoration = decoration;
+	}
+
+	public void setDecorationFromResult(Result result) {
+		switch (result) {
+		case BLACK_WON:
+			decoration = ResultDecoration.BlackWin;
+			break;
+		case WHITE_WON:
+			decoration = ResultDecoration.WhiteWin;
+			break;
+		case DRAW:
+			decoration = ResultDecoration.Draw;
+			break;
+		case ON_GOING:
+			decoration = ResultDecoration.Undetermined;
+			break;
+		case UNDETERMINED:
+			decoration = ResultDecoration.Undetermined;
+			break;
+		}
 	}
 
 	/**
@@ -106,129 +273,6 @@ public class ResultDecorator implements BoardConstants {
 			}
 		}
 		return resultFont;
-	}
-
-	protected void init() {
-		// Add paint listeners to the squares to redraw the result.
-		board.getSquare(SQUARE_D4).addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				if (!isHiding
-						&& !board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.ON_GOING) {
-					String text = null;
-					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
-						text = "1";
-					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
-						text = "0";
-					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = "\u00BD";
-					} else if (board.getController().getGame().getResult() == Result.UNDETERMINED) {
-
-					}
-					drawResultText(e, text);
-				}
-			}
-		});
-
-		board.getSquare(SQUARE_E4).addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				if (!isHiding
-						&& !board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.ON_GOING) {
-
-					String text = null;
-					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
-						text = "-";
-					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
-						text = "-";
-					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = "-";
-					} else if (board.getController().getGame().getResult() == Result.UNDETERMINED) {
-						text = "*";
-					}
-					drawResultText(e, text);
-				}
-			}
-		});
-
-		board.getSquare(SQUARE_F4).addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				if (!isHiding
-						&& !board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.ON_GOING) {
-
-					String text = null;
-					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
-						text = "0";
-					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
-						text = "1";
-					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = "\u00BD";
-					}
-					drawResultText(e, text);
-				}
-			}
-		});
-
-		board.getSquare(SQUARE_E5).addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				if (!isHiding
-						&& board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.ON_GOING) {
-					String text = null;
-					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
-						text = "1";
-					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
-						text = "0";
-					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = "\u00BD";
-					} else if (board.getController().getGame().getResult() == Result.UNDETERMINED) {
-
-					}
-					drawResultText(e, text);
-				}
-			}
-		});
-
-		board.getSquare(SQUARE_D5).addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				if (!isHiding
-						&& board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.ON_GOING) {
-
-					String text = null;
-					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
-						text = "-";
-					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
-						text = "-";
-					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = "-";
-					} else if (board.getController().getGame().getResult() == Result.UNDETERMINED) {
-						text = "*";
-					}
-					drawResultText(e, text);
-				}
-			}
-		});
-
-		board.getSquare(SQUARE_C5).addPaintListener(new PaintListener() {
-			public void paintControl(PaintEvent e) {
-				if (!isHiding
-						&& board.isWhiteOnTop()
-						&& board.getController().getGame().getResult() != Result.ON_GOING) {
-
-					String text = null;
-					if (board.getController().getGame().getResult() == Result.WHITE_WON) {
-						text = "0";
-					} else if (board.getController().getGame().getResult() == Result.BLACK_WON) {
-						text = "1";
-					} else if (board.getController().getGame().getResult() == Result.DRAW) {
-						text = "\u00BD";
-					}
-					drawResultText(e, text);
-				}
-			}
-		});
 	}
 
 }

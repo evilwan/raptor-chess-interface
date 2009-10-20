@@ -132,8 +132,6 @@ public class BughouseSuggestController extends ObserveController {
 		if (!isDisposed()) {
 			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " "
 					+ isDnd);
-			board.getResultDecorator().setHiding(true);
-
 			board.getSquareHighlighter().removeAllHighlights();
 			board.getArrowDecorator().removeAllArrows();
 

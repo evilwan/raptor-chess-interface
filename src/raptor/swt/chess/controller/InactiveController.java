@@ -352,21 +352,25 @@ public class InactiveController extends ChessBoardController implements
 			refresh();
 			break;
 		case NEXT_NAV:
+			board.getResultDecorator().setDecoration(null);
 			cursor.setCursorNext();
 			refresh();
 			decorateForLastMoveListMove();
 			break;
 		case BACK_NAV:
+			board.getResultDecorator().setDecoration(null);
 			cursor.setCursorPrevious();
 			refresh();
 			decorateForLastMoveListMove();
 			break;
 		case FIRST_NAV:
+			board.getResultDecorator().setDecoration(null);
 			cursor.setCursorFirst();
 			refresh();
 			decorateForLastMoveListMove();
 			break;
 		case LAST_NAV:
+			board.getResultDecorator().setDecoration(null);
 			cursor.setCursorLast();
 			refresh();
 			decorateForLastMoveListMove();
@@ -413,6 +417,7 @@ public class InactiveController extends ChessBoardController implements
 	 */
 	@Override
 	public void userClickedOnMove(int halfMoveNumber) {
+		board.getResultDecorator().setDecoration(null);
 		cursor.setCursor(halfMoveNumber);
 		enableDisableNavButtons();
 		refresh();
@@ -425,7 +430,7 @@ public class InactiveController extends ChessBoardController implements
 			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " "
 					+ isDnd);
 			userMadeAdjustment = true;
-			board.getResultDecorator().setHiding(true);
+			board.getResultDecorator().setDecoration(null);
 
 			board.getSquareHighlighter().removeAllHighlights();
 			board.getArrowDecorator().removeAllArrows();

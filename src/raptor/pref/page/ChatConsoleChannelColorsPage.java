@@ -80,7 +80,7 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		parent.setLayout(new GridLayout(3, false));
 
 		Label channelNamesLabel = new Label(parent, SWT.NONE);
-		channelNamesLabel.setText("Script:");
+		channelNamesLabel.setText("Channels:");
 		channelNamesLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false, 1, 1));
 

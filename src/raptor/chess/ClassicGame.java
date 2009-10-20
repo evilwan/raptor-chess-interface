@@ -76,13 +76,13 @@ public class ClassicGame implements Game {
 	protected Map<PgnHeader, String> pgnHeaderMap = new HashMap<PgnHeader, String>();
 	protected long[][] pieceBB = new long[2][7];
 	protected int[][] pieceCounts = new int[2][7];
-	protected Result result = Result.ON_GOING;
 	protected int state;
 	protected long zobristGameHash;
 	protected long zobristPositionHash;
 
 	public ClassicGame() {
 		setHeader(PgnHeader.Variant, Variant.classic.name());
+		setHeader(PgnHeader.Result, Result.ON_GOING.getDescription());
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class ClassicGame implements Game {
 		pieceBB = new long[2][7];
 		pieceCounts = new int[2][7];
 		moves = new MoveList();
-		result = Result.ON_GOING;
+		setHeader(PgnHeader.Result, Result.ON_GOING.getDescription());
 	}
 
 	/**
@@ -463,7 +463,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public Result getResult() {
-		return result;
+		return Result.get(getHeader(PgnHeader.Result));
 	}
 
 	/**
@@ -1294,7 +1294,7 @@ public class ClassicGame implements Game {
 			case 3:
 				result.append("State: " + state + " Variant="
 						+ getHeader(PgnHeader.Variant) + " Result="
-						+ this.result);
+						+ getResult());
 				break;
 			case 2:
 				result.append("Event: " + getHeader(PgnHeader.Event) + " Site="

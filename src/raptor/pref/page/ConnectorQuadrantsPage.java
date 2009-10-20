@@ -14,7 +14,7 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 	protected String connectorShortName;
 
 	public ConnectorQuadrantsPage(String connectorShortName) {
-		super(FLAT);
+		super(GRID);
 		setTitle(connectorShortName + " Quadrants");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 		this.connectorShortName = connectorShortName;

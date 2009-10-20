@@ -349,19 +349,19 @@ public class IcsParser implements GameConstants {
 			case GameEndMessage.ABORTED:
 			case GameEndMessage.ADJOURNED:
 			case GameEndMessage.UNDETERMINED:
-				game.setHeader(PgnHeader.ResultDescription, Result.UNDETERMINED
+				game.setHeader(PgnHeader.Result, Result.UNDETERMINED
 						.getDescription());
 				break;
 			case GameEndMessage.BLACK_WON:
-				game.setHeader(PgnHeader.ResultDescription, Result.BLACK_WON
+				game.setHeader(PgnHeader.Result, Result.BLACK_WON
 						.getDescription());
 				break;
 			case GameEndMessage.WHITE_WON:
-				game.setHeader(PgnHeader.ResultDescription, Result.WHITE_WON
+				game.setHeader(PgnHeader.Result, Result.WHITE_WON
 						.getDescription());
 				break;
 			case GameEndMessage.DRAW:
-				game.setHeader(PgnHeader.ResultDescription, Result.DRAW
+				game.setHeader(PgnHeader.Result, Result.DRAW
 						.getDescription());
 				break;
 			default:
@@ -436,9 +436,9 @@ public class IcsParser implements GameConstants {
 	protected void process(RemovingObsGameMessage message, GameService service) {
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			if (LOG.isInfoEnabled()) {
+			if (LOG.isDebugEnabled()) {
 				LOG
-						.info("Received removing obs game message for a game not in the GameService. This can usually be ignored if a game end message was received first."
+						.debug("Received removing obs game message for a game not in the GameService."
 								+ message);
 			}
 		} else {

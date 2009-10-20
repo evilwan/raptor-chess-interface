@@ -107,7 +107,8 @@ public class PlayingController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
-
+							board.getResultDecorator().setDecorationFromResult(
+									getGame().getResult());
 							board.redrawSquares();
 							onPlayGameEndSound();
 
