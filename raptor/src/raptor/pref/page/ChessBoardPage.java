@@ -320,12 +320,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				"Square Background", backgroundNameValues,
 				getFieldEditorParent());
 		addField(backgroundFieldEditor);
-
-		ComboFieldEditor layoutsFieldEditor = new ComboFieldEditor(
-				PreferenceKeys.BOARD_LAYOUT, "Chess Board Control Layout:",
-				LAYOUTS, getFieldEditorParent());
-		addField(layoutsFieldEditor);
-
+		
 		pieceJailBackground = new ColorFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
 				"Piece Jail Background Color:", getFieldEditorParent());
@@ -336,6 +331,11 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 					}
 				});
 		addField(pieceJailBackground);
+
+		ComboFieldEditor layoutsFieldEditor = new ComboFieldEditor(
+				PreferenceKeys.BOARD_LAYOUT, "Chess Board Control Layout:",
+				LAYOUTS, getFieldEditorParent());
+		addField(layoutsFieldEditor);
 
 		pieceResize = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_SIZE_ADJUSTMENT,
@@ -410,7 +410,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		pieceJailHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA,
-				"Piece Jail shadow (0 is transparent, 255 is opaque):", ALPHAS,
+				"Piece Jail Shadow (0 is transparent, 255 is opaque):", ALPHAS,
 				getFieldEditorParent());
 		addField(pieceJailHidingAlphaCombo);
 
