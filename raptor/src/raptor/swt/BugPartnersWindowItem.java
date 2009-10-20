@@ -145,8 +145,6 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 		ratingFilterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false));
 		ratingFilterComposite.setLayout(new RowLayout());
-		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("Rating >= ");
 		minAvailablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
 		
@@ -167,8 +165,8 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 			}
 		});
 		
-		label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("Rating <= ");
+		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
+		label.setText("<= Rating <= ");
 		maxAvailablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
 		for(String rating : getRatings()) {
@@ -259,8 +257,6 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 			}
 		});
 		availablePartnersTable.setHeaderVisible(true);
-		// availablePartnersTable.setSize(availablePartnersTable.computeSize(
-		// SWT.DEFAULT, 250, true));
 
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
