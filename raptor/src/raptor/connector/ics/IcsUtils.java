@@ -369,7 +369,6 @@ public class IcsUtils implements GameConstants {
 				}
 			}
 		}
-		message.append('\n');
 	}
 
 	public static BuggerStatus getBuggserStatus(String status) {

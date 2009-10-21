@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -796,11 +797,11 @@ public abstract class IcsConnector implements Connector {
 		if (isConnected()) {
 			StringBuilder builder = new StringBuilder(message);
 			IcsUtils.filterOutbound(builder);
-			message = builder.toString();
+
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(context.getShortName() + "Connector Sending: "
-						+ message.trim());
+						+ builder.toString().trim());
 			}
 
 			if (hideNextChatType != null) {
@@ -810,8 +811,12 @@ public abstract class IcsConnector implements Connector {
 			// Only one thread at a time should write to the socket.
 			synchronized (socket) {
 				try {
-					socket.getOutputStream().write(message.getBytes());
-					socket.getOutputStream().flush();
+					String[] messages = breakUpMessage(builder);
+					for (String current : messages) {
+						System.err.println("sending \n" + current);
+						socket.getOutputStream().write(current.getBytes());
+						socket.getOutputStream().flush();
+					}
 					if (!message.startsWith("$$")) {
 						lastSendPingTime = System.currentTimeMillis();
 					} else {
@@ -836,6 +841,46 @@ public abstract class IcsConnector implements Connector {
 					"Error: Unable to send " + message + " to "
 							+ getShortName()
 							+ ". There is currently no connection."));
+		}
+	}
+
+	public String[] breakUpMessage(StringBuilder message) {
+		if (message.length() <= 330) {
+			return new String[] { message + "\n"};
+		} else {
+			int firstSpace = message.indexOf(" ");
+			List<String> result = new ArrayList<String>(5);
+			if (firstSpace != -1) {
+				int secondSpace = message.indexOf(" ", firstSpace + 1);
+				if (secondSpace != -1) {
+					String beginingText = message.substring(0, secondSpace + 1);
+					System.err.println("beginingText=" + beginingText);
+					String wrappedText = WordUtils.wrap(message.toString(), 330, "\n",
+							true);
+					String[] wrapped = wrappedText.split("\n");
+					result.add(wrapped[0] + "\n");
+					for (int i = 1; i < wrapped.length; i++) {
+						result.add(beginingText + wrapped[i] + "\n");
+					}
+				} else {
+					result.add(message.substring(0, 330) + "\n");
+					publishEvent(new ChatEvent(
+							null,
+							ChatType.INTERNAL,
+							"Your message was too long and Raptor could not find a nice "
+									+ "way to break it up. Your message was trimmed to:\n"
+									+ result.get(0)));
+				}
+			} else {
+				result.add(message.substring(0, 330) + "\n");
+				publishEvent(new ChatEvent(
+						null,
+						ChatType.INTERNAL,
+						"Your message was too long and Raptor could not find a nice "
+								+ "way to break it up. Your message was trimmed to:\n"
+								+ result.get(0)));
+			}
+			return result.toArray(new String[0]);
 		}
 	}
 
