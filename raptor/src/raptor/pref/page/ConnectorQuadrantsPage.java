@@ -68,14 +68,12 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT,
-				"Bughouse Board 2:",
+				+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT, "Bughouse Board 2:",
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.BUG_BUTTONS_QUADRANT,
-				"BughouseButtons:",
+				+ PreferenceKeys.BUG_BUTTONS_QUADRANT, "BughouseButtons:",
 				buildQuadrantArray(BugButtonsWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
@@ -85,14 +83,12 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.CHANNEL_TAB_QUADRANT,
-				"Channel Console:",
+				+ PreferenceKeys.CHANNEL_TAB_QUADRANT, "Channel Console:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.PERSON_TAB_QUADRANT,
-				"Person Console:",
+				+ PreferenceKeys.PERSON_TAB_QUADRANT, "Person Console:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 

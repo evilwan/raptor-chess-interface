@@ -361,8 +361,7 @@ public class IcsParser implements GameConstants {
 						.getDescription());
 				break;
 			case GameEndMessage.DRAW:
-				game.setHeader(PgnHeader.Result, Result.DRAW
-						.getDescription());
+				game.setHeader(PgnHeader.Result, Result.DRAW.getDescription());
 				break;
 			default:
 				LOG.error("Undetermined game end type. " + message);
@@ -497,7 +496,8 @@ public class IcsParser implements GameConstants {
 
 				// Takebacks may have effected the state of the game so first
 				// adjsut to those.
-				// adjust takebacks will also do nothing on refreshes and end games 
+				// adjust takebacks will also do nothing on refreshes and end
+				// games
 				// but will return true.
 				if (!IcsUtils.adjustToTakebacks(game, message, connector)) {
 					if (LOG.isDebugEnabled()) {
@@ -511,8 +511,9 @@ public class IcsParser implements GameConstants {
 									.debug("Position was a move firing state changed.");
 						}
 						service.fireGameStateChanged(message.gameId, true);
-					} else { //I'm not sure this block of code is ever hit anymore.
-						     //TO DO: look at removing it.
+					} else { // I'm not sure this block of code is ever hit
+								// anymore.
+						// TO DO: look at removing it.
 						if (LOG.isDebugEnabled()) {
 							LOG
 									.debug("Position was not a move firing state changed.");

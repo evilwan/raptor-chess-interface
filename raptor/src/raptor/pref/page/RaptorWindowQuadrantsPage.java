@@ -65,16 +65,15 @@ public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 						+ WordUtils.wrap(
 								"On this page you can customize the quadrant the following content "
 										+ "is originally created in.", 70));
-		
+
 		Label label = new Label(getFieldEditorParent(), SWT.NONE);
 		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false,
 				2, 1));
 		label.setImage(Raptor.getInstance().getImage(
 				Raptor.RESOURCES_DIR + "/images/quadrants.png"));
-		
+
 		ComboFieldEditor internalBrowserQuad = new ComboFieldEditor(
-				PreferenceKeys.APP_BROWSER_QUADRANT,
-				"Internal Web Browser:",
+				PreferenceKeys.APP_BROWSER_QUADRANT, "Internal Web Browser:",
 				buildQuadrantArray(BrowserWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(internalBrowserQuad);
