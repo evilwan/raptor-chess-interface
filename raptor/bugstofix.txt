@@ -1,7 +1,0 @@
-Figure out how to handle focusing on main tab when others pop up (optional)
-Figure out how to fix the focus problem when typing in a console and not losing any typed characters.
-Figure out how to shut down flash if its running in a browser page.
-Issues that are outstanding on the raptor site.
-Figure out how to fix the move list scrolling all the way to the right sometimes.
-Fix some issues related to the arrows and move lists.
-Fix lag not being set correctly when you are playing.
