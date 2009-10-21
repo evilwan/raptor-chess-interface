@@ -7,7 +7,7 @@ b3 b5|A01|Nimzovich-Larsen attack|Polish Variation
 b3 b6|A01|Nimzovich-Larsen attack|Symmetrical Variation 
 b3 C5|A01|Nimzovich-Larsen attack|English Variation 
 b3 D5|A01|Nimzovich-Larsen attack|Classical Variation 
-b3 E5|A01|Nimzovich-Larsen attack|Modern Variation 
+b3 E5|A01|Nimzovich-Larsen attack|Modern Variation  
 b3 F5|A01|Nimzovich-Larsen attack|Dutch Variation 
 b3 NF6|A01|Nimzovich-Larsen attack|Indian Variation 
 b3|A01|Nimzovich-Larsen attack|
@@ -1770,7 +1770,7 @@ E4 E5 NF3 QF6|C40|Greco defense|Kieseritsky, Rice gambit
 E4 E5 NF3|C40|King's knight Opening|Kieseritsky, Rice gambit
 E4 E5 QF3|C20|KP|Napoleon's Opening
 E4 E5 QH5|C20|KP|Patzer Opening
-E4 E5|C20|King's pawn game|Winawer, Advance, poisoned pawn, Konstantinopolsky Variation 
+E4 E5|C20|King's pawn game|
 E4 E6 b3|C00|French|Reti (Spielmann) Variation 
 E4 E6 C4|C00|French defense, Steiner Variation |Najdorf, 7...be7 Main line
 E4 E6 D3 D5 ND2 NF6 NGF3 NC6 Be2|C00|French|Reversed Philidor formation

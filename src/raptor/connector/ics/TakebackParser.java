@@ -33,12 +33,14 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class TakebackParser {
 
-	public static final String ACCEPTD_TAKE_BACK = "accepts the takeback request";
+	public static final String ACCEPTED_TAKE_BACK = "accepts the takeback request";
+
+	public static final String YOU_ACCEPTED_TAKE_BACK = "You accept the takeback request from";
 
 	public static final String IDENTIFIER = "Game";
 
 	private static final Log LOG = LogFactory.getLog(TakebackParser.class);
-	public static final String REQUEST_TAKE_BACK = "take back";
+	public static final String REQUEST_TAKE_BACK = "would like to take back";
 
 	public static class TakebackMessage {
 		public String gameId = "";
@@ -91,10 +93,11 @@ public class TakebackParser {
 			message.halfMovesRequested = Integer.parseInt(tok.nextToken());
 
 			gameToTakebackMessages.put(message.gameId, message);
-
+			System.err.println("Taleback offered.");
 			return false;
-		} else if (line.startsWith(IDENTIFIER)
-				&& line.contains(ACCEPTD_TAKE_BACK)) {
+		} else if ((line.startsWith(IDENTIFIER) && line
+				.contains(ACCEPTED_TAKE_BACK))
+				|| line.startsWith(YOU_ACCEPTED_TAKE_BACK)) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Processing accepted takeback.");
 			}
@@ -119,6 +122,7 @@ public class TakebackParser {
 				message.gameId = gameId;
 				gameToTakebackMessages.put(message.gameId, message);
 			}
+			System.err.println("Taleback accepted.");
 			return true;
 		}
 		return false;
