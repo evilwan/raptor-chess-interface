@@ -45,6 +45,7 @@ import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
+import raptor.service.ThreadService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
@@ -155,7 +156,8 @@ public class PlayingController extends ChessBoardController {
 								handleAutoDraw();
 								if (!makePremove(false)) {
 									refresh();
-									if (getPreferences()
+									boolean wasUserMove = !isUsersMove();
+									if (!wasUserMove && getPreferences()
 											.getBoolean(
 													PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
 										board
@@ -176,7 +178,7 @@ public class PlayingController extends ChessBoardController {
 																				PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
 									}
 
-									if (getPreferences()
+									if (!wasUserMove && getPreferences()
 											.getBoolean(
 													PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
 										board
@@ -698,9 +700,15 @@ public class PlayingController extends ChessBoardController {
 				adjustForIllegalMove(fromSquare, toSquare, false);
 			} else {
 				if (game.move(move)) {
+					game.rollback();
+					final Move finalMove = move;
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							connector.makeMove(game, finalMove);
+						}
+					});
 					board.unhidePieces();
 					refreshForMove(move);
-					connector.makeMove(game, move);
 				} else {
 					connector.onError(
 							"Game.move returned false for a move that should have been legal.Move: "
@@ -799,7 +807,13 @@ public class PlayingController extends ChessBoardController {
 					Move move = foundMoves.get(random
 							.nextInt(foundMoves.size()));
 					if (game.move(move)) {
-						connector.makeMove(game, move);
+						game.rollback();
+						final Move finalMove = move;
+						ThreadService.getInstance().run(new Runnable() {
+							public void run() {
+								connector.makeMove(game, finalMove);
+							}
+						});
 					} else {
 						throw new IllegalStateException(
 								"Game rejected move in smart move. This is a bug.");
@@ -1074,7 +1088,11 @@ public class PlayingController extends ChessBoardController {
 	 */
 	protected void handleAutoDraw() {
 		if (isToolItemSelected(ToolBarItemKey.AUTO_DRAW)) {
-			getConnector().onDraw(getGame());
+			ThreadService.getInstance().run(new Runnable() {
+				public void run() {
+					getConnector().onDraw(getGame());
+				}
+			});
 		}
 	}
 
@@ -1089,6 +1107,10 @@ public class PlayingController extends ChessBoardController {
 	 *            true if this is a premoe drop, otherwise false.
 	 */
 	protected boolean makePremove(boolean isPremoveDrop) {
+		if (!isUsersMove()) {
+			return false;
+		}
+
 		boolean result = false;
 		Move moveMade = null;
 		Move moveBeforePremove = getGame().getLastMove();
@@ -1109,9 +1131,22 @@ public class PlayingController extends ChessBoardController {
 							try {
 								move = game.makeMove(info.fromSquare,
 										info.toSquare);
-								getConnector().makeMove(getGame(), move);
+								game.rollback();
+								final Move finalMove = move;
+								ThreadService.getInstance().run(new Runnable() {
+									public void run() {
+										connector.makeMove(game, finalMove);
+									}
+								});
+								//Grabs the last move.
+								refresh();
+								//Adjusts for the new move
+								refreshForMove(move);
+								//Handles auto draw if its pressed.
+								handleAutoDraw();
 								moveMade = move;
 								result = true;
+								
 								break;
 							} catch (IllegalArgumentException iae) {
 								getConnector()
@@ -1133,12 +1168,24 @@ public class PlayingController extends ChessBoardController {
 									.makeMove(info.fromSquare, info.toSquare,
 											info.promotionColorlessPiece);
 						}
-						getConnector().makeMove(getGame(), move);
+						game.rollback();
+						final Move finalMove = move;
+						ThreadService.getInstance().run(new Runnable() {
+							public void run() {
+								connector.makeMove(game, finalMove);
+							}
+						});
+						
+						//Grabs the last move.
+						refresh();
+						//Adjusts for the new move
+						refreshForMove(move);
 						premovesToRemove.add(info);
+						//Handles auto draw if its pressed.
 						handleAutoDraw();
 						result = true;
 						moveMade = move;
-
+						
 						break;
 					}
 				} catch (IllegalArgumentException iae) {
@@ -1156,8 +1203,6 @@ public class PlayingController extends ChessBoardController {
 			}
 		}
 		if (result) {
-			refresh();
-
 			if (moveBeforePremove != null) {
 				board.getSquareHighlighter().removeAllHighlights();
 				board.getArrowDecorator().removeAllArrows();
