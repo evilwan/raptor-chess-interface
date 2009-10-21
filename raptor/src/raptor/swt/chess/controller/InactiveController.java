@@ -380,6 +380,9 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void refresh() {
+		if (isDisposed()) {
+			return;
+		}
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(cursor.getCursorPosition());
 		enableDisableNavButtons();
