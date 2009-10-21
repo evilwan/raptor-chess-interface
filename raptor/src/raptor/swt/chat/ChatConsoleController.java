@@ -57,7 +57,6 @@ import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
-import raptor.connector.ics.IcsUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ChatScript;
