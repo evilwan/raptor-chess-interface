@@ -156,9 +156,10 @@ public class PlayingController extends ChessBoardController {
 								handleAutoDraw();
 								if (!makePremove(false)) {
 									boolean wasUserMove = !isUsersMove();
-									if (!wasUserMove && getPreferences()
-											.getBoolean(
-													PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
+									if (!wasUserMove
+											&& getPreferences()
+													.getBoolean(
+															PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
 										board
 												.getSquareHighlighter()
 												.addHighlight(
@@ -177,9 +178,10 @@ public class PlayingController extends ChessBoardController {
 																				PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
 									}
 
-									if (!wasUserMove && getPreferences()
-											.getBoolean(
-													PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
+									if (!wasUserMove
+											&& getPreferences()
+													.getBoolean(
+															PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
 										board
 												.getArrowDecorator()
 												.addArrow(
@@ -199,9 +201,8 @@ public class PlayingController extends ChessBoardController {
 									}
 									refresh();
 									onPlayMoveSound();
-								}
-								else {
-									onPlayMoveSound();									
+								} else {
+									onPlayMoveSound();
 								}
 							} else {
 								decorateForLastMoveListMove();
@@ -1145,15 +1146,15 @@ public class PlayingController extends ChessBoardController {
 										connector.makeMove(game, finalMove);
 									}
 								});
-								//Grabs the last move.
+								// Grabs the last move.
 								refresh();
-								//Adjusts for the new move
+								// Adjusts for the new move
 								refreshForMove(move);
-								//Handles auto draw if its pressed.
+								// Handles auto draw if its pressed.
 								handleAutoDraw();
 								moveMade = move;
 								result = true;
-								
+
 								break;
 							} catch (IllegalArgumentException iae) {
 								getConnector()
@@ -1182,17 +1183,17 @@ public class PlayingController extends ChessBoardController {
 								connector.makeMove(game, finalMove);
 							}
 						});
-						
-						//Grabs the last move.
+
+						// Grabs the last move.
 						refresh();
-						//Adjusts for the new move
+						// Adjusts for the new move
 						refreshForMove(move);
 						premovesToRemove.add(info);
-						//Handles auto draw if its pressed.
+						// Handles auto draw if its pressed.
 						handleAutoDraw();
 						result = true;
 						moveMade = move;
-						
+
 						break;
 					}
 				} catch (IllegalArgumentException iae) {

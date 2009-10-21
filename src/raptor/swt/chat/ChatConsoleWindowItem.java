@@ -122,6 +122,7 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 					}
 				});
 			}
+			console.getController().onActivate();
 			isPassive = false;
 		}
 	}
@@ -129,6 +130,7 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	public void onPassivate() {
 		if (!isPassive) {
 			console.setLayoutDeferred(true);
+			console.getController().onPassivate();
 			isPassive = true;
 		}
 	}

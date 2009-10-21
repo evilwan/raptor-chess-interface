@@ -66,12 +66,12 @@ public class Move implements GameConstants {
 	protected String san;
 
 	protected byte to = EMPTY_SQUARE;
-	
+
 	/**
 	 * Used during rollbacks.
 	 */
 	protected String previousEcoHeader;
-	
+
 	/**
 	 * Used during rollbacks.
 	 */
@@ -285,6 +285,24 @@ public class Move implements GameConstants {
 		return previous50MoveCount;
 	}
 
+	/**
+	 * Used to reset the header during a rollback.
+	 * 
+	 * @param previousOpeningHeader
+	 */
+	public String getPreviousEcoHeader() {
+		return previousEcoHeader;
+	}
+
+	/**
+	 * Used to reset the header during a rollback.
+	 * 
+	 * @param previousOpeningHeader
+	 */
+	public String getPreviousOpeningHeader() {
+		return previousOpeningHeader;
+	}
+
 	public RemainingClockTime[] getRemainingClockTimes() {
 		if (annotations == null) {
 			return new RemainingClockTime[0];
@@ -431,6 +449,24 @@ public class Move implements GameConstants {
 		this.previous50MoveCount = (byte) previous50MoveCount;
 	}
 
+	/**
+	 * Used to reset the header during a rollback.
+	 * 
+	 * @param previousOpeningHeader
+	 */
+	public void setPreviousEcoHeader(String previousEcoHeader) {
+		this.previousEcoHeader = previousEcoHeader;
+	}
+
+	/**
+	 * Used to reset the header during a rollback.
+	 * 
+	 * @param previousOpeningHeader
+	 */
+	public void setPreviousOpeningHeader(String previousOpeningHeader) {
+		this.previousOpeningHeader = previousOpeningHeader;
+	}
+
 	public void setSan(String san) {
 		this.san = san;
 	}
@@ -442,37 +478,5 @@ public class Move implements GameConstants {
 	@Override
 	public String toString() {
 		return getSan() != null ? getSan() : getLan();
-	}
-
-	/**
-	 * Used to reset the header during a rollback.
-	 * @param previousOpeningHeader
-	 */
-	public String getPreviousEcoHeader() {
-		return previousEcoHeader;
-	}
-
-	/**
-	 * Used to reset the header during a rollback.
-	 * @param previousOpeningHeader
-	 */
-	public void setPreviousEcoHeader(String previousEcoHeader) {
-		this.previousEcoHeader = previousEcoHeader;
-	}
-
-	/**
-	 * Used to reset the header during a rollback.
-	 * @param previousOpeningHeader
-	 */
-	public String getPreviousOpeningHeader() {
-		return previousOpeningHeader;
-	}
-
-	/**
-	 * Used to reset the header during a rollback.
-	 * @param previousOpeningHeader
-	 */
-	public void setPreviousOpeningHeader(String previousOpeningHeader) {
-		this.previousOpeningHeader = previousOpeningHeader;
 	}
 }

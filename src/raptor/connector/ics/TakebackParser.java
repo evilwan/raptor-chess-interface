@@ -95,8 +95,8 @@ public class TakebackParser {
 			gameToTakebackMessages.put(message.gameId, message);
 			System.err.println("Taleback offered.");
 			return false;
-		} else if ((line.startsWith(IDENTIFIER) && line
-				.contains(ACCEPTED_TAKE_BACK))
+		} else if (line.startsWith(IDENTIFIER)
+				&& line.contains(ACCEPTED_TAKE_BACK)
 				|| line.startsWith(YOU_ACCEPTED_TAKE_BACK)) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Processing accepted takeback.");

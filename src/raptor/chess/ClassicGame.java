@@ -2148,6 +2148,13 @@ public class ClassicGame implements Game {
 		setEpSquare(move.getEpSquare());
 	}
 
+	protected void rollbackEcoHeaders(Move move) {
+		if (isSettingEcoHeaders()) {
+			setHeader(PgnHeader.ECO, move.getPreviousEcoHeader());
+			setHeader(PgnHeader.Opening, move.getPreviousOpeningHeader());
+		}
+	}
+
 	protected void rollbackEpMove(Move move) {
 		int oppositeColor = getOppositeColor(getColorToMove());
 		long fromBB = getBitboard(move.getFrom());
@@ -2450,13 +2457,6 @@ public class ClassicGame implements Game {
 			}
 		}
 		return result;
-	}
-
-	protected void rollbackEcoHeaders(Move move) {
-		if (isSettingEcoHeaders()) {
-			setHeader(PgnHeader.ECO, move.getPreviousEcoHeader());
-			setHeader(PgnHeader.Opening, move.getPreviousOpeningHeader());
-		}
 	}
 
 	protected void updateEcoHeaders(Move move) {

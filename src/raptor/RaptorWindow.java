@@ -464,6 +464,12 @@ public class RaptorWindow extends ApplicationWindow {
 										raptorParent.updateToolbar(true);
 									}
 								} catch (SWTException swt) {
+									if (LOG.isDebugEnabled()) {
+										LOG
+												.debug(
+														"Error handling item state changed:",
+														swt);
+									}
 									// Just eat it. It is probably a
 									// widget is
 									// disposed exception
@@ -1452,8 +1458,8 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	protected void initFolder(final RaptorTabFolder folder) {
 		folder.setSimple(false);
-		folder.setUnselectedImageVisible(false);
-		folder.setUnselectedCloseVisible(false);
+		folder.setUnselectedImageVisible(true);
+		folder.setUnselectedCloseVisible(true);
 		folder.setMaximizeVisible(true);
 		folder.setMinimizeVisible(true);
 

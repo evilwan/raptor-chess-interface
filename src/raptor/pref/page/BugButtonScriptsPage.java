@@ -64,7 +64,8 @@ public class BugButtonScriptsPage extends PreferencePage {
 				false, 2, 1));
 		textLabel
 				.setText(WordUtils
-						.wrap("\tBughouse button scripts have no parameters and can only use the methods "
+						.wrap(
+								"\tBughouse button scripts have no parameters and can only use the methods "
 										+ "in the context. See the Scripting wiki on the raptor site "
 										+ "http://code.google.com/p/raptor-chess-interface/wiki/Scripting for more details.",
 								70));

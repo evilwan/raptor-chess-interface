@@ -131,6 +131,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			.synchronizedList(new ArrayList<ChatEvent>(100));
 	protected boolean hasUnseenText;
 	protected boolean ignoreAwayList;
+	protected boolean isActive;
 	protected MouseListener inputTextClickListener = new MouseAdapter() {
 
 		@Override
@@ -230,7 +231,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	 * Returns an Image icon that can be used to represent this controller.
 	 */
 	public Image getIconImage() {
-		return null;
+		if (!isActive && hasUnseenText) {
+			return Raptor.getInstance().getIcon("chat2");
+		} else {
+			return null;
+		}
 	}
 
 	public List<ItemChangedListener> getItemChangedListeners() {
@@ -408,12 +413,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onActivate() {
-		chatConsole.getDisplay().timerExec(100, new Runnable() {
-			public void run() {
+		if (!isActive) {
+			isActive = true;
+			hasUnseenText = false;
+			fireItemChanged();
+			chatConsole.getDisplay().timerExec(100, new Runnable() {
+				public void run() {
 
-				onForceAutoScroll();
-			}
-		});
+					onForceAutoScroll();
+				}
+			});
+		}
 	}
 
 	public void onAppendChatEventToInputText(ChatEvent event) {
@@ -503,6 +513,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			onAppendChatEventToInputText(event);
 			if (!isIgnoringActions()) {
 				playSounds(event);
+				updateImageIcon(event);
 			}
 		}
 
@@ -521,6 +532,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onPassivate() {
+		if (isActive) {
+			isActive = false;
+			hasUnseenText = false;
+		}
 	}
 
 	public void onSave() {
@@ -1248,4 +1263,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					getChatConsole().getOutputText().getCharCount());
 		}
 	}
+
+	protected void updateImageIcon(ChatEvent event) {
+		if (!isActive && !hasUnseenText) {
+			hasUnseenText = true;
+			fireItemChanged();
+		}
+	}
+
 }
