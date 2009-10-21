@@ -813,7 +813,6 @@ public abstract class IcsConnector implements Connector {
 				try {
 					String[] messages = breakUpMessage(builder);
 					for (String current : messages) {
-						System.err.println("sending \n" + current);
 						socket.getOutputStream().write(current.getBytes());
 						socket.getOutputStream().flush();
 					}
@@ -854,7 +853,6 @@ public abstract class IcsConnector implements Connector {
 				int secondSpace = message.indexOf(" ", firstSpace + 1);
 				if (secondSpace != -1) {
 					String beginingText = message.substring(0, secondSpace + 1);
-					System.err.println("beginingText=" + beginingText);
 					String wrappedText = WordUtils.wrap(message.toString(), 330, "\n",
 							true);
 					String[] wrapped = wrappedText.split("\n");
