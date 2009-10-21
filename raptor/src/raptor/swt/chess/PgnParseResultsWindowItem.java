@@ -12,6 +12,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -45,8 +46,6 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
-
-	public static final int MAX_GAMES = 1000;
 
 	protected Composite composite;
 	protected List<PgnParserError> errors;
@@ -132,9 +131,12 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		gamesTotalLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 
-		final Table gamesTable = new Table(composite, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-		gamesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		Composite gamesTableComposite = new Composite(composite, SWT.NONE);
+		gamesTableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				true, true));
+		gamesTableComposite.setLayout(new FillLayout());
+		final Table gamesTable = new Table(gamesTableComposite, SWT.BORDER
+				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		final TableColumn type = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn date = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn white = new TableColumn(gamesTable, SWT.LEFT);
@@ -329,7 +331,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		black.setWidth(100);
 		blackElo.setWidth(60);
 		eco.setWidth(40);
-		opening.setWidth(100);
+		opening.setWidth(300);
 		gamesTable.setHeaderVisible(true);
 
 		Collections.sort(games, new GameComparator(PgnHeader.Date, false));
@@ -339,7 +341,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		populateGamesTable(gamesTable);
 
 		Button button = new Button(composite, SWT.PUSH);
-		button.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false));
+		button.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		button.setText("View");
 		button.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -357,11 +359,12 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			errorsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 					false));
 
-			Table errorTable = new Table(composite, SWT.BORDER | SWT.H_SCROLL
-					| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-
-			errorTable.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-					false));
+			Composite errorTableComposite = new Composite(composite, SWT.NONE);
+			errorTableComposite.setLayoutData(new GridData(SWT.FILL,
+					SWT.CENTER, true, false));
+			Table errorTable = new Table(errorTableComposite, SWT.BORDER
+					| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE
+					| SWT.FULL_SELECTION);
 			TableColumn tc1 = new TableColumn(errorTable, SWT.LEFT);
 			TableColumn tc2 = new TableColumn(errorTable, SWT.LEFT);
 			TableColumn tc3 = new TableColumn(errorTable, SWT.LEFT);
@@ -372,6 +375,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			tc2.setWidth(200);
 			tc3.setWidth(80);
 			errorTable.setHeaderVisible(true);
+			errorTable.setSize(errorTable.computeSize(SWT.DEFAULT, 150, true));
 
 			for (PgnParserError error : errors) {
 				TableItem item = new TableItem(errorTable, SWT.NONE);

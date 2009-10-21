@@ -512,7 +512,7 @@ public class IcsParser implements GameConstants {
 						}
 						service.fireGameStateChanged(message.gameId, true);
 					} else { // I'm not sure this block of code is ever hit
-								// anymore.
+						// anymore.
 						// TO DO: look at removing it.
 						if (LOG.isDebugEnabled()) {
 							LOG
