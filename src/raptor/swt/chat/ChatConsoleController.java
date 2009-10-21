@@ -651,16 +651,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				});
 			}
 		} else if (!isConsoleOutputText
-				&& IcsUtils.LEGAL_CHARACTERS.indexOf(event.character) != -1
 				&& event.stateMask == 0) {
 			onAppendOutputText("" + event.character);
-			if (!isConsoleOutputText) {
-				chatConsole.getDisplay().timerExec(750, new Runnable() {
-					public void run() {
-						chatConsole.outputText.forceFocus();
-					}
-				});
-			}
 		} else if (!isConsoleOutputText) {
 			chatConsole.getDisplay().asyncExec(new Runnable() {
 				public void run() {
@@ -1259,8 +1251,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void setCaretToOutputTextEnd() {
 		if (!isIgnoringActions()) {
-			getChatConsole().getOutputText().setSelection(
-					getChatConsole().getOutputText().getCharCount());
+			getChatConsole().getOutputText().setCaretOffset(getChatConsole().getOutputText().getCharCount());
 		}
 	}
 
