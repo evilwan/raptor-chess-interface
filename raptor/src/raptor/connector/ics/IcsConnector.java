@@ -378,6 +378,45 @@ public abstract class IcsConnector implements Connector {
 		connectorListeners.add(listener);
 	}
 
+	public String[] breakUpMessage(StringBuilder message) {
+		if (message.length() <= 330) {
+			return new String[] { message + "\n" };
+		} else {
+			int firstSpace = message.indexOf(" ");
+			List<String> result = new ArrayList<String>(5);
+			if (firstSpace != -1) {
+				int secondSpace = message.indexOf(" ", firstSpace + 1);
+				if (secondSpace != -1) {
+					String beginingText = message.substring(0, secondSpace + 1);
+					String wrappedText = WordUtils.wrap(message.toString(),
+							330, "\n", true);
+					String[] wrapped = wrappedText.split("\n");
+					result.add(wrapped[0] + "\n");
+					for (int i = 1; i < wrapped.length; i++) {
+						result.add(beginingText + wrapped[i] + "\n");
+					}
+				} else {
+					result.add(message.substring(0, 330) + "\n");
+					publishEvent(new ChatEvent(
+							null,
+							ChatType.INTERNAL,
+							"Your message was too long and Raptor could not find a nice "
+									+ "way to break it up. Your message was trimmed to:\n"
+									+ result.get(0)));
+				}
+			} else {
+				result.add(message.substring(0, 330) + "\n");
+				publishEvent(new ChatEvent(
+						null,
+						ChatType.INTERNAL,
+						"Your message was too long and Raptor could not find a nice "
+								+ "way to break it up. Your message was trimmed to:\n"
+								+ result.get(0)));
+			}
+			return result.toArray(new String[0]);
+		}
+	}
+
 	/**
 	 * Connects to ics using the settings in preferences.
 	 */
@@ -798,7 +837,6 @@ public abstract class IcsConnector implements Connector {
 			StringBuilder builder = new StringBuilder(message);
 			IcsUtils.filterOutbound(builder);
 
-
 			if (LOG.isDebugEnabled()) {
 				LOG.debug(context.getShortName() + "Connector Sending: "
 						+ builder.toString().trim());
@@ -831,7 +869,6 @@ public abstract class IcsConnector implements Connector {
 			}
 
 			if (!isHidingFromUser) {
-				// Wrap the text before publishing an outbound event.
 				publishEvent(new ChatEvent(null, ChatType.OUTBOUND, message
 						.trim()));
 			}
@@ -840,45 +877,6 @@ public abstract class IcsConnector implements Connector {
 					"Error: Unable to send " + message + " to "
 							+ getShortName()
 							+ ". There is currently no connection."));
-		}
-	}
-
-	public String[] breakUpMessage(StringBuilder message) {
-		if (message.length() <= 330) {
-			return new String[] { message + "\n"};
-		} else {
-			int firstSpace = message.indexOf(" ");
-			List<String> result = new ArrayList<String>(5);
-			if (firstSpace != -1) {
-				int secondSpace = message.indexOf(" ", firstSpace + 1);
-				if (secondSpace != -1) {
-					String beginingText = message.substring(0, secondSpace + 1);
-					String wrappedText = WordUtils.wrap(message.toString(), 330, "\n",
-							true);
-					String[] wrapped = wrappedText.split("\n");
-					result.add(wrapped[0] + "\n");
-					for (int i = 1; i < wrapped.length; i++) {
-						result.add(beginingText + wrapped[i] + "\n");
-					}
-				} else {
-					result.add(message.substring(0, 330) + "\n");
-					publishEvent(new ChatEvent(
-							null,
-							ChatType.INTERNAL,
-							"Your message was too long and Raptor could not find a nice "
-									+ "way to break it up. Your message was trimmed to:\n"
-									+ result.get(0)));
-				}
-			} else {
-				result.add(message.substring(0, 330) + "\n");
-				publishEvent(new ChatEvent(
-						null,
-						ChatType.INTERNAL,
-						"Your message was too long and Raptor could not find a nice "
-								+ "way to break it up. Your message was trimmed to:\n"
-								+ result.get(0)));
-			}
-			return result.toArray(new String[0]);
 		}
 	}
 
