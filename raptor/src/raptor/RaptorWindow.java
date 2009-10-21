@@ -1608,11 +1608,6 @@ public class RaptorWindow extends ApplicationWindow {
 
 					new MenuItem(menu, SWT.SEPARATOR);
 
-					MenuItem imageMenuItem = new MenuItem(menu, SWT.CASCADE);
-					imageMenuItem.setImage(Raptor.getInstance().getImage(
-							Raptor.RESOURCES_DIR + "/images/quadrantsSmall"
-									+ folder.quad.toString() + ".png"));
-
 					Quadrant[] availableQuadrants = folder
 							.getRaptorTabItemSelection().raptorItem
 							.getMoveToQuadrants();
@@ -1632,6 +1627,12 @@ public class RaptorWindow extends ApplicationWindow {
 							});
 						}
 					}
+
+					MenuItem imageMenuItem = new MenuItem(menu, SWT.CASCADE);
+					imageMenuItem.setImage(Raptor.getInstance().getImage(
+							Raptor.RESOURCES_DIR + "/images/quadrantsSmall"
+									+ folder.quad.toString() + ".png"));
+
 					menu.setLocation(folder.toDisplay(e.x, e.y));
 					menu.setVisible(true);
 					while (!menu.isDisposed() && menu.isVisible()) {
