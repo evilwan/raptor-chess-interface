@@ -497,7 +497,9 @@ public class IcsParser implements GameConstants {
 
 				// Takebacks may have effected the state of the game so first
 				// adjsut to those.
-				if (!IcsUtils.adjustToTakebacks(game, message, takebackParser)) {
+				// adjust takebacks will also do nothing on refreshes and end games 
+				// but will return true.
+				if (!IcsUtils.adjustToTakebacks(game, message, connector)) {
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Making move in obs/playing position.");
 					}
@@ -509,7 +511,8 @@ public class IcsParser implements GameConstants {
 									.debug("Position was a move firing state changed.");
 						}
 						service.fireGameStateChanged(message.gameId, true);
-					} else {
+					} else { //I'm not sure this block of code is ever hit anymore.
+						     //TO DO: look at removing it.
 						if (LOG.isDebugEnabled()) {
 							LOG
 									.debug("Position was not a move firing state changed.");
@@ -520,7 +523,7 @@ public class IcsParser implements GameConstants {
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Adjusted for takebacks.");
 					}
-					service.fireGameStateChanged(message.gameId, true);
+					service.fireGameStateChanged(message.gameId, false);
 				}
 			}
 		} else {

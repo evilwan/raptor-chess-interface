@@ -155,7 +155,6 @@ public class PlayingController extends ChessBoardController {
 							if (isNewMove) {
 								handleAutoDraw();
 								if (!makePremove(false)) {
-									refresh();
 									boolean wasUserMove = !isUsersMove();
 									if (!wasUserMove && getPreferences()
 											.getBoolean(
@@ -198,11 +197,16 @@ public class PlayingController extends ChessBoardController {
 																		.getBoolean(
 																				PreferenceKeys.ARROW_FADE_AWAY_MODE)));
 									}
+									refresh();
+									onPlayMoveSound();
+								}
+								else {
+									onPlayMoveSound();									
 								}
 							} else {
+								decorateForLastMoveListMove();
 								refresh();
 							}
-							onPlayMoveSound();
 						} catch (Throwable t) {
 							connector.onError(
 									"PlayingController.gameStateChanged", t);

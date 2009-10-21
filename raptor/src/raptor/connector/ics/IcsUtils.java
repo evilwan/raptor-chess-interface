@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
+import raptor.chat.ChatType;
 import raptor.chat.Bugger.BuggerStatus;
 import raptor.chess.AtomicGame;
 import raptor.chess.BughouseGame;
@@ -39,7 +40,6 @@ import raptor.chess.pgn.RemainingClockTime;
 import raptor.chess.util.GameUtils;
 import raptor.chess.util.ZobristUtils;
 import raptor.connector.Connector;
-import raptor.connector.ics.TakebackParser.TakebackMessage;
 import raptor.connector.ics.game.message.G1Message;
 import raptor.connector.ics.game.message.MovesMessage;
 import raptor.connector.ics.game.message.Style12Message;
@@ -109,7 +109,10 @@ public class IcsUtils implements GameConstants {
 			}
 		} else {
 			if (message.san.equals("none")) {
-				LOG.warn("Received a none for san in a style 12 event.");
+				Raptor
+						.getInstance()
+						.onError(
+								"Received a none for san in a style 12 event. This should have contained a move.");
 			} else {
 				Move move = game.makeSanMove(message.san);
 				move.addAnnotation(new RemainingClockTime(
@@ -148,49 +151,47 @@ public class IcsUtils implements GameConstants {
 	 * Returns true if the game was adjusted for takebacks. False otherwise.
 	 */
 	public static boolean adjustToTakebacks(Game game, Style12Message message,
-			TakebackParser takebackParser) {
+			Connector connector) {
 		boolean result = false;
-		TakebackMessage takeback = takebackParser.getTakebackMessage(game
-				.getId());
 
-		if (takeback != null && takeback.wasAccepted) {
-			if (takeback.halfMovesRequested == -1) {
+		// fics ----- game halfmove
+		// 1 w b ---- 0 1
+		// 2 w b ---- 2 3
+		// 3 w b ---- 4 5
+		// 4 w b ---- 6 7
+		// 5 w b ---- 7 8
+		int currentHalfMove = ((message.fullMoveNumber - 1) * 2)
+				+ (message.isWhitesMoveAfterMoveIsMade ? 0 : 1);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("adjustToTakebacks calculatedHalfMove " + currentHalfMove
+					+ " 12FulLMoveNumber " + message.fullMoveNumber
+					+ " 12isWhitesMoveAfter "
+					+ message.isWhitesMoveAfterMoveIsMade + " gameHalfMove "
+					+ game.getHalfMoveCount());
+		}
+
+		if (currentHalfMove != game.getHalfMoveCount() + 1) {
+
+			if (game.getHalfMoveCount() < currentHalfMove) {
 				if (LOG.isDebugEnabled()) {
 					LOG
-							.debug("Resettting position becuse we dont know how many moves to rollback.");
+							.debug("Didnt have all the moves needed for rollback. Resetting game and sending moves request.");
 				}
 				resetGame(game, message);
+				connector.sendMessage("moves " + message.gameId, true,
+						ChatType.MOVES);
 				result = true;
 			} else {
-				int adjustedHalfMoveCount = game.getHalfMoveCount()
-						- takeback.halfMovesRequested;
 
-				if (game.getMoveList().getSize() < adjustedHalfMoveCount) {
+				while (game.getHalfMoveCount() > currentHalfMove) {
 					if (LOG.isDebugEnabled()) {
-						LOG
-								.debug("Resettting position becuse we dont have enough moves to handle the takebacks");
+						LOG.debug("Rolled back a move.");
 					}
-					resetGame(game, message);
-					result = true;
-				} else {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Rolling back moves to adjust to takebacks. "
-								+ takeback.halfMovesRequested);
-					}
-
-					for (int i = 0; i < takeback.halfMovesRequested; i++) {
-						game.rollback();
-					}
-
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Finished rolling back.");
-					}
-
-					result = true;
+					game.rollback();
 				}
+				result = true;
 			}
 		}
-		takebackParser.clearTakebackMessages(game.getId());
 		return result;
 	}
 

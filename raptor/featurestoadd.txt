@@ -2,8 +2,6 @@
  Add key mappings. (Function key + hot key support).
  Installer
  Build
- Seek graph
- Bugwho panels
  Engine support
  More ChessBoardLayouts
  More Chess Sets.

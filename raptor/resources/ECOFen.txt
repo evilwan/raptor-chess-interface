@@ -5,7 +5,7 @@ rnbqkbnr/p1pppppp/8/1p6/8/1P6/P1PPPPPP/RNBQKBNR w|A01|Nimzovich-Larsen attack|Po
 rnbqkbnr/p1pppppp/1p6/8/8/1P6/P1PPPPPP/RNBQKBNR w|A01|Nimzovich-Larsen attack|Symmetrical Variation |
 rnbqkbnr/pp1ppppp/8/2p5/8/1P6/P1PPPPPP/RNBQKBNR w|A01|Nimzovich-Larsen attack|English Variation |
 rnbqkbnr/ppp1pppp/8/3p4/8/1P6/P1PPPPPP/RNBQKBNR w|A01|Nimzovich-Larsen attack|Classical Variation |
-rnbqkbnr/pppp1ppp/8/4p3/8/1P6/P1PPPPPP/RNBQKBNR w|A01|Nimzovich-Larsen attack|Modern Variation |
+rnbqkbnr/pppp1ppp/8/4p3/8/1P6/P1PPPPPP/RNBQKBNR w|A01|Nimzovich-Larsen attack|Modern Variation  |
 rnbqkbnr/ppppp1pp/8/5p2/8/1P6/P1PPPPPP/RNBQKBNR w|A01|Nimzovich-Larsen attack|Dutch Variation |
 rnbqkb1r/pppppppp/5n2/8/8/1P6/P1PPPPPP/RNBQKBNR w|A01|Nimzovich-Larsen attack|Indian Variation |
 rnbqkbnr/pppppppp/8/8/8/1P6/P1PPPPPP/RNBQKBNR b|A01|Nimzovich-Larsen attack|
@@ -1455,7 +1455,7 @@ r2qk2r/2p1bppp/p1np1n2/1p2p3/3PP1b1/1BP2N2/PP2QPPP/RNB1K2R w|C77|Ruy Lopez|Worma
 r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPPQPPP/RNB1K2R b|C77|Ruy Lopez|Wormald (Alapin) attack|
 r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w|C77|Ruy Lopez|Morphy defense|
 r1bqkb1r/1pppnppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w|C70|Ruy Lopez|Cozio defense deferred|
-r1bqkbnr/1ppp1ppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R b|C70|Ruy Lopez|Exchange, bronstein Variation |
+r1bqkbnr/1ppp1ppp/p1n5/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R b|C70|Ruy Lopez|
 r3kbnr/1ppb1ppp/p1p5/8/3NP3/8/PPP2PPP/RNB1K2R w|C68|Ruy Lopez|Exchange, Alekhine Variation |
 r1bqkbnr/1pp3pp/p1p2p2/4p3/4P3/2NP1N2/PPP2PPP/R1BQK2R b|C68|Ruy Lopez|Exchange, Romanovsky Variation |
 r1bqkbnr/1pp2ppp/p1p5/4p3/4P3/2N2N2/PPPP1PPP/R1BQK2R b|C68|Ruy Lopez|Exchange, Keres Variation |
@@ -1768,7 +1768,7 @@ rnb1kbnr/pppp1ppp/5q2/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w|C40|Greco defense|Kieserit
 rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b|C40|King's knight Opening|Kieseritsky, Rice gambit|
 rnbqkbnr/pppp1ppp/8/4p3/4P3/5Q2/PPPP1PPP/RNB1KBNR b|C20|KP|Napoleon's Opening|
 rnbqkbnr/pppp1ppp/8/4p2Q/4P3/8/PPPP1PPP/RNB1KBNR b|C20|KP|Patzer Opening|
-rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w|C20|King's pawn game|Winawer, Advance, poisoned pawn, Konstantinopolsky Variation |
+rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w|C20|King's pawn game|
 rnbqkbnr/pppp1ppp/4p3/8/4P3/1P6/P1PP1PPP/RNBQKBNR b|C00|French|Reti (Spielmann) Variation |
 rnbqkbnr/pppp1ppp/4p3/8/2P1P3/8/PP1P1PPP/RNBQKBNR b|C00|French defense, Steiner Variation |Najdorf, 7...be7 Main line|
 r1bqkb1r/ppp2ppp/2n1pn2/3p4/4P3/3P1N2/PPPNBPPP/R1BQK2R b|C00|French|Reversed Philidor formation|
@@ -1897,9 +1897,9 @@ rnbqk1nr/ppp1ppbp/3p2p1/8/3PP3/2N5/PPP2PPP/R1BQKBNR w|B06|Robatsch (Modern) defe
 rnbqk1nr/ppppppbp/6p1/8/3PP3/2N5/PPP2PPP/R1BQKBNR b|B06|Robatsch defense|Three pawns attack|
 rnbqk1nr/ppp1ppbp/3p2p1/8/3PP3/2P2N2/PP3PPP/RNBQKB1R b|B07|Robatsch defense|Geller's system|
 rn1qk1nr/ppp1ppbp/3p2p1/8/2PPP1b1/5N2/PP3PPP/RNBQKB1R w|A41|Robatsch defense|Rossolimo Variation |
-rnbqk1nr/ppppppbp/6p1/8/3PP3/8/PPP2PPP/RNBQKBNR w|B06|Robatsch (Modern) defense|Modern, Vitolins attack|
-rnbqkb1r/ppppppnp/6p1/4P3/3P2P1/8/PPP2P1P/RNBQKBNR w|B06|Norwegian defense|Modern, Vitolins attack|
-rnbqkbnr/pppppp1p/6p1/8/4P3/8/PPPP1PPP/RNBQKBNR w|B06|Robatsch (Modern) defense|Modern, Vitolins attack|
+rnbqk1nr/ppppppbp/6p1/8/3PP3/8/PPP2PPP/RNBQKBNR w|B06|Robatsch (Modern) defense|
+rnbqkb1r/ppppppnp/6p1/4P3/3P2P1/8/PPP2P1P/RNBQKBNR w|B06|Norwegian defense|
+rnbqkbnr/pppppp1p/6p1/8/4P3/8/PPPP1PPP/RNBQKBNR w|B06|Robatsch (Modern) defense|
 rnbqkbnr/ppppppp1/7p/8/4P3/8/PPPP1PPP/RNBQKBNR w|B00|Carr's defense|
 r1bqkbnr/pppppppp/n7/8/4P3/8/PPPP1PPP/RNBQKBNR w|B00|Lemming defense|
 r1bqkbnr/pppppppp/2n5/8/3PP3/2P5/P4PPP/RNBQKBNR b|B00|KP|Nimzovich defense, Wheeler gambit|

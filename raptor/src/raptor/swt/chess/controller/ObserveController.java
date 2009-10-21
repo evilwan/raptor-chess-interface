@@ -113,56 +113,50 @@ public class ObserveController extends ChessBoardController {
 							if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
 								cursor.setCursorMasterLast();
 							}
-							refresh();
 							if (isNewMove) {
 								onPlayMoveSound();
+							}
 
-								board.getSquareHighlighter()
-										.removeAllHighlights();
-								board.getArrowDecorator().removeAllArrows();
+							board.getSquareHighlighter().removeAllHighlights();
+							board.getArrowDecorator().removeAllArrows();
 
-								Move lastMove = getGame().getLastMove();
+							Move lastMove = getGame().getLastMove();
 
-								if (lastMove != null) {
-									if (getPreferences()
-											.getBoolean(
-													PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
-										board
-												.getSquareHighlighter()
-												.addHighlight(
-														new Highlight(
-																lastMove
-																		.getFrom(),
-																lastMove
-																		.getTo(),
-																getPreferences()
-																		.getColor(
-																				PreferenceKeys.HIGHLIGHT_OBS_COLOR),
-																getPreferences()
-																		.getBoolean(
-																				PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-									}
+							if (lastMove != null) {
+								if (getPreferences()
+										.getBoolean(
+												PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
+									board
+											.getSquareHighlighter()
+											.addHighlight(
+													new Highlight(
+															lastMove.getFrom(),
+															lastMove.getTo(),
+															getPreferences()
+																	.getColor(
+																			PreferenceKeys.HIGHLIGHT_OBS_COLOR),
+															getPreferences()
+																	.getBoolean(
+																			PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+								}
 
-									if (getPreferences()
-											.getBoolean(
-													PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
-										board
-												.getArrowDecorator()
-												.addArrow(
-														new Arrow(
-																lastMove
-																		.getFrom(),
-																lastMove
-																		.getTo(),
-																getPreferences()
-																		.getColor(
-																				PreferenceKeys.ARROW_OBS_COLOR),
-																getPreferences()
-																		.getBoolean(
-																				PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-									}
+								if (getPreferences().getBoolean(
+										PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
+									board
+											.getArrowDecorator()
+											.addArrow(
+													new Arrow(
+															lastMove.getFrom(),
+															lastMove.getTo(),
+															getPreferences()
+																	.getColor(
+																			PreferenceKeys.ARROW_OBS_COLOR),
+															getPreferences()
+																	.getBoolean(
+																			PreferenceKeys.ARROW_FADE_AWAY_MODE)));
 								}
 							}
+							refresh();
 						} catch (Throwable t) {
 							connector.onError(
 									"ObserveController.gameStateChanged", t);

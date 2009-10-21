@@ -119,6 +119,7 @@ public class ResultDecorator implements BoardConstants {
 							break;
 						}
 					}
+					break;
 				case SQUARE_D5:
 					if (board.isWhiteOnTop()) {
 						switch (decoration) {
