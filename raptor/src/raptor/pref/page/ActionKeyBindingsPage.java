@@ -59,7 +59,12 @@ public class ActionKeyBindingsPage extends PreferencePage {
 		Label textLabel = new Label(composite, SWT.WRAP);
 		textLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 3, 1));
-		textLabel.setText(WordUtils.wrap("\tTO DO...", 70));
+		textLabel
+				.setText(WordUtils
+						.wrap(
+								"\tOn this page you can bind actions provided by "
+										+ "Raptor or created in the Action Scripts page to keystrokes.",
+								70));
 
 		Composite actionsTableComposite = new Composite(composite, SWT.NONE);
 		actionsTableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
