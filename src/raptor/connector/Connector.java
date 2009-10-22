@@ -23,6 +23,7 @@ import raptor.chess.Move;
 import raptor.script.ChatScriptContext;
 import raptor.script.GameScriptContext;
 import raptor.script.ScriptConnectorType;
+import raptor.script.ScriptContext;
 import raptor.service.ChatService;
 import raptor.service.GameService;
 import raptor.service.SeekService;
@@ -147,6 +148,13 @@ public interface Connector {
 	 * does'nt support scripting.
 	 */
 	public ScriptConnectorType getScriptConnectorType();
+
+	/**
+	 * Returns a ScriptContext with the specified parameters set.
+	 * 
+	 * @return
+	 */
+	public ScriptContext getScriptContext(String... params);
 
 	/**
 	 * Returns an array of the secondary preference nodes.

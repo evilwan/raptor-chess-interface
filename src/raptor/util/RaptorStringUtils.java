@@ -211,14 +211,9 @@ public class RaptorStringUtils {
 		if (StringUtils.isNotBlank(string)) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(string, ",",
 					false);
-
 			while (tok.hasMoreTokens()) {
 				String token = tok.nextToken();
-				if (token.equals("null")) {
-					result.add(null);
-				} else {
-					result.add(tok.nextToken());
-				}
+				result.add(token);
 			}
 		}
 		return result.toArray(new String[0]);
@@ -238,11 +233,7 @@ public class RaptorStringUtils {
 	 */
 	public static String toDelimitedString(Object[] array, String delimiter) {
 		StringBuilder result = new StringBuilder(100);
-		if (array == null) {
-			result.append("null");
-		} else if (array.length == 0) {
-			result.append("empty");
-		} else {
+		if (array != null && array.length != 0) {
 			for (int i = 0; i < array.length; i++) {
 				result.append(array[i].toString());
 

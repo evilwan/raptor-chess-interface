@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Display;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.service.ActionService;
 import raptor.service.ChessBoardCacheService;
 import raptor.service.ConnectorService;
 import raptor.service.EcoService;
@@ -390,6 +391,18 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		try {
+			ActionService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting down ActionService", t);
+		}
+
+		try {
+			ScriptService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting down ScriptService", t);
+		}
+
+		try {
 			if (raptorWindow != null) {
 				raptorWindow.close();
 			}
@@ -424,6 +437,7 @@ public class Raptor implements PreferenceKeys {
 		ConnectorService.getInstance();
 		SoundService.getInstance();
 		ScriptService.getInstance();
+		ActionService.getInstance();
 	}
 
 	/**

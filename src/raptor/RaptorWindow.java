@@ -78,8 +78,8 @@ import raptor.swt.PgnProcessingDialog;
 import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
-import raptor.swt.chat.controller.PartnerTellController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chess.Arrow;
 import raptor.swt.chess.ChessBoardWindowItem;
@@ -680,7 +680,7 @@ public class RaptorWindow extends ApplicationWindow {
 					ChatConsoleWindowItem item = (ChatConsoleWindowItem) folder
 							.getRaptorTabItemAt(i).raptorItem;
 					if (item.getController().getConnector() == connector
-							&& item.getController() instanceof PartnerTellController) {
+							&& item.getController() instanceof BughousePartnerController) {
 						result = true;
 						break;
 					}
@@ -711,6 +711,24 @@ public class RaptorWindow extends ApplicationWindow {
 							break;
 						}
 					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns true if atleast one window item of the specified type is being
+	 * managed.
+	 */
+	@SuppressWarnings("unchecked")
+	public boolean containsWindowItems(Class windowItemClass) {
+		boolean result = false;
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
+				if (windowItemClass.isInstance(currentTabItem.raptorItem)) {
+					result = true;
+					break;
 				}
 			}
 		}
@@ -899,10 +917,60 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
+	 * Returns all RaptorWindowItems that are being managed and are of the
+	 * specified class type and are currently selected within their parent
+	 * RaptorTabFolder.
+	 * 
+	 * @param windowItemClass
+	 *            The window item class.
+	 * @return The result.
+	 */
+	@SuppressWarnings("unchecked")
+	public RaptorWindowItem[] getSelectedWindowItems(Class windowItemClass) {
+		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
+
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
+				if (windowItemClass.isInstance(currentTabItem.raptorItem)
+						&& !currentTabItem.raptorParent.getMinimized()
+						&& currentTabItem.raptorParent
+								.getRaptorTabItemSelection() == currentTabItem) {
+					result.add(currentTabItem.raptorItem);
+				}
+			}
+		}
+
+		return result.toArray(new RaptorWindowItem[0]);
+	}
+
+	/**
 	 * Returns the RaptorTabFolder at the specified 0 based index.
 	 */
 	public RaptorTabFolder getTabFolder(int index) {
 		return folders[index];
+	}
+
+	/**
+	 * Returns all RaptorWindowItems that are being managed and are of the
+	 * specified class type.
+	 * 
+	 * @param windowItemClass
+	 *            The window item class.
+	 * @return The result.
+	 */
+	@SuppressWarnings("unchecked")
+	public RaptorWindowItem[] getWindowItems(Class windowItemClass) {
+		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
+
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
+				if (windowItemClass.isInstance(currentTabItem.raptorItem)) {
+					result.add(currentTabItem.raptorItem);
+				}
+			}
+		}
+
+		return result.toArray(new RaptorWindowItem[0]);
 	}
 
 	/**
@@ -1338,16 +1406,12 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		}
 
-		helpMenu.add(new Action("&About") {
+		helpMenu.add(new Action("&Raptor Home Page") {
 			@Override
 			public void run() {
-				Raptor.getInstance().alert("Comming soon.");
-			}
-		});
-		helpMenu.add(new Action("&Fics Commands Help") {
-			@Override
-			public void run() {
-				BrowserUtils.openUrl(PreferenceKeys.FICS_COMMANDS_HELP_URL);
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/");
+
 			}
 		});
 		menuBar.add(helpMenu);

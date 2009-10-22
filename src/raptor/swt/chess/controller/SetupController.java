@@ -23,13 +23,11 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
-import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
-import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -207,15 +205,28 @@ public class SetupController extends ChessBoardController {
 		return connector.getShortName() + "(Setup " + getGame().getId() + ")";
 	}
 
+	// @Override
+	// public Control getToolbar(Composite parent) {
+	// if (toolbar == null) {
+	// toolbar = new ToolBar(parent, SWT.FLAT);
+	// ChessBoardUtils.addSetupIconsToToolbar(this, toolbar);
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// } else if (toolbar.getParent() != parent) {
+	// toolbar.setParent(parent);
+	// }
+	// return toolbar;
+	// }
+
 	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			ChessBoardUtils.addSetupIconsToToolbar(this, toolbar);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		} else if (toolbar.getParent() != parent) {
+			ChessBoardUtils.addActionsToToolbar(this,
+					RaptorActionContainer.SetupChessBoard, toolbar, true);
+		} else {
 			toolbar.setParent(parent);
 		}
+
 		return toolbar;
 	}
 
@@ -229,36 +240,36 @@ public class SetupController extends ChessBoardController {
 		fireItemChanged();
 	}
 
-	@Override
-	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-		switch (key) {
-		case FEN:
-			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getHeader(PgnHeader.White) + " vs "
-							+ game.getHeader(PgnHeader.Black), game.toFen());
-			break;
-		case FLIP:
-			onFlip();
-			break;
-		case SETUP_CLEAR:
-			connector.onSetupClear(getGame());
-			break;
-		case SETUP_START:
-			connector.onSetupStartPosition(getGame());
-			break;
-		case SETUP_DONE:
-			connector.onSetupComplete(getGame());
-			break;
-		case SETUP_FROM_FEN:
-			String result = Raptor.getInstance().promptForText(
-					"Enter the FEN to set the position to:");
-			if (result != null) {
-				connector.onSetupFromFEN(getGame(), result);
-			}
-			break;
-
-		}
-	}
+	// @Override
+	// public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
+	// switch (key) {
+	// case FEN:
+	// Raptor.getInstance().promptForText(
+	// "FEN for game " + game.getHeader(PgnHeader.White) + " vs "
+	// + game.getHeader(PgnHeader.Black), game.toFen());
+	// break;
+	// case FLIP:
+	// onFlip();
+	// break;
+	// case SETUP_CLEAR:
+	// connector.onSetupClear(getGame());
+	// break;
+	// case SETUP_START:
+	// connector.onSetupStartPosition(getGame());
+	// break;
+	// case SETUP_DONE:
+	// connector.onSetupComplete(getGame());
+	// break;
+	// case SETUP_FROM_FEN:
+	// String result = Raptor.getInstance().promptForText(
+	// "Enter the FEN to set the position to:");
+	// if (result != null) {
+	// connector.onSetupFromFEN(getGame(), result);
+	// }
+	// break;
+	//
+	// }
+	// }
 
 	public void setupOnIllegalMove(String move) {
 		SoundService.getInstance().playSound("illegalMove");

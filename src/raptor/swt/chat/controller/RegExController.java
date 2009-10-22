@@ -17,15 +17,13 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
 import raptor.swt.RegExDialog;
@@ -62,80 +60,12 @@ public class RegExController extends ChatConsoleController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-
-			ToolItem adjustButton = new ToolItem(toolbar, SWT.FLAT);
-			adjustButton.setImage(Raptor.getInstance().getIcon("wrench"));
-			adjustButton
-					.setToolTipText("Adjust the regular expression being used.");
-			adjustButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					RegExDialog regExDialog = new RegExDialog(Raptor
-							.getInstance().getWindow().getShell(), connector
-							.getShortName()
-							+ " Adjust regular expression dialog",
-							"Enter the regular expression the new regular expression below:");
-					regExDialog.setInput(pattern.pattern());
-					String regEx = regExDialog.open();
-					if (StringUtils.isNotBlank(regEx)) {
-						chatConsole.getInputText().setText("");
-						pattern = Pattern.compile(regEx, Pattern.MULTILINE
-								| Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-						fireItemChanged();
-						ChatUtils.appendPreviousChatsToController(chatConsole);
-					}
-
-				}
-			});
-			addToolItem(ToolBarItemKey.ADJUST_BUTTON, adjustButton);
-
-			ToolItem saveButton = new ToolItem(toolbar, SWT.FLAT);
-			saveButton.setImage(Raptor.getInstance().getIcon("save"));
-			saveButton
-					.setToolTipText("Save the current console text to a file.");
-			saveButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					onSave();
-
-				}
-			});
-			addToolItem(ToolBarItemKey.SAVE_BUTTON, saveButton);
-
-			if (isSearchable()) {
-				ToolItem searchButton = new ToolItem(toolbar, SWT.FLAT);
-				searchButton.setImage(Raptor.getInstance().getIcon("search"));
-				searchButton
-						.setToolTipText("Searches backward for the message in the console text. "
-								+ "The search is case insensitive and does not use regular expressions.");
-				searchButton.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						onSearch();
-					}
-				});
-				addToolItem(ToolBarItemKey.SEARCH_BUTTON, searchButton);
-			}
-
-			final ToolItem autoScroll = new ToolItem(toolbar, SWT.FLAT);
-			autoScroll.setImage(Raptor.getInstance().getIcon("down"));
-			autoScroll.setToolTipText("Forces auto scrolling.");
-			autoScroll.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					onForceAutoScroll();
-
-				}
-			});
-			addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, autoScroll);
-
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		} else if (toolbar.getParent() != parent) {
+			ChatUtils.addActionsToToolbar(this,
+					RaptorActionContainer.RegExChatConsole, toolbar);
+		} else {
 			toolbar.setParent(parent);
 		}
-
 		return toolbar;
-
 	}
 
 	@Override
@@ -146,6 +76,73 @@ public class RegExController extends ChatConsoleController {
 			return false;
 		}
 	}
+
+	// @Override
+	// public Control getToolbar(Composite parent) {
+	// if (toolbar == null) {
+	// toolbar = new ToolBar(parent, SWT.FLAT);
+	//
+	// ToolItem adjustButton = new ToolItem(toolbar, SWT.FLAT);
+	// adjustButton.setImage(Raptor.getInstance().getIcon("wrench"));
+	// adjustButton
+	// .setToolTipText("Adjust the regular expression being used.");
+	// adjustButton.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent arg0) {
+	//
+	// }
+	// });
+	// addToolItem(ToolBarItemKey.ADJUST_BUTTON, adjustButton);
+	//
+	// ToolItem saveButton = new ToolItem(toolbar, SWT.FLAT);
+	// saveButton.setImage(Raptor.getInstance().getIcon("save"));
+	// saveButton
+	// .setToolTipText("Save the current console text to a file.");
+	// saveButton.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent arg0) {
+	// onSave();
+	//
+	// }
+	// });
+	// addToolItem(ToolBarItemKey.SAVE_BUTTON, saveButton);
+	//
+	// if (isSearchable()) {
+	// ToolItem searchButton = new ToolItem(toolbar, SWT.FLAT);
+	// searchButton.setImage(Raptor.getInstance().getIcon("search"));
+	// searchButton
+	// .setToolTipText("Searches backward for the message in the console text. "
+	// +
+	// "The search is case insensitive and does not use regular expressions.");
+	// searchButton.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent arg0) {
+	// onSearch();
+	// }
+	// });
+	// addToolItem(ToolBarItemKey.SEARCH_BUTTON, searchButton);
+	// }
+	//
+	// final ToolItem autoScroll = new ToolItem(toolbar, SWT.FLAT);
+	// autoScroll.setImage(Raptor.getInstance().getIcon("down"));
+	// autoScroll.setToolTipText("Forces auto scrolling.");
+	// autoScroll.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent arg0) {
+	// onForceAutoScroll();
+	//
+	// }
+	// });
+	// addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, autoScroll);
+	//
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// } else if (toolbar.getParent() != parent) {
+	// toolbar.setParent(parent);
+	// }
+	//
+	// return toolbar;
+	//
+	// }
 
 	@Override
 	public boolean isAwayable() {
@@ -165,5 +162,21 @@ public class RegExController extends ChatConsoleController {
 	@Override
 	public boolean isSearchable() {
 		return true;
+	}
+
+	public void onAdjustRegEx() {
+		RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
+				.getWindow().getShell(), connector.getShortName()
+				+ " Adjust regular expression dialog",
+				"Enter the regular expression the new regular expression below:");
+		regExDialog.setInput(pattern.pattern());
+		String regEx = regExDialog.open();
+		if (StringUtils.isNotBlank(regEx)) {
+			chatConsole.getInputText().setText("");
+			pattern = Pattern.compile(regEx, Pattern.MULTILINE | Pattern.DOTALL
+					| Pattern.CASE_INSENSITIVE);
+			fireItemChanged();
+			ChatUtils.appendPreviousChatsToController(chatConsole);
+		}
 	}
 }

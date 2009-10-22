@@ -22,13 +22,17 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
+import raptor.action.RaptorAction;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.connector.bics.pref.BicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.IcsParser;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ConnectorQuadrantsPage;
+import raptor.service.ActionService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.util.RaptorStringTokenizer;
@@ -170,7 +174,14 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] {
 				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics")),
-				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics2")) };
+				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics2")),
+				new PreferenceNode(
+						"bicsMenuActions",
+						new ActionContainerPage(
+								"Bics Menu Actions",
+								"\tOn this page you can configure the actions shown in the bics "
+										+ "menu.You can add new actions on the Action Scripts Page.",
+								RaptorActionContainer.BicsMenu)) };
 
 	}
 
@@ -300,6 +311,24 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bugbuttonsAction);
 		// connectionsMenu.add(bughouseArenaAction);
+		connectionsMenu.add(new Separator());
+		RaptorAction[] ficsMenuActions = ActionService.getInstance()
+				.getActions(RaptorActionContainer.BicsMenu);
+		for (final RaptorAction raptorAction : ficsMenuActions) {
+			if (raptorAction instanceof Separator) {
+				connectionsMenu.add(new Separator());
+			} else {
+				Action action = new Action(raptorAction.getName()) {
+					@Override
+					public void run() {
+						raptorAction.setConnectorSource(BicsConnector.this);
+						raptorAction.run();
+					}
+				};
+				action.setToolTipText(raptorAction.getDescription());
+				connectionsMenu.add(action);
+			}
+		}
 		connectionsMenu.add(new Separator());
 
 		MenuManager bics2Menu = new MenuManager(

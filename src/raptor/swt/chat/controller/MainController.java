@@ -14,19 +14,17 @@
 package raptor.swt.chat.controller;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
-import raptor.script.ChatScript;
-import raptor.script.ChatScript.ChatScriptType;
-import raptor.service.ScriptService;
 import raptor.swt.chat.ChatConsoleController;
+import raptor.swt.chat.ChatUtils;
 
 public class MainController extends ChatConsoleController {
 	public MainController(Connector connector) {
@@ -66,6 +64,18 @@ public class MainController extends ChatConsoleController {
 	}
 
 	@Override
+	public Control getToolbar(Composite parent) {
+		if (toolbar == null) {
+			toolbar = new ToolBar(parent, SWT.FLAT);
+			ChatUtils.addActionsToToolbar(this,
+					RaptorActionContainer.MainChatConsole, toolbar);
+		} else {
+			toolbar.setParent(parent);
+		}
+		return toolbar;
+	}
+
+	@Override
 	public boolean isAcceptingChatEvent(ChatEvent inboundEvent) {
 		return true;
 	}
@@ -95,28 +105,28 @@ public class MainController extends ChatConsoleController {
 	 * 
 	 * @param toolbar
 	 */
-	@Override
-	protected void prependToolbarItems(ToolBar toolbar) {
-		final ChatScript[] scripts = ScriptService.getInstance()
-				.getChatScripts(connector, ChatScriptType.ToolbarOneShot);
-		boolean wasScriptAdded = false;
-		for (int i = 0; i < scripts.length; i++) {
-			final ChatScript script = scripts[i];
-			ToolItem item = new ToolItem(toolbar, SWT.PUSH);
-			item.setText(script.getName());
-			item.setToolTipText(script.getDescription());
-			item.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					// Grab from script service to pick up changes.
-					ScriptService.getInstance().getChatScript(script.getName())
-							.execute(connector.getChatScriptContext());
-				}
-			});
-			wasScriptAdded = true;
-		}
-		if (wasScriptAdded) {
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		}
-	}
+	// @Override
+	// protected void prependToolbarItems(ToolBar toolbar) {
+	// final ChatScript[] scripts = ScriptService.getInstance()
+	// .getChatScripts(connector, ChatScriptType.ToolbarOneShot);
+	// boolean wasScriptAdded = false;
+	// for (int i = 0; i < scripts.length; i++) {
+	// final ChatScript script = scripts[i];
+	// ToolItem item = new ToolItem(toolbar, SWT.PUSH);
+	// item.setText(script.getName());
+	// item.setToolTipText(script.getDescription());
+	// item.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// // Grab from script service to pick up changes.
+	// ScriptService.getInstance().getChatScript(script.getName())
+	// .execute(connector.getChatScriptContext());
+	// }
+	// });
+	// wasScriptAdded = true;
+	// }
+	// if (wasScriptAdded) {
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// }
+	// }
 }

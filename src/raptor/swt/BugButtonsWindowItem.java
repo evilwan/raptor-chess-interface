@@ -16,11 +16,11 @@ import org.eclipse.swt.widgets.Control;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
+import raptor.action.RaptorAction;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
-import raptor.script.ChatScript;
-import raptor.script.ChatScript.ChatScriptType;
-import raptor.service.ScriptService;
+import raptor.service.ActionService;
 
 public class BugButtonsWindowItem implements RaptorWindowItem {
 	static final Log LOG = LogFactory.getLog(BugButtonsWindowItem.class);
@@ -54,8 +54,8 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
-		ChatScript[] scripts = ScriptService.getInstance().getChatScripts(
-				connector, ChatScriptType.BugButtonsOneShot);
+		RaptorAction[] scripts = ActionService.getInstance().getActions(
+				RaptorActionContainer.BugButtons);
 		if (newQuadrant == Quadrant.II) {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, true));
 		} else {
@@ -122,8 +122,8 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 		Raptor.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
 
-		ChatScript[] scripts = ScriptService.getInstance().getChatScripts(
-				connector, ChatScriptType.BugButtonsOneShot);
+		RaptorAction[] actions = ActionService.getInstance().getActions(
+				RaptorActionContainer.BugButtons);
 
 		composite = new Composite(parent, SWT.NONE);
 		Quadrant quadrant = getPreferredQuadrant();
@@ -131,10 +131,10 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, true));
 		} else {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(
-					scripts.length / 2, true));
+					actions.length / 2, true));
 		}
 
-		addButtons(scripts);
+		addButtons(actions);
 		updateFromPrefs();
 	}
 
@@ -147,18 +147,20 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 
-	protected void addButtons(ChatScript[] scripts) {
+	protected void addButtons(RaptorAction[] actions) {
 
-		for (final ChatScript script : scripts) {
+		for (final RaptorAction action : actions) {
 			Button button = new Button(composite, SWT.FLAT);
-			button.setText(script.getName());
-			button.setToolTipText(script.getDescription());
+			button.setText(action.getName());
+			button.setToolTipText(action.getDescription());
 			button.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 			button.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					ScriptService.getInstance().getChatScript(script.getName())
-							.execute(connector.getChatScriptContext());
+					RaptorAction loadedAction = ActionService.getInstance()
+							.getAction(action.getName());
+					loadedAction.setConnectorSource(connector);
+					loadedAction.run();
 				}
 			});
 		}

@@ -34,8 +34,6 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -53,6 +51,8 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.action.ActionUtils;
+import raptor.action.RaptorAction;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
@@ -61,6 +61,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ChatScript;
 import raptor.script.ChatScript.ChatScriptType;
+import raptor.service.ActionService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
@@ -276,87 +277,89 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
-	public Control getToolbar(Composite parent) {
-		if (toolbar == null) {
-			toolbar = new ToolBar(parent, SWT.FLAT);
-			prependToolbarItems(toolbar);
+	public abstract Control getToolbar(Composite parent);
 
-			if (isPrependable()) {
-				ToolItem prependTextButton = new ToolItem(toolbar, SWT.CHECK);
-				prependTextButton.setText("Prepend");
-				prependTextButton.setToolTipText("Prepends "
-						+ getPrependText(false)
-						+ " to the input text after sending a tell.");
-				prependTextButton.setSelection(true);
-				addToolItem(ToolBarItemKey.PREPEND_TEXT_BUTTON,
-						prependTextButton);
-			}
-
-			ToolItem saveButton = new ToolItem(toolbar, SWT.FLAT);
-			saveButton.setImage(Raptor.getInstance().getIcon("save"));
-			saveButton
-					.setToolTipText("Save the current console text to a file.");
-			saveButton.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					onSave();
-
-				}
-			});
-			addToolItem(ToolBarItemKey.SAVE_BUTTON, saveButton);
-
-			if (isAwayable()) {
-				final ToolItem awayButton = new ToolItem(toolbar, SWT.FLAT);
-				awayButton.setImage(Raptor.getInstance().getIcon("chat"));
-				awayButton
-						.setToolTipText("Displays all of the direct tells you missed while you were away. "
-								+ "The list of tells you missed is reset each time you send a message.");
-				awayButton.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						onAway();
-
-					}
-				});
-				awayButton.setEnabled(!awayList.isEmpty());
-				addToolItem(ToolBarItemKey.AWAY_BUTTON, awayButton);
-			}
-
-			if (isSearchable()) {
-				ToolItem searchButton = new ToolItem(toolbar, SWT.FLAT);
-				searchButton.setImage(Raptor.getInstance().getIcon("search"));
-				searchButton
-						.setToolTipText("Searches backward for the message in the console text. "
-								+ "The search is case insensitive and does not use regular expressions.");
-				searchButton.addSelectionListener(new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						onSearch();
-					}
-				});
-				addToolItem(ToolBarItemKey.SEARCH_BUTTON, searchButton);
-			}
-
-			final ToolItem autoScroll = new ToolItem(toolbar, SWT.FLAT);
-			autoScroll.setImage(Raptor.getInstance().getIcon("down"));
-			autoScroll.setToolTipText("Forces auto scrolling.");
-			autoScroll.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent arg0) {
-					onForceAutoScroll();
-
-				}
-			});
-			addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, autoScroll);
-
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		} else if (toolbar.getParent() != parent) {
-			toolbar.setParent(parent);
-		}
-
-		return toolbar;
-
-	}
+	// if (toolbar == null) {
+	// toolbar = new ToolBar(parent, SWT.FLAT);
+	// prependToolbarItems(toolbar);
+	//
+	// if (isPrependable()) {
+	// ToolItem prependTextButton = new ToolItem(toolbar, SWT.CHECK);
+	// prependTextButton.setText("Prepend");
+	// prependTextButton.setToolTipText("Prepends "
+	// + getPrependText(false)
+	// + " to the input text after sending a tell.");
+	// prependTextButton.setSelection(true);
+	// addToolItem(ToolBarItemKey.PREPEND_TEXT_BUTTON,
+	// prependTextButton);
+	// }
+	//
+	// ToolItem saveButton = new ToolItem(toolbar, SWT.FLAT);
+	// saveButton.setImage(Raptor.getInstance().getIcon("save"));
+	// saveButton
+	// .setToolTipText("Save the current console text to a file.");
+	// saveButton.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent arg0) {
+	// onSave();
+	//
+	// }
+	// });
+	// addToolItem(ToolBarItemKey.SAVE_BUTTON, saveButton);
+	//
+	// if (isAwayable()) {
+	// final ToolItem awayButton = new ToolItem(toolbar, SWT.FLAT);
+	// awayButton.setImage(Raptor.getInstance().getIcon("chat"));
+	// awayButton
+	// .setToolTipText("Displays all of the direct tells you missed while you were away. "
+	// + "The list of tells you missed is reset each time you send a message.");
+	// awayButton.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent arg0) {
+	// onAway();
+	//
+	// }
+	// });
+	// awayButton.setEnabled(!awayList.isEmpty());
+	// addToolItem(ToolBarItemKey.AWAY_BUTTON, awayButton);
+	// }
+	//
+	// if (isSearchable()) {
+	// ToolItem searchButton = new ToolItem(toolbar, SWT.FLAT);
+	// searchButton.setImage(Raptor.getInstance().getIcon("search"));
+	// searchButton
+	// .setToolTipText("Searches backward for the message in the console text. "
+	// +
+	// "The search is case insensitive and does not use regular expressions.");
+	// searchButton.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent arg0) {
+	// onSearch();
+	// }
+	// });
+	// addToolItem(ToolBarItemKey.SEARCH_BUTTON, searchButton);
+	// }
+	//
+	// final ToolItem autoScroll = new ToolItem(toolbar, SWT.FLAT);
+	// autoScroll.setImage(Raptor.getInstance().getIcon("down"));
+	// autoScroll.setToolTipText("Forces auto scrolling.");
+	// autoScroll.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent arg0) {
+	// onForceAutoScroll();
+	//
+	// }
+	// });
+	// addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, autoScroll);
+	//
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// } else if (toolbar.getParent() != parent) {
+	// toolbar.setParent(parent);
+	// }
+	//
+	// return toolbar;
+	//
+	// }
 
 	public ToolItem getToolItem(ToolBarItemKey key) {
 		return toolItemMap.get(key);
@@ -489,17 +492,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onAway() {
-
-		ignoreAwayList = true;
-		onAppendChatEventToInputText(new ChatEvent(null, ChatType.OUTBOUND,
-				"Direct tells you missed while you were away:"));
-		for (ChatEvent event : awayList) {
-			onAppendChatEventToInputText(event);
+		if (isAwayable()) {
+			ignoreAwayList = true;
+			onAppendChatEventToInputText(new ChatEvent(null, ChatType.OUTBOUND,
+					"Direct tells you missed while you were away:"));
+			for (ChatEvent event : awayList) {
+				onAppendChatEventToInputText(event);
+			}
+			awayList.clear();
+			ignoreAwayList = false;
+			adjustAwayButtonEnabled();
 		}
-		awayList.clear();
-		ignoreAwayList = false;
-		adjustAwayButtonEnabled();
-
 	}
 
 	public void onChatEvent(ChatEvent event) {
@@ -586,6 +589,71 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	public void onSearch() {
+		if (!isIgnoringActions()) {
+
+			chatConsole.getDisplay().asyncExec(new Runnable() {
+				public void run() {
+					String searchString = chatConsole.outputText.getText();
+					if (StringUtils.isBlank(searchString)) {
+						MessageBox box = new MessageBox(chatConsole.getShell(),
+								SWT.ICON_INFORMATION | SWT.OK);
+						box
+								.setMessage("You must enter text in the input field to search on.");
+						box.setText("Alert");
+						box.open();
+					} else {
+						boolean foundText = false;
+						searchString = searchString.toUpperCase();
+						int start = chatConsole.inputText.getCaretOffset();
+
+						if (start >= chatConsole.inputText.getCharCount()) {
+							start = chatConsole.inputText.getCharCount() - 1;
+						} else if (start - searchString.length() + 1 >= 0) {
+							String text = chatConsole.inputText.getText(start
+									- searchString.length(), start - 1);
+							if (text.equalsIgnoreCase(searchString)) {
+								start -= searchString.length();
+							}
+						}
+
+						while (start > 0) {
+							int charsBack = 0;
+							if (start - TEXT_CHUNK_SIZE > 0) {
+								charsBack = TEXT_CHUNK_SIZE;
+							} else {
+								charsBack = start;
+							}
+
+							String stringToSearch = chatConsole.inputText
+									.getText(start - charsBack, start)
+									.toUpperCase();
+							int index = stringToSearch
+									.lastIndexOf(searchString);
+							if (index != -1) {
+								int textStart = start - charsBack + index;
+								chatConsole.inputText.setSelection(textStart,
+										textStart + searchString.length());
+								foundText = true;
+								break;
+							}
+							start -= charsBack;
+						}
+
+						if (!foundText) {
+							MessageBox box = new MessageBox(chatConsole
+									.getShell(), SWT.ICON_INFORMATION | SWT.OK);
+							box.setMessage("Could not find any occurances of '"
+									+ searchString + "'.");
+							box.setText("Alert");
+							box.open();
+						}
+					}
+				}
+			});
+		}
+	}
+
 	public void onSendOutputText() {
 		connector.sendMessage(chatConsole.outputText.getText());
 		chatConsole.outputText.setText(getPrependText(true));
@@ -597,20 +665,27 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public void processKeystroke(KeyEvent event) {
 		boolean isConsoleOutputText = event.widget == chatConsole.outputText;
 
-		if (event.keyCode == SWT.F3) {
-			connector.onAcceptKeyPress();
-		} else if (event.keyCode == SWT.F4) {
-			connector.onDeclineKeyPress();
-		} else if (event.keyCode == SWT.F6) {
-			connector.onAbortKeyPress();
-		} else if (event.keyCode == SWT.F7) {
-			connector.onRematchKeyPress();
-		} else if (event.keyCode == SWT.F9) {
-			if (sourceOfLastTellReceived != null) {
-				chatConsole.outputText.setText(connector
-						.getTellToString(sourceOfLastTellReceived));
-				chatConsole.outputText.setSelection(chatConsole.outputText
-						.getCharCount() + 1);
+		if (ActionUtils.isValidModifier(event.stateMask)) {
+			RaptorAction action = ActionService.getInstance().getAction(
+					event.stateMask, event.keyCode);
+			if (action != null) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Executing action from keybinding: "
+							+ action.getName());
+					action.setChatConsoleControllerSource(this);
+					action.run();
+				}
+			}
+		} else if (ActionUtils.isValidKeyCodeWithoutModifier(event.keyCode)) {
+			RaptorAction action = ActionService.getInstance().getAction(
+					event.stateMask, event.keyCode);
+			if (action != null) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Executing action from keybinding: "
+							+ action.getName());
+					action.setChatConsoleControllerSource(this);
+					action.run();
+				}
 			}
 		} else if (event.keyCode == SWT.ARROW_UP) {
 			if (sentTextIndex >= 0) {
@@ -649,8 +724,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				});
 			}
-		} else if (!isConsoleOutputText
-				&& event.stateMask == 0) {
+		} else if (!isConsoleOutputText && event.stateMask == 0) {
 			onAppendOutputText("" + event.character);
 		} else if (!isConsoleOutputText) {
 			chatConsole.getDisplay().asyncExec(new Runnable() {
@@ -673,6 +747,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public void setHasUnseenText(boolean hasUnseenText) {
 		this.hasUnseenText = hasUnseenText;
+	}
+
+	public void setInputToLastTell() {
+		if (sourceOfLastTellReceived != null) {
+			chatConsole.outputText.setText(connector
+					.getTellToString(sourceOfLastTellReceived));
+			chatConsole.outputText.setSelection(chatConsole.outputText
+					.getCharCount() + 1);
+		}
 	}
 
 	public void setItemChangedListeners(
@@ -1131,71 +1214,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		menu.dispose();
 	}
 
-	protected void onSearch() {
-		if (!isIgnoringActions()) {
-
-			chatConsole.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					String searchString = chatConsole.outputText.getText();
-					if (StringUtils.isBlank(searchString)) {
-						MessageBox box = new MessageBox(chatConsole.getShell(),
-								SWT.ICON_INFORMATION | SWT.OK);
-						box
-								.setMessage("You must enter text in the input field to search on.");
-						box.setText("Alert");
-						box.open();
-					} else {
-						boolean foundText = false;
-						searchString = searchString.toUpperCase();
-						int start = chatConsole.inputText.getCaretOffset();
-
-						if (start >= chatConsole.inputText.getCharCount()) {
-							start = chatConsole.inputText.getCharCount() - 1;
-						} else if (start - searchString.length() + 1 >= 0) {
-							String text = chatConsole.inputText.getText(start
-									- searchString.length(), start - 1);
-							if (text.equalsIgnoreCase(searchString)) {
-								start -= searchString.length();
-							}
-						}
-
-						while (start > 0) {
-							int charsBack = 0;
-							if (start - TEXT_CHUNK_SIZE > 0) {
-								charsBack = TEXT_CHUNK_SIZE;
-							} else {
-								charsBack = start;
-							}
-
-							String stringToSearch = chatConsole.inputText
-									.getText(start - charsBack, start)
-									.toUpperCase();
-							int index = stringToSearch
-									.lastIndexOf(searchString);
-							if (index != -1) {
-								int textStart = start - charsBack + index;
-								chatConsole.inputText.setSelection(textStart,
-										textStart + searchString.length());
-								foundText = true;
-								break;
-							}
-							start -= charsBack;
-						}
-
-						if (!foundText) {
-							MessageBox box = new MessageBox(chatConsole
-									.getShell(), SWT.ICON_INFORMATION | SWT.OK);
-							box.setMessage("Could not find any occurances of '"
-									+ searchString + "'.");
-							box.setText("Alert");
-							box.open();
-						}
-					}
-				}
-			});
-		}
-	}
-
 	protected void playSounds(ChatEvent event) {
 		if (!isSoundDisabled) {
 			if (event.getType() == ChatType.TELL
@@ -1208,15 +1226,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				SoundService.getInstance().playSound("chat");
 			}
 		}
-	}
-
-	/**
-	 * Can be overridden to prepend items to the toolbar.
-	 * 
-	 * @param toolbar
-	 */
-	protected void prependToolbarItems(ToolBar toolbar) {
-
 	}
 
 	protected void reduceInputTextIfNeeded() {
@@ -1250,7 +1259,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void setCaretToOutputTextEnd() {
 		if (!isIgnoringActions()) {
-			getChatConsole().getOutputText().setCaretOffset(getChatConsole().getOutputText().getCharCount());
+			getChatConsole().getOutputText().setCaretOffset(
+					getChatConsole().getOutputText().getCharCount());
 		}
 	}
 

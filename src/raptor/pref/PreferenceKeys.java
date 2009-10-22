@@ -83,6 +83,8 @@ public interface PreferenceKeys {
 	public static final String APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout3-quad56-quad7-sash-weights";
 	public static final String APP_LAYOUT3_WINDOW_BOUNDS = "app-Layout3-window-bounds";
 
+	public static final String ACTION_SEPARATOR_SEQUENCE = "action-separator-sequence";
+
 	public static final String BUG_ARENA_PARTNERS_INDEX = "bughouse-arena-partners-index";
 	public static final String BUG_ARENA_MAX_PARTNERS_INDEX = "bughouse-arena-max-partners-index";
 	public static final String BUG_ARENA_TEAMS_INDEX = "bughouse-arena-teams-index";
@@ -197,17 +199,12 @@ public interface PreferenceKeys {
 
 	// Connector preferences should always use the short name of the connector
 	// followed by the preference.
-	public static final String FICS_ADJUDICATE_URL = "fics-adjudicate-url";
 	public static final String FICS_AUTO_CONNECT = "fics-auto-connect";
-	public static final String FICS_COMMANDS_HELP_URL = "fics-commands-help-url";
-	public static final String FICS_FICS_GAMES_URL = "fics-games-url";
 	public static final String FICS_SHOW_BUGBUTTONS_ON_CONNECT = "fics-show-bugbuttons-on-connect";
-	public static final String FICS_FREECHESS_ORG_URL = "fics-freechess-org-url";
 	public static final String FICS_IS_LOGGING_GAMES = "fics-is-logging-games";
 	public static final String FICS_KEEP_ALIVE = "fics-keep-alive";
 	public static final String FICS_LOGIN_SCRIPT = "fics-login-script";
 	public static final String FICS_PROFILE = "fics-profile";
-	public static final String FICS_TEAM_LEAGUE_URL = "fics-team-league-url";
 
 	public static final String FICS_PRIMARY_IS_ANON_GUEST = "fics-Primary-is-anon-guest";
 	public static final String FICS_PRIMARY_IS_NAMED_GUEST = "fics-Primary-is-named-guest";

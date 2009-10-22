@@ -21,8 +21,6 @@ import java.util.Random;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -31,9 +29,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.GameCursor;
@@ -242,49 +240,68 @@ public class InactiveController extends ChessBoardController implements
 		return title == null ? "Inactive" : title;
 	}
 
+	// @Override
+	// public Control getToolbar(Composite parent) {
+	// if (toolbar == null) {
+	// toolbar = new ToolBar(parent, SWT.FLAT);
+	// ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar, true,
+	// game.getVariant() == Variant.suicide);
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// ToolItem saveItem = new ToolItem(toolbar, SWT.PUSH);
+	// saveItem.setImage(Raptor.getInstance().getIcon("save"));
+	// saveItem.setToolTipText("Save to pgn.");
+	// saveItem.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// onSave();
+	// }
+	// });
+	//
+	// ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
+	// ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
+	// movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
+	// movesItem.setToolTipText("Shows or hides the move list.");
+	// movesItem.setSelection(false);
+	// addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
+	// movesItem.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
+	// board.showMoveList();
+	// } else {
+	// board.hideMoveList();
+	// }
+	// }
+	// });
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// } else if (toolbar.getParent() != parent) {
+	// toolbar.setParent(parent);
+	// }
+	//
+	// if (game.getVariant() == Variant.suicide) {
+	// setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
+	// } else {
+	// setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+	// }
+	// return toolbar;
+	// }
+
 	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar, true,
-					game.getVariant() == Variant.suicide);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-			ToolItem saveItem = new ToolItem(toolbar, SWT.PUSH);
-			saveItem.setImage(Raptor.getInstance().getIcon("save"));
-			saveItem.setToolTipText("Save to pgn.");
-			saveItem.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					onSave();
-				}
-			});
+			ChessBoardUtils.addActionsToToolbar(this,
+					RaptorActionContainer.InactiveChessBoard, toolbar, false);
 
-			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
-			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
-			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
-			movesItem.setToolTipText("Shows or hides the move list.");
-			movesItem.setSelection(false);
-			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
-			movesItem.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
-						board.showMoveList();
-					} else {
-						board.hideMoveList();
-					}
-				}
-			});
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		} else if (toolbar.getParent() != parent) {
+			if (game.getVariant() == Variant.suicide) {
+				setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
+			} else {
+				setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+			}
+		} else {
 			toolbar.setParent(parent);
 		}
 
-		if (game.getVariant() == Variant.suicide) {
-			setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
-		} else {
-			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
-		}
 		return toolbar;
 	}
 
@@ -302,6 +319,63 @@ public class InactiveController extends ChessBoardController implements
 		cursor.setCursorMasterLast();
 		refresh();
 		fireItemChanged();
+	}
+
+	@Override
+	public void onBack() {
+		board.getResultDecorator().setDecoration(null);
+		cursor.setCursorPrevious();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	// @Override
+	// public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
+	// switch (key) {
+	// // case FEN:
+	// // Raptor.getInstance().promptForText(
+	// // "FEN for game " + game.getHeader(PgnHeader.White) + " vs "
+	// // + game.getHeader(PgnHeader.Black), game.toFen());
+	// // break;
+	//
+	// }
+	// }
+
+	@Override
+	public void onCommit() {
+		cursor.commit();
+		refresh();
+	}
+
+	@Override
+	public void onFirst() {
+		board.getResultDecorator().setDecoration(null);
+		cursor.setCursorFirst();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	@Override
+	public void onForward() {
+		board.getResultDecorator().setDecoration(null);
+		cursor.setCursorNext();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	@Override
+	public void onLast() {
+		board.getResultDecorator().setDecoration(null);
+		cursor.setCursorLast();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	@Override
+	public void onRevert() {
+		cursor.revert();
+		refresh();
+		decorateForLastMoveListMove();
 	}
 
 	public void onSave() {
@@ -328,53 +402,6 @@ public class InactiveController extends ChessBoardController implements
 				} catch (Throwable t) {
 				}
 			}
-		}
-	}
-
-	@Override
-	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-		switch (key) {
-		case FEN:
-			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getHeader(PgnHeader.White) + " vs "
-							+ game.getHeader(PgnHeader.Black), game.toFen());
-			break;
-		case FLIP:
-			onFlip();
-			break;
-		case REVERT_NAV:
-			cursor.revert();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case COMMIT_NAV:
-			cursor.commit();
-			refresh();
-			break;
-		case NEXT_NAV:
-			board.getResultDecorator().setDecoration(null);
-			cursor.setCursorNext();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case BACK_NAV:
-			board.getResultDecorator().setDecoration(null);
-			cursor.setCursorPrevious();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case FIRST_NAV:
-			board.getResultDecorator().setDecoration(null);
-			cursor.setCursorFirst();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case LAST_NAV:
-			board.getResultDecorator().setDecoration(null);
-			cursor.setCursorLast();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
 		}
 	}
 

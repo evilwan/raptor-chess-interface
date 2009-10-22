@@ -15,7 +15,6 @@ package raptor.connector.fics.pref;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.StringFieldEditor;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -47,21 +46,6 @@ public class FicsPage extends FieldEditorPreferencePage {
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_CONNECT,
 				"Show bughouse buttons on connect", getFieldEditorParent()));
-
-		addField(new StringFieldEditor(PreferenceKeys.FICS_FREECHESS_ORG_URL,
-				"Fics url:", getFieldEditorParent()));
-
-		addField(new StringFieldEditor(PreferenceKeys.FICS_COMMANDS_HELP_URL,
-				"Fics Commands Help url:", getFieldEditorParent()));
-
-		addField(new StringFieldEditor(PreferenceKeys.FICS_ADJUDICATE_URL,
-				"Ajudicate url:", getFieldEditorParent()));
-
-		addField(new StringFieldEditor(PreferenceKeys.FICS_TEAM_LEAGUE_URL,
-				"Team League url:", getFieldEditorParent()));
-
-		addField(new StringFieldEditor(PreferenceKeys.FICS_FICS_GAMES_URL,
-				"Fics Games url:", getFieldEditorParent()));
 
 		addField(new TextFieldEditor(PreferenceKeys.FICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));

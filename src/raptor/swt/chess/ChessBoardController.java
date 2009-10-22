@@ -244,6 +244,9 @@ public abstract class ChessBoardController implements BoardConstants,
 		return board;
 	}
 
+	/**
+	 * Returns the connector. May return null.
+	 */
 	public Connector getConnector() {
 		return connector;
 	}
@@ -270,10 +273,17 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public abstract String getTitle();
 
+	/**
+	 * Returns the toolbar for this controller. The default implementation
+	 * returns null.
+	 */
 	public Control getToolbar(Composite parent) {
 		return null;
 	}
 
+	/**
+	 * Returns the tool item with the specified key.
+	 */
 	public ToolItem getToolItem(ToolBarItemKey key) {
 		return toolItemMap.get(key);
 	}
@@ -324,6 +334,34 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Handles the auto draw action. The default implementation does nothing.
+	 */
+	public void onAutoDraw() {
+
+	}
+
+	/**
+	 * Handles the back action. The default implementation does nothing.
+	 */
+	public void onBack() {
+
+	}
+
+	/**
+	 * Handles the commit action. The default implementation does nothing.
+	 */
+	public void onCommit() {
+
+	}
+
+	/**
+	 * Handles the first action. The default implementation does nothing.
+	 */
+	public void onFirst() {
+
+	}
+
+	/**
 	 * Flips the ChessBoard object.
 	 */
 	public void onFlip() {
@@ -347,6 +385,32 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Handles the forward action. The default implementation does nothing.
+	 */
+	public void onForward() {
+
+	}
+
+	/**
+	 * Handles the last action. The default implementation does nothing.
+	 */
+	public void onLast() {
+
+	}
+
+	/**
+	 * Handles the on move list action. The default implementation toggles the
+	 * showing of the move list.
+	 */
+	public void onMoveList() {
+		if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
+			board.showMoveList();
+		} else {
+			board.hideMoveList();
+		}
+	}
+
+	/**
 	 * Invoked when the ChessBoard is being hidden from the user. The default
 	 * implementation does nothing.
 	 */
@@ -358,10 +422,11 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Invoked when a toolbar button is pressed.
+	 * Handles the revert action. The default implementation does nothing.
 	 */
-	public abstract void onToolbarButtonAction(ToolBarItemKey key,
-			String... args);
+	public void onRevert() {
+
+	}
 
 	/**
 	 * Adjusts all of the ChessBoard to the state of the board object. The

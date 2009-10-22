@@ -63,9 +63,9 @@ import raptor.service.GameService.GameServiceListener;
 import raptor.service.ScriptService.ScriptServiceListener;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
+import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.MainController;
-import raptor.swt.chat.controller.PartnerTellController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardUtils;
@@ -190,7 +190,7 @@ public abstract class IcsConnector implements Connector {
 			if (!Raptor.getInstance().getWindow().containsPartnerTellItem(
 					IcsConnector.this)) {
 				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-						new PartnerTellController(IcsConnector.this));
+						new BughousePartnerController(IcsConnector.this));
 				Raptor.getInstance().getWindow().addRaptorWindowItem(
 						windowItem, false);
 				ChatUtils.appendPreviousChatsToController(windowItem
@@ -273,6 +273,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	protected BughouseService bughouseService;
+
 	protected ChatService chatService;
 	protected List<ConnectorListener> connectorListeners = Collections
 			.synchronizedList(new ArrayList<ConnectorListener>(10));
@@ -282,7 +283,6 @@ public abstract class IcsConnector implements Connector {
 	protected GameService gameService;
 	protected Map<String, String> scriptHash = new HashMap<String, String>();
 	protected SeekService seekService;
-
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
 	 */
@@ -306,6 +306,7 @@ public abstract class IcsConnector implements Connector {
 	};
 
 	protected boolean hasSentLogin = false;
+
 	protected boolean hasSentPassword = false;
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
 	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
@@ -607,6 +608,10 @@ public abstract class IcsConnector implements Connector {
 
 	public ScriptConnectorType getScriptConnectorType() {
 		return ScriptConnectorType.ICS;
+	}
+
+	public ScriptContext getScriptContext(String... params) {
+		return new IcsScriptContext(params);
 	}
 
 	public SeekService getSeekService() {
