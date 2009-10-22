@@ -114,7 +114,6 @@ public class IcsUtils implements GameConstants {
 						.onError(
 								"Received a none for san in a style 12 event. This should have contained a move.");
 			} else {
-				System.err.println("Making move: " + message.san + "\n" + game);
 				Move move = game.makeSanMove(message.san);
 				move.addAnnotation(new RemainingClockTime(
 						message.timeTakenForLastMoveMillis));
@@ -281,8 +280,6 @@ public class IcsUtils implements GameConstants {
 			throw new IllegalStateException("Unsupported game type" + variant);
 
 		}
-
-		System.err.println("Result game created: " + result);
 
 		result.setId(g1.gameId);
 		result.addState(Game.UPDATING_SAN_STATE);
