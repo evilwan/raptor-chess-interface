@@ -22,13 +22,17 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
+import raptor.action.RaptorAction;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.connector.fics.pref.FicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.IcsParser;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ConnectorQuadrantsPage;
+import raptor.service.ActionService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.BugGamesWindowItem;
@@ -40,7 +44,6 @@ import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.RegExController;
-import raptor.util.BrowserUtils;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -126,7 +129,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] {
 				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics")),
-				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics2")) };
+				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics2")),
+				new PreferenceNode(
+						"ficsMenuActions",
+						new ActionContainerPage(
+								"Fics Menu Actions",
+								"\tOn this page you can configure the actions shown in the fics "
+										+ "menu.You can add new actions on the Action Scripts Page.",
+								RaptorActionContainer.FicsMenu)) };
 
 	}
 
@@ -328,43 +338,24 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(regexTabAction);
 		connectionsMenu.add(new Separator());
 
-		Action adjudicateAGame = new Action("Adjudicate a game") {
+		RaptorAction[] ficsMenuActions = ActionService.getInstance()
+				.getActions(RaptorActionContainer.FicsMenu);
+		for (final RaptorAction raptorAction : ficsMenuActions) {
+			if (raptorAction instanceof Separator) {
+				connectionsMenu.add(new Separator());
+			} else {
+				Action action = new Action(raptorAction.getName()) {
+					@Override
+					public void run() {
+						raptorAction.setConnectorSource(FicsConnector.this);
+						raptorAction.run();
+					}
+				};
+				action.setToolTipText(raptorAction.getDescription());
+				connectionsMenu.add(action);
+			}
+		}
 
-			@Override
-			public void run() {
-				BrowserUtils.openUrl(getPreferences().getString(
-						PreferenceKeys.FICS_ADJUDICATE_URL));
-			}
-		};
-		Action ficsSite = new Action(getPreferences().getString(
-				PreferenceKeys.FICS_FREECHESS_ORG_URL)) {
-
-			@Override
-			public void run() {
-				BrowserUtils.openUrl(getPreferences().getString(
-						PreferenceKeys.FICS_FREECHESS_ORG_URL));
-			}
-		};
-		Action ficsGamesSite = new Action(getPreferences().getString(
-				PreferenceKeys.FICS_FICS_GAMES_URL)) {
-			@Override
-			public void run() {
-				BrowserUtils.openUrl(getPreferences().getString(
-						PreferenceKeys.FICS_FICS_GAMES_URL));
-			}
-		};
-		Action ficsTeamLeague = new Action("Fics Team League") {
-
-			@Override
-			public void run() {
-				BrowserUtils.openUrl(getPreferences().getString(
-						PreferenceKeys.FICS_TEAM_LEAGUE_URL));
-			}
-		};
-		connectionsMenu.add(adjudicateAGame);
-		connectionsMenu.add(ficsSite);
-		connectionsMenu.add(ficsGamesSite);
-		connectionsMenu.add(ficsTeamLeague);
 		connectionsMenu.add(new Separator());
 
 		MenuManager fics2Menu = new MenuManager(

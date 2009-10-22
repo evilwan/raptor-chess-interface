@@ -23,8 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -32,9 +30,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.GameCursor;
 import raptor.chess.Move;
@@ -475,37 +473,19 @@ public class PlayingController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar,
-					isUserWhite, game.getVariant() == Variant.suicide);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-			ChessBoardUtils.addPremoveClearAndAutoDrawToolbar(this, toolbar);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
-			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
-			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
-			movesItem.setToolTipText("Shows or hides the move list.");
-			movesItem.setSelection(false);
-			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
-			movesItem.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
-						board.showMoveList();
-					} else {
-						board.hideMoveList();
-					}
-				}
-			});
-			new ToolItem(toolbar, SWT.SEPARATOR);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		} else if (toolbar.getParent() != parent) {
+			ChessBoardUtils.addActionsToToolbar(this,
+					RaptorActionContainer.PlayingChessBoard, toolbar,
+					isUserWhite());
+
+			if (game.getVariant() == Variant.suicide) {
+				setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
+			} else {
+				setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+			}
+		} else {
 			toolbar.setParent(parent);
 		}
-		if (game.getVariant() == Variant.suicide) {
-			setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
-		} else {
-			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
-		}
+
 		return toolbar;
 	}
 
@@ -555,45 +535,46 @@ public class PlayingController extends ChessBoardController {
 		return isUserWhite;
 	}
 
+	@Override
+	public void onAutoDraw() {
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				getConnector().onDraw(getGame());
+			}
+		});
+	}
+
+	@Override
+	public void onBack() {
+		cursor.setCursorPrevious();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
 	public void onClearPremoves() {
 		premoves.clear();
 		adjustPremoveLabel();
 	}
 
 	@Override
-	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-		switch (key) {
-		case FEN:
-			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getHeader(PgnHeader.White) + " vs "
-							+ game.getHeader(PgnHeader.White), game.toFen());
-			break;
-		case FLIP:
-			onFlip();
-			break;
-		case CLEAR_PREMOVES:
-			onClearPremoves();
-		case NEXT_NAV:
-			cursor.setCursorNext();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case BACK_NAV:
-			cursor.setCursorPrevious();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case FIRST_NAV:
-			cursor.setCursorFirst();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case LAST_NAV:
-			cursor.setCursorMasterLast();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		}
+	public void onFirst() {
+		cursor.setCursorFirst();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	@Override
+	public void onForward() {
+		cursor.setCursorNext();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	@Override
+	public void onLast() {
+		cursor.setCursorMasterLast();
+		refresh();
+		decorateForLastMoveListMove();
 	}
 
 	@Override
@@ -1096,11 +1077,7 @@ public class PlayingController extends ChessBoardController {
 	 */
 	protected void handleAutoDraw() {
 		if (isToolItemSelected(ToolBarItemKey.AUTO_DRAW)) {
-			ThreadService.getInstance().run(new Runnable() {
-				public void run() {
-					getConnector().onDraw(getGame());
-				}
-			});
+			onAutoDraw();
 		}
 	}
 

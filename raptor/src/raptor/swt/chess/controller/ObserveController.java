@@ -16,18 +16,14 @@ package raptor.swt.chess.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
-import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.GameCursor;
 import raptor.chess.Move;
-import raptor.chess.GameCursor.Mode;
 import raptor.chess.pgn.PgnHeader;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -251,6 +247,10 @@ public class ObserveController extends ChessBoardController {
 		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
 	}
 
+	public GameCursor getCursor() {
+		return cursor;
+	}
+
 	@Override
 	public String getTitle() {
 		return getConnector().getShortName() + "(Obs " + getGame().getId()
@@ -261,50 +261,14 @@ public class ObserveController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
-			ToolItem forceUpdate = new ToolItem(toolbar, SWT.CHECK);
-			addToolItem(ToolBarItemKey.FORCE_UPDATE, forceUpdate);
-			forceUpdate.setText("UPDATE");
-			forceUpdate
-					.setToolTipText("When selected, as moves are made in the game the board will be refreshed.\n"
-							+ "When unselected this will not occur, and you have to use the navigation\n"
-							+ "buttons to traverse the game. This is useful when you are looking at a previous\n"
-							+ "move and don't want the position to update as new moves are being made.");
-			forceUpdate.setSelection(true);
-			forceUpdate.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
-						cursor.setMode(Mode.MakeMovesOnMasterSetCursorToLast);
-						cursor.setCursorMasterLast();
-						refresh();
-					} else {
-						cursor.setMode(Mode.MakeMovesOnMaster);
-					}
-					refresh();
-				}
-			});
+			ChessBoardUtils.addActionsToToolbar(this,
+					RaptorActionContainer.ObservingChessBoard, toolbar, false);
 
-			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
-			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
-			movesItem.setToolTipText("Shows or hides the move list.");
-			movesItem.setSelection(false);
-			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
-			movesItem.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
-						board.showMoveList();
-					} else {
-						board.hideMoveList();
-					}
-				}
-			});
-
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		} else if (toolbar.getParent() != parent) {
+			setToolItemSelected(ToolBarItemKey.FORCE_UPDATE, true);
+		} else {
 			toolbar.setParent(parent);
 		}
+
 		return toolbar;
 	}
 
@@ -337,39 +301,44 @@ public class ObserveController extends ChessBoardController {
 		fireItemChanged();
 	}
 
+	// @Override
+	// public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
+	// switch (key) {
+	// case FEN:
+	// Raptor.getInstance().promptForText(
+	// "FEN for game " + game.getHeader(PgnHeader.White) + " vs "
+	// + game.getHeader(PgnHeader.Black), game.toFen());
+	// break;
+	// }
+	// }
+
 	@Override
-	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-		switch (key) {
-		case FEN:
-			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getHeader(PgnHeader.White) + " vs "
-							+ game.getHeader(PgnHeader.Black), game.toFen());
-			break;
-		case FLIP:
-			onFlip();
-			break;
-		case NEXT_NAV:
-			cursor.setCursorNext();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case BACK_NAV:
-			cursor.setCursorPrevious();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case FIRST_NAV:
-			cursor.setCursorFirst();
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		case LAST_NAV:
-			cursor.setCursorMasterLast();
-			setToolItemEnabled(ToolBarItemKey.FORCE_UPDATE, true);
-			refresh();
-			decorateForLastMoveListMove();
-			break;
-		}
+	public void onBack() {
+		cursor.setCursorPrevious();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	@Override
+	public void onFirst() {
+		cursor.setCursorFirst();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	@Override
+	public void onForward() {
+		cursor.setCursorNext();
+		refresh();
+		decorateForLastMoveListMove();
+	}
+
+	@Override
+	public void onLast() {
+		cursor.setCursorMasterLast();
+		setToolItemEnabled(ToolBarItemKey.FORCE_UPDATE, true);
+		refresh();
+		decorateForLastMoveListMove();
 	}
 
 	@Override

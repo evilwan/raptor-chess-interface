@@ -79,6 +79,12 @@ public class ScriptService {
 				+ scriptName + ".properties").delete();
 	}
 
+	public void dispose() {
+		listeners.clear();
+		chatScriptMap.clear();
+		gameScriptMap.clear();
+	}
+
 	/**
 	 * Returns all chat scripts sorted by name.
 	 */

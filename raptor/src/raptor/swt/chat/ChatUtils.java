@@ -13,13 +13,48 @@
  */
 package raptor.swt.chat;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
+import raptor.Raptor;
+import raptor.action.RaptorAction;
+import raptor.action.SeparatorAction;
+import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.action.chat.AutoScrollAction;
+import raptor.action.chat.PrependAction;
+import raptor.action.chat.TellsMissedWhileIWasAwayAction;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatLogger.ChatEventParseListener;
+import raptor.service.ActionService;
 import raptor.service.ThreadService;
+import raptor.swt.chat.controller.ToolBarItemKey;
 
 public class ChatUtils {
+	private static final Log LOG = LogFactory.getLog(ChatUtils.class);
+
+	public static void addActionsToToolbar(
+			final ChatConsoleController controller,
+			RaptorActionContainer container, ToolBar toolbar) {
+		RaptorAction[] toolbarActions = ActionService.getInstance().getActions(
+				container);
+
+		for (RaptorAction action : toolbarActions) {
+			ToolItem item = createToolItem(action, controller, toolbar);
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Added " + action + " to toolbar " + item);
+			}
+		}
+		new ToolItem(toolbar, SWT.SEPARATOR);
+
+	}
 
 	/**
 	 * Appends all of the previous chat events to the controller. This method
@@ -253,6 +288,51 @@ public class ChatUtils {
 			}
 		}
 		return word;
+	}
+
+	protected static ToolItem createToolItem(final RaptorAction action,
+			final ChatConsoleController controller, ToolBar toolbar) {
+		ToolItem result = null;
+		if (action instanceof SeparatorAction) {
+			result = new ToolItem(toolbar, SWT.SEPARATOR);
+			return result;
+		} else if (action instanceof AutoScrollAction) {
+			result = new ToolItem(toolbar, SWT.PUSH);
+			controller.addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, result);
+		} else if (action instanceof PrependAction) {
+			result = new ToolItem(toolbar, SWT.CHECK);
+			controller.addToolItem(ToolBarItemKey.PREPEND_TEXT_BUTTON, result);
+		} else if (action instanceof TellsMissedWhileIWasAwayAction) {
+			result = new ToolItem(toolbar, SWT.CHECK);
+			controller.addToolItem(ToolBarItemKey.AWAY_BUTTON, result);
+		} else {
+			result = new ToolItem(toolbar, SWT.PUSH);
+		}
+
+		if (result.getText() != null && StringUtils.isBlank(action.getIcon())) {
+			result.setText(action.getName());
+		} else if (StringUtils.isNotBlank(action.getIcon())) {
+			result.setImage(Raptor.getInstance().getIcon(action.getIcon()));
+		} else {
+			Raptor.getInstance().alert(
+					"There is no image or short name set for action "
+							+ action.getName());
+		}
+
+		if (StringUtils.isNotBlank(action.getDescription())) {
+			result.setToolTipText(action.getDescription());
+		}
+
+		result.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				RaptorAction loadedAction = ActionService.getInstance()
+						.getAction(action.getName());
+				loadedAction.setChatConsoleControllerSource(controller);
+				loadedAction.run();
+			}
+		});
+		return result;
 	}
 
 }

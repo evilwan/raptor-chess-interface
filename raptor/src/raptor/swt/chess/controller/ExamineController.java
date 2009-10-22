@@ -19,13 +19,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
-import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.Move;
 import raptor.chess.Variant;
-import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -210,21 +208,40 @@ public class ExamineController extends ChessBoardController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar, true,
-					game.getVariant() == Variant.suicide);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		} else if (toolbar.getParent() != parent) {
+			ChessBoardUtils.addActionsToToolbar(this,
+					RaptorActionContainer.ExaminingChessBoard, toolbar, true);
+
+			if (game.getVariant() == Variant.suicide) {
+				setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
+			} else {
+				setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+			}
+		} else {
 			toolbar.setParent(parent);
 		}
-		if (game.getVariant() == Variant.suicide) {
-			setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
-		} else {
-			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
-		}
+
 		return toolbar;
 	}
+
+	// @Override
+	// public Control getToolbar(Composite parent) {
+	// if (toolbar == null) {
+	// toolbar = new ToolBar(parent, SWT.FLAT);
+	// ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar, true,
+	// game.getVariant() == Variant.suicide);
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// } else if (toolbar.getParent() != parent) {
+	// toolbar.setParent(parent);
+	// }
+	// if (game.getVariant() == Variant.suicide) {
+	// setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
+	// } else {
+	// setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+	// }
+	// return toolbar;
+	// }
 
 	@Override
 	public void init() {
@@ -236,37 +253,47 @@ public class ExamineController extends ChessBoardController {
 		fireItemChanged();
 	}
 
+	// @Override
+	// public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
+	// switch (key) {
+	// case FEN:
+	// Raptor.getInstance().promptForText(
+	// "FEN for game " + game.getHeader(PgnHeader.Black) + " vs "
+	// + game.getHeader(PgnHeader.Black),
+	// getGame().toFen());
+	// break;
+	//
+	// }
+	// }
+
 	@Override
-	public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-		switch (key) {
-		case FEN:
-			Raptor.getInstance().promptForText(
-					"FEN for game " + game.getHeader(PgnHeader.Black) + " vs "
-							+ game.getHeader(PgnHeader.Black),
-					getGame().toFen());
-			break;
-		case FLIP:
-			onFlip();
-			break;
-		case NEXT_NAV:
-			connector.onExamineModeForward(getGame());
-			break;
-		case BACK_NAV:
-			connector.onExamineModeBack(getGame());
-			break;
-		case FIRST_NAV:
-			connector.onExamineModeFirst(getGame());
-			break;
-		case LAST_NAV:
-			connector.onExamineModeLast(getGame());
-			break;
-		case REVERT_NAV:
-			connector.onExamineModeRevert(getGame());
-			break;
-		case COMMIT_NAV:
-			connector.onExamineModeCommit(getGame());
-			break;
-		}
+	public void onBack() {
+		connector.onExamineModeBack(getGame());
+	}
+
+	@Override
+	public void onCommit() {
+		connector.onExamineModeCommit(getGame());
+	}
+
+	@Override
+	public void onFirst() {
+		connector.onExamineModeFirst(getGame());
+	}
+
+	@Override
+	public void onForward() {
+		connector.onExamineModeForward(getGame());
+	}
+
+	@Override
+	public void onLast() {
+		connector.onExamineModeLast(getGame());
+	}
+
+	@Override
+	public void onRevert() {
+		connector.onExamineModeRevert(getGame());
 	}
 
 	@Override

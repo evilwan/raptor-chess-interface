@@ -226,6 +226,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				.defaultFont().getFontData()[0].getName();
 		String defaultMonospacedFontName = "Courier";
 
+		// Action
+		setDefault(ACTION_SEPARATOR_SEQUENCE, 200);
+
 		// Board
 		setDefault(BOARD_CHESS_SET_NAME, "Fantasy");
 		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "Wood2");
@@ -504,13 +507,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_SHOW_BUGBUTTONS_ON_CONNECT, false);
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
-		setDefault(FICS_COMMANDS_HELP_URL,
-				"http://www.freechess.org/Help/AllFiles.html");
-		setDefault(FICS_FREECHESS_ORG_URL, "http://www.freechess.org");
-		setDefault(FICS_FICS_GAMES_URL, "http://www.ficsgames.com");
-		setDefault(FICS_ADJUDICATE_URL,
-				"http://www.freechess.org/Adjudicate/index.html");
-		setDefault(FICS_TEAM_LEAGUE_URL, "http://teamleague.org/");
+
 		// Fics Primary
 		setDefault(FICS_PRIMARY_USER_NAME, "");
 		setDefault(FICS_PRIMARY_PASSWORD, "");

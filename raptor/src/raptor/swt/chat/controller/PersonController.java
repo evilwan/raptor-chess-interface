@@ -14,13 +14,19 @@
 package raptor.swt.chat.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.ToolBar;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
 import raptor.swt.chat.ChatConsoleController;
+import raptor.swt.chat.ChatUtils;
 
 public class PersonController extends ChatConsoleController {
 
@@ -66,6 +72,18 @@ public class PersonController extends ChatConsoleController {
 	@Override
 	public String getPrompt() {
 		return connector.getPrompt();
+	}
+
+	@Override
+	public Control getToolbar(Composite parent) {
+		if (toolbar == null) {
+			toolbar = new ToolBar(parent, SWT.FLAT);
+			ChatUtils.addActionsToToolbar(this,
+					RaptorActionContainer.PersonChatConsole, toolbar);
+		} else {
+			toolbar.setParent(parent);
+		}
+		return toolbar;
 	}
 
 	@Override

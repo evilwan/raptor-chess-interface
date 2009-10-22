@@ -1,8 +1,6 @@
 package raptor.swt.chess.controller;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -10,12 +8,10 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 
-import raptor.Raptor;
+import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.GameCursor;
-import raptor.chess.GameCursor.Mode;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -64,55 +60,69 @@ public class BughouseSuggestController extends ObserveController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
-			ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar,
-					isPartnerWhite, false);
-			new ToolItem(toolbar, SWT.SEPARATOR);
-			ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
-			ToolItem forceUpdate = new ToolItem(toolbar, SWT.CHECK);
-			addToolItem(ToolBarItemKey.FORCE_UPDATE, forceUpdate);
-			forceUpdate.setText("UPDATE");
-			forceUpdate
-					.setToolTipText("When selected, as moves are made in the game the board will be refreshed.\n"
-							+ "When unselected this will not occur, and you have to use the navigation\n"
-							+ "buttons to traverse the game. This is useful when you are looking at a previous\n"
-							+ "move and don't want the position to update as new moves are being made.");
-			forceUpdate.setSelection(true);
-			forceUpdate.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
-						cursor.setMode(Mode.MakeMovesOnMasterSetCursorToLast);
-						cursor.setCursorMasterLast();
-						refresh();
-					} else {
-						cursor.setMode(Mode.MakeMovesOnMaster);
-					}
-					refresh();
-				}
-			});
+			ChessBoardUtils.addActionsToToolbar(this,
+					RaptorActionContainer.BughouseSuggestChessBoard, toolbar,
+					false);
 
-			ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
-			movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
-			movesItem.setToolTipText("Shows or hides the move list.");
-			movesItem.setSelection(false);
-			addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
-			movesItem.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
-						board.showMoveList();
-					} else {
-						board.hideMoveList();
-					}
-				}
-			});
-
-			new ToolItem(toolbar, SWT.SEPARATOR);
-		} else if (toolbar.getParent() != parent) {
+			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
+			setToolItemSelected(ToolBarItemKey.FORCE_UPDATE, true);
+		} else {
 			toolbar.setParent(parent);
 		}
+
 		return toolbar;
 	}
+
+	// @Override
+	// public Control getToolbar(Composite parent) {
+	// if (toolbar == null) {
+	// toolbar = new ToolBar(parent, SWT.FLAT);
+	// ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar,
+	// isPartnerWhite, false);
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, false);
+	// ToolItem forceUpdate = new ToolItem(toolbar, SWT.CHECK);
+	// addToolItem(ToolBarItemKey.FORCE_UPDATE, forceUpdate);
+	// forceUpdate.setText("UPDATE");
+	// forceUpdate
+	// .setToolTipText("When selected, as moves are made in the game the board will be refreshed.\n"
+	// +
+	// "When unselected this will not occur, and you have to use the navigation\n"
+	// +
+	// "buttons to traverse the game. This is useful when you are looking at a previous\n"
+	// +
+	// "move and don't want the position to update as new moves are being made.");
+	// forceUpdate.setSelection(true);
+	// forceUpdate.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	//					
+	// refresh();
+	// }
+	// });
+	//
+	// ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
+	// movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
+	// movesItem.setToolTipText("Shows or hides the move list.");
+	// movesItem.setSelection(false);
+	// addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
+	// movesItem.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
+	// board.showMoveList();
+	// } else {
+	// board.hideMoveList();
+	// }
+	// }
+	// });
+	//
+	// new ToolItem(toolbar, SWT.SEPARATOR);
+	// } else if (toolbar.getParent() != parent) {
+	// toolbar.setParent(parent);
+	// }
+	// return toolbar;
+	// }
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
