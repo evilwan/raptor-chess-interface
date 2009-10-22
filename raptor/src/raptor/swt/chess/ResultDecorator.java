@@ -181,7 +181,7 @@ public class ResultDecorator implements BoardConstants {
 		decorators.add(new SquareDecorator(board.getSquare(SQUARE_F4)));
 		decorators.add(new SquareDecorator(board.getSquare(SQUARE_E5)));
 		decorators.add(new SquareDecorator(board.getSquare(SQUARE_D5)));
-		decorators.add(new SquareDecorator(board.getSquare(SQUARE_F5)));
+		decorators.add(new SquareDecorator(board.getSquare(SQUARE_C5)));
 	}
 
 	public void dispose() {
