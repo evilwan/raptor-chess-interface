@@ -317,16 +317,16 @@ public abstract class IcsConnector implements Connector {
 	protected Runnable keepAlive = new Runnable() {
 		public void run() {
 			LOG.error("In keepAlive.run() "
-					+ (System.currentTimeMillis() - lastSendTime > 60000 * 50));
+					+ (System.currentTimeMillis() - lastSendTime > 1000*60*50));
 
 			if (isConnected()
 					&& getPreferences().getBoolean(
 							context.getShortName() + "-keep-alive")
-					&& System.currentTimeMillis() - lastSendTime > 60000 * 50) {
+					&& (System.currentTimeMillis() - lastSendTime) > (1000*60*50)) {
 				sendMessage("date", true);
 				publishEvent(new ChatEvent("", ChatType.INTERNAL,
 						"The \"date\" command was just sent as a keep alive."));
-				ThreadService.getInstance().scheduleOneShot(60000 * 30, this);
+				ThreadService.getInstance().scheduleOneShot(1000*60*30, this);
 			}
 		}
 	};
@@ -697,7 +697,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onError(String message, Throwable t) {
-		LOG.error(message,t);
+		LOG.error(message, t);
 		String errorMessage = IcsUtils
 				.cleanupMessage("Critical error occured! We are trying to make Raptor "
 						+ "bug free and we need your help! Please take a moment to report this "
@@ -986,9 +986,9 @@ public abstract class IcsConnector implements Connector {
 		});
 		isConnecting = true;
 
-		if (getPreferences().getBoolean(
-				context.getShortName() + "-keep-alive")) {
-			ThreadService.getInstance().scheduleOneShot(300000, keepAlive);
+		if (getPreferences().getBoolean(context.getShortName() + "-keep-alive")) {
+			ThreadService.getInstance().scheduleOneShot(30 * 60 * 1000,
+					keepAlive);
 		}
 
 		ScriptService.getInstance().addScriptServiceListener(
