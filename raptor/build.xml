@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="Raptor" default="run" basedir=".">
+	<property environment="env" />
+
+	<!--
+	    IMPORTANT to run the application you will need to specify your environment here.
+	    This is the folder located in projectFiles/swt to use for your compile,run.
+	  -->
+	<property name="swtEnv" value="Mac_Carbon" />
+
+	<property name="version" value="Alpha1" />
+	<property name="dist.dir" value="install" />
+	<property name="src.dir" value="src" />
+	<property name="build.dir" value="target" />
+	<property name="docs.dir" value="target/docs" />
+	<property name="projectFiles.dir" value="projectFiles" />
+	<property name="classes.dir" value="target/classes" />
+	<property name="install.dir" value="target/install" />
+	<property name="uploads.dir" value="target/uploads" />
+	<property name="javadoc.dir" value="${docs.dir}" />
+	<property name="lib.dir" value="lib" />
+
+
+	<!--
+	    You will need to download jar bunlder from
+	    http://informagen.com/JarBundler/
+	    and add the JarBundler.jar to your ant lib directory.
+	    -->
+	<taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" />
+
+
+
+	<!--
+	    You will need to download ant contrib from
+	    http://ant-contrib.sourceforge.net/
+	    and add the ant-contrib-*.jar to your ant lib directory.
+	    -->
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+
+
+
+	<path id="class.path">
+		<fileset dir="${lib.dir}">
+			<include name="common/*.jar" />
+		</fileset>
+		<fileset dir="${projectFiles.dir}/swt/${swtEnv}">
+			<include name="swt.jar" />
+		</fileset>
+	</path>
+
+	<target name="init">
+		<echo>Your swtEnv is set to ${swtEnv}.</echo>
+		<echo>If this is incorrect please edit the build.xml file and change your swtEnv!</echo>
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${docs.dir}" />
+		<mkdir dir="${classes.dir}" />
+		<mkdir dir="${install.dir}" />
+		<mkdir dir="${uploads.dir}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="compile" depends="init" description="Compile the Java source code">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="class.path" debug="true" deprecation="true" optimize="false">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+	</target>
+
+	<target name="javadoc" description="Generates java docs">
+		<mkdir dir="${javadoc.dir}" />
+		<javadoc destdir="${javadoc.dir}" author="true" version="true" use="true" windowtitle="Raptor">
+			<packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="**" />
+			</packageset>
+			<tag name="todo" scope="all" description="To do:" />
+		</javadoc>
+		<echo>Javadoc is located in ${javadoc.dir}</echo>
+	</target>
+
+	<target name="install" depends="compile" description="Creates the install directory. Copies over all the files needed and creates the raptor jar.">
+		<copy todir="${install.dir}/resources">
+			<fileset dir="resources">
+				<include name="**/*" />
+				<exclude name="log4j.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${install.dir}/lib/common">
+			<fileset dir="${lib.dir}/common">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+		<copy todir="${install.dir}/lib/swt">
+			<fileset dir="${projectFiles.dir}/swt/${swtEnv}">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<copy todir="${install.dir}/defaultHomeDir">
+			<fileset dir="defaultHomeDir">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<copy todir="${install.dir}/resources" overwrite="true">
+			<fileset dir="${projectFiles.dir}">
+				<include name="log4j.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${install.dir}" overwrite="true">
+			<fileset dir=".">
+				<include name="bsd-new-license.txt" />
+			</fileset>
+		</copy>
+
+		<jar jarfile="${install.dir}/Raptor.jar" manifest="${projectFiles.dir}/Manifest.txt" basedir="${classes.dir}">
+			<include name="**/*" />
+		</jar>
+	</target>
+
+	<target name="osxCarbonApp" depends="init" description="Builds Raptor.app">
+		<delete dir="${install.dir}" />
+		<mkdir dir="${install.dir}" />
+
+		<var name="swtEnv" value="Mac_Carbon" />
+		<antcall target="install" />
+
+		<jarbundler dir="${install.dir}" name="Raptor" shortname="Raptor" mainclass="raptor.Raptor" startOnMainThread="true" icon="resources/images/raptor.icns" jvmversion="1.5+" version="${version}">
+			<jarfileset dir="${install.dir}">
+				<include name="**/*.jar" />
+			</jarfileset>
+		</jarbundler>
+
+		<delete includeEmptyDirs="true">
+			<fileset dir="${install.dir}/lib" />
+		</delete>
+		<delete file="${install.dir}/Raptor.jar" />
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_OS_X_Carbon.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="osxCocoa64App" depends="init" description="Builds Raptor.app">
+		<delete dir="${install.dir}" />
+		<mkdir dir="${install.dir}" />
+
+		<var name="swtEnv" value="Mac_Cocoa_x86_64" />
+		<antcall target="install" />
+
+		<jarbundler dir="${install.dir}" name="Raptor" shortname="Raptor" mainclass="raptor.Raptor" icon="resources/images/raptor.icns" startOnMainThread="true" jvmversion="1.5+" vmoptions="-d64" version="${version}">
+			<jarfileset dir="${install.dir}">
+				<include name="**/*.jar" />
+			</jarfileset>
+		</jarbundler>
+		<delete includeEmptyDirs="true">
+			<fileset dir="${install.dir}/lib" />
+		</delete>
+		<delete file="${install.dir}/Raptor.jar" />
+
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_OS_X_Cocoa_x86_64.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="osxCocoa32App" depends="init" description="Builds Raptor.app">
+		<delete dir="${install.dir}" />
+		<mkdir dir="${install.dir}" />
+
+		<var name="swtEnv" value="Mac_Cocoa" />
+		<antcall target="install" />
+
+		<jarbundler dir="${install.dir}" name="Raptor" shortname="Raptor" mainclass="raptor.Raptor" icon="resources/images/raptor.icns" startOnMainThread="true" jvmversion="1.5+" vmoptions="-d32" version="${version}">
+			<jarfileset dir="${install.dir}">
+				<include name="**/*.jar" />
+			</jarfileset>
+		</jarbundler>
+		<delete includeEmptyDirs="true">
+			<fileset dir="${install.dir}/lib" />
+		</delete>
+		<delete file="${install.dir}/Raptor.jar" />
+
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_OS_X_Cocoa.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="createUploads">
+		<antcall target="osxCarbonApp" />
+		<antcall target="osxCocoa64App" />
+		<antcall target="osxCocoa32App" />
+	</target>
+
+
+	<target name="run" depends="compile" description="Raptor">
+		<path id="run.class.path">
+			<fileset dir="${lib.dir}">
+				<include name="common/*.jar" />
+			</fileset>
+			<fileset dir="${projectFiles.dir}/swt/${swtEnv}">
+				<include name="swt.jar" />
+			</fileset>
+			<pathelement location="${classes.dir}" />
+		</path>
+		<java classname="raptor.Raptor" classpathref="run.class.path" fork="true" />
+	</target>
+
+	<target name="runCarbon" depends="compile" description="Raptor">
+		<path id="run.class.path">
+			<fileset dir="${lib.dir}">
+				<include name="common/*.jar" />
+			</fileset>
+			<fileset dir="${projectFiles.dir}/swt/${swtEnv}">
+				<include name="swt.jar" />
+			</fileset>
+			<pathelement location="${classes.dir}" />
+		</path>
+		<java classname="raptor.Raptor" classpathref="run.class.path" fork="true">
+			<jvmarg value="-XstartOnFirstThread" />
+		</java>
+	</target>
+</project>

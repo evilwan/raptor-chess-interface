@@ -126,7 +126,7 @@ public class TestPgnParsing {
 	@Test
 	public void testCrazyhosueFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
-				"resources/test/crazyhouseGames.pgn"), Integer.MAX_VALUE);
+				"projectFiles/test/crazyhouseGames.pgn"), Integer.MAX_VALUE);
 		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
@@ -143,7 +143,7 @@ public class TestPgnParsing {
 	@Test
 	public void testLargeFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
-				"resources/test/Alekhine4Pawns.pgn"), Integer.MAX_VALUE);
+				"projectFiles/test/Alekhine4Pawns.pgn"), Integer.MAX_VALUE);
 		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
@@ -158,7 +158,7 @@ public class TestPgnParsing {
 	@Test
 	public void testLosersFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
-				"resources/test/losersGames.pgn"), Integer.MAX_VALUE);
+				"projectFiles/test/losersGames.pgn"), Integer.MAX_VALUE);
 		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
@@ -175,7 +175,7 @@ public class TestPgnParsing {
 	@Test
 	public void testSuicideFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
-				"resources/test/suicideGames.pgn"), Integer.MAX_VALUE);
+				"projectFiles/test/suicideGames.pgn"), Integer.MAX_VALUE);
 		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
@@ -218,7 +218,7 @@ public class TestPgnParsing {
 	@Test
 	public void testWild5File() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
-				"resources/test/wild5Games.pgn"), Integer.MAX_VALUE);
+				"projectFiles/test/wild5Games.pgn"), Integer.MAX_VALUE);
 		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
@@ -235,7 +235,7 @@ public class TestPgnParsing {
 	private String pgnFileAsString(String fileName) throws Exception {
 		StringBuilder builder = new StringBuilder();
 		BufferedReader reader = new BufferedReader(new FileReader(
-				"resources/test/" + fileName));
+				"projectFiles/test/" + fileName));
 
 		String currentLine = reader.readLine();
 		while (currentLine != null) {

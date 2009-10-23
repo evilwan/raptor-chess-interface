@@ -26,7 +26,7 @@ public class RaptorActionFactory {
 		Raptor.getInstance().getPreferences().setValue(
 				PreferenceKeys.ACTION_SEPARATOR_SEQUENCE, sequenceValue + 1);
 		Raptor.getInstance().getPreferences().save();
-		action.setName("<<Separator " + sequenceValue + ">>");
+		action.setName("Separator " + sequenceValue);
 		return action;
 	}
 
