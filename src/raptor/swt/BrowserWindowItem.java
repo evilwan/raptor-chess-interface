@@ -80,7 +80,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		} catch (Throwable t) {
 		}
 		try {
-			browser.dispose();
+			composite.dispose();
 		} catch (Throwable t) {
 		}
 		if (LOG.isInfoEnabled()) {
