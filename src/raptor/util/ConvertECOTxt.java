@@ -17,7 +17,7 @@ import raptor.chess.Variant;
 public class ConvertECOTxt {
 	public static void main(String args[]) throws IOException {
 		BufferedReader reader = new BufferedReader(new FileReader(
-				"resources/ECO.txt"));
+				"projectFiles/ECO.txt"));
 		FileWriter writer = new FileWriter("resources/ECOFen.txt");
 
 		String currentLine = null;
