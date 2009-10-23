@@ -76,12 +76,18 @@ public class BrowserWindowItem implements RaptorWindowItem {
 
 	public void dispose() {
 		try {
+			browser.stop();
+			browser.setText("<html><body>I have to do this to get a browser "
+					+ "to shut down correctly. Duno why.</body><html>");
 			browser.close();
+			browser.dispose();
 		} catch (Throwable t) {
+			LOG.error("Error stoping closing and disposing browser", t);
 		}
 		try {
 			composite.dispose();
 		} catch (Throwable t) {
+			LOG.error("Error disposing composite", t);
 		}
 		if (LOG.isInfoEnabled()) {
 			LOG.info("Disposed BrowserWindowItem");
@@ -132,6 +138,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		backButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				browser.stop();
 				browser.back();
 			}
 
@@ -145,6 +152,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		forwardButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				browser.stop();
 				browser.forward();
 			}
 		});
@@ -157,6 +165,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				browser.stop();
 				browser.refresh();
 			}
 		});
@@ -170,6 +179,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 			public void keyReleased(KeyEvent e) {
 				if (e.character == '\r') {
 					url = urlText.getText();
+					browser.stop();
 					browser.setUrl(url);
 				}
 			}
@@ -183,6 +193,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				url = urlText.getText();
+				browser.stop();
 				browser.setUrl(url);
 			}
 		});
@@ -227,6 +238,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public void setUrl(String url) {
+		browser.stop();
 		browser.setUrl(url);
 	}
 }
