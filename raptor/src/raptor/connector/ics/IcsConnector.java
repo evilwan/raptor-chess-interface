@@ -484,7 +484,7 @@ public abstract class IcsConnector implements Connector {
 
 			Raptor.getInstance().getWindow().setPingTime(this, -1);
 			fireDisconnected();
-			LOG.error("Disconnected from " + getShortName());
+			LOG.info("Disconnected from " + getShortName());
 		}
 
 	}
@@ -514,7 +514,6 @@ public abstract class IcsConnector implements Connector {
 		}
 		if (keepAlive != null) {
 			ThreadService.getInstance().getExecutor().remove(keepAlive);
-			keepAlive = null;
 		}
 
 		if (inputChannel != null) {
@@ -698,6 +697,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void onError(String message, Throwable t) {
+		LOG.error(message,t);
 		String errorMessage = IcsUtils
 				.cleanupMessage("Critical error occured! We are trying to make Raptor "
 						+ "bug free and we need your help! Please take a moment to report this "
@@ -987,7 +987,7 @@ public abstract class IcsConnector implements Connector {
 		isConnecting = true;
 
 		if (getPreferences().getBoolean(
-				context.getPreferencePrefix() + "-keep-alive")) {
+				context.getShortName() + "-keep-alive")) {
 			ThreadService.getInstance().scheduleOneShot(300000, keepAlive);
 		}
 
