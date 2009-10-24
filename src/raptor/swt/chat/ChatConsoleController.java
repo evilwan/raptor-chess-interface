@@ -724,7 +724,14 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				});
 			}
-		} else if (!isConsoleOutputText && event.stateMask == 0) {
+		} else if (!isConsoleOutputText && event.character == '\b') {
+			if (chatConsole.outputText.getCharCount() > 0) {
+				chatConsole.outputText.setText(chatConsole.outputText.getText()
+						.substring(0,
+								chatConsole.outputText.getText().length() - 1));
+			}
+		} else if (!isConsoleOutputText
+				&& ChatUtils.FORWARD_CHAR.indexOf(event.character) != -1) {
 			onAppendOutputText("" + event.character);
 		} else if (!isConsoleOutputText) {
 			chatConsole.getDisplay().asyncExec(new Runnable() {
