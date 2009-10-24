@@ -323,7 +323,7 @@ public abstract class IcsConnector implements Connector {
 			if (isConnected()
 					&& getPreferences().getBoolean(
 							context.getShortName() + "-keep-alive")
-					&& (System.currentTimeMillis() - lastSendTime) > (1000 * 60 * 50)) {
+					&& System.currentTimeMillis() - lastSendTime > 1000 * 60 * 50) {
 				sendMessage("date", true);
 				publishEvent(new ChatEvent("", ChatType.INTERNAL,
 						"The \"date\" command was just sent as a keep alive."));
@@ -863,7 +863,7 @@ public abstract class IcsConnector implements Connector {
 					}
 					if (message.startsWith("$$")) {
 						// Don't update last send time on a $$ since idle time
-						// isn't effected on the server. 
+						// isn't effected on the server.
 						lastSendPingTime = System.currentTimeMillis();
 					} else {
 						lastSendTime = lastSendPingTime = System

@@ -78,6 +78,13 @@ public class Move implements GameConstants {
 	protected String previousOpeningHeader;
 
 	/**
+	 * Used only for atomic.
+	 * 
+	 * @see AtomicExplosionInfo For more details.
+	 */
+	protected AtomicExplosionInfo[] atomicExplosionInfo = null;
+
+	/**
 	 * Constructor for drop moves. From square will be set to the drop square
 	 * for the piece.
 	 */
@@ -147,6 +154,15 @@ public class Move implements GameConstants {
 			}
 		}
 		return result.toArray(new Arrow[0]);
+	}
+
+	/**
+	 * Used only for atomic.
+	 * 
+	 * @see AtomicExplosionInfo For more details.
+	 */
+	public AtomicExplosionInfo[] getAtomicExplosionInfo() {
+		return atomicExplosionInfo;
 	}
 
 	/**
@@ -403,6 +419,15 @@ public class Move implements GameConstants {
 			return;
 		}
 		annotations.remove(annotation);
+	}
+
+	/**
+	 * Used only for atomic.
+	 * 
+	 * @see AtomicExplosionInfo For more details.
+	 */
+	public void setAtomicExplosionInfo(AtomicExplosionInfo[] atomicExplosionInfo) {
+		this.atomicExplosionInfo = atomicExplosionInfo;
 	}
 
 	public void setCapture(int capture) {
