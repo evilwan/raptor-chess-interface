@@ -265,6 +265,7 @@ public class ObserveController extends ChessBoardController {
 					RaptorActionContainer.ObservingChessBoard, toolbar, false);
 
 			setToolItemSelected(ToolBarItemKey.FORCE_UPDATE, true);
+			enableDisableNavButtons();
 		} else {
 			toolbar.setParent(parent);
 		}
@@ -300,17 +301,6 @@ public class ObserveController extends ChessBoardController {
 		connector.getGameService().addGameServiceListener(listener);
 		fireItemChanged();
 	}
-
-	// @Override
-	// public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-	// switch (key) {
-	// case FEN:
-	// Raptor.getInstance().promptForText(
-	// "FEN for game " + game.getHeader(PgnHeader.White) + " vs "
-	// + game.getHeader(PgnHeader.Black), game.toFen());
-	// break;
-	// }
-	// }
 
 	@Override
 	public void onBack() {

@@ -240,52 +240,6 @@ public class InactiveController extends ChessBoardController implements
 		return title == null ? "Inactive" : title;
 	}
 
-	// @Override
-	// public Control getToolbar(Composite parent) {
-	// if (toolbar == null) {
-	// toolbar = new ToolBar(parent, SWT.FLAT);
-	// ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar, true,
-	// game.getVariant() == Variant.suicide);
-	// new ToolItem(toolbar, SWT.SEPARATOR);
-	// ToolItem saveItem = new ToolItem(toolbar, SWT.PUSH);
-	// saveItem.setImage(Raptor.getInstance().getIcon("save"));
-	// saveItem.setToolTipText("Save to pgn.");
-	// saveItem.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent e) {
-	// onSave();
-	// }
-	// });
-	//
-	// ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
-	// ToolItem movesItem = new ToolItem(toolbar, SWT.CHECK);
-	// movesItem.setImage(Raptor.getInstance().getIcon("moveList"));
-	// movesItem.setToolTipText("Shows or hides the move list.");
-	// movesItem.setSelection(false);
-	// addToolItem(ToolBarItemKey.MOVE_LIST, movesItem);
-	// movesItem.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent e) {
-	// if (isToolItemSelected(ToolBarItemKey.MOVE_LIST)) {
-	// board.showMoveList();
-	// } else {
-	// board.hideMoveList();
-	// }
-	// }
-	// });
-	// new ToolItem(toolbar, SWT.SEPARATOR);
-	// } else if (toolbar.getParent() != parent) {
-	// toolbar.setParent(parent);
-	// }
-	//
-	// if (game.getVariant() == Variant.suicide) {
-	// setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
-	// } else {
-	// setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
-	// }
-	// return toolbar;
-	// }
-
 	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
@@ -298,6 +252,7 @@ public class InactiveController extends ChessBoardController implements
 			} else {
 				setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
 			}
+			enableDisableNavButtons();
 		} else {
 			toolbar.setParent(parent);
 		}
@@ -328,18 +283,6 @@ public class InactiveController extends ChessBoardController implements
 		refresh();
 		decorateForLastMoveListMove();
 	}
-
-	// @Override
-	// public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-	// switch (key) {
-	// // case FEN:
-	// // Raptor.getInstance().promptForText(
-	// // "FEN for game " + game.getHeader(PgnHeader.White) + " vs "
-	// // + game.getHeader(PgnHeader.Black), game.toFen());
-	// // break;
-	//
-	// }
-	// }
 
 	@Override
 	public void onCommit() {

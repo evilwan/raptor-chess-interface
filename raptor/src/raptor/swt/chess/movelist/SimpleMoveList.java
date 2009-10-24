@@ -78,6 +78,7 @@ public class SimpleMoveList implements ChessBoardMoveList {
 			int row = halfMoveIndex / 2;
 			int column = halfMoveIndex % 2 == 0 ? 0 : 1;
 			cursor.setSelection(row, column);
+			cursor.redraw();
 			ignoreSelection = false;
 		}
 	}
