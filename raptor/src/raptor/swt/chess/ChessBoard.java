@@ -418,18 +418,11 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	public synchronized void showMoveList() {
-		if (moveList.getControl().getHorizontalBar() != null) {
-			moveList.getControl().getHorizontalBar().setVisible(false);
-		}
-		int moveListWidth = moveList.getControl().computeSize(SWT.DEFAULT,
-				SWT.DEFAULT).x;
+
+		int width = moveList.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
+		sashForm.setWeights(new int[] { sashForm.getSize().x - width, width });
 		sashForm.setMaximizedControl(null);
-		sashForm.setWeights(new int[] { sashForm.getSize().x - moveListWidth,
-				moveListWidth });
-		if (moveList.getControl().getHorizontalBar() != null) {
-			moveList.getControl().getHorizontalBar().setVisible(false);
-		}
-		// moveList.getControl().layout(true, true);
+		// moveList.getControl().pack();
 		moveList.forceRedraw();
 	}
 
