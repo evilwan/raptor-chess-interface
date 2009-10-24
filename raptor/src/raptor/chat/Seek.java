@@ -51,26 +51,53 @@ public class Seek {
 
 	public static final Comparator<Seek> TIME_CONTROL_ASCENDING_COMPARATOR = new Comparator<Seek>() {
 		public int compare(Seek seek1, Seek seek2) {
-			return seek1.getTimeControl().compareTo(seek2.getTimeControl());
+			if (seek1.getType() == GameType.untimed
+					&& seek2.getType() == GameType.untimed) {
+				return 0;
+			} else if (seek1.getType() == GameType.untimed
+					&& seek2.getType() != GameType.untimed) {
+				return 1;
+			} else if (seek1.getType() != GameType.untimed
+					&& seek2.getType() == GameType.untimed) {
+				return -1;
+			} else if (seek1.getMinutes() < seek2.getMinutes()) {
+				return -1;
+			} else if (seek1.getMinutes() > seek2.getMinutes()) {
+				return 1;
+			} else {// seek1.getMinutes() == seek2.getMinutes()
+				if (seek1.getIncrement() > seek2.getIncrement()) {
+					return 1;
+				} else if (seek1.getIncrement() < seek2.getIncrement()) {
+					return -1;
+				} else {
+					return 0;
+				}
+			}
 		}
 	};
 
 	public static final Comparator<Seek> TIME_CONTROL_DESCENDING_COMPARATOR = new Comparator<Seek>() {
+
 		public int compare(Seek seek1, Seek seek2) {
-			return seek1.getTimeControl().compareTo(seek2.getTimeControl())
-					* -1;
+			return -1 * TIME_CONTROL_ASCENDING_COMPARATOR.compare(seek1, seek2);
 		}
 	};
 
 	public static final Comparator<Seek> AD_ASCENDING_COMPARATOR = new Comparator<Seek>() {
 		public int compare(Seek seek1, Seek seek2) {
-			return seek1.getAd().compareTo(seek2.getAd());
+			try {
+				int ad1 = Integer.parseInt(seek1.getAd());
+				int ad2 = Integer.parseInt(seek2.getAd());
+				return ad1 > ad2 ? 1 : ad1 < ad2 ? -1 : 0;
+			} catch (NumberFormatException nfe) {
+				return seek1.getAd().compareTo(seek2.getAd());
+			}
 		}
 	};
 
 	public static final Comparator<Seek> AD_DESCENDING_COMPARATOR = new Comparator<Seek>() {
 		public int compare(Seek seek1, Seek seek2) {
-			return seek1.getAd().compareTo(seek2.getAd()) * -1;
+			return -1 * AD_ASCENDING_COMPARATOR.compare(seek1, seek2);
 		}
 	};
 
