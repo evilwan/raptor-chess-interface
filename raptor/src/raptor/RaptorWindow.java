@@ -797,7 +797,7 @@ public class RaptorWindow extends ApplicationWindow {
 	public void forceFocus(RaptorWindowItem windowItem) {
 		synchronized (itemsManaged) {
 			boolean wasRestored = false;
-			
+
 			for (RaptorTabItem currentTabItem : itemsManaged) {
 				if (currentTabItem.raptorItem == windowItem) {
 					currentTabItem.raptorParent.setSelection(currentTabItem);
@@ -808,10 +808,10 @@ public class RaptorWindow extends ApplicationWindow {
 					break;
 				}
 			}
-			
-			//Now check to see if a folder is maximized. If one is then do a restore.
-			if (!wasRestored)
-			{
+
+			// Now check to see if a folder is maximized. If one is then do a
+			// restore.
+			if (!wasRestored) {
 				boolean isFolderMaximized = false;
 				for (RaptorTabFolder folder : folders) {
 					if (folder.getMaximized()) {
@@ -819,7 +819,7 @@ public class RaptorWindow extends ApplicationWindow {
 						break;
 					}
 				}
-				
+
 				if (isFolderMaximized) {
 					restoreFolders();
 				}

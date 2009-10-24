@@ -37,6 +37,7 @@ import raptor.service.ThreadService;
 import raptor.swt.chat.controller.ToolBarItemKey;
 
 public class ChatUtils {
+	public static final String FORWARD_CHAR = " `1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./?><MNBVCXZ\":LKJHGFDSA|}{POIUYTREWQ+_)(*&^%$#@!~";
 	private static final Log LOG = LogFactory.getLog(ChatUtils.class);
 
 	public static void addActionsToToolbar(
