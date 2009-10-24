@@ -1,0 +1,15 @@
+[Event "FICS rated atomic game"]
+[Site "FICS"]
+[FICSGamesDBGameNo "27304222"]
+[White "mslmts"]
+[Black "SuperIntellect"]
+[WhiteElo "1446"]
+[BlackElo "1965"]
+[TimeControl "120+0"]
+[Date "2009.10.08"]
+[WhiteClock "0:02:00.000"]
+[BlackClock "0:02:00.000"]
+[PlyCount "22"]
+[Result "0-1"]
+
+1. Nf3 {[%emt 0.0]} f6 {[%emt 0.0]} 2. Nd4 {[%emt 2.625]} Nh6 {[%emt 2.364]} 3. e4 {[%emt 3.844]} c6 {[%emt 5.36]} 4. Bc4 {[%emt 8.0]} d5 {[%emt 3.087]} 5. Nf5 {[%emt 1.609]} Bxf5 {[%emt 12.087]} 6. Be2 {[%emt 7.359]} dxe4 {[%emt 2.866]} 7. d4 {[%emt 10.937]} Ng4 {[%emt 1.225]} 8. Bxg4 {[%emt 1.25]} e5 {[%emt 4.439]} 9. Qg4 {[%emt 9.094]} f5 {[%emt 7.164]} 10. Qe2 {[%emt 22.531]} Qh4 {[%emt 4.834]} 11. Qh5+ {[%emt 5.734]} {White's king exploded} 0-1

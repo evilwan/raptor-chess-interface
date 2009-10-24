@@ -584,14 +584,16 @@ public class IcsParser implements GameConstants {
 						// to
 						// do this.
 						if (bugGamesWithoutBoard2.isEmpty()) {
-							if ((game.isInState(Game.PLAYING_STATE) && connector
-									.getPreferences()
-									.getBoolean(
-											PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD))
-									|| (!game.isInState(Game.PLAYING_STATE) && connector
+							if (game.isInState(Game.PLAYING_STATE)
+									&& connector
 											.getPreferences()
 											.getBoolean(
-													PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD))) {
+													PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD)
+									|| !game.isInState(Game.PLAYING_STATE)
+									&& connector
+											.getPreferences()
+											.getBoolean(
+													PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)) {
 								bugGamesWithoutBoard2.add(message.gameId);
 								connector
 										.sendMessage(
@@ -633,16 +635,19 @@ public class IcsParser implements GameConstants {
 					} else { // Fics mode partner id is set.
 						if (!connector.getGameService().isManaging(
 								g1Message.parterGameId)) {
-							if ((game.isInState(Game.PLAYING_STATE) && connector
-									.getPreferences()
-									.getBoolean(
-											PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD))
-									|| (!game.isInState(Game.PLAYING_STATE) && connector
+							if (game.isInState(Game.PLAYING_STATE)
+									&& connector
 											.getPreferences()
 											.getBoolean(
-													PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)))
+													PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD)
+									|| !game.isInState(Game.PLAYING_STATE)
+									&& connector
+											.getPreferences()
+											.getBoolean(
+													PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)) {
 								connector.sendMessage("observe "
 										+ g1Message.parterGameId, true);
+							}
 						} else {
 							Game otherBoard = service
 									.getGame(g1Message.parterGameId);

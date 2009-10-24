@@ -124,6 +124,51 @@ public class TestPgnParsing {
 	}
 
 	@Test
+	public void testAtomic() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"projectFiles/test/atomic.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+
+		System.err.println("Parsed " + listener.getGames().size() + " games "
+				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
+
+		System.err.println(listener.getErrors());
+	}
+
+	@Test
+	public void testAtomicNotInCheckIfOppKingExplodes() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"projectFiles/test/atomicTest1.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+		System.err.println(listener.getGames().get(0));
+		listener.getGames().get(0).makeSanMove("e5");
+	}
+
+	@Test
+	public void testAtomicQxf2() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"projectFiles/test/atomicTest2.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+		System.err.println(listener.getGames().get(0));
+		listener.getGames().get(0).makeSanMove("Qxf2#");
+	}
+
+	@Test
 	public void testCrazyhosueFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
 				"projectFiles/test/crazyhouseGames.pgn"), Integer.MAX_VALUE);

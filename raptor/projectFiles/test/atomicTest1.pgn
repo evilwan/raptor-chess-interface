@@ -1,0 +1,15 @@
+[Event "FICS rated atomic game"]
+[Site "FICS"]
+[FICSGamesDBGameNo "27311831"]
+[White "LexB"]
+[Black "isaaclev"]
+[WhiteElo "1868"]
+[BlackElo "1941"]
+[TimeControl "180+0"]
+[Date "2009.10.08"]
+[WhiteClock "0:03:00.000"]
+[BlackClock "0:03:00.000"]
+[PlyCount "113"]
+[Result "1-0"]
+
+1. e3 {[%emt 0.0]} e6 {[%emt 0.0]} 2. Nh3 {[%emt 3.098]} h6 {[%emt 3.618]} 3. Nc3 {[%emt 3.246]} Bb4 {[%emt 2.108]} 4. Nf4 {[%emt 4.302]} d5 {[%emt 19.963]} 5. Ng6 {[%emt 5.408]} fxg6 {[%emt 4.159]} 6. Qh5+ {[%emt 2.484]} g6 {[%emt 1.242]} 7. Qe5 {[%emt 1.971]} Qh4 {[%emt 7.773]} 8. g3 {[%emt 1.146]} Qf4 {[%emt 57.144]} 9. f3 {[%emt 3.353]} Qxe5 {[%emt 1.034]} 10. Bb5+ {[%emt 4.936]} c6 {[%emt 1.138]} 11. Bf1 {[%emt 3.485]} e5 {[%emt 1.771]} 12. Bh3 {[%emt 2.795]} Bxh3 {[%emt 0.53]} 13. O-O {[%emt 2.121]} Bxc3 {[%emt 2.102]} 14. d3 {[%emt 1.606]} Ne7 {[%emt 1.627]} 15. e4 {[%emt 0.759]} d4 {[%emt 1.578]} 16. f4 {[%emt 1.132]} O-O {[%emt 2.673]} 17. f5 {[%emt 0.791]} Kh8 {[%emt 6.224]} 18. f6 {[%emt 1.444]} Ng8 {[%emt 4.598]} 19. Bd2 {[%emt 8.799]} Nd7 {[%emt 2.367]} 20. h4 {[%emt 9.279]} Ngxf6 {[%emt 2.175]} 21. Rf7 {[%emt 4.51]} Rxf7 {[%emt 0.718]} 22. Rf1 {[%emt 1.267]} Rf8 {[%emt 0.813]} 23. Rf7 {[%emt 2.11]} Rxf7 {[%emt 1.225]} 24. g4 {[%emt 5.691]} Nc5 {[%emt 2.875]} 25. Bb4 {[%emt 3.148]} Nb3 {[%emt 9.713]} 26. Bf8 {[%emt 3.158]} Nd2 {[%emt 2.232]} 27. Bg7+ {[%emt 3.122]} Kg8 {[%emt 1.323]} 28. h5 {[%emt 1.631]} g5 {[%emt 1.035]} 29. Kf2 {[%emt 2.791]} Nf3 {[%emt 1.498]} 30. a3 {[%emt 3.603]} c5 {[%emt 0.805]} 31. b3 {[%emt 2.161]} b5 {[%emt 1.139]} 32. a4 {[%emt 5.369]} bxa4 {[%emt 3.026]} 33. Bf8 {[%emt 1.991]} Nd2 {[%emt 1.516]} 34. b4 {[%emt 3.087]} cxb4 {[%emt 3.771]} 35. c3 {[%emt 1.961]} a5 {[%emt 4.141]} 36. cxd4 {[%emt 1.515]} a4 {[%emt 1.996]} 37. d4 {[%emt 3.155]} Nc4 {[%emt 4.559]} 38. dxe5 {[%emt 2.906]} a3 {[%emt 1.513]} 39. Bxa3 {[%emt 2.026]} Ne5 {[%emt 1.248]} 40. Ke3 {[%emt 1.481]} Kf7 {[%emt 0.518]} 41. Kd4 {[%emt 1.098]} Ke7 {[%emt 0.755]} 42. Kd5 {[%emt 0.942]} Nxg4 {[%emt 1.083]} 43. Kd4 {[%emt 1.851]} g4 {[%emt 0.505]} 44. Ke3 {[%emt 0.44]} g3 {[%emt 0.446]} 45. Kf4 {[%emt 4.54]} g2 {[%emt 0.1]} 46. Ke5 {[%emt 0.764]} g1=Q {[%emt 0.1]} 47. Ke6 {[%emt 6.68]} Qg5 {[%emt 0.1]} 48. Kf7 {[%emt 3.057]} Qf6 {[%emt 0.514]} {Black forfeits on time} 1-0
