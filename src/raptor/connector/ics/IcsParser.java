@@ -57,6 +57,7 @@ import raptor.connector.ics.game.message.MovesMessage;
 import raptor.connector.ics.game.message.NoLongerExaminingGameMessage;
 import raptor.connector.ics.game.message.RemovingObsGameMessage;
 import raptor.connector.ics.game.message.Style12Message;
+import raptor.pref.PreferenceKeys;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 
@@ -579,15 +580,26 @@ public class IcsParser implements GameConstants {
 				if (game.getVariant() == Variant.bughouse) {
 
 					if (g1Message.parterGameId.equals("0")) {
-						// BICS mode its ugly buggy and i hate it. Please ask
-						// them
-						// to add
-						// a damn partnerGameId its a pain without it.
+						// BICS currently does'nt set a partner id so you have
+						// to
+						// do this.
 						if (bugGamesWithoutBoard2.isEmpty()) {
-							bugGamesWithoutBoard2.add(message.gameId);
-							connector.sendMessage("pobserve "
-									+ (message.isWhiteOnTop ? message.blackName
-											: message.whiteName), true);
+							if ((game.isInState(Game.PLAYING_STATE) && connector
+									.getPreferences()
+									.getBoolean(
+											PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD))
+									|| (!game.isInState(Game.PLAYING_STATE) && connector
+											.getPreferences()
+											.getBoolean(
+													PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD))) {
+								bugGamesWithoutBoard2.add(message.gameId);
+								connector
+										.sendMessage(
+												"pobserve "
+														+ (message.isWhiteOnTop ? message.blackName
+																: message.whiteName),
+												true);
+							}
 						} else {
 							Game otherBoard = service
 									.getGame(bugGamesWithoutBoard2.get(0));
@@ -618,11 +630,19 @@ public class IcsParser implements GameConstants {
 							}
 							bugGamesWithoutBoard2.clear();
 						}
-					} else { // Fics mode, nice and clean.
+					} else { // Fics mode partner id is set.
 						if (!connector.getGameService().isManaging(
 								g1Message.parterGameId)) {
-							connector.sendMessage("observe "
-									+ g1Message.parterGameId, true);
+							if ((game.isInState(Game.PLAYING_STATE) && connector
+									.getPreferences()
+									.getBoolean(
+											PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD))
+									|| (!game.isInState(Game.PLAYING_STATE) && connector
+											.getPreferences()
+											.getBoolean(
+													PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)))
+								connector.sendMessage("observe "
+										+ g1Message.parterGameId, true);
 						} else {
 							Game otherBoard = service
 									.getGame(g1Message.parterGameId);
