@@ -1539,11 +1539,9 @@ public class RaptorWindow extends ApplicationWindow {
 		folder.addCTabFolder2Listener(new CTabFolder2Adapter() {
 			@Override
 			public void close(CTabFolderEvent event) {
-				RaptorTabItem item = (RaptorTabItem) folder.getSelection();
+				RaptorTabItem item = (RaptorTabItem) event.item;
 				if (item.raptorItem.confirmClose()) {
 					event.doit = true;
-					// item.raptorItem.dispose();
-					// item.dispose();
 					getShell().getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							restoreFolders();
