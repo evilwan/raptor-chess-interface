@@ -482,6 +482,7 @@ public class PlayingController extends ChessBoardController {
 			} else {
 				setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
 			}
+			enableDisableNavButtons();
 		} else {
 			toolbar.setParent(parent);
 		}

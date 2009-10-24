@@ -205,18 +205,6 @@ public class SetupController extends ChessBoardController {
 		return connector.getShortName() + "(Setup " + getGame().getId() + ")";
 	}
 
-	// @Override
-	// public Control getToolbar(Composite parent) {
-	// if (toolbar == null) {
-	// toolbar = new ToolBar(parent, SWT.FLAT);
-	// ChessBoardUtils.addSetupIconsToToolbar(this, toolbar);
-	// new ToolItem(toolbar, SWT.SEPARATOR);
-	// } else if (toolbar.getParent() != parent) {
-	// toolbar.setParent(parent);
-	// }
-	// return toolbar;
-	// }
-
 	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
@@ -239,37 +227,6 @@ public class SetupController extends ChessBoardController {
 		connector.getGameService().addGameServiceListener(listener);
 		fireItemChanged();
 	}
-
-	// @Override
-	// public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-	// switch (key) {
-	// case FEN:
-	// Raptor.getInstance().promptForText(
-	// "FEN for game " + game.getHeader(PgnHeader.White) + " vs "
-	// + game.getHeader(PgnHeader.Black), game.toFen());
-	// break;
-	// case FLIP:
-	// onFlip();
-	// break;
-	// case SETUP_CLEAR:
-	// connector.onSetupClear(getGame());
-	// break;
-	// case SETUP_START:
-	// connector.onSetupStartPosition(getGame());
-	// break;
-	// case SETUP_DONE:
-	// connector.onSetupComplete(getGame());
-	// break;
-	// case SETUP_FROM_FEN:
-	// String result = Raptor.getInstance().promptForText(
-	// "Enter the FEN to set the position to:");
-	// if (result != null) {
-	// connector.onSetupFromFEN(getGame(), result);
-	// }
-	// break;
-	//
-	// }
-	// }
 
 	public void setupOnIllegalMove(String move) {
 		SoundService.getInstance().playSound("illegalMove");
