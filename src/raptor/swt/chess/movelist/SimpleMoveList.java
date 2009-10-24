@@ -1,11 +1,13 @@
 package raptor.swt.chess.movelist;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -24,20 +26,27 @@ public class SimpleMoveList implements ChessBoardMoveList {
 	protected ChessBoardController controller;
 	protected TableCursor cursor;
 	protected boolean ignoreSelection;
+	protected Composite composite;
 	protected Table movesTable;
 
 	public Composite create(Composite parent) {
 		if (movesTable == null) {
 			createControls(parent);
 		}
-		return movesTable;
+		return composite;
 	}
 
 	public void forceRedraw() {
+		updateToGame();
+		final int numRows = movesTable.getItemCount();
 		cursor.setVisible(true);
-		cursor.redraw();
-		movesTable.layout(true, true);
-
+		if (numRows > 0) {
+			final int column = StringUtils.isBlank(movesTable.getItem(
+					numRows - 1).getText(1)) ? 0 : 1;
+			ignoreSelection = true;
+			cursor.setSelection(numRows - 1, column);
+			ignoreSelection = false;
+		}
 	}
 
 	public ChessBoardController getChessBoardController() {
@@ -45,30 +54,32 @@ public class SimpleMoveList implements ChessBoardMoveList {
 	}
 
 	public Composite getControl() {
-		return movesTable;
+		return composite;
 	}
 
 	public void select(int halfMoveIndex) {
-		ignoreSelection = true;
-		if (movesTable.getItemCount() == 0) {
-			return;
-		} else if (halfMoveIndex < 0) {
-			LOG.warn("Received invalid halfMoveIndex " + halfMoveIndex
-					+ " Set halfMoveIndex to 0");
-			halfMoveIndex = 0;
-		} else if (halfMoveIndex / 2 > movesTable.getItemCount()) {
-			LOG.warn("Received invalid halfMoveIndex adjust and set to "
-					+ halfMoveIndex + " Set halfMoveIndex to 0");
-			halfMoveIndex = 0;
-		}
-		if (halfMoveIndex > 0) {
-			halfMoveIndex = halfMoveIndex - 1;
-		}
+		if (composite.isVisible()) {
+			ignoreSelection = true;
+			if (movesTable.getItemCount() == 0) {
+				return;
+			} else if (halfMoveIndex < 0) {
+				LOG.warn("Received invalid halfMoveIndex " + halfMoveIndex
+						+ " Set halfMoveIndex to 0");
+				halfMoveIndex = 0;
+			} else if (halfMoveIndex / 2 > movesTable.getItemCount()) {
+				LOG.warn("Received invalid halfMoveIndex adjust and set to "
+						+ halfMoveIndex + " Set halfMoveIndex to 0");
+				halfMoveIndex = 0;
+			}
+			if (halfMoveIndex > 0) {
+				halfMoveIndex = halfMoveIndex - 1;
+			}
 
-		int row = halfMoveIndex / 2;
-		int column = halfMoveIndex % 2 == 0 ? 0 : 1;
-		cursor.setSelection(row, column);
-		ignoreSelection = false;
+			int row = halfMoveIndex / 2;
+			int column = halfMoveIndex % 2 == 0 ? 0 : 1;
+			cursor.setSelection(row, column);
+			ignoreSelection = false;
+		}
 	}
 
 	public void setController(ChessBoardController controller) {
@@ -77,46 +88,50 @@ public class SimpleMoveList implements ChessBoardMoveList {
 
 	public void updateToGame() {
 		long startTime = System.currentTimeMillis();
+		if (composite.isVisible()) {
 
-		Game game = controller.getGame();
-		TableItem[] items = movesTable.getItems();
-		for (TableItem item : items) {
-			item.dispose();
-		}
-		for (int i = 0; i < game.getMoveList().getSize(); i += 2) {
-			TableItem item = new TableItem(movesTable, SWT.NONE);
-			int moveNumber = i / 2 + 1;
-			String move1 = null;
-			String move2 = null;
-
-			if (i + 1 < game.getMoveList().getSize()) {
-				move1 = ""
-						+ moveNumber
-						+ ") "
-						+ GameUtils.convertSanToUseUnicode(game.getMoveList()
-								.get(i).toString(), true);
-				move2 = GameUtils.convertSanToUseUnicode(game.getMoveList()
-						.get(i + 1).toString(), false);
-			} else {
-				move1 = ""
-						+ moveNumber
-						+ ") "
-						+ GameUtils.convertSanToUseUnicode(game.getMoveList()
-								.get(i).toString(), true);
-				move2 = "";
-				;
+			Game game = controller.getGame();
+			TableItem[] items = movesTable.getItems();
+			for (TableItem item : items) {
+				item.dispose();
 			}
+			for (int i = 0; i < game.getMoveList().getSize(); i += 2) {
+				TableItem item = new TableItem(movesTable, SWT.NONE);
+				int moveNumber = i / 2 + 1;
+				String move1 = null;
+				String move2 = null;
 
-			item.setText(new String[] { move1, move2 });
-		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Updated to game in : "
-					+ (System.currentTimeMillis() - startTime));
+				if (i + 1 < game.getMoveList().getSize()) {
+					move1 = ""
+							+ moveNumber
+							+ ") "
+							+ GameUtils.convertSanToUseUnicode(game
+									.getMoveList().get(i).toString(), true);
+					move2 = GameUtils.convertSanToUseUnicode(game.getMoveList()
+							.get(i + 1).toString(), false);
+				} else {
+					move1 = ""
+							+ moveNumber
+							+ ") "
+							+ GameUtils.convertSanToUseUnicode(game
+									.getMoveList().get(i).toString(), true);
+					move2 = "";
+					;
+				}
+
+				item.setText(new String[] { move1, move2 });
+			}
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Updated to game in : "
+						+ (System.currentTimeMillis() - startTime));
+			}
 		}
 	}
 
 	protected void createControls(Composite parent) {
-		movesTable = new Table(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+		composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new FillLayout());
+		movesTable = new Table(composite, SWT.SINGLE | SWT.V_SCROLL);
 		final TableColumn whiteMove = new TableColumn(movesTable, SWT.LEFT);
 		final TableColumn blackMove = new TableColumn(movesTable, SWT.LEFT);
 
@@ -148,6 +163,5 @@ public class SimpleMoveList implements ChessBoardMoveList {
 			}
 
 		});
-		cursor.setVisible(true);
 	}
 }
