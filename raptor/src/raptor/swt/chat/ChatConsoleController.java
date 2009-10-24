@@ -672,9 +672,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Executing action from keybinding: "
 							+ action.getName());
-					action.setChatConsoleControllerSource(this);
-					action.run();
 				}
+				action.setChatConsoleControllerSource(this);
+				action.run();
+
 			}
 		} else if (ActionUtils.isValidKeyCodeWithoutModifier(event.keyCode)) {
 			RaptorAction action = ActionService.getInstance().getAction(
@@ -683,9 +684,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Executing action from keybinding: "
 							+ action.getName());
-					action.setChatConsoleControllerSource(this);
-					action.run();
 				}
+				action.setChatConsoleControllerSource(this);
+				action.run();
+
 			}
 		} else if (event.keyCode == SWT.ARROW_UP) {
 			if (sentTextIndex >= 0) {
