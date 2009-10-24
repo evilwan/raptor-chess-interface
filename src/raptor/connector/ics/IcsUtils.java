@@ -141,8 +141,10 @@ public class IcsUtils implements GameConstants {
 
 		if (message.isClockTicking) {
 			game.addState(Game.IS_CLOCK_TICKING_STATE);
+			System.err.println("Set is clock ticking state.");
 		} else {
 			game.clearState(Game.IS_CLOCK_TICKING_STATE);
+			System.err.println("Cleared is clock ticking state.");
 		}
 		return result;
 	}
@@ -191,6 +193,14 @@ public class IcsUtils implements GameConstants {
 				}
 				result = true;
 			}
+		}
+		
+		if (message.isClockTicking) {
+			game.addState(Game.IS_CLOCK_TICKING_STATE);
+			System.err.println("Set is clock ticking state.");
+		} else {
+			game.clearState(Game.IS_CLOCK_TICKING_STATE);
+			System.err.println("Cleared is clock ticking state.");
 		}
 		return result;
 	}

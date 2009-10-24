@@ -316,17 +316,19 @@ public abstract class IcsConnector implements Connector {
 	protected boolean isLoggedIn = false;
 	protected Runnable keepAlive = new Runnable() {
 		public void run() {
-			LOG.error("In keepAlive.run() "
-					+ (System.currentTimeMillis() - lastSendTime > 1000*60*50));
+			LOG
+					.error("In keepAlive.run() "
+							+ (System.currentTimeMillis() - lastSendTime > 1000 * 60 * 50));
 
 			if (isConnected()
 					&& getPreferences().getBoolean(
 							context.getShortName() + "-keep-alive")
-					&& (System.currentTimeMillis() - lastSendTime) > (1000*60*50)) {
+					&& (System.currentTimeMillis() - lastSendTime) > (1000 * 60 * 50)) {
 				sendMessage("date", true);
 				publishEvent(new ChatEvent("", ChatType.INTERNAL,
 						"The \"date\" command was just sent as a keep alive."));
-				ThreadService.getInstance().scheduleOneShot(1000*60*30, this);
+				ThreadService.getInstance().scheduleOneShot(1000 * 60 * 30,
+						this);
 			}
 		}
 	};
@@ -860,6 +862,8 @@ public abstract class IcsConnector implements Connector {
 						socket.getOutputStream().flush();
 					}
 					if (message.startsWith("$$")) {
+						// Don't update last send time on a $$ since idle time
+						// isn't effected on the server. 
 						lastSendPingTime = System.currentTimeMillis();
 					} else {
 						lastSendTime = lastSendPingTime = System
