@@ -8,7 +8,7 @@
 	  -->
 	<property name="swtEnv" value="Mac_Carbon" />
 
-	<property name="version" value="Alpha1" />
+	<property name="version" value="Alpha" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -117,80 +117,152 @@
 
 	<target name="osxCarbonApp" depends="init" description="Builds Raptor.app">
 		<delete dir="${install.dir}" />
-		<mkdir dir="${install.dir}" />
+		<delete file="${uploads.dir}/Raptor_OS_X_${version}_Carbon.dmg" />
 
 		<var name="swtEnv" value="Mac_Carbon" />
+
 		<antcall target="install" />
 
-		<jarbundler dir="${install.dir}" name="Raptor" shortname="Raptor" mainclass="raptor.Raptor" startOnMainThread="true" icon="resources/images/raptor.icns" jvmversion="1.5+" version="${version}">
-			<jarfileset dir="${install.dir}">
-				<include name="**/*.jar" />
-			</jarfileset>
-		</jarbundler>
+		<move toDir="${install.dir}/Raptor_${version}">
+			<fileset dir="${install.dir}" />
+		</move>
 
-		<delete includeEmptyDirs="true">
-			<fileset dir="${install.dir}/lib" />
-		</delete>
-		<delete file="${install.dir}/Raptor.jar" />
-
-		<zip destfile="${uploads.dir}/Raptor_${version}_OS_X_Carbon.zip">
-			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app" />
+		<copy todir="${install.dir}/Raptor_${version}/Raptor.app">
+			<fileset dir="projectFiles/Raptor.app.carbon">
 				<include name="**/*" />
-				<exclude name="Thumbs.db" />
-			</zipfileset>
-		</zip>
+			</fileset>
+		</copy>
+
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+			<fileset dir="${install.dir}/Raptor_${version}/lib" />
+		</move>
+
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
+		</move>
+
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
+
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
+		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
+			<fileset dir="${install.dir}/Raptor_${version}">
+				<exclude name="${install.dir}/Raptor_${version}/Raptor_${version}" />
+				<include name="**/*" />
+			</fileset>
+		</move>
+		<exec executable="hdiutil">
+			<arg value="create" />
+			<arg value="-srcfolder" />
+			<arg value="${install.dir}/Raptor_${version}" />
+			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Carbon.dmg" />
+		</exec>
+
+		<exec executable="hdiutil">
+			<arg value="internet-enable" />
+			<arg value="-yes" />
+			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Carbon.dmg" />
+		</exec>
 	</target>
 
 	<target name="osxCocoa64App" depends="init" description="Builds Raptor.app">
 		<delete dir="${install.dir}" />
-		<mkdir dir="${install.dir}" />
+		<delete file="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_x86_64.dmg" />
 
 		<var name="swtEnv" value="Mac_Cocoa_x86_64" />
+
 		<antcall target="install" />
 
-		<jarbundler dir="${install.dir}" name="Raptor" shortname="Raptor" mainclass="raptor.Raptor" icon="resources/images/raptor.icns" startOnMainThread="true" jvmversion="1.5+" vmoptions="-d64" version="${version}">
-			<jarfileset dir="${install.dir}">
-				<include name="**/*.jar" />
-			</jarfileset>
-		</jarbundler>
-		<delete includeEmptyDirs="true">
-			<fileset dir="${install.dir}/lib" />
-		</delete>
-		<delete file="${install.dir}/Raptor.jar" />
+		<move toDir="${install.dir}/Raptor_${version}">
+			<fileset dir="${install.dir}" />
+		</move>
 
-
-		<zip destfile="${uploads.dir}/Raptor_${version}_OS_X_Cocoa_x86_64.zip">
-			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app" />
+		<copy todir="${install.dir}/Raptor_${version}/Raptor.app">
+			<fileset dir="projectFiles/Raptor.app.cocoa64">
 				<include name="**/*" />
-				<exclude name="Thumbs.db" />
-			</zipfileset>
-		</zip>
+			</fileset>
+		</copy>
+
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+			<fileset dir="${install.dir}/Raptor_${version}/lib" />
+		</move>
+
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
+		</move>
+
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
+
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
+		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
+			<fileset dir="${install.dir}/Raptor_${version}">
+				<exclude name="${install.dir}/Raptor_${version}/Raptor_${version}" />
+				<include name="**/*" />
+			</fileset>
+		</move>
+		<exec executable="hdiutil">
+			<arg value="create" />
+			<arg value="-srcfolder" />
+			<arg value="${install.dir}/Raptor_${version}" />
+			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_x86_64.dmg" />
+		</exec>
+
+		<exec executable="hdiutil">
+			<arg value="internet-enable" />
+			<arg value="-yes" />
+			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_x86_64.dmg" />
+		</exec>
 	</target>
 
 	<target name="osxCocoa32App" depends="init" description="Builds Raptor.app">
 		<delete dir="${install.dir}" />
-		<mkdir dir="${install.dir}" />
+		<delete file="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_32.dmg" />
 
 		<var name="swtEnv" value="Mac_Cocoa" />
+
 		<antcall target="install" />
 
-		<jarbundler dir="${install.dir}" name="Raptor" shortname="Raptor" mainclass="raptor.Raptor" icon="resources/images/raptor.icns" startOnMainThread="true" jvmversion="1.5+" vmoptions="-d32" version="${version}">
-			<jarfileset dir="${install.dir}">
-				<include name="**/*.jar" />
-			</jarfileset>
-		</jarbundler>
-		<delete includeEmptyDirs="true">
-			<fileset dir="${install.dir}/lib" />
-		</delete>
-		<delete file="${install.dir}/Raptor.jar" />
+		<move toDir="${install.dir}/Raptor_${version}">
+			<fileset dir="${install.dir}" />
+		</move>
 
-
-		<zip destfile="${uploads.dir}/Raptor_${version}_OS_X_Cocoa.zip">
-			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app" />
+		<copy todir="${install.dir}/Raptor_${version}/Raptor.app">
+			<fileset dir="projectFiles/Raptor.app.cocoa32">
 				<include name="**/*" />
-				<exclude name="Thumbs.db" />
-			</zipfileset>
-		</zip>
+			</fileset>
+		</copy>
+
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+			<fileset dir="${install.dir}/Raptor_${version}/lib" />
+		</move>
+
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
+		</move>
+
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
+
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
+		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
+			<fileset dir="${install.dir}/Raptor_${version}">
+				<exclude name="${install.dir}/Raptor_${version}/Raptor_${version}" />
+				<include name="**/*" />
+			</fileset>
+		</move>
+		<exec executable="hdiutil">
+			<arg value="create" />
+			<arg value="-srcfolder" />
+			<arg value="${install.dir}/Raptor_${version}" />
+			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_32.dmg" />
+		</exec>
+
+		<exec executable="hdiutil">
+			<arg value="internet-enable" />
+			<arg value="-yes" />
+			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_32.dmg" />
+		</exec>
 	</target>
 
 	<target name="createUploads">
