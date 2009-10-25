@@ -14,6 +14,8 @@
 package raptor.connector.bics;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
@@ -24,6 +26,8 @@ import org.eclipse.jface.preference.PreferencePage;
 import raptor.Raptor;
 import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.connector.bics.pref.BicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
@@ -41,6 +45,7 @@ import raptor.util.RaptorStringTokenizer;
  * The connector used to connect to www.freechess.org.
  */
 public class BicsConnector extends IcsConnector implements PreferenceKeys {
+	private static final Log LOG = LogFactory.getLog(BicsConnector.class);
 
 	public static class BicsConnectorContext extends IcsConnectorContext {
 		public BicsConnectorContext() {
@@ -338,9 +343,22 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(context
 						.getPreferencePrefix(), "Bics Simultaneous Login");
+				if (isConnected()) {
+					dialog.setShowingSimulBug(true);
+				}
 				dialog.open();
+				autoConnectAction.setChecked(getPreferences().getBoolean(
+						context.getPreferencePrefix() + "auto-connect"));
+
 				if (dialog.wasLoginPressed()) {
 					bics2.connect(dialog.getSelectedProfile());
+
+					if (dialog.isSimulBugLogin()) {
+						bics2.setSimulBugConnector(true);
+						bics2.setSimulBugPartnerName(getUserName());
+						// Force bug-open to get the partnership message.
+						sendMessage("set bugopen on");
+					}
 				}
 			}
 		};
@@ -469,10 +487,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			public void run() {
 				isConnecting = false;
 				fireConnected();
-				sendMessage("iset defprompt 1", true);
 				sendMessage("iset gameinfo 1", true);
 				sendMessage("iset ms 1", true);
-				sendMessage("iset allresults 1", true);
 				sendMessage(
 						"iset premove "
 								+ (getPreferences().getBoolean(
@@ -501,7 +517,56 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 						sendMessage(tok.nextToken().trim());
 					}
 				}
+
+				if (isSimulBugConnector) {
+					try {
+						Thread.sleep(300);
+					} catch (InterruptedException ie) {
+					}
+					sendMessage("set bugopen on");
+
+					if (StringUtils.isNotBlank(getSimulBugPartnerName())) {
+						sendMessage("partner " + getSimulBugPartnerName());
+					}
+				}
+
 			}
 		});
+	}
+
+	/**
+	 * This method is overridden to support simul bughouse.
+	 */
+	@Override
+	protected void publishEvent(final ChatEvent event) {
+		if (chatService != null) { // Could have been disposed.
+			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
+				if (bics2 != null
+						&& bics2.isConnected()
+						&& StringUtils.equalsIgnoreCase(event.getSource(),
+								bics2.getUserName())) {
+					if (LOG.isInfoEnabled()) {
+						LOG.info("Created simul bughouse partnership with "
+								+ bics2.getUserName());
+					}
+					isSimulBugConnector = true;
+					simulBugPartnerName = event.getSource();
+					bics2.isSimulBugConnector = true;
+					bics2.simulBugPartnerName = getUserName();
+				}
+			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
+				if (bics2 != null && isSimulBugConnector) {
+					if (LOG.isInfoEnabled()) {
+						LOG.info("Ended simul bughouse partnership with "
+								+ bics2.getUserName());
+					}
+					isSimulBugConnector = false;
+					simulBugPartnerName = null;
+					bics2.isSimulBugConnector = false;
+					bics2.simulBugPartnerName = null;
+				}
+			}
+			super.publishEvent(event);
+		}
 	}
 }

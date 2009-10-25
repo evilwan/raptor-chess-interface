@@ -39,6 +39,7 @@ import raptor.chat.ChatType;
 import raptor.chess.BughouseGame;
 import raptor.chess.Game;
 import raptor.chess.Move;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
@@ -291,9 +292,20 @@ public abstract class IcsConnector implements Connector {
 		@Override
 		public void gameCreated(Game game) {
 			if (game instanceof BughouseGame) {
-				if (((BughouseGame) game).getOtherBoard() == null) {
+				if (isSimulBugConnector) {
+					// Always make white the primary and black the other board.
+					if (StringUtils.equals(game.getHeader(PgnHeader.White),
+							getUserName())) {
+						ChessBoardUtils.openBoard(IcsUtils.buildController(
+								game, IcsConnector.this));
+					} else {
+						ChessBoardUtils.openBoard(IcsUtils.buildController(
+								game, IcsConnector.this), true);
+					}
+				} else if (((BughouseGame) game).getOtherBoard() == null) {
 					ChessBoardUtils.openBoard(IcsUtils.buildController(game,
 							IcsConnector.this));
+
 				} else {
 					ChessBoardUtils.openBoard(IcsUtils.buildController(game,
 							IcsConnector.this, true), true);
@@ -314,6 +326,9 @@ public abstract class IcsConnector implements Connector {
 	protected ReadableByteChannel inputChannel;
 	protected boolean isConnecting;
 	protected boolean isLoggedIn = false;
+	protected boolean isSimulBugConnector = false;
+	protected String simulBugPartnerName;
+
 	protected Runnable keepAlive = new Runnable() {
 		public void run() {
 			LOG
@@ -467,6 +482,8 @@ public abstract class IcsConnector implements Connector {
 					socket = null;
 					inputChannel = null;
 					daemonThread = null;
+					isSimulBugConnector = false;
+					simulBugPartnerName = null;
 				}
 
 				try {
@@ -623,6 +640,10 @@ public abstract class IcsConnector implements Connector {
 		return context.getShortName();
 	}
 
+	public String getSimulBugPartnerName() {
+		return simulBugPartnerName;
+	}
+
 	public String getTellToString(String handle) {
 		return "tell " + handle + " ";
 	}
@@ -656,6 +677,10 @@ public abstract class IcsConnector implements Connector {
 
 	public boolean isLikelyPerson(String word) {
 		return IcsUtils.isLikelyPerson(word);
+	}
+
+	public boolean isSimulBugConnector() {
+		return isSimulBugConnector;
 	}
 
 	public void makeMove(Game game, Move move) {
@@ -887,6 +912,14 @@ public abstract class IcsConnector implements Connector {
 							+ getShortName()
 							+ ". There is currently no connection."));
 		}
+	}
+
+	public void setSimulBugConnector(boolean isSimulBugConnector) {
+		this.isSimulBugConnector = isSimulBugConnector;
+	}
+
+	public void setSimulBugPartnerName(String simulBugPartnerName) {
+		this.simulBugPartnerName = simulBugPartnerName;
 	}
 
 	/**
@@ -1377,6 +1410,11 @@ public abstract class IcsConnector implements Connector {
 				LOG.debug("Publishing event : " + event);
 			}
 
+			if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
+				isSimulBugConnector = false;
+				simulBugPartnerName = null;
+			}
+
 			// Sets the user following. This is used in the IcsParser to
 			// determine if white is on top or not.
 			if (event.getType() == ChatType.FOLLOWING) {
@@ -1427,6 +1465,8 @@ public abstract class IcsConnector implements Connector {
 		hasSentLogin = false;
 		hasSentPassword = false;
 		userFollowing = null;
+		isSimulBugConnector = false;
+		simulBugPartnerName = null;
 		ignoringChatTypes.clear();
 	}
 

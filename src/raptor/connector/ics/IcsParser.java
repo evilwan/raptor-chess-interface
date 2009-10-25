@@ -359,9 +359,8 @@ public class IcsParser implements GameConstants {
 	protected void process(GameEndMessage message, GameService service) {
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			connector.onError(
-					"Received game end for a game not in the GameService. "
-							+ message, new Exception());
+			// Bug game other boards might not be in the game service.
+			// So no need to send a connector.onError.
 		} else {
 			switch (message.type) {
 			case GameEndMessage.ABORTED:
@@ -606,6 +605,7 @@ public class IcsParser implements GameConstants {
 											.getPreferences()
 											.getBoolean(
 													PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD)
+									&& !connector.isSimulBugConnector()
 									|| !game.isInState(Game.PLAYING_STATE)
 									&& connector
 											.getPreferences()
@@ -652,7 +652,8 @@ public class IcsParser implements GameConstants {
 					} else { // Fics mode partner id is set.
 						if (!connector.getGameService().isManaging(
 								g1Message.parterGameId)) {
-							if (game.isInState(Game.PLAYING_STATE)
+							if (!connector.isSimulBugConnector()
+									&& game.isInState(Game.PLAYING_STATE)
 									&& connector
 											.getPreferences()
 											.getBoolean(

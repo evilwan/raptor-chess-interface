@@ -14,6 +14,8 @@
 package raptor.connector.fics;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
@@ -24,6 +26,8 @@ import org.eclipse.jface.preference.PreferencePage;
 import raptor.Raptor;
 import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.connector.fics.pref.FicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
@@ -50,6 +54,7 @@ import raptor.util.RaptorStringTokenizer;
  * The connector used to connect to www.freechess.org.
  */
 public class FicsConnector extends IcsConnector implements PreferenceKeys {
+	private static final Log LOG = LogFactory.getLog(FicsConnector.class);
 
 	protected MenuManager connectionsMenu;
 	protected Action autoConnectAction;
@@ -365,12 +370,22 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(context
 						.getPreferencePrefix(), "Fics Simultaneous Login");
-				dialog.open();
-				if (dialog.wasLoginPressed()) {
-					fics2.connect(dialog.getSelectedProfile());
+				if (isConnected()) {
+					dialog.setShowingSimulBug(true);
 				}
+				dialog.open();
 				autoConnectAction.setChecked(getPreferences().getBoolean(
 						context.getPreferencePrefix() + "auto-connect"));
+				if (dialog.wasLoginPressed()) {
+					fics2.connect(dialog.getSelectedProfile());
+
+					if (dialog.isSimulBugLogin()) {
+						fics2.setSimulBugConnector(true);
+						fics2.setSimulBugPartnerName(getUserName());
+						// Force bug-open to get the partnership message.
+						sendMessage("set bugopen on");
+					}
+				}
 			}
 		};
 
@@ -591,8 +606,55 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						sendMessage(tok.nextToken().trim());
 					}
 				}
+
+				if (isSimulBugConnector) {
+					try {
+						Thread.sleep(300);
+					} catch (InterruptedException ie) {
+					}
+					sendMessage("set bugopen on");
+
+					if (StringUtils.isNotBlank(getSimulBugPartnerName())) {
+						sendMessage("partner " + getSimulBugPartnerName());
+					}
+				}
 			}
 		});
 	}
 
+	/**
+	 * This method is overridden to support simul bughouse.
+	 */
+	@Override
+	protected void publishEvent(final ChatEvent event) {
+		if (chatService != null) { // Could have been disposed.
+			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
+				if (fics2 != null
+						&& fics2.isConnected()
+						&& StringUtils.equalsIgnoreCase(event.getSource(),
+								fics2.getUserName())) {
+					if (LOG.isInfoEnabled()) {
+						LOG.info("Created simul bughouse partnership with "
+								+ fics2.getUserName());
+					}
+					isSimulBugConnector = true;
+					simulBugPartnerName = event.getSource();
+					fics2.isSimulBugConnector = true;
+					fics2.simulBugPartnerName = getUserName();
+				}
+			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
+				if (fics2 != null && isSimulBugConnector) {
+					if (LOG.isInfoEnabled()) {
+						LOG.info("Ended simul bughouse partnership with "
+								+ fics2.getUserName());
+					}
+					isSimulBugConnector = false;
+					simulBugPartnerName = null;
+					fics2.isSimulBugConnector = false;
+					fics2.simulBugPartnerName = null;
+				}
+			}
+			super.publishEvent(event);
+		}
+	}
 }
