@@ -30,17 +30,17 @@ public class PartnershipCreatedEventParser extends ChatEventParser {
 	public ChatEvent parse(String text) {
 		if (text.length() < 100) {
 			int i = text.indexOf(IDENTIFIER);
-			if (i != -1) {
+			if (i == 0 || i == 1) {
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
-						text.substring(i + "You agree to be".length(), text
-								.length()), " '");
+						text.substring(i + IDENTIFIER.length(), text.length()),
+						" '", true);
 				return new ChatEvent(IcsUtils.stripTitles(stringtokenizer
 						.nextToken()), ChatType.PARTNERSHIP_CREATED, text);
 			}
 			int j = text.indexOf(IDENTIFIER_2);
 			if (j != -1) {
 				RaptorStringTokenizer stringtokenizer1 = new RaptorStringTokenizer(
-						text, " ");
+						text, " ", true);
 				String s1 = stringtokenizer1.nextToken();
 				String s2 = stringtokenizer1.nextToken();
 				if (s2.equals("agrees")) {

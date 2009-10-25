@@ -536,7 +536,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Bics
 		setDefault(BICS_KEEP_ALIVE, false);
 		setDefault(BICS_AUTO_CONNECT, false);
-		setDefault(BICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
+		setDefault(BICS_LOGIN_SCRIPT, "set autoflag 1\n\n");
 		setDefault(BICS_IS_LOGGING_GAMES, false);
 		setDefault(BICS_AUTO_CONNECT, false);
 		setDefault(BICS_SHOW_BUGBUTTONS_ON_CONNECT, false);

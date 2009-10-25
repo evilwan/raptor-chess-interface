@@ -60,10 +60,13 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	protected String profilePrefix;
 	protected Text serverField;
 	protected Label serverLabel;
+	protected Button simulBugButton;
 
 	protected Button timesealEnabledCheckBox;
 	protected String title;
 	protected boolean wasLoginPressed;
+	protected boolean isShowingSimulBug;
+	protected boolean isSimulBugLogin;
 
 	public IcsLoginDialog(String profilePrefix, String title) {
 		super(Raptor.getInstance().getWindow().getShell());
@@ -133,6 +136,14 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		data.horizontalSpan = 2;
 		autoLoginCheckBox.setLayoutData(data);
 
+		if (isShowingSimulBug()) {
+			simulBugButton = new Button(content, SWT.CHECK);
+			simulBugButton.setText("Simul bughouse mode.");
+			data = new GridData();
+			data.horizontalSpan = 2;
+			simulBugButton.setLayoutData(data);
+		}
+
 		loginButton = new Button(content, SWT.PUSH);
 		loginButton.setText("Login");
 		data = new GridData();
@@ -193,6 +204,10 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 						} catch (Throwable t) {
 						}
 						wasLoginPressed = true;
+
+						if (isShowingSimulBug()) {
+							isSimulBugLogin = simulBugButton.getSelection();
+						}
 						close();
 					}
 				}
@@ -226,9 +241,25 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		return lastSelection;
 	}
 
+	public boolean isShowingSimulBug() {
+		return isShowingSimulBug;
+	}
+
+	public boolean isSimulBugLogin() {
+		return isSimulBugLogin;
+	}
+
 	@Override
 	public int open() {
 		return super.open();
+	}
+
+	public void setShowingSimulBug(boolean isShowingSimulBug) {
+		this.isShowingSimulBug = isShowingSimulBug;
+	}
+
+	public void setSimulBugLogin(boolean isSimulBugLogin) {
+		this.isSimulBugLogin = isSimulBugLogin;
 	}
 
 	public boolean wasLoginPressed() {

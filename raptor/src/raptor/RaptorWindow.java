@@ -384,11 +384,12 @@ public class RaptorWindow extends ApplicationWindow {
 
 				Control currentSelectionToolbar = null;
 				if (currentSelection != null) {
-					System.err
-							.println("In updateToolbar selected RaptorWindowItem="
-									+ currentSelection.raptorItem
-									+ " quad="
-									+ quad);
+					if (LOG.isDebugEnabled()) {
+						LOG
+								.debug("In updateToolbar selected RaptorWindowItem="
+										+ currentSelection.raptorItem
+										+ " quad=" + quad);
+					}
 
 					currentSelectionToolbar = currentSelection.raptorItem
 							.getToolbar(this);
@@ -402,7 +403,9 @@ public class RaptorWindow extends ApplicationWindow {
 							setTopRight(null);
 						}
 						if (currentSelectionToolbar != null) {
-							System.err.println("Setting up toolbar. ");
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("Setting up toolbar. ");
+							}
 							setTopRight(currentSelectionToolbar, SWT.RIGHT);
 							setTabHeight(Math.max(currentSelectionToolbar
 									.computeSize(SWT.DEFAULT, SWT.DEFAULT).y,
