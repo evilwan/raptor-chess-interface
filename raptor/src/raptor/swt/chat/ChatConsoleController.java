@@ -122,7 +122,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			System.err.println("In vertical scroll bar listener");
 			ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
 			if (scrollbar != null
 					&& scrollbar.isVisible()
@@ -195,35 +194,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		connector.addConnectorListener(connectorListener);
 	}
 
-	public boolean isAutoScrolling() {
-		return isAutoScrolling;
-	}
-
-	public void setAutoScrolling(boolean isAutoScrolling) {
-		if (isAutoScrolling != this.isAutoScrolling) {
-			this.isAutoScrolling = isAutoScrolling;
-			if (isAutoScrolling) {
-				ToolItem item = toolItemMap
-						.get(ToolBarItemKey.AUTO_SCROLL_BUTTON);
-				if (item != null) {
-					item.setSelection(true);
-					item.setImage(Raptor.getInstance().getIcon("locked"));
-					item.setToolTipText("Scroll lock enabled.");
-				}
-			} else {
-				ToolItem item = toolItemMap
-						.get(ToolBarItemKey.AUTO_SCROLL_BUTTON);
-				if (item != null) {
-					item.setSelection(false);
-					item.setImage(Raptor.getInstance().getIcon("unlocked"));
-					item.setToolTipText("Scroll lock disabled.");
-				}
-			}
-		}
-	}
-
 	public void addItemChangedListener(ItemChangedListener listener) {
 		itemChangedListeners.add(listener);
+	}
+
+	public void addScrollBarListeners() {
+		chatConsole.getInputText().getVerticalBar().addSelectionListener(
+				verticalScrollbarListener);
 	}
 
 	public void addToolItem(ToolBarItemKey key, ToolItem item) {
@@ -341,11 +318,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		return hasUnseenText;
 	}
 
-	public void addScrollBarListeners() {
-		chatConsole.getInputText().getVerticalBar().addSelectionListener(
-				verticalScrollbarListener);
-	}
-
 	public void init() {
 		addScrollBarListeners();
 		addInputTextKeyListeners();
@@ -357,6 +329,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public abstract boolean isAcceptingChatEvent(ChatEvent inboundEvent);
+
+	public boolean isAutoScrolling() {
+		return isAutoScrolling;
+	}
 
 	public abstract boolean isAwayable();
 
@@ -716,6 +692,30 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
 		itemChangedListeners.remove(listener);
+	}
+
+	public void setAutoScrolling(boolean isAutoScrolling) {
+		if (isAutoScrolling != this.isAutoScrolling) {
+			this.isAutoScrolling = isAutoScrolling;
+			if (isAutoScrolling) {
+				ToolItem item = toolItemMap
+						.get(ToolBarItemKey.AUTO_SCROLL_BUTTON);
+				if (item != null) {
+					item.setSelection(true);
+					item.setImage(Raptor.getInstance().getIcon("locked"));
+					item.setToolTipText("Scroll lock enabled.");
+				}
+				onForceAutoScroll();
+			} else {
+				ToolItem item = toolItemMap
+						.get(ToolBarItemKey.AUTO_SCROLL_BUTTON);
+				if (item != null) {
+					item.setSelection(false);
+					item.setImage(Raptor.getInstance().getIcon("unlocked"));
+					item.setToolTipText("Scroll lock disabled.");
+				}
+			}
+		}
 	}
 
 	public void setChatConsole(ChatConsole chatConsole) {
