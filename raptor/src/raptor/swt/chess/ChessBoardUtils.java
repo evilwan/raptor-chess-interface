@@ -79,6 +79,25 @@ public class ChessBoardUtils implements BoardConstants {
 			+ "square/";
 	public static final String SQUARE_BACKGROUND_IMAGE_SUFFIX = ".png";
 
+	public static void addActionsToToolbar(
+			final ChessBoardController controller,
+			RaptorActionContainer container, ToolBar toolbar,
+			boolean isUserWhite) {
+		RaptorAction[] toolbarActions = ActionService.getInstance().getActions(
+				container);
+
+		for (RaptorAction action : toolbarActions) {
+			ToolItem item = createToolItem(action, controller, toolbar,
+					isUserWhite);
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Added " + action + " to toolbar " + item);
+			}
+		}
+		new ToolItem(toolbar, SWT.SEPARATOR);
+
+	}
+
 	/**
 	 * Appends the game to the users game pgn file.
 	 */
@@ -101,25 +120,6 @@ public class ChessBoardUtils implements BoardConstants {
 				}
 			}
 		}
-	}
-
-	public static void addActionsToToolbar(
-			final ChessBoardController controller,
-			RaptorActionContainer container, ToolBar toolbar,
-			boolean isUserWhite) {
-		RaptorAction[] toolbarActions = ActionService.getInstance().getActions(
-				container);
-
-		for (RaptorAction action : toolbarActions) {
-			ToolItem item = createToolItem(action, controller, toolbar,
-					isUserWhite);
-
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Added " + action + " to toolbar " + item);
-			}
-		}
-		new ToolItem(toolbar, SWT.SEPARATOR);
-
 	}
 
 	public static boolean arePiecesSameColor(int piece1, int piece2) {

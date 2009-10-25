@@ -1474,9 +1474,8 @@ public class RaptorWindow extends ApplicationWindow {
 		// addRaptorWindowItem(new ChessBoardWindowItem(controller));
 		// }
 		// });
-		
-		
-		 menuBar.add(fileMenu);
+
+		menuBar.add(fileMenu);
 
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();
 
