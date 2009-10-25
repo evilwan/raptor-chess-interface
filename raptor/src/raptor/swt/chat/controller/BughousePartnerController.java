@@ -73,6 +73,7 @@ public class BughousePartnerController extends ChatConsoleController {
 			toolbar = new ToolBar(parent, SWT.FLAT);
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.BughousePartnerChatConsole, toolbar);
+			adjustAwayButtonEnabled();
 		} else {
 			toolbar.setParent(parent);
 		}

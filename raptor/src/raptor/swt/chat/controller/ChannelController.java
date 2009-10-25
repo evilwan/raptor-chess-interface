@@ -79,6 +79,7 @@ public class ChannelController extends ChatConsoleController {
 			toolbar = new ToolBar(parent, SWT.FLAT);
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.ChannelChatConsole, toolbar);
+			adjustAwayButtonEnabled();
 		} else {
 			toolbar.setParent(parent);
 		}

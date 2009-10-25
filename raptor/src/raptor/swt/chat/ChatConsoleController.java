@@ -896,9 +896,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void adjustAwayButtonEnabled() {
-		if (!isIgnoringActions()) {
-			setToolItemEnabled(ToolBarItemKey.AWAY_BUTTON, !awayList.isEmpty());
-		}
+		setToolItemEnabled(ToolBarItemKey.AWAY_BUTTON, !awayList.isEmpty());
 	}
 
 	protected void decorateForegroundColor(ChatEvent event, String message,

@@ -69,6 +69,7 @@ public class MainController extends ChatConsoleController {
 			toolbar = new ToolBar(parent, SWT.FLAT);
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.MainChatConsole, toolbar);
+			adjustAwayButtonEnabled();
 		} else {
 			toolbar.setParent(parent);
 		}
@@ -99,34 +100,4 @@ public class MainController extends ChatConsoleController {
 	public boolean isSearchable() {
 		return true;
 	}
-
-	/**
-	 * Can be overridden to prepend items to the toolbar.
-	 * 
-	 * @param toolbar
-	 */
-	// @Override
-	// protected void prependToolbarItems(ToolBar toolbar) {
-	// final ChatScript[] scripts = ScriptService.getInstance()
-	// .getChatScripts(connector, ChatScriptType.ToolbarOneShot);
-	// boolean wasScriptAdded = false;
-	// for (int i = 0; i < scripts.length; i++) {
-	// final ChatScript script = scripts[i];
-	// ToolItem item = new ToolItem(toolbar, SWT.PUSH);
-	// item.setText(script.getName());
-	// item.setToolTipText(script.getDescription());
-	// item.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent e) {
-	// // Grab from script service to pick up changes.
-	// ScriptService.getInstance().getChatScript(script.getName())
-	// .execute(connector.getChatScriptContext());
-	// }
-	// });
-	// wasScriptAdded = true;
-	// }
-	// if (wasScriptAdded) {
-	// new ToolItem(toolbar, SWT.SEPARATOR);
-	// }
-	// }
 }
