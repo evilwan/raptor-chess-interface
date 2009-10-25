@@ -62,6 +62,7 @@ public class RegExController extends ChatConsoleController {
 			toolbar = new ToolBar(parent, SWT.FLAT);
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.RegExChatConsole, toolbar);
+			adjustAwayButtonEnabled();
 		} else {
 			toolbar.setParent(parent);
 		}

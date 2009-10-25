@@ -309,7 +309,7 @@ public class ChatUtils {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			controller.addToolItem(ToolBarItemKey.PREPEND_TEXT_BUTTON, result);
 		} else if (action instanceof TellsMissedWhileIWasAwayAction) {
-			result = new ToolItem(toolbar, SWT.CHECK);
+			result = new ToolItem(toolbar, SWT.PUSH);
 			controller.addToolItem(ToolBarItemKey.AWAY_BUTTON, result);
 		} else {
 			result = new ToolItem(toolbar, SWT.PUSH);

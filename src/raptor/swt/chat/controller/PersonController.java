@@ -80,6 +80,7 @@ public class PersonController extends ChatConsoleController {
 			toolbar = new ToolBar(parent, SWT.FLAT);
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.PersonChatConsole, toolbar);
+			adjustAwayButtonEnabled();
 		} else {
 			toolbar.setParent(parent);
 		}

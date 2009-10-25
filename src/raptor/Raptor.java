@@ -158,8 +158,10 @@ public class Raptor implements PreferenceKeys {
 			// Open the app window
 			instance.raptorWindow.open();
 		} catch (Throwable t) {
-			t.printStackTrace();
-			instance.LOG.error("Error occured in main:", t);
+			instance.LOG
+					.error(
+							"Error occured in main: (If this is a widget is disposed error just ignore it its nothing)",
+							t);
 		} finally {
 			if (instance != null) {
 				instance.shutdown();
