@@ -111,6 +111,8 @@ public class PlayingController extends ChessBoardController {
 							board.redrawSquares();
 							onPlayGameEndSound();
 
+							ChessBoardUtils.appendGameToPgnFile(getGame());
+
 							// Now swap controllers to the inactive controller.
 							InactiveController inactiveController = new InactiveController(
 									getGame());

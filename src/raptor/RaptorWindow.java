@@ -13,6 +13,7 @@
  */
 package raptor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,12 +61,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
-import raptor.chess.Game;
-import raptor.chess.GameConstants;
-import raptor.chess.GameFactory;
-import raptor.chess.Variant;
-import raptor.chess.pgn.PgnHeader;
-import raptor.chess.pgn.PgnUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtils;
@@ -81,7 +76,6 @@ import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PersonController;
-import raptor.swt.chess.Arrow;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.util.BrowserUtils;
@@ -1274,7 +1268,7 @@ public class RaptorWindow extends ApplicationWindow {
 		MenuManager fileMenu = new MenuManager("File");
 		MenuManager helpMenu = new MenuManager("&Help");
 
-		fileMenu.add(new Action("Open PGN File") {
+		fileMenu.add(new Action("View PGN File") {
 			@Override
 			public void run() {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
@@ -1290,8 +1284,23 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
+		fileMenu.add(new Action("View my saved games") {
+			@Override
+			public void run() {
+				File file = new File(Raptor.GAMES_PGN_FILE);
+				if (!file.exists()) {
+					Raptor.getInstance().alert(
+							"You currently do not have any games saved in "
+									+ Raptor.GAMES_PGN_FILE);
+				} else {
+					PgnProcessingDialog dialog = new PgnProcessingDialog(
+							getShell(), Raptor.GAMES_PGN_FILE);
+					dialog.open();
+				}
+			}
+		});
 		fileMenu.add(new Separator());
-		fileMenu.add(new Action("Properties") {
+		fileMenu.add(new Action("Preferences") {
 			@Override
 			public void run() {
 				PreferenceUtils.launchPreferenceDialog();
@@ -1305,166 +1314,169 @@ public class RaptorWindow extends ApplicationWindow {
 				dialog.open();
 			}
 		});
-		fileMenu.add(new Action("Create Test Board") {
-			@Override
-			public void run() {
-				Game game = GameFactory.createStartingPosition(Variant.classic);
-				game.addState(Game.UPDATING_SAN_STATE);
-				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
-				game.addState(Game.IS_CLOCK_TICKING_STATE);
-				game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
-						.currentTimeMillis()));
-				game.setHeader(PgnHeader.Round, "?");
-				game.setHeader(PgnHeader.Site, "Test Game Site");
-				game.setHeader(PgnHeader.TimeControl, PgnUtils
-						.timeIncMillisToTimeControl(180000, 0));
-				game.setHeader(PgnHeader.BlackRemainingMillis, "" + 46728);
-				game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 153857);
-				game.setHeader(PgnHeader.WhiteClock, PgnUtils
-						.timeToClock(180000));
-				game.setHeader(PgnHeader.BlackClock, PgnUtils
-						.timeToClock(180000));
-				game.setHeader(PgnHeader.BlackElo, "----");
-				game.setHeader(PgnHeader.WhiteElo, "----");
-				game.setHeader(PgnHeader.Event, "blitz 3 0 rated");
-				game.makeSanMove("e4");
-				game.makeSanMove("e5");
-				game.makeSanMove("Nf3");
-				game.makeSanMove("Nc6");
-				game.makeSanMove("Bb5");
-				game.makeSanMove("a6");
-				InactiveController controller = new InactiveController(game);
-				ChessBoardWindowItem item = new ChessBoardWindowItem(controller);
-				addRaptorWindowItem(item, false);
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_E2,
-								GameConstants.SQUARE_E7, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_RED)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_D7,
-								GameConstants.SQUARE_D1, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_GREEN)));
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_A8,
-								GameConstants.SQUARE_D8, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_BLACK)));
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_H8,
-								GameConstants.SQUARE_E8, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_CYAN)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_B1,
-								GameConstants.SQUARE_A3, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_RED)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_B1,
-								GameConstants.SQUARE_D2, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_RED)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_G1,
-								GameConstants.SQUARE_H3, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_GREEN)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_G1,
-								GameConstants.SQUARE_E2, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_GREEN)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_E7,
-								GameConstants.SQUARE_C6, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_RED)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_E7,
-								GameConstants.SQUARE_G6, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_RED)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_B7,
-								GameConstants.SQUARE_A5, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_GREEN)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_G7,
-								GameConstants.SQUARE_H5, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_GREEN)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_E4,
-								GameConstants.SQUARE_H7, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_RED)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_E4,
-								GameConstants.SQUARE_A8, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_GREEN)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_E4,
-								GameConstants.SQUARE_H1, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_BLUE)));
-
-				item.getBoard().getArrowDecorator().addArrow(
-						new Arrow(GameConstants.SQUARE_E4,
-								GameConstants.SQUARE_B1, Raptor.getInstance()
-										.getDisplay().getSystemColor(
-												SWT.COLOR_GRAY)));
-			}
-		});
-		menuBar.add(fileMenu);
-		fileMenu.add(new Action("Create Test Crazyhouse Board") {
-			@Override
-			public void run() {
-				Game game = GameFactory
-						.createStartingPosition(Variant.crazyhouse);
-				game.addState(Game.UPDATING_SAN_STATE);
-				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
-				game.addState(Game.IS_CLOCK_TICKING_STATE);
-				game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
-						.currentTimeMillis()));
-				game.setHeader(PgnHeader.Round, "?");
-				game.setHeader(PgnHeader.Site, "Test Game Site");
-				game.setHeader(PgnHeader.TimeControl, PgnUtils
-						.timeIncMillisToTimeControl(180000, 0));
-				game.setHeader(PgnHeader.BlackRemainingMillis, "" + 46728);
-				game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 153857);
-				game.setHeader(PgnHeader.WhiteClock, PgnUtils
-						.timeToClock(180000));
-				game.setHeader(PgnHeader.BlackClock, PgnUtils
-						.timeToClock(180000));
-				game.setHeader(PgnHeader.BlackElo, "----");
-				game.setHeader(PgnHeader.WhiteElo, "----");
-				game.setHeader(PgnHeader.Event, "crazyhouse 3 0 rated");
-				game.makeSanMove("e4");
-				game.makeSanMove("d5");
-				game.makeSanMove("ed");
-				game.makeSanMove("Qd5");
-				InactiveController controller = new InactiveController(game);
-
-				addRaptorWindowItem(new ChessBoardWindowItem(controller));
-			}
-		});
-		menuBar.add(fileMenu);
+		// Please leave these commented out. It is useful to enable for testing.
+		// fileMenu.add(new Action("Create Test Board") {
+		// @Override
+		// public void run() {
+		// Game game = GameFactory.createStartingPosition(Variant.classic);
+		// game.addState(Game.UPDATING_SAN_STATE);
+		// game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+		// game.addState(Game.IS_CLOCK_TICKING_STATE);
+		// game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
+		// .currentTimeMillis()));
+		// game.setHeader(PgnHeader.Round, "?");
+		// game.setHeader(PgnHeader.Site, "Test Game Site");
+		// game.setHeader(PgnHeader.TimeControl, PgnUtils
+		// .timeIncMillisToTimeControl(180000, 0));
+		// game.setHeader(PgnHeader.BlackRemainingMillis, "" + 46728);
+		// game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 153857);
+		// game.setHeader(PgnHeader.WhiteClock, PgnUtils
+		// .timeToClock(180000));
+		// game.setHeader(PgnHeader.BlackClock, PgnUtils
+		// .timeToClock(180000));
+		// game.setHeader(PgnHeader.BlackElo, "----");
+		// game.setHeader(PgnHeader.WhiteElo, "----");
+		// game.setHeader(PgnHeader.Event, "blitz 3 0 rated");
+		// game.makeSanMove("e4");
+		// game.makeSanMove("e5");
+		// game.makeSanMove("Nf3");
+		// game.makeSanMove("Nc6");
+		// game.makeSanMove("Bb5");
+		// game.makeSanMove("a6");
+		// InactiveController controller = new InactiveController(game);
+		// ChessBoardWindowItem item = new ChessBoardWindowItem(controller);
+		// addRaptorWindowItem(item, false);
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_E2,
+		// GameConstants.SQUARE_E7, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_RED)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_D7,
+		// GameConstants.SQUARE_D1, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_GREEN)));
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_A8,
+		// GameConstants.SQUARE_D8, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_BLACK)));
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_H8,
+		// GameConstants.SQUARE_E8, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_CYAN)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_B1,
+		// GameConstants.SQUARE_A3, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_RED)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_B1,
+		// GameConstants.SQUARE_D2, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_RED)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_G1,
+		// GameConstants.SQUARE_H3, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_GREEN)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_G1,
+		// GameConstants.SQUARE_E2, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_GREEN)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_E7,
+		// GameConstants.SQUARE_C6, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_RED)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_E7,
+		// GameConstants.SQUARE_G6, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_RED)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_B7,
+		// GameConstants.SQUARE_A5, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_GREEN)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_G7,
+		// GameConstants.SQUARE_H5, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_GREEN)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_E4,
+		// GameConstants.SQUARE_H7, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_RED)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_E4,
+		// GameConstants.SQUARE_A8, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_GREEN)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_E4,
+		// GameConstants.SQUARE_H1, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_BLUE)));
+		//
+		// item.getBoard().getArrowDecorator().addArrow(
+		// new Arrow(GameConstants.SQUARE_E4,
+		// GameConstants.SQUARE_B1, Raptor.getInstance()
+		// .getDisplay().getSystemColor(
+		// SWT.COLOR_GRAY)));
+		// }
+		// });
+		// menuBar.add(fileMenu);
+		// fileMenu.add(new Action("Create Test Crazyhouse Board") {
+		// @Override
+		// public void run() {
+		// Game game = GameFactory
+		// .createStartingPosition(Variant.crazyhouse);
+		// game.addState(Game.UPDATING_SAN_STATE);
+		// game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+		// game.addState(Game.IS_CLOCK_TICKING_STATE);
+		// game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
+		// .currentTimeMillis()));
+		// game.setHeader(PgnHeader.Round, "?");
+		// game.setHeader(PgnHeader.Site, "Test Game Site");
+		// game.setHeader(PgnHeader.TimeControl, PgnUtils
+		// .timeIncMillisToTimeControl(180000, 0));
+		// game.setHeader(PgnHeader.BlackRemainingMillis, "" + 46728);
+		// game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 153857);
+		// game.setHeader(PgnHeader.WhiteClock, PgnUtils
+		// .timeToClock(180000));
+		// game.setHeader(PgnHeader.BlackClock, PgnUtils
+		// .timeToClock(180000));
+		// game.setHeader(PgnHeader.BlackElo, "----");
+		// game.setHeader(PgnHeader.WhiteElo, "----");
+		// game.setHeader(PgnHeader.Event, "crazyhouse 3 0 rated");
+		// game.makeSanMove("e4");
+		// game.makeSanMove("d5");
+		// game.makeSanMove("ed");
+		// game.makeSanMove("Qd5");
+		// InactiveController controller = new InactiveController(game);
+		//
+		// addRaptorWindowItem(new ChessBoardWindowItem(controller));
+		// }
+		// });
+		
+		
+		 menuBar.add(fileMenu);
 
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();
 

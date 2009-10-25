@@ -63,6 +63,8 @@ public class Raptor implements PreferenceKeys {
 	public static final String IMAGES_DIR = "resources/images/";
 	public static final String RESOURCES_SCRIPTS = "resources/scripts";
 	public static final String RESOURCES_DIR = "resources/";
+	public static final String GAMES_PGN_FILE = USER_RAPTOR_HOME_PATH
+			+ "/games/raptorGames.pgn";
 	private static Raptor instance;
 	private static Display display;
 

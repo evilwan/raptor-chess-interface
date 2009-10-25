@@ -454,6 +454,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_HOME_URL,
 				"http://code.google.com/p/raptor-chess-interface/");
 		setDefault(APP_SOUND_ENABLED, true);
+		setDefault(APP_IS_LOGGING_GAMES, true);
 		setDefault(APP_LAYOUT, "Layout1");
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_BROWSER_QUADRANT, Quadrant.III);
@@ -504,7 +505,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_KEEP_ALIVE, false);
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
-		setDefault(FICS_IS_LOGGING_GAMES, false);
 		setDefault(FICS_SHOW_BUGBUTTONS_ON_CONNECT, false);
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
@@ -538,7 +538,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_KEEP_ALIVE, false);
 		setDefault(BICS_AUTO_CONNECT, false);
 		setDefault(BICS_LOGIN_SCRIPT, "set autoflag 1\n\n");
-		setDefault(BICS_IS_LOGGING_GAMES, false);
 		setDefault(BICS_AUTO_CONNECT, false);
 		setDefault(BICS_SHOW_BUGBUTTONS_ON_CONNECT, false);
 		setDefault(BICS_PROFILE, "Primary");

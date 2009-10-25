@@ -14,6 +14,7 @@
 package raptor.swt.chess;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -79,195 +80,29 @@ public class ChessBoardUtils implements BoardConstants {
 	public static final String SQUARE_BACKGROUND_IMAGE_SUFFIX = ".png";
 
 	/**
-	 * Adds the promotion icons to the toolbar.
-	 * 
-	 * @param isUserWhite
-	 *            True if white pieces should be added, otherwise false.
-	 * @param controller
-	 *            The controller to add the ToolItems to.
-	 * @param toolbar
-	 *            The toolbar to add the items to.
+	 * Appends the game to the users game pgn file.
 	 */
-	// public static void addNavIconsToToolbar(
-	// final ChessBoardController controller, ToolBar toolbar,
-	// boolean showNavDirectionButtons, boolean showRevertCommitButtons) {
-	// LOG.debug("Adding addNavIconsToToolbar to toolbar");
-	//
-	// // if (showNavDirectionButtons) {
-	// // ToolItem firstButtonItem = new ToolItem(toolbar, SWT.FLAT);
-	// // firstButtonItem.setImage(Raptor.getInstance().getIcon("first"));
-	// // firstButtonItem.setToolTipText("Go to the first move played");
-	// // firstButtonItem.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.FIRST_NAV);
-	// // }
-	// // });
-	// // controller.addToolItem(ToolBarItemKey.FIRST_NAV, firstButtonItem);
-	// // }
-	// //
-	// // if (showNavDirectionButtons) {
-	// // ToolItem backButton = new ToolItem(toolbar, SWT.FLAT);
-	// // backButton.setImage(Raptor.getInstance().getIcon("back"));
-	// // backButton.setToolTipText("Go to the previous move played");
-	// // backButton.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.BACK_NAV);
-	// // }
-	// // });
-	// // controller.addToolItem(ToolBarItemKey.BACK_NAV, backButton);
-	// // }
-	// //
-	// // if (showRevertCommitButtons) {
-	// // ToolItem revertButton = new ToolItem(toolbar, SWT.FLAT);
-	// // revertButton.setImage(Raptor.getInstance().getIcon(
-	// // "counterClockwise"));
-	// // revertButton.setToolTipText("Revert back to main-variation.");
-	// // revertButton.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.REVERT_NAV);
-	// // }
-	// // });
-	// // controller.addToolItem(ToolBarItemKey.REVERT_NAV, revertButton);
-	// //
-	// // ToolItem commitButton = new ToolItem(toolbar, SWT.FLAT);
-	// // commitButton.setImage(Raptor.getInstance().getIcon("clockwise"));
-	// // commitButton.setToolTipText("Commit sub-variation.");
-	// // commitButton.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.COMMIT_NAV);
-	// // }
-	// // });
-	// // controller.addToolItem(ToolBarItemKey.COMMIT_NAV, commitButton);
-	// // }
-	// //
-	// // if (showNavDirectionButtons) {
-	// // ToolItem nextButton = new ToolItem(toolbar, SWT.FLAT);
-	// // nextButton.setImage(Raptor.getInstance().getIcon("next"));
-	// // nextButton.setToolTipText("Go to the next move played");
-	// // nextButton.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.NEXT_NAV);
-	// // }
-	// // });
-	// // controller.addToolItem(ToolBarItemKey.NEXT_NAV, nextButton);
-	// // }
-	// //
-	// // if (showNavDirectionButtons) {
-	// // ToolItem lastButton = new ToolItem(toolbar, SWT.FLAT);
-	// // lastButton.setImage(Raptor.getInstance().getIcon("last"));
-	// // lastButton.setToolTipText("Go to the last move played");
-	// // lastButton.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.LAST_NAV);
-	// // }
-	// // });
-	// // controller.addToolItem(ToolBarItemKey.LAST_NAV, lastButton);
-	// // }
-	// //
-	// // ToolItem flipButton = new ToolItem(toolbar, SWT.FLAT);
-	// // flipButton.setImage(Raptor.getInstance().getIcon("flip"));
-	// // flipButton.setToolTipText("Flips the chess board.");
-	// // flipButton.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.FLIP);
-	// // }
-	// // });
-	// // controller.addToolItem(ToolBarItemKey.FLIP, flipButton);
-	// //
-	// // ToolItem fenButton = new ToolItem(toolbar, SWT.FLAT);
-	// // fenButton.setText("FEN");
-	// // fenButton
-	// //
-	// .setToolTipText("Shows the FEN (Forsyth Edwards Notation) of the current position.");
-	// // fenButton.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.FEN);
-	// // }
-	// // });
-	// // controller.addToolItem(ToolBarItemKey.FEN, fenButton);
-	// }
-	// public static void addPremoveClearAndAutoDrawToolbar(
-	// final ChessBoardController controller, ToolBar toolbar) {
-	//
-	// // ToolItem premoveButton = new ToolItem(toolbar, SWT.FLAT);
-	// // premoveButton.setImage(Raptor.getInstance().getIcon("redx"));
-	// // premoveButton.setToolTipText("Clears all premoves.");
-	// // premoveButton.addSelectionListener(new SelectionAdapter() {
-	// // @Override
-	// // public void widgetSelected(SelectionEvent arg0) {
-	// // controller.onToolbarButtonAction(ToolBarItemKey.CLEAR_PREMOVES);
-	// // }
-	// // });
-	// //
-	// // controller.addToolItem(ToolBarItemKey.CLEAR_PREMOVES, premoveButton);
-	// // ToolItem autoDrawButton = new ToolItem(toolbar, SWT.CHECK);
-	// // autoDrawButton.setImage(Raptor.getInstance().getIcon("draw"));
-	// // autoDrawButton
-	// // .setToolTipText("Offer a draw after every move you make.");
-	// // controller.addToolItem(ToolBarItemKey.AUTO_DRAW, autoDrawButton);
-	// }
-	/**
-	 * Adds the promotion icons to the toolbar.
-	 * 
-	 * @param isUserWhite
-	 *            True if white pieces should be added, otherwise false.
-	 * @param controller
-	 *            The controller to add the ToolItems to.
-	 * @param toolbar
-	 *            The toolbar to add the items to.
-	 */
-	// public static final void addPromotionIconsToToolbar(
-	// ChessBoardController controller, ToolBar toolbar,
-	// boolean isUserWhite, boolean isPromoteToKingAllowed) {
-	// if (isPromoteToKingAllowed) {
-	// ToolItem queenPromote = new ToolItem(toolbar, SWT.RADIO);
-	// queenPromote.setText(GameUtils
-	// .getPieceRepresentation(isUserWhite ? GameConstants.WK
-	// : GameConstants.BK));
-	// controller.addToolItem(ToolBarItemKey.AUTO_KING, queenPromote);
-	// queenPromote.setToolTipText("Auto King");
-	// queenPromote.setSelection(false);
-	// }
-	// ToolItem queenPromote = new ToolItem(toolbar, SWT.RADIO);
-	// queenPromote.setText(GameUtils
-	// .getPieceRepresentation(isUserWhite ? GameConstants.WQ
-	// : GameConstants.BQ));
-	// controller.addToolItem(ToolBarItemKey.AUTO_QUEEN, queenPromote);
-	// queenPromote.setToolTipText("Auto Queen");
-	// queenPromote.setSelection(false);
-	//
-	// ToolItem knightPromote = new ToolItem(toolbar, SWT.RADIO);
-	// knightPromote.setText(GameUtils
-	// .getPieceRepresentation(isUserWhite ? GameConstants.WN
-	// : GameConstants.BN));
-	// controller.addToolItem(ToolBarItemKey.AUTO_KNIGHT, knightPromote);
-	// knightPromote.setToolTipText("Auto Knight");
-	// queenPromote.setSelection(false);
-	//
-	// ToolItem bishopPromote = new ToolItem(toolbar, SWT.RADIO);
-	// bishopPromote.setText(GameUtils
-	// .getPieceRepresentation(isUserWhite ? GameConstants.WB
-	// : GameConstants.BB));
-	// controller.addToolItem(ToolBarItemKey.AUTO_BISHOP, bishopPromote);
-	// knightPromote.setToolTipText("Auto Bishop");
-	// bishopPromote.setSelection(false);
-	//
-	// ToolItem rookPromote = new ToolItem(toolbar, SWT.RADIO);
-	// rookPromote.setText(GameUtils
-	// .getPieceRepresentation(isUserWhite ? GameConstants.WR
-	// : GameConstants.BR));
-	// controller.addToolItem(ToolBarItemKey.AUTO_ROOK, rookPromote);
-	// knightPromote.setToolTipText("Auto Rook");
-	// rookPromote.setSelection(false);
-	// }
+	public static void appendGameToPgnFile(Game game) {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.APP_IS_LOGGING_GAMES)) {
+			String pgn = game.toPgn();
+			File file = new File(Raptor.GAMES_PGN_FILE);
+			FileWriter fileWriter = null;
+			try {
+				fileWriter = new FileWriter(file, true);
+				fileWriter.append("\n\n");
+				fileWriter.append(pgn);
+			} catch (IOException ioe) {
+				LOG.error("Error saving game", ioe);
+			} finally {
+				try {
+					fileWriter.close();
+				} catch (IOException ioe) {
+				}
+			}
+		}
+	}
+
 	public static void addActionsToToolbar(
 			final ChessBoardController controller,
 			RaptorActionContainer container, ToolBar toolbar,
@@ -291,56 +126,6 @@ public class ChessBoardUtils implements BoardConstants {
 		return isWhitePiece(piece1) && isWhitePiece(piece2)
 				|| isBlackPiece(piece1) && isBlackPiece(piece2);
 	}
-
-	// public static void addSetupIconsToToolbar(
-	// final ChessBoardController controller, ToolBar toolbar) {
-
-	// ToolItem setupInitial = new ToolItem(toolbar, SWT.FLAT);
-	// setupInitial.setText("Initial");
-	// setupInitial.setToolTipText("Sets up the initial position.");
-	// setupInitial.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent arg0) {
-	// controller.onToolbarButtonAction(ToolBarItemKey.SETUP_START);
-	//
-	// }
-	// });
-	// controller.addToolItem(ToolBarItemKey.SETUP_START, setupInitial);
-	//
-	// ToolItem setupClear = new ToolItem(toolbar, SWT.FLAT);
-	// setupClear.setText("Clear");
-	// setupClear.setToolTipText("Clears all pieces from the chess board.");
-	// setupClear.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent arg0) {
-	// controller.onToolbarButtonAction(ToolBarItemKey.SETUP_CLEAR);
-	// }
-	// });
-	// controller.addToolItem(ToolBarItemKey.SETUP_CLEAR, setupClear);
-	//
-	// ToolItem setupDone = new ToolItem(toolbar, SWT.FLAT);
-	// setupDone.setText("Done");
-	// setupDone.setToolTipText("Completes setup mode.");
-	// setupDone.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent arg0) {
-	// controller.onToolbarButtonAction(ToolBarItemKey.SETUP_DONE);
-	// }
-	// });
-	// controller.addToolItem(ToolBarItemKey.SETUP_DONE, setupDone);
-	//
-	// ToolItem fromFenButton = new ToolItem(toolbar, SWT.FLAT);
-	// fromFenButton.setText("FromFEN");
-	// fromFenButton
-	// .setToolTipText("Sets up the position from a specified FEN (Forsyth Edwards Notation) string.");
-	// fromFenButton.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent arg0) {
-	// controller.onToolbarButtonAction(ToolBarItemKey.SETUP_FROM_FEN);
-	// }
-	// });
-	// controller.addToolItem(ToolBarItemKey.SETUP_FROM_FEN, fromFenButton);
-	// }
 
 	public static Move createDropMove(int fromSquare, int toSquare) {
 		int coloredPiece = ChessBoardUtils.pieceJailSquareToPiece(fromSquare);
