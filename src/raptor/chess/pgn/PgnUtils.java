@@ -74,32 +74,37 @@ public class PgnUtils {
 	 * Returns the string to use for the move in a Pgn file. This includes the
 	 * move number and all annotations.
 	 */
-	public static boolean getMove(StringBuilder builder, Move moveInfo,
+	public static boolean getMove(StringBuilder builder, Move move,
 			boolean forceMoveNumber) {
 		boolean result = false;
 
-		if (forceMoveNumber || moveInfo.isWhitesMove()) {
-			int moveNumber = moveInfo.getFullMoveCount();
-			builder.append(moveNumber
-					+ (moveInfo.isWhitesMove() ? ". " : "... "));
+		if (forceMoveNumber || move.isWhitesMove()) {
+			int moveNumber = move.getFullMoveCount();
+			builder.append(moveNumber + (move.isWhitesMove() ? ". " : "... "));
 		}
-		builder.append(moveInfo.toString());
+		builder.append(move.toString());
 
 		// First get all of the sublines.
-		for (SublineNode subline : moveInfo.getSublines()) {
+		for (SublineNode subline : move.getSublines()) {
 			result = true;
 			builder.append(" (");
 			getSubline(builder, subline);
 			builder.append(")");
 		}
 
-		for (Comment comment : moveInfo.getComments()) {
+		for (Comment comment : move.getComments()) {
 			builder.append(" {" + comment.getText() + "}");
 		}
 
-		for (Nag nag : moveInfo.getNags()) {
+		for (Nag nag : move.getNags()) {
 			builder.append(" " + nag.getNagString());
 		}
+
+		for (TimeTakenForMove timeTaken : move.getTimeTakenForMove()) {
+			builder.append(" {" + timeTaken.getText() + "}");
+			break;
+		}
+
 		return result;
 	}
 
@@ -176,7 +181,7 @@ public class PgnUtils {
 	 */
 	public static String timeIncMillisToTimeControl(long startTimeMillis,
 			long startIncMillis) {
-		String minutes = "" + startTimeMillis / 60000;
+		String minutes = "" + startTimeMillis / 1000;
 		String inc = "" + startIncMillis / 1000;
 
 		return minutes + "+" + inc;
@@ -213,7 +218,7 @@ public class PgnUtils {
 	public static String timeToEMTFormat(long elapsedTimeMillis) {
 		double elapsedTimeInSeconds = elapsedTimeMillis / 1000.0;
 		BigDecimal bigDecimal = new BigDecimal(elapsedTimeInSeconds);
-		bigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
+		bigDecimal = bigDecimal.setScale(3, BigDecimal.ROUND_HALF_UP);
 		return "[%emt " + bigDecimal.toString() + "]";
 	}
 

@@ -36,7 +36,7 @@ import raptor.chess.SuicideGame;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.PgnUtils;
-import raptor.chess.pgn.RemainingClockTime;
+import raptor.chess.pgn.TimeTakenForMove;
 import raptor.chess.util.GameUtils;
 import raptor.chess.util.ZobristUtils;
 import raptor.connector.Connector;
@@ -104,7 +104,7 @@ public class IcsUtils implements GameConstants {
 			if (message.timeTakenForLastMoveMillis != 0) {
 				game.getMoveList().get(game.getMoveList().getSize() - 1)
 						.addAnnotation(
-								new RemainingClockTime(
+								new TimeTakenForMove(
 										message.timeTakenForLastMoveMillis));
 			}
 		} else {
@@ -115,7 +115,7 @@ public class IcsUtils implements GameConstants {
 								"Received a none for san in a style 12 event. This should have contained a move.");
 			} else {
 				Move move = game.makeSanMove(message.san);
-				move.addAnnotation(new RemainingClockTime(
+				move.addAnnotation(new TimeTakenForMove(
 						message.timeTakenForLastMoveMillis));
 			}
 
@@ -656,7 +656,7 @@ public class IcsUtils implements GameConstants {
 						gameClone.setDropCount(BLACK, BISHOP, 1);
 					}
 					Move move = gameClone.makeSanMove(message.moves[i]);
-					move.addAnnotation(new RemainingClockTime(
+					move.addAnnotation(new TimeTakenForMove(
 							message.timePerMove[i]));
 				} catch (IllegalArgumentException iae) {
 					LOG.error("Could not parse san", iae);

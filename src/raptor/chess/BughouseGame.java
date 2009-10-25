@@ -19,8 +19,6 @@ import raptor.chess.pgn.PgnHeader;
  * An implementation of a bughouse game. This approach involves linking two
  * bughouse games together. And setting the others droppable piece counts as
  * pieces are captured.
- * 
- * TO DO: add in the blast radius on captures.
  */
 public class BughouseGame extends CrazyhouseGame {
 
