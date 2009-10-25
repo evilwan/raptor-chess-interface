@@ -330,11 +330,7 @@ public abstract class IcsConnector implements Connector {
 	protected String simulBugPartnerName;
 
 	protected Runnable keepAlive = new Runnable() {
-		public void run() {
-			LOG
-					.error("In keepAlive.run() "
-							+ (System.currentTimeMillis() - lastSendTime > 1000 * 60 * 50));
-
+		public void run() {		
 			if (isConnected()
 					&& getPreferences().getBoolean(
 							context.getShortName() + "-keep-alive")
