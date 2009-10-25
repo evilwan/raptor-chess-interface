@@ -63,7 +63,8 @@ public class ConnectorService {
 	 * Returns an array of all connectors.
 	 */
 	public Connector[] getConnectors() {
-		return shortNameToConnector.values().toArray(new Connector[0]);
+		return new Connector[] { shortNameToConnector.get("fics"),
+				shortNameToConnector.get("bics") };
 
 	}
 }
