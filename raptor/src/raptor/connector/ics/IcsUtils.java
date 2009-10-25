@@ -191,6 +191,13 @@ public class IcsUtils implements GameConstants {
 				}
 				result = true;
 			}
+
+			// At the end of a game multiple <12> messages are sent.
+			// The are also sent when a refresh is sent.
+			game.setHeader(PgnHeader.WhiteRemainingMillis, ""
+					+ message.whiteRemainingTimeMillis);
+			game.setHeader(PgnHeader.BlackRemainingMillis, ""
+					+ message.blackRemainingTimeMillis);
 		}
 
 		if (message.isClockTicking) {
