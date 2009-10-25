@@ -30,8 +30,9 @@ import org.apache.commons.logging.LogFactory;
 import raptor.Raptor;
 
 /**
- * Multi-threading should be usually avoided in Raptor. Instead to launch
- * something asynchronously you should use this service.
+ * Creating your own threads should really be avoided in Raptor. Instead please
+ * use this service. It contains lots of features, like showing errors to the
+ * user and providing a thread dump when the pool runs out of threads.
  * 
  * This service provides exception handling, and pooling
  */
