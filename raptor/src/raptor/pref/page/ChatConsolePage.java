@@ -58,6 +58,13 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 				"Underline single quoted text", getFieldEditorParent());
 		addField(underlineSingleQuotes);
 
+		BooleanFieldEditor smartScroll = new BooleanFieldEditor(
+				PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED,
+				"Smart Scroll (Toggles auto scroll based on the "
+						+ "horizontal scrolllbar position)",
+				getFieldEditorParent());
+		addField(smartScroll);
+
 		StringFieldEditor timestampFormat = new StringFieldEditor(
 				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE_FORMAT,
 				"Message Timestamp Format (Advanced):", getFieldEditorParent());

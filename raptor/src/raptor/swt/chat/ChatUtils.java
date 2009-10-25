@@ -27,7 +27,7 @@ import raptor.Raptor;
 import raptor.action.RaptorAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
-import raptor.action.chat.AutoScrollAction;
+import raptor.action.chat.ToggleScrollLock;
 import raptor.action.chat.PrependAction;
 import raptor.action.chat.TellsMissedWhileIWasAwayAction;
 import raptor.chat.ChatEvent;
@@ -297,8 +297,10 @@ public class ChatUtils {
 		if (action instanceof SeparatorAction) {
 			result = new ToolItem(toolbar, SWT.SEPARATOR);
 			return result;
-		} else if (action instanceof AutoScrollAction) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+		} else if (action instanceof ToggleScrollLock) {
+			result = new ToolItem(toolbar, SWT.CHECK);
+			result.setSelection(true);
+			result.setToolTipText("Scroll lock enabled");
 			controller.addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, result);
 		} else if (action instanceof PrependAction) {
 			result = new ToolItem(toolbar, SWT.CHECK);

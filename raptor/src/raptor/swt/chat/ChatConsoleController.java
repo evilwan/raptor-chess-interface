@@ -34,6 +34,9 @@ import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -114,6 +117,29 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			fireItemChanged();
 		}
 	};
+
+	protected SelectionListener verticalScrollbarListener = new SelectionAdapter() {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			System.err.println("In vertical scroll bar listener");
+			ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
+			if (scrollbar != null
+					&& scrollbar.isVisible()
+					&& getPreferences().getBoolean(
+							PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED)) {
+
+				if (scrollbar.getMaximum() == scrollbar.getSelection()
+						+ scrollbar.getThumb()) {
+					setAutoScrolling(true);
+				} else {
+					setAutoScrolling(false);
+				}
+			}
+		}
+
+	};
+
 	protected KeyListener consoleInputTextKeyListener = new KeyAdapter() {
 		@Override
 		public void keyReleased(KeyEvent event) {
@@ -150,6 +176,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected boolean isBeingReparented;
 	protected boolean isDirty;
 	protected boolean isSoundDisabled = false;
+	protected boolean isAutoScrolling = true;
 	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
 			5);
 
@@ -166,6 +193,33 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public ChatConsoleController(Connector connector) {
 		this.connector = connector;
 		connector.addConnectorListener(connectorListener);
+	}
+
+	public boolean isAutoScrolling() {
+		return isAutoScrolling;
+	}
+
+	public void setAutoScrolling(boolean isAutoScrolling) {
+		if (isAutoScrolling != this.isAutoScrolling) {
+			this.isAutoScrolling = isAutoScrolling;
+			if (isAutoScrolling) {
+				ToolItem item = toolItemMap
+						.get(ToolBarItemKey.AUTO_SCROLL_BUTTON);
+				if (item != null) {
+					item.setSelection(true);
+					item.setImage(Raptor.getInstance().getIcon("locked"));
+					item.setToolTipText("Scroll lock enabled.");
+				}
+			} else {
+				ToolItem item = toolItemMap
+						.get(ToolBarItemKey.AUTO_SCROLL_BUTTON);
+				if (item != null) {
+					item.setSelection(false);
+					item.setImage(Raptor.getInstance().getIcon("unlocked"));
+					item.setToolTipText("Scroll lock disabled.");
+				}
+			}
+		}
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -287,7 +341,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		return hasUnseenText;
 	}
 
+	public void addScrollBarListeners() {
+		chatConsole.getInputText().getVerticalBar().addSelectionListener(
+				verticalScrollbarListener);
+	}
+
 	public void init() {
+		addScrollBarListeners();
 		addInputTextKeyListeners();
 		addMouseListeners();
 		registerForChatEvents();
@@ -365,14 +425,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				return;
 			}
 
-			boolean isScrollBarAtMax = false;
-			ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
-			if (scrollbar != null && scrollbar.isVisible()) {
-				isScrollBarAtMax = scrollbar.getMaximum() == scrollbar
-						.getSelection()
-						+ scrollbar.getThumb();
-			}
-
 			String messageText = event.getMessage();
 			String date = "";
 			if (Raptor.getInstance().getPreferences().getBoolean(
@@ -392,9 +444,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			startIndex = chatConsole.inputText.getCharCount()
 					- appendText.length();
 
-			if (isScrollBarAtMax
-					&& chatConsole.inputText.getSelection().y
-							- chatConsole.inputText.getSelection().x == 0) {
+			if (isAutoScrolling) {
 				onForceAutoScroll();
 			}
 		}
@@ -1181,6 +1231,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			chatConsole.inputText
 					.removeKeyListener(consoleInputTextKeyListener);
 			chatConsole.inputText.removeMouseListener(inputTextClickListener);
+			chatConsole.inputText.getVerticalBar().removeSelectionListener(
+					verticalScrollbarListener);
 		}
 	}
 
