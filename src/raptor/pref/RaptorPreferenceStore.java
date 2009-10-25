@@ -361,6 +361,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PTELL, true);
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL, true);
+		setDefault(CHAT_IS_SMART_SCROLL_ENABLED,true);
 
 		PreferenceConverter
 				.setDefault(this, CHAT_INPUT_FONT,

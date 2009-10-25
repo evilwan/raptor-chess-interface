@@ -196,6 +196,7 @@ public interface PreferenceKeys {
 	public static final String CHAT_UNDERLINE_SINGLE_QUOTES = "chat-underline-single-quotes";
 	public static final String CHAT_IS_PLAYING_CHAT_ON_PTELL = "chat-is-playing-chat-on-ptell";
 	public static final String CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL = "chat-is-playing-chat-on-person-tell";
+	public static final String CHAT_IS_SMART_SCROLL_ENABLED = "chat-is-smart-scroll-enabled";
 
 	// Connector preferences should always use the short name of the connector
 	// followed by the preference.
