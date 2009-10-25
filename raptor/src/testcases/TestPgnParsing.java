@@ -148,7 +148,6 @@ public class TestPgnParsing {
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
 
-		long startTime = System.currentTimeMillis();
 		parser.parse();
 		System.err.println(listener.getGames().get(0));
 		listener.getGames().get(0).makeSanMove("e5");
@@ -162,7 +161,6 @@ public class TestPgnParsing {
 		parser.addPgnParserListener(new TimingPgnParserListener());
 		parser.addPgnParserListener(listener);
 
-		long startTime = System.currentTimeMillis();
 		parser.parse();
 		System.err.println(listener.getGames().get(0));
 		listener.getGames().get(0).makeSanMove("Qxf2#");
