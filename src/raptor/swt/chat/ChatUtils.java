@@ -228,6 +228,9 @@ public class ChatUtils {
 			int currentPosition = position;
 			char currentChar = charAt(text, currentPosition);
 
+			// This method currently does'nt check backwards through all the
+			// wraps.
+			// This should probably be added in the future sometime.
 			while (currentPosition > 0 && !Character.isWhitespace(currentChar)) {
 				currentChar = charAt(text, --currentPosition);
 			}
@@ -250,7 +253,7 @@ public class ChatUtils {
 				currentChar = charAt(text, ++currentPosition);
 			}
 			while (currentChar == '\\') {
-				charAt(text, ++currentPosition);
+				currentChar = charAt(text, ++currentPosition);
 				while (Character.isWhitespace(currentChar)
 						&& currentPosition < text.getCharCount()) {
 					currentChar = charAt(text, ++currentPosition);

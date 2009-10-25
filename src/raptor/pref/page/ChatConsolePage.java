@@ -61,9 +61,19 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 		BooleanFieldEditor smartScroll = new BooleanFieldEditor(
 				PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED,
 				"Smart Scroll (Toggles auto scroll based on the "
-						+ "horizontal scrolllbar position)",
+						+ "vertical scrolllbar position)",
 				getFieldEditorParent());
 		addField(smartScroll);
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PTELL,
+				"Play 'chat' sound on all partner tells.",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL,
+				"Play 'chat' sound on all person tells.",
+				getFieldEditorParent()));
 
 		StringFieldEditor timestampFormat = new StringFieldEditor(
 				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE_FORMAT,
