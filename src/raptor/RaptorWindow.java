@@ -372,28 +372,44 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		public void updateToolbar(boolean force) {
+
+			// This method currently leaks toolBars.
+			// However, it is the only way I have found to pull this off.
+			// Care is taken in RaptorWindowItems to remove all menu items from
+			// tool bars.
+			// But the actual tool bar control will be leaked.
 			if (!getMinimized() || force) {
 				long startTime = System.currentTimeMillis();
 				RaptorTabItem currentSelection = (RaptorTabItem) getSelection();
+
+				Control currentSelectionToolbar = null;
+				if (currentSelection != null) {
+					System.err
+							.println("In updateToolbar selected RaptorWindowItem="
+									+ currentSelection.raptorItem
+									+ " quad="
+									+ quad);
+
+					currentSelectionToolbar = currentSelection.raptorItem
+							.getToolbar(this);
+				}
 				Control existingControl = getTopRight();
 				if (currentSelection != null) {
-					if (existingControl != currentSelection.raptorItem
-							.getToolbar(this)) {
+					if (existingControl != currentSelectionToolbar) {
 						if (existingControl != null
 								&& !existingControl.isDisposed()) {
 							existingControl.setVisible(false);
 							setTopRight(null);
 						}
-						if (currentSelection != null) {
-							Control newControl = currentSelection.raptorItem
-									.getToolbar(this);
-							if (newControl != null) {
-								newControl.setVisible(true);
-								setTopRight(newControl, SWT.RIGHT);
-								setTabHeight(Math.max(newControl.computeSize(
-										SWT.DEFAULT, SWT.DEFAULT).y,
-										getTabHeight()));
-							}
+						if (currentSelectionToolbar != null) {
+							System.err.println("Setting up toolbar. ");
+							setTopRight(currentSelectionToolbar, SWT.RIGHT);
+							setTabHeight(Math.max(currentSelectionToolbar
+									.computeSize(SWT.DEFAULT, SWT.DEFAULT).y,
+									getTabHeight()));
+							currentSelectionToolbar.setVisible(true);
+							currentSelectionToolbar.redraw();
+							layout(true);
 						}
 					} else if (existingControl != null
 							&& existingControl.isVisible() == false) {
@@ -493,7 +509,10 @@ public class RaptorWindow extends ApplicationWindow {
 
 		@Override
 		public void dispose() {
-			super.dispose();
+			try {
+				super.dispose();
+			} catch (Throwable t) {
+			}// Eat it. Prob an already disposed issue.
 			itemsManaged.remove(this);
 			try {
 				if (raptorItem != null) {
@@ -513,13 +532,42 @@ public class RaptorWindow extends ApplicationWindow {
 						.alert(
 								"You can only move between quadrants if reparenting is supported in your SWT environment.");
 			} else {
+				// This code is quite tricky and must happen in an exact order
+				// or subtle issues occur with tool bars.
 				raptorItem.removeItemChangedListener(listener);
+
+				// Set the control to null so it can be re-parented.
 				setControl(null);
+
+				// Re-parent the control
 				raptorItem.getControl().setParent(newParent);
+
+				// Now add the new raptor tab item to the new parent.
 				new RaptorTabItem(newParent, getStyle(), raptorItem, false);
+
+				// Invoke after move so the item can adjust to its new parent if
+				// needed.
 				raptorItem.afterQuadrantMove(newParent.quad);
+
+				// We will lose the raptorParent reference on dispose,
+				// and we need it to adjust the toolbar after disposing.
+				RaptorTabFolder oldParent = raptorParent;
+
+				// Dispose of the window item.
+				// Notice that raptorItem is set to null so the raptorItem will
+				// not be disposed.
 				raptorItem = null;
 				dispose();
+
+				// Removes the tool bar on the current parent.
+				// This will allow it to be re-parented on the new parent.
+				oldParent.updateToolbar(true);
+
+				// Forces an update on the tool bar of the new parent.
+				newParent.updateToolbar(true);
+
+				// And finally restore the folders so if the quad being
+				// moved to is empty, it gets restored.
 				restoreFolders();
 			}
 		}

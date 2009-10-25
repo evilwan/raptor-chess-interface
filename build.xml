@@ -22,18 +22,16 @@
 
 
 	<!--
-	    You will need to download jar bunlder from
-	    http://informagen.com/JarBundler/
-	    and add the JarBundler.jar to your ant lib directory.
+	   http://informagen.com/JarBundler/
+	    You need to add the JarBundler.jar to your ant lib directory. 
+	    It can be found in the projectFiles/antlib directory. 
 	    -->
 	<taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" />
 
-
-
 	<!--
-	    You will need to download ant contrib from
 	    http://ant-contrib.sourceforge.net/
-	    and add the ant-contrib-*.jar to your ant lib directory.
+	    You need to add theant-contrib-*.jar to your ant lib directory. 
+	    It can be found in the projectFiles/antlib directory. 
 	    -->
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
