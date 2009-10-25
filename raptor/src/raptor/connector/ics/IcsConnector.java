@@ -605,7 +605,7 @@ public abstract class IcsConnector implements Connector {
 				new String[] { "Censor " + person, "+censor " + person },
 				new String[] { "Uncensor " + person, "-censor " + person },
 				new String[] { "Noplay " + person, "+noplay " + person },
-				new String[] { "Unnoplay " + person, "noplay " + person } };
+				new String[] { "Unnoplay " + person, "-noplay " + person } };
 	}
 
 	public String getPersonTabPrefix(String person) {
