@@ -57,6 +57,11 @@ public class RaptorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(isPlayingSound);
 
+		BooleanFieldEditor isSavingGamePgn = new BooleanFieldEditor(
+				PreferenceKeys.APP_IS_LOGGING_GAMES, "Save my games to "
+						+ Raptor.GAMES_PGN_FILE, getFieldEditorParent());
+		addField(isSavingGamePgn);
+
 		BooleanFieldEditor launchExternalLinkx = new BooleanFieldEditor(
 				PreferenceKeys.APP_OPEN_LINKS_IN_EXTERNAL_BROWSER,
 				"Launch links in external browser", getFieldEditorParent());

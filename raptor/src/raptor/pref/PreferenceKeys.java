@@ -40,6 +40,7 @@ public interface PreferenceKeys {
 
 	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";
+	public static final String APP_IS_LOGGING_GAMES = "app-is-logging-games";
 	public static final String APP_OPEN_LINKS_IN_EXTERNAL_BROWSER = "app-open-links-in-external-browser";
 	public static final String APP_PING_COLOR = "app-lag-color";
 	public static final String APP_PING_FONT = "app-lag-font";
@@ -202,7 +203,6 @@ public interface PreferenceKeys {
 	// followed by the preference.
 	public static final String FICS_AUTO_CONNECT = "fics-auto-connect";
 	public static final String FICS_SHOW_BUGBUTTONS_ON_CONNECT = "fics-show-bugbuttons-on-connect";
-	public static final String FICS_IS_LOGGING_GAMES = "fics-is-logging-games";
 	public static final String FICS_KEEP_ALIVE = "fics-keep-alive";
 	public static final String FICS_LOGIN_SCRIPT = "fics-login-script";
 	public static final String FICS_PROFILE = "fics-profile";
@@ -233,7 +233,6 @@ public interface PreferenceKeys {
 
 	public static final String BICS_AUTO_CONNECT = "bics-auto-connect";
 	public static final String BICS_SHOW_BUGBUTTONS_ON_CONNECT = "bics-show-bugbuttons-on-connect";
-	public static final String BICS_IS_LOGGING_GAMES = "bics-is-logging-games";
 	public static final String BICS_KEEP_ALIVE = "bics-keep-alive";
 	public static final String BICS_LOGIN_SCRIPT = "bics-login-script";
 	public static final String BICS_PROFILE = "bics-profile";
