@@ -1,5 +1,6 @@
-//This sucks but it was copied from Babas and needs adjustments.
-//Please use a lower case b to denote the b file. It is required
+//I really hate the upper-case format of this file.
+//If you make changes to it please use correct short algebraic
+//(a4 instead of A4, and Nd4 instead of nd4 or ND4).
 A3|A00|Anderssen's Opening|
 A4 E5 H4|A00|Crab Opening|
 A4|A00|Ware (Meadow Hay) Opening|
