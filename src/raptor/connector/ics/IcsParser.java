@@ -85,6 +85,14 @@ public class IcsParser implements GameConstants {
 	protected BugWhoGParser bugWhoGParser;
 	protected BugWhoPParser bugWhoPParser;
 	protected BugWhoUParser bugWhoUParser;
+	/**
+	 * Used for BICS parsing. Bics sends a B1 right after you make a move then a
+	 * style 12 and another B1. This breaks Raptor, since it uses the game
+	 * object to keep track of the state. So it is currently being used to
+	 * ignore all B1s if the game is zh and its a BICS parser if they were not
+	 * preceded by a style 12.
+	 */
+	protected boolean containedStyle12;
 
 	protected TakebackParser takebackParser;
 	protected boolean isBicsParser = false;
@@ -208,6 +216,7 @@ public class IcsParser implements GameConstants {
 	 * games in service. Returns a String with the game events removed.
 	 */
 	protected String parseGameEvents(String inboundMessage) {
+		containedStyle12 = false;
 		if (inboundMessage.length() > MAX_GAME_MESSAGE) {
 			return inboundMessage;
 		} else {
@@ -235,6 +244,7 @@ public class IcsParser implements GameConstants {
 				if (style12Message != null) {
 					process(style12Message, connector.getGameService(),
 							inboundMessage);
+					containedStyle12 = true;
 					continue;
 				}
 
@@ -325,6 +335,13 @@ public class IcsParser implements GameConstants {
 			connector.onError("Received B1 for a game not in the GameService. "
 					+ message, new Exception());
 		} else {
+			if (isBicsParser && game.getVariant() == Variant.crazyhouse
+					&& !containedStyle12) {
+				// See the documentation on the variable for an explanation of
+				// why this is done.
+				return;
+			}
+
 			for (int i = 1; i < message.whiteHoldings.length; i++) {
 				game.setDropCount(WHITE, i, message.whiteHoldings[i]);
 			}
