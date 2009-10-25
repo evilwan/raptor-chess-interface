@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -36,8 +37,10 @@ import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.GameCursor;
 import raptor.chess.Move;
+import raptor.chess.MoveList;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
+import raptor.chess.pgn.TimeTakenForMove;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
@@ -47,6 +50,7 @@ import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.Highlight;
+import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -598,6 +602,65 @@ public class InactiveController extends ChessBoardController implements
 			}
 			menu.dispose();
 		}
+	}
+
+	/**
+	 * Over-ridden to provide support for viewing pgn files.
+	 */
+	@Override
+	protected long[] getRemainingTimes() {
+		long whiteTime = 0;
+		long blackTime = 0;
+
+		int inc = 0;
+		String timeControl = getGame().getHeader(PgnHeader.TimeControl);
+		if (StringUtils.isNotBlank(timeControl)) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(timeControl,
+					"+ ", true);
+			try {
+				whiteTime = blackTime = Integer.parseInt(tok.nextToken()) * 1000;
+				if (tok.hasMoreTokens()) {
+					inc = Integer.parseInt(tok.nextToken()) * 1000;
+				}
+			} catch (NumberFormatException nfe) {
+				LOG
+						.error(
+								"Error obtaining initial clock times. This could hvae been because of an invalid TimeControl pgn header.",
+								nfe);
+			}
+
+			MoveList moveList = cursor.getCursorGame().getMoveList();
+			for (int i = 0; i < moveList.getSize(); i++) {
+				Move move = moveList.get(i);
+				if (move.isWhitesMove()) {
+					TimeTakenForMove[] annotations = move.getTimeTakenForMove();
+					if (annotations != null && annotations.length != 0) {
+						whiteTime -= annotations[0].getMilliseconds();
+						if (inc != 0) {
+							whiteTime += inc;
+						}
+					} else {
+						if (LOG.isDebugEnabled()) {
+							LOG.debug("No time found for move " + move);
+						}
+					}
+				} else {
+					TimeTakenForMove[] annotations = move.getTimeTakenForMove();
+					if (annotations != null && annotations.length != 0) {
+						blackTime -= annotations[0].getMilliseconds();
+						if (inc != 0) {
+							blackTime += inc;
+						}
+					} else {
+						if (LOG.isDebugEnabled()) {
+							LOG.debug("No time found for move " + move);
+						}
+					}
+				}
+			}
+		}
+
+		return new long[] { whiteTime, blackTime };
 	}
 
 	protected void onPlayIllegalMoveSound() {

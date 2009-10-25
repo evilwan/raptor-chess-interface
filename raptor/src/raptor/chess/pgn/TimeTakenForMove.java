@@ -1,5 +1,7 @@
 package raptor.chess.pgn;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -9,28 +11,29 @@ import raptor.util.RaptorStringUtils;
 /**
  * These annotations take the form [%emt 1.438]
  */
-public class RemainingClockTime implements MoveAnnotation {
-	private static final Log LOG = LogFactory.getLog(RemainingClockTime.class);
-	static final long serialVersionUID = 1;
+public class TimeTakenForMove implements MoveAnnotation {
+	private static final long serialVersionUID = 3398826247420411970L;
+	private static final Log LOG = LogFactory.getLog(TimeTakenForMove.class);
 	public String text;
 
-	public RemainingClockTime(long time) {
+	public TimeTakenForMove(long time) {
 		// [%emt 1.438]
 		setText(PgnUtils.timeToEMTFormat(time));
 	}
 
-	public RemainingClockTime(String text) {
+	public TimeTakenForMove(String text) {
 		setText(text);
 	}
 
-	public long getElapsedTimeForMoveMillis() {
+	public long getMilliseconds() {
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(getText(),
-				"[Z%emt ]", true);
+				"[%emt ]", true);
 		if (tok.hasMoreTokens()) {
 			String elapsedTimeInSeconds = tok.nextToken();
 			try {
-				double asDouble = Double.parseDouble(elapsedTimeInSeconds);
-				return (long) asDouble * 1000;
+				BigDecimal decimal = new BigDecimal(elapsedTimeInSeconds);
+				decimal = decimal.multiply(new BigDecimal(1000));
+				return decimal.longValue();
 			} catch (NumberFormatException nfe) {
 				if (LOG.isWarnEnabled()) {
 					LOG.warn("Invalid Remaining Clock Time detected: "

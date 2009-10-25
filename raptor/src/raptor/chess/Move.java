@@ -20,8 +20,8 @@ import raptor.chess.pgn.Comment;
 import raptor.chess.pgn.Highlight;
 import raptor.chess.pgn.MoveAnnotation;
 import raptor.chess.pgn.Nag;
-import raptor.chess.pgn.RemainingClockTime;
 import raptor.chess.pgn.SublineNode;
+import raptor.chess.pgn.TimeTakenForMove;
 import raptor.chess.util.GameUtils;
 
 public class Move implements GameConstants {
@@ -319,21 +319,6 @@ public class Move implements GameConstants {
 		return previousOpeningHeader;
 	}
 
-	public RemainingClockTime[] getRemainingClockTimes() {
-		if (annotations == null) {
-			return new RemainingClockTime[0];
-		}
-
-		ArrayList<RemainingClockTime> result = new ArrayList<RemainingClockTime>(
-				3);
-		for (MoveAnnotation annotation : annotations) {
-			if (annotation instanceof RemainingClockTime) {
-				result.add((RemainingClockTime) annotation);
-			}
-		}
-		return result.toArray(new RemainingClockTime[0]);
-	}
-
 	public String getSan() {
 		return san;
 	}
@@ -350,6 +335,20 @@ public class Move implements GameConstants {
 			}
 		}
 		return result.toArray(new SublineNode[0]);
+	}
+
+	public TimeTakenForMove[] getTimeTakenForMove() {
+		if (annotations == null) {
+			return new TimeTakenForMove[0];
+		}
+
+		ArrayList<TimeTakenForMove> result = new ArrayList<TimeTakenForMove>(3);
+		for (MoveAnnotation annotation : annotations) {
+			if (annotation instanceof TimeTakenForMove) {
+				result.add((TimeTakenForMove) annotation);
+			}
+		}
+		return result.toArray(new TimeTakenForMove[0]);
 	}
 
 	public int getTo() {

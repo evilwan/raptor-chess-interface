@@ -175,6 +175,10 @@ public class GameCursor implements Game {
 		return cursor.getColorToMove();
 	}
 
+	public Game getCursorGame() {
+		return cursor;
+	}
+
 	public int getCursorPosition() {
 		return cursorPosition;
 	}
@@ -221,6 +225,10 @@ public class GameCursor implements Game {
 
 	public PriorityMoveList getLegalMoves() {
 		return cursor.getLegalMoves();
+	}
+
+	public Game getMasterGame() {
+		return master;
 	}
 
 	public int getMasterGameLength() {

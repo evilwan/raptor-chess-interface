@@ -218,6 +218,8 @@ public class ClassicGame implements Game {
 		incrementRepCount();
 
 		updateEcoHeaders(move);
+		move.setFullMoveCount((getHalfMoveCount() - 1) / 2 + 1);
+		move.setHalfMoveCount(getHalfMoveCount());
 	}
 
 	/**
@@ -1223,12 +1225,7 @@ public class ClassicGame implements Game {
 			}
 		}
 
-		if (isCheckmate() || isStalemate()) {
-			builder.append(getResult().getDescription());
-		} else {
-			builder.append(Result.ON_GOING.getDescription());
-		}
-
+		builder.append(getResult().getDescription());
 		return builder.toString();
 	}
 

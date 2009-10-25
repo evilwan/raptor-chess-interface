@@ -650,7 +650,11 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 			String pgnAnnotation) {
 		List<MoveAnnotation> annotations = new ArrayList<MoveAnnotation>(3);
 
-		annotations.add(new Comment(pgnAnnotation));
+		if (pgnAnnotation.startsWith("[%emt")) {
+			annotations.add(new TimeTakenForMove(pgnAnnotation));
+		} else {
+			annotations.add(new Comment(pgnAnnotation));
+		}
 
 		return annotations.toArray(new MoveAnnotation[0]);
 	}
