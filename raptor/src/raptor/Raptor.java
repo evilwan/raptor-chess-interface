@@ -115,6 +115,7 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public static void main(String args[]) {
 		try {
+			Display.setAppName("Raptor");
 			display = new Display();
 
 			createInstance();
