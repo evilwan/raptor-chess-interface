@@ -32,6 +32,7 @@ import raptor.action.chat.TellsMissedWhileIWasAwayAction;
 import raptor.action.chat.ToggleScrollLock;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatLogger.ChatEventParseListener;
+import raptor.connector.Connector;
 import raptor.service.ActionService;
 import raptor.service.ThreadService;
 import raptor.swt.chat.controller.ToolBarItemKey;
@@ -108,6 +109,26 @@ public class ChatUtils {
 	 */
 	public static char charAt(StyledText text, int position) {
 		return text.getText(position, position + 1).charAt(0);
+	}
+
+	/**
+	 * Removes tailing prompts form the text.
+	 * 
+	 * @param text
+	 *            The text.
+	 * @param connector
+	 *            The connector to obtain the prompt from.
+	 * @return The result.
+	 */
+	public static String filterTrailingPrompts(String text, Connector connector) {
+		if (text.endsWith(connector.getPrompt())) {
+			return text.substring(0,
+					text.length() - connector.getPrompt().length()).trim();
+		} else if (text.endsWith(connector.getPrompt() + " ")) {
+			return text.substring(0,
+					text.length() - connector.getPrompt().length() - 1).trim();
+		}
+		return text;
 	}
 
 	/**

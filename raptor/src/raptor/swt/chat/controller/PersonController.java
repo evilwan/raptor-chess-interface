@@ -37,6 +37,15 @@ public class PersonController extends ChatConsoleController {
 		this.person = person;
 	}
 
+	/**
+	 * Currently removes the connectors prompt from the end of the text. And
+	 * trims just the trailing message.
+	 */
+	@Override
+	public String filterText(String text) {
+		return ChatUtils.filterTrailingPrompts(text, getConnector());
+	}
+
 	@Override
 	public String getName() {
 		return person;

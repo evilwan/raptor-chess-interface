@@ -39,6 +39,15 @@ public class RegExController extends ChatConsoleController {
 				| Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
 	}
 
+	/**
+	 * Currently removes the connectors prompt from the end of the text. And
+	 * trims just the trailing message.
+	 */
+	@Override
+	public String filterText(String text) {
+		return ChatUtils.filterTrailingPrompts(text, getConnector());
+	}
+
 	@Override
 	public String getName() {
 		return pattern.pattern();

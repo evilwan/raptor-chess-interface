@@ -288,10 +288,9 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	public boolean isDisposed() {
-		return getInstance() == null
-				|| getInstance().getWindow() == null
-				|| (getInstance().getWindow().getShell() != null && getInstance()
-						.getWindow().getShell().isDisposed());
+		return getInstance() == null || getInstance().getWindow() == null
+				|| getInstance().getWindow().getShell() != null
+				&& getInstance().getWindow().getShell().isDisposed();
 	}
 
 	/**

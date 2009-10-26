@@ -176,6 +176,18 @@ public class RaptorStringUtils {
 		}
 	}
 
+	public static String removeBeginingNewlines(String string) {
+		if (string == null || string.length() == 0) {
+			return string;
+		} else {
+			StringBuilder result = new StringBuilder(string);
+			while (result.charAt(0) == '\n') {
+				result.deleteCharAt(0);
+			}
+			return result.toString();
+		}
+	}
+
 	public static String replaceAll(String source, String strToReplace,
 			String replacement) {
 		int toRemoveIndex = source.indexOf(strToReplace);
@@ -276,17 +288,5 @@ public class RaptorStringUtils {
 			valuesString = valuesString.substring(0, valuesString.length() - 1);
 		}
 		return valuesString;
-	}
-
-	public static String removeBeginingNewlines(String string) {
-		if (string == null || string.length() == 0) {
-			return string;
-		} else {
-			StringBuilder result = new StringBuilder(string);
-			while (result.charAt(0) == '\n') {
-				result.deleteCharAt(0);
-			}
-			return result.toString();
-		}
 	}
 }
