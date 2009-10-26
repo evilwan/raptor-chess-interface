@@ -57,6 +57,7 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 	protected Combo minAvailablePartnersFilter;
 	protected Combo maxAvailablePartnersFilter;
 	protected Table availablePartnersTable;
+	protected Button isUpdating;
 	protected boolean isActive = false;
 	protected TableColumn lastStortedColumn;
 	protected boolean wasLastSortAscending;
@@ -203,6 +204,22 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 						refreshTable();
 					}
 				});
+
+		isUpdating = new Button(ratingFilterComposite, SWT.CHECK);
+		isUpdating.setText("Update");
+		isUpdating
+				.setToolTipText("Toggles whether or not the table is being updated from events. "
+						+ "You can uncheck this to select a partner from a list without having to "
+						+ "fight the scrollbar then check it again to get a recent list.");
+		isUpdating.setSelection(true);
+		isUpdating.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (isUpdating.getSelection()) {
+					refreshTable();
+				}
+			}
+		});
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
@@ -397,48 +414,51 @@ public class BugPartnersWindowItem implements RaptorWindowItem {
 	protected void refreshTable() {
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				synchronized (availablePartnersTable) {
-					int[] selectedIndexes = availablePartnersTable
-							.getSelectionIndices();
-					List<String> selectedNamesBeforeRefresh = new ArrayList<String>(
-							selectedIndexes.length);
+				if (isUpdating.getSelection()) {
+					synchronized (availablePartnersTable) {
+						int[] selectedIndexes = availablePartnersTable
+								.getSelectionIndices();
+						List<String> selectedNamesBeforeRefresh = new ArrayList<String>(
+								selectedIndexes.length);
 
-					for (int index : selectedIndexes) {
-						String name = availablePartnersTable.getItem(index)
-								.getText(1);
-						selectedNamesBeforeRefresh.add(name);
-					}
-
-					TableItem[] items = availablePartnersTable.getItems();
-					for (TableItem item : items) {
-						item.dispose();
-					}
-
-					for (Bugger bugger : currentBuggers) {
-						if (passesFilterCriteria(bugger)) {
-							TableItem tableItem = new TableItem(
-									availablePartnersTable, SWT.NONE);
-							tableItem.setText(new String[] {
-									bugger.getRating(), bugger.getName(),
-									bugger.getStatus().toString() });
+						for (int index : selectedIndexes) {
+							String name = availablePartnersTable.getItem(index)
+									.getText(1);
+							selectedNamesBeforeRefresh.add(name);
 						}
-					}
 
-					List<Integer> indexes = new ArrayList<Integer>(
-							selectedNamesBeforeRefresh.size());
-					TableItem[] newItems = availablePartnersTable.getItems();
-					for (int i = 0; i < newItems.length; i++) {
-						if (selectedNamesBeforeRefresh.contains(newItems[i]
-								.getText(1))) {
-							indexes.add(i);
+						TableItem[] items = availablePartnersTable.getItems();
+						for (TableItem item : items) {
+							item.dispose();
 						}
-					}
-					if (indexes.size() > 0) {
-						int[] indexesArray = new int[indexes.size()];
-						for (int i = 0; i < indexes.size(); i++) {
-							indexesArray[i] = indexes.get(i);
+
+						for (Bugger bugger : currentBuggers) {
+							if (passesFilterCriteria(bugger)) {
+								TableItem tableItem = new TableItem(
+										availablePartnersTable, SWT.NONE);
+								tableItem.setText(new String[] {
+										bugger.getRating(), bugger.getName(),
+										bugger.getStatus().toString() });
+							}
 						}
-						availablePartnersTable.select(indexesArray);
+
+						List<Integer> indexes = new ArrayList<Integer>(
+								selectedNamesBeforeRefresh.size());
+						TableItem[] newItems = availablePartnersTable
+								.getItems();
+						for (int i = 0; i < newItems.length; i++) {
+							if (selectedNamesBeforeRefresh.contains(newItems[i]
+									.getText(1))) {
+								indexes.add(i);
+							}
+						}
+						if (indexes.size() > 0) {
+							int[] indexesArray = new int[indexes.size()];
+							for (int i = 0; i < indexes.size(); i++) {
+								indexesArray[i] = indexes.get(i);
+							}
+							availablePartnersTable.select(indexesArray);
+						}
 					}
 				}
 			}
