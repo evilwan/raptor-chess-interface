@@ -156,6 +156,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		final TableColumn whiteElo = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn black = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn blackElo = new TableColumn(gamesTable, SWT.LEFT);
+		final TableColumn result = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn eco = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn opening = new TableColumn(gamesTable, SWT.LEFT);
 		final TableColumn event = new TableColumn(gamesTable, SWT.LEFT);
@@ -246,6 +247,21 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				populateGamesTable(gamesTable);
 			}
 		});
+		result.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+
+				wasLastSortAscending = lastStortedColumn == null ? true
+						: lastStortedColumn == result ? !wasLastSortAscending
+								: true;
+				lastStortedColumn = result;
+
+				Collections.sort(games, new GameComparator(PgnHeader.Result,
+						wasLastSortAscending));
+				disposeAllItems(gamesTable);
+				populateGamesTable(gamesTable);
+			}
+		});
 		eco.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -328,6 +344,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		whiteElo.setText("White ELO");
 		black.setText("Black");
 		blackElo.setText("Black ELO");
+		result.setText("Result");
 		eco.setText("ECO");
 		opening.setText("Opening");
 		event.setText("Event");
@@ -343,6 +360,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		whiteElo.setWidth(60);
 		black.setWidth(100);
 		blackElo.setWidth(60);
+		result.setWidth(50);
 		eco.setWidth(40);
 		opening.setWidth(300);
 		gamesTable.setHeaderVisible(true);
@@ -447,6 +465,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 							"?"),
 					StringUtils.defaultString(game
 							.getHeader(PgnHeader.BlackElo), "?"),
+					StringUtils.defaultString(game.getHeader(PgnHeader.Result),
+							"?"),
 					StringUtils
 							.defaultString(game.getHeader(PgnHeader.ECO), ""),
 					StringUtils.defaultString(
