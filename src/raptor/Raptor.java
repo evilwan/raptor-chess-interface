@@ -129,9 +129,13 @@ public class Raptor implements PreferenceKeys {
 			for (final Connector connector : connectors) {
 				// Wait 750 milliseconds so the RaptorWindow has time to be
 				// created.
+				System.err.println("Connector " + connector);
 				ThreadService.getInstance().scheduleOneShot(750,
 						new Runnable() {
 							public void run() {
+								System.err
+										.println("Executing oen short for auto connect "
+												+ connector);
 								connector.onAutoConnect();
 							}
 						});
@@ -284,9 +288,10 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	public boolean isDisposed() {
-		return getInstance() == null || getInstance().getWindow() == null
-				|| getInstance().getWindow().getShell() == null
-				|| getInstance().getWindow().getShell().isDisposed();
+		return getInstance() == null
+				|| getInstance().getWindow() == null
+				|| (getInstance().getWindow().getShell() != null && getInstance()
+						.getWindow().getShell().isDisposed());
 	}
 
 	/**
