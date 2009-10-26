@@ -409,9 +409,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						.getInstance().getPreferences().getString(
 								CHAT_TIMESTAMP_CONSOLE_FORMAT));
 				date = format.format(new Date(event.getTime()));
-			} else {
-				messageText = messageText.trim();
 			}
+			// There use to be an else {messageText = messateText.trim();} here.
+			// It was removed to fix Issue 48.
+			// This comment is here just in case someone ever adds it back.
 
 			appendText = (chatConsole.inputText.getCharCount() == 0 ? "" : "\n")
 					+ date + messageText;
@@ -427,7 +428,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		onDecorateInputText(event, appendText, startIndex);
 		reduceInputTextIfNeeded();
-
 	}
 
 	public void onAppendOutputText(String string) {
@@ -462,7 +462,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				updateImageIcon(event);
 			}
 		}
-
 	}
 
 	public void onForceAutoScroll() {
@@ -474,7 +473,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				.getCharCount());
 		chatConsole.inputText.setSelection(new Point(chatConsole.inputText
 				.getCharCount(), chatConsole.inputText.getCharCount()));
-
 	}
 
 	public void onPassivate() {
@@ -1026,7 +1024,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				chatConsole.inputText.setStyleRange(range);
 			}
 		}
-
 	}
 
 	protected void decorateQuotes(ChatEvent event, String message,
@@ -1092,7 +1089,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				chatConsole.inputText.setStyleRange(range);
 			}
 		}
-
 	}
 
 	/**
@@ -1247,5 +1243,4 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			fireItemChanged();
 		}
 	}
-
 }
