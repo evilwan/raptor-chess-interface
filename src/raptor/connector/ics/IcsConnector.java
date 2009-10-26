@@ -330,7 +330,7 @@ public abstract class IcsConnector implements Connector {
 	protected String simulBugPartnerName;
 
 	protected Runnable keepAlive = new Runnable() {
-		public void run() {		
+		public void run() {
 			if (isConnected()
 					&& getPreferences().getBoolean(
 							context.getShortName() + "-keep-alive")

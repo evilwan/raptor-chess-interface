@@ -74,6 +74,7 @@ import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.ToolBarItemKey;
 import raptor.util.BrowserUtils;
+import raptor.util.RaptorStringUtils;
 
 public abstract class ChatConsoleController implements PreferenceKeys {
 	public static final double CLEAN_PERCENTAGE = .33;
@@ -250,6 +251,19 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	/**
+	 * A method that allows subclasses to filter the text before it is appended
+	 * to the chatConsole.inputText. The default implementation just returns
+	 * what is passed in.
+	 * 
+	 * @param text
+	 *            The incomming text
+	 * @return The text to append.
+	 */
+	public String filterText(String text) {
+		return text;
+	}
+
 	public ChatConsole getChatConsole() {
 		return chatConsole;
 	}
@@ -383,7 +397,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onAppendChatEventToInputText(ChatEvent event) {
-
 		if (!ignoreAwayList && event.getType() == ChatType.TELL
 				|| event.getType() == ChatType.PARTNER_TELL) {
 			awayList.add(event);
@@ -401,7 +414,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				return;
 			}
 
-			String messageText = event.getMessage();
+			String messageText = filterText(event.getMessage());
 			String date = "";
 			if (Raptor.getInstance().getPreferences().getBoolean(
 					CHAT_TIMESTAMP_CONSOLE)) {
@@ -409,6 +422,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						.getInstance().getPreferences().getString(
 								CHAT_TIMESTAMP_CONSOLE_FORMAT));
 				date = format.format(new Date(event.getTime()));
+			} else {
+				messageText = RaptorStringUtils
+						.removeBeginingNewlines(messageText);
 			}
 			// There use to be an else {messageText = messateText.trim();} here.
 			// It was removed to fix Issue 48.
