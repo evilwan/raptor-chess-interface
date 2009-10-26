@@ -278,4 +278,15 @@ public class RaptorStringUtils {
 		return valuesString;
 	}
 
+	public static String removeBeginingNewlines(String string) {
+		if (string == null || string.length() == 0) {
+			return string;
+		} else {
+			StringBuilder result = new StringBuilder(string);
+			while (result.charAt(0) == '\n') {
+				result.deleteCharAt(0);
+			}
+			return result.toString();
+		}
+	}
 }
