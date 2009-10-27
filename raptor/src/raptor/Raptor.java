@@ -305,8 +305,8 @@ public class Raptor implements PreferenceKeys {
 	 * otherwise you can use this.
 	 */
 	public void onError(final String error, final Throwable throwable) {
+		LOG.error(error, throwable);
 		if (!isDisposed()) {
-			LOG.error(error, throwable);
 			getInstance().getWindow().getShell().getDisplay().asyncExec(
 					new Runnable() {
 						public void run() {

@@ -6,7 +6,7 @@
 	    IMPORTANT to run the application you will need to specify your environment here.
 	    This is the folder located in projectFiles/swt to use for your compile,run.
 	  -->
-	<property name="swtEnv" value="Mac_Carbon" />
+	<property name="swtEnv" value="MacCarbon" />
 
 	<property name="version" value="Alpha" />
 	<property name="dist.dir" value="install" />
@@ -22,20 +22,11 @@
 
 
 	<!--
-	   http://informagen.com/JarBundler/
-	    You need to add the JarBundler.jar to your ant lib directory. 
-	    It can be found in the projectFiles/antlib directory. 
-	    -->
-	<taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler" />
-
-	<!--
 	    http://ant-contrib.sourceforge.net/
 	    You need to add theant-contrib-*.jar to your ant lib directory. 
 	    It can be found in the projectFiles/antlib directory. 
 	    -->
 	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-
-
 
 	<path id="class.path">
 		<fileset dir="${lib.dir}">
@@ -115,11 +106,116 @@
 		</jar>
 	</target>
 
+	<target name="windows32Zip" depends="init">
+		<delete dir="${install.dir}" />
+		<var name="swtEnv" value="Windows32" />
+
+		<antcall target="install" />
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_Windows32.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="windows64Zip" depends="init">
+		<delete dir="${install.dir}" />
+		<var name="swtEnv" value="Windows64" />
+
+		<antcall target="install" />
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_Windows64.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="linuxPPCZip" depends="init">
+		<delete dir="${install.dir}" />
+		<var name="swtEnv" value="LinuxPPC_GTK2" />
+
+		<antcall target="install" />
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_LinuxPPC_GTK2.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="Linux_x86Zip" depends="init">
+		<delete dir="${install.dir}" />
+		<var name="swtEnv" value="Linux_x86_GTK2" />
+
+		<antcall target="install" />
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_Linux_x86_GTK2.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="Linux_x86_64Zip" depends="init" description="Builds Raptor.exe">
+		<delete dir="${install.dir}" />
+		<var name="swtEnv" value="Linux_x86_64_GTK2" />
+
+		<antcall target="install" />
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_Linux_x86_64_GTK2.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="Solaris10_SPARC_GTK2Zip" depends="init">
+		<delete dir="${install.dir}" />
+		<var name="swtEnv" value="Solaris10_SPARC_GTK2" />
+
+		<antcall target="install" />
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_Solaris10_SPARC_GTK2.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+	</target>
+
+	<target name="Solaris10_x86_GTK2Zip" depends="init">
+		<delete dir="${install.dir}" />
+		<var name="swtEnv" value="Solaris10_x86_GTK2" />
+
+		<antcall target="install" />
+
+		<zip destfile="${uploads.dir}/Raptor_${version}_Solaris10_x86_GTK2.zip">
+			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+	</target>
+
 	<target name="osxCarbonApp" depends="init" description="Builds Raptor.app">
 		<delete dir="${install.dir}" />
-		<delete file="${uploads.dir}/Raptor_OS_X_${version}_Carbon.dmg" />
+		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
 
-		<var name="swtEnv" value="Mac_Carbon" />
+		<var name="swtEnv" value="MacCarbon" />
 
 		<antcall target="install" />
 
@@ -167,9 +263,9 @@
 
 	<target name="osxCocoa64App" depends="init" description="Builds Raptor.app">
 		<delete dir="${install.dir}" />
-		<delete file="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_x86_64.dmg" />
+		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Cocoa64.dmg" />
 
-		<var name="swtEnv" value="Mac_Cocoa_x86_64" />
+		<var name="swtEnv" value="MacCocoa64" />
 
 		<antcall target="install" />
 
@@ -217,9 +313,9 @@
 
 	<target name="osxCocoa32App" depends="init" description="Builds Raptor.app">
 		<delete dir="${install.dir}" />
-		<delete file="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_32.dmg" />
+		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Cocoa32.dmg" />
 
-		<var name="swtEnv" value="Mac_Cocoa" />
+		<var name="swtEnv" value="MacCocoa32" />
 
 		<antcall target="install" />
 
@@ -269,6 +365,13 @@
 		<antcall target="osxCarbonApp" />
 		<antcall target="osxCocoa64App" />
 		<antcall target="osxCocoa32App" />
+		<antcall target="windows32Zip" />
+		<antcall target="windows64Zip" />
+		<antcall target="linuxPPCZip" />
+		<antcall target="Linux_x86Zip" />
+		<antcall target="Linux_x86_64Zip" />
+		<antcall target="Solaris10_SPARC_GTK2Zip" />
+		<antcall target="Solaris10_x86_GTK2Zip" />
 	</target>
 
 
