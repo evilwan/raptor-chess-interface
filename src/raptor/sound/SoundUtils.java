@@ -30,7 +30,7 @@ public class SoundUtils {
 			} else if (osName.startsWith("Windows")) {
 				return new JavaxSampledSoundPlayer();
 			} else {
-				return new SunAudioSoundPlayer();
+				return new LinuxSoundPlayer();
 			}
 		}
 	}
