@@ -42,6 +42,7 @@ import raptor.pref.page.MessageEventScripts;
 import raptor.pref.page.RaptorPage;
 import raptor.pref.page.RaptorWindowPage;
 import raptor.pref.page.RaptorWindowQuadrantsPage;
+import raptor.pref.page.SoundPage;
 import raptor.pref.page.SpeechPage;
 import raptor.service.ConnectorService;
 
@@ -231,6 +232,7 @@ public class PreferenceUtils {
 		mgr.addToRoot(new PreferenceNode("actionScriptKeys",
 				new ActionKeyBindingsPage()));
 
+		mgr.addToRoot(new PreferenceNode("sound", new SoundPage()));
 		mgr.addToRoot(new PreferenceNode("speech", new SpeechPage()));
 
 		// Add the connector preference nodes.

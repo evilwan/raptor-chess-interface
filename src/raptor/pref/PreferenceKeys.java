@@ -263,5 +263,7 @@ public interface PreferenceKeys {
 
 	public static final String SPEECH_PROCESS_NAME = "speech_process_name";
 
+	public static final String SOUND_PROCESS_NAME = "sound_process_name";
+
 	public static final String TIMESEAL_INIT_STRING = "timeseal-init-string";
 }
