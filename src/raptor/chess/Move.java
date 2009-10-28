@@ -52,7 +52,8 @@ public class Move implements GameConstants {
 	 * May or may not be used.
 	 */
 	protected int halfMoveCount = 0;
-	protected byte lastCastleState = CASTLE_NONE;
+	protected byte lastWhiteCastlingState = CASTLE_NONE;
+	protected byte lastBlackCastlingState = CASTLE_NONE;
 	protected byte moveCharacteristic = 0;
 	protected byte piece = EMPTY;
 
@@ -243,8 +244,12 @@ public class Move implements GameConstants {
 										& NOT_PROMOTED_MASK) : "");
 	}
 
-	public int getLastCastleState() {
-		return lastCastleState;
+	public int getLastBlackCastlingState() {
+		return lastBlackCastlingState;
+	}
+
+	public byte getLastWhiteCastlingState() {
+		return lastWhiteCastlingState;
 	}
 
 	public int getMoveCharacteristic() {
@@ -453,8 +458,12 @@ public class Move implements GameConstants {
 		this.halfMoveCount = halfMoveCount;
 	}
 
-	public void setLastCastleState(int lastCastleState) {
-		this.lastCastleState = (byte) lastCastleState;
+	public void setLastBlackCastlingState(int lastBlackCastlingState) {
+		this.lastBlackCastlingState = (byte) lastBlackCastlingState;
+	}
+
+	public void setLastWhiteCastlingState(int lastWhiteCastlingState) {
+		this.lastWhiteCastlingState = (byte) lastWhiteCastlingState;
 	}
 
 	public void setMoveCharacteristic(int moveCharacteristic) {

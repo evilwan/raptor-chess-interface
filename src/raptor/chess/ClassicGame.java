@@ -172,7 +172,8 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public void forceMove(Move move) {
-		move.setLastCastleState(getCastling(getColorToMove()));
+		move.setLastWhiteCastlingState(getCastling(WHITE));
+		move.setLastBlackCastlingState(getCastling(BLACK));
 		setSan(move);
 		switch (move.getMoveCharacteristic()) {
 		case Move.EN_PASSANT_CHARACTERISTIC:
@@ -986,7 +987,8 @@ public class ClassicGame implements Game {
 		setHalfMoveCount(getHalfMoveCount() - 1);
 
 		setFiftyMoveCount(move.getPrevious50MoveCount());
-		setCastling(getColorToMove(), move.getLastCastleState());
+		setCastling(WHITE, move.getLastWhiteCastlingState());
+		setCastling(BLACK, move.getLastBlackCastlingState());
 
 		updateZobristHash();
 
