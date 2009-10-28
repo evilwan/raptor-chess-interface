@@ -247,6 +247,34 @@ public class TestClassical implements GameConstants {
 	}
 
 	@Test
+	public void testCastlingPart2() {
+		Game game = createStartingPosition(Variant.classic);
+		game.addState(Game.UPDATING_SAN_STATE);
+		game.makeSanMove("e4");
+		game.makeSanMove("g6");
+		game.makeSanMove("d4");
+		game.makeSanMove("Bg7");
+		game.makeSanMove("Nf3");
+		game.makeSanMove("c5");
+		game.makeSanMove("Be3");
+		game.makeSanMove("Qb6");
+		game.makeSanMove("dxc5");
+		game.makeSanMove("Qxb2");
+		game.makeSanMove("Bd4");
+		game.makeSanMove("Bxd4");
+		game.makeSanMove("Qxd4");
+		game.makeSanMove("Qc1");
+		game.makeSanMove("Qd1");
+		game.makeSanMove("Qxd1");
+		game.makeSanMove("Kxd1");
+		game.makeSanMove("Nf6");
+		game.makeSanMove("Bd3");
+		game.makeSanMove("Nc6");
+		game.makeSanMove("c3");
+		game.makeSanMove("O-O");
+	}
+
+	@Test
 	public void testCheckMate() throws Exception {
 		for (String element : CHECKMATE_FEN_TESTS) {
 			Game game = createFromFen(element, Variant.classic);
