@@ -161,6 +161,17 @@ public class ObserveController extends ChessBoardController {
 				});
 			}
 		}
+
+		@Override
+		public void droppablePiecesChanged(Game game) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+							refreshBoard();
+					}
+				});
+			}
+		}
 	};
 	protected ToolBar toolbar;
 
