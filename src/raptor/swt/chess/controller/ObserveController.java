@@ -49,6 +49,17 @@ public class ObserveController extends ChessBoardController {
 	protected GameCursor cursor = null;
 	protected GameServiceListener listener = new GameServiceAdapter() {
 		@Override
+		public void droppablePiecesChanged(Game game) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						refreshBoard();
+					}
+				});
+			}
+		}
+
+		@Override
 		public void gameInactive(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
@@ -157,17 +168,6 @@ public class ObserveController extends ChessBoardController {
 							connector.onError(
 									"ObserveController.gameStateChanged", t);
 						}
-					}
-				});
-			}
-		}
-
-		@Override
-		public void droppablePiecesChanged(Game game) {
-			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-							refreshBoard();
 					}
 				});
 			}
@@ -316,21 +316,21 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public void onBack() {
 		cursor.setCursorPrevious();
-		refresh();
+		refresh(false);
 		decorateForLastMoveListMove();
 	}
 
 	@Override
 	public void onFirst() {
 		cursor.setCursorFirst();
-		refresh();
+		refresh(false);
 		decorateForLastMoveListMove();
 	}
 
 	@Override
 	public void onForward() {
 		cursor.setCursorNext();
-		refresh();
+		refresh(false);
 		decorateForLastMoveListMove();
 	}
 
@@ -338,37 +338,23 @@ public class ObserveController extends ChessBoardController {
 	public void onLast() {
 		cursor.setCursorMasterLast();
 		setToolItemEnabled(ToolBarItemKey.FORCE_UPDATE, true);
-		refresh();
+		refresh(false);
 		decorateForLastMoveListMove();
 	}
 
 	@Override
-	public void refresh() {
+	public void refresh(boolean isUpdatingClocks) {
 		if (isDisposed()) {
 			return;
 		}
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(cursor.getCursorPosition());
 		enableDisableNavButtons();
-		super.refresh();
+		super.refresh(isUpdatingClocks);
 	}
 
 	@Override
 	public void userCancelledMove(int fromSquare, boolean isDnd) {
-	}
-
-	/**
-	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
-	 * selected.
-	 * 
-	 * The default implementation does nothing. It can be overridden to provide
-	 * functionality.
-	 */
-	@Override
-	public void userClickedOnMove(int halfMoveNumber) {
-		cursor.setCursor(halfMoveNumber);
-		refresh();
-		decorateForLastMoveListMove();
 	}
 
 	@Override
@@ -385,6 +371,20 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void userRightClicked(int square) {
+	}
+
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	@Override
+	public void userSelectedMoveListMove(int halfMoveNumber) {
+		cursor.setCursor(halfMoveNumber);
+		refresh(false);
+		decorateForLastMoveListMove();
 	}
 
 	protected void onPlayGameEndSound() {

@@ -98,12 +98,16 @@ public class ChessBoardCacheService {
 				// connector on
 				// dispose.
 				board.getController().dispose();
-				ThreadService.getInstance().scheduleOneShot(3000,
+
+				// Run this in 3 seconds to decrease the load on the SWT event
+				// thread.
+				Raptor.getInstance().getDisplay().timerExec(3000,
 						new Runnable() {
 							public void run() {
 								board.getControl().setLayoutDeferred(true);
 								board.getControl().setParent(composite);
 								board.hideMoveList();
+								board.getMoveList().clear();
 								chessBoardCache.add(0, board);
 							}
 						});
