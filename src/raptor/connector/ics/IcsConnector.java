@@ -1328,12 +1328,12 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	/**
-	 * Plays the bughouse sound for the specified ptell. Returns true if a
-	 * bughouse sound was played.
+	 * Plays the bughouse sound for the specified ptell. Sets hasBeenHandled to
+	 * true on the event if a bughouse sound is played.
 	 */
-	protected boolean playBughouseSounds(final String ptell) {
-		boolean result = false;
+	protected void playBughouseSounds(ChatEvent event) {
 		if (getPreferences().getBoolean(PreferenceKeys.APP_SOUND_ENABLED)) {
+			String ptell = event.getMessage();
 			int colonIndex = ptell.indexOf(":");
 			if (colonIndex != -1) {
 				String message = ptell
@@ -1343,9 +1343,9 @@ public abstract class IcsConnector implements Connector {
 				message = tok.nextToken().trim();
 				for (String bugSound : bughouseSounds) {
 					if (bugSound.equalsIgnoreCase(message)) {
-						// This creates its own thread.
+						event.setHasBeenHandled(true);
+						// This launches it on another thread.
 						SoundService.getInstance().playBughouseSound(bugSound);
-						result = true;
 						break;
 					}
 				}
@@ -1354,7 +1354,6 @@ public abstract class IcsConnector implements Connector {
 						new Exception());
 			}
 		}
-		return result;
 	}
 
 	/**
@@ -1419,17 +1418,15 @@ public abstract class IcsConnector implements Connector {
 				userFollowing = null;
 			}
 
-			if (event.getType() == ChatType.PARTNER_TELL
-					|| event.getType() == ChatType.TELL
-					|| event.getType() == ChatType.CHANNEL_TELL) {
-				processScripts(event);
+			if (event.getType() == ChatType.PARTNER_TELL) {
+				playBughouseSounds(event);
 			}
 
-			if (event.getType() == ChatType.PARTNER_TELL) {
-				if (playBughouseSounds(event.getMessage())) {
-					// No need to publish it we played the sound.
-					return;
-				}
+			if (!event.hasBeenHandled()
+					&& (event.getType() == ChatType.PARTNER_TELL
+							|| event.getType() == ChatType.TELL || event
+							.getType() == ChatType.CHANNEL_TELL)) {
+				processScripts(event);
 			}
 
 			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
