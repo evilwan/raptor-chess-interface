@@ -70,7 +70,6 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 				AudioInputStream stream = AudioSystem
 						.getAudioInputStream(new FileInputStream(currentFile));
 				clip.open(stream);
-				System.err.println("Loaded " + key);
 				soundToClip.put(key.substring(0, dotIndex), clip);
 			}
 
