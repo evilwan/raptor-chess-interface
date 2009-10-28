@@ -3,6 +3,11 @@
 	<property environment="env" />
 
 	<!--
+	   IMPORTANT to run from this build file for OS X use runOSX and not run!.
+	 -->
+	
+	
+	<!--
 	    IMPORTANT to run the application you will need to specify your environment here.
 	    This is the folder located in projectFiles/swt to use for your compile,run.
 	  -->
@@ -141,6 +146,8 @@
 		<var name="swtEnv" value="LinuxPPC_GTK2" />
 
 		<antcall target="install" />
+		
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_LinuxPPC_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
@@ -157,6 +164,8 @@
 
 		<antcall target="install" />
 
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
+		
 		<zip destfile="${uploads.dir}/Raptor_${version}_Linux_x86_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -171,7 +180,8 @@
 		<var name="swtEnv" value="Linux_x86_64_GTK2" />
 
 		<antcall target="install" />
-
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
+		
 		<zip destfile="${uploads.dir}/Raptor_${version}_Linux_x86_64_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -186,7 +196,7 @@
 		<var name="swtEnv" value="Solaris10_SPARC_GTK2" />
 
 		<antcall target="install" />
-
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
 		<zip destfile="${uploads.dir}/Raptor_${version}_Solaris10_SPARC_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -201,7 +211,7 @@
 		<var name="swtEnv" value="Solaris10_x86_GTK2" />
 
 		<antcall target="install" />
-
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
 		<zip destfile="${uploads.dir}/Raptor_${version}_Solaris10_x86_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -388,7 +398,7 @@
 		<java classname="raptor.Raptor" classpathref="run.class.path" fork="true" />
 	</target>
 
-	<target name="runCarbon" depends="compile" description="Raptor">
+	<target name="runOSX" depends="compile" description="Raptor">
 		<path id="run.class.path">
 			<fileset dir="${lib.dir}">
 				<include name="common/*.jar" />
