@@ -1,0 +1,2 @@
+#!/bin/sh
+java -jar Raptor.jar
