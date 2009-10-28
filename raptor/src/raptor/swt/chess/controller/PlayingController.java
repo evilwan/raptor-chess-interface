@@ -550,7 +550,7 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	public void onBack() {
 		cursor.setCursorPrevious();
-		refresh();
+		refresh(false);
 		decorateForLastMoveListMove();
 	}
 
@@ -562,21 +562,21 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	public void onFirst() {
 		cursor.setCursorFirst();
-		refresh();
+		refresh(false);
 		decorateForLastMoveListMove();
 	}
 
 	@Override
 	public void onForward() {
 		cursor.setCursorNext();
-		refresh();
+		refresh(false);
 		decorateForLastMoveListMove();
 	}
 
 	@Override
 	public void onLast() {
 		cursor.setCursorMasterLast();
-		refresh();
+		refresh(false);
 		decorateForLastMoveListMove();
 	}
 

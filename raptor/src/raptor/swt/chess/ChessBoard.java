@@ -106,6 +106,7 @@ public class ChessBoard implements BoardConstants {
 			createMoveList();
 			moveList.create(sashForm);
 			sashForm.setMaximizedControl(boardComposite);
+			moveList.getControl().setVisible(false);
 
 			sashForm.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent e) {
@@ -341,6 +342,7 @@ public class ChessBoard implements BoardConstants {
 
 	public void hideMoveList() {
 		sashForm.setMaximizedControl(boardComposite);
+		moveList.getControl().setVisible(false);
 	}
 
 	/**
@@ -421,8 +423,8 @@ public class ChessBoard implements BoardConstants {
 
 		int width = moveList.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).x;
 		sashForm.setWeights(new int[] { sashForm.getSize().x - width, width });
+		moveList.getControl().setVisible(true);
 		sashForm.setMaximizedControl(null);
-		// moveList.getControl().pack();
 		moveList.forceRedraw();
 	}
 

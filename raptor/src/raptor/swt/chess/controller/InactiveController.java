@@ -385,22 +385,6 @@ public class InactiveController extends ChessBoardController implements
 		}
 	}
 
-	/**
-	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
-	 * selected.
-	 * 
-	 * The default implementation does nothing. It can be overridden to provide
-	 * functionality.
-	 */
-	@Override
-	public void userClickedOnMove(int halfMoveNumber) {
-		board.getResultDecorator().setDecoration(null);
-		cursor.setCursor(halfMoveNumber);
-		enableDisableNavButtons();
-		refresh();
-		decorateForLastMoveListMove();
-	}
-
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
 		if (!isDisposed()) {
@@ -602,6 +586,22 @@ public class InactiveController extends ChessBoardController implements
 			}
 			menu.dispose();
 		}
+	}
+
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	@Override
+	public void userSelectedMoveListMove(int halfMoveNumber) {
+		board.getResultDecorator().setDecoration(null);
+		cursor.setCursor(halfMoveNumber);
+		enableDisableNavButtons();
+		refresh();
+		decorateForLastMoveListMove();
 	}
 
 	/**

@@ -433,6 +433,17 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * clocks are refreshed from the game.
 	 */
 	public void refresh() {
+		refresh(true);
+	}
+
+	/**
+	 * The same as refresh, except you can control if the clocks are being
+	 * updated or not.
+	 * 
+	 * @param isUpdatingClocks
+	 *            True if the clocks should be updated, false otherwise.
+	 */
+	public void refresh(boolean isUpdatingClocks) {
 		if (isDisposed()) {
 			return;
 		}
@@ -447,7 +458,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		adjustOpeningDescriptionLabel();
 		adjustNameRatingLabels();
 		adjustLagLabels();
-		refreshClocks(true);
+		refreshClocks(isUpdatingClocks);
 		adjustPieceJailVisibility();
 		adjustBoard();
 		adjustPieceJail();
@@ -515,17 +526,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	public abstract void userCancelledMove(int fromSquare, boolean isDnd);
 
 	/**
-	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
-	 * selected.
-	 * 
-	 * The default implementation does nothing. It can be overridden to provide
-	 * functionality.
-	 */
-	public void userClickedOnMove(int halfMoveNumber) {
-
-	}
-
-	/**
 	 * Invoked when the user initiates a move.
 	 * 
 	 * @param square
@@ -561,6 +561,17 @@ public abstract class ChessBoardController implements BoardConstants,
 	 *            The square right clicked on.
 	 */
 	public abstract void userRightClicked(int square);
+
+	/**
+	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move
+	 * selected.
+	 * 
+	 * The default implementation does nothing. It can be overridden to provide
+	 * functionality.
+	 */
+	public void userSelectedMoveListMove(int halfMoveNumber) {
+
+	}
 
 	/**
 	 * Adjusts only the ChessBoard squares to match the squares in the game.
