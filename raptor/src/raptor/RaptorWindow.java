@@ -650,6 +650,7 @@ public class RaptorWindow extends ApplicationWindow {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
 					new RaptorTabItem(folder, SWT.NONE, item);
+					folder.setMinimized(false);
 					restoreFolders();
 				}
 			});
@@ -659,6 +660,7 @@ public class RaptorWindow extends ApplicationWindow {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
 					new RaptorTabItem(folder, SWT.NONE, item);
+					folder.setMinimized(false);
 					restoreFolders();
 				}
 			});
@@ -847,6 +849,7 @@ public class RaptorWindow extends ApplicationWindow {
 				if (currentTabItem.raptorItem == windowItem) {
 					currentTabItem.raptorParent.setSelection(currentTabItem);
 					if (currentTabItem.raptorParent.getMinimized()) {
+						currentTabItem.raptorParent.setMinimized(false);
 						restoreFolders();
 						wasRestored = true;
 					}
