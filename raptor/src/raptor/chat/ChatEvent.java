@@ -20,6 +20,7 @@ public class ChatEvent {
 	protected String source;
 	protected long time;
 	protected ChatType type;
+	protected boolean hasBeenHandled;
 
 	public ChatEvent() {
 		time = System.currentTimeMillis();
@@ -74,12 +75,26 @@ public class ChatEvent {
 		return type;
 	}
 
+	/**
+	 * Returns true if this event has been handled.
+	 */
+	public boolean hasBeenHandled() {
+		return hasBeenHandled;
+	}
+
 	public void setChannel(String channel) {
 		this.channel = channel;
 	}
 
 	public void setGameId(String gameId) {
 		this.gameId = gameId;
+	}
+
+	/**
+	 * Sets the flag denoting this event has been handled.
+	 */
+	public void setHasBeenHandled(boolean hasBeenHandled) {
+		this.hasBeenHandled = hasBeenHandled;
 	}
 
 	public void setMessage(String message) {
