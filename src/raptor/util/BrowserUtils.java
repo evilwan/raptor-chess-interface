@@ -30,6 +30,31 @@ public class BrowserUtils {
 	private static final Log LOG = LogFactory.getLog(BrowserUtils.class);
 
 	/**
+     * This checks the users preferences and opens the browser either internally
+     * or externally depending on how its set. It will also check to see if a
+     * browser is currently in use. If it is it will use that browser to display
+     * the url.
+     */
+    public static void openHtml(String html) {
+        if (!StringUtils.isNotBlank(html)) return; // is blank
+        
+                BrowserWindowItem item = Raptor.getInstance().getWindow()
+                        .getBrowserWindowItem();
+                if (item == null) {
+                	 //YOUR NEW CONSTRUCTOR GOES HERE
+                	Raptor.getInstance().getWindow().addRaptorWindowItem( 
+                			new BrowserWindowItem(html,true)
+                		);
+                } else {
+                	//YOUR NEW item.setHtml method goes here.
+                	//item.setDisplayName(title);
+                	item.setHTML(html);
+                	
+                    Raptor.getInstance().getWindow().forceFocus(item);
+                }
+    }
+	
+	/**
 	 * Opens the link in an external browser. Code taken from: Bare Bones
 	 * Browser Launch Version 1.5 (December 10, 2005) By Dem Pilafian Supports:
 	 * Mac OS X, GNU/Linux, Unix, Windows XP Public Domain Software -- Free to
@@ -39,7 +64,7 @@ public class BrowserUtils {
 	 *            The url to open.
 	 */
 	@SuppressWarnings("unchecked")
-	public static void openExtarnalUrl(String url) {
+	public static void openExternalUrl(String url) {
 		String osName = System.getProperty("os.name");
 		try {
 			if (osName.startsWith("Mac OS")) {
@@ -98,7 +123,7 @@ public class BrowserUtils {
 		if (StringUtils.isNotBlank(url)) {
 			if (Raptor.getInstance().getPreferences().getBoolean(
 					PreferenceKeys.APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
-				openExtarnalUrl(url);
+				openExternalUrl(url);
 				return;
 			} else {
 				BrowserWindowItem item = Raptor.getInstance().getWindow()
