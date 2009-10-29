@@ -334,11 +334,20 @@ public abstract class IcsConnector implements Connector {
 		public void run() {
 			if (isConnected()
 					&& getPreferences().getBoolean(
-							context.getShortName() + "-keep-alive")
-					&& System.currentTimeMillis() - lastSendTime > 1000 * 60 * 50) {
-				sendMessage("date", true);
-				publishEvent(new ChatEvent("", ChatType.INTERNAL,
-						"The \"date\" command was just sent as a keep alive."));
+							context.getShortName() + "-keep-alive")) {
+				if (LOG.isInfoEnabled()) {
+					LOG.info("In keep alive ...");
+				}
+				if ((System.currentTimeMillis() - lastSendTime) > (1000 * 60 * 50)) {
+					sendMessage("date", true);
+					publishEvent(new ChatEvent("", ChatType.INTERNAL,
+							"The \"date\" command was just sent as a keep alive."));
+				} else {
+					if (LOG.isInfoEnabled()) {
+						LOG
+								.info("No need to send keep alive rescheduling for 30 minutes.");
+					}
+				}
 				ThreadService.getInstance().scheduleOneShot(1000 * 60 * 30,
 						this);
 			}
