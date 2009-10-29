@@ -53,35 +53,26 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	protected Browser browser;
 	protected Composite composite;
 	protected String url;
-	//private String displayName = "";
 	private String storedHtml = null;
 
 	public String getHTML() {
 		return storedHtml;
 	}
 
-//	public void setDisplayName(String str) {
-//		this.displayName = str;
-//	}
-	
 	public void setHTML(String html) {
 		this.storedHtml = html;
-		if (browser != null) browser.setText(html);
+		if (browser != null)
+			browser.setText(html);
 	}
 
 	public BrowserWindowItem(String url) {
 		this.url = url;
 	}
-	
-	public BrowserWindowItem(String html,boolean PLACEHOLDER) {
+
+	public BrowserWindowItem(String html, boolean PLACEHOLDER) {
 		this("");
 		setHTML(html);
 	}
-	
-//	public BrowserWindowItem(String showUrlName,String html) {
-//		//setDisplayName(showUrlName);
-//		setHTML(html);
-//	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
 	}
@@ -225,7 +216,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		});
 
 		browser = new Browser(composite, SWT.NONE);
-		
+
 		browser.addOpenWindowListener(new OpenWindowListener() {
 			public void open(WindowEvent event) {
 				if (!event.required) {
@@ -253,12 +244,11 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		});
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		if (getHTML() != null) {
-			browser.setText( getHTML() );
-			//if (!displayName.equals("")) urlText.setText(displayName);
+			browser.setText(getHTML());
 		} else {
 			browser.setUrl(url);
 		}
-		
+
 		browser.addLocationListener(new LocationAdapter() {
 			@Override
 			public void changed(LocationEvent event) {
