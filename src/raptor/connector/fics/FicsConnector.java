@@ -574,6 +574,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			public void run() {
 				isConnecting = false;
 				fireConnected();
+				hasVetoPower = false;
 				sendMessage("iset defprompt 1", true);
 				sendMessage("iset gameinfo 1", true);
 				sendMessage("iset ms 1", true);
@@ -621,6 +622,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				}
 
 				sendMessage("iset lock 1", true);
+				hasVetoPower = true;
 			}
 		});
 	}

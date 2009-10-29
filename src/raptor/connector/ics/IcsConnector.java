@@ -318,6 +318,7 @@ public abstract class IcsConnector implements Connector {
 	};
 
 	protected boolean hasSentLogin = false;
+	protected boolean hasVetoPower = true;
 
 	protected boolean hasSentPassword = false;
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
@@ -1480,6 +1481,9 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	protected boolean vetoMessage(String message) {
+		if (!hasVetoPower) {
+			return false;
+		}
 		boolean result = false;
 		if (message.startsWith("set ptime")) {
 			publishEvent(new ChatEvent(null, ChatType.INTERNAL,

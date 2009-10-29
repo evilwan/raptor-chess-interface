@@ -162,6 +162,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 
 	};
+
+	protected MouseListener outputTextClickListener = new MouseAdapter() {
+		@Override
+		public void mouseUp(MouseEvent e) {
+			if (e.button == 3) {
+				onOutputTextRightClick(e);
+			}
+		}
+	};
+
 	protected boolean isBeingReparented;
 	protected boolean isDirty;
 	protected boolean isSoundDisabled = false;
@@ -860,6 +870,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void addMouseListeners() {
 		if (!isIgnoringActions()) {
 			chatConsole.inputText.addMouseListener(inputTextClickListener);
+			chatConsole.outputText.addMouseListener(outputTextClickListener);
 		}
 	}
 
@@ -1147,6 +1158,49 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	protected void onOutputTextRightClick(MouseEvent e) {
+		String word = chatConsole.outputText.getSelectionText();
+		boolean wasSelectedText = true;
+
+		if (StringUtils.isBlank(word)) {
+			wasSelectedText = false;
+		}
+
+		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
+		if (wasSelectedText) {
+			MenuItem copyItem = new MenuItem(menu, SWT.POP_UP);
+			copyItem.setText("copy");
+			copyItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					chatConsole.outputText.copy();
+				}
+			});
+		}
+		MenuItem pasteItem = new MenuItem(menu, SWT.POP_UP);
+		pasteItem.setText("paste");
+		pasteItem.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				chatConsole.outputText.paste();
+			}
+		});
+
+		if (menu.getItemCount() > 0) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Showing popup with " + menu.getItemCount()
+						+ " items. "
+						+ chatConsole.inputText.toDisplay(e.x, e.y));
+			}
+			menu.setLocation(chatConsole.outputText.toDisplay(e.x, e.y));
+			menu.setVisible(true);
+			while (!menu.isDisposed() && menu.isVisible()) {
+				if (!chatConsole.getDisplay().readAndDispatch()) {
+					chatConsole.getDisplay().sleep();
+				}
+			}
+		}
+		menu.dispose();
+	}
+
 	protected void onInputTextRightClick(MouseEvent e) {
 		int caretPosition = 0;
 		try {
@@ -1182,8 +1236,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		addGameIdMenuItems(menu, word);
 
 		if (menu.getItemCount() > 0) {
-			LOG.debug("Showing popup with " + menu.getItemCount() + " items. "
-					+ chatConsole.inputText.toDisplay(e.x, e.y));
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Showing popup with " + menu.getItemCount()
+						+ " items. "
+						+ chatConsole.inputText.toDisplay(e.x, e.y));
+			}
 			menu.setLocation(chatConsole.inputText.toDisplay(e.x, e.y));
 			menu.setVisible(true);
 			while (!menu.isDisposed() && menu.isVisible()) {
@@ -1232,6 +1289,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (!chatConsole.isDisposed()) {
 			chatConsole.outputText
 					.removeKeyListener(consoleOutputTextKeyListener);
+			chatConsole.outputText.removeMouseListener(outputTextClickListener);
 			chatConsole.inputText
 					.removeKeyListener(consoleInputTextKeyListener);
 			chatConsole.inputText.removeMouseListener(inputTextClickListener);
