@@ -33,6 +33,14 @@ import raptor.Raptor;
  */
 public class SWTUtils {
 
+	public static final String[] OSX_MONOSPACED_FONTS = { "Monaco", "Andale",
+			"Andale Mono", "Courier" };
+	public static final String[] WINDOWS_MONOSPACED_FONTS = { "Monaco",
+			"Andale Mono", "Consolas", "Lucida Console", "Fixedsys", "Courier" };
+	public static final String[] OTHER_MONOSPACED_FONTS = { "Monospace",
+			"Monaco", "DejaVu Sans Mono", "Nimbus Mono L",
+			"WenQuanYi Zen Hei Mono", "Courier 10 Pitch", "Courier" };
+
 	/**
 	 * Centers the shell in the RaptorWindow.
 	 */

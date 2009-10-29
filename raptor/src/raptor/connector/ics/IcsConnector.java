@@ -338,7 +338,7 @@ public abstract class IcsConnector implements Connector {
 				if (LOG.isInfoEnabled()) {
 					LOG.info("In keep alive ...");
 				}
-				if ((System.currentTimeMillis() - lastSendTime) > (1000 * 60 * 50)) {
+				if (System.currentTimeMillis() - lastSendTime > 1000 * 60 * 50) {
 					sendMessage("date", true);
 					publishEvent(new ChatEvent("", ChatType.INTERNAL,
 							"The \"date\" command was just sent as a keep alive."));
