@@ -1061,6 +1061,10 @@ public class RaptorWindow extends ApplicationWindow {
 	 * -1 the label will disappear.
 	 */
 	public void setPingTime(final Connector connector, final long pingTime) {
+		if (Raptor.getInstance().isDisposed()) {
+			return;
+		}
+
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("setPingTime " + connector.getShortName() + " "
 					+ pingTime);

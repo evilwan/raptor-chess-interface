@@ -50,6 +50,7 @@ import raptor.swt.SWTUtils;
 import raptor.swt.chess.Arrow;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.swt.chess.ClockLabelUpdater;
 import raptor.swt.chess.Highlight;
 import raptor.util.RaptorStringUtils;
 
@@ -1081,6 +1082,16 @@ public class PlayingController extends ChessBoardController {
 	protected void handleAutoDraw() {
 		if (isToolItemSelected(ToolBarItemKey.AUTO_DRAW)) {
 			onAutoDraw();
+		}
+	}
+
+	@Override
+	protected void initClockUpdaters() {
+		if (whiteClockUpdater == null) {
+			whiteClockUpdater = new ClockLabelUpdater(getBoard()
+					.getWhiteClockLabel(), getBoard(), isUserWhite());
+			blackClockUpdater = new ClockLabelUpdater(getBoard()
+					.getBlackClockLabel(), getBoard(), !isUserWhite());
 		}
 	}
 

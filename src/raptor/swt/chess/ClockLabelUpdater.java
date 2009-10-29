@@ -19,17 +19,22 @@ import raptor.Raptor;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.service.SoundService;
 
-class ClockLabelUpdater implements Runnable, PreferenceKeys {
+public class ClockLabelUpdater implements Runnable, PreferenceKeys {
 	ChessBoard board;
 	CLabel clockLabel;
 	boolean isRunning;
 	long lastSystemTime = 0;
 	long remainingTimeMillis;
+	int lastCountdownPlayed = -1;
+	boolean isSpeakingCountdown;
 
-	public ClockLabelUpdater(CLabel clockLabel, ChessBoard board) {
+	public ClockLabelUpdater(CLabel clockLabel, ChessBoard board,
+			boolean isSpeakingCountdown) {
 		this.clockLabel = clockLabel;
 		this.board = board;
+		this.isSpeakingCountdown = isSpeakingCountdown;
 	}
 
 	public long calculateNextUpdate() {
@@ -76,10 +81,19 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			remainingTimeMillis -= currentTime - lastSystemTime;
 			lastSystemTime = currentTime;
 
+			if (remainingTimeMillis < 10000
+					&& isSpeakingCountdown
+					&& Raptor
+							.getInstance()
+							.getPreferences()
+							.getBoolean(
+									PreferenceKeys.BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS)) {
+				playCountdownSound(remainingTimeMillis);
+			}
+
 			clockLabel.setText(GameUtils
 					.timeToString(remainingTimeMillis, true));
 
-			// if (remainingTimeMillis > 0) {
 			// Continue running even if time has expired. This produces the
 			// flashing behavior.
 			long nextUpdate = calculateNextUpdate();
@@ -87,7 +101,6 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 				Raptor.getInstance().getDisplay().timerExec((int) nextUpdate,
 						this);
 			}
-			// }
 		}
 	}
 
@@ -111,5 +124,63 @@ class ClockLabelUpdater implements Runnable, PreferenceKeys {
 
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
+	}
+
+	protected void playCountdownSound(long currentTime) {
+		if (currentTime >= 9000 && currentTime < 10000
+				&& lastCountdownPlayed != 10) {
+			lastCountdownPlayed = 10;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 8000 && currentTime < 9000
+				&& lastCountdownPlayed != 9) {
+			lastCountdownPlayed = 9;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 7000 && currentTime < 8000
+				&& lastCountdownPlayed != 8) {
+			lastCountdownPlayed = 8;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 6000 && currentTime < 7000
+				&& lastCountdownPlayed != 7) {
+			lastCountdownPlayed = 7;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 5000 && currentTime < 6000
+				&& lastCountdownPlayed != 6) {
+			lastCountdownPlayed = 6;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 4000 && currentTime < 5000
+				&& lastCountdownPlayed != 5) {
+			lastCountdownPlayed = 5;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 3000 && currentTime < 4000
+				&& lastCountdownPlayed != 4) {
+			lastCountdownPlayed = 4;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 2000 && currentTime < 3000
+				&& lastCountdownPlayed != 3) {
+			lastCountdownPlayed = 3;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 1000 && currentTime < 2000
+				&& lastCountdownPlayed != 2) {
+			lastCountdownPlayed = 2;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime >= 0 && currentTime < 1000
+				&& lastCountdownPlayed != 1) {
+			lastCountdownPlayed = 1;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		} else if (currentTime <= 0 && lastCountdownPlayed != 0) {
+			lastCountdownPlayed = 0;
+			SoundService.getInstance().playSound(
+					"countdown" + lastCountdownPlayed);
+		}
 	}
 }
