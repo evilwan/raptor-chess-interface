@@ -618,7 +618,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						sendMessage("partner " + getSimulBugPartnerName());
 					}
 				}
-			}
+			
+				sendMessage("iset lock 1",true);
+			
+			}			
 		});
 	}
 
