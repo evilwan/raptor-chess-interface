@@ -613,47 +613,68 @@ public class InactiveController extends ChessBoardController implements
 		long blackTime = 0;
 
 		int inc = 0;
-		String timeControl = getGame().getHeader(PgnHeader.TimeControl);
-		if (StringUtils.isNotBlank(timeControl)) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(timeControl,
-					"+ ", true);
-			try {
-				whiteTime = blackTime = Integer.parseInt(tok.nextToken()) * 1000;
-				if (tok.hasMoreTokens()) {
-					inc = Integer.parseInt(tok.nextToken()) * 1000;
-				}
-			} catch (NumberFormatException nfe) {
-				LOG
-						.error(
-								"Error obtaining initial clock times. This could hvae been because of an invalid TimeControl pgn header.",
-								nfe);
-			}
 
-			MoveList moveList = cursor.getCursorGame().getMoveList();
-			for (int i = 0; i < moveList.getSize(); i++) {
-				Move move = moveList.get(i);
-				if (move.isWhitesMove()) {
-					TimeTakenForMove[] annotations = move.getTimeTakenForMove();
-					if (annotations != null && annotations.length != 0) {
-						whiteTime -= annotations[0].getMilliseconds();
-						if (inc != 0) {
-							whiteTime += inc;
-						}
-					} else {
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("No time found for move " + move);
-						}
+		System.err.println("Game lengths " + cursor.getCursorPosition() + " "
+				+ cursor.getMasterGameLength());
+		if (cursor.getCursorPosition() == cursor.getMasterGameLength()
+				&& StringUtils.isNotBlank(getGame().getHeader(
+						PgnHeader.WhiteRemainingMillis))
+				&& StringUtils.isNotBlank(getGame().getHeader(
+						PgnHeader.BlackRemainingMillis))) {
+
+			whiteTime = Long.parseLong(getGame().getHeader(
+					PgnHeader.WhiteRemainingMillis));
+			blackTime = Long.parseLong(getGame().getHeader(
+					PgnHeader.BlackRemainingMillis));
+		} else {
+			String timeControl = getGame().getHeader(PgnHeader.TimeControl);
+			if (StringUtils.isNotBlank(timeControl)) {
+				RaptorStringTokenizer tok = new RaptorStringTokenizer(
+						timeControl, "+ ", true);
+				try {
+					whiteTime = blackTime = Integer.parseInt(tok.nextToken()) * 1000;
+
+					if (whiteTime == 0) {
+						whiteTime = blackTime = 10000;
 					}
-				} else {
-					TimeTakenForMove[] annotations = move.getTimeTakenForMove();
-					if (annotations != null && annotations.length != 0) {
-						blackTime -= annotations[0].getMilliseconds();
-						if (inc != 0) {
-							blackTime += inc;
+					if (tok.hasMoreTokens()) {
+						inc = Integer.parseInt(tok.nextToken()) * 1000;
+					}
+				} catch (NumberFormatException nfe) {
+					LOG
+							.error(
+									"Error obtaining initial clock times. This could hvae been because of an invalid TimeControl pgn header.",
+									nfe);
+				}
+
+				MoveList moveList = cursor.getCursorGame().getMoveList();
+				for (int i = 0; i < moveList.getSize(); i++) {
+					Move move = moveList.get(i);
+					if (move.isWhitesMove()) {
+						TimeTakenForMove[] annotations = move
+								.getTimeTakenForMove();
+						if (annotations != null && annotations.length != 0) {
+							whiteTime -= annotations[0].getMilliseconds();
+							if (inc != 0) {
+								whiteTime += inc;
+							}
+						} else {
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("No time found for move " + move);
+							}
 						}
 					} else {
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("No time found for move " + move);
+						TimeTakenForMove[] annotations = move
+								.getTimeTakenForMove();
+						if (annotations != null && annotations.length != 0) {
+							blackTime -= annotations[0].getMilliseconds();
+							if (inc != 0) {
+								blackTime += inc;
+							}
+						} else {
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("No time found for move " + move);
+							}
 						}
 					}
 				}
