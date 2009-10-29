@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -47,7 +48,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 	protected Composite buttonComposite;
 	protected ChatConsoleController controller;
 	protected StyledText inputText;
-	protected StyledText outputText;
+	protected Text outputText;
 	protected Label promptLabel;
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -105,10 +106,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		promptLabel = new Label(southControlsComposite, SWT.NONE);
 		promptLabel.setText(controller.getPrompt());
 
-		outputText = new RaptorStyledText(southControlsComposite, SWT.SINGLE
-				| SWT.BORDER) {
-
-		};
+		outputText = new Text(southControlsComposite, SWT.SINGLE | SWT.BORDER);
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		buttonComposite = new Composite(southControlsComposite, SWT.NONE);
@@ -134,7 +132,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		return inputText;
 	}
 
-	public StyledText getOutputText() {
+	public Text getOutputText() {
 		return outputText;
 	}
 
