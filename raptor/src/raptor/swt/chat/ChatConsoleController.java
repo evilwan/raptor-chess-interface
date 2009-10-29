@@ -123,19 +123,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
-			if (scrollbar != null
-					&& scrollbar.isVisible()
-					&& getPreferences().getBoolean(
-							PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED)) {
-
-				if (scrollbar.getMaximum() == scrollbar.getSelection()
-						+ scrollbar.getThumb()) {
-					setAutoScrolling(true);
-				} else {
-					setAutoScrolling(false);
-				}
-			}
+			smartScroll();
 		}
 
 	};
@@ -146,6 +134,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			processKeystroke(event);
 		}
 	};
+
 	protected KeyListener consoleOutputTextKeyListener = new KeyAdapter() {
 
 		@Override
@@ -179,7 +168,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected boolean isAutoScrolling = true;
 	protected List<ItemChangedListener> itemChangedListeners = new ArrayList<ItemChangedListener>(
 			5);
-
 	protected List<String> sentText = new ArrayList<String>(50);
 
 	protected int sentTextIndex = 0;
@@ -647,6 +635,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				action.run();
 
 			}
+		} else if (event.keyCode == SWT.PAGE_DOWN
+				|| event.keyCode == SWT.PAGE_UP) {
+			smartScroll();
 		} else if (event.keyCode == SWT.ARROW_UP) {
 			if (sentTextIndex >= 0) {
 				if (sentTextIndex > 0) {
@@ -684,6 +675,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				});
 			}
+		} else if (event.stateMask != 0) {
+			// eat it.
+			// This prevents control c, control v from getting forwarded.
 		} else if (!isConsoleOutputText && event.character == '\b') {
 			if (chatConsole.outputText.getCharCount() > 0) {
 				chatConsole.outputText.setText(chatConsole.outputText.getText()
@@ -1250,6 +1244,22 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (!isIgnoringActions()) {
 			getChatConsole().getOutputText().setCaretOffset(
 					getChatConsole().getOutputText().getCharCount());
+		}
+	}
+
+	protected void smartScroll() {
+		ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
+		if (scrollbar != null
+				&& scrollbar.isVisible()
+				&& getPreferences().getBoolean(
+						PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED)) {
+
+			if (scrollbar.getMaximum() == scrollbar.getSelection()
+					+ scrollbar.getThumb()) {
+				setAutoScrolling(true);
+			} else {
+				setAutoScrolling(false);
+			}
 		}
 	}
 
