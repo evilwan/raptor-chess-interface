@@ -1319,7 +1319,14 @@ public abstract class IcsConnector implements Connector {
 	 * message will always use \n as the line delimiter.
 	 */
 	protected void parseMessage(String message) {
-		ChatEvent[] events = context.getParser().parse(message);
+		ChatEvent[] events = null;
+		try {
+			events = context.getParser().parse(message);
+		} catch (RuntimeException re) {
+			throw new RuntimeException("Error occured parsing message: "
+					+ message, re);
+		}
+
 		for (ChatEvent event : events) {
 			event.setMessage(IcsUtils
 					.maciejgFormatToUnicode(event.getMessage()));
