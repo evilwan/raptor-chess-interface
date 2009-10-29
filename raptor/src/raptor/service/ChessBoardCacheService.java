@@ -107,6 +107,7 @@ public class ChessBoardCacheService {
 								board.getControl().setLayoutDeferred(true);
 								board.getControl().setParent(composite);
 								board.hideMoveList();
+								board.getResultDecorator().setDecoration(null);
 								board.getMoveList().clear();
 								chessBoardCache.add(0, board);
 							}
