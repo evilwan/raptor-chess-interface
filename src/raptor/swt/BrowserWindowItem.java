@@ -55,16 +55,6 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	protected String url;
 	private String storedHtml = null;
 
-	public String getHTML() {
-		return storedHtml;
-	}
-
-	public void setHTML(String html) {
-		this.storedHtml = html;
-		if (browser != null)
-			browser.setText(html);
-	}
-
 	public BrowserWindowItem(String url) {
 		this.url = url;
 	}
@@ -113,6 +103,10 @@ public class BrowserWindowItem implements RaptorWindowItem {
 
 	public Composite getControl() {
 		return composite;
+	}
+
+	public String getHTML() {
+		return storedHtml;
 	}
 
 	public Image getImage() {
@@ -264,6 +258,13 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
+	}
+
+	public void setHTML(String html) {
+		storedHtml = html;
+		if (browser != null) {
+			browser.setText(html);
+		}
 	}
 
 	public void setUrl(String url) {

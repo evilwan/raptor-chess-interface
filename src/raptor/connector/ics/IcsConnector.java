@@ -862,6 +862,11 @@ public abstract class IcsConnector implements Connector {
 	public void sendMessage(String message, boolean isHidingFromUser,
 			ChatType hideNextChatType) {
 		if (isConnected()) {
+
+			if (vetoMessage(message)) {
+				return;
+			}
+
 			StringBuilder builder = new StringBuilder(message);
 			IcsUtils.filterOutbound(builder);
 
@@ -1472,6 +1477,16 @@ public abstract class IcsConnector implements Connector {
 
 	protected void setUserFollowing(String userFollowing) {
 		this.userFollowing = userFollowing;
+	}
+
+	protected boolean vetoMessage(String message) {
+		boolean result = false;
+		if (message.startsWith("set ptime")) {
+			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
+					"Raptor will not work with ptime set. Command vetoed."));
+			return true;
+		}
+		return result;
 	}
 
 	private void setBughouseService(BughouseService bughouseService) {

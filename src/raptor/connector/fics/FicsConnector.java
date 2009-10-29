@@ -592,6 +592,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						+ getPreferences().getString(APP_NAME));
 				sendMessage("set style 12", true);
 				sendMessage("set bell 0", true);
+				sendMessage("set ptime 0", true);
 
 				String loginScript = getPreferences().getString(
 						FICS_LOGIN_SCRIPT);
@@ -618,10 +619,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						sendMessage("partner " + getSimulBugPartnerName());
 					}
 				}
-			
-				sendMessage("iset lock 1",true);
-			
-			}			
+
+				sendMessage("iset lock 1", true);
+			}
 		});
 	}
 
