@@ -1508,28 +1508,33 @@ public class RaptorWindow extends ApplicationWindow {
 			public void run() {
 				byte[] arr = readErrorLog();
 				String html = new String(arr);
-				html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n" + html + "</pre>\n</body>\n</html>\n";
+				html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
+						+ html + "</pre>\n</body>\n</html>\n";
 				BrowserUtils.openHtml(html);
 			}
 		});
-		
+
 		menuBar.add(helpMenu);
 		return menuBar;
 	}
 
 	private byte[] readErrorLog() {
+		File f = null;
 		try {
-		File f = new File(Raptor.USER_RAPTOR_HOME_PATH + "/logs/error.log");
-		
-		FileInputStream s = new FileInputStream(f);
-		byte[] bytes = new byte[s.available()];
-		s.read(bytes);
-		
-		return bytes;
-		} catch(IOException e) { e.printStackTrace(System.err); }
+			f = new File(Raptor.USER_RAPTOR_HOME_PATH + "/logs/error.log");
+
+			FileInputStream s = new FileInputStream(f);
+			byte[] bytes = new byte[s.available()];
+			s.read(bytes);
+
+			return bytes;
+		} catch (IOException e) {
+			Raptor.getInstance().onError(
+					"Error reading file: " + f.getAbsolutePath(), e);
+		}
 		return new byte[0];
 	}
-	
+
 	/**
 	 * Creates the sash hierarchy.
 	 */

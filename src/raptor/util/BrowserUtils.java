@@ -30,30 +30,27 @@ public class BrowserUtils {
 	private static final Log LOG = LogFactory.getLog(BrowserUtils.class);
 
 	/**
-     * This checks the users preferences and opens the browser either internally
-     * or externally depending on how its set. It will also check to see if a
-     * browser is currently in use. If it is it will use that browser to display
-     * the url.
-     */
-    public static void openHtml(String html) {
-        if (!StringUtils.isNotBlank(html)) return; // is blank
-        
-                BrowserWindowItem item = Raptor.getInstance().getWindow()
-                        .getBrowserWindowItem();
-                if (item == null) {
-                	 //YOUR NEW CONSTRUCTOR GOES HERE
-                	Raptor.getInstance().getWindow().addRaptorWindowItem( 
-                			new BrowserWindowItem(html,true)
-                		);
-                } else {
-                	//YOUR NEW item.setHtml method goes here.
-                	//item.setDisplayName(title);
-                	item.setHTML(html);
-                	
-                    Raptor.getInstance().getWindow().forceFocus(item);
-                }
-    }
-	
+	 * This checks the users preferences and opens the browser either internally
+	 * or externally depending on how its set. It will also check to see if a
+	 * browser is currently in use. If it is it will use that browser to display
+	 * the url.
+	 */
+	public static void openHtml(String html) {
+		if (!StringUtils.isNotBlank(html))
+			return; // is blank
+
+		BrowserWindowItem item = Raptor.getInstance().getWindow()
+				.getBrowserWindowItem();
+		if (item == null) {
+			Raptor.getInstance().getWindow().addRaptorWindowItem(
+					new BrowserWindowItem(html, true));
+		} else {
+			item.setHTML(html);
+
+			Raptor.getInstance().getWindow().forceFocus(item);
+		}
+	}
+
 	/**
 	 * Opens the link in an external browser. Code taken from: Bare Bones
 	 * Browser Launch Version 1.5 (December 10, 2005) By Dem Pilafian Supports:
