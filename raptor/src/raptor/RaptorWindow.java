@@ -1518,23 +1518,6 @@ public class RaptorWindow extends ApplicationWindow {
 		return menuBar;
 	}
 
-	private byte[] readErrorLog() {
-		File f = null;
-		try {
-			f = new File(Raptor.USER_RAPTOR_HOME_PATH + "/logs/error.log");
-
-			FileInputStream s = new FileInputStream(f);
-			byte[] bytes = new byte[s.available()];
-			s.read(bytes);
-
-			return bytes;
-		} catch (IOException e) {
-			Raptor.getInstance().onError(
-					"Error reading file: " + f.getAbsolutePath(), e);
-		}
-		return new byte[0];
-	}
-
 	/**
 	 * Creates the sash hierarchy.
 	 */
@@ -1947,5 +1930,22 @@ public class RaptorWindow extends ApplicationWindow {
 	protected void storeBounds() {
 		getPreferences().setCurrentLayoutRectangle(
 				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
+	}
+
+	private byte[] readErrorLog() {
+		File f = null;
+		try {
+			f = new File(Raptor.USER_RAPTOR_HOME_PATH + "/logs/error.log");
+
+			FileInputStream s = new FileInputStream(f);
+			byte[] bytes = new byte[s.available()];
+			s.read(bytes);
+
+			return bytes;
+		} catch (IOException e) {
+			Raptor.getInstance().onError(
+					"Error reading file: " + f.getAbsolutePath(), e);
+		}
+		return new byte[0];
 	}
 }
