@@ -67,7 +67,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	protected Listener dndListener = new Listener() {
 		public void handleEvent(Event e) {
 			switch (e.type) {
-			case SWT.DragDetect: {
+			case SWT.MouseDown: {
 				if (board.getController().canUserInitiateMoveFrom(id)) {
 					board.getControl()
 							.setData(DRAG_INITIATOR, ChessSquare.this);
@@ -252,7 +252,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		addPaintListener(paintListener);
 		addControlListener(controlListener);
 		addMouseListener(mouseListener);
-		addListener(SWT.DragDetect, dndListener);
+		addListener(SWT.MouseDown, dndListener);
 		addListener(SWT.MouseUp, dndListener);
 
 	}
