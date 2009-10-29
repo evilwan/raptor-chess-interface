@@ -308,7 +308,7 @@ public abstract class ChessBoardController implements BoardConstants,
 
 	/**
 	 * Returns true if the specified tool item is selected. Returns false if the
-	 * tool item is noexistant or not selected.
+	 * tool item is does not exist or not selected.
 	 * 
 	 * @param key
 	 *            They tool items key.
@@ -869,9 +869,9 @@ public abstract class ChessBoardController implements BoardConstants,
 	protected void initClockUpdaters() {
 		if (whiteClockUpdater == null) {
 			whiteClockUpdater = new ClockLabelUpdater(board.whiteClockLabel,
-					board);
+					board, false);
 			blackClockUpdater = new ClockLabelUpdater(board.blackClockLabel,
-					board);
+					board, false);
 		}
 	}
 
