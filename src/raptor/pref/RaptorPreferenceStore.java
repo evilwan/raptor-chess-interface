@@ -41,6 +41,7 @@ import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.swt.BugPartnersWindowItem;
+import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
 import raptor.util.RaptorStringUtils;
 
@@ -182,6 +183,36 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		return RaptorStringUtils.stringArrayFromString(getDefaultString(key));
 	}
 
+	public String getDefauultMonospacedFont() {
+		FontData[] fonts = Raptor.getInstance().getDisplay().getFontList(null,
+				true);
+		String[] preferredFontNames = null;
+
+		String osName = System.getProperty("os.name");
+		if (osName.startsWith("Mac OS")) {
+			preferredFontNames = SWTUtils.OSX_MONOSPACED_FONTS;
+		} else if (osName.startsWith("Windows")) {
+			preferredFontNames = SWTUtils.WINDOWS_MONOSPACED_FONTS;
+		} else {
+			preferredFontNames = SWTUtils.OTHER_MONOSPACED_FONTS;
+		}
+
+		String result = null;
+		outer: for (int i = 0; i < preferredFontNames.length; i++) {
+			for (FontData fontData : fonts) {
+				if (fontData.getName().equalsIgnoreCase(preferredFontNames[i])) {
+					result = preferredFontNames[i];
+					break outer;
+				}
+			}
+		}
+		if (result == null) {
+			result = "Courier";
+		}
+
+		return result;
+	}
+
 	/**
 	 * Returns the font for the specified key. Returns the default font if key
 	 * was not found.
@@ -224,7 +255,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	public void loadDefaults() {
 		String defaultFontName = Raptor.getInstance().getFontRegistry()
 				.defaultFont().getFontData()[0].getName();
-		String defaultMonospacedFontName = "Courier";
+		String defaultMonospacedFontName = getDefauultMonospacedFont();
 
 		// Action
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 200);

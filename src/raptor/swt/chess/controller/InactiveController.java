@@ -614,8 +614,6 @@ public class InactiveController extends ChessBoardController implements
 
 		int inc = 0;
 
-		System.err.println("Game lengths " + cursor.getCursorPosition() + " "
-				+ cursor.getMasterGameLength());
 		if (cursor.getCursorPosition() == cursor.getMasterGameLength()
 				&& StringUtils.isNotBlank(getGame().getHeader(
 						PgnHeader.WhiteRemainingMillis))
