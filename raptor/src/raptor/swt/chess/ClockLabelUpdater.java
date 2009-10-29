@@ -38,12 +38,11 @@ public class ClockLabelUpdater implements Runnable, PreferenceKeys {
 	}
 
 	public long calculateNextUpdate() {
-		// The previous approach of trying to update at less frequent time
-		// controls depending
-		// on how the clock is setup didnt work so well.
+		// The previous approach of trying to update at less frequent intervals
+		// depending on how the clock is setup didnt work so well.
 
-		// For now make a check every 100 milliseconds if not in showing tenths
-		// and do it every 50 if showing tenths.
+		// For now make a check every 100 milliseconds if showing tenths then
+		// every 50 ms.
 		long result = 0L;
 		if (remainingTimeMillis < 0) {
 			// Just update every 100L to get the flashing behavior.

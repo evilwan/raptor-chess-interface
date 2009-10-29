@@ -57,6 +57,19 @@ public class SoughtParser {
 				RaptorStringTokenizer tok = new RaptorStringTokenizer(line,
 						" -[]", true);
 				seek.setAd(tok.nextToken());
+
+				// Sought messages are tricky to parse since they can't be
+				// identified clearly with a starting message.
+				// Check to make sure the first row starts with an integer, if
+				// it does'nt its not a sought message.
+				if (i == 0) {
+					try {
+						Integer.parseInt(seek.getAd());
+					} catch (NumberFormatException nfe) {
+						return null;
+					}
+				}
+
 				seek.setRating(tok.nextToken());
 				if (seek.getRating().equals("****")) {
 					seek.setRating("----");
