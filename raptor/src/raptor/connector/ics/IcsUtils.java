@@ -459,6 +459,24 @@ public class IcsUtils implements GameConstants {
 							int channel = Integer.parseInt(current);
 							return channel >= 0 && channel <= 255;
 						} catch (NumberFormatException nfe2) {
+							if (tok.hasMoreTokens()) {
+								try {
+									current = tok.nextToken();
+									int channel = Integer.parseInt(current);
+									return channel >= 0 && channel <= 255;
+								} catch (NumberFormatException nfe3) {
+									if (tok.hasMoreTokens()) {
+										try {
+											current = tok.nextToken();
+											int channel = Integer
+													.parseInt(current);
+											return channel >= 0
+													&& channel <= 255;
+										} catch (NumberFormatException nfe4) {
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -571,6 +589,27 @@ public class IcsUtils implements GameConstants {
 								return "" + channel;
 							}
 						} catch (NumberFormatException nfe2) {
+							if (tok.hasMoreTokens()) {
+								try {
+									current = tok.nextToken();
+									int channel = Integer.parseInt(current);
+									if (channel >= 0 && channel <= 255) {
+										return "" + channel;
+									}
+								} catch (NumberFormatException nfe3) {
+									if (tok.hasMoreTokens()) {
+										try {
+											current = tok.nextToken();
+											int channel = Integer
+													.parseInt(current);
+											if (channel >= 0 && channel <= 255) {
+												return "" + channel;
+											}
+										} catch (NumberFormatException nfe4) {
+										}
+									}
+								}
+							}
 						}
 					}
 				}
