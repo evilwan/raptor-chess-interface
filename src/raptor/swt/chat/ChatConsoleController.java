@@ -816,7 +816,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void addCommandMenuItems(Menu menu, final String message) {
-		if (message.length() <= 200) {
+		if (message != null && message.length() <= 200) {
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
