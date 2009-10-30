@@ -515,6 +515,10 @@ public class IcsUtils implements GameConstants {
 		}
 	}
 
+	protected void replaceMaciejgUnicodeWithUnicode() {
+
+	}
+
 	/**
 	 * Maciejg format, named after him because of his finger notes. Unicode
 	 * chars are represented as &#x3b1; &#x3b2; &#x3b3; &#x3b4; &#x3b5; &#x3b6;
@@ -525,17 +529,22 @@ public class IcsUtils implements GameConstants {
 		int unicodePrefix = 0;
 		while ((unicodePrefix = builder.indexOf("&#x", unicodePrefix)) != -1) {
 			int endIndex = builder.indexOf(";", unicodePrefix);
-			if (endIndex != -1 && endIndex - unicodePrefix <= 8) {
-				String unicodeHex = builder.substring(unicodePrefix + 3,
-						endIndex).toUpperCase();
+			if (endIndex == -1) {
+				break;
+			}
+			String maciejgWord = builder.substring(unicodePrefix + 3, endIndex);
+			maciejgWord = StringUtils.replaceChars(maciejgWord, " \\\n", "")
+					.toUpperCase();
+			if (maciejgWord.length() <= 5) {
 				try {
-					int intValue = Integer.parseInt(unicodeHex, 16);
-					String replacement = new String(
-							new char[] { (char) intValue });
-					builder.replace(unicodePrefix, endIndex + 1, replacement);
+					int intValue = Integer.parseInt(maciejgWord, 16);
+					String unicode = new String(new char[] { (char) intValue });
+					builder.replace(unicodePrefix, endIndex + 1, unicode);
 				} catch (NumberFormatException nfe) {
-					unicodePrefix = endIndex;
+					unicodePrefix = endIndex + 1;
 				}
+			} else {
+				unicodePrefix = endIndex + 1;
 			}
 		}
 		return builder.toString();

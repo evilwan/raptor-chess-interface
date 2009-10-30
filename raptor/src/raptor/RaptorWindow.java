@@ -1323,6 +1323,17 @@ public class RaptorWindow extends ApplicationWindow {
 				dialog.open();
 			}
 		});
+		
+		String osName = System.getProperty("os.name");
+		if (!osName.startsWith("Mac OS")) {
+			fileMenu.add(new Separator());
+			fileMenu.add(new Action("Quit Raptor") {
+				@Override
+				public void run() {
+					Raptor.getInstance().shutdown();
+				}
+			});
+		}
 		// Please leave these commented out. It is useful to enable for testing.
 		// fileMenu.add(new Action("Create Test Board") {
 		// @Override
@@ -1503,10 +1514,25 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
+		helpMenu.add(new Action("&BSD New Liscense") {
+			@Override
+			public void run() {
+				byte[] arr = readFile("bsd-new-license.txt");
+				BrowserUtils.openHtml(new String(arr));;
+			}
+		});
+		helpMenu.add(new Action("&Third Party Content") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/ThirdPartyContent");
+
+			}
+		});
 		helpMenu.add(new Action("&Show Error Log") {
 			@Override
 			public void run() {
-				byte[] arr = readErrorLog();
+				byte[] arr = readFile(Raptor.USER_RAPTOR_HOME_PATH + "/logs/error.log");
 				String html = new String(arr);
 				html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
 						+ html + "</pre>\n</body>\n</html>\n";
@@ -1931,11 +1957,11 @@ public class RaptorWindow extends ApplicationWindow {
 		getPreferences().setCurrentLayoutRectangle(
 				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
 	}
-
-	private byte[] readErrorLog() {
+	
+	protected byte[] readFile(String fileName) {
 		File f = null;
 		try {
-			f = new File(Raptor.USER_RAPTOR_HOME_PATH + "/logs/error.log");
+			f = new File(fileName);
 
 			FileInputStream s = new FileInputStream(f);
 			byte[] bytes = new byte[s.available()];
