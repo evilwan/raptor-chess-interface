@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="84.947739"
+   id="svg1"
+   inkscape:version="0.46"
+   sodipodi:docbase="/home/vector"
+   sodipodi:docname="chess_set_symbols_02_white_king.svg"
+   sodipodi:version="0.32"
+   width="78.234558"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   version="1.0"
+   inkscape:export-filename="C:\joanna\Gfx\drawings_vector\admin\thumbs\Igor Krizanovskij\chess_set_symbols_igor_k_01_ok.png"
+   inkscape:export-xdpi="51.457458"
+   inkscape:export-ydpi="51.457458">
+  <metadata
+     id="metadata3">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:title>Chess Set Symbols</dc:title>
+        <dc:description />
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li />
+            <rdf:li>game</rdf:li>
+            <rdf:li>chess</rdf:li>
+            <rdf:li>symbols</rdf:li>
+            <rdf:li>board</rdf:li>
+            <rdf:li>recreation</rdf:li>
+            <rdf:li>fonts</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:publisher>
+          <cc:Agent
+             rdf:about="http://www.openclipart.org">
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Igor Krizanovskij</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:date />
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:language>en</dc:language>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs3">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 187.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="1052.3622 : 187.5 : 1"
+       inkscape:persp3d-origin="526.18109 : 125 : 1"
+       id="perspective20" />
+  </defs>
+  <sodipodi:namedview
+     bordercolor="#666666"
+     borderopacity="1.0"
+     id="base"
+     inkscape:current-layer="layer1"
+     inkscape:cx="408.97908"
+     inkscape:cy="239.13405"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:window-height="778"
+     inkscape:window-width="1270"
+     inkscape:window-x="2"
+     inkscape:window-y="0"
+     inkscape:zoom="1.3674339"
+     pagecolor="#ffffff"
+     showgrid="false" />
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1"
+     transform="translate(-70.539484,-214.20189)">
+    <path
+       d="M 109.65676,299.14963 C 92.52951,299.14963 83.836778,296.26642 83.578582,290.49994 C 83.148243,282.58182 81.81421,276.60019 79.576484,272.55505 C 78.629754,270.91979 77.295721,268.94026 75.574385,266.61646 C 72.648124,262.74347 71.012859,259.47294 70.668592,256.80487 C 70.582521,256.11634 70.539484,255.38476 70.539484,254.61016 C 70.539484,249.18798 72.820247,244.92769 77.381772,241.82928 C 78.500646,241.14074 79.662535,240.58131 80.867481,240.15098 C 85.429005,238.51571 89.947495,238.77391 94.422969,240.92559 C 96.058229,241.70017 97.693493,242.73297 99.328757,244.02397 L 99.457867,244.15308 C 99.457867,242.34567 99.54392,240.40918 99.716067,238.3436 C 99.716067,237.74111 100.01729,236.92349 100.61976,235.89068 C 101.99683,233.65296 103.63209,231.88858 105.52555,230.59759 C 105.86981,230.42545 106.21408,230.21028 106.55835,229.95209 L 106.55835,226.85369 L 101.26526,223.7553 L 101.26526,219.10771 L 106.04196,219.10771 L 107.72026,214.20189 L 111.59325,214.20189 L 113.27155,219.10771 L 118.04825,219.10771 L 118.04825,223.7553 L 112.75516,226.85369 L 112.75516,229.95209 C 117.23062,232.79228 119.51138,235.63248 119.59744,238.47268 C 119.76957,240.19401 119.85564,242.08748 119.85564,244.15308 L 119.98475,244.02397 C 125.40694,239.46244 131.08734,237.99932 137.02593,239.63459 C 138.57514,240.0649 140.03827,240.7104 141.41533,241.57109 C 146.23505,244.49734 148.68796,248.84371 148.77404,254.61016 C 148.77404,258.05284 147.0527,262.141 143.61003,266.87465 C 140.76983,270.83371 139.00547,273.71696 138.31693,275.52435 C 136.85382,279.39733 135.99313,284.3892 135.73494,290.49994 C 135.56282,296.26642 126.87008,299.14963 109.65676,299.14963 M 109.65676,255.64296 L 113.40066,249.70437 C 114.00313,248.41337 114.47648,247.20844 114.82074,246.08957 C 114.99289,245.48711 115.07896,244.23915 115.07896,242.34567 C 115.07896,237.26776 113.31459,234.72877 109.78584,234.72877 C 106.08499,234.72877 104.23455,237.26776 104.23455,242.34567 C 104.23455,244.23915 104.32062,245.48711 104.49275,246.08957 C 105.18128,248.41337 106.64442,251.16751 108.88215,254.35196 C 109.39856,254.95443 109.65676,255.38476 109.65676,255.64296 M 144.12644,255.38476 C 144.12644,251.51177 142.83545,248.54248 140.25342,246.47688 C 138.10177,244.66947 135.56282,243.76578 132.63653,243.76578 C 128.93569,243.76578 124.93358,245.65923 120.63025,249.44617 C 115.55232,253.83557 112.66909,259.77417 111.98055,267.26196 C 111.98055,267.86442 113.57278,268.55295 116.75724,269.32756 C 120.45811,270.0161 126.74097,270.36036 135.60583,270.36036 L 141.41533,262.61436 C 143.22273,259.86024 144.12644,257.45037 144.12644,255.38476 M 109.65676,272.81325 C 107.50508,273.76 100.96402,274.57762 90.033567,275.26615 C 88.398303,275.35223 87.064269,275.43828 86.031468,275.52435 C 86.892147,278.79488 87.451574,282.40967 87.709769,286.36874 C 93.648362,284.47527 100.96402,283.52855 109.65676,283.52855 C 118.52161,283.52855 125.83728,284.47527 131.60375,286.36874 C 131.86195,282.06541 132.42138,278.45061 133.28205,275.52435 L 114.17524,273.97515 C 112.53998,273.71696 111.03382,273.32966 109.65676,272.81325 M 75.187082,255.38476 C 75.187082,258.05284 77.295721,262.09797 81.512979,267.52015 C 82.54578,268.81115 83.277351,269.7579 83.70767,270.36036 L 86.031468,270.36036 C 94.896328,270.36036 101.35133,269.7579 105.39646,268.55295 C 106.68746,268.20869 107.33296,267.77837 107.33296,267.26196 C 106.64442,259.77417 103.76119,253.83557 98.683267,249.44617 C 94.466005,245.65923 90.463907,243.76578 86.676966,243.76578 C 85.472042,243.76578 84.181044,244.02397 82.803975,244.54038 C 79.361303,245.40104 77.037505,247.6818 75.83258,251.38267 L 75.187082,254.86837 L 75.187082,255.38476 M 109.65676,294.50204 C 117.74701,294.50204 123.34136,293.98563 126.43975,292.95285 C 127.21435,292.69463 127.60165,292.3934 127.60165,292.04913 C 127.60165,289.8114 121.66306,288.69254 109.78584,288.69254 C 105.22432,288.69254 100.7919,288.99379 96.488576,289.59625 C 93.304095,290.11264 91.711868,290.93028 91.711868,292.04913 C 91.711868,293.34013 96.789803,294.15778 106.94566,294.50204 C 107.97846,294.50204 108.88215,294.50204 109.65676,294.50204"
+       id="path1721"
+       style="font-size:12px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1pt;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans" />
+  </g>
+</svg>
