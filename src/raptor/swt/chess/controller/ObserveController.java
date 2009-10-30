@@ -277,6 +277,7 @@ public class ObserveController extends ChessBoardController {
 
 			setToolItemSelected(ToolBarItemKey.FORCE_UPDATE, true);
 			enableDisableNavButtons();
+			toolbar.pack();
 		} else {
 			toolbar.setParent(parent);
 		}
