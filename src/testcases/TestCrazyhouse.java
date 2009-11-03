@@ -100,4 +100,37 @@ public class TestCrazyhouse implements GameConstants {
 		game.makeSanMove("Qxg1+");
 		game.makeSanMove("Kxg1");
 	}
+
+	@Test
+	public void testTanBug() {
+		String[] moves = { "Nf3", "d5", "e3", "c5", "c3", "Nc6", "Be2", "Bf5",
+				"d3", "Nf6", "O-O", "e6", "Bd2", "Bd6", "Na3", "a6", "c4",
+				"O-O", "b4", "Nxb4", "Bxb4", "cxb4", "Nc2", "a5", "Nfd4",
+				"Bg6", "Nb5", "Be5", "d4", "Bc7", "c5", "Rc8", "Ne1", "Qd7",
+				"a4", "Rfe8", "Nf3", "Ne4", "Bd3", "f5", "Bxe4", "fxe4",
+				"Nxc7", "exf3", "Nxe8", "fxg2", "Re1", "Rxe8", "Qg4", "Qf7",
+				"f4", "Be4", "Rac1", "Rc8", "Re2", "b6", "c6", "b5", "axb5" };
+
+		Game game = GameFactory.createStartingPosition(Variant.crazyhouse);
+		game.addState(Game.UPDATING_SAN_STATE);
+		for (int i = 0; i < moves.length; i++) {
+			game.getLegalMoves();
+			game.makeSanMove(moves[i]);
+		}
+		// System.err.println("AFTER d5 \n" +
+		// GameUtils.getString(game.getOccupiedBB()));
+		// game.getLegalMoves();
+		// System.err.println("AFTER getlegals \n" +
+		// GameUtils.getString(game.getOccupiedBB()));
+		// //System.err.println(game);
+		// game.makeSanMove("fxe4");
+		// System.err.println("AFTER fxe4 \n" +
+		// GameUtils.getString(game.getOccupiedBB()));
+		// System.err.println(game);
+
+		// game.makeSanMove("fxe4");
+
+		// game.getLegalMoves();
+		// System.err.println(game);
+	}
 }

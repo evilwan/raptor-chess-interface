@@ -163,7 +163,7 @@ public class BugButtonsWindowItem implements RaptorWindowItem {
 	protected void addButtons(RaptorAction[] actions) {
 
 		for (final RaptorAction action : actions) {
-			Button button = new Button(composite, SWT.FLAT);
+			Button button = new Button(composite, SWT.FLAT | SWT.NO_FOCUS);
 			button.setText(action.getName());
 			button.setToolTipText(action.getDescription());
 			button.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));

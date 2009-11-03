@@ -1323,7 +1323,7 @@ public class RaptorWindow extends ApplicationWindow {
 				dialog.open();
 			}
 		});
-		
+
 		String osName = System.getProperty("os.name");
 		if (!osName.startsWith("Mac OS")) {
 			fileMenu.add(new Separator());
@@ -1518,7 +1518,8 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void run() {
 				byte[] arr = readFile("bsd-new-license.txt");
-				BrowserUtils.openHtml(new String(arr));;
+				BrowserUtils.openHtml(new String(arr));
+				;
 			}
 		});
 		helpMenu.add(new Action("&Third Party Content") {
@@ -1532,7 +1533,8 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(new Action("&Show Error Log") {
 			@Override
 			public void run() {
-				byte[] arr = readFile(Raptor.USER_RAPTOR_HOME_PATH + "/logs/error.log");
+				byte[] arr = readFile(Raptor.USER_RAPTOR_HOME_PATH
+						+ "/logs/error.log");
 				String html = new String(arr);
 				html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
 						+ html + "</pre>\n</body>\n</html>\n";
@@ -1918,6 +1920,23 @@ public class RaptorWindow extends ApplicationWindow {
 		getShell().setLocation(screenBounds.x, screenBounds.y);
 	}
 
+	protected byte[] readFile(String fileName) {
+		File f = null;
+		try {
+			f = new File(fileName);
+
+			FileInputStream s = new FileInputStream(f);
+			byte[] bytes = new byte[s.available()];
+			s.read(bytes);
+
+			return bytes;
+		} catch (IOException e) {
+			Raptor.getInstance().onError(
+					"Error reading file: " + f.getAbsolutePath(), e);
+		}
+		return new byte[0];
+	}
+
 	/**
 	 * Restores the window to a non maximized state. If a Quadrant contains no
 	 * items, it is not visible.
@@ -1956,22 +1975,5 @@ public class RaptorWindow extends ApplicationWindow {
 	protected void storeBounds() {
 		getPreferences().setCurrentLayoutRectangle(
 				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
-	}
-	
-	protected byte[] readFile(String fileName) {
-		File f = null;
-		try {
-			f = new File(fileName);
-
-			FileInputStream s = new FileInputStream(f);
-			byte[] bytes = new byte[s.available()];
-			s.read(bytes);
-
-			return bytes;
-		} catch (IOException e) {
-			Raptor.getInstance().onError(
-					"Error reading file: " + f.getAbsolutePath(), e);
-		}
-		return new byte[0];
 	}
 }
