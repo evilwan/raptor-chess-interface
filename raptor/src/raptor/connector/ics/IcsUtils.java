@@ -515,10 +515,6 @@ public class IcsUtils implements GameConstants {
 		}
 	}
 
-	protected void replaceMaciejgUnicodeWithUnicode() {
-
-	}
-
 	/**
 	 * Maciejg format, named after him because of his finger notes. Unicode
 	 * chars are represented as &#x3b1; &#x3b2; &#x3b3; &#x3b4; &#x3b5; &#x3b6;
@@ -871,5 +867,9 @@ public class IcsUtils implements GameConstants {
 			throw new IllegalStateException("Position is not legal: "
 					+ game.toString());
 		}
+	}
+
+	protected void replaceMaciejgUnicodeWithUnicode() {
+
 	}
 }
