@@ -354,7 +354,6 @@ public class ClassicGame implements Game {
 		for (int i = 0; i < result.getHighPrioritySize(); i++) {
 			Move move = result.getHighPriority(i);
 			forceMove(move);
-
 			if (!isLegalPosition()) {
 				result.removeHighPriority(i);
 				i--;
@@ -2168,6 +2167,8 @@ public class ClassicGame implements Game {
 		xor(oppositeColor, fromToBB);
 		setOccupiedBB(getOccupiedBB() ^ fromToBB);
 		setEmptyBB(getEmptyBB() ^ fromToBB);
+		setEmptyBB(getEmptyBB() ^ captureBB);
+		setOccupiedBB(getOccupiedBB() ^ captureBB);
 
 		xor(getColorToMove(), move.getCapture(), captureBB);
 		xor(getColorToMove(), captureBB);
