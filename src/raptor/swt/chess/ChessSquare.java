@@ -68,7 +68,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		public void handleEvent(Event e) {
 			switch (e.type) {
 			case SWT.MouseDown: {
-				if (board.getController().canUserInitiateMoveFrom(id)) {
+				if (piece != EMPTY
+						&& board.getController().canUserInitiateMoveFrom(id)) {
 					board.getControl()
 							.setData(DRAG_INITIATOR, ChessSquare.this);
 					board.getControl().setData(DROP_HANDLED, false);
@@ -158,6 +159,12 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							board.controller.userInitiatedMove(id, false);
 							board.getControl().setData(CLICK_INITIATOR,
 									ChessSquare.this);
+						} else if (board.getControl().getData(CLICK_INITIATOR) != ChessSquare.this) {
+							// Tried to move on a different board.
+							ChessSquare sourceSquare = (ChessSquare) e.widget;
+							sourceSquare.board.controller.userCancelledMove(
+									sourceSquare.id, false);
+							board.getControl().setData(CLICK_INITIATOR, null);
 						} else {// A valid move
 							board.controller.userMadeMove(initiator.id, id);
 							board.getControl().setData(CLICK_INITIATOR, null);

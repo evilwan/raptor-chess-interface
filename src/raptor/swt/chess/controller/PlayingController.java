@@ -279,44 +279,29 @@ public class PlayingController extends ChessBoardController {
 	 * If premove is enabled, and premove is not in queued mode then clear the
 	 * premoves on an illegal move.
 	 */
-	public void adjustForIllegalMove(int from, int to, boolean adjustClocks) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("adjustForIllegalMove ");
-		}
-
-		if (!getPreferences().getBoolean(
-				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
-			onClearPremoves();
-		}
-
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
-
-		board.unhidePieces();
-		refresh();
-		if (adjustClocks) {
-			refresh();
-		} else {
-			refreshBoard();
-		}
-		try {
-			board.getStatusLabel().setText(
-					"Illegal Move: "
-							+ GameUtils.getPseudoSan(getGame(), from, to));
-		} catch (IllegalArgumentException iae) {
-			board.getStatusLabel().setText(
-					"Illegal Move: " + GameUtils.getSan(from) + "-"
-							+ GameUtils.getSan(to));
-		}
-
-		SoundService.getInstance().playSound("illegalMove");
+	public void adjustForIllegalMove(boolean adjustClocks) {
+		adjustForIllegalMove(null, adjustClocks);
 	}
 
 	/**
 	 * If premove is enabled, and premove is not in queued mode then clear the
 	 * premoves on an illegal move.
 	 */
-	public void adjustForIllegalMove(String move, boolean adjustClocks) {
+	public void adjustForIllegalMove(int from, int to, boolean adjustClocks) {
+		try {
+			adjustForIllegalMove("Illegal Move: "
+					+ GameUtils.getPseudoSan(getGame(), from, to), adjustClocks);
+		} catch (IllegalArgumentException iae) {
+			adjustForIllegalMove("Illegal Move: "
+					+ GameUtils.getPseudoSan(getGame(), from, to), adjustClocks);
+		}
+	}
+
+	/**
+	 * If premove is enabled, and premove is not in queued mode then clear the
+	 * premoves on an illegal move.
+	 */
+	public void adjustForIllegalMove(String statusText, boolean adjustClocks) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("adjustForIllegalMove ");
 		}
@@ -328,6 +313,7 @@ public class PlayingController extends ChessBoardController {
 				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
 			onClearPremoves();
 		}
+
 		board.unhidePieces();
 		if (adjustClocks) {
 			refresh();
@@ -335,7 +321,10 @@ public class PlayingController extends ChessBoardController {
 			refreshBoard();
 		}
 
-		board.getStatusLabel().setText("Illegal Move: " + move);
+		if (StringUtils.isNotBlank(statusText)) {
+			board.getStatusLabel().setText(statusText);
+		}
+
 		SoundService.getInstance().playSound("illegalMove");
 	}
 
@@ -606,13 +595,7 @@ public class PlayingController extends ChessBoardController {
 			LOG.debug("userCancelledMove " + GameUtils.getSan(fromSquare)
 					+ " is drag and drop=" + isDnd);
 		}
-
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
-
-		board.unhidePieces();
-		refresh();
-		onPlayIllegalMoveSound();
+		adjustForIllegalMove(false);
 	}
 
 	/**
@@ -707,7 +690,8 @@ public class PlayingController extends ChessBoardController {
 							"Game.move returned false for a move that should have been legal.Move: "
 									+ move + ".", new Throwable(getGame()
 									.toString()));
-					adjustForIllegalMove(move.toString(), false);
+					adjustForIllegalMove("Illegal Move: " + move.toString(),
+							false);
 				}
 			}
 
