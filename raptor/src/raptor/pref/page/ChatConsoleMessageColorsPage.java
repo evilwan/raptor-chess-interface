@@ -34,6 +34,18 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 				"Default Message Color:", getFieldEditorParent());
 		addField(defaultMessages);
 
+		ColorFieldEditor personTellMessages = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.TELL + "-color", "Person Tell Color:",
+				getFieldEditorParent());
+		addField(personTellMessages);
+
+		ColorFieldEditor ptellMessages = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.PARTNER_TELL + "-color",
+				"Bughouse Partner Tell Message Color:", getFieldEditorParent());
+		addField(ptellMessages);
+
 		ColorFieldEditor challengeMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.CHALLENGE + "-color",
@@ -63,12 +75,6 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 						+ ChatType.WHISPER + "-color",
 				"Whisper Message Color:", getFieldEditorParent());
 		addField(whisperMessages);
-
-		ColorFieldEditor ptellMessages = new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.PARTNER_TELL + "-color",
-				"Partner Tell Message Color:", getFieldEditorParent());
-		addField(ptellMessages);
 
 		ColorFieldEditor outboundMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
