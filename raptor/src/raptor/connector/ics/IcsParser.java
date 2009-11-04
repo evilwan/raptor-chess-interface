@@ -484,8 +484,9 @@ public class IcsParser implements GameConstants {
 		Game game = service.getGame(message.gameId);
 		if (game != null) {
 			if (game.isInState(Game.EXAMINING_STATE)
-					|| game.isInState(Game.SETUP_STATE)) {
-				// Examined/BSetup moves flow through here.
+					|| game.isInState(Game.SETUP_STATE)
+					|| game.isInState(Game.OBSERVING_EXAMINED_STATE)) {
+				// Examined/BSetup/obs ex moves flow through here.
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Processing bsetup or examine position move.");
 				}
@@ -693,8 +694,9 @@ public class IcsParser implements GameConstants {
 				/**
 				 * Send a request for the moves.
 				 */
-				if (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
-						&& !message.isWhitesMoveAfterMoveIsMade) {
+				if (message.relation != Style12Message.OBSERVING_EXAMINED_GAME_RELATION
+						&& (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
+								&& !message.isWhitesMoveAfterMoveIsMade)) {
 					connector.sendMessage("moves " + message.gameId, true,
 							ChatType.MOVES);
 				}
