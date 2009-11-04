@@ -782,7 +782,7 @@ public class PlayingController extends ChessBoardController {
 				List<Move> foundMoves = new ArrayList<Move>(5);
 				for (Move move : moves) {
 					if (move.getTo() == square
-							&& (move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) != 0) {
+							&& (move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) == 0) {
 						foundMoves.add(move);
 					}
 				}
@@ -790,6 +790,7 @@ public class PlayingController extends ChessBoardController {
 				if (foundMoves.size() > 0) {
 					Move move = foundMoves.get(random
 							.nextInt(foundMoves.size()));
+
 					if (game.move(move)) {
 						game.rollback();
 						final Move finalMove = move;
@@ -802,14 +803,19 @@ public class PlayingController extends ChessBoardController {
 						throw new IllegalStateException(
 								"Game rejected move in smart move. This is a bug.");
 					}
+
 					board.getSquareHighlighter().removeAllHighlights();
 					board.getArrowDecorator().removeAllArrows();
 					refreshForMove(move);
+				}
+				else {
+					onPlayIllegalMoveSound();
 				}
 			} else {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Rejected smart move since its not users move.");
 				}
+				onPlayIllegalMoveSound();
 			}
 		}
 	}
