@@ -549,6 +549,34 @@ public class GameUtils implements GameConstants {
 		return result.toString();
 	}
 
+	public static int getUncoloredPiece(int coloredPiece) {
+		switch (coloredPiece) {
+		case WK:
+		case BK:
+			return KING;
+		case WQ:
+		case BQ:
+			return QUEEN;
+		case WR:
+		case BR:
+			return ROOK;
+		case WB:
+		case BB:
+			return BISHOP;
+		case WN:
+		case BN:
+			return KNIGHT;
+		case WP:
+		case BP:
+			return PAWN;
+		case EMPTY:
+			return EMPTY;
+		default:
+			throw new IllegalArgumentException("Invalid colored piece:"
+					+ coloredPiece);
+		}
+	}
+
 	public static boolean isBlackPiece(Game game, int square) {
 		return (game.getColorBB(BLACK) & getBitboard(square)) != 0;
 	}

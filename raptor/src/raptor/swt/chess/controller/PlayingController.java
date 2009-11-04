@@ -13,6 +13,17 @@
  */
 package raptor.swt.chess.controller;
 
+import static raptor.chess.util.GameUtils.getColoredPiece;
+import static raptor.chess.util.GameUtils.getColoredPieceFromDropSquare;
+import static raptor.chess.util.GameUtils.getDropSquareFromColoredPiece;
+import static raptor.chess.util.GameUtils.getPieceRepresentation;
+import static raptor.chess.util.GameUtils.getPseudoSan;
+import static raptor.chess.util.GameUtils.getSan;
+import static raptor.chess.util.GameUtils.getUncoloredPiece;
+import static raptor.chess.util.GameUtils.isBlackPiece;
+import static raptor.chess.util.GameUtils.isPromotion;
+import static raptor.chess.util.GameUtils.isWhitePiece;
+
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +50,6 @@ import raptor.chess.Move;
 import raptor.chess.Result;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
-import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
@@ -290,10 +300,10 @@ public class PlayingController extends ChessBoardController {
 	public void adjustForIllegalMove(int from, int to, boolean adjustClocks) {
 		try {
 			adjustForIllegalMove("Illegal Move: "
-					+ GameUtils.getPseudoSan(getGame(), from, to), adjustClocks);
+					+ getPseudoSan(getGame(), from, to), adjustClocks);
 		} catch (IllegalArgumentException iae) {
 			adjustForIllegalMove("Illegal Move: "
-					+ GameUtils.getPseudoSan(getGame(), from, to), adjustClocks);
+					+ getPseudoSan(getGame(), from, to), adjustClocks);
 		}
 	}
 
@@ -348,7 +358,7 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("canUserInitiateMoveFrom " + GameUtils.getSan(squareId));
+			LOG.debug("canUserInitiateMoveFrom " + getSan(squareId));
 		}
 		if (!isUsersMove()) {
 			if (isPremoveable()) {
@@ -359,10 +369,8 @@ public class PlayingController extends ChessBoardController {
 							|| !isUserWhite
 							&& ChessBoardUtils.isJailSquareBlackPiece(squareId);
 				} else {
-					return isUserWhite
-							&& GameUtils.isWhitePiece(getGame(), squareId)
-							|| !isUserWhite
-							&& GameUtils.isBlackPiece(game, squareId);
+					return isUserWhite && isWhitePiece(getGame(), squareId)
+							|| !isUserWhite && isBlackPiece(game, squareId);
 				}
 			}
 			return false;
@@ -376,8 +384,8 @@ public class PlayingController extends ChessBoardController {
 					|| !isUserWhite
 					&& ChessBoardUtils.isJailSquareBlackPiece(squareId);
 		} else {
-			return isUserWhite && GameUtils.isWhitePiece(getGame(), squareId)
-					|| !isUserWhite && GameUtils.isBlackPiece(game, squareId);
+			return isUserWhite && isWhitePiece(getGame(), squareId)
+					|| !isUserWhite && isBlackPiece(game, squareId);
 		}
 	}
 
@@ -592,7 +600,7 @@ public class PlayingController extends ChessBoardController {
 			return;
 		}
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("userCancelledMove " + GameUtils.getSan(fromSquare)
+			LOG.debug("userCancelledMove " + getSan(fromSquare)
 					+ " is drag and drop=" + isDnd);
 		}
 		adjustForIllegalMove(false);
@@ -605,7 +613,7 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	public void userInitiatedMove(int square, boolean isDnd) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("userInitiatedMove " + GameUtils.getSan(square)
+			LOG.debug("userInitiatedMove " + getSan(square)
 					+ " is drag and drop=" + isDnd);
 		}
 
@@ -639,8 +647,7 @@ public class PlayingController extends ChessBoardController {
 
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("userMadeMove " + getGame().getId() + " "
-					+ GameUtils.getSan(fromSquare) + " "
-					+ GameUtils.getSan(toSquare));
+					+ getSan(fromSquare) + " " + getSan(toSquare));
 		}
 		board.unhidePieces();
 		board.getSquareHighlighter().removeAllHighlights();
@@ -664,7 +671,7 @@ public class PlayingController extends ChessBoardController {
 			}
 
 			Move move = null;
-			if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
+			if (isPromotion(getGame(), fromSquare, toSquare)) {
 				move = ChessBoardUtils.createMove(getGame(), fromSquare,
 						toSquare, getAutoPromoteSelection());
 			} else {
@@ -720,8 +727,8 @@ public class PlayingController extends ChessBoardController {
 			premoveInfo.toSquare = toSquare;
 			premoveInfo.fromPiece = board.getSquare(fromSquare).getPiece();
 			premoveInfo.toPiece = board.getSquare(toSquare).getPiece();
-			premoveInfo.promotionColorlessPiece = GameUtils.isPromotion(
-					isUserWhite(), getGame(), fromSquare, toSquare) ? getAutoPromoteSelection()
+			premoveInfo.promotionColorlessPiece = isPromotion(isUserWhite(),
+					getGame(), fromSquare, toSquare) ? getAutoPromoteSelection()
 					: EMPTY;
 
 			/**
@@ -828,17 +835,15 @@ public class PlayingController extends ChessBoardController {
 				if (getGame().getDropCount(color, PAWN) == 0) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Premove drop "
-							+ GameUtils.getPieceRepresentation(GameUtils
-									.getColoredPiece(PAWN, color)) + "@"
-							+ GameUtils.getSan(square));
+							+ getPieceRepresentation(getColoredPiece(PAWN,
+									color)) + "@" + getSan(square));
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
 							PremoveInfo premoveInfo = new PremoveInfo();
 							premoveInfo.isPremoveDrop = true;
 							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = GameUtils
-									.getDropSquareFromColoredPiece(GameUtils
-											.getColoredPiece(PAWN, color));
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									PAWN, color));
 							premoveInfo.fromPiece = isUserWhite() ? WP : BP;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
@@ -852,17 +857,15 @@ public class PlayingController extends ChessBoardController {
 				if (getGame().getDropCount(color, KNIGHT) == 0) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Premove drop "
-							+ GameUtils.getPieceRepresentation(GameUtils
-									.getColoredPiece(KNIGHT, color)) + "@"
-							+ GameUtils.getSan(square));
+							+ getPieceRepresentation(getColoredPiece(KNIGHT,
+									color)) + "@" + getSan(square));
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
 							PremoveInfo premoveInfo = new PremoveInfo();
 							premoveInfo.isPremoveDrop = true;
 							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = GameUtils
-									.getDropSquareFromColoredPiece(GameUtils
-											.getColoredPiece(KNIGHT, color));
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									KNIGHT, color));
 							premoveInfo.fromPiece = isUserWhite() ? WN : BN;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
@@ -876,17 +879,15 @@ public class PlayingController extends ChessBoardController {
 				if (getGame().getDropCount(color, BISHOP) == 0) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Premove drop "
-							+ GameUtils.getPieceRepresentation(GameUtils
-									.getColoredPiece(BISHOP, color)) + "@"
-							+ GameUtils.getSan(square));
+							+ getPieceRepresentation(getColoredPiece(BISHOP,
+									color)) + "@" + getSan(square));
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
 							PremoveInfo premoveInfo = new PremoveInfo();
 							premoveInfo.isPremoveDrop = true;
 							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = GameUtils
-									.getDropSquareFromColoredPiece(GameUtils
-											.getColoredPiece(BISHOP, color));
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									BISHOP, color));
 							premoveInfo.fromPiece = isUserWhite() ? WB : BB;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
@@ -900,17 +901,15 @@ public class PlayingController extends ChessBoardController {
 				if (getGame().getDropCount(color, ROOK) == 0) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Premove drop "
-							+ GameUtils.getPieceRepresentation(GameUtils
-									.getColoredPiece(ROOK, color)) + "@"
-							+ GameUtils.getSan(square));
+							+ getPieceRepresentation(getColoredPiece(ROOK,
+									color)) + "@" + getSan(square));
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
 							PremoveInfo premoveInfo = new PremoveInfo();
 							premoveInfo.isPremoveDrop = true;
 							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = GameUtils
-									.getDropSquareFromColoredPiece(GameUtils
-											.getColoredPiece(ROOK, color));
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									ROOK, color));
 							premoveInfo.fromPiece = isUserWhite() ? WR : BR;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
@@ -924,17 +923,15 @@ public class PlayingController extends ChessBoardController {
 				if (getGame().getDropCount(color, QUEEN) == 0) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Premove drop "
-							+ GameUtils.getPieceRepresentation(GameUtils
-									.getColoredPiece(QUEEN, color)) + "@"
-							+ GameUtils.getSan(square));
+							+ getPieceRepresentation(getColoredPiece(QUEEN,
+									color)) + "@" + getSan(square));
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
 							PremoveInfo premoveInfo = new PremoveInfo();
 							premoveInfo.isPremoveDrop = true;
 							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = GameUtils
-									.getDropSquareFromColoredPiece(GameUtils
-											.getColoredPiece(QUEEN, color));
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									QUEEN, color));
 							premoveInfo.fromPiece = isUserWhite() ? WQ : BQ;
 							premoveInfo.highlight = new Highlight(
 									premoveInfo.fromSquare,
@@ -953,69 +950,69 @@ public class PlayingController extends ChessBoardController {
 
 			if (getGame().getDropCount(color, PAWN) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(GameUtils.getPieceRepresentation(GameUtils
-						.getColoredPiece(PAWN, color))
-						+ "@" + GameUtils.getSan(square));
+				item
+						.setText(getPieceRepresentation(getColoredPiece(PAWN,
+								color))
+								+ "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
-						userMadeMove(GameUtils
-								.getDropSquareFromColoredPiece(GameUtils
-										.getColoredPiece(PAWN, color)), square);
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										PAWN, color)), square);
 
 					}
 				});
 			}
 			if (getGame().getDropCount(color, KNIGHT) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(GameUtils.getPieceRepresentation(GameUtils
-						.getColoredPiece(KNIGHT, color))
-						+ "@" + GameUtils.getSan(square));
+				item.setText(getPieceRepresentation(getColoredPiece(KNIGHT,
+						color))
+						+ "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
-						userMadeMove(GameUtils
-								.getDropSquareFromColoredPiece(GameUtils
-										.getColoredPiece(KNIGHT, color)),
-								square);
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										KNIGHT, color)), square);
 					}
 				});
 			}
 			if (getGame().getDropCount(color, BISHOP) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(GameUtils.getPieceRepresentation(GameUtils
-						.getColoredPiece(BISHOP, color))
-						+ "@" + GameUtils.getSan(square));
+				item.setText(getPieceRepresentation(getColoredPiece(BISHOP,
+						color))
+						+ "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
-						userMadeMove(GameUtils
-								.getDropSquareFromColoredPiece(GameUtils
-										.getColoredPiece(BISHOP, color)),
-								square);
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										BISHOP, color)), square);
 					}
 				});
 			}
 			if (getGame().getDropCount(color, ROOK) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(GameUtils.getPieceRepresentation(GameUtils
-						.getColoredPiece(ROOK, color))
-						+ "@" + GameUtils.getSan(square));
+				item
+						.setText(getPieceRepresentation(getColoredPiece(ROOK,
+								color))
+								+ "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
-						userMadeMove(GameUtils
-								.getDropSquareFromColoredPiece(GameUtils
-										.getColoredPiece(ROOK, color)), square);
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										ROOK, color)), square);
 					}
 				});
 			}
 			if (getGame().getDropCount(color, QUEEN) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(GameUtils.getPieceRepresentation(GameUtils
-						.getColoredPiece(QUEEN, color))
-						+ "@" + GameUtils.getSan(square));
+				item.setText(getPieceRepresentation(getColoredPiece(QUEEN,
+						color))
+						+ "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
-						userMadeMove(GameUtils
-								.getDropSquareFromColoredPiece(GameUtils
-										.getColoredPiece(QUEEN, color)), square);
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										QUEEN, color)), square);
 					}
 				});
 			}
@@ -1042,7 +1039,7 @@ public class PlayingController extends ChessBoardController {
 			boolean hasAddedPremove = false;
 			for (PremoveInfo info : premoves) {
 				String premove = (info.isPremoveDrop ? "{" : "")
-						+ GameUtils.getPseudoSan(info.fromPiece, info.toPiece,
+						+ getPseudoSan(info.fromPiece, info.toPiece,
 								info.fromSquare, info.toSquare)
 						+ (info.isPremoveDrop ? "}" : "");
 				if (!hasAddedPremove) {
@@ -1109,8 +1106,7 @@ public class PlayingController extends ChessBoardController {
 						} else if (getGame()
 								.getDropCount(
 										isUserWhite() ? WHITE : BLACK,
-										GameUtils
-												.getColoredPieceFromDropSquare(info.fromSquare)) > 0) {
+										getUncoloredPiece(getColoredPieceFromDropSquare(info.fromSquare))) > 0) {
 							try {
 								move = game.makeMove(info.fromSquare,
 										info.toSquare);
