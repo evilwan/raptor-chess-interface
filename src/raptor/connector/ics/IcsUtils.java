@@ -187,7 +187,15 @@ public class IcsUtils implements GameConstants {
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Rolled back a move.");
 					}
-					game.rollback();
+					if (game.getLastMove() != null) {
+						game.rollback();
+					} else {
+						resetGame(game, message);
+						connector.sendMessage("moves " + message.gameId, true,
+								ChatType.MOVES);
+						result = false;
+						break;
+					}
 				}
 				result = true;
 			}
