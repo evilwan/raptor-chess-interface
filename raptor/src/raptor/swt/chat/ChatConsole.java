@@ -13,6 +13,7 @@
  */
 package raptor.swt.chat;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -29,7 +30,9 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
@@ -48,6 +51,10 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 	protected Composite buttonComposite;
 	protected ChatConsoleController controller;
 	protected StyledText inputText;
+
+	// There is a good reason this is not a StyledText.
+	// Making it a regular Text fixed some issues around focus and forwarding
+	// characters.
 	protected Text outputText;
 	protected Label promptLabel;
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
@@ -108,6 +115,16 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 
 		outputText = new Text(southControlsComposite, SWT.SINGLE | SWT.BORDER);
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		outputText.addListener(SWT.Verify, new Listener() {
+			public void handleEvent(Event e) {
+				String string = e.text;
+				if (e.text.contains("\n") || e.text.contains("\r")) {
+					e.doit = false;
+					outputText.setText(StringUtils.replaceChars(string, "\n\r",
+							""));
+				}
+			}
+		});
 
 		buttonComposite = new Composite(southControlsComposite, SWT.NONE);
 		RowLayout rowLayout = new RowLayout();
