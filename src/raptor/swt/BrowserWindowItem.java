@@ -22,8 +22,6 @@ import org.eclipse.swt.browser.CloseWindowListener;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.OpenWindowListener;
-import org.eclipse.swt.browser.TitleEvent;
-import org.eclipse.swt.browser.TitleListener;
 import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -229,11 +227,12 @@ public class BrowserWindowItem implements RaptorWindowItem {
 			}
 		});
 		browser.addLocationListener(new LocationAdapter() {
+			@Override
 			public void changed(LocationEvent event) {
 				urlText.setText(event.location);
 			}
 		});
-		
+
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		if (getHTML() != null) {
 			browser.setText(getHTML());
