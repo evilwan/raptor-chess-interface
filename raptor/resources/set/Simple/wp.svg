@@ -1,146 +1,53 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
    width="45"
    height="45"
-   id="svg3128"
-   sodipodi:version="0.32"
-   inkscape:version="0.47pre4 r22446"
-   version="1.0"
-   sodipodi:docname="wp.svg">
+   id="svg3128">
   <defs
-     id="defs3130">
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 22.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="45 : 22.5 : 1"
-       inkscape:persp3d-origin="22.5 : 15 : 1"
-       id="perspective2884" />
-    <inkscape:perspective
-       id="perspective5118"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
-       sodipodi:type="inkscape:persp3d" />
-    <inkscape:perspective
-       id="perspective5220"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
-       sodipodi:type="inkscape:persp3d" />
-  </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     gridtolerance="10000"
-     guidetolerance="10"
-     objecttolerance="10"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="16.266667"
-     inkscape:cx="11.557377"
-     inkscape:cy="22.5"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     height="45px"
-     width="45px"
-     inkscape:grid-points="true"
-     showgrid="true"
-     inkscape:window-width="1680"
-     inkscape:window-height="975"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:snap-global="true"
-     showguides="false"
-     inkscape:window-maximized="1">
-    <inkscape:grid
-       id="GridFromPre046Settings"
-       type="xygrid"
-       originx="0px"
-       originy="0px"
-       spacingx="0.5px"
-       spacingy="0.5px"
-       color="#0000ff"
-       empcolor="#0000ff"
-       opacity="0.2"
-       empopacity="0.4"
-       empspacing="5"
-       visible="true"
-       enabled="true"
-       snapvisiblegridlinesonly="true" />
-  </sodipodi:namedview>
-  <metadata
-     id="metadata3133">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
+     id="defs3130" />
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#ffffff;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
-       id="rect5206"
        width="25"
        height="5"
+       rx="2.5"
        x="10"
        y="37.5"
-       rx="2.5" />
+       id="rect5206"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <rect
-       style="fill:#ffffff;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
-       id="rect5208"
        width="20"
        height="5"
+       rx="2.5"
        x="12.5"
        y="32.5"
-       rx="2.5" />
+       id="rect5208"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <g
+       transform="matrix(1,0,0,0.7986799,0.119199,7.3250824)"
        id="g5254"
-       transform="matrix(1,0,0,0.79867987,0.119199,7.3250824)"
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.1189576;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none">
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.11895764;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
       <path
+         d="M 17.581967,31.418033 C 17.581967,31.418033 27.298831,31.418033 27.298831,31.418033 C 27.298831,31.418033 32.380798,24 27.380801,19 C 22.5,19 22.5,19 17.5,19 C 12.5,24 17.58197,31.418033 17.58197,31.418033 L 17.581967,31.418033 z"
          id="path5210-2"
-         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.1189576;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-         d="m 17.581967,31.418033 c 0,0 9.716864,0 9.716864,0 0,0 5.081967,-7.418033 0.08197,-12.418033 C 22.5,19 22.5,19 17.5,19 c -5,5 0.08197,12.418033 0.08197,12.418033 z"
-         sodipodi:nodetypes="ccccc" />
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.11895764;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       id="rect5234"
        width="15"
        height="5"
+       rx="2.5"
        x="15"
        y="17.5"
-       rx="2.5" />
+       id="rect5234"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
-       sodipodi:type="arc"
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 27.5,5 A 5,5 0 1 1 17.5,5 A 5,5 0 1 1 27.5,5 z"
+       transform="matrix(0.8,0,0,0.8,4.5,9.5)"
        id="path5238"
-       sodipodi:cx="22.5"
-       sodipodi:cy="5"
-       sodipodi:rx="5"
-       sodipodi:ry="5"
-       d="m 27.5,5 a 5,5 0 1 1 -10,0 5,5 0 1 1 10,0 z"
-       transform="matrix(0.8,0,0,0.8,4.5,9.5)" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   </g>
 </svg>
