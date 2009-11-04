@@ -13,6 +13,7 @@
  */
 package raptor.swt;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -20,8 +21,9 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.CloseWindowListener;
 import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
-import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.browser.OpenWindowListener;
+import org.eclipse.swt.browser.TitleEvent;
+import org.eclipse.swt.browser.TitleListener;
 import org.eclipse.swt.browser.WindowEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -190,8 +192,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 			public void keyReleased(KeyEvent e) {
 				if (e.character == '\r') {
 					url = urlText.getText();
-					browser.stop();
-					browser.setUrl(url);
+					setUrl(url);
 				}
 			}
 		});
@@ -204,8 +205,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				url = urlText.getText();
-				browser.stop();
-				browser.setUrl(url);
+				setUrl(url);
 			}
 		});
 
@@ -228,19 +228,17 @@ public class BrowserWindowItem implements RaptorWindowItem {
 						BrowserWindowItem.this);
 			}
 		});
-		browser.addLocationListener(new LocationListener() {
+		browser.addLocationListener(new LocationAdapter() {
 			public void changed(LocationEvent event) {
-			}
-
-			public void changing(LocationEvent event) {
 				urlText.setText(event.location);
 			}
 		});
+		
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		if (getHTML() != null) {
 			browser.setText(getHTML());
 		} else {
-			browser.setUrl(url);
+			setUrl(url);
 		}
 
 		browser.addLocationListener(new LocationAdapter() {
@@ -268,7 +266,12 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public void setUrl(String url) {
-		browser.stop();
-		browser.setUrl(url);
+		if (StringUtils.isNotBlank(url)) {
+			browser.stop();
+			if (!browser.setUrl(url)) {
+				browser
+						.setText("<html><<body><h1>The page could not be loaded.</h1></body>/html>");
+			}
+		}
 	}
 }
