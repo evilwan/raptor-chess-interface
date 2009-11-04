@@ -96,6 +96,10 @@ public class SimpleMoveList implements ChessBoardMoveList {
 	 */
 	public void select(int halfMoveIndex) {
 		if (composite.isVisible()) {
+			if (movesTable.getItemCount() == 0) {
+				return;
+			}
+			
 			ignoreSelection = true;
 
 			if (halfMoveIndex > 0) {
