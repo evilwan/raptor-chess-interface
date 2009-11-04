@@ -585,7 +585,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_SECONDARY_PASSWORD, "");
 		setDefault(BICS_SECONDARY_IS_NAMED_GUEST, false);
 		setDefault(BICS_SECONDARY_IS_ANON_GUEST, false);
-		setDefault(BICS_SECONDARY_SERVER_URL, "dev.chess.sipay.ru");
+		setDefault(BICS_SECONDARY_SERVER_URL, "chess.sipay.ru");
 		setDefault(BICS_SECONDARY_PORT, 5000);
 		setDefault(BICS_SECONDARY_TIMESEAL_ENABLED, true);
 		// Bics Tertiary
