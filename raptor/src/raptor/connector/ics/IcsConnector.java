@@ -348,7 +348,7 @@ public abstract class IcsConnector implements Connector {
 								.info("No need to send keep alive rescheduling for 30 minutes.");
 					}
 				}
-				ThreadService.getInstance().scheduleOneShot(1000 * 60 * 30,
+				ThreadService.getInstance().scheduleOneShot(1000 * 60 * 5,
 						this);
 			}
 		}
