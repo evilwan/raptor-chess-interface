@@ -105,7 +105,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
 		passwordLabel = new Label(content, SWT.NONE);
 		passwordLabel.setText("Password:");
-		passwordField = new Text(content, SWT.BORDER);
+		passwordField = new Text(content, SWT.BORDER | SWT.PASSWORD);
 		passwordField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		serverLabel = new Label(content, SWT.NONE);
