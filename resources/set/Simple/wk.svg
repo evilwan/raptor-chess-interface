@@ -1,164 +1,47 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
    width="45"
    height="45"
-   id="svg3128"
-   sodipodi:version="0.32"
-   inkscape:version="0.47pre4 r22446"
-   version="1.0"
-   sodipodi:docname="wk.svg">
+   id="svg3128">
   <defs
-     id="defs3130">
-    <inkscape:perspective
-       sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="0 : 22.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_z="45 : 22.5 : 1"
-       inkscape:persp3d-origin="22.5 : 15 : 1"
-       id="perspective2884" />
-    <inkscape:perspective
-       id="perspective5118"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
-       sodipodi:type="inkscape:persp3d" />
-    <inkscape:perspective
-       id="perspective5220"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
-       sodipodi:type="inkscape:persp3d" />
-    <inkscape:perspective
-       id="perspective7045"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
-       sodipodi:type="inkscape:persp3d" />
-    <inkscape:perspective
-       id="perspective7069"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
-       sodipodi:type="inkscape:persp3d" />
-    <inkscape:perspective
-       id="perspective7069-7"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
-       sodipodi:type="inkscape:persp3d" />
-    <inkscape:perspective
-       id="perspective8898"
-       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
-       inkscape:vp_z="1 : 0.5 : 1"
-       inkscape:vp_y="0 : 1000 : 0"
-       inkscape:vp_x="0 : 0.5 : 1"
-       sodipodi:type="inkscape:persp3d" />
-  </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     gridtolerance="10000"
-     guidetolerance="10"
-     objecttolerance="10"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="16.266667"
-     inkscape:cx="22.5"
-     inkscape:cy="22.5"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer1"
-     height="45px"
-     width="45px"
-     inkscape:grid-points="true"
-     showgrid="true"
-     inkscape:window-width="1680"
-     inkscape:window-height="975"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:snap-global="true"
-     showguides="false"
-     inkscape:window-maximized="1">
-    <inkscape:grid
-       id="GridFromPre046Settings"
-       type="xygrid"
-       originx="0px"
-       originy="0px"
-       spacingx="0.5px"
-       spacingy="0.5px"
-       color="#0000ff"
-       empcolor="#0000ff"
-       opacity="0.2"
-       empopacity="0.4"
-       empspacing="5"
-       visible="true"
-       enabled="true"
-       snapvisiblegridlinesonly="true" />
-  </sodipodi:namedview>
-  <metadata
-     id="metadata3133">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
+     id="defs3130" />
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
-       id="rect8811"
        width="30"
        height="5"
+       rx="2.5"
        x="7.5"
        y="37.5"
-       rx="2.5" />
+       id="rect8811"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
+       d="M 15.061475,32.463114 C 15.061475,32.463114 29.938525,32.463114 29.938525,32.463114 C 29.938525,32.463114 37.5,19 37.5,14.5 C 37.5,7.75 27.5,10 27.5,10 C 27.5,10 17.5,10 17.5,10 C 17.5,10 7.5,7.75 7.5,14.5 C 7.5,19 15.061475,32.463114 15.061475,32.463114 L 15.061475,32.463114 z"
        id="path8888-5"
-       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.94868332px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
-       d="m 15.061475,32.463114 c 0,0 14.87705,0 14.87705,0 C 29.938525,32.463114 37.5,19 37.5,14.5 c 0,-6.75 -10,-4.5 -10,-4.5 0,0 -10,0 -10,0 0,0 -10,-2.25 -10,4.5 0,4.5 7.561475,17.963114 7.561475,17.963114 z"
-       sodipodi:nodetypes="ccsccsc" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.94868332px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
     <path
-       style="fill:#ffffff;stroke:#000000;stroke-width:0.94868332000000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
-       d="M 19.856557,32.407787 C 19.856557,32.407787 15,21.25 15,16.75 c 0,-4.5 2.5,-9 7.5,-9 5,0 7.5,4.5 7.5,9 0,4.5 -5,15.75 -5,15.75"
+       d="M 19.856557,32.407787 C 19.856557,32.407787 15,21.25 15,16.75 C 15,12.25 17.5,7.75 22.5,7.75 C 27.5,7.75 30,12.25 30,16.75 C 30,21.25 25,32.5 25,32.5"
        id="path8912"
-       sodipodi:nodetypes="csssc" />
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.94868332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
-       d="m 22.5,2.5 0,5"
-       id="path8919" />
+       d="M 22.5,2.5 L 22.5,7.5"
+       id="path8919"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
     <path
-       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1"
-       d="m 20,5 5,0"
-       id="path8921" />
+       d="M 20,5 L 25,5"
+       id="path8921"
+       style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       id="rect8813"
        width="25"
        height="5"
+       rx="2.5"
        x="10"
        y="32.5"
-       rx="2.5" />
+       id="rect8813"
+       style="fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   </g>
 </svg>
