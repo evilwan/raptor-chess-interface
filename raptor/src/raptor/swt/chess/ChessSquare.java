@@ -68,6 +68,9 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		public void handleEvent(Event e) {
 			switch (e.type) {
 			case SWT.MouseDown: {
+				if (e.button != 1) {
+					return;
+				}
 				if (piece != EMPTY
 						&& board.getController().canUserInitiateMoveFrom(id)) {
 					board.getControl()
@@ -82,6 +85,10 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				break;
 			}
 			case SWT.MouseUp: {
+				if (e.button != 1) {
+					return;
+				}
+
 				ChessSquare dragSource = (ChessSquare) board.getControl()
 						.getData(DRAG_INITIATOR);
 				if (dragSource == null) {
@@ -119,13 +126,13 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		public void mouseDown(MouseEvent e) {
 			if (e.button == 3) {
 				board.controller.userRightClicked(id);
+			} else if (e.button == 2) {
+				board.controller.userMiddleClicked(id);
 			}
 		}
 
 		public void mouseUp(MouseEvent e) {
-			if (e.button == 2) {
-				board.controller.userMiddleClicked(id);
-			} else if (e.button == 1) {
+			if (e.button == 1) {
 				Long lastDropTime = (Long) board.getControl().getData(
 						LAST_DROP_TIME);
 				if (lastDropTime == null
