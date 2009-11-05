@@ -189,6 +189,9 @@ public abstract class ChessBoardController implements BoardConstants,
 					getBoard().getBlackLagLabel().setImage(null);
 				}
 			}
+		} else {
+			getBoard().getWhiteLagLabel().setImage(null);
+			getBoard().getBlackLagLabel().setImage(null);
 		}
 	}
 
