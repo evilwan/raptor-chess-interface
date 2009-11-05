@@ -23,12 +23,16 @@ import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
 
 import raptor.Raptor;
 import raptor.chess.GameConstants;
 import raptor.chess.util.GameUtils;
+import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.swt.SWTUtils;
 import raptor.swt.chess.layout.RightOrientedLayout;
 import raptor.swt.chess.movelist.SimpleMoveList;
 
@@ -59,6 +63,7 @@ public class ChessBoard implements BoardConstants {
 	protected boolean isWhitePieceJailOnTop = true;
 	protected ChessBoardMoveList moveList;
 	protected CLabel openingDescriptionLabel;
+	protected CoolBar coolbar;
 
 	/**
 	 * Piece jail is indexed by the colored piece constants in Constants. The
@@ -78,6 +83,7 @@ public class ChessBoard implements BoardConstants {
 	protected ResultDecorator resultDecorator;
 	protected ArrowDecorator arrowDecorator;
 
+	protected Composite componentComposite;
 	protected SashForm sashForm;
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
 	protected CLabel statusLabel;
@@ -101,7 +107,27 @@ public class ChessBoard implements BoardConstants {
 			}
 			long startTime = System.currentTimeMillis();
 
-			sashForm = new SashForm(parent, SWT.HORIZONTAL);
+			componentComposite = new Composite(parent, SWT.NONE);
+			componentComposite.setLayout(SWTUtils.createMarginlessGridLayout(1,
+					true));
+			if (Raptor.getInstance().getPreferences().getBoolean(
+					PreferenceKeys.BOARD_COOLBAR_ON_TOP)) {
+				coolbar = new CoolBar(componentComposite, SWT.FLAT
+						| SWT.HORIZONTAL);
+				coolbar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
+						false));
+			}
+			sashForm = new SashForm(componentComposite, SWT.HORIZONTAL);
+			sashForm
+					.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			if (!Raptor.getInstance().getPreferences().getBoolean(
+					PreferenceKeys.BOARD_COOLBAR_ON_TOP)) {
+				coolbar = new CoolBar(componentComposite, SWT.FLAT
+						| SWT.HORIZONTAL);
+				coolbar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
+						false));
+			}
+
 			boardComposite = new Composite(sashForm, SWT.NONE);
 			createMoveList();
 			moveList.create(sashForm);
@@ -237,11 +263,15 @@ public class ChessBoard implements BoardConstants {
 	 * Returns the control representing this chess board.
 	 */
 	public synchronized Composite getControl() {
-		return sashForm;
+		return componentComposite;
 	}
 
 	public synchronized ChessBoardController getController() {
 		return controller;
+	}
+
+	public CoolBar getCoolbar() {
+		return coolbar;
 	}
 
 	public synchronized CLabel getCurrentPremovesLabel() {
@@ -391,7 +421,6 @@ public class ChessBoard implements BoardConstants {
 		for (int i = 1; i < pieceJailSquares.length; i++) {
 			pieceJailSquares[i].redraw();
 		}
-
 	}
 
 	/**

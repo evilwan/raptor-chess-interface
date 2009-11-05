@@ -76,6 +76,9 @@ public class SetupController extends ChessBoardController {
 							connector.getGameService()
 									.removeGameServiceListener(listener);
 
+							// Clear the cool bar and init the inactive
+							// controller.
+							ChessBoardUtils.clearCoolbar(getBoard());
 							inactiveController.init();
 
 							unexamineOnDispose = false;
@@ -142,6 +145,9 @@ public class SetupController extends ChessBoardController {
 							// cleared and disposed
 							setItemChangedListeners(null);
 
+							// Clear the cool bar and init the examineController
+							// controller.
+							ChessBoardUtils.clearCoolbar(getBoard());
 							examineController.init();
 
 							unexamineOnDispose = false;
@@ -185,7 +191,7 @@ public class SetupController extends ChessBoardController {
 				connector.onUnexamine(getGame());
 			}
 
-			if (toolbar != null) {
+			if (toolbar != null && !toolbar.isDisposed()) {
 				toolbar.setVisible(false);
 				SWTUtils.clearToolbar(toolbar);
 				toolbar = null;
@@ -207,15 +213,27 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public Control getToolbar(Composite parent) {
+		boolean isCoolbarMode = getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE);
 		if (toolbar == null) {
-			toolbar = new ToolBar(parent, SWT.FLAT);
+			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
+					: parent, SWT.FLAT);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.SetupChessBoard, toolbar, true);
+			if (isCoolbarMode) {
+				ChessBoardUtils.adjustCoolbar(getBoard(), toolbar);
+			}
 		} else {
-			toolbar.setParent(parent);
+			if (!isCoolbarMode) {
+				toolbar.setParent(parent);
+			}
 		}
 
-		return toolbar;
+		if (isCoolbarMode) {
+			return null;
+		} else {
+			return toolbar;
+		}
 	}
 
 	@Override

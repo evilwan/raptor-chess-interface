@@ -299,11 +299,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * otherwise.
 	 */
 	public boolean isDisposed() {
-		boolean result = false;
-		if (board == null) {
-			result = true;
-		}
-		return result;
+		return getBoard() == null;
 	}
 
 	/**

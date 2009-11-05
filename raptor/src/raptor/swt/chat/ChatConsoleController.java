@@ -120,7 +120,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	};
 
 	protected SelectionListener verticalScrollbarListener = new SelectionAdapter() {
-
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			smartScroll();

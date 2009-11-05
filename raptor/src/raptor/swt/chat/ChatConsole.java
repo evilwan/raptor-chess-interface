@@ -120,7 +120,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 				String string = e.text;
 				if (e.text.contains("\n") || e.text.contains("\r")) {
 					e.doit = false;
-					outputText.setText(StringUtils.replaceChars(string, "\n\r",
+					outputText.insert(StringUtils.replaceChars(string, "\n\r",
 							""));
 				}
 			}

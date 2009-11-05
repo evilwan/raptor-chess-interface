@@ -26,8 +26,7 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 	public static final String[][] HIGHLIGHT_ANIMATION_DELAY_OPTIONS = {
 			{ "100 milliseconds", "100" }, { "200 milliseconds", "200" },
 			{ "300 milliseconds", "300" }, { "500 milliseconds", "500" },
-			{ "750 milliseconds", "750" },
-			{ "1 second", "1000" } };
+			{ "750 milliseconds", "750" }, { "1 second", "1000" } };
 
 	public static final String[][] HIGHLIGHT_BORDER_PERCENTAGE_OPTIONS = {
 			{ "2%", "2" }, { "3%", "3" }, { "5%", "4" }, { "8%", "8" },

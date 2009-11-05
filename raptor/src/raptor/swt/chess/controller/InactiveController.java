@@ -223,7 +223,7 @@ public class InactiveController extends ChessBoardController implements
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (toolbar != null) {
+		if (toolbar != null && !toolbar.isDisposed()) {
 			toolbar.setVisible(false);
 			SWTUtils.clearToolbar(toolbar);
 			toolbar = null;
@@ -246,8 +246,12 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public Control getToolbar(Composite parent) {
+		boolean isCoolbarMode = getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE);
+
 		if (toolbar == null) {
-			toolbar = new ToolBar(parent, SWT.FLAT);
+			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
+					: parent, SWT.FLAT);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.InactiveChessBoard, toolbar, false);
 
@@ -257,11 +261,21 @@ public class InactiveController extends ChessBoardController implements
 				setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
 			}
 			enableDisableNavButtons();
+
+			if (isCoolbarMode) {
+				ChessBoardUtils.adjustCoolbar(getBoard(), toolbar);
+			}
 		} else {
-			toolbar.setParent(parent);
+			if (!isCoolbarMode) {
+				toolbar.setParent(parent);
+			}
 		}
 
-		return toolbar;
+		if (isCoolbarMode) {
+			return null;
+		} else {
+			return toolbar;
+		}
 	}
 
 	@Override
