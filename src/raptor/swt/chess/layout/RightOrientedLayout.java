@@ -49,8 +49,6 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	public static final int NORTH = 0;
 	public static final int SOUTH = 1;
 
-	public static final int TO_MOVE_INDICATOR_PERCENTAGE_OF_BOARD_SQUARE = 85;
-
 	public static final int[] TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1, };
 	public static final int TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
 	public static final int[] TOP_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
@@ -64,7 +62,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	protected Rectangle bottomNameLabelRect;
 	protected Point bottomPieceJailRow1Point;
 	protected Point bottomPieceJailRow2Point;
-	protected Rectangle bottomToMoveIndicatorRect;
+	protected Rectangle bottomUpTimeRect;
 	protected ControlListener controlListener;
 	protected Rectangle currentPremovesLabelRect;
 	protected Rectangle gameDescriptionLabelRect;
@@ -80,7 +78,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	protected Rectangle topNameLabelRect;
 	protected Point topPieceJailRow1Point;
 	protected Point topPieceJailRow2Point;
-	protected Rectangle topToMoveIndicatorRect;
+	protected Rectangle topUpTimeRect;
 
 	public RightOrientedLayout(ChessBoard board) {
 		super(board);
@@ -131,6 +129,8 @@ public class RightOrientedLayout extends ChessBoardLayout {
 			return SWT.LEFT;
 		case LAG_LABEL:
 			return SWT.LEFT;
+		case UP_TIME_LABEL:
+			return SWT.LEFT | SWT.BORDER;
 		default:
 			return SWT.NONE;
 		}
@@ -215,6 +215,8 @@ public class RightOrientedLayout extends ChessBoardLayout {
 				board.isWhiteOnTop() ? topLagRect : bottomLagRect);
 		board.getWhiteClockLabel().setBounds(
 				board.isWhiteOnTop() ? topClockRect : bottomClockRect);
+		// board.getWhiteUpTimeLabel().setBounds(
+		// board.isWhiteOnTop() ? topUpTimeRect : bottomUpTimeRect);
 
 		board.getBlackNameRatingLabel().setBounds(
 				board.isWhiteOnTop() ? bottomNameLabelRect : topNameLabelRect);
@@ -222,6 +224,8 @@ public class RightOrientedLayout extends ChessBoardLayout {
 				board.isWhiteOnTop() ? bottomLagRect : topLagRect);
 		board.getBlackClockLabel().setBounds(
 				board.isWhiteOnTop() ? bottomClockRect : topClockRect);
+		// board.getBlackUpTimeLabel().setBounds(
+		// board.isWhiteOnTop() ? bottomUpTimeRect : topUpTimeRect);
 
 		if (board.isWhitePieceJailOnTop()) {
 			board.getPieceJailSquares()[WP].setBounds(topPieceJailRow1Point.x,
@@ -392,12 +396,12 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 		boardTopLeft = new Point(boardWidthPixelsWest, topHeight);
 
-		int toMoveIndicatorX = boardWidthPixelsWest + boardHeight
-				+ boardWidthPixelsEast;
-		int toMoveIndicatorSide = TO_MOVE_INDICATOR_PERCENTAGE_OF_BOARD_SQUARE / 100;
+		// int upTimeIndicatorX = boardWidthPixelsWest + boardHeight
+		// + boardWidthPixelsEast;
+		// int upTimeIndicatorSide = 12;
 
 		int nameLabelStartX = boardWidthPixelsWest + boardHeight
-				+ boardWidthPixelsEast + toMoveIndicatorSide;
+				+ boardWidthPixelsEast;
 
 		Point nameLabelSize = new Point(width - nameLabelStartX, squareSize
 				* NAME_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE / 100);
@@ -414,19 +418,21 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		int nameStartY = topHeight;
 		int bottomHeightStart = nameStartY + 4 * squareSize;
 
-		topToMoveIndicatorRect = new Rectangle(toMoveIndicatorX, nameStartY,
-				toMoveIndicatorSide, toMoveIndicatorSide);
 		topNameLabelRect = new Rectangle(nameLabelStartX, nameStartY,
 				nameLabelSize.x, nameLabelSize.y);
+		// topUpTimeRect = new Rectangle(upTimeIndicatorX, nameStartY +
+		// topNameLabelRect.height,
+		// upTimeIndicatorSide, upTimeIndicatorSide);
 		topLagRect = new Rectangle(nameLabelStartX, nameStartY
 				+ topNameLabelRect.height, lagLabelSize.x, lagLabelSize.y);
 		topClockRect = new Rectangle(clockStartX, nameStartY + squareSize,
 				clockLabelSize.x, clockLabelSize.y);
 
-		bottomToMoveIndicatorRect = new Rectangle(toMoveIndicatorX,
-				bottomHeightStart, toMoveIndicatorSide, toMoveIndicatorSide);
 		bottomNameLabelRect = new Rectangle(nameLabelStartX, bottomHeightStart,
 				nameLabelSize.x, nameLabelSize.y);
+		// bottomUpTimeRect = new Rectangle(upTimeIndicatorX, bottomHeightStart
+		// + bottomNameLabelRect.height, upTimeIndicatorSide,
+		// upTimeIndicatorSide);
 		bottomLagRect = new Rectangle(nameLabelStartX, bottomHeightStart
 				+ bottomNameLabelRect.height, lagLabelSize.x, lagLabelSize.y);
 		bottomClockRect = new Rectangle(clockStartX, bottomHeightStart

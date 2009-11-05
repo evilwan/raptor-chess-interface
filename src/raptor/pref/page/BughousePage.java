@@ -42,6 +42,10 @@ public class BughousePage extends FieldEditorPreferencePage {
 				"Auto open partners board on games I observe",
 				getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME,
+				"Show up time indicator", getFieldEditorParent()));
+
 		addField(new FontFieldEditor(PreferenceKeys.BUG_BUTTONS_FONT,
 				"Button Font:", getFieldEditorParent()));
 
