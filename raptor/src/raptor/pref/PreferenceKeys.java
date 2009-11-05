@@ -114,6 +114,7 @@ public interface PreferenceKeys {
 	public static final String BUG_BUTTONS_FONT = "bugbuttons-font";
 
 	public static final String BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME = "board-show-bughouse-side-up-time";
+	public static final String BOARD_PIECE_JAIL_LABEL_PERCENTAGE = "board-piece-jail-label-percentage";
 	public static final String BOARD_ACTIVE_CLOCK_COLOR = "board-active-clock-color";
 	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
 	public static final String BOARD_COOLBAR_MODE = "board-coolbar-mode";

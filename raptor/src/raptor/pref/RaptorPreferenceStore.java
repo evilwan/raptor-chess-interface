@@ -262,6 +262,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// Board
 		setDefault(BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME, true);
+		setDefault(BOARD_PIECE_JAIL_LABEL_PERCENTAGE, 40);
 		setDefault(BOARD_COOLBAR_MODE, true);
 		setDefault(BOARD_COOLBAR_ON_TOP, true);
 		setDefault(BOARD_CHESS_SET_NAME, "Portable");
