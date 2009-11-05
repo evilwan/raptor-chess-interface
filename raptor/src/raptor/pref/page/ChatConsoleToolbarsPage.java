@@ -13,11 +13,9 @@
  */
 package raptor.pref.page;
 
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
-import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ChatConsoleToolbarsPage extends FieldEditorPreferencePage {
@@ -31,8 +29,5 @@ public class ChatConsoleToolbarsPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
-		addField(new BooleanFieldEditor(PreferenceKeys.BOARD_COOLBAR_MODE,
-				"Show toolbar on the top left of the board",
-				getFieldEditorParent()));
 	}
-} 
+}
