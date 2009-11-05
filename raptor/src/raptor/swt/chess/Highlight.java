@@ -68,6 +68,14 @@ public class Highlight {
 		}
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		Highlight highlight = (Highlight) object;
+		return startSquare == highlight.startSquare
+				&& endSquare == highlight.endSquare
+				&& isFadeAway == highlight.isFadeAway;
+	}
+
 	public Color getColor() {
 		return color;
 	}

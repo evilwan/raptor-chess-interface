@@ -828,6 +828,26 @@ public class ArrowDecorator {
 		}
 	}
 
+	/**
+	 * Returns true if the arrow is currently being used in the decorator.
+	 * 
+	 * @param arrow
+	 *            The arrow
+	 * @return The result.
+	 */
+	public boolean containsArrow(Arrow arrow) {
+		boolean result = false;
+		outer: for (SquareArrowDecorator decorator : decorators) {
+			for (ArrowSpec spec : decorator.specs) {
+				result = spec.arrow.equals(arrow);
+				if (result) {
+					break outer;
+				}
+			}
+		}
+		return result;
+	}
+
 	public void dispose() {
 		if (decorators != null) {
 			removeAllArrows();

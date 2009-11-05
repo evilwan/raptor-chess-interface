@@ -51,7 +51,8 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_PREMOVES,
-				"Show highlights on my premoves", getFieldEditorParent()));
+				"Show non-fading highlights as my premoves are made",
+				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES,
@@ -59,7 +60,8 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE,
-				"Highlights fade away", getFieldEditorParent()));
+				"Highlights fade away (excludes premoves)",
+				getFieldEditorParent()));
 
 		addField(new RadioGroupFieldEditor(
 				PreferenceKeys.HIGHLIGHT_ANIMATION_DELAY,
@@ -73,6 +75,8 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_MY_COLOR,
 				"My highlight color:", getFieldEditorParent()));
+		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_PREMOVE_COLOR,
+				"My premoves highlight color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_OPPONENT_COLOR,
 				"Opponent highlight color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_OBS_COLOR,

@@ -53,10 +53,12 @@ public class ChessBoardArrowsPage extends FieldEditorPreferencePage {
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.ARROW_SHOW_ON_MY_PREMOVES,
-				"Show arrows as my premoves are made", getFieldEditorParent()));
+				"Show non fading arrows as my premoves are made",
+				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceKeys.ARROW_FADE_AWAY_MODE,
-				"Arrows fade away", getFieldEditorParent()));
+				"Arrows fade away (excludes premove arrows)",
+				getFieldEditorParent()));
 
 		addField(new RadioGroupFieldEditor(
 				PreferenceKeys.ARROW_ANIMATION_DELAY, "Arrow animation delay:",
@@ -69,6 +71,8 @@ public class ChessBoardArrowsPage extends FieldEditorPreferencePage {
 
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_MY_COLOR,
 				"My Arrow Color:", getFieldEditorParent()));
+		addField(new ColorFieldEditor(PreferenceKeys.ARROW_PREMOVE_COLOR,
+				"My Premove Arrow Color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_OPPONENT_COLOR,
 				"Opponent Arrow Color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_OBS_COLOR,
