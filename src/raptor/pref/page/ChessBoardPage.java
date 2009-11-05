@@ -58,6 +58,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "26%", "26" }, { "28%", "28" }, { "30%", "30" }, { "32%", "32" },
 			{ "34%", "34" }, { "36%", "36" }, { "38%", "38" }, { "40%", "40" } };
 
+	public static final String[][] DROP_SQUARE_PERCENT = { { "20%", "20" },
+			{ "25%", "25" }, { "30%", "30" }, { "35%", "35" }, { "40%", "40" },
+			{ "45%", "45" }, { "50%", "50" } };
+
 	public static final String[][] ALPHAS = { { "0", "0" }, { "5", "5" },
 			{ "10", "10" }, { "15", "15" }, { "25", "25" }, { "30", "30" },
 			{ "35", "35" }, { "40", "40" }, { "50", "50" }, { "60", "60" },
@@ -103,6 +107,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			} catch (Exception e) {
 				return getSize().y;
 			}
+		}
+
+		protected int getPieceJailLabelPercentage() {
+			return Integer.parseInt(pieceJailPercentageCombo.getValue());
 		}
 
 		@Override
@@ -228,6 +236,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	ChessBoardPageComboFieldEditor boardHidingAlphaCombo;
 	ChessBoardPageComboFieldEditor pieceJailHidingAlphaCombo;
 	ChessBoardPageComboFieldEditor coordinatesPercentageCombo;
+	ChessBoardPageComboFieldEditor pieceJailPercentageCombo;
 	ColorFieldEditor pieceJailBackground;
 	ChessBoardPageSquare[][] squares = null;
 	PieceJailSquarePageSquare[] dropSquares = null;
@@ -345,6 +354,12 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				COORDINATES_SIZE_PERCENTAGE, getFieldEditorParent());
 		addField(coordinatesPercentageCombo);
 
+		pieceJailPercentageCombo = new ChessBoardPageComboFieldEditor(
+				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_PERCENTAGE,
+				"Piece jail label as a percentage of square size:",
+				DROP_SQUARE_PERCENT, getFieldEditorParent());
+		addField(pieceJailPercentageCombo);
+
 		Composite boards = new Composite(getFieldEditorParent(), SWT.NONE);
 		boards.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false,
 				3, 1));
@@ -396,7 +411,9 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		dropSquares[1].setBackground(Raptor.getInstance().getPreferences()
 				.getColor(PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
 		dropSquares[0].setPiece(GameConstants.WN);
+		dropSquares[0].setText("" + 2);
 		dropSquares[1].setPiece(GameConstants.BN);
+		dropSquares[0].setText("" + 2);
 
 		boardHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_SHADOW_ALPHA,

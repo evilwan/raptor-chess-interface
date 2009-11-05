@@ -19,6 +19,8 @@ import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 
+import raptor.Raptor;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.SWTUtils;
 
 /**
@@ -26,7 +28,6 @@ import raptor.swt.SWTUtils;
  * piece jails and drop squares to show the number of pieces.
  */
 public class PieceJailChessSquare extends ChessSquare {
-	public static final int LABEL_HEIGHT_PERCENTAGE = 30;
 
 	protected PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent e) {
@@ -52,7 +53,7 @@ public class PieceJailChessSquare extends ChessSquare {
 							BOARD_PIECE_JAIL_LABEL_COLOR));
 					e.gc.setFont(SWTUtils.getProportionalFont(getPreferences()
 							.getFont(BOARD_PIECE_JAIL_FONT),
-							LABEL_HEIGHT_PERCENTAGE, size.y));
+							getPieceJailLabelPercentage(), size.y));
 
 					int width = e.gc.getFontMetrics().getAverageCharWidth()
 							* text.length() + 2;
@@ -66,7 +67,9 @@ public class PieceJailChessSquare extends ChessSquare {
 			}
 		}
 	};
+
 	protected String text = "";
+
 	protected int pieceJailPiece;
 
 	public PieceJailChessSquare(Composite parent, ChessBoard board,
@@ -102,6 +105,11 @@ public class PieceJailChessSquare extends ChessSquare {
 	 */
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	protected int getPieceJailLabelPercentage() {
+		return Raptor.getInstance().getPreferences().getInt(
+				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_PERCENTAGE);
 	}
 
 	protected int getPieceJailShadowAlpha() {
