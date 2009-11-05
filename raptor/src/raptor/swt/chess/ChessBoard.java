@@ -13,6 +13,7 @@
  */
 package raptor.swt.chess;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
@@ -22,10 +23,16 @@ import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 import raptor.Raptor;
 import raptor.chess.GameConstants;
@@ -33,6 +40,9 @@ import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.SWTUtils;
+import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.ChatUtils;
+import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chess.layout.RightOrientedLayout;
 import raptor.swt.chess.movelist.SimpleMoveList;
 
@@ -95,6 +105,75 @@ public class ChessBoard implements BoardConstants {
 	protected CLabel whiteToMoveIndicatorLabel;
 
 	public ChessBoard() {
+	}
+
+	protected void addPersonMenuItems(Menu menu, String word) {
+		if (controller.getConnector().isLikelyPerson(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String person = controller.getConnector().parsePerson(word);
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add a tab for person: " + person);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					if (!Raptor.getInstance().getWindow()
+							.containsPersonalTellItem(
+									controller.getConnector(), person)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new PersonController(controller.getConnector(),
+										person));
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
+						ChatUtils.appendPreviousChatsToController(windowItem
+								.getConsole());
+					}
+				}
+			});
+
+			final String[][] connectorPersonItems = controller.getConnector()
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText(connectorPersonItems[i][0]);
+					final int index = i;
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							controller.getConnector().sendMessage(
+									connectorPersonItems[index][1]);
+						}
+					});
+				}
+			}
+		}
+	}
+
+	protected void onNameLabelRightClick(MouseEvent e, CLabel label) {
+		if (StringUtils.isNotBlank(label.getText()) && getController() != null
+				&& getController().getConnector() != null) {
+
+			String name = label.getText().split(" ")[0];
+
+			if (StringUtils.isNotBlank(name)) {
+				Menu menu = new Menu(componentComposite.getShell(), SWT.POP_UP);
+				addPersonMenuItems(menu, name);
+				if (menu.getItemCount() > 0) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Showing popup with " + menu.getItemCount()
+								+ " items. " + label.toDisplay(e.x, e.y));
+					}
+					menu.setLocation(label.toDisplay(e.x, e.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!componentComposite.getDisplay().readAndDispatch()) {
+							componentComposite.getDisplay().sleep();
+						}
+					}
+				}
+				menu.dispose();
+			}
+		}
 	}
 
 	/**
@@ -176,8 +255,22 @@ public class ChessBoard implements BoardConstants {
 
 			whiteNameRatingLabel = new CLabel(boardComposite, chessBoardLayout
 					.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
+			whiteNameRatingLabel.addMouseListener(new MouseAdapter() {
+				public void mouseDown(MouseEvent e) {
+					if (e.button == 3) {
+						onNameLabelRightClick(e, whiteNameRatingLabel);
+					}
+				}
+			});
 			blackNameRatingLabel = new CLabel(boardComposite, chessBoardLayout
 					.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
+			blackNameRatingLabel.addMouseListener(new MouseAdapter() {
+				public void mouseDown(MouseEvent e) {
+					if (e.button == 3) {
+						onNameLabelRightClick(e, blackNameRatingLabel);
+					}
+				}
+			});
 			whiteClockLabel = new CLabel(boardComposite, chessBoardLayout
 					.getStyle(ChessBoardLayout.Field.CLOCK_LABEL));
 			blackClockLabel = new CLabel(boardComposite, chessBoardLayout
