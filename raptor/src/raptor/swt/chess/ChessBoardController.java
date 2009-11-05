@@ -706,7 +706,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		String eco = getGame().getHeader(PgnHeader.ECO);
 		String opening = getGame().getHeader(PgnHeader.Opening);
 
-		String description = StringUtils.isBlank(eco) ? "" : eco + " ";
+		String description = StringUtils.isBlank(eco) ? "" : "(" + eco + ") ";
 		description += StringUtils.isBlank(opening) ? "" : opening;
 		board.getOpeningDescriptionLabel().setText(description);
 	}
