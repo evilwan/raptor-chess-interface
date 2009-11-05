@@ -120,11 +120,11 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		case GAME_DESCRIPTION_LABEL:
 			return SWT.LEFT;
 		case CURRENT_PREMOVE_LABEL:
-			return SWT.RIGHT;
+			return SWT.LEFT;
 		case STATUS_LABEL:
 			return SWT.LEFT;
 		case OPENING_DESCRIPTION_LABEL:
-			return SWT.RIGHT;
+			return SWT.LEFT;
 		case NAME_RATING_LABEL:
 			return SWT.LEFT;
 		case CLOCK_LABEL:
@@ -365,17 +365,13 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 		int topLabelPixelsWest = width
 				* TOP_LABEL_WIDTH_MARGIN_PERCENTAGES[WEST] / 100;
-		int topLabelPixesEast = width
-				* TOP_LABEL_WIDTH_MARGIN_PERCENTAGES[EAST] / 100;
 		int bottonLabelPixelsWest = width
 				* BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES[WEST] / 100;
-		int bottomLabelPixelsEast = width
-				* BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES[EAST] / 100;
 
-		int gameDescriptionWidth = width / 2 - topLabelPixelsWest;
-		int currentPremovesWidth = width / 2 - topLabelPixesEast;
-		int gameStatusWidth = width / 2 - bottonLabelPixelsWest;
-		int openingDescriptionWidth = width / 2 - bottomLabelPixelsEast;
+		int gameDescriptionWidth = boardWidthPixelsWest + boardHeight;
+		int currentPremovesWidth = width - boardWidthPixelsWest;
+		int gameStatusWidth = bottonLabelPixelsWest + boardHeight;
+		int openingDescriptionWidth = width - gameStatusWidth;
 
 		int topHeight = topLabelNorthMargin + topLabelHeight
 				+ topLabelSouthMargin;
