@@ -16,9 +16,9 @@ package raptor.pref.page;
 //import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FontFieldEditor;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -52,14 +52,13 @@ public class ChessBoardClocksPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS,
 				"Play 10 second countdown sounds", getFieldEditorParent()));
 
-		addField(new RadioGroupFieldEditor(
+		addField(new ComboFieldEditor(
 				PreferenceKeys.BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
-				"Show Seconds:", 3, SHOW_SECONDS_OPTIONS,
-				getFieldEditorParent()));
+				"Show Seconds:", SHOW_SECONDS_OPTIONS, getFieldEditorParent()));
 
-		addField(new RadioGroupFieldEditor(
+		addField(new ComboFieldEditor(
 				PreferenceKeys.BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN,
-				"Show Tenths of Seconds:", 3, SHOW_TENTHS_OPTIONS,
+				"Show Tenths of Seconds:", SHOW_TENTHS_OPTIONS,
 				getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR,
