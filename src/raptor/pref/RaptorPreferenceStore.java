@@ -261,6 +261,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 200);
 
 		// Board
+		setDefault(BOARD_COOLBAR_MODE, true);
+		setDefault(BOARD_COOLBAR_ON_TOP, true);
 		setDefault(BOARD_CHESS_SET_NAME, "Wiki");
 		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "Wood2");
 		setDefault(BOARD_IS_SHOW_COORDINATES, true);
@@ -352,6 +354,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(SEEK_TABLE_SHOW_LOSERS, true);
 		setDefault(SEEK_TABLE_SHOW_UNTIMED, true);
 
+		// Arrows
 		PreferenceConverter.setDefault(this, ARROW_OPPONENT_COLOR, new RGB(255,
 				0, 255));
 		PreferenceConverter
@@ -368,6 +371,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ARROW_FADE_AWAY_MODE, true);
 		setDefault(ARROW_WIDTH_PERCENTAGE, 15);
 
+		// Highlights
 		PreferenceConverter.setDefault(this, HIGHLIGHT_OPPONENT_COLOR, new RGB(
 				255, 0, 255));
 		PreferenceConverter.setDefault(this, HIGHLIGHT_MY_COLOR, new RGB(0, 0,
@@ -384,6 +388,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(HIGHLIGHT_ANIMATION_DELAY, 300L);
 		setDefault(HIGHLIGHT_WIDTH_PERCENTAGE, 3);
 
+		// Game Results
 		PreferenceConverter.setDefault(this, RESULTS_COLOR, new RGB(255, 0, 0));
 		PreferenceConverter.setDefault(this, RESULTS_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName, 40,

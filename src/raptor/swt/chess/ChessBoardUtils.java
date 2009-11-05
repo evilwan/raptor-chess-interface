@@ -33,6 +33,8 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -94,8 +96,23 @@ public class ChessBoardUtils implements BoardConstants {
 				LOG.debug("Added " + action + " to toolbar " + item);
 			}
 		}
-		new ToolItem(toolbar, SWT.SEPARATOR);
 
+		if (!controller.getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE)) {
+			new ToolItem(toolbar, SWT.SEPARATOR);
+		}
+	}
+
+	public static void adjustCoolbar(ChessBoard board, ToolBar toolbar) {
+		clearCoolbar(board);
+		toolbar.pack();
+		CoolItem coolItem = new CoolItem(board.getCoolbar(), SWT.NONE);
+		coolItem.setControl(toolbar);
+		toolbar.pack();
+		coolItem
+				.setPreferredSize(toolbar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		board.getCoolbar().setVisible(true);
+		board.getControl().layout();
 	}
 
 	/**
@@ -125,6 +142,18 @@ public class ChessBoardUtils implements BoardConstants {
 	public static boolean arePiecesSameColor(int piece1, int piece2) {
 		return isWhitePiece(piece1) && isWhitePiece(piece2)
 				|| isBlackPiece(piece1) && isBlackPiece(piece2);
+	}
+
+	public static void clearCoolbar(ChessBoard board) {
+		CoolBar coolbar = board.getCoolbar();
+		CoolItem[] items = coolbar.getItems();
+		for (CoolItem item : items) {
+			if (item.getControl() != null && !item.getControl().isDisposed()) {
+				item.getControl().dispose();
+			}
+			item.dispose();
+		}
+		board.getCoolbar().setVisible(false);
 	}
 
 	public static Move createDropMove(int fromSquare, int toSquare) {

@@ -27,6 +27,7 @@ import raptor.chess.GameFactory;
 import raptor.chess.Variant;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.controller.InactiveController;
 
 /**
@@ -107,8 +108,12 @@ public class ChessBoardCacheService {
 								board.getControl().setLayoutDeferred(true);
 								board.getControl().setParent(composite);
 								board.hideMoveList();
+								board.getArrowDecorator().removeAllArrows();
+								board.getSquareHighlighter()
+										.removeAllHighlights();
 								board.getResultDecorator().setDecoration(null);
 								board.getMoveList().clear();
+								ChessBoardUtils.clearCoolbar(board);
 								chessBoardCache.add(0, board);
 							}
 						});

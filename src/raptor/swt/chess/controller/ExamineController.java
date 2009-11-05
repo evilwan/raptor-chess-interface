@@ -62,6 +62,9 @@ public class ExamineController extends ChessBoardController {
 									.removeGameServiceListener(listener);
 							inactiveController
 									.setItemChangedListeners(itemChangedListeners);
+							// Clear the cool bar and init the inactive
+							// controller.
+							ChessBoardUtils.clearCoolbar(getBoard());
 							inactiveController.init();
 
 							setItemChangedListeners(null);
@@ -160,7 +163,7 @@ public class ExamineController extends ChessBoardController {
 					&& getGame().isInState(Game.ACTIVE_STATE)) {
 				connector.onUnexamine(getGame());
 			}
-			if (toolbar != null) {
+			if (toolbar != null && !toolbar.isDisposed()) {
 				toolbar.setVisible(false);
 				SWTUtils.clearToolbar(toolbar);
 				toolbar = null;
@@ -206,8 +209,11 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public Control getToolbar(Composite parent) {
+		boolean isCoolbarMode = getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE);
 		if (toolbar == null) {
-			toolbar = new ToolBar(parent, SWT.FLAT);
+			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
+					: parent, SWT.FLAT);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.ExaminingChessBoard, toolbar, true);
 
@@ -216,32 +222,21 @@ public class ExamineController extends ChessBoardController {
 			} else {
 				setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
 			}
+			if (isCoolbarMode) {
+				ChessBoardUtils.adjustCoolbar(getBoard(), toolbar);
+			}
 		} else {
-			toolbar.setParent(parent);
+			if (!isCoolbarMode) {
+				toolbar.setParent(parent);
+			}
 		}
 
-		return toolbar;
+		if (isCoolbarMode) {
+			return null;
+		} else {
+			return toolbar;
+		}
 	}
-
-	// @Override
-	// public Control getToolbar(Composite parent) {
-	// if (toolbar == null) {
-	// toolbar = new ToolBar(parent, SWT.FLAT);
-	// ChessBoardUtils.addPromotionIconsToToolbar(this, toolbar, true,
-	// game.getVariant() == Variant.suicide);
-	// new ToolItem(toolbar, SWT.SEPARATOR);
-	// ChessBoardUtils.addNavIconsToToolbar(this, toolbar, true, true);
-	// new ToolItem(toolbar, SWT.SEPARATOR);
-	// } else if (toolbar.getParent() != parent) {
-	// toolbar.setParent(parent);
-	// }
-	// if (game.getVariant() == Variant.suicide) {
-	// setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
-	// } else {
-	// setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
-	// }
-	// return toolbar;
-	// }
 
 	@Override
 	public void init() {
@@ -252,19 +247,6 @@ public class ExamineController extends ChessBoardController {
 		connector.getGameService().addGameServiceListener(listener);
 		fireItemChanged();
 	}
-
-	// @Override
-	// public void onToolbarButtonAction(ToolBarItemKey key, String... args) {
-	// switch (key) {
-	// case FEN:
-	// Raptor.getInstance().promptForText(
-	// "FEN for game " + game.getHeader(PgnHeader.Black) + " vs "
-	// + game.getHeader(PgnHeader.Black),
-	// getGame().toFen());
-	// break;
-	//
-	// }
-	// }
 
 	@Override
 	public void onBack() {

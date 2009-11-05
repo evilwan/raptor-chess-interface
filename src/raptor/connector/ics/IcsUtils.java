@@ -26,6 +26,7 @@ import raptor.chess.AtomicGame;
 import raptor.chess.BughouseGame;
 import raptor.chess.ClassicGame;
 import raptor.chess.CrazyhouseGame;
+import raptor.chess.FischerRandomGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.GameFactory;
@@ -62,6 +63,8 @@ public class IcsUtils implements GameConstants {
 	public static final String CHANNEL_STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]";
 
 	public static final String CRAZYHOUSE_IDENTIFIER = "crazyhouse";
+
+	public static final String FISCHER_RANDOM_IDENTIFIER = "wild/fr";
 
 	public static final String LEGAL_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
 			+ "!@#$%^&*()-=_+`~[{]}\\|;:'\",<.>/?";
@@ -281,6 +284,7 @@ public class IcsUtils implements GameConstants {
 		case wild:
 			result = new ClassicGame();
 			result.setHeader(PgnHeader.Variant, Variant.wild.name());
+			break;
 		case suicide:
 			result = new SuicideGame();
 			break;
@@ -295,6 +299,9 @@ public class IcsUtils implements GameConstants {
 			break;
 		case bughouse:
 			result = new BughouseGame();
+			break;
+		case fischerRandom:
+			result = new FischerRandomGame();
 			break;
 		default:
 			LOG.error("Uhandled game type " + g1.gameTypeDescription);
@@ -352,7 +359,28 @@ public class IcsUtils implements GameConstants {
 			game.setHeader(PgnHeader.WhiteElo, "");
 			game.setHeader(PgnHeader.Event, isSetup ? "Setting Up Position"
 					: "Examining Game");
-
+			updateNonPositionFields(game, message);
+			updatePosition(game, message);
+			verifyLegal(game);
+			return game;
+		} else if (message.relation == Style12Message.ISOLATED_POSITION_RELATION) {
+			Game game = new ClassicGame();
+			game.setId(message.gameId);
+			game.addState(Game.UPDATING_SAN_STATE);
+			game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+			game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
+					.currentTimeMillis()));
+			game.setHeader(PgnHeader.Round, "?");
+			game.setHeader(PgnHeader.Site, "freechess.org");
+			game.setHeader(PgnHeader.TimeControl, PgnUtils
+					.timeIncMillisToTimeControl(0, 0));
+			game.setHeader(PgnHeader.BlackRemainingMillis, "" + 0);
+			game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 0);
+			game.setHeader(PgnHeader.WhiteClock, PgnUtils.timeToClock(0));
+			game.setHeader(PgnHeader.BlackClock, PgnUtils.timeToClock(0));
+			game.setHeader(PgnHeader.BlackElo, "");
+			game.setHeader(PgnHeader.WhiteElo, "");
+			game.setHeader(PgnHeader.Event, "Isolated Position");
 			updateNonPositionFields(game, message);
 			updatePosition(game, message);
 			verifyLegal(game);
@@ -422,6 +450,8 @@ public class IcsUtils implements GameConstants {
 			result = Variant.crazyhouse;
 		} else if (identifier.indexOf(STANDARD_IDENTIFIER) != -1) {
 			result = Variant.classic;
+		} else if (identifier.indexOf(FISCHER_RANDOM_IDENTIFIER) != -1) {
+			result = Variant.fischerRandom;
 		} else if (identifier.indexOf(WILD_IDENTIFIER) != -1) {
 			result = Variant.wild;
 		} else if (identifier.indexOf(LIGHTNING_IDENTIFIER) != -1) {
@@ -685,12 +715,22 @@ public class IcsUtils implements GameConstants {
 	 * message.
 	 */
 	public static void updateGamesMoves(Game game, MovesMessage message) {
+		if (game.getVariant() == Variant.fischerRandom
+				|| game.getVariant() == Variant.wild) {
+			// Just avoid these. The are the source of all things evil with move
+			// lists.
+			// I have no idea how to get the starting positions if the pieces
+			// are randomized.
+			return;
+		}
+
 		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
 				- game.getMoveList().getSize();
 
 		if (halfMoveCountGameStartedOn != 0) {
 			Game gameClone = GameFactory.createStartingPosition(game
 					.getVariant());
+			gameClone.addState(Game.UPDATING_SAN_STATE);
 			gameClone.addState(Game.UPDATING_ECO_HEADERS_STATE);
 
 			for (int i = 0; i < halfMoveCountGameStartedOn; i++) {

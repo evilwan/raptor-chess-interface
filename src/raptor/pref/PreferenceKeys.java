@@ -115,6 +115,8 @@ public interface PreferenceKeys {
 
 	public static final String BOARD_ACTIVE_CLOCK_COLOR = "board-active-clock-color";
 	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
+	public static final String BOARD_COOLBAR_MODE = "board-coolbar-mode";
+	public static final String BOARD_COOLBAR_ON_TOP = "board-coolbar-on-top";
 	public static final String BOARD_CHESS_SET_NAME = "board-chess-set-name";
 	public static final String BOARD_CLOCK_FONT = "board-clock-font";
 	public static final String BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN = "board-clock-show-millis-when-less-than";
