@@ -151,7 +151,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 						80, bottomLabelHeight));
 		board.getOpeningDescriptionLabel().setFont(
 				SWTUtils.getProportionalFont(board.getOpeningDescriptionLabel()
-						.getFont(), 60, bottomLabelHeight));
+						.getFont(), 80, bottomLabelHeight));
 
 		Font nameFont = SWTUtils.getProportionalFont(board
 				.getWhiteNameRatingLabel().getFont(), hasHeightProblem ? 60

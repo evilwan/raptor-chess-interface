@@ -20,19 +20,18 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.chess.EcoInfo;
 import raptor.chess.Game;
+import raptor.chess.GameConstants;
 import raptor.chess.Variant;
+import raptor.chess.util.GameUtils;
 
 /**
- * A singleton service which can be used to lookup EcoInfo on a game.
- * 
- * This service was modeled from initial code John Nahlen produced.
- * 
- * ECO.txt is a modified version of the ECO.txt in BabasChess.
+ * A singleton service which can be used to lookup the opening description and
+ * ECO code of the current position in a game.
  * 
  * Currently this service only supports Classic but hopefully others will
  * contribute files to match other variants (bug,zh,suicide,losers,etc).
@@ -43,7 +42,9 @@ public class EcoService {
 
 	private static final EcoService singletonInstance = new EcoService();
 
-	private Map<Variant, Map<String, EcoInfo>> typeToInfoMap = new HashMap<Variant, Map<String, EcoInfo>>();
+	private Map<Variant, Map<String, String>> typeToFenToEco = new HashMap<Variant, Map<String, String>>();
+
+	private Map<Variant, Map<String, String>> typeToFenToDescription = new HashMap<Variant, Map<String, String>>();
 
 	public static EcoService getInstance() {
 		return singletonInstance;
@@ -57,72 +58,85 @@ public class EcoService {
 	 * Disposes the EcoService.
 	 */
 	public void dispose() {
-		typeToInfoMap.clear();
+		typeToFenToEco.clear();
+		typeToFenToDescription.clear();
 	}
 
 	/**
-	 * @param game
-	 *            Instance of Game that an ECOParser object needs to be
-	 *            retrieved from.
-	 * @return ECOParser instance if found, <code>null</code> if not.
+	 * Returns the ECO code for the specified game, null if one could not be
+	 * found.
 	 */
-	public EcoInfo getEcoInfo(Game game) {
+	public String getEco(Game game) {
 		// Don't add debug messages in here. It gets called so often they are
 		// annoying and really slow it down.
-
-		Map<String, EcoInfo> map = typeToInfoMap.get(game.getVariant());
-		EcoInfo result = null;
-
-		if (map != null) {
-			result = map.get(game.toFenPosition() + " "
-					+ (game.isWhitesMove() ? 'w' : 'b'));
+		Map<String, String> map = typeToFenToEco.get(game.getVariant());
+		if (map == null) {
+			return null;
 		} else {
-			result = null;
+			return map.get(getFenKey(game, true));
 		}
+	}
 
-		return result;
+	/**
+	 * Returns the long description of the opening for the specified game, null
+	 * if one could not be found.
+	 */
+	public String getLongDescription(Game game) {
+		// Don't add debug messages in here. It gets called so often they are
+		// annoying and really slow it down.
+		Map<String, String> map = typeToFenToDescription.get(game.getVariant());
+		if (map == null) {
+			return null;
+		} else {
+			return map.get(getFenKey(game, false));
+		}
+	}
+
+	protected String getFenKey(Game game, boolean includeEP) {
+		return game.toFenPosition()
+				+ " "
+				+ (game.isWhitesMove() ? 'w' : 'b')
+				+ " "
+				+ game.getFenCastle()
+				+ " "
+				+ (includeEP ? game.getEpSquare() == GameConstants.EMPTY_SQUARE ? "-"
+						: GameUtils.getSan(game.getEpSquare())
+						: "-");
 	}
 
 	private void initClassic() {
-		File file = new File(raptor.Raptor.RESOURCES_DIR + "ECOFen.txt");
-		typeToInfoMap.put(Variant.classic, parse(file));
+		File file = new File(raptor.Raptor.RESOURCES_DIR + "eco999.idx");
+		typeToFenToEco.put(Variant.classic, parse(file));
+		file = new File(raptor.Raptor.RESOURCES_DIR + "long999.idx");
+		typeToFenToDescription.put(Variant.classic, parse(file));
 	}
 
 	/**
-	 * Parses ECO information from File <code>file</code>.<br />
-	 * Example line in File <code>file</code>: A3|A00|Anderssen's
-	 * Opening|Romford counter-gambit.
-	 * 
-	 * The result list will be sorted ascending by key length.
+	 * Parses information from an idx file. These files contain FEN on one line
+	 * followed by a string on another line. The string can be either eco or
+	 * description.
 	 * 
 	 * @param file
 	 *            File containing the ECO information.
 	 * @throws IOException
 	 *             If something goes wrong during reading.
 	 */
-	private Map<String, EcoInfo> parse(File file) {
+	private Map<String, String> parse(File file) {
 		if (LOG.isDebugEnabled()) {
 			LOG.info("parse(" + file.getAbsolutePath() + ")");
 		}
 		long startTime = System.currentTimeMillis();
-		Map<String, EcoInfo> result = new HashMap<String, EcoInfo>();
+		Map<String, String> result = new HashMap<String, String>();
 
 		BufferedReader reader = null;
 
 		try {
 			reader = new BufferedReader(new FileReader(file));
 			while (reader.ready()) {
-				String line = reader.readLine();
-				String[] arr = line.split("\\|");
-				String varName = "";
-				if (arr.length == 4) {
-					varName = arr[3];
-				}
-				if (arr.length < 3) {
-					continue;
-				}
-				EcoInfo info = new EcoInfo(arr[0], arr[1], arr[2], varName);
-				result.put(arr[0], info);
+				String fen = reader.readLine();
+				String line2 = StringUtils.replaceChars(reader.readLine(),
+						"\\", "");
+				result.put(fen, line2);
 			}
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);

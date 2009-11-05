@@ -292,6 +292,18 @@ public class ClassicGame implements Game {
 		return epSquare;
 	}
 
+	public String getFenCastle() {
+		String whiteCastlingFen = getCastling(WHITE) == CASTLE_NONE ? ""
+				: getCastling(WHITE) == CASTLE_BOTH ? "KQ"
+						: getCastling(WHITE) == CASTLE_SHORT ? "K" : "Q";
+		String blackCastlingFen = getCastling(BLACK) == CASTLE_NONE ? ""
+				: getCastling(BLACK) == CASTLE_BOTH ? "kq"
+						: getCastling(BLACK) == CASTLE_SHORT ? "k" : "q";
+
+		return whiteCastlingFen.equals("") && blackCastlingFen.equals("") ? " -"
+				: whiteCastlingFen + blackCastlingFen;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -1768,18 +1780,6 @@ public class ClassicGame implements Game {
 				+ getDropCount(BLACK, KING) + "]";
 	}
 
-	protected String getFenCastle() {
-		String whiteCastlingFen = getCastling(WHITE) == CASTLE_NONE ? ""
-				: getCastling(WHITE) == CASTLE_BOTH ? "KQ"
-						: getCastling(WHITE) == CASTLE_SHORT ? "K" : "Q";
-		String blackCastlingFen = getCastling(BLACK) == CASTLE_NONE ? ""
-				: getCastling(BLACK) == CASTLE_BOTH ? "kq"
-						: getCastling(BLACK) == CASTLE_SHORT ? "k" : "q";
-
-		return whiteCastlingFen.equals("") && blackCastlingFen.equals("") ? " -"
-				: whiteCastlingFen + blackCastlingFen;
-	}
-
 	protected String getPieceCountsString() {
 		return "Piece counts [WP=" + getPieceCount(WHITE, PAWN) + " WN="
 				+ getPieceCount(WHITE, KNIGHT) + " WB="
@@ -2148,8 +2148,16 @@ public class ClassicGame implements Game {
 
 	protected void rollbackEcoHeaders(Move move) {
 		if (isSettingEcoHeaders()) {
-			setHeader(PgnHeader.ECO, move.getPreviousEcoHeader());
-			setHeader(PgnHeader.Opening, move.getPreviousOpeningHeader());
+			if (StringUtils.isNotBlank(move.getPreviousEcoHeader())) {
+				setHeader(PgnHeader.ECO, move.getPreviousEcoHeader());
+			} else {
+				removeHeader(PgnHeader.ECO);
+			}
+			if (StringUtils.isNotBlank(move.getPreviousOpeningHeader())) {
+				setHeader(PgnHeader.Opening, move.getPreviousOpeningHeader());
+			} else {
+				removeHeader(PgnHeader.Opening);
+			}
 		}
 	}
 
@@ -2461,22 +2469,14 @@ public class ClassicGame implements Game {
 
 	protected void updateEcoHeaders(Move move) {
 		if (isSettingEcoHeaders()) {
-			EcoInfo info = EcoService.getInstance().getEcoInfo(this);
-			if (info != null) {
-				if (!StringUtils.isBlank(info.getEcoCode())) {
-					setHeader(PgnHeader.ECO, info.getEcoCode());
-				} else {
-					removeHeader(PgnHeader.ECO);
-				}
-				if (!StringUtils.isBlank(info.getOpening())) {
-					String openingDescription = info.getOpening()
-							+ (StringUtils.isNotBlank(info.getVariation()) ? " "
-									+ info.getVariation()
-									: "");
-					setHeader(PgnHeader.Opening, openingDescription);
-				} else {
-					removeHeader(PgnHeader.Opening);
-				}
+			String ecoCode = EcoService.getInstance().getEco(this);
+			String description = EcoService.getInstance().getLongDescription(
+					this);
+			if (StringUtils.isNotBlank(ecoCode)) {
+				setHeader(PgnHeader.ECO, ecoCode);
+			}
+			if (StringUtils.isNotBlank(description)) {
+				setHeader(PgnHeader.Opening, description);
 			}
 			move.setPreviousEcoHeader(getHeader(PgnHeader.ECO));
 			move.setPreviousOpeningHeader(getHeader(PgnHeader.Opening));
