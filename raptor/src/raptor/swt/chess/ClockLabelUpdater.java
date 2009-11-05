@@ -16,13 +16,16 @@ package raptor.swt.chess;
 import org.eclipse.swt.custom.CLabel;
 
 import raptor.Raptor;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.SoundService;
 
 public class ClockLabelUpdater implements Runnable, PreferenceKeys {
+	ChessBoardController controller;
 	ChessBoard board;
+	boolean isWhite;
 	CLabel clockLabel;
 	boolean isRunning;
 	long lastSystemTime = 0;
@@ -30,10 +33,13 @@ public class ClockLabelUpdater implements Runnable, PreferenceKeys {
 	int lastCountdownPlayed = -1;
 	boolean isSpeakingCountdown;
 
-	public ClockLabelUpdater(CLabel clockLabel, ChessBoard board,
+	public ClockLabelUpdater(boolean isWhite, ChessBoardController controller,
 			boolean isSpeakingCountdown) {
-		this.clockLabel = clockLabel;
-		this.board = board;
+		this.isWhite = isWhite;
+		board = controller.getBoard();
+		clockLabel = isWhite ? board.getWhiteClockLabel() : board
+				.getBlackClockLabel();
+		this.controller = controller;
 		this.isSpeakingCountdown = isSpeakingCountdown;
 	}
 
@@ -90,8 +96,15 @@ public class ClockLabelUpdater implements Runnable, PreferenceKeys {
 				playCountdownSound(remainingTimeMillis);
 			}
 
+			controller.getGame().setHeader(
+					isWhite ? PgnHeader.WhiteRemainingMillis
+							: PgnHeader.BlackRemainingMillis,
+					"" + remainingTimeMillis);
+
 			clockLabel.setText(GameUtils
 					.timeToString(remainingTimeMillis, true));
+
+			controller.adjustTimeUpLabel();
 
 			// Continue running even if time has expired. This produces the
 			// flashing behavior.

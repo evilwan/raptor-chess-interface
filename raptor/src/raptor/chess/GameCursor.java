@@ -643,8 +643,7 @@ public class GameCursor implements Game {
 	}
 
 	public void setHeader(PgnHeader header, String value) {
-		throw new UnsupportedOperationException(
-				"This operation is not supported in GameCursor");
+		master.setHeader(header, value);
 	}
 
 	public void setId(String id) {

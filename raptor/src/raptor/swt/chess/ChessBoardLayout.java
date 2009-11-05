@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Layout;
 
 public abstract class ChessBoardLayout extends Layout implements BoardConstants {
 	public static enum Field {
-		CLOCK_LABEL, CURRENT_PREMOVE_LABEL, GAME_DESCRIPTION_LABEL, LAG_LABEL, NAME_RATING_LABEL, OPENING_DESCRIPTION_LABEL, STATUS_LABEL, TO_MOVE_INDICATOR;
+		CLOCK_LABEL, CURRENT_PREMOVE_LABEL, GAME_DESCRIPTION_LABEL, LAG_LABEL, NAME_RATING_LABEL, OPENING_DESCRIPTION_LABEL, STATUS_LABEL, UP_TIME_LABEL;
 	}
 
 	protected ChessBoard board;

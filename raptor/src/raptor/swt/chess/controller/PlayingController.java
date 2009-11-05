@@ -597,6 +597,7 @@ public class PlayingController extends ChessBoardController {
 		if (isDisposed()) {
 			return;
 		}
+		adjustTimeUpLabel();
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(cursor.getCursorPosition());
 		enableDisableNavButtons();
@@ -1091,10 +1092,9 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	protected void initClockUpdaters() {
 		if (whiteClockUpdater == null) {
-			whiteClockUpdater = new ClockLabelUpdater(getBoard()
-					.getWhiteClockLabel(), getBoard(), isUserWhite());
-			blackClockUpdater = new ClockLabelUpdater(getBoard()
-					.getBlackClockLabel(), getBoard(), !isUserWhite());
+			whiteClockUpdater = new ClockLabelUpdater(true, this, isUserWhite());
+			blackClockUpdater = new ClockLabelUpdater(true, this,
+					!isUserWhite());
 		}
 	}
 

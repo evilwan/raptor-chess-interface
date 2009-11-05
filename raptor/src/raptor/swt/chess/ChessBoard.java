@@ -63,7 +63,6 @@ public class ChessBoard implements BoardConstants {
 	protected CLabel blackClockLabel;
 	protected CLabel blackLagLabel;
 	protected CLabel blackNameRatingLabel;
-	protected CLabel blackToMoveIndicatorLabel;
 	protected Composite boardComposite;
 	protected ChessBoardLayout chessBoardLayout;
 	protected ChessBoardController controller;
@@ -99,81 +98,9 @@ public class ChessBoard implements BoardConstants {
 	protected CLabel statusLabel;
 	protected CLabel whiteClockLabel;
 	protected CLabel whiteLagLabel;
-
 	protected CLabel whiteNameRatingLabel;
 
-	protected CLabel whiteToMoveIndicatorLabel;
-
 	public ChessBoard() {
-	}
-
-	protected void addPersonMenuItems(Menu menu, String word) {
-		if (controller.getConnector().isLikelyPerson(word)) {
-			if (menu.getItemCount() > 0) {
-				new MenuItem(menu, SWT.SEPARATOR);
-			}
-			final String person = controller.getConnector().parsePerson(word);
-			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add a tab for person: " + person);
-			item.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					if (!Raptor.getInstance().getWindow()
-							.containsPersonalTellItem(
-									controller.getConnector(), person)) {
-						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-								new PersonController(controller.getConnector(),
-										person));
-						Raptor.getInstance().getWindow().addRaptorWindowItem(
-								windowItem, false);
-						ChatUtils.appendPreviousChatsToController(windowItem
-								.getConsole());
-					}
-				}
-			});
-
-			final String[][] connectorPersonItems = controller.getConnector()
-					.getPersonActions(person);
-			if (connectorPersonItems != null) {
-				for (int i = 0; i < connectorPersonItems.length; i++) {
-					item = new MenuItem(menu, SWT.PUSH);
-					item.setText(connectorPersonItems[i][0]);
-					final int index = i;
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							controller.getConnector().sendMessage(
-									connectorPersonItems[index][1]);
-						}
-					});
-				}
-			}
-		}
-	}
-
-	protected void onNameLabelRightClick(MouseEvent e, CLabel label) {
-		if (StringUtils.isNotBlank(label.getText()) && getController() != null
-				&& getController().getConnector() != null) {
-
-			String name = label.getText().split(" ")[0];
-
-			if (StringUtils.isNotBlank(name)) {
-				Menu menu = new Menu(componentComposite.getShell(), SWT.POP_UP);
-				addPersonMenuItems(menu, name);
-				if (menu.getItemCount() > 0) {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Showing popup with " + menu.getItemCount()
-								+ " items. " + label.toDisplay(e.x, e.y));
-					}
-					menu.setLocation(label.toDisplay(e.x, e.y));
-					menu.setVisible(true);
-					while (!menu.isDisposed() && menu.isVisible()) {
-						if (!componentComposite.getDisplay().readAndDispatch()) {
-							componentComposite.getDisplay().sleep();
-						}
-					}
-				}
-				menu.dispose();
-			}
-		}
 	}
 
 	/**
@@ -256,6 +183,7 @@ public class ChessBoard implements BoardConstants {
 			whiteNameRatingLabel = new CLabel(boardComposite, chessBoardLayout
 					.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
 			whiteNameRatingLabel.addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseDown(MouseEvent e) {
 					if (e.button == 3) {
 						onNameLabelRightClick(e, whiteNameRatingLabel);
@@ -265,6 +193,7 @@ public class ChessBoard implements BoardConstants {
 			blackNameRatingLabel = new CLabel(boardComposite, chessBoardLayout
 					.getStyle(ChessBoardLayout.Field.NAME_RATING_LABEL));
 			blackNameRatingLabel.addMouseListener(new MouseAdapter() {
+				@Override
 				public void mouseDown(MouseEvent e) {
 					if (e.button == 3) {
 						onNameLabelRightClick(e, blackNameRatingLabel);
@@ -289,18 +218,6 @@ public class ChessBoard implements BoardConstants {
 					.getStyle(ChessBoardLayout.Field.GAME_DESCRIPTION_LABEL));
 			currentPremovesLabel = new CLabel(boardComposite, chessBoardLayout
 					.getStyle(ChessBoardLayout.Field.CURRENT_PREMOVE_LABEL));
-
-			whiteToMoveIndicatorLabel = new CLabel(boardComposite,
-					chessBoardLayout
-							.getStyle(ChessBoardLayout.Field.TO_MOVE_INDICATOR));
-			whiteToMoveIndicatorLabel.setImage(ChessBoardUtils
-					.getToMoveIndicatorImage(true, 30));
-
-			blackToMoveIndicatorLabel = new CLabel(boardComposite,
-					chessBoardLayout
-							.getStyle(ChessBoardLayout.Field.TO_MOVE_INDICATOR));
-			blackToMoveIndicatorLabel.setImage(ChessBoardUtils
-					.getToMoveIndicatorImage(false, 30));
 
 			Raptor.getInstance().getPreferences().addPropertyChangeListener(
 					propertyChangeListener);
@@ -338,10 +255,6 @@ public class ChessBoard implements BoardConstants {
 
 	public synchronized CLabel getBlackNameRatingLabel() {
 		return blackNameRatingLabel;
-	}
-
-	public synchronized CLabel getBlackToMoveIndicatorLabel() {
-		return blackToMoveIndicatorLabel;
 	}
 
 	/**
@@ -458,10 +371,6 @@ public class ChessBoard implements BoardConstants {
 
 	public synchronized CLabel getWhiteNameRatingLabel() {
 		return whiteNameRatingLabel;
-	}
-
-	public synchronized CLabel getWhiteToMoveIndicatorLabel() {
-		return whiteToMoveIndicatorLabel;
 	}
 
 	public void hideMoveList() {
@@ -601,9 +510,6 @@ public class ChessBoard implements BoardConstants {
 				.getColor(BOARD_PLAYER_NAME_COLOR));
 		blackNameRatingLabel.setBackground(background);
 
-		whiteToMoveIndicatorLabel.setBackground(background);
-		blackToMoveIndicatorLabel.setBackground(background);
-
 		whiteLagLabel.setFont(preferences.getFont(BOARD_LAG_FONT));
 		whiteLagLabel.setForeground(preferences.getColor(BOARD_LAG_COLOR));
 		whiteLagLabel.setBackground(background);
@@ -648,6 +554,48 @@ public class ChessBoard implements BoardConstants {
 		controller.refresh();
 		sashForm.layout(true, true);
 		sashForm.redraw();
+	}
+
+	protected void addPersonMenuItems(Menu menu, String word) {
+		if (controller.getConnector().isLikelyPerson(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String person = controller.getConnector().parsePerson(word);
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add a tab for person: " + person);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					if (!Raptor.getInstance().getWindow()
+							.containsPersonalTellItem(
+									controller.getConnector(), person)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new PersonController(controller.getConnector(),
+										person));
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
+						ChatUtils.appendPreviousChatsToController(windowItem
+								.getConsole());
+					}
+				}
+			});
+
+			final String[][] connectorPersonItems = controller.getConnector()
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText(connectorPersonItems[i][0]);
+					final int index = i;
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							controller.getConnector().sendMessage(
+									connectorPersonItems[index][1]);
+						}
+					});
+				}
+			}
+		}
 	}
 
 	/**
@@ -698,6 +646,33 @@ public class ChessBoard implements BoardConstants {
 				squares[i][j] = new ChessSquare(boardComposite, this, GameUtils
 						.getSquare(i, j), isWhiteSquare);
 				isWhiteSquare = !isWhiteSquare;
+			}
+		}
+	}
+
+	protected void onNameLabelRightClick(MouseEvent e, CLabel label) {
+		if (StringUtils.isNotBlank(label.getText()) && getController() != null
+				&& getController().getConnector() != null) {
+
+			String name = label.getText().split(" ")[0];
+
+			if (StringUtils.isNotBlank(name)) {
+				Menu menu = new Menu(componentComposite.getShell(), SWT.POP_UP);
+				addPersonMenuItems(menu, name);
+				if (menu.getItemCount() > 0) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Showing popup with " + menu.getItemCount()
+								+ " items. " + label.toDisplay(e.x, e.y));
+					}
+					menu.setLocation(label.toDisplay(e.x, e.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!componentComposite.getDisplay().readAndDispatch()) {
+							componentComposite.getDisplay().sleep();
+						}
+					}
+				}
+				menu.dispose();
 			}
 		}
 	}

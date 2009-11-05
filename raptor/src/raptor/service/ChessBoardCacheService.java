@@ -113,6 +113,8 @@ public class ChessBoardCacheService {
 										.removeAllHighlights();
 								board.getResultDecorator().setDecoration(null);
 								board.getMoveList().clear();
+								board.getWhiteLagLabel().setImage(null);
+								board.getBlackLagLabel().setImage(null);
 								ChessBoardUtils.clearCoolbar(board);
 								chessBoardCache.add(0, board);
 							}

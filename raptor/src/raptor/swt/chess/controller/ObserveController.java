@@ -364,6 +364,9 @@ public class ObserveController extends ChessBoardController {
 		if (isDisposed()) {
 			return;
 		}
+
+		adjustTimeUpLabel();
+
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(cursor.getCursorPosition());
 		enableDisableNavButtons();

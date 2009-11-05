@@ -30,7 +30,9 @@ import raptor.Raptor;
 import raptor.chess.BughouseGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
+import raptor.chess.GameCursor;
 import raptor.chess.Move;
+import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
@@ -148,6 +150,44 @@ public abstract class ChessBoardController implements BoardConstants,
 			if (result != null) {
 				board.getStatusLabel().setText(
 						getGame().getHeader(PgnHeader.ResultDescription));
+			}
+		}
+	}
+
+	/**
+	 * Adjusts the time up label if the game is bughouse.
+	 */
+	public void adjustTimeUpLabel() {
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME)
+				&& getGame().getVariant() == Variant.bughouse) {
+			BughouseGame bugGame = getGame() instanceof GameCursor ? (BughouseGame) ((GameCursor) getGame())
+					.getMasterGame()
+					: (BughouseGame) getGame();
+
+			if (bugGame.getOtherBoard() != null) {
+				long teamOneWhite = Long.parseLong(bugGame
+						.getHeader(PgnHeader.WhiteRemainingMillis));
+				long teamOneBlack = Long.parseLong(bugGame
+						.getHeader(PgnHeader.BlackRemainingMillis));
+
+				long teamTwoWhite = Long.parseLong(bugGame.getOtherBoard()
+						.getHeader(PgnHeader.WhiteRemainingMillis));
+				long teamTwoBlack = Long.parseLong(bugGame.getOtherBoard()
+						.getHeader(PgnHeader.BlackRemainingMillis));
+
+				if (teamOneWhite > teamTwoWhite) {
+					getBoard().getWhiteLagLabel().setImage(
+							Raptor.getInstance().getIcon("up"));
+				} else {
+					getBoard().getWhiteLagLabel().setImage(null);
+				}
+				if (teamOneBlack > teamTwoBlack) {
+					getBoard().getBlackLagLabel().setImage(
+							Raptor.getInstance().getIcon("up"));
+				} else {
+					getBoard().getBlackLagLabel().setImage(null);
+				}
 			}
 		}
 	}
@@ -864,10 +904,8 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	protected void initClockUpdaters() {
 		if (whiteClockUpdater == null) {
-			whiteClockUpdater = new ClockLabelUpdater(board.whiteClockLabel,
-					board, false);
-			blackClockUpdater = new ClockLabelUpdater(board.blackClockLabel,
-					board, false);
+			whiteClockUpdater = new ClockLabelUpdater(true, this, false);
+			blackClockUpdater = new ClockLabelUpdater(false, this, false);
 		}
 	}
 
