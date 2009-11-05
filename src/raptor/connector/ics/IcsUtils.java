@@ -772,7 +772,6 @@ public class IcsUtils implements GameConstants {
 				game.setHeader(PgnHeader.Opening, gameClone
 						.getHeader(PgnHeader.Opening));
 			}
-
 		}
 	}
 

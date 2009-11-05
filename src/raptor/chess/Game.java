@@ -183,6 +183,11 @@ public interface Game extends GameConstants {
 	public int getEpSquare();
 
 	/**
+	 * Returns the castle part of the fen string.
+	 */
+	public String getFenCastle();
+
+	/**
 	 * Returns the number of half moves since the last irreversible move. This
 	 * is useful for determining the 50 move draw rule.
 	 */

@@ -195,6 +195,10 @@ public class GameCursor implements Game {
 		return cursor.getEpSquare();
 	}
 
+	public String getFenCastle() {
+		return cursor.toFenPosition();
+	}
+
 	public int getFiftyMoveCount() {
 		return cursor.getFiftyMoveCount();
 	}
