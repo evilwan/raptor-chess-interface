@@ -35,4 +35,4 @@ public class ChatConsoleToolbarsPage extends FieldEditorPreferencePage {
 				"Show toolbar on the top left of the board",
 				getFieldEditorParent()));
 	}
-}
+} 
