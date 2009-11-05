@@ -146,8 +146,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_PREMOVES_COLOR = "board-premoves-color";
 	public static final String BOARD_PREMOVES_FONT = "board-premoves-font";
 	public static final String BOARD_QUEUED_PREMOVE_ENABLED = "board-queued-premove-enabled";
-	public static final String BOARD_RESULT_COLOR = "board-result-color";
-	public static final String BOARD_RESULT_FONT = "board-result-font";
 	public static final String BOARD_SMARTMOVE_ENABLED = "board-smartmove-enabled";
 	public static final String BOARD_SQUARE_BACKGROUND_NAME = "board-square-background-name";
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
@@ -180,6 +178,13 @@ public interface PreferenceKeys {
 	public static final String HIGHLIGHT_FADE_AWAY_MODE = "hilight-fade-away-mode";
 	public static final String HIGHLIGHT_ANIMATION_DELAY = "highlight-animation-delay";
 	public static final String HIGHLIGHT_WIDTH_PERCENTAGE = "highlight-width-percentage";
+
+	public static final String RESULTS_COLOR = "results-color";
+	public static final String RESULTS_ANIMATION_DELAY = "results-animation-delay";
+	public static final String RESULTS_WIDTH_PERCENTAGE = "results-width-percentage";
+	public static final String RESULTS_FADE_AWAY_MODE = "results-fade-away-mode";
+	public static final String RESULTS_FONT = "results-font";
+	public static final String RESULTS_IS_SHOWING = "results-is-showing";
 
 	public static final String CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO = "chat-event-";
 	public static final String CHAT_CONSOLE_BACKGROUND_COLOR = "chat-console-background-color";

@@ -308,8 +308,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				128, 128));
 		PreferenceConverter.setDefault(this, BOARD_STATUS_COLOR, new RGB(128,
 				128, 128));
-		PreferenceConverter.setDefault(this, BOARD_RESULT_COLOR, new RGB(255,
-				0, 0));
 
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName, 14, 0) });
@@ -329,9 +327,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
-		PreferenceConverter.setDefault(this, BOARD_RESULT_FONT,
-				new FontData[] { new FontData(defaultMonospacedFontName, 40,
-						SWT.BOLD) });
 
 		// BugArena
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
@@ -388,6 +383,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(HIGHLIGHT_FADE_AWAY_MODE, false);
 		setDefault(HIGHLIGHT_ANIMATION_DELAY, 300L);
 		setDefault(HIGHLIGHT_WIDTH_PERCENTAGE, 3);
+
+		PreferenceConverter.setDefault(this, RESULTS_COLOR, new RGB(255, 0, 0));
+		PreferenceConverter.setDefault(this, RESULTS_FONT,
+				new FontData[] { new FontData(defaultMonospacedFontName, 40,
+						SWT.BOLD) });
+		setDefault(RESULTS_IS_SHOWING, true);
+		setDefault(RESULTS_FADE_AWAY_MODE, true);
+		setDefault(RESULTS_ANIMATION_DELAY, 500L);
+		setDefault(RESULTS_WIDTH_PERCENTAGE, 80);
 
 		// Chat
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);

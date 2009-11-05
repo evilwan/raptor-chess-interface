@@ -186,9 +186,10 @@ public class ChessBoard implements BoardConstants {
 			Raptor.getInstance().getPreferences().addPropertyChangeListener(
 					propertyChangeListener);
 
-			resultDecorator = new ResultDecorator(this);
-			arrowDecorator = new ArrowDecorator(this);
+			// order is important here.
 			squareHighlighter = new SquareHighlighter(this);
+			arrowDecorator = new ArrowDecorator(this);
+			resultDecorator = new ResultDecorator(this);
 
 			updateFromPrefs();
 
