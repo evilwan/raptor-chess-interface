@@ -45,6 +45,13 @@ public class Arrow {
 		}
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		Arrow arrow = (Arrow) object;
+		return startSquare == arrow.startSquare && endSquare == arrow.endSquare
+				&& isFadeAway == arrow.isFadeAway;
+	}
+
 	public Color getColor() {
 		return color;
 	}

@@ -99,7 +99,7 @@ public class SimpleMoveList implements ChessBoardMoveList {
 			if (movesTable.getItemCount() == 0) {
 				return;
 			}
-			
+
 			ignoreSelection = true;
 
 			if (halfMoveIndex > 0) {

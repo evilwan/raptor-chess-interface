@@ -89,8 +89,6 @@ public class PlayingController extends ChessBoardController {
 		int promotionColorlessPiece;
 		int toPiece;
 		int toSquare;
-		Highlight highlight;
-		Arrow arrow;
 		boolean isPremoveDrop = false;
 	}
 
@@ -153,7 +151,6 @@ public class PlayingController extends ChessBoardController {
 						}
 					}
 				});
-
 			}
 		}
 
@@ -554,7 +551,7 @@ public class PlayingController extends ChessBoardController {
 
 	public void onClearPremoves() {
 		premoves.clear();
-		adjustPremoveLabel();
+		adjustPremoveLabelHighlightsAndArrows();
 	}
 
 	@Override
@@ -741,7 +738,7 @@ public class PlayingController extends ChessBoardController {
 				premoves.clear();
 				premoves.add(premoveInfo);
 
-				adjustPremoveLabel();
+				adjustPremoveLabelHighlightsAndArrows();
 
 				board.unhidePieces();
 
@@ -750,7 +747,7 @@ public class PlayingController extends ChessBoardController {
 				premoves.add(premoveInfo);
 
 				board.unhidePieces();
-				adjustPremoveLabel();
+				adjustPremoveLabelHighlightsAndArrows();
 				refreshBoard();
 			}
 		}
@@ -807,8 +804,7 @@ public class PlayingController extends ChessBoardController {
 					board.getSquareHighlighter().removeAllHighlights();
 					board.getArrowDecorator().removeAllArrows();
 					refreshForMove(move);
-				}
-				else {
+				} else {
 					onPlayIllegalMoveSound();
 				}
 			} else {
@@ -851,12 +847,8 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
 									PAWN, color));
 							premoveInfo.fromPiece = isUserWhite() ? WP : BP;
-							premoveInfo.highlight = new Highlight(
-									premoveInfo.fromSquare,
-									premoveInfo.toSquare, getPreferences()
-											.getColor(HIGHLIGHT_MY_COLOR));
 							premoves.add(premoveInfo);
-							adjustPremoveLabel();
+							adjustPremoveLabelHighlightsAndArrows();
 						}
 					});
 				}
@@ -873,12 +865,8 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
 									KNIGHT, color));
 							premoveInfo.fromPiece = isUserWhite() ? WN : BN;
-							premoveInfo.highlight = new Highlight(
-									premoveInfo.fromSquare,
-									premoveInfo.toSquare, getPreferences()
-											.getColor(HIGHLIGHT_MY_COLOR));
 							premoves.add(premoveInfo);
-							adjustPremoveLabel();
+							adjustPremoveLabelHighlightsAndArrows();
 						}
 					});
 				}
@@ -895,12 +883,8 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
 									BISHOP, color));
 							premoveInfo.fromPiece = isUserWhite() ? WB : BB;
-							premoveInfo.highlight = new Highlight(
-									premoveInfo.fromSquare,
-									premoveInfo.toSquare, getPreferences()
-											.getColor(HIGHLIGHT_MY_COLOR));
 							premoves.add(premoveInfo);
-							adjustPremoveLabel();
+							adjustPremoveLabelHighlightsAndArrows();
 						}
 					});
 				}
@@ -917,12 +901,8 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
 									ROOK, color));
 							premoveInfo.fromPiece = isUserWhite() ? WR : BR;
-							premoveInfo.highlight = new Highlight(
-									premoveInfo.fromSquare,
-									premoveInfo.toSquare, getPreferences()
-											.getColor(HIGHLIGHT_MY_COLOR));
 							premoves.add(premoveInfo);
-							adjustPremoveLabel();
+							adjustPremoveLabelHighlightsAndArrows();
 						}
 					});
 				}
@@ -939,12 +919,8 @@ public class PlayingController extends ChessBoardController {
 							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
 									QUEEN, color));
 							premoveInfo.fromPiece = isUserWhite() ? WQ : BQ;
-							premoveInfo.highlight = new Highlight(
-									premoveInfo.fromSquare,
-									premoveInfo.toSquare, getPreferences()
-											.getColor(HIGHLIGHT_MY_COLOR));
 							premoves.add(premoveInfo);
-							adjustPremoveLabel();
+							adjustPremoveLabelHighlightsAndArrows();
 						}
 					});
 				}
@@ -1036,10 +1012,14 @@ public class PlayingController extends ChessBoardController {
 
 	/**
 	 * Adds all premoves to the premoves label. Also updates the clear premove
-	 * button if there are moves in the premove queue.
+	 * button if there are moves in the premove queue. Also adds arrows and
+	 * highlights of premoves.
+	 * 
+	 * 
+	 * Premove arrows are always permanent
 	 */
 	@Override
-	protected void adjustPremoveLabel() {
+	protected void adjustPremoveLabelHighlightsAndArrows() {
 		String labelText = "Premoves: ";
 		synchronized (premoves) {
 			boolean hasAddedPremove = false;
@@ -1054,9 +1034,28 @@ public class PlayingController extends ChessBoardController {
 					labelText += " , " + premove;
 				}
 				hasAddedPremove = true;
+
+				if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_PREMOVES)) {
+					Highlight highlight = new Highlight(info.fromSquare,
+							info.toSquare, getPreferences().getColor(
+									HIGHLIGHT_PREMOVE_COLOR), false);
+					if (!board.getSquareHighlighter().containsHighlight(
+							highlight)) {
+						board.getSquareHighlighter().addHighlight(highlight);
+					}
+				}
+				if (getPreferences().getBoolean(ARROW_SHOW_ON_MY_PREMOVES)) {
+					Arrow arrow = new Arrow(info.fromSquare, info.toSquare,
+							getPreferences().getColor(ARROW_PREMOVE_COLOR),
+							false);
+					if (!board.getArrowDecorator().containsArrow(arrow)) {
+						board.getArrowDecorator().addArrow(arrow);
+					}
+				}
 			}
+			setToolItemEnabled(ToolBarItemKey.CLEAR_PREMOVES, hasAddedPremove);
+			board.getCurrentPremovesLabel().setText(labelText);
 		}
-		board.getCurrentPremovesLabel().setText(labelText);
 	}
 
 	/**
@@ -1096,6 +1095,8 @@ public class PlayingController extends ChessBoardController {
 		if (!isUsersMove()) {
 			return false;
 		}
+		board.getArrowDecorator().removeAllArrows();
+		board.getSquareHighlighter().removeAllHighlights();
 
 		boolean result = false;
 		Move moveMade = null;
@@ -1230,7 +1231,7 @@ public class PlayingController extends ChessBoardController {
 			}
 
 			if (moveMade != null) {
-				if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_PREMOVES)) {
+				if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
 					board
 							.getSquareHighlighter()
 							.addHighlight(
@@ -1244,7 +1245,7 @@ public class PlayingController extends ChessBoardController {
 															PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
 				}
 				if (getPreferences().getBoolean(
-						PreferenceKeys.ARROW_SHOW_ON_MY_PREMOVES)) {
+						PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
 					board
 							.getArrowDecorator()
 							.addArrow(
@@ -1259,10 +1260,8 @@ public class PlayingController extends ChessBoardController {
 															PreferenceKeys.ARROW_FADE_AWAY_MODE)));
 				}
 			}
-
-		} else {
-			adjustPremoveLabel();
 		}
+		adjustPremoveLabelHighlightsAndArrows();
 		return result;
 	}
 

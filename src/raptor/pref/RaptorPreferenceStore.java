@@ -361,6 +361,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				0, 255));
 		PreferenceConverter
 				.setDefault(this, ARROW_MY_COLOR, new RGB(0, 0, 255));
+		PreferenceConverter.setDefault(this, ARROW_PREMOVE_COLOR, new RGB(0, 0,
+				255));
 		PreferenceConverter.setDefault(this, ARROW_OBS_COLOR,
 				new RGB(0, 0, 255));
 		setDefault(ARROW_SHOW_ON_OBS_MOVES, true);
@@ -375,6 +377,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				255, 0, 255));
 		PreferenceConverter.setDefault(this, HIGHLIGHT_MY_COLOR, new RGB(0, 0,
 				255));
+		PreferenceConverter.setDefault(this, HIGHLIGHT_PREMOVE_COLOR, new RGB(
+				0, 0, 255));
 		PreferenceConverter.setDefault(this, HIGHLIGHT_OBS_COLOR, new RGB(0, 0,
 				255));
 		setDefault(HIGHLIGHT_SHOW_ON_OBS_MOVES, true);

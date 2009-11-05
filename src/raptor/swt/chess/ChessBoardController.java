@@ -453,7 +453,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		long startTime = System.currentTimeMillis();
 
 		adjustGameDescriptionLabel();
-		adjustPremoveLabel();
+		adjustPremoveLabelHighlightsAndArrows();
 		adjustGameStatusLabel();
 		adjustOpeningDescriptionLabel();
 		adjustNameRatingLabels();
@@ -801,7 +801,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * empty string. This method should be overridden to provide premove
 	 * support.
 	 */
-	protected void adjustPremoveLabel() {
+	protected void adjustPremoveLabelHighlightsAndArrows() {
 		if (isDisposed()) {
 			return;
 		}

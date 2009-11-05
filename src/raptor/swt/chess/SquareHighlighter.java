@@ -162,6 +162,35 @@ public class SquareHighlighter {
 		}
 	}
 
+	/**
+	 * Returns true if the highlight is currently being used.
+	 * 
+	 * @param highlight
+	 *            The Highlight
+	 * @return The result.
+	 */
+	public boolean containsHighlight(Highlight highlight) {
+		boolean result = false;
+		for (HighlightDecorator decorator : decorators) {
+			result = decorator.highlights.contains(highlight);
+			if (result) {
+				break;
+			}
+		}
+
+		if (!result) {
+			for (HighlightDecorator decorator : dropSquareDecorators) {
+				if (decorator != null) {
+					result = decorator.highlights.contains(highlight);
+					if (result) {
+						break;
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 	public void dispose() {
 		if (decorators != null) {
 			removeAllHighlights(true);
