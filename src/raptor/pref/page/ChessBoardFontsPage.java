@@ -67,10 +67,5 @@ public class ChessBoardFontsPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_STATUS_FONT, "Last Move Font:",
 				getFieldEditorParent());
 		addField(lastMoveFont);
-
-		FontFieldEditor resultFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_RESULT_FONT, "Result Font:",
-				getFieldEditorParent());
-		addField(resultFont);
 	}
 }

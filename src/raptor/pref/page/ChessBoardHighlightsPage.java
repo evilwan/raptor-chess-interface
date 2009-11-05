@@ -15,8 +15,8 @@ package raptor.pref.page;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.RadioGroupFieldEditor;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -26,6 +26,7 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 	public static final String[][] HIGHLIGHT_ANIMATION_DELAY_OPTIONS = {
 			{ "100 milliseconds", "100" }, { "200 milliseconds", "200" },
 			{ "300 milliseconds", "300" }, { "500 milliseconds", "500" },
+			{ "750 milliseconds", "750" },
 			{ "1 second", "1000" } };
 
 	public static final String[][] HIGHLIGHT_BORDER_PERCENTAGE_OPTIONS = {
@@ -63,14 +64,13 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 				"Highlights fade away (excludes premoves)",
 				getFieldEditorParent()));
 
-		addField(new RadioGroupFieldEditor(
-				PreferenceKeys.HIGHLIGHT_ANIMATION_DELAY,
-				"Highlight animation delay:", 5,
+		addField(new ComboFieldEditor(PreferenceKeys.HIGHLIGHT_ANIMATION_DELAY,
+				"Highlight animation delay:",
 				HIGHLIGHT_ANIMATION_DELAY_OPTIONS, getFieldEditorParent()));
 
-		addField(new RadioGroupFieldEditor(
+		addField(new ComboFieldEditor(
 				PreferenceKeys.HIGHLIGHT_WIDTH_PERCENTAGE,
-				"Highlight border percentage of square size:", 5,
+				"Highlight border percentage of square size:",
 				HIGHLIGHT_BORDER_PERCENTAGE_OPTIONS, getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_MY_COLOR,

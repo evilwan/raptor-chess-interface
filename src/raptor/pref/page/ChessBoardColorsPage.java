@@ -74,11 +74,6 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(lastMoveColor);
 
-		ColorFieldEditor resultColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_RESULT_COLOR, "Result Color:",
-				getFieldEditorParent());
-		addField(resultColor);
-
 		ColorFieldEditor jailLabelColor = new ColorFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR,
 				"Piece Jail/Drop Square Number Color:", getFieldEditorParent());

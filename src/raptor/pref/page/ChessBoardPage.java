@@ -40,13 +40,6 @@ import raptor.swt.chess.ChessSquare;
 import raptor.swt.chess.PieceJailChessSquare;
 
 public class ChessBoardPage extends FieldEditorPreferencePage {
-
-	public static final String[][] HIGHLIGHT_BORDER_RESIZE_PERCENTAGE = {
-			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
-			{ "3%", "0.03" }, { "4%", "0.04" }, { "5%", "0.05" },
-			{ "6%", "0.06" }, { "7.5%", "0.075" }, { "10%", "0.1" },
-			{ "12.5%", "0.125" } };
-
 	public static final String[][] LAYOUTS = { { "Right Oriented Layout",
 			"raptor.swt.chess.layout.RightOrientedLayout" } };
 
@@ -55,7 +48,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "4%", "0.04" }, { "6%", "0.06" }, { "7%", "0.07" },
 			{ "8%", "0.08" }, { "9%", "0.09" }, { "10%", "0.1" },
 			{ "11%", "0.09" }, { "12%", "0.12" }, { "14%", "0.14" },
-			{ "16%", "0.16" }, { "18%", "0.18" } };
+			{ "16%", "0.16" }, { "18%", "0.18" }, { "20%", "0.20" },
+			{ "22%", "0.22" }, { "25%", "0.25" }, { "30%", "0.30" },
+			{ "35%", "0.35" }, { "40%", "0.40" }, { "45%", "0.45" },
+			{ "50%", "0.50" } };
 
 	public static final String[][] COORDINATES_SIZE_PERCENTAGE = {
 			{ "18%", "18" }, { "20%", "20" }, { "22%", "22" }, { "24%", "24" },

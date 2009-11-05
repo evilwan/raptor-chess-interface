@@ -37,6 +37,7 @@ import raptor.pref.page.ChessBoardColorsPage;
 import raptor.pref.page.ChessBoardFontsPage;
 import raptor.pref.page.ChessBoardHighlightsPage;
 import raptor.pref.page.ChessBoardPage;
+import raptor.pref.page.ChessBoardResultsPage;
 import raptor.pref.page.ChessBoardToolbarsPage;
 import raptor.pref.page.MessageEventScripts;
 import raptor.pref.page.RaptorPage;
@@ -144,6 +145,9 @@ public class PreferenceUtils {
 				new ChessBoardArrowsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("highlights",
 				new ChessBoardHighlightsPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("results",
+				new ChessBoardResultsPage()));
+
 		mgr.addTo("chessBoard", new PreferenceNode("toolbar",
 				new ChessBoardToolbarsPage()));
 		mgr

@@ -166,8 +166,8 @@ public class ResultDecorator implements BoardConstants {
 	}
 
 	protected ChessBoard board;
-	protected boolean isHiding = false;
 	protected Font resultFont;
+	protected int frame = -1;
 	protected int resultFontHeight;
 	protected ResultDecoration decoration;
 
@@ -189,11 +189,11 @@ public class ResultDecorator implements BoardConstants {
 			decorator.dispose();
 		}
 		decorators.clear();
-	};
+	}
 
 	public ChessBoard getBoard() {
 		return board;
-	}
+	};
 
 	public ResultDecoration getDecoration() {
 		return decoration;
@@ -209,6 +209,11 @@ public class ResultDecorator implements BoardConstants {
 	}
 
 	public void setDecorationFromResult(Result result) {
+		if (!Raptor.getInstance().getPreferences().getBoolean(
+				RESULTS_IS_SHOWING)) {
+			decoration = null;
+			return;
+		}
 		switch (result) {
 		case BLACK_WON:
 			decoration = ResultDecoration.BlackWin;
@@ -226,6 +231,36 @@ public class ResultDecorator implements BoardConstants {
 			decoration = ResultDecoration.Undetermined;
 			break;
 		}
+
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				RESULTS_FADE_AWAY_MODE)) {
+			frame = 5;
+			Raptor.getInstance().getDisplay().timerExec(
+					Raptor.getInstance().getPreferences().getInt(
+							PreferenceKeys.RESULTS_ANIMATION_DELAY),
+					new Runnable() {
+						public void run() {
+							frame--;
+							redrawSquares();
+							if (frame != 0) {
+								Raptor
+										.getInstance()
+										.getDisplay()
+										.timerExec(
+												Raptor
+														.getInstance()
+														.getPreferences()
+														.getInt(
+																PreferenceKeys.RESULTS_ANIMATION_DELAY),
+												this);
+							} else {
+								frame = -1;
+								decoration = null;
+							}
+							redrawSquares();
+						}
+					});
+		}
 	}
 
 	/**
@@ -239,13 +274,22 @@ public class ResultDecorator implements BoardConstants {
 	protected void drawResultText(PaintEvent e, String text) {
 		if (text != null) {
 			e.gc.setForeground(Raptor.getInstance().getPreferences().getColor(
-					PreferenceKeys.BOARD_RESULT_COLOR));
+					PreferenceKeys.RESULTS_COLOR));
 
 			e.gc.setFont(getResultFont(e.height));
 
 			Point extent = e.gc.stringExtent(text);
-			e.gc.drawString(text, e.width / 2 - extent.x / 2, e.height / 2
-					- extent.y / 2, true);
+
+			if (frame != -1) {
+				e.gc.setAdvanced(true);
+				e.gc.setAlpha(50 * frame);
+				e.gc.drawString(text, e.width / 2 - extent.x / 2, e.height / 2
+						- extent.y / 2, true);
+				e.gc.setAlpha(255);
+			} else {
+				e.gc.drawString(text, e.width / 2 - extent.x / 2, e.height / 2
+						- extent.y / 2, true);
+			}
 		}
 	}
 
@@ -260,15 +304,18 @@ public class ResultDecorator implements BoardConstants {
 	 *            The height of the square.
 	 */
 	protected synchronized Font getResultFont(int height) {
+		int fontPercentOfSquareSize = Raptor.getInstance().getPreferences()
+				.getInt(PreferenceKeys.RESULTS_WIDTH_PERCENTAGE);
 		if (resultFont == null) {
 			resultFont = Raptor.getInstance().getPreferences().getFont(
-					PreferenceKeys.BOARD_RESULT_FONT);
-			resultFont = SWTUtils.getProportionalFont(resultFont, 80, height);
+					PreferenceKeys.RESULTS_FONT);
+			resultFont = SWTUtils.getProportionalFont(resultFont,
+					fontPercentOfSquareSize, height);
 			resultFontHeight = height;
 		} else {
 			if (resultFontHeight != height) {
-				Font newFont = SWTUtils.getProportionalFont(resultFont, 80,
-						height);
+				Font newFont = SWTUtils.getProportionalFont(resultFont,
+						fontPercentOfSquareSize, height);
 				resultFontHeight = height;
 				resultFont = newFont;
 			}
@@ -276,4 +323,12 @@ public class ResultDecorator implements BoardConstants {
 		return resultFont;
 	}
 
+	/**
+	 * Redraws all squares that have arrow segments.
+	 */
+	protected void redrawSquares() {
+		for (SquareDecorator decorator : decorators) {
+			decorator.square.redraw();
+		}
+	}
 }
