@@ -1818,7 +1818,7 @@ public class RaptorWindow extends ApplicationWindow {
 						}
 					}
 
-					MenuItem imageMenuItem = new MenuItem(menu, SWT.CASCADE);
+					final MenuItem imageMenuItem = new MenuItem(menu, SWT.PUSH);
 					imageMenuItem.setImage(Raptor.getInstance().getImage(
 							Raptor.RESOURCES_DIR + "/images/quadrantsSmall"
 									+ folder.quad.toString() + ".png"));
