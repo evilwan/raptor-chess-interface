@@ -19,25 +19,29 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
+import raptor.pref.fields.LabelFieldEditor;
 
 public class ChessBoardToolbarsPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
 
 	public ChessBoardToolbarsPage() {
-		super(GRID);
+		super(FLAT);
 		setTitle("Toolbars");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override
 	protected void createFieldEditors() {
+		addField(new LabelFieldEditor("NONE",
+				"The changes below require a restart to work seamlessly.",
+				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_COOLBAR_MODE,
-				"Show toolbar on the chess board as opposed to on the top right\n(Requires restart)",
+				"Show toolbar on the chess board as opposed to on the top right.",
 				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_COOLBAR_ON_TOP,
-				"Show toolbar on the top of the board, unchecked it will be on the bottom.\n(Requires restart and the above checkbox checked)",
+				"Show toolbar on the top of the board, unchecked it will be on the bottom.",
 				getFieldEditorParent()));
 	}
 }
