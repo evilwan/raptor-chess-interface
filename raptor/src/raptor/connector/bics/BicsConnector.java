@@ -109,10 +109,22 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	}
 
 	/**
-	 * Raptor allows connecting to fics twice with different profiles. Override
-	 * short name and change it to fics2 so users can distinguish the two.
+	 * Raptor allows connecting to bics twice with different profiles. Override
+	 * short name and change it to bics2 so users can distinguish the two.
+	 * 
+	 * This is also used to handle partnerships in simul bug.
+	 * 
+	 * If this is bics 1 it will contain the bics2 connector. If this is bics2
+	 * it will be null.
 	 */
 	protected BicsConnector bics2 = null;
+
+	/**
+	 * This is used by the bics2 connector. You need a reference back to bics1
+	 * to handle simul bug partnerships. If this is bics2 it will contain the
+	 * bics1 connector, otherwise its null.
+	 */
+	protected BicsConnector bics1 = null;
 	protected MenuManager connectionsMenu;
 
 	protected Action autoConnectAction;
@@ -154,6 +166,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			bics2.dispose();
 			bics2 = null;
 		}
+		bics1 = null;
 	}
 
 	/**
@@ -354,8 +367,15 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 					bics2.connect(dialog.getSelectedProfile());
 
 					if (dialog.isSimulBugLogin()) {
+						// set bics2s simul bug connector.
+						// This is used to automatically send the partner
+						// message after login.
+						// When the partnership is received a
+						// PARTNERSHIP_CREATED message
+						// is fired and the names of the bug partners are set in
+						// that see the overridden publishEvent for how that
+						// works.
 						bics2.setSimulBugConnector(true);
-						bics2.setSimulBugPartnerName(getUserName());
 						// Force bug-open to get the partnership message.
 						sendMessage("set bugopen on");
 					}
@@ -542,9 +562,11 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		if (chatService != null) { // Could have been disposed.
 			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
 				if (bics2 != null
+						&& isConnected()
 						&& bics2.isConnected()
 						&& StringUtils.equalsIgnoreCase(event.getSource(),
 								bics2.getUserName())) {
+					// here we are in fics1 where a partnership was created.
 					if (LOG.isInfoEnabled()) {
 						LOG.info("Created simul bughouse partnership with "
 								+ bics2.getUserName());
@@ -553,17 +575,39 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 					simulBugPartnerName = event.getSource();
 					bics2.isSimulBugConnector = true;
 					bics2.simulBugPartnerName = getUserName();
+				} else if (bics1 == null
+						&& bics1 != null
+						&& bics1.isConnected()
+						&& isConnected()
+						&& StringUtils.equalsIgnoreCase(event.getSource(),
+								bics1.getUserName())) {
+					// here we are in fics2 when a partnership was created.
+					if (LOG.isInfoEnabled()) {
+						LOG.info("Created simul bughouse partnership with "
+								+ bics1.getUserName());
+					}
+					isSimulBugConnector = true;
+					simulBugPartnerName = event.getSource();
+					bics1.isSimulBugConnector = true;
+					bics1.simulBugPartnerName = getUserName();
 				}
 			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
-				if (bics2 != null && isSimulBugConnector) {
-					if (LOG.isInfoEnabled()) {
-						LOG.info("Ended simul bughouse partnership with "
-								+ bics2.getUserName());
-					}
-					isSimulBugConnector = false;
-					simulBugPartnerName = null;
+				isSimulBugConnector = false;
+				simulBugPartnerName = null;
+
+				if (LOG.isInfoEnabled()) {
+					LOG
+							.info("Partnership destroyed. Resetting partnership information.");
+				}
+
+				// clear out the fics2 or fics1 depending on what this is.
+				if (bics2 != null) {
 					bics2.isSimulBugConnector = false;
 					bics2.simulBugPartnerName = null;
+				}
+				if (bics1 != null) {
+					bics1.isSimulBugConnector = false;
+					bics1.simulBugPartnerName = null;
 				}
 			}
 			super.publishEvent(event);

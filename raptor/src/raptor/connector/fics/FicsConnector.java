@@ -71,8 +71,20 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
+	 * 
+	 * This is also used to handle partnerships in simul bug.
+	 * 
+	 * If this is fics 1 it will contain the fics2 connector. If this is fics2
+	 * it will be null.
 	 */
 	protected FicsConnector fics2 = null;
+
+	/**
+	 * This is used by the fics2 connector. You need a reference back to fics1
+	 * to handle simul bug partnerships. If this is fics2 it will contain the
+	 * fics1 connector, otherwise its null.
+	 */
+	protected FicsConnector fics1 = null;
 
 	public FicsConnector() {
 		this(new IcsConnectorContext(new IcsParser(false)));
@@ -109,6 +121,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			fics2.dispose();
 			fics2 = null;
 		}
+		// stop circular refs for easier gc.
+		fics1 = null;
 	}
 
 	/**
@@ -380,8 +394,15 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 					fics2.connect(dialog.getSelectedProfile());
 
 					if (dialog.isSimulBugLogin()) {
+						// set fics2s simul bug connector.
+						// This is used to automatically send the partner
+						// message after login.
+						// When the partnership is received a
+						// PARTNERSHIP_CREATED message
+						// is fired and the names of the bug partners are set in
+						// that see the overridden publishEvent for how that
+						// works.
 						fics2.setSimulBugConnector(true);
-						fics2.setSimulBugPartnerName(getUserName());
 						// Force bug-open to get the partnership message.
 						sendMessage("set bugopen on");
 					}
@@ -566,6 +587,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 
 		};
+		fics2.fics1 = this;
 	}
 
 	@Override
@@ -635,9 +657,11 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		if (chatService != null) { // Could have been disposed.
 			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
 				if (fics2 != null
+						&& isConnected()
 						&& fics2.isConnected()
 						&& StringUtils.equalsIgnoreCase(event.getSource(),
 								fics2.getUserName())) {
+					// here we are in fics1 where a partnership was created.
 					if (LOG.isInfoEnabled()) {
 						LOG.info("Created simul bughouse partnership with "
 								+ fics2.getUserName());
@@ -646,17 +670,39 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 					simulBugPartnerName = event.getSource();
 					fics2.isSimulBugConnector = true;
 					fics2.simulBugPartnerName = getUserName();
+				} else if (fics2 == null
+						&& fics1 != null
+						&& fics1.isConnected()
+						&& isConnected()
+						&& StringUtils.equalsIgnoreCase(event.getSource(),
+								fics1.getUserName())) {
+					// here we are in fics2 when a partnership was created.
+					if (LOG.isInfoEnabled()) {
+						LOG.info("Created simul bughouse partnership with "
+								+ fics1.getUserName());
+					}
+					isSimulBugConnector = true;
+					simulBugPartnerName = event.getSource();
+					fics1.isSimulBugConnector = true;
+					fics1.simulBugPartnerName = getUserName();
 				}
 			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
-				if (fics2 != null && isSimulBugConnector) {
-					if (LOG.isInfoEnabled()) {
-						LOG.info("Ended simul bughouse partnership with "
-								+ fics2.getUserName());
-					}
-					isSimulBugConnector = false;
-					simulBugPartnerName = null;
+				isSimulBugConnector = false;
+				simulBugPartnerName = null;
+
+				if (LOG.isInfoEnabled()) {
+					LOG
+							.info("Partnership destroyed. Resetting partnership information.");
+				}
+
+				// clear out the fics2 or fics1 depending on what this is.
+				if (fics2 != null) {
 					fics2.isSimulBugConnector = false;
 					fics2.simulBugPartnerName = null;
+				}
+				if (fics1 != null) {
+					fics1.isSimulBugConnector = false;
+					fics1.simulBugPartnerName = null;
 				}
 			}
 			super.publishEvent(event);
