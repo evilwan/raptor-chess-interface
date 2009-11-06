@@ -48,6 +48,7 @@ import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.controller.BughouseSuggestController;
 import raptor.swt.chess.controller.ExamineController;
+import raptor.swt.chess.controller.InactiveController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.PlayingController;
 import raptor.swt.chess.controller.SetupController;
@@ -253,8 +254,8 @@ public class IcsUtils implements GameConstants {
 		} else if (game.isInState(Game.PLAYING_STATE)) {
 			controller = new PlayingController(game, connector);
 		} else {
-			LOG.error("Could not find controller type for game state. "
-					+ "Ignoring game. state= " + game.getState());
+			//Used for sposition.
+			controller = new InactiveController(game);
 		}
 		return controller;
 	}
@@ -851,9 +852,7 @@ public class IcsUtils implements GameConstants {
 			game.addState(Game.EXAMINING_STATE);
 			break;
 		case Style12Message.ISOLATED_POSITION_RELATION:
-			throw new IllegalArgumentException(
-					"Isolated positions are not currently implemented. "
-							+ game.getId() + " " + message);
+			break;
 		case Style12Message.OBSERVING_EXAMINED_GAME_RELATION:
 			game.addState(Game.OBSERVING_EXAMINED_STATE);
 			break;
