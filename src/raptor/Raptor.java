@@ -23,9 +23,12 @@ import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -96,6 +99,8 @@ public class Raptor implements PreferenceKeys {
 
 	protected RaptorWindow raptorWindow;
 
+	protected boolean isShutdown = false;
+
 	public static void createInstance() {
 		instance = new Raptor();
 		instance.init();
@@ -119,6 +124,12 @@ public class Raptor implements PreferenceKeys {
 			display = new Display();
 
 			createInstance();
+
+			display.addListener(SWT.Close, new Listener() {
+				public void handleEvent(Event event) {
+					getInstance().shutdown();
+				}
+			});
 
 			instance.raptorWindow = new RaptorWindow();
 			instance.raptorWindow.setBlockOnOpen(true);
@@ -362,10 +373,19 @@ public class Raptor implements PreferenceKeys {
 		}
 	}
 
+	public boolean isShutdown() {
+		return isShutdown;
+	}
+
 	/**
 	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
 	 */
 	public void shutdown() {
+		if (isShutdown()) {
+			return;
+		}
+		isShutdown = true;
+
 		getPreferences().save();
 
 		try {
@@ -411,7 +431,7 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		try {
-			if (raptorWindow != null) {
+			if (raptorWindow != null && !raptorWindow.getShell().isDisposed()) {
 				raptorWindow.close();
 			}
 		} catch (Throwable t) {
