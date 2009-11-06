@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.RaptorWindowItem;
 import raptor.action.RaptorAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
@@ -640,6 +641,33 @@ public class ChessBoardUtils implements BoardConstants {
 				if (item == null) {
 					item = new ChessBoardWindowItem(controller,
 							isBughouseOtherBoard);
+
+					// This block of code overrides the quadrant if there is an
+					// active controller already there observing a chess game.
+					if ((item.getPreferredQuadrant() == Quadrant.III || item
+							.getPreferredQuadrant() == Quadrant.IV)
+							&& item.getController().getGame().getVariant() != Variant.bughouse) {
+						RaptorWindowItem[] items = Raptor.getInstance()
+								.getWindow().getWindowItems(
+										item.getPreferredQuadrant());
+						boolean swapQuadrants = false;
+						for (RaptorWindowItem currentItem : items) {
+							if (currentItem instanceof ChessBoardWindowItem) {
+								if (((ChessBoardWindowItem) currentItem)
+										.getConnector() != null) {
+									swapQuadrants = true;
+								}
+							}
+						}
+						if (swapQuadrants) {
+							if (item.getPreferredQuadrant() == Quadrant.III) {
+								item.setQuadrant(Quadrant.IV);
+							} else if (item.getPreferredQuadrant() == Quadrant.IV) {
+								item.setQuadrant(Quadrant.III);
+							}
+						}
+					}
+
 					Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 				} else {
 					item.takeOver(controller, isBughouseOtherBoard);

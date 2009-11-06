@@ -49,6 +49,7 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 
 	boolean isPassive = true;
 	boolean isBughouseOtherBoard = false;
+	Quadrant quadrant;
 
 	public ChessBoardWindowItem(ChessBoardController controller) {
 		this.controller = controller;
@@ -116,9 +117,16 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		Quadrant result = ChessBoardUtils.getQuadrantForController(
-				getController(), isBughouseOtherBoard);
-		return result;
+		return getQuadrant();
+	}
+
+	/**
+	 * Returns the quadrant to use for this ChesBoardWindowItem.
+	 */
+	public Quadrant getQuadrant() {
+		return quadrant != null ? quadrant
+				: ChessBoardUtils.getQuadrantForController(getController(),
+						isBughouseOtherBoard);
 	}
 
 	public String getTitle() {
@@ -174,6 +182,15 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
 		getController().removeItemChangedListener(listener);
+	}
+
+	/**
+	 * Can be set to override preferred quadrant.
+	 * 
+	 * @param quadrant
+	 */
+	public void setQuadrant(Quadrant quadrant) {
+		this.quadrant = quadrant;
 	}
 
 	/**

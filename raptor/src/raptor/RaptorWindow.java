@@ -1013,21 +1013,6 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
-	 * Returns an array of all RaptorWindowItems currently active.
-	 */
-	public RaptorWindowItem[] getRaptorWindowItems() {
-		synchronized (itemsManaged) {
-			RaptorWindowItem[] result = new RaptorWindowItem[itemsManaged
-					.size()];
-			int i = 0;
-			for (RaptorTabItem item : itemsManaged) {
-				result[i++] = item.raptorItem;
-			}
-			return result;
-		}
-	}
-
-	/**
 	 * Returns all RaptorWindowItems that are being managed and are of the
 	 * specified class type and are currently selected within their parent
 	 * RaptorTabFolder.
@@ -1092,7 +1077,6 @@ public class RaptorWindow extends ApplicationWindow {
 	 *            The window item class.
 	 * @return The result.
 	 */
-	@SuppressWarnings("unchecked")
 	public RaptorConnectorWindowItem[] getWindowItems(Connector connector) {
 		List<RaptorConnectorWindowItem> result = new ArrayList<RaptorConnectorWindowItem>(
 				10);
@@ -1108,6 +1092,26 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		}
 		return result.toArray(new RaptorConnectorWindowItem[0]);
+	}
+
+	/**
+	 * Returns all RaptorWindowItems that are being managed and belong to the
+	 * specified connector.
+	 * 
+	 * @param windowItemClass
+	 *            The window item class.
+	 * @return The result.
+	 */
+	public RaptorWindowItem[] getWindowItems(Quadrant quadrant) {
+		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
+				if (currentTabItem.raptorParent.quad == quadrant) {
+					result.add(currentTabItem.raptorItem);
+				}
+			}
+		}
+		return result.toArray(new RaptorWindowItem[0]);
 	}
 
 	/**
