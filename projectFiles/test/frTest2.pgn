@@ -1,0 +1,16 @@
+[Event "FICS rated wild/fr game"]
+[Site "FICS"]
+[FICSGamesDBGameNo "28796742"]
+[White "vilinar"]
+[Black "Hackelaar"]
+[WhiteElo "1818"]
+[BlackElo "1779"]
+[TimeControl "60+1"]
+[Date "2009.11.05"]
+[WhiteClock "0:01:00.000"]
+[BlackClock "0:01:00.000"]
+[FEN "rnqkbnrb/pppppppp/8/8/8/8/PPPPPPPP/RNQKBNRB w KQkq - 0 1"]
+[PlyCount "93"]
+[Result "1-0"]
+
+1. e4 {[%emt 0.0]} Nc6 {[%emt 0.0]} 2. d4 {[%emt 2.578]} g6 {[%emt 1.875]} 3. c3 {[%emt 8.438]} f6 {[%emt 7.766]} 4. Bd2 {[%emt 3.437]} Bf7 {[%emt 1.281]} 5. f4 {[%emt 1.406]} Na5 {[%emt 2.688]} 6. Ne3 {[%emt 2.047]} b6 {[%emt 5.422]} 7. O-O {[%emt 2.734]} Qa6 {[%emt 1.516]} 8. Na3 {[%emt 6.047]} Qd3 {[%emt 4.406]} 9. b4 {[%emt 8.984]} Nc6 {[%emt 4.156]} 10. Rf3 {[%emt 1.391]} Qe2 {[%emt 5.203]} 11. Qc2 {[%emt 12.828]} Ne6 {[%emt 3.125]} 12. Re1 {[%emt 1.812]} Qa6 {[%emt 2.593]} 13. Bc1 {[%emt 0.625]} Qc8 {[%emt 2.5]} 14. d5 {[%emt 1.75]} Nxb4 {[%emt 4.719]} 15. cxb4 {[%emt 0.922]} Nf8 {[%emt 2.015]} 16. Bb2 {[%emt 0.61]} e6 {[%emt 2.515]} 17. dxe6 {[%emt 1.312]} Bxe6 {[%emt 0.593]} 18. f5 {[%emt 0.578]} gxf5 {[%emt 1.765]} 19. exf5 {[%emt 0.141]} Bf7 {[%emt 2.969]} 20. g3 {[%emt 3.0]} d6 {[%emt 0.828]} 21. Rf4 {[%emt 1.281]} Nd7 {[%emt 0.812]} 22. Bxa8 {[%emt 1.078]} Qxa8 {[%emt 1.875]} 23. Nec4 {[%emt 1.454]} Ne5 {[%emt 1.328]} 24. Nxe5 {[%emt 1.218]} dxe5 {[%emt 0.75]} 25. Qd3+ {[%emt 2.25]} *

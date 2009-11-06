@@ -189,12 +189,23 @@ public class GameFactory implements GameConstants {
 				}
 			}
 		}
+
+		if (result.getVariant() == Variant.fischerRandom) {
+			/**
+			 * Assume its the starting position. That is the only way to load a
+			 * FR game from a fen.
+			 */
+			((FischerRandomGame) result).initialPositionIsSet();
+		}
 		return result;
 	}
 
 	public static final Game createStartingPosition(Variant variant) {
 		if (variant == Variant.suicide) {
 			return createFromFen(STARTING_SUICIDE_POSITION_FEN, variant);
+		} else if (variant == Variant.fischerRandom) {
+			throw new IllegalArgumentException(
+					"Creating from a starting position for FischerRandom is not currently supported.");
 		} else {
 			return createFromFen(STARTING_POSITION_FEN, variant);
 		}

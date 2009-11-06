@@ -765,7 +765,6 @@ public class ClassicGame implements Game {
 			int candidatePromotedPiece = EMPTY;
 
 			if (validations.isCastleKSideStrict()) {
-
 				for (Move move : pseudoLegals) {
 					if (move != null
 							&& (move.getMoveCharacteristic() & Move.SHORT_CASTLING_CHARACTERISTIC) != 0) {
@@ -1993,30 +1992,7 @@ public class ClassicGame implements Game {
 			setPiece(move.getFrom(), EMPTY);
 		}
 
-		switch (move.getPiece()) {
-		case KING:
-			setCastling(getColorToMove(), CASTLE_NONE);
-			break;
-		default:
-			if (move.getPiece() == ROOK && move.getFrom() == SQUARE_A1
-					&& getColorToMove() == WHITE || move.getCapture() == ROOK
-					&& move.getTo() == SQUARE_A1 && getColorToMove() == BLACK) {
-				setCastling(WHITE, getCastling(WHITE) & CASTLE_SHORT);
-			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_H1
-					&& getColorToMove() == WHITE || move.getCapture() == ROOK
-					&& move.getTo() == SQUARE_H1 && getColorToMove() == BLACK) {
-				setCastling(WHITE, getCastling(WHITE) & CASTLE_LONG);
-			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_A8
-					&& getColorToMove() == BLACK || move.getCapture() == ROOK
-					&& move.getTo() == SQUARE_A8 && getColorToMove() == WHITE) {
-				setCastling(BLACK, getCastling(BLACK) & CASTLE_SHORT);
-			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_H8
-					&& getColorToMove() == BLACK || move.getCapture() == ROOK
-					&& move.getTo() == SQUARE_H8 && getColorToMove() == WHITE) {
-				setCastling(BLACK, getCastling(BLACK) & CASTLE_LONG);
-			}
-			break;
-		}
+		updateCastlingRightsForNonEpNonCastlingMove(move);
 
 		setEpSquare(move.getEpSquare());
 	}
@@ -2428,6 +2404,11 @@ public class ClassicGame implements Game {
 			if (kingSquare != EMPTY_SQUARE) { // Now trim illegals
 				for (int i = 0; i < matches.getSize(); i++) {
 					Move current = matches.get(i);
+
+					// Needed for FR.
+					if (current.isCastleLong() || current.isCastleShort()) {
+						continue;
+					}
 					synchronized (this) {
 						try {
 							forceMove(current);
@@ -2465,6 +2446,37 @@ public class ClassicGame implements Game {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Provided so it can be easily implemented for Fischer Random type of
+	 * games.
+	 */
+	protected void updateCastlingRightsForNonEpNonCastlingMove(Move move) {
+		switch (move.getPiece()) {
+		case KING:
+			setCastling(getColorToMove(), CASTLE_NONE);
+			break;
+		default:
+			if (move.getPiece() == ROOK && move.getFrom() == SQUARE_A1
+					&& getColorToMove() == WHITE || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_A1 && getColorToMove() == BLACK) {
+				setCastling(WHITE, getCastling(WHITE) & CASTLE_SHORT);
+			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_H1
+					&& getColorToMove() == WHITE || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_H1 && getColorToMove() == BLACK) {
+				setCastling(WHITE, getCastling(WHITE) & CASTLE_LONG);
+			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_A8
+					&& getColorToMove() == BLACK || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_A8 && getColorToMove() == WHITE) {
+				setCastling(BLACK, getCastling(BLACK) & CASTLE_SHORT);
+			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_H8
+					&& getColorToMove() == BLACK || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_H8 && getColorToMove() == WHITE) {
+				setCastling(BLACK, getCastling(BLACK) & CASTLE_LONG);
+			}
+			break;
+		}
 	}
 
 	protected void updateEcoHeaders(Move move) {

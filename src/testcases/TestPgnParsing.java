@@ -197,6 +197,49 @@ public class TestPgnParsing {
 	}
 
 	@Test
+	public void testFischerRandom() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"projectFiles/test/wildFrGames.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+		System.err.println("Parsed " + listener.getGames().size() + " games "
+				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
+
+		System.err.println(listener.getErrors());
+	}
+
+	@Test
+	public void testFRKingc8() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"projectFiles/test/frTest2.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		parser.parse();
+		System.err.println(listener.getGames().get(0));
+		System.err.println(listener.getGames().get(0));
+		listener.getGames().get(0).makeSanMove("Kc8");
+	}
+
+	@Test
+	public void testFRLongCastle() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"projectFiles/test/frTest1.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		parser.parse();
+		System.err.println(listener.getGames().get(0));
+		System.err.println(listener.getGames().get(0));
+		listener.getGames().get(0).makeSanMove("O-O-O");
+	}
+
+	@Test
 	public void testLargeFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
 				"projectFiles/test/Alekhine4Pawns.pgn"), Integer.MAX_VALUE);

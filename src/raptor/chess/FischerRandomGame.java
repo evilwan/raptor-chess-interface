@@ -13,6 +13,12 @@
  */
 package raptor.chess;
 
+import static raptor.chess.util.GameUtils.bitscanClear;
+import static raptor.chess.util.GameUtils.bitscanForward;
+import static raptor.chess.util.GameUtils.getBitboard;
+import static raptor.chess.util.GameUtils.getFile;
+import static raptor.chess.util.GameUtils.getSquare;
+import static raptor.chess.util.ZobristUtils.zobrist;
 import raptor.chess.pgn.PgnHeader;
 
 /**
@@ -57,9 +63,9 @@ import raptor.chess.pgn.PgnHeader;
  */
 public class FischerRandomGame extends ClassicGame {
 
-	// protected int initialLongRookFile;
-	// protected int initialShortRookFile;
-	// protected int initialKingFile;
+	protected int initialLongRookFile;
+	protected int initialShortRookFile;
+	protected int initialKingFile;
 
 	public FischerRandomGame() {
 		setHeader(PgnHeader.Variant, Variant.fischerRandom.name());
@@ -75,232 +81,319 @@ public class FischerRandomGame extends ClassicGame {
 		return result;
 	}
 
-	// @Override
-	// public PriorityMoveList getLegalMoves() {
-	// return null;
-	// }
-	//
-	// /**
-	// * This method should be invoked after the initial position is setup. It
-	// * handles setting castling information used later on during the game.
-	// */
-	// public void initialPositionIsSet() {
-	// initialKingFile = getFile(bitscanForward(getPieceBB(WHITE, KING)));
-	// long rookBB = getPieceBB(WHITE, ROOK);
-	// int firstRook = getFile(bitscanForward(rookBB));
-	// rookBB = bitscanClear(rookBB);
-	// int secondRook = getFile(bitscanForward(rookBB));
-	// if (firstRook < initialKingFile) {
-	// initialLongRookFile = firstRook;
-	// initialShortRookFile = secondRook;
-	// } else {
-	// initialLongRookFile = firstRook;
-	// initialShortRookFile = secondRook;
-	// }
-	// }
-	//
-	// @Override
-	// public boolean isLegalPosition() {
-	// return false;
-	// }
-	//
-	// protected boolean emptyBetweenFiles(int rank, int startFile, int endFile)
-	// {
-	// // This is ugly should be rewritten using a bit board trick.
-	// boolean result = true;
-	// for (int i = startFile + 1; i < endFile; i++) {
-	// result = getPiece(getSquare(rank, i)) == EMPTY;
-	// if (!result) {
-	// break;
-	// }
-	// }
-	// return result;
-	// }
-	//
-	// /**
-	// * Generates all of the pseudo legal king castling moves in the position
-	// and
-	// * adds them to the specified move list.
-	// *
-	// * @param moves
-	// * A move list.
-	// */
-	// @Override
-	// protected void generatePseudoKingCastlingMoves(long fromBB,
-	// PriorityMoveList moves) {
-	// // The king destination square isnt checked, its checked when legal
-	// // getMoves() are checked.
-	// // int fromSquare = getSquare(fromBB);
-	//
-	// if (getColorToMove() == WHITE
-	// && (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
-	// && fromBB == getBitboard(getSquare(0, initialKingFile))
-	// && emptyBetweenFiles(0, initialLongRookFile, initialKingFile)) {
-	// // && !inCheckBetweenFiles(initialLongRookFile, E1) &&
-	// // !isInCheck(WHITE, F1)) {
-	// moves
-	// .appendLowPriority(new Move(SQUARE_E1, SQUARE_G1, KING,
-	// getColorToMove(), EMPTY,
-	// Move.SHORT_CASTLING_CHARACTERISTIC));
-	// }
-	//
-	// if (getColorToMove() == WHITE
-	// && (getCastling(getColorToMove()) & CASTLE_LONG) != 0
-	// && fromBB == E1 && getPiece(SQUARE_D1) == EMPTY
-	// && getPiece(SQUARE_C1) == EMPTY && getPiece(SQUARE_B1) == EMPTY
-	// && !isInCheck(WHITE, E1) && !isInCheck(WHITE, D1)) {
-	// moves
-	// .appendLowPriority(new Move(SQUARE_E1, SQUARE_C1, KING,
-	// getColorToMove(), EMPTY,
-	// Move.LONG_CASTLING_CHARACTERISTIC));
-	// }
-	//
-	// if (getColorToMove() == BLACK
-	// && (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
-	// && fromBB == E8 && getPiece(SQUARE_G8) == EMPTY
-	// && getPiece(SQUARE_F8) == EMPTY && !isInCheck(BLACK, E8)
-	// && !isInCheck(BLACK, F8)) {
-	// moves
-	// .appendLowPriority(new Move(SQUARE_E8, SQUARE_G8, KING,
-	// getColorToMove(), EMPTY,
-	// Move.SHORT_CASTLING_CHARACTERISTIC));
-	//
-	// }
-	//
-	// if (getColorToMove() == BLACK
-	// && (getCastling(getColorToMove()) & CASTLE_LONG) != 0
-	// && fromBB == E8 && getPiece(SQUARE_D8) == EMPTY
-	// && getPiece(SQUARE_C8) == EMPTY && getPiece(SQUARE_B8) == EMPTY
-	// && !isInCheck(BLACK, E8) && !isInCheck(BLACK, D8)) {
-	// moves
-	// .appendLowPriority(new Move(SQUARE_E8, SQUARE_C8, KING,
-	// getColorToMove(), EMPTY,
-	// Move.LONG_CASTLING_CHARACTERISTIC));
-	// }
-	// }
-	//
-	// protected boolean inCheckBetweenFiles(int rank, int startFile, int
-	// endFile,
-	// int color) {
-	// // This is ugly should be rewritten using a bit board trick.
-	// boolean result = false;
-	// for (int i = startFile + 1; i < endFile; i++) {
-	// int square = getSquare(rank, i);
-	// result = isInCheck(color, square);
-	// if (result) {
-	// break;
-	// }
-	// }
-	// return result;
-	// }
-	//
-	// @Override
-	// protected void makeCastlingMove(Move move) {
-	// long kingFromBB, kingToBB, rookFromBB, rookToBB;
-	//
-	// if (move.getColor() == WHITE) {
-	// kingFromBB = E1;
-	// if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
-	// kingToBB = G1;
-	// rookFromBB = H1;
-	// rookToBB = F1;
-	// updateZobristPOCastleKsideWhite();
-	// } else {
-	// kingToBB = C1;
-	// rookFromBB = A1;
-	// rookToBB = D1;
-	// updateZobristPOCastleQsideWhite();
-	// }
-	// } else {
-	// kingFromBB = E8;
-	// if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
-	// kingToBB = G8;
-	// rookFromBB = H8;
-	// rookToBB = F8;
-	// updateZobristPOCastleKsideBlack();
-	// } else {
-	// kingToBB = C8;
-	// rookFromBB = A8;
-	// rookToBB = D8;
-	// updateZobristPOCastleQsideBlack();
-	// }
-	// }
-	//
-	// setPiece(bitscanForward(kingFromBB), EMPTY);
-	// setPiece(bitscanForward(kingToBB), KING);
-	// setPiece(bitscanForward(rookFromBB), EMPTY);
-	// setPiece(bitscanForward(rookToBB), ROOK);
-	//
-	// long kingFromTo = kingToBB | kingFromBB;
-	// long rookFromTo = rookToBB | rookFromBB;
-	//
-	// xor(move.getColor(), KING, kingFromTo);
-	// xor(move.getColor(), kingFromTo);
-	// setOccupiedBB(getOccupiedBB() ^ kingFromTo);
-	// setEmptyBB(getEmptyBB() ^ kingFromTo);
-	//
-	// xor(move.getColor(), ROOK, rookFromTo);
-	// xor(move.getColor(), rookFromTo);
-	// setOccupiedBB(getOccupiedBB() ^ rookFromTo);
-	// setEmptyBB(getEmptyBB() ^ rookFromTo);
-	//
-	// setCastling(getColorToMove(), CASTLE_NONE);
-	//
-	// setEpSquare(EMPTY_SQUARE);
-	// }
-	//
-	// @Override
-	// protected void rollbackCastlingMove(Move move) {
-	// long kingFromBB, kingToBB, rookFromBB, rookToBB;
-	//
-	// if (move.getColor() == WHITE) {
-	// kingFromBB = E1;
-	// if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
-	// kingToBB = G1;
-	// rookFromBB = H1;
-	// rookToBB = F1;
-	// updateZobristPOCastleKsideWhite();
-	//
-	// } else {
-	// kingToBB = C1;
-	// rookFromBB = A1;
-	// rookToBB = D1;
-	// updateZobristPOCastleQsideWhite();
-	// }
-	// } else {
-	// kingFromBB = E8;
-	// if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
-	// kingToBB = G8;
-	// rookFromBB = H8;
-	// rookToBB = F8;
-	// updateZobristPOCastleKsideBlack();
-	// } else {
-	// kingToBB = C8;
-	// rookFromBB = A8;
-	// rookToBB = D8;
-	// updateZobristPOCastleQsideBlack();
-	// }
-	// }
-	//
-	// setPiece(bitscanForward(kingFromBB), KING);
-	// setPiece(bitscanForward(kingToBB), EMPTY);
-	// setPiece(bitscanForward(rookFromBB), ROOK);
-	// setPiece(bitscanForward(rookToBB), EMPTY);
-	//
-	// long kingFromTo = kingToBB | kingFromBB;
-	// long rookFromTo = rookToBB | rookFromBB;
-	//
-	// xor(move.getColor(), KING, kingFromTo);
-	// xor(move.getColor(), kingFromTo);
-	// setOccupiedBB(getOccupiedBB() ^ kingFromTo);
-	// setEmptyBB(getEmptyBB() ^ kingFromTo);
-	//
-	// xor(move.getColor(), ROOK, rookFromTo);
-	// xor(move.getColor(), rookFromTo);
-	// setOccupiedBB(getOccupiedBB() ^ rookFromTo);
-	// setEmptyBB(getEmptyBB() ^ rookFromTo);
-	//
-	// setEpSquareFromPreviousMove();
-	// }
+	/**
+	 * This method should be invoked after the initial position is setup. It
+	 * handles setting castling information used later on during the game.
+	 */
+	public void initialPositionIsSet() {
+		initialKingFile = getFile(bitscanForward(getPieceBB(WHITE, KING)));
+		long rookBB = getPieceBB(WHITE, ROOK);
+		int firstRook = getFile(bitscanForward(rookBB));
+		rookBB = bitscanClear(rookBB);
+		int secondRook = getFile(bitscanForward(rookBB));
+		if (firstRook < initialKingFile) {
+			initialLongRookFile = firstRook;
+			initialShortRookFile = secondRook;
+		} else {
+			initialLongRookFile = secondRook;
+			initialShortRookFile = firstRook;
+		}
+	}
+
+	/**
+	 * Returns true if all the squares between startFile and endFile are empty
+	 * (excluding the passed in files).
+	 */
+	protected boolean emptyBetweenFiles(int rank, int startFile, int endFile) {
+		boolean result = true;
+		for (int i = startFile + 1; i < endFile; i++) {
+			result = getPiece(getSquare(rank, i)) == EMPTY;
+			if (!result) {
+				break;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Overridden to handle special FR castling rules.
+	 */
+	@Override
+	protected void generatePseudoKingCastlingMoves(long fromBB,
+			PriorityMoveList moves) {
+		int kingSquare = getColorToMove() == WHITE ? getSquare(0,
+				initialKingFile) : getSquare(7, initialKingFile);
+		long kingSquareBB = getBitboard(kingSquare);
+
+		if (getColorToMove() == WHITE
+				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
+				&& fromBB == kingSquareBB
+				&& emptyBetweenFiles(0, initialKingFile, initialShortRookFile)
+				&& isKingEmptyOrRook(SQUARE_F1, WHITE)
+				&& isKingEmptyOrRook(SQUARE_G1, WHITE)
+				&& !isCastlePathInCheck(kingSquare, SQUARE_G1, WHITE)) {
+
+			moves.appendLowPriority(new Move(kingSquare, SQUARE_G1, KING,
+					WHITE, EMPTY, Move.SHORT_CASTLING_CHARACTERISTIC));
+		}
+
+		if (getColorToMove() == BLACK
+				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
+				&& fromBB == kingSquareBB
+				&& emptyBetweenFiles(7, initialKingFile, initialShortRookFile)
+				&& isKingEmptyOrRook(SQUARE_F8, BLACK)
+				&& isKingEmptyOrRook(SQUARE_G8, BLACK)
+				&& !isCastlePathInCheck(kingSquare, SQUARE_G8, BLACK)) {
+
+			moves.appendLowPriority(new Move(kingSquare, SQUARE_G8, KING,
+					BLACK, EMPTY, Move.SHORT_CASTLING_CHARACTERISTIC));
+		}
+
+		if (getColorToMove() == WHITE
+				&& (getCastling(getColorToMove()) & CASTLE_LONG) != 0
+				&& fromBB == kingSquareBB
+				&& emptyBetweenFiles(0, initialLongRookFile, initialKingFile)
+				&& isKingEmptyOrRook(SQUARE_D1, WHITE)
+				&& isKingEmptyOrRook(SQUARE_C1, WHITE)
+				&& !isCastlePathInCheck(kingSquare, SQUARE_C1, WHITE)) {
+			moves.appendLowPriority(new Move(kingSquare, SQUARE_C1, KING,
+					WHITE, EMPTY, Move.LONG_CASTLING_CHARACTERISTIC));
+		}
+
+		if (getColorToMove() == BLACK
+				&& (getCastling(getColorToMove()) & CASTLE_LONG) != 0
+				&& fromBB == kingSquareBB
+				&& emptyBetweenFiles(7, initialLongRookFile, initialKingFile)
+				&& isKingEmptyOrRook(SQUARE_D8, BLACK)
+				&& isKingEmptyOrRook(SQUARE_C8, BLACK)
+				&& !isCastlePathInCheck(kingSquare, SQUARE_C8, BLACK)) {
+			moves.appendLowPriority(new Move(kingSquare, SQUARE_C8, KING,
+					BLACK, EMPTY, Move.LONG_CASTLING_CHARACTERISTIC));
+		}
+	}
+
+	/**
+	 * Returns true if any of the squares between king startSquare and
+	 * kingEndSquare are in check (including the start/end squares).
+	 * kingStartSquare can either be < or > kingEndSquare.
+	 */
+	protected boolean isCastlePathInCheck(int kingStartSquare,
+			int kingEndSquare, int color) {
+		boolean result = false;
+		if (kingStartSquare < kingEndSquare) {
+			for (int i = kingStartSquare; !result && i < kingEndSquare; i++) {
+				result = isInCheck(color, getBitboard(i));
+			}
+		} else {
+			for (int i = kingEndSquare; !result && i < kingStartSquare; i++) {
+				result = isInCheck(color, getBitboard(i));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns true if the specified square is either empty or a king or rook of
+	 * the specified color.
+	 */
+	protected boolean isKingEmptyOrRook(int square, int color) {
+		return board[square] == EMPTY || board[square] == KING
+				&& (getColorBB(color) & getBitboard(square)) != 0
+				|| board[square] == ROOK
+				&& (getColorBB(color) & getBitboard(square)) != 0;
+	}
+
+	/**
+	 * Overridden to handle special FR castling rules.
+	 */
+	@Override
+	protected void makeCastlingMove(Move move) {
+
+		int kingFromSquare = move.getColor() == WHITE ? getSquare(0,
+				initialKingFile) : getSquare(7, initialKingFile);
+		long kingFromBB = getBitboard(kingFromSquare);
+		long kingToBB, rookFromBB, rookToBB;
+		int rookFromSquare;
+
+		if (move.getColor() == WHITE) {
+			if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
+				rookFromSquare = getSquare(0, initialShortRookFile);
+				kingToBB = G1;
+				rookFromBB = getBitboard(rookFromSquare);
+				rookToBB = F1;
+				updateZobristCastle(WHITE, kingFromSquare, rookFromSquare,
+						SQUARE_G1, SQUARE_F1);
+			} else {
+				rookFromSquare = getSquare(0, initialLongRookFile);
+				kingToBB = C1;
+				rookFromBB = getBitboard(rookFromSquare);
+				rookToBB = D1;
+				updateZobristCastle(WHITE, kingFromSquare, rookFromSquare,
+						SQUARE_C1, SQUARE_D1);
+			}
+		} else {
+			if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
+				rookFromSquare = getSquare(7, initialShortRookFile);
+				kingToBB = G8;
+				rookFromBB = getBitboard(rookFromSquare);
+				rookToBB = F8;
+				updateZobristCastle(BLACK, kingFromSquare, rookFromSquare,
+						SQUARE_G8, SQUARE_F8);
+			} else {
+				rookFromSquare = getSquare(7, initialLongRookFile);
+				kingToBB = C8;
+				rookFromBB = getBitboard(rookFromSquare);
+				rookToBB = D8;
+				updateZobristCastle(BLACK, kingFromSquare, rookFromSquare,
+						SQUARE_C8, SQUARE_D8);
+			}
+		}
+
+		if (kingToBB != kingFromBB) {
+			long kingFromTo = kingToBB | kingFromBB;
+			setPiece(bitscanForward(kingToBB), KING);
+			setPiece(kingFromSquare, EMPTY);
+			xor(move.getColor(), KING, kingFromTo);
+			xor(move.getColor(), kingFromTo);
+			setOccupiedBB(getOccupiedBB() ^ kingFromTo);
+			setEmptyBB(getEmptyBB() ^ kingFromTo);
+		}
+
+		if (rookFromBB != rookToBB) {
+			long rookFromTo = rookToBB | rookFromBB;
+			setPiece(bitscanForward(rookToBB), ROOK);
+			setPiece(rookFromSquare, EMPTY);
+			xor(move.getColor(), ROOK, rookFromTo);
+			xor(move.getColor(), rookFromTo);
+			setOccupiedBB(getOccupiedBB() ^ rookFromTo);
+			setEmptyBB(getEmptyBB() ^ rookFromTo);
+		}
+
+		setCastling(getColorToMove(), CASTLE_NONE);
+		setEpSquare(EMPTY_SQUARE);
+	}
+
+	/**
+	 * Overridden to handle special FR castling rules.
+	 */
+	@Override
+	protected void rollbackCastlingMove(Move move) {
+		int kingFromSquare = move.getColor() == WHITE ? getSquare(0,
+				initialKingFile) : getSquare(7, initialKingFile);
+		long kingFromBB = getBitboard(kingFromSquare);
+		long kingToBB, rookFromBB, rookToBB;
+		int rookFromSquare;
+
+		if (move.getColor() == WHITE) {
+			if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
+				rookFromSquare = getSquare(0, initialShortRookFile);
+				kingToBB = G1;
+				rookFromBB = getBitboard(rookFromSquare);
+				rookToBB = F1;
+				updateZobristCastle(WHITE, kingFromSquare, rookFromSquare,
+						SQUARE_G1, SQUARE_F1);
+			} else {
+				rookFromSquare = getSquare(0, initialLongRookFile);
+				kingToBB = C1;
+				rookFromBB = getBitboard(rookFromSquare);
+				rookToBB = D1;
+				updateZobristCastle(WHITE, kingFromSquare, rookFromSquare,
+						SQUARE_C1, SQUARE_D1);
+			}
+		} else {
+			if (move.getMoveCharacteristic() == Move.SHORT_CASTLING_CHARACTERISTIC) {
+				rookFromSquare = getSquare(7, initialShortRookFile);
+				kingToBB = G8;
+				rookFromBB = getBitboard(rookFromSquare);
+				rookToBB = F8;
+				updateZobristCastle(BLACK, kingFromSquare, rookFromSquare,
+						SQUARE_G8, SQUARE_F8);
+			} else {
+				rookFromSquare = getSquare(7, initialLongRookFile);
+				kingToBB = C8;
+				rookFromBB = getBitboard(rookFromSquare);
+				rookToBB = D8;
+				updateZobristCastle(BLACK, kingFromSquare, rookFromSquare,
+						SQUARE_C8, SQUARE_D8);
+			}
+		}
+
+		if (kingToBB != kingFromBB) {
+			long kingFromTo = kingToBB | kingFromBB;
+			setPiece(bitscanForward(kingToBB), EMPTY);
+			setPiece(kingFromSquare, KING);
+			xor(move.getColor(), KING, kingFromTo);
+			xor(move.getColor(), kingFromTo);
+			setOccupiedBB(getOccupiedBB() ^ kingFromTo);
+			setEmptyBB(getEmptyBB() ^ kingFromTo);
+		}
+
+		if (rookFromBB != rookToBB) {
+			long rookFromTo = rookToBB | rookFromBB;
+			setPiece(bitscanForward(rookToBB), EMPTY);
+			setPiece(rookFromSquare, ROOK);
+			xor(move.getColor(), ROOK, rookFromTo);
+			xor(move.getColor(), rookFromTo);
+			setOccupiedBB(getOccupiedBB() ^ rookFromTo);
+			setEmptyBB(getEmptyBB() ^ rookFromTo);
+		}
+
+		setEpSquareFromPreviousMove();
+	}
+
+	/**
+	 * Overridden to handle special FR castling rules.
+	 */
+	@Override
+	protected void updateCastlingRightsForNonEpNonCastlingMove(Move move) {
+
+		int shortRookSquare = getColorToMove() == WHITE ? getSquare(0,
+				initialShortRookFile) : getSquare(7, initialShortRookFile);
+		int longRookSquare = getColorToMove() == WHITE ? getSquare(0,
+				initialLongRookFile) : getSquare(7, initialLongRookFile);
+
+		switch (move.getPiece()) {
+		case KING:
+			setCastling(getColorToMove(), CASTLE_NONE);
+			break;
+		default:
+			if (move.getPiece() == ROOK && move.getFrom() == longRookSquare
+					&& getColorToMove() == WHITE || move.getCapture() == ROOK
+					&& move.getTo() == longRookSquare
+					&& getColorToMove() == BLACK) {
+				setCastling(WHITE, getCastling(WHITE) & CASTLE_SHORT);
+			} else if (move.getPiece() == ROOK
+					&& move.getFrom() == shortRookSquare
+					&& getColorToMove() == WHITE || move.getCapture() == ROOK
+					&& move.getTo() == shortRookSquare
+					&& getColorToMove() == BLACK) {
+				setCastling(WHITE, getCastling(WHITE) & CASTLE_LONG);
+			} else if (move.getPiece() == ROOK
+					&& move.getFrom() == longRookSquare
+					&& getColorToMove() == BLACK || move.getCapture() == ROOK
+					&& move.getTo() == longRookSquare
+					&& getColorToMove() == WHITE) {
+				setCastling(BLACK, getCastling(BLACK) & CASTLE_SHORT);
+			} else if (move.getPiece() == ROOK
+					&& move.getFrom() == shortRookSquare
+					&& getColorToMove() == BLACK || move.getCapture() == ROOK
+					&& move.getTo() == shortRookSquare
+					&& getColorToMove() == WHITE) {
+				setCastling(BLACK, getCastling(BLACK) & CASTLE_LONG);
+			}
+			break;
+		}
+	}
+
+	/**
+	 * Updates the zobrist position hash with the specified castling information
+	 */
+	protected void updateZobristCastle(int color, int kingStartSquare,
+			int rookStartSquare, int kingEndSquare, int rookEndSquare) {
+		zobristPositionHash ^= zobrist(color, KING, kingStartSquare)
+				^ zobrist(color, KING, kingStartSquare)
+				^ zobrist(color, ROOK, rookStartSquare)
+				^ zobrist(color, ROOK, rookEndSquare);
+	}
 
 }
