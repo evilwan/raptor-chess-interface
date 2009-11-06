@@ -24,6 +24,7 @@ import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.Move;
 import raptor.chess.Variant;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -136,7 +137,8 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void adjustGameDescriptionLabel() {
-		board.getGameDescriptionLabel().setText("Examining a game");
+		board.getGameDescriptionLabel()
+				.setText(game.getHeader(PgnHeader.Event));
 	}
 
 	@Override
@@ -276,6 +278,16 @@ public class ExamineController extends ChessBoardController {
 	@Override
 	public void onRevert() {
 		connector.onExamineModeRevert(getGame());
+	}
+
+	@Override
+	public void refresh(boolean isUpdatingClocks) {
+		if (isDisposed()) {
+			return;
+		}
+		board.getMoveList().updateToGame();
+		board.getMoveList().select(getGame().getMoveList().getSize());
+		super.refresh(isUpdatingClocks);
 	}
 
 	@Override

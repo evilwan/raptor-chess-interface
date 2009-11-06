@@ -274,6 +274,67 @@ public class IcsUtils implements GameConstants {
 		game.clear();
 	}
 
+	public static Game createExaminedGame(
+			Style12Message gameStateStyle12Message, MovesMessage movesMessage) {
+		Game result = null;
+		if (movesMessage.style12 == null) {
+			result = GameFactory
+					.createStartingPosition(identifierToGameType(movesMessage.gameType));
+		} else {
+			result = createGameFromVariant(identifierToGameType(movesMessage.gameType));
+			updatePosition(result, movesMessage.style12);
+			if (result.getVariant() == Variant.fischerRandom) {
+				((FischerRandomGame) result).initialPositionIsSet();
+			}
+			updateNonPositionFields(result, movesMessage.style12);
+			result.setHeader(PgnHeader.FEN, result.toFen());
+		}
+		result.addState(Game.UPDATING_SAN_STATE);
+		result.addState(Game.UPDATING_ECO_HEADERS_STATE);
+		result.setId(movesMessage.gameId);
+
+		for (int i = 0; i < movesMessage.moves.length; i++) {
+			try {
+				if (result.isInState(Game.DROPPABLE_STATE)) {
+					result.setDropCount(WHITE, PAWN, 1);
+					result.setDropCount(WHITE, QUEEN, 1);
+					result.setDropCount(WHITE, ROOK, 1);
+					result.setDropCount(WHITE, KNIGHT, 1);
+					result.setDropCount(WHITE, BISHOP, 1);
+					result.setDropCount(BLACK, PAWN, 1);
+					result.setDropCount(BLACK, QUEEN, 1);
+					result.setDropCount(BLACK, ROOK, 1);
+					result.setDropCount(BLACK, KNIGHT, 1);
+					result.setDropCount(BLACK, BISHOP, 1);
+				}
+				Move move = result.makeSanMove(movesMessage.moves[i]);
+				move.addAnnotation(new TimeTakenForMove(
+						movesMessage.timePerMove[i]));
+			} catch (IllegalArgumentException iae) {
+				LOG.error("Could not parse san", iae);
+				Raptor.getInstance().onError("Error update game with moves",
+						iae);
+			}
+		}
+		updateNonPositionFields(result, gameStateStyle12Message);
+		result.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
+				.currentTimeMillis()));
+		result.setHeader(PgnHeader.Round, "?");
+		result.setHeader(PgnHeader.Site, "freechess.org");
+		result.setHeader(PgnHeader.TimeControl, PgnUtils
+				.timeIncMillisToTimeControl(0, 0));
+		result.setHeader(PgnHeader.BlackRemainingMillis, "" + 0);
+		result.setHeader(PgnHeader.WhiteRemainingMillis, "" + 0);
+		result.setHeader(PgnHeader.WhiteClock, PgnUtils.timeToClock(0));
+		result.setHeader(PgnHeader.BlackClock, PgnUtils.timeToClock(0));
+		result.setHeader(PgnHeader.BlackElo, "");
+		result.setHeader(PgnHeader.WhiteElo, "");
+		result.setHeader(PgnHeader.Event, "Examining " + movesMessage.gameType
+				+ " game");
+		result.setHeader(PgnHeader.Variant, result.getVariant().toString());
+		return result;
+	}
+
 	public static Game createGame(G1Message g1) {
 		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);
 		Game result = createGameFromVariant(variant);

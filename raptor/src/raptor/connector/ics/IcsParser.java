@@ -106,6 +106,13 @@ public class IcsParser implements GameConstants {
 	protected Map<String, G1Message> unprocessedG1Messages = new HashMap<String, G1Message>();
 
 	/**
+	 * A map keyed by game id. Used to temporarily store style12 messages from
+	 * newly examined games until the moves message comes along. From the moves
+	 * message you can identify the variant and create the game correctly.
+	 */
+	protected Map<String, Style12Message> exaimineGamesWaitingOnMoves = new HashMap<String, Style12Message>();
+
+	/**
 	 * BICS does'nt support the partner board in G1 messages so you have to
 	 * resort to this to link the bug games together.
 	 */
@@ -417,7 +424,21 @@ public class IcsParser implements GameConstants {
 		}
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			if (LOG.isWarnEnabled()) {
+			// Check to see if this was for an examined game.
+			Style12Message style12 = exaimineGamesWaitingOnMoves
+					.get(message.gameId);
+			if (style12 != null) {
+				exaimineGamesWaitingOnMoves.remove(message.gameId);
+				game = IcsUtils.createExaminedGame(style12, message);
+				service.addGame(game);
+				// Respect the flip variable if its set.
+				game.setHeader(PgnHeader.WhiteOnTop, style12.isWhiteOnTop ? "1"
+						: "0");
+				service.fireGameCreated(game.getId());
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Firing game created.");
+				}
+			} else {
 				LOG
 						.warn("Received a MovesMessage for a game not being managed. This can occur if the user manually types in the moves command. "
 								+ message.gameId);
@@ -484,9 +505,10 @@ public class IcsParser implements GameConstants {
 
 		Game game = service.getGame(message.gameId);
 		if (game != null) {
-			if (game.isInState(Game.EXAMINING_STATE)
-					|| game.isInState(Game.SETUP_STATE)
-					|| game.isInState(Game.OBSERVING_EXAMINED_STATE)) {
+			if (// game.isInState(Game.EXAMINING_STATE)
+			game.isInState(Game.SETUP_STATE)
+			// || game.isInState(Game.OBSERVING_EXAMINED_STATE))
+			) {
 				// Examined/BSetup/obs ex moves flow through here.
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Processing bsetup or examine position move.");
@@ -509,9 +531,9 @@ public class IcsParser implements GameConstants {
 					service.fireGameStateChanged(message.gameId, true);
 				}
 			} else {
-				// Playing/Obsing moves flow through here.
+				// Playing/Obsing/Examining flow through here.
 				if (LOG.isDebugEnabled()) {
-					LOG.debug("Processing obs/playing position move.");
+					LOG.debug("Processing obs/playing/ex position move.");
 				}
 
 				// Takebacks may have effected the state of the game so first
@@ -550,20 +572,28 @@ public class IcsParser implements GameConstants {
 		} else {
 			G1Message g1Message = unprocessedG1Messages.get(message.gameId);
 			if (g1Message == null) {
-				// Examined/Bsetup game starts flow through here
+				// Examined/Bsetup/Isolated Positions game starts flow through
+				// here
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Processing new ex or bsetup game.");
 				}
 				game = IcsUtils.createGame(message, entireMessage);
-				service.addGame(game);
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Firing game created.");
-				}
 
-				// Respect the flip variable if its set.
-				game.setHeader(PgnHeader.WhiteOnTop, message.isWhiteOnTop ? "1"
-						: "0");
-				service.fireGameCreated(game.getId());
+				if (message.relation == Style12Message.EXAMINING_GAME_RELATION
+						&& !game.isInState(Game.SETUP_STATE)) {
+					exaimineGamesWaitingOnMoves.put(game.getId(), message);
+					connector.sendMessage("moves " + message.gameId, true,
+							ChatType.MOVES);
+				} else {
+					service.addGame(game);
+					// Respect the flip variable if its set.
+					game.setHeader(PgnHeader.WhiteOnTop,
+							message.isWhiteOnTop ? "1" : "0");
+					service.fireGameCreated(game.getId());
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Firing game created.");
+					}
+				}
 			} else {
 				// Observed/Playing games starts flow through here
 				if (LOG.isDebugEnabled()) {
@@ -704,7 +734,7 @@ public class IcsParser implements GameConstants {
 				 * Send a request for the moves.
 				 */
 				if (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
-								&& !message.isWhitesMoveAfterMoveIsMade) {
+						&& !message.isWhitesMoveAfterMoveIsMade) {
 					connector.sendMessage("moves " + message.gameId, true,
 							ChatType.MOVES);
 				}
