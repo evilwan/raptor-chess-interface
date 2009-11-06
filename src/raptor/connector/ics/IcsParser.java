@@ -579,6 +579,10 @@ public class IcsParser implements GameConstants {
 				if (game instanceof FischerRandomGame) {
 					((FischerRandomGame) game).initialPositionIsSet();
 				}
+				if (game.getVariant() == Variant.wild
+						|| game.getVariant() == Variant.fischerRandom) {
+					game.setHeader(PgnHeader.FEN, game.toFen());
+				}
 				service.addGame(game);
 
 				if (message.isWhiteOnTop) {
@@ -700,8 +704,6 @@ public class IcsParser implements GameConstants {
 				 * Send a request for the moves.
 				 */
 				if (message.relation != Style12Message.OBSERVING_EXAMINED_GAME_RELATION
-						&& game.getVariant() != Variant.wild
-						&& game.getVariant() != Variant.fischerRandom
 						&& (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
 								&& !message.isWhitesMoveAfterMoveIsMade)) {
 					connector.sendMessage("moves " + message.gameId, true,

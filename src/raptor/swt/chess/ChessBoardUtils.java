@@ -51,6 +51,8 @@ import raptor.action.game.AutoKnightAction;
 import raptor.action.game.AutoQueenAction;
 import raptor.action.game.AutoRookAction;
 import raptor.action.game.BackAction;
+import raptor.action.game.CastleLongAction;
+import raptor.action.game.CastleShortAction;
 import raptor.action.game.ClearPremovesAction;
 import raptor.action.game.CommitAction;
 import raptor.action.game.FirstAction;
@@ -756,6 +758,18 @@ public class ChessBoardUtils implements BoardConstants {
 					.getPieceRepresentation(isUserWhite ? GameConstants.WK
 							: GameConstants.BK));
 		} else if (action instanceof AutoKingAction) {
+			return null;
+		} else if (action instanceof CastleLongAction
+				&& controller.getGame().getVariant() == Variant.fischerRandom) {
+			result = new ToolItem(toolbar, SWT.PUSH);
+			controller.addToolItem(ToolBarItemKey.CASTLE_LONG, result);
+		} else if (action instanceof CastleLongAction) {
+			return null;
+		} else if (action instanceof CastleShortAction
+				&& controller.getGame().getVariant() == Variant.fischerRandom) {
+			result = new ToolItem(toolbar, SWT.PUSH);
+			controller.addToolItem(ToolBarItemKey.CASTLE_SHORT, result);
+		} else if (action instanceof CastleShortAction) {
 			return null;
 		} else {
 			result = new ToolItem(toolbar, SWT.PUSH);

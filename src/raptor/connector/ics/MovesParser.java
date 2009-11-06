@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.connector.ics.game.message.MovesMessage;
+import raptor.connector.ics.game.message.Style12Message;
 import raptor.util.RaptorStringTokenizer;
 
 /***
@@ -113,6 +114,35 @@ import raptor.util.RaptorStringTokenizer;
  * 38. f5 (0:05.673)
  * 
  * {Still in progress}
+ * 
+ * 
+ * 
+ * 
+ * With the startpos ivar set you get this type of move list if the starting position is needed for the game type:
+ * Movelist for game 69:
+ * laikun (2106) vs. zabakov (2021) --- Fri Nov  6, 03:23 PST 2009
+ * Rated wild/fr match, initial time: 3 minutes, increment: 0 seconds.
+ * &lt;12&gt; qrnkbnrb pppppppp -------- -------- -------- -------- PPPPPPPP QRNKBNRB W -1 1 1 1 1 0 69 laikun zabakov -4 3 0 39 39 108 123 1 none (0:00) none 0 0 0
+ * Move  laikun             zabakov            
+ * ---  ----------------   ----------------
+ *   1.  g3      (0:00)     e5      (0:00)  
+ *   2.  d3      (0:03)     g6      (0:01)  
+ *   3.  Nd2     (0:01)     Ne6     (0:01)  
+ *   4.  c3      (0:02)     a5      (0:02)  
+ *   5.  a4      (0:04)     Qa6     (0:01)  
+ *   6.  Qa3     (0:08)     d6      (0:05)  
+ *   7.  Nf3     (0:04)     Bf6     (0:09)  
+ *   8.  Bd2     (0:01)     Bc6     (0:03)  
+ *   9.  b4      (0:04)     axb4    (0:02)  
+ *  10.  Rxb4    (0:02)     Nb6     (0:03)  
+ *  11.  a5      (0:03)     Nd5     (0:01)  
+ *  12.  Rb1     (0:06)     O-O     (0:05)  
+ *  13.  c4      (0:02)     Ne7     (0:03)  
+ *  14.  O-O     (0:02)     b6      (0:04)  
+ *  15.  Nb3     (0:04)     Bg7     (0:10)  
+ *  16.  Qc1     (0:25)  
+ *       {Still in progress} *
+ * 
  * </pre>
  */
 public class MovesParser {
@@ -121,6 +151,8 @@ public class MovesParser {
 	private static final String EVENT_START_2 = "fics% \nMovelist for game ";
 
 	private static final Log LOG = LogFactory.getLog(MovesParser.class);
+
+	private Style12Parser style12Parser = new Style12Parser();
 
 	public MovesParser() {
 		super();
@@ -131,12 +163,23 @@ public class MovesParser {
 			int lastDash = string.lastIndexOf("--");
 			int firstColon = string.indexOf(':', 0);
 			boolean startsWithEventStart = string.startsWith(EVENT_START);
+			Style12Message message = null;
 			String gameNumber = string.substring(
 					startsWithEventStart ? EVENT_START.length() : EVENT_START_2
 							.length(), firstColon);
 
 			if (lastDash != -1) {
 				try {
+
+					int style12Index = string.indexOf("<12>");
+					if (style12Index != -1) {
+						int style12End = string.indexOf("\n", style12Index);
+						if (style12End != -1) {
+							message = style12Parser.parse(string.substring(
+									style12Index, style12End));
+						}
+					}
+
 					String afterDash = string.substring(lastDash);
 					RaptorStringTokenizer multiLineTok = new RaptorStringTokenizer(
 							afterDash, "\n", true);
@@ -185,6 +228,7 @@ public class MovesParser {
 						}
 					}
 					MovesMessage result = new MovesMessage();
+					result.style12 = message;
 					result.moves = moves.toArray(new String[0]);
 					result.timePerMove = moveTimes.toArray(new Long[0]);
 					result.gameId = gameNumber;

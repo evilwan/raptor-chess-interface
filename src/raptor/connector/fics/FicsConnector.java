@@ -601,6 +601,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				sendMessage("iset gameinfo 1", true);
 				sendMessage("iset ms 1", true);
 				sendMessage("iset allresults 1", true);
+				sendMessage("iset startpos 1", true);
 				sendMessage(
 						"iset premove "
 								+ (getPreferences().getBoolean(

@@ -19,10 +19,11 @@ public class MovesMessage {
 	public String gameId;
 	public String[] moves;
 	public Long[] timePerMove;
+	public Style12Message style12;
 
 	@Override
 	public String toString() {
 		return "MovesMessage: " + gameId + " " + Arrays.toString(moves) + " "
-				+ Arrays.toString(timePerMove);
+				+ Arrays.toString(timePerMove) + " " + style12;
 	}
 }
