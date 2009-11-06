@@ -30,16 +30,17 @@ import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
-import raptor.RaptorWindowItem;
+import raptor.RaptorConnectorWindowItem;
 import raptor.chat.BugGame;
 import raptor.chat.Bugger;
 import raptor.chat.Partnership;
+import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
 
-public class BugGamesWindowItem implements RaptorWindowItem {
+public class BugGamesWindowItem implements RaptorConnectorWindowItem {
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
@@ -107,6 +108,10 @@ public class BugGamesWindowItem implements RaptorWindowItem {
 		isActive = false;
 		composite.dispose();
 		service.removeBughouseServiceListener(listener);
+	}
+
+	public Connector getConnector() {
+		return service.getConnector();
 	}
 
 	public Control getControl() {
@@ -233,47 +238,52 @@ public class BugGamesWindowItem implements RaptorWindowItem {
 	protected void refreshTable() {
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				synchronized (bugGamesTable) {
-					int selectedIndex = bugGamesTable.getSelectionIndex();
-					String selectedGameId = null;
-					if (selectedIndex != -1) {
-						selectedGameId = bugGamesTable.getItem(selectedIndex)
-								.getText(0);
+				if (!bugGamesTable.isDisposed()) {
+					synchronized (bugGamesTable) {
+						int selectedIndex = bugGamesTable.getSelectionIndex();
+						String selectedGameId = null;
+						if (selectedIndex != -1) {
+							selectedGameId = bugGamesTable.getItem(
+									selectedIndex).getText(0);
 
-					}
+						}
 
-					TableItem[] items = bugGamesTable.getItems();
-					for (TableItem item : items) {
-						item.dispose();
-					}
+						TableItem[] items = bugGamesTable.getItems();
+						for (TableItem item : items) {
+							item.dispose();
+						}
 
-					for (BugGame game : currentGames) {
-						TableItem item = new TableItem(bugGamesTable, SWT.NONE);
-						item.setText(new String[] {
-								game.getGame1Id(),
-								game.getGame1White().getRating(),
-								game.getGame1White().getName(),
-								game.getGame1Black().getRating(),
-								game.getGame1Black().getName(),
-								game.getTimeControl() + " "
-										+ (game.isRated() ? "r" : "u") });
-						TableItem item2 = new TableItem(bugGamesTable, SWT.NONE);
-						item2.setText(new String[] {
-								game.getGame2Id(),
-								game.getGame2White().getRating(),
-								game.getGame2White().getName(),
-								game.getGame2Black().getRating(),
-								game.getGame2Black().getName(),
-								game.getTimeControl() + " "
-										+ (game.isRated() ? "r" : "u") });
-					}
+						for (BugGame game : currentGames) {
+							TableItem item = new TableItem(bugGamesTable,
+									SWT.NONE);
+							item.setText(new String[] {
+									game.getGame1Id(),
+									game.getGame1White().getRating(),
+									game.getGame1White().getName(),
+									game.getGame1Black().getRating(),
+									game.getGame1Black().getName(),
+									game.getTimeControl() + " "
+											+ (game.isRated() ? "r" : "u") });
+							TableItem item2 = new TableItem(bugGamesTable,
+									SWT.NONE);
+							item2.setText(new String[] {
+									game.getGame2Id(),
+									game.getGame2White().getRating(),
+									game.getGame2White().getName(),
+									game.getGame2Black().getRating(),
+									game.getGame2Black().getName(),
+									game.getTimeControl() + " "
+											+ (game.isRated() ? "r" : "u") });
+						}
 
-					if (selectedGameId != null) {
-						TableItem[] itemsAfter = bugGamesTable.getItems();
-						for (int i = 0; i < itemsAfter.length; i++) {
-							if (itemsAfter[i].getText(0).equals(selectedGameId)) {
-								bugGamesTable.setSelection(i);
-								break;
+						if (selectedGameId != null) {
+							TableItem[] itemsAfter = bugGamesTable.getItems();
+							for (int i = 0; i < itemsAfter.length; i++) {
+								if (itemsAfter[i].getText(0).equals(
+										selectedGameId)) {
+									bugGamesTable.setSelection(i);
+									break;
+								}
 							}
 						}
 					}

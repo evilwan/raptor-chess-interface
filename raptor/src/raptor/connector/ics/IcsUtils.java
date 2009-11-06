@@ -254,7 +254,7 @@ public class IcsUtils implements GameConstants {
 		} else if (game.isInState(Game.PLAYING_STATE)) {
 			controller = new PlayingController(game, connector);
 		} else {
-			//Used for sposition.
+			// Used for sposition.
 			controller = new InactiveController(game);
 		}
 		return controller;

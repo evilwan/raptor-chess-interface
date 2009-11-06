@@ -31,7 +31,9 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 			{ "1/2 Million Characters", "500000" },
 			{ "1 Million Characters", "1000000" },
 			{ "5 Million Characters", "5000000" },
-			{ "10 Million Characters", "10000000" } };
+			{ "10 Million Characters", "10000000" },
+			{ "15 Million Characters", "10000000" },
+			{ "20 Million Characters", "10000000" } };
 
 	LabelButtonFieldEditor labelButtonFieldEditor;
 

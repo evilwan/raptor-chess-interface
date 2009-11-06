@@ -19,10 +19,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
-import raptor.RaptorWindowItem;
+import raptor.RaptorConnectorWindowItem;
+import raptor.connector.Connector;
 import raptor.swt.ItemChangedListener;
 
-public class ChatConsoleWindowItem implements RaptorWindowItem {
+public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
 
@@ -30,9 +31,16 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	ChatConsole console;
 	ChatConsoleController controller;
 	boolean isPassive = true;
+	Quadrant quadrant;
 
 	public ChatConsoleWindowItem(ChatConsoleController controller) {
 		this.controller = controller;
+	}
+
+	public ChatConsoleWindowItem(ChatConsoleController controller,
+			Quadrant quadrant) {
+		this.controller = controller;
+		this.quadrant = quadrant;
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -61,6 +69,10 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 		}
 	}
 
+	public Connector getConnector() {
+		return getController().getConnector();
+	}
+
 	public ChatConsole getConsole() {
 		return console;
 	}
@@ -85,9 +97,8 @@ public class ChatConsoleWindowItem implements RaptorWindowItem {
 	}
 
 	public Quadrant getPreferredQuadrant() {
-		return controller != null ? controller.getPreferredQuadrant()
-				: Quadrant.I;
-
+		return quadrant != null ? quadrant : controller != null ? controller
+				.getPreferredQuadrant() : Quadrant.III;
 	}
 
 	public String getTitle() {

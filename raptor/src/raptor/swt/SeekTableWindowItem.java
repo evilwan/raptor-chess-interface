@@ -38,14 +38,15 @@ import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
-import raptor.RaptorWindowItem;
+import raptor.RaptorConnectorWindowItem;
 import raptor.chat.Seek;
+import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SeekService;
 import raptor.service.ThreadService;
 import raptor.service.SeekService.SeekServiceListener;
 
-public class SeekTableWindowItem implements RaptorWindowItem {
+public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
@@ -131,6 +132,10 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 		isActive = false;
 		composite.dispose();
 		service.removeSeekServiceLisetner(listener);
+	}
+
+	public Connector getConnector() {
+		return service.getConnector();
 	}
 
 	public Control getControl() {
@@ -753,6 +758,9 @@ public class SeekTableWindowItem implements RaptorWindowItem {
 	protected void refreshTable() {
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
+				if (seeksTable.isDisposed()) {
+					return;
+				}
 				synchronized (seeksTable) {
 					int[] selectedIndexes = seeksTable.getSelectionIndices();
 					List<String> selectedAdsBeforeRefresh = new ArrayList<String>(

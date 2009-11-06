@@ -28,14 +28,14 @@ import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
 import raptor.Raptor;
-import raptor.RaptorWindowItem;
+import raptor.RaptorConnectorWindowItem;
 import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ActionService;
 
-public class BugButtonsWindowItem implements RaptorWindowItem {
+public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 	static final Log LOG = LogFactory.getLog(BugButtonsWindowItem.class);
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
