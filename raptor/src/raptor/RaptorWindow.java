@@ -445,8 +445,13 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
+				final RaptorWindowItem item, boolean isInitingItem, int index) {
+			super(parent, style, index);
+			init(parent, item, isInitingItem);
+		}
+
+		protected void init(RaptorTabFolder parent,
 				final RaptorWindowItem item, boolean isInitingItem) {
-			super(parent, style);
 			raptorParent = parent;
 
 			if (LOG.isDebugEnabled()) {
@@ -505,6 +510,12 @@ public class RaptorWindow extends ApplicationWindow {
 			// parent.layout(true, true);
 			parent.setSelection(this);
 			itemsManaged.add(this);
+		}
+
+		public RaptorTabItem(RaptorTabFolder parent, int style,
+				final RaptorWindowItem item, boolean isInitingItem) {
+			super(parent, style);
+			init(parent, item, isInitingItem);
 		}
 
 		@Override
@@ -1964,6 +1975,35 @@ public class RaptorWindow extends ApplicationWindow {
 															.toString(dragStartItem.raptorItem
 																	.getMoveToQuadrants()));
 						}
+					} else if (dropFolder != null
+							&& dropFolder == dragStartItem.raptorParent) {
+						// Please leave commented out. This is code to handle
+						// DND within a tab folder.
+						// Currently it is broken but it will be useful when
+						// looked at again.
+
+						// RaptorTabItem tabItem = (RaptorTabItem) dropFolder
+						// .getItem(dragStartItem.raptorParent.toControl(
+						// Raptor.getInstance().getDisplay()
+						// .getCursorLocation()));
+						// System.err.println("tabItem=" + tabItem);
+						// if (tabItem != null && tabItem != dragStartItem) {
+						// int index = folder.indexOf(tabItem) - 1;
+						// index = Math.max(0, index);
+						// System.err.println("Index=" + index);
+						// RaptorTabItem newItem = new RaptorTabItem(
+						// dragStartItem.raptorParent, SWT.NONE,
+						// dragStartItem.raptorItem, false, index);
+						// dragStartItem.setControl(null);
+						// dragStartItem.raptorItem = null;
+						// dragStartItem.dispose();
+						//
+						// dropFolder.setSelection(newItem);
+						//
+						// dropFolder.redraw();
+						//
+						// System.err.println("Moved item");
+						// }
 					}
 					isInDrag = false;
 					isExitDrag = false;
