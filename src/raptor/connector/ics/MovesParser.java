@@ -180,6 +180,15 @@ public class MovesParser {
 						}
 					}
 
+					RaptorStringTokenizer tok = new RaptorStringTokenizer(
+							string.substring(firstColon), "\n", true);
+					tok.nextToken();
+					tok.nextToken();
+					RaptorStringTokenizer tok2 = new RaptorStringTokenizer(tok
+							.nextToken(), " ", true);
+					tok2.nextToken();
+					String gameType = tok2.nextToken();
+
 					String afterDash = string.substring(lastDash);
 					RaptorStringTokenizer multiLineTok = new RaptorStringTokenizer(
 							afterDash, "\n", true);
@@ -229,6 +238,7 @@ public class MovesParser {
 					}
 					MovesMessage result = new MovesMessage();
 					result.style12 = message;
+					result.gameType = gameType;
 					result.moves = moves.toArray(new String[0]);
 					result.timePerMove = moveTimes.toArray(new Long[0]);
 					result.gameId = gameNumber;

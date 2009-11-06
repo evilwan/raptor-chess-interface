@@ -20,6 +20,7 @@ public class MovesMessage {
 	public String[] moves;
 	public Long[] timePerMove;
 	public Style12Message style12;
+	public String gameType;
 
 	@Override
 	public String toString() {
