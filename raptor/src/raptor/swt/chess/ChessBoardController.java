@@ -958,7 +958,6 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 
 		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
-			initClockUpdaters();
 			if (getGame().getColorToMove() == WHITE) {
 				whiteClockUpdater.start();
 			} else {

@@ -519,6 +519,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 								+ (getPreferences().getBoolean(
 										BOARD_SMARTMOVE_ENABLED) ? "1" : "0"),
 						true);
+				sendMessage("iset startpos 1", true);
 				sendMessage("set interface "
 						+ getPreferences().getString(APP_NAME));
 				sendMessage("set style 12", true);

@@ -163,9 +163,21 @@ public class PlayingController extends ChessBoardController {
 							board.getSquareHighlighter().removeAllHighlights();
 							board.getArrowDecorator().removeAllArrows();
 
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("In gameStateChanged "
+										+ getGame().getId() + " " + isNewMove);
+							}
+
 							if (isNewMove) {
 								handleAutoDraw();
 								if (!makePremove(false)) {
+									if (LOG.isDebugEnabled()) {
+										LOG
+												.debug("In did not make premove block "
+														+ getGame().getId()
+														+ " " + isNewMove);
+									}
+
 									boolean wasUserMove = !isUsersMove();
 									if (!wasUserMove
 											&& getPreferences()
@@ -210,12 +222,27 @@ public class PlayingController extends ChessBoardController {
 																		.getBoolean(
 																				PreferenceKeys.ARROW_FADE_AWAY_MODE)));
 									}
+
+									if (LOG.isDebugEnabled()) {
+										LOG.debug("Invoking refresh "
+												+ wasUserMove);
+									}
+
 									refresh();
 									onPlayMoveSound();
 								} else {
+									if (LOG.isDebugEnabled()) {
+										LOG
+												.debug("Premove was made. Playing move sound. ");
+									}
 									onPlayMoveSound();
 								}
 							} else {
+								if (LOG.isDebugEnabled()) {
+									LOG
+											.debug("This isnt an update from a move, doing a full refresh.");
+								}
+
 								decorateForLastMoveListMove();
 								refresh();
 							}
@@ -568,7 +595,10 @@ public class PlayingController extends ChessBoardController {
 
 	public void onClearPremoves() {
 		premoves.clear();
+		board.getSquareHighlighter().removeAllHighlights();
+		board.getArrowDecorator().removeAllArrows();
 		adjustPremoveLabelHighlightsAndArrows();
+		board.redrawSquares();
 	}
 
 	@Override
@@ -1093,7 +1123,7 @@ public class PlayingController extends ChessBoardController {
 	protected void initClockUpdaters() {
 		if (whiteClockUpdater == null) {
 			whiteClockUpdater = new ClockLabelUpdater(true, this, isUserWhite());
-			blackClockUpdater = new ClockLabelUpdater(true, this,
+			blackClockUpdater = new ClockLabelUpdater(false, this,
 					!isUserWhite());
 		}
 	}

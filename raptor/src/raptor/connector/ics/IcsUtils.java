@@ -275,40 +275,8 @@ public class IcsUtils implements GameConstants {
 	}
 
 	public static Game createGame(G1Message g1) {
-		Game result = null;
 		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);
-		switch (variant) {
-		case classic:
-			result = new ClassicGame();
-			break;
-		case wild:
-			result = new ClassicGame();
-			result.setHeader(PgnHeader.Variant, Variant.wild.name());
-			break;
-		case suicide:
-			result = new SuicideGame();
-			break;
-		case losers:
-			result = new LosersGame();
-			break;
-		case atomic:
-			result = new AtomicGame();
-			break;
-		case crazyhouse:
-			result = new CrazyhouseGame();
-			break;
-		case bughouse:
-			result = new BughouseGame();
-			break;
-		case fischerRandom:
-			result = new FischerRandomGame();
-			break;
-		default:
-			LOG.error("Uhandled game type " + g1.gameTypeDescription);
-			throw new IllegalStateException("Unsupported game type" + variant);
-
-		}
-
+		Game result = createGameFromVariant(variant);
 		result.setId(g1.gameId);
 		result.addState(Game.UPDATING_SAN_STATE);
 		result.addState(Game.UPDATING_ECO_HEADERS_STATE);
@@ -392,6 +360,41 @@ public class IcsUtils implements GameConstants {
 					"Cant created a examined or setup game from a game with relation "
 							+ message.relation);
 		}
+	}
+
+	public static Game createGameFromVariant(Variant variant) {
+		Game result = null;
+		switch (variant) {
+		case classic:
+			result = new ClassicGame();
+			break;
+		case wild:
+			result = new ClassicGame();
+			result.setHeader(PgnHeader.Variant, Variant.wild.name());
+			break;
+		case suicide:
+			result = new SuicideGame();
+			break;
+		case losers:
+			result = new LosersGame();
+			break;
+		case atomic:
+			result = new AtomicGame();
+			break;
+		case crazyhouse:
+			result = new CrazyhouseGame();
+			break;
+		case bughouse:
+			result = new BughouseGame();
+			break;
+		case fischerRandom:
+			result = new FischerRandomGame();
+			break;
+		default:
+			LOG.error("Unsupported variant: " + variant);
+			throw new IllegalStateException("Unsupported game type" + variant);
+		}
+		return result;
 	}
 
 	/**
@@ -715,21 +718,23 @@ public class IcsUtils implements GameConstants {
 	 * message.
 	 */
 	public static void updateGamesMoves(Game game, MovesMessage message) {
-		if (game.getVariant() == Variant.fischerRandom
-				|| game.getVariant() == Variant.wild) {
-			// Just avoid these. The are the source of all things evil with move
-			// lists.
-			// I have no idea how to get the starting positions if the pieces
-			// are randomized.
-			return;
-		}
-
 		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
 				- game.getMoveList().getSize();
 
 		if (halfMoveCountGameStartedOn != 0) {
-			Game gameClone = GameFactory.createStartingPosition(game
-					.getVariant());
+			Game gameClone = null;
+			if (message.style12 == null) {
+				gameClone = GameFactory.createStartingPosition(game
+						.getVariant());
+			} else {
+				gameClone = createGameFromVariant(game.getVariant());
+				updatePosition(gameClone, message.style12);
+				if (gameClone.getVariant() == Variant.fischerRandom) {
+					((FischerRandomGame) gameClone).initialPositionIsSet();
+				}
+				updateNonPositionFields(gameClone, message.style12);
+				game.setHeader(PgnHeader.FEN, gameClone.toFen());
+			}
 			gameClone.addState(Game.UPDATING_SAN_STATE);
 			gameClone.addState(Game.UPDATING_ECO_HEADERS_STATE);
 

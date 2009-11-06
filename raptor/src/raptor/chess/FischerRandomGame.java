@@ -254,19 +254,27 @@ public class FischerRandomGame extends ClassicGame {
 			setPiece(bitscanForward(kingToBB), KING);
 			setPiece(kingFromSquare, EMPTY);
 			xor(move.getColor(), KING, kingFromTo);
-			xor(move.getColor(), kingFromTo);
-			setOccupiedBB(getOccupiedBB() ^ kingFromTo);
-			setEmptyBB(getEmptyBB() ^ kingFromTo);
+
+			if (kingToBB != rookFromBB && rookToBB != kingFromBB) {
+				xor(move.getColor(), kingFromTo);
+				setOccupiedBB(getOccupiedBB() ^ kingFromTo);
+				setEmptyBB(getEmptyBB() ^ kingFromTo);
+			}
 		}
 
 		if (rookFromBB != rookToBB) {
 			long rookFromTo = rookToBB | rookFromBB;
 			setPiece(bitscanForward(rookToBB), ROOK);
-			setPiece(rookFromSquare, EMPTY);
+			if (rookFromBB != kingToBB) {
+				setPiece(rookFromSquare, EMPTY);
+			}
 			xor(move.getColor(), ROOK, rookFromTo);
-			xor(move.getColor(), rookFromTo);
-			setOccupiedBB(getOccupiedBB() ^ rookFromTo);
-			setEmptyBB(getEmptyBB() ^ rookFromTo);
+
+			if (kingToBB != rookFromBB && rookToBB != kingFromBB) {
+				xor(move.getColor(), rookFromTo);
+				setOccupiedBB(getOccupiedBB() ^ rookFromTo);
+				setEmptyBB(getEmptyBB() ^ rookFromTo);
+			}
 		}
 
 		setCastling(getColorToMove(), CASTLE_NONE);
@@ -323,19 +331,26 @@ public class FischerRandomGame extends ClassicGame {
 			setPiece(bitscanForward(kingToBB), EMPTY);
 			setPiece(kingFromSquare, KING);
 			xor(move.getColor(), KING, kingFromTo);
-			xor(move.getColor(), kingFromTo);
-			setOccupiedBB(getOccupiedBB() ^ kingFromTo);
-			setEmptyBB(getEmptyBB() ^ kingFromTo);
+
+			if (kingToBB != rookFromBB && rookToBB != kingFromBB) {
+				xor(move.getColor(), kingFromTo);
+				setOccupiedBB(getOccupiedBB() ^ kingFromTo);
+				setEmptyBB(getEmptyBB() ^ kingFromTo);
+			}
 		}
 
 		if (rookFromBB != rookToBB) {
 			long rookFromTo = rookToBB | rookFromBB;
-			setPiece(bitscanForward(rookToBB), EMPTY);
+			if (rookToBB != kingFromBB) {
+				setPiece(bitscanForward(rookToBB), EMPTY);
+			}
 			setPiece(rookFromSquare, ROOK);
 			xor(move.getColor(), ROOK, rookFromTo);
-			xor(move.getColor(), rookFromTo);
-			setOccupiedBB(getOccupiedBB() ^ rookFromTo);
-			setEmptyBB(getEmptyBB() ^ rookFromTo);
+			if (kingToBB != rookFromBB && rookToBB != kingFromBB) {
+				xor(move.getColor(), rookFromTo);
+				setOccupiedBB(getOccupiedBB() ^ rookFromTo);
+				setEmptyBB(getEmptyBB() ^ rookFromTo);
+			}
 		}
 
 		setEpSquareFromPreviousMove();
