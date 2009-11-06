@@ -300,6 +300,10 @@ public class Raptor implements PreferenceKeys {
 				&& getInstance().getWindow().getShell().isDisposed();
 	}
 
+	public boolean isShutdown() {
+		return isShutdown;
+	}
+
 	/**
 	 * Handles an error in a way the user is notified and can report an issue.
 	 * If possible try and use a connectors on error if you have access to one,
@@ -371,10 +375,6 @@ public class Raptor implements PreferenceKeys {
 		} else {
 			return null;
 		}
-	}
-
-	public boolean isShutdown() {
-		return isShutdown;
 	}
 
 	/**

@@ -446,16 +446,10 @@ public abstract class IcsConnector implements Connector {
 
 	public void closeAllConnectorWindowsItems() {
 		if (!Raptor.getInstance().isDisposed()) {
-			RaptorWindowItem[] items = Raptor.getInstance().getWindow()
-					.getRaptorWindowItems();
+			RaptorConnectorWindowItem[] items = Raptor.getInstance()
+					.getWindow().getWindowItems(this);
 			for (RaptorWindowItem item : items) {
-				if (item instanceof RaptorConnectorWindowItem) {
-					RaptorConnectorWindowItem connectorItem = (RaptorConnectorWindowItem) item;
-					if (connectorItem.getConnector() == this) {
-						Raptor.getInstance().getWindow()
-								.disposeRaptorWindowItem(item);
-					}
-				}
+				Raptor.getInstance().getWindow().disposeRaptorWindowItem(item);
 			}
 		}
 	}
