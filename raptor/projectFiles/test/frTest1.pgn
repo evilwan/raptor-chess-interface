@@ -1,0 +1,16 @@
+[Event "FICS rated wild/fr game"]
+[Site "FICS"]
+[FICSGamesDBGameNo "28810388"]
+[White "Raph"]
+[Black "Mezzominuto"]
+[WhiteElo "2053"]
+[BlackElo "2241"]
+[TimeControl "120+0"]
+[Date "2009.11.06"]
+[WhiteClock "0:02:00.000"]
+[BlackClock "0:02:00.000"]
+[FEN "rnbbkrqn/pppppppp/8/8/8/8/PPPPPPPP/RNBBKRQN w KQkq - 0 1"]
+[PlyCount "56"]
+[Result "0-1"]
+
+1. Ng3 {[%emt 0.0]} c5 {[%emt 0.0]} 2. f3 {[%emt 1.386]} d6 {[%emt 4.297]} 3. b3 {[%emt 1.491]} f5 {[%emt 2.703]} 4. Bb2 {[%emt 1.043]} e5 {[%emt 0.906]} 5. c4 {[%emt 1.053]} Be6 {[%emt 0.938]} 6. e3 {[%emt 1.133]} Nc6 {[%emt 0.422]} 7. Nc3 {[%emt 1.362]} Nb4 {[%emt 0.609]} 8. Ke2 {[%emt 7.424]} g5 {[%emt 5.125]} 9. a3 {[%emt 1.426]} Nc6 {[%emt 0.516]} 10. Bc2 {[%emt 2.681]} Qf7 {[%emt 5.875]} 11. Rae1 {[%emt 1.49]} Ba5 {[%emt 4.046]} 12. Kd1 {[%emt 1.804]} * 

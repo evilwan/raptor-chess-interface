@@ -108,7 +108,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 					.get(PgnHeader.Event.name()), "losers")) {
 				variant = Variant.losers;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
-					.get(PgnHeader.Event.name()), "wild fr")) {
+					.get(PgnHeader.Event.name()), "wild/fr")) {
 				variant = Variant.fischerRandom;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
 					.get(PgnHeader.Event.name()), "bughouse")) {

@@ -28,6 +28,7 @@ import raptor.chat.ChatType;
 import raptor.chat.Partnership;
 import raptor.chat.Seek;
 import raptor.chess.BughouseGame;
+import raptor.chess.FischerRandomGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Result;
@@ -574,6 +575,10 @@ public class IcsParser implements GameConstants {
 				IcsUtils.updateNonPositionFields(game, message);
 				IcsUtils.updatePosition(game, message);
 				IcsUtils.verifyLegal(game);
+
+				if (game instanceof FischerRandomGame) {
+					((FischerRandomGame) game).initialPositionIsSet();
+				}
 				service.addGame(game);
 
 				if (message.isWhiteOnTop) {
