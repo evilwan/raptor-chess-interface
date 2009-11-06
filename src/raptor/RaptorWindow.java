@@ -78,6 +78,7 @@ import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.PersonController;
+import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.util.BrowserUtils;
@@ -767,6 +768,33 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
+	 * Returns true if this RaptorWindow is managing a channel tell tab for the
+	 * specified channel.
+	 */
+	public boolean containsRegExItem(Connector connector, String pattern) {
+		boolean result = false;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChatConsoleWindowItem) {
+					ChatConsoleWindowItem item = (ChatConsoleWindowItem) folder
+							.getRaptorTabItemAt(i).raptorItem;
+					if (item.getController().getConnector() == connector
+							&& item.getController() instanceof RegExController) {
+						RegExController controller = (RegExController) item
+								.getController();
+						if (StringUtils
+								.equals(controller.getPattern(), pattern)) {
+							result = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * Returns true if atleast one window item of the specified type is being
 	 * managed.
 	 */
@@ -843,38 +871,45 @@ public class RaptorWindow extends ApplicationWindow {
 	/**
 	 * Forces the current window item in view.
 	 */
-	public void forceFocus(RaptorWindowItem windowItem) {
-		synchronized (itemsManaged) {
-			boolean wasRestored = false;
+	public void forceFocus(final RaptorWindowItem windowItem) {
+		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				synchronized (itemsManaged) {
+					boolean wasRestored = false;
 
-			for (RaptorTabItem currentTabItem : itemsManaged) {
-				if (currentTabItem.raptorItem == windowItem) {
-					currentTabItem.raptorParent.setSelection(currentTabItem);
-					if (currentTabItem.raptorParent.getMinimized()) {
-						currentTabItem.raptorParent.setMinimized(false);
-						restoreFolders();
-						wasRestored = true;
+					for (RaptorTabItem currentTabItem : itemsManaged) {
+						if (currentTabItem.raptorItem == windowItem) {
+							currentTabItem.raptorParent
+									.setSelection(currentTabItem);
+							if (currentTabItem.raptorParent.getMinimized()) {
+								currentTabItem.raptorParent.setMinimized(false);
+								restoreFolders();
+								wasRestored = true;
+							}
+							break;
+						}
 					}
-					break;
+
+					// Now check to see if a folder is maximized. If one is then
+					// do a
+					// restore.
+					if (!wasRestored) {
+						boolean isFolderMaximized = false;
+						for (RaptorTabFolder folder : folders) {
+							if (folder.getMaximized()) {
+								isFolderMaximized = true;
+								break;
+							}
+						}
+
+						if (isFolderMaximized) {
+							restoreFolders();
+						}
+					}
 				}
 			}
+		});
 
-			// Now check to see if a folder is maximized. If one is then do a
-			// restore.
-			if (!wasRestored) {
-				boolean isFolderMaximized = false;
-				for (RaptorTabFolder folder : folders) {
-					if (folder.getMaximized()) {
-						isFolderMaximized = true;
-						break;
-					}
-				}
-
-				if (isFolderMaximized) {
-					restoreFolders();
-				}
-			}
-		}
 	}
 
 	/**
@@ -981,7 +1016,15 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Returns an array of all RaptorWindowItems currently active.
 	 */
 	public RaptorWindowItem[] getRaptorWindowItems() {
-		return itemsManaged.toArray(new RaptorWindowItem[0]);
+		synchronized (itemsManaged) {
+			RaptorWindowItem[] result = new RaptorWindowItem[itemsManaged
+					.size()];
+			int i = 0;
+			for (RaptorTabItem item : itemsManaged) {
+				result[i++] = item.raptorItem;
+			}
+			return result;
+		}
 	}
 
 	/**
@@ -1039,6 +1082,32 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		return result.toArray(new RaptorWindowItem[0]);
+	}
+
+	/**
+	 * Returns all RaptorWindowItems that are being managed and belong to the
+	 * specified connetor.
+	 * 
+	 * @param windowItemClass
+	 *            The window item class.
+	 * @return The result.
+	 */
+	@SuppressWarnings("unchecked")
+	public RaptorConnectorWindowItem[] getWindowItems(Connector connector) {
+		List<RaptorConnectorWindowItem> result = new ArrayList<RaptorConnectorWindowItem>(
+				10);
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
+				if (currentTabItem.raptorItem instanceof RaptorConnectorWindowItem) {
+					RaptorConnectorWindowItem connectorItem = (RaptorConnectorWindowItem) currentTabItem.raptorItem;
+					if (connectorItem.getConnector() == connector) {
+						result
+								.add((RaptorConnectorWindowItem) currentTabItem.raptorItem);
+					}
+				}
+			}
+		}
+		return result.toArray(new RaptorConnectorWindowItem[0]);
 	}
 
 	/**
@@ -1201,11 +1270,6 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void controlResized(ControlEvent e) {
 				storeBounds();
-			}
-		});
-		getShell().addListener(SWT.Close, new Listener() {
-			public void handleEvent(Event e) {
-				Raptor.getInstance().shutdown();
 			}
 		});
 
@@ -1640,6 +1704,14 @@ public class RaptorWindow extends ApplicationWindow {
 
 	protected RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
+	}
+
+	/**
+	 * Overridden to cleanly shut down raptor.
+	 */
+	@Override
+	protected void handleShellCloseEvent() {
+		Raptor.getInstance().shutdown();
 	}
 
 	/**

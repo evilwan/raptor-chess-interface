@@ -20,7 +20,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
-import raptor.RaptorWindowItem;
+import raptor.RaptorConnectorWindowItem;
+import raptor.connector.Connector;
 import raptor.service.ChessBoardCacheService;
 import raptor.swt.ItemChangedListener;
 
@@ -32,7 +33,7 @@ import raptor.swt.ItemChangedListener;
  * If you want the window item to be able to take over inactive games use
  * BoardUtils.openGame(ChessBoardController).
  */
-public class ChessBoardWindowItem implements RaptorWindowItem {
+public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
@@ -88,6 +89,10 @@ public class ChessBoardWindowItem implements RaptorWindowItem {
 
 	public ChessBoard getBoard() {
 		return board;
+	}
+
+	public Connector getConnector() {
+		return getController().getConnector();
 	}
 
 	public Control getControl() {

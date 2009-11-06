@@ -36,16 +36,17 @@ import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
-import raptor.RaptorWindowItem;
+import raptor.RaptorConnectorWindowItem;
 import raptor.chat.BugGame;
 import raptor.chat.Bugger;
 import raptor.chat.Partnership;
+import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
 
-public class BugTeamsWindowItem implements RaptorWindowItem {
+public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
 			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
@@ -116,6 +117,10 @@ public class BugTeamsWindowItem implements RaptorWindowItem {
 		isActive = false;
 		composite.dispose();
 		service.removeBughouseServiceListener(listener);
+	}
+
+	public Connector getConnector() {
+		return service.getConnector();
 	}
 
 	public Control getControl() {
@@ -476,6 +481,10 @@ public class BugTeamsWindowItem implements RaptorWindowItem {
 	protected void refreshTable() {
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
+				if (player1Table.isDisposed()) {
+					return;
+				}
+
 				synchronized (player1Table) {
 
 					List<String> selectedNamesBeforeRefresh = new ArrayList<String>(

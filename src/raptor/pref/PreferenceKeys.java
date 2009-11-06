@@ -37,6 +37,7 @@ public interface PreferenceKeys {
 	public static final String QUAD5_QUAD6_SASH_WEIGHTS = "quad5-quad6-sash-weights";
 	public static final String QUAD56_QUAD7_SASH_WEIGHTS = "quad56-quad7-sash-weights";
 	public static final String WINDOW_BOUNDS = "window-bounds";
+	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-info";
 
 	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";

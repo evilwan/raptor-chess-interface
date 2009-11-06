@@ -53,6 +53,10 @@ public class RegExController extends ChatConsoleController {
 		return pattern.pattern();
 	}
 
+	public String getPattern() {
+		return pattern.pattern();
+	}
+
 	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(

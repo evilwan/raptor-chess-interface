@@ -33,7 +33,10 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.RaptorConnectorWindowItem;
+import raptor.RaptorWindowItem;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.chess.BughouseGame;
@@ -441,6 +444,22 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
+	public void closeAllConnectorWindowsItems() {
+		if (!Raptor.getInstance().isDisposed()) {
+			RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+					.getRaptorWindowItems();
+			for (RaptorWindowItem item : items) {
+				if (item instanceof RaptorConnectorWindowItem) {
+					RaptorConnectorWindowItem connectorItem = (RaptorConnectorWindowItem) item;
+					if (connectorItem.getConnector() == this) {
+						Raptor.getInstance().getWindow()
+								.disposeRaptorWindowItem(item);
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Connects to ics using the settings in preferences.
 	 */
@@ -455,6 +474,10 @@ public abstract class IcsConnector implements Connector {
 	public void disconnect() {
 		synchronized (this) {
 			if (isConnected()) {
+				if (isLoggedIn) {
+					storeTabStates();
+				}
+				closeAllConnectorWindowsItems();
 				try {
 					ScriptService.getInstance().removeScriptServiceListener(
 							scriptServiceListener);
@@ -511,7 +534,6 @@ public abstract class IcsConnector implements Connector {
 			fireDisconnected();
 			LOG.info("Disconnected from " + getShortName());
 		}
-
 	}
 
 	public void dispose() {
@@ -835,6 +857,57 @@ public abstract class IcsConnector implements Connector {
 		return IcsUtils.removeLineBreaks(message);
 	}
 
+	/**
+	 * Restores the saved states for this connector.
+	 */
+	public void restoreTabStates() {
+		String preference = StringUtils.defaultString(Raptor.getInstance()
+				.getPreferences().getString(
+						getContext().getShortName() + "-" + currentProfileName
+								+ "-" + PreferenceKeys.CHANNEL_REGEX_TAB_INFO));
+
+		RaptorStringTokenizer tok = new RaptorStringTokenizer(preference, "`",
+				true);
+		while (tok.hasMoreTokens()) {
+			String type = tok.nextToken();
+			String value = tok.nextToken();
+			Quadrant quad = Quadrant.valueOf(tok.nextToken());
+
+			if (type.equals("Channel")) {
+				if (!Raptor.getInstance().getWindow().containsChannelItem(this,
+						value)) {
+					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+							new ChannelController(this, value), quad);
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							windowItem, false);
+					ChatUtils.appendPreviousChatsToController(windowItem
+							.getConsole());
+				}
+			} else if (type.equals("RegEx")) {
+				if (!Raptor.getInstance().getWindow().containsRegExItem(this,
+						value)) {
+					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+							new RegExController(this, value), quad);
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							windowItem, false);
+					ChatUtils.appendPreviousChatsToController(windowItem
+							.getConsole());
+				}
+			}
+		}
+
+		RaptorConnectorWindowItem[] items = Raptor.getInstance().getWindow()
+				.getWindowItems(this);
+		for (RaptorConnectorWindowItem item : items) {
+			if (item instanceof ChatConsoleWindowItem) {
+				ChatConsoleWindowItem windowItem = (ChatConsoleWindowItem) item;
+				if (windowItem.getController() instanceof MainController) {
+					Raptor.getInstance().getWindow().forceFocus(item);
+				}
+			}
+		}
+	}
+
 	public void sendBugAvailableTeamsMessage() {
 		sendMessage("$$bugwho p", true, ChatType.BUGWHO_AVAILABLE_TEAMS);
 	}
@@ -931,6 +1004,47 @@ public abstract class IcsConnector implements Connector {
 
 	public void setSimulBugPartnerName(String simulBugPartnerName) {
 		this.simulBugPartnerName = simulBugPartnerName;
+	}
+
+	/**
+	 * Stores off the tab states that matter to this connector so they can be
+	 * restored when reconnected.
+	 */
+	public void storeTabStates() {
+		if (!Raptor.getInstance().isDisposed()) {
+			String preference = "";
+			RaptorConnectorWindowItem[] items = Raptor.getInstance()
+					.getWindow().getWindowItems(this);
+			for (RaptorConnectorWindowItem item : items) {
+				if (item instanceof ChatConsoleWindowItem) {
+					ChatConsoleWindowItem chatConsoleItem = (ChatConsoleWindowItem) item;
+					if (chatConsoleItem.getController() instanceof ChannelController) {
+						ChannelController controller = (ChannelController) chatConsoleItem
+								.getController();
+						preference += (preference.equals("") ? "" : "`")
+								+ "Channel`"
+								+ controller.getChannel()
+								+ "`"
+								+ Raptor.getInstance().getWindow().getQuadrant(
+										item).toString();
+					} else if (chatConsoleItem.getController() instanceof RegExController) {
+						RegExController controller = (RegExController) chatConsoleItem
+								.getController();
+						preference += (preference.equals("") ? "" : "`")
+								+ "RegEx`"
+								+ controller.getPattern()
+								+ "`"
+								+ Raptor.getInstance().getWindow().getQuadrant(
+										item).toString();
+					}
+				}
+			}
+			Raptor.getInstance().getPreferences().setValue(
+					getContext().getShortName() + "-" + currentProfileName
+							+ "-" + PreferenceKeys.CHANNEL_REGEX_TAB_INFO,
+					preference);
+			Raptor.getInstance().getPreferences().save();
+		}
 	}
 
 	/**
@@ -1280,6 +1394,7 @@ public abstract class IcsConnector implements Connector {
 							+ "login complete. userName=" + userName);
 					isLoggedIn = true;
 					onSuccessfulLogin();
+					restoreTabStates();
 					// Since we are now logged in, just buffer the text
 					// received and
 					// invoke parseMessage when the prompt arrives.
