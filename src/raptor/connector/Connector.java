@@ -298,7 +298,7 @@ public interface Connector {
 	/**
 	 * Sends a rematch request. On Fics this would be the rematch command.
 	 */
-	public void onRematchKeyPress();
+	public void onRematch();
 
 	/**
 	 * Resigns the specified game.

@@ -789,7 +789,7 @@ public abstract class IcsConnector implements Connector {
 		sendMessage("$$partner " + bugger, true);
 	}
 
-	public void onRematchKeyPress() {
+	public void onRematch() {
 		sendMessage("$$rematch", true);
 	}
 
