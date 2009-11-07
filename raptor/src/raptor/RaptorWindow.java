@@ -445,76 +445,14 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
-				final RaptorWindowItem item, boolean isInitingItem, int index) {
-			super(parent, style, index);
+				final RaptorWindowItem item, boolean isInitingItem) {
+			super(parent, style);
 			init(parent, item, isInitingItem);
 		}
 
-		protected void init(RaptorTabFolder parent,
-				final RaptorWindowItem item, boolean isInitingItem) {
-			raptorParent = parent;
-
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Creating RaptorTabItem.");
-			}
-
-			raptorItem = item;
-			if (isInitingItem) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("initing item.");
-				}
-				item.init(parent);
-			}
-
-			item.addItemChangedListener(listener = new ItemChangedListener() {
-				public void itemStateChanged() {
-					if (!disposed && item.getControl() != null
-							&& !item.getControl().isDisposed()) {
-						getShell().getDisplay().asyncExec(new Runnable() {
-							public void run() {
-
-								if (LOG.isDebugEnabled()) {
-									LOG
-											.debug("Item changed, updating text,title,showClose");
-								}
-								try {
-									setText(item.getTitle());
-									setImage(item.getImage());
-									setShowClose(true);
-									if (raptorParent.getSelection() == RaptorTabItem.this) {
-										raptorParent.updateToolbar(true);
-									}
-								} catch (SWTException swt) {
-									if (LOG.isDebugEnabled()) {
-										LOG
-												.debug(
-														"Error handling item state changed:",
-														swt);
-									}
-									// Just eat it. It is probably a
-									// widget is
-									// disposed exception
-									// and i can't figure out how to
-									// avoid it.
-								}
-							}
-						});
-					}
-				}
-			});
-
-			setControl(item.getControl());
-			setText(item.getTitle());
-			setImage(item.getImage());
-			setShowClose(true);
-			// parent.layout(true, true);
-			parent.setSelection(this);
-			itemsManaged.add(this);
-		}
-
 		public RaptorTabItem(RaptorTabFolder parent, int style,
-				final RaptorWindowItem item, boolean isInitingItem) {
-			super(parent, style);
+				final RaptorWindowItem item, boolean isInitingItem, int index) {
+			super(parent, style, index);
 			init(parent, item, isInitingItem);
 		}
 
@@ -587,6 +525,68 @@ public class RaptorWindow extends ApplicationWindow {
 		public String toString() {
 			return "RaptorTabItem: " + getText() + " isVisible=" + " quadrant="
 					+ raptorParent.quad + getControl().isVisible();
+		}
+
+		protected void init(RaptorTabFolder parent,
+				final RaptorWindowItem item, boolean isInitingItem) {
+			raptorParent = parent;
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Creating RaptorTabItem.");
+			}
+
+			raptorItem = item;
+			if (isInitingItem) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("initing item.");
+				}
+				item.init(parent);
+			}
+
+			item.addItemChangedListener(listener = new ItemChangedListener() {
+				public void itemStateChanged() {
+					if (!disposed && item.getControl() != null
+							&& !item.getControl().isDisposed()) {
+						getShell().getDisplay().asyncExec(new Runnable() {
+							public void run() {
+
+								if (LOG.isDebugEnabled()) {
+									LOG
+											.debug("Item changed, updating text,title,showClose");
+								}
+								try {
+									setText(item.getTitle());
+									setImage(item.getImage());
+									setShowClose(true);
+									if (raptorParent.getSelection() == RaptorTabItem.this) {
+										raptorParent.updateToolbar(true);
+									}
+								} catch (SWTException swt) {
+									if (LOG.isDebugEnabled()) {
+										LOG
+												.debug(
+														"Error handling item state changed:",
+														swt);
+									}
+									// Just eat it. It is probably a
+									// widget is
+									// disposed exception
+									// and i can't figure out how to
+									// avoid it.
+								}
+							}
+						});
+					}
+				}
+			});
+
+			setControl(item.getControl());
+			setText(item.getTitle());
+			setImage(item.getImage());
+			setShowClose(true);
+			// parent.layout(true, true);
+			parent.setSelection(this);
+			itemsManaged.add(this);
 		}
 	}
 

@@ -101,6 +101,10 @@ public class PlayingController extends ChessBoardController {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (isDisposed()) {
+							return;
+						}
+
 						if (!makePremove(true)) {
 							refreshBoard();
 						}
@@ -115,6 +119,10 @@ public class PlayingController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							board.getResultDecorator().setDecorationFromResult(
 									getGame().getResult());
 							board.redrawSquares();
@@ -159,6 +167,10 @@ public class PlayingController extends ChessBoardController {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (isDisposed()) {
+							return;
+						}
+
 						try {
 							board.getSquareHighlighter().removeAllHighlights();
 							board.getArrowDecorator().removeAllArrows();
@@ -261,6 +273,10 @@ public class PlayingController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							adjustForIllegalMove(move, true);
 						} catch (Throwable t) {
 							connector.onError("PlayingController.illegalMove",

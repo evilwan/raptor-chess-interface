@@ -53,6 +53,10 @@ public class ObserveController extends ChessBoardController {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (isDisposed()) {
+							return;
+						}
+
 						refreshBoard();
 					}
 				});
@@ -64,6 +68,10 @@ public class ObserveController extends ChessBoardController {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (isDisposed()) {
+							return;
+						}
+
 						try {
 							board.getResultDecorator().setDecorationFromResult(
 									getGame().getResult());
@@ -102,6 +110,10 @@ public class ObserveController extends ChessBoardController {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (isDisposed()) {
+							return;
+						}
+
 						try {
 							cursor.setCursorMasterLast();
 							refresh();
@@ -119,6 +131,10 @@ public class ObserveController extends ChessBoardController {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (isDisposed()) {
+							return;
+						}
+
 						try {
 							if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
 								cursor.setCursorMasterLast();

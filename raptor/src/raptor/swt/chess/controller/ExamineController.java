@@ -52,6 +52,10 @@ public class ExamineController extends ChessBoardController {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
+						if (isDisposed()) {
+							return;
+						}
+
 						try {
 							onPlayGameEndSound();
 							InactiveController inactiveController = new InactiveController(
@@ -86,6 +90,10 @@ public class ExamineController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							refresh();
 						} catch (Throwable t) {
 							connector.onError(
@@ -102,6 +110,10 @@ public class ExamineController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							examinePositionUpdate();
 						} catch (Throwable t) {
 							connector.onError(
@@ -118,6 +130,10 @@ public class ExamineController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							examineOnIllegalMove(move);
 						} catch (Throwable t) {
 							connector.onError("ExamineController.illegalMove",

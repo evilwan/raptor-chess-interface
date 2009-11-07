@@ -215,7 +215,12 @@ public class MovesParser {
 
 							// White move number.
 							if (lineTok.hasMoreTokens()) {
-								moves.add(lineTok.nextToken());
+								String token = lineTok.nextToken();
+								if (token.equals("...")) {
+									break;
+								} else {
+									moves.add(token);
+								}
 							}
 
 							// White time.
@@ -226,7 +231,12 @@ public class MovesParser {
 
 							// Blacks move
 							if (lineTok.hasMoreTokens()) {
-								moves.add(lineTok.nextToken());
+								String token = lineTok.nextToken();
+								if (token.equals("...")) {
+									break;
+								} else {
+									moves.add(token);
+								}
 							}
 
 							// Blacks time
