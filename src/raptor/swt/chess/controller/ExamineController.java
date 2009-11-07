@@ -307,7 +307,8 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public void userCancelledMove(int fromSquare, boolean isDnd) {
+	public void userCancelledMove(int fromSquare) {
+		SoundService.getInstance().playSound("illegalMove");
 		board.unhidePieces();
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
@@ -315,7 +316,7 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public void userInitiatedMove(int square, boolean isDnd) {
+	public void userInitiatedMove(int square) {
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
 		if (getPreferences().getBoolean(
@@ -325,9 +326,7 @@ public class ExamineController extends ChessBoardController {
 							PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
 		}
 
-		if (isDnd) {
-			board.getSquare(square).setHidingPiece(true);
-		}
+		board.getSquare(square).setHidingPiece(true);
 		board.getSquare(square).redraw();
 	}
 
@@ -344,6 +343,7 @@ public class ExamineController extends ChessBoardController {
 
 		if (ChessBoardUtils.isPieceJailSquare(toSquare)) {
 			SoundService.getInstance().playSound("illegalMove");
+			refreshBoard();
 			return;
 		}
 

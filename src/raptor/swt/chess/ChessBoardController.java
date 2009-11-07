@@ -562,7 +562,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	/**
 	 * Invoked when the user cancels a move.
 	 */
-	public abstract void userCancelledMove(int fromSquare, boolean isDnd);
+	public abstract void userCancelledMove(int fromSquare);
 
 	/**
 	 * Invoked when the user initiates a move.
@@ -573,7 +573,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 *            True if this is a drag and drop move, false if its a click
 	 *            click move.
 	 */
-	public abstract void userInitiatedMove(int square, boolean isDnd);
+	public abstract void userInitiatedMove(int square);
 
 	/**
 	 * Invoked when the user has made a move.

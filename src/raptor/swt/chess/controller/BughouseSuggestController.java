@@ -88,10 +88,12 @@ public class BughouseSuggestController extends ObserveController {
 	}
 
 	@Override
-	public void userCancelledMove(int fromSquare, boolean isDnd) {
+	public void userCancelledMove(int fromSquare) {
 		if (!isDisposed()) {
-			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare
-					+ " " + isDnd);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("moveCancelled" + getGame().getId() + " "
+						+ fromSquare);
+			}
 			board.unhidePieces();
 			board.getSquareHighlighter().removeAllHighlights();
 			board.getArrowDecorator().removeAllArrows();
@@ -101,10 +103,11 @@ public class BughouseSuggestController extends ObserveController {
 	}
 
 	@Override
-	public void userInitiatedMove(int square, boolean isDnd) {
+	public void userInitiatedMove(int square) {
 		if (!isDisposed()) {
-			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " "
-					+ isDnd);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("moveInitiated" + getGame().getId() + " " + square);
+			}
 			board.getSquareHighlighter().removeAllHighlights();
 			board.getArrowDecorator().removeAllArrows();
 
@@ -115,9 +118,7 @@ public class BughouseSuggestController extends ObserveController {
 								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
 			}
 
-			if (isDnd) {
-				board.getSquare(square).setHidingPiece(true);
-			}
+			board.getSquare(square).setHidingPiece(true);
 			board.getSquare(square).redraw();
 		}
 	}
