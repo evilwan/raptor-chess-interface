@@ -66,6 +66,11 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 */
 	protected Listener dndListener = new Listener() {
 		public void handleEvent(Event e) {
+			if (!getPreferences().getString(
+					PreferenceKeys.BOARD_USER_MOVE_INPUT_MODE).equals(
+					UserMoveInputMode.DragAndDrop.toString())) {
+				return;
+			}
 			switch (e.type) {
 			case SWT.MouseDown: {
 				if (e.button != 1) {
@@ -77,7 +82,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							.setData(DRAG_INITIATOR, ChessSquare.this);
 					board.getControl().setData(DROP_HANDLED, false);
 					updateCursorForDrag(piece);
-					board.controller.userInitiatedMove(id, true);
+					board.controller.userInitiatedMove(id);
 				} else {
 					board.getControl().setData(DRAG_INITIATOR, null);
 					board.getControl().setData(DROP_HANDLED, false);
@@ -99,7 +104,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				ChessSquare dragEnd = getSquareCursorIsAt();
 
 				if (dragEnd == null) {
-					board.controller.userCancelledMove(dragSource.id, true);
+					board.controller.userCancelledMove(dragSource.id);
 					board.getControl().setData(LAST_DROP_TIME,
 							System.currentTimeMillis());
 					board.getControl().setData(DROP_HANDLED, false);
@@ -132,6 +137,12 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		}
 
 		public void mouseUp(MouseEvent e) {
+
+			if (!getPreferences().getString(
+					PreferenceKeys.BOARD_USER_MOVE_INPUT_MODE).equals(
+					UserMoveInputMode.ClickClickMove.toString())) {
+				return;
+			}
 			if (e.button == 1) {
 				Long lastDropTime = (Long) board.getControl().getData(
 						LAST_DROP_TIME);
@@ -144,7 +155,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 						if (board.controller.canUserInitiateMoveFrom(id)) {
 							board.getControl().setData(CLICK_INITIATOR,
 									ChessSquare.this);
-							board.controller.userInitiatedMove(id, false);
+							board.controller.userInitiatedMove(id);
 						}
 					} else {
 						if (ChessSquare.this == initiator) {// Clicked
@@ -152,8 +163,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							// same
 							// square
 							// twice.
-							board.controller.userCancelledMove(initiator.id,
-									false);
+							board.controller.userCancelledMove(initiator.id);
 							board.getControl().setData(CLICK_INITIATOR, null);
 						} else if (ChessBoardUtils.arePiecesSameColor(piece,
 								initiator.piece)) {// Clicked
@@ -161,17 +171,10 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							// same
 							// piece color
 							// type.
-							board.controller.userCancelledMove(initiator.id,
-									false);
-							board.controller.userInitiatedMove(id, false);
+							board.controller.userCancelledMove(initiator.id);
+							board.controller.userInitiatedMove(id);
 							board.getControl().setData(CLICK_INITIATOR,
 									ChessSquare.this);
-						} else if (board.getControl().getData(CLICK_INITIATOR) != ChessSquare.this) {
-							// Tried to move on a different board.
-							ChessSquare sourceSquare = (ChessSquare) e.widget;
-							sourceSquare.board.controller.userCancelledMove(
-									sourceSquare.id, false);
-							board.getControl().setData(CLICK_INITIATOR, null);
 						} else {// A valid move
 							board.controller.userMadeMove(initiator.id, id);
 							board.getControl().setData(CLICK_INITIATOR, null);

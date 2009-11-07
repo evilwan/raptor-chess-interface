@@ -656,13 +656,12 @@ public class PlayingController extends ChessBoardController {
 	 * removed in userInitiatedMove will be added back.
 	 */
 	@Override
-	public void userCancelledMove(int fromSquare, boolean isDnd) {
+	public void userCancelledMove(int fromSquare) {
 		if (isDisposed()) {
 			return;
 		}
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("userCancelledMove " + getSan(fromSquare)
-					+ " is drag and drop=" + isDnd);
+			LOG.debug("userCancelledMove " + getSan(fromSquare));
 		}
 		adjustForIllegalMove(false);
 	}
@@ -672,10 +671,9 @@ public class PlayingController extends ChessBoardController {
 	 * highlighted and if its a DND move the piece is removed.
 	 */
 	@Override
-	public void userInitiatedMove(int square, boolean isDnd) {
+	public void userInitiatedMove(int square) {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("userInitiatedMove " + getSan(square)
-					+ " is drag and drop=" + isDnd);
+			LOG.debug("userInitiatedMove " + getSan(square));
 		}
 
 		if (!isDisposed() && board.getSquare(square).getPiece() != EMPTY) {
@@ -689,9 +687,8 @@ public class PlayingController extends ChessBoardController {
 								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
 			}
 
-			if (isDnd) {
-				board.getSquare(square).setHidingPiece(true);
-			}
+			board.getSquare(square).setHidingPiece(true);
+
 			board.redrawSquares();
 		}
 	}

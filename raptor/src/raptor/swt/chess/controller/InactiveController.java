@@ -387,10 +387,9 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
-	public void userCancelledMove(int fromSquare, boolean isDnd) {
+	public void userCancelledMove(int fromSquare) {
 		if (!isDisposed()) {
-			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare
-					+ " " + isDnd);
+			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare);
 			board.unhidePieces();
 			board.getSquareHighlighter().removeAllHighlights();
 			board.getArrowDecorator().removeAllArrows();
@@ -400,10 +399,9 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
-	public void userInitiatedMove(int square, boolean isDnd) {
+	public void userInitiatedMove(int square) {
 		if (!isDisposed()) {
-			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " "
-					+ isDnd);
+			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " ");
 			userMadeAdjustment = true;
 			board.getResultDecorator().setDecoration(null);
 
@@ -417,9 +415,8 @@ public class InactiveController extends ChessBoardController implements
 								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
 			}
 
-			if (isDnd) {
-				board.getSquare(square).setHidingPiece(true);
-			}
+			board.getSquare(square).setHidingPiece(true);
+
 			board.getSquare(square).redraw();
 		}
 	}

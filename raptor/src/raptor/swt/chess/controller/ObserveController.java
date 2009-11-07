@@ -390,11 +390,11 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	@Override
-	public void userCancelledMove(int fromSquare, boolean isDnd) {
+	public void userCancelledMove(int fromSquare) {
 	}
 
 	@Override
-	public void userInitiatedMove(int square, boolean isDnd) {
+	public void userInitiatedMove(int square) {
 	}
 
 	@Override

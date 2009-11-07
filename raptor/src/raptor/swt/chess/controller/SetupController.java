@@ -287,15 +287,15 @@ public class SetupController extends ChessBoardController {
 	}
 
 	@Override
-	public void userCancelledMove(int fromSquare, boolean isDnd) {
+	public void userCancelledMove(int fromSquare) {
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getArrowDecorator().removeAllArrows();
 		refresh();
 	}
 
 	@Override
-	public void userInitiatedMove(int square, boolean isDnd) {
-		if (isDnd && !ChessBoardUtils.isPieceJailSquare(square)) {
+	public void userInitiatedMove(int square) {
+		if (!ChessBoardUtils.isPieceJailSquare(square)) {
 			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
 		board.redrawSquares();

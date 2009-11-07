@@ -14,12 +14,19 @@
 package raptor.pref.page;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
+import raptor.swt.chess.UserMoveInputMode;
 
 public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
+
+	public static final String[][] USER_MOVE_INPUT_MODE_ARRAY = {
+			{ "Drag And Drop", UserMoveInputMode.DragAndDrop.toString() },
+			{ "Click Click Move", UserMoveInputMode.ClickClickMove.toString() } };
+
 	public ChessBoardBehaviorPage() {
 		// Use the "flat" layout
 		super(GRID);
@@ -29,6 +36,10 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
+		addField(new ComboFieldEditor(
+				PreferenceKeys.BOARD_USER_MOVE_INPUT_MODE, "Move input mode:",
+				USER_MOVE_INPUT_MODE_ARRAY, getFieldEditorParent()));
+
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES,
 				"Inactive games can be taken over by new games",
