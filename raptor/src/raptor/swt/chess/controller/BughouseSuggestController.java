@@ -24,7 +24,6 @@ import org.eclipse.swt.widgets.ToolBar;
 
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
-import raptor.chess.GameCursor;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
@@ -42,8 +41,7 @@ public class BughouseSuggestController extends ObserveController {
 	 */
 	public BughouseSuggestController(Game game, Connector connector,
 			boolean isPartnerWhite) {
-		super(new GameCursor(game,
-				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast), connector);
+		super(game, connector);
 		this.isPartnerWhite = isPartnerWhite;
 	}
 
@@ -71,8 +69,11 @@ public class BughouseSuggestController extends ObserveController {
 
 	@Override
 	public Control getToolbar(Composite parent) {
+		boolean isCoolbarMode = getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE);
 		if (toolbar == null) {
-			toolbar = new ToolBar(parent, SWT.FLAT);
+			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
+					: parent, SWT.FLAT);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.BughouseSuggestChessBoard, toolbar,
 					false);
@@ -80,11 +81,20 @@ public class BughouseSuggestController extends ObserveController {
 			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
 			setToolItemSelected(ToolBarItemKey.FORCE_UPDATE, true);
 			enableDisableNavButtons();
+			if (isCoolbarMode) {
+				ChessBoardUtils.adjustCoolbar(getBoard(), toolbar);
+			}
 		} else {
-			toolbar.setParent(parent);
+			if (!isCoolbarMode) {
+				toolbar.setParent(parent);
+			}
 		}
 
-		return toolbar;
+		if (isCoolbarMode) {
+			return null;
+		} else {
+			return toolbar;
+		}
 	}
 
 	@Override
