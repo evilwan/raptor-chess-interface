@@ -113,6 +113,13 @@ public class IcsParser implements GameConstants {
 	protected Map<String, Style12Message> exaimineGamesWaitingOnMoves = new HashMap<String, Style12Message>();
 
 	/**
+	 * A map keyed by game id. Used to temporarily store style12 messages from
+	 * newly examined games until the moves message comes along. From the moves
+	 * message you can identify the variant and create the game correctly.
+	 */
+	protected Map<String, B1Message> exaimineB1sWaitingOnMoves = new HashMap<String, B1Message>();
+
+	/**
 	 * BICS does'nt support the partner board in G1 messages so you have to
 	 * resort to this to link the bug games together.
 	 */
@@ -340,8 +347,14 @@ public class IcsParser implements GameConstants {
 		}
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			connector.onError("Received B1 for a game not in the GameService. "
-					+ message, new Exception());
+			if (exaimineGamesWaitingOnMoves.containsKey(message.gameId)) {
+				exaimineB1sWaitingOnMoves.put(message.gameId, message);
+
+			} else {
+				connector.onError(
+						"Received B1 for a game not in the GameService. "
+								+ message, new Exception());
+			}
 		} else {
 			if (isBicsParser && game.getVariant() == Variant.crazyhouse
 					&& !containedStyle12) {
@@ -350,12 +363,7 @@ public class IcsParser implements GameConstants {
 				return;
 			}
 
-			for (int i = 1; i < message.whiteHoldings.length; i++) {
-				game.setDropCount(WHITE, i, message.whiteHoldings[i]);
-			}
-			for (int i = 1; i < message.blackHoldings.length; i++) {
-				game.setDropCount(BLACK, i, message.blackHoldings[i]);
-			}
+			updateGameForB1(game, message);
 			service.fireDroppablePiecesChanged(message.gameId);
 		}
 	}
@@ -430,6 +438,12 @@ public class IcsParser implements GameConstants {
 			if (style12 != null) {
 				exaimineGamesWaitingOnMoves.remove(message.gameId);
 				game = IcsUtils.createExaminedGame(style12, message);
+				B1Message b1Message = exaimineB1sWaitingOnMoves.get(game
+						.getId());
+				if (b1Message != null) {
+					updateGameForB1(game, b1Message);
+					exaimineB1sWaitingOnMoves.remove(game.getId());
+				}
 				service.addGame(game);
 				// Respect the flip variable if its set.
 				game.setHeader(PgnHeader.WhiteOnTop, style12.isWhiteOnTop ? "1"
@@ -790,6 +804,31 @@ public class IcsParser implements GameConstants {
 			}
 		}
 		return result;
+	}
+
+	protected void updateGameForB1(Game game, B1Message message) {
+		if (game instanceof BughouseGame
+				&& game.isInState(Game.EXAMINING_STATE)) {
+			// On fics when examining a bug game you dont get pieces.
+			// To handle all the issues around that just set 1 of everything.
+			game.setDropCount(WHITE, PAWN, 1);
+			game.setDropCount(WHITE, QUEEN, 1);
+			game.setDropCount(WHITE, ROOK, 1);
+			game.setDropCount(WHITE, KNIGHT, 1);
+			game.setDropCount(WHITE, BISHOP, 1);
+			game.setDropCount(BLACK, PAWN, 1);
+			game.setDropCount(BLACK, QUEEN, 1);
+			game.setDropCount(BLACK, ROOK, 1);
+			game.setDropCount(BLACK, KNIGHT, 1);
+			game.setDropCount(BLACK, BISHOP, 1);
+		} else {
+			for (int i = 1; i < message.whiteHoldings.length; i++) {
+				game.setDropCount(WHITE, i, message.whiteHoldings[i]);
+			}
+			for (int i = 1; i < message.blackHoldings.length; i++) {
+				game.setDropCount(BLACK, i, message.blackHoldings[i]);
+			}
+		}
 	}
 
 }

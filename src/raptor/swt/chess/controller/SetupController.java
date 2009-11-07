@@ -59,6 +59,10 @@ public class SetupController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							onPlayGameEndSound();
 							InactiveController inactiveController = new InactiveController(
 									getGame());
@@ -99,6 +103,10 @@ public class SetupController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							setupPositionUpdated();
 						} catch (Throwable t) {
 							connector.onError(
@@ -115,6 +123,10 @@ public class SetupController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							setupOnIllegalMove(move);
 						} catch (Throwable t) {
 							connector.onError("ExamineController.illegalMove",
@@ -131,6 +143,10 @@ public class SetupController extends ChessBoardController {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						try {
+							if (isDisposed()) {
+								return;
+							}
+
 							ExamineController examineController = new ExamineController(
 									getGame(), connector);
 							getBoard().setController(examineController);
