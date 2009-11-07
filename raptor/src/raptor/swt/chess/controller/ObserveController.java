@@ -335,6 +335,12 @@ public class ObserveController extends ChessBoardController {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
 
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE))
+		{
+			getToolbar(null);
+		}
+		
 		cursor.setCursorMasterLast();
 		refresh();
 

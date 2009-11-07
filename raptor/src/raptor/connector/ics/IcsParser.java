@@ -510,6 +510,257 @@ public class IcsParser implements GameConstants {
 		}
 	}
 
+	/**
+	 * Setup style 12 adjustments flow through here.
+	 */
+	protected void processStyle12SetupAdjustment(Game game,
+			Style12Message message, GameService service, String entireMessage) {
+		// Examined/BSetup/obs ex moves flow through here.
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing bsetup or examine position move.");
+		}
+
+		if (entireMessage
+				.contains("Game is validated - entering examine mode.\n")) {
+
+			// Games changing from Setup to Examine mode flow through
+			// here.
+			game.clearState(Game.SETUP_STATE);
+			game.clearState(Game.DROPPABLE_STATE);
+			IcsUtils.resetGame(game, message);
+			service.fireSetupGameBecameExamined(message.gameId);
+		} else {
+			// Clear out the game and start over.
+			// There is no telling what happened
+			// in a setup or examine game.
+			IcsUtils.resetGame(game, message);
+			service.fireGameStateChanged(message.gameId, true);
+		}
+	}
+
+	/**
+	 * Playing,Observing,Examining style 12 adjustments flow through here.
+	 */
+	protected void processStyle12Adjustment(Game game, Style12Message message,
+			GameService service, String entireMessage) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing obs/playing/ex position move.");
+		}
+
+		// Takebacks may have effected the state of the game so first
+		// adjsut to those.
+		// adjust takebacks will also do nothing on refreshes and end
+		// games
+		// but will return true.
+		if (!IcsUtils.adjustToTakebacks(game, message, connector)) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Making move in obs/playing position.");
+			}
+			// Now add the move to the game.
+			// Game Ends and Refreshes dont involve adding a move.
+			if (IcsUtils.addCurrentMove(game, message)) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Position was a move firing state changed.");
+				}
+				service.fireGameStateChanged(message.gameId, true);
+			} else { // I'm not sure this block of code is ever hit
+				// anymore.
+				// TO DO: look at removing it.
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Position was not a move firing state changed.");
+				}
+				service.fireGameStateChanged(message.gameId, false);
+			}
+		} else {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Adjusted for takebacks.");
+			}
+			service.fireGameStateChanged(message.gameId, false);
+		}
+	}
+
+	/**
+	 * Examined/Bsetup/Isolated Positions game starts flow through here (i.e.
+	 * All games that didnt have a G1 message)
+	 */
+	protected void processStyle12Creation(Game game, Style12Message message,
+			GameService service, String entireMessage) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing new ex or bsetup game.");
+		}
+		game = IcsUtils.createGame(message, entireMessage);
+
+		if (message.relation == Style12Message.EXAMINING_GAME_RELATION
+				&& !game.isInState(Game.SETUP_STATE)) {
+			exaimineGamesWaitingOnMoves.put(game.getId(), message);
+			connector.sendMessage("moves " + message.gameId, true,
+					ChatType.MOVES);
+		} else {
+			service.addGame(game);
+			// Respect the flip variable if its set.
+			game.setHeader(PgnHeader.WhiteOnTop, message.isWhiteOnTop ? "1"
+					: "0");
+			service.fireGameCreated(game.getId());
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Firing game created.");
+			}
+		}
+	}
+
+	protected void adjustWhiteOnTopHeader(Game game, Style12Message message) {
+		if (message.isWhiteOnTop) {
+			// Respect the flip variable.
+			game.setHeader(PgnHeader.WhiteOnTop, "1");
+		} else if (StringUtils.equalsIgnoreCase(message.whiteName,
+				connector.userName)) {
+			game.setHeader(PgnHeader.WhiteOnTop, "0");
+		} else if (StringUtils.equalsIgnoreCase(message.whiteName,
+				connector.userFollowing)) {
+			game.setHeader(PgnHeader.WhiteOnTop, "0");
+		} else if (StringUtils.equalsIgnoreCase(message.blackName,
+				connector.userName)) {
+			game.setHeader(PgnHeader.WhiteOnTop, "1");
+		} else if (StringUtils.equalsIgnoreCase(message.blackName,
+				connector.userFollowing)) {
+			game.setHeader(PgnHeader.WhiteOnTop, "1");
+		} else {
+			game.setHeader(PgnHeader.WhiteOnTop, "0");
+		}
+	}
+
+	protected void adjustBughouseHeadersAndFollowPartnersGamesForBics(
+			Game game, Style12Message message, GameService service) {
+		// BICS currently does'nt set a partner id so you have
+		// to
+		// do this.
+		if (bugGamesWithoutBoard2.isEmpty()) {
+			if (game.isInState(Game.PLAYING_STATE)
+					&& connector.getPreferences().getBoolean(
+							PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD)
+					&& !connector.isSimulBugConnector()
+					|| !game.isInState(Game.PLAYING_STATE)
+					&& connector
+							.getPreferences()
+							.getBoolean(
+									PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)) {
+				bugGamesWithoutBoard2.add(message.gameId);
+				connector.sendMessage("pobserve "
+						+ (message.isWhiteOnTop ? message.blackName
+								: message.whiteName), true);
+			}
+		} else {
+			Game otherBoard = service.getGame(bugGamesWithoutBoard2.get(0));
+			if (otherBoard == null) {
+				connector
+						.onError(
+								"Could not find game with id "
+										+ bugGamesWithoutBoard2.get(0)
+										+ " in the GameService. Please get BICS to add a partner game id to its G1 message.\n"
+										+ " You can complain to both johnthegreat and aramen.",
+								new Exception());
+			} else {
+				((BughouseGame) game).setOtherBoard((BughouseGame) otherBoard);
+				((BughouseGame) otherBoard).setOtherBoard((BughouseGame) game);
+
+				if (StringUtils.defaultIfEmpty(
+						otherBoard.getHeader(PgnHeader.WhiteOnTop), "0")
+						.equals("0")) {
+					game.setHeader(PgnHeader.WhiteOnTop, "1");
+				} else {
+					game.setHeader(PgnHeader.WhiteOnTop, "0");
+				}
+			}
+			bugGamesWithoutBoard2.clear();
+		}
+	}
+
+	protected void adjustBughouseHeadersAndFollowPartnersGamesForFics(
+			Game game, G1Message g1Message, Style12Message message,
+			GameService service) {
+		if (!connector.getGameService().isManaging(g1Message.parterGameId)) {
+			if (!connector.isSimulBugConnector()
+					&& (game.isInState(Game.PLAYING_STATE) && connector
+							.getPreferences()
+							.getBoolean(
+									PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD))
+					|| (game.isInState(Game.OBSERVING_STATE) && connector
+							.getPreferences()
+							.getBoolean(
+									PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD))) {
+				connector
+						.sendMessage("observe " + g1Message.parterGameId, true);
+			}
+		} else {
+			Game otherBoard = service.getGame(g1Message.parterGameId);
+			((BughouseGame) game).setOtherBoard((BughouseGame) otherBoard);
+			((BughouseGame) otherBoard).setOtherBoard((BughouseGame) game);
+			if (StringUtils.defaultIfEmpty(
+					otherBoard.getHeader(PgnHeader.WhiteOnTop), "0")
+					.equals("0")) {
+				game.setHeader(PgnHeader.WhiteOnTop, "1");
+			} else {
+				game.setHeader(PgnHeader.WhiteOnTop, "0");
+			}
+		}
+	}
+
+	/**
+	 * Observed/Playing games starts flow here (i.e. All games that contain a G1
+	 * message)
+	 */
+	protected void processStyle12Creation(Game game, G1Message g1Message,
+			Style12Message message, GameService service, String entireMessage) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing new obs/playing game.");
+		}
+		unprocessedG1Messages.remove(message.gameId);
+
+		game = IcsUtils.createGame(g1Message);
+		IcsUtils.updateNonPositionFields(game, message);
+		IcsUtils.updatePosition(game, message);
+		IcsUtils.verifyLegal(game);
+
+		if (game instanceof FischerRandomGame) {
+			((FischerRandomGame) game).initialPositionIsSet();
+		}
+		if (game.getVariant() == Variant.wild
+				|| game.getVariant() == Variant.fischerRandom) {
+			game.setHeader(PgnHeader.FEN, game.toFen());
+		}
+		service.addGame(game);
+
+		adjustWhiteOnTopHeader(game, message);
+
+		if (game.getVariant() == Variant.bughouse) {
+
+			/**
+			 * BICS does'nt have the partner game id in the G1 so you have to
+			 * handle BICS and FICS differently.
+			 */
+			if (g1Message.parterGameId.equals("0")) {
+				adjustBughouseHeadersAndFollowPartnersGamesForBics(game,
+						message, service);
+			} else {
+				adjustBughouseHeadersAndFollowPartnersGamesForFics(game,
+						g1Message, message, service);
+			}
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Firing game created.");
+		}
+		service.fireGameCreated(game.getId());
+
+		/**
+		 * Send a request for the moves.
+		 */
+		if (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
+				&& !message.isWhitesMoveAfterMoveIsMade) {
+			connector.sendMessage("moves " + message.gameId, true,
+					ChatType.MOVES);
+		}
+	}
+
 	protected void process(Style12Message message, GameService service,
 			String entireMessage) {
 		if (LOG.isDebugEnabled()) {
@@ -519,239 +770,21 @@ public class IcsParser implements GameConstants {
 
 		Game game = service.getGame(message.gameId);
 		if (game != null) {
-			if (// game.isInState(Game.EXAMINING_STATE)
-			game.isInState(Game.SETUP_STATE)
-			// || game.isInState(Game.OBSERVING_EXAMINED_STATE))
-			) {
-				// Examined/BSetup/obs ex moves flow through here.
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Processing bsetup or examine position move.");
-				}
+			if (game.isInState(Game.SETUP_STATE)) {
+				processStyle12SetupAdjustment(game, message, service,
+						entireMessage);
 
-				if (entireMessage
-						.contains("Game is validated - entering examine mode.\n")) {
-
-					// Games changing from Setup to Examine mode flow through
-					// here.
-					game.clearState(Game.SETUP_STATE);
-					game.clearState(Game.DROPPABLE_STATE);
-					IcsUtils.resetGame(game, message);
-					service.fireSetupGameBecameExamined(message.gameId);
-				} else {
-					// Clear out the game and start over.
-					// There is no telling what happened
-					// in a setup or examine game.
-					IcsUtils.resetGame(game, message);
-					service.fireGameStateChanged(message.gameId, true);
-				}
 			} else {
-				// Playing/Obsing/Examining flow through here.
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Processing obs/playing/ex position move.");
-				}
-
-				// Takebacks may have effected the state of the game so first
-				// adjsut to those.
-				// adjust takebacks will also do nothing on refreshes and end
-				// games
-				// but will return true.
-				if (!IcsUtils.adjustToTakebacks(game, message, connector)) {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Making move in obs/playing position.");
-					}
-					// Now add the move to the game.
-					// Game Ends and Refreshes dont involve adding a move.
-					if (IcsUtils.addCurrentMove(game, message)) {
-						if (LOG.isDebugEnabled()) {
-							LOG
-									.debug("Position was a move firing state changed.");
-						}
-						service.fireGameStateChanged(message.gameId, true);
-					} else { // I'm not sure this block of code is ever hit
-						// anymore.
-						// TO DO: look at removing it.
-						if (LOG.isDebugEnabled()) {
-							LOG
-									.debug("Position was not a move firing state changed.");
-						}
-						service.fireGameStateChanged(message.gameId, false);
-					}
-				} else {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Adjusted for takebacks.");
-					}
-					service.fireGameStateChanged(message.gameId, false);
-				}
+				processStyle12Adjustment(game, message, service, entireMessage);
 			}
 		} else {
 			G1Message g1Message = unprocessedG1Messages.get(message.gameId);
 			if (g1Message == null) {
-				// Examined/Bsetup/Isolated Positions game starts flow through
-				// here
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Processing new ex or bsetup game.");
-				}
-				game = IcsUtils.createGame(message, entireMessage);
+				processStyle12Creation(game, message, service, entireMessage);
 
-				if (message.relation == Style12Message.EXAMINING_GAME_RELATION
-						&& !game.isInState(Game.SETUP_STATE)) {
-					exaimineGamesWaitingOnMoves.put(game.getId(), message);
-					connector.sendMessage("moves " + message.gameId, true,
-							ChatType.MOVES);
-				} else {
-					service.addGame(game);
-					// Respect the flip variable if its set.
-					game.setHeader(PgnHeader.WhiteOnTop,
-							message.isWhiteOnTop ? "1" : "0");
-					service.fireGameCreated(game.getId());
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Firing game created.");
-					}
-				}
 			} else {
-				// Observed/Playing games starts flow through here
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Processing new obs/playing game.");
-				}
-				unprocessedG1Messages.remove(message.gameId);
-
-				game = IcsUtils.createGame(g1Message);
-				IcsUtils.updateNonPositionFields(game, message);
-				IcsUtils.updatePosition(game, message);
-				IcsUtils.verifyLegal(game);
-
-				if (game instanceof FischerRandomGame) {
-					((FischerRandomGame) game).initialPositionIsSet();
-				}
-				if (game.getVariant() == Variant.wild
-						|| game.getVariant() == Variant.fischerRandom) {
-					game.setHeader(PgnHeader.FEN, game.toFen());
-				}
-				service.addGame(game);
-
-				if (message.isWhiteOnTop) {
-					// Respect the flip variable.
-					game.setHeader(PgnHeader.WhiteOnTop, "1");
-				} else if (StringUtils.equalsIgnoreCase(message.whiteName,
-						connector.userName)) {
-					game.setHeader(PgnHeader.WhiteOnTop, "0");
-				} else if (StringUtils.equalsIgnoreCase(message.whiteName,
-						connector.userFollowing)) {
-					game.setHeader(PgnHeader.WhiteOnTop, "0");
-				} else if (StringUtils.equalsIgnoreCase(message.blackName,
-						connector.userName)) {
-					game.setHeader(PgnHeader.WhiteOnTop, "1");
-				} else if (StringUtils.equalsIgnoreCase(message.blackName,
-						connector.userFollowing)) {
-					game.setHeader(PgnHeader.WhiteOnTop, "1");
-				} else {
-					game.setHeader(PgnHeader.WhiteOnTop, "0");
-				}
-
-				if (game.getVariant() == Variant.bughouse) {
-
-					if (g1Message.parterGameId.equals("0")) {
-						// BICS currently does'nt set a partner id so you have
-						// to
-						// do this.
-						if (bugGamesWithoutBoard2.isEmpty()) {
-							if (game.isInState(Game.PLAYING_STATE)
-									&& connector
-											.getPreferences()
-											.getBoolean(
-													PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD)
-									&& !connector.isSimulBugConnector()
-									|| !game.isInState(Game.PLAYING_STATE)
-									&& connector
-											.getPreferences()
-											.getBoolean(
-													PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)) {
-								bugGamesWithoutBoard2.add(message.gameId);
-								connector
-										.sendMessage(
-												"pobserve "
-														+ (message.isWhiteOnTop ? message.blackName
-																: message.whiteName),
-												true);
-							}
-						} else {
-							Game otherBoard = service
-									.getGame(bugGamesWithoutBoard2.get(0));
-							if (otherBoard == null) {
-								connector
-										.onError(
-												"Could not find game with id "
-														+ bugGamesWithoutBoard2
-																.get(0)
-														+ " in the GameService. Please get BICS to add a partner game id to its G1 message.\n"
-														+ " You can complain to both johnthegreat and aramen.",
-												new Exception());
-							} else {
-								((BughouseGame) game)
-										.setOtherBoard((BughouseGame) otherBoard);
-								((BughouseGame) otherBoard)
-										.setOtherBoard((BughouseGame) game);
-
-								if (StringUtils
-										.defaultIfEmpty(
-												otherBoard
-														.getHeader(PgnHeader.WhiteOnTop),
-												"0").equals("0")) {
-									game.setHeader(PgnHeader.WhiteOnTop, "1");
-								} else {
-									game.setHeader(PgnHeader.WhiteOnTop, "0");
-								}
-							}
-							bugGamesWithoutBoard2.clear();
-						}
-					} else { // Fics mode partner id is set.
-						if (!connector.getGameService().isManaging(
-								g1Message.parterGameId)) {
-							if (!connector.isSimulBugConnector()
-									&& game.isInState(Game.PLAYING_STATE)
-									&& connector
-											.getPreferences()
-											.getBoolean(
-													PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD)
-									|| !game.isInState(Game.PLAYING_STATE)
-									&& connector
-											.getPreferences()
-											.getBoolean(
-													PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)) {
-								connector.sendMessage("observe "
-										+ g1Message.parterGameId, true);
-							}
-						} else {
-							Game otherBoard = service
-									.getGame(g1Message.parterGameId);
-							((BughouseGame) game)
-									.setOtherBoard((BughouseGame) otherBoard);
-							((BughouseGame) otherBoard)
-									.setOtherBoard((BughouseGame) game);
-							if (StringUtils.defaultIfEmpty(
-									otherBoard.getHeader(PgnHeader.WhiteOnTop),
-									"0").equals("0")) {
-								game.setHeader(PgnHeader.WhiteOnTop, "1");
-							} else {
-								game.setHeader(PgnHeader.WhiteOnTop, "0");
-							}
-						}
-					}
-				}
-
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Firing game created.");
-				}
-				service.fireGameCreated(game.getId());
-
-				/**
-				 * Send a request for the moves.
-				 */
-				if (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
-						&& !message.isWhitesMoveAfterMoveIsMade) {
-					connector.sendMessage("moves " + message.gameId, true,
-							ChatType.MOVES);
-				}
+				processStyle12Creation(game, g1Message, message, service,
+						entireMessage);
 			}
 		}
 

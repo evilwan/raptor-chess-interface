@@ -564,6 +564,13 @@ public class PlayingController extends ChessBoardController {
 		} else {
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
+		
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE))
+		{
+			getToolbar(null);
+		}
+		
 		refresh();
 		onPlayGameStartSound();
 
