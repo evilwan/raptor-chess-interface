@@ -219,6 +219,7 @@ public interface PreferenceKeys {
 	public static final String FICS_KEEP_ALIVE = "fics-keep-alive";
 	public static final String FICS_LOGIN_SCRIPT = "fics-login-script";
 	public static final String FICS_PROFILE = "fics-profile";
+	public static final String FICS_CLOSE_TABS_ON_DISCONNECT = "fics-close-tabs-on-disconnect";
 
 	public static final String FICS_PRIMARY_IS_ANON_GUEST = "fics-Primary-is-anon-guest";
 	public static final String FICS_PRIMARY_IS_NAMED_GUEST = "fics-Primary-is-named-guest";
@@ -249,6 +250,7 @@ public interface PreferenceKeys {
 	public static final String BICS_KEEP_ALIVE = "bics-keep-alive";
 	public static final String BICS_LOGIN_SCRIPT = "bics-login-script";
 	public static final String BICS_PROFILE = "bics-profile";
+	public static final String BICS_CLOSE_TABS_ON_DISCONNECT = "bics-close-tabs-on-disconnect";
 
 	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
 	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";

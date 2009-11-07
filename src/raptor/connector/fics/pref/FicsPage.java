@@ -41,6 +41,10 @@ public class FicsPage extends FieldEditorPreferencePage {
 		addField(bfe);
 
 		addField(new BooleanFieldEditor(
+				PreferenceKeys.FICS_CLOSE_TABS_ON_DISCONNECT,
+				"Close all fics tabs on disconnect", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_CONNECT,
 				"Show bughouse buttons on connect", getFieldEditorParent()));
 
