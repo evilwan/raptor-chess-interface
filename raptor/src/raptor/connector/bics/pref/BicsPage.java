@@ -37,6 +37,10 @@ public class BicsPage extends FieldEditorPreferencePage {
 				"Auto Connect", getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
+				PreferenceKeys.BICS_CLOSE_TABS_ON_DISCONNECT,
+				"Close all bics tabs on disconnect", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_CONNECT,
 				"Show bughouse buttons on connect", getFieldEditorParent()));
 

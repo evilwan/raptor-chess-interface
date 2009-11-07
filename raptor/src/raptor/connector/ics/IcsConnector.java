@@ -445,7 +445,11 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void closeAllConnectorWindowsItems() {
-		if (!Raptor.getInstance().isDisposed()) {
+
+		if (!Raptor.getInstance().isDisposed()
+				&& getPreferences().getBoolean(
+						getContext().getPreferencePrefix()
+								+ "close-tabs-on-disconnect")) {
 			RaptorConnectorWindowItem[] items = Raptor.getInstance()
 					.getWindow().getWindowItems(this);
 			for (RaptorWindowItem item : items) {
