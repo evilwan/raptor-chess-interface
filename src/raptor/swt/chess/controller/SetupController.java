@@ -256,8 +256,12 @@ public class SetupController extends ChessBoardController {
 	public void init() {
 		board.setWhitePieceJailOnTop(false);
 		board.setWhiteOnTop(false);
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE))
+		{
+			getToolbar(null);
+		}
 		refresh();
-		onPlayGameStartSound();
 		connector.getGameService().addGameServiceListener(listener);
 		fireItemChanged();
 	}

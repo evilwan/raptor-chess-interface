@@ -290,6 +290,13 @@ public class InactiveController extends ChessBoardController implements
 		}
 		board.getMoveList().updateToGame();
 		cursor.setCursorMasterLast();
+		
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_COOLBAR_MODE))
+		{
+			getToolbar(null);
+		}
+		
 		refresh();
 		fireItemChanged();
 	}
