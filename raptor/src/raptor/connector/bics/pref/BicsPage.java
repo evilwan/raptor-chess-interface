@@ -41,8 +41,9 @@ public class BicsPage extends FieldEditorPreferencePage {
 				"Close all bics tabs on disconnect", getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_CONNECT,
-				"Show bughouse buttons on connect", getFieldEditorParent()));
+				PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP,
+				"Show bughouse buttons on partnerships (excluding simul)",
+				getFieldEditorParent()));
 
 		addField(new TextFieldEditor(PreferenceKeys.BICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
