@@ -9,7 +9,8 @@ import raptor.chess.pgn.PgnHeader;
  * Fischer Random Bughouse Game.
  * 
  * NOTE: the xoring for the zobrist is broken. It would need to be fixed to rely
- * on that for a computer program.
+ * on that for a computer program. Also this wont work for bgpn without some
+ * changes.
  */
 public class FischerRandomBughouseGame extends BughouseGame {
 	protected int initialLongRookFile;

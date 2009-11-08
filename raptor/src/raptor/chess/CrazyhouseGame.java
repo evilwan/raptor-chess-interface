@@ -22,6 +22,9 @@ import raptor.chess.util.SanUtils.SanValidations;
 
 /**
  * Follows FICS crazyhosue rules.
+ * 
+ * NOTE: the xoring for the zobrist is broken. It would need to be fixed to rely
+ * on that for a computer program.
  */
 public class CrazyhouseGame extends ClassicGame {
 	public CrazyhouseGame() {
