@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
+import raptor.RaptorWindowItem;
+import raptor.connector.Connector;
 
 /**
  * A class containing SWT and JFace utilities.
@@ -162,6 +164,134 @@ public class SWTUtils {
 			}
 			Raptor.getInstance().getFontRegistry().put(key, fontDataArray);
 			return Raptor.getInstance().getFontRegistry().get(key);
+		}
+	}
+
+	/**
+	 * Opens a bug buttons window item if one is not already open.
+	 */
+	public static void openBugButtonsWindowItem(Connector connector) {
+		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+				.getWindowItems(BugButtonsWindowItem.class);
+
+		boolean openNewWindow = true;
+
+		for (RaptorWindowItem item : items) {
+			BugButtonsWindowItem bugButtonsItem = (BugButtonsWindowItem) item;
+			if (bugButtonsItem.getConnector() == connector) {
+				Raptor.getInstance().getWindow().forceFocus(item);
+				openNewWindow = false;
+				break;
+			}
+		}
+
+		if (openNewWindow) {
+			Raptor.getInstance().getWindow().addRaptorWindowItem(
+					new BugButtonsWindowItem(connector));
+		}
+	}
+
+	/**
+	 * Opens a bug games window item if one is not already open for the
+	 * specified connector.
+	 */
+	public static void openBugGamesWindowItem(Connector connector) {
+		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+				.getWindowItems(BugGamesWindowItem.class);
+
+		boolean openNewWindow = true;
+
+		for (RaptorWindowItem item : items) {
+			BugGamesWindowItem bugGamesItem = (BugGamesWindowItem) item;
+			if (bugGamesItem.getConnector() == connector) {
+				Raptor.getInstance().getWindow().forceFocus(item);
+				openNewWindow = false;
+				break;
+			}
+		}
+
+		if (openNewWindow) {
+			BugGamesWindowItem item = new BugGamesWindowItem(connector
+					.getBughouseService());
+			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+		}
+	}
+
+	/**
+	 * Opens a bug partners window item if one is not already open for the
+	 * specified connector.
+	 */
+	public static void openBugPartnersWindowItem(Connector connector) {
+		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+				.getWindowItems(BugPartnersWindowItem.class);
+
+		boolean openNewWindow = true;
+
+		for (RaptorWindowItem item : items) {
+			BugPartnersWindowItem bugPartnersItem = (BugPartnersWindowItem) item;
+			if (bugPartnersItem.getConnector() == connector) {
+				Raptor.getInstance().getWindow().forceFocus(item);
+				openNewWindow = false;
+				break;
+			}
+		}
+
+		if (openNewWindow) {
+			BugPartnersWindowItem item = new BugPartnersWindowItem(connector
+					.getBughouseService());
+			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+		}
+	}
+
+	/**
+	 * Opens a bug games teams window item if one is not already open for the
+	 * specified connector.
+	 */
+	public static void openBugTeamsWindowItem(Connector connector) {
+		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+				.getWindowItems(BugTeamsWindowItem.class);
+
+		boolean openNewWindow = true;
+
+		for (RaptorWindowItem item : items) {
+			BugTeamsWindowItem bugTeamsItem = (BugTeamsWindowItem) item;
+			if (bugTeamsItem.getConnector() == connector) {
+				Raptor.getInstance().getWindow().forceFocus(item);
+				openNewWindow = false;
+				break;
+			}
+		}
+
+		if (openNewWindow) {
+			BugTeamsWindowItem item = new BugTeamsWindowItem(connector
+					.getBughouseService());
+			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+		}
+	}
+
+	/**
+	 * Opens a seek table window item if one is not already open for the
+	 * specified connector.
+	 */
+	public static void openSeekTableWindowItem(Connector connector) {
+		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+				.getWindowItems(SeekTableWindowItem.class);
+
+		boolean openNewWindow = true;
+
+		for (RaptorWindowItem item : items) {
+			SeekTableWindowItem seekTableItem = (SeekTableWindowItem) item;
+			if (seekTableItem.getConnector() == connector) {
+				Raptor.getInstance().getWindow().forceFocus(item);
+				openNewWindow = false;
+				break;
+			}
+		}
+
+		if (openNewWindow) {
+			SeekTableWindowItem item = new SeekTableWindowItem(connector
+					.getSeekService());
+			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 		}
 	}
 

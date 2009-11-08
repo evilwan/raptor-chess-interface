@@ -39,11 +39,8 @@ import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ActionService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
-import raptor.swt.BugGamesWindowItem;
-import raptor.swt.BugPartnersWindowItem;
-import raptor.swt.BugTeamsWindowItem;
 import raptor.swt.RegExDialog;
-import raptor.swt.SeekTableWindowItem;
+import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
@@ -67,7 +64,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected Action regexTabAction;
 	protected Action seekTableAction;
 	protected Action bugbuttonsAction;
-	protected Action isShowingBugButtonsOnConnectAction;
+
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
 	 * short name and change it to fics2 so users can distinguish the two.
@@ -110,7 +107,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		seekTableAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
-		isShowingBugButtonsOnConnectAction.setEnabled(true);
 		bugbuttonsAction.setEnabled(false);
 	}
 
@@ -175,10 +171,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			seekTableAction.setEnabled(true);
 			regexTabAction.setEnabled(true);
 			bugbuttonsAction.setEnabled(true);
-			isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
-					.getBoolean(
-							context.getPreferencePrefix()
-									+ "show-bugbuttons-on-connect"));
 
 			if (getPreferences().getBoolean(
 					context.getPreferencePrefix()
@@ -235,9 +227,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		seekTableAction = new Action("Show &Seek Table") {
 			@Override
 			public void run() {
-				SeekTableWindowItem item = new SeekTableWindowItem(
-						getSeekService());
-				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				SWTUtils.openSeekTableWindowItem(FicsConnector.this);
 			}
 		};
 
@@ -245,9 +235,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"Show Bughouse Available &Partners") {
 			@Override
 			public void run() {
-				BugPartnersWindowItem item = new BugPartnersWindowItem(
-						getBughouseService());
-				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				SWTUtils.openBugPartnersWindowItem(FicsConnector.this);
 			}
 		};
 
@@ -255,40 +243,21 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"Show Bughouse Available &Teams") {
 			@Override
 			public void run() {
-				BugTeamsWindowItem item = new BugTeamsWindowItem(
-						getBughouseService());
-				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				SWTUtils.openBugTeamsWindowItem(FicsConnector.this);
 			}
 		};
 
 		bughouseArenaGamesAction = new Action("Show Bughouse &Games") {
 			@Override
 			public void run() {
-				BugGamesWindowItem item = new BugGamesWindowItem(
-						getBughouseService());
-				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				SWTUtils.openBugGamesWindowItem(FicsConnector.this);
 			}
 		};
 
 		bugbuttonsAction = new Action("Show Bughouse &Buttons") {
 			@Override
 			public void run() {
-				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
-						FicsConnector.this)) {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BugButtonsWindowItem(FicsConnector.this));
-				}
-			}
-		};
-
-		isShowingBugButtonsOnConnectAction = new Action(
-				"Show Bug Buttons On Connect", IAction.AS_CHECK_BOX) {
-			@Override
-			public void run() {
-				getPreferences().setValue(
-						context.getPreferencePrefix()
-								+ "show-bugbuttons-on-connect", isChecked());
-				getPreferences().save();
+				SWTUtils.openBugButtonsWindowItem(FicsConnector.this);
 			}
 		};
 
@@ -334,11 +303,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		seekTableAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		bugbuttonsAction.setEnabled(false);
-		isShowingBugButtonsOnConnectAction.setEnabled(true);
-		isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
-				.getBoolean(
-						context.getPreferencePrefix()
-								+ "show-bugbuttons-on-connect"));
+
 		autoConnectAction.setChecked(getPreferences().getBoolean(
 				context.getPreferencePrefix() + "auto-connect"));
 
@@ -346,7 +311,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		connectionsMenu.add(disconnectAction);
 		connectionsMenu.add(reconnectAction);
 		connectionsMenu.add(autoConnectAction);
-		connectionsMenu.add(isShowingBugButtonsOnConnectAction);
+
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(seekTableAction);
 		connectionsMenu.add(bugbuttonsAction);
@@ -433,9 +398,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2.seekTableAction = new Action("Show &Seek Table") {
 			@Override
 			public void run() {
-				SeekTableWindowItem item = new SeekTableWindowItem(fics2
-						.getSeekService());
-				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				SWTUtils.openSeekTableWindowItem(fics2);
 			}
 		};
 
@@ -443,9 +406,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"Show Bughouse Available &Partners") {
 			@Override
 			public void run() {
-				BugPartnersWindowItem item = new BugPartnersWindowItem(fics2
-						.getBughouseService());
-				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				SWTUtils.openBugPartnersWindowItem(fics2);
 			}
 		};
 
@@ -453,18 +414,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"Show Bughouse Available &Teams") {
 			@Override
 			public void run() {
-				BugTeamsWindowItem item = new BugTeamsWindowItem(fics2
-						.getBughouseService());
-				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				SWTUtils.openBugTeamsWindowItem(fics2);
 			}
 		};
 
 		fics2.bughouseArenaGamesAction = new Action("Show Bughouse &Games") {
 			@Override
 			public void run() {
-				BugGamesWindowItem item = new BugGamesWindowItem(fics2
-						.getBughouseService());
-				Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+				SWTUtils.openBugGamesWindowItem(fics2);
 			}
 		};
 
@@ -493,18 +450,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2.bugbuttonsAction = new Action("Show Bughouse &Buttons") {
 			@Override
 			public void run() {
-				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
-						fics2)) {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BugButtonsWindowItem(fics2));
-				}
-			}
-		};
-
-		fics2.isShowingBugButtonsOnConnectAction = new Action(
-				"Show Bug Buttons On Connect") {
-			@Override
-			public void run() {
+				SWTUtils.openBugButtonsWindowItem(fics2);
 			}
 		};
 
@@ -524,7 +470,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		fics2.bughouseArenaGamesAction.setEnabled(false);
 		fics2.regexTabAction.setEnabled(false);
 		fics2.bugbuttonsAction.setEnabled(false);
-		fics2.isShowingBugButtonsOnConnectAction.setEnabled(true);
 
 		fics2Menu.add(fics2.connectAction);
 		fics2Menu.add(fics2.disconnectAction);
@@ -687,6 +632,15 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 					fics1.isSimulBugConnector = true;
 					fics1.simulBugPartnerName = getUserName();
 				}
+
+				if (!isSimulBugConnector
+						&& getPreferences()
+								.getBoolean(
+										PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP)) {
+					if (!isSimulBugConnector) {
+						SWTUtils.openBugButtonsWindowItem(this);
+					}
+				}
 			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
 				isSimulBugConnector = false;
 				simulBugPartnerName = null;
@@ -706,6 +660,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 					fics1.simulBugPartnerName = null;
 				}
 			}
+
 			super.publishEvent(event);
 		}
 	}

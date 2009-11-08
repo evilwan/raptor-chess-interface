@@ -24,6 +24,7 @@ import raptor.script.ChatScriptContext;
 import raptor.script.GameScriptContext;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptContext;
+import raptor.service.BughouseService;
 import raptor.service.ChatService;
 import raptor.service.GameService;
 import raptor.service.SeekService;
@@ -52,6 +53,11 @@ public interface Connector {
 	 * connector is maintaining.
 	 */
 	public void dispose();
+
+	/**
+	 * Returns the bughouse service for the specified connector.
+	 */
+	public BughouseService getBughouseService();
 
 	/**
 	 * Returns descriptions and messages to send to the connector. This is

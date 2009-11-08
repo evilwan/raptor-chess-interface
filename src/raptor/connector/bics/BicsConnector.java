@@ -39,6 +39,7 @@ import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ActionService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
+import raptor.swt.SWTUtils;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -133,7 +134,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	protected Action disconnectAction;
 	protected Action reconnectAction;
 	protected Action bugbuttonsAction;
-	protected Action isShowingBugButtonsOnConnectAction;
 
 	public BicsConnector() {
 		this(new BicsConnectorContext());
@@ -155,7 +155,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		reconnectAction.setEnabled(false);
 		bughouseArenaAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
-		isShowingBugButtonsOnConnectAction.setEnabled(true);
 		bugbuttonsAction.setEnabled(false);
 	}
 
@@ -214,10 +213,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			reconnectAction.setEnabled(true);
 			bughouseArenaAction.setEnabled(true);
 			bugbuttonsAction.setEnabled(true);
-			isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
-					.getBoolean(
-							context.getPreferencePrefix()
-									+ "show-bugbuttons-on-connect"));
 
 			if (getPreferences().getBoolean(
 					context.getPreferencePrefix()
@@ -281,22 +276,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bugbuttonsAction = new Action("Show Bughouse &Buttons") {
 			@Override
 			public void run() {
-				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
-						BicsConnector.this)) {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BugButtonsWindowItem(BicsConnector.this));
-				}
-			}
-		};
-
-		isShowingBugButtonsOnConnectAction = new Action(
-				"Show Bug Buttons On Connect", IAction.AS_CHECK_BOX) {
-			@Override
-			public void run() {
-				getPreferences().setValue(
-						context.getPreferencePrefix()
-								+ "show-bugbuttons-on-connect", isChecked());
-				getPreferences().save();
+				SWTUtils.openBugButtonsWindowItem(BicsConnector.this);
 			}
 		};
 
@@ -316,16 +296,10 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bughouseArenaAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
 		bugbuttonsAction.setEnabled(false);
-		isShowingBugButtonsOnConnectAction.setEnabled(true);
-		isShowingBugButtonsOnConnectAction.setChecked(getPreferences()
-				.getBoolean(
-						context.getPreferencePrefix()
-								+ "show-bugbuttons-on-connect"));
 		connectionsMenu.add(connectAction);
 		connectionsMenu.add(disconnectAction);
 		connectionsMenu.add(reconnectAction);
 		connectionsMenu.add(autoConnectAction);
-		connectionsMenu.add(isShowingBugButtonsOnConnectAction);
 		connectionsMenu.add(new Separator());
 		connectionsMenu.add(bugbuttonsAction);
 		// connectionsMenu.add(bughouseArenaAction);
@@ -419,18 +393,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bics2.bugbuttonsAction = new Action("Show Bughouse &Buttons") {
 			@Override
 			public void run() {
-				if (!Raptor.getInstance().getWindow().containsBugButtonsItem(
-						BicsConnector.this)) {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BugButtonsWindowItem(bics2));
-				}
-			}
-		};
-
-		bics2.isShowingBugButtonsOnConnectAction = new Action(
-				"Show Bug Buttons On Connect") {
-			@Override
-			public void run() {
+				SWTUtils.openBugButtonsWindowItem(bics2);
 			}
 		};
 
@@ -439,7 +402,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bics2.reconnectAction.setEnabled(false);
 		// bics2.bughouseArenaAction.setEnabled(false);
 		bics2.bugbuttonsAction.setEnabled(false);
-		bics2.isShowingBugButtonsOnConnectAction.setEnabled(true);
 
 		bics2Menu.add(bics2.connectAction);
 		bics2Menu.add(bics2.disconnectAction);
@@ -591,6 +553,15 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 					simulBugPartnerName = event.getSource();
 					bics1.isSimulBugConnector = true;
 					bics1.simulBugPartnerName = getUserName();
+				}
+
+				if (!isSimulBugConnector
+						&& getPreferences()
+								.getBoolean(
+										PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP)) {
+					if (!isSimulBugConnector) {
+						SWTUtils.openBugButtonsWindowItem(this);
+					}
 				}
 			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
 				isSimulBugConnector = false;

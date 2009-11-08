@@ -215,11 +215,11 @@ public interface PreferenceKeys {
 	// Connector preferences should always use the short name of the connector
 	// followed by the preference.
 	public static final String FICS_AUTO_CONNECT = "fics-auto-connect";
-	public static final String FICS_SHOW_BUGBUTTONS_ON_CONNECT = "fics-show-bugbuttons-on-connect";
 	public static final String FICS_KEEP_ALIVE = "fics-keep-alive";
 	public static final String FICS_LOGIN_SCRIPT = "fics-login-script";
 	public static final String FICS_PROFILE = "fics-profile";
 	public static final String FICS_CLOSE_TABS_ON_DISCONNECT = "fics-close-tabs-on-disconnect";
+	public static final String FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "fics-show-bug-buttons-on-partnership";
 
 	public static final String FICS_PRIMARY_IS_ANON_GUEST = "fics-Primary-is-anon-guest";
 	public static final String FICS_PRIMARY_IS_NAMED_GUEST = "fics-Primary-is-named-guest";
@@ -246,11 +246,11 @@ public interface PreferenceKeys {
 	public static final String FICS_TERTIARY_USER_NAME = "fics-Tertiary-user-name";
 
 	public static final String BICS_AUTO_CONNECT = "bics-auto-connect";
-	public static final String BICS_SHOW_BUGBUTTONS_ON_CONNECT = "bics-show-bugbuttons-on-connect";
 	public static final String BICS_KEEP_ALIVE = "bics-keep-alive";
 	public static final String BICS_LOGIN_SCRIPT = "bics-login-script";
 	public static final String BICS_PROFILE = "bics-profile";
 	public static final String BICS_CLOSE_TABS_ON_DISCONNECT = "bics-close-tabs-on-disconnect";
+	public static final String BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "bics-show-bug-buttons-on-partnership";
 
 	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
 	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";
