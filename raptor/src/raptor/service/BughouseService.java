@@ -14,6 +14,7 @@
 package raptor.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import raptor.chat.BugGame;
@@ -35,8 +36,8 @@ public class BughouseService {
 	private Bugger[] unpartneredBuggers = new Bugger[0];
 	private Connector connector;
 
-	private List<BughouseServiceListener> listeners = new ArrayList<BughouseServiceListener>(
-			10);
+	private List<BughouseServiceListener> listeners = Collections
+			.synchronizedList(new ArrayList<BughouseServiceListener>(10));
 
 	public BughouseService(Connector connector) {
 		this.connector = connector;
@@ -94,21 +95,26 @@ public class BughouseService {
 	}
 
 	protected void fireAvaialblePartnershipsChanged() {
-		for (BughouseServiceListener listener : listeners) {
-			listener.availablePartnershipsChanged(availablePartnerships);
+		synchronized (listeners) {
+			for (BughouseServiceListener listener : listeners) {
+				listener.availablePartnershipsChanged(availablePartnerships);
+			}
 		}
 	}
 
 	protected void fireGamesInProgressChanged() {
-		for (BughouseServiceListener listener : listeners) {
-			listener.gamesInProgressChanged(gamesInProgress);
+		synchronized (listeners) {
+			for (BughouseServiceListener listener : listeners) {
+				listener.gamesInProgressChanged(gamesInProgress);
+			}
 		}
 	}
 
 	protected void fireUnpartneredBuggersChanged() {
-		for (BughouseServiceListener listener : listeners) {
-			listener.unpartneredBuggersChanged(unpartneredBuggers);
+		synchronized (listeners) {
+			for (BughouseServiceListener listener : listeners) {
+				listener.unpartneredBuggersChanged(unpartneredBuggers);
+			}
 		}
 	}
-
 }
