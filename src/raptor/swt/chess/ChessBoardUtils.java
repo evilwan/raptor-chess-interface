@@ -788,13 +788,13 @@ public class ChessBoardUtils implements BoardConstants {
 		} else if (action instanceof AutoKingAction) {
 			return null;
 		} else if (action instanceof CastleLongAction
-				&& controller.getGame().getVariant() == Variant.fischerRandom) {
+				&& controller.getGame().isInState(Game.FISCHER_RANDOM_STATE)) {
 			result = new ToolItem(toolbar, SWT.PUSH);
 			controller.addToolItem(ToolBarItemKey.CASTLE_LONG, result);
 		} else if (action instanceof CastleLongAction) {
 			return null;
 		} else if (action instanceof CastleShortAction
-				&& controller.getGame().getVariant() == Variant.fischerRandom) {
+				&& controller.getGame().isInState(Game.FISCHER_RANDOM_STATE)) {
 			result = new ToolItem(toolbar, SWT.PUSH);
 			controller.addToolItem(ToolBarItemKey.CASTLE_SHORT, result);
 		} else if (action instanceof CastleShortAction) {
@@ -825,5 +825,4 @@ public class ChessBoardUtils implements BoardConstants {
 		});
 		return result;
 	}
-
 }

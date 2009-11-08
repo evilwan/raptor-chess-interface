@@ -22,9 +22,13 @@ public enum Variant {
 	 */
 	atomic,
 	/**
-	 * Bughosue chess.
+	 * Bughouse chess.
 	 */
 	bughouse,
+	/**
+	 * Fischer Random Bughouse.
+	 */
+	fischerRandomBughouse,
 	/**
 	 * Normal chess.
 	 */
@@ -34,6 +38,10 @@ public enum Variant {
 	 * Crazyhouse chess.
 	 */
 	crazyhouse,
+	/**
+	 * Fischer Random crazyhouse.
+	 */
+	fischerRandomCrazyhouse,
 	/**
 	 * Fischer random chess.
 	 */

@@ -29,6 +29,7 @@ public class BughouseGame extends CrazyhouseGame {
 		setHeader(PgnHeader.Variant, Variant.bughouse.name());
 	}
 
+	// Leave this here. It will be needed when bgpn is implemented.
 	/**
 	 * Decrements the drop count of the other game.
 	 */
@@ -56,6 +57,7 @@ public class BughouseGame extends CrazyhouseGame {
 		return otherBoard;
 	}
 
+	// Leave this here. It will be needed when bgpn is implemented.
 	/**
 	 * Increments the drop count of the other game.
 	 */

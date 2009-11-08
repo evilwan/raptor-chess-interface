@@ -26,6 +26,13 @@ public interface Game extends GameConstants {
 	public static final int DROPPABLE_STATE = ACTIVE_STATE << 5;
 
 	/**
+	 * The fischer random state bitmask. Set when the game uses FR castling
+	 * rules game, e.g. fischer random, fischer random zh, fischer random
+	 * bughouse.
+	 */
+	public static final int FISCHER_RANDOM_STATE = ACTIVE_STATE << 12;
+
+	/**
 	 * The examining state bitmask. Set when a game is in an examined state.
 	 */
 	public static final int EXAMINING_STATE = ACTIVE_STATE << 2;
