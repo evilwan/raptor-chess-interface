@@ -768,6 +768,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	public void setToolItemSelected(ToolBarItemKey key, boolean isSelected) {
+		ToolItem item = getToolItem(key);
+		if (item != null) {
+			item.setSelection(isSelected);
+		}
+	}
+
 	protected void addChannelMenuItems(Menu menu, String word) {
 		if (connector.isLikelyChannel(word)) {
 			if (menu.getItemCount() > 0) {
