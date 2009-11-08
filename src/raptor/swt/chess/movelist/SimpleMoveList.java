@@ -122,8 +122,15 @@ public class SimpleMoveList implements ChessBoardMoveList {
 			}
 
 			movesTable.select(row);
+			movesTable.redraw();
 			cursor.setSelection(row, column);
-			cursor.redraw();
+
+			try {
+				cursor.redraw();
+			} catch (NullPointerException npe) {
+				// Hoping this fixes the linux issue along with the redraw
+				// above.
+			}
 
 			ignoreSelection = false;
 		}
