@@ -15,6 +15,7 @@ package raptor.action.chat;
 
 import raptor.Raptor;
 import raptor.action.AbstractRaptorAction;
+import raptor.swt.chat.controller.ToolBarItemKey;
 
 public class PrependAction extends AbstractRaptorAction {
 	public PrependAction() {
@@ -27,6 +28,17 @@ public class PrependAction extends AbstractRaptorAction {
 	public void run() {
 		boolean wasHandled = false;
 		if (getChatConsoleControllerSource() != null) {
+			if (!getChatConsoleControllerSource().isToolItemSelected(
+					ToolBarItemKey.PREPEND_TEXT_BUTTON)) {
+				getChatConsoleControllerSource().getChatConsole()
+						.getOutputText().setText("");
+			} else {
+				getChatConsoleControllerSource().getChatConsole()
+						.getOutputText().setText(
+								getChatConsoleControllerSource()
+										.getPrependText(true));
+
+			}
 			wasHandled = true;
 		}
 

@@ -90,6 +90,7 @@ public class PersonController extends ChatConsoleController {
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.PersonChatConsole, toolbar);
 			adjustAwayButtonEnabled();
+			setToolItemEnabled(ToolBarItemKey.PREPEND_TEXT_BUTTON, true);
 		} else {
 			toolbar.setParent(parent);
 		}
@@ -99,7 +100,8 @@ public class PersonController extends ChatConsoleController {
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent event) {
 		return isDirectTellFromPerson(event)
-				|| isOutboundTellPertainingToPerson(event);
+				|| isOutboundTellPertainingToPerson(event)
+				|| isNotLoggedInMessagePertainingToPerson(event);
 	}
 
 	@Override
@@ -129,9 +131,14 @@ public class PersonController extends ChatConsoleController {
 						.getType() == ChatType.TOLD);
 	}
 
+	protected boolean isNotLoggedInMessagePertainingToPerson(ChatEvent event) {
+		return event.getType() == ChatType.UNKNOWN
+				&& event.getMessage().startsWith(getPerson())
+				&& event.getMessage().contains("is not logged in.");
+	}
+
 	protected boolean isOutboundTellPertainingToPerson(ChatEvent event) {
 		return StringUtils.containsIgnoreCase(event.getMessage(), person)
 				&& event.getType() == ChatType.OUTBOUND;
 	}
-
 }
