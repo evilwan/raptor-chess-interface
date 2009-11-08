@@ -55,7 +55,6 @@ public class ChatUtils {
 			}
 		}
 		new ToolItem(toolbar, SWT.SEPARATOR);
-
 	}
 
 	/**
@@ -108,7 +107,7 @@ public class ChatUtils {
 	 * Returns the character at the specified position in the StyledText.
 	 */
 	public static char charAt(StyledText text, int position) {
-		return text.getText(position, position + 1).charAt(0);
+		return text.getContent().getTextRange(position, 1).charAt(0);
 	}
 
 	/**
@@ -251,7 +250,9 @@ public class ChatUtils {
 
 			// This method currently does'nt check backwards through all the
 			// wraps.
-			// This should probably be added in the future sometime.
+			// This should probably be added in the future sometime so you can
+			// click on
+			// the second or third wrapped line of a link and it will work.
 			while (currentPosition > 0 && !Character.isWhitespace(currentChar)) {
 				currentChar = charAt(text, --currentPosition);
 			}
@@ -261,37 +262,42 @@ public class ChatUtils {
 			currentPosition = position;
 			currentChar = charAt(text, currentPosition);
 
-			while (currentPosition < text.getCharCount()
+			while (currentPosition < text.getCharCount() - 1
 					&& !Character.isWhitespace(currentChar)) {
 				currentChar = charAt(text, ++currentPosition);
 			}
 			lineEnd = currentPosition;
-			result = text.getText(lineStart + 1, lineEnd - 1);
+			if (lineEnd >= text.getCharCount() - 1) {
+				result = text.getText(lineStart + 1, text.getCharCount() - 1);
 
-			// now check to see if its a wrap
-			while (Character.isWhitespace(currentChar)
-					&& currentPosition < text.getCharCount()) {
-				currentChar = charAt(text, ++currentPosition);
-			}
-			while (currentChar == '\\') {
-				currentChar = charAt(text, ++currentPosition);
+			} else {
+				result = text.getText(lineStart + 1, lineEnd - 1);
+
+				// now check to see if its a wrap
 				while (Character.isWhitespace(currentChar)
-						&& currentPosition < text.getCharCount()) {
+						&& currentPosition < text.getCharCount() - 1) {
 					currentChar = charAt(text, ++currentPosition);
 				}
-
-				lineStart = currentPosition - 1;
-				while (!Character.isWhitespace(currentChar)
-						&& currentPosition < text.getCharCount()) {
+				while (currentChar == '\\') {
 					currentChar = charAt(text, ++currentPosition);
-				}
+					while (Character.isWhitespace(currentChar)
+							&& currentPosition < text.getCharCount() - 1) {
+						currentChar = charAt(text, ++currentPosition);
+					}
 
-				lineEnd = currentPosition;
-				result += text.getText(lineStart + 1, lineEnd - 1);
+					lineStart = currentPosition - 1;
+					while (!Character.isWhitespace(currentChar)
+							&& currentPosition < text.getCharCount() - 1) {
+						currentChar = charAt(text, ++currentPosition);
+					}
 
-				while (Character.isWhitespace(currentChar)
-						&& currentPosition < text.getCharCount()) {
-					currentChar = charAt(text, ++currentPosition);
+					lineEnd = currentPosition;
+					result += text.getText(lineStart + 1, lineEnd - 1);
+
+					while (Character.isWhitespace(currentChar)
+							&& currentPosition < text.getCharCount() - 1) {
+						currentChar = charAt(text, ++currentPosition);
+					}
 				}
 			}
 
@@ -301,6 +307,7 @@ public class ChatUtils {
 			return result;
 
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
