@@ -65,6 +65,12 @@ import raptor.service.ThreadService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.service.ScriptService.ScriptServiceListener;
+import raptor.swt.BugButtonsWindowItem;
+import raptor.swt.BugGamesWindowItem;
+import raptor.swt.BugPartnersWindowItem;
+import raptor.swt.BugTeamsWindowItem;
+import raptor.swt.SWTUtils;
+import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.BughousePartnerController;
@@ -869,7 +875,9 @@ public abstract class IcsConnector implements Connector {
 		while (tok.hasMoreTokens()) {
 			String type = tok.nextToken();
 			String value = tok.nextToken();
-			Quadrant quad = Quadrant.valueOf(tok.nextToken());
+			String quadString = tok.nextToken();
+			Quadrant quad = StringUtils.isNotBlank(quadString) ? Quadrant
+					.valueOf(tok.nextToken()) : null;
 
 			if (type.equals("Channel")) {
 				if (!Raptor.getInstance().getWindow().containsChannelItem(this,
@@ -891,6 +899,16 @@ public abstract class IcsConnector implements Connector {
 					ChatUtils.appendPreviousChatsToController(windowItem
 							.getConsole());
 				}
+			} else if (type.equals("SeekTableWindowItem")) {
+				SWTUtils.openSeekTableWindowItem(this);
+			} else if (type.equals("BugPartnersWindowItem")) {
+				SWTUtils.openBugPartnersWindowItem(this);
+			} else if (type.equals("BugGamesWindowItem")) {
+				SWTUtils.openBugGamesWindowItem(this);
+			} else if (type.equals("BugTeamsWindowItem")) {
+				SWTUtils.openBugTeamsWindowItem(this);
+			} else if (type.equals("BugButtonsWindowItem")) {
+				SWTUtils.openBugButtonsWindowItem(this);
 			}
 		}
 
@@ -1035,6 +1053,21 @@ public abstract class IcsConnector implements Connector {
 								+ Raptor.getInstance().getWindow().getQuadrant(
 										item).toString();
 					}
+				} else if (item instanceof SeekTableWindowItem) {
+					preference += (preference.equals("") ? "" : "`")
+							+ "SeekTableWindowItem` " + "` ";
+				} else if (item instanceof BugPartnersWindowItem) {
+					preference += (preference.equals("") ? "" : "`")
+							+ "BugPartnersWindowItem` " + "` ";
+				} else if (item instanceof BugGamesWindowItem) {
+					preference += (preference.equals("") ? "" : "`")
+							+ "BugGamesWindowItem` " + "` ";
+				} else if (item instanceof BugTeamsWindowItem) {
+					preference += (preference.equals("") ? "" : "`")
+							+ "BugTeamsWindowItem` " + "` ";
+				} else if (item instanceof BugButtonsWindowItem) {
+					preference += (preference.equals("") ? "" : "`")
+							+ "BugButtonsWindowItem` " + "` ";
 				}
 			}
 			Raptor.getInstance().getPreferences().setValue(
