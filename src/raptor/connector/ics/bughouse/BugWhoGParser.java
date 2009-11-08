@@ -16,6 +16,7 @@ package raptor.connector.ics.bughouse;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -74,6 +75,11 @@ public class BugWhoGParser {
 		if (text.equals("")) {
 			return new BugGame[0];
 		}
+		
+		//Replace ---- with ```` so the tokens can be parsed correctly then
+		//substitute it back after parsing.
+		text = StringUtils.replace(text,"----", "````");
+		
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(text,
 				" \n[]-():", true);
 		List<BugGame> result = new ArrayList<BugGame>(10);
@@ -82,10 +88,16 @@ public class BugWhoGParser {
 			game.setGame1Id(tok.nextToken());
 			game.setGame1White(new Bugger());
 			game.getGame1White().setRating(tok.nextToken());
+			if (game.getGame1White().getRating().equals("````")) {
+				game.getGame1White().setRating("----");
+			}
 			game.getGame1White().setName(tok.nextToken());
 			game.getGame1White().setStatus(BuggerStatus.Available);
 			game.setGame1Black(new Bugger());
 			game.getGame1Black().setRating(tok.nextToken());
+			if (game.getGame1Black().getRating().equals("````")) {
+				game.getGame1Black().setRating("----");
+			}
 			game.getGame1Black().setName(tok.nextToken());
 			game.getGame1Black().setStatus(BuggerStatus.Available);
 			game.setRated(tok.nextToken().indexOf('r') != -1);
@@ -96,10 +108,17 @@ public class BugWhoGParser {
 			game.setGame2Id(tok.nextToken());
 			game.setGame2White(new Bugger());
 			game.getGame2White().setRating(tok.nextToken());
+			if (game.getGame2White().getRating().equals("````")) {
+				game.getGame2White().setRating("----");
+			}
+
 			game.getGame2White().setName(tok.nextToken());
 			game.getGame2White().setStatus(BuggerStatus.Available);
 			game.setGame2Black(new Bugger());
 			game.getGame2Black().setRating(tok.nextToken());
+			if (game.getGame2Black().getRating().equals("````")) {
+				game.getGame2Black().setRating("----");
+			}
 			game.getGame2Black().setName(tok.nextToken());
 			game.getGame2Black().setStatus(BuggerStatus.Available);
 
