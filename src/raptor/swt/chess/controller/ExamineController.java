@@ -312,22 +312,11 @@ public class ExamineController extends ChessBoardController {
 	public void userCancelledMove(int fromSquare) {
 		SoundService.getInstance().playSound("illegalMove");
 		board.unhidePieces();
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
 		refreshBoard();
 	}
 
 	@Override
 	public void userInitiatedMove(int square) {
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
-		if (getPreferences().getBoolean(
-				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-			board.getSquareHighlighter().addHighlight(
-					new Highlight(square, getPreferences().getColor(
-							PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
-		}
-
 		board.getSquare(square).setHidingPiece(true);
 		board.getSquare(square).redraw();
 	}

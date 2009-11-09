@@ -396,8 +396,6 @@ public class InactiveController extends ChessBoardController implements
 		if (!isDisposed()) {
 			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare);
 			board.unhidePieces();
-			board.getSquareHighlighter().removeAllHighlights();
-			board.getArrowDecorator().removeAllArrows();
 			refresh();
 			onPlayIllegalMoveSound();
 		}
@@ -409,19 +407,7 @@ public class InactiveController extends ChessBoardController implements
 			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " ");
 			userMadeAdjustment = true;
 			board.getResultDecorator().setDecoration(null);
-
-			board.getSquareHighlighter().removeAllHighlights();
-			board.getArrowDecorator().removeAllArrows();
-
-			if (getPreferences().getBoolean(
-					PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-				board.getSquareHighlighter().addHighlight(
-						new Highlight(square, getPreferences().getColor(
-								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
-			}
-
 			board.getSquare(square).setHidingPiece(true);
-
 			board.getSquare(square).redraw();
 		}
 	}

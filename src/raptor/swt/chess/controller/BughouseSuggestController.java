@@ -29,7 +29,6 @@ import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.swt.chess.ChessBoardUtils;
-import raptor.swt.chess.Highlight;
 
 public class BughouseSuggestController extends ObserveController {
 
@@ -105,8 +104,6 @@ public class BughouseSuggestController extends ObserveController {
 						+ fromSquare);
 			}
 			board.unhidePieces();
-			board.getSquareHighlighter().removeAllHighlights();
-			board.getArrowDecorator().removeAllArrows();
 			refresh();
 			onPlayIllegalMoveSound();
 		}
@@ -118,16 +115,6 @@ public class BughouseSuggestController extends ObserveController {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("moveInitiated" + getGame().getId() + " " + square);
 			}
-			board.getSquareHighlighter().removeAllHighlights();
-			board.getArrowDecorator().removeAllArrows();
-
-			if (getPreferences().getBoolean(
-					PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-				board.getSquareHighlighter().addHighlight(
-						new Highlight(square, getPreferences().getColor(
-								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
-			}
-
 			board.getSquare(square).setHidingPiece(true);
 			board.getSquare(square).redraw();
 		}

@@ -75,11 +75,11 @@ public class BugWhoGParser {
 		if (text.equals("")) {
 			return new BugGame[0];
 		}
-		
-		//Replace ---- with ```` so the tokens can be parsed correctly then
-		//substitute it back after parsing.
-		text = StringUtils.replace(text,"----", "````");
-		
+
+		// Replace ---- with ```` so the tokens can be parsed correctly then
+		// substitute it back after parsing.
+		text = StringUtils.replace(text, "----", "````");
+
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(text,
 				" \n[]-():", true);
 		List<BugGame> result = new ArrayList<BugGame>(10);
