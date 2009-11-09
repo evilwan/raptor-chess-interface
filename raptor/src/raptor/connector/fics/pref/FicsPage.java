@@ -19,6 +19,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.TextFieldEditor;
+import raptor.pref.fields.ListFieldEditor;
 
 public class FicsPage extends FieldEditorPreferencePage {
 	public FicsPage() {
@@ -51,5 +52,9 @@ public class FicsPage extends FieldEditorPreferencePage {
 
 		addField(new TextFieldEditor(PreferenceKeys.FICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
+
+		addField(new ListFieldEditor(PreferenceKeys.FICS_MATCH_CMMANDS,
+				"Right Click Person Match Commands:", getFieldEditorParent(),
+				','));
 	}
 }

@@ -19,6 +19,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.TextFieldEditor;
+import raptor.pref.fields.ListFieldEditor;
 
 public class BicsPage extends FieldEditorPreferencePage {
 	public BicsPage() {
@@ -47,5 +48,9 @@ public class BicsPage extends FieldEditorPreferencePage {
 
 		addField(new TextFieldEditor(PreferenceKeys.BICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
+
+		addField(new ListFieldEditor(PreferenceKeys.BICS_MATCH_CMMANDS,
+				"Right Click Person Match Commands:", getFieldEditorParent(),
+				','));
 	}
 }
