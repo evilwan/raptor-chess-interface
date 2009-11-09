@@ -29,6 +29,8 @@ import raptor.chat.ChatType;
 import raptor.chat.Partnership;
 import raptor.chat.Seek;
 import raptor.chess.BughouseGame;
+import raptor.chess.FischerRandomBughouseGame;
+import raptor.chess.FischerRandomCrazyhouseGame;
 import raptor.chess.FischerRandomGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
@@ -579,7 +581,7 @@ public class IcsParser implements GameConstants {
 								+ message.gameId);
 			}
 		} else {
-			IcsUtils.updateGamesMoves(game, message);
+			IcsUtils.updateGamesMoves(game, message, isBicsParser);
 			service.fireGameMovesAdded(game.getId());
 		}
 	}
@@ -761,7 +763,7 @@ public class IcsParser implements GameConstants {
 		}
 		unprocessedG1Messages.remove(message.gameId);
 
-		Game game = IcsUtils.createGame(g1Message);
+		Game game = IcsUtils.createGame(g1Message, message, isBicsParser);
 		IcsUtils.updateNonPositionFields(game, message);
 		IcsUtils.updatePosition(game, message);
 		IcsUtils.verifyLegal(game);
@@ -783,7 +785,12 @@ public class IcsParser implements GameConstants {
 
 		if (game instanceof FischerRandomGame) {
 			((FischerRandomGame) game).initialPositionIsSet();
+		} else if (game instanceof FischerRandomCrazyhouseGame) {
+			((FischerRandomCrazyhouseGame) game).initialPositionIsSet();
+		} else if (game instanceof FischerRandomBughouseGame) {
+			((FischerRandomBughouseGame) game).initialPositionIsSet();
 		}
+
 		if (game.getVariant() == Variant.wild
 				|| game.getVariant() == Variant.fischerRandom) {
 			game.setHeader(PgnHeader.FEN, game.toFen());

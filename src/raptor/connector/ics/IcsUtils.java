@@ -26,6 +26,8 @@ import raptor.chess.AtomicGame;
 import raptor.chess.BughouseGame;
 import raptor.chess.ClassicGame;
 import raptor.chess.CrazyhouseGame;
+import raptor.chess.FischerRandomBughouseGame;
+import raptor.chess.FischerRandomCrazyhouseGame;
 import raptor.chess.FischerRandomGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
@@ -282,10 +284,16 @@ public class IcsUtils implements GameConstants {
 			result = GameFactory
 					.createStartingPosition(identifierToGameType(movesMessage.gameType));
 		} else {
-			result = createGameFromVariant(identifierToGameType(movesMessage.gameType));
+			result = createGameFromVariant(
+					identifierToGameType(movesMessage.gameType),
+					gameStateStyle12Message, false);
 			updatePosition(result, movesMessage.style12);
 			if (result.getVariant() == Variant.fischerRandom) {
 				((FischerRandomGame) result).initialPositionIsSet();
+			} else if (result.getVariant() == Variant.fischerRandomBughouse) {
+				((FischerRandomBughouseGame) result).initialPositionIsSet();
+			} else if (result.getVariant() == Variant.fischerRandomCrazyhouse) {
+				((FischerRandomCrazyhouseGame) result).initialPositionIsSet();
 			}
 			updateNonPositionFields(result, movesMessage.style12);
 			result.setHeader(PgnHeader.FEN, result.toFen());
@@ -336,9 +344,10 @@ public class IcsUtils implements GameConstants {
 		return result;
 	}
 
-	public static Game createGame(G1Message g1) {
+	public static Game createGame(G1Message g1, Style12Message style12,
+			boolean isBics) {
 		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);
-		Game result = createGameFromVariant(variant);
+		Game result = createGameFromVariant(variant, style12, isBics);
 		result.setId(g1.gameId);
 		result.addState(Game.UPDATING_SAN_STATE);
 		result.addState(Game.UPDATING_ECO_HEADERS_STATE);
@@ -424,7 +433,7 @@ public class IcsUtils implements GameConstants {
 		}
 	}
 
-	public static Game createGameFromVariant(Variant variant) {
+	public static Game createGameFromVariant(Variant variant, Game existingGame) {
 		Game result = null;
 		switch (variant) {
 		case classic:
@@ -444,10 +453,65 @@ public class IcsUtils implements GameConstants {
 			result = new AtomicGame();
 			break;
 		case crazyhouse:
-			result = new CrazyhouseGame();
+			result = existingGame instanceof FischerRandomCrazyhouseGame ? new FischerRandomCrazyhouseGame()
+					: new CrazyhouseGame();
 			break;
 		case bughouse:
-			result = new BughouseGame();
+			result = existingGame instanceof FischerRandomBughouseGame ? new FischerRandomBughouseGame()
+					: new BughouseGame();
+			break;
+		case fischerRandom:
+			result = new FischerRandomGame();
+			break;
+		default:
+			LOG.error("Unsupported variant: " + variant);
+			throw new IllegalStateException("Unsupported game type" + variant);
+		}
+		return result;
+	}
+
+	public static Game createGameFromVariant(Variant variant,
+			Style12Message message, boolean isBicsMessage) {
+		Game result = null;
+
+		boolean isFrBugOrFrZh = false;
+
+		if (isBicsMessage
+				&& (variant == Variant.bughouse || variant == Variant.crazyhouse)) {
+			isFrBugOrFrZh = message.position[0][0] != ROOK
+					|| message.position[0][1] != KNIGHT
+					|| message.position[0][2] != BISHOP
+					|| message.position[0][3] != QUEEN
+					|| message.position[0][4] != KING
+					|| message.position[0][5] != BISHOP
+					|| message.position[0][6] != KNIGHT
+					|| message.position[0][7] != ROOK;
+		}
+
+		switch (variant) {
+		case classic:
+			result = new ClassicGame();
+			break;
+		case wild:
+			result = new ClassicGame();
+			result.setHeader(PgnHeader.Variant, Variant.wild.name());
+			break;
+		case suicide:
+			result = new SuicideGame();
+			break;
+		case losers:
+			result = new LosersGame();
+			break;
+		case atomic:
+			result = new AtomicGame();
+			break;
+		case crazyhouse:
+			result = isFrBugOrFrZh ? new FischerRandomCrazyhouseGame()
+					: new CrazyhouseGame();
+			break;
+		case bughouse:
+			result = isFrBugOrFrZh ? new FischerRandomBughouseGame()
+					: new BughouseGame();
 			break;
 		case fischerRandom:
 			result = new FischerRandomGame();
@@ -779,7 +843,8 @@ public class IcsUtils implements GameConstants {
 	 * Updates the moves that are missing in the game to the ones in the move
 	 * message.
 	 */
-	public static void updateGamesMoves(Game game, MovesMessage message) {
+	public static void updateGamesMoves(Game game, MovesMessage message,
+			boolean isBics) {
 		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
 				- game.getMoveList().getSize();
 
@@ -789,10 +854,16 @@ public class IcsUtils implements GameConstants {
 				gameClone = GameFactory.createStartingPosition(game
 						.getVariant());
 			} else {
-				gameClone = createGameFromVariant(game.getVariant());
+				gameClone = createGameFromVariant(game.getVariant(), game);
 				updatePosition(gameClone, message.style12);
 				if (gameClone.getVariant() == Variant.fischerRandom) {
 					((FischerRandomGame) gameClone).initialPositionIsSet();
+				} else if (gameClone.getVariant() == Variant.fischerRandomBughouse) {
+					((FischerRandomBughouseGame) gameClone)
+							.initialPositionIsSet();
+				} else if (gameClone.getVariant() == Variant.fischerRandomCrazyhouse) {
+					((FischerRandomCrazyhouseGame) gameClone)
+							.initialPositionIsSet();
 				}
 				updateNonPositionFields(gameClone, message.style12);
 				game.setHeader(PgnHeader.FEN, gameClone.toFen());

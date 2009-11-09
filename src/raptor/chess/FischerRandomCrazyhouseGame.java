@@ -27,6 +27,9 @@ public class FischerRandomCrazyhouseGame extends CrazyhouseGame {
 	@Override
 	public FischerRandomCrazyhouseGame deepCopy(boolean ignoreHashes) {
 		FischerRandomCrazyhouseGame result = new FischerRandomCrazyhouseGame();
+		result.initialLongRookFile = initialLongRookFile;
+		result.initialShortRookFile = initialShortRookFile;
+		result.initialKingFile = initialKingFile;
 		overwrite(result, ignoreHashes);
 		return result;
 	}
