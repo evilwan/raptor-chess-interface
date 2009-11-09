@@ -28,6 +28,7 @@ import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.chess.Game;
 import raptor.connector.bics.pref.BicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
@@ -200,6 +201,31 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 										+ "menu.You can add new actions on the Action Scripts Page.",
 								RaptorActionContainer.BicsMenu)) };
 
+	}
+
+	/**
+	 * Returns true if isConnected and a user is playing a game.
+	 */
+	public boolean isLoggedInUserPlayingAGame() {
+		boolean result = false;
+		if (isConnected()) {
+			for (Game game : getGameService().getAllActiveGames()) {
+				if (game.isInState(Game.PLAYING_STATE)) {
+					result = true;
+					break;
+				}
+			}
+		}
+		// Check the bics2 connection.
+		if (!result && bics2 != null && bics2.isConnected()) {
+			for (Game game : getGameService().getAllActiveGames()) {
+				if (game.isInState(Game.PLAYING_STATE)) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override

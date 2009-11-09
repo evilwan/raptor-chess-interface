@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.Raptor;
 import raptor.chat.Bugger;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -34,6 +35,7 @@ import raptor.chess.GameConstants;
 import raptor.chess.Result;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
+import raptor.connector.Connector;
 import raptor.connector.ics.bughouse.BugWhoGParser;
 import raptor.connector.ics.bughouse.BugWhoPParser;
 import raptor.connector.ics.bughouse.BugWhoUParser;
@@ -59,6 +61,7 @@ import raptor.connector.ics.game.message.NoLongerExaminingGameMessage;
 import raptor.connector.ics.game.message.RemovingObsGameMessage;
 import raptor.connector.ics.game.message.Style12Message;
 import raptor.pref.PreferenceKeys;
+import raptor.service.ConnectorService;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 
@@ -224,6 +227,27 @@ public class IcsParser implements GameConstants {
 	public void setConnector(IcsConnector connector) {
 		this.connector = connector;
 
+	}
+
+	/**
+	 * If a game is being played on any connector and the preference
+	 * BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING is set then this will veto the
+	 * games creation.
+	 */
+	public boolean vetoGameCreation(Game game) {
+		boolean result = false;
+		if (game.isInState(Game.OBSERVING_STATE)
+				&& Raptor.getInstance().getPreferences().getBoolean(
+						PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING)) {
+			for (Connector connector : ConnectorService.getInstance()
+					.getConnectors()) {
+				if (connector.isLoggedInUserPlayingAGame()) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 	protected void adjustBughouseHeadersAndFollowPartnersGamesForBics(
@@ -626,10 +650,10 @@ public class IcsParser implements GameConstants {
 		} else {
 			G1Message g1Message = unprocessedG1Messages.get(message.gameId);
 			if (g1Message == null) {
-				processStyle12Creation(game, message, service, entireMessage);
+				processStyle12Creation(message, service, entireMessage);
 
 			} else {
-				processStyle12Creation(game, g1Message, message, service,
+				processStyle12Creation(g1Message, message, service,
 						entireMessage);
 			}
 		}
@@ -730,17 +754,32 @@ public class IcsParser implements GameConstants {
 	 * Observed/Playing games starts flow here (i.e. All games that contain a G1
 	 * message)
 	 */
-	protected void processStyle12Creation(Game game, G1Message g1Message,
+	protected void processStyle12Creation(G1Message g1Message,
 			Style12Message message, GameService service, String entireMessage) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processing new obs/playing game.");
 		}
 		unprocessedG1Messages.remove(message.gameId);
 
-		game = IcsUtils.createGame(g1Message);
+		Game game = IcsUtils.createGame(g1Message);
 		IcsUtils.updateNonPositionFields(game, message);
 		IcsUtils.updatePosition(game, message);
 		IcsUtils.verifyLegal(game);
+
+		if (vetoGameCreation(game)) {
+			connector.onUnobserve(game);
+			connector
+					.publishEvent(new ChatEvent(
+							null,
+							ChatType.INTERNAL,
+							"Observation of game "
+									+ game.getId()
+									+ " was vetoed because you have the preference set to ignore "
+									+ "observed games while you are playing."
+									+ "To observe this game please unset that in Preferences->ChessBoard->Behavior "
+									+ " and observe it again."));
+			return;
+		}
 
 		if (game instanceof FischerRandomGame) {
 			((FischerRandomGame) game).initialPositionIsSet();
@@ -787,12 +826,28 @@ public class IcsParser implements GameConstants {
 	 * Examined/Bsetup/Isolated Positions game starts flow through here (i.e.
 	 * All games that didnt have a G1 message)
 	 */
-	protected void processStyle12Creation(Game game, Style12Message message,
+	protected void processStyle12Creation(Style12Message message,
 			GameService service, String entireMessage) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processing new ex or bsetup game.");
 		}
-		game = IcsUtils.createGame(message, entireMessage);
+
+		if (message.relation == Style12Message.OBSERVING_EXAMINED_GAME_RELATION
+				|| message.relation == Style12Message.OBSERVING_GAME_RELATION) {
+			// This is probably from a game that was vetoed because the user was
+			// playing.
+			// Just return the unobserve has'nt taken effect yet.
+			if (LOG.isInfoEnabled()) {
+				LOG
+						.info("A style 12 message was received for an observed game "
+								+ "that wasnt being managed. Assuming this was because you "
+								+ "are playing a game and have the ignore observed games if playing "
+								+ "preference enabled.");
+			}
+			return;
+		}
+
+		Game game = IcsUtils.createGame(message, entireMessage);
 
 		if (message.relation == Style12Message.EXAMINING_GAME_RELATION
 				&& !game.isInState(Game.SETUP_STATE)) {
