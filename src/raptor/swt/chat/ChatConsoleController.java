@@ -60,6 +60,7 @@ import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
+import raptor.connector.fics.FicsConnector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ChatScript;
@@ -897,6 +898,42 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				}
 			});
+
+			if (connector instanceof FicsConnector) {
+
+				MenuItem ficsGamesHistory = new MenuItem(menu, SWT.PUSH);
+				ficsGamesHistory.setText("ficsgames.com History for person: "
+						+ person);
+				ficsGamesHistory.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils
+								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
+										+ person + "&showhistory=showhistory");
+					}
+				});
+
+				MenuItem ficsGamesStats = new MenuItem(menu, SWT.PUSH);
+				ficsGamesStats.setText("ficsgames.com Stats for person: "
+						+ person);
+				ficsGamesStats.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils
+								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
+										+ person + "&showstats=showstats");
+					}
+				});
+
+				MenuItem watchBotStats = new MenuItem(menu, SWT.PUSH);
+				watchBotStats.setText("WatchBot history for person: " + person);
+				watchBotStats.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils.openHtml(BrowserUtils
+								.getWatchBotJavascript(person));
+					}
+				});
+
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
 
 			final String[][] connectorPersonItems = connector
 					.getPersonActions(person);

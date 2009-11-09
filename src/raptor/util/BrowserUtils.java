@@ -29,6 +29,18 @@ import raptor.swt.BrowserWindowItem;
 public class BrowserUtils {
 	private static final Log LOG = LogFactory.getLog(BrowserUtils.class);
 
+	public static String getWatchBotJavascript(String player) {
+		return "<html><body>"
+				+ "<form action=\"http://mekk.waw.pl/mk/watchbot/search/player\" method=\"post\">"
+				+ "<input id=\"player\" name=\"player\" size=\"15\" type=\"text\" value=\""
+				+ player + "\" />" + "<select name=\"color\" id=\"color\">"
+				+ "<option value=\"\">Any color</option>"
+				+ "<option value=\"white\">White</option>"
+				+ "<option value=\"black\">Black</option>" + "</select>"
+				+ "</form>" + "<script>" + "document.forms[0].submit();"
+				+ "</script>" + "</body></html>";
+	}
+
 	/**
 	 * Opens the link in an external browser. Code taken from: Bare Bones
 	 * Browser Launch Version 1.5 (December 10, 2005) By Dem Pilafian Supports:
@@ -136,5 +148,4 @@ public class BrowserUtils {
 			}
 		}
 	}
-
 }

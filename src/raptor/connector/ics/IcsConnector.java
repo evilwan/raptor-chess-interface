@@ -795,6 +795,13 @@ public abstract class IcsConnector implements Connector {
 		sendMessage("$$observe " + gameId, true);
 	}
 
+	/**
+	 * This should show all of the observers watching the specified game.
+	 */
+	public void onObservers(Game game) {
+		sendMessage("allobservers " + game.getId(), true);
+	}
+
 	public void onPartner(String bugger) {
 		sendMessage("$$partner " + bugger, true);
 	}
