@@ -135,6 +135,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	protected Action disconnectAction;
 	protected Action reconnectAction;
 	protected Action bugbuttonsAction;
+	protected String partnerOnConnect;
 
 	public BicsConnector() {
 		this(new BicsConnectorContext());
@@ -376,6 +377,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 						// that see the overridden publishEvent for how that
 						// works.
 						bics2.setSimulBugConnector(true);
+						bics2.partnerOnConnect = userName;
 						// Force bug-open to get the partnership message.
 						sendMessage("set bugopen on");
 					}
@@ -534,8 +536,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 					}
 					sendMessage("set bugopen on");
 
-					if (StringUtils.isNotBlank(getSimulBugPartnerName())) {
-						sendMessage("partner " + getSimulBugPartnerName());
+					if (StringUtils.isNotBlank(partnerOnConnect)) {
+						sendMessage("partner " + partnerOnConnect);
 					}
 				}
 

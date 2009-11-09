@@ -83,6 +83,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	 * fics1 connector, otherwise its null.
 	 */
 	protected FicsConnector fics1 = null;
+	protected String partnerOnConnect;
 
 	public FicsConnector() {
 		this(new IcsConnectorContext(new IcsParser(false)));
@@ -394,6 +395,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						// that see the overridden publishEvent for how that
 						// works.
 						fics2.setSimulBugConnector(true);
+						fics2.partnerOnConnect = userName;
 						// Force bug-open to get the partnership message.
 						sendMessage("set bugopen on");
 					}
@@ -610,8 +612,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 					}
 					sendMessage("set bugopen on");
 
-					if (StringUtils.isNotBlank(getSimulBugPartnerName())) {
-						sendMessage("partner " + getSimulBugPartnerName());
+					if (StringUtils.isNotBlank(partnerOnConnect)) {
+						sendMessage("partner " + partnerOnConnect);
 					}
 				}
 
