@@ -1310,6 +1310,18 @@ public class PlayingController extends ChessBoardController {
 													.getBoolean(
 															PreferenceKeys.ARROW_FADE_AWAY_MODE)));
 				}
+
+				// remove all premoves that have the same start square as this
+				// move.
+				for (int i = 0; i < premoves.size(); i++) {
+					if (premoves.get(i).fromSquare == moveMade.getFrom()) {
+						System.err.println("Removing: "
+								+ premoves.get(i).fromSquare + " moveAdeFrom="
+								+ moveMade.getFrom());
+						premoves.remove(i);
+						i--;
+					}
+				}
 			}
 		}
 		adjustPremoveLabelHighlightsAndArrows();
