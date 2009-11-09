@@ -359,9 +359,6 @@ public class PlayingController extends ChessBoardController {
 			LOG.debug("adjustForIllegalMove ");
 		}
 
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
-
 		if (!getPreferences().getBoolean(
 				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
 			onClearPremoves();
@@ -682,18 +679,7 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		if (!isDisposed() && board.getSquare(square).getPiece() != EMPTY) {
-			board.getSquareHighlighter().removeAllHighlights();
-			board.getArrowDecorator().removeAllArrows();
-
-			if (getPreferences().getBoolean(
-					PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-				board.getSquareHighlighter().addHighlight(
-						new Highlight(square, getPreferences().getColor(
-								PreferenceKeys.HIGHLIGHT_MY_COLOR), false));
-			}
-
 			board.getSquare(square).setHidingPiece(true);
-
 			board.redrawSquares();
 		}
 	}
