@@ -243,26 +243,26 @@ public class FischerRandomUtils implements GameConstants {
 			}
 		}
 
-		if (kingToBB != kingFromBB) {
-			long kingFromTo = kingToBB | kingFromBB;
-			game.setPiece(bitscanForward(kingToBB), EMPTY);
-			game.setPiece(kingFromSquare, KING);
-			game.xor(move.getColor(), KING, kingFromTo);
-			game.xor(move.getColor(), kingFromTo);
-			game.setOccupiedBB(game.getOccupiedBB() ^ kingFromTo);
-			game.setEmptyBB(game.getEmptyBB() ^ kingFromTo);
-		}
-
 		if (rookFromBB != rookToBB) {
 			long rookFromTo = rookToBB | rookFromBB;
-			if (rookToBB != kingFromBB) {
-				game.setPiece(bitscanForward(rookToBB), EMPTY);
-			}
+			game.setPiece(bitscanForward(rookToBB), EMPTY);
 			game.setPiece(rookFromSquare, ROOK);
 			game.xor(move.getColor(), ROOK, rookFromTo);
 			game.xor(move.getColor(), rookFromTo);
 			game.setOccupiedBB(game.getOccupiedBB() ^ rookFromTo);
 			game.setEmptyBB(game.getEmptyBB() ^ rookFromTo);
+		}
+
+		if (kingToBB != kingFromBB) {
+			long kingFromTo = kingToBB | kingFromBB;
+			if (kingToBB != rookFromBB) {
+				game.setPiece(bitscanForward(kingToBB), EMPTY);
+			}
+			game.setPiece(kingFromSquare, KING);
+			game.xor(move.getColor(), KING, kingFromTo);
+			game.xor(move.getColor(), kingFromTo);
+			game.setOccupiedBB(game.getOccupiedBB() ^ kingFromTo);
+			game.setEmptyBB(game.getEmptyBB() ^ kingFromTo);
 		}
 
 		game.setEpSquareFromPreviousMove();
