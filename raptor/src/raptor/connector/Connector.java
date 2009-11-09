@@ -304,6 +304,11 @@ public interface Connector {
 
 	public void onObserveGame(String gameId);
 
+	/**
+	 * This should show all of the observers watching the specified game.
+	 */
+	public void onObservers(Game game);
+
 	public void onPartner(String bugger);
 
 	/**
