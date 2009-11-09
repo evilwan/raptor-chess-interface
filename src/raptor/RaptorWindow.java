@@ -1585,6 +1585,15 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		}
 
+		helpMenu.add(new Action("&Frequently Asked Questions") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/FAQ");
+
+			}
+		});
+
 		helpMenu.add(new Action("&Raptor Home Page") {
 			@Override
 			public void run() {

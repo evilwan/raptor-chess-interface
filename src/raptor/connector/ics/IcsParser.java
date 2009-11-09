@@ -236,11 +236,14 @@ public class IcsParser implements GameConstants {
 	 * BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING is set then this will veto the
 	 * games creation.
 	 */
-	public boolean vetoGameCreation(Game game) {
+	public boolean vetoGameCreation(Game game, G1Message g1Message) {
 		boolean result = false;
 		if (game.isInState(Game.OBSERVING_STATE)
 				&& Raptor.getInstance().getPreferences().getBoolean(
-						PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING)) {
+						PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING)
+				&& (!isBughouse(game) || isBughouse(game)
+						&& !connector.getGameService().isManaging(
+								g1Message.parterGameId))) {
 			for (Connector connector : ConnectorService.getInstance()
 					.getConnectors()) {
 				if (connector.isLoggedInUserPlayingAGame()) {
@@ -347,6 +350,11 @@ public class IcsParser implements GameConstants {
 		} else {
 			game.setHeader(PgnHeader.WhiteOnTop, "0");
 		}
+	}
+
+	protected boolean isBughouse(Game game) {
+		return game.getVariant() == Variant.bughouse
+				|| game.getVariant() == Variant.fischerRandomBughouse;
 	}
 
 	/**
@@ -474,9 +482,11 @@ public class IcsParser implements GameConstants {
 				exaimineB1sWaitingOnMoves.put(message.gameId, message);
 
 			} else {
-				connector.onError(
-						"Received B1 for a game not in the GameService. "
-								+ message, new Exception());
+				if (LOG.isInfoEnabled()) {
+					LOG
+							.info("Received B1 for a game not in the GameService. "
+									+ "You could be ignoring a bug or zh game and get this.");
+				}
 			}
 		} else {
 			if (isBicsParser && game.getVariant() == Variant.crazyhouse
@@ -485,7 +495,6 @@ public class IcsParser implements GameConstants {
 				// why this is done.
 				return;
 			}
-
 			updateGameForB1(game, message);
 			service.fireDroppablePiecesChanged(message.gameId);
 		}
@@ -768,7 +777,7 @@ public class IcsParser implements GameConstants {
 		IcsUtils.updatePosition(game, message);
 		IcsUtils.verifyLegal(game);
 
-		if (vetoGameCreation(game)) {
+		if (vetoGameCreation(game, g1Message)) {
 			connector.onUnobserve(game);
 			connector
 					.publishEvent(new ChatEvent(
@@ -799,7 +808,7 @@ public class IcsParser implements GameConstants {
 
 		adjustWhiteOnTopHeader(game, message);
 
-		if (game.getVariant() == Variant.bughouse) {
+		if (isBughouse(game)) {
 
 			/**
 			 * BICS does'nt have the partner game id in the G1 so you have to
@@ -904,7 +913,7 @@ public class IcsParser implements GameConstants {
 	protected void updateGameForB1(Game game, B1Message message) {
 		if (game instanceof BughouseGame
 				&& game.isInState(Game.EXAMINING_STATE)) {
-			// On fics when examining a bug game you dont get pieces.
+			// On Fics when examining a bug game you don't get pieces.
 			// To handle all the issues around that just set 1 of everything.
 			game.setDropCount(WHITE, PAWN, 1);
 			game.setDropCount(WHITE, QUEEN, 1);
