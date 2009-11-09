@@ -38,6 +38,7 @@ public interface PreferenceKeys {
 	public static final String QUAD56_QUAD7_SASH_WEIGHTS = "quad56-quad7-sash-weights";
 	public static final String WINDOW_BOUNDS = "window-bounds";
 	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-info";
+	public static final String MATCH_COMMANDS = "match-commands";
 
 	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";
@@ -221,6 +222,7 @@ public interface PreferenceKeys {
 	public static final String FICS_PROFILE = "fics-profile";
 	public static final String FICS_CLOSE_TABS_ON_DISCONNECT = "fics-close-tabs-on-disconnect";
 	public static final String FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "fics-show-bug-buttons-on-partnership";
+	public static final String FICS_MATCH_CMMANDS = "fics-match-commands";
 
 	public static final String FICS_PRIMARY_IS_ANON_GUEST = "fics-Primary-is-anon-guest";
 	public static final String FICS_PRIMARY_IS_NAMED_GUEST = "fics-Primary-is-named-guest";
@@ -252,6 +254,7 @@ public interface PreferenceKeys {
 	public static final String BICS_PROFILE = "bics-profile";
 	public static final String BICS_CLOSE_TABS_ON_DISCONNECT = "bics-close-tabs-on-disconnect";
 	public static final String BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "bics-show-bug-buttons-on-partnership";
+	public static final String BICS_MATCH_CMMANDS = "bics-match-commands";
 
 	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
 	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";

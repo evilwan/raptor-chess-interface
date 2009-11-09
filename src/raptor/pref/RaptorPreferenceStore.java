@@ -557,6 +557,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_PROFILE, "Primary");
 		setDefault(FICS_CLOSE_TABS_ON_DISCONNECT, true);
 		setDefault(FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
+		setDefault(FICS_MATCH_CMMANDS, "1 0,3 0,5 0,15 0");
 
 		// Fics Primary
 		setDefault(FICS_PRIMARY_USER_NAME, "");
@@ -591,6 +592,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_PROFILE, "Primary");
 		setDefault(BICS_CLOSE_TABS_ON_DISCONNECT, true);
 		setDefault(BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
+		setDefault(
+				BICS_MATCH_CMMANDS,
+				"1 0 zh,3 0 zh,1 0 zh fr,3 0 zh fr,1 0 bughouse, 2 0 bughouse, 1 0 bughouse fr, 2 0 bughouse fr,1 0 bughouse w5,2 0 bughouse w5");
 
 		// Bics Primary
 		setDefault(BICS_PRIMARY_USER_NAME, "");

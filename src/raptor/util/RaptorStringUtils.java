@@ -218,11 +218,19 @@ public class RaptorStringUtils {
 	 * toString(String[]) returns.
 	 */
 	public static String[] stringArrayFromString(String string) {
+		return stringArrayFromString(string, ',');
+	}
+
+	/**
+	 * Returns a String[] of strings from a string that is formatted in what
+	 * toString(String[]) returns.
+	 */
+	public static String[] stringArrayFromString(String string, char delimiter) {
 		List<String> result = new ArrayList<String>(10);
 
 		if (StringUtils.isNotBlank(string)) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(string, ",",
-					false);
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(string, ""
+					+ delimiter, false);
 			while (tok.hasMoreTokens()) {
 				String token = tok.nextToken();
 				result.add(token);

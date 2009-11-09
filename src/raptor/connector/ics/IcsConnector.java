@@ -81,6 +81,7 @@ import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.BrowserUtils;
 import raptor.util.RaptorStringTokenizer;
+import raptor.util.RaptorStringUtils;
 
 /**
  * An ics (internet chess server) connector. You will need to supply yuor own
@@ -631,17 +632,30 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[][] getPersonActions(String person) {
-		return new String[][] {
-				new String[] { "Finger " + person, "finger " + person },
-				new String[] { "Observe " + person, "observe " + person },
-				new String[] { "History " + person, "history " + person },
-				new String[] { "Follow " + person, "follow " + person },
-				new String[] { "Partner " + person, "partner " + person },
-				new String[] { "Vars " + person, "vars " + person },
-				new String[] { "Censor " + person, "+censor " + person },
-				new String[] { "Uncensor " + person, "-censor " + person },
-				new String[] { "Noplay " + person, "+noplay " + person },
-				new String[] { "Unnoplay " + person, "-noplay " + person } };
+		String matchActions = Raptor.getInstance().getPreferences().getString(
+				getContext().getPreferencePrefix()
+						+ PreferenceKeys.MATCH_COMMANDS);
+		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
+				matchActions, ',');
+
+		String[][] result = new String[10 + matchActionsArray.length][2];
+
+		result[0] = new String[] { "Finger " + person, "finger " + person };
+		result[1] = new String[] { "Observe " + person, "observe " + person };
+		result[2] = new String[] { "History " + person, "history " + person };
+		result[3] = new String[] { "Follow " + person, "follow " + person };
+		result[4] = new String[] { "Partner " + person, "partner " + person };
+		result[5] = new String[] { "Vars " + person, "vars " + person };
+		result[6] = new String[] { "Censor " + person, "+censor " + person };
+		result[7] = new String[] { "Uncensor " + person, "-censor " + person };
+		result[8] = new String[] { "Noplay " + person, "+noplay " + person };
+		result[9] = new String[] { "Unnoplay " + person, "-noplay " + person };
+
+		for (int i = 0; i < matchActionsArray.length; i++) {
+			result[10 + i] = new String[] { "Match " + matchActionsArray[i],
+					"match " + person + " " + matchActionsArray[i] };
+		}
+		return result;
 	}
 
 	public String getPersonTabPrefix(String person) {
