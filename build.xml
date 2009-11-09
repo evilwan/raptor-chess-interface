@@ -13,7 +13,7 @@
 	  -->
 	<property name="swtEnv" value="MacCarbon" />
 
-	<property name="version" value="CandidateBeta1" />
+	<property name="version" value="Beta1" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -261,13 +261,13 @@
 			<arg value="create" />
 			<arg value="-srcfolder" />
 			<arg value="${install.dir}/Raptor_${version}" />
-			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Carbon.dmg" />
+			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
 		</exec>
 
 		<exec executable="hdiutil">
 			<arg value="internet-enable" />
 			<arg value="-yes" />
-			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Carbon.dmg" />
+			<arg value="${uploads.dir}/Raptor${version}_OS_X_Carbon.dmg" />
 		</exec>
 	</target>
 
@@ -311,13 +311,13 @@
 			<arg value="create" />
 			<arg value="-srcfolder" />
 			<arg value="${install.dir}/Raptor_${version}" />
-			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_x86_64.dmg" />
+			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Cocoa_x86_64.dmg" />
 		</exec>
 
 		<exec executable="hdiutil">
 			<arg value="internet-enable" />
 			<arg value="-yes" />
-			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_x86_64.dmg" />
+			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Cocoa_x86_64.dmg" />
 		</exec>
 	</target>
 
@@ -361,13 +361,13 @@
 			<arg value="create" />
 			<arg value="-srcfolder" />
 			<arg value="${install.dir}/Raptor_${version}" />
-			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_32.dmg" />
+			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Cocoa_32.dmg" />
 		</exec>
 
 		<exec executable="hdiutil">
 			<arg value="internet-enable" />
 			<arg value="-yes" />
-			<arg value="${uploads.dir}/Raptor_OS_X_${version}_Cocoa_32.dmg" />
+			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Cocoa_32.dmg" />
 		</exec>
 	</target>
 
