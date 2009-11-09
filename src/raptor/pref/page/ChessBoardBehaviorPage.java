@@ -42,7 +42,12 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES,
-				"Inactive games can be taken over by new games",
+				"Inactive games can be taken over by new games. (Improves performance)",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING,
+				"Ignore observed games if I am playing a game.",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(

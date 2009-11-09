@@ -114,6 +114,7 @@ public interface PreferenceKeys {
 
 	public static final String BUG_BUTTONS_FONT = "bugbuttons-font";
 
+	public static final String BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING = "board-ignore-observed-games-if-playing";
 	public static final String BOARD_USER_MOVE_INPUT_MODE = "board-user-input-mode";
 	public static final String BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME = "board-show-bughouse-side-up-time";
 	public static final String BOARD_PIECE_JAIL_LABEL_PERCENTAGE = "board-piece-jail-label-percentage";

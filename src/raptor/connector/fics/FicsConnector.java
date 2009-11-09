@@ -28,6 +28,7 @@ import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.chess.Game;
 import raptor.connector.fics.pref.FicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
@@ -153,6 +154,31 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 										+ "menu.You can add new actions on the Action Scripts Page.",
 								RaptorActionContainer.FicsMenu)) };
 
+	}
+
+	/**
+	 * Returns true if isConnected and a user is playing a game.
+	 */
+	public boolean isLoggedInUserPlayingAGame() {
+		boolean result = false;
+		if (isConnected()) {
+			for (Game game : getGameService().getAllActiveGames()) {
+				if (game.isInState(Game.PLAYING_STATE)) {
+					result = true;
+					break;
+				}
+			}
+		}
+		// Check the fics2 connection.
+		if (!result && fics2 != null && fics2.isConnected()) {
+			for (Game game : getGameService().getAllActiveGames()) {
+				if (game.isInState(Game.PLAYING_STATE)) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 	@Override

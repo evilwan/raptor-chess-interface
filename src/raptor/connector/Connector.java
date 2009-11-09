@@ -221,6 +221,11 @@ public interface Connector {
 	public boolean isLikelyPerson(String word);
 
 	/**
+	 * Returns true if isConnected and a user is playing a game.
+	 */
+	public boolean isLoggedInUserPlayingAGame();
+
+	/**
 	 * Makes the move in the specified game.
 	 */
 	public void makeMove(Game game, Move move);
