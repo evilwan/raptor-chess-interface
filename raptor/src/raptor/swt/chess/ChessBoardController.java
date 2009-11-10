@@ -974,13 +974,17 @@ public abstract class ChessBoardController implements BoardConstants,
 		int fromPiece = board.getSquare(move.getFrom()).getPiece();
 
 		if (move.isEnPassant()) {
+
+			int epSquare = move.isWhitesMove() ? move.getTo() - 8 : move
+					.getTo() + 8;
+
 			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
 				board
 						.getSquareHighlighter()
 						.addHighlight(
 								new Highlight(
 										move.getFrom(),
-										move.getEpSquare(),
+										move.getTo(),
 										getPreferences().getColor(
 												HIGHLIGHT_MY_COLOR),
 										getPreferences()
@@ -991,7 +995,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			if (getPreferences().getBoolean(
 					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
 				board.getArrowDecorator().addArrow(
-						new Arrow(move.getFrom(), move.getEpSquare(),
+						new Arrow(move.getFrom(), move.getTo(),
 								getPreferences().getColor(
 										PreferenceKeys.ARROW_MY_COLOR),
 								getPreferences().getBoolean(
@@ -999,7 +1003,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			}
 
 			board.getSquare(move.getTo()).setPiece(fromPiece);
-			board.getSquare(move.getEpSquare()).setPiece(EMPTY);
+			board.getSquare(epSquare).setPiece(EMPTY);
 			board.getSquare(move.getFrom()).setPiece(EMPTY);
 		} else if (move.isDrop()) {
 			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
