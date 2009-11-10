@@ -57,11 +57,8 @@ public class BughouseSuggestController extends ObserveController {
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!isDisposed()) {
-			if (getGame().getPiece(squareId) == EMPTY) {
-				return false;
-			} else {
-				return true;
-			}
+			return ChessBoardUtils.isPieceJailSquare(squareId) ? true
+					: getGame().getPiece(squareId) == EMPTY;
 		}
 		return false;
 	}
@@ -132,7 +129,6 @@ public class BughouseSuggestController extends ObserveController {
 		board.getArrowDecorator().removeAllArrows();
 
 		if (fromSquare == toSquare
-				|| ChessBoardUtils.isPieceJailSquare(toSquare)
 				|| board.getSquare(fromSquare).getPiece() == EMPTY) {
 			if (LOG.isDebugEnabled()) {
 				LOG
@@ -156,8 +152,8 @@ public class BughouseSuggestController extends ObserveController {
 			connector.sendMessage(connector.getPartnerTellPrefix()
 					+ " I suggest " + san);
 		} else {
-			connector.sendMessage(connector.getPartnerTellPrefix() + " Watch out for "
-					+ san);
+			connector.sendMessage(connector.getPartnerTellPrefix()
+					+ " Watch out for " + san);
 		}
 	}
 
