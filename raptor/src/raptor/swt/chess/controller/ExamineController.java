@@ -160,9 +160,16 @@ public class ExamineController extends ChessBoardController {
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!isDisposed()) {
-			if (ChessBoardUtils.isPieceJailSquare(squareId)) {
+			if (ChessBoardUtils.isPieceJailSquare(squareId)
+					&& !getGame().isInState(Game.DROPPABLE_STATE)) {
 				return false;
+			} else if (ChessBoardUtils.isPieceJailSquare(squareId)) {
+				return getGame().isWhitesMove()
+						&& ChessBoardUtils.isJailSquareWhitePiece(squareId)
+						|| !getGame().isWhitesMove()
+						&& ChessBoardUtils.isJailSquareBlackPiece(squareId);
 			} else {
+
 				int piece = GameUtils.getColoredPiece(squareId, getGame());
 				return ChessBoardUtils.isWhitePiece(piece)
 						&& getGame().isWhitesMove()
@@ -259,10 +266,24 @@ public class ExamineController extends ChessBoardController {
 	@Override
 	public void init() {
 		board.setWhiteOnTop(false);
-		board.setWhitePieceJailOnTop(true);
+
+		/**
+		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail
+		 * since you can drop pieces from it.
+		 * 
+		 * In other games its just a collection of pieces yu have captured so
+		 * your opponent owns your piece jail.
+		 */
+		if (getGame().isInState(Game.DROPPABLE_STATE)) {
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
+		} else {
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
+		}
+
 		if (getPreferences().getBoolean(PreferenceKeys.BOARD_COOLBAR_MODE)) {
 			getToolbar(null);
 		}
+
 		refresh();
 		connector.getGameService().addGameServiceListener(listener);
 		fireItemChanged();
@@ -388,25 +409,6 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void userRightClicked(int square) {
-	}
-
-	@Override
-	protected void adjustClockColors() {
-		if (getGame().getColorToMove() == WHITE) {
-			board.getWhiteClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-			board.getBlackClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-		} else {
-			board.getBlackClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-			board.getWhiteClockLabel().setForeground(
-					getPreferences().getColor(
-							PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-		}
 	}
 
 	protected void onPlayGameEndSound() {
