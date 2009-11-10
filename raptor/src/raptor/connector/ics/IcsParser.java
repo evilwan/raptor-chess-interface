@@ -911,8 +911,9 @@ public class IcsParser implements GameConstants {
 	}
 
 	protected void updateGameForB1(Game game, B1Message message) {
-		if (game instanceof BughouseGame
-				&& game.isInState(Game.EXAMINING_STATE)) {
+		if (isBughouse(game)
+				&& (game.isInState(Game.EXAMINING_STATE) || game
+						.isInState(Game.OBSERVING_EXAMINED_STATE))) {
 			// On Fics when examining a bug game you don't get pieces.
 			// To handle all the issues around that just set 1 of everything.
 			game.setDropCount(WHITE, PAWN, 1);
