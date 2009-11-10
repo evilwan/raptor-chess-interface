@@ -646,7 +646,8 @@ public class ChessBoardUtils implements BoardConstants {
 					// active controller already there observing a chess game.
 					if ((item.getPreferredQuadrant() == Quadrant.III || item
 							.getPreferredQuadrant() == Quadrant.IV)
-							&& item.getController().getGame().getVariant() != Variant.bughouse) {
+							&& item.getController().getGame().getVariant() != Variant.bughouse
+							&& item.getController().getGame().getVariant() != Variant.fischerRandomBughouse) {
 						RaptorWindowItem[] items = Raptor.getInstance()
 								.getWindow().getWindowItems(
 										item.getPreferredQuadrant());
