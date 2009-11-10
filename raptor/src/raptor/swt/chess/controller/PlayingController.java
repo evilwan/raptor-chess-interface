@@ -990,8 +990,6 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	protected void adjustPremoveLabelHighlightsAndArrows() {
-		System.err.println("Adjusting premove highlights and arrows.");
-		new Exception().printStackTrace();
 		String labelText = "Premoves: ";
 		synchronized (premoves) {
 			boolean hasAddedPremove = false;

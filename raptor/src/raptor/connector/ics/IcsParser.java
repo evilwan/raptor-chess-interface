@@ -261,15 +261,8 @@ public class IcsParser implements GameConstants {
 		// to
 		// do this.
 		if (bugGamesWithoutBoard2.isEmpty()) {
-			if (game.isInState(Game.PLAYING_STATE)
-					&& connector.getPreferences().getBoolean(
-							PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD)
-					&& !connector.isSimulBugConnector()
-					|| !game.isInState(Game.PLAYING_STATE)
-					&& connector
-							.getPreferences()
-							.getBoolean(
-									PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)) {
+			if (!connector.isSimulBugConnector()
+					&& observePartnerBoardForGame(game)) {
 				bugGamesWithoutBoard2.add(message.gameId);
 				connector.sendMessage("pobserve "
 						+ (message.isWhiteOnTop ? message.blackName
@@ -306,14 +299,7 @@ public class IcsParser implements GameConstants {
 			GameService service) {
 		if (!connector.getGameService().isManaging(g1Message.parterGameId)) {
 			if (!connector.isSimulBugConnector()
-					&& game.isInState(Game.PLAYING_STATE)
-					&& connector.getPreferences().getBoolean(
-							PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD)
-					|| game.isInState(Game.OBSERVING_STATE)
-					&& connector
-							.getPreferences()
-							.getBoolean(
-									PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD)) {
+					&& observePartnerBoardForGame(game)) {
 				connector
 						.sendMessage("observe " + g1Message.parterGameId, true);
 			}
@@ -355,6 +341,18 @@ public class IcsParser implements GameConstants {
 	protected boolean isBughouse(Game game) {
 		return game.getVariant() == Variant.bughouse
 				|| game.getVariant() == Variant.fischerRandomBughouse;
+	}
+
+	protected boolean observePartnerBoardForGame(Game game) {
+		boolean result = false;
+		if (game.isInState(Game.PLAYING_STATE)) {
+			result = connector.getPreferences().getBoolean(
+					PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD);
+		} else if (game.isInState(Game.OBSERVING_STATE)) {
+			result = connector.getPreferences().getBoolean(
+					PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD);
+		}
+		return result;
 	}
 
 	/**

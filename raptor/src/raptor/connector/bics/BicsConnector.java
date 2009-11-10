@@ -24,6 +24,7 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
+import raptor.RaptorWindowItem;
 import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
@@ -529,18 +530,15 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 					}
 				}
 
-				if (isSimulBugConnector) {
+				if (StringUtils.isNotBlank(partnerOnConnect)) {
 					try {
 						Thread.sleep(300);
 					} catch (InterruptedException ie) {
 					}
 					sendMessage("set bugopen on");
-
-					if (StringUtils.isNotBlank(partnerOnConnect)) {
-						sendMessage("partner " + partnerOnConnect);
-					}
+					sendMessage("partner " + partnerOnConnect);
+					partnerOnConnect = null;
 				}
-
 			}
 		});
 	}
@@ -587,9 +585,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 						&& getPreferences()
 								.getBoolean(
 										PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP)) {
-					if (!isSimulBugConnector) {
-						SWTUtils.openBugButtonsWindowItem(this);
-					}
+					SWTUtils.openBugButtonsWindowItem(this);
 				}
 			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
 				isSimulBugConnector = false;
@@ -608,6 +604,17 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				if (bics1 != null) {
 					bics1.isSimulBugConnector = false;
 					bics1.simulBugPartnerName = null;
+				}
+
+				// Remove bug buttons if up displayed you have no partner.
+				RaptorWindowItem[] windowItems = Raptor.getInstance()
+						.getWindow().getWindowItems(BugButtonsWindowItem.class);
+				for (RaptorWindowItem item : windowItems) {
+					BugButtonsWindowItem bugButtonsItem = (BugButtonsWindowItem) item;
+					if (bugButtonsItem.getConnector() == this) {
+						Raptor.getInstance().getWindow()
+								.disposeRaptorWindowItem(bugButtonsItem);
+					}
 				}
 			}
 			super.publishEvent(event);
