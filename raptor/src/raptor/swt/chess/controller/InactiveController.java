@@ -45,11 +45,9 @@ import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.swt.SWTUtils;
-import raptor.swt.chess.Arrow;
 import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
-import raptor.swt.chess.Highlight;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
@@ -185,41 +183,6 @@ public class InactiveController extends ChessBoardController implements
 		return false;
 	}
 
-	public void decorateForLastMoveListMove() {
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
-
-		Move lastMove = getGame().getLastMove();
-
-		if (lastMove != null) {
-			if (getPreferences().getBoolean(
-					PreferenceKeys.HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES)) {
-				board
-						.getSquareHighlighter()
-						.addHighlight(
-								new Highlight(
-										lastMove.getFrom(),
-										lastMove.getTo(),
-										getPreferences()
-												.getColor(
-														PreferenceKeys.HIGHLIGHT_OBS_COLOR),
-										getPreferences()
-												.getBoolean(
-														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-			}
-
-			if (getPreferences().getBoolean(
-					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
-				board.getArrowDecorator().addArrow(
-						new Arrow(lastMove.getFrom(), lastMove.getTo(),
-								getPreferences().getColor(
-										PreferenceKeys.ARROW_OBS_COLOR),
-								getPreferences().getBoolean(
-										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-			}
-		}
-	}
-
 	@Override
 	public void dispose() {
 		super.dispose();
@@ -304,7 +267,7 @@ public class InactiveController extends ChessBoardController implements
 		board.getResultDecorator().setDecoration(null);
 		cursor.setCursorPrevious();
 		refresh();
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	@Override
@@ -318,7 +281,7 @@ public class InactiveController extends ChessBoardController implements
 		board.getResultDecorator().setDecoration(null);
 		cursor.setCursorFirst();
 		refresh();
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	@Override
@@ -326,7 +289,7 @@ public class InactiveController extends ChessBoardController implements
 		board.getResultDecorator().setDecoration(null);
 		cursor.setCursorNext();
 		refresh();
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	@Override
@@ -334,14 +297,14 @@ public class InactiveController extends ChessBoardController implements
 		board.getResultDecorator().setDecoration(null);
 		cursor.setCursorLast();
 		refresh();
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	@Override
 	public void onRevert() {
 		cursor.revert();
 		refresh();
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	public void onSave() {
@@ -420,8 +383,7 @@ public class InactiveController extends ChessBoardController implements
 					+ GameUtils.getSan(toSquare));
 		}
 		board.unhidePieces();
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
+		removeAllMoveDecorations();
 
 		if (fromSquare == toSquare
 				|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
@@ -449,32 +411,7 @@ public class InactiveController extends ChessBoardController implements
 			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
 					toSquare));
 		} else {
-			if (getPreferences().getBoolean(
-					PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-				board
-						.getSquareHighlighter()
-						.addHighlight(
-								new Highlight(
-										move.getFrom(),
-										move.getTo(),
-										getPreferences()
-												.getColor(
-														PreferenceKeys.HIGHLIGHT_MY_COLOR),
-										getPreferences()
-												.getBoolean(
-														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-			}
-
-			if (getPreferences().getBoolean(
-					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().addArrow(
-						new Arrow(move.getFrom(), move.getTo(),
-								getPreferences().getColor(
-										PreferenceKeys.ARROW_MY_COLOR),
-								getPreferences().getBoolean(
-										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-			}
-
+			addDecorationsForMove(move, true);
 			if (game.move(move)) {
 				refresh();
 				onPlayMoveSound();
@@ -603,7 +540,7 @@ public class InactiveController extends ChessBoardController implements
 		cursor.setCursor(halfMoveNumber);
 		enableDisableNavButtons();
 		refresh();
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	/**

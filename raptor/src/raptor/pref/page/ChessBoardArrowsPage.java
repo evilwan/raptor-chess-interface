@@ -40,7 +40,8 @@ public class ChessBoardArrowsPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
-		addField(new BooleanFieldEditor(PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES,
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.ARROW_SHOW_ON_OBS_AND_OPP_MOVES,
 				"Show arrows on opponent and observed moves",
 				getFieldEditorParent()));
 
@@ -72,7 +73,7 @@ public class ChessBoardArrowsPage extends FieldEditorPreferencePage {
 				"My Arrow Color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_PREMOVE_COLOR,
 				"My Premove Arrow Color:", getFieldEditorParent()));
-		addField(new ColorFieldEditor(PreferenceKeys.ARROW_OPPONENT_COLOR,
+		addField(new ColorFieldEditor(PreferenceKeys.ARROW_OBS_OPP_COLOR,
 				"Opponent Arrow Color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_OBS_COLOR,
 				"Observe Arrow Color:", getFieldEditorParent()));

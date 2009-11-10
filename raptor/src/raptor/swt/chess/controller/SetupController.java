@@ -35,10 +35,8 @@ import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
-import raptor.swt.chess.Arrow;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
-import raptor.swt.chess.Highlight;
 
 /**
  * A controller used when setting up a position. When the controller receives a
@@ -290,8 +288,7 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void userCancelledMove(int fromSquare) {
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
+		removeAllMoveDecorations();
 		refresh();
 	}
 
@@ -514,24 +511,8 @@ public class SetupController extends ChessBoardController {
 	}
 
 	protected void adjustToDropMove(Move move, boolean isRedrawing) {
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
-		if (getPreferences().getBoolean(
-				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-			board.getSquareHighlighter().addHighlight(
-					new Highlight(move.getFrom(), move.getTo(),
-							getPreferences().getColor(
-									PreferenceKeys.HIGHLIGHT_MY_COLOR),
-							getPreferences().getBoolean(
-									PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-		}
-		if (getPreferences().getBoolean(PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-			board.getArrowDecorator().addArrow(
-					new Arrow(move.getFrom(), move.getTo(), getPreferences()
-							.getColor(PreferenceKeys.ARROW_MY_COLOR),
-							getPreferences().getBoolean(
-									PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-		}
+		removeAllMoveDecorations();
+		addDecorationsForMove(move, true);
 		board.getSquare(move.getTo()).setPiece(
 				ChessBoardUtils.getColoredPiece(move.getPiece(), move
 						.isWhitesMove()));

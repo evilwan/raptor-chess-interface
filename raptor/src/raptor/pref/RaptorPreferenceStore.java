@@ -359,7 +359,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(SEEK_TABLE_SHOW_UNTIMED, true);
 
 		// Arrows
-		PreferenceConverter.setDefault(this, ARROW_OPPONENT_COLOR, new RGB(255,
+		PreferenceConverter.setDefault(this, ARROW_OBS_OPP_COLOR, new RGB(255,
 				0, 255));
 		PreferenceConverter
 				.setDefault(this, ARROW_MY_COLOR, new RGB(0, 0, 255));
@@ -367,7 +367,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				255));
 		PreferenceConverter.setDefault(this, ARROW_OBS_COLOR,
 				new RGB(0, 0, 255));
-		setDefault(ARROW_SHOW_ON_OBS_MOVES, true);
+		setDefault(ARROW_SHOW_ON_OBS_AND_OPP_MOVES, true);
 		setDefault(ARROW_SHOW_ON_MOVE_LIST_MOVES, true);
 		setDefault(ARROW_SHOW_ON_MY_PREMOVES, true);
 		setDefault(ARROW_SHOW_ON_MY_MOVES, false);
@@ -376,7 +376,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ARROW_WIDTH_PERCENTAGE, 15);
 
 		// Highlights
-		PreferenceConverter.setDefault(this, HIGHLIGHT_OPPONENT_COLOR, new RGB(
+		PreferenceConverter.setDefault(this, HIGHLIGHT_OBS_OPP_COLOR, new RGB(
 				255, 0, 255));
 		PreferenceConverter.setDefault(this, HIGHLIGHT_MY_COLOR, new RGB(0, 0,
 				255));
@@ -384,7 +384,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				0, 0, 255));
 		PreferenceConverter.setDefault(this, HIGHLIGHT_OBS_COLOR, new RGB(0, 0,
 				255));
-		setDefault(HIGHLIGHT_SHOW_ON_OBS_MOVES, true);
+		setDefault(HIGHLIGHT_SHOW_ON_OBS_AND_OPP_MOVES, true);
 		setDefault(HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES, true);
 		setDefault(HIGHLIGHT_SHOW_ON_MY_PREMOVES, true);
 		setDefault(HIGHLIGHT_SHOW_ON_MY_MOVES, false);

@@ -101,6 +101,38 @@ public abstract class ChessBoardController implements BoardConstants,
 		this.connector = connector;
 	}
 
+	public void addDecorationsForLastMoveListMove() {
+		removeAllMoveDecorations();
+		Move lastMove = getGame().getLastMove();
+		if (lastMove != null) {
+			if (getPreferences().getBoolean(
+					PreferenceKeys.HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										lastMove.getFrom(),
+										lastMove.getTo(),
+										getPreferences()
+												.getColor(
+														PreferenceKeys.HIGHLIGHT_OBS_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
+				board.getArrowDecorator().addArrow(
+						new Arrow(lastMove.getFrom(), lastMove.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_OBS_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
+		}
+	}
+
 	/**
 	 * Adds an item changed listener. This listener should be invoked whenever
 	 * the meta information about the game changes e.g. if it is closable, its
@@ -613,6 +645,69 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Adds arrows and highlights based on preference settings and isUserMove.
+	 * 
+	 * @param move
+	 * @param isUserMove
+	 */
+	protected void addDecorationsForMove(Move move, boolean isUserMove) {
+		if (move == null) {
+			return;
+		}
+
+		if (!isUserMove) {
+			if (getPreferences().getBoolean(
+					PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_AND_OPP_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										move.getFrom(),
+										move.getTo(),
+										getPreferences()
+												.getColor(
+														PreferenceKeys.HIGHLIGHT_OBS_OPP_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_OBS_AND_OPP_MOVES)) {
+				board.getArrowDecorator().addArrow(
+						new Arrow(move.getFrom(), move.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_OBS_OPP_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
+		} else {
+			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
+				board
+						.getSquareHighlighter()
+						.addHighlight(
+								new Highlight(
+										move.getFrom(),
+										move.getTo(),
+										getPreferences().getColor(
+												HIGHLIGHT_MY_COLOR),
+										getPreferences()
+												.getBoolean(
+														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
+			}
+			if (getPreferences().getBoolean(
+					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
+				board.getArrowDecorator().addArrow(
+						new Arrow(move.getFrom(), move.getTo(),
+								getPreferences().getColor(
+										PreferenceKeys.ARROW_MY_COLOR),
+								getPreferences().getBoolean(
+										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
+			}
+		}
+	}
+
+	/**
 	 * Adjusts only the ChessBoard squares to match the squares in the game.
 	 * 
 	 * This method is provided so it can easily be overridden.
@@ -719,7 +814,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		} else if (StringUtils.isBlank(whiteRating)) {
 			whiteNameRating = whiteName;
 		} else {
-			whiteNameRating = whiteName + " (" + whiteRating + ")";
+			whiteNameRating = whiteName + " " + whiteRating;
 		}
 
 		if (StringUtils.isBlank(blackName)) {
@@ -727,7 +822,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		} else if (StringUtils.isBlank(blackRating)) {
 			blackNameRating = blackName;
 		} else {
-			blackNameRating = blackName + " (" + blackRating + ")";
+			blackNameRating = blackName + " " + blackRating;
 		}
 
 		board.blackNameRatingLabel.setText(blackNameRating);
@@ -973,85 +1068,16 @@ public abstract class ChessBoardController implements BoardConstants,
 	protected void refreshForMove(Move move) {
 		int fromPiece = board.getSquare(move.getFrom()).getPiece();
 
+		addDecorationsForMove(move, true);
 		if (move.isEnPassant()) {
-
 			int epSquare = move.isWhitesMove() ? move.getTo() - 8 : move
 					.getTo() + 8;
-
-			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-				board
-						.getSquareHighlighter()
-						.addHighlight(
-								new Highlight(
-										move.getFrom(),
-										move.getTo(),
-										getPreferences().getColor(
-												HIGHLIGHT_MY_COLOR),
-										getPreferences()
-												.getBoolean(
-														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-
-			}
-			if (getPreferences().getBoolean(
-					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().addArrow(
-						new Arrow(move.getFrom(), move.getTo(),
-								getPreferences().getColor(
-										PreferenceKeys.ARROW_MY_COLOR),
-								getPreferences().getBoolean(
-										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-			}
-
 			board.getSquare(move.getTo()).setPiece(fromPiece);
 			board.getSquare(epSquare).setPiece(EMPTY);
 			board.getSquare(move.getFrom()).setPiece(EMPTY);
 		} else if (move.isDrop()) {
-			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-				board
-						.getSquareHighlighter()
-						.addHighlight(
-								new Highlight(
-										move.getFrom(),
-										move.getTo(),
-										getPreferences().getColor(
-												HIGHLIGHT_MY_COLOR),
-										getPreferences()
-												.getBoolean(
-														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-			}
-			if (getPreferences().getBoolean(
-					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().addArrow(
-						new Arrow(move.getFrom(), move.getTo(),
-								getPreferences().getColor(
-										PreferenceKeys.ARROW_MY_COLOR),
-								getPreferences().getBoolean(
-										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-			}
 			board.getSquare(move.getTo()).setPiece(fromPiece);
 		} else {
-			if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-				board
-						.getSquareHighlighter()
-						.addHighlight(
-								new Highlight(
-										move.getFrom(),
-										move.getTo(),
-										getPreferences().getColor(
-												HIGHLIGHT_MY_COLOR),
-										getPreferences()
-												.getBoolean(
-														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-			}
-			if (getPreferences().getBoolean(
-					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().addArrow(
-						new Arrow(move.getFrom(), move.getTo(),
-								getPreferences().getColor(
-										PreferenceKeys.ARROW_MY_COLOR),
-								getPreferences().getBoolean(
-										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-			}
 			board.getSquare(move.getFrom()).setPiece(EMPTY);
 			board.getSquare(move.getTo()).setPiece(fromPiece);
 		}
@@ -1064,6 +1090,12 @@ public abstract class ChessBoardController implements BoardConstants,
 	protected void refreshPieceJail() {
 		adjustPieceJail();
 		board.redrawSquares();
+	}
+
+	protected void removeAllMoveDecorations() {
+		System.err.println("Clearing all arrows and highlights.");
+		board.getArrowDecorator().removeAllArrows();
+		board.getSquareHighlighter().removeAllHighlights();
 	}
 
 	protected void setGame(Game game) {

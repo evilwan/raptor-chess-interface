@@ -32,10 +32,8 @@ import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
-import raptor.swt.chess.Arrow;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
-import raptor.swt.chess.Highlight;
 
 /**
  * Examines a game on a backing connector. When examining a game the user is
@@ -216,8 +214,6 @@ public class ExamineController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("examinePositionUpdate " + getGame().getId());
 		}
-
-		// board.unhighlightAllSquares();
 		refresh();
 		onPlayMoveSound();
 	}
@@ -350,8 +346,7 @@ public class ExamineController extends ChessBoardController {
 		}
 
 		board.unhidePieces();
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
+		removeAllMoveDecorations();
 
 		if (ChessBoardUtils.isPieceJailSquare(toSquare)) {
 			SoundService.getInstance().playSound("illegalMove");
@@ -370,32 +365,7 @@ public class ExamineController extends ChessBoardController {
 
 		if (move != null) {
 			connector.makeMove(game, move);
-			if (getPreferences().getBoolean(
-					PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-				board
-						.getSquareHighlighter()
-						.addHighlight(
-								new Highlight(
-										move.getFrom(),
-										move.getTo(),
-										getPreferences()
-												.getColor(
-														PreferenceKeys.HIGHLIGHT_MY_COLOR),
-										getPreferences()
-												.getBoolean(
-														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-			}
-
-			if (getPreferences().getBoolean(
-					PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-				board.getArrowDecorator().addArrow(
-						new Arrow(move.getFrom(), move.getTo(),
-								getPreferences().getColor(
-										PreferenceKeys.ARROW_MY_COLOR),
-								getPreferences().getBoolean(
-										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-			}
-
+			addDecorationsForMove(move, true);
 			refreshForMove(move);
 		} else {
 			examineOnIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,

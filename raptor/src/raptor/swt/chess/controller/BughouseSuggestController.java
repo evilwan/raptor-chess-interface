@@ -125,8 +125,7 @@ public class BughouseSuggestController extends ObserveController {
 					+ GameUtils.getSan(toSquare));
 		}
 		board.unhidePieces();
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
+		removeAllMoveDecorations();
 
 		if (fromSquare == toSquare
 				|| board.getSquare(fromSquare).getPiece() == EMPTY) {
