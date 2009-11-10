@@ -885,7 +885,9 @@ public class PlayingController extends ChessBoardController {
 			final int color = isUserWhite() ? WHITE : BLACK;
 			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
 
-			if (getGame().getVariant() == Variant.bughouse && isUsersMove()) {
+			if ((getGame().getVariant() == Variant.bughouse || getGame()
+					.getVariant() == Variant.fischerRandomBughouse)
+					&& isUsersMove()) {
 				if (getGame().getDropCount(color, PAWN) == 0) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Premove drop "

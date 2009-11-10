@@ -156,7 +156,7 @@ public class BughouseSuggestController extends ObserveController {
 			connector.sendMessage(connector.getPartnerTellPrefix()
 					+ " I suggest " + san);
 		} else {
-			connector.sendMessage(connector.getPartnerTellPrefix() + " Watch "
+			connector.sendMessage(connector.getPartnerTellPrefix() + " Watch out for "
 					+ san);
 		}
 	}
