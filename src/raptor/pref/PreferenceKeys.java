@@ -163,11 +163,11 @@ public interface PreferenceKeys {
 	public static final String BOARD_PIECE_JAIL_SHADOW_ALPHA = "board-piece-jail-empty-alpha";
 	public static final String BOARD_COORDINATES_SIZE_PERCENTAGE = "board-coordinates-size-percentage";
 
-	public static final String ARROW_OPPONENT_COLOR = "arrow-opponent-color";
+	public static final String ARROW_OBS_OPP_COLOR = "arrow-opponent-color";
 	public static final String ARROW_PREMOVE_COLOR = "arrow-premove-color";
 	public static final String ARROW_MY_COLOR = "arrow-my-color";
 	public static final String ARROW_OBS_COLOR = "arrow-obs-color";
-	public static final String ARROW_SHOW_ON_OBS_MOVES = "arrow-show-on-obs-moves";
+	public static final String ARROW_SHOW_ON_OBS_AND_OPP_MOVES = "arrow-show-on-obs-moves";
 	public static final String ARROW_SHOW_ON_MOVE_LIST_MOVES = "arrow-show-on-move-list-moves";
 	public static final String ARROW_SHOW_ON_MY_PREMOVES = "arrow-show-on-my-premoves";
 	public static final String ARROW_SHOW_ON_MY_MOVES = "arrow-show-on-my-moves";
@@ -176,10 +176,10 @@ public interface PreferenceKeys {
 	public static final String ARROW_FADE_AWAY_MODE = "arrow-fade-away-mode";
 
 	public static final String HIGHLIGHT_PREMOVE_COLOR = "hilight-premove-color";
-	public static final String HIGHLIGHT_OPPONENT_COLOR = "hilight-opponent-color";
+	public static final String HIGHLIGHT_OBS_OPP_COLOR = "hilight-opponent-color";
 	public static final String HIGHLIGHT_MY_COLOR = "hilight-my-color";
 	public static final String HIGHLIGHT_OBS_COLOR = "hilight-obs-color";
-	public static final String HIGHLIGHT_SHOW_ON_OBS_MOVES = "hilight-show-on-obs-moves";
+	public static final String HIGHLIGHT_SHOW_ON_OBS_AND_OPP_MOVES = "hilight-show-on-obs-moves";
 	public static final String HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES = "hilight-show-on-move-list-moves";
 	public static final String HIGHLIGHT_SHOW_ON_MY_PREMOVES = "hilight-show-on-my-premoves";
 	public static final String HIGHLIGHT_SHOW_ON_MY_MOVES = "hilight-show-on-my-moves";

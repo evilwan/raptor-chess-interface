@@ -105,7 +105,7 @@ public class PlayingController extends ChessBoardController {
 							return;
 						}
 
-						if (!makePremove(true)) {
+						if (!handlePremoveDrop()) {
 							refreshBoard();
 						}
 					}
@@ -172,8 +172,6 @@ public class PlayingController extends ChessBoardController {
 						}
 
 						try {
-							board.getSquareHighlighter().removeAllHighlights();
-							board.getArrowDecorator().removeAllArrows();
 
 							if (LOG.isDebugEnabled()) {
 								LOG.debug("In gameStateChanged "
@@ -182,7 +180,7 @@ public class PlayingController extends ChessBoardController {
 
 							if (isNewMove) {
 								handleAutoDraw();
-								if (!makePremove(false)) {
+								if (!handlePremove()) {
 									if (LOG.isDebugEnabled()) {
 										LOG
 												.debug("In did not make premove block "
@@ -191,49 +189,8 @@ public class PlayingController extends ChessBoardController {
 									}
 
 									boolean wasUserMove = !isUsersMove();
-									if (!wasUserMove
-											&& getPreferences()
-													.getBoolean(
-															PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
-										board
-												.getSquareHighlighter()
-												.addHighlight(
-														new Highlight(
-																getGame()
-																		.getLastMove()
-																		.getFrom(),
-																getGame()
-																		.getLastMove()
-																		.getTo(),
-																getPreferences()
-																		.getColor(
-																				PreferenceKeys.HIGHLIGHT_OPPONENT_COLOR),
-																getPreferences()
-																		.getBoolean(
-																				PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-									}
-
-									if (!wasUserMove
-											&& getPreferences()
-													.getBoolean(
-															PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
-										board
-												.getArrowDecorator()
-												.addArrow(
-														new Arrow(
-																getGame()
-																		.getLastMove()
-																		.getFrom(),
-																getGame()
-																		.getLastMove()
-																		.getTo(),
-																getPreferences()
-																		.getColor(
-																				PreferenceKeys.ARROW_OPPONENT_COLOR),
-																getPreferences()
-																		.getBoolean(
-																				PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-									}
+									addDecorationsForMove(getGame()
+											.getLastMove(), wasUserMove);
 
 									if (LOG.isDebugEnabled()) {
 										LOG.debug("Invoking refresh "
@@ -255,7 +212,7 @@ public class PlayingController extends ChessBoardController {
 											.debug("This isnt an update from a move, doing a full refresh.");
 								}
 
-								decorateForLastMoveListMove();
+								addDecorationsForLastMoveListMove();
 								refresh();
 							}
 						} catch (Throwable t) {
@@ -444,40 +401,6 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
-	public void decorateForLastMoveListMove() {
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
-
-		Move lastMove = getGame().getLastMove();
-
-		if (lastMove != null) {
-			if (getPreferences().getBoolean(
-					PreferenceKeys.HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES)) {
-				board
-						.getSquareHighlighter()
-						.addHighlight(
-								new Highlight(
-										lastMove.getFrom(),
-										lastMove.getTo(),
-										getPreferences()
-												.getColor(
-														PreferenceKeys.HIGHLIGHT_OBS_COLOR),
-										getPreferences()
-												.getBoolean(
-														PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-			}
-			if (getPreferences().getBoolean(
-					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
-				board.getArrowDecorator().addArrow(
-						new Arrow(lastMove.getFrom(), lastMove.getTo(),
-								getPreferences().getColor(
-										PreferenceKeys.ARROW_OBS_COLOR),
-								getPreferences().getBoolean(
-										PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-			}
-		}
-	}
-
 	@Override
 	public void dispose() {
 		try {
@@ -608,13 +531,12 @@ public class PlayingController extends ChessBoardController {
 	public void onBack() {
 		cursor.setCursorPrevious();
 		refresh(false);
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	public void onClearPremoves() {
 		premoves.clear();
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
+		removeAllMoveDecorations();
 		adjustPremoveLabelHighlightsAndArrows();
 		board.redrawSquares();
 	}
@@ -623,21 +545,21 @@ public class PlayingController extends ChessBoardController {
 	public void onFirst() {
 		cursor.setCursorFirst();
 		refresh(false);
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	@Override
 	public void onForward() {
 		cursor.setCursorNext();
 		refresh(false);
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	@Override
 	public void onLast() {
 		cursor.setCursorMasterLast();
 		refresh(false);
-		decorateForLastMoveListMove();
+		addDecorationsForLastMoveListMove();
 	}
 
 	@Override
@@ -699,8 +621,6 @@ public class PlayingController extends ChessBoardController {
 					+ getSan(fromSquare) + " " + getSan(toSquare));
 		}
 		board.unhidePieces();
-		board.getSquareHighlighter().removeAllHighlights();
-		board.getArrowDecorator().removeAllArrows();
 
 		long startTime = System.currentTimeMillis();
 
@@ -853,8 +773,7 @@ public class PlayingController extends ChessBoardController {
 								"Game rejected move in smart move. This is a bug.");
 					}
 
-					board.getSquareHighlighter().removeAllHighlights();
-					board.getArrowDecorator().removeAllArrows();
+					removeAllMoveDecorations();
 					refreshForMove(move);
 				} else {
 					onPlayIllegalMoveSound();
@@ -875,19 +794,16 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	public void userRightClicked(final int square) {
-		if (isDisposed()) {
+		if (isDisposed() || !getGame().isInState(Game.DROPPABLE_STATE)) {
 			return;
 		}
 
 		if (!ChessBoardUtils.isPieceJailSquare(square)
-				&& getGame().isInState(Game.DROPPABLE_STATE)
 				&& getGame().getPiece(square) == EMPTY) {
 			final int color = isUserWhite() ? WHITE : BLACK;
 			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
 
-			if ((getGame().getVariant() == Variant.bughouse || getGame()
-					.getVariant() == Variant.fischerRandomBughouse)
-					&& isUsersMove()) {
+			if (isBughouse() && isUsersMove()) {
 				if (getGame().getDropCount(color, PAWN) == 0) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item.setText("Premove drop "
@@ -1074,6 +990,8 @@ public class PlayingController extends ChessBoardController {
 	 */
 	@Override
 	protected void adjustPremoveLabelHighlightsAndArrows() {
+		System.err.println("Adjusting premove highlights and arrows.");
+		new Exception().printStackTrace();
 		String labelText = "Premoves: ";
 		synchronized (premoves) {
 			boolean hasAddedPremove = false;
@@ -1125,31 +1043,21 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
-	@Override
-	protected void initClockUpdaters() {
-		if (whiteClockUpdater == null) {
-			whiteClockUpdater = new ClockLabelUpdater(true, this, isUserWhite());
-			blackClockUpdater = new ClockLabelUpdater(false, this,
-					!isUserWhite());
-		}
-	}
-
 	/**
 	 * Runs through the premove queue and tries to make each move. If a move
 	 * succeeds it is made and the rest of the queue is left intact. If a move
 	 * fails it is removed from the queue and the next move is tried.
 	 * 
 	 * If a move succeeded true is returned, otherwise false is returned.
-	 * 
-	 * @param isPremoveDrop
-	 *            true if this is a premoe drop, otherwise false.
 	 */
-	protected boolean makePremove(boolean isPremoveDrop) {
+	protected boolean handlePremove() {
 		if (!isUsersMove()) {
 			return false;
 		}
-		board.getArrowDecorator().removeAllArrows();
-		board.getSquareHighlighter().removeAllHighlights();
+
+		// Remove all arrows and highlights, they will be added back in this
+		// method and after its invoked if it returns false.
+		removeAllMoveDecorations();
 
 		boolean result = false;
 		Move moveMade = null;
@@ -1160,79 +1068,45 @@ public class PlayingController extends ChessBoardController {
 			for (PremoveInfo info : premoves) {
 				Move move = null;
 				try {
-					if (isPremoveDrop) {
-						if (!info.isPremoveDrop) {
-							continue;
-						} else if (getGame()
-								.getDropCount(
-										isUserWhite() ? WHITE : BLACK,
-										getUncoloredPiece(getColoredPieceFromDropSquare(info.fromSquare))) > 0) {
-							try {
-								move = game.makeMove(info.fromSquare,
-										info.toSquare);
-								game.rollback();
-								final Move finalMove = move;
-								ThreadService.getInstance().run(new Runnable() {
-									public void run() {
-										connector.makeMove(game, finalMove);
-									}
-								});
-								// Grabs the last move.
-								refresh();
-								// Adjusts for the new move
-								refreshForMove(move);
-								// Handles auto draw if its pressed.
-								handleAutoDraw();
-								moveMade = move;
-								result = true;
-
-								break;
-							} catch (IllegalArgumentException iae) {
-								getConnector()
-										.onError(
-												"Couldnt make a premove drop. This should never happen.",
-												iae);
-								premovesToRemove.add(info);
-							}
-						}
-					} else {
-						if (info.isPremoveDrop) {
-							premovesToRemove.add(info);
-							continue;
-						} else if (info.promotionColorlessPiece == EMPTY) {
-							move = game
-									.makeMove(info.fromSquare, info.toSquare);
-						} else {
-							move = game
-									.makeMove(info.fromSquare, info.toSquare,
-											info.promotionColorlessPiece);
-						}
-						game.rollback();
-						final Move finalMove = move;
-						ThreadService.getInstance().run(new Runnable() {
-							public void run() {
-								connector.makeMove(game, finalMove);
-							}
-						});
-
-						// Grabs the last move.
-						refresh();
-						// Adjusts for the new move
-						refreshForMove(move);
+					if (info.isPremoveDrop) {
 						premovesToRemove.add(info);
-						// Handles auto draw if its pressed.
-						handleAutoDraw();
-						result = true;
-						moveMade = move;
-
-						break;
+						continue;
+					} else if (info.promotionColorlessPiece == EMPTY) {
+						move = game.makeMove(info.fromSquare, info.toSquare);
+					} else {
+						move = game.makeMove(info.fromSquare, info.toSquare,
+								info.promotionColorlessPiece);
 					}
+					game.rollback();
+					final Move finalMove = move;
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							connector.makeMove(game, finalMove);
+						}
+					});
+
+					// Grabs the last move.
+					refresh();
+					// Adjusts for the new move
+					refreshForMove(move);
+					premovesToRemove.add(info);
+					// Handles auto draw if its pressed.
+					handleAutoDraw();
+					result = true;
+					moveMade = move;
+
+					// They will all be added back at the end.
+					removeAllMoveDecorations();
+
+					break;
+
 				} catch (IllegalArgumentException iae) {
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Invalid premove trying next one in queue.",
 								iae);
 					}
 					premovesToRemove.add(info);
+					iae.printStackTrace();
 				}
 			}
 			if (!result) {
@@ -1243,88 +1117,113 @@ public class PlayingController extends ChessBoardController {
 		}
 		if (result) {
 			if (moveBeforePremove != null) {
-				board.getSquareHighlighter().removeAllHighlights();
-				board.getArrowDecorator().removeAllArrows();
-
-				Move lastMove = getGame().getLastMove();
-
-				if (lastMove != null) {
-					if (getPreferences().getBoolean(
-							PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES)) {
-						board
-								.getSquareHighlighter()
-								.addHighlight(
-										new Highlight(
-												lastMove.getFrom(),
-												lastMove.getTo(),
-												getPreferences()
-														.getColor(
-																PreferenceKeys.HIGHLIGHT_OPPONENT_COLOR),
-												getPreferences()
-														.getBoolean(
-																PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-					}
-
-					if (getPreferences().getBoolean(
-							PreferenceKeys.ARROW_SHOW_ON_OBS_MOVES)) {
-						board
-								.getArrowDecorator()
-								.addArrow(
-										new Arrow(
-												lastMove.getFrom(),
-												lastMove.getTo(),
-												getPreferences()
-														.getColor(
-																PreferenceKeys.ARROW_OPPONENT_COLOR),
-												getPreferences()
-														.getBoolean(
-																PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-					}
-				}
+				// add highlights/arrows for last move.
+				addDecorationsForMove(moveBeforePremove, false);
 			}
-
 			if (moveMade != null) {
-				if (getPreferences().getBoolean(HIGHLIGHT_SHOW_ON_MY_MOVES)) {
-					board
-							.getSquareHighlighter()
-							.addHighlight(
-									new Highlight(
-											moveMade.getFrom(),
-											moveMade.getTo(),
-											getPreferences().getColor(
-													HIGHLIGHT_MY_COLOR),
-											getPreferences()
-													.getBoolean(
-															PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE)));
-				}
-				if (getPreferences().getBoolean(
-						PreferenceKeys.ARROW_SHOW_ON_MY_MOVES)) {
-					board
-							.getArrowDecorator()
-							.addArrow(
-									new Arrow(
-											moveMade.getFrom(),
-											moveMade.getTo(),
-											getPreferences()
-													.getColor(
-															PreferenceKeys.ARROW_MY_COLOR),
-											getPreferences()
-													.getBoolean(
-															PreferenceKeys.ARROW_FADE_AWAY_MODE)));
-				}
+				// add highlights/arrows for this move.
+				addDecorationsForMove(moveMade, true);
 
 				// remove all premoves that have the same start square as this
 				// move.
 				for (int i = 0; i < premoves.size(); i++) {
 					if (premoves.get(i).fromSquare == moveMade.getFrom()) {
+						System.err.println("Removing premove "
+								+ premoves.get(i));
 						premoves.remove(i);
 						i--;
 					}
 				}
 			}
 		}
+
 		adjustPremoveLabelHighlightsAndArrows();
 		return result;
+	}
+
+	/**
+	 * Handles premove drop. THis should only be called on position updates when
+	 * its the users move.
+	 */
+	protected boolean handlePremoveDrop() {
+		if (!isUsersMove() || !isBughouse()) {
+			return false;
+		}
+
+		boolean result = false;
+
+		Move moveMade = null;
+		Move moveBeforePremove = getGame().getLastMove();
+		List<PremoveInfo> premovesToRemove = new ArrayList<PremoveInfo>(
+				premoves.size());
+		for (PremoveInfo info : premoves) {
+			Move move = null;
+			if (!info.isPremoveDrop) {
+				continue;
+			} else if (getGame()
+					.getDropCount(
+							isUserWhite() ? WHITE : BLACK,
+							getUncoloredPiece(getColoredPieceFromDropSquare(info.fromSquare))) > 0) {
+				try {
+					move = game.makeMove(info.fromSquare, info.toSquare);
+					game.rollback();
+					final Move finalMove = move;
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							connector.makeMove(game, finalMove);
+						}
+					});
+
+					// Clear everything a move was made.
+					removeAllMoveDecorations();
+
+					premovesToRemove.add(info);
+					// Grabs the last move.
+					refresh();
+					// Adjusts for the new move
+					refreshForMove(move);
+					// Handles auto draw if its pressed.
+					handleAutoDraw();
+					moveMade = move;
+					result = true;
+
+					break;
+				} catch (IllegalArgumentException iae) {
+					getConnector()
+							.onError(
+									"Couldnt make a premove drop. This should never happen.",
+									iae);
+					premovesToRemove.add(info);
+				}
+			}
+		}
+		premoves.removeAll(premovesToRemove);
+		if (result) {
+			if (moveBeforePremove != null) {
+				// add highlights/arrows for last move.
+				addDecorationsForMove(moveBeforePremove, false);
+			}
+			if (moveMade != null) {
+				// add highlights/arrows for this move.
+				addDecorationsForMove(moveMade, true);
+			}
+		}
+		adjustPremoveLabelHighlightsAndArrows();
+		return result;
+	}
+
+	@Override
+	protected void initClockUpdaters() {
+		if (whiteClockUpdater == null) {
+			whiteClockUpdater = new ClockLabelUpdater(true, this, isUserWhite());
+			blackClockUpdater = new ClockLabelUpdater(false, this,
+					!isUserWhite());
+		}
+	}
+
+	protected boolean isBughouse() {
+		return getGame().getVariant() == Variant.bughouse
+				|| getGame().getVariant() == Variant.fischerRandomBughouse;
 	}
 
 	protected void onPlayGameEndSound() {

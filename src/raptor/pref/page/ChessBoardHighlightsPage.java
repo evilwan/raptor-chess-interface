@@ -41,7 +41,7 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_MOVES,
+				PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_AND_OPP_MOVES,
 				"Show highlights on observed and opponents moves",
 				getFieldEditorParent()));
 
@@ -76,7 +76,7 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 				"My highlight color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_PREMOVE_COLOR,
 				"My premoves highlight color:", getFieldEditorParent()));
-		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_OPPONENT_COLOR,
+		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_OBS_OPP_COLOR,
 				"Opponent highlight color:", getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_OBS_COLOR,
 				"Observe highlight color:", getFieldEditorParent()));
