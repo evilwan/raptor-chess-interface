@@ -24,6 +24,7 @@ import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
+import raptor.RaptorWindowItem;
 import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
@@ -386,7 +387,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 					fics2.connect(dialog.getSelectedProfile());
 
 					if (dialog.isSimulBugLogin()) {
-						// set fics2s simul bug connector.
 						// This is used to automatically send the partner
 						// message after login.
 						// When the partnership is received a
@@ -394,7 +394,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						// is fired and the names of the bug partners are set in
 						// that see the overridden publishEvent for how that
 						// works.
-						fics2.setSimulBugConnector(true);
 						fics2.partnerOnConnect = userName;
 						// Force bug-open to get the partnership message.
 						sendMessage("set bugopen on");
@@ -605,16 +604,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 					}
 				}
 
-				if (isSimulBugConnector) {
+				if (StringUtils.isNotBlank(partnerOnConnect)) {
 					try {
 						Thread.sleep(300);
 					} catch (InterruptedException ie) {
 					}
 					sendMessage("set bugopen on");
-
-					if (StringUtils.isNotBlank(partnerOnConnect)) {
-						sendMessage("partner " + partnerOnConnect);
-					}
+					sendMessage("partner " + partnerOnConnect);
+					partnerOnConnect = null;
 				}
 
 				sendMessage("iset lock 1", true);
@@ -665,9 +662,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						&& getPreferences()
 								.getBoolean(
 										PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP)) {
-					if (!isSimulBugConnector) {
-						SWTUtils.openBugButtonsWindowItem(this);
-					}
+					SWTUtils.openBugButtonsWindowItem(this);
 				}
 			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
 				isSimulBugConnector = false;
@@ -686,6 +681,17 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				if (fics1 != null) {
 					fics1.isSimulBugConnector = false;
 					fics1.simulBugPartnerName = null;
+				}
+
+				// Remove bug buttons if up displayed you have no partner.
+				RaptorWindowItem[] windowItems = Raptor.getInstance()
+						.getWindow().getWindowItems(BugButtonsWindowItem.class);
+				for (RaptorWindowItem item : windowItems) {
+					BugButtonsWindowItem bugButtonsItem = (BugButtonsWindowItem) item;
+					if (bugButtonsItem.getConnector() == this) {
+						Raptor.getInstance().getWindow()
+								.disposeRaptorWindowItem(bugButtonsItem);
+					}
 				}
 			}
 

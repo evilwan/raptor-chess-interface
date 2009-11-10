@@ -267,9 +267,9 @@ public class ChatUtils {
 				currentChar = charAt(text, ++currentPosition);
 			}
 			lineEnd = currentPosition;
-			if (lineEnd >= text.getCharCount() - 1) {
+			if (text.getContent().getLineAtOffset(lineEnd) == text.getContent()
+					.getLineCount()) {
 				result = text.getText(lineStart + 1, text.getCharCount() - 1);
-
 			} else {
 				result = text.getText(lineStart + 1, lineEnd - 1);
 
@@ -307,7 +307,6 @@ public class ChatUtils {
 			return result;
 
 		} catch (Exception e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
