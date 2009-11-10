@@ -1182,8 +1182,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void onInputTextDoubleClick(MouseEvent e) {
 		int caretPosition = chatConsole.inputText.getCaretOffset();
-
 		String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
+
 		if (StringUtils.isNotBlank(url)) {
 			BrowserUtils.openUrl(url);
 		}
@@ -1191,9 +1191,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		String quotedText = ChatUtils.getQuotedText(chatConsole.inputText,
 				caretPosition);
 		if (StringUtils.isNotBlank(quotedText)) {
-			connector.sendMessage(quotedText);
-			onForceAutoScroll();
-			return;
+			url = ChatUtils.getUrl(quotedText);
+			if (url == null) {
+				connector.sendMessage(quotedText);
+				onForceAutoScroll();
+			} else {
+				BrowserUtils.openUrl(url);
+			}
 		}
 	}
 

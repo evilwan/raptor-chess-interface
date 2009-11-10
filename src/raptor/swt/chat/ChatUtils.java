@@ -175,29 +175,30 @@ public class ChatUtils {
 		}
 	}
 
+	public static String getUrl(String text) {
+		if (text != null
+				&& (text.startsWith("http://") || text.startsWith("https://"))) {
+			return text;
+		} else if (text != null
+				&& (text.endsWith(".com") || text.endsWith(".org")
+						|| text.endsWith(".edu") || text.startsWith("www."))
+				&& !text.contains("@")) {
+			if (text.endsWith(".") || text.endsWith(",")) {
+				text = text.substring(0, text.length() - 1);
+			}
+			return "http://" + text;
+		} else {
+			return null;
+		}
+	}
+
 	/**
 	 * Returns the url at the specified position, null if there is not one. This
 	 * method handles ICS wrapping and will remove it and return just the url.
 	 */
 	public static String getUrl(StyledText text, int position) {
 		String candidateWord = getWrappedWord(text, position);
-		if (candidateWord != null
-				&& (candidateWord.startsWith("http://") || candidateWord
-						.startsWith("https://"))) {
-			return candidateWord;
-		} else if (candidateWord != null
-				&& (candidateWord.endsWith(".com")
-						|| candidateWord.endsWith(".org")
-						|| candidateWord.endsWith(".edu") || candidateWord
-						.startsWith("www.")) && !candidateWord.contains("@")) {
-			if (candidateWord.endsWith(".") || candidateWord.endsWith(",")) {
-				candidateWord = candidateWord.substring(0, candidateWord
-						.length() - 1);
-			}
-			return "http://" + candidateWord;
-		} else {
-			return null;
-		}
+		return getUrl(candidateWord);
 	}
 
 	/**
