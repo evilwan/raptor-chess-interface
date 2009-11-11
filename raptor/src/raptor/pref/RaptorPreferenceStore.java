@@ -594,7 +594,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
 		setDefault(
 				BICS_MATCH_CMMANDS,
-				"1 0 zh,3 0 zh,1 0 zh fr,3 0 zh fr,1 0 bughouse, 2 0 bughouse, 1 0 bughouse fr, 2 0 bughouse fr,1 0 bughouse w5,2 0 bughouse w5");
+				"1 0 zh,3 0 zh,1 0 zh fr,3 0 zh fr,1 0 bughouse,2 0 bughouse,1 0 bughouse fr,2 0 bughouse fr,1 0 bughouse w5,2 0 bughouse w5");
 
 		// Bics Primary
 		setDefault(BICS_PRIMARY_USER_NAME, "");
