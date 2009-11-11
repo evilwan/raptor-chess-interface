@@ -13,6 +13,7 @@
  */
 package raptor.pref.page;
 
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.ColorSelector;
 import org.eclipse.jface.preference.PreferencePage;
@@ -78,6 +79,23 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 	protected Control createContents(Composite parent) {
 		parent = new Composite(parent, SWT.NONE);
 		parent.setLayout(new GridLayout(3, false));
+
+		Label label = new Label(parent, SWT.NONE);
+		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 3,
+				1));
+		label
+				.setText(WordUtils
+						.wrap(
+								"\tTo set the channel color for an existing channel, select it from the Channels Combo Box. "
+										+ "Use the color selector to adjust the color and click the 'Save/Add Channel Color' button. "
+										+ "Ignore the buttons on the bottom right don't use those.",
+								70)
+						+ WordUtils
+								.wrap(
+										"\n\tTo add a new channel color "
+												+ "type in the channel number in the box provided set the color and click the 'Save/Add Channel Color'. "
+												+ "Ignore the buttons on the bottom right.",
+										70));
 
 		Label channelNamesLabel = new Label(parent, SWT.NONE);
 		channelNamesLabel.setText("Channels:");
