@@ -150,8 +150,8 @@ public class InactiveController extends ChessBoardController implements
 
 	/**
 	 * Inactive games can be taken over by other games that need to be displayed
-	 * for efficiency. This is an optimization feature. See the constructors
-	 * for more information on how this is set.
+	 * for efficiency. This is an optimization feature. See the constructors for
+	 * more information on how this is set.
 	 */
 	public boolean canBeTakenOver() {
 		return canBeTakenOver;
