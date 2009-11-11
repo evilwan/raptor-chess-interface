@@ -17,6 +17,7 @@ import static raptor.chess.util.GameUtils.bitscanForward;
 import static raptor.chess.util.GameUtils.getBitboard;
 import static raptor.chess.util.GameUtils.getSquare;
 import static raptor.chess.util.ZobristUtils.zobrist;
+import raptor.chess.util.GameUtils;
 
 /**
  * Contains utility methods for fischer random chess. Since java doesnt allow
@@ -58,8 +59,10 @@ public class FischerRandomUtils implements GameConstants {
 				&& fromBB == kingSquareBB
 				&& emptyBetweenFiles(game, 0, initialKingFile,
 						initialShortRookFile)
-				&& isKingEmptyOrRook(game, SQUARE_F1, WHITE)
-				&& isKingEmptyOrRook(game, SQUARE_G1, WHITE)
+				&& isKingEmptyOrRook(game, SQUARE_F1, WHITE,
+						initialShortRookFile)
+				&& isKingEmptyOrRook(game, SQUARE_G1, WHITE,
+						initialShortRookFile)
 				&& !isCastlePathInCheck(game, kingSquare, SQUARE_G1, WHITE)) {
 
 			moves.appendLowPriority(new Move(kingSquare, SQUARE_G1, KING,
@@ -71,8 +74,10 @@ public class FischerRandomUtils implements GameConstants {
 				&& fromBB == kingSquareBB
 				&& emptyBetweenFiles(game, 7, initialKingFile,
 						initialShortRookFile)
-				&& isKingEmptyOrRook(game, SQUARE_F8, BLACK)
-				&& isKingEmptyOrRook(game, SQUARE_G8, BLACK)
+				&& isKingEmptyOrRook(game, SQUARE_F8, BLACK,
+						initialShortRookFile)
+				&& isKingEmptyOrRook(game, SQUARE_G8, BLACK,
+						initialShortRookFile)
 				&& !isCastlePathInCheck(game, kingSquare, SQUARE_G8, BLACK)) {
 
 			moves.appendLowPriority(new Move(kingSquare, SQUARE_G8, KING,
@@ -84,8 +89,10 @@ public class FischerRandomUtils implements GameConstants {
 				&& fromBB == kingSquareBB
 				&& emptyBetweenFiles(game, 0, initialLongRookFile,
 						initialKingFile)
-				&& isKingEmptyOrRook(game, SQUARE_D1, WHITE)
-				&& isKingEmptyOrRook(game, SQUARE_C1, WHITE)
+				&& isKingEmptyOrRook(game, SQUARE_D1, WHITE,
+						initialLongRookFile)
+				&& isKingEmptyOrRook(game, SQUARE_C1, WHITE,
+						initialLongRookFile)
 				&& !isCastlePathInCheck(game, kingSquare, SQUARE_C1, WHITE)) {
 			moves.appendLowPriority(new Move(kingSquare, SQUARE_C1, KING,
 					WHITE, EMPTY, Move.LONG_CASTLING_CHARACTERISTIC));
@@ -96,8 +103,10 @@ public class FischerRandomUtils implements GameConstants {
 				&& fromBB == kingSquareBB
 				&& emptyBetweenFiles(game, 7, initialLongRookFile,
 						initialKingFile)
-				&& isKingEmptyOrRook(game, SQUARE_D8, BLACK)
-				&& isKingEmptyOrRook(game, SQUARE_C8, BLACK)
+				&& isKingEmptyOrRook(game, SQUARE_D8, BLACK,
+						initialLongRookFile)
+				&& isKingEmptyOrRook(game, SQUARE_C8, BLACK,
+						initialLongRookFile)
 				&& !isCastlePathInCheck(game, kingSquare, SQUARE_C8, BLACK)) {
 			moves.appendLowPriority(new Move(kingSquare, SQUARE_C8, KING,
 					BLACK, EMPTY, Move.LONG_CASTLING_CHARACTERISTIC));
@@ -129,10 +138,11 @@ public class FischerRandomUtils implements GameConstants {
 	 * the specified color.
 	 */
 	public static boolean isKingEmptyOrRook(ClassicGame game, int square,
-			int color) {
+			int color, int intitialRookFile) {
 		return game.board[square] == EMPTY || game.board[square] == KING
 				&& (game.getColorBB(color) & getBitboard(square)) != 0
 				|| game.board[square] == ROOK
+				&& intitialRookFile == GameUtils.getFile(square)
 				&& (game.getColorBB(color) & getBitboard(square)) != 0;
 	}
 
