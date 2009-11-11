@@ -710,6 +710,7 @@ public class PlayingController extends ChessBoardController {
 				premoves.clear();
 				premoves.add(premoveInfo);
 
+				removeAllMoveDecorations();
 				adjustPremoveLabelHighlightsAndArrows();
 
 				board.unhidePieces();
@@ -1104,7 +1105,6 @@ public class PlayingController extends ChessBoardController {
 								iae);
 					}
 					premovesToRemove.add(info);
-					iae.printStackTrace();
 				}
 			}
 			if (!result) {
