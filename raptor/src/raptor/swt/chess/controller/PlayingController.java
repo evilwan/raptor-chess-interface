@@ -180,6 +180,9 @@ public class PlayingController extends ChessBoardController {
 
 							if (isNewMove) {
 								handleAutoDraw();
+								if (!wasLastMovePremove) {
+									removeAllMoveDecorations();
+								}
 								if (!handlePremove()) {
 									if (LOG.isDebugEnabled()) {
 										LOG
@@ -249,6 +252,7 @@ public class PlayingController extends ChessBoardController {
 			.synchronizedList(new ArrayList<PremoveInfo>(10));
 	protected Random random = new SecureRandom();
 	protected ToolBar toolbar;
+	protected boolean wasLastMovePremove = false;
 
 	/**
 	 * Creates a playing controller. One of the players white or black playing
@@ -1134,6 +1138,8 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		adjustPremoveLabelHighlightsAndArrows();
+
+		wasLastMovePremove = result;
 		return result;
 	}
 
