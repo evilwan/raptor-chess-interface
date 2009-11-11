@@ -898,7 +898,7 @@ public abstract class IcsConnector implements Connector {
 			String value = tok.nextToken();
 			String quadString = tok.nextToken();
 			Quadrant quad = StringUtils.isNotBlank(quadString) ? Quadrant
-					.valueOf(tok.nextToken()) : null;
+					.valueOf(quadString) : null;
 
 			if (type.equals("Channel")) {
 				if (!Raptor.getInstance().getWindow().containsChannelItem(this,

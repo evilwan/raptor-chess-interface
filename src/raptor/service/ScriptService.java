@@ -243,15 +243,18 @@ public class ScriptService {
 			}
 		});
 
-		for (File file : files) {
-			try {
-				ChatScript script = ChatScript.load(file.getAbsolutePath());
-				chatScriptMap.put(script.getName(), script);
-				script.setSystemScript(true);
-				count++;
-			} catch (IOException ioe) {
-				Raptor.getInstance().onError(
-						"Error loading game script " + file.getName() + ",ioe");
+		if (files != null) {
+			for (File file : files) {
+				try {
+					ChatScript script = ChatScript.load(file.getAbsolutePath());
+					chatScriptMap.put(script.getName(), script);
+					script.setSystemScript(true);
+					count++;
+				} catch (IOException ioe) {
+					Raptor.getInstance().onError(
+							"Error loading game script " + file.getName()
+									+ ",ioe");
+				}
 			}
 		}
 
@@ -263,14 +266,17 @@ public class ScriptService {
 			}
 		});
 
-		for (File file : userFiles) {
-			try {
-				ChatScript script = ChatScript.load(file.getAbsolutePath());
-				chatScriptMap.put(script.getName(), script);
-				count++;
-			} catch (IOException ioe) {
-				Raptor.getInstance().onError(
-						"Error loading game script " + file.getName() + ",ioe");
+		if (userFiles != null) {
+			for (File file : userFiles) {
+				try {
+					ChatScript script = ChatScript.load(file.getAbsolutePath());
+					chatScriptMap.put(script.getName(), script);
+					count++;
+				} catch (IOException ioe) {
+					Raptor.getInstance().onError(
+							"Error loading game script " + file.getName()
+									+ ",ioe");
+				}
 			}
 		}
 
@@ -292,15 +298,18 @@ public class ScriptService {
 			}
 		});
 
-		for (File file : files) {
-			try {
-				GameScript script = GameScript.load(file.getAbsolutePath());
-				script.setSystemScript(true);
-				gameScriptMap.put(script.getName(), script);
-				count++;
-			} catch (IOException ioe) {
-				Raptor.getInstance().onError(
-						"Error loading game script " + file.getName() + ",ioe");
+		if (files != null) {
+			for (File file : files) {
+				try {
+					GameScript script = GameScript.load(file.getAbsolutePath());
+					script.setSystemScript(true);
+					gameScriptMap.put(script.getName(), script);
+					count++;
+				} catch (IOException ioe) {
+					Raptor.getInstance().onError(
+							"Error loading game script " + file.getName()
+									+ ",ioe");
+				}
 			}
 		}
 
@@ -312,14 +321,17 @@ public class ScriptService {
 			}
 		});
 
-		for (File file : userFiles) {
-			try {
-				GameScript script = GameScript.load(file.getAbsolutePath());
-				gameScriptMap.put(script.getName(), script);
-				count++;
-			} catch (IOException ioe) {
-				Raptor.getInstance().onError(
-						"Error loading game script " + file.getName() + ",ioe");
+		if (userFiles != null) {
+			for (File file : userFiles) {
+				try {
+					GameScript script = GameScript.load(file.getAbsolutePath());
+					gameScriptMap.put(script.getName(), script);
+					count++;
+				} catch (IOException ioe) {
+					Raptor.getInstance().onError(
+							"Error loading game script " + file.getName()
+									+ ",ioe");
+				}
 			}
 		}
 
