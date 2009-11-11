@@ -1126,8 +1126,6 @@ public class PlayingController extends ChessBoardController {
 				// move.
 				for (int i = 0; i < premoves.size(); i++) {
 					if (premoves.get(i).fromSquare == moveMade.getFrom()) {
-						System.err.println("Removing premove "
-								+ premoves.get(i));
 						premoves.remove(i);
 						i--;
 					}
