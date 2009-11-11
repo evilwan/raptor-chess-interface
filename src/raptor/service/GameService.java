@@ -31,7 +31,9 @@ public class GameService {
 	 */
 	public static class GameServiceAdapter implements GameServiceListener {
 		public void droppablePiecesChanged(Game game) {
+		}
 
+		public void examinedGameBecameSetup(Game game) {
 		}
 
 		public void gameCreated(Game game) {
@@ -49,6 +51,9 @@ public class GameService {
 		public void illegalMove(Game game, String move) {
 		}
 
+		public void observedGameBecameExamined(Game game) {
+		}
+
 		public void setupGameBecameExamined(Game game) {
 		}
 	}
@@ -62,6 +67,11 @@ public class GameService {
 		 * @param game
 		 */
 		public void droppablePiecesChanged(Game game);
+
+		/**
+		 * Invoked when an examined game becomes a setup game.
+		 */
+		public void examinedGameBecameSetup(Game game);
 
 		/**
 		 * Invoked when a game is created.
@@ -91,6 +101,11 @@ public class GameService {
 		 * Invoked when a user makes a move on a connector that is invalid.
 		 */
 		public void illegalMove(Game game, String move);
+
+		/**
+		 * Invoked when a user becomes an examiner of an observed game.
+		 */
+		public void observedGameBecameExamined(Game game);
 
 		/**
 		 * Invoked when a game which was previously in setup mode has entered
@@ -125,6 +140,20 @@ public class GameService {
 			synchronized (listeners) {
 				for (GameServiceListener listener : listeners) {
 					listener.droppablePiecesChanged(game);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 */
+	public void fireExaminedGameBecameSetup(String gameId) {
+		Game game = getGame(gameId);
+		if (game != null) {
+			synchronized (listeners) {
+				for (GameServiceListener listener : listeners) {
+					listener.examinedGameBecameSetup(game);
 				}
 			}
 		}
@@ -200,6 +229,20 @@ public class GameService {
 			synchronized (listeners) {
 				for (GameServiceListener listener : listeners) {
 					listener.illegalMove(game, move);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 */
+	public void fireObservedGameBecameExamined(String gameId) {
+		Game game = getGame(gameId);
+		if (game != null) {
+			synchronized (listeners) {
+				for (GameServiceListener listener : listeners) {
+					listener.observedGameBecameExamined(game);
 				}
 			}
 		}

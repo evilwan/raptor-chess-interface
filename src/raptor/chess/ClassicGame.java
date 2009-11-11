@@ -952,6 +952,50 @@ public class ClassicGame implements Game {
 	}
 
 	/**
+	 * Copys the information from this game into the passed in game.
+	 */
+	public void overwrite(Game game, boolean ignoreHashes) {
+		ClassicGame gameToOverwrite = (ClassicGame) game;
+		gameToOverwrite.id = id;
+		gameToOverwrite.state = state;
+		gameToOverwrite.pgnHeaderMap = new HashMap<PgnHeader, String>(
+				pgnHeaderMap);
+		gameToOverwrite.moves = moves.deepCopy();
+		gameToOverwrite.halfMoveCount = halfMoveCount;
+		System.arraycopy(colorBB, 0, gameToOverwrite.colorBB, 0,
+				gameToOverwrite.colorBB.length);
+		for (int i = 0; i < pieceBB.length; i++) {
+			System.arraycopy(pieceBB[i], 0, gameToOverwrite.pieceBB[i], 0,
+					pieceBB[i].length);
+		}
+		System.arraycopy(board, 0, gameToOverwrite.board, 0, board.length);
+		gameToOverwrite.occupiedBB = occupiedBB;
+		gameToOverwrite.emptyBB = emptyBB;
+		gameToOverwrite.notColorToMoveBB = notColorToMoveBB;
+		System.arraycopy(castling, 0, gameToOverwrite.castling, 0,
+				castling.length);
+		gameToOverwrite.initialEpSquare = initialEpSquare;
+		gameToOverwrite.epSquare = epSquare;
+		gameToOverwrite.colorToMove = colorToMove;
+		gameToOverwrite.fiftyMoveCount = fiftyMoveCount;
+		for (int i = 0; i < pieceCounts.length; i++) {
+			System.arraycopy(pieceCounts[i], 0, gameToOverwrite.pieceCounts[i],
+					0, pieceCounts[i].length);
+		}
+		for (int i = 0; i < dropCounts.length; i++) {
+			System.arraycopy(dropCounts[i], 0, gameToOverwrite.dropCounts[i],
+					0, dropCounts[i].length);
+		}
+		gameToOverwrite.zobristPositionHash = zobristPositionHash;
+		gameToOverwrite.zobristGameHash = zobristGameHash;
+
+		if (!ignoreHashes) {
+			System.arraycopy(moveRepHash, 0, gameToOverwrite.moveRepHash, 0,
+					moveRepHash.length);
+		}
+	}
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public void removeHeader(PgnHeader headerName) {
@@ -2008,50 +2052,6 @@ public class ClassicGame implements Game {
 	protected Move makeSanMoveOverride(String shortAlgebraic,
 			SanValidations validations, Move[] pseudoLegals) {
 		return null;
-	}
-
-	/**
-	 * Copys the information from this game into the passed in game.
-	 */
-	protected void overwrite(Game game, boolean ignoreHashes) {
-		ClassicGame gameToOverwrite = (ClassicGame) game;
-		gameToOverwrite.id = id;
-		gameToOverwrite.state = state;
-		gameToOverwrite.pgnHeaderMap = new HashMap<PgnHeader, String>(
-				pgnHeaderMap);
-		gameToOverwrite.moves = moves.deepCopy();
-		gameToOverwrite.halfMoveCount = halfMoveCount;
-		System.arraycopy(colorBB, 0, gameToOverwrite.colorBB, 0,
-				gameToOverwrite.colorBB.length);
-		for (int i = 0; i < pieceBB.length; i++) {
-			System.arraycopy(pieceBB[i], 0, gameToOverwrite.pieceBB[i], 0,
-					pieceBB[i].length);
-		}
-		System.arraycopy(board, 0, gameToOverwrite.board, 0, board.length);
-		gameToOverwrite.occupiedBB = occupiedBB;
-		gameToOverwrite.emptyBB = emptyBB;
-		gameToOverwrite.notColorToMoveBB = notColorToMoveBB;
-		System.arraycopy(castling, 0, gameToOverwrite.castling, 0,
-				castling.length);
-		gameToOverwrite.initialEpSquare = initialEpSquare;
-		gameToOverwrite.epSquare = epSquare;
-		gameToOverwrite.colorToMove = colorToMove;
-		gameToOverwrite.fiftyMoveCount = fiftyMoveCount;
-		for (int i = 0; i < pieceCounts.length; i++) {
-			System.arraycopy(pieceCounts[i], 0, gameToOverwrite.pieceCounts[i],
-					0, pieceCounts[i].length);
-		}
-		for (int i = 0; i < dropCounts.length; i++) {
-			System.arraycopy(dropCounts[i], 0, gameToOverwrite.dropCounts[i],
-					0, dropCounts[i].length);
-		}
-		gameToOverwrite.zobristPositionHash = zobristPositionHash;
-		gameToOverwrite.zobristGameHash = zobristGameHash;
-
-		if (!ignoreHashes) {
-			System.arraycopy(moveRepHash, 0, gameToOverwrite.moveRepHash, 0,
-					moveRepHash.length);
-		}
 	}
 
 	protected void rollbackCastlingMove(Move move) {

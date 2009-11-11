@@ -318,6 +318,8 @@ public class GameUtils implements GameConstants {
 				return "\u265E";
 			case BP:
 				return "\u265F";
+			case EMPTY:
+				return "EMPTY";
 			}
 		} else {
 			switch (coloredPiece) {
@@ -345,6 +347,8 @@ public class GameUtils implements GameConstants {
 				return "N";
 			case BP:
 				return "P";
+			case EMPTY:
+				return "EMPTY";
 			}
 		}
 

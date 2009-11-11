@@ -37,6 +37,7 @@ import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.swt.chess.PieceJailChessSquare;
 
 /**
  * A controller used when setting up a position. When the controller receives a
@@ -52,7 +53,7 @@ public class SetupController extends ChessBoardController {
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
-		public void gameInactive(Game game) {
+		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -63,7 +64,7 @@ public class SetupController extends ChessBoardController {
 
 							onPlayGameEndSound();
 							InactiveController inactiveController = new InactiveController(
-									getGame());
+									game);
 							getBoard().setController(inactiveController);
 
 							inactiveController.setBoard(board);
@@ -136,7 +137,7 @@ public class SetupController extends ChessBoardController {
 		}
 
 		@Override
-		public void setupGameBecameExamined(Game game) {
+		public void setupGameBecameExamined(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -146,7 +147,7 @@ public class SetupController extends ChessBoardController {
 							}
 
 							ExamineController examineController = new ExamineController(
-									getGame(), connector);
+									game, connector);
 							getBoard().setController(examineController);
 							examineController
 									.setItemChangedListeners(itemChangedListeners);
@@ -179,9 +180,15 @@ public class SetupController extends ChessBoardController {
 	};
 	protected ToolBar toolbar;
 	protected boolean unexamineOnDispose = true;
+	protected boolean isWhiteOnTopInit;
+
+	public SetupController(Game game, boolean isWhiteOnTop, Connector connector) {
+		super(game, connector);
+		isWhiteOnTopInit = isWhiteOnTop;
+	}
 
 	public SetupController(Game game, Connector connector) {
-		super(game, connector);
+		this(game, false, connector);
 	}
 
 	@Override
@@ -252,11 +259,14 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void init() {
-		board.setWhitePieceJailOnTop(false);
-		board.setWhiteOnTop(false);
+		board.setWhiteOnTop(isWhiteOnTopInit);
+		board.setWhitePieceJailOnTop(isWhiteOnTopInit);
+
 		if (getPreferences().getBoolean(PreferenceKeys.BOARD_COOLBAR_MODE)) {
 			getToolbar(null);
 		}
+
+		board.getControl().layout(true, true);
 		refresh();
 		connector.getGameService().addGameServiceListener(listener);
 		fireItemChanged();
@@ -510,6 +520,23 @@ public class SetupController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * Adjusts the contents of the piece jail based on the game state.
+	 */
+	@Override
+	protected void adjustPieceJail() {
+		if (isDisposed()) {
+			return;
+		}
+
+		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
+			PieceJailChessSquare square = board.getPieceJailSquares()[DROPPABLE_PIECES[i]];
+			square.setPiece(DROPPABLE_PIECES[i]);
+			square.setText("");
+			square.redraw();
+		}
+	}
+
 	protected void adjustToDropMove(Move move, boolean isRedrawing) {
 		removeAllMoveDecorations();
 		addDecorationsForMove(move, true);
@@ -523,11 +550,11 @@ public class SetupController extends ChessBoardController {
 	}
 
 	protected void onPlayGameEndSound() {
-		SoundService.getInstance().playSound("obsGameEnd");
+		// SoundService.getInstance().playSound("obsGameEnd");
 	}
 
 	protected void onPlayGameStartSound() {
-		SoundService.getInstance().playSound("gameStart");
+		// SoundService.getInstance().playSound("gameStart");
 	}
 
 	protected void onPlayMoveSound() {

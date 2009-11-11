@@ -510,6 +510,11 @@ public interface Game extends GameConstants {
 	public boolean move(Move move);
 
 	/**
+	 * Copys the information from this game into the passed in game.
+	 */
+	public void overwrite(Game game, boolean ignoreHashes);
+
+	/**
 	 * Removes the specified pgn header from this game.
 	 */
 	public void removeHeader(PgnHeader headerName);

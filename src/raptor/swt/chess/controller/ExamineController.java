@@ -46,7 +46,47 @@ public class ExamineController extends ChessBoardController {
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
-		public void gameInactive(Game game) {
+		public void examinedGameBecameSetup(final Game game) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							if (isDisposed()) {
+								return;
+							}
+							SetupController setupController = new SetupController(
+									game, board.isWhiteOnTop(), connector);
+							getBoard().setController(setupController);
+							setupController
+									.setItemChangedListeners(itemChangedListeners);
+							setupController.setBoard(board);
+							connector.getGameService()
+									.removeGameServiceListener(listener);
+
+							// Set the listeners to null so they wont get
+							// cleared and disposed
+							setItemChangedListeners(null);
+
+							// Clear the cool bar and init the examineController
+							// controller.
+							ChessBoardUtils.clearCoolbar(getBoard());
+							setupController.init();
+
+							unexamineOnDispose = false;
+							ExamineController.this.dispose();
+						} catch (Throwable t) {
+							connector
+									.onError(
+											"ExamineController.examinedGameBecameSetup",
+											t);
+						}
+					}
+				});
+			}
+		}
+
+		@Override
+		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -57,7 +97,7 @@ public class ExamineController extends ChessBoardController {
 						try {
 							onPlayGameEndSound();
 							InactiveController inactiveController = new InactiveController(
-									getGame());
+									game);
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 
@@ -144,9 +184,17 @@ public class ExamineController extends ChessBoardController {
 
 	};
 	protected ToolBar toolbar;
+	protected boolean initWhiteOnTop;
+	protected boolean unexamineOnDispose = true;
+
+	public ExamineController(Game game, boolean isWhiteOnTop,
+			Connector connector) {
+		super(game, connector);
+		initWhiteOnTop = isWhiteOnTop;
+	}
 
 	public ExamineController(Game game, Connector connector) {
-		super(game, connector);
+		this(game, false, connector);
 	}
 
 	@Override
@@ -182,7 +230,7 @@ public class ExamineController extends ChessBoardController {
 	public void dispose() {
 		try {
 			connector.getGameService().removeGameServiceListener(listener);
-			if (connector.isConnected()
+			if (unexamineOnDispose && connector.isConnected()
 					&& getGame().isInState(Game.ACTIVE_STATE)) {
 				connector.onUnexamine(getGame());
 			}
@@ -261,7 +309,7 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void init() {
-		board.setWhiteOnTop(false);
+		board.setWhiteOnTop(initWhiteOnTop);
 
 		/**
 		 * In Droppable games (bughouse/crazyhouse) you own your own piece jail
@@ -279,10 +327,15 @@ public class ExamineController extends ChessBoardController {
 		if (getPreferences().getBoolean(PreferenceKeys.BOARD_COOLBAR_MODE)) {
 			getToolbar(null);
 		}
+		board.getControl().layout(true, true);
 
 		refresh();
 		connector.getGameService().addGameServiceListener(listener);
 		fireItemChanged();
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Inited Examine Controller: " + getGame().getId());
+		}
 	}
 
 	@Override
@@ -382,11 +435,11 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	protected void onPlayGameEndSound() {
-		SoundService.getInstance().playSound("obsGameEnd");
+		// SoundService.getInstance().playSound("obsGameEnd");
 	}
 
 	protected void onPlayGameStartSound() {
-		SoundService.getInstance().playSound("gameStart");
+		// SoundService.getInstance().playSound("gameStart");
 	}
 
 	protected void onPlayMoveSound() {

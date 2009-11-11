@@ -35,6 +35,7 @@ import raptor.chess.FischerRandomGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Result;
+import raptor.chess.SetupGame;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.connector.Connector;
@@ -224,6 +225,46 @@ public class IcsParser implements GameConstants {
 		}
 
 		return events.toArray(new ChatEvent[0]);
+	}
+
+	/**
+	 * Invoked when a user is examining a game and it becomes a setup position.
+	 */
+	public void processExaminedGameBecameSetup() {
+		Game[] activeGames = connector.getGameService().getAllActiveGames();
+		for (Game game : activeGames) {
+			if (game.isInState(Game.EXAMINING_STATE)) {
+				if (LOG.isDebugEnabled()) {
+					LOG
+							.debug("Handling transition from examined game to bsetup.");
+				}
+				SetupGame setupGame = new SetupGame();
+				game.overwrite(setupGame, true);
+
+				// Set all the drop pieces.
+				setupGame.setPieceCount(WHITE, PAWN, 1);
+				setupGame.setPieceCount(WHITE, KNIGHT, 1);
+				setupGame.setPieceCount(WHITE, BISHOP, 1);
+				setupGame.setPieceCount(WHITE, ROOK, 1);
+				setupGame.setPieceCount(WHITE, QUEEN, 1);
+				setupGame.setPieceCount(WHITE, KING, 1);
+				setupGame.setPieceCount(BLACK, PAWN, 1);
+				setupGame.setPieceCount(BLACK, KNIGHT, 1);
+				setupGame.setPieceCount(BLACK, BISHOP, 1);
+				setupGame.setPieceCount(BLACK, ROOK, 1);
+				setupGame.setPieceCount(BLACK, QUEEN, 1);
+				setupGame.setPieceCount(BLACK, KING, 1);
+
+				// Adjust the state since it was cleared after the overwrite.
+				setupGame.clearState(Game.EXAMINING_STATE);
+				setupGame.addState(Game.SETUP_STATE);
+				setupGame.addState(Game.DROPPABLE_STATE);
+				connector.getGameService().addGame(setupGame);
+				connector.getGameService().fireExaminedGameBecameSetup(
+						game.getId());
+				break;
+			}
+		}
 	}
 
 	public void setConnector(IcsConnector connector) {
@@ -421,7 +462,8 @@ public class IcsParser implements GameConstants {
 				RemovingObsGameMessage removingObsGameMessage = removingObsGameParser
 						.parse(line);
 				if (removingObsGameMessage != null) {
-					process(removingObsGameMessage, connector.getGameService());
+					process(removingObsGameMessage, inboundMessage, connector
+							.getGameService());
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 					continue;
 				}
@@ -446,6 +488,11 @@ public class IcsParser implements GameConstants {
 					// It is just being used here to set the user we are
 					// following so white on top
 					// can be set properly.
+				}
+
+				if (line.startsWith("Entering setup mode.")
+						&& !inboundMessage.contains("<12>")) {
+					processExaminedGameBecameSetup();
 				}
 
 				result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
@@ -566,7 +613,7 @@ public class IcsParser implements GameConstants {
 		}
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			// Check to see if this was for an examined game.
+			// Check to see if this was for a newly examined game.
 			Style12Message style12 = exaimineGamesWaitingOnMoves
 					.get(message.gameId);
 			if (style12 != null) {
@@ -592,8 +639,48 @@ public class IcsParser implements GameConstants {
 								+ message.gameId);
 			}
 		} else {
-			IcsUtils.updateGamesMoves(game, message, isBicsParser);
-			service.fireGameMovesAdded(game.getId());
+			Style12Message style12 = exaimineGamesWaitingOnMoves
+					.get(message.gameId);
+			if (style12 != null) {
+				// Both observed games becoming examined games and
+				// setup games becoming examined games will flow through here.
+
+				// Distinguishes between setup and observed.
+				boolean isSetup = game.isInState(Game.SETUP_STATE);
+
+				exaimineGamesWaitingOnMoves.remove(message.gameId);
+				game = IcsUtils.createExaminedGame(style12, message);
+				B1Message b1Message = exaimineB1sWaitingOnMoves.get(game
+						.getId());
+				if (b1Message != null) {
+					updateGameForB1(game, b1Message);
+					exaimineB1sWaitingOnMoves.remove(game.getId());
+				}
+				service.addGame(game);
+				// Respect the flip variable if its set.
+				game.setHeader(PgnHeader.WhiteOnTop, style12.isWhiteOnTop ? "1"
+						: "0");
+
+				if (isSetup) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Firing fireSetupGameBecameExamined.");
+					}
+					service.fireSetupGameBecameExamined(game.getId());
+				} else {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Firing fireObservedGameBecameExamined.");
+					}
+					// Need a delay for puzzlebot sometimes it opens too fast.
+					try {
+						Thread.sleep(250);
+					} catch (InterruptedException ie) {
+					}
+					service.fireObservedGameBecameExamined(game.getId());
+				}
+			} else {
+				IcsUtils.updateGamesMoves(game, message, isBicsParser);
+				service.fireGameMovesAdded(game.getId());
+			}
 		}
 	}
 
@@ -620,7 +707,8 @@ public class IcsParser implements GameConstants {
 		}
 	}
 
-	protected void process(RemovingObsGameMessage message, GameService service) {
+	protected void process(RemovingObsGameMessage message,
+			String entireMessage, GameService service) {
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
 			if (LOG.isDebugEnabled()) {
@@ -629,15 +717,19 @@ public class IcsParser implements GameConstants {
 								+ message);
 			}
 		} else {
-			game.setHeader(PgnHeader.ResultDescription,
-					"Interrupted by unobserve");
-			game.setHeader(PgnHeader.Result, Result.UNDETERMINED
-					.getDescription());
-			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
-			game.addState(Game.INACTIVE_STATE);
-			service.fireGameInactive(game.getId());
-			service.removeGame(game);
-			takebackParser.clearTakebackMessages(game.getId());
+			if (!entireMessage.contains("has made you an examiner of game ")) {
+				game.setHeader(PgnHeader.ResultDescription,
+						"Interrupted by unobserve");
+				game.setHeader(PgnHeader.Result, Result.UNDETERMINED
+						.getDescription());
+				game
+						.clearState(Game.ACTIVE_STATE
+								| Game.IS_CLOCK_TICKING_STATE);
+				game.addState(Game.INACTIVE_STATE);
+				service.fireGameInactive(game.getId());
+				service.removeGame(game);
+				takebackParser.clearTakebackMessages(game.getId());
+			}
 		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processed removing obs game: " + message);
@@ -666,8 +758,7 @@ public class IcsParser implements GameConstants {
 				processStyle12Creation(message, service, entireMessage);
 
 			} else {
-				processStyle12Creation(g1Message, message, service,
-						entireMessage);
+				processG1Creation(g1Message, message, service, entireMessage);
 			}
 		}
 
@@ -710,64 +801,11 @@ public class IcsParser implements GameConstants {
 		return result;
 	}
 
-	protected ChatEvent processSought(String message) {
-		ChatEvent result = null;
-		if (soughtParser != null) {
-			Seek[] seeks = soughtParser.parse(message);
-			if (seeks != null) {
-				connector.getSeekService().setSeeks(seeks);
-				result = new ChatEvent(null, ChatType.SEEKS, message);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * Playing,Observing,Examining style 12 adjustments flow through here.
-	 */
-	protected void processStyle12Adjustment(Game game, Style12Message message,
-			GameService service, String entireMessage) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Processing obs/playing/ex position move.");
-		}
-
-		// Takebacks may have effected the state of the game so first
-		// adjsut to those.
-		// adjust takebacks will also do nothing on refreshes and end
-		// games
-		// but will return true.
-		if (!IcsUtils.adjustToTakebacks(game, message, connector)) {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Making move in obs/playing position.");
-			}
-			// Now add the move to the game.
-			// Game Ends and Refreshes dont involve adding a move.
-			if (IcsUtils.addCurrentMove(game, message)) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Position was a move firing state changed.");
-				}
-				service.fireGameStateChanged(message.gameId, true);
-			} else { // I'm not sure this block of code is ever hit
-				// anymore.
-				// TO DO: look at removing it.
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Position was not a move firing state changed.");
-				}
-				service.fireGameStateChanged(message.gameId, false);
-			}
-		} else {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Adjusted for takebacks.");
-			}
-			service.fireGameStateChanged(message.gameId, false);
-		}
-	}
-
 	/**
 	 * Observed/Playing games starts flow here (i.e. All games that contain a G1
 	 * message)
 	 */
-	protected void processStyle12Creation(G1Message g1Message,
+	protected void processG1Creation(G1Message g1Message,
 			Style12Message message, GameService service, String entireMessage) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processing new obs/playing game.");
@@ -840,6 +878,103 @@ public class IcsParser implements GameConstants {
 		}
 	}
 
+	protected ChatEvent processSought(String message) {
+		ChatEvent result = null;
+		if (soughtParser != null) {
+			Seek[] seeks = soughtParser.parse(message);
+			if (seeks != null) {
+				connector.getSeekService().setSeeks(seeks);
+				result = new ChatEvent(null, ChatType.SEEKS, message);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Playing,Observing,Examining style 12 adjustments flow through here.
+	 */
+	protected void processStyle12Adjustment(Game game, Style12Message message,
+			GameService service, String entireMessage) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing obs/playing/ex position move.");
+		}
+
+		if (entireMessage.contains("- entering examine mode.")) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Handling bsetup to examine mode transition.");
+			}
+			// Handles one case of the transition from bsetup mode to examine
+			// mode.
+			Game examineGame = IcsUtils.createGame(message, entireMessage);
+			if (message.relation == Style12Message.EXAMINING_GAME_RELATION
+					&& !examineGame.isInState(Game.SETUP_STATE)) {
+				exaimineGamesWaitingOnMoves.put(game.getId(), message);
+				connector.sendMessage("moves " + message.gameId, true,
+						ChatType.MOVES);
+			}
+		} else if (game.isInState(Game.OBSERVING_EXAMINED_STATE)
+				&& message.relation == Style12Message.EXAMINING_GAME_RELATION) {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Handling observer became examiner transition.");
+			}
+
+			// Handles a user becoming an examiner of a game he/she was
+			// observing.
+			exaimineGamesWaitingOnMoves.put(game.getId(), message);
+			connector.sendMessage("moves " + message.gameId, true,
+					ChatType.MOVES);
+		} else if (game.isInState(Game.EXAMINING_STATE)
+				&& entireMessage.contains("Entering setup mode.\n")) {
+			if (LOG.isDebugEnabled()) {
+				LOG
+						.debug("Handling examined game became setup game transition.");
+			}
+			// Handles an examined game becoming a setup game.
+
+			game = IcsUtils.createGame(message, entireMessage);
+			service.addGame(game);
+			service.fireExaminedGameBecameSetup(game.getId());
+		} else {
+			// No game state transition occured.
+			if (LOG.isDebugEnabled()) {
+				LOG
+						.debug("No state transitions occured. Processing style12 on existing game.");
+			}
+
+			// Takebacks may have effected the state of the game so first
+			// adjsut to those.
+			// adjust takebacks will also do nothing on refreshes and end
+			// games
+			// but will return true.
+			if (!IcsUtils.adjustToTakebacks(game, message, connector)) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Making move in obs/playing position.");
+				}
+				// Now add the move to the game.
+				// Game Ends and Refreshes dont involve adding a move.
+				if (IcsUtils.addCurrentMove(game, message)) {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Position was a move firing state changed.");
+					}
+					service.fireGameStateChanged(message.gameId, true);
+				} else { // I'm not sure this block of code is ever hit
+					// anymore.
+					// TO DO: look at removing it.
+					if (LOG.isDebugEnabled()) {
+						LOG
+								.debug("Position was not a move firing state changed.");
+					}
+					service.fireGameStateChanged(message.gameId, false);
+				}
+			} else {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Adjusted for takebacks.");
+				}
+				service.fireGameStateChanged(message.gameId, false);
+			}
+		}
+	}
+
 	/**
 	 * Examined/Bsetup/Isolated Positions game starts flow through here (i.e.
 	 * All games that didnt have a G1 message)
@@ -896,13 +1031,12 @@ public class IcsParser implements GameConstants {
 
 		if (entireMessage
 				.contains("Game is validated - entering examine mode.\n")) {
-
-			// Games changing from Setup to Examine mode flow through
-			// here.
-			game.clearState(Game.SETUP_STATE);
-			game.clearState(Game.DROPPABLE_STATE);
-			IcsUtils.resetGame(game, message);
-			service.fireSetupGameBecameExamined(message.gameId);
+			// Add this game to the games waiting on moves.
+			// Send a moves message.
+			// Transition from BSETUP to EXAMINE when moves arrives.
+			exaimineGamesWaitingOnMoves.put(game.getId(), message);
+			connector.sendMessage("moves " + message.gameId, true,
+					ChatType.MOVES);
 		} else {
 			// Clear out the game and start over.
 			// There is no telling what happened

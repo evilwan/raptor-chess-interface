@@ -851,19 +851,6 @@ public abstract class ChessBoardController implements BoardConstants,
 
 	/**
 	 * Adjusts the contents of the piece jail based on the game state.
-	 * 
-	 * <pre>
-	 * SETUP_STATE:
-	 * The piece jail squares contain the game.PieceCounts for the respective piece.
-	 * 
-	 * DROPPABLE_STATE:
-	 * The piece jail squares contain the game.DropCounts for the respective piece.
-	 * 
-	 * DEFAULT:
-	 * The piece jail squares contain the captured piece counts of the respective piece.
-	 * </pre>
-	 * 
-	 * *TO DO add adjustments when game is droppable.
 	 */
 	protected void adjustPieceJail() {
 		if (isDisposed()) {
@@ -875,8 +862,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			int count = 0;
 			PieceJailChessSquare square = board.pieceJailSquares[DROPPABLE_PIECES[i]];
 
-			if (game.isInState(Game.DROPPABLE_STATE)
-					&& !game.isInState(Game.SETUP_STATE)) {
+			if (game.isInState(Game.DROPPABLE_STATE)) {
 				count = getGame().getDropCount(
 						coloredPiece,
 						ChessBoardUtils
@@ -891,20 +877,13 @@ public abstract class ChessBoardController implements BoardConstants,
 												.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
 			}
 
-			if (game.isInState(Game.SETUP_STATE)) {
-				if (count > 0) {
-					square.setPiece(coloredPiece);
-				} else {
-					square.setPiece(EMPTY);
-				}
+			if (count == 0) {
+				square.setPiece(GameConstants.EMPTY);
 			} else {
-				if (count == 0) {
-					square.setPiece(GameConstants.EMPTY);
-				} else {
-					square.setPiece(DROPPABLE_PIECES[i]);
-				}
-				square.setText(ChessBoardUtils.pieceCountToString(count));
+				square.setPiece(DROPPABLE_PIECES[i]);
 			}
+			square.setText(ChessBoardUtils.pieceCountToString(count));
+
 			square.redraw();
 		}
 	}
