@@ -482,6 +482,11 @@ public class GameCursor implements Game {
 		}
 	}
 
+	public void overwrite(Game game, boolean ignoreHashes) {
+		throw new UnsupportedOperationException(
+				"This operation is not supported in GameCursor");
+	}
+
 	public void removeHeader(PgnHeader headerName) {
 		throw new UnsupportedOperationException(
 				"This operation is not supported in GameCursor");
@@ -674,7 +679,6 @@ public class GameCursor implements Game {
 	public void setPiece(int square, int piece) {
 		throw new UnsupportedOperationException(
 				"This operation is not supported in GameCursor");
-
 	}
 
 	public void setPieceBB(int color, int piece, long bb) {

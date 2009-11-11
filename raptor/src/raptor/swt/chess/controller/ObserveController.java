@@ -157,9 +157,51 @@ public class ObserveController extends ChessBoardController {
 					}
 				});
 			}
+
+		}
+
+		@Override
+		public void observedGameBecameExamined(final Game game) {
+			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				board.getControl().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							if (isDisposed()) {
+								return;
+							}
+							ExamineController examineController = new ExamineController(
+									game, board.isWhiteOnTop(), connector);
+							getBoard().setController(examineController);
+							examineController
+									.setItemChangedListeners(itemChangedListeners);
+							examineController.setBoard(board);
+							connector.getGameService()
+									.removeGameServiceListener(listener);
+
+							// Set the listeners to null so they wont get
+							// cleared and disposed
+							setItemChangedListeners(null);
+
+							// Clear the cool bar and init the examineController
+							// controller.
+							ChessBoardUtils.clearCoolbar(getBoard());
+							examineController.init();
+
+							unobserveOnDispose = false;
+							ObserveController.this.dispose();
+						} catch (Throwable t) {
+							connector
+									.onError(
+											"ObserveController.observedGameBecameExamined",
+											t);
+						}
+					}
+				});
+			}
 		}
 	};
 	protected ToolBar toolbar;
+	protected boolean unobserveOnDispose = true;
 
 	/**
 	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
@@ -188,7 +230,7 @@ public class ObserveController extends ChessBoardController {
 	public void dispose() {
 		try {
 			getConnector().getGameService().removeGameServiceListener(listener);
-			if (getConnector().isConnected()
+			if (unobserveOnDispose && getConnector().isConnected()
 					&& getGame().isInState(Game.ACTIVE_STATE)) {
 				getConnector().onUnobserve(getGame());
 			}

@@ -114,7 +114,7 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		@Override
-		public void gameInactive(Game game) {
+		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -132,7 +132,7 @@ public class PlayingController extends ChessBoardController {
 
 							// Now swap controllers to the inactive controller.
 							InactiveController inactiveController = new InactiveController(
-									getGame());
+									game);
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 							inactiveController

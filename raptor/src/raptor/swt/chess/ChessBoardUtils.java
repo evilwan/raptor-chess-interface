@@ -635,8 +635,21 @@ public class ChessBoardUtils implements BoardConstants {
 			public void run() {
 				Quadrant quadrant = getQuadrantForController(controller,
 						isBughouseOtherBoard);
-				ChessBoardWindowItem item = Raptor.getInstance().getWindow()
-						.getChessBoardWindowItemToTakeOver(quadrant);
+				ChessBoardWindowItem item = null;
+
+				if (Raptor.getInstance().getPreferences().getBoolean(
+						PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES)) {
+					item = Raptor.getInstance().getWindow()
+							.getChessBoardWindowItemToTakeOver(quadrant);
+					if (item == null
+							&& controller.getGame().getVariant() != Variant.bughouse
+							&& controller.getGame().getVariant() != Variant.fischerRandomBughouse) {
+						item = Raptor.getInstance().getWindow()
+								.getChessBoardWindowItemToTakeOver(
+										quadrant == Quadrant.III ? Quadrant.IV
+												: Quadrant.III);
+					}
+				}
 
 				if (item == null) {
 					item = new ChessBoardWindowItem(controller,
