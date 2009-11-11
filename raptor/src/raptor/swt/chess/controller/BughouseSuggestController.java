@@ -58,7 +58,7 @@ public class BughouseSuggestController extends ObserveController {
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!isDisposed()) {
 			return ChessBoardUtils.isPieceJailSquare(squareId) ? true
-					: getGame().getPiece(squareId) == EMPTY;
+					: getGame().getPiece(squareId) != EMPTY;
 		}
 		return false;
 	}
@@ -128,7 +128,8 @@ public class BughouseSuggestController extends ObserveController {
 		removeAllMoveDecorations();
 
 		if (fromSquare == toSquare
-				|| board.getSquare(fromSquare).getPiece() == EMPTY) {
+				|| board.getSquare(fromSquare).getPiece() == EMPTY
+				|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
 			if (LOG.isDebugEnabled()) {
 				LOG
 						.debug("User tried to make a move where from square == to square or toSquare was the piece jail.");
@@ -142,6 +143,11 @@ public class BughouseSuggestController extends ObserveController {
 		}
 
 		int fromColoredPiece = board.getSquare(fromSquare).getPiece();
+		if (fromColoredPiece == EMPTY
+				&& ChessBoardUtils.isPieceJailSquare(fromSquare)) {
+			fromColoredPiece = GameUtils
+					.getColoredPieceFromDropSquare(fromColoredPiece);
+		}
 		boolean isColoredPieceWhite = GameUtils.isWhitePiece(fromColoredPiece);
 		String san = GameUtils.getPseudoSan(getGame(), fromSquare, toSquare,
 				false);
@@ -154,6 +160,8 @@ public class BughouseSuggestController extends ObserveController {
 			connector.sendMessage(connector.getPartnerTellPrefix()
 					+ " Watch out for " + san);
 		}
+
+		refreshBoard();
 	}
 
 	@Override

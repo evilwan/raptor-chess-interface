@@ -195,17 +195,19 @@ public class ActionService {
 			}
 		});
 
-		for (File file : files) {
-			try {
-				Properties properties = new Properties();
-				properties.load(new FileInputStream(file));
-				RaptorAction action = RaptorActionFactory.load(properties);
-				nameToActionMap.put(action.getName(), action);
-				action.setSystemAction(true);
-				count++;
-			} catch (IOException ioe) {
-				Raptor.getInstance().onError(
-						"Error loading action " + file.getName() + ",ioe");
+		if (files != null) {
+			for (File file : files) {
+				try {
+					Properties properties = new Properties();
+					properties.load(new FileInputStream(file));
+					RaptorAction action = RaptorActionFactory.load(properties);
+					nameToActionMap.put(action.getName(), action);
+					action.setSystemAction(true);
+					count++;
+				} catch (IOException ioe) {
+					Raptor.getInstance().onError(
+							"Error loading action " + file.getName() + ",ioe");
+				}
 			}
 		}
 
@@ -216,17 +218,19 @@ public class ActionService {
 			}
 		});
 
-		for (File file : userFiles) {
-			try {
-				Properties properties = new Properties();
-				properties.load(new FileInputStream(file));
-				RaptorAction action = RaptorActionFactory.load(properties);
-				nameToActionMap.put(action.getName(), action);
-				action.setSystemAction(false);
-				count++;
-			} catch (IOException ioe) {
-				Raptor.getInstance().onError(
-						"Error loading action " + file.getName() + ",ioe");
+		if (userFiles != null) {
+			for (File file : userFiles) {
+				try {
+					Properties properties = new Properties();
+					properties.load(new FileInputStream(file));
+					RaptorAction action = RaptorActionFactory.load(properties);
+					nameToActionMap.put(action.getName(), action);
+					action.setSystemAction(false);
+					count++;
+				} catch (IOException ioe) {
+					Raptor.getInstance().onError(
+							"Error loading action " + file.getName() + ",ioe");
+				}
 			}
 		}
 
