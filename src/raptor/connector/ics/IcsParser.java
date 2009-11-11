@@ -343,6 +343,11 @@ public class IcsParser implements GameConstants {
 				|| game.getVariant() == Variant.fischerRandomBughouse;
 	}
 
+	protected boolean isCrazyhouse(Game game) {
+		return game.getVariant() == Variant.crazyhouse
+				|| game.getVariant() == Variant.fischerRandomCrazyhouse;
+	}
+
 	protected boolean observePartnerBoardForGame(Game game) {
 		boolean result = false;
 		if (game.isInState(Game.PLAYING_STATE)) {
@@ -487,8 +492,7 @@ public class IcsParser implements GameConstants {
 				}
 			}
 		} else {
-			if (isBicsParser && game.getVariant() == Variant.crazyhouse
-					&& !containedStyle12) {
+			if (isBicsParser && isCrazyhouse(game) && !containedStyle12) {
 				// See the documentation on the variable for an explanation of
 				// why this is done.
 				return;
