@@ -1093,7 +1093,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	protected void removeAllMoveDecorations() {
-		System.err.println("Clearing all arrows and highlights.");
 		board.getArrowDecorator().removeAllArrows();
 		board.getSquareHighlighter().removeAllHighlights();
 	}
