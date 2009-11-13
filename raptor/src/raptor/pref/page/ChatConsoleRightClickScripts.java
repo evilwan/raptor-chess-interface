@@ -298,7 +298,6 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 			}
 		});
 		refreshTables();
-		composite.pack();
 		return composite;
 	}
 

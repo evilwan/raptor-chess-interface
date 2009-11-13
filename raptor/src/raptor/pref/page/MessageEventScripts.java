@@ -76,16 +76,15 @@ public class MessageEventScripts extends PreferencePage {
 								"\tMessage Event Scripts have access to the methods to the following methods in the context: "
 										+ "getMessage() (returns the entire message), getMessageSource (returns the person sending "
 										+ "the channel/personal tell), and getMessageChannel (returns the channel if the tell was a "
-										+ "channel tell). To activate/inactiveate a script click on it then check the active checkbox "
-										+ "and then save."
+										+ "channel tell). To activate/inactiveate a script click on the left right arrows."
 										+ "See the Scripting wiki on the raptor site "
 										+ "http://code.google.com/p/raptor-chess-interface/wiki/Scripting for more details.",
 								70));
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
-		tableComposite.setLayout(new GridLayout(2, false));
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true));
+				true, 3, 1));
+		tableComposite.setLayout(new GridLayout(3, false));
 
 		activeScriptsTable = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
@@ -104,6 +103,61 @@ public class MessageEventScripts extends PreferencePage {
 						loadControls(selection);
 					}
 				});
+
+		Composite addRemoveComposite = new Composite(tableComposite, SWT.NONE);
+		addRemoveComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				false, true));
+		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+		addRemoveComposite.setLayout(rowLayout);
+		Label strut = new Label(addRemoveComposite, SWT.NONE);
+		strut.setText(" ");
+		Label strut2 = new Label(addRemoveComposite, SWT.NONE);
+		strut2.setText(" ");
+		Label strut3 = new Label(addRemoveComposite, SWT.NONE);
+		strut3.setText(" ");
+		Label strut4 = new Label(addRemoveComposite, SWT.NONE);
+		strut4.setText(" ");
+		Button addButton = new Button(addRemoveComposite, SWT.PUSH);
+		addButton.setImage(Raptor.getInstance().getIcon("back"));
+		addButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int selectedIndex = inactiveScriptsTable.getTable()
+						.getSelectionIndex();
+				if (selectedIndex == -1) {
+					return;
+				}
+				String selection = inactiveScriptsTable.getTable().getItem(
+						selectedIndex).getText(0);
+
+				ChatScript script = ScriptService.getInstance().getChatScript(
+						selection);
+				script.setActive(true);
+				ScriptService.getInstance().saveChatScript(script);
+				refreshTables();
+			}
+		});
+
+		Button removeButton = new Button(addRemoveComposite, SWT.PUSH);
+		removeButton.setImage(Raptor.getInstance().getIcon("next"));
+		removeButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int selectedIndex = activeScriptsTable.getTable()
+						.getSelectionIndex();
+				if (selectedIndex == -1) {
+					return;
+				}
+				String selection = activeScriptsTable.getTable().getItem(
+						selectedIndex).getText(0);
+
+				ChatScript script = ScriptService.getInstance().getChatScript(
+						selection);
+				script.setActive(false);
+				ScriptService.getInstance().saveChatScript(script);
+				refreshTables();
+			}
+		});
 
 		inactiveScriptsTable = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
@@ -228,7 +282,6 @@ public class MessageEventScripts extends PreferencePage {
 		inactiveScriptsTable.sort(0);
 		refreshTables();
 		tableComposite.setSize(tableComposite.computeSize(SWT.DEFAULT, 200));
-		composite.pack();
 		return composite;
 	}
 

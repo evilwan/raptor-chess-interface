@@ -72,7 +72,7 @@ public class ActionKeyBindingsPage extends PreferencePage {
 				| SWT.H_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		actionsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
 				false, 3, 1));
-		actionsTable.addColumn("Key Stroke", SWT.LEFT, 10, true, null);
+		actionsTable.addColumn("Key Stroke", SWT.LEFT, 20, true, null);
 		actionsTable.addColumn("Action Name", SWT.LEFT, 20, true, null);
 		actionsTable.addColumn("Category", SWT.LEFT, 20, true, null);
 		actionsTable.addColumn("Description", SWT.LEFT, 40, true, null);
@@ -201,7 +201,6 @@ public class ActionKeyBindingsPage extends PreferencePage {
 		loadControls(actionsTable.getTable().getItem(
 				actionsTable.getTable().getSelectionIndex()).getText(1));
 		actionsTable.setSize(actionsTable.computeSize(SWT.DEFAULT, 200));
-		composite.pack();
 		return composite;
 	}
 
