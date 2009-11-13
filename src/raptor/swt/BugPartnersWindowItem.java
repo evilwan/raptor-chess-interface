@@ -14,17 +14,14 @@
 package raptor.swt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -32,8 +29,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Quadrant;
@@ -47,6 +46,11 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
+import raptor.swt.RaptorTable.TableListener;
+import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.ChatUtils;
+import raptor.swt.chat.controller.PersonController;
+import raptor.util.RatingComparator;
 
 public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 
@@ -57,15 +61,9 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 	protected Composite composite;
 	protected Combo minAvailablePartnersFilter;
 	protected Combo maxAvailablePartnersFilter;
-	protected Table availablePartnersTable;
-	protected Button isUpdating;
 	protected boolean isActive = false;
-	protected TableColumn lastStortedColumn;
-	protected boolean wasLastSortAscending;
-	protected Bugger[] currentBuggers;
-	protected TableColumn ratingColumn;
-	protected TableColumn nameColumn;
-	protected TableColumn statusColumn;
+	protected RaptorTable table;
+
 	protected Runnable timer = new Runnable() {
 		public void run() {
 			if (isActive) {
@@ -91,12 +89,7 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 		}
 
 		public void unpartneredBuggersChanged(Bugger[] newUnpartneredBuggers) {
-			synchronized (availablePartnersTable) {
-				Comparator<Bugger> comparator = getComparatorForRefresh();
-				currentBuggers = newUnpartneredBuggers;
-				Arrays.sort(currentBuggers, comparator);
-				refreshTable();
-			}
+			refreshTable();
 		}
 	};
 
@@ -210,93 +203,48 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 					}
 				});
 
-		isUpdating = new Button(ratingFilterComposite, SWT.CHECK);
-		isUpdating.setText("Update");
-		isUpdating
-				.setToolTipText("Toggles whether or not the table is being updated from events. "
-						+ "You can uncheck this to select a partner from a list without having to "
-						+ "fight the scrollbar then check it again to get a recent list.");
-		isUpdating.setSelection(true);
-		isUpdating.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (isUpdating.getSelection()) {
-					refreshTable();
+		table = new RaptorTable(composite, SWT.BORDER | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		table.addColumn("Rating", SWT.LEFT, 25, true, new RatingComparator());
+		table.addColumn("Name", SWT.LEFT, 50, true, null);
+		table.addColumn("Status", SWT.LEFT, 25, true, null);
+
+		// Sort twice so it will sort by rating descending.
+		table.sort(0);
+		table.sort(0);
+
+		table.addRowListener(new TableListener() {
+
+			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
+				service.getConnector().onPartner(rowData[1]);
+
+			}
+
+			public void rowRightClicked(MouseEvent event, String[] rowData) {
+				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
+				addPersonMenuItems(menu, rowData[1]);
+				if (menu.getItemCount() > 0) {
+					menu.setLocation(table.getTable().toDisplay(event.x,
+							event.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!composite.getDisplay().readAndDispatch()) {
+							composite.getDisplay().sleep();
+						}
+					}
 				}
+				menu.dispose();
+
+			}
+
+			public void tableSorted() {
+			}
+
+			public void tableUpdated() {
 			}
 		});
-
-		Composite tableComposite = new Composite(composite, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true));
-		tableComposite.setLayout(new FillLayout());
-		availablePartnersTable = new Table(tableComposite, SWT.BORDER
-				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-
-		ratingColumn = new TableColumn(availablePartnersTable, SWT.LEFT);
-		nameColumn = new TableColumn(availablePartnersTable, SWT.LEFT);
-		statusColumn = new TableColumn(availablePartnersTable, SWT.LEFT);
-
-		ratingColumn.setText("Rating");
-		nameColumn.setText("Name");
-		statusColumn.setText("Status");
-
-		ratingColumn.setWidth(50);
-		nameColumn.setWidth(115);
-		statusColumn.setWidth(90);
-
-		ratingColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				synchronized (availablePartnersTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == ratingColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = ratingColumn;
-
-					Arrays.sort(currentBuggers,
-							wasLastSortAscending ? Bugger.BY_RATING_ASCENDING
-									: Bugger.BY_RATING_DESCENDING);
-					refreshTable();
-				}
-			}
-		});
-
-		nameColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				synchronized (availablePartnersTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == nameColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = nameColumn;
-
-					Arrays.sort(currentBuggers,
-							wasLastSortAscending ? Bugger.BY_NAME_ASCENDING
-									: Bugger.BY_NAME_DESCENDING);
-					refreshTable();
-				}
-			}
-		});
-
-		statusColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				synchronized (availablePartnersTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == statusColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = statusColumn;
-
-					Arrays.sort(currentBuggers,
-							wasLastSortAscending ? Bugger.BY_STATUS_ASCENDING
-									: Bugger.BY_STATUS_DESCENDING);
-					refreshTable();
-				}
-			}
-		});
-		availablePartnersTable.setHeaderVisible(true);
 
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
@@ -311,19 +259,19 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 
 			public void widgetSelected(SelectionEvent e) {
 				int[] selectedIndexes = null;
-				synchronized (availablePartnersTable) {
-					selectedIndexes = availablePartnersTable
-							.getSelectionIndices();
+				synchronized (table.getTable()) {
+					selectedIndexes = table.getTable().getSelectionIndices();
 				}
 				if (selectedIndexes == null || selectedIndexes.length == 0) {
 					Raptor.getInstance().alert(
 							"You must first some select buggers to partner.");
 				} else {
-					synchronized (availablePartnersTable) {
+					synchronized (table.getTable()) {
 						for (int i = 0; i < selectedIndexes.length; i++) {
 							service.getConnector().onPartner(
-									availablePartnersTable.getItem(
-											selectedIndexes[i]).getText(1));
+									table.getTable()
+											.getItem(selectedIndexes[i])
+											.getText(1));
 						}
 					}
 				}
@@ -337,27 +285,22 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				synchronized (availablePartnersTable) {
-					TableItem[] items = availablePartnersTable.getItems();
+				synchronized (table.getTable()) {
+					TableItem[] items = table.getTable().getItems();
 					for (TableItem item : items) {
 						service.getConnector().onPartner(item.getText(1));
 					}
 				}
 			}
 		});
-
-		if (currentBuggers != null) {
-			Arrays.sort(currentBuggers, getComparatorForRefresh());
-			refreshTable();
-		}
-
-		service.getUnpartneredBuggers();
+		service.refreshUnpartneredBuggers();
+		refreshTable();
 	}
 
 	public void onActivate() {
 		if (!isActive) {
 			isActive = true;
-			service.getUnpartneredBuggers();
+			service.refreshUnpartneredBuggers();
 			ThreadService
 					.getInstance()
 					.scheduleOneShot(
@@ -380,25 +323,55 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 
-	protected Comparator<Bugger> getComparatorForRefresh() {
-		Comparator<Bugger> comparator = null;
-		if (lastStortedColumn == null) {
-			comparator = Bugger.BY_RATING_DESCENDING;
-			lastStortedColumn = ratingColumn;
-			wasLastSortAscending = false;
-		} else {
-			if (lastStortedColumn == ratingColumn) {
-				comparator = wasLastSortAscending ? Bugger.BY_RATING_ASCENDING
-						: Bugger.BY_RATING_DESCENDING;
-			} else if (lastStortedColumn == nameColumn) {
-				comparator = wasLastSortAscending ? Bugger.BY_NAME_ASCENDING
-						: Bugger.BY_NAME_DESCENDING;
-			} else if (lastStortedColumn == statusColumn) {
-				comparator = wasLastSortAscending ? Bugger.BY_STATUS_ASCENDING
-						: Bugger.BY_STATUS_DESCENDING;
+	protected void addPersonMenuItems(Menu menu, String word) {
+		if (getConnector().isLikelyPerson(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String person = getConnector().parsePerson(word);
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add a tab for person: " + person);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					if (!Raptor.getInstance().getWindow()
+							.containsPersonalTellItem(getConnector(), person)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new PersonController(getConnector(), person));
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
+						ChatUtils.appendPreviousChatsToController(windowItem
+								.getConsole());
+					}
+				}
+			});
+
+			final String[][] connectorPersonItems = getConnector()
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText(connectorPersonItems[i][0]);
+					final int index = i;
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							getConnector().sendMessage(
+									connectorPersonItems[index][1]);
+						}
+					});
+				}
 			}
 		}
-		return comparator;
+	}
+
+	protected Bugger[] getFilteredBuggers() {
+		Bugger[] buggers = service.getUnpartneredBuggers();
+		List<Bugger> result = new ArrayList<Bugger>(buggers.length);
+		for (Bugger bugger : buggers) {
+			if (passesFilterCriteria(bugger)) {
+				result.add(bugger);
+			}
+		}
+		return result.toArray(new Bugger[0]);
 	}
 
 	protected boolean passesFilterCriteria(Bugger bugger) {
@@ -419,55 +392,20 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 	protected void refreshTable() {
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				if (availablePartnersTable.isDisposed()) {
+				if (table.isDisposed()) {
 					return;
 				}
-				if (isUpdating.getSelection()) {
-					synchronized (availablePartnersTable) {
-						int[] selectedIndexes = availablePartnersTable
-								.getSelectionIndices();
-						List<String> selectedNamesBeforeRefresh = new ArrayList<String>(
-								selectedIndexes.length);
 
-						for (int index : selectedIndexes) {
-							String name = availablePartnersTable.getItem(index)
-									.getText(1);
-							selectedNamesBeforeRefresh.add(name);
-						}
-
-						TableItem[] items = availablePartnersTable.getItems();
-						for (TableItem item : items) {
-							item.dispose();
-						}
-
-						for (Bugger bugger : currentBuggers) {
-							if (passesFilterCriteria(bugger)) {
-								TableItem tableItem = new TableItem(
-										availablePartnersTable, SWT.NONE);
-								tableItem.setText(new String[] {
-										bugger.getRating(), bugger.getName(),
-										bugger.getStatus().toString() });
-							}
-						}
-
-						List<Integer> indexes = new ArrayList<Integer>(
-								selectedNamesBeforeRefresh.size());
-						TableItem[] newItems = availablePartnersTable
-								.getItems();
-						for (int i = 0; i < newItems.length; i++) {
-							if (selectedNamesBeforeRefresh.contains(newItems[i]
-									.getText(1))) {
-								indexes.add(i);
-							}
-						}
-						if (indexes.size() > 0) {
-							int[] indexesArray = new int[indexes.size()];
-							for (int i = 0; i < indexes.size(); i++) {
-								indexesArray[i] = indexes.get(i);
-							}
-							availablePartnersTable.select(indexesArray);
-						}
+				synchronized (table.getTable()) {
+					Bugger[] currentBuggers = getFilteredBuggers();
+					String[][] newData = new String[currentBuggers.length][3];
+					for (int i = 0; i < currentBuggers.length; i++) {
+						newData[i][0] = currentBuggers[i].getRating();
+						newData[i][1] = currentBuggers[i].getName();
+						newData[i][2] = currentBuggers[i].getStatus()
+								.toString();
 					}
+					table.refreshTable(newData);
 				}
 			}
 		});

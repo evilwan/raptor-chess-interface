@@ -13,14 +13,12 @@
  */
 package raptor.pref.page;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -31,9 +29,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
@@ -42,24 +37,22 @@ import raptor.action.ScriptedAction;
 import raptor.action.RaptorAction.Category;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.service.ActionService;
+import raptor.swt.RaptorTable;
 import raptor.swt.SWTUtils;
+import raptor.swt.RaptorTable.TableListener;
 import raptor.util.RaptorUtils;
 
 public class ActionScriptsPage extends PreferencePage {
 	protected RaptorActionContainer container;
 	protected Combo icons;
 	protected Combo categories;
-	protected Table scriptedActionsTable;
+	protected RaptorTable scriptedActionsTable;
 	protected Composite iconComposite;
 	protected Composite composite;
 	protected Label icon;
 	protected Text nameText;
 	protected Text descriptionText;
 	protected StyledText scriptText;
-	protected TableColumn lastStortedColumn;
-	protected TableColumn nameColumn;
-	protected TableColumn descriptionColumn;
-	protected TableColumn categoryColumn;
 	protected boolean wasLastSortAscending;
 
 	public ActionScriptsPage() {
@@ -94,65 +87,39 @@ public class ActionScriptsPage extends PreferencePage {
 												+ "resources/icons directory.",
 										70));
 
-		Composite tableComposite = new Composite(composite, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
-				false, 3, 1));
-		scriptedActionsTable = new Table(tableComposite, SWT.BORDER
+		scriptedActionsTable = new RaptorTable(composite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-		scriptedActionsTable.setHeaderVisible(true);
+		scriptedActionsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				false, false, 3, 1));
+		scriptedActionsTable.addColumn("Script Name", SWT.LEFT, 30, true, null);
+		scriptedActionsTable.addColumn("Script Category", SWT.LEFT, 20, true,
+				null);
+		scriptedActionsTable.addColumn("Description", SWT.LEFT, 50, true, null);
+		scriptedActionsTable.addRowListener(new TableListener() {
+			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
+			}
 
-		nameColumn = new TableColumn(scriptedActionsTable, SWT.LEFT);
-		categoryColumn = new TableColumn(scriptedActionsTable, SWT.LEFT);
-		descriptionColumn = new TableColumn(scriptedActionsTable, SWT.LEFT);
-		nameColumn.setText("Script Name");
-		nameColumn.setWidth(150);
-		categoryColumn.setText("Script Category");
-		categoryColumn.setWidth(100);
-		descriptionColumn.setText("Description");
-		descriptionColumn.setWidth(200);
+			public void rowRightClicked(MouseEvent event, String[] rowData) {
+			}
 
-		nameColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == nameColumn ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = nameColumn;
-				refreshActions();
+			public void tableSorted() {
+			}
+
+			public void tableUpdated() {
 			}
 		});
 
-		categoryColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == categoryColumn ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = categoryColumn;
-				refreshActions();
-			}
-		});
-
-		descriptionColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == descriptionColumn ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = descriptionColumn;
-				refreshActions();
-			}
-		});
-
-		scriptedActionsTable.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = scriptedActionsTable.getSelectionIndex();
-				String selection = scriptedActionsTable.getItem(selectedIndex)
-						.getText(0);
-				loadControls(selection);
-			}
-		});
+		scriptedActionsTable.getTable().addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						int selectedIndex = scriptedActionsTable.getTable()
+								.getSelectionIndex();
+						String selection = scriptedActionsTable.getTable()
+								.getItem(selectedIndex).getText(0);
+						loadControls(selection);
+					}
+				});
 
 		Composite nameComposite = new Composite(composite, SWT.NONE);
 		nameComposite.setLayout(new GridLayout(2, false));
@@ -263,15 +230,16 @@ public class ActionScriptsPage extends PreferencePage {
 					Raptor.getInstance().alert("Script can not be empty");
 				} else {
 					ActionService.getInstance().saveAction(scriptedAction);
-
-					int indexBeforeSave = scriptedActionsTable
-							.getSelectionIndex();
 					refreshActions();
-					if (indexBeforeSave != -1) {
-						scriptedActionsTable.setSelection(indexBeforeSave);
-						loadControls(scriptedActionsTable.getItem(
-								scriptedActionsTable.getSelectionIndex())
-								.getText(0));
+					scriptedActionsTable.getTable().deselectAll();
+
+					for (int i = 0; i < scriptedActionsTable.getTable()
+							.getItemCount(); i++) {
+						if (scriptedActionsTable.getTable().getItem(i).getText(
+								0).equals(scriptedAction.getName())) {
+							scriptedActionsTable.getTable().select(i);
+							break;
+						}
 					}
 				}
 			}
@@ -299,30 +267,16 @@ public class ActionScriptsPage extends PreferencePage {
 			}
 		});
 
+		scriptedActionsTable.sort(0);
 		refreshActions();
-		scriptedActionsTable.setSelection(0);
-		loadControls(scriptedActionsTable.getItem(
-				scriptedActionsTable.getSelectionIndex()).getText(0));
+		scriptedActionsTable.getTable().setSelection(0);
+		loadControls(scriptedActionsTable.getTable().getItem(
+				scriptedActionsTable.getTable().getSelectionIndex()).getText(0));
 		scriptedActionsTable.setSize(scriptedActionsTable.computeSize(
-				SWT.DEFAULT, 300, true));
+				SWT.DEFAULT, 200));
+		scriptText.setSize(scriptedActionsTable.computeSize(SWT.DEFAULT, 100));
+		composite.pack();
 		return composite;
-	}
-
-	protected Comparator<RaptorAction> getCompatator() {
-		if (lastStortedColumn == null) {
-			lastStortedColumn = nameColumn;
-			wasLastSortAscending = true;
-			return RaptorAction.NAME_COMPARATOR_ASCENDING;
-		} else if (lastStortedColumn == nameColumn) {
-			return wasLastSortAscending ? RaptorAction.NAME_COMPARATOR_ASCENDING
-					: RaptorAction.NAME_COMPARATOR_DESCENDING;
-		} else if (lastStortedColumn == descriptionColumn) {
-			return wasLastSortAscending ? RaptorAction.DESCRIPTION_COMPARATOR_ASCENDING
-					: RaptorAction.DESCRIPTION_COMPARATOR_DESCENDING;
-		} else {
-			return wasLastSortAscending ? RaptorAction.CATEGORY_COMPARATOR_ASCENDING
-					: RaptorAction.CATEGORY_COMPARATOR_DESCENDING;
-		}
 	}
 
 	protected void loadControls(String actionName) {
@@ -370,19 +324,14 @@ public class ActionScriptsPage extends PreferencePage {
 	}
 
 	protected void refreshActions() {
-		TableItem[] currentItems = scriptedActionsTable.getItems();
-		for (TableItem item : currentItems) {
-			item.dispose();
-		}
-
 		RaptorAction[] scripts = ActionService.getInstance()
 				.getAllScriptedActions();
-		Arrays.sort(scripts, getCompatator());
-
-		for (RaptorAction action : scripts) {
-			TableItem item = new TableItem(scriptedActionsTable, SWT.NONE);
-			item.setText(new String[] { action.getName(),
-					action.getCategory().toString(), action.getDescription() });
+		String[][] data = new String[scripts.length][];
+		for (int i = 0; i < data.length; i++) {
+			RaptorAction action = scripts[i];
+			data[i] = new String[] { action.getName(),
+					action.getCategory().toString(), action.getDescription() };
 		}
+		scriptedActionsTable.refreshTable(data);
 	}
 }

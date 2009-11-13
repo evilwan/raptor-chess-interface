@@ -63,6 +63,27 @@ public class RaptorStringUtils {
 		return result;
 	}
 
+	public static boolean equals(String[] array1, String[] array2) {
+		boolean result = true;
+		if (array1 == null && array2 != null) {
+			result = false;
+		} else if (array2 == null && array1 != null) {
+			result = false;
+		} else if (array1 == null && array2 == null) {
+			result = true;
+		} else if (array1.length != array2.length) {
+			result = false;
+		} else {
+			for (int i = 0; i < array1.length; i++) {
+				if (!StringUtils.equals(array1[i], array2[i])) {
+					result = false;
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * Generates a random word between 1 and n chars in length.
 	 */

@@ -13,56 +13,12 @@
  */
 package raptor.chat;
 
-import java.util.Comparator;
-
 import org.apache.commons.lang.StringUtils;
 
 /**
  * This code was adapted from some code that johnthegreat wrote for Raptor.
  */
 public class Bugger {
-	public static Comparator<Bugger> BY_STATUS_ASCENDING = new Comparator<Bugger>() {
-		public int compare(Bugger bugger1, Bugger bugger2) {
-			return bugger1.getStatus().toString().compareTo(
-					bugger2.getStatus().toString());
-		}
-	};
-
-	public static Comparator<Bugger> BY_STATUS_DESCENDING = new Comparator<Bugger>() {
-		public int compare(Bugger bugger1, Bugger bugger2) {
-			return -1
-					* bugger1.getStatus().toString().compareTo(
-							bugger2.getStatus().toString());
-		}
-	};
-
-	public static Comparator<Bugger> BY_NAME_ASCENDING = new Comparator<Bugger>() {
-		public int compare(Bugger bugger1, Bugger bugger2) {
-			return bugger1.getName().compareTo(bugger2.getName());
-		}
-	};
-
-	public static Comparator<Bugger> BY_NAME_DESCENDING = new Comparator<Bugger>() {
-		public int compare(Bugger bugger1, Bugger bugger2) {
-			return -1 * bugger1.getName().compareTo(bugger2.getName());
-		}
-	};
-
-	public static Comparator<Bugger> BY_RATING_ASCENDING = new Comparator<Bugger>() {
-		public int compare(Bugger bugger1, Bugger bugger2) {
-			int rating1 = bugger1.getRatingAsInt();
-			int rating2 = bugger2.getRatingAsInt();
-			return rating1 < rating2 ? -1 : rating1 == rating2 ? 0 : 1;
-		}
-	};
-
-	public static Comparator<Bugger> BY_RATING_DESCENDING = new Comparator<Bugger>() {
-		public int compare(Bugger bugger1, Bugger bugger2) {
-			int rating1 = bugger1.getRatingAsInt();
-			int rating2 = bugger2.getRatingAsInt();
-			return rating1 < rating2 ? 1 : rating1 == rating2 ? 0 : -1;
-		}
-	};
 
 	public static enum BuggerStatus {
 		Available, Idle, Closed, Playing, Simul, Examining, InTourney

@@ -14,17 +14,14 @@
 package raptor.swt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
-import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -32,9 +29,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
@@ -45,6 +43,12 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.SeekService;
 import raptor.service.ThreadService;
 import raptor.service.SeekService.SeekServiceListener;
+import raptor.swt.RaptorTable.TableListener;
+import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.ChatUtils;
+import raptor.swt.chat.controller.PersonController;
+import raptor.util.IntegerComparator;
+import raptor.util.RatingComparator;
 
 public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 
@@ -67,18 +71,9 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 	protected Button isShowingSuicide;
 	protected Button isShowingLosers;
 	protected Button isShowingUntimed;
-	protected Table seeksTable;
+	protected RaptorTable seeksTable;
 	protected boolean isActive = false;
-	protected TableColumn lastStortedColumn;
-	protected boolean wasLastSortAscending;
-	protected Seek[] currentSeeks;
-	protected TableColumn adColumn;
-	protected TableColumn ratingColumn;
-	protected TableColumn typeDescriptionColumn;
-	protected TableColumn nameColumn;
-	protected TableColumn timeControlColumn;
-	protected TableColumn ratingRangeColumn;
-	protected TableColumn flagsColumn;
+
 	protected Runnable timer = new Runnable() {
 		public void run() {
 			if (isActive) {
@@ -98,19 +93,14 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 
 	protected SeekServiceListener listener = new SeekServiceListener() {
 		public void seeksChanged(Seek[] seeks) {
-			synchronized (seeksTable) {
-				Comparator<Seek> comparator = getComparatorForRefresh();
-				currentSeeks = seeks;
-				Arrays.sort(currentSeeks, comparator);
-				refreshTable();
-			}
+			refreshTable();
 		}
 	};
 
 	public static final String[] getRatings() {
 		return new String[] { "0", "1", "700", "1000", "1100", "1200", "1300",
 				"1400", "1500", "1600", "1700", "1800", "1900", "2000", "2100",
-				"2200", "2300", "2400" };
+				"2200", "2300", "2400", "3000", "9999" };
 	}
 
 	public SeekTableWindowItem(SeekService service) {
@@ -427,174 +417,50 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		Composite tableComposite = new Composite(composite, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
-				true));
-		tableComposite.setLayout(new FillLayout());
-		seeksTable = new Table(tableComposite, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+		seeksTable = new RaptorTable(composite, SWT.BORDER | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		seeksTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		adColumn = new TableColumn(seeksTable, SWT.LEFT);
-		ratingColumn = new TableColumn(seeksTable, SWT.LEFT);
-		timeControlColumn = new TableColumn(seeksTable, SWT.LEFT);
-		typeDescriptionColumn = new TableColumn(seeksTable, SWT.LEFT);
-		nameColumn = new TableColumn(seeksTable, SWT.LEFT);
-		ratingRangeColumn = new TableColumn(seeksTable, SWT.LEFT);
-		flagsColumn = new TableColumn(seeksTable, SWT.LEFT);
+		seeksTable.addColumn("Ad", SWT.LEFT, 8, true, new IntegerComparator());
+		seeksTable.addColumn("Elo", SWT.LEFT, 11, true, new RatingComparator());
+		seeksTable.addColumn("Time", SWT.LEFT, 11, true, null);
+		seeksTable.addColumn("Type", SWT.LEFT, 14, true, null);
+		seeksTable.addColumn("Name", SWT.LEFT, 27, true, null);
+		seeksTable.addColumn("Rating Range", SWT.LEFT, 19, true, null);
+		seeksTable.addColumn("Flags", SWT.LEFT, 10, true, null);
 
-		adColumn.setText("Ad");
-		ratingColumn.setText("Elo");
-		timeControlColumn.setText("Time");
-		typeDescriptionColumn.setText("Type");
-		nameColumn.setText("Name");
-		ratingRangeColumn.setText("Rating Range");
-		flagsColumn.setText("Flags");
+		// Sort twice so when data is refreshed it will be on elo descending.
+		seeksTable.sort(1);
+		seeksTable.sort(1);
 
-		adColumn.setWidth(40);
-		ratingColumn.setWidth(50);
-		timeControlColumn.setWidth(50);
-		typeDescriptionColumn.setWidth(75);
-		nameColumn.setWidth(90);
-		ratingRangeColumn.setWidth(78);
-		flagsColumn.setWidth(40);
+		seeksTable.addRowListener(new TableListener() {
 
-		adColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
+				service.getConnector().acceptSeek(rowData[0]);
+			}
 
-				synchronized (seeksTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == adColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = adColumn;
-
-					Arrays.sort(currentSeeks,
-							wasLastSortAscending ? Seek.AD_ASCENDING_COMPARATOR
-									: Seek.AD_DESCENDING_COMPARATOR);
-					refreshTable();
+			public void rowRightClicked(MouseEvent event, String[] rowData) {
+				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
+				addPersonMenuItems(menu, rowData[4]);
+				if (menu.getItemCount() > 0) {
+					menu.setLocation(seeksTable.getTable().toDisplay(event.x,
+							event.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!composite.getDisplay().readAndDispatch()) {
+							composite.getDisplay().sleep();
+						}
+					}
 				}
+				menu.dispose();
+			}
+
+			public void tableSorted() {
+			}
+
+			public void tableUpdated() {
 			}
 		});
-
-		ratingColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				synchronized (seeksTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == ratingColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = ratingColumn;
-
-					Arrays
-							.sort(
-									currentSeeks,
-									wasLastSortAscending ? Seek.RATING_ASCENDING_COMPARATOR
-											: Seek.RATING_DESCENDING_COMPARATOR);
-					refreshTable();
-				}
-			}
-		});
-
-		timeControlColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				synchronized (seeksTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == timeControlColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = timeControlColumn;
-
-					Arrays
-							.sort(
-									currentSeeks,
-									wasLastSortAscending ? Seek.TIME_CONTROL_ASCENDING_COMPARATOR
-											: Seek.TIME_CONTROL_DESCENDING_COMPARATOR);
-					refreshTable();
-				}
-			}
-		});
-
-		typeDescriptionColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				synchronized (seeksTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == typeDescriptionColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = typeDescriptionColumn;
-
-					Arrays
-							.sort(
-									currentSeeks,
-									wasLastSortAscending ? Seek.TYPE_DESCRIPTION_ASCENDING_COMPARATOR
-											: Seek.TYPE_DESCRIPTION_DESCENDING_COMPARATOR);
-					refreshTable();
-				}
-			}
-		});
-
-		nameColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				synchronized (seeksTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == nameColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = nameColumn;
-
-					Arrays
-							.sort(
-									currentSeeks,
-									wasLastSortAscending ? Seek.NAME_ASCENDING_COMPARATOR
-											: Seek.NAME_DESCENDING_COMPARATOR);
-					refreshTable();
-				}
-			}
-		});
-
-		ratingRangeColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				synchronized (seeksTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == ratingRangeColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = ratingRangeColumn;
-
-					Arrays
-							.sort(
-									currentSeeks,
-									wasLastSortAscending ? Seek.RATING_RANGE_ASCENDING_COMPARATOR
-											: Seek.RATING_RANGE_DESCENDING_COMPARATOR);
-					refreshTable();
-				}
-			}
-		});
-		flagsColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				synchronized (seeksTable) {
-					wasLastSortAscending = lastStortedColumn == null ? true
-							: lastStortedColumn == flagsColumn ? !wasLastSortAscending
-									: true;
-					lastStortedColumn = flagsColumn;
-
-					Arrays
-							.sort(
-									currentSeeks,
-									wasLastSortAscending ? Seek.FLAGS_ASCENDING_COMPARATOR
-											: Seek.FLAGS_DESCENDING_COMPARATOR);
-					refreshTable();
-				}
-			}
-		});
-		seeksTable.setHeaderVisible(true);
 
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
@@ -610,7 +476,8 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			public void widgetSelected(SelectionEvent e) {
 				int[] selectedIndexes = null;
 				synchronized (seeksTable) {
-					selectedIndexes = seeksTable.getSelectionIndices();
+					selectedIndexes = seeksTable.getTable()
+							.getSelectionIndices();
 				}
 				if (selectedIndexes == null || selectedIndexes.length == 0) {
 					Raptor.getInstance().alert(
@@ -619,20 +486,15 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 					synchronized (seeksTable) {
 						for (int i = 0; i < selectedIndexes.length; i++) {
 							service.getConnector().acceptSeek(
-									seeksTable.getItem(selectedIndexes[i])
-											.getText(0));
+									seeksTable.getTable().getItem(
+											selectedIndexes[i]).getText(0));
 						}
 					}
 				}
 			}
 		});
-
-		if (currentSeeks != null) {
-			Arrays.sort(currentSeeks, getComparatorForRefresh());
-			refreshTable();
-		}
-
 		service.refreshSeeks();
+		refreshTable();
 	}
 
 	public void onActivate() {
@@ -661,37 +523,58 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 
-	protected Comparator<Seek> getComparatorForRefresh() {
-		Comparator<Seek> comparator = null;
-		if (lastStortedColumn == null) {
-			comparator = Seek.RATING_DESCENDING_COMPARATOR;
-			lastStortedColumn = ratingColumn;
-			wasLastSortAscending = false;
-		} else {
-			if (lastStortedColumn == ratingColumn) {
-				comparator = wasLastSortAscending ? Seek.RATING_ASCENDING_COMPARATOR
-						: Seek.RATING_DESCENDING_COMPARATOR;
-			} else if (lastStortedColumn == nameColumn) {
-				comparator = wasLastSortAscending ? Seek.NAME_ASCENDING_COMPARATOR
-						: Seek.NAME_DESCENDING_COMPARATOR;
-			} else if (lastStortedColumn == adColumn) {
-				comparator = wasLastSortAscending ? Seek.AD_ASCENDING_COMPARATOR
-						: Seek.AD_DESCENDING_COMPARATOR;
-			} else if (lastStortedColumn == flagsColumn) {
-				comparator = wasLastSortAscending ? Seek.FLAGS_ASCENDING_COMPARATOR
-						: Seek.FLAGS_DESCENDING_COMPARATOR;
-			} else if (lastStortedColumn == ratingRangeColumn) {
-				comparator = wasLastSortAscending ? Seek.RATING_RANGE_ASCENDING_COMPARATOR
-						: Seek.RATING_RANGE_DESCENDING_COMPARATOR;
-			} else if (lastStortedColumn == timeControlColumn) {
-				comparator = wasLastSortAscending ? Seek.TIME_CONTROL_ASCENDING_COMPARATOR
-						: Seek.TIME_CONTROL_DESCENDING_COMPARATOR;
-			} else if (lastStortedColumn == typeDescriptionColumn) {
-				comparator = wasLastSortAscending ? Seek.TYPE_DESCRIPTION_ASCENDING_COMPARATOR
-						: Seek.TYPE_DESCRIPTION_DESCENDING_COMPARATOR;
+	protected void addPersonMenuItems(Menu menu, String word) {
+		if (getConnector().isLikelyPerson(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String person = getConnector().parsePerson(word);
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add a tab for person: " + person);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					if (!Raptor.getInstance().getWindow()
+							.containsPersonalTellItem(getConnector(), person)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new PersonController(getConnector(), person));
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
+						ChatUtils.appendPreviousChatsToController(windowItem
+								.getConsole());
+					}
+				}
+			});
+
+			final String[][] connectorPersonItems = getConnector()
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText(connectorPersonItems[i][0]);
+					final int index = i;
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							getConnector().sendMessage(
+									connectorPersonItems[index][1]);
+						}
+					});
+				}
 			}
 		}
-		return comparator;
+	}
+
+	protected Seek[] getFilteredSeeks() {
+		Seek[] currentSeeks = service.getSeeks();
+		if (currentSeeks == null) {
+			currentSeeks = new Seek[0];
+		}
+		List<Seek> result = new ArrayList<Seek>(currentSeeks.length);
+		for (Seek seek : currentSeeks) {
+			if (passesFilterCriteria(seek)) {
+				result.add(seek);
+			}
+		}
+		return result.toArray(new Seek[0]);
 	}
 
 	protected boolean passesFilterCriteria(Seek seek) {
@@ -761,48 +644,21 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 				if (seeksTable.isDisposed()) {
 					return;
 				}
-				synchronized (seeksTable) {
-					int[] selectedIndexes = seeksTable.getSelectionIndices();
-					List<String> selectedAdsBeforeRefresh = new ArrayList<String>(
-							selectedIndexes.length);
+				synchronized (seeksTable.getTable()) {
+					Seek[] seeks = getFilteredSeeks();
 
-					for (int index : selectedIndexes) {
-						String name = seeksTable.getItem(index).getText(0);
-						selectedAdsBeforeRefresh.add(name);
+					String[][] data = new String[seeks.length][7];
+					for (int i = 0; i < data.length; i++) {
+						Seek seek = seeks[i];
+						data[i][0] = seek.getAd();
+						data[i][1] = seek.getRating();
+						data[i][2] = seek.getTimeControl();
+						data[i][3] = seek.getTypeDescription();
+						data[i][4] = seek.getName();
+						data[i][5] = seek.getRatingRange();
+						data[i][6] = seek.getFlags();
 					}
-
-					TableItem[] items = seeksTable.getItems();
-					for (TableItem item : items) {
-						item.dispose();
-					}
-
-					for (Seek seek : currentSeeks) {
-						if (passesFilterCriteria(seek)) {
-							TableItem tableItem = new TableItem(seeksTable,
-									SWT.NONE);
-							tableItem.setText(new String[] { seek.getAd(),
-									seek.getRating(), seek.getTimeControl(),
-									seek.getTypeDescription(), seek.getName(),
-									seek.getRatingRange(), seek.getFlags() });
-						}
-					}
-
-					List<Integer> indexes = new ArrayList<Integer>(
-							selectedAdsBeforeRefresh.size());
-					TableItem[] newItems = seeksTable.getItems();
-					for (int i = 0; i < newItems.length; i++) {
-						if (selectedAdsBeforeRefresh.contains(newItems[i]
-								.getText(0))) {
-							indexes.add(i);
-						}
-					}
-					if (indexes.size() > 0) {
-						int[] indexesArray = new int[indexes.size()];
-						for (int i = 0; i < indexes.size(); i++) {
-							indexesArray[i] = indexes.get(i);
-						}
-						seeksTable.select(indexesArray);
-					}
+					seeksTable.refreshTable(data);
 				}
 			}
 		});
