@@ -13,11 +13,13 @@
  */
 package raptor.pref.page;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -28,9 +30,6 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
@@ -38,11 +37,12 @@ import raptor.script.ChatScript;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.ScriptService;
+import raptor.swt.RaptorTable;
 
 public class MessageEventScripts extends PreferencePage {
 
-	protected Table activeScriptsTable;
-	protected Table inactiveScriptsTable;
+	protected RaptorTable activeScriptsTable;
+	protected RaptorTable inactiveScriptsTable;
 
 	protected Composite composite;
 
@@ -76,60 +76,52 @@ public class MessageEventScripts extends PreferencePage {
 								"\tMessage Event Scripts have access to the methods to the following methods in the context: "
 										+ "getMessage() (returns the entire message), getMessageSource (returns the person sending "
 										+ "the channel/personal tell), and getMessageChannel (returns the channel if the tell was a "
-										+ "channel tell)."
+										+ "channel tell). To activate/inactiveate a script click on it then check the active checkbox "
+										+ "and then save."
 										+ "See the Scripting wiki on the raptor site "
 										+ "http://code.google.com/p/raptor-chess-interface/wiki/Scripting for more details.",
 								70));
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
-				false));
-		activeScriptsTable = new Table(tableComposite, SWT.BORDER
+		tableComposite.setLayout(new GridLayout(2, false));
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true));
+
+		activeScriptsTable = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-		activeScriptsTable.setSize(activeScriptsTable.computeSize(160, 250));
-		activeScriptsTable.setLocation(5, 5);
+		activeScriptsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true));
+		activeScriptsTable.addColumn("Active Script Name", SWT.LEFT, 100, true,
+				null);
+		activeScriptsTable.getTable().addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						int selectedIndex = activeScriptsTable.getTable()
+								.getSelectionIndex();
+						String selection = activeScriptsTable.getTable()
+								.getItem(selectedIndex).getText(0);
+						loadControls(selection);
+					}
+				});
 
-		TableColumn activeName = new TableColumn(activeScriptsTable, SWT.LEFT);
-		activeName.setText("Active Script Name");
-		activeName.setWidth(150);
-		activeScriptsTable.setHeaderVisible(true);
-
-		TableCursor activeCursor = new TableCursor(activeScriptsTable, SWT.NONE);
-		activeCursor.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = activeScriptsTable.getSelectionIndex();
-				String selection = activeScriptsTable.getItem(selectedIndex)
-						.getText(0);
-				loadControls(selection);
-			}
-		});
-		activeCursor.setVisible(true);
-
-		inactiveScriptsTable = new Table(tableComposite, SWT.BORDER
+		inactiveScriptsTable = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-		inactiveScriptsTable
-				.setSize(inactiveScriptsTable.computeSize(160, 250));
-		inactiveScriptsTable.setLocation(
-				5 + 20 + activeScriptsTable.getSize().x, 5);
-
-		TableColumn inactiveName = new TableColumn(inactiveScriptsTable,
-				SWT.LEFT);
-		inactiveName.setText("Inactive Script Name");
-		inactiveName.setWidth(150);
-		inactiveScriptsTable.setHeaderVisible(true);
-		TableCursor inactiveCursor = new TableCursor(inactiveScriptsTable,
-				SWT.NONE);
-		inactiveCursor.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = inactiveScriptsTable.getSelectionIndex();
-				String selection = inactiveScriptsTable.getItem(selectedIndex)
-						.getText(0);
-				loadControls(selection);
-			}
-		});
-		inactiveCursor.setVisible(true);
+		inactiveScriptsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				true, true));
+		inactiveScriptsTable.addColumn("Inactive Script Name", SWT.LEFT, 100,
+				true, null);
+		inactiveScriptsTable.getTable().addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						int selectedIndex = inactiveScriptsTable.getTable()
+								.getSelectionIndex();
+						String selection = inactiveScriptsTable.getTable()
+								.getItem(selectedIndex).getText(0);
+						loadControls(selection);
+					}
+				});
 
 		Composite nameComposite = new Composite(composite, SWT.NONE);
 		nameComposite.setLayout(new GridLayout(3, false));
@@ -232,7 +224,10 @@ public class MessageEventScripts extends PreferencePage {
 				refreshTables();
 			}
 		});
+		activeScriptsTable.sort(0);
+		inactiveScriptsTable.sort(0);
 		refreshTables();
+		tableComposite.setSize(tableComposite.computeSize(SWT.DEFAULT, 200));
 		composite.pack();
 		return composite;
 	}
@@ -269,30 +264,34 @@ public class MessageEventScripts extends PreferencePage {
 	}
 
 	protected void refreshTables() {
-		TableItem[] activeItems = activeScriptsTable.getItems();
-		for (TableItem item : activeItems) {
-			item.dispose();
-		}
-		TableItem[] inactiveItems = inactiveScriptsTable.getItems();
-		for (TableItem item : inactiveItems) {
-			item.dispose();
-		}
 
 		ChatScript[] allScripts = ScriptService.getInstance()
 				.getAllChatScripts();
+
+		List<String[]> activeScripts = new ArrayList<String[]>(10);
+		List<String[]> inactiveScripts = new ArrayList<String[]>(10);
 		for (ChatScript script : allScripts) {
 			if (script.getChatScriptType() == ChatScriptType.onChannelTellMessages
 					|| script.getChatScriptType() == ChatScriptType.OnPartnerTellMessages
 					|| script.getChatScriptType() == ChatScriptType.OnPersonTellMessages) {
 				if (script.isActive()) {
-					TableItem item = new TableItem(activeScriptsTable, SWT.NONE);
-					item.setText(new String[] { script.getName() });
+					activeScripts.add(new String[] { script.getName() });
 				} else {
-					TableItem item = new TableItem(inactiveScriptsTable,
-							SWT.NONE);
-					item.setText(new String[] { script.getName() });
+					inactiveScripts.add(new String[] { script.getName() });
 				}
 			}
 		}
+
+		String[][] activeData = new String[activeScripts.size()][];
+		for (int i = 0; i < activeData.length; i++) {
+			activeData[i] = activeScripts.get(i);
+		}
+
+		String[][] inactiveData = new String[inactiveScripts.size()][];
+		for (int i = 0; i < inactiveData.length; i++) {
+			inactiveData[i] = inactiveScripts.get(i);
+		}
+		activeScriptsTable.refreshTable(activeData);
+		inactiveScriptsTable.refreshTable(inactiveData);
 	}
 }

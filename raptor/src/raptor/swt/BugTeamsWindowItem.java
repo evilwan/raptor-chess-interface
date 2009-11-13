@@ -14,11 +14,11 @@
 package raptor.swt;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -30,8 +30,10 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Quadrant;
@@ -45,6 +47,10 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
+import raptor.swt.RaptorTable.TableListener;
+import raptor.swt.chat.ChatConsoleWindowItem;
+import raptor.swt.chat.ChatUtils;
+import raptor.swt.chat.controller.PersonController;
 
 public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 
@@ -54,16 +60,9 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 	protected BughouseService service;
 	protected Composite composite;
 	protected Combo availablePartnershipsFilter;
-	protected Table player1Table;
-	protected Table player2Table;
+	protected RaptorTable player1Table;
+	protected RaptorTable player2Table;
 	protected boolean isActive = false;
-	protected Partnership[] currentPartnerships;
-	protected TableColumn player1RatingColumn;
-	protected TableColumn player1NameColumn;
-	protected TableColumn player1StatusColumn;
-	protected TableColumn player2RatingColumn;
-	protected TableColumn player2NameColumn;
-	protected TableColumn player2StatusColumn;
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
@@ -84,11 +83,7 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 
 	protected BughouseServiceListener listener = new BughouseServiceListener() {
 		public void availablePartnershipsChanged(Partnership[] newPartnerships) {
-			synchronized (player1Table) {
-				currentPartnerships = newPartnerships;
-				Arrays.sort(currentPartnerships);
-				refreshTable();
-			}
+			refreshTable();
 		}
 
 		public void gamesInProgressChanged(BugGame[] newGamesInProgress) {
@@ -195,37 +190,70 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true));
 		tableComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		player1Table = new Table(tableComposite, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+		player1Table = new RaptorTable(tableComposite, SWT.BORDER
+				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+		player1Table.addColumn("Rating", SWT.LEFT, 20, false, null);
+		player1Table.addColumn("Name", SWT.LEFT, 45, false, null);
+		player1Table.addColumn("Status", SWT.LEFT, 35, false, null);
+		player1Table.addRowListener(new TableListener() {
 
-		player1RatingColumn = new TableColumn(player1Table, SWT.LEFT);
-		player1NameColumn = new TableColumn(player1Table, SWT.LEFT);
-		player1StatusColumn = new TableColumn(player1Table, SWT.LEFT);
+			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
+			}
 
-		player1RatingColumn.setText("Rating");
-		player1NameColumn.setText("Name");
-		player1StatusColumn.setText("Status");
+			public void rowRightClicked(MouseEvent event, String[] rowData) {
+				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
+				addPersonMenuItems(menu, rowData[1]);
+				if (menu.getItemCount() > 0) {
+					menu.setLocation(player1Table.getTable().toDisplay(event.x,
+							event.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!composite.getDisplay().readAndDispatch()) {
+							composite.getDisplay().sleep();
+						}
+					}
+				}
+				menu.dispose();
+			}
 
-		player1RatingColumn.setWidth(50);
-		player1NameColumn.setWidth(80);
-		player1StatusColumn.setWidth(50);
-		player1Table.setHeaderVisible(true);
+			public void tableSorted() {
+			}
 
-		player2Table = new Table(tableComposite, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+			public void tableUpdated() {
+			}
+		});
 
-		player2RatingColumn = new TableColumn(player2Table, SWT.LEFT);
-		player2NameColumn = new TableColumn(player2Table, SWT.LEFT);
-		player2StatusColumn = new TableColumn(player2Table, SWT.LEFT);
+		player2Table = new RaptorTable(tableComposite, SWT.BORDER
+				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
+		player2Table.addColumn("Rating", SWT.LEFT, 20, false, null);
+		player2Table.addColumn("Name", SWT.LEFT, 45, false, null);
+		player2Table.addColumn("Status", SWT.LEFT, 35, false, null);
+		player2Table.addRowListener(new TableListener() {
+			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
+			}
 
-		player2RatingColumn.setText("Rating");
-		player2NameColumn.setText("Name");
-		player2StatusColumn.setText("Status");
+			public void rowRightClicked(MouseEvent event, String[] rowData) {
+				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
+				addPersonMenuItems(menu, rowData[1]);
+				if (menu.getItemCount() > 0) {
+					menu.setLocation(player2Table.getTable().toDisplay(event.x,
+							event.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!composite.getDisplay().readAndDispatch()) {
+							composite.getDisplay().sleep();
+						}
+					}
+				}
+				menu.dispose();
+			}
 
-		player2RatingColumn.setWidth(50);
-		player2NameColumn.setWidth(80);
-		player2StatusColumn.setWidth(60);
-		player2Table.setHeaderVisible(true);
+			public void tableSorted() {
+			}
+
+			public void tableUpdated() {
+			}
+		});
 
 		final Button isRated = new Button(composite, SWT.CHECK);
 		isRated.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, true, false));
@@ -261,23 +289,25 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 				int[] selectedIndexes = null;
 				boolean matchedSomeone = false;
 				synchronized (player1Table) {
-					selectedIndexes = player1Table.getSelectionIndices();
+					selectedIndexes = player1Table.getTable()
+							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
 						service.getConnector().matchBughouse(
-								player1Table.getItem(selectedIndexes[i])
-										.getText(1), isRated.getSelection(), 1,
-								0);
+								player1Table.getTable().getItem(
+										selectedIndexes[i]).getText(1),
+								isRated.getSelection(), 1, 0);
 						matchedSomeone = true;
 					}
 
-					selectedIndexes = player2Table.getSelectionIndices();
+					selectedIndexes = player2Table.getTable()
+							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
 						service.getConnector().matchBughouse(
-								player2Table.getItem(selectedIndexes[i])
-										.getText(1), isRated.getSelection(), 1,
-								0);
+								player2Table.getTable().getItem(
+										selectedIndexes[i]).getText(1),
+								isRated.getSelection(), 1, 0);
 						matchedSomeone = true;
 					}
 				}
@@ -299,23 +329,25 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 				int[] selectedIndexes = null;
 				boolean matchedSomeone = false;
 				synchronized (player1Table) {
-					selectedIndexes = player1Table.getSelectionIndices();
+					selectedIndexes = player1Table.getTable()
+							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
 						service.getConnector().matchBughouse(
-								player1Table.getItem(selectedIndexes[i])
-										.getText(1), isRated.getSelection(), 2,
-								0);
+								player1Table.getTable().getItem(
+										selectedIndexes[i]).getText(1),
+								isRated.getSelection(), 2, 0);
 						matchedSomeone = true;
 					}
 
-					selectedIndexes = player2Table.getSelectionIndices();
+					selectedIndexes = player2Table.getTable()
+							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
 						service.getConnector().matchBughouse(
-								player2Table.getItem(selectedIndexes[i])
-										.getText(1), isRated.getSelection(), 2,
-								0);
+								player2Table.getTable().getItem(
+										selectedIndexes[i]).getText(1),
+								isRated.getSelection(), 2, 0);
 						matchedSomeone = true;
 					}
 				}
@@ -337,23 +369,25 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 				int[] selectedIndexes = null;
 				boolean matchedSomeone = false;
 				synchronized (player1Table) {
-					selectedIndexes = player1Table.getSelectionIndices();
+					selectedIndexes = player1Table.getTable()
+							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
 						service.getConnector().matchBughouse(
-								player1Table.getItem(selectedIndexes[i])
-										.getText(1), isRated.getSelection(), 3,
-								0);
+								player1Table.getTable().getItem(
+										selectedIndexes[i]).getText(1),
+								isRated.getSelection(), 3, 0);
 						matchedSomeone = true;
 					}
 
-					selectedIndexes = player2Table.getSelectionIndices();
+					selectedIndexes = player2Table.getTable()
+							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
 						service.getConnector().matchBughouse(
-								player2Table.getItem(selectedIndexes[i])
-										.getText(1), isRated.getSelection(), 3,
-								0);
+								player2Table.getTable().getItem(
+										selectedIndexes[i]).getText(1),
+								isRated.getSelection(), 3, 0);
 						matchedSomeone = true;
 					}
 				}
@@ -376,13 +410,15 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 
 			public void widgetSelected(SelectionEvent e) {
 				synchronized (player1Table) {
-					TableItem[] table1Items = player1Table.getItems();
+					TableItem[] table1Items = player1Table.getTable()
+							.getItems();
 					for (TableItem item : table1Items) {
 						service.getConnector().matchBughouse(item.getText(1),
 								isRated.getSelection(), 1, 0);
 					}
 
-					TableItem[] table2Items = player2Table.getItems();
+					TableItem[] table2Items = player2Table.getTable()
+							.getItems();
 					for (TableItem item : table2Items) {
 						service.getConnector().matchBughouse(item.getText(1),
 								isRated.getSelection(), 1, 0);
@@ -399,13 +435,15 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 
 			public void widgetSelected(SelectionEvent e) {
 				synchronized (player1Table) {
-					TableItem[] table1Items = player1Table.getItems();
+					TableItem[] table1Items = player1Table.getTable()
+							.getItems();
 					for (TableItem item : table1Items) {
 						service.getConnector().matchBughouse(item.getText(1),
 								isRated.getSelection(), 2, 0);
 					}
 
-					TableItem[] table2Items = player2Table.getItems();
+					TableItem[] table2Items = player2Table.getTable()
+							.getItems();
 					for (TableItem item : table2Items) {
 						service.getConnector().matchBughouse(item.getText(1),
 								isRated.getSelection(), 2, 0);
@@ -423,13 +461,15 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 
 			public void widgetSelected(SelectionEvent e) {
 				synchronized (player1Table) {
-					TableItem[] table1Items = player1Table.getItems();
+					TableItem[] table1Items = player1Table.getTable()
+							.getItems();
 					for (TableItem item : table1Items) {
 						service.getConnector().matchBughouse(item.getText(1),
 								isRated.getSelection(), 3, 0);
 					}
 
-					TableItem[] table2Items = player2Table.getItems();
+					TableItem[] table2Items = player2Table.getTable()
+							.getItems();
 					for (TableItem item : table2Items) {
 						service.getConnector().matchBughouse(item.getText(1),
 								isRated.getSelection(), 3, 0);
@@ -437,18 +477,14 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 				}
 			}
 		});
-
-		if (currentPartnerships != null) {
-			Arrays.sort(currentPartnerships);
-			refreshTable();
-		}
-		service.getAvailablePartnerships();
+		service.refreshAvailablePartnerships();
+		refreshTable();
 	}
 
 	public void onActivate() {
 		if (!isActive) {
 			isActive = true;
-			service.getAvailablePartnerships();
+			service.refreshAvailablePartnerships();
 			ThreadService
 					.getInstance()
 					.scheduleOneShot(
@@ -471,6 +507,60 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 
+	protected void addPersonMenuItems(Menu menu, String word) {
+		if (getConnector().isLikelyPerson(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String person = getConnector().parsePerson(word);
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add a tab for person: " + person);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					if (!Raptor.getInstance().getWindow()
+							.containsPersonalTellItem(getConnector(), person)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new PersonController(getConnector(), person));
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
+						ChatUtils.appendPreviousChatsToController(windowItem
+								.getConsole());
+					}
+				}
+			});
+
+			final String[][] connectorPersonItems = getConnector()
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					item = new MenuItem(menu, SWT.PUSH);
+					item.setText(connectorPersonItems[i][0]);
+					final int index = i;
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							getConnector().sendMessage(
+									connectorPersonItems[index][1]);
+						}
+					});
+				}
+			}
+		}
+	}
+
+	protected Partnership[] getFilteredPartnerships() {
+		Partnership[] current = service.getAvailablePartnerships();
+		if (current == null) {
+			current = new Partnership[0];
+		}
+		List<Partnership> result = new ArrayList<Partnership>(current.length);
+		for (Partnership partnership : current) {
+			if (passesFilterCriteria(partnership)) {
+				result.add(partnership);
+			}
+		}
+		return result.toArray(new Partnership[0]);
+	}
+
 	protected boolean passesFilterCriteria(Partnership partnership) {
 		int filterRating = Integer.parseInt(availablePartnershipsFilter
 				.getText());
@@ -485,86 +575,30 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 					return;
 				}
 
-				synchronized (player1Table) {
+				synchronized (player1Table.getTable()) {
 
-					List<String> selectedNamesBeforeRefresh = new ArrayList<String>(
-							10);
+					Partnership[] partnerships = getFilteredPartnerships();
+					String[][] player1Data = new String[partnerships.length][3];
+					String[][] player2Data = new String[partnerships.length][3];
 
-					int[] selectedIndexesTable1 = player1Table
-							.getSelectionIndices();
-					for (int index : selectedIndexesTable1) {
-						String name = player1Table.getItem(index).getText(1);
-						selectedNamesBeforeRefresh.add(name);
-					}
-					int[] selectedIndexesTable2 = player2Table
-							.getSelectionIndices();
-					for (int index : selectedIndexesTable2) {
-						String name = player2Table.getItem(index).getText(1);
-						selectedNamesBeforeRefresh.add(name);
-					}
+					for (int i = 0; i < partnerships.length; i++) {
+						Partnership partnership = partnerships[i];
 
-					TableItem[] items = player1Table.getItems();
-					for (TableItem item : items) {
-						item.dispose();
-					}
-					TableItem[] items2 = player2Table.getItems();
-					for (TableItem item : items2) {
-						item.dispose();
-					}
+						player1Data[i][0] = partnership.getBugger1()
+								.getRating();
+						player1Data[i][1] = partnership.getBugger1().getName();
+						player1Data[i][2] = partnership.getBugger1()
+								.getStatus().toString();
 
-					for (Partnership partnership : currentPartnerships) {
-						if (passesFilterCriteria(partnership)) {
-							TableItem tableItem = new TableItem(player1Table,
-									SWT.NONE);
-							tableItem.setText(new String[] {
-									partnership.getBugger1().getRating(),
-									partnership.getBugger1().getName(),
-									partnership.getBugger1().getStatus()
-											.toString() });
+						player2Data[i][0] = partnership.getBugger2()
+								.getRating();
+						player2Data[i][1] = partnership.getBugger2().getName();
+						player2Data[i][2] = partnership.getBugger2()
+								.getStatus().toString();
 
-							TableItem table2Item = new TableItem(player2Table,
-									SWT.NONE);
-							table2Item.setText(new String[] {
-									partnership.getBugger2().getRating(),
-									partnership.getBugger2().getName(),
-									partnership.getBugger2().getStatus()
-											.toString() });
-						}
 					}
-
-					List<Integer> table1Indexes = new ArrayList<Integer>(
-							selectedNamesBeforeRefresh.size());
-					TableItem[] newItems = player1Table.getItems();
-					for (int i = 0; i < newItems.length; i++) {
-						if (selectedNamesBeforeRefresh.contains(newItems[i]
-								.getText(1))) {
-							table1Indexes.add(i);
-						}
-					}
-					if (table1Indexes.size() > 0) {
-						int[] indexesArray = new int[table1Indexes.size()];
-						for (int i = 0; i < table1Indexes.size(); i++) {
-							indexesArray[i] = table1Indexes.get(i);
-						}
-						player1Table.select(indexesArray);
-					}
-
-					List<Integer> table2Indexes = new ArrayList<Integer>(
-							selectedNamesBeforeRefresh.size());
-					TableItem[] newItems2 = player2Table.getItems();
-					for (int i = 0; i < newItems2.length; i++) {
-						if (selectedNamesBeforeRefresh.contains(newItems2[i]
-								.getText(1))) {
-							table2Indexes.add(i);
-						}
-					}
-					if (table2Indexes.size() > 0) {
-						int[] indexesArray = new int[table2Indexes.size()];
-						for (int i = 0; i < table2Indexes.size(); i++) {
-							indexesArray[i] = table2Indexes.get(i);
-						}
-						player2Table.select(indexesArray);
-					}
+					player1Table.refreshTable(player1Data);
+					player2Table.refreshTable(player2Data);
 				}
 			}
 		});
