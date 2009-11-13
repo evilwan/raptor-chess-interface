@@ -13,14 +13,10 @@
  */
 package raptor.pref.page;
 
-import java.util.Arrays;
-import java.util.Comparator;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -30,8 +26,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Raptor;
@@ -41,25 +35,22 @@ import raptor.action.ScriptedAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.service.ActionService;
+import raptor.swt.RaptorTable;
 
 public class ActionContainerPage extends PreferencePage {
 
 	protected RaptorActionContainer container;
 	protected Composite iconComposite;
-	protected Table currentActionsTable;
-	protected Table availableActionsTable;
+	protected RaptorTable currentActionsTable;
+	protected RaptorTable availableActionsTable;
 	protected Composite composite;
 	protected Label icon;
 	protected Label nameText;
 	protected Label descriptionText;
 	protected Label categoryText;
-	protected StyledText scriptText;
+	protected Label scriptText;
 	protected String description;
 	protected String title;
-	protected TableColumn lastStortedColumn;
-	protected TableColumn availableNameColumn;
-	protected TableColumn availableCategoryColumn;
-	protected boolean wasLastSortAscending;
 
 	public ActionContainerPage(String title, String description,
 			RaptorActionContainer actionContainer) {
@@ -84,30 +75,32 @@ public class ActionContainerPage extends PreferencePage {
 		}
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER,
-				false, false, 3, 1));
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 3, 1));
+		tableComposite.setLayout(new GridLayout(3, false));
 
-		currentActionsTable = new Table(tableComposite, SWT.BORDER
+		currentActionsTable = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-		currentActionsTable.setSize(currentActionsTable.computeSize(160, 250));
-		currentActionsTable.setLocation(0, 0);
-
-		TableColumn activeName = new TableColumn(currentActionsTable, SWT.LEFT);
-		activeName.setText(title + " Actions");
-		activeName.setWidth(150);
-		currentActionsTable.setHeaderVisible(true);
-
-		currentActionsTable.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = currentActionsTable.getSelectionIndex();
-				String selection = currentActionsTable.getItem(selectedIndex)
-						.getText();
-				loadControls(selection);
-			}
-		});
+		currentActionsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				false, true));
+		currentActionsTable.setFixedWidth(175);
+		currentActionsTable.addColumn(title + " Actions", SWT.LEFT, 100, false,
+				null);
+		currentActionsTable.getTable().addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						int selectedIndex = currentActionsTable.getTable()
+								.getSelectionIndex();
+						String selection = currentActionsTable.getTable()
+								.getItem(selectedIndex).getText();
+						loadControls(selection);
+					}
+				});
 
 		Composite addRemoveComposite = new Composite(tableComposite, SWT.NONE);
+		addRemoveComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				false, true));
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 		addRemoveComposite.setLayout(rowLayout);
 		Label strut = new Label(addRemoveComposite, SWT.NONE);
@@ -123,11 +116,13 @@ public class ActionContainerPage extends PreferencePage {
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = availableActionsTable.getSelectionIndex();
+				int selectedIndex = availableActionsTable.getTable()
+						.getSelectionIndex();
 				if (selectedIndex != -1) {
-					String actionName = availableActionsTable.getItem(
-							selectedIndex).getText(0);
-					TableItem[] currentItems = currentActionsTable.getItems();
+					String actionName = availableActionsTable.getTable()
+							.getItem(selectedIndex).getText(0);
+					TableItem[] currentItems = currentActionsTable.getTable()
+							.getItems();
 					boolean isInCurrent = false;
 					for (TableItem item : currentItems) {
 						if (item.getText().equals(actionName)) {
@@ -140,7 +135,7 @@ public class ActionContainerPage extends PreferencePage {
 						RaptorAction action = ActionService.getInstance()
 								.getAction(actionName);
 						action.addContainer(container, currentActionsTable
-								.getItemCount());
+								.getTable().getItemCount());
 						ActionService.getInstance().saveAction(action);
 						refreshCurrentActions();
 					}
@@ -153,9 +148,10 @@ public class ActionContainerPage extends PreferencePage {
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = currentActionsTable.getSelectionIndex();
+				int selectedIndex = currentActionsTable.getTable()
+						.getSelectionIndex();
 				if (selectedIndex != -1) {
-					String actionName = currentActionsTable.getItem(
+					String actionName = currentActionsTable.getTable().getItem(
 							selectedIndex).getText(0);
 					RaptorAction action = ActionService.getInstance()
 							.getAction(actionName);
@@ -165,57 +161,26 @@ public class ActionContainerPage extends PreferencePage {
 				}
 			}
 		});
-		addRemoveComposite.setSize(addRemoveComposite.computeSize(60, 260));
-		addRemoveComposite.setLocation(currentActionsTable.getSize().x + 5, 0);
 
-		availableActionsTable = new Table(tableComposite, SWT.BORDER
+		availableActionsTable = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-
-		availableActionsTable.setSize(availableActionsTable.computeSize(290,
-				250));
-		availableActionsTable.setLocation(currentActionsTable.getSize().x + 5
-				+ addRemoveComposite.getSize().x + 15, 0);
-		availableActionsTable.setHeaderVisible(true);
-
-		availableNameColumn = new TableColumn(availableActionsTable, SWT.LEFT);
-		availableCategoryColumn = new TableColumn(availableActionsTable,
-				SWT.LEFT);
-		availableNameColumn.setText("All Actions Name");
-		availableNameColumn.setWidth(150);
-		availableCategoryColumn.setText("Category");
-		availableCategoryColumn.setWidth(120);
-
-		availableNameColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == availableNameColumn ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = availableNameColumn;
-				refreshAvailableActions();
-			}
-		});
-
-		availableCategoryColumn.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == availableCategoryColumn ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = availableCategoryColumn;
-				refreshAvailableActions();
-			}
-		});
-
-		availableActionsTable.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = availableActionsTable.getSelectionIndex();
-				String selection = availableActionsTable.getItem(selectedIndex)
-						.getText(0);
-				loadControls(selection);
-			}
-		});
+		availableActionsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				true, true));
+		availableActionsTable.addColumn("All Actions Name", SWT.LEFT, 50, true,
+				null);
+		availableActionsTable.addColumn("All Actions Catagory", SWT.LEFT, 50,
+				true, null);
+		availableActionsTable.getTable().addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						int selectedIndex = availableActionsTable.getTable()
+								.getSelectionIndex();
+						String selection = availableActionsTable.getTable()
+								.getItem(selectedIndex).getText(0);
+						loadControls(selection);
+					}
+				});
 
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false,
@@ -226,9 +191,11 @@ public class ActionContainerPage extends PreferencePage {
 		upButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int selectedScript = currentActionsTable.getSelectionIndex();
+				int selectedScript = currentActionsTable.getTable()
+						.getSelectionIndex();
 				if (selectedScript > 0) {
-					TableItem[] items = currentActionsTable.getItems();
+					TableItem[] items = currentActionsTable.getTable()
+							.getItems();
 					for (int i = 0; i < items.length; i++) {
 						RaptorAction action = ActionService.getInstance()
 								.getAction(items[i].getText());
@@ -245,7 +212,8 @@ public class ActionContainerPage extends PreferencePage {
 					items[selectedScript].setText(items[selectedScript - 1]
 							.getText());
 					items[selectedScript - 1].setText(selectedText);
-					currentActionsTable.setSelection(selectedScript - 1);
+					currentActionsTable.getTable().setSelection(
+							selectedScript - 1);
 					currentActionsTable.redraw();
 				}
 			}
@@ -255,9 +223,12 @@ public class ActionContainerPage extends PreferencePage {
 		downButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int selectedScript = currentActionsTable.getSelectionIndex();
-				if (selectedScript < currentActionsTable.getItemCount() - 1) {
-					TableItem[] items = currentActionsTable.getItems();
+				int selectedScript = currentActionsTable.getTable()
+						.getSelectionIndex();
+				if (selectedScript < currentActionsTable.getTable()
+						.getItemCount() - 1) {
+					TableItem[] items = currentActionsTable.getTable()
+							.getItems();
 					for (int i = 0; i < items.length; i++) {
 						RaptorAction action = ActionService.getInstance()
 								.getAction(items[i].getText());
@@ -274,7 +245,8 @@ public class ActionContainerPage extends PreferencePage {
 					items[selectedScript].setText(items[selectedScript + 1]
 							.getText());
 					items[selectedScript + 1].setText(selectedText);
-					currentActionsTable.setSelection(selectedScript + 1);
+					currentActionsTable.getTable().setSelection(
+							selectedScript + 1);
 					currentActionsTable.redraw();
 				}
 			}
@@ -287,7 +259,7 @@ public class ActionContainerPage extends PreferencePage {
 				SeparatorAction separator = RaptorActionFactory
 						.createSeparator();
 				separator.addContainer(container, currentActionsTable
-						.getItemCount());
+						.getTable().getItemCount());
 				ActionService.getInstance().saveAction(separator);
 				refreshCurrentActions();
 			}
@@ -339,39 +311,28 @@ public class ActionContainerPage extends PreferencePage {
 		descriptionText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false));
 
-		Label scriptLabel = new Label(composite, SWT.NONE);
+		Composite scriptComposite = new Composite(composite, SWT.NONE);
+		scriptComposite.setLayout(new GridLayout(2, false));
+		scriptComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 3, 1));
+
+		Label scriptLabel = new Label(scriptComposite, SWT.NONE);
 		scriptLabel.setText("Script:");
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 2, 1));
-		scriptText = new StyledText(composite, SWT.BORDER | SWT.V_SCROLL
-				| SWT.H_SCROLL);
-		scriptText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true,
-				3, 1));
-		scriptText.setText("\n\n\n\n\n\n");
-		scriptText.setEditable(false);
-		scriptText.setWordWrap(false);
+				false));
+		scriptText = new Label(scriptComposite, SWT.NONE);
+		scriptText
+				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
+		scriptText.setText("\n\n\n");
 
+		availableActionsTable.sort(0);
 		refreshCurrentActions();
 		refreshAvailableActions();
 
-		availableActionsTable.setSelection(0);
-		loadControls(availableActionsTable.getItem(0).getText(0));
+		availableActionsTable.getTable().setSelection(0);
+		loadControls(availableActionsTable.getTable().getItem(0).getText(0));
 
 		return composite;
-	}
-
-	protected Comparator<RaptorAction> getCompatator() {
-		if (lastStortedColumn == null) {
-			lastStortedColumn = availableNameColumn;
-			wasLastSortAscending = true;
-			return RaptorAction.NAME_COMPARATOR_ASCENDING;
-		} else if (lastStortedColumn == availableNameColumn) {
-			return wasLastSortAscending ? RaptorAction.NAME_COMPARATOR_ASCENDING
-					: RaptorAction.NAME_COMPARATOR_DESCENDING;
-		} else {
-			return wasLastSortAscending ? RaptorAction.CATEGORY_COMPARATOR_ASCENDING
-					: RaptorAction.CATEGORY_COMPARATOR_DESCENDING;
-		}
 	}
 
 	protected void loadControls(String actionName) {
@@ -397,32 +358,27 @@ public class ActionContainerPage extends PreferencePage {
 	}
 
 	protected void refreshAvailableActions() {
-		TableItem[] inactiveItems = availableActionsTable.getItems();
-		for (TableItem item : inactiveItems) {
-			item.dispose();
-		}
-
 		RaptorAction[] availableActions = ActionService.getInstance()
 				.getAllActions();
-		Arrays.sort(availableActions, getCompatator());
+		String[][] data = new String[availableActions.length][2];
 
-		for (RaptorAction action : availableActions) {
-			TableItem item = new TableItem(availableActionsTable, SWT.NONE);
-			item.setText(new String[] { action.getName(),
-					action.getCategory().toString() });
+		for (int i = 0; i < availableActions.length; i++) {
+			RaptorAction action = availableActions[i];
+			data[i][0] = action.getName();
+			data[i][1] = action.getCategory().toString();
 		}
+		availableActionsTable.refreshTable(data);
 	}
 
 	protected void refreshCurrentActions() {
-		TableItem[] currentItems = currentActionsTable.getItems();
-		for (TableItem item : currentItems) {
-			item.dispose();
-		}
+		RaptorAction[] availableActions = ActionService.getInstance()
+				.getActions(container);
+		String[][] data = new String[availableActions.length][1];
 
-		for (RaptorAction action : ActionService.getInstance().getActions(
-				container)) {
-			TableItem item = new TableItem(currentActionsTable, SWT.NONE);
-			item.setText(action.getName());
+		for (int i = 0; i < availableActions.length; i++) {
+			RaptorAction action = availableActions[i];
+			data[i][0] = action.getName();
 		}
+		currentActionsTable.refreshTable(data);
 	}
 }

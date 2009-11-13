@@ -90,6 +90,7 @@ public class RaptorTable extends Composite {
 	protected TableItemComparator lastComparator;
 	protected List<TableListener> tableListeners = new ArrayList<TableListener>(
 			2);
+	protected int fixedWidth;
 
 	public RaptorTable(Composite parent, int tableStyle) {
 		super(parent, SWT.NONE);
@@ -99,7 +100,6 @@ public class RaptorTable extends Composite {
 			}
 		});
 
-		// setLayout(new FillLayout());
 		table = new Table(this, tableStyle);
 		table.setLocation(0, 0);
 		table.setHeaderVisible(true);
@@ -184,24 +184,18 @@ public class RaptorTable extends Composite {
 		}
 	}
 
+	@Override
+	public Point computeSize(int hint, int hint2, boolean changed) {
+		if (fixedWidth != 0) {
+			return super.computeSize(fixedWidth, hint2, changed);
+		} else {
+			return super.computeSize(hint, hint2, changed);
+		}
+	}
+
 	public Table getTable() {
 		return table;
 	}
-
-	// public void swapRows(int index1, int index2) {
-	// TableItem item1 = table.getItem(index1);
-	// TableItem item2 = table.getItem(index2);
-	// String[] data1 = getData(item1);
-	// String[] data2 = getData(item2);
-	//
-	// TableItem newItem1 = new TableItem(table, SWT.NONE, index2);
-	// newItem1.setText(data2);
-	// item2.dispose();
-	//
-	// TableItem newItem2 = new TableItem(table, SWT.NONE, index1);
-	// newItem2.setText(data1);
-	// item1.dispose();
-	// }
 
 	/**
 	 * Refreshes the table with the specified data. Selections are preserved.
@@ -282,6 +276,10 @@ public class RaptorTable extends Composite {
 
 	public void removeRowListener(TableListener listener) {
 		tableListeners.remove(listener);
+	}
+
+	public void setFixedWidth(int width) {
+		fixedWidth = width;
 	}
 
 	public void sort(int index) {

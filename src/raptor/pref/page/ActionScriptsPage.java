@@ -275,7 +275,6 @@ public class ActionScriptsPage extends PreferencePage {
 		scriptedActionsTable.setSize(scriptedActionsTable.computeSize(
 				SWT.DEFAULT, 200));
 		scriptText.setSize(scriptedActionsTable.computeSize(SWT.DEFAULT, 100));
-		composite.pack();
 		return composite;
 	}
 
