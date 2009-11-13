@@ -34,6 +34,7 @@ import raptor.connector.fics.pref.FicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.IcsParser;
+import raptor.connector.ics.IcsUtils;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
@@ -630,7 +631,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				if (fics2 != null
 						&& isConnected()
 						&& fics2.isConnected()
-						&& StringUtils.equalsIgnoreCase(event.getSource(),
+						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(event.getSource()).trim(),
 								fics2.getUserName())) {
 					// here we are in fics1 where a partnership was created.
 					if (LOG.isInfoEnabled()) {
@@ -645,7 +646,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						&& fics1 != null
 						&& fics1.isConnected()
 						&& isConnected()
-						&& StringUtils.equalsIgnoreCase(event.getSource(),
+						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(event.getSource()).trim(),
 								fics1.getUserName())) {
 					// here we are in fics2 when a partnership was created.
 					if (LOG.isInfoEnabled()) {

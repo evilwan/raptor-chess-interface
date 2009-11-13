@@ -34,6 +34,7 @@ import raptor.connector.bics.pref.BicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.IcsParser;
+import raptor.connector.ics.IcsUtils;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
@@ -553,8 +554,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				if (bics2 != null
 						&& isConnected()
 						&& bics2.isConnected()
-						&& StringUtils.equalsIgnoreCase(event.getSource(),
-								bics2.getUserName())) {
+						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
+								event.getSource()).trim(), bics2.getUserName())) {
 					// here we are in fics1 where a partnership was created.
 					if (LOG.isInfoEnabled()) {
 						LOG.info("Created simul bughouse partnership with "
@@ -568,8 +569,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 						&& bics1 != null
 						&& bics1.isConnected()
 						&& isConnected()
-						&& StringUtils.equalsIgnoreCase(event.getSource(),
-								bics1.getUserName())) {
+						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
+								event.getSource()).trim(), bics1.getUserName())) {
 					// here we are in fics2 when a partnership was created.
 					if (LOG.isInfoEnabled()) {
 						LOG.info("Created simul bughouse partnership with "
