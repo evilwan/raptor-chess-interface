@@ -46,7 +46,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
-import raptor.swt.RaptorTable.TableListener;
+import raptor.swt.RaptorTable.TableAdapter;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
@@ -215,13 +215,15 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 		table.sort(0);
 		table.sort(0);
 
-		table.addRowListener(new TableListener() {
+		table.addRowListener(new TableAdapter() {
 
+			@Override
 			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
 				service.getConnector().onPartner(rowData[1]);
 
 			}
 
+			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
 				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
 				addPersonMenuItems(menu, rowData[1]);
@@ -237,12 +239,6 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 				}
 				menu.dispose();
 
-			}
-
-			public void tableSorted() {
-			}
-
-			public void tableUpdated() {
 			}
 		});
 

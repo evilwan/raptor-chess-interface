@@ -5,19 +5,25 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -45,7 +51,26 @@ public class RaptorTable extends Composite {
 		}
 	};
 
+	public static class TableAdapter implements TableListener {
+		public void cursorMoved(int row, int column) {
+		}
+
+		public void rowDoubleClicked(MouseEvent event, String[] rowData) {
+		}
+
+		public void rowRightClicked(MouseEvent event, String[] rowData) {
+		}
+
+		public void tableSorted() {
+		}
+
+		public void tableUpdated() {
+		}
+	}
+
 	public static interface TableListener {
+		public void cursorMoved(int row, int column);
+
 		public void rowDoubleClicked(MouseEvent event, String[] rowData);
 
 		public void rowRightClicked(MouseEvent event, String[] rowData);
@@ -91,8 +116,15 @@ public class RaptorTable extends Composite {
 	protected List<TableListener> tableListeners = new ArrayList<TableListener>(
 			2);
 	protected int fixedWidth;
+	protected TableCursor cursor;
+	protected boolean ignoreCursorSelection;
 
 	public RaptorTable(Composite parent, int tableStyle) {
+		this(parent, tableStyle, false, true);
+	}
+
+	public RaptorTable(Composite parent, int tableStyle,
+			boolean usesTableCursor, boolean showHeaders) {
 		super(parent, SWT.NONE);
 		addDisposeListener(new DisposeListener() {
 			public void widgetDisposed(DisposeEvent e) {
@@ -102,7 +134,7 @@ public class RaptorTable extends Composite {
 
 		table = new Table(this, tableStyle);
 		table.setLocation(0, 0);
-		table.setHeaderVisible(true);
+		table.setHeaderVisible(showHeaders);
 		addControlListener(new ControlAdapter() {
 			@Override
 			public void controlResized(ControlEvent e) {
@@ -117,8 +149,10 @@ public class RaptorTable extends Composite {
 			public void mouseDoubleClick(MouseEvent e) {
 				TableItem item = table.getItem(new Point(e.x, e.y));
 
-				for (TableListener listener : tableListeners) {
-					listener.rowDoubleClicked(e, getData(item));
+				if (item != null) {
+					for (TableListener listener : tableListeners) {
+						listener.rowDoubleClicked(e, getData(item));
+					}
 				}
 			}
 
@@ -126,36 +160,113 @@ public class RaptorTable extends Composite {
 			public void mouseDown(MouseEvent e) {
 				if (e.button == 3) {
 					TableItem item = table.getItem(new Point(e.x, e.y));
-					for (TableListener listener : tableListeners) {
-						listener.rowRightClicked(e, getData(item));
+					if (item != null) {
+						for (TableListener listener : tableListeners) {
+							listener.rowRightClicked(e, getData(item));
+						}
 					}
 				}
 			}
 		});
+		if (usesTableCursor) {
+
+			// A trick to hide the row selection.
+			table.addListener(SWT.EraseItem, new Listener() {
+				public void handleEvent(Event event) {
+					if ((event.detail & SWT.SELECTED) != 0) {
+						event.detail &= ~SWT.SELECTED;
+					}
+				}
+			});
+
+			cursor = new TableCursor(table, SWT.NONE);
+			cursor.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					if (!ignoreCursorSelection) {
+						for (TableListener listener : tableListeners) {
+							listener.cursorMoved(table.getSelectionIndex(),
+									cursor.getColumn());
+						}
+					}
+				}
+			});
+
+			// Adds up/down arrow key listener.
+			cursor.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyReleased(KeyEvent e) {
+					synchronized (table) {
+						if (e.keyCode == SWT.ARROW_UP) {
+							int currentRow = table.getSelectionIndex();
+							int currentColumn = cursor.getColumn();
+
+							if (currentRow != 0) {
+								table.deselectAll();
+								table.setSelection(currentRow - 1);
+								cursor.setSelection(currentRow - 1,
+										currentColumn);
+								cursor.setVisible(true);
+								cursor.redraw();
+
+								// for (TableListener listener : tableListeners)
+								// {
+								// listener.cursorMoved(table
+								// .getSelectionIndex(), cursor
+								// .getColumn());
+								// }
+							}
+
+						} else if (e.keyCode == SWT.ARROW_DOWN) {
+							int currentRow = table.getSelectionIndex();
+							int currentColumn = cursor.getColumn();
+
+							if (currentRow != table.getItemCount() - 1) {
+								table.deselectAll();
+								table.setSelection(currentRow + 1);
+								cursor.setSelection(currentRow + 1,
+										currentColumn);
+								cursor.setVisible(true);
+								cursor.redraw();
+
+								// for (TableListener listener : tableListeners)
+								// {
+								// listener.cursorMoved(table
+								// .getSelectionIndex(), cursor
+								// .getColumn());
+								// }
+							}
+						}
+					}
+				}
+			});
+		}
 	}
 
 	public void addColumn(String name, int style, int widthPercentage,
 			boolean isSortable, Comparator<String> compartor) {
-		TableColumn column = new TableColumn(table, style);
-		column.setText(name);
-		final ColumnInfo info = new ColumnInfo();
-		info.column = column;
-		info.widthPercentage = widthPercentage;
-		info.index = ++lastIndex;
-		if (isSortable) {
-			if (compartor == null) {
-				info.comparator = STRING_COMPARATOR;
-			} else {
-				info.comparator = compartor;
-			}
-			column.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					sort(info.index);
+		synchronized (table) {
+			TableColumn column = new TableColumn(table, style);
+			column.setText(name);
+			final ColumnInfo info = new ColumnInfo();
+			info.column = column;
+			info.widthPercentage = widthPercentage;
+			info.index = ++lastIndex;
+			if (isSortable) {
+				if (compartor == null) {
+					info.comparator = STRING_COMPARATOR;
+				} else {
+					info.comparator = compartor;
 				}
-			});
+				column.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						sort(info.index);
+					}
+				});
+			}
+			columnInfos.add(info);
 		}
-		columnInfos.add(info);
 	}
 
 	public void addRowListener(TableListener listener) {
@@ -163,6 +274,9 @@ public class RaptorTable extends Composite {
 	}
 
 	public void appendRow(String[] data) {
+		if (cursor != null) {
+			cursor.setVisible(true);
+		}
 		TableItem item = new TableItem(table, SWT.NONE);
 		item.setText(data);
 
@@ -173,6 +287,9 @@ public class RaptorTable extends Composite {
 
 	public void clearTable() {
 		synchronized (table) {
+			if (cursor != null) {
+				cursor.setVisible(false);
+			}
 			TableItem[] items = table.getItems();
 			for (TableItem item : items) {
 				item.dispose();
@@ -193,8 +310,24 @@ public class RaptorTable extends Composite {
 		}
 	}
 
+	public String[] getRowText(int row) {
+		return getData(table.getItem(row));
+	}
+
 	public Table getTable() {
 		return table;
+	}
+
+	/**
+	 * If usesTableCursor was passed into the constructor then this will return
+	 * the table cursor. Otherwise it will return null.
+	 */
+	public TableCursor getTableCursor() {
+		return cursor;
+	}
+
+	public String getText(int row, int column) {
+		return table.getItem(row).getText(column);
 	}
 
 	/**
@@ -255,6 +388,11 @@ public class RaptorTable extends Composite {
 			table.layout(true);
 			table.redraw();
 
+			if (cursor != null) {
+				cursor.setVisible(true);
+				cursor.redraw();
+			}
+
 			for (TableListener listener : tableListeners) {
 				listener.tableUpdated();
 			}
@@ -278,8 +416,51 @@ public class RaptorTable extends Composite {
 		tableListeners.remove(listener);
 	}
 
+	/**
+	 * If usesTableCursor this will select the specified row and column.
+	 */
+	public void select(int row, int column) {
+		table.deselectAll();
+		table.setSelection(row);
+		if (cursor != null) {
+			cursor.setSelection(row, column);
+			cursor.setVisible(true);
+		}
+		table.redraw();
+		if (cursor != null) {
+			try {
+				cursor.redraw();
+			} catch (NullPointerException npe) {
+			}
+		}
+	}
+
+	public void setCursorEnd() {
+		synchronized (table) {
+			if (table.getItemCount() > 0) {
+				table.deselectAll();
+				table.setSelection(table.getItemCount() - 1);
+				int column = 0;
+				for (int i = table.getColumnCount() - 1; i >= 0; i--) {
+					if (StringUtils.isNotBlank(table.getItem(
+							table.getItemCount() - 1).getText(i))) {
+						column = i;
+						break;
+					}
+				}
+				cursor.setSelection(table.getSelectionIndex(), column);
+				cursor.setVisible(true);
+				cursor.redraw();
+			}
+		}
+	}
+
 	public void setFixedWidth(int width) {
 		fixedWidth = width;
+	}
+
+	public void setText(int row, int column, String text) {
+		table.getItem(row).setText(column, text);
 	}
 
 	public void sort(int index) {

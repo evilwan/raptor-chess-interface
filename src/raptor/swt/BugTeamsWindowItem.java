@@ -47,7 +47,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
-import raptor.swt.RaptorTable.TableListener;
+import raptor.swt.RaptorTable.TableAdapter;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
@@ -192,14 +192,11 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 		tableComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
 		player1Table = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		player1Table.addColumn("Rating", SWT.LEFT, 20, false, null);
+		player1Table.addColumn("Elo", SWT.LEFT, 20, false, null);
 		player1Table.addColumn("Name", SWT.LEFT, 45, false, null);
 		player1Table.addColumn("Status", SWT.LEFT, 35, false, null);
-		player1Table.addRowListener(new TableListener() {
-
-			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
-			}
-
+		player1Table.addRowListener(new TableAdapter() {
+			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
 				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
 				addPersonMenuItems(menu, rowData[1]);
@@ -215,12 +212,6 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 				}
 				menu.dispose();
 			}
-
-			public void tableSorted() {
-			}
-
-			public void tableUpdated() {
-			}
 		});
 
 		player2Table = new RaptorTable(tableComposite, SWT.BORDER
@@ -228,10 +219,9 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 		player2Table.addColumn("Rating", SWT.LEFT, 20, false, null);
 		player2Table.addColumn("Name", SWT.LEFT, 45, false, null);
 		player2Table.addColumn("Status", SWT.LEFT, 35, false, null);
-		player2Table.addRowListener(new TableListener() {
-			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
-			}
+		player2Table.addRowListener(new TableAdapter() {
 
+			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
 				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
 				addPersonMenuItems(menu, rowData[1]);
@@ -248,11 +238,6 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 				menu.dispose();
 			}
 
-			public void tableSorted() {
-			}
-
-			public void tableUpdated() {
-			}
 		});
 
 		final Button isRated = new Button(composite, SWT.CHECK);

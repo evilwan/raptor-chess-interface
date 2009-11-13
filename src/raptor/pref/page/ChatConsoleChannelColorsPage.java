@@ -56,6 +56,12 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 				+ ChatType.CHANNEL_TELL + "-" + channel + "-color";
 	}
 
+	@Override
+	public boolean performOk() {
+		onSave();
+		return super.performOk();
+	}
+
 	public void updateChannelsCombo() {
 		for (int i = 0; i < 255; i++) {
 			String key = getKey("" + i);
@@ -137,32 +143,7 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				try {
-					int channelInt = Integer.parseInt(channelName.getText());
-					if (channelInt < 0 || channelInt > 256) {
-						throw new Exception();
-					}
-					String key = getKey("" + channelInt);
-					raptorPreferenceStore.setValue(key, colorSelector
-							.getColorValue());
-
-					boolean channelsHasSelection = false;
-					for (int i = 0; i < channels.getItemCount(); i++) {
-						if (channels.getItem(i).equals("" + channelInt)) {
-							channelsHasSelection = true;
-							break;
-						}
-					}
-
-					if (!channelsHasSelection) {
-						channels.add("" + channelInt);
-					}
-				} catch (Throwable t) {
-					MessageDialog
-							.openInformation(Raptor.getInstance().getWindow()
-									.getShell(), "Alert",
-									"Channel name must be an integer greater than -1 and less than 256.");
-				}
+				onSave();
 			}
 		});
 
@@ -199,5 +180,39 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		}
 
 		return parent;
+	}
+
+	protected void onSave() {
+		try {
+			int channelInt = Integer.parseInt(channelName.getText());
+			if (channelInt < 0 || channelInt > 256) {
+				throw new Exception();
+			}
+			String key = getKey("" + channelInt);
+			raptorPreferenceStore.setValue(key, colorSelector.getColorValue());
+
+			boolean channelsHasSelection = false;
+			for (int i = 0; i < channels.getItemCount(); i++) {
+				if (channels.getItem(i).equals("" + channelInt)) {
+					channelsHasSelection = true;
+					break;
+				}
+			}
+
+			if (!channelsHasSelection) {
+				channels.add("" + channelInt);
+			}
+		} catch (Throwable t) {
+			MessageDialog
+					.openInformation(Raptor.getInstance().getWindow()
+							.getShell(), "Alert",
+							"Channel name must be an integer greater than -1 and less than 256.");
+		}
+	}
+
+	@Override
+	protected void performApply() {
+		onSave();
+		super.performApply();
 	}
 }
