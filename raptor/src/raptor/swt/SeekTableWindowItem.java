@@ -43,7 +43,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.SeekService;
 import raptor.service.ThreadService;
 import raptor.service.SeekService.SeekServiceListener;
-import raptor.swt.RaptorTable.TableListener;
+import raptor.swt.RaptorTable.TableAdapter;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
@@ -433,12 +433,14 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		seeksTable.sort(1);
 		seeksTable.sort(1);
 
-		seeksTable.addRowListener(new TableListener() {
+		seeksTable.addRowListener(new TableAdapter() {
 
+			@Override
 			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
 				service.getConnector().acceptSeek(rowData[0]);
 			}
 
+			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
 				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
 				addPersonMenuItems(menu, rowData[4]);
@@ -453,12 +455,6 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 					}
 				}
 				menu.dispose();
-			}
-
-			public void tableSorted() {
-			}
-
-			public void tableUpdated() {
 			}
 		});
 

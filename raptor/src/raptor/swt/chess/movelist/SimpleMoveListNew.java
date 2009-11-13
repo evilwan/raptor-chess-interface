@@ -29,7 +29,7 @@ import raptor.swt.chess.ChessBoardMoveList;
  * A move list that just shows a simple 2 column table. The table is traversable
  * by mouse and by keystrokes.
  */
-public class SimpleMoveList implements ChessBoardMoveList {
+public class SimpleMoveListNew implements ChessBoardMoveList {
 	private static final Log LOG = LogFactory.getLog(SimpleMoveList.class);
 
 	protected ChessBoardController controller;
@@ -129,33 +129,26 @@ public class SimpleMoveList implements ChessBoardMoveList {
 
 			Game game = controller.getGame();
 			int moveListSize = game.getMoveList().getSize();
-			if (moveListSize == 0) {
-				movesTable.clearTable();
-			} else {
-				int numRows = (moveListSize + 1) / 2;
-
-				String[][] data = new String[numRows][2];
-
-				for (int i = 0; i < data.length; i++) {
-					data[i][0] = i
-							+ 1
-							+ ") "
-							+ GameUtils.convertSanToUseUnicode(game
-									.getMoveList().get(i * 2).toString(), true);
-					if (i * 2 + 1 >= moveListSize) {
-						data[i][1] = "";
-					} else {
-						data[i][1] = GameUtils.convertSanToUseUnicode(game
-								.getMoveList().get(i * 2 + 1).toString(), true);
-					}
+			String[][] data = new String[moveListSize / 2][2];
+			for (int i = 0; i < data.length; i++) {
+				data[i][0] = i
+						+ 1
+						+ ") "
+						+ GameUtils.convertSanToUseUnicode(game.getMoveList()
+								.get(i * 2).toString(), true);
+				if (i + 1 >= moveListSize) {
+					data[i][1] = "";
+				} else {
+					data[i][1] = GameUtils.convertSanToUseUnicode(game
+							.getMoveList().get(i * 2).toString(), true);
 				}
+			}
 
-				movesTable.refreshTable(data);
+			movesTable.refreshTable(data);
 
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Updated to game in : "
-							+ (System.currentTimeMillis() - startTime));
-				}
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Updated to game in : "
+						+ (System.currentTimeMillis() - startTime));
 			}
 		}
 	}
@@ -185,7 +178,7 @@ public class SimpleMoveList implements ChessBoardMoveList {
 	 */
 	protected void createControls(Composite parent) {
 		movesTable = new RaptorTable(parent, SWT.SINGLE | SWT.V_SCROLL, true,
-				true);
+				false);
 		movesTable.addColumn("White", SWT.LEFT, 60, false, null);
 		movesTable.addColumn("Black", SWT.LEFT, 40, false, null);
 

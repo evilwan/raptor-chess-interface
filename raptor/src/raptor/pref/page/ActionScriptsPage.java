@@ -18,7 +18,6 @@ import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -39,7 +38,6 @@ import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.service.ActionService;
 import raptor.swt.RaptorTable;
 import raptor.swt.SWTUtils;
-import raptor.swt.RaptorTable.TableListener;
 import raptor.util.RaptorUtils;
 
 public class ActionScriptsPage extends PreferencePage {
@@ -95,19 +93,6 @@ public class ActionScriptsPage extends PreferencePage {
 		scriptedActionsTable.addColumn("Script Category", SWT.LEFT, 20, true,
 				null);
 		scriptedActionsTable.addColumn("Description", SWT.LEFT, 50, true, null);
-		scriptedActionsTable.addRowListener(new TableListener() {
-			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
-			}
-
-			public void rowRightClicked(MouseEvent event, String[] rowData) {
-			}
-
-			public void tableSorted() {
-			}
-
-			public void tableUpdated() {
-			}
-		});
 
 		scriptedActionsTable.getTable().addSelectionListener(
 				new SelectionAdapter() {

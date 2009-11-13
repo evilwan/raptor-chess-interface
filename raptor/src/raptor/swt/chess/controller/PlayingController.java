@@ -572,7 +572,7 @@ public class PlayingController extends ChessBoardController {
 		}
 		adjustTimeUpLabel();
 		board.getMoveList().updateToGame();
-		board.getMoveList().select(cursor.getCursorPosition());
+		board.getMoveList().select(getGame().getMoveList().getSize());
 		enableDisableNavButtons();
 		super.refresh();
 	}

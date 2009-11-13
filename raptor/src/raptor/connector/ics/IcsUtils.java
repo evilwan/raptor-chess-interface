@@ -848,7 +848,7 @@ public class IcsUtils implements GameConstants {
 		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
 				- game.getMoveList().getSize();
 
-		if (game.getMoveList().getSize() > 0 && halfMoveCountGameStartedOn != 0) {
+		if (message.moves.length > 0 && halfMoveCountGameStartedOn != 0) {
 			Game gameClone = null;
 			if (message.style12 == null) {
 				gameClone = GameFactory.createStartingPosition(game
