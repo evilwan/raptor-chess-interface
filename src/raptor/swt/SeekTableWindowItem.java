@@ -43,7 +43,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.SeekService;
 import raptor.service.ThreadService;
 import raptor.service.SeekService.SeekServiceListener;
-import raptor.swt.RaptorTable.TableAdapter;
+import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
@@ -433,7 +433,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		seeksTable.sort(1);
 		seeksTable.sort(1);
 
-		seeksTable.addRowListener(new TableAdapter() {
+		seeksTable.addRaptorTableListener(new RaptorTableAdapter() {
 
 			@Override
 			public void rowDoubleClicked(MouseEvent event, String[] rowData) {

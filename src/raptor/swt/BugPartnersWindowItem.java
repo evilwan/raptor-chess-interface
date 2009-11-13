@@ -46,7 +46,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
-import raptor.swt.RaptorTable.TableAdapter;
+import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
@@ -215,7 +215,7 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 		table.sort(0);
 		table.sort(0);
 
-		table.addRowListener(new TableAdapter() {
+		table.addRaptorTableListener(new RaptorTableAdapter() {
 
 			@Override
 			public void rowDoubleClicked(MouseEvent event, String[] rowData) {

@@ -51,16 +51,28 @@ public class RaptorTable extends Composite {
 		}
 	};
 
-	public static class TableAdapter implements TableListener {
+	public static class RaptorTableAdapter implements RaptorTableListener {
+		/**
+		 * @{inheritDoc
+		 */
 		public void cursorMoved(int row, int column) {
 		}
 
+		/**
+		 * @{inheritDoc
+		 */
 		public void rowDoubleClicked(MouseEvent event, String[] rowData) {
 		}
 
+		/**
+		 * @{inheritDoc
+		 */
 		public void rowRightClicked(MouseEvent event, String[] rowData) {
 		}
 
+		/**
+		 * @{inheritDoc
+		 */
 		public void tableSorted() {
 		}
 
@@ -68,15 +80,45 @@ public class RaptorTable extends Composite {
 		}
 	}
 
-	public static interface TableListener {
+	public static interface RaptorTableListener {
+		/**
+		 * Invoked when the cursor is moved.
+		 * 
+		 * @param row
+		 *            New cursor row
+		 * @param column
+		 *            New cursor column.
+		 */
 		public void cursorMoved(int row, int column);
 
+		/**
+		 * Invoked when a row is double clicked.
+		 * 
+		 * @param event
+		 *            The mouse event of the double click.
+		 * @param rowData
+		 *            The row data in the row that was double clicked.
+		 */
 		public void rowDoubleClicked(MouseEvent event, String[] rowData);
 
+		/**
+		 * Invoked when a row is right clicked.
+		 * 
+		 * @param event
+		 *            The mouse event of the right click.
+		 * @param rowData
+		 *            The row data in the row that was right clicked.
+		 */
 		public void rowRightClicked(MouseEvent event, String[] rowData);
 
+		/**
+		 * Invoked after the table is sorted.
+		 */
 		public void tableSorted();
 
+		/**
+		 * Invoked when the table is updated.
+		 */
 		public void tableUpdated();
 	}
 
@@ -113,16 +155,36 @@ public class RaptorTable extends Composite {
 	protected TableColumn lastStortedColumn;
 	protected boolean wasLastSortAscending;
 	protected TableItemComparator lastComparator;
-	protected List<TableListener> tableListeners = new ArrayList<TableListener>(
+	protected List<RaptorTableListener> tableListeners = new ArrayList<RaptorTableListener>(
 			2);
 	protected int fixedWidth;
 	protected TableCursor cursor;
 	protected boolean ignoreCursorSelection;
 
+	/**
+	 * Creates a RaptorTable that shows headers and does'nt use a table cursor.
+	 * 
+	 * @param parent
+	 *            Parent component
+	 * @param tableStyle
+	 *            Style for the swt Table object.
+	 */
 	public RaptorTable(Composite parent, int tableStyle) {
 		this(parent, tableStyle, false, true);
 	}
 
+	/**
+	 * Constructs a RaptorTable
+	 * 
+	 * @param parent
+	 *            Parent component
+	 * @param tableStyle
+	 *            Style for the swt Table object.
+	 * @param usesTableCursor
+	 *            True if a table cursor should be used, false otherwise.
+	 * @param showHeaders
+	 *            True if headers should be shown, false otherwise.
+	 */
 	public RaptorTable(Composite parent, int tableStyle,
 			boolean usesTableCursor, boolean showHeaders) {
 		super(parent, SWT.NONE);
@@ -150,7 +212,7 @@ public class RaptorTable extends Composite {
 				TableItem item = table.getItem(new Point(e.x, e.y));
 
 				if (item != null) {
-					for (TableListener listener : tableListeners) {
+					for (RaptorTableListener listener : tableListeners) {
 						listener.rowDoubleClicked(e, getData(item));
 					}
 				}
@@ -161,7 +223,7 @@ public class RaptorTable extends Composite {
 				if (e.button == 3) {
 					TableItem item = table.getItem(new Point(e.x, e.y));
 					if (item != null) {
-						for (TableListener listener : tableListeners) {
+						for (RaptorTableListener listener : tableListeners) {
 							listener.rowRightClicked(e, getData(item));
 						}
 					}
@@ -184,7 +246,7 @@ public class RaptorTable extends Composite {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					if (!ignoreCursorSelection) {
-						for (TableListener listener : tableListeners) {
+						for (RaptorTableListener listener : tableListeners) {
 							listener.cursorMoved(table.getSelectionIndex(),
 									cursor.getColumn());
 						}
@@ -208,13 +270,6 @@ public class RaptorTable extends Composite {
 										currentColumn);
 								cursor.setVisible(true);
 								cursor.redraw();
-
-								// for (TableListener listener : tableListeners)
-								// {
-								// listener.cursorMoved(table
-								// .getSelectionIndex(), cursor
-								// .getColumn());
-								// }
 							}
 
 						} else if (e.keyCode == SWT.ARROW_DOWN) {
@@ -228,13 +283,6 @@ public class RaptorTable extends Composite {
 										currentColumn);
 								cursor.setVisible(true);
 								cursor.redraw();
-
-								// for (TableListener listener : tableListeners)
-								// {
-								// listener.cursorMoved(table
-								// .getSelectionIndex(), cursor
-								// .getColumn());
-								// }
 							}
 						}
 					}
@@ -243,6 +291,21 @@ public class RaptorTable extends Composite {
 		}
 	}
 
+	/**
+	 * Adds a column to this table.
+	 * 
+	 * @param name
+	 *            The name of the column.
+	 * @param style
+	 *            The style of the column (SWT.LEFT,SWT.RIGHT,SWT.CENTER).
+	 * @param widthPercentage
+	 *            The width percentage of this column.
+	 * @param isSortable
+	 *            True of the column is sortable.
+	 * @param compartor
+	 *            The comparator to use for the sort if isSortable. If null a
+	 *            String.compareTo will be used.
+	 */
 	public void addColumn(String name, int style, int widthPercentage,
 			boolean isSortable, Comparator<String> compartor) {
 		synchronized (table) {
@@ -269,10 +332,16 @@ public class RaptorTable extends Composite {
 		}
 	}
 
-	public void addRowListener(TableListener listener) {
+	/**
+	 * Adds a RaptorTableListener to this table.
+	 */
+	public void addRaptorTableListener(RaptorTableListener listener) {
 		tableListeners.add(listener);
 	}
 
+	/**
+	 * Appends a row to this table.
+	 */
 	public void appendRow(String[] data) {
 		if (cursor != null) {
 			cursor.setVisible(true);
@@ -280,11 +349,14 @@ public class RaptorTable extends Composite {
 		TableItem item = new TableItem(table, SWT.NONE);
 		item.setText(data);
 
-		for (TableListener listener : tableListeners) {
+		for (RaptorTableListener listener : tableListeners) {
 			listener.tableUpdated();
 		}
 	}
 
+	/**
+	 * Clears the contents of this table.
+	 */
 	public void clearTable() {
 		synchronized (table) {
 			if (cursor != null) {
@@ -295,12 +367,15 @@ public class RaptorTable extends Composite {
 				item.dispose();
 			}
 
-			for (TableListener listener : tableListeners) {
+			for (RaptorTableListener listener : tableListeners) {
 				listener.tableUpdated();
 			}
 		}
 	}
 
+	/**
+	 * Overridden to support fixed width if its set.
+	 */
 	@Override
 	public Point computeSize(int hint, int hint2, boolean changed) {
 		if (fixedWidth != 0) {
@@ -310,10 +385,42 @@ public class RaptorTable extends Composite {
 		}
 	}
 
+	/**
+	 * Returns the number of columns in this table.
+	 */
+	public int getColumnCount() {
+		return table.getColumnCount();
+	}
+
+	/**
+	 * Returns the number of rows in this table.
+	 */
+	public int getRowCount() {
+		return table.getItemCount();
+	}
+
+	/**
+	 * Returns the text in the specified row.
+	 */
 	public String[] getRowText(int row) {
 		return getData(table.getItem(row));
 	}
 
+	/**
+	 * Returns the data in the selected row if one is selected, otherwise
+	 * returns null.
+	 */
+	public String[] getSelectedRowData() {
+		if (table.getSelectionIndex() == -1) {
+			return null;
+		} else {
+			return getRowText(table.getSelectionIndex());
+		}
+	}
+
+	/**
+	 * Returns the backing table this RaptorTable uses.
+	 */
 	public Table getTable() {
 		return table;
 	}
@@ -326,6 +433,9 @@ public class RaptorTable extends Composite {
 		return cursor;
 	}
 
+	/**
+	 * Returns the text in the specified cell.
+	 */
 	public String getText(int row, int column) {
 		return table.getItem(row).getText(column);
 	}
@@ -393,7 +503,7 @@ public class RaptorTable extends Composite {
 				cursor.redraw();
 			}
 
-			for (TableListener listener : tableListeners) {
+			for (RaptorTableListener listener : tableListeners) {
 				listener.tableUpdated();
 			}
 		}
@@ -404,16 +514,22 @@ public class RaptorTable extends Composite {
 		}
 	}
 
+	/**
+	 * Removes a TableListener from this table.
+	 */
+	public void removeRaptorTableListener(RaptorTableListener listener) {
+		tableListeners.remove(listener);
+	}
+
+	/**
+	 * Removes the specified row.
+	 */
 	public void removeRow(int index) {
 		table.getItem(index).dispose();
 
-		for (TableListener listener : tableListeners) {
+		for (RaptorTableListener listener : tableListeners) {
 			listener.tableUpdated();
 		}
-	}
-
-	public void removeRowListener(TableListener listener) {
-		tableListeners.remove(listener);
 	}
 
 	/**
@@ -435,6 +551,9 @@ public class RaptorTable extends Composite {
 		}
 	}
 
+	/**
+	 * Sets the cursor to the first non null column in the last row.
+	 */
 	public void setCursorEnd() {
 		synchronized (table) {
 			if (table.getItemCount() > 0) {
@@ -448,21 +567,34 @@ public class RaptorTable extends Composite {
 						break;
 					}
 				}
-				cursor.setSelection(table.getSelectionIndex(), column);
-				cursor.setVisible(true);
-				cursor.redraw();
+				if (cursor != null) {
+					cursor.setSelection(table.getSelectionIndex(), column);
+					cursor.setVisible(true);
+					cursor.redraw();
+				}
 			}
 		}
 	}
 
+	/**
+	 * Sets a fixed width for this table. It will always return the passed in
+	 * width in computeSize.
+	 */
 	public void setFixedWidth(int width) {
 		fixedWidth = width;
 	}
 
+	/**
+	 * Sets the text in the specified cell.
+	 */
 	public void setText(int row, int column, String text) {
 		table.getItem(row).setText(column, text);
 	}
 
+	/**
+	 * Sorts the specified column. Keeps track of ascending,descending and
+	 * toggles them if the same column is sorted twice.
+	 */
 	public void sort(int index) {
 		synchronized (table) {
 			table.setRedraw(false);
@@ -480,13 +612,16 @@ public class RaptorTable extends Composite {
 			table.layout(true);
 			table.redraw();
 
-			for (TableListener listener : tableListeners) {
+			for (RaptorTableListener listener : tableListeners) {
 				listener.tableSorted();
 			}
 		}
 
 	}
 
+	/**
+	 * Returns a String[] of the data in the specified item.
+	 */
 	protected String[] getData(TableItem item) {
 		Table table = item.getParent();
 		int colCount = table.getColumnCount();
@@ -497,12 +632,19 @@ public class RaptorTable extends Composite {
 		return result;
 	}
 
+	/**
+	 * Resizes the columns to the specified width according to their
+	 * percentages.
+	 */
 	protected void resizeColumns(int width) {
 		for (ColumnInfo info : columnInfos) {
 			info.column.setWidth((int) (width * info.widthPercentage / 100.0));
 		}
 	}
 
+	/**
+	 * Sorts the table using the specified comparator.
+	 */
 	protected void sort(Comparator<TableItem> comparator) {
 		long startTime = System.currentTimeMillis();
 
