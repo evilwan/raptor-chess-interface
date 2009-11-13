@@ -72,10 +72,9 @@ import raptor.util.RaptorStringUtils;
  * When a game is no longer active, this controller swaps itself out with the
  * Inactive controller.
  * 
- * This controller suports premove,queued premove, and premove drop.
+ * This controller supports premove,queued premove, and premove drop.
  * 
  * You can also right click to bring up a menu of available pieces to drop.
- * 
  */
 public class PlayingController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(PlayingController.class);
@@ -629,14 +628,20 @@ public class PlayingController extends ChessBoardController {
 		long startTime = System.currentTimeMillis();
 
 		if (isUsersMove()) {
-			// Non premoves flow through here
-			if (fromSquare == toSquare
-					|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
+			if (fromSquare == toSquare) {
+				if (LOG.isDebugEnabled()) {
+					LOG
+							.debug("User tried to make a move where from square == to square.");
+				}
+				refreshBoard();
+				return;
+			} else if (ChessBoardUtils.isPieceJailSquare(toSquare)) {
 				if (LOG.isDebugEnabled()) {
 					LOG
 							.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
 				}
 				adjustForIllegalMove(fromSquare, toSquare, false);
+				return;
 			}
 
 			if (LOG.isDebugEnabled()) {
@@ -677,9 +682,14 @@ public class PlayingController extends ChessBoardController {
 
 		} else if (isPremoveable()) {
 			// Premove logic flows through here
-
-			if (fromSquare == toSquare
-					|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
+			if (fromSquare == toSquare) {
+				if (LOG.isDebugEnabled()) {
+					LOG
+							.debug("User tried to make a premove with fromSquare == toSquare.");
+				}
+				refreshBoard();
+				return;
+			} else if (ChessBoardUtils.isPieceJailSquare(toSquare)) {
 				// No need to check other conditions they are checked in
 				// canUserInitiateMoveFrom
 
@@ -691,6 +701,7 @@ public class PlayingController extends ChessBoardController {
 				adjustForIllegalMove(fromSquare, toSquare, false);
 				return;
 			}
+
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Processing premove.");
 			}
