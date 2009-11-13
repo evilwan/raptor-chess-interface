@@ -552,10 +552,14 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		if (chatService != null) { // Could have been disposed.
 			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
 				if (bics1 == null) {
-					LOG.warn("in bics1 connector bics1User=" + getUserName() + " bics2User=" + bics2.getUserName() + " eventSource=" + event.getSource());
-				}
-				else {
-					LOG.warn("in bics2 connector bics1User=" + bics1.getUserName() + " bics2User=" + getUserName() + " eventSource=" + event.getSource());
+					LOG.warn("in bics1 connector bics1User=" + getUserName()
+							+ " bics2User=" + bics2.getUserName()
+							+ " eventSource=" + event.getSource());
+				} else {
+					LOG.warn("in bics2 connector bics1User="
+							+ bics1.getUserName() + " bics2User="
+							+ getUserName() + " eventSource="
+							+ event.getSource());
 				}
 				if (bics2 != null
 						&& isConnected()

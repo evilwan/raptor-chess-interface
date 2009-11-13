@@ -5,8 +5,7 @@
 	<!--
 	   IMPORTANT to run from this build file for OS X use runOSX and not run!.
 	 -->
-	
-	
+
 	<!--
 	    IMPORTANT to run the application you will need to specify your environment here.
 	    This is the folder located in projectFiles/swt to use for your compile,run.
