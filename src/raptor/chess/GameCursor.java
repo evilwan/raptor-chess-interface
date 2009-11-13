@@ -563,13 +563,13 @@ public class GameCursor implements Game {
 	public void setCursor(int halfMoveIndex) {
 
 		if (halfMoveIndex < 0) {
-			LOG.warn("Half move index must be greater than or equal to 0. "
+			LOG.info("Half move index must be greater than or equal to 0. "
 					+ halfMoveIndex + " setting to 0.");
 			halfMoveIndex = 0;
 		}
 		if (halfMoveIndex > getMoveList().getSize()) {
 			LOG
-					.warn("Half move index must be less than the master games move list size."
+					.info("Half move index must be less than the master games move list size."
 							+ halfMoveIndex
 							+ " setting to "
 							+ getMoveList().getSize());
