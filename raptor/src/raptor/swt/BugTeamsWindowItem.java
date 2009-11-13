@@ -47,7 +47,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
-import raptor.swt.RaptorTable.TableAdapter;
+import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
@@ -195,7 +195,7 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 		player1Table.addColumn("Elo", SWT.LEFT, 20, false, null);
 		player1Table.addColumn("Name", SWT.LEFT, 45, false, null);
 		player1Table.addColumn("Status", SWT.LEFT, 35, false, null);
-		player1Table.addRowListener(new TableAdapter() {
+		player1Table.addRaptorTableListener(new RaptorTableAdapter() {
 			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
 				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
@@ -219,7 +219,7 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 		player2Table.addColumn("Rating", SWT.LEFT, 20, false, null);
 		player2Table.addColumn("Name", SWT.LEFT, 45, false, null);
 		player2Table.addColumn("Status", SWT.LEFT, 35, false, null);
-		player2Table.addRowListener(new TableAdapter() {
+		player2Table.addRaptorTableListener(new RaptorTableAdapter() {
 
 			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {

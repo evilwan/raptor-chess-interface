@@ -36,7 +36,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
-import raptor.swt.RaptorTable.TableAdapter;
+import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.util.IntegerComparator;
 import raptor.util.RatingComparator;
 
@@ -151,7 +151,7 @@ public class BugGamesWindowItem implements RaptorConnectorWindowItem {
 		bugGamesTable.addColumn("BName", SWT.LEFT, 19, true, null);
 		bugGamesTable.addColumn("Time", SWT.LEFT, 14, true, null);
 
-		bugGamesTable.addRowListener(new TableAdapter() {
+		bugGamesTable.addRaptorTableListener(new RaptorTableAdapter() {
 			@Override
 			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
 				service.getConnector().onObserveGame(rowData[0]);

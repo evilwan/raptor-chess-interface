@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import raptor.chess.Game;
 import raptor.chess.util.GameUtils;
 import raptor.swt.RaptorTable;
-import raptor.swt.RaptorTable.TableAdapter;
+import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardMoveList;
 
@@ -182,7 +182,7 @@ public class SimpleMoveListNew implements ChessBoardMoveList {
 		movesTable.addColumn("White", SWT.LEFT, 60, false, null);
 		movesTable.addColumn("Black", SWT.LEFT, 40, false, null);
 
-		movesTable.addRowListener(new TableAdapter() {
+		movesTable.addRaptorTableListener(new RaptorTableAdapter() {
 			@Override
 			public void cursorMoved(int row, int column) {
 				if (!ignoreSelection) {
