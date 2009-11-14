@@ -488,7 +488,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD, true);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor v.Beta1c");
+		setDefault(APP_NAME, "Raptor v.Beta1d");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName, 12, 0) });
