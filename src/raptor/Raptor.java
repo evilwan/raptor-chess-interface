@@ -381,12 +381,21 @@ public class Raptor implements PreferenceKeys {
 	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
 	 */
 	public void shutdown() {
+		shutdown(false);
+	}
+
+	/**
+	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
+	 */
+	public void shutdown(boolean isIgnoringPreferenceSaves) {
 		if (isShutdown()) {
 			return;
 		}
 		isShutdown = true;
 
-		getPreferences().save();
+		if (!isIgnoringPreferenceSaves) {
+			getPreferences().save();
+		}
 
 		try {
 			ConnectorService.getInstance().dispose();

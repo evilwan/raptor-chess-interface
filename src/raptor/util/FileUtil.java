@@ -139,4 +139,29 @@ public class FileUtil {
 			}
 		}
 	}
+
+	/**
+	 * Deletes all files and subdirectories under "dir".
+	 * 
+	 * @param dir
+	 *            Directory to be deleted
+	 * @return boolean Returns "true" if all deletions were successful. If a
+	 *         deletion fails, the method stops attempting to delete and returns
+	 *         "false".
+	 */
+	public static boolean deleteDir(File dir) {
+
+		if (dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+
+		// The directory is now empty so now it can be smoked
+		return dir.delete();
+	}
 }
