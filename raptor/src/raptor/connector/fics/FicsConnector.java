@@ -629,25 +629,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	protected void publishEvent(final ChatEvent event) {
 		if (chatService != null) { // Could have been disposed.
 			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
-				if (fics1 == null) {
-					LOG.warn("in fics1 connector fics1User=" + getUserName()
-							+ " fics2User=" + fics2.getUserName()
-							+ " eventSource=" + event.getSource());
-				} else {
-					LOG.warn("in fics2 connector fics1User="
-							+ fics1.getUserName() + " fics2User="
-							+ getUserName() + " eventSource="
-							+ event.getSource());
-				}
-
 				if (fics2 != null
 						&& isConnected()
 						&& fics2.isConnected()
 						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
 								event.getSource()).trim(), fics2.getUserName())) {
 					// here we are in fics1 where a partnership was created.
-					if (LOG.isWarnEnabled()) {
-						LOG.warn("Created simul bughouse partnership with "
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Created simul bughouse partnership with "
 								+ fics2.getUserName());
 					}
 					isSimulBugConnector = true;
@@ -661,8 +650,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
 								event.getSource()).trim(), fics1.getUserName())) {
 					// here we are in fics2 when a partnership was created.
-					if (LOG.isWarnEnabled()) {
-						LOG.warn("Created simul bughouse partnership with "
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Created simul bughouse partnership with "
 								+ fics1.getUserName());
 					}
 					isSimulBugConnector = true;
@@ -681,9 +670,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				isSimulBugConnector = false;
 				simulBugPartnerName = null;
 
-				if (LOG.isWarnEnabled()) {
+				if (LOG.isDebugEnabled()) {
 					LOG
-							.warn("Partnership destroyed. Resetting partnership information.");
+							.debug("Partnership destroyed. Resetting partnership information.");
 				}
 
 				// clear out the fics2 or fics1 depending on what this is.
