@@ -1490,8 +1490,9 @@ public class ClassicGame implements Game {
 		if (getColorToMove() == WHITE
 				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
 				&& fromBB == E1 && getPiece(SQUARE_G1) == EMPTY
-				&& getPiece(SQUARE_F1) == EMPTY && !isInCheck(WHITE, E1)
-				&& !isInCheck(WHITE, F1)) {
+				&& GameUtils.isWhitePiece(this, SQUARE_H1)
+				&& getPiece(SQUARE_H1) == ROOK && getPiece(SQUARE_F1) == EMPTY
+				&& !isInCheck(WHITE, E1) && !isInCheck(WHITE, F1)) {
 			moves
 					.appendLowPriority(new Move(SQUARE_E1, SQUARE_G1, KING,
 							getColorToMove(), EMPTY,
@@ -1500,7 +1501,8 @@ public class ClassicGame implements Game {
 
 		if (getColorToMove() == WHITE
 				&& (getCastling(getColorToMove()) & CASTLE_LONG) != 0
-				&& fromBB == E1 && getPiece(SQUARE_D1) == EMPTY
+				&& fromBB == E1 && GameUtils.isWhitePiece(this, SQUARE_A1)
+				&& getPiece(SQUARE_A1) == ROOK && getPiece(SQUARE_D1) == EMPTY
 				&& getPiece(SQUARE_C1) == EMPTY && getPiece(SQUARE_B1) == EMPTY
 				&& !isInCheck(WHITE, E1) && !isInCheck(WHITE, D1)) {
 			moves
@@ -1511,7 +1513,8 @@ public class ClassicGame implements Game {
 
 		if (getColorToMove() == BLACK
 				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
-				&& fromBB == E8 && getPiece(SQUARE_G8) == EMPTY
+				&& fromBB == E8 && !GameUtils.isWhitePiece(this, SQUARE_H8)
+				&& getPiece(SQUARE_H8) == ROOK && getPiece(SQUARE_G8) == EMPTY
 				&& getPiece(SQUARE_F8) == EMPTY && !isInCheck(BLACK, E8)
 				&& !isInCheck(BLACK, F8)) {
 			moves
@@ -1523,9 +1526,11 @@ public class ClassicGame implements Game {
 
 		if (getColorToMove() == BLACK
 				&& (getCastling(getColorToMove()) & CASTLE_LONG) != 0
-				&& fromBB == E8 && getPiece(SQUARE_D8) == EMPTY
-				&& getPiece(SQUARE_C8) == EMPTY && getPiece(SQUARE_B8) == EMPTY
-				&& !isInCheck(BLACK, E8) && !isInCheck(BLACK, D8)) {
+				&& !GameUtils.isWhitePiece(this, SQUARE_A8)
+				&& getPiece(SQUARE_A8) == ROOK && fromBB == E8
+				&& getPiece(SQUARE_D8) == EMPTY && getPiece(SQUARE_C8) == EMPTY
+				&& getPiece(SQUARE_B8) == EMPTY && !isInCheck(BLACK, E8)
+				&& !isInCheck(BLACK, D8)) {
 			moves
 					.appendLowPriority(new Move(SQUARE_E8, SQUARE_C8, KING,
 							getColorToMove(), EMPTY,
