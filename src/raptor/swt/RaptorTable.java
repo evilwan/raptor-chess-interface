@@ -475,7 +475,7 @@ public class RaptorTable extends Composite {
 				}
 			}
 			if (data.length < items.length) {
-				for (int i = data.length; i < table.getItemCount(); i++) {
+				for (int i = data.length; i < items.length; i++) {
 					items[i].dispose();
 				}
 			}
