@@ -294,6 +294,13 @@ public class Raptor implements PreferenceKeys {
 		return raptorWindow;
 	}
 
+	/**
+	 * Does'nt execute the normal shutdown procedure when Raptor is closed.
+	 */
+	public void ignoreShutdown() {
+		isShutdown = true;
+	}
+
 	public boolean isDisposed() {
 		return getInstance() == null || getInstance().getWindow() == null
 				|| getInstance().getWindow().getShell() != null
