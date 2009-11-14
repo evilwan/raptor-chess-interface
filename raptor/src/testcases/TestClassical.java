@@ -19,6 +19,7 @@ import static raptor.chess.GameFactory.createStartingPosition;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -182,6 +183,35 @@ public class TestClassical implements GameConstants {
 			result = array[i].equals(string);
 		}
 		return result;
+	}
+	
+	@Test
+	public void testEP3() throws Exception {
+		Game game = createStartingPosition(Variant.bughouse);
+		game.addState(Game.UPDATING_SAN_STATE);
+		
+		game.makeSanMove("e4");
+		game.getLegalMoves();
+		game.makeSanMove("Nf6");
+		game.getLegalMoves();
+		game.makeSanMove("e5");
+		game.getLegalMoves();
+		game.makeSanMove("Ne4");
+		game.getLegalMoves();
+		game.makeSanMove("Nc3");
+		game.getLegalMoves();
+		game.makeSanMove("d5");
+		game.getLegalMoves();
+		game.rollback();
+		game.makeSanMove("d5");
+		game.makeSanMove("exd6");
+		game.rollback();
+		game.setDropCount(WHITE, PAWN, 1);
+		game.setDropCount(WHITE, KNIGHT, 1);
+		game.setDropCount(BLACK, PAWN, 1);
+		System.err.println(Arrays.toString(game.getLegalMoves().asArray()));
+		game.makeSanMove("exd6");
+		
 	}
 
 	@Test
