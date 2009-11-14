@@ -27,6 +27,7 @@ import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
+import raptor.util.FileUtil;
 import raptor.util.RaptorStringUtils;
 
 public class RaptorPage extends FieldEditorPreferencePage {
@@ -142,5 +143,23 @@ public class RaptorPage extends FieldEditorPreferencePage {
 				PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL,
 				"Polling Refresh Interval (Seek Table,Bug Partners,Bug Teams,etc):",
 				POLLING_REFRESH, getFieldEditorParent()));
+
+		addField(new LabelButtonFieldEditor("NONE", "", getFieldEditorParent(),
+				"Reset Raptor To Defaults", new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						if (Raptor
+								.getInstance()
+								.confirm(
+										"You will lose all preferences,saved scripts,saved games,and image caching. "
+												+ "Raptor will also exit after executing this action, and will "
+												+ "have to be restarted. "
+												+ "Do you wish to continue?")) {
+							FileUtil.deleteDir(Raptor.USER_RAPTOR_DIR);
+							Raptor.getInstance().ignoreShutdown();
+							System.exit(1);
+						}
+					}
+				}));
 	}
 }
