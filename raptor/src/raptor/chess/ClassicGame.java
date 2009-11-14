@@ -2124,7 +2124,7 @@ public class ClassicGame implements Game {
 		updateZobristDrop(move, oppositeColor);
 
 		setPiece(move.getTo(), EMPTY);
-		setEpSquare(move.getEpSquare());
+		setEpSquareFromPreviousMove();
 	}
 
 	protected void rollbackEcoHeaders(Move move) {
