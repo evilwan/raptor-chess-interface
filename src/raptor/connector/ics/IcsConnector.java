@@ -42,6 +42,8 @@ import raptor.chat.ChatType;
 import raptor.chess.BughouseGame;
 import raptor.chess.Game;
 import raptor.chess.Move;
+import raptor.chess.Result;
+import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
@@ -729,6 +731,12 @@ public abstract class IcsConnector implements Connector {
 		return isSimulBugConnector;
 	}
 
+	public void kibitz(Game game, String kibitz) {
+		sendMessage("primary " + game.getId(), true);
+		sendMessage("kibitz " + kibitz);
+
+	}
+
 	public void makeMove(Game game, Move move) {
 		sendMessage(move.getLan(), true);
 	}
@@ -737,6 +745,37 @@ public abstract class IcsConnector implements Connector {
 			int inc) {
 		sendMessage("$$match " + playerName + " " + time + " " + inc + " "
 				+ (isRated ? "rated" : "unrated") + " bughouse");
+	}
+
+	public void matchWinner(Game game) {
+		String winner = game.getResult() == Result.WHITE_WON ? game
+				.getHeader(PgnHeader.White)
+				: game.getResult() == Result.BLACK_WON ? game
+						.getHeader(PgnHeader.Black) : null;
+
+		if (winner != null) {
+			String timeControl = game.getHeader(PgnHeader.TimeControl);
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(timeControl,
+					"+", true);
+			try {
+				String minutes = "" + Integer.parseInt(tok.nextToken()) / 60;
+				String seconds = tok.nextToken();
+
+				String match = "match "
+						+ winner
+						+ " "
+						+ minutes
+						+ " "
+						+ seconds
+						+ " "
+						+ (game.getHeader(PgnHeader.Event).contains("unrated") ? "u"
+								: "r") + " " + Variant.getIcsMatchType(game);
+
+				sendMessage(match);
+			} catch (NumberFormatException nfe) {
+				return;
+			}
+		}
 	}
 
 	public void onAbortKeyPress() {
@@ -1097,6 +1136,11 @@ public abstract class IcsConnector implements Connector {
 					preference);
 			Raptor.getInstance().getPreferences().save();
 		}
+	}
+
+	public void whisper(Game game, String whisper) {
+		sendMessage("primary " + game.getId(), true);
+		sendMessage("whisper " + whisper);
 	}
 
 	/**

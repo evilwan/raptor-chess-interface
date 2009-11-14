@@ -60,6 +60,7 @@ import raptor.action.game.FirstAction;
 import raptor.action.game.ForceUpdateAction;
 import raptor.action.game.ForwardAction;
 import raptor.action.game.LastAction;
+import raptor.action.game.MatchWinnerAction;
 import raptor.action.game.MoveListAction;
 import raptor.action.game.RevertAction;
 import raptor.chess.Game;
@@ -70,6 +71,7 @@ import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ActionService;
 import raptor.service.ThreadService;
+import raptor.swt.chess.controller.BughouseSuggestController;
 import raptor.swt.chess.controller.ToolBarItemKey;
 import raptor.util.SVGUtil;
 
@@ -738,6 +740,13 @@ public class ChessBoardUtils implements BoardConstants {
 		if (action instanceof SeparatorAction) {
 			result = new ToolItem(toolbar, SWT.SEPARATOR);
 			return result;
+		} else if (action instanceof MatchWinnerAction) {
+			if (controller instanceof BughouseSuggestController) {
+				return null;
+			}
+			result = new ToolItem(toolbar, SWT.CHECK);
+			controller.addToolItem(ToolBarItemKey.MATCH_WINNER, result);
+
 		} else if (action instanceof AutoDrawAction) {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			controller.addToolItem(ToolBarItemKey.AUTO_DRAW, result);

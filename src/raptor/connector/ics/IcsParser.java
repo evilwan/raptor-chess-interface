@@ -302,8 +302,7 @@ public class IcsParser implements GameConstants {
 		// to
 		// do this.
 		if (bugGamesWithoutBoard2.isEmpty()) {
-			if (!connector.isSimulBugConnector()
-					&& observePartnerBoardForGame(game)) {
+			if (observePartnerBoardForGame(game)) {
 				bugGamesWithoutBoard2.add(message.gameId);
 				connector.sendMessage("pobserve "
 						+ (message.isWhiteOnTop ? message.blackName
@@ -339,8 +338,7 @@ public class IcsParser implements GameConstants {
 			Game game, G1Message g1Message, Style12Message message,
 			GameService service) {
 		if (!connector.getGameService().isManaging(g1Message.parterGameId)) {
-			if (!connector.isSimulBugConnector()
-					&& observePartnerBoardForGame(game)) {
+			if (observePartnerBoardForGame(game)) {
 				connector
 						.sendMessage("observe " + g1Message.parterGameId, true);
 			}
@@ -391,6 +389,27 @@ public class IcsParser implements GameConstants {
 
 	protected boolean observePartnerBoardForGame(Game game) {
 		boolean result = false;
+
+		// This lets you observe if you are simuled but obsing another game,
+		// otherwise
+		// it wont let you observe.
+		if (connector.isSimulBugConnector()) {
+			String white = IcsUtils
+					.stripTitles(game.getHeader(PgnHeader.White));
+			String black = IcsUtils
+					.stripTitles(game.getHeader(PgnHeader.Black));
+
+			if (StringUtils.equalsIgnoreCase(white, connector.getUserName())
+					|| StringUtils.equalsIgnoreCase(white, connector
+							.getSimulBugPartnerName())
+					|| StringUtils.equalsIgnoreCase(black, connector
+							.getUserName())
+					|| StringUtils.equalsIgnoreCase(black, connector
+							.getSimulBugPartnerName())) {
+				return false;
+			}
+		}
+
 		if (game.isInState(Game.PLAYING_STATE)) {
 			result = connector.getPreferences().getBoolean(
 					PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD);
