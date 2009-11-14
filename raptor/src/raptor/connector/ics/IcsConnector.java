@@ -304,7 +304,7 @@ public abstract class IcsConnector implements Connector {
 		@Override
 		public void gameCreated(Game game) {
 			if (game instanceof BughouseGame) {
-				if (isSimulBugConnector) {
+				if (isSimulBugConnector && game.isInState(Game.PLAYING_STATE)) {
 					// Always make white the primary and black the other board.
 					if (StringUtils.equals(game.getHeader(PgnHeader.White),
 							getUserName())) {
