@@ -70,6 +70,8 @@ public class ObserveController extends ChessBoardController {
 							return;
 						}
 
+						handleMatchWinner();
+
 						try {
 							board.getResultDecorator().setDecorationFromResult(
 									getGame().getResult());
@@ -399,6 +401,15 @@ public class ObserveController extends ChessBoardController {
 		cursor.setCursor(halfMoveNumber);
 		refresh(false);
 		addDecorationsForLastMoveListMove();
+	}
+
+	protected void handleMatchWinner() {
+		if (isToolItemSelected(ToolBarItemKey.MATCH_WINNER)) {
+			if (connector instanceof BughouseSuggestController) {
+				return;
+			}
+			connector.matchWinner(cursor.getMasterGame());
+		}
 	}
 
 	protected void onPlayGameEndSound() {

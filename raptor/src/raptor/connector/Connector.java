@@ -225,6 +225,8 @@ public interface Connector {
 	 */
 	public boolean isLoggedInUserPlayingAGame();
 
+	public void kibitz(Game game, String kibitz);
+
 	/**
 	 * Makes the move in the specified game.
 	 */
@@ -232,6 +234,8 @@ public interface Connector {
 
 	public void matchBughouse(String playerName, boolean isRated, int time,
 			int inc);
+
+	public void matchWinner(Game game);
 
 	/**
 	 * Handles sending an abort.
@@ -411,4 +415,6 @@ public interface Connector {
 	 */
 	public void sendMessage(String message, boolean isHidingFromUser,
 			ChatType hideNextChatType);
+
+	public void whisper(Game game, String whisper);
 }

@@ -56,12 +56,6 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 				+ ChatType.CHANNEL_TELL + "-" + channel + "-color";
 	}
 
-	@Override
-	public boolean performOk() {
-		onSave();
-		return super.performOk();
-	}
-
 	public void updateChannelsCombo() {
 		for (int i = 0; i < 255; i++) {
 			String key = getKey("" + i);

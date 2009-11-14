@@ -24,6 +24,7 @@ import org.apache.commons.lang.WordUtils;
 import raptor.Raptor;
 import raptor.action.RaptorActionFactory;
 import raptor.action.ScriptedAction;
+import raptor.action.RaptorAction.Category;
 
 public class CreateBugButtonActions {
 	public static void main(String args[]) throws Exception {
@@ -41,10 +42,11 @@ public class CreateBugButtonActions {
 					+ name + ".properties");
 			if (!scriptFile.exists()) {
 				ScriptedAction scriptedAction = new ScriptedAction();
+				scriptedAction.setCategory(Category.PartnerTells);
 				scriptedAction.setName(name);
 				scriptedAction.setDescription("Sends the command: ptell "
 						+ sound);
-				scriptedAction.setScript("context.sendHidden(\"ptell " + sound
+				scriptedAction.setScript("context.send(\"ptell " + sound
 						+ "\");");
 				Properties properties = RaptorActionFactory
 						.save(scriptedAction);

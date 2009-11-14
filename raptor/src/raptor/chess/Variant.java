@@ -59,4 +59,38 @@ public enum Variant {
 	 * positions.
 	 */
 	wild;
+
+	/**
+	 * Returns the ics match type to use for a specified variant given a game.
+	 * Currently wild is not supported. wild 5 bug on bics will also match to
+	 * bughouse.
+	 * 
+	 * If null is returned its not supported.
+	 */
+	public static String getIcsMatchType(Game game) {
+		switch (game.getVariant()) {
+		case atomic:
+			return "atomic";
+		case bughouse:
+			return "bughouse";
+		case fischerRandomBughouse:
+			return "bughouse fr";
+		case classic:
+			return "";
+		case crazyhouse:
+			return "zh";
+		case fischerRandomCrazyhouse:
+			return "zh fr";
+		case losers:
+			return "losers";
+		case suicide:
+			return "suicide";
+		case wild:
+			return null;
+		case fischerRandom:
+			return "wild fr";
+		default:
+			return null;
+		}
+	}
 }
