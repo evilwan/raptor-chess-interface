@@ -100,7 +100,8 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 	public static final String[] getRatings() {
 		return new String[] { "0", "1", "700", "1000", "1100", "1200", "1300",
 				"1400", "1500", "1600", "1700", "1800", "1900", "2000", "2100",
-				"2200", "2300", "2400", "3000", "9999" };
+				"2200", "2300", "2400", "2500", "2600", "2700", "2800", "3000",
+				"9999" };
 	}
 
 	public SeekTableWindowItem(SeekService service) {
