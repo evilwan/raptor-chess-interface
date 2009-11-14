@@ -209,7 +209,7 @@ public class TestClassical implements GameConstants {
 		game.setDropCount(WHITE, PAWN, 1);
 		game.setDropCount(WHITE, KNIGHT, 1);
 		game.setDropCount(BLACK, PAWN, 1);
-		System.err.println(Arrays.toString(game.getLegalMoves().asArray()));
+		Arrays.toString(game.getLegalMoves().asArray());
 		game.makeSanMove("exd6");
 		
 	}
