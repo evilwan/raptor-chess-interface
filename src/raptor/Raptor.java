@@ -294,13 +294,6 @@ public class Raptor implements PreferenceKeys {
 		return raptorWindow;
 	}
 
-	/**
-	 * Does'nt execute the normal shutdown procedure when Raptor is closed.
-	 */
-	public void ignoreShutdown() {
-		isShutdown = true;
-	}
-
 	public boolean isDisposed() {
 		return getInstance() == null || getInstance().getWindow() == null
 				|| getInstance().getWindow().getShell() != null
@@ -388,12 +381,21 @@ public class Raptor implements PreferenceKeys {
 	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
 	 */
 	public void shutdown() {
+		shutdown(false);
+	}
+
+	/**
+	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
+	 */
+	public void shutdown(boolean isIgnoringPreferenceSaves) {
 		if (isShutdown()) {
 			return;
 		}
 		isShutdown = true;
 
-		getPreferences().save();
+		if (!isIgnoringPreferenceSaves) {
+			getPreferences().save();
+		}
 
 		try {
 			ConnectorService.getInstance().dispose();

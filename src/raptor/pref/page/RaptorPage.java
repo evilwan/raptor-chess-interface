@@ -156,8 +156,7 @@ public class RaptorPage extends FieldEditorPreferencePage {
 												+ "have to be restarted. "
 												+ "Do you wish to continue?")) {
 							FileUtil.deleteDir(Raptor.USER_RAPTOR_DIR);
-							Raptor.getInstance().ignoreShutdown();
-							System.exit(1);
+							Raptor.getInstance().shutdown(true);
 						}
 					}
 				}));
