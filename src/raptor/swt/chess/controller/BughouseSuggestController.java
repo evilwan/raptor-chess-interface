@@ -329,6 +329,14 @@ public class BughouseSuggestController extends ObserveController {
 		}
 	}
 
+	@Override
+	protected void onPlayGameEndSound() {
+	}
+
+	@Override
+	protected void onPlayGameStartSound() {
+	}
+
 	protected void onPlayIllegalMoveSound() {
 		SoundService.getInstance().playSound("illegalMove");
 	}
