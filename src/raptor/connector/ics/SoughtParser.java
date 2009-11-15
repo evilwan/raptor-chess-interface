@@ -132,10 +132,7 @@ public class SoughtParser {
 				} else if (seek.getTypeDescription().contains("untimed")) {
 					seek.setType(GameType.untimed);
 				} else {
-					Raptor.getInstance().onError(
-							"Unkown game type encountered in seek: "
-									+ seek.getTypeDescription(),
-							new Exception());
+					seek.setType(GameType.other);
 				}
 				seeks.add(seek);
 			}
