@@ -1798,6 +1798,11 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				if (e.button == 3) {
+					final RaptorTabItem raptorTabItem = (RaptorTabItem) folder
+							.getItem(new Point(e.x, e.y));
+					if (raptorTabItem == null) {
+						return;
+					}
 					Menu menu = new Menu(folder.getShell(), SWT.POP_UP);
 
 					if (folder.getItemCount() > 0) {
@@ -1806,10 +1811,8 @@ public class RaptorWindow extends ApplicationWindow {
 						item.addListener(SWT.Selection, new Listener() {
 							public void handleEvent(Event e) {
 								if (folder.getRaptorTabItemSelection() != null) {
-									if (folder.getRaptorTabItemSelection().raptorItem
-											.confirmClose()) {
-										folder.getRaptorTabItemSelection()
-												.dispose();
+									if (raptorTabItem.raptorItem.confirmClose()) {
+										raptorTabItem.dispose();
 
 										if (folder.getItemCount() == 0) {
 											restoreFolders();
@@ -1830,7 +1833,7 @@ public class RaptorWindow extends ApplicationWindow {
 								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
 										folder.getItemCount());
 								for (int i = 0; i < folder.getItemCount(); i++) {
-									if (i != folder.getSelectionIndex()
+									if (folder.getItem(i) != raptorTabItem
 											&& folder.getRaptorTabItemAt(i).raptorItem
 													.confirmClose()) {
 										itemsToClose.add(folder
@@ -1884,10 +1887,9 @@ public class RaptorWindow extends ApplicationWindow {
 							item.setText("Move to " + currentQuadrant.name());
 							item.addListener(SWT.Selection, new Listener() {
 								public void handleEvent(Event e) {
-									RaptorTabItem item = folder
-											.getRaptorTabItemSelection();
-									item.onMoveTo(folders[currentQuadrant
-											.ordinal()]);
+									raptorTabItem
+											.onMoveTo(folders[currentQuadrant
+													.ordinal()]);
 
 								}
 							});
