@@ -1163,6 +1163,29 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	protected void decoreateNext(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() != ChatType.OUTBOUND) {
+			List<int[]> nextRanges = new ArrayList<int[]>(5);
+
+			int nextIndex = message.indexOf("[next]");
+			while (nextIndex != -1) {
+				nextRanges.add(new int[] { nextIndex, nextIndex + 6 });
+				nextIndex = message.indexOf("[next]", nextIndex + 1);
+			}
+
+			for (int[] nextRange : nextRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_QUOTE_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ nextRange[0], nextRange[1] - nextRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
 	/**
 	 * Should be invoked when the title or closeability changes.
 	 */
@@ -1189,16 +1212,23 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		decorateForegroundColor(event, message, textStartPosition);
 		decorateQuotes(event, message, textStartPosition);
 		decorateLinks(event, message, textStartPosition);
+		decoreateNext(event, message, textStartPosition);
 
 	}
 
 	protected void onInputTextDoubleClick(MouseEvent e) {
 		int caretPosition = chatConsole.inputText.getCaretOffset();
+
+		if (chatConsole.inputText.getSelectionText().equals("next")) {
+			connector.sendMessage("next", true);
+			return;
+		}
+
 		String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
-		System.err.println(url);
 
 		if (StringUtils.isNotBlank(url)) {
 			BrowserUtils.openUrl(url);
+			return;
 		}
 
 		String quotedText = ChatUtils.getQuotedText(chatConsole.inputText,
