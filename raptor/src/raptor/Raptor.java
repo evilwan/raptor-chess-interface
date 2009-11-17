@@ -40,9 +40,11 @@ import raptor.service.EcoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
+import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.InputDialog;
 import raptor.swt.RaptorCursorRegistry;
 import raptor.swt.RaptorImageRegistry;
+import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtil;
 
@@ -166,6 +168,28 @@ public class Raptor implements PreferenceKeys {
 					// Initialize this after a half second. It requires a
 					// RaptorWindow.
 					ChessBoardCacheService.getInstance();
+
+					String currentChessSet = getInstance().getPreferences()
+							.getString(PreferenceKeys.BOARD_CHESS_SET_NAME);
+
+					// Prompt for set optimization if set is not optimized..
+					if (!ChessBoardUtils.isChessSetOptimized(currentChessSet)
+							&& Raptor
+									.getInstance()
+									.confirm(
+											"Your current chess set "
+													+ currentChessSet
+													+ " is not optimized. "
+													+ "It is strongly suggested that you optimize your current chess sets. "
+													+ "It will boost Raptor performance."
+													+ "Would you like to optimize?")) {
+						ChessSetOptimizationDialog dialog = new ChessSetOptimizationDialog(
+								Raptor.getInstance().getWindow().getShell(),
+								"Chess Set " + currentChessSet
+										+ " Optimization.", currentChessSet);
+						dialog.open();
+
+					}
 				}
 			});
 
