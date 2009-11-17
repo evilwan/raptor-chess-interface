@@ -63,6 +63,8 @@ import raptor.action.game.LastAction;
 import raptor.action.game.MatchWinnerAction;
 import raptor.action.game.MoveListAction;
 import raptor.action.game.RevertAction;
+import raptor.chess.BughouseGame;
+import raptor.chess.FischerRandomBughouseGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
@@ -124,6 +126,10 @@ public class ChessBoardUtils implements BoardConstants {
 	 * Appends the game to the users game pgn file.
 	 */
 	public static void appendGameToPgnFile(Game game) {
+		if (game instanceof BughouseGame
+				|| game instanceof FischerRandomBughouseGame) {
+			return;
+		}
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_IS_LOGGING_GAMES)) {
 			String pgn = game.toPgn();
