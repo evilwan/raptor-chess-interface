@@ -702,7 +702,7 @@ public class IcsParser implements GameConstants {
 					service.fireObservedGameBecameExamined(game.getId());
 				}
 			} else {
-				IcsUtils.updateGamesMoves(game, message, isBicsParser);
+				IcsUtils.updateGamesMoves(game, message);
 				service.fireGameMovesAdded(game.getId());
 			}
 		}
