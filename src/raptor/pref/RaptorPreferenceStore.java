@@ -261,6 +261,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 200);
 
 		// Board
+		setDefault(BOARD_PLAY_CHALLENGE_SOUND, true);
+		setDefault(BOARD_PLAY_ABORT_REQUEST_SOUND, true);
+		setDefault(BOARD_PLAY_DRAW_OFFER_SOUND, true);
 		setDefault(BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING, true);
 		setDefault(BOARD_USER_MOVE_INPUT_MODE, "DragAndDrop");
 		setDefault(BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME, true);
@@ -454,6 +457,12 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						+ "-color", new RGB(128, 128, 128));
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.PARTNER_TELL
+						+ "-color", new RGB(255, 0, 0));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.DRAW_REQUEST
+						+ "-color", new RGB(255, 0, 0));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.ABORT_REQUEST
 						+ "-color", new RGB(255, 0, 0));
 		PreferenceConverter
 				.setDefault(this, CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO

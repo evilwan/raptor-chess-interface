@@ -103,5 +103,13 @@ public enum ChatType {
 	/**
 	 * A message indicating this is a message containing seeks.
 	 */
-	SEEKS
+	SEEKS,
+	/**
+	 * A message indicating an abort request.
+	 */
+	ABORT_REQUEST,
+	/**
+	 * A message indicating a draw offer.
+	 */
+	DRAW_REQUEST,
 }

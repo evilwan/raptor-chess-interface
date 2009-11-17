@@ -130,7 +130,7 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 				} catch (Throwable t) {
 					Raptor.getInstance().onError(
 							"Error playing sound " + sound, t);
-				} 
+				}
 			}
 		}
 	}
