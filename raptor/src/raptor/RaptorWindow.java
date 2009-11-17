@@ -113,6 +113,17 @@ public class RaptorWindow extends ApplicationWindow {
 					SWT.COLOR_LIST_SELECTION_TEXT));
 		}
 
+		public boolean contains(RaptorWindowItem item) {
+			boolean result = false;
+			for (int i = 0; i < getItemCount(); i++) {
+				if (getRaptorTabItemAt(i).raptorItem == item) {
+					result = true;
+					break;
+				}
+			}
+			return result;
+		}
+
 		/**
 		 * Activates the current selected item.
 		 */
@@ -876,9 +887,8 @@ public class RaptorWindow extends ApplicationWindow {
 	public void forceFocus(final RaptorWindowItem windowItem) {
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
+				boolean wasRestored = false;
 				synchronized (itemsManaged) {
-					boolean wasRestored = false;
-
 					for (RaptorTabItem currentTabItem : itemsManaged) {
 						if (currentTabItem.raptorItem == windowItem) {
 							currentTabItem.raptorParent
@@ -891,21 +901,34 @@ public class RaptorWindow extends ApplicationWindow {
 							break;
 						}
 					}
+				}
 
-					// Now check to see if a folder is maximized. If one is then
-					// do a
-					// restore.
-					if (!wasRestored) {
-						boolean isFolderMaximized = false;
-						for (RaptorTabFolder folder : folders) {
-							if (folder.getMaximized()) {
-								isFolderMaximized = true;
-								break;
-							}
+				// Now check to see if a folder is maximized. If one is then
+				// do a
+				// restore.
+				if (!wasRestored) {
+					boolean isFolderMaximized = false;
+					for (RaptorTabFolder folder : folders) {
+						if (folder.getMaximized()
+								&& !folder.contains(windowItem)) {
+							isFolderMaximized = true;
+							break;
 						}
+					}
 
-						if (isFolderMaximized) {
-							restoreFolders();
+					if (isFolderMaximized) {
+						restoreFolders();
+					}
+				}
+
+				// Now make the current item the selection in the folder.
+				outer: for (RaptorTabFolder folder : folders) {
+					if (folder.contains(windowItem)) {
+						for (int i = 0; i < folder.getItemCount(); i++) {
+							if (folder.getRaptorTabItemAt(i).raptorItem == windowItem) {
+								folder.setSelection(i);
+								break outer;
+							}
 						}
 					}
 				}
