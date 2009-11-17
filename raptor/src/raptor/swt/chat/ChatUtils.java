@@ -267,9 +267,11 @@ public class ChatUtils {
 					&& !Character.isWhitespace(currentChar)) {
 				currentChar = charAt(text, ++currentPosition);
 			}
+
 			lineEnd = currentPosition;
+
 			if (text.getContent().getLineAtOffset(lineEnd) == text.getContent()
-					.getLineCount()) {
+					.getLineCount() - 1) {
 				result = text.getText(lineStart + 1, text.getCharCount() - 1);
 			} else {
 				result = text.getText(lineStart + 1, lineEnd - 1);
@@ -303,12 +305,22 @@ public class ChatUtils {
 			}
 
 			if (result != null) {
-				return trimDateStampFromWord(result);
+				return stripDoubleUrls(trimDateStampFromWord(result));
 			}
 			return result;
 
 		} catch (Exception e) {
 			return null;
+		}
+	}
+
+	public static String stripDoubleUrls(String word) {
+		if (StringUtils.countMatches(word, "http://") == 2
+				|| StringUtils.countMatches(word, "https://") == 2) {
+			int httpIndex = word.indexOf("http", 1);
+			return word.substring(0, httpIndex).trim();
+		} else {
+			return word;
 		}
 	}
 
