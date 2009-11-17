@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -111,23 +113,24 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 			if (!bugSoundsPlaying.get(sound)) {
 				try {
 					bugSoundsPlaying.put(sound, true);
-					Clip clip = AudioSystem.getClip();
+					final Clip clip = AudioSystem.getClip();
 					AudioInputStream stream = AudioSystem
 							.getAudioInputStream(new FileInputStream(soundFile));
 					clip.open(stream);
 					clip.setFramePosition(0);
 					clip.start();
-					Thread.sleep(100);
-					while (clip.isRunning()) {
-						Thread.sleep(100);
-					}
-					clip.close();
+					clip.addLineListener(new LineListener() {
+						public void update(LineEvent arg0) {
+							LineEvent.Type type = arg0.getType();
+							if (type == LineEvent.Type.STOP) {
+								bugSoundsPlaying.put(sound, false);
+							}
+						}
+					});
 				} catch (Throwable t) {
 					Raptor.getInstance().onError(
 							"Error playing sound " + sound, t);
-				} finally {
-					bugSoundsPlaying.put(sound, false);
-				}
+				} 
 			}
 		}
 	}
