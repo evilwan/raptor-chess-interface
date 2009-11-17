@@ -654,12 +654,14 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					sentTextIndex--;
 				}
 				if (!sentText.isEmpty()) {
+					chatConsole.outputText.setText("");
 					chatConsole.outputText.setText(sentText.get(sentTextIndex));
 				}
 			}
 		} else if (event.keyCode == SWT.ARROW_DOWN) {
 			if (sentTextIndex < sentText.size() - 1) {
 				sentTextIndex++;
+				chatConsole.outputText.setText("");
 				chatConsole.outputText.setText(sentText.get(sentTextIndex));
 			} else {
 				chatConsole.outputText.setText("");
