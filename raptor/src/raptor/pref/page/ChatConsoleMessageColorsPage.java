@@ -52,6 +52,18 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 				"Challenge Message Color:", getFieldEditorParent());
 		addField(challengeMessages);
 
+		ColorFieldEditor drawRequest = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.DRAW_REQUEST + "-color",
+				"Draw Request Message Color:", getFieldEditorParent());
+		addField(drawRequest);
+
+		ColorFieldEditor abortRequest = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.ABORT_REQUEST + "-color",
+				"Abort Request Message Color:", getFieldEditorParent());
+		addField(abortRequest);
+
 		ColorFieldEditor cshoutMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.CSHOUT + "-color", "C-Shout Message Color:",

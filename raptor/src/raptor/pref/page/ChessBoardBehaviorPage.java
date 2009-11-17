@@ -59,10 +59,6 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING,
-				"Play Move Sound When Observing", getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR,
 				"Invisible Move Enabled (Crosshairs cursor on drag and drops)",
 				getFieldEditorParent()));
@@ -81,5 +77,18 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 
 		addField(new BooleanFieldEditor(PreferenceKeys.BOARD_SMARTMOVE_ENABLED,
 				"Smartmove Enabled (Middle Click)", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING,
+				"Play move Sound when observing", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_CHALLENGE_SOUND,
+				"Play challenge sound.", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_DRAW_OFFER_SOUND,
+				"Play draw offered sound.", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_ABORT_REQUEST_SOUND,
+				"Play abort requested sound.", getFieldEditorParent()));
 	}
 }

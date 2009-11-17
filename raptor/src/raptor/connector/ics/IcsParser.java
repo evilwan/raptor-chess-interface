@@ -42,10 +42,12 @@ import raptor.connector.Connector;
 import raptor.connector.ics.bughouse.BugWhoGParser;
 import raptor.connector.ics.bughouse.BugWhoPParser;
 import raptor.connector.ics.bughouse.BugWhoUParser;
+import raptor.connector.ics.chat.AbortRequestedEventParser;
 import raptor.connector.ics.chat.CShoutEventParser;
 import raptor.connector.ics.chat.ChallengeEventParser;
 import raptor.connector.ics.chat.ChannelTellEventParser;
 import raptor.connector.ics.chat.ChatEventParser;
+import raptor.connector.ics.chat.DrawOfferedEventParser;
 import raptor.connector.ics.chat.FollowingEventParser;
 import raptor.connector.ics.chat.KibitzEventParser;
 import raptor.connector.ics.chat.PartnerTellEventParser;
@@ -165,6 +167,9 @@ public class IcsParser implements GameConstants {
 		nonGameEventParsers.add(new PartnershipCreatedEventParser());
 		nonGameEventParsers.add(new PartnershipEndedEventParser());
 		nonGameEventParsers.add(new FollowingEventParser());
+		nonGameEventParsers.add(new DrawOfferedEventParser());
+		nonGameEventParsers.add(new AbortRequestedEventParser());
+
 	}
 
 	public ChatEvent[] parse(String inboundMessage) {
