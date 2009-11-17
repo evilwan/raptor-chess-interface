@@ -204,6 +204,14 @@ public class ChessBoardUtils implements BoardConstants {
 		}
 	}
 
+	public static boolean isChessSetOptimized(String setName) {
+		File file = new File(getUserImageCachePieceName(setName, Game.WP, 6, 6));
+		File file2 = new File(getUserImageCachePieceName(setName, Game.BP, 100,
+				100));
+		return file.exists() && file2.exists();
+
+	}
+
 	/**
 	 * Returns the image from the users image cache matching the type,width, and
 	 * height. If the image is in the localImageRegistry it is returned.
