@@ -1228,9 +1228,12 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	protected void initClockUpdaters() {
 		if (whiteClockUpdater == null) {
-			whiteClockUpdater = new ClockLabelUpdater(true, this, isUserWhite());
+			boolean speakCountdown = getPreferences().getBoolean(
+					BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS);
+			whiteClockUpdater = new ClockLabelUpdater(true, this,
+					speakCountdown && isUserWhite());
 			blackClockUpdater = new ClockLabelUpdater(false, this,
-					!isUserWhite());
+					speakCountdown && !isUserWhite());
 		}
 	}
 

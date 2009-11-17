@@ -86,13 +86,7 @@ public class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			remainingTimeMillis -= currentTime - lastSystemTime;
 			lastSystemTime = currentTime;
 
-			if (remainingTimeMillis < 10000
-					&& isSpeakingCountdown
-					&& Raptor
-							.getInstance()
-							.getPreferences()
-							.getBoolean(
-									PreferenceKeys.BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS)) {
+			if (remainingTimeMillis < 10000 && isSpeakingCountdown) {
 				playCountdownSound(remainingTimeMillis);
 			}
 

@@ -43,6 +43,10 @@ public class BughousePage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
+				PreferenceKeys.BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD,
+				"Speak countdown on partners board.", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME,
 				"Show up time indicator", getFieldEditorParent()));
 

@@ -112,6 +112,7 @@ public interface PreferenceKeys {
 
 	public static final String BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD = "bughouse-playing-open-partner-board";
 	public static final String BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD = "bughouse-observing-open-partner-board";
+	public static final String BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD = "bughouse-speak-countdown-on-partner-board";
 
 	public static final String BUG_BUTTONS_FONT = "bugbuttons-font";
 
