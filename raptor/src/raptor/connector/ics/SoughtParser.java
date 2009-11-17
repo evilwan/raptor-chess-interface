@@ -20,7 +20,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.Raptor;
 import raptor.chat.Seek;
 import raptor.chat.Seek.GameType;
 import raptor.util.RaptorStringTokenizer;

@@ -265,30 +265,6 @@ public class TestPgnParsing {
 		performRollbackTest(games);
 	}
 
-	/**
-	 * Rolls back all the moves, does a to string at each move on the game
-	 * (which gens legals), and tries to maek all the moves. This is slow but a
-	 * great test.
-	 */
-	protected void performRollbackTest(List<Game> games) {
-		for (int g = 0; g < games.size(); g++) {
-			Game game = games.get(g);
-			long gameStart = System.currentTimeMillis();
-			MoveList moveList = game.getMoveList().deepCopy();
-			while (game.getMoveList().getSize() > 0) {
-				game.rollback();
-			}
-			for (int i = 0; i < moveList.getSize(); i++) {
-				Assert.assertTrue(i + "/" + games.size() + " Move "
-						+ moveList.get(i) + " was illegal\n" + game, game
-						.move(moveList.get(i)));
-			}
-			System.err.println(g + "/" + games.size()
-					+ " performRollbackTest duration="
-					+ (System.currentTimeMillis() - gameStart));
-		}
-	}
-
 	@Test
 	public void testLosersFile() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
@@ -364,6 +340,30 @@ public class TestPgnParsing {
 				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
 
 		System.err.println(listener.getErrors());
+	}
+
+	/**
+	 * Rolls back all the moves, does a to string at each move on the game
+	 * (which gens legals), and tries to maek all the moves. This is slow but a
+	 * great test.
+	 */
+	protected void performRollbackTest(List<Game> games) {
+		for (int g = 0; g < games.size(); g++) {
+			Game game = games.get(g);
+			long gameStart = System.currentTimeMillis();
+			MoveList moveList = game.getMoveList().deepCopy();
+			while (game.getMoveList().getSize() > 0) {
+				game.rollback();
+			}
+			for (int i = 0; i < moveList.getSize(); i++) {
+				Assert.assertTrue(i + "/" + games.size() + " Move "
+						+ moveList.get(i) + " was illegal\n" + game, game
+						.move(moveList.get(i)));
+			}
+			System.err.println(g + "/" + games.size()
+					+ " performRollbackTest duration="
+					+ (System.currentTimeMillis() - gameStart));
+		}
 	}
 
 	private String pgnFileAsString(String fileName) throws Exception {

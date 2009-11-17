@@ -37,9 +37,6 @@ import org.eclipse.swt.custom.CTabFolder2Adapter;
 import org.eclipse.swt.custom.CTabFolderEvent;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ControlListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -91,122 +88,6 @@ import raptor.util.BrowserUtils;
  * visible quadrants.
  */
 public class RaptorWindow extends ApplicationWindow {
-
-	/**
-	 * A sash form that loads and stores its weights in a specified key. A
-	 * SashForm can only have a RaptorTabFolder or another RaptorSashFolder as a
-	 * child.
-	 */
-	protected class RaptorWindowSashForm extends SashForm {
-		protected String key;
-
-		public RaptorWindowSashForm(Composite parent, int style, String key) {
-			super(parent, style | SWT.SMOOTH);
-			this.key = key;
-			setSashWidth(getPreferences().getInt(PreferenceKeys.APP_SASH_WIDTH));
-		}
-
-		/**
-		 * Returns all of the items in the sash that are not in folders that are
-		 * minimized.
-		 * 
-		 * @return
-		 */
-		public int getItemsInSash() {
-			int result = 0;
-			for (Control control : getTabList()) {
-				if (control instanceof RaptorWindowSashForm) {
-					result += ((RaptorWindowSashForm) control).getItemsInSash();
-				} else if (control instanceof RaptorTabFolder) {
-					RaptorTabFolder folder = (RaptorTabFolder) control;
-					result += folder.getMinimized() ? 0 : folder.getItemCount();
-				}
-			}
-			return result;
-		}
-
-		public String getKey() {
-			return key;
-		}
-
-		public void loadFromPreferences() {
-			setWeights(getPreferences().getCurrentLayoutSashWeights(key));
-		}
-
-		/**
-		 * Restores the tab by setting it visible if it or one of its children
-		 * contains items. This has a cascading effect if one of its children is
-		 * another RaptorSashForm.
-		 */
-		public void restore() {
-			Control lastChildToShow = null;
-			int numberOfChildrenShowing = 0;
-
-			Control[] children = getTabList();
-
-			// First restore tab folders.
-			for (Control element : children) {
-				if (element instanceof RaptorTabFolder) {
-					RaptorTabFolder folder = (RaptorTabFolder) element;
-					if (folder.getItemCount() > 0 && !folder.getMinimized()) {
-						RaptorTabFolder childFolder = (RaptorTabFolder) element;
-						lastChildToShow = childFolder;
-						childFolder.setVisible(true);
-						childFolder.setMaximized(itemsManaged.size() == 1);
-						childFolder.activate();
-						numberOfChildrenShowing++;
-					} else {
-						folder.setVisible(false);
-					}
-				}
-			}
-
-			// Now restore sashes.
-			for (Control element : children) {
-				if (element instanceof RaptorWindowSashForm) {
-					if (((RaptorWindowSashForm) element).getItemsInSash() > 0) {
-						RaptorWindowSashForm childSashForm = (RaptorWindowSashForm) element;
-						lastChildToShow = childSashForm;
-						lastChildToShow.setVisible(true);
-						numberOfChildrenShowing++;
-					} else {
-						if (element != null) {
-							element.setVisible(false);
-						}
-					}
-				}
-			}
-			setVisible(numberOfChildrenShowing > 0);
-			setMaximizedControl(numberOfChildrenShowing == 1 ? lastChildToShow
-					: null);
-		}
-
-		@Override
-		public void layout(boolean changed) {
-			long startTime = System.currentTimeMillis();
-			super.layout(changed);
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Laid out " + key + " in "
-						+ (System.currentTimeMillis() - startTime));
-			}
-		}
-
-		public void storeSashWeights() {
-			try {
-				if (getMaximizedControl() == null && isVisible()) {
-					getPreferences().setCurrentLayoutSashWeights(key,
-							getWeights());
-				}
-			} catch (SWTException swet) {// Eat it its prob a disposed exception
-			}
-		}
-
-		@Override
-		public String toString() {
-			return "RaptorSashForm " + key + " isVisible=" + isVisible()
-					+ " maxControl=" + getMaximizedControl();
-		}
-	}
 
 	/**
 	 * A RaptorTabFolder which keeps track of the Quadrant it is in in and its
@@ -581,6 +462,122 @@ public class RaptorWindow extends ApplicationWindow {
 			// parent.layout(true, true);
 			parent.setSelection(this);
 			itemsManaged.add(this);
+		}
+	}
+
+	/**
+	 * A sash form that loads and stores its weights in a specified key. A
+	 * SashForm can only have a RaptorTabFolder or another RaptorSashFolder as a
+	 * child.
+	 */
+	protected class RaptorWindowSashForm extends SashForm {
+		protected String key;
+
+		public RaptorWindowSashForm(Composite parent, int style, String key) {
+			super(parent, style | SWT.SMOOTH);
+			this.key = key;
+			setSashWidth(getPreferences().getInt(PreferenceKeys.APP_SASH_WIDTH));
+		}
+
+		/**
+		 * Returns all of the items in the sash that are not in folders that are
+		 * minimized.
+		 * 
+		 * @return
+		 */
+		public int getItemsInSash() {
+			int result = 0;
+			for (Control control : getTabList()) {
+				if (control instanceof RaptorWindowSashForm) {
+					result += ((RaptorWindowSashForm) control).getItemsInSash();
+				} else if (control instanceof RaptorTabFolder) {
+					RaptorTabFolder folder = (RaptorTabFolder) control;
+					result += folder.getMinimized() ? 0 : folder.getItemCount();
+				}
+			}
+			return result;
+		}
+
+		public String getKey() {
+			return key;
+		}
+
+		@Override
+		public void layout(boolean changed) {
+			long startTime = System.currentTimeMillis();
+			super.layout(changed);
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Laid out " + key + " in "
+						+ (System.currentTimeMillis() - startTime));
+			}
+		}
+
+		public void loadFromPreferences() {
+			setWeights(getPreferences().getCurrentLayoutSashWeights(key));
+		}
+
+		/**
+		 * Restores the tab by setting it visible if it or one of its children
+		 * contains items. This has a cascading effect if one of its children is
+		 * another RaptorSashForm.
+		 */
+		public void restore() {
+			Control lastChildToShow = null;
+			int numberOfChildrenShowing = 0;
+
+			Control[] children = getTabList();
+
+			// First restore tab folders.
+			for (Control element : children) {
+				if (element instanceof RaptorTabFolder) {
+					RaptorTabFolder folder = (RaptorTabFolder) element;
+					if (folder.getItemCount() > 0 && !folder.getMinimized()) {
+						RaptorTabFolder childFolder = (RaptorTabFolder) element;
+						lastChildToShow = childFolder;
+						childFolder.setVisible(true);
+						childFolder.setMaximized(itemsManaged.size() == 1);
+						childFolder.activate();
+						numberOfChildrenShowing++;
+					} else {
+						folder.setVisible(false);
+					}
+				}
+			}
+
+			// Now restore sashes.
+			for (Control element : children) {
+				if (element instanceof RaptorWindowSashForm) {
+					if (((RaptorWindowSashForm) element).getItemsInSash() > 0) {
+						RaptorWindowSashForm childSashForm = (RaptorWindowSashForm) element;
+						lastChildToShow = childSashForm;
+						lastChildToShow.setVisible(true);
+						numberOfChildrenShowing++;
+					} else {
+						if (element != null) {
+							element.setVisible(false);
+						}
+					}
+				}
+			}
+			setVisible(numberOfChildrenShowing > 0);
+			setMaximizedControl(numberOfChildrenShowing == 1 ? lastChildToShow
+					: null);
+		}
+
+		public void storeSashWeights() {
+			try {
+				if (getMaximizedControl() == null && isVisible()) {
+					getPreferences().setCurrentLayoutSashWeights(key,
+							getWeights());
+				}
+			} catch (SWTException swet) {// Eat it its prob a disposed exception
+			}
+		}
+
+		@Override
+		public String toString() {
+			return "RaptorSashForm " + key + " isVisible=" + isVisible()
+					+ " maxControl=" + getMaximizedControl();
 		}
 	}
 
