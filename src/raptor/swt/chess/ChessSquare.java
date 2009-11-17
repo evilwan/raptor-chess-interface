@@ -187,6 +187,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 
 	PaintListener paintListener = new PaintListener() {
 		public void paintControl(PaintEvent e) {
+			long startTime = System.currentTimeMillis();
+
 			Point size = getSize();
 			if (!ignorePaint) {
 				e.gc.setAdvanced(true);
@@ -240,6 +242,11 @@ public class ChessSquare extends Canvas implements BoardConstants {
 
 					e.gc.drawString(rankLabel, 0, 0, true);
 				}
+			}
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Drew chess square: " + getId() + " in "
+						+ (System.currentTimeMillis() - startTime));
 			}
 		}
 	};
