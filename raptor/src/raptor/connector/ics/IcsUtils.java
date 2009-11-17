@@ -203,6 +203,15 @@ public class IcsUtils implements GameConstants {
 						break;
 					}
 				}
+
+				if (game.isInState(Game.OBSERVING_EXAMINED_STATE)
+						&& game.getMoveList().getSize() == 0) {
+					game.clear();
+					updateNonPositionFields(game, message);
+					updatePosition(game, message);
+					game.removeHeader(PgnHeader.ECO);
+					game.removeHeader(PgnHeader.Opening);
+				}
 				result = true;
 			}
 
@@ -843,8 +852,7 @@ public class IcsUtils implements GameConstants {
 	 * Updates the moves that are missing in the game to the ones in the move
 	 * message.
 	 */
-	public static void updateGamesMoves(Game game, MovesMessage message,
-			boolean isBics) {
+	public static void updateGamesMoves(Game game, MovesMessage message) {
 		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
 				- game.getMoveList().getSize();
 
@@ -910,6 +918,13 @@ public class IcsUtils implements GameConstants {
 				game.setHeader(PgnHeader.Opening, gameClone
 						.getHeader(PgnHeader.Opening));
 			}
+		} else if (message.moves.length == 0 && message.style12 != null) {
+			game.clear();
+			updateNonPositionFields(game, message.style12);
+			updatePosition(game, message.style12);
+			game.setHeader(PgnHeader.FEN, game.toFen());
+			game.removeHeader(PgnHeader.ECO);
+			game.removeHeader(PgnHeader.Opening);
 		}
 	}
 
