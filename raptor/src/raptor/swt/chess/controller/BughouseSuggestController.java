@@ -29,6 +29,7 @@ import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.swt.chess.ClockLabelUpdater;
 
 public class BughouseSuggestController extends ObserveController {
 
@@ -326,6 +327,18 @@ public class BughouseSuggestController extends ObserveController {
 				}
 			}
 			menu.dispose();
+		}
+	}
+
+	@Override
+	protected void initClockUpdaters() {
+		if (whiteClockUpdater == null) {
+			boolean speakCountdown = getPreferences().getBoolean(
+					BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD);
+			whiteClockUpdater = new ClockLabelUpdater(true, this,
+					speakCountdown && isPartnerWhite);
+			blackClockUpdater = new ClockLabelUpdater(false, this,
+					speakCountdown && !isPartnerWhite);
 		}
 	}
 

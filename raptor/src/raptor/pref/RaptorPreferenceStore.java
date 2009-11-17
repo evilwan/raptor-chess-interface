@@ -495,6 +495,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Bug house
 		setDefault(BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD, true);
+		setDefault(BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD, true);
 
 		// App settings.
 		setDefault(APP_NAME, "Raptor v.Beta1e");
