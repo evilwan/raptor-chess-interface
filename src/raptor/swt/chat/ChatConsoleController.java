@@ -824,6 +824,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
 
+			if (message.startsWith("http")) {
+				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+				menuItem.setText("Open in external browser: '" + message + "'");
+				menuItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils.openExternalUrl(message);
+					}
+				});
+			}
+
 			ChatScript[] scripts = ScriptService.getInstance().getChatScripts(
 					getConnector(), ChatScriptType.RightClickOneShot);
 
@@ -1183,6 +1193,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void onInputTextDoubleClick(MouseEvent e) {
 		int caretPosition = chatConsole.inputText.getCaretOffset();
 		String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
+		System.err.println(url);
 
 		if (StringUtils.isNotBlank(url)) {
 			BrowserUtils.openUrl(url);
