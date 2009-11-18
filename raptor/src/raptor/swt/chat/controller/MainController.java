@@ -47,6 +47,12 @@ public class MainController extends ChatConsoleController {
 		return result;
 	}
 
+	@Override
+	public void dispose() {
+		connector.setSpeakingAllPersonTells(false);
+		super.dispose();
+	}
+
 	/**
 	 * Currently removes the connectors prompt from the end of the text. And
 	 * trims just the trailing message.

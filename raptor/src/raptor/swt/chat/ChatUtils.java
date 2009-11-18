@@ -28,6 +28,8 @@ import raptor.action.RaptorAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.action.chat.PrependAction;
+import raptor.action.chat.SpeakChannelTellsAction;
+import raptor.action.chat.SpeakPersonTellsAction;
 import raptor.action.chat.TellsMissedWhileIWasAwayAction;
 import raptor.action.chat.ToggleScrollLock;
 import raptor.chat.ChatEvent;
@@ -337,6 +339,7 @@ public class ChatUtils {
 	protected static ToolItem createToolItem(final RaptorAction action,
 			final ChatConsoleController controller, ToolBar toolbar) {
 		ToolItem result = null;
+
 		if (action instanceof SeparatorAction) {
 			result = new ToolItem(toolbar, SWT.SEPARATOR);
 			return result;
@@ -353,6 +356,14 @@ public class ChatUtils {
 			result = new ToolItem(toolbar, SWT.PUSH);
 			controller.addToolItem(ToolBarItemKey.AWAY_BUTTON, result);
 			result.setEnabled(false);
+		} else if (action instanceof SpeakChannelTellsAction) {
+			result = new ToolItem(toolbar, SWT.CHECK);
+			controller.addToolItem(ToolBarItemKey.SPEAK_TELLS, result);
+			result.setSelection(false);
+		} else if (action instanceof SpeakPersonTellsAction) {
+			result = new ToolItem(toolbar, SWT.CHECK);
+			controller.addToolItem(ToolBarItemKey.SPEAK_TELLS, result);
+			result.setSelection(false);
 		} else {
 			result = new ToolItem(toolbar, SWT.PUSH);
 		}

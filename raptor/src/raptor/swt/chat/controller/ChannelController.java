@@ -37,6 +37,12 @@ public class ChannelController extends ChatConsoleController {
 		this.channel = channel;
 	}
 
+	@Override
+	public void dispose() {
+		connector.setSpeakingChannelTells(channel, false);
+		super.dispose();
+	}
+
 	/**
 	 * Currently removes the connectors prompt from the end of the text. And
 	 * trims just the trailing message.
