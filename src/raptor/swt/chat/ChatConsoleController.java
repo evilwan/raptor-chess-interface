@@ -1339,7 +1339,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void playSounds(ChatEvent event) {
-		if (!isSoundDisabled) {
+		if (!isSoundDisabled && !event.hasBeenHandled()) {
 			if (event.getType() == ChatType.TELL
 					&& getPreferences().getBoolean(
 							PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL)) {

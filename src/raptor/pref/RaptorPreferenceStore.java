@@ -321,7 +321,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName, 14, 0) });
 		PreferenceConverter.setDefault(this, BOARD_CLOCK_FONT,
-				new FontData[] { new FontData(defaultMonospacedFontName, 24, SWT.BOLD) });
+				new FontData[] { new FontData(defaultMonospacedFontName, 24,
+						SWT.BOLD) });
 		PreferenceConverter.setDefault(this, BOARD_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName, 10, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PLAYER_NAME_FONT,
@@ -496,6 +497,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD, true);
+		setDefault(BUGHOUSE_SPEAK_PARTNER_TELLS, true);
 
 		// App settings.
 		setDefault(APP_NAME, "Raptor v.Beta1e");

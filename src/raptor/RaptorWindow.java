@@ -113,6 +113,15 @@ public class RaptorWindow extends ApplicationWindow {
 					SWT.COLOR_LIST_SELECTION_TEXT));
 		}
 
+		/**
+		 * Activates the current selected item.
+		 */
+		public void activate() {
+			if (getRaptorTabItemSelection() != null) {
+				getRaptorTabItemSelection().raptorItem.onActivate();
+			}
+		}
+
 		public boolean contains(RaptorWindowItem item) {
 			boolean result = false;
 			for (int i = 0; i < getItemCount(); i++) {
@@ -122,15 +131,6 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 			return result;
-		}
-
-		/**
-		 * Activates the current selected item.
-		 */
-		public void activate() {
-			if (getRaptorTabItemSelection() != null) {
-				getRaptorTabItemSelection().raptorItem.onActivate();
-			}
 		}
 
 		/**

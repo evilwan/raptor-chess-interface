@@ -133,12 +133,11 @@ public class SoundService {
 	}
 
 	/**
-	 * Speaks the specified text.
-	 * 
-	 * @param text
-	 *            text to speak.
+	 * Speaks the specified text. Returns true if speech is configured and the
+	 * result was spoken.
 	 */
-	public void textToSpeech(String text) {
+	public boolean textToSpeech(String text) {
+		boolean result = false;
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_SOUND_ENABLED)) {
 			if (speech == null
@@ -148,11 +147,13 @@ public class SoundService {
 			}
 			if (speech != null) {
 				speech.speak(text);
+				result = true;
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Spoke " + text);
 				}
 			}
 		}
+		return result;
 	}
 
 	/**

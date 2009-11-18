@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -295,7 +297,11 @@ public abstract class IcsConnector implements Connector {
 	protected Thread daemonThread;
 	protected GameService gameService;
 	protected Map<String, String> scriptHash = new HashMap<String, String>();
+	protected Set<String> peopleToSpeakTellsFrom = new HashSet<String>();
+	protected Set<String> channelToSpeakTellsFrom = new HashSet<String>();
 	protected SeekService seekService;
+	protected boolean isSpeakingAllPersonTells = false;
+
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
 	 */
@@ -330,18 +336,20 @@ public abstract class IcsConnector implements Connector {
 	};
 
 	protected boolean hasSentLogin = false;
+
 	protected boolean hasVetoPower = true;
 
 	protected boolean hasSentPassword = false;
+
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
 	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
+
 	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
 	protected ReadableByteChannel inputChannel;
 	protected boolean isConnecting;
 	protected boolean isLoggedIn = false;
 	protected boolean isSimulBugConnector = false;
 	protected String simulBugPartnerName;
-
 	protected Runnable keepAlive = new Runnable() {
 		public void run() {
 			if (isConnected()
@@ -367,6 +375,7 @@ public abstract class IcsConnector implements Connector {
 	};
 	protected long lastPingTime;
 	protected long lastSendTime;
+
 	protected long lastSendPingTime;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 	protected Socket socket;
@@ -520,6 +529,9 @@ public abstract class IcsConnector implements Connector {
 					daemonThread = null;
 					isSimulBugConnector = false;
 					simulBugPartnerName = null;
+					peopleToSpeakTellsFrom.clear();
+					channelToSpeakTellsFrom.clear();
+					isSpeakingAllPersonTells = false;
 				}
 
 				try {
@@ -1082,6 +1094,32 @@ public abstract class IcsConnector implements Connector {
 		this.simulBugPartnerName = simulBugPartnerName;
 	}
 
+	public void setSpeakingAllPersonTells(boolean isSpeakingAllPersonTells) {
+		this.isSpeakingAllPersonTells = isSpeakingAllPersonTells;
+	}
+
+	public void setSpeakingChannelTells(String channel,
+			boolean isSpeakingChannelTells) {
+		if (isSpeakingChannelTells) {
+			if (!channelToSpeakTellsFrom.contains(channel)) {
+				channelToSpeakTellsFrom.add(channel);
+			}
+		} else {
+			channelToSpeakTellsFrom.remove(channel);
+		}
+	}
+
+	public void setSpeakingPersonTells(String person,
+			boolean isSpeakingPersonTells) {
+		if (isSpeakingPersonTells) {
+			if (!peopleToSpeakTellsFrom.contains(person)) {
+				peopleToSpeakTellsFrom.add(person);
+			}
+		} else {
+			peopleToSpeakTellsFrom.remove(person);
+		}
+	}
+
 	/**
 	 * Stores off the tab states that matter to this connector so they can be
 	 * restored when reconnected.
@@ -1318,6 +1356,15 @@ public abstract class IcsConnector implements Connector {
 	protected String getInitialTimesealString() {
 		return Raptor.getInstance().getPreferences().getString(
 				PreferenceKeys.TIMESEAL_INIT_STRING);
+	}
+
+	protected String getTextAfterColon(String message) {
+		int colonIndex = message.indexOf(":");
+		if (colonIndex != -1) {
+			return message.substring(colonIndex + 1, message.length());
+		} else {
+			return message;
+		}
 	}
 
 	/**
@@ -1653,12 +1700,38 @@ public abstract class IcsConnector implements Connector {
 
 			if (event.getType() == ChatType.PARTNER_TELL) {
 				playBughouseSounds(event);
+				if (!event.hasBeenHandled()
+						&& getPreferences().getBoolean(
+								PreferenceKeys.BUGHOUSE_SPEAK_PARTNER_TELLS)) {
+					event.setHasBeenHandled(speak(getTextAfterColon(event
+							.getMessage())));
+				}
 			}
 
-			if (!event.hasBeenHandled()
-					&& (event.getType() == ChatType.PARTNER_TELL
-							|| event.getType() == ChatType.TELL || event
-							.getType() == ChatType.CHANNEL_TELL)) {
+			if (event.getType() == ChatType.CHANNEL_TELL) {
+				if (!event.getSource().equals(getUserName())
+						&& channelToSpeakTellsFrom.contains(event.getChannel())) {
+					event.setHasBeenHandled(speak(IcsUtils.stripTitles(event
+							.getSource())
+							+ " "
+							+ event.getChannel()
+							+ " "
+							+ getTextAfterColon(event.getMessage())));
+				}
+			}
+
+			if (event.getType() == ChatType.TELL) {
+				if (isSpeakingAllPersonTells
+						|| peopleToSpeakTellsFrom.contains(event.getSource())) {
+					event.setHasBeenHandled(speak(IcsUtils.stripTitles(event
+							.getSource())
+							+ " " + getTextAfterColon(event.getMessage())));
+				}
+			}
+
+			if (event.getType() == ChatType.PARTNER_TELL
+					|| event.getType() == ChatType.TELL
+					|| event.getType() == ChatType.CHANNEL_TELL) {
 				processScripts(event);
 			}
 
@@ -1694,10 +1767,18 @@ public abstract class IcsConnector implements Connector {
 		isSimulBugConnector = false;
 		simulBugPartnerName = null;
 		ignoringChatTypes.clear();
+		peopleToSpeakTellsFrom.clear();
+		channelToSpeakTellsFrom.clear();
+		isSpeakingAllPersonTells = false;
 	}
 
 	protected void setUserFollowing(String userFollowing) {
 		this.userFollowing = userFollowing;
+	}
+
+	protected boolean speak(String message) {
+		message = StringUtils.remove(message, "fics%").trim();
+		return SoundService.getInstance().textToSpeech(message);
 	}
 
 	protected boolean vetoMessage(String message) {

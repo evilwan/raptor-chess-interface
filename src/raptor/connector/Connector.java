@@ -416,5 +416,13 @@ public interface Connector {
 	public void sendMessage(String message, boolean isHidingFromUser,
 			ChatType hideNextChatType);
 
+	public void setSpeakingAllPersonTells(boolean isSpeakingAllPersonTells);
+
+	public void setSpeakingChannelTells(String channel,
+			boolean isSpeakingChannelTells);
+
+	public void setSpeakingPersonTells(String person,
+			boolean isSpeakingPersonTells);
+
 	public void whisper(Game game, String whisper);
 }
