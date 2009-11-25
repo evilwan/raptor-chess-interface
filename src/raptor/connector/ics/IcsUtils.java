@@ -473,8 +473,8 @@ public class IcsUtils implements GameConstants {
 			result = new FischerRandomGame();
 			break;
 		default:
-			LOG.error("Unsupported variant: " + variant);
-			throw new IllegalStateException("Unsupported game type" + variant);
+			LOG.warn("Unknown variant: " + variant + " assuming its classical");
+			result = new ClassicGame();
 		}
 		return result;
 	}
@@ -526,8 +526,9 @@ public class IcsUtils implements GameConstants {
 			result = new FischerRandomGame();
 			break;
 		default:
-			LOG.error("Unsupported variant: " + variant);
-			throw new IllegalStateException("Unsupported game type" + variant);
+			LOG.warn("Unsupported variant: " + variant
+					+ " assuming its Classic");
+			result = new ClassicGame();
 		}
 		return result;
 	}
@@ -603,10 +604,9 @@ public class IcsUtils implements GameConstants {
 		} else if (identifier.indexOf(UNTIMED_IDENTIFIER) != -1) {
 			result = Variant.classic;
 		} else {
-			throw new IllegalArgumentException("Unknown identifier "
-					+ identifier
-					+ " encountered. Please notify someone on the raptor team "
-					+ "so they can implement this new game type.");
+			LOG.warn("Unknown identifier " + identifier
+					+ " encountered. Assuming its classic.");
+			result = Variant.classic;
 		}
 
 		return result;
