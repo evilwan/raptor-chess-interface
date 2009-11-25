@@ -446,7 +446,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public void onAppendOutputText(String string) {
 		chatConsole.outputText.append(string);
-		setCaretToOutputTextEnd();
+		//setCaretToOutputTextEnd();
 	}
 
 	public void onAway() {
