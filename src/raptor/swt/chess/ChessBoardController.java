@@ -426,6 +426,18 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
+	 * Handles the on move list action. The default implementation toggles the
+	 * showing of the move list.
+	 */
+	public void onEngineAnalysis() {
+		if (isToolItemSelected(ToolBarItemKey.TOGGLE_ANALYSIS_ENGINE)) {
+			board.showEngineAnalysisWidget();
+		} else {
+			board.hideEngineAnalysisWidget();
+		}
+	}
+
+	/**
 	 * Handles the first action. The default implementation does nothing.
 	 */
 	public void onFirst() {

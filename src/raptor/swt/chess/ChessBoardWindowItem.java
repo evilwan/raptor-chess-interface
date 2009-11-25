@@ -210,6 +210,8 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 		board.getSquareHighlighter().removeAllHighlights();
 		board.getResultDecorator().setDecoration(null);
 		board.getArrowDecorator().removeAllArrows();
+		board.hideEngineAnalysisWidget();
+		board.hideMoveList();
 		board.setController(newController);
 		controller.setBoard(board);
 		board.getController().init();

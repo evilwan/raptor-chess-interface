@@ -300,7 +300,7 @@ public class ClassicGame implements Game {
 				: getCastling(BLACK) == CASTLE_BOTH ? "kq"
 						: getCastling(BLACK) == CASTLE_SHORT ? "k" : "q";
 
-		return whiteCastlingFen.equals("") && blackCastlingFen.equals("") ? " -"
+		return whiteCastlingFen.equals("") && blackCastlingFen.equals("") ? "-"
 				: whiteCastlingFen + blackCastlingFen;
 	}
 
@@ -960,6 +960,7 @@ public class ClassicGame implements Game {
 		gameToOverwrite.state = state;
 		gameToOverwrite.pgnHeaderMap = new HashMap<PgnHeader, String>(
 				pgnHeaderMap);
+
 		gameToOverwrite.moves = moves.deepCopy();
 		gameToOverwrite.halfMoveCount = halfMoveCount;
 		System.arraycopy(colorBB, 0, gameToOverwrite.colorBB, 0,

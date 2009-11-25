@@ -63,6 +63,7 @@ import raptor.action.game.LastAction;
 import raptor.action.game.MatchWinnerAction;
 import raptor.action.game.MoveListAction;
 import raptor.action.game.RevertAction;
+import raptor.action.game.ToggleEngineAnalysisAction;
 import raptor.chess.BughouseGame;
 import raptor.chess.FischerRandomBughouseGame;
 import raptor.chess.Game;
@@ -74,6 +75,9 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.ActionService;
 import raptor.service.ThreadService;
 import raptor.swt.chess.controller.BughouseSuggestController;
+import raptor.swt.chess.controller.ExamineController;
+import raptor.swt.chess.controller.InactiveController;
+import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.ToolBarItemKey;
 import raptor.util.SVGUtil;
 
@@ -762,6 +766,22 @@ public class ChessBoardUtils implements BoardConstants {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			controller.addToolItem(ToolBarItemKey.MATCH_WINNER, result);
 
+		} else if (action instanceof ToggleEngineAnalysisAction) {
+			if (controller instanceof InactiveController
+					|| controller instanceof ExamineController
+					|| controller instanceof ObserveController) {
+
+				if (controller.getGame().getVariant() == Variant.classic
+						|| controller.getGame().getVariant() == Variant.wild) {
+					result = new ToolItem(toolbar, SWT.CHECK);
+					controller.addToolItem(
+							ToolBarItemKey.TOGGLE_ANALYSIS_ENGINE, result);
+				}
+			}
+
+			if (result == null) {
+				return null;
+			}
 		} else if (action instanceof AutoDrawAction) {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			controller.addToolItem(ToolBarItemKey.AUTO_DRAW, result);

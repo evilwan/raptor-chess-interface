@@ -376,6 +376,7 @@ public class ExamineController extends ChessBoardController {
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(getGame().getMoveList().getSize());
 		super.refresh(isUpdatingClocks);
+		board.getEngineAnalysisWidget().updateToGame();
 	}
 
 	@Override

@@ -43,6 +43,7 @@ import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
+import raptor.swt.chess.analysis.SimpleAnalysisWidget;
 import raptor.swt.chess.layout.RightOrientedLayout;
 import raptor.swt.chess.movelist.SimpleMoveList;
 
@@ -71,6 +72,7 @@ public class ChessBoard implements BoardConstants {
 	protected boolean isWhiteOnTop = false;
 	protected boolean isWhitePieceJailOnTop = true;
 	protected ChessBoardMoveList moveList;
+	protected EngineAnalysisWidget engineAnalysisWidget;
 	protected CLabel openingDescriptionLabel;
 	protected CoolBar coolbar;
 
@@ -93,7 +95,8 @@ public class ChessBoard implements BoardConstants {
 	protected ArrowDecorator arrowDecorator;
 
 	protected Composite componentComposite;
-	protected SashForm sashForm;
+	protected SashForm boardMoveListSash;
+	protected SashForm analysisSash;
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
 	protected CLabel statusLabel;
 	protected CLabel whiteClockLabel;
@@ -123,9 +126,10 @@ public class ChessBoard implements BoardConstants {
 				coolbar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
 						false));
 			}
-			sashForm = new SashForm(componentComposite, SWT.HORIZONTAL);
-			sashForm
-					.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+			analysisSash = new SashForm(componentComposite, SWT.VERTICAL);
+			analysisSash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+					true));
+
 			if (!Raptor.getInstance().getPreferences().getBoolean(
 					PreferenceKeys.BOARD_COOLBAR_ON_TOP)) {
 				coolbar = new CoolBar(componentComposite, SWT.FLAT
@@ -134,19 +138,29 @@ public class ChessBoard implements BoardConstants {
 						false));
 			}
 
-			boardComposite = new Composite(sashForm, SWT.NONE);
+			boardMoveListSash = new SashForm(analysisSash, SWT.HORIZONTAL);
+			boardComposite = new Composite(boardMoveListSash, SWT.NONE);
 			createMoveList();
-			moveList.create(sashForm);
-			sashForm.setMaximizedControl(boardComposite);
+			moveList.create(boardMoveListSash);
+			boardMoveListSash.setMaximizedControl(boardComposite);
 			moveList.getControl().setVisible(false);
 
-			sashForm.addDisposeListener(new DisposeListener() {
+			createEngineAnalysisWidget();
+			engineAnalysisWidget.create(analysisSash);
+			analysisSash.setMaximizedControl(boardMoveListSash);
+			engineAnalysisWidget.getControl().setVisible(false);
+
+			boardMoveListSash.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent e) {
 					if (propertyChangeListener != null) {
 						Raptor.getInstance().getPreferences()
 								.removePropertyChangeListener(
 										propertyChangeListener);
 						propertyChangeListener = null;
+					}
+					if (engineAnalysisWidget != null) {
+						engineAnalysisWidget.quit();
+						engineAnalysisWidget = null;
 					}
 					if (controller != null) {
 						controller.dispose();
@@ -238,7 +252,7 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	public void dispose() {
-		sashForm.dispose();
+		boardMoveListSash.dispose();
 	}
 
 	public synchronized ArrowDecorator getArrowDecorator() {
@@ -282,6 +296,10 @@ public class ChessBoard implements BoardConstants {
 
 	public synchronized CLabel getCurrentPremovesLabel() {
 		return currentPremovesLabel;
+	}
+
+	public EngineAnalysisWidget getEngineAnalysisWidget() {
+		return engineAnalysisWidget;
 	}
 
 	public synchronized CLabel getGameDescriptionLabel() {
@@ -373,8 +391,14 @@ public class ChessBoard implements BoardConstants {
 		return whiteNameRatingLabel;
 	}
 
+	public void hideEngineAnalysisWidget() {
+		analysisSash.setMaximizedControl(boardMoveListSash);
+		engineAnalysisWidget.quit();
+		engineAnalysisWidget.getControl().setVisible(false);
+	}
+
 	public void hideMoveList() {
-		sashForm.setMaximizedControl(boardComposite);
+		boardMoveListSash.setMaximizedControl(boardComposite);
 		moveList.getControl().setVisible(false);
 	}
 
@@ -390,7 +414,7 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	public boolean isDisposed() {
-		return sashForm.isDisposed();
+		return boardMoveListSash.isDisposed();
 	}
 
 	/**
@@ -433,6 +457,9 @@ public class ChessBoard implements BoardConstants {
 		if (moveList != null) {
 			moveList.setController(controller);
 		}
+		if (engineAnalysisWidget != null) {
+			engineAnalysisWidget.setController(controller);
+		}
 	}
 
 	/**
@@ -451,12 +478,24 @@ public class ChessBoard implements BoardConstants {
 		this.isWhitePieceJailOnTop = isWhitePieceJailOnTop;
 	}
 
+	public synchronized void showEngineAnalysisWidget() {
+
+		int height = engineAnalysisWidget.getControl().computeSize(SWT.DEFAULT,
+				200).y;
+		boardMoveListSash.setWeights(new int[] {
+				boardMoveListSash.getSize().y - height, height });
+		engineAnalysisWidget.getControl().setVisible(true);
+		analysisSash.setMaximizedControl(null);
+		engineAnalysisWidget.onShow();
+	}
+
 	public synchronized void showMoveList() {
 
 		int width = moveList.getControl().computeSize(150, SWT.DEFAULT).x;
-		sashForm.setWeights(new int[] { sashForm.getSize().x - width, width });
+		boardMoveListSash.setWeights(new int[] {
+				boardMoveListSash.getSize().x - width, width });
 		moveList.getControl().setVisible(true);
-		sashForm.setMaximizedControl(null);
+		boardMoveListSash.setMaximizedControl(null);
 		moveList.forceRedraw();
 	}
 
@@ -552,8 +591,8 @@ public class ChessBoard implements BoardConstants {
 		boardComposite.setBackground(preferences
 				.getColor(BOARD_BACKGROUND_COLOR));
 		controller.refresh();
-		sashForm.layout(true, true);
-		sashForm.redraw();
+		boardMoveListSash.layout(true, true);
+		boardMoveListSash.redraw();
 	}
 
 	protected void addPersonMenuItems(Menu menu, String word) {
@@ -603,6 +642,11 @@ public class ChessBoard implements BoardConstants {
 	 */
 	protected void createChessBoardLayout() {
 		chessBoardLayout = new RightOrientedLayout(this);
+	}
+
+	protected void createEngineAnalysisWidget() {
+		engineAnalysisWidget = new SimpleAnalysisWidget();
+		engineAnalysisWidget.setController(controller);
 	}
 
 	protected void createMoveList() {

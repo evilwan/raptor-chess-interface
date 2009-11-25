@@ -367,6 +367,7 @@ public class ObserveController extends ChessBoardController {
 		board.getMoveList().select(cursor.getCursorPosition());
 		enableDisableNavButtons();
 		super.refresh(isUpdatingClocks);
+		board.getEngineAnalysisWidget().updateToGame();
 	}
 
 	@Override
