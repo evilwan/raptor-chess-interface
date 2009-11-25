@@ -219,6 +219,25 @@ public class TestPgnParsing {
 	}
 
 	@Test
+	public void testfr3() throws Exception {
+		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
+				"projectFiles/test/enpassantfr.pgn"), Integer.MAX_VALUE);
+		ListMaintainingPgnParserListener listener = new ListMaintainingPgnParserListener();
+		parser.addPgnParserListener(new TimingPgnParserListener());
+		parser.addPgnParserListener(listener);
+
+		long startTime = System.currentTimeMillis();
+		parser.parse();
+
+		System.err.println("Parsed " + listener.getGames().size() + " games "
+				+ " in " + (System.currentTimeMillis() - startTime) + "ms");
+
+		System.err.println(listener.getErrors());
+
+		performRollbackTest(listener.getGames());
+	}
+
+	@Test
 	public void testFRKingc8() throws Exception {
 		StreamingPgnParser parser = new StreamingPgnParser(new FileReader(
 				"projectFiles/test/frTest2.pgn"), Integer.MAX_VALUE);

@@ -40,6 +40,7 @@ import raptor.service.EcoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
+import raptor.service.UCIEngineService;
 import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.InputDialog;
 import raptor.swt.RaptorCursorRegistry;
@@ -70,6 +71,7 @@ public class Raptor implements PreferenceKeys {
 	public static final String RESOURCES_DIR = "resources/";
 	public static final String GAMES_PGN_FILE = USER_RAPTOR_HOME_PATH
 			+ "/games/raptorGames.pgn";
+	public static final String ENGINES_DIR = USER_RAPTOR_HOME_PATH + "/engines";
 	private static Raptor instance;
 	private static Display display;
 
@@ -168,6 +170,10 @@ public class Raptor implements PreferenceKeys {
 					// Initialize this after a half second. It requires a
 					// RaptorWindow.
 					ChessBoardCacheService.getInstance();
+
+					// Initialize the UCIEngineService after a half second.
+					// Requires a raptor window in case there is an error.
+					UCIEngineService.getInstance();
 
 					String currentChessSet = getInstance().getPreferences()
 							.getString(PreferenceKeys.BOARD_CHESS_SET_NAME);
@@ -443,6 +449,12 @@ public class Raptor implements PreferenceKeys {
 			ChessBoardCacheService.getInstance().dispose();
 		} catch (Throwable t) {
 			LOG.warn("Error shutting ChessBoardCacheService", t);
+		}
+
+		try {
+			UCIEngineService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting UCIEngineService", t);
 		}
 
 		try {

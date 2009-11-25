@@ -343,6 +343,7 @@ public class InactiveController extends ChessBoardController implements
 		board.getMoveList().select(cursor.getCursorPosition());
 		enableDisableNavButtons();
 		super.refresh();
+		board.getEngineAnalysisWidget().updateToGame();
 	}
 
 	/**

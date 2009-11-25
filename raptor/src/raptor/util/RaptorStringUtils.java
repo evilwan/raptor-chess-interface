@@ -84,6 +84,23 @@ public class RaptorStringUtils {
 		return result;
 	}
 
+	public static String formatAsNumber(String stringOfDigits) {
+		if (stringOfDigits.length() <= 3) {
+			return stringOfDigits;
+		} else {
+			StringBuilder result = new StringBuilder(
+					stringOfDigits.length() + 10);
+			int digitsCounted = 0;
+			for (int i = 0; i < stringOfDigits.length(); i++) {
+				if (i != 0 && (stringOfDigits.length() - i) % 3 == 0) {
+					result.append(",");
+				}
+				result.append(stringOfDigits.charAt(i));
+			}
+			return result.toString();
+		}
+	}
+
 	/**
 	 * Generates a random word between 1 and n chars in length.
 	 */

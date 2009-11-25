@@ -108,6 +108,8 @@ public class ChessBoardCacheService {
 								board.getControl().setLayoutDeferred(true);
 								board.getControl().setParent(composite);
 								board.hideMoveList();
+								// This shuts down the engine if its visible.
+								board.hideEngineAnalysisWidget();
 								board.getArrowDecorator().removeAllArrows();
 								board.getSquareHighlighter()
 										.removeAllHighlights();
