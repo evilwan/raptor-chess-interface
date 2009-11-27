@@ -690,9 +690,11 @@ public class UCIEngine {
 		} else if (varValue.equalsIgnoreCase("author")) {
 			engineAuthor = varValue;
 		} else {
-			LOG
-					.warn("Unknown id variable name (Please post this on the Raptor site so it can be added). "
-							+ varName + "=" + varValue);
+			if (LOG.isDebugEnabled()) {
+				LOG
+						.debug("Unknown id variable name. "
+								+ varName + "=" + varValue);
+			}
 		}
 	}
 
