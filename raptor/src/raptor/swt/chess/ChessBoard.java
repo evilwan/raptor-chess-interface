@@ -147,6 +147,7 @@ public class ChessBoard implements BoardConstants {
 
 			createEngineAnalysisWidget();
 			engineAnalysisWidget.create(analysisSash);
+			analysisSash.setWeights(new int[] { 70, 30 });
 			analysisSash.setMaximizedControl(boardMoveListSash);
 			engineAnalysisWidget.getControl().setVisible(false);
 
@@ -393,8 +394,8 @@ public class ChessBoard implements BoardConstants {
 
 	public void hideEngineAnalysisWidget() {
 		analysisSash.setMaximizedControl(boardMoveListSash);
-		engineAnalysisWidget.quit();
 		engineAnalysisWidget.getControl().setVisible(false);
+		engineAnalysisWidget.quit();
 	}
 
 	public void hideMoveList() {
@@ -479,11 +480,6 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	public synchronized void showEngineAnalysisWidget() {
-
-		int height = engineAnalysisWidget.getControl().computeSize(SWT.DEFAULT,
-				200).y;
-		boardMoveListSash.setWeights(new int[] {
-				boardMoveListSash.getSize().y - height, height });
 		engineAnalysisWidget.getControl().setVisible(true);
 		analysisSash.setMaximizedControl(null);
 		engineAnalysisWidget.onShow();
@@ -593,6 +589,8 @@ public class ChessBoard implements BoardConstants {
 		controller.refresh();
 		boardMoveListSash.layout(true, true);
 		boardMoveListSash.redraw();
+
+		engineAnalysisWidget.updateFromPrefs();
 	}
 
 	protected void addPersonMenuItems(Menu menu, String word) {

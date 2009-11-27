@@ -14,6 +14,8 @@
 package raptor.swt.chess.analysis;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -22,6 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -34,21 +37,25 @@ import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.Move;
 import raptor.chess.util.GameUtils;
+import raptor.engine.uci.UCIBestMove;
 import raptor.engine.uci.UCIEngine;
 import raptor.engine.uci.UCIInfo;
 import raptor.engine.uci.UCIInfoListener;
 import raptor.engine.uci.UCIMove;
 import raptor.engine.uci.UCIOption;
 import raptor.engine.uci.info.BestLineFoundInfo;
+import raptor.engine.uci.info.CPULoadInfo;
 import raptor.engine.uci.info.DepthInfo;
 import raptor.engine.uci.info.NodesPerSecondInfo;
 import raptor.engine.uci.info.NodesSearchedInfo;
 import raptor.engine.uci.info.ScoreInfo;
 import raptor.engine.uci.info.TimeInfo;
 import raptor.engine.uci.options.UCIButton;
+import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.swt.RaptorTable;
+import raptor.swt.UCIEnginePropertiesDialog;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.EngineAnalysisWidget;
 import raptor.util.RaptorStringUtils;
@@ -58,70 +65,76 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			.getLog(SimpleAnalysisWidget.class);
 
 	protected ChessBoardController controller;
-	protected Composite composite;
+	protected Composite composite, topLine;
 	protected UCIEngine currentEngine;
+	protected CLabel engineComboCLabel;
+	protected CLabel nodesPerSecondLabelLabel;
+	protected CLabel nodesPerSecondLabel;
+	protected CLabel cpuPercentageLabelLabel;
+	protected CLabel cpuPercentageLabel;
 	protected Combo engineCombo;
-	protected CLabel scoreCLabel;
-	protected CLabel depthCLabel;
-	protected CLabel nodesSearchedCLabel;
-	protected CLabel nodesPerSecondCLabel;
-	protected CLabel timeInfoCLabel;
 	protected RaptorTable bestMoves;
-	protected Button stopButton;
-	protected Button startButton;
-	protected Composite customButtons;
+	protected Button stopButton, startButton, propertiesButton;
 	protected boolean ignoreEngineSelection;
 	protected boolean isInStart = false;
 	protected UCIInfoListener listener = new UCIInfoListener() {
+		public void engineSentBestMove(UCIBestMove uciBestMove) {
+		}
+
 		public void engineSentInfo(final UCIInfo[] infos) {
 			Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 				public void run() {
+					String score = null;
+					String time = null;
+					String depth = null;
+					String nodes = null;
+					String cpu = null;
+					String nps = null;
+					List<String> pvs = new ArrayList<String>(3);
+
 					for (UCIInfo info : infos) {
 						if (info instanceof ScoreInfo) {
 							ScoreInfo scoreInfo = (ScoreInfo) info;
 							if (((ScoreInfo) info).getMateInMoves() != 0) {
-								scoreCLabel.setText("Mate in "
-										+ scoreInfo.getMateInMoves());
+								score = "Mate in " + scoreInfo.getMateInMoves();
 							} else if (scoreInfo.isLowerBoundScore()) {
-								scoreCLabel.setText("-infinity");
+								score = "-inf";
 							} else if (scoreInfo.isUpperBoundScore()) {
-								scoreCLabel.setText("+infinity");
+								score = "+inf";
 							} else {
-								scoreCLabel
-										.setText(""
-												+ new BigDecimal(
-														scoreInfo
-																.getValueInCentipawns() / 100.0)
-														.setScale(
-																2,
-																BigDecimal.ROUND_HALF_UP)
-														.toString());
+								score = ""
+										+ new BigDecimal(scoreInfo
+												.getValueInCentipawns() / 100.0)
+												.setScale(
+														2,
+														BigDecimal.ROUND_HALF_UP)
+												.toString();
 							}
 						} else if (info instanceof DepthInfo) {
 							DepthInfo depthInfo = (DepthInfo) info;
-							depthCLabel.setText(depthInfo.getSearchDepthPlies()
-									+ " plies");
+							depth = depthInfo.getSearchDepthPlies() + " plies";
 						} else if (info instanceof NodesSearchedInfo) {
 							NodesSearchedInfo nodesSearchedInfo = (NodesSearchedInfo) info;
-							nodesSearchedCLabel.setText(RaptorStringUtils
-									.formatAsNumber(""
-											+ nodesSearchedInfo
-													.getNodesSearched() / 1000)
-									+ "K");
+							nodes = RaptorStringUtils.formatAsNumber(""
+									+ nodesSearchedInfo.getNodesSearched()
+									/ 1000);
+						} else if (info instanceof CPULoadInfo) {
+							CPULoadInfo cpuLoad = (CPULoadInfo) info;
+							cpu = new BigDecimal(
+									cpuLoad.getCpuUsage() / 1000.0 * 100)
+									.setScale(0, BigDecimal.ROUND_HALF_UP)
+									.toString();
 						} else if (info instanceof NodesPerSecondInfo) {
 							NodesPerSecondInfo nodesPerSecondInfo = (NodesPerSecondInfo) info;
-							nodesPerSecondCLabel
-									.setText(RaptorStringUtils
-											.formatAsNumber(""
-													+ nodesPerSecondInfo
-															.getNodesPerSecond()
-													/ 1000)
-											+ "K");
+							nps = RaptorStringUtils.formatAsNumber(""
+									+ nodesPerSecondInfo.getNodesPerSecond()
+									/ 1000);
 						} else if (info instanceof TimeInfo) {
 							TimeInfo timeInfo = (TimeInfo) info;
-							timeInfoCLabel.setText(new BigDecimal(timeInfo
-									.getTimeMillis() / 1000.0).setScale(1,
-									BigDecimal.ROUND_HALF_UP).toString());
+							time = new BigDecimal(
+									timeInfo.getTimeMillis() / 1000.0)
+									.setScale(1, BigDecimal.ROUND_HALF_UP)
+									.toString();
 						} else if (info instanceof BestLineFoundInfo) {
 							BestLineFoundInfo bestLineFoundInfo = (BestLineFoundInfo) info;
 							StringBuilder line = new StringBuilder(100);
@@ -166,149 +179,160 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 									break;
 								}
 							}
-							bestMoves.refreshTable(new String[][] { { line
-									.toString() } });
+							pvs.add(line.toString());
 						}
 					}
+
+					final String finalScore = score;
+					final String finalTime = time;
+					final String finalDepth = depth;
+					final String finalNodes = nodes;
+					final List<String> finalPVs = pvs;
+					final String finalCPU = cpu;
+					final String finalNPS = nps;
+
+					Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
+						public void run() {
+							if (!finalPVs.isEmpty()) {
+								String[][] data = new String[bestMoves
+										.getRowCount()
+										+ finalPVs.size()][5];
+
+								for (int i = 0; i < finalPVs.size(); i++) {
+									data[0][0] = StringUtils
+											.defaultString(finalScore);
+									data[0][1] = StringUtils
+											.defaultString(finalDepth);
+									data[0][2] = StringUtils
+											.defaultString(finalTime);
+									data[0][3] = StringUtils
+											.defaultString(finalNodes);
+									data[0][4] = StringUtils
+											.defaultString(finalPVs.get(i));
+								}
+
+								for (int i = 0; i < bestMoves.getRowCount(); i++) {
+									for (int j = 0; j < bestMoves
+											.getColumnCount(); j++) {
+										data[i + finalPVs.size()][j] = bestMoves
+												.getText(i, j);
+									}
+								}
+
+								bestMoves.refreshTable(data);
+							} else if (bestMoves.getRowCount() > 0) {
+								if (StringUtils.isNotBlank(finalScore)) {
+									bestMoves.setText(0, 0, finalScore);
+								}
+								if (StringUtils.isNotBlank(finalDepth)) {
+									bestMoves.setText(0, 1, finalDepth);
+								}
+								if (StringUtils.isNotBlank(finalTime)) {
+									bestMoves.setText(0, 2, finalTime);
+								}
+
+								if (StringUtils.isNotBlank(finalNodes)) {
+									bestMoves.setText(0, 3, finalNodes);
+								}
+							}
+							if (finalCPU != null) {
+								cpuPercentageLabel.setText(finalCPU);
+							}
+							if (finalNPS != null) {
+								nodesPerSecondLabel.setText(finalNPS);
+							}
+						}
+					});
 				}
 			});
 		}
 	};
 
 	public void clear() {
-		scoreCLabel.setText("               ");
-		depthCLabel.setText("               ");
-		nodesSearchedCLabel.setText("               ");
-		timeInfoCLabel.setText("               ");
-		nodesPerSecondCLabel.setText("               ");
-		bestMoves.clearTable();
+		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				bestMoves.clearTable();
+				cpuPercentageLabel.setText("   ");
+				nodesPerSecondLabel.setText("      ");
+			}
+		});
 	}
 
 	public Composite create(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(6, false));
+		composite.setLayout(new GridLayout(1, false));
 
-		CLabel engineComboCLabel = new CLabel(composite, SWT.LEFT);
+		topLine = new Composite(composite, SWT.LEFT);
+		topLine.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
+		topLine.setLayout(new RowLayout());
+
+		engineComboCLabel = new CLabel(topLine, SWT.LEFT);
 		engineComboCLabel.setText("Engine:");
-		engineComboCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
-				false, false, 1, 1));
 
-		engineCombo = new Combo(composite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		engineCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1));
+		engineCombo = new Combo(topLine, SWT.DROP_DOWN | SWT.READ_ONLY);
 		engineCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (!ignoreEngineSelection) {
-					if (currentEngine != null
-							&& !StringUtils.equals(engineCombo.getText(),
-									currentEngine.getUserName())) {
-						ThreadService.getInstance().run(new Runnable() {
-							public void run() {
-								if (currentEngine != null) {
-									currentEngine.quit();
-								}
-								currentEngine = UCIEngineService.getInstance()
-										.getUCIEngine(engineCombo.getText())
-										.getDeepCopy();
-
-								Raptor.getInstance().getDisplay().asyncExec(
-										new Runnable() {
-											public void run() {
-												clear();
-											}
-										});
-
-								currentEngine.connect();
-								start();
-							}
-						});
-					}
+				if (ignoreEngineSelection) {
+					return;
 				}
+
+				final String value = engineCombo.getText();
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("engineCombo value selected: " + value);
+				}
+
+				if (currentEngine != null) {
+					if (currentEngine.getUserName().equals(value)) {
+						return;
+					}
+
+					final UCIEngine engineToQuit = currentEngine;
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							engineToQuit.quit();
+						}
+					});
+
+				}
+				ThreadService.getInstance().run(new Runnable() {
+					public void run() {
+						try {
+							currentEngine = UCIEngineService.getInstance()
+									.getUCIEngine(value).getDeepCopy();
+							if (LOG.isDebugEnabled()) {
+								LOG.debug("Changing engine to : "
+										+ currentEngine.getUserName());
+							}
+							start(true);
+						} catch (Throwable t) {
+							LOG.error("Error switching chess engines", t);
+						}
+					}
+				});
 			}
 		});
 
-		CLabel scoreHeaderCLabel = new CLabel(composite, SWT.LEFT);
-		scoreHeaderCLabel.setText("Score:");
-		scoreHeaderCLabel
-				.setToolTipText("Score in pawns. Negative score is a black advantage. Positive score is a white advantage.");
-		scoreHeaderCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
-				false, false, 1, 1));
+		nodesPerSecondLabelLabel = new CLabel(topLine, SWT.LEFT);
+		nodesPerSecondLabelLabel.setText("NPS(K):");
+		nodesPerSecondLabelLabel
+				.setToolTipText("Nodes per second in thousands");
 
-		scoreCLabel = new CLabel(composite, SWT.LEFT);
-		scoreCLabel
-				.setToolTipText("Score in pawns. Negative score is a black advantage. Positive score is a white advantage.");
-		scoreCLabel.setText("               ");
-		scoreCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1));
+		nodesPerSecondLabel = new CLabel(topLine, SWT.LEFT);
+		nodesPerSecondLabel.setToolTipText("Nodes per second in thousands");
+		nodesPerSecondLabel.setText("       ");
 
-		CLabel depthHeaderCLabel = new CLabel(composite, SWT.LEFT);
-		depthHeaderCLabel.setToolTipText("The current depth searched.");
-		depthHeaderCLabel.setText("Depth:");
-		depthHeaderCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
-				false, false, 1, 1));
+		cpuPercentageLabelLabel = new CLabel(topLine, SWT.LEFT);
+		cpuPercentageLabelLabel.setText("CPU%:");
+		cpuPercentageLabelLabel
+				.setToolTipText("Percentage of cpu being used by the engine");
 
-		depthCLabel = new CLabel(composite, SWT.LEFT);
-		depthCLabel.setToolTipText("The current depth searched.");
-		depthCLabel.setText("               ");
-		depthCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1));
+		cpuPercentageLabel = new CLabel(topLine, SWT.LEFT);
+		cpuPercentageLabel.setText("   ");
+		cpuPercentageLabel
+				.setToolTipText("Percentage of cpu being used by the engine");
 
-		CLabel nodesSearchedHeaderCLabel = new CLabel(composite, SWT.LEFT);
-		nodesSearchedHeaderCLabel
-				.setToolTipText("The total number of positions searched.");
-		nodesSearchedHeaderCLabel.setText("Nodes Searched:");
-		nodesSearchedHeaderCLabel.setLayoutData(new GridData(SWT.LEFT,
-				SWT.CENTER, false, false, 1, 1));
-
-		nodesSearchedCLabel = new CLabel(composite, SWT.LEFT);
-		nodesSearchedCLabel
-				.setToolTipText("The total number of positions searched.");
-		nodesSearchedCLabel.setText("               ");
-		nodesSearchedCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
-				false, false, 1, 1));
-
-		CLabel npsHeaderCLabel = new CLabel(composite, SWT.LEFT);
-		npsHeaderCLabel
-				.setToolTipText("The average number of positions searched in a second.");
-		npsHeaderCLabel.setText("Nodes Per Second:");
-		npsHeaderCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1));
-
-		nodesPerSecondCLabel = new CLabel(composite, SWT.LEFT);
-		nodesPerSecondCLabel
-				.setToolTipText("The average number of positions searched in a second.");
-		nodesPerSecondCLabel.setText("               ");
-		nodesPerSecondCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
-				false, false, 1, 1));
-
-		CLabel timeInfoHeaderCLabel = new CLabel(composite, SWT.LEFT);
-		timeInfoHeaderCLabel.setText("Time (seconds):");
-		timeInfoHeaderCLabel
-				.setToolTipText("The amount of time taken for the last search in seconds.");
-		timeInfoHeaderCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
-				false, false, 1, 1));
-
-		timeInfoCLabel = new CLabel(composite, SWT.LEFT);
-		timeInfoCLabel.setText("               ");
-		timeInfoCLabel
-				.setToolTipText("The amount of time taken for the last search in seconds.");
-		timeInfoCLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1));
-
-		bestMoves = new RaptorTable(composite, SWT.BORDER | SWT.FULL_SELECTION,
-				false, true);
-		bestMoves.setToolTipText("The current best lines in the position.");
-		bestMoves.addColumn("Best Moves", SWT.LEFT, 100, false, null);
-		bestMoves.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 6,
-				1));
-
-		customButtons = new Composite(composite, SWT.NONE);
-		customButtons.setLayout(new RowLayout());
-		customButtons.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 6, 1));
-
-		startButton = new Button(customButtons, SWT.PUSH);
+		startButton = new Button(topLine, SWT.PUSH);
 		startButton.setText("Start");
 		startButton
 				.setToolTipText("Starts analysis if it is not currently running.");
@@ -319,7 +343,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			}
 		});
 
-		stopButton = new Button(customButtons, SWT.PUSH);
+		stopButton = new Button(topLine, SWT.PUSH);
 		stopButton.setText("Stop");
 		stopButton.setToolTipText("Stops analysis if it is currently running.");
 		stopButton.addSelectionListener(new SelectionAdapter() {
@@ -328,8 +352,43 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 				stop();
 			}
 		});
+
+		propertiesButton = new Button(topLine, SWT.PUSH);
+		propertiesButton.setText("Engine Properties");
+		propertiesButton.setToolTipText("Shows the engines custom properties.");
+		propertiesButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				UCIEnginePropertiesDialog dialog = new UCIEnginePropertiesDialog(
+						composite.getShell(), currentEngine);
+				dialog.open();
+
+				ThreadService.getInstance().run(new Runnable() {
+					public void run() {
+						currentEngine.stop();
+						currentEngine.quit();
+						currentEngine.connect();
+						start(true);
+					}
+				});
+			}
+		});
+
+		bestMoves = new RaptorTable(composite, SWT.BORDER | SWT.FULL_SELECTION,
+				false, true);
+		bestMoves.setToolTipText("The current best lines in the position.");
+		bestMoves.addColumn("Score(Pawns)", SWT.LEFT, 10, false, null);
+		bestMoves.addColumn("Depth(ply)", SWT.LEFT, 10, false, null);
+		bestMoves.addColumn("Time(sec)", SWT.LEFT, 10, false, null);
+		bestMoves.addColumn("Nodes(K)", SWT.LEFT, 10, false, null);
+		bestMoves.addColumn("Principal Variation", SWT.LEFT, 60, false, null);
+		bestMoves.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
+
 		updateEnginesCombo();
 		updateCustomButtons();
+
+		updateFromPrefs();
 		return composite;
 	}
 
@@ -349,9 +408,13 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 	}
 
 	public void quit() {
-		if (!composite.isDisposed()) {
-			clear();
-		}
+		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				if (!composite.isDisposed()) {
+					clear();
+				}
+			}
+		});
 		if (currentEngine != null) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
@@ -366,21 +429,72 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 	}
 
 	public void start() {
-		if (currentEngine != null && composite.isVisible() && !isInStart) {
+		if (composite.isVisible()) {
+			start(false);
+		}
+	}
+
+	public void stop() {
+		if (currentEngine != null) {
+			ThreadService.getInstance().run(new Runnable() {
+				public void run() {
+					currentEngine.stop();
+					currentEngine.isReady();
+				}
+			});
+		}
+	}
+
+	public void updateFromPrefs() {
+		Color background = Raptor.getInstance().getPreferences().getColor(
+				PreferenceKeys.BOARD_BACKGROUND_COLOR);
+		Color foreground = Raptor.getInstance().getPreferences().getColor(
+				PreferenceKeys.BOARD_STATUS_COLOR);
+		composite.setBackground(background);
+		topLine.setBackground(background);
+		engineComboCLabel.setBackground(background);
+		engineComboCLabel.setForeground(foreground);
+		nodesPerSecondLabelLabel.setBackground(background);
+		nodesPerSecondLabelLabel.setForeground(foreground);
+		nodesPerSecondLabel.setBackground(background);
+		nodesPerSecondLabel.setForeground(foreground);
+		cpuPercentageLabelLabel.setBackground(background);
+		cpuPercentageLabelLabel.setForeground(foreground);
+		cpuPercentageLabel.setBackground(background);
+		cpuPercentageLabel.setForeground(foreground);
+	}
+
+	public void updateToGame() {
+		start();
+	}
+
+	protected void start(boolean override) {
+
+		if (currentEngine != null && (!isInStart || override)) {
 			isInStart = true;
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("In SimpleAnalysisWidget.start("
+								+ currentEngine.getUserName() + ")");
+					}
 					try {
 						if (!currentEngine.isConnected()) {
 							currentEngine.connect();
 						}
+						Raptor.getInstance().getDisplay().asyncExec(
+								new Runnable() {
+									public void run() {
+										clear();
+									}
+								});
 						currentEngine.stop();
 						currentEngine.newGame();
-						currentEngine.isReady();
-
 						currentEngine.setPosition(controller.getGame().toFen(),
 								null);
-						currentEngine.go("infinite", listener);
+						currentEngine.isReady();
+						currentEngine.go(currentEngine
+								.getGoAnalysisParameters(), listener);
 					} catch (Throwable t) {
 						LOG.error("Error starting engine", t);
 					} finally {
@@ -391,24 +505,12 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 		}
 	}
 
-	public void stop() {
-		if (currentEngine != null) {
-			ThreadService.getInstance().run(new Runnable() {
-				public void run() {
-					currentEngine.stop();
-				}
-			});
-		}
-	}
-
-	public void updateToGame() {
-		start();
-	}
-
 	protected void updateCustomButtons() {
 		if (currentEngine != null) {
-			for (Control control : customButtons.getChildren()) {
-				if (control != stopButton && control != startButton) {
+			for (Control control : topLine.getChildren()) {
+				if (control instanceof Button && control != stopButton
+						&& control != startButton
+						&& control != propertiesButton) {
 					control.dispose();
 				}
 			}
@@ -417,7 +519,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			for (String controlName : controlNames) {
 				final UCIOption option = currentEngine.getOption(controlName);
 				if (option instanceof UCIButton) {
-					Button button = new Button(customButtons, SWT.PUSH);
+					Button button = new Button(topLine, SWT.PUSH);
 					button.setText(controlName);
 					button.setToolTipText("Custom engine analyis button.");
 					button.addSelectionListener(new SelectionAdapter() {
@@ -425,16 +527,19 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 						public void widgetSelected(SelectionEvent e) {
 							ThreadService.getInstance().run(new Runnable() {
 								public void run() {
-									stop();
+									currentEngine.stop();
+									currentEngine.isReady();
 									currentEngine.setOption(option);
-									start();
+									currentEngine.isReady();
+									start(true);
 								}
 							});
 						}
 					});
 				}
 			}
-			customButtons.layout(true, true);
+			topLine.pack(true);
+			topLine.layout(true, true);
 		}
 	}
 
@@ -458,5 +563,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			}
 		}
 		ignoreEngineSelection = false;
+		topLine.pack(true);
+		topLine.layout(true, true);
 	}
 }

@@ -90,7 +90,6 @@ public class RaptorStringUtils {
 		} else {
 			StringBuilder result = new StringBuilder(
 					stringOfDigits.length() + 10);
-			int digitsCounted = 0;
 			for (int i = 0; i < stringOfDigits.length(); i++) {
 				if (i != 0 && (stringOfDigits.length() - i) % 3 == 0) {
 					result.append(",");
