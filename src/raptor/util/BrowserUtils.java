@@ -81,16 +81,14 @@ public class BrowserUtils {
 					if (browser == null) {
 						throw new Exception("Could not find web browser");
 					} else {
-						Runtime.getRuntime()
-								.exec(new String[] { browser, url });
+						new ProcessBuilder(browser, url).start();
 					}
 				} else {
 					String browser = null;
 					if (browser == null) {
 						throw new Exception("Could not find web browser");
 					} else {
-						Runtime.getRuntime()
-								.exec(new String[] { browser, url });
+						new ProcessBuilder(browser, url).start();
 
 					}
 				}
