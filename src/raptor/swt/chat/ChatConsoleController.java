@@ -824,6 +824,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 
 			if (message.startsWith("http")) {
+				MenuItem internalBrowserItem = new MenuItem(menu, SWT.PUSH);
+				internalBrowserItem.setText("Open in internal browser: '"
+						+ message + "'");
+				internalBrowserItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils.openInternalUrl(message);
+					}
+				});
+
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
 				menuItem.setText("Open in external browser: '" + message + "'");
 				menuItem.addListener(SWT.Selection, new Listener() {
@@ -831,6 +840,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						BrowserUtils.openExternalUrl(message);
 					}
 				});
+
 			}
 
 			ChatScript[] scripts = ScriptService.getInstance().getChatScripts(
