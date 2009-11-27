@@ -121,6 +121,18 @@ public class BrowserUtils {
 		}
 	}
 
+	public static void openInternalUrl(String url) {
+		BrowserWindowItem item = Raptor.getInstance().getWindow()
+				.getBrowserWindowItem();
+		if (item == null) {
+			Raptor.getInstance().getWindow().addRaptorWindowItem(
+					new BrowserWindowItem(url));
+		} else {
+			item.setUrl(url);
+			Raptor.getInstance().getWindow().forceFocus(item);
+		}
+	}
+
 	/**
 	 * This checks the users preferences and opens the browser either internally
 	 * or externally depending on how its set. It will also check to see if a
@@ -136,18 +148,6 @@ public class BrowserUtils {
 			} else {
 				openInternalUrl(url);
 			}
-		}
-	}
-
-	public static void openInternalUrl(String url) {
-		BrowserWindowItem item = Raptor.getInstance().getWindow()
-				.getBrowserWindowItem();
-		if (item == null) {
-			Raptor.getInstance().getWindow().addRaptorWindowItem(
-					new BrowserWindowItem(url));
-		} else {
-			item.setUrl(url);
-			Raptor.getInstance().getWindow().forceFocus(item);
 		}
 	}
 }
