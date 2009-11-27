@@ -134,16 +134,20 @@ public class BrowserUtils {
 				openExternalUrl(url);
 				return;
 			} else {
-				BrowserWindowItem item = Raptor.getInstance().getWindow()
-						.getBrowserWindowItem();
-				if (item == null) {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BrowserWindowItem(url));
-				} else {
-					item.setUrl(url);
-					Raptor.getInstance().getWindow().forceFocus(item);
-				}
+				openInternalUrl(url);
 			}
+		}
+	}
+
+	public static void openInternalUrl(String url) {
+		BrowserWindowItem item = Raptor.getInstance().getWindow()
+				.getBrowserWindowItem();
+		if (item == null) {
+			Raptor.getInstance().getWindow().addRaptorWindowItem(
+					new BrowserWindowItem(url));
+		} else {
+			item.setUrl(url);
+			Raptor.getInstance().getWindow().forceFocus(item);
 		}
 	}
 }
