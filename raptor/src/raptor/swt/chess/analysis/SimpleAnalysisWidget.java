@@ -193,6 +193,9 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 
 					Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 						public void run() {
+							if (composite.isDisposed()) {
+								return;
+							}
 							if (!finalPVs.isEmpty()) {
 								String[][] data = new String[bestMoves
 										.getRowCount()
