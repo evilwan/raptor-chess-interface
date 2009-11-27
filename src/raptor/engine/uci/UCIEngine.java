@@ -63,6 +63,7 @@ public class UCIEngine {
 	protected PrintWriter out;
 	protected boolean isConnected;
 	protected Map<String, UCIOption> nameToOptions = new HashMap<String, UCIOption>();
+	protected Map<String, String> overrideOptions = new HashMap<String, String>();
 	protected String processPath;
 	protected String engineName;
 	protected String engineAuthor;
@@ -73,6 +74,7 @@ public class UCIEngine {
 	protected String userName;
 	protected boolean isDefault;
 	protected Object stopSynch = new Object();
+	protected String goAnalysisParameters = "infinite";
 
 	/**
 	 * Connects to the engine. After this method is invoked the engine name,
@@ -114,9 +116,10 @@ public class UCIEngine {
 				} else if (currentLine.startsWith("uciok")) {
 					break;
 				} else {
-					LOG
-							.warn("Unknown response to uci (Please post an issue so this can be added to Raptor): "
-									+ currentLine);
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Unknown response to uci ignoring: "
+								+ currentLine);
+					}
 				}
 			}
 
@@ -158,7 +161,9 @@ public class UCIEngine {
 		result.setProcessPath(getProcessPath());
 		result.setParameters(getParameters());
 		result.setUserName(getUserName());
+		result.setGoAnalysisParameters(getGoAnalysisParameters());
 		result.nameToOptions = nameToOptions;
+		result.overrideOptions = overrideOptions;
 		result.isDefault = isDefault;
 		return result;
 	}
@@ -169,6 +174,10 @@ public class UCIEngine {
 
 	public String getEngineName() {
 		return engineName;
+	}
+
+	public String getGoAnalysisParameters() {
+		return goAnalysisParameters;
 	}
 
 	/**
@@ -183,6 +192,14 @@ public class UCIEngine {
 	 */
 	public String[] getOptionNames() {
 		return nameToOptions.keySet().toArray(new String[0]);
+	}
+
+	public String getOverrideOption(String name) {
+		return overrideOptions.get(name);
+	}
+
+	public String[] getOverrideOptionNames() {
+		return overrideOptions.keySet().toArray(new String[0]);
 	}
 
 	public String[] getParameters() {
@@ -271,6 +288,7 @@ public class UCIEngine {
 								parseInfoLine(line, listener);
 							} else if (line.startsWith("bestmove")) {
 								lastBestMove = parseBestMove(line);
+								listener.engineSentBestMove(lastBestMove);
 								break;
 							}
 							line = readLine();
@@ -282,7 +300,9 @@ public class UCIEngine {
 				}
 			});
 		} else {
-			LOG.warn("Go is in process. Ignoring go call.");
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Go is in process. Ignoring go call.");
+			}
 		}
 	}
 
@@ -407,7 +427,7 @@ public class UCIEngine {
 
 		send("quit");
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException ie) {
 		}
 		disconnect();
@@ -444,6 +464,10 @@ public class UCIEngine {
 		this.engineName = engineName;
 	}
 
+	public void setGoAnalysisParameters(String goAnalysisParameters) {
+		this.goAnalysisParameters = goAnalysisParameters;
+	}
+
 	/**
 	 * setoption name [value ] this is sent to the engine when the user wants to
 	 * change the internal parameters of the engine. For the "button" type no
@@ -463,6 +487,9 @@ public class UCIEngine {
 		}
 
 		try {
+			if (!option.isDefaultValue()) {
+				overrideOptions.put(option.getName(), option.getValue());
+			}
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Entering setOption(" + option + ")");
@@ -482,6 +509,10 @@ public class UCIEngine {
 			LOG.warn("Error occured setting option: " + option, t);
 			disconnect();
 		}
+	}
+
+	public void setOverrideOption(String name, String value) {
+		overrideOptions.put(name, value);
 	}
 
 	public void setParameters(String[] parameters) {
@@ -591,10 +622,12 @@ public class UCIEngine {
 				lastBestMove = null;
 
 			} else {
+				long totalSleepTime = 0;
 				send("stop");
-				while (goRunnable != null && lastBestMove != null) {
+				while (goRunnable != null && totalSleepTime < 2500) {
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(500);
+						totalSleepTime += 500;
 					} catch (InterruptedException ie) {
 					}
 				}
@@ -913,6 +946,7 @@ public class UCIEngine {
 			}
 
 			UCISpinner spinner = new UCISpinner();
+			spinner.setDefaultValue(defaultValue);
 			spinner.setName(name);
 			spinner.setMaximum(maxValue);
 			spinner.setMinimum(minValue);
@@ -1031,12 +1065,13 @@ public class UCIEngine {
 	 * Sends all of the options that do not have default values to the engine.
 	 */
 	protected void sendAllNonDefaultOptions() {
-		for (UCIOption option : nameToOptions.values()) {
-			if (!(option instanceof UCIButton)) {
-				String defaultValue = option.getDefaultValue();
-				if (!StringUtils.equals(defaultValue, option.getValue())) {
-					setOption(option);
-				}
+		for (String overrideOption : overrideOptions.keySet()) {
+			UCIOption option = getOption(overrideOption);
+			if (option != null) {
+				option.setValue(overrideOptions.get(overrideOption));
+			} else {
+				LOG.warn("Could not set default value for property "
+						+ overrideOption);
 			}
 		}
 	}

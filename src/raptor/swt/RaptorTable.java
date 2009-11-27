@@ -158,6 +158,7 @@ public class RaptorTable extends Composite {
 	protected List<RaptorTableListener> tableListeners = new ArrayList<RaptorTableListener>(
 			2);
 	protected int fixedWidth;
+	protected int fixedHeight;
 	protected TableCursor cursor;
 	protected boolean ignoreCursorSelection;
 
@@ -378,11 +379,8 @@ public class RaptorTable extends Composite {
 	 */
 	@Override
 	public Point computeSize(int hint, int hint2, boolean changed) {
-		if (fixedWidth != 0) {
-			return super.computeSize(fixedWidth, hint2, changed);
-		} else {
-			return super.computeSize(hint, hint2, changed);
-		}
+		return super.computeSize(fixedWidth != 0 ? fixedWidth : hint,
+				fixedHeight != 0 ? fixedHeight : hint2, changed);
 	}
 
 	/**
@@ -390,6 +388,14 @@ public class RaptorTable extends Composite {
 	 */
 	public int getColumnCount() {
 		return table.getColumnCount();
+	}
+
+	public int getFixedHeight() {
+		return fixedHeight;
+	}
+
+	public int getFixedWidth() {
+		return fixedWidth;
 	}
 
 	/**
@@ -574,6 +580,14 @@ public class RaptorTable extends Composite {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Sets a fixed height for this table. It will always return the passed in
+	 * width in computeSize.
+	 */
+	public void setFixedHeight(int height) {
+		fixedHeight = height;
 	}
 
 	/**

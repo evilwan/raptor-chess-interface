@@ -74,6 +74,7 @@ import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ActionService;
 import raptor.service.ThreadService;
+import raptor.service.UCIEngineService;
 import raptor.swt.chess.controller.BughouseSuggestController;
 import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.InactiveController;
@@ -670,6 +671,11 @@ public class ChessBoardUtils implements BoardConstants {
 										quadrant == Quadrant.III ? Quadrant.IV
 												: Quadrant.III);
 					}
+
+					if (item != null) {
+						item.getBoard().hideEngineAnalysisWidget();
+						item.getBoard().hideMoveList();
+					}
 				}
 
 				if (item == null) {
@@ -772,7 +778,8 @@ public class ChessBoardUtils implements BoardConstants {
 					|| controller instanceof ObserveController) {
 
 				if (controller.getGame().getVariant() == Variant.classic
-						|| controller.getGame().getVariant() == Variant.wild) {
+						|| controller.getGame().getVariant() == Variant.wild
+						&& UCIEngineService.getInstance().getDefaultEngine() != null) {
 					result = new ToolItem(toolbar, SWT.CHECK);
 					controller.addToolItem(
 							ToolBarItemKey.TOGGLE_ANALYSIS_ENGINE, result);

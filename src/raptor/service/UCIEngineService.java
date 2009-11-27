@@ -31,15 +31,21 @@ public class UCIEngineService {
 	}
 
 	public void deleteConfiguration(String userName) {
-		try {
-			new File(Raptor.ENGINES_DIR + "/" + userName + ".properties")
-					.delete();
-			disconnectAll();
-			loadEngines();
-		} catch (Throwable t) {
-			Raptor.getInstance().onError(
-					"Error deleting " + Raptor.ENGINES_DIR + "/" + userName
-							+ ".properties", t);
+		synchronized (userNameToEngine) {
+			try {
+				UCIEngine engine = userNameToEngine.get(userName);
+				if (engine != null) {
+					engine.disconnect();
+
+					new File(Raptor.ENGINES_DIR + "/" + userName
+							+ ".properties").delete();
+					userNameToEngine.remove(userName);
+				}
+			} catch (Throwable t) {
+				Raptor.getInstance().onError(
+						"Error deleting " + Raptor.ENGINES_DIR + "/" + userName
+								+ ".properties", t);
+			}
 		}
 	}
 
@@ -48,40 +54,48 @@ public class UCIEngineService {
 	}
 
 	public UCIEngine getDefaultEngine() {
-		UCIEngine result = null;
-		UCIEngine[] engines = getUCIEngines();
+		synchronized (userNameToEngine) {
+			UCIEngine result = null;
+			UCIEngine[] engines = getUCIEngines();
 
-		for (UCIEngine engine : engines) {
-			if (engine.isDefault()) {
-				result = engine;
-				break;
+			for (UCIEngine engine : engines) {
+				if (engine.isDefault()) {
+					result = engine;
+					break;
+				}
 			}
-		}
 
-		if (result == null && engines.length > 0) {
-			result = engines[0];
+			if (result == null && engines.length > 0) {
+				result = engines[0];
+			}
+			return result;
 		}
-		return result;
 	}
 
 	public UCIEngine getUCIEngine(String name) {
-		return userNameToEngine.get(name);
+		synchronized (userNameToEngine) {
+			return userNameToEngine.get(name);
+		}
 	}
 
 	public UCIEngine[] getUCIEngines() {
-		return userNameToEngine.values().toArray(new UCIEngine[0]);
+		synchronized (userNameToEngine) {
+			return userNameToEngine.values().toArray(new UCIEngine[0]);
+		}
 	}
 
 	public void saveConfiguration(UCIEngine engine) {
-		try {
-			Properties properties = uciEngineToProperties(engine);
-			properties.store(new FileOutputStream(Raptor.ENGINES_DIR + "/"
-					+ engine.getUserName() + ".properties"),
-					"Generated in Raptor");
-			disconnectAll();
-			loadEngines();
-		} catch (IOException ioe) {
-			Raptor.getInstance().onError("Error saving engine: " + engine, ioe);
+		synchronized (userNameToEngine) {
+			try {
+				Properties properties = uciEngineToProperties(engine);
+				properties.store(new FileOutputStream(Raptor.ENGINES_DIR + "/"
+						+ engine.getUserName() + ".properties"),
+						"Generated in Raptor");
+				userNameToEngine.put(engine.getUserName(), engine);
+			} catch (IOException ioe) {
+				Raptor.getInstance().onError("Error saving engine: " + engine,
+						ioe);
+			}
 		}
 	}
 
@@ -92,29 +106,34 @@ public class UCIEngineService {
 	}
 
 	protected void loadEngines() {
-		userNameToEngine.clear();
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				userNameToEngine.clear();
 
-		File engineProperties = new File(Raptor.ENGINES_DIR);
-		File[] files = engineProperties.listFiles(new FilenameFilter() {
+				File engineProperties = new File(Raptor.ENGINES_DIR);
+				File[] files = engineProperties.listFiles(new FilenameFilter() {
 
-			public boolean accept(File arg0, String arg1) {
-				return arg1.endsWith(".properties");
-			}
-		});
+					public boolean accept(File arg0, String arg1) {
+						return arg1.endsWith(".properties");
+					}
+				});
 
-		if (files != null) {
-			for (File file : files) {
-				try {
-					Properties properties = new Properties();
-					properties.load(new FileInputStream(file));
-					UCIEngine engine = uciEngineFromProperties(properties);
-					userNameToEngine.put(engine.getUserName(), engine);
-				} catch (IOException ioe) {
-					Raptor.getInstance().onError(
-							"Error loading file " + file.getName() + ",ioe");
+				if (files != null) {
+					for (File file : files) {
+						try {
+							Properties properties = new Properties();
+							properties.load(new FileInputStream(file));
+							UCIEngine engine = uciEngineFromProperties(properties);
+							userNameToEngine.put(engine.getUserName(), engine);
+						} catch (IOException ioe) {
+							Raptor.getInstance().onError(
+									"Error loading file " + file.getName()
+											+ ",ioe");
+						}
+					}
 				}
 			}
-		}
+		});
 	}
 
 	protected UCIEngine uciEngineFromProperties(Properties properties) {
@@ -122,31 +141,25 @@ public class UCIEngineService {
 		engine.setDefault(properties.getProperty("isDefault").equals("true"));
 		engine.setProcessPath(properties.getProperty("processPath"));
 		engine.setUserName(properties.getProperty("userName"));
+		engine.setGoAnalysisParameters(properties
+				.getProperty("goAnalysisParams"));
 		String parameters = properties.getProperty("parameters");
 		if (StringUtils.isNotBlank(parameters)) {
 			engine.setParameters(RaptorStringUtils.stringArrayFromString(
 					parameters, '@'));
 		}
 
-		if (!engine.connect()) {
-			throw new RuntimeException("Could not connect to engine: "
-					+ engine.getProcessPath());
-		}
-
 		// Set the configured values.
 		for (Object key : properties.keySet()) {
 			String keyString = (String) key;
 			if (!keyString.equals("isUCI") && !keyString.equals("processPath")
+					&& !keyString.equals("isDefault")
+					&& !keyString.equals("goAnalysisParams")
 					&& !keyString.equals("userName")
 					&& !keyString.equals("parameters")) {
-				UCIOption option = engine.getOption(keyString);
-				if (option != null) {
-					option.setValue(properties.getProperty(keyString));
-				}
+				engine.setOverrideOption(keyString, "" + properties.get(key));
 			}
 		}
-
-		engine.disconnect();
 		return engine;
 	}
 
@@ -155,7 +168,7 @@ public class UCIEngineService {
 
 		if (!engine.isConnected()) {
 			if (!engine.connect()) {
-				throw new RuntimeException("Couldnt connect to engine.");
+				throw new RuntimeException("Could not connect to engine.");
 			}
 		}
 
@@ -163,18 +176,18 @@ public class UCIEngineService {
 		properties.put("isDefault", "" + engine.isDefault());
 		properties.put("processPath", engine.getProcessPath());
 		properties.put("userName", engine.getUserName());
+		properties.put("goAnalysisParams", engine.getGoAnalysisParameters());
 		if (engine.getParameters() == null || engine.getParameters().length > 0) {
 			properties.put("parameters", RaptorStringUtils.toDelimitedString(
 					engine.getParameters(), "@"));
 		}
-		for (String optionName : engine.getOptionNames()) {
+		for (String optionName : engine.getOverrideOptionNames()) {
 			UCIOption option = engine.getOption(optionName);
 			if (!(option instanceof UCIButton) && !option.isDefaultValue()) {
-				properties.put(option, option.getValue());
+				properties.put(option.getName(), engine
+						.getOverrideOption(optionName));
 			}
 		}
 		return properties;
-
 	}
-
 }

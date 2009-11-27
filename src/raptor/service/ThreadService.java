@@ -42,17 +42,25 @@ public class ThreadService {
 	public static final String THREAD_DUMP_FILE_PATH = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/threaddump_" + System.currentTimeMillis() + ".txt";
 
-	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(20) {
-		@Override
-		protected void afterExecute(Runnable arg0, Throwable arg1) {
-			if (arg1 != null) {
-				LOG.error("Error executing runnable: ", arg1);
-				Raptor.getInstance().onError(
-						"Error in ThreadService Runnable.", arg1);
-			}
-			super.afterExecute(arg0, arg1);
+	protected static final class RunnableExceptionDecorator implements Runnable {
+		protected Runnable runnable;
+
+		public RunnableExceptionDecorator(Runnable runnable) {
+			this.runnable = runnable;
 		}
-	};
+
+		public void run() {
+			try {
+				runnable.run();
+			} catch (Throwable t) {
+				Raptor.getInstance().onError(
+						"Error in ThreadService Runnable.", t);
+			}
+		}
+
+	}
+
+	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(20);
 
 	protected boolean isDisposed = false;
 
@@ -125,7 +133,7 @@ public class ThreadService {
 	public void run(Runnable runnable) {
 		if (!Raptor.getInstance().isDisposed() && !isDisposed) {
 			try {
-				executor.execute(runnable);
+				executor.execute(new RunnableExceptionDecorator(runnable));
 			} catch (RejectedExecutionException rej) {
 				if (!Raptor.getInstance().isDisposed()) {
 					LOG.error("Error executing runnable: ", rej);
@@ -150,7 +158,8 @@ public class ThreadService {
 	public void scheduleOneShot(long delay, Runnable runnable) {
 		if (!Raptor.getInstance().isDisposed() && !isDisposed) {
 			try {
-				executor.schedule(runnable, delay, TimeUnit.MILLISECONDS);
+				executor.schedule(new RunnableExceptionDecorator(runnable),
+						delay, TimeUnit.MILLISECONDS);
 			} catch (RejectedExecutionException rej) {
 				if (!Raptor.getInstance().isDisposed()) {
 					LOG.error("Error executing runnable in scheduleOneShot: ",

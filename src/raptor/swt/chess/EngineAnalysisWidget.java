@@ -62,6 +62,11 @@ public interface EngineAnalysisWidget {
 	public void stop();
 
 	/**
+	 * Updates preferences from a change.
+	 */
+	public void updateFromPrefs();
+
+	/**
 	 * Updates the move list to the current game.
 	 */
 	public void updateToGame();
