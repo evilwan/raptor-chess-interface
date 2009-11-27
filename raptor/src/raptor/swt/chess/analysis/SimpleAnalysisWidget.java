@@ -124,11 +124,13 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 									cpuLoad.getCpuUsage() / 1000.0 * 100)
 									.setScale(0, BigDecimal.ROUND_HALF_UP)
 									.toString();
+							cpu = StringUtils.rightPad(cpu, 4);
 						} else if (info instanceof NodesPerSecondInfo) {
 							NodesPerSecondInfo nodesPerSecondInfo = (NodesPerSecondInfo) info;
 							nps = RaptorStringUtils.formatAsNumber(""
 									+ nodesPerSecondInfo.getNodesPerSecond()
 									/ 1000);
+							nps = StringUtils.rightPad(nps, 6);
 						} else if (info instanceof TimeInfo) {
 							TimeInfo timeInfo = (TimeInfo) info;
 							time = new BigDecimal(
