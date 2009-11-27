@@ -87,21 +87,20 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected ChatConsole chatConsole;
 	protected ChatListener chatServiceListener = new ChatListener() {
 		public void chatEventOccured(final ChatEvent event) {
-			if (chatConsole != null && !chatConsole.isDisposed()) {
-				if (!isBeingReparented) {
-					chatConsole.getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							try {
-								onChatEvent(event);
-							} catch (Throwable t) {
-								connector.onError("onChatEvent", t);
-							}
+			if (!isDisposed && chatConsole != null && !chatConsole.isDisposed()) {
+				chatConsole.getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						try {
+							onChatEvent(event);
+						} catch (Throwable t) {
+							connector.onError("onChatEvent", t);
 						}
-					});
-				} else {
-					eventsWhileBeingReparented.add(event);
-				}
+					}
+				});
+			} else {
+				eventsWhileBeingReparented.add(event);
 			}
+
 		}
 	};
 	protected Connector connector;
@@ -172,7 +171,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	};
 
-	protected boolean isBeingReparented;
+	protected boolean isDisposed;
 	protected boolean isDirty;
 	protected boolean isSoundDisabled = false;
 	protected boolean isAutoScrolling = true;
@@ -211,7 +210,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void dispose() {
-
+		isDisposed = true;
 		if (connector != null) {
 			connector.getChatService().removeChatServiceListener(
 					chatServiceListener);
@@ -352,8 +351,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public boolean isIgnoringActions() {
 		boolean result = false;
-		if (isBeingReparented || chatConsole == null
-				|| chatConsole.isDisposed()) {
+		if (isDisposed || chatConsole == null || chatConsole.isDisposed()) {
 			LOG
 					.debug(
 							"isBeingReparented invoked. The exception is thrown just to debug the stack trace.",
@@ -1189,8 +1187,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	 * Should be invoked when the title or closeability changes.
 	 */
 	protected void fireItemChanged() {
-		for (ItemChangedListener listener : itemChangedListeners) {
-			listener.itemStateChanged();
+		if (!isDisposed) {
+			for (ItemChangedListener listener : itemChangedListeners) {
+				listener.itemStateChanged();
+			}
 		}
 	}
 
@@ -1312,6 +1312,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			});
 		}
+
 		MenuItem pasteItem = new MenuItem(menu, SWT.POP_UP);
 		pasteItem.setText("paste");
 		pasteItem.addListener(SWT.Selection, new Listener() {

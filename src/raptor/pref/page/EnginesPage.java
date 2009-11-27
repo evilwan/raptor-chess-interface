@@ -1,5 +1,8 @@
 package raptor.pref.page;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
@@ -108,7 +111,13 @@ public class EnginesPage extends PreferencePage {
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
 				if (!StringUtils.isBlank(selected)) {
-					processLocationText.setText(selected);
+					try {
+						processLocationText.setText(new File(selected)
+								.getCanonicalPath());
+					} catch (IOException ioe) {
+						Raptor.getInstance().onError("Error getting filename",
+								ioe);
+					}
 
 					if (currentEngine != null) {
 						currentEngine.disconnect();

@@ -91,14 +91,14 @@ public class UCIEngine {
 			long startTime = System.currentTimeMillis();
 
 			if (parameters == null || parameters.length == 0) {
-				process = Runtime.getRuntime().exec(processPath);
+				process = new ProcessBuilder(processPath).start();
 			} else {
 				String[] args = new String[parameters.length + 1];
 				args[0] = processPath;
 				for (int i = 0; i < parameters.length; i++) {
 					args[1 + i] = parameters[i];
 				}
-				process = Runtime.getRuntime().exec(args);
+				process = new ProcessBuilder(args).start();
 			}
 			in = new BufferedReader(new InputStreamReader(process
 					.getInputStream()), 10000);
@@ -691,9 +691,8 @@ public class UCIEngine {
 			engineAuthor = varValue;
 		} else {
 			if (LOG.isDebugEnabled()) {
-				LOG
-						.debug("Unknown id variable name. "
-								+ varName + "=" + varValue);
+				LOG.debug("Unknown id variable name. " + varName + "="
+						+ varValue);
 			}
 		}
 	}
