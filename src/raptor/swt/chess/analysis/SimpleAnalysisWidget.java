@@ -102,9 +102,13 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 							} else if (scoreInfo.isUpperBoundScore()) {
 								score = "+inf";
 							} else {
+								double scoreAsDouble = controller.getGame()
+										.isWhitesMove() ? scoreInfo
+										.getValueInCentipawns() / 100.0
+										: -scoreInfo.getValueInCentipawns() / 100.0;
+
 								score = ""
-										+ new BigDecimal(scoreInfo
-												.getValueInCentipawns() / 100.0)
+										+ new BigDecimal(scoreAsDouble)
 												.setScale(
 														2,
 														BigDecimal.ROUND_HALF_UP)
