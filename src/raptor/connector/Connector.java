@@ -416,6 +416,11 @@ public interface Connector {
 	public void sendMessage(String message, boolean isHidingFromUser,
 			ChatType hideNextChatType);
 
+	/**
+	 * Sets the primary game if the user is observing more than one game.
+	 */
+	public void setPrimaryGame(Game game);
+
 	public void setSpeakingAllPersonTells(boolean isSpeakingAllPersonTells);
 
 	public void setSpeakingChannelTells(String channel,

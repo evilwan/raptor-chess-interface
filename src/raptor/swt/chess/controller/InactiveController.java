@@ -377,6 +377,10 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
+	public void userLeftClicked(int square) {
+	}
+
+	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("userMadeMove " + getGame().getId() + " "

@@ -620,6 +620,16 @@ public abstract class ChessBoardController implements BoardConstants,
 	public abstract void userInitiatedMove(int square);
 
 	/**
+	 * Invoked when the user left clicks on a square. This method might not be
+	 * called if the square contains a piece and userInitiatedMove returns
+	 * false.
+	 * 
+	 * @param square
+	 *            The square left clicked on.
+	 */
+	public abstract void userLeftClicked(int square);
+
+	/**
 	 * Invoked when the user has made a move.
 	 * 
 	 * @param fromSquare

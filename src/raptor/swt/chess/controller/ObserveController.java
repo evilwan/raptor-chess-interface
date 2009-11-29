@@ -376,6 +376,12 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void userInitiatedMove(int square) {
+
+	}
+
+	@Override
+	public void userLeftClicked(int square) {
+		connector.setPrimaryGame(getGame());
 	}
 
 	@Override

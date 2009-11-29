@@ -393,6 +393,10 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
+	public void userLeftClicked(int square) {
+	}
+
+	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "

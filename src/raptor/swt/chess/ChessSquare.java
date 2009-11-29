@@ -133,6 +133,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				board.controller.userRightClicked(id);
 			} else if (e.button == 2) {
 				board.controller.userMiddleClicked(id);
+			} else if (e.button == 1) {
+				board.controller.userLeftClicked(id);
 			}
 		}
 
