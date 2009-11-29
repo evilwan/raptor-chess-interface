@@ -13,6 +13,8 @@
  */
 package raptor.script;
 
+import raptor.chat.ChatEvent;
+
 /**
  * This interface contains what is available for ChatScripts in addition to the
  * methods in ScriptContext.
@@ -21,19 +23,7 @@ package raptor.script;
  */
 public interface ChatScriptContext extends ScriptContext {
 	/**
-	 * Returns the message currently being parsed.
+	 * Returns the ChatEvent this script pertains to.
 	 */
-	public String getMessage();
-
-	/**
-	 * If the message is a channel message, this will return the messages
-	 * channel. Otherwise it will return null.
-	 */
-	public String getMessageChannel();
-
-	/**
-	 * Returns the source of the message. For tell and ptell events this is the
-	 * name of the user sending the tell.
-	 */
-	public String getMessageSource();
+	public ChatEvent getChatEvent();
 }

@@ -123,6 +123,15 @@ public class RaptorStringUtils {
 				|| StringUtils.equals(value, "1");
 	}
 
+	public static String getFirstWord(String line) {
+		int spaceIndex = line.indexOf(' ');
+		if (spaceIndex == -1) {
+			return line;
+		} else {
+			return line.substring(0, spaceIndex);
+		}
+	}
+
 	/**
 	 * Returns the value specified in bytes into megs. Currently only shows 2
 	 * digits after the decimal and rounds half up.

@@ -229,6 +229,84 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		return result;
 	}
 
+	/**
+	 * This method is overridden to support simul bughouse.
+	 */
+	@Override
+	public void publishEvent(final ChatEvent event) {
+		if (chatService != null) { // Could have been disposed.
+			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
+				if (bics2 != null
+						&& isConnected()
+						&& bics2.isConnected()
+						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
+								event.getSource()).trim(), bics2.getUserName())) {
+					// here we are in fics1 where a partnership was created.
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Created simul bughouse partnership with "
+								+ bics2.getUserName());
+					}
+					isSimulBugConnector = true;
+					simulBugPartnerName = event.getSource();
+					bics2.isSimulBugConnector = true;
+					bics2.simulBugPartnerName = getUserName();
+				} else if (bics1 == null
+						&& bics1 != null
+						&& bics1.isConnected()
+						&& isConnected()
+						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
+								event.getSource()).trim(), bics1.getUserName())) {
+					// here we are in fics2 when a partnership was created.
+					if (LOG.isDebugEnabled()) {
+						LOG.debug("Created simul bughouse partnership with "
+								+ bics1.getUserName());
+					}
+					isSimulBugConnector = true;
+					simulBugPartnerName = event.getSource();
+					bics1.isSimulBugConnector = true;
+					bics1.simulBugPartnerName = getUserName();
+				}
+
+				if (!isSimulBugConnector
+						&& getPreferences()
+								.getBoolean(
+										PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP)) {
+					SWTUtils.openBugButtonsWindowItem(this);
+				}
+			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
+				isSimulBugConnector = false;
+				simulBugPartnerName = null;
+
+				if (LOG.isDebugEnabled()) {
+					LOG
+							.debug("Partnership destroyed. Resetting partnership information.");
+				}
+
+				// clear out the fics2 or fics1 depending on what this is.
+				if (bics2 != null) {
+					bics2.isSimulBugConnector = false;
+					bics2.simulBugPartnerName = null;
+				}
+				if (bics1 != null) {
+					bics1.isSimulBugConnector = false;
+					bics1.simulBugPartnerName = null;
+				}
+
+				// Remove bug buttons if up displayed you have no partner.
+				RaptorWindowItem[] windowItems = Raptor.getInstance()
+						.getWindow().getWindowItems(BugButtonsWindowItem.class);
+				for (RaptorWindowItem item : windowItems) {
+					BugButtonsWindowItem bugButtonsItem = (BugButtonsWindowItem) item;
+					if (bugButtonsItem.getConnector() == this) {
+						Raptor.getInstance().getWindow()
+								.disposeRaptorWindowItem(bugButtonsItem);
+					}
+				}
+			}
+			super.publishEvent(event);
+		}
+	}
+
 	@Override
 	protected void connect(final String profileName) {
 		super.connect(profileName);
@@ -527,83 +605,5 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				}
 			}
 		});
-	}
-
-	/**
-	 * This method is overridden to support simul bughouse.
-	 */
-	@Override
-	protected void publishEvent(final ChatEvent event) {
-		if (chatService != null) { // Could have been disposed.
-			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
-				if (bics2 != null
-						&& isConnected()
-						&& bics2.isConnected()
-						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
-								event.getSource()).trim(), bics2.getUserName())) {
-					// here we are in fics1 where a partnership was created.
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Created simul bughouse partnership with "
-								+ bics2.getUserName());
-					}
-					isSimulBugConnector = true;
-					simulBugPartnerName = event.getSource();
-					bics2.isSimulBugConnector = true;
-					bics2.simulBugPartnerName = getUserName();
-				} else if (bics1 == null
-						&& bics1 != null
-						&& bics1.isConnected()
-						&& isConnected()
-						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
-								event.getSource()).trim(), bics1.getUserName())) {
-					// here we are in fics2 when a partnership was created.
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Created simul bughouse partnership with "
-								+ bics1.getUserName());
-					}
-					isSimulBugConnector = true;
-					simulBugPartnerName = event.getSource();
-					bics1.isSimulBugConnector = true;
-					bics1.simulBugPartnerName = getUserName();
-				}
-
-				if (!isSimulBugConnector
-						&& getPreferences()
-								.getBoolean(
-										PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP)) {
-					SWTUtils.openBugButtonsWindowItem(this);
-				}
-			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
-				isSimulBugConnector = false;
-				simulBugPartnerName = null;
-
-				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("Partnership destroyed. Resetting partnership information.");
-				}
-
-				// clear out the fics2 or fics1 depending on what this is.
-				if (bics2 != null) {
-					bics2.isSimulBugConnector = false;
-					bics2.simulBugPartnerName = null;
-				}
-				if (bics1 != null) {
-					bics1.isSimulBugConnector = false;
-					bics1.simulBugPartnerName = null;
-				}
-
-				// Remove bug buttons if up displayed you have no partner.
-				RaptorWindowItem[] windowItems = Raptor.getInstance()
-						.getWindow().getWindowItems(BugButtonsWindowItem.class);
-				for (RaptorWindowItem item : windowItems) {
-					BugButtonsWindowItem bugButtonsItem = (BugButtonsWindowItem) item;
-					if (bugButtonsItem.getConnector() == this) {
-						Raptor.getInstance().getWindow()
-								.disposeRaptorWindowItem(bugButtonsItem);
-					}
-				}
-			}
-			super.publishEvent(event);
-		}
 	}
 }
