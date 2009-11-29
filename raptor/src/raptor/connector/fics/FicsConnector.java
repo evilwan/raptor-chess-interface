@@ -190,10 +190,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	public void disconnect() {
 		super.disconnect();
 		connectAction.setEnabled(true);
+		if (autoConnectAction != null) {
+			autoConnectAction.setEnabled(true);
+		}
 		for (Action action : onlyEnabledOnConnectActions) {
 			action.setEnabled(false);
 		}
-		autoConnectAction.setEnabled(true);
 	}
 
 	@Override
@@ -369,9 +371,11 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		super.connect(profileName);
 		if (isConnecting) {
 			connectAction.setEnabled(false);
-			autoConnectAction.setChecked(getPreferences().getBoolean(
-					context.getPreferencePrefix() + "auto-connect"));
-			autoConnectAction.setEnabled(true);
+			if (autoConnectAction != null) {
+				autoConnectAction.setChecked(getPreferences().getBoolean(
+						context.getPreferencePrefix() + "auto-connect"));
+				autoConnectAction.setEnabled(true);
+			}
 
 			for (Action action : onlyEnabledOnConnectActions) {
 				action.setEnabled(true);
@@ -506,8 +510,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 					dialog.setShowingSimulBug(true);
 				}
 				dialog.open();
-				autoConnectAction.setChecked(getPreferences().getBoolean(
-						context.getPreferencePrefix() + "auto-connect"));
+				if (autoConnectAction != null) {
+					autoConnectAction.setChecked(getPreferences().getBoolean(
+							context.getPreferencePrefix() + "auto-connect"));
+				}
 				if (dialog.wasLoginPressed()) {
 					fics2.connect(dialog.getSelectedProfile());
 

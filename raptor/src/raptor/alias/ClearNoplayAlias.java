@@ -21,7 +21,7 @@ public class ClearNoplayAlias extends RaptorAlias {
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- noplay list\\:.*", new MessageCallback() {
 
-						public void matchReceived(ChatEvent event) {
+						public boolean matchReceived(ChatEvent event) {
 							RaptorStringTokenizer tok = new RaptorStringTokenizer(
 									event.getMessage(), "\n", true);
 							int itemsRemoved = 0;
@@ -51,6 +51,7 @@ public class ClearNoplayAlias extends RaptorAlias {
 																	+ " entries from your noplay list."));
 										}
 									});
+							return false;
 						}
 					});
 			return result;

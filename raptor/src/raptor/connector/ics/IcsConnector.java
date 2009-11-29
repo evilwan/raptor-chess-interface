@@ -801,17 +801,12 @@ public abstract class IcsConnector implements Connector {
 										.debug("Invoking callback "
 												+ entry.callback);
 							}
-							entry.callback.matchReceived(event);
-							if (entry.isOneShot) {
+							if (!entry.callback.matchReceived(event)) {
 								messageCallbackEntries.remove(i);
 								i--;
 							}
 						} else {
 							entry.missCount++;
-							if (entry.missCount > 50) {
-								messageCallbackEntries.remove(i);
-								i--;
-							}
 						}
 					}
 				}
