@@ -844,6 +844,93 @@ public class TestClassical implements GameConstants {
 		}
 	}
 
+	@Test
+	public void testWild5PieceCounts() throws Exception {
+		Game game = createFromFen(
+				"RNBKQBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbkqbnr w - - 0 1",
+				Variant.classic);
+		game.addState(Game.UPDATING_SAN_STATE);
+		game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+		game.makeSanMove("Nf6");
+		game.makeSanMove("Nf3");
+		game.makeSanMove("NC6");
+		game.makeSanMove("NC3");
+		game.makeSanMove("b8=Q");
+		game.makeSanMove("b1=Q");
+		game.makeSanMove("g8=Q");
+		game.makeSanMove("g1=Q");
+		game.toString();
+		assertTrue("Black Queen Count != 3\n" + game, game.getPieceCount(BLACK,
+				QUEEN) == 3);
+		assertTrue("Black Pawn Count != 6\n" + game, game.getPieceCount(BLACK,
+				PAWN) == 6);
+		assertTrue("White Queen Count != 3\n" + game, game.getPieceCount(WHITE,
+				QUEEN) == 3);
+		assertTrue("White Pawn Count != 6\n" + game, game.getPieceCount(WHITE,
+				PAWN) == 6);
+
+		game.makeSanMove("Qxb1");
+		game.makeSanMove("axb1=Q");
+		assertTrue("Black Queen Count != 3\n" + game, game.getPieceCount(BLACK,
+				QUEEN) == 3);
+		assertTrue("Black Pawnn Count != 5\n" + game, game.getPieceCount(BLACK,
+				PAWN) == 5);
+	}
+
+	@Test
+	public void testWild5PieceJailCounts() throws Exception {
+		Game game = createFromFen(
+				"RNBKQBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbkqbnr w - - 0 1",
+				Variant.classic);
+		game.addState(Game.UPDATING_SAN_STATE);
+		game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+		game.makeSanMove("Nf6");
+		game.makeSanMove("Nf3");
+		game.makeSanMove("NC6");
+		game.makeSanMove("NC3");
+		game.makeSanMove("b8=Q");
+		game.makeSanMove("b1=Q");
+		game.makeSanMove("g8=Q");
+		game.makeSanMove("g1=Q");
+		game.toString();
+		game.makeSanMove("Qxb1");
+		game.toString();
+		game.makeSanMove("axb1=Q");
+		game.toString();
+		game.rollback();
+		game.makeSanMove("axb1=Q");
+
+		int[] blackPieceJail = game.getPieceJailCounts(BLACK);
+		int[] whitePieceJail = game.getPieceJailCounts(WHITE);
+
+		assertTrue("Black pawns captured != 1\n" + game,
+				blackPieceJail[PAWN] == 1);
+		assertTrue("Black queens captured != 0\n" + game,
+				blackPieceJail[QUEEN] == 0);
+		assertTrue("Black knights captured != 0\n" + game,
+				blackPieceJail[KNIGHT] == 0);
+		assertTrue("Black bishops captured != 0\n" + game,
+				blackPieceJail[BISHOP] == 0);
+		assertTrue("Black rooks captured != 0\n" + game,
+				blackPieceJail[ROOK] == 0);
+		assertTrue("Black kings captured != 0\n" + game,
+				blackPieceJail[KING] == 0);
+
+		assertTrue("White pawns captured != 1\n" + game,
+				whitePieceJail[PAWN] == 1);
+		assertTrue("White queens captured != 0\n" + game,
+				whitePieceJail[QUEEN] == 0);
+		assertTrue("White knights captured != 0\n" + game,
+				blackPieceJail[KNIGHT] == 0);
+		assertTrue("White bishops captured != 0\n" + game,
+				blackPieceJail[BISHOP] == 0);
+		assertTrue("White rooks captured != 0\n" + game,
+				blackPieceJail[ROOK] == 0);
+		assertTrue("White kings captured != 0\n" + game,
+				blackPieceJail[KING] == 0);
+
+	}
+
 	private void dumpGame(String message, Game position) {
 		if (DEBUG) {
 			System.out.println(message);

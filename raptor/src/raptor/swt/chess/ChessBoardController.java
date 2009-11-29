@@ -869,34 +869,47 @@ public abstract class ChessBoardController implements BoardConstants,
 			return;
 		}
 
-		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
-			int coloredPiece = DROPPABLE_PIECE_COLOR[i];
-			int count = 0;
-			PieceJailChessSquare square = board.pieceJailSquares[DROPPABLE_PIECES[i]];
+		if (game.isInState(Game.DROPPABLE_STATE)) {
+			// Droppable piece games like crazyhouse and bughouse flow through
+			// here.
+			// The dropCount is used for the piece count in the jail.
+			for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
+				int coloredPiece = DROPPABLE_PIECE_COLOR[i];
+				int count = 0;
+				PieceJailChessSquare square = board.pieceJailSquares[DROPPABLE_PIECES[i]];
 
-			if (game.isInState(Game.DROPPABLE_STATE)) {
 				count = getGame().getDropCount(
 						coloredPiece,
 						ChessBoardUtils
 								.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
-			} else {
 
-				count = INITIAL_DROPPABLE_PIECE_COUNTS[i]
-						- getGame()
-								.getPieceCount(
-										coloredPiece,
-										ChessBoardUtils
-												.pieceFromColoredPiece(DROPPABLE_PIECES[i]));
+				if (count == 0) {
+					square.setPiece(GameConstants.EMPTY);
+				} else {
+					square.setPiece(DROPPABLE_PIECES[i]);
+				}
+				square.setText(ChessBoardUtils.pieceCountToString(count));
+				square.redraw();
 			}
+		} else {
+			// Non-Droppable piece games like classic chess flow through here.
+			// The result from game.getPieceJailCounts are used to populate the
+			// piece jail.
+			int[] whitePieceJailCounts = game.getPieceJailCounts(WHITE);
+			int[] blackPieceJailCounts = game.getPieceJailCounts(BLACK);
 
-			if (count == 0) {
-				square.setPiece(GameConstants.EMPTY);
-			} else {
-				square.setPiece(DROPPABLE_PIECES[i]);
+			for (int i = 1; i < whitePieceJailCounts.length; i++) {
+				int piece = i;
+				int coloredPiece = GameUtils.getColoredPiece(piece, WHITE);
+				int count = whitePieceJailCounts[i];
+				updateDropPieceCount(count, coloredPiece);
 			}
-			square.setText(ChessBoardUtils.pieceCountToString(count));
-
-			square.redraw();
+			for (int i = 1; i < blackPieceJailCounts.length; i++) {
+				int piece = i;
+				int coloredPiece = GameUtils.getColoredPiece(piece, BLACK);
+				int count = blackPieceJailCounts[i];
+				updateDropPieceCount(count, coloredPiece);
+			}
 		}
 	}
 
@@ -1103,5 +1116,16 @@ public abstract class ChessBoardController implements BoardConstants,
 
 		whiteClockUpdater.stop();
 		blackClockUpdater.stop();
+	}
+
+	protected void updateDropPieceCount(int count, int coloredPiece) {
+		PieceJailChessSquare square = board.getPieceJailSquare(coloredPiece);
+		if (count == 0) {
+			square.setPiece(GameConstants.EMPTY);
+		} else {
+			square.setPiece(coloredPiece);
+		}
+		square.setText(ChessBoardUtils.pieceCountToString(count));
+		square.redraw();
 	}
 }

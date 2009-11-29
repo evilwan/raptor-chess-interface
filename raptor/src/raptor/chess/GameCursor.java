@@ -271,6 +271,10 @@ public class GameCursor implements Game {
 		return cursor.getPieceCount(color, piece);
 	}
 
+	public int[] getPieceJailCounts(int color) {
+		return cursor.getPieceJailCounts(color);
+	}
+
 	public int getPieceWithPromoteMask(int square) {
 		return cursor.getPieceWithPromoteMask(square);
 	}

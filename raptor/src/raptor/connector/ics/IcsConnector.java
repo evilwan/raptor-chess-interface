@@ -664,6 +664,13 @@ public abstract class IcsConnector implements Connector {
 		result[7] = new String[] { "Uncensor " + person, "-censor " + person };
 		result[8] = new String[] { "Noplay " + person, "+noplay " + person };
 		result[9] = new String[] { "Unnoplay " + person, "-noplay " + person };
+		result[8] = new String[] { "Notify " + person, "+notify " + person };
+		result[9] = new String[] { "Unnotify " + person, "-notify " + person };
+		result[8] = new String[] { "Notify when " + person + " plays a game.",
+				"+gnotify " + person };
+		result[9] = new String[] {
+				"Don't notify when " + person + " plays a game.",
+				"-gnotify " + person };
 
 		for (int i = 0; i < matchActionsArray.length; i++) {
 			result[10 + i] = new String[] { "Match " + matchActionsArray[i],

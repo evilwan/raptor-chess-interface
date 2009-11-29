@@ -289,6 +289,18 @@ public interface Game extends GameConstants {
 	public int getPieceCount(int color, int piece);
 
 	/**
+	 * Returns an array indexed by piece type containing the piece jail counts
+	 * for the specified color.
+	 * 
+	 * @param color
+	 *            The color to get the piece jail form. WHITE will return a
+	 *            piece jail representation for the BLACK pieces, i.e. captured
+	 *            WHITE pieces.
+	 * @return An array indexed by piece type containing the piece jail counts.
+	 */
+	public int[] getPieceJailCounts(int color);
+
+	/**
 	 * Returns the piece at the specified square with its promotion mask.
 	 */
 	public int getPieceWithPromoteMask(int square);
