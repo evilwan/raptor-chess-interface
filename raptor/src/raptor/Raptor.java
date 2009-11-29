@@ -24,6 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
@@ -102,6 +103,8 @@ public class Raptor implements PreferenceKeys {
 	protected RaptorPreferenceStore preferences;
 
 	protected RaptorWindow raptorWindow;
+
+	protected Clipboard clipboard;
 
 	protected boolean isShutdown = false;
 
@@ -214,6 +217,7 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	public Raptor() {
+		clipboard = new Clipboard(getDisplay());
 	}
 
 	/**
@@ -241,6 +245,10 @@ public class Raptor implements PreferenceKeys {
 					.getShell(), "Confirm", question);
 		}
 		return false;
+	}
+
+	public Clipboard getClipboard() {
+		return clipboard;
 	}
 
 	/**
@@ -407,6 +415,10 @@ public class Raptor implements PreferenceKeys {
 		}
 	}
 
+	public void setClipboard(Clipboard clipboard) {
+		this.clipboard = clipboard;
+	}
+
 	/**
 	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
 	 */
@@ -422,6 +434,10 @@ public class Raptor implements PreferenceKeys {
 			return;
 		}
 		isShutdown = true;
+
+		if (clipboard != null) {
+			clipboard.dispose();
+		}
 
 		if (!isIgnoringPreferenceSaves) {
 			getPreferences().save();

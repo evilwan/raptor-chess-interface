@@ -346,15 +346,19 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 					.getPersonActions(person);
 			if (connectorPersonItems != null) {
 				for (int i = 0; i < connectorPersonItems.length; i++) {
-					item = new MenuItem(menu, SWT.PUSH);
-					item.setText(connectorPersonItems[i][0]);
-					final int index = i;
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							getConnector().sendMessage(
-									connectorPersonItems[index][1]);
-						}
-					});
+					if (connectorPersonItems[i][0].equals("separator")) {
+						new MenuItem(menu, SWT.SEPARATOR);
+					} else {
+						item = new MenuItem(menu, SWT.PUSH);
+						item.setText(connectorPersonItems[i][0]);
+						final int index = i;
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								getConnector().sendMessage(
+										connectorPersonItems[index][1]);
+							}
+						});
+					}
 				}
 			}
 		}

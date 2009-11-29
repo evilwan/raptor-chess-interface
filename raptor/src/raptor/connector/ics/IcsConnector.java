@@ -652,28 +652,31 @@ public abstract class IcsConnector implements Connector {
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
 
-		String[][] result = new String[10 + matchActionsArray.length][2];
+		String[][] result = new String[18 + matchActionsArray.length][2];
 
-		result[0] = new String[] { "Finger " + person, "finger " + person };
-		result[1] = new String[] { "Observe " + person, "observe " + person };
-		result[2] = new String[] { "History " + person, "history " + person };
-		result[3] = new String[] { "Follow " + person, "follow " + person };
-		result[4] = new String[] { "Partner " + person, "partner " + person };
-		result[5] = new String[] { "Vars " + person, "vars " + person };
-		result[6] = new String[] { "Censor " + person, "+censor " + person };
-		result[7] = new String[] { "Uncensor " + person, "-censor " + person };
-		result[8] = new String[] { "Noplay " + person, "+noplay " + person };
-		result[9] = new String[] { "Unnoplay " + person, "-noplay " + person };
-		result[8] = new String[] { "Notify " + person, "+notify " + person };
-		result[9] = new String[] { "Unnotify " + person, "-notify " + person };
-		result[8] = new String[] { "Notify when " + person + " plays a game.",
-				"+gnotify " + person };
-		result[9] = new String[] {
-				"Don't notify when " + person + " plays a game.",
-				"-gnotify " + person };
+		result[0] = new String[] { "finger " + person, "finger " + person };
+		result[1] = new String[] { "variables " + person, "vars " + person };
+		result[2] = new String[] { "history " + person, "history " + person };
+		result[3] = new String[] { "partner " + person, "partner " + person };
+		result[4] = new String[] { "observe " + person, "observe " + person };
+		result[5] = new String[] { "follow " + person, "follow " + person };
+		result[6] = new String[] { "pstat " + userName + " " + person,
+				"pstat " + userName + " " + person };
+		result[7] = new String[] { "oldpstat " + userName + " " + person,
+				"oldpstat " + userName + " " + person };
+		result[8] = new String[] { "separator", "separator" };
+		result[9] = new String[] { "+censor " + person, "+censor " + person };
+		result[10] = new String[] { "-censor " + person, "-censor " + person };
+		result[11] = new String[] { "+noplay " + person, "+noplay " + person };
+		result[12] = new String[] { "-noplay " + person, "-noplay " + person };
+		result[13] = new String[] { "+notify " + person, "+notify " + person };
+		result[14] = new String[] { "-notify " + person, "-notify " + person };
+		result[15] = new String[] { "+gnotify", "+gnotify " + person };
+		result[16] = new String[] { "-gnotify", "-gnotify " + person };
+		result[17] = new String[] { "separator", "separator" };
 
 		for (int i = 0; i < matchActionsArray.length; i++) {
-			result[10 + i] = new String[] { "Match " + matchActionsArray[i],
+			result[18 + i] = new String[] { "match " + matchActionsArray[i],
 					"match " + person + " " + matchActionsArray[i] };
 		}
 		return result;

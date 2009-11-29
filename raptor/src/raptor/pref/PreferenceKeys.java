@@ -115,7 +115,7 @@ public interface PreferenceKeys {
 
 	public static final String BUG_BUTTONS_FONT = "bugbuttons-font";
 
-    public static final String BOARD_PLAY_CHALLENGE_SOUND = "board-play-challenge-sound";
+	public static final String BOARD_PLAY_CHALLENGE_SOUND = "board-play-challenge-sound";
 	public static final String BOARD_PLAY_ABORT_REQUEST_SOUND = "board-play-abort-request-sound";
 	public static final String BOARD_PLAY_DRAW_OFFER_SOUND = "board-play-draw-offer-sound";
 	public static final String BOARD_USER_MOVE_INPUT_MODE = "board-user-input-mode";

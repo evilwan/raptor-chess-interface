@@ -87,6 +87,9 @@ public class ChatService {
 	public void publishChatEvent(final ChatEvent event) {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
+				if (listeners == null) {
+					return;
+				}
 				for (ChatListener listener : listeners) {
 					listener.chatEventOccured(event);
 				}
