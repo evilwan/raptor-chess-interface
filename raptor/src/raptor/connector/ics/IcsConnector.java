@@ -1096,7 +1096,9 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void setPrimaryGame(Game game) {
-		sendMessage("primary " + game.getId(), true);
+		if (getGameService().getAllActiveGames().length > 1) {
+			sendMessage("primary " + game.getId(), true);
+		}
 	}
 
 	public void setSimulBugConnector(boolean isSimulBugConnector) {
