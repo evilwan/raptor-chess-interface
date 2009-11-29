@@ -609,6 +609,10 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	@Override
+	public void userLeftClicked(int square) {
+	}
+
 	/**
 	 * Invoked when a user makes a dnd move or a click click move on the
 	 * chessboard.

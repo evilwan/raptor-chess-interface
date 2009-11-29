@@ -3,7 +3,7 @@
 order=1
 script=String parameter \=  context.getParameters()[0];\nparameter \= context.urlEncode(parameter);\ncontext.openUrl("http\://www.translate.google.com/?js\=y&prev\=_t&hl\=en&ie\=UTF-8&text\=" + parameter + "&sl\=auto&tl\=en\#submit");
 chatScriptType=RightClickOneShot
-name=Google Translate (En)
+name=Translate to Engish
 isActive=true
 description=Does a google translate to english on the passed in parameter.
 scriptConnectorType=ICS
