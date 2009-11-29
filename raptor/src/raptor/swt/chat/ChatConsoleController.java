@@ -59,6 +59,7 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.action.ActionUtils;
 import raptor.action.RaptorAction;
+import raptor.alias.RaptorAliasResult;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
@@ -69,6 +70,7 @@ import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ChatScript;
 import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.ActionService;
+import raptor.service.AliasService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
@@ -352,6 +354,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public abstract boolean isCloseable();
 
+	public boolean isDisposed() {
+		return isDisposed;
+	}
+
 	public boolean isIgnoringActions() {
 		boolean result = false;
 		if (isDisposed || chatConsole == null || chatConsole.isDisposed()) {
@@ -611,7 +617,20 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onSendOutputText() {
-		connector.sendMessage(chatConsole.outputText.getText());
+		String text = chatConsole.outputText.getText();
+		RaptorAliasResult alias = AliasService.getInstance().processAlias(this,
+				text);
+		if (alias == null) {
+			connector.sendMessage(text);
+		} else if (alias.getNewText() != null) {
+			connector.sendMessage(alias.getNewText());
+		}
+
+		if (alias != null && alias.getUserMessage() != null) {
+			onAppendChatEventToInputText(new ChatEvent(null, ChatType.INTERNAL,
+					alias.getUserMessage()));
+		}
+
 		chatConsole.outputText.setText(getPrependText(true));
 		setCaretToOutputTextEnd();
 		awayList.clear();
@@ -854,7 +873,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				menuItem.setText(script.getName() + ": '" + message + "'");
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						script.execute(connector.getChatScriptContext(message));
+						script.execute(connector.getChatScriptContext(null,
+								message));
 					}
 				});
 			}

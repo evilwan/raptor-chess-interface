@@ -43,15 +43,6 @@ public class ChannelController extends ChatConsoleController {
 		super.dispose();
 	}
 
-	/**
-	 * Currently removes the connectors prompt from the end of the text. And
-	 * trims just the trailing message.
-	 */
-	@Override
-	public String filterText(String text) {
-		return ChatUtils.filterTrailingPrompts(text, getConnector());
-	}
-
 	public String getChannel() {
 		return channel;
 	}

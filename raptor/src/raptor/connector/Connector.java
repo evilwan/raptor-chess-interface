@@ -17,6 +17,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
+import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.chess.Game;
 import raptor.chess.Move;
@@ -30,6 +31,10 @@ import raptor.service.GameService;
 import raptor.service.SeekService;
 
 public interface Connector {
+
+	/**
+	 * Accepts a seek with the specified ad id.
+	 */
 	public void acceptSeek(String adId);
 
 	/**
@@ -78,7 +83,8 @@ public interface Connector {
 	 * 
 	 * Params are optional.
 	 */
-	public ChatScriptContext getChatScriptContext(String... params);
+	public ChatScriptContext getChatScriptContext(ChatEvent event,
+			String... parameters);
 
 	/**
 	 * Returns the chat service the connector maintains. All ChatEvents are
@@ -111,6 +117,11 @@ public interface Connector {
 	public GameScriptContext getGametScriptContext();
 
 	/**
+	 * Returns the last time a message was sent in EPOC time.
+	 */
+	public long getLastSendTime();
+
+	/**
 	 * Returns the menu manager to use in the RaptorWindow menu bar for this
 	 * connector.
 	 */
@@ -134,6 +145,11 @@ public interface Connector {
 	 * person '
 	 */
 	public String getPersonTabPrefix(String person);
+
+	/**
+	 * Returns the connectors ping time in milliseconds.
+	 */
+	public long getPingTime();
 
 	/**
 	 * Returns the prompt used by the connector. The result should not include
@@ -163,6 +179,12 @@ public interface Connector {
 	public ScriptContext getScriptContext(String... params);
 
 	/**
+	 * Returns the script variable with the specified name. Null if no variable
+	 * has been set with the name.
+	 */
+	public String getScriptVariable(String variableName);
+
+	/**
 	 * Returns an array of the secondary preference nodes.
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes();
@@ -186,6 +208,18 @@ public interface Connector {
 	 * Returns the name of the current user logged in.
 	 */
 	public String getUserName();
+
+	/**
+	 * Invokes callback on the next message found that matches the specified
+	 * regular expression.
+	 * 
+	 * @param regularExpression
+	 *            The regular expression.
+	 * @param callback
+	 *            The callback to invoke.
+	 */
+	public void invokeOnNextMatch(String regularExpression,
+			MessageCallback callback);
 
 	/**
 	 * Returns true if the connector is connected.
@@ -377,6 +411,13 @@ public interface Connector {
 	public String parsePerson(String word);
 
 	/**
+	 * Publishes the specified event to the chat service maintained by the
+	 * connector. Currently all messages are published on separate threads via
+	 * ThreadService.
+	 */
+	public void publishEvent(final ChatEvent event);
+
+	/**
 	 * Removes a connector listener from the connector.
 	 */
 	public void removeConnectorListener(ConnectorListener listener);
@@ -387,12 +428,24 @@ public interface Connector {
 	 */
 	public String removeLineBreaks(String message);
 
+	/**
+	 * Sends the available bug teams message.
+	 */
 	public void sendBugAvailableTeamsMessage();
 
+	/**
+	 * Sends the bug games message.
+	 */
 	public void sendBugGamesMessage();
 
+	/**
+	 * Sends the unpartnered bug games message.
+	 */
 	public void sendBugUnpartneredBuggersMessage();
 
+	/**
+	 * Sends the sought games message.
+	 */
 	public void sendGetSeeksMessage();
 
 	/**
@@ -421,13 +474,35 @@ public interface Connector {
 	 */
 	public void setPrimaryGame(Game game);
 
+	/**
+	 * Sets a script variable.
+	 * 
+	 * @param variableName
+	 *            The variable name.
+	 * @param value
+	 *            The variable value.
+	 */
+	public void setScriptVariable(String variableName, String value);
+
+	/**
+	 * Sets whether or not all person tells are being spoken.
+	 */
 	public void setSpeakingAllPersonTells(boolean isSpeakingAllPersonTells);
 
+	/**
+	 * Toggles speaking channel tells for the specified channel.
+	 */
 	public void setSpeakingChannelTells(String channel,
 			boolean isSpeakingChannelTells);
 
+	/**
+	 * Toggles speaking person tells for the specified person.
+	 */
 	public void setSpeakingPersonTells(String person,
 			boolean isSpeakingPersonTells);
 
+	/**
+	 * Whispers a message about the specified game.
+	 */
 	public void whisper(Game game, String whisper);
 }

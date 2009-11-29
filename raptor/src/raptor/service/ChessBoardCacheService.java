@@ -105,6 +105,10 @@ public class ChessBoardCacheService {
 				Raptor.getInstance().getDisplay().timerExec(3000,
 						new Runnable() {
 							public void run() {
+								if (board.getControl().isDisposed()) {
+									return;
+								}
+
 								board.getControl().setLayoutDeferred(true);
 								board.getControl().setParent(composite);
 								board.hideMoveList();

@@ -14,20 +14,18 @@
 package raptor.connector.ics;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.Socket;
-import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
@@ -50,12 +48,15 @@ import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
+import raptor.connector.MessageCallback;
 import raptor.connector.ics.timeseal.TimesealingSocket;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ChatScript;
 import raptor.script.ChatScriptContext;
 import raptor.script.GameScriptContext;
+import raptor.script.RaptorChatScriptContext;
+import raptor.script.RaptorScriptContext;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptContext;
 import raptor.script.ChatScript.ChatScriptType;
@@ -77,13 +78,10 @@ import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
-import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.MainController;
-import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardUtils;
-import raptor.util.BrowserUtils;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
@@ -95,205 +93,24 @@ import raptor.util.RaptorStringUtils;
 public abstract class IcsConnector implements Connector {
 	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
 
-	protected class IcsChatScriptContext extends IcsScriptContext implements
-			ChatScriptContext {
-		ChatEvent event;
-		boolean ignoreEvent = false;
-
-		public IcsChatScriptContext(ChatEvent event) {
-			this.event = event;
-		}
-
-		public IcsChatScriptContext(String... params) {
-			super(params);
-		}
-
-		public String getMessage() {
-			if (event == null) {
-				Raptor.getInstance().alert(
-						"getMessage is not supported in toolbar scripts");
-				return null;
-			} else {
-				return event.getMessage();
-			}
-		}
-
-		public String getMessageChannel() {
-			if (event == null) {
-				Raptor
-						.getInstance()
-						.alert(
-								"getMessageChannel is not supported in toolbar scripts");
-				return null;
-			} else {
-				return event.getChannel();
-			}
-		}
-
-		public String getMessageSource() {
-			if (event == null) {
-				Raptor.getInstance().alert(
-						"getMessageSource is not supported in toolbar scripts");
-				return null;
-			} else {
-				return event.getSource();
-			}
-		}
-
-	}
-
-	protected class IcsScriptContext implements ScriptContext {
-
-		protected String[] parameters;
-
-		protected IcsScriptContext(String... parameters) {
-			this.parameters = parameters;
-		}
-
-		public void alert(String message) {
-			Raptor.getInstance().alert(message);
-		}
-
-		public String[] getParameters() {
-			return parameters;
-		}
-
-		public long getPingMillis() {
-			return lastPingTime;
-		}
-
-		public String getUserFollowing() {
-			Raptor.getInstance().alert(
-					"getUserFollowing is not yet implemented.");
-			return "";
-		}
-
-		public int getUserIdleSeconds() {
-			return (int) (System.currentTimeMillis() - lastSendTime) / 1000;
-		}
-
-		public String getUserName() {
-			return userName;
-		}
-
-		public String getValue(String key) {
-			return scriptHash.get(key);
-		}
-
-		public void launchProcess(String... commandAndArgs) {
-			try {
-				Runtime.getRuntime().exec(commandAndArgs);
-			} catch (Throwable t) {
-				onError("Error launching process: "
-						+ Arrays.toString(commandAndArgs), t);
-			}
-		}
-
-		public void openChannelTab(String channel) {
-			if (!Raptor.getInstance().getWindow().containsChannelItem(
-					IcsConnector.this, channel)) {
-				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-						new ChannelController(IcsConnector.this, channel));
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						windowItem, false);
-				ChatUtils.appendPreviousChatsToController(windowItem
-						.getConsole());
-			}
-		}
-
-		public void openPartnerTab() {
-			if (!Raptor.getInstance().getWindow().containsPartnerTellItem(
-					IcsConnector.this)) {
-				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-						new BughousePartnerController(IcsConnector.this));
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						windowItem, false);
-				ChatUtils.appendPreviousChatsToController(windowItem
-						.getConsole());
-			}
-		}
-
-		public void openPersonTab(String person) {
-			if (!Raptor.getInstance().getWindow().containsPersonalTellItem(
-					IcsConnector.this, person)) {
-				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-						new PersonController(IcsConnector.this, person));
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						windowItem, false);
-				ChatUtils.appendPreviousChatsToController(windowItem
-						.getConsole());
-			}
-		}
-
-		public void openRegExTab(String regularExpression) {
-			if (!Raptor.getInstance().getWindow().containsPartnerTellItem(
-					IcsConnector.this)) {
-				ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-						new RegExController(IcsConnector.this,
-								regularExpression));
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						windowItem, false);
-				ChatUtils.appendPreviousChatsToController(windowItem
-						.getConsole());
-			}
-		}
-
-		public void openUrl(String url) {
-			BrowserUtils.openUrl(url);
-		}
-
-		public void playBughouseSound(String soundName) {
-			SoundService.getInstance().playBughouseSound(soundName);
-		}
-
-		public void playSound(String soundName) {
-			SoundService.getInstance().playSound(soundName);
-		}
-
-		public String prompt(String message) {
-			return Raptor.getInstance().promptForText(message);
-		}
-
-		public void send(String message) {
-			IcsConnector.this.sendMessage(message);
-		}
-
-		public void sendHidden(String message) {
-			if (message.contains("tell")) {
-				IcsConnector.this.sendMessage(message, true, ChatType.TOLD);
-			} else {
-				IcsConnector.this.sendMessage(message, true);
-			}
-		}
-
-		public void sendToConsole(String message) {
-			publishEvent(new ChatEvent(null, ChatType.INTERNAL, message));
-		}
-
-		public void speak(String message) {
-			SoundService.getInstance().textToSpeech(message);
-		}
-
-		public void storeValue(String key, String value) {
-			scriptHash.put(key, value);
-		}
-
-		public String urlEncode(String stringToEncode) {
-			try {
-				return URLEncoder.encode(stringToEncode, "UTF-8");
-			} catch (UnsupportedEncodingException uee) {
-			}// Eat it wont happen.
-			return stringToEncode;
-		}
+	protected class MessageCallbackEntry {
+		protected boolean isOneShot;
+		protected int missCount;
+		protected Pattern regularExpression;
+		protected MessageCallback callback;
 	}
 
 	protected BughouseService bughouseService;
 
 	protected ChatService chatService;
+
 	protected List<ConnectorListener> connectorListeners = Collections
 			.synchronizedList(new ArrayList<ConnectorListener>(10));
+
 	protected IcsConnectorContext context;
+
 	protected String currentProfileName;
+
 	protected Thread daemonThread;
 	protected GameService gameService;
 	protected Map<String, String> scriptHash = new HashMap<String, String>();
@@ -301,7 +118,6 @@ public abstract class IcsConnector implements Connector {
 	protected Set<String> channelToSpeakTellsFrom = new HashSet<String>();
 	protected SeekService seekService;
 	protected boolean isSpeakingAllPersonTells = false;
-
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
 	 */
@@ -334,20 +150,21 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 	};
-
 	protected boolean hasSentLogin = false;
-
 	protected boolean hasVetoPower = true;
-
 	protected boolean hasSentPassword = false;
 
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
+
 	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
 
 	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
+
 	protected ReadableByteChannel inputChannel;
+
 	protected boolean isConnecting;
 	protected boolean isLoggedIn = false;
+
 	protected boolean isSimulBugConnector = false;
 	protected String simulBugPartnerName;
 	protected Runnable keepAlive = new Runnable() {
@@ -375,17 +192,19 @@ public abstract class IcsConnector implements Connector {
 	};
 	protected long lastPingTime;
 	protected long lastSendTime;
-
 	protected long lastSendPingTime;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 	protected Socket socket;
 	protected String userName;
+
 	protected String userFollowing;
 	protected String[] bughouseSounds = SoundService.getInstance()
 			.getBughouseSoundKeys();
 	protected ChatScript[] personTellMessageScripts = null;
 	protected ChatScript[] channelTellMessageScripts = null;
 	protected ChatScript[] partnerTellMessageScripts = null;
+	protected List<MessageCallbackEntry> messageCallbackEntries = new ArrayList<MessageCallbackEntry>(
+			20);
 	protected ScriptServiceListener scriptServiceListener = new ScriptServiceListener() {
 
 		public void onChatScriptsChanged() {
@@ -532,6 +351,7 @@ public abstract class IcsConnector implements Connector {
 					peopleToSpeakTellsFrom.clear();
 					channelToSpeakTellsFrom.clear();
 					isSpeakingAllPersonTells = false;
+					messageCallbackEntries.clear();
 				}
 
 				try {
@@ -608,8 +428,9 @@ public abstract class IcsConnector implements Connector {
 		return "tell " + channel + " ";
 	}
 
-	public ChatScriptContext getChatScriptContext(String... params) {
-		return new IcsChatScriptContext(params);
+	public ChatScriptContext getChatScriptContext(ChatEvent event,
+			String... parameters) {
+		return new RaptorChatScriptContext(this, parameters, event);
 	}
 
 	public ChatService getChatService() {
@@ -638,6 +459,13 @@ public abstract class IcsConnector implements Connector {
 
 	public GameScriptContext getGametScriptContext() {
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getLastSendTime() {
+		return lastSendTime;
 	}
 
 	public String getPartnerTellPrefix() {
@@ -685,6 +513,13 @@ public abstract class IcsConnector implements Connector {
 		return "tell " + person + " ";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public long getPingTime() {
+		return lastPingTime;
+	}
+
 	public RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
 	}
@@ -698,7 +533,14 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public ScriptContext getScriptContext(String... params) {
-		return new IcsScriptContext(params);
+		return new RaptorScriptContext(this, params);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getScriptVariable(String variableName) {
+		return scriptHash.get(variableName);
 	}
 
 	public SeekService getSeekService() {
@@ -722,6 +564,20 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public String getUserName() {
 		return userName;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void invokeOnNextMatch(String regularExpression,
+			MessageCallback callback) {
+		MessageCallbackEntry messageCallbackEntry = new MessageCallbackEntry();
+		messageCallbackEntry.regularExpression = Pattern.compile(
+				regularExpression, Pattern.MULTILINE | Pattern.DOTALL
+						| Pattern.CASE_INSENSITIVE);
+		messageCallbackEntry.isOneShot = true;
+		messageCallbackEntry.callback = callback;
+		messageCallbackEntries.add(messageCallbackEntry);
 	}
 
 	public boolean isConnected() {
@@ -931,6 +787,112 @@ public abstract class IcsConnector implements Connector {
 		return IcsUtils.stripWord(word);
 	}
 
+	public void processMessageCallbacks(final ChatEvent event) {
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				synchronized (messageCallbackEntries) {
+					for (int i = 0; i < messageCallbackEntries.size(); i++) {
+						MessageCallbackEntry entry = messageCallbackEntries
+								.get(i);
+						if (entry.regularExpression.matcher(event.getMessage())
+								.matches()) {
+							if (LOG.isDebugEnabled()) {
+								LOG
+										.debug("Invoking callback "
+												+ entry.callback);
+							}
+							entry.callback.matchReceived(event);
+							if (entry.isOneShot) {
+								messageCallbackEntries.remove(i);
+								i--;
+							}
+						} else {
+							entry.missCount++;
+							if (entry.missCount > 50) {
+								messageCallbackEntries.remove(i);
+								i--;
+							}
+						}
+					}
+				}
+			}
+		});
+	}
+
+	/**
+	 * Publishes the specified event to the chat service. Currently all messages
+	 * are published on separate threads via ThreadService.
+	 */
+	public void publishEvent(final ChatEvent event) {
+		if (chatService != null) { // Could have been disposed.
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Publishing event : " + event);
+			}
+			event.setMessage(filterTrailingPrompts(event.getMessage()));
+
+			if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
+				isSimulBugConnector = false;
+				simulBugPartnerName = null;
+			}
+
+			// Sets the user following. This is used in the IcsParser to
+			// determine if white is on top or not.
+			if (event.getType() == ChatType.FOLLOWING) {
+				userFollowing = event.getSource();
+			} else if (event.getType() == ChatType.NOT_FOLLOWING) {
+				userFollowing = null;
+			}
+
+			if (event.getType() == ChatType.PARTNER_TELL) {
+				playBughouseSounds(event);
+				if (!event.hasBeenHandled()
+						&& getPreferences().getBoolean(
+								PreferenceKeys.BUGHOUSE_SPEAK_PARTNER_TELLS)) {
+					event.setHasBeenHandled(speak(getTextAfterColon(event
+							.getMessage())));
+				}
+			}
+
+			if (event.getType() == ChatType.CHANNEL_TELL) {
+				if (!event.getSource().equals(getUserName())
+						&& channelToSpeakTellsFrom.contains(event.getChannel())) {
+					event.setHasBeenHandled(speak(IcsUtils.stripTitles(event
+							.getSource())
+							+ " "
+							+ event.getChannel()
+							+ " "
+							+ getTextAfterColon(event.getMessage())));
+				}
+			}
+
+			if (event.getType() == ChatType.TELL) {
+				if (isSpeakingAllPersonTells
+						|| peopleToSpeakTellsFrom.contains(event.getSource())) {
+					event.setHasBeenHandled(speak(IcsUtils.stripTitles(event
+							.getSource())
+							+ " " + getTextAfterColon(event.getMessage())));
+				}
+			}
+
+			if (event.getType() == ChatType.PARTNER_TELL
+					|| event.getType() == ChatType.TELL
+					|| event.getType() == ChatType.CHANNEL_TELL) {
+				processScripts(event);
+			}
+
+			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
+			if (ignoreIndex != -1) {
+				ignoringChatTypes.remove(ignoreIndex);
+			} else {
+				// It is interesting to note messages are handled sequentially
+				// up to this point. chatService will publish the event
+				// asynchronously.
+				chatService.publishChatEvent(event);
+				processMessageCallbacks(event);
+			}
+		}
+	}
+
 	/**
 	 * Removes a connector listener from the connector.
 	 */
@@ -1095,16 +1057,32 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setPrimaryGame(Game game) {
 		if (getGameService().getAllActiveGames().length > 1) {
 			sendMessage("primary " + game.getId(), true);
 		}
 	}
 
+	/**
+	 * /** {@inheritDoc}
+	 */
+	public void setScriptVariable(String variableName, String value) {
+		scriptHash.put(variableName, value);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSimulBugConnector(boolean isSimulBugConnector) {
 		this.isSimulBugConnector = isSimulBugConnector;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setSimulBugPartnerName(String simulBugPartnerName) {
 		this.simulBugPartnerName = simulBugPartnerName;
 	}
@@ -1332,9 +1310,36 @@ public abstract class IcsConnector implements Connector {
 		return result;
 	}
 
+	/**
+	 * Removes tailing prompts form the text.
+	 * 
+	 * @param text
+	 *            The text.
+	 * @param connector
+	 *            The connector to obtain the prompt from.
+	 * @return The result.
+	 */
+	protected String filterTrailingPrompts(String text) {
+		while (text.startsWith(context.getPrompt() + " ")) {
+			text = text.substring(context.getPrompt().length() + 1);
+		}
+
+		if (text.endsWith(context.getRawPrompt())) {
+			return text.substring(0, text.length()
+					- context.getRawPrompt().length());
+		} else if (text.endsWith("\n" + context.getPrompt())) {
+			return text.substring(0, text.length()
+					- (context.getPrompt().length() + 1));
+		}
+		return text;
+	}
+
 	protected void fireConnected() {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
+				if (connectorListeners == null) {
+					return;
+				}
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
 						listener.onConnect();
@@ -1347,6 +1352,9 @@ public abstract class IcsConnector implements Connector {
 	protected void fireConnecting() {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
+				if (connectorListeners == null) {
+					return;
+				}
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
 						listener.onConnecting();
@@ -1359,6 +1367,9 @@ public abstract class IcsConnector implements Connector {
 	protected void fireDisconnected() {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
+				if (connectorListeners == null) {
+					return;
+				}
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
 						listener.onConnecting();
@@ -1664,7 +1675,8 @@ public abstract class IcsConnector implements Connector {
 						ChatScript newScript = ScriptService.getInstance()
 								.getChatScript(script.getName());
 						if (newScript != null) {
-							newScript.execute(new IcsChatScriptContext(event));
+							newScript.execute(new RaptorChatScriptContext(
+									IcsConnector.this, event));
 						}
 					}
 				} else if (channelTellMessageScripts != null
@@ -1673,7 +1685,8 @@ public abstract class IcsConnector implements Connector {
 						ChatScript newScript = ScriptService.getInstance()
 								.getChatScript(script.getName());
 						if (newScript != null) {
-							newScript.execute(new IcsChatScriptContext(event));
+							newScript.execute(new RaptorChatScriptContext(
+									IcsConnector.this, event));
 						}
 					}
 				} else if (partnerTellMessageScripts != null
@@ -1682,84 +1695,13 @@ public abstract class IcsConnector implements Connector {
 						ChatScript newScript = ScriptService.getInstance()
 								.getChatScript(script.getName());
 						if (newScript != null) {
-							newScript.execute(new IcsChatScriptContext(event));
+							newScript.execute(new RaptorChatScriptContext(
+									IcsConnector.this, event));
 						}
 					}
 				}
 			}
 		});
-	}
-
-	/**
-	 * Publishes the specified event to the chat service. Currently all messages
-	 * are published on separate threads via ThreadService.
-	 */
-	protected void publishEvent(final ChatEvent event) {
-		if (chatService != null) { // Could have been disposed.
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Publishing event : " + event);
-			}
-
-			if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
-				isSimulBugConnector = false;
-				simulBugPartnerName = null;
-			}
-
-			// Sets the user following. This is used in the IcsParser to
-			// determine if white is on top or not.
-			if (event.getType() == ChatType.FOLLOWING) {
-				userFollowing = event.getSource();
-			} else if (event.getType() == ChatType.NOT_FOLLOWING) {
-				userFollowing = null;
-			}
-
-			if (event.getType() == ChatType.PARTNER_TELL) {
-				playBughouseSounds(event);
-				if (!event.hasBeenHandled()
-						&& getPreferences().getBoolean(
-								PreferenceKeys.BUGHOUSE_SPEAK_PARTNER_TELLS)) {
-					event.setHasBeenHandled(speak(getTextAfterColon(event
-							.getMessage())));
-				}
-			}
-
-			if (event.getType() == ChatType.CHANNEL_TELL) {
-				if (!event.getSource().equals(getUserName())
-						&& channelToSpeakTellsFrom.contains(event.getChannel())) {
-					event.setHasBeenHandled(speak(IcsUtils.stripTitles(event
-							.getSource())
-							+ " "
-							+ event.getChannel()
-							+ " "
-							+ getTextAfterColon(event.getMessage())));
-				}
-			}
-
-			if (event.getType() == ChatType.TELL) {
-				if (isSpeakingAllPersonTells
-						|| peopleToSpeakTellsFrom.contains(event.getSource())) {
-					event.setHasBeenHandled(speak(IcsUtils.stripTitles(event
-							.getSource())
-							+ " " + getTextAfterColon(event.getMessage())));
-				}
-			}
-
-			if (event.getType() == ChatType.PARTNER_TELL
-					|| event.getType() == ChatType.TELL
-					|| event.getType() == ChatType.CHANNEL_TELL) {
-				processScripts(event);
-			}
-
-			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
-			if (ignoreIndex != -1) {
-				ignoringChatTypes.remove(ignoreIndex);
-			} else {
-				// It is interesting to note messages are handled sequentially
-				// up to this point. chatService will publish the event
-				// asynchronously.
-				chatService.publishChatEvent(event);
-			}
-		}
 	}
 
 	protected void refreshChatScripts() {
@@ -1784,6 +1726,7 @@ public abstract class IcsConnector implements Connector {
 		ignoringChatTypes.clear();
 		peopleToSpeakTellsFrom.clear();
 		channelToSpeakTellsFrom.clear();
+		messageCallbackEntries.clear();
 		isSpeakingAllPersonTells = false;
 	}
 

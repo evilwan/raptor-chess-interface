@@ -13,6 +13,9 @@
  */
 package raptor.chat;
 
+/**
+ * A class defining an inbound message received from a server.
+ */
 public class ChatEvent {
 	protected String channel;
 	protected String gameId;
@@ -38,15 +41,27 @@ public class ChatEvent {
 		this.gameId = gameId;
 	}
 
+	/**
+	 * If the chat event represents a channel tell this contains the channel
+	 * number. Otherwise it is null.
+	 */
 	public String getChannel() {
 		return channel;
 	}
 
+	/**
+	 * If the chat event represents a tell about a game, i.e.
+	 * kibitz,whisper,etc, this is the game id. Otherwise it is null.
+	 * 
+	 * @return
+	 */
 	public String getGameId() {
 		return gameId;
 	}
 
 	/**
+	 * Returns the entire server message.
+	 * 
 	 * @return Entire message involved in this ChatEvent.
 	 */
 	public String getMessage() {
@@ -54,14 +69,22 @@ public class ChatEvent {
 	}
 
 	/**
-	 * @return Username of the person involved in this ChatEvent.
+	 * This is the source of the ChatEvent. If it is a tell event, it is the
+	 * user sending the tell. If it is a channel tell event, it is the user
+	 * sending the tell to the channel. If its a shout or c-shout, its the
+	 * person shouting. If its a kibitz or whisper, its the person kibitzing or
+	 * whispering. If its a say, its the person sending the say.
+	 * 
+	 * @return The user name of the person involved in this ChatEvent.
 	 */
 	public String getSource() {
 		return source;
 	}
 
 	/**
-	 * @return What time this ChatEvent occurred, in milliseconds.
+	 * The time in EPOC the chat event was created.
+	 * 
+	 * @return ChatEvent creation timestamp in EPOC millisconds.
 	 */
 	public long getTime() {
 		return time;

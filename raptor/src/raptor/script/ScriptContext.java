@@ -13,6 +13,8 @@
  */
 package raptor.script;
 
+import raptor.connector.MessageCallback;
+
 /**
  * This interface contains the core Raptor features you have access to in
  * scripting. If you would like new ones added you can make enhancement requests
@@ -129,6 +131,23 @@ public interface ScriptContext {
 	 * @return
 	 */
 	public String prompt(String message);
+
+	/**
+	 * Registers a callback which will be invoked when the next message arrives
+	 * that matches the specified regular expression.
+	 * 
+	 * @param regularExpression
+	 *            The regular expression to match.
+	 * @param callback
+	 *            The callback which gets invoked. MessageCallback must
+	 *            implement the method
+	 * 
+	 *            <pre>
+	 * public void matchReceived(ChatEvent event);
+	 * </pre>
+	 */
+	public void registerMessageCallback(String regularExpression,
+			MessageCallback callback);
 
 	/**
 	 * Sends the specified message to the connector.

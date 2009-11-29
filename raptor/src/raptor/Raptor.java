@@ -35,6 +35,7 @@ import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ActionService;
+import raptor.service.AliasService;
 import raptor.service.ChessBoardCacheService;
 import raptor.service.ConnectorService;
 import raptor.service.EcoService;
@@ -492,6 +493,12 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		try {
+			AliasService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting down AliasService", t);
+		}
+
+		try {
 			if (raptorWindow != null && !raptorWindow.getShell().isDisposed()) {
 				raptorWindow.close();
 			}
@@ -527,6 +534,8 @@ public class Raptor implements PreferenceKeys {
 		SoundService.getInstance();
 		ScriptService.getInstance();
 		ActionService.getInstance();
+		UCIEngineService.getInstance();
+		AliasService.getInstance();
 	}
 
 	/**
