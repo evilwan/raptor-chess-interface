@@ -49,7 +49,7 @@ import raptor.swt.RaptorCursorRegistry;
 import raptor.swt.RaptorImageRegistry;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.BrowserUtils;
-import raptor.util.FileUtil;
+import raptor.util.FileUtils;
 
 /**
  * Raptor is a singleton representing the application. It contains methods to
@@ -545,7 +545,7 @@ public class Raptor implements PreferenceKeys {
 	 */
 	private void install() {
 		try {
-			FileUtil.copyFiles(DEFAULT_HOME_DIR, USER_RAPTOR_DIR);
+			FileUtils.copyFiles(DEFAULT_HOME_DIR, USER_RAPTOR_DIR);
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}

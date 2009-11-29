@@ -27,7 +27,7 @@ import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
-import raptor.util.FileUtil;
+import raptor.util.FileUtils;
 import raptor.util.RaptorStringUtils;
 
 public class RaptorPage extends FieldEditorPreferencePage {
@@ -155,7 +155,7 @@ public class RaptorPage extends FieldEditorPreferencePage {
 												+ "Raptor will also exit after executing this action, and will "
 												+ "have to be restarted. "
 												+ "Do you wish to continue?")) {
-							FileUtil.deleteDir(Raptor.USER_RAPTOR_DIR);
+							FileUtils.deleteDir(Raptor.USER_RAPTOR_DIR);
 							Raptor.getInstance().shutdown(true);
 						}
 					}

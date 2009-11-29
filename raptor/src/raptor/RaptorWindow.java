@@ -14,8 +14,6 @@
 package raptor;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -80,6 +78,7 @@ import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.util.BrowserUtils;
+import raptor.util.FileUtils;
 
 /**
  * A Raptor window is broken up into quadrants. Each quadrant is tabbed. You can
@@ -1436,12 +1435,13 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
-		helpMenu.add(new Action("&Liscense") {
+		helpMenu.add(new Action("&License") {
 			@Override
 			public void run() {
-				byte[] arr = readFile("bsd-new-license.txt");
-				BrowserUtils.openHtml(new String(arr));
-				;
+				String html = FileUtils.fileAsString("bsd-new-license.txt");
+				if (html != null) {
+					BrowserUtils.openHtml(html);
+				}
 			}
 		});
 		helpMenu.add(new Action("&Third Party Content") {
@@ -1462,7 +1462,22 @@ public class RaptorWindow extends ApplicationWindow {
 						.openHtml(AliasService.getInstance().getAliasHtml());
 			}
 		});
-		raptorHelp.add(new Action("&FAQ") {
+		raptorHelp.add(new Action("Raptor &Scripting") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/Scripting");
+			}
+		});
+		raptorHelp.add(new Action("Raptor &Tips") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/UsefulTips");
+
+			}
+		});
+		raptorHelp.add(new Action("&Frequently Asked Questions") {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1473,12 +1488,14 @@ public class RaptorWindow extends ApplicationWindow {
 		raptorHelp.add(new Action("&Show Error Log") {
 			@Override
 			public void run() {
-				byte[] arr = readFile(Raptor.USER_RAPTOR_HOME_PATH
-						+ "/logs/error.log");
-				String html = new String(arr);
-				html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
-						+ html + "</pre>\n</body>\n</html>\n";
-				BrowserUtils.openHtml(html);
+				String html = FileUtils
+						.fileAsString(Raptor.USER_RAPTOR_HOME_PATH
+								+ "/logs/error.log");
+				if (html != null) {
+					html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
+							+ html + "</pre>\n</body>\n</html>\n";
+					BrowserUtils.openHtml(html);
+				}
 			}
 		});
 		helpMenu.add(raptorHelp);
@@ -1499,7 +1516,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
-		ficsHelp.add(new Action("&FAQ") {
+		ficsHelp.add(new Action("&Frequently Asked Questions") {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1924,23 +1941,6 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 		getShell().setSize(screenBounds.width, screenBounds.height);
 		getShell().setLocation(screenBounds.x, screenBounds.y);
-	}
-
-	protected byte[] readFile(String fileName) {
-		File f = null;
-		try {
-			f = new File(fileName);
-
-			FileInputStream s = new FileInputStream(f);
-			byte[] bytes = new byte[s.available()];
-			s.read(bytes);
-
-			return bytes;
-		} catch (IOException e) {
-			Raptor.getInstance().onError(
-					"Error reading file: " + f.getAbsolutePath(), e);
-		}
-		return new byte[0];
 	}
 
 	/**
