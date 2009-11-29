@@ -599,10 +599,9 @@ public abstract class IcsConnector implements Connector {
 
 	public String[][] getChannelActions(String channel) {
 		return new String[][] {
-				new String[] { "Add Channel " + channel, "+channel " + channel },
-				new String[] { "Remove Channel " + channel,
-						"-channel " + channel },
-				new String[] { "In Channel " + channel, "in " + channel } };
+				new String[] { "+channel " + channel, "+channel " + channel },
+				new String[] { "-channel " + channel, "-channel " + channel },
+				new String[] { "in " + channel, "in " + channel } };
 	}
 
 	public String getChannelTabPrefix(String channel) {
