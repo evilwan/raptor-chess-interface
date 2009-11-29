@@ -147,7 +147,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 							+ getChessPieceCharacter(KNIGHT, true) + " vs "
 							+ getChessPieceCharacter(KING, false)
 							+ getChessPieceCharacter(PAWN, false),
-					"tell endgamebot play kbnk" } };
+					"tell endgamebot play knnkp" } };
 
 	protected MenuManager ficsMenu;
 	protected Action autoConnectAction;
