@@ -28,6 +28,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -784,7 +787,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			MenuItem item = null;
 			item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add a tab for channel: " + channel);
+			item.setText("Add channel tab: " + channel);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					if (!Raptor.getInstance().getWindow().containsChannelItem(
@@ -903,7 +906,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 			final String person = connector.parsePerson(word);
 			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add a tab for person: " + person);
+			item.setText("Add person tab: " + person);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					if (!Raptor.getInstance().getWindow()
@@ -921,8 +924,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			if (connector instanceof FicsConnector) {
 
 				MenuItem ficsGamesHistory = new MenuItem(menu, SWT.PUSH);
-				ficsGamesHistory.setText("ficsgames.com History for person: "
-						+ person);
+				ficsGamesHistory.setText("ficsgames.com history: " + person);
 				ficsGamesHistory.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						BrowserUtils
@@ -932,8 +934,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				});
 
 				MenuItem ficsGamesStats = new MenuItem(menu, SWT.PUSH);
-				ficsGamesStats.setText("ficsgames.com Stats for person: "
-						+ person);
+				ficsGamesStats.setText("ficsgames.com statistics: " + person);
 				ficsGamesStats.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						BrowserUtils
@@ -943,7 +944,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				});
 
 				MenuItem watchBotStats = new MenuItem(menu, SWT.PUSH);
-				watchBotStats.setText("WatchBot history for person: " + person);
+				watchBotStats.setText("WatchBot history: " + person);
 				watchBotStats.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						BrowserUtils.openHtml(BrowserUtils
@@ -958,15 +959,19 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					.getPersonActions(person);
 			if (connectorPersonItems != null) {
 				for (int i = 0; i < connectorPersonItems.length; i++) {
-					item = new MenuItem(menu, SWT.PUSH);
-					item.setText(connectorPersonItems[i][0]);
-					final int index = i;
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							connector
-									.sendMessage(connectorPersonItems[index][1]);
-						}
-					});
+					if (connectorPersonItems[i][0].equals("separator")) {
+						new MenuItem(menu, SWT.SEPARATOR);
+					} else {
+						item = new MenuItem(menu, SWT.PUSH);
+						item.setText(connectorPersonItems[i][0]);
+						final int index = i;
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								connector
+										.sendMessage(connectorPersonItems[index][1]);
+							}
+						});
+					}
 				}
 			}
 		}
@@ -1275,10 +1280,23 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
 		if (wasSelectedText) {
 			MenuItem copyItem = new MenuItem(menu, SWT.PUSH);
-			copyItem.setText("copy");
+			copyItem.setText("copy (remove line breaks)");
 			copyItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					chatConsole.inputText.copy();
+				}
+			});
+
+			MenuItem copyPreserveItem = new MenuItem(menu, SWT.PUSH);
+			copyPreserveItem.setText("copy (preserve line breaks)");
+			copyPreserveItem.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					TextTransfer plainTextTransfer = TextTransfer.getInstance();
+					Object[] data = new Object[] { chatConsole.inputText
+							.getSelectionText() };
+					Transfer[] types = new Transfer[] { plainTextTransfer };
+					Raptor.getInstance().getClipboard().setContents(data,
+							types, DND.CLIPBOARD);
 				}
 			});
 		}
