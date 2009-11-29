@@ -292,7 +292,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bugbuttonsAction = new Action("Bughouse &Buttons") {
+		bugbuttonsAction = new Action("Bug &Buttons") {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(BicsConnector.this);
@@ -363,14 +363,14 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bics2.autoConnectAction = new Action("Auto &Login",
+		bics2.autoConnectAction = new Action("Toggle Auto &Login",
 				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 			}
 		};
 
-		bics2.bugbuttonsAction = new Action("Show Bughouse &Buttons") {
+		bics2.bugbuttonsAction = new Action("Bug &Buttons") {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(bics2);

@@ -204,6 +204,63 @@ public class GameUtils implements GameConstants {
 		return SQUARE_TO_COORDINATE[square];
 	}
 
+	public static String getChessPieceCharacter(int piece) {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+			switch (piece) {
+			case PAWN:
+				return "\u2659";
+			case KNIGHT:
+				return "\u2658";
+			case BISHOP:
+				return "\u2657";
+			case ROOK:
+				return "\u2656";
+			case QUEEN:
+				return "\u2655";
+			case KING:
+				return "\u2654";
+			case EMPTY:
+				return " ";
+			default:
+				throw new IllegalArgumentException("Unknown piece cosntant: "
+						+ piece);
+			}
+		} else {
+			return "" + PIECE_TO_SAN.charAt(piece);
+		}
+
+	}
+
+	public static String getChessPieceCharacter(int piece, boolean isWhite) {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+			switch (piece) {
+			case PAWN:
+				return isWhite ? "\u2659" : "\u265F";
+			case KNIGHT:
+				return isWhite ? "\u2658" : "\u265E";
+			case BISHOP:
+				return isWhite ? "\u2657" : "\u265D";
+			case ROOK:
+				return isWhite ? "\u2656" : "\u265C";
+			case QUEEN:
+				return isWhite ? "\u2655" : "\u265B";
+			case KING:
+				return isWhite ? "\u2654" : "\u265A";
+			case EMPTY:
+				return " ";
+			default:
+				throw new IllegalArgumentException("Unknown piece cosntant: "
+						+ piece);
+			}
+		} else {
+			return isWhite ? ("" + PIECE_TO_SAN.charAt(piece)).toLowerCase()
+					: "" + PIECE_TO_SAN.charAt(piece);
+		}
+
+	}
+
 	public static int getColoredPiece(int square, Game game) {
 		long squareBB = GameUtils.getBitboard(square);
 		int gamePiece = game.getPiece(square);

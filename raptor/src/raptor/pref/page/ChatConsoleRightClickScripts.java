@@ -8,7 +8,6 @@ import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -20,8 +19,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
@@ -30,12 +27,13 @@ import raptor.script.ChatScript;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.ScriptService;
+import raptor.swt.RaptorTable;
 import raptor.swt.SWTUtils;
 
 public class ChatConsoleRightClickScripts extends PreferencePage {
 
-	protected Table icsActiveScriptsTable;
-	protected Table icsInactiveScriptsTable;
+	protected RaptorTable icsActiveScriptsTable;
+	protected RaptorTable icsInactiveScriptsTable;
 
 	protected Composite composite;
 
@@ -72,58 +70,100 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 								70));
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
-		tableComposite.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false,
-				false));
-		icsActiveScriptsTable = new Table(tableComposite, SWT.BORDER
+		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 3, 1));
+		tableComposite.setLayout(new GridLayout(3, false));
+
+		icsActiveScriptsTable = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-		icsActiveScriptsTable.setSize(icsActiveScriptsTable.computeSize(160,
-				250));
-		icsActiveScriptsTable.setLocation(5, 5);
+		icsActiveScriptsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				true, true));
+		icsActiveScriptsTable.addColumn("Active Right-Click Scripts", SWT.LEFT,
+				100, false, null);
+		icsActiveScriptsTable.getTable().addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						int selectedIndex = icsActiveScriptsTable.getTable()
+								.getSelectionIndex();
+						String selection = icsActiveScriptsTable.getTable()
+								.getItem(selectedIndex).getText(0);
+						loadControls(selection);
+					}
+				});
 
-		TableColumn activeName = new TableColumn(icsActiveScriptsTable,
-				SWT.LEFT);
-		activeName.setText("Active Right-Click Scripts");
-		activeName.setWidth(150);
-		icsActiveScriptsTable.setHeaderVisible(true);
-
-		final TableCursor activeCursor = new TableCursor(icsActiveScriptsTable,
-				SWT.NONE);
-		activeCursor.addSelectionListener(new SelectionAdapter() {
+		Composite addRemoveComposite = new Composite(tableComposite, SWT.NONE);
+		addRemoveComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				false, true));
+		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+		addRemoveComposite.setLayout(rowLayout);
+		Label strut = new Label(addRemoveComposite, SWT.NONE);
+		strut.setText(" ");
+		Label strut2 = new Label(addRemoveComposite, SWT.NONE);
+		strut2.setText(" ");
+		Label strut3 = new Label(addRemoveComposite, SWT.NONE);
+		strut3.setText(" ");
+		Label strut4 = new Label(addRemoveComposite, SWT.NONE);
+		strut4.setText(" ");
+		Button addButton = new Button(addRemoveComposite, SWT.PUSH);
+		addButton.setImage(Raptor.getInstance().getIcon("back"));
+		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = icsActiveScriptsTable.getSelectionIndex();
-				String selection = icsActiveScriptsTable.getItem(selectedIndex)
-						.getText(0);
-				loadControls(selection);
-			}
-		});
-		activeCursor.setVisible(true);
-
-		icsInactiveScriptsTable = new Table(tableComposite, SWT.BORDER
-				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-
-		icsInactiveScriptsTable.setSize(icsInactiveScriptsTable.computeSize(
-				160, 250));
-		icsInactiveScriptsTable.setLocation(5 + 20 + icsActiveScriptsTable
-				.getSize().x, 5);
-
-		TableColumn inactiveName = new TableColumn(icsInactiveScriptsTable,
-				SWT.LEFT);
-		inactiveName.setText("Inactive Right-Click Scripts");
-		inactiveName.setWidth(150);
-		icsInactiveScriptsTable.setHeaderVisible(true);
-		TableCursor inactiveCursor = new TableCursor(icsInactiveScriptsTable,
-				SWT.NONE);
-		inactiveCursor.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selectedIndex = icsInactiveScriptsTable.getSelectionIndex();
-				String selection = icsInactiveScriptsTable.getItem(
+				int selectedIndex = icsInactiveScriptsTable.getTable()
+						.getSelectionIndex();
+				if (selectedIndex == -1) {
+					return;
+				}
+				String selection = icsInactiveScriptsTable.getTable().getItem(
 						selectedIndex).getText(0);
-				loadControls(selection);
+
+				ChatScript script = ScriptService.getInstance().getChatScript(
+						selection);
+				script.setActive(true);
+				ScriptService.getInstance().saveChatScript(script);
+				refreshTables();
 			}
 		});
-		inactiveCursor.setVisible(true);
+
+		Button removeButton = new Button(addRemoveComposite, SWT.PUSH);
+		removeButton.setImage(Raptor.getInstance().getIcon("next"));
+		removeButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				int selectedIndex = icsActiveScriptsTable.getTable()
+						.getSelectionIndex();
+				if (selectedIndex == -1) {
+					return;
+				}
+				String selection = icsActiveScriptsTable.getTable().getItem(
+						selectedIndex).getText(0);
+
+				ChatScript script = ScriptService.getInstance().getChatScript(
+						selection);
+				script.setActive(false);
+				ScriptService.getInstance().saveChatScript(script);
+				refreshTables();
+			}
+		});
+
+		icsInactiveScriptsTable = new RaptorTable(tableComposite, SWT.BORDER
+				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		icsInactiveScriptsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
+				true, true));
+		icsInactiveScriptsTable.addColumn("Inactive Right-Click Script Name",
+				SWT.LEFT, 100, true, null);
+		icsInactiveScriptsTable.getTable().addSelectionListener(
+				new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						int selectedIndex = icsInactiveScriptsTable.getTable()
+								.getSelectionIndex();
+						String selection = icsInactiveScriptsTable.getTable()
+								.getItem(selectedIndex).getText(0);
+						loadControls(selection);
+					}
+				});
 
 		Composite buttonsComposite = new Composite(composite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false,
@@ -134,9 +174,11 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		upButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int selectedScript = icsActiveScriptsTable.getSelectionIndex();
+				int selectedScript = icsActiveScriptsTable.getTable()
+						.getSelectionIndex();
 				if (selectedScript > 0) {
-					TableItem[] items = icsActiveScriptsTable.getItems();
+					TableItem[] items = icsActiveScriptsTable.getTable()
+							.getItems();
 					for (int i = 0; i < items.length; i++) {
 						ChatScript script = ScriptService.getInstance()
 								.getChatScript(items[i].getText());
@@ -153,8 +195,8 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 					items[selectedScript].setText(items[selectedScript - 1]
 							.getText());
 					items[selectedScript - 1].setText(selectedText);
-					activeCursor.setSelection(selectedScript - 1, 0);
-					icsActiveScriptsTable.setSelection(selectedScript - 1);
+					icsActiveScriptsTable.getTable().setSelection(
+							selectedScript - 1);
 					icsActiveScriptsTable.redraw();
 				}
 			}
@@ -164,9 +206,12 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		downButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				int selectedScript = icsActiveScriptsTable.getSelectionIndex();
-				if (selectedScript < icsActiveScriptsTable.getItemCount() - 1) {
-					TableItem[] items = icsActiveScriptsTable.getItems();
+				int selectedScript = icsActiveScriptsTable.getTable()
+						.getSelectionIndex();
+				if (selectedScript < icsActiveScriptsTable.getTable()
+						.getItemCount() - 1) {
+					TableItem[] items = icsActiveScriptsTable.getTable()
+							.getItems();
 					for (int i = 0; i < items.length; i++) {
 						ChatScript script = ScriptService.getInstance()
 								.getChatScript(items[i].getText());
@@ -183,8 +228,8 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 					items[selectedScript].setText(items[selectedScript + 1]
 							.getText());
 					items[selectedScript + 1].setText(selectedText);
-					activeCursor.setSelection(selectedScript + 1, 0);
-					icsActiveScriptsTable.setSelection(selectedScript + 1);
+					icsActiveScriptsTable.getTable().setSelection(
+							selectedScript + 1);
 					icsActiveScriptsTable.redraw();
 				}
 			}
@@ -322,20 +367,12 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 	}
 
 	protected void refreshTables() {
-		TableItem[] activeItems = icsActiveScriptsTable.getItems();
-		for (TableItem item : activeItems) {
-			item.dispose();
-		}
-		TableItem[] inactiveItems = icsInactiveScriptsTable.getItems();
-		for (TableItem item : inactiveItems) {
-			item.dispose();
-		}
-
 		ChatScript[] allScripts = ScriptService.getInstance()
 				.getAllChatScripts();
 
 		List<ChatScript> inactiveScripts = new ArrayList<ChatScript>(10);
 		List<ChatScript> activeScripts = new ArrayList<ChatScript>(10);
+
 		for (ChatScript script : allScripts) {
 			if (script.getChatScriptType() == ChatScriptType.RightClickOneShot) {
 				if (script.isActive()) {
@@ -349,15 +386,17 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		Collections.sort(inactiveScripts,
 				new ChatScript.ChatScriptNameComparator());
 
-		for (ChatScript script : inactiveScripts) {
-			TableItem item = new TableItem(icsInactiveScriptsTable, SWT.NONE);
-			item.setText(script.getName());
+		String[][] activeData = new String[activeScripts.size()][1];
+		String[][] inactiveData = new String[inactiveScripts.size()][1];
 
+		for (int i = 0; i < activeData.length; i++) {
+			activeData[i][0] = activeScripts.get(i).getName();
 		}
-		for (ChatScript script : activeScripts) {
-			TableItem item = new TableItem(icsActiveScriptsTable, SWT.NONE);
-			item.setText(script.getName());
+		for (int i = 0; i < inactiveData.length; i++) {
+			inactiveData[i][0] = inactiveScripts.get(i).getName();
+		}
 
-		}
+		icsActiveScriptsTable.refreshTable(activeData);
+		icsInactiveScriptsTable.refreshTable(inactiveData);
 	}
 }

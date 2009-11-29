@@ -13,6 +13,11 @@
  */
 package raptor.connector.fics;
 
+import static raptor.chess.util.GameUtils.getChessPieceCharacter;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,6 +35,7 @@ import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.chess.Game;
+import raptor.chess.GameConstants;
 import raptor.connector.fics.pref.FicsPage;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
@@ -53,20 +59,101 @@ import raptor.util.RaptorStringTokenizer;
 /**
  * The connector used to connect to www.freechess.org.
  */
-public class FicsConnector extends IcsConnector implements PreferenceKeys {
+public class FicsConnector extends IcsConnector implements PreferenceKeys,
+		GameConstants {
 	private static final Log LOG = LogFactory.getLog(FicsConnector.class);
+	protected static final String[][] PROBLEM_ACTIONS = {
+			{ "Tactics", "tell puzzlebot gettactics" },
+			{ "Mate", "tell puzzlebot getmate" },
+			{ "separator", "separator" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(PAWN, true) + " vs "
+							+ getChessPieceCharacter(KING, false),
+					"tell endgamebot play kpk" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(PAWN, true) + " vs "
+							+ getChessPieceCharacter(KING, false)
+							+ getChessPieceCharacter(PAWN, false),
+					"tell endgamebot play kpkp" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(PAWN, true)
+							+ getChessPieceCharacter(PAWN, true) + " vs "
+							+ getChessPieceCharacter(KING, false)
+							+ getChessPieceCharacter(PAWN, false),
+					"tell endgamebot play kppkp" },
+			{ "separator", "separator" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(QUEEN, true) + " vs "
+							+ getChessPieceCharacter(KING, false),
+					"tell endgamebot play kqk" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(QUEEN, true) + " vs "
+							+ getChessPieceCharacter(KING, false)
+							+ getChessPieceCharacter(ROOK, false),
+					"tell endgamebot play kqkr" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(QUEEN, true)
+							+ getChessPieceCharacter(PAWN, true) + " vs "
+							+ getChessPieceCharacter(KING, false)
+							+ getChessPieceCharacter(QUEEN, false),
+					"tell endgamebot play kqpkq" },
+			{ "separator", "separator" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(ROOK, true) + " vs "
+							+ getChessPieceCharacter(KING, false),
+					"tell endgamebot play krk" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(ROOK, true)
+							+ getChessPieceCharacter(PAWN, true) + " vs "
+							+ getChessPieceCharacter(KING, false)
+							+ getChessPieceCharacter(ROOK, false),
+					"tell endgamebot play krpk" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(ROOK, true) + " vs "
+							+ getChessPieceCharacter(KING, false)
+							+ getChessPieceCharacter(PAWN, false),
+					"tell endgamebot play krkp" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(ROOK, true) + " vs "
+							+ getChessPieceCharacter(KING, false)
+							+ getChessPieceCharacter(KNIGHT, false),
+					"tell endgamebot play krkn" },
+			{ "separator", "separator" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(BISHOP, true)
+							+ getChessPieceCharacter(BISHOP, true) + " vs "
+							+ getChessPieceCharacter(KING, false),
+					"tell endgamebot play kbbk" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(BISHOP, true)
+							+ getChessPieceCharacter(KNIGHT, true) + " vs "
+							+ getChessPieceCharacter(KING, false),
+					"tell endgamebot play kbnk" },
+			{
+					getChessPieceCharacter(KING, true)
+							+ getChessPieceCharacter(KNIGHT, true)
+							+ getChessPieceCharacter(KNIGHT, true) + " vs "
+							+ getChessPieceCharacter(KING, false)
+							+ getChessPieceCharacter(PAWN, false),
+					"tell endgamebot play kbnk" } };
 
 	protected MenuManager ficsMenu;
 	protected Action autoConnectAction;
-	protected Action bughouseArenaAvailPartnersAction;
-	protected Action bughouseArenaPartnershipsAction;
-	protected Action bughouseArenaGamesAction;
 	protected Action connectAction;
-	protected Action disconnectAction;
-	protected Action reconnectAction;
-	protected Action regexTabAction;
-	protected Action seekTableAction;
-	protected Action bugbuttonsAction;
+	protected List<Action> onlyEnabledOnConnectActions = new ArrayList<Action>(
+			20);
 
 	/**
 	 * Raptor allows connecting to fics twice with different profiles. Override
@@ -103,15 +190,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 	public void disconnect() {
 		super.disconnect();
 		connectAction.setEnabled(true);
-		disconnectAction.setEnabled(false);
-		reconnectAction.setEnabled(false);
-		bughouseArenaAvailPartnersAction.setEnabled(false);
-		bughouseArenaPartnershipsAction.setEnabled(false);
-		bughouseArenaGamesAction.setEnabled(false);
-		seekTableAction.setEnabled(false);
-		regexTabAction.setEnabled(false);
+		for (Action action : onlyEnabledOnConnectActions) {
+			action.setEnabled(false);
+		}
 		autoConnectAction.setEnabled(true);
-		bugbuttonsAction.setEnabled(false);
 	}
 
 	@Override
@@ -184,6 +266,25 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		return result;
 	}
 
+	protected void addProblemActions(MenuManager problemMenu) {
+		for (int i = 0; i < PROBLEM_ACTIONS.length; i++) {
+			if (PROBLEM_ACTIONS[i][0].equals("separator")) {
+				problemMenu.add(new Separator());
+			} else {
+				final String action = PROBLEM_ACTIONS[i][1];
+				Action problemAction = new Action(PROBLEM_ACTIONS[i][0]) {
+					public void run() {
+						sendMessage(action);
+					}
+				};
+				problemAction.setEnabled(false);
+				onlyEnabledOnConnectActions.add(problemAction);
+				problemMenu.add(problemAction);
+			}
+
+		}
+	}
+
 	@Override
 	protected void connect(final String profileName) {
 		super.connect(profileName);
@@ -192,14 +293,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			autoConnectAction.setChecked(getPreferences().getBoolean(
 					context.getPreferencePrefix() + "auto-connect"));
 			autoConnectAction.setEnabled(true);
-			disconnectAction.setEnabled(true);
-			reconnectAction.setEnabled(true);
-			bughouseArenaAvailPartnersAction.setEnabled(true);
-			bughouseArenaPartnershipsAction.setEnabled(true);
-			bughouseArenaGamesAction.setEnabled(true);
-			seekTableAction.setEnabled(true);
-			regexTabAction.setEnabled(true);
-			bugbuttonsAction.setEnabled(true);
+
+			for (Action action : onlyEnabledOnConnectActions) {
+				action.setEnabled(true);
+			}
 
 			if (getPreferences().getBoolean(
 					context.getPreferencePrefix()
@@ -233,14 +330,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		disconnectAction = new Action("&Disconnect") {
+		Action disconnectAction = new Action("&Disconnect") {
 			@Override
 			public void run() {
 				disconnect();
 			}
 		};
 
-		reconnectAction = new Action("&Reconnect") {
+		Action reconnectAction = new Action("&Reconnect") {
 			@Override
 			public void run() {
 				disconnect();
@@ -253,42 +350,42 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		seekTableAction = new Action("&Seek Table") {
+		Action seekTableAction = new Action("&Seek Table") {
 			@Override
 			public void run() {
 				SWTUtils.openSeekTableWindowItem(FicsConnector.this);
 			}
 		};
 
-		bughouseArenaAvailPartnersAction = new Action("Bughouse &Partners") {
+		Action bughouseArenaAvailPartnersAction = new Action("Bug &Partners") {
 			@Override
 			public void run() {
 				SWTUtils.openBugPartnersWindowItem(FicsConnector.this);
 			}
 		};
 
-		bughouseArenaPartnershipsAction = new Action("Bughouse &Teams") {
+		Action bughouseArenaPartnershipsAction = new Action("Bug &Teams") {
 			@Override
 			public void run() {
 				SWTUtils.openBugTeamsWindowItem(FicsConnector.this);
 			}
 		};
 
-		bughouseArenaGamesAction = new Action("Bughouse &Games") {
+		Action bughouseArenaGamesAction = new Action("Bug &Games") {
 			@Override
 			public void run() {
 				SWTUtils.openBugGamesWindowItem(FicsConnector.this);
 			}
 		};
 
-		bugbuttonsAction = new Action("Bughouse &Buttons") {
+		Action bugbuttonsAction = new Action("Bug &Buttons") {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(FicsConnector.this);
 			}
 		};
 
-		regexTabAction = new Action("&Regular Expression") {
+		Action regexTabAction = new Action("&Regular Expression") {
 			@Override
 			public void run() {
 				RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
@@ -351,14 +448,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		fics2.disconnectAction = new Action("&Disconnect") {
+		Action fics2DisconnectAction = new Action("&Disconnect") {
 			@Override
 			public void run() {
 				fics2.disconnect();
 			}
 		};
 
-		fics2.reconnectAction = new Action("&Reconnect") {
+		Action fics2ReconnectAction = new Action("&Reconnect") {
 			@Override
 			public void run() {
 				fics2.disconnect();
@@ -371,36 +468,36 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		fics2.seekTableAction = new Action("&Seek Table") {
+		Action fics2SeekTableAction = new Action("&Seek Table") {
 			@Override
 			public void run() {
 				SWTUtils.openSeekTableWindowItem(fics2);
 			}
 		};
 
-		fics2.bughouseArenaAvailPartnersAction = new Action(
-				"Bughouse &Partners") {
+		Action fics2BughouseArenaAvailPartnersAction = new Action(
+				"Bug &Partners") {
 			@Override
 			public void run() {
 				SWTUtils.openBugPartnersWindowItem(fics2);
 			}
 		};
 
-		fics2.bughouseArenaPartnershipsAction = new Action("Bughouse &Teams") {
+		Action fics2BughouseArenaPartnershipsAction = new Action("Bug &Teams") {
 			@Override
 			public void run() {
 				SWTUtils.openBugTeamsWindowItem(fics2);
 			}
 		};
 
-		fics2.bughouseArenaGamesAction = new Action("Bughouse &Games") {
+		Action fics2BughouseArenaGamesAction = new Action("Bug &Games") {
 			@Override
 			public void run() {
 				SWTUtils.openBugGamesWindowItem(fics2);
 			}
 		};
 
-		fics2.regexTabAction = new Action("&Regular Expression") {
+		Action fics2RegexTabAction = new Action("&Regular Expression") {
 			@Override
 			public void run() {
 				RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
@@ -422,17 +519,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		fics2.bugbuttonsAction = new Action("Bughouse &Buttons") {
+		Action fics2BugbuttonsAction = new Action("Bughouse &Buttons") {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(fics2);
-			}
-		};
-
-		fics2.autoConnectAction = new Action("Auto &Login",
-				IAction.AS_CHECK_BOX) {
-			@Override
-			public void run() {
 			}
 		};
 
@@ -447,15 +537,35 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 		regexTabAction.setEnabled(false);
 		bugbuttonsAction.setEnabled(false);
 
+		onlyEnabledOnConnectActions.add(bughouseArenaAvailPartnersAction);
+		onlyEnabledOnConnectActions.add(bughouseArenaPartnershipsAction);
+		onlyEnabledOnConnectActions.add(bughouseArenaGamesAction);
+		onlyEnabledOnConnectActions.add(disconnectAction);
+		onlyEnabledOnConnectActions.add(reconnectAction);
+		onlyEnabledOnConnectActions.add(regexTabAction);
+		onlyEnabledOnConnectActions.add(seekTableAction);
+		onlyEnabledOnConnectActions.add(bugbuttonsAction);
+
 		fics2.connectAction.setEnabled(true);
-		fics2.disconnectAction.setEnabled(false);
-		fics2.reconnectAction.setEnabled(false);
-		fics2.seekTableAction.setEnabled(false);
-		fics2.bughouseArenaPartnershipsAction.setEnabled(false);
-		fics2.bughouseArenaAvailPartnersAction.setEnabled(false);
-		fics2.bughouseArenaGamesAction.setEnabled(false);
-		fics2.regexTabAction.setEnabled(false);
-		fics2.bugbuttonsAction.setEnabled(false);
+		fics2DisconnectAction.setEnabled(false);
+		fics2ReconnectAction.setEnabled(false);
+		fics2SeekTableAction.setEnabled(false);
+		fics2BughouseArenaPartnershipsAction.setEnabled(false);
+		fics2BughouseArenaAvailPartnersAction.setEnabled(false);
+		fics2BughouseArenaGamesAction.setEnabled(false);
+		fics2RegexTabAction.setEnabled(false);
+		fics2BugbuttonsAction.setEnabled(false);
+
+		fics2.onlyEnabledOnConnectActions
+				.add(fics2BughouseArenaAvailPartnersAction);
+		fics2.onlyEnabledOnConnectActions
+				.add(fics2BughouseArenaPartnershipsAction);
+		fics2.onlyEnabledOnConnectActions.add(fics2BughouseArenaGamesAction);
+		fics2.onlyEnabledOnConnectActions.add(fics2DisconnectAction);
+		fics2.onlyEnabledOnConnectActions.add(fics2ReconnectAction);
+		fics2.onlyEnabledOnConnectActions.add(fics2RegexTabAction);
+		fics2.onlyEnabledOnConnectActions.add(fics2SeekTableAction);
+		fics2.onlyEnabledOnConnectActions.add(fics2BugbuttonsAction);
 
 		autoConnectAction.setChecked(getPreferences().getBoolean(
 				context.getPreferencePrefix() + "auto-connect"));
@@ -469,17 +579,17 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				"&Another Simultaneous Connection");
 		MenuManager fics2TabsMenu = new MenuManager("&Tabs");
 		fics2Menu.add(fics2.connectAction);
-		fics2Menu.add(fics2.disconnectAction);
-		fics2Menu.add(fics2.reconnectAction);
+		fics2Menu.add(fics2DisconnectAction);
+		fics2Menu.add(fics2ReconnectAction);
 		fics2Menu.add(new Separator());
-		fics2TabsMenu.add(fics2.seekTableAction);
+		fics2TabsMenu.add(fics2SeekTableAction);
 		fics2Menu.add(new Separator());
-		fics2TabsMenu.add(fics2.bugbuttonsAction);
-		fics2TabsMenu.add(fics2.bughouseArenaAvailPartnersAction);
-		fics2TabsMenu.add(fics2.bughouseArenaPartnershipsAction);
-		fics2TabsMenu.add(fics2.bughouseArenaGamesAction);
+		fics2TabsMenu.add(fics2BugbuttonsAction);
+		fics2TabsMenu.add(fics2BughouseArenaAvailPartnersAction);
+		fics2TabsMenu.add(fics2BughouseArenaPartnershipsAction);
+		fics2TabsMenu.add(fics2BughouseArenaGamesAction);
 		fics2TabsMenu.add(new Separator());
-		fics2TabsMenu.add(fics2.regexTabAction);
+		fics2TabsMenu.add(fics2RegexTabAction);
 		fics2Menu.add(fics2TabsMenu);
 		ficsMenu.add(fics2Menu);
 
@@ -513,7 +623,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		}
 		ficsMenu.add(linksMenu);
-
+		MenuManager problems = new MenuManager("&Puzzles");
+		addProblemActions(problems);
+		ficsMenu.add(problems);
 	}
 
 	protected void initFics2() {
@@ -593,7 +705,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys {
 				sendMessage("set style 12", true);
 				sendMessage("set bell 0", true);
 				sendMessage("set ptime 0", true);
-				sendMessage("set unobserve 3", true);
 
 				String loginScript = getPreferences().getString(
 						FICS_LOGIN_SCRIPT);
