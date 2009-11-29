@@ -22,7 +22,7 @@ public class ClearChannelsAlias extends RaptorAlias {
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- channel list\\:.*", new MessageCallback() {
 
-						public void matchReceived(ChatEvent event) {
+						public boolean matchReceived(ChatEvent event) {
 							RaptorStringTokenizer tok = new RaptorStringTokenizer(
 									event.getMessage(), "\n", true);
 							int itemsRemoved = 0;
@@ -52,6 +52,7 @@ public class ClearChannelsAlias extends RaptorAlias {
 																	+ " entries from your channel list."));
 										}
 									});
+							return false;
 
 						}
 					});

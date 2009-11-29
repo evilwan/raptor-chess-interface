@@ -22,7 +22,7 @@ public class ClearCensorAlias extends RaptorAlias {
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- censor list\\:.*", new MessageCallback() {
 
-						public void matchReceived(ChatEvent event) {
+						public boolean matchReceived(ChatEvent event) {
 							RaptorStringTokenizer tok = new RaptorStringTokenizer(
 									event.getMessage(), "\n", true);
 							int censorsRemoved = 0;
@@ -52,7 +52,7 @@ public class ClearCensorAlias extends RaptorAlias {
 																	+ " entries from your censor list."));
 										}
 									});
-
+							return false;
 						}
 					});
 			return result;

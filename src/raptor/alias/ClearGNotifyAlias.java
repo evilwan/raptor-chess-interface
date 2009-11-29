@@ -22,7 +22,7 @@ public class ClearGNotifyAlias extends RaptorAlias {
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- gnotify list\\:.*", new MessageCallback() {
 
-						public void matchReceived(ChatEvent event) {
+						public boolean matchReceived(ChatEvent event) {
 							RaptorStringTokenizer tok = new RaptorStringTokenizer(
 									event.getMessage(), "\n", true);
 							int itemsRemoved = 0;
@@ -52,6 +52,7 @@ public class ClearGNotifyAlias extends RaptorAlias {
 																	+ " entries from your gnotify list."));
 										}
 									});
+							return false;
 
 						}
 					});

@@ -21,7 +21,7 @@ public class ClearNotifyAlias extends RaptorAlias {
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- notify list\\:.*", new MessageCallback() {
 
-						public void matchReceived(ChatEvent event) {
+						public boolean matchReceived(ChatEvent event) {
 							RaptorStringTokenizer tok = new RaptorStringTokenizer(
 									event.getMessage(), "\n", true);
 							int itemsRemoved = 0;
@@ -51,6 +51,7 @@ public class ClearNotifyAlias extends RaptorAlias {
 																	+ " entries from your notify list."));
 										}
 									});
+							return false;
 
 						}
 					});

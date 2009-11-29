@@ -36,7 +36,7 @@ public class TellAllInChannelAlias extends RaptorAlias {
 								+ "one tell will be sent every 2 seconds.");
 				controller.getConnector().invokeOnNextMatch(
 						"Channel " + channel + ".*", new MessageCallback() {
-							public void matchReceived(ChatEvent event) {
+							public boolean matchReceived(ChatEvent event) {
 								RaptorStringTokenizer tok = new RaptorStringTokenizer(
 										event.getMessage(), "\\\n{} ", true);
 								tok.nextToken();
@@ -80,6 +80,7 @@ public class TellAllInChannelAlias extends RaptorAlias {
 																		+ " people."));
 											}
 										});
+								return false;
 
 							}
 						});
