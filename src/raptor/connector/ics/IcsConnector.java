@@ -498,8 +498,8 @@ public abstract class IcsConnector implements Connector {
 		result[12] = new String[] { "-noplay " + person, "-noplay " + person };
 		result[13] = new String[] { "+notify " + person, "+notify " + person };
 		result[14] = new String[] { "-notify " + person, "-notify " + person };
-		result[15] = new String[] { "+gnotify", "+gnotify " + person };
-		result[16] = new String[] { "-gnotify", "-gnotify " + person };
+		result[15] = new String[] { "+gnotify " + person, "+gnotify " + person };
+		result[16] = new String[] { "-gnotify " + person, "-gnotify " + person };
 		result[17] = new String[] { "separator", "separator" };
 
 		for (int i = 0; i < matchActionsArray.length; i++) {
