@@ -13,16 +13,20 @@
  */
 package raptor.util;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class FileUtil {
-	private static final Log LOG = LogFactory.getLog(FileUtil.class);
+import raptor.Raptor;
+
+public class FileUtils {
+	private static final Log LOG = LogFactory.getLog(FileUtils.class);
 
 	/**
 	 * This code was obtained from:
@@ -163,5 +167,32 @@ public class FileUtil {
 
 		// The directory is now empty so now it can be smoked
 		return dir.delete();
+	}
+
+	/**
+	 * Returns the contents of the specified file as a string.
+	 * 
+	 * @param fileName
+	 *            The fully qualified file name.
+	 * @return The contents of the file as a string. Returns null if there was
+	 *         an error reading the file.
+	 */
+	public static String fileAsString(String fileName) {
+		File f = null;
+		try {
+			f = new File(fileName);
+
+			BufferedReader reader = new BufferedReader(new FileReader(f));
+			StringBuilder result = new StringBuilder(10000);
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				result.append(line + "\n");
+			}
+			return result.toString();
+		} catch (IOException e) {
+			Raptor.getInstance().onError(
+					"Error reading file: " + f.getAbsolutePath(), e);
+			return null;
+		}
 	}
 }
