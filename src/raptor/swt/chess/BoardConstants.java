@@ -24,7 +24,4 @@ public interface BoardConstants extends GameConstants, PreferenceKeys {
 			WHITE, BLACK, BLACK, BLACK, BLACK, BLACK, BLACK };
 	public int[] DROPPABLE_PIECES = { WP, WB, WN, WR, WQ, WK, BP, BB, BN, BR,
 			BQ, BK };
-
-	public int[] INITIAL_DROPPABLE_PIECE_COUNTS = { 8, 2, 2, 2, 1, 1, 8, 2, 2,
-			2, 1, 1 };
 }

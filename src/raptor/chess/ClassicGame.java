@@ -441,6 +441,59 @@ public class ClassicGame implements Game {
 	/**
 	 * {@inheritDoc}
 	 */
+	public int[] getPieceJailCounts(int color) {
+		int totalKings = 0;
+		int totalPawns = 0;
+		int totalKnights = 0;
+		int totalBishops = 0;
+		int totalRooks = 0;
+		int totalQueens = 0;
+
+		for (int i = 0; i < board.length; i++) {
+			int piece = board[i];
+			if (piece != EMPTY
+					&& (GameUtils.getBitboard(i) & getColorBB(color)) != 0) {
+				if ((piece & PROMOTED_MASK) != 0) {
+					totalPawns++;
+				} else {
+					switch (piece) {
+					case KING:
+						totalKings++;
+						break;
+					case PAWN:
+						totalPawns++;
+						break;
+					case KNIGHT:
+						totalKnights++;
+						break;
+					case BISHOP:
+						totalBishops++;
+						break;
+					case ROOK:
+						totalRooks++;
+						break;
+					case QUEEN:
+						totalQueens++;
+						break;
+					}
+				}
+			}
+		}
+
+		int[] result = new int[7];
+		result[PAWN] = 8 - totalPawns;
+		result[KNIGHT] = 2 - totalKnights;
+		result[BISHOP] = 2 - totalBishops;
+		result[ROOK] = 2 - totalRooks;
+		result[QUEEN] = 1 - totalQueens;
+		result[KING] = 1 - totalKings;
+
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public int getPieceWithPromoteMask(int square) {
 		return board[square];
 	}
@@ -1434,7 +1487,7 @@ public class ClassicGame implements Game {
 	 */
 	protected void decrementPieceCount(int color, int piece) {
 		if ((piece & PROMOTED_MASK) != 0) {
-			piece = PAWN;
+			piece &= NOT_PROMOTED_MASK;
 		}
 		pieceCounts[color][piece]--;
 	}
@@ -1890,11 +1943,6 @@ public class ClassicGame implements Game {
 	protected void incrementPieceCount(int color, int piece) {
 		if ((piece & PROMOTED_MASK) != 0) {
 			piece &= NOT_PROMOTED_MASK;
-			// When a promoted piece is captured it is a pawn.
-			// So this is rolling back a promoted piece capture.
-			// Decrease the pawn to add it back to the piece counts.
-			// Then increase the piece count of the piece captured.
-			pieceCounts[color][PAWN]--;
 		}
 		pieceCounts[color][piece]++;
 	}
