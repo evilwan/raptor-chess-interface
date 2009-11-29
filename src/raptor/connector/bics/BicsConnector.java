@@ -129,10 +129,9 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	 * bics1 connector, otherwise its null.
 	 */
 	protected BicsConnector bics1 = null;
-	protected MenuManager connectionsMenu;
+	protected MenuManager bicsMenu;
 
 	protected Action autoConnectAction;
-	protected Action bughouseArenaAction;
 	protected Action connectAction;
 	protected Action disconnectAction;
 	protected Action reconnectAction;
@@ -157,7 +156,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		connectAction.setEnabled(true);
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
-		bughouseArenaAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
 		bugbuttonsAction.setEnabled(false);
 	}
@@ -176,7 +174,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	 * Returns the menu manager for this connector.
 	 */
 	public MenuManager getMenuManager() {
-		return connectionsMenu;
+		return bicsMenu;
 	}
 
 	/**
@@ -240,7 +238,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 					context.getPreferencePrefix() + "auto-connect"));
 			disconnectAction.setEnabled(true);
 			reconnectAction.setEnabled(true);
-			bughouseArenaAction.setEnabled(true);
 			bugbuttonsAction.setEnabled(true);
 
 			if (getPreferences().getBoolean(
@@ -256,7 +253,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	 * Creates the connectionsMenu and all of the actions associated with it.
 	 */
 	protected void createMenuActions() {
-		connectionsMenu = new MenuManager("&Bics");
+		bicsMenu = new MenuManager("&Bics");
 		connectAction = new Action("&Connect") {
 			@Override
 			public void run() {
@@ -295,21 +292,15 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bughouseArenaAction = new Action("Show &Bughouse Arena") {
-			@Override
-			public void run() {
-				Raptor.getInstance().alert("Bughouse Areana Comming soon");
-			}
-		};
-
-		bugbuttonsAction = new Action("Show Bughouse &Buttons") {
+		bugbuttonsAction = new Action("Bughouse &Buttons") {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(BicsConnector.this);
 			}
 		};
 
-		autoConnectAction = new Action("Auto &Login", IAction.AS_CHECK_BOX) {
+		autoConnectAction = new Action("Toggle Auto &Login",
+				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 				getPreferences().setValue(
@@ -319,41 +310,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		connectAction.setEnabled(true);
-		disconnectAction.setEnabled(false);
-		reconnectAction.setEnabled(false);
-		bughouseArenaAction.setEnabled(false);
-		autoConnectAction.setEnabled(true);
-		bugbuttonsAction.setEnabled(false);
-		connectionsMenu.add(connectAction);
-		connectionsMenu.add(disconnectAction);
-		connectionsMenu.add(reconnectAction);
-		connectionsMenu.add(autoConnectAction);
-		connectionsMenu.add(new Separator());
-		connectionsMenu.add(bugbuttonsAction);
-		// connectionsMenu.add(bughouseArenaAction);
-		connectionsMenu.add(new Separator());
-		RaptorAction[] ficsMenuActions = ActionService.getInstance()
-				.getActions(RaptorActionContainer.BicsMenu);
-		for (final RaptorAction raptorAction : ficsMenuActions) {
-			if (raptorAction instanceof Separator) {
-				connectionsMenu.add(new Separator());
-			} else {
-				Action action = new Action(raptorAction.getName()) {
-					@Override
-					public void run() {
-						raptorAction.setConnectorSource(BicsConnector.this);
-						raptorAction.run();
-					}
-				};
-				action.setToolTipText(raptorAction.getDescription());
-				connectionsMenu.add(action);
-			}
-		}
-		connectionsMenu.add(new Separator());
-
-		MenuManager bics2Menu = new MenuManager(
-				"&Another Simultaneous Connection");
 		bics2.connectAction = new Action("&Connect") {
 			@Override
 			public void run() {
@@ -407,12 +363,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bics2.bughouseArenaAction = new Action("Show &Bughouse Arena") {
-			@Override
-			public void run() {
-				Raptor.getInstance().alert("Bughouse Areana Comming soon");
-			}
-		};
 		bics2.autoConnectAction = new Action("Auto &Login",
 				IAction.AS_CHECK_BOX) {
 			@Override
@@ -427,22 +377,57 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
+		connectAction.setEnabled(true);
+		disconnectAction.setEnabled(false);
+		reconnectAction.setEnabled(false);
+		autoConnectAction.setEnabled(true);
+		bugbuttonsAction.setEnabled(false);
+
 		bics2.connectAction.setEnabled(true);
 		bics2.disconnectAction.setEnabled(false);
 		bics2.reconnectAction.setEnabled(false);
-		// bics2.bughouseArenaAction.setEnabled(false);
 		bics2.bugbuttonsAction.setEnabled(false);
 
+		bicsMenu.add(connectAction);
+		bicsMenu.add(disconnectAction);
+		bicsMenu.add(reconnectAction);
+		bicsMenu.add(autoConnectAction);
+
+		MenuManager bics2Menu = new MenuManager(
+				"&Another Simultaneous Connection");
 		bics2Menu.add(bics2.connectAction);
 		bics2Menu.add(bics2.disconnectAction);
 		bics2Menu.add(bics2.reconnectAction);
 		bics2Menu.add(new Separator());
-		bics2Menu.add(bics2.bugbuttonsAction);
-		bics2Menu.add(bics2.bughouseArenaAction);
-		bics2Menu.add(new Separator());
+		MenuManager bics2Tabs = new MenuManager("&Tabs");
+		bics2Tabs.add(bics2.bugbuttonsAction);
+		bics2Menu.add(bics2Tabs);
+		bicsMenu.add(bics2Menu);
 
-		connectionsMenu.add(bics2Menu);
+		bicsMenu.add(new Separator());
+		MenuManager tabsMenu = new MenuManager("&Tabs");
+		tabsMenu.add(bugbuttonsAction);
+		bicsMenu.add(tabsMenu);
 
+		MenuManager linksMenu = new MenuManager("&Links");
+		RaptorAction[] ficsMenuActions = ActionService.getInstance()
+				.getActions(RaptorActionContainer.BicsMenu);
+		for (final RaptorAction raptorAction : ficsMenuActions) {
+			if (raptorAction instanceof Separator) {
+				bicsMenu.add(new Separator());
+			} else {
+				Action action = new Action(raptorAction.getName()) {
+					@Override
+					public void run() {
+						raptorAction.setConnectorSource(BicsConnector.this);
+						raptorAction.run();
+					}
+				};
+				action.setToolTipText(raptorAction.getDescription());
+				linksMenu.add(action);
+			}
+		}
+		bicsMenu.add(linksMenu);
 	}
 
 	protected void initBics2() {
