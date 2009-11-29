@@ -22,7 +22,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.Raptor;
 import raptor.chat.Bugger;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -285,8 +284,6 @@ public class IcsParser implements GameConstants {
 	public boolean vetoGameCreation(Game game, G1Message g1Message) {
 		boolean result = false;
 		if (game.isInState(Game.OBSERVING_STATE)
-				&& Raptor.getInstance().getPreferences().getBoolean(
-						PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING)
 				&& (!isBughouse(game) || isBughouse(game)
 						&& !connector.getGameService().isManaging(
 								g1Message.parterGameId))) {
