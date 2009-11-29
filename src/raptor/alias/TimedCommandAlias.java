@@ -30,7 +30,9 @@ public class TimedCommandAlias extends RaptorAlias {
 			tok.nextToken();
 			final String firstWord = tok.nextToken();
 
-			if (firstWord.equals("kill")) {
+			if (firstWord == null) {
+				return null;
+			} else if (firstWord.equals("kill")) {
 				int commandsKilled = 0;
 				for (Runnable key : runningTimedCommands.keySet()) {
 					runningTimedCommands.put(key, false);
@@ -58,7 +60,7 @@ public class TimedCommandAlias extends RaptorAlias {
 						Integer.parseInt(firstWord) * 1000 * 60, runnable);
 				runningTimedCommands.put(runnable, true);
 				return new RaptorAliasResult(tok.getWhatsLeft(),
-						"Commands will be from now on ever every " + firstWord
+						"Commands will be sent every " + firstWord
 								+ " minutes. Use 'timed kill' to stop it.");
 			} else {
 				return new RaptorAliasResult(null, "Invalid syntax: Usage"
