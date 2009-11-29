@@ -46,11 +46,6 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING,
-				"Ignore observed games if I am playing a game.",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL, "Show Piece Jail",
 				getFieldEditorParent()));
 
