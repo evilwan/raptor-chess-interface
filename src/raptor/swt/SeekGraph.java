@@ -23,6 +23,9 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -43,6 +46,7 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
@@ -52,10 +56,8 @@ import raptor.service.SeekService;
 import raptor.service.SeekService.SeekServiceListener;
 
 /**
- * Seek Graph
- * 
- * @author Sergei Kozyrenko
- * 
+ * Seek Plot Component
+ * Shows seeks on a time vs. rating scatter plot
  */
 public class SeekGraph extends Canvas {
 
@@ -115,13 +117,12 @@ public class SeekGraph extends Canvas {
 	};
 	
 	public SeekGraph(final Composite parent, SeekService service) {
-		super(parent, SWT.DOUBLE_BUFFERED);
+		super(parent, SWT.NO_REDRAW_RESIZE);
 		seekService = service;
 		if (seekService != null) {
 			seekService.adSeekServiceListener(seekListener);
 		}
-	
-		
+
 	    this.parent = parent;
 	    this.redrawListener = new Listener() {
 	      public void handleEvent(Event e) {
@@ -143,21 +144,50 @@ public class SeekGraph extends Canvas {
 		manyColor = Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
 		ratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		unratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
+		
+		Label label = new Label(this, SWT.NONE);
+		
+		
 //		menu = new JPopupMenu();
 //		acceptListeners = new LinkedList<AcceptSeekListener>();
 //
-//		addMouseMotionListener(this);
-//		addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				if (e.getClickCount() == 2) {
-//					Point relative = e.getPoint();
-//					Point real = new Point(relative);
-//					SwingUtilities.convertPointToScreen(real, e.getComponent());
-//					acceptGameAt(relative, real);
+		addMouseMoveListener(new MouseMoveListener() {
+			
+			@Override
+			public void mouseMove(MouseEvent e) {
+				Point where = new Point(e.x, e.y);
+				boolean showing = false;
+
+				for (Point loc : screen.keySet()) {
+
+					Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
+
+					if (rect.contains(where)) {
+						showAcceptPopup(where, loc, rect);
+						showing = true;
+						break;
+					}
+				}
+
+//				if (!showing) {
+//					menu.setVisible(showing);
+//					// we're not pointing at anything, so reset _lastPopupRect
+//					_lastPopupRect = null;
 //				}
-//			}
-//		});
+			}
+		});
+		
+		addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				Point relative = new Point(e.x, e.y);
+				System.out.println(relative);
+//				Point real = new Point(relative);
+//				SwingUtilities.convertPointToScreen(real, e.getComponent());
+				acceptGameAt(relative);
+			}
+		});
 	}
 	
 	public void setVStart(int start) {
@@ -214,50 +244,29 @@ public class SeekGraph extends Canvas {
 		legendImage = null;
 	}
 
-//	protected void acceptGameAt(Point where, Point realWhere) {
-//		for (Point loc : screen.keySet()) {
-//
-//			Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
-//
-//			if (rect.contains(where)) {
-//				List<Seek> existing = seeks.get(screen.get(loc));
-//				if (existing.size() > 1) {
-//					showAcceptPopup(realWhere, loc, rect);
-//				} else {
-//					notifyAcceptListeners(existing.get(0).getAd());
-//				}
-//
-//				break;
-//			}
-//		}
-//	}
-//
-//	public void mouseDragged(MouseEvent e) {
-//		// who cares
-//	}
-//
-//	public void mouseMoved(MouseEvent e) {
-//		Point where = e.getPoint();
-//		boolean showing = false;
-//
-//		for (Point loc : screen.keySet()) {
-//
-//			Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
-//
-//			if (rect.contains(where)) {
-//				SwingUtilities.convertPointToScreen(where, e.getComponent());
-//				showAcceptPopup(where, loc, rect);
-//				showing = true;
-//				break;
-//			}
-//		}
-//
-//		if (!showing) {
-//			menu.setVisible(showing);
-//			// we're not pointing at anything, so reset _lastPopupRect
-//			_lastPopupRect = null;
-//		}
-//	}
+	protected void acceptGameAt(Point where) {
+		for (Point loc : screen.keySet()) {
+
+			Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
+
+			if (rect.contains(where)) {
+				List<Seek> existing = seeks.get(screen.get(loc));
+				if (existing.size() == 1) {
+					System.out.println("Will send game request!");
+					// notifyAcceptListeners(existing.get(0).getAd());
+				} else {
+					// showAcceptPopup(where, loc, rect);
+				}
+
+				break;
+			}
+		}
+	}
+	
+	private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
+		System.out.println("Will show popup for: " + clickLoc + " for point: " + loc);
+	}
+
 
 //	private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
 //		// are we're already showing for this?
@@ -360,31 +369,26 @@ public class SeekGraph extends Canvas {
 	 */
 	public void replaceBy(final List<Seek> incoming) {
 
-				long before = System.nanoTime();
-				screen.clear();
-				seeks.clear();
-				_lastPopupRect = null;
+		long before = System.nanoTime();
+		screen.clear();
+		seeks.clear();
+		_lastPopupRect = null;
 
-				for (Seek seek : incoming) {
-					addSeek(seek, true);
-				}
-				redraw();
-				long after = System.nanoTime();
+		for (Seek seek : incoming) {
+			addSeek(seek, true);
+		}
+		redraw();
+		long after = System.nanoTime();
 
-				if (logger.isDebugEnabled()) {
-					logger.debug("Time to reload: " + (after - before));
-				}
-	}
-	
-	public void redraw() {
-		 redraw();
+		if (logger.isDebugEnabled()) {
+			logger.debug("Time to reload: " + (after - before));
+		}
 	}
 
 	protected void paintComponent(PaintEvent event) {
 		
 		Rectangle clientArea = getClientArea();
 		System.out.println("ClientArea: " + clientArea);
-        event.gc.fillOval(0,0,clientArea.width,clientArea.height);
 
 		int width = clientArea.width;
 		int height = clientArea.height;
@@ -392,15 +396,18 @@ public class SeekGraph extends Canvas {
 		Rectangle clip = event.gc.getClipping();
 		System.out.println("Clip: " + clip);
 
-		// TODO: see if needed
-//		// fix resize problem
-//		if (clip.width == width && clip.height == height) {
-//			// we're probably resizing, this will invalidate screen map
-//			screen.clear();
-//			_lastPopupRect = null;
-//		}
+		// fix resize problem
+		if (clip.width == width && clip.height == height) {
+			// we're probably resizing, this will invalidate screen map
+			screen.clear();
+			_lastPopupRect = null;
+		}
 
 		GC gc = event.gc;
+		
+		gc.setAntialias(SWT.ON);
+		
+		// Fill with white background
 		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(inset, inset, width - 2 * inset, height - 2 * inset);
 
@@ -410,17 +417,25 @@ public class SeekGraph extends Canvas {
 				* inset);
 		// drawLegend(gc, height, width);
 
+		
+		drawPoints(gc, clip, width, height);
+
+		// TODO: dispose of something???
+	}
+
+	private void drawPoints(GC gc, Rectangle clip, int width, int height) {
 		for (Point sp : seeks.keySet()) {
 			Point p = scale(sp, width - 2 * inset, height - 2 * inset);
 			p.y = height - inset - p.y - SEEK_SIZE / 2;
 			p.x = p.x + inset - SEEK_SIZE / 2;
-			if (clip.contains(p)) { // we will honor the clip!
+			// TODO: fix this...
+			// System.out.println("Painting point: " + p);
+			// if (clip.contains(p)) { // we will honor the clip!
+				// System.out.println("Putting new point into screen: " + p);
 				paintSeeks(gc, p, seeks.get(sp));
 				screen.put(p, sp);
-			}
+			// }
 		}
-
-		// TODO: dispose of something???
 	}
 
 //	private void drawLegend(GC gc, int height, int width) {
@@ -464,13 +479,14 @@ public class SeekGraph extends Canvas {
 //
 //		return ci;
 //	}
+	
+	
 
 	private void drawHorizontalLines(GC gc, int height, int plotH,
 			int width, int plotW) {
 
 		int one = plotH / hfactor;
 
-		gc.setLineStyle(SWT.LINE_DASH);
 		gc.setLineCap(SWT.CAP_ROUND);
 		gc.setLineWidth(2);
 
@@ -481,7 +497,7 @@ public class SeekGraph extends Canvas {
 			gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
 			gc.drawLine(inset, h, inset + plotW, h);
 			gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-			gc.drawString(String.valueOf(pair[0]), 0, h);
+			gc.drawString(String.valueOf(pair[0]), 0, h + 2);
 		}
 	}
 
@@ -501,7 +517,7 @@ public class SeekGraph extends Canvas {
 			gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
 			gc.drawLine(w, height - inset, w, inset);
 			gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-			gc.drawString(String.valueOf(pair[0]), w, height - inset / 2);
+			gc.drawString(String.valueOf(pair[0]), w, height - inset + 2);
 		}
 	}
 
