@@ -152,6 +152,10 @@ public class UCIEngineService {
 	protected UCIEngine uciEngineFromProperties(Properties properties) {
 		UCIEngine engine = new UCIEngine();
 		engine.setDefault(properties.getProperty("isDefault").equals("true"));
+		engine.setMultiplyBlackScoreByMinus1(properties
+				.contains("multiplyBlackScoreByMinus1") ? properties
+				.getProperty("multiplyBlackScoreByMinus1").equals("true")
+				: false);
 		engine.setProcessPath(properties.getProperty("processPath"));
 		engine.setUserName(properties.getProperty("userName"));
 		engine.setGoAnalysisParameters(properties
@@ -190,6 +194,8 @@ public class UCIEngineService {
 		properties.put("processPath", engine.getProcessPath());
 		properties.put("userName", engine.getUserName());
 		properties.put("goAnalysisParams", engine.getGoAnalysisParameters());
+		properties.put("multiplyBlackScoreByMinus1", "" + engine
+				.isMultiplyBlackScoreByMinus1());
 		if (engine.getParameters() == null || engine.getParameters().length > 0) {
 			properties.put("parameters", RaptorStringUtils.toDelimitedString(
 					engine.getParameters(), "@"));
