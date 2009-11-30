@@ -69,12 +69,21 @@ public class UCIEngine {
 	protected String engineAuthor;
 	protected Runnable goRunnable;
 	protected boolean cancelGo;
+	protected boolean multiplyBlackScoreByMinus1;
 	protected UCIBestMove lastBestMove;
 	protected String[] parameters;
 	protected String userName;
 	protected boolean isDefault;
 	protected Object stopSynch = new Object();
 	protected String goAnalysisParameters = "infinite";
+
+	public boolean isMultiplyBlackScoreByMinus1() {
+		return multiplyBlackScoreByMinus1;
+	}
+
+	public void setMultiplyBlackScoreByMinus1(boolean multiplyBlackScoreByMinus1) {
+		this.multiplyBlackScoreByMinus1 = multiplyBlackScoreByMinus1;
+	}
 
 	/**
 	 * Connects to the engine. After this method is invoked the engine name,

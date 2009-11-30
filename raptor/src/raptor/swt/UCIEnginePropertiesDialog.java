@@ -114,6 +114,18 @@ public class UCIEnginePropertiesDialog extends Dialog {
 				false, 1, 1));
 		goAnalysisParams.setText(engine.getGoAnalysisParameters());
 
+		final Button multiplyBlackScoreByMinus1Button = new Button(
+				customControls, SWT.CHECK);
+		multiplyBlackScoreByMinus1Button.setLayoutData(new GridData(SWT.LEFT,
+				SWT.CENTER, false, false, 2, 1));
+		multiplyBlackScoreByMinus1Button.setText("Multiply black score by -1");
+		multiplyBlackScoreByMinus1Button.setSelection(engine.isMultiplyBlackScoreByMinus1());
+
+		goAnalysisParams = new Text(customControls, SWT.SINGLE | SWT.BORDER);
+		goAnalysisParams.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
+		goAnalysisParams.setText(engine.getGoAnalysisParameters());
+
 		String[] optionNames = engine.getOptionNames();
 		for (String optionName : optionNames) {
 			UCIOption uciOption = engine.getOption(optionName);
@@ -202,6 +214,9 @@ public class UCIEnginePropertiesDialog extends Dialog {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				engine.setGoAnalysisParameters(goAnalysisParams.getText());
+				engine
+						.setMultiplyBlackScoreByMinus1(multiplyBlackScoreByMinus1Button
+								.getSelection());
 				String[] customNames = engine.getOptionNames();
 				for (String optionName : customNames) {
 					saveOptionValue(optionName);

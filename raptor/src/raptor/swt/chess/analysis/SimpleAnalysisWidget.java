@@ -103,7 +103,9 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 								score = "+inf";
 							} else {
 								double scoreAsDouble = controller.getGame()
-										.isWhitesMove() ? scoreInfo
+										.isWhitesMove()
+										|| !currentEngine
+												.isMultiplyBlackScoreByMinus1() ? scoreInfo
 										.getValueInCentipawns() / 100.0
 										: -scoreInfo.getValueInCentipawns() / 100.0;
 
@@ -154,10 +156,19 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 
 							for (UCIMove move : bestLineFoundInfo.getMoves()) {
 								try {
-									Move gameMove = gameClone.makeMove(move
-											.getStartSquare(), move
-											.getEndSquare(), move
-											.getPromotedPiece());
+									Move gameMove = null;
+
+									if (move.isPromotion()) {
+										gameMove = gameClone.makeMove(move
+												.getStartSquare(), move
+												.getEndSquare(), move
+												.getPromotedPiece());
+									} else {
+										gameMove = gameClone.makeMove(move
+												.getStartSquare(), move
+												.getEndSquare());
+									}
+
 									String san = GameUtils
 											.convertSanToUseUnicode(gameMove
 													.getSan(), gameMove
@@ -175,6 +186,8 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 													+ moveNumber
 													+ san
 													+ (gameClone.isInCheck() ? "+"
+															: "")
+													+ (gameClone.isCheckmate() ? "#"
 															: ""));
 									isFirstMove = false;
 								} catch (Throwable t) {
