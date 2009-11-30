@@ -57,7 +57,8 @@ public class UCIEnginePropertiesDialog extends Dialog {
 
 	public UCIEnginePropertiesDialog(Shell parent, UCIEngine engine) {
 		super(parent);
-		setText(engine.getUserName() + " Custom Properties");
+		setText("Profile: " + engine.getUserName() + "    Engine: "
+				+ engine.getEngineName() + " by " + engine.getEngineAuthor());
 		this.engine = engine;
 	}
 
@@ -93,8 +94,21 @@ public class UCIEnginePropertiesDialog extends Dialog {
 	protected void createContents() {
 		shell.setLayout(new GridLayout(1, false));
 		ScrolledComposite scrolledComposite = new ScrolledComposite(shell,
-				SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER);
-		scrolledComposite.setLayoutData(new GridData(500, 450));
+				SWT.V_SCROLL | SWT.H_SCROLL | SWT.BORDER) {
+			@Override
+			public Point computeSize(int hint, int hint2, boolean changed) {
+				Point result = super.computeSize(hint, hint2, changed);
+				if (result.y > 400) {
+					result.y = 400;
+				}
+				if (result.x > 600) {
+					result.x = 600;
+				}
+				return result;
+			}
+		};
+		scrolledComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
 
 		Composite customControls = new Composite(scrolledComposite, SWT.NONE);
 		customControls.setLayout(new GridLayout(2, false));
@@ -119,12 +133,8 @@ public class UCIEnginePropertiesDialog extends Dialog {
 		multiplyBlackScoreByMinus1Button.setLayoutData(new GridData(SWT.LEFT,
 				SWT.CENTER, false, false, 2, 1));
 		multiplyBlackScoreByMinus1Button.setText("Multiply black score by -1");
-		multiplyBlackScoreByMinus1Button.setSelection(engine.isMultiplyBlackScoreByMinus1());
-
-		goAnalysisParams = new Text(customControls, SWT.SINGLE | SWT.BORDER);
-		goAnalysisParams.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1));
-		goAnalysisParams.setText(engine.getGoAnalysisParameters());
+		multiplyBlackScoreByMinus1Button.setSelection(engine
+				.isMultiplyBlackScoreByMinus1());
 
 		String[] optionNames = engine.getOptionNames();
 		for (String optionName : optionNames) {
