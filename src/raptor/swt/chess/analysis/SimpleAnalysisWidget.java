@@ -191,10 +191,13 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 															: ""));
 									isFirstMove = false;
 								} catch (Throwable t) {
-									LOG
-											.warn(
-													"Illegal line found skipping line.",
-													t);
+									if (LOG.isInfoEnabled()) {
+										LOG
+												.info(
+														"Illegal line found skipping line (This can occur if the position was "
+																+ "changing when the analysis line was being calculated).",
+														t);
+									}
 									break;
 								}
 							}

@@ -58,6 +58,7 @@ public class UCIEngine {
 			"seldepth", "time", "nodes", "pv", "multipv", "score", "currmove",
 			"currentmovenumber", "hashfull", "nps", "tbhits", "cpuload",
 			"string" };
+
 	protected Process process;
 	protected BufferedReader in;
 	protected PrintWriter out;
@@ -69,21 +70,13 @@ public class UCIEngine {
 	protected String engineAuthor;
 	protected Runnable goRunnable;
 	protected boolean cancelGo;
-	protected boolean multiplyBlackScoreByMinus1;
+	protected boolean multiplyBlackScoreByMinus1 = true;
 	protected UCIBestMove lastBestMove;
 	protected String[] parameters;
 	protected String userName;
 	protected boolean isDefault;
 	protected Object stopSynch = new Object();
 	protected String goAnalysisParameters = "infinite";
-
-	public boolean isMultiplyBlackScoreByMinus1() {
-		return multiplyBlackScoreByMinus1;
-	}
-
-	public void setMultiplyBlackScoreByMinus1(boolean multiplyBlackScoreByMinus1) {
-		this.multiplyBlackScoreByMinus1 = multiplyBlackScoreByMinus1;
-	}
 
 	/**
 	 * Connects to the engine. After this method is invoked the engine name,
@@ -335,6 +328,10 @@ public class UCIEngine {
 		return isDefault;
 	}
 
+	public boolean isMultiplyBlackScoreByMinus1() {
+		return multiplyBlackScoreByMinus1;
+	}
+
 	/**
 	 * Returns true if a go command is currently being processed, otherwise
 	 * false.
@@ -475,6 +472,10 @@ public class UCIEngine {
 
 	public void setGoAnalysisParameters(String goAnalysisParameters) {
 		this.goAnalysisParameters = goAnalysisParameters;
+	}
+
+	public void setMultiplyBlackScoreByMinus1(boolean multiplyBlackScoreByMinus1) {
+		this.multiplyBlackScoreByMinus1 = multiplyBlackScoreByMinus1;
 	}
 
 	/**
@@ -692,15 +693,15 @@ public class UCIEngine {
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(idLine, " ", true);
 		tok.nextToken();
 		String varName = tok.nextToken();
-		String varValue = tok.nextToken();
+		String varValue = tok.getWhatsLeft();
 
 		if (varName.equalsIgnoreCase("name")) {
 			engineName = varValue;
-		} else if (varValue.equalsIgnoreCase("author")) {
+		} else if (varName.equalsIgnoreCase("author")) {
 			engineAuthor = varValue;
 		} else {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Unknown id variable name. " + varName + "="
+			if (LOG.isInfoEnabled()) {
+				LOG.info("Unknown id variable name. " + varName + "="
 						+ varValue);
 			}
 		}
