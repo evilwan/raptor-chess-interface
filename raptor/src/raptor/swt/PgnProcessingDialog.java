@@ -136,10 +136,11 @@ public class PgnProcessingDialog extends Dialog {
 
 		ThreadService.getInstance().scheduleOneShot(250, new Runnable() {
 			public void run() {
+				FileReader reader = null;
 				try {
 					// start work
 					StreamingPgnParser parser = new StreamingPgnParser(
-							new FileReader(file), MAX_CHARS_IN_FILE);
+							reader = new FileReader(file), MAX_CHARS_IN_FILE);
 					ProfressPgnParserListener listener = new ProfressPgnParserListener();
 					parser.addPgnParserListener(listener);
 
@@ -163,6 +164,11 @@ public class PgnProcessingDialog extends Dialog {
 						LOG.error("Error parsing pgn file", t);
 						Raptor.getInstance().onError(
 								"Error parsing pgn file: " + file, t);
+					}
+				} finally {
+					try {
+						reader.close();
+					} catch (Throwable t) {
 					}
 				}
 				shell.getDisplay().asyncExec(new Runnable() {

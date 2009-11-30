@@ -114,7 +114,7 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 				try {
 					bugSoundsPlaying.put(sound, true);
 					final Clip clip = AudioSystem.getClip();
-					AudioInputStream stream = AudioSystem
+					final AudioInputStream stream = AudioSystem
 							.getAudioInputStream(new FileInputStream(soundFile));
 					clip.open(stream);
 					clip.setFramePosition(0);
@@ -124,6 +124,10 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 							LineEvent.Type type = arg0.getType();
 							if (type == LineEvent.Type.STOP) {
 								bugSoundsPlaying.put(sound, false);
+							}
+							try {
+								stream.close();
+							} catch (Throwable t) {
 							}
 						}
 					});

@@ -80,22 +80,39 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public RaptorPreferenceStore() {
 		super();
+		FileInputStream fileIn = null;
+		FileOutputStream fileOut = null;
+
 		try {
 			LOG.info("Loading RaptorPreferenceStore store "
 					+ PREFERENCE_PROPERTIES_FILE);
 			loadDefaults();
 			if (RAPTOR_PROPERTIES.exists()) {
-				load(new FileInputStream(RAPTOR_PROPERTIES));
+				load(fileIn = new FileInputStream(RAPTOR_PROPERTIES));
 			} else {
 				RAPTOR_PROPERTIES.getParentFile().mkdir();
 				RAPTOR_PROPERTIES.createNewFile();
-				save(new FileOutputStream(RAPTOR_PROPERTIES), "Last saved on "
-						+ new Date());
+				save(fileOut = new FileOutputStream(RAPTOR_PROPERTIES),
+						"Last saved on " + new Date());
 			}
 			setFilename(RAPTOR_PROPERTIES.getAbsolutePath());
 		} catch (Exception e) {
 			LOG.error("Error reading or writing to file ", e);
 			throw new RuntimeException(e);
+		} finally {
+			if (fileIn != null) {
+				try {
+					fileIn.close();
+				} catch (Throwable t) {
+				}
+			}
+			if (fileOut != null) {
+				try {
+					fileOut.flush();
+					fileOut.close();
+				} catch (Throwable t) {
+				}
+			}
 		}
 
 		addPropertyChangeListener(propertyChangeListener);
