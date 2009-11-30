@@ -164,12 +164,20 @@ public class ActionService {
 	public void saveAction(RaptorAction action) {
 		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/actions/"
 				+ action.getName() + ".properties";
+		FileOutputStream fileOut = null;
 		try {
-			RaptorActionFactory.save(action).store(
-					new FileOutputStream(fileName), "Saved in Raptor");
+			RaptorActionFactory.save(action)
+					.store(fileOut = new FileOutputStream(fileName),
+							"Saved in Raptor");
 		} catch (IOException ioe) {
 			Raptor.getInstance().onError(
 					"Error saving action: " + action.getName(), ioe);
+		} finally {
+			try {
+				fileOut.flush();
+				fileOut.close();
+			} catch (Throwable t) {
+			}
 		}
 		nameToActionMap.put(action.getName(), action);
 		fireActionsChanged();
@@ -197,9 +205,10 @@ public class ActionService {
 
 		if (files != null) {
 			for (File file : files) {
+				FileInputStream fileIn = null;
 				try {
 					Properties properties = new Properties();
-					properties.load(new FileInputStream(file));
+					properties.load(fileIn = new FileInputStream(file));
 					RaptorAction action = RaptorActionFactory.load(properties);
 					nameToActionMap.put(action.getName(), action);
 					action.setSystemAction(true);
@@ -207,6 +216,11 @@ public class ActionService {
 				} catch (IOException ioe) {
 					Raptor.getInstance().onError(
 							"Error loading action " + file.getName() + ",ioe");
+				} finally {
+					try {
+						fileIn.close();
+					} catch (Throwable t) {
+					}
 				}
 			}
 		}
@@ -220,9 +234,10 @@ public class ActionService {
 
 		if (userFiles != null) {
 			for (File file : userFiles) {
+				FileInputStream fileIn = null;
 				try {
 					Properties properties = new Properties();
-					properties.load(new FileInputStream(file));
+					properties.load(fileIn = new FileInputStream(file));
 					RaptorAction action = RaptorActionFactory.load(properties);
 					nameToActionMap.put(action.getName(), action);
 					action.setSystemAction(false);
@@ -230,7 +245,13 @@ public class ActionService {
 				} catch (IOException ioe) {
 					Raptor.getInstance().onError(
 							"Error loading action " + file.getName() + ",ioe");
+				} finally {
+					try {
+						fileIn.close();
+					} catch (Throwable t) {
+					}
 				}
+
 			}
 		}
 

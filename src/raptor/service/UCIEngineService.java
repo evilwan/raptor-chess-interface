@@ -86,15 +86,22 @@ public class UCIEngineService {
 
 	public void saveConfiguration(UCIEngine engine) {
 		synchronized (userNameToEngine) {
+			FileOutputStream fileOut = null;
 			try {
 				Properties properties = uciEngineToProperties(engine);
-				properties.store(new FileOutputStream(Raptor.ENGINES_DIR + "/"
-						+ engine.getUserName() + ".properties"),
-						"Generated in Raptor");
+				properties.store(fileOut = new FileOutputStream(
+						Raptor.ENGINES_DIR + "/" + engine.getUserName()
+								+ ".properties"), "Generated in Raptor");
 				userNameToEngine.put(engine.getUserName(), engine);
 			} catch (IOException ioe) {
 				Raptor.getInstance().onError("Error saving engine: " + engine,
 						ioe);
+			} finally {
+				try {
+					fileOut.flush();
+					fileOut.close();
+				} catch (Throwable t) {
+				}
 			}
 		}
 	}
@@ -120,15 +127,21 @@ public class UCIEngineService {
 
 				if (files != null) {
 					for (File file : files) {
+						FileInputStream fileIn = null;
 						try {
 							Properties properties = new Properties();
-							properties.load(new FileInputStream(file));
+							properties.load(fileIn = new FileInputStream(file));
 							UCIEngine engine = uciEngineFromProperties(properties);
 							userNameToEngine.put(engine.getUserName(), engine);
 						} catch (IOException ioe) {
 							Raptor.getInstance().onError(
 									"Error loading file " + file.getName()
 											+ ",ioe");
+						} finally {
+							try {
+								fileIn.close();
+							} catch (Throwable t) {
+							}
 						}
 					}
 				}

@@ -134,11 +134,17 @@ public class FileUtils {
 			} finally { // Ensure that the files are closed (if they were open).
 
 				if (fin != null) {
-					fin.close();
+					try {
+						fin.close();
+					} catch (Throwable t) {
+					}
 				}
 
 				if (fout != null) {
-					fout.close();
+					try {
+						fout.close();
+					} catch (Throwable t) {
+					}
 				}
 			}
 		}
@@ -179,10 +185,11 @@ public class FileUtils {
 	 */
 	public static String fileAsString(String fileName) {
 		File f = null;
+		BufferedReader reader = null;
 		try {
 			f = new File(fileName);
 
-			BufferedReader reader = new BufferedReader(new FileReader(f));
+			reader = new BufferedReader(new FileReader(f));
 			StringBuilder result = new StringBuilder(10000);
 			String line = null;
 			while ((line = reader.readLine()) != null) {
@@ -193,6 +200,11 @@ public class FileUtils {
 			Raptor.getInstance().onError(
 					"Error reading file: " + f.getAbsolutePath(), e);
 			return null;
+		} finally {
+			try {
+				reader.close();
+			} catch (Throwable t) {
+			}
 		}
 	}
 }

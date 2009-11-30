@@ -85,42 +85,60 @@ public class ChatScript implements Comparable<ChatScript> {
 	 * Loads a ChatScript from a file.
 	 */
 	public static ChatScript load(String file) throws IOException {
-		ChatScript result = new ChatScript();
-		Properties properties = new Properties();
-		properties.load(new FileInputStream(file));
-		result.order = NumberUtils.toInt(properties.getProperty("order"),
-				Integer.MAX_VALUE);
-		result.isActive = BooleanUtils.toBoolean(properties
-				.getProperty("isActive"));
-		result.name = StringUtils.defaultIfEmpty(
-				properties.getProperty("name"), "EmptyName");
-		result.description = StringUtils.defaultIfEmpty(properties
-				.getProperty("description"), "EmptyDescription");
-		result.script = StringUtils.defaultIfEmpty(properties
-				.getProperty("script"), "EmptyScript");
-		result.chatScriptType = ChatScriptType.valueOf(StringUtils
-				.defaultIfEmpty(properties.getProperty("chatScriptType"),
-						"OneShot"));
-		result.scriptConnectorType = ScriptConnectorType.valueOf(StringUtils
-				.defaultIfEmpty(properties
-						.getProperty("chatScriptConnectorType"), "ICS"));
-		return result;
+		FileInputStream fileIn = null;
+		try {
+			ChatScript result = new ChatScript();
+			Properties properties = new Properties();
+			properties.load(fileIn = new FileInputStream(file));
+			result.order = NumberUtils.toInt(properties.getProperty("order"),
+					Integer.MAX_VALUE);
+			result.isActive = BooleanUtils.toBoolean(properties
+					.getProperty("isActive"));
+			result.name = StringUtils.defaultIfEmpty(properties
+					.getProperty("name"), "EmptyName");
+			result.description = StringUtils.defaultIfEmpty(properties
+					.getProperty("description"), "EmptyDescription");
+			result.script = StringUtils.defaultIfEmpty(properties
+					.getProperty("script"), "EmptyScript");
+			result.chatScriptType = ChatScriptType.valueOf(StringUtils
+					.defaultIfEmpty(properties.getProperty("chatScriptType"),
+							"OneShot"));
+			result.scriptConnectorType = ScriptConnectorType
+					.valueOf(StringUtils.defaultIfEmpty(properties
+							.getProperty("chatScriptConnectorType"), "ICS"));
+			return result;
+		} finally {
+			try {
+				fileIn.close();
+			} catch (Throwable t) {
+			}
+		}
 	}
 
 	/**
 	 * Saves a ChatScript to a file.
 	 */
 	public static void store(ChatScript script, String file) throws IOException {
-		Properties properties = new Properties();
-		properties.put("order", "" + script.order);
-		properties.put("name", script.name);
-		properties.put("isActive", "" + script.isActive);
-		properties.put("description", script.description);
-		properties.put("script", script.script);
-		properties.put("chatScriptType", script.chatScriptType.name());
-		properties
-				.put("scriptConnectorType", script.scriptConnectorType.name());
-		properties.store(new FileOutputStream(file), "Saved on " + new Date());
+		FileOutputStream fileOut = null;
+		try {
+			Properties properties = new Properties();
+			properties.put("order", "" + script.order);
+			properties.put("name", script.name);
+			properties.put("isActive", "" + script.isActive);
+			properties.put("description", script.description);
+			properties.put("script", script.script);
+			properties.put("chatScriptType", script.chatScriptType.name());
+			properties.put("scriptConnectorType", script.scriptConnectorType
+					.name());
+			properties.store(fileOut = new FileOutputStream(file), "Saved on "
+					+ new Date());
+		} finally {
+			try {
+				fileOut.flush();
+				fileOut.close();
+			} catch (Throwable t) {
+			}
+		}
 	}
 
 	public int compareTo(ChatScript script) {
