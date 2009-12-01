@@ -57,6 +57,7 @@ public class ConvertIcons {
 		File tinyIcons = new File(Raptor.RESOURCES_DIR + "icons/tiny/");
 		tinyIcons.mkdir();
 
+		@SuppressWarnings("unused")
 		File tinySource = new File(
 				"/Users/mindspan/desktop/12x12-free-toolbar-icons/png");
 		File smallSource = new File(
