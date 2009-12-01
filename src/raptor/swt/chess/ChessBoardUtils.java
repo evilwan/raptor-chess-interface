@@ -822,34 +822,39 @@ public class ChessBoardUtils implements BoardConstants {
 		} else if (action instanceof AutoQueenAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_QUEEN, result);
-			result.setText(GameUtils
-					.getPieceRepresentation(isUserWhite ? GameConstants.WQ
-							: GameConstants.BQ));
+			int pieceSize = Raptor.getInstance().getPreferences().getInt(
+					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			result.setImage(getChessPieceImage("wiki", isUserWhite ? WQ : BQ,
+					pieceSize, pieceSize));
 		} else if (action instanceof AutoKnightAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_KNIGHT, result);
-			result.setText(GameUtils
-					.getPieceRepresentation(isUserWhite ? GameConstants.WN
-							: GameConstants.BN));
+			int pieceSize = Raptor.getInstance().getPreferences().getInt(
+					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			result.setImage(getChessPieceImage("wiki", isUserWhite ? WN : BN,
+					pieceSize, pieceSize));
 		} else if (action instanceof AutoBishopAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_BISHOP, result);
-			result.setText(GameUtils
-					.getPieceRepresentation(isUserWhite ? GameConstants.WB
-							: GameConstants.BB));
+			int pieceSize = Raptor.getInstance().getPreferences().getInt(
+					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			result.setImage(getChessPieceImage("wiki", isUserWhite ? WB : BB,
+					pieceSize, pieceSize));
 		} else if (action instanceof AutoRookAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_ROOK, result);
-			result.setText(GameUtils
-					.getPieceRepresentation(isUserWhite ? GameConstants.WR
-							: GameConstants.BR));
+			int pieceSize = Raptor.getInstance().getPreferences().getInt(
+					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			result.setImage(getChessPieceImage("wiki", isUserWhite ? WR : BR,
+					pieceSize, pieceSize));
 		} else if (action instanceof AutoKingAction
 				&& controller.getGame().getVariant() == Variant.suicide) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_KING, result);
-			result.setText(GameUtils
-					.getPieceRepresentation(isUserWhite ? GameConstants.WK
-							: GameConstants.BK));
+			int pieceSize = Raptor.getInstance().getPreferences().getInt(
+					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			result.setImage(getChessPieceImage("wiki", isUserWhite ? WK : BK,
+					pieceSize, pieceSize));
 		} else if (action instanceof AutoKingAction) {
 			return null;
 		} else if (action instanceof CastleLongAction
@@ -869,9 +874,11 @@ public class ChessBoardUtils implements BoardConstants {
 		}
 
 		if (StringUtils.isBlank(result.getText())
-				&& StringUtils.isBlank(action.getIcon())) {
+				&& StringUtils.isBlank(action.getIcon())
+				&& result.getImage() == null) {
 			result.setText(action.getName());
-		} else if (StringUtils.isNotBlank(action.getIcon())) {
+		} else if (StringUtils.isNotBlank(action.getIcon())
+				&& result.getImage() == null) {
 			result.setImage(Raptor.getInstance().getIcon(action.getIcon()));
 		}
 

@@ -56,6 +56,12 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 	public static final File RAPTOR_PROPERTIES = new File(
 			Raptor.USER_RAPTOR_DIR, "raptor.properties");
+	protected String defaultMonospacedFontName;
+	protected String defaultFontName;
+	protected int defaultLargeFontSize;
+	protected int defaultSmallFontSize;
+	protected int defaultMediumFontSize;
+	protected int defaultTinyFontSize;
 
 	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 
@@ -270,9 +276,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	}
 
 	public void loadDefaults() {
-		String defaultFontName = Raptor.getInstance().getFontRegistry()
-				.defaultFont().getFontData()[0].getName();
-		String defaultMonospacedFontName = getDefauultMonospacedFont();
+		defaultFontName = Raptor.getInstance().getFontRegistry().defaultFont()
+				.getFontData()[0].getName();
+		defaultMonospacedFontName = getDefauultMonospacedFont();
+
+		setDefaultMonitorBasedSizes();
 
 		// Action
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 200);
@@ -335,24 +343,32 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				128, 128));
 
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
-				new FontData[] { new FontData(defaultFontName, 14, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultMediumFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_CLOCK_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName, 24,
 						SWT.BOLD) });
 		PreferenceConverter.setDefault(this, BOARD_LAG_FONT,
-				new FontData[] { new FontData(defaultFontName, 10, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultTinyFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PLAYER_NAME_FONT,
-				new FontData[] { new FontData(defaultFontName, 14, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultMediumFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_FONT,
-				new FontData[] { new FontData(defaultFontName, 14, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultMediumFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_OPENING_DESC_FONT,
-				new FontData[] { new FontData(defaultFontName, 10, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultTinyFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_STATUS_FONT,
-				new FontData[] { new FontData(defaultFontName, 10, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultTinyFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_GAME_DESCRIPTION_FONT,
-				new FontData[] { new FontData(defaultFontName, 12, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultSmallFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
-				new FontData[] { new FontData(defaultFontName, 12, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultSmallFontSize, 0) });
 
 		// BugArena
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
@@ -431,18 +447,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL, true);
 		setDefault(CHAT_IS_SMART_SCROLL_ENABLED, true);
 
-		PreferenceConverter
-				.setDefault(this, CHAT_INPUT_FONT,
-						new FontData[] { new FontData(
-								defaultMonospacedFontName, 16, 0) });
-		PreferenceConverter
-				.setDefault(this, CHAT_OUTPUT_FONT,
-						new FontData[] { new FontData(
-								defaultMonospacedFontName, 16, 0) });
-		PreferenceConverter
-				.setDefault(this, CHAT_PROMPT_FONT,
-						new FontData[] { new FontData(
-								defaultMonospacedFontName, 16, 0) });
+		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
+				new FontData[] { new FontData(defaultMonospacedFontName,
+						defaultLargeFontSize, 0) });
+		PreferenceConverter.setDefault(this, CHAT_OUTPUT_FONT,
+				new FontData[] { new FontData(defaultMonospacedFontName,
+						defaultLargeFontSize, 0) });
+		PreferenceConverter.setDefault(this, CHAT_PROMPT_FONT,
+				new FontData[] { new FontData(defaultMonospacedFontName,
+						defaultLargeFontSize, 0) });
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
@@ -508,7 +521,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// Bug house buttons settings.
 		PreferenceConverter.setDefault(this, BUG_BUTTONS_FONT,
-				new FontData[] { new FontData(defaultFontName, 16, SWT.BOLD) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultLargeFontSize, SWT.BOLD) });
 		// Bug house
 		setDefault(BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD, true);
@@ -519,11 +533,13 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_NAME, "Raptor v.Beta2Pre");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
-				new FontData[] { new FontData(defaultFontName, 12, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultSmallFontSize, 0) });
 		PreferenceConverter.setDefault(this, APP_PING_COLOR, new RGB(0, 0, 0));
 
 		PreferenceConverter.setDefault(this, APP_STATUS_BAR_FONT,
-				new FontData[] { new FontData(defaultFontName, 12, 0) });
+				new FontData[] { new FontData(defaultFontName,
+						defaultSmallFontSize, 0) });
 		PreferenceConverter.setDefault(this, APP_STATUS_BAR_COLOR, new RGB(0,
 				0, 0));
 
@@ -781,6 +797,44 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	public void setValue(String key, String[] values) {
 		setValue(key, RaptorStringUtils.toString(values));
+	}
+
+	protected void setDefaultMonitorBasedSizes() {
+		Rectangle fullViewBounds = Display.getCurrent().getPrimaryMonitor()
+				.getBounds();
+		int toolbarPieceSize = 12;
+
+		String iconSize = "tiny";
+		defaultLargeFontSize = 10;
+		defaultMediumFontSize = 10;
+		defaultSmallFontSize = 8;
+		defaultTinyFontSize = 6;
+		if (fullViewBounds.height >= 1200) {
+			iconSize = "large";
+			toolbarPieceSize = 24;
+			defaultLargeFontSize = 18;
+			defaultMediumFontSize = 16;
+			defaultSmallFontSize = 14;
+			defaultTinyFontSize = 12;
+		} else if (fullViewBounds.height >= 1024) {
+			iconSize = "medium";
+			toolbarPieceSize = 20;
+			defaultLargeFontSize = 16;
+			defaultMediumFontSize = 14;
+			defaultSmallFontSize = 12;
+			defaultTinyFontSize = 10;
+		} else if (fullViewBounds.height >= 800) {
+			iconSize = "small";
+			toolbarPieceSize = 16;
+			defaultLargeFontSize = 12;
+			defaultMediumFontSize = 12;
+			defaultSmallFontSize = 10;
+			defaultTinyFontSize = 8;
+		}
+		getDefauultMonospacedFont();
+
+		setDefault(PreferenceKeys.APP_ICON_SIZE, iconSize);
+		setDefault(PreferenceKeys.APP_TOOLBAR_PIECE_SIZE, toolbarPieceSize);
 	}
 
 }
