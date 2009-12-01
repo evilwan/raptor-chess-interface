@@ -33,7 +33,7 @@ public class RelayAlias extends RaptorAlias {
 			} else if (param.equalsIgnoreCase("remove")) {
 				if (relayPerson != null) {
 					RaptorAliasResult result = new RaptorAliasResult("tell "
-							+ relayPerson + " has stopped relaying tells.",
+							+ relayPerson + " I am no longer relaying direct tells.",
 							"You will no longer relay tells to " + relayPerson
 									+ ".");
 					relayPerson = null;
