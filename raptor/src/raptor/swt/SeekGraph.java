@@ -112,6 +112,67 @@ public class SeekGraph extends Canvas {
 		}
 	};
 
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		Display display = new Display();
+		Display.setAppName("Seek Graph");
+		Shell shell = new Shell(display, SWT.SHELL_TRIM);
+
+		GridLayout grid = new GridLayout(1, true);
+		shell.setLayout(grid);
+
+		final SeekGraph graph = new SeekGraph(shell, null);
+		graph.addSeek(24, 1500, "Sergei", 5, 0, true);
+		graph.addSeek(48, 1500, "Someone", 5, 0, true);
+		graph.addSeek(48, 1500, "Someone", 3, 0, true);
+		graph.addSeek(48, 1500, "Someone", 5, 2, true);
+		graph.addSeek(48, 1500, "Someone", 3, 1, true);
+		graph.addSeek(48, 1500, "Someone", 1, 0, true);
+
+		GridData sg = new GridData(SWT.FILL, SWT.FILL, true, true);
+		sg.widthHint = 400;
+		sg.heightHint = 400;
+		graph.setLayoutData(sg);
+
+		Button acceptButton = new Button(shell, SWT.PUSH);
+		acceptButton.setText("Add seek");
+		acceptButton.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				widgetSelected(e);
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Random random = new Random();
+				int rating = random.nextInt(1000) + 1000;
+				int mins = random.nextInt(3);
+				int incr = random.nextInt(10);
+				String[] names = new String[] { "Hi", "Bye", "My", "Try" };
+				int gameNumber = random.nextInt(1000);
+
+				System.out.println("Adding seek ( " + rating + ", " + mins
+						+ ", " + incr + " )");
+				graph.addSeek(gameNumber, rating, names[random
+						.nextInt(names.length)], mins, incr, random
+						.nextBoolean());
+			}
+		});
+
+		GridData b = new GridData(GridData.VERTICAL_ALIGN_END);
+		b.grabExcessVerticalSpace = false;
+		acceptButton.setLayoutData(b);
+
+		shell.pack();
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) {
+				display.sleep();
+			}
+		}
+		display.dispose();
+	}
+
 	public SeekGraph(final Composite parent, SeekService service) {
 		super(parent, SWT.NO_REDRAW_RESIZE);
 		seekService = service;
@@ -120,7 +181,7 @@ public class SeekGraph extends Canvas {
 		}
 
 		this.parent = parent;
-		this.redrawListener = new Listener() {
+		redrawListener = new Listener() {
 			public void handleEvent(Event e) {
 				redraw();
 			}
@@ -187,21 +248,51 @@ public class SeekGraph extends Canvas {
 		});
 	}
 
-	public void setVStart(int start) {
-		vstart = start;
+	public void addSeek(final int gameNumber, final int rating,
+			final String name, final int mins, final int incr,
+			final boolean rated) {
+
+		Seek seek = new Seek();
+		seek.setAd(String.valueOf(gameNumber));
+		seek.setRating(String.valueOf(rating));
+		seek.setName(name);
+		seek.setMinutes(mins);
+		seek.setIncrement(incr);
+		seek.setRated(rated);
+
+		addSeek(seek, false);
 	}
 
-	public void setHStart(int start) {
-		hstart = start;
+	public void redoLegend() {
+		legendImage = null;
 	}
 
-	public void setVScale(int[][] scale) {
-		vscale = scale;
+	/**
+	 * This is empirically faster then replace by one, as it just does one
+	 * repaint call
+	 * 
+	 * @param incoming
+	 */
+	public void replaceBy(final List<Seek> incoming) {
 
-		vfactor = 0;
-		for (int[] range : vscale) {
-			vfactor += range[1];
+		long before = System.nanoTime();
+		screen.clear();
+		seeks.clear();
+		_lastPopupRect = null;
+
+		for (Seek seek : incoming) {
+			addSeek(seek, true);
 		}
+		redraw();
+		long after = System.nanoTime();
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Time to reload: " + (after - before));
+		}
+	}
+
+	public void setComputerColor(Color c) {
+		computerColor = c;
 	}
 
 	public void setHScale(int[][] scale) {
@@ -213,6 +304,18 @@ public class SeekGraph extends Canvas {
 		}
 	}
 
+	public void setHStart(int start) {
+		hstart = start;
+	}
+
+	public void setManyColor(Color c) {
+		manyColor = c;
+	}
+
+	public void setRatedColor(Color c) {
+		ratedColor = c;
+	}
+
 	public void setShowComputerSeeks(boolean value) {
 		showComputer = value;
 	}
@@ -221,48 +324,17 @@ public class SeekGraph extends Canvas {
 		showUnrated = value;
 	}
 
-	public void setComputerColor(Color c) {
-		computerColor = c;
-	}
-
-	public void setRatedColor(Color c) {
-		ratedColor = c;
-	}
-
 	public void setUnratedColor(Color c) {
 		unratedColor = c;
 	}
 
-	public void setManyColor(Color c) {
-		manyColor = c;
-	}
+	public void setVScale(int[][] scale) {
+		vscale = scale;
 
-	public void redoLegend() {
-		legendImage = null;
-	}
-
-	protected void acceptGameAt(Point where) {
-		for (Point loc : screen.keySet()) {
-
-			Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
-
-			if (rect.contains(where)) {
-				List<Seek> existing = seeks.get(screen.get(loc));
-				if (existing.size() == 1) {
-					System.out.println("Will send game request!");
-					// notifyAcceptListeners(existing.get(0).getAd());
-				} else {
-					// showAcceptPopup(where, loc, rect);
-				}
-
-				break;
-			}
+		vfactor = 0;
+		for (int[] range : vscale) {
+			vfactor += range[1];
 		}
-	}
-
-	private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
-		System.out.println("Will show popup for: " + clickLoc + " for point: "
-				+ loc);
 	}
 
 	// private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
@@ -298,89 +370,26 @@ public class SeekGraph extends Canvas {
 	// }
 	// }
 
-	public void addSeek(final int gameNumber, final int rating,
-			final String name, final int mins, final int incr,
-			final boolean rated) {
-
-		Seek seek = new Seek();
-		seek.setAd(String.valueOf(gameNumber));
-		seek.setRating(String.valueOf(rating));
-		seek.setName(name);
-		seek.setMinutes(mins);
-		seek.setIncrement(incr);
-		seek.setRated(rated);
-
-		addSeek(seek, false);
+	public void setVStart(int start) {
+		vstart = start;
 	}
 
-	private void addSeek(Seek seek, boolean fullRepaint) {
+	protected void acceptGameAt(Point where) {
+		for (Point loc : screen.keySet()) {
 
-		if (seek.isComputer() && !showComputer)
-			return;
+			Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
 
-		if (!seek.isRated() && !showUnrated)
-			return;
+			if (rect.contains(where)) {
+				List<Seek> existing = seeks.get(screen.get(loc));
+				if (existing.size() == 1) {
+					System.out.println("Will send game request!");
+					// notifyAcceptListeners(existing.get(0).getAd());
+				} else {
+					// showAcceptPopup(where, loc, rect);
+				}
 
-		Point loc = new Point(getX(seek), getY(seek));
-		List<Seek> existing = seeks.get(loc);
-		if (existing == null) {
-			existing = new LinkedList<Seek>();
-			seeks.put(loc, existing);
-		}
-
-		boolean already = false;
-		for (Seek s : existing) {
-			if (s.getAd().equals(seek.getAd())) {
-				already = true;
 				break;
 			}
-		}
-
-		if (!already) {
-			existing.add(seek);
-
-			if (!fullRepaint && isVisible()) {
-
-				int width = getClientArea().width;
-				int height = getClientArea().height;
-				Point where = scale(loc, width - 2 * inset, height - 2 * inset);
-				where.y = height - inset - where.y;
-				where.x = where.x + inset;
-				redraw(where.x - SEEK_SIZE / 2, where.y - SEEK_SIZE / 2,
-						SEEK_SIZE, SEEK_SIZE, false);
-			}
-		}
-	}
-
-	private int getX(Seek seek) {
-		return seek.getMinutes() * 60 + seek.getIncrement() * 40;
-	}
-
-	private int getY(Seek seek) {
-		return seek.getRatingAsInt();
-	}
-
-	/**
-	 * This is empirically faster then replace by one, as it just does one
-	 * repaint call
-	 * 
-	 * @param incoming
-	 */
-	public void replaceBy(final List<Seek> incoming) {
-
-		long before = System.nanoTime();
-		screen.clear();
-		seeks.clear();
-		_lastPopupRect = null;
-
-		for (Seek seek : incoming) {
-			addSeek(seek, true);
-		}
-		redraw();
-		long after = System.nanoTime();
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("Time to reload: " + (after - before));
 		}
 	}
 
@@ -419,6 +428,126 @@ public class SeekGraph extends Canvas {
 		drawPoints(gc, clip, width, height);
 
 		// TODO: dispose of something???
+	}
+
+	protected Point scale(Point p, int width, int height) {
+		Point result = new Point(-1, -1);
+
+		float one = (float) height / hfactor;
+
+		// scale appropriately
+		if (p.y < hstart) {
+			result.y = 1;
+		} else {
+			int factor = 0;
+			int prev = hstart;
+			for (int[] pair : hscale) {
+				if (p.y <= pair[0]) {
+					result.y = (int) (factor * one + pair[1] * one
+							/ (pair[0] - prev) * (p.y - prev));
+					break;
+				}
+				factor += pair[1];
+				prev = pair[0];
+			}
+		}
+
+		if (result.y == -1) {
+			result.y = height;
+		}
+
+		float oneW = (float) width / vfactor;
+
+		// scale appropriately
+		if (p.x < vstart) {
+			result.x = 1;
+		} else {
+			int factor = 0;
+			int prev = vstart;
+			float scaled_x = p.x;
+			for (int[] pair : vscale) {
+				if (scaled_x <= pair[0] * 60) {
+					result.x = (int) (factor * oneW + pair[1] * oneW
+							/ (pair[0] * 60 - prev) * (scaled_x - prev));
+					break;
+				}
+				factor += pair[1];
+				prev = pair[0] * 60;
+			}
+		}
+
+		if (result.x == -1) {
+			result.x = width;
+		}
+
+		// result.x = (int) (((float) width) / MAX_SECONDS * p.x);
+		// if (result.x > width) {
+		// result.x = width;
+		// }
+
+		return result;
+	}
+
+	private void addSeek(Seek seek, boolean fullRepaint) {
+
+		if (seek.isComputer() && !showComputer) {
+			return;
+		}
+
+		if (!seek.isRated() && !showUnrated) {
+			return;
+		}
+
+		Point loc = new Point(getX(seek), getY(seek));
+		List<Seek> existing = seeks.get(loc);
+		if (existing == null) {
+			existing = new LinkedList<Seek>();
+			seeks.put(loc, existing);
+		}
+
+		boolean already = false;
+		for (Seek s : existing) {
+			if (s.getAd().equals(seek.getAd())) {
+				already = true;
+				break;
+			}
+		}
+
+		if (!already) {
+			existing.add(seek);
+
+			if (!fullRepaint && isVisible()) {
+
+				int width = getClientArea().width;
+				int height = getClientArea().height;
+				Point where = scale(loc, width - 2 * inset, height - 2 * inset);
+				where.y = height - inset - where.y;
+				where.x = where.x + inset;
+				redraw(where.x - SEEK_SIZE / 2, where.y - SEEK_SIZE / 2,
+						SEEK_SIZE, SEEK_SIZE, false);
+			}
+		}
+	}
+
+	private void drawHorizontalLines(GC gc, int height, int plotH, int width,
+			int plotW) {
+
+		int one = plotH / hfactor;
+
+		gc.setLineCap(SWT.CAP_ROUND);
+		gc.setLineWidth(2);
+
+		int factor = 0;
+		for (int[] pair : hscale) {
+			factor += pair[1];
+			int h = height - one * factor - inset;
+			gc.setForeground(Display.getCurrent()
+					.getSystemColor(SWT.COLOR_BLUE));
+			gc.drawLine(inset, h, inset + plotW, h);
+			gc.setForeground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_BLACK));
+			gc.drawString(String.valueOf(pair[0]), 0, h + 2);
+		}
 	}
 
 	private void drawPoints(GC gc, Rectangle clip, int width, int height) {
@@ -479,27 +608,6 @@ public class SeekGraph extends Canvas {
 	// return ci;
 	// }
 
-	private void drawHorizontalLines(GC gc, int height, int plotH, int width,
-			int plotW) {
-
-		int one = plotH / hfactor;
-
-		gc.setLineCap(SWT.CAP_ROUND);
-		gc.setLineWidth(2);
-
-		int factor = 0;
-		for (int[] pair : hscale) {
-			factor += pair[1];
-			int h = height - one * factor - inset;
-			gc.setForeground(Display.getCurrent()
-					.getSystemColor(SWT.COLOR_BLUE));
-			gc.drawLine(inset, h, inset + plotW, h);
-			gc.setForeground(Display.getCurrent().getSystemColor(
-					SWT.COLOR_BLACK));
-			gc.drawString(String.valueOf(pair[0]), 0, h + 2);
-		}
-	}
-
 	private void drawVerticalLines(GC gc, int height, int plotH, int width,
 			int plotW) {
 
@@ -522,19 +630,29 @@ public class SeekGraph extends Canvas {
 		}
 	}
 
+	private int getX(Seek seek) {
+		return seek.getMinutes() * 60 + seek.getIncrement() * 40;
+	}
+
+	private int getY(Seek seek) {
+		return seek.getRatingAsInt();
+	}
+
 	private void paintSeeks(GC gc, Point p, List<Seek> here) {
 		Color color = unratedColor;
 
 		if (here.size() == 1) {
 			Seek s = here.get(0);
 			if (s.isComputer()) {
-				if (!showComputer)
+				if (!showComputer) {
 					return;
+				}
 				color = computerColor;
 			} else if (s.isRated()) {
 				color = ratedColor;
-			} else if (!s.isRated() && !showUnrated)
+			} else if (!s.isRated() && !showUnrated) {
 				return;
+			}
 		} else {
 			color = manyColor;
 		}
@@ -543,122 +661,9 @@ public class SeekGraph extends Canvas {
 		gc.fillOval(p.x, p.y, SEEK_SIZE, SEEK_SIZE);
 	}
 
-	protected Point scale(Point p, int width, int height) {
-		Point result = new Point(-1, -1);
-
-		float one = ((float) height) / hfactor;
-
-		// scale appropriately
-		if (p.y < hstart) {
-			result.y = 1;
-		} else {
-			int factor = 0;
-			int prev = hstart;
-			for (int[] pair : hscale) {
-				if (p.y <= pair[0]) {
-					result.y = (int) (factor * one + pair[1] * one
-							/ (pair[0] - prev) * (p.y - prev));
-					break;
-				}
-				factor += pair[1];
-				prev = pair[0];
-			}
-		}
-
-		if (result.y == -1) {
-			result.y = height;
-		}
-
-		float oneW = ((float) width) / vfactor;
-
-		// scale appropriately
-		if (p.x < vstart) {
-			result.x = 1;
-		} else {
-			int factor = 0;
-			int prev = vstart;
-			float scaled_x = p.x;
-			for (int[] pair : vscale) {
-				if (scaled_x <= pair[0] * 60) {
-					result.x = (int) (factor * oneW + pair[1] * oneW
-							/ (pair[0] * 60 - prev) * (scaled_x - prev));
-					break;
-				}
-				factor += pair[1];
-				prev = pair[0] * 60;
-			}
-		}
-
-		if (result.x == -1) {
-			result.x = width;
-		}
-
-		// result.x = (int) (((float) width) / MAX_SECONDS * p.x);
-		// if (result.x > width) {
-		// result.x = width;
-		// }
-
-		return result;
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		Display display = new Display();
-		Display.setAppName("Seek Graph");
-		Shell shell = new Shell(display, SWT.SHELL_TRIM);
-
-		GridLayout grid = new GridLayout(1, true);
-		shell.setLayout(grid);
-
-		final SeekGraph graph = new SeekGraph(shell, null);
-		graph.addSeek(24, 1500, "Sergei", 5, 0, true);
-		graph.addSeek(48, 1500, "Someone", 5, 0, true);
-		graph.addSeek(48, 1500, "Someone", 3, 0, true);
-		graph.addSeek(48, 1500, "Someone", 5, 2, true);
-		graph.addSeek(48, 1500, "Someone", 3, 1, true);
-		graph.addSeek(48, 1500, "Someone", 1, 0, true);
-
-		GridData sg = new GridData(SWT.FILL, SWT.FILL, true, true);
-		sg.widthHint = 400;
-		sg.heightHint = 400;
-		graph.setLayoutData(sg);
-
-		Button acceptButton = new Button(shell, SWT.PUSH);
-		acceptButton.setText("Add seek");
-		acceptButton.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				Random random = new Random();
-				int rating = random.nextInt(1000) + 1000;
-				int mins = random.nextInt(3);
-				int incr = random.nextInt(10);
-				String[] names = new String[] { "Hi", "Bye", "My", "Try" };
-				int gameNumber = random.nextInt(1000);
-
-				System.out.println("Adding seek ( " + rating + ", " + mins
-						+ ", " + incr + " )");
-				graph.addSeek(gameNumber, rating, names[random
-						.nextInt(names.length)], mins, incr, random
-						.nextBoolean());
-			}
-		});
-
-		GridData b = new GridData(GridData.VERTICAL_ALIGN_END);
-		b.grabExcessVerticalSpace = false;
-		acceptButton.setLayoutData(b);
-
-		shell.pack();
-		shell.open();
-		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		display.dispose();
+	private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
+		System.out.println("Will show popup for: " + clickLoc + " for point: "
+				+ loc);
 	}
 
 	// class AcceptAction extends AbstractAction {

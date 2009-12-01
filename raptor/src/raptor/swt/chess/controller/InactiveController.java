@@ -243,6 +243,9 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void init() {
+		board.getArrowDecorator().removeAllArrows();
+		board.getSquareHighlighter().removeAllHighlights();
+
 		board.setWhiteOnTop(RaptorStringUtils.getBooleanValue(game
 				.getHeader(PgnHeader.WhiteOnTop)));
 
