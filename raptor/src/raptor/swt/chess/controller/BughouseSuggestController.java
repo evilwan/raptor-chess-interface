@@ -73,7 +73,7 @@ public class BughouseSuggestController extends ObserveController {
 					: parent, SWT.FLAT);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.BughouseSuggestChessBoard, toolbar,
-					false);
+					isPartnerWhite);
 
 			setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
 			setToolItemSelected(ToolBarItemKey.FORCE_UPDATE, true);

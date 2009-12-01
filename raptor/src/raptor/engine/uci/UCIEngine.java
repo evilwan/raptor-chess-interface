@@ -60,6 +60,7 @@ public class UCIEngine {
 			"string" };
 
 	protected Process process;
+	protected boolean isUsingThreadService = true;
 	protected BufferedReader in;
 	protected PrintWriter out;
 	protected boolean isConnected;
@@ -281,7 +282,7 @@ public class UCIEngine {
 				send("go " + options);
 			}
 
-			ThreadService.getInstance().run(goRunnable = new Runnable() {
+			Runnable runnable = goRunnable = new Runnable() {
 				public void run() {
 					try {
 						String line = readLine();
@@ -300,7 +301,12 @@ public class UCIEngine {
 						LOG.error("Error occured executng go ", t);
 					}
 				}
-			});
+			};
+			if (isUsingThreadService) {
+				ThreadService.getInstance().run(runnable);
+			} else {
+				new Thread(runnable).start();
+			}
 		} else {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Go is in process. Ignoring go call.");
@@ -377,6 +383,10 @@ public class UCIEngine {
 				disconnect();
 			}
 		}
+	}
+
+	public boolean isUsingThreadService() {
+		return isUsingThreadService;
 	}
 
 	/**
@@ -610,6 +620,10 @@ public class UCIEngine {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public void setUsingThreadService(boolean isUsingThreadService) {
+		this.isUsingThreadService = isUsingThreadService;
 	}
 
 	/**

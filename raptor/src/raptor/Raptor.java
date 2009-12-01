@@ -286,7 +286,10 @@ public class Raptor implements PreferenceKeys {
 	 * method handles that for you.
 	 */
 	public Image getIcon(String nameOfFileInIconsWithoutPng) {
-		String fileName = ICONS_DIR + nameOfFileInIconsWithoutPng + ".png";
+		String iconSize = getPreferences().getString(
+				PreferenceKeys.APP_ICON_SIZE);
+		String fileName = ICONS_DIR + "/" + iconSize + "/"
+				+ nameOfFileInIconsWithoutPng + ".png";
 		return getImage(fileName);
 	}
 

@@ -14,12 +14,10 @@
 package raptor.swt;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
@@ -35,12 +33,8 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Composite;
@@ -50,14 +44,12 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 
-import raptor.Raptor;
 import raptor.chat.Seek;
 import raptor.service.SeekService;
 import raptor.service.SeekService.SeekServiceListener;
 
 /**
- * Seek Plot Component
- * Shows seeks on a time vs. rating scatter plot
+ * Seek Plot Component Shows seeks on a time vs. rating scatter plot
  */
 public class SeekGraph extends Canvas {
 
@@ -69,6 +61,7 @@ public class SeekGraph extends Canvas {
 
 	private Map<Point, Point> screen;
 
+	@SuppressWarnings("unused")
 	private Rectangle _lastPopupRect;
 
 	private int inset;
@@ -81,6 +74,7 @@ public class SeekGraph extends Canvas {
 
 	private Color computerColor;
 
+	@SuppressWarnings("unused")
 	private Image legendImage;
 
 	private int hstart = 1000;
@@ -101,21 +95,23 @@ public class SeekGraph extends Canvas {
 	private int vfactor = 8;
 
 	// private final List<AcceptSeekListener> acceptListeners;
-	
+
 	private boolean showComputer = true;
 	private boolean showUnrated = true;
-	
+
+	@SuppressWarnings("unused")
 	private Composite parent;
+	@SuppressWarnings("unused")
 	private Listener redrawListener;
-	
+
 	private SeekService seekService;
-	
+
 	protected SeekServiceListener seekListener = new SeekServiceListener() {
 		public void seeksChanged(Seek[] seeks) {
 			redraw();
 		}
 	};
-	
+
 	public SeekGraph(final Composite parent, SeekService service) {
 		super(parent, SWT.NO_REDRAW_RESIZE);
 		seekService = service;
@@ -123,44 +119,45 @@ public class SeekGraph extends Canvas {
 			seekService.adSeekServiceListener(seekListener);
 		}
 
-	    this.parent = parent;
-	    this.redrawListener = new Listener() {
-	      public void handleEvent(Event e) {
-	        redraw();
-	      }
-	    };
-	    
-	    addPaintListener(new PaintListener() {
-	        public void paintControl(PaintEvent e) {
-	            paintComponent(e);
-	        }
-	    }); 
-	    
+		this.parent = parent;
+		this.redrawListener = new Listener() {
+			public void handleEvent(Event e) {
+				redraw();
+			}
+		};
+
+		addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				paintComponent(e);
+			}
+		});
+
 		seeks = new HashMap<Point, List<Seek>>();
 		screen = new HashMap<Point, Point>();
 		inset = 20;
-		
+
 		computerColor = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
 		manyColor = Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
 		ratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		unratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
-		
+
+		@SuppressWarnings("unused")
 		Label label = new Label(this, SWT.NONE);
-		
-		
-//		menu = new JPopupMenu();
-//		acceptListeners = new LinkedList<AcceptSeekListener>();
-//
+
+		// menu = new JPopupMenu();
+		// acceptListeners = new LinkedList<AcceptSeekListener>();
+		//
 		addMouseMoveListener(new MouseMoveListener() {
-			
-			@Override
+
 			public void mouseMove(MouseEvent e) {
 				Point where = new Point(e.x, e.y);
+				@SuppressWarnings("unused")
 				boolean showing = false;
 
 				for (Point loc : screen.keySet()) {
 
-					Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
+					Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE,
+							SEEK_SIZE);
 
 					if (rect.contains(where)) {
 						showAcceptPopup(where, loc, rect);
@@ -169,77 +166,77 @@ public class SeekGraph extends Canvas {
 					}
 				}
 
-//				if (!showing) {
-//					menu.setVisible(showing);
-//					// we're not pointing at anything, so reset _lastPopupRect
-//					_lastPopupRect = null;
-//				}
+				// if (!showing) {
+				// menu.setVisible(showing);
+				// // we're not pointing at anything, so reset _lastPopupRect
+				// _lastPopupRect = null;
+				// }
 			}
 		});
-		
+
 		addMouseListener(new MouseAdapter() {
-			
+
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				Point relative = new Point(e.x, e.y);
 				System.out.println(relative);
-//				Point real = new Point(relative);
-//				SwingUtilities.convertPointToScreen(real, e.getComponent());
+				// Point real = new Point(relative);
+				// SwingUtilities.convertPointToScreen(real, e.getComponent());
 				acceptGameAt(relative);
 			}
 		});
 	}
-	
+
 	public void setVStart(int start) {
 		vstart = start;
 	}
-	
+
 	public void setHStart(int start) {
 		hstart = start;
 	}
-	
-	public void setVScale(int [][] scale) {
+
+	public void setVScale(int[][] scale) {
 		vscale = scale;
-		
+
 		vfactor = 0;
-		for (int [] range : vscale) {
+		for (int[] range : vscale) {
 			vfactor += range[1];
 		}
 	}
-	
-	public void setHScale(int [][] scale) {
+
+	public void setHScale(int[][] scale) {
 		hscale = scale;
-		
+
 		hfactor = 0;
-		for (int [] range : hscale) {
+		for (int[] range : hscale) {
 			hfactor += range[1];
 		}
 	}
-	
+
 	public void setShowComputerSeeks(boolean value) {
 		showComputer = value;
 	}
-	
+
 	public void setShowUnratedSeeks(boolean value) {
 		showUnrated = value;
 	}
-	
+
 	public void setComputerColor(Color c) {
 		computerColor = c;
 	}
-	
+
 	public void setRatedColor(Color c) {
 		ratedColor = c;
 	}
-	
+
 	public void setUnratedColor(Color c) {
-		unratedColor= c;
+		unratedColor = c;
 	}
-	
+
 	public void setManyColor(Color c) {
 		manyColor = c;
 	}
-	
+
 	public void redoLegend() {
 		legendImage = null;
 	}
@@ -262,44 +259,44 @@ public class SeekGraph extends Canvas {
 			}
 		}
 	}
-	
+
 	private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
-		System.out.println("Will show popup for: " + clickLoc + " for point: " + loc);
+		System.out.println("Will show popup for: " + clickLoc + " for point: "
+				+ loc);
 	}
 
-
-//	private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
-//		// are we're already showing for this?
-//		if (_lastPopupRect == null || !rect.equals(_lastPopupRect)) {
-//			if (menu.getComponentCount() > 0)
-//				menu.removeAll();
-//			List<Seek> existing = seeks.get(screen.get(loc));
-//			menu.add(new JLabel("Accept:"));
-//			for (Seek seek : existing) {
-//				String rating = (seek.getRatingAsInt() == -1) ? " (Guest) " : " ("
-//						+ seek.getRating() + ") ";
-//				String rated = seek.isRated() ? "r" : "ur";
-//				Action accept = new AcceptAction(
-//						seek.getName()
-//								+ rating
-//								+ seek.getMinutes()
-//								+ " "
-//								+ seek.getIncrement()
-//								+ " "
-//								+ rated
-//								+ seek.getType(),
-//								seek.getAd());
-//				menu.add(new JMenuItem(accept));
-//			}
-//			_lastPopupRect = rect;
-//			// menu.setLocation(realLoc);
-//			// show popup right under the seek
-//			Point screenLoc = new Point(loc);
-//			SwingUtilities.convertPointToScreen(screenLoc, this);
-//			menu.setLocation(screenLoc.x + SEEK_SIZE-2, screenLoc.y + SEEK_SIZE-2);
-//			menu.setVisible(true);
-//		}
-//	}
+	// private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
+	// // are we're already showing for this?
+	// if (_lastPopupRect == null || !rect.equals(_lastPopupRect)) {
+	// if (menu.getComponentCount() > 0)
+	// menu.removeAll();
+	// List<Seek> existing = seeks.get(screen.get(loc));
+	// menu.add(new JLabel("Accept:"));
+	// for (Seek seek : existing) {
+	// String rating = (seek.getRatingAsInt() == -1) ? " (Guest) " : " ("
+	// + seek.getRating() + ") ";
+	// String rated = seek.isRated() ? "r" : "ur";
+	// Action accept = new AcceptAction(
+	// seek.getName()
+	// + rating
+	// + seek.getMinutes()
+	// + " "
+	// + seek.getIncrement()
+	// + " "
+	// + rated
+	// + seek.getType(),
+	// seek.getAd());
+	// menu.add(new JMenuItem(accept));
+	// }
+	// _lastPopupRect = rect;
+	// // menu.setLocation(realLoc);
+	// // show popup right under the seek
+	// Point screenLoc = new Point(loc);
+	// SwingUtilities.convertPointToScreen(screenLoc, this);
+	// menu.setLocation(screenLoc.x + SEEK_SIZE-2, screenLoc.y + SEEK_SIZE-2);
+	// menu.setVisible(true);
+	// }
+	// }
 
 	public void addSeek(final int gameNumber, final int rating,
 			final String name, final int mins, final int incr,
@@ -312,16 +309,18 @@ public class SeekGraph extends Canvas {
 		seek.setMinutes(mins);
 		seek.setIncrement(incr);
 		seek.setRated(rated);
-		
+
 		addSeek(seek, false);
 	}
 
 	private void addSeek(Seek seek, boolean fullRepaint) {
-		
-		if (seek.isComputer() && !showComputer) return;
-		
-		if (!seek.isRated() && !showUnrated) return; 
-		
+
+		if (seek.isComputer() && !showComputer)
+			return;
+
+		if (!seek.isRated() && !showUnrated)
+			return;
+
 		Point loc = new Point(getX(seek), getY(seek));
 		List<Seek> existing = seeks.get(loc);
 		if (existing == null) {
@@ -352,11 +351,11 @@ public class SeekGraph extends Canvas {
 			}
 		}
 	}
-	
+
 	private int getX(Seek seek) {
 		return seek.getMinutes() * 60 + seek.getIncrement() * 40;
 	}
-	
+
 	private int getY(Seek seek) {
 		return seek.getRatingAsInt();
 	}
@@ -386,7 +385,7 @@ public class SeekGraph extends Canvas {
 	}
 
 	protected void paintComponent(PaintEvent event) {
-		
+
 		Rectangle clientArea = getClientArea();
 		System.out.println("ClientArea: " + clientArea);
 
@@ -404,9 +403,9 @@ public class SeekGraph extends Canvas {
 		}
 
 		GC gc = event.gc;
-		
+
 		gc.setAntialias(SWT.ON);
-		
+
 		// Fill with white background
 		gc.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(inset, inset, width - 2 * inset, height - 2 * inset);
@@ -417,7 +416,6 @@ public class SeekGraph extends Canvas {
 				* inset);
 		// drawLegend(gc, height, width);
 
-		
 		drawPoints(gc, clip, width, height);
 
 		// TODO: dispose of something???
@@ -431,59 +429,58 @@ public class SeekGraph extends Canvas {
 			// TODO: fix this...
 			// System.out.println("Painting point: " + p);
 			// if (clip.contains(p)) { // we will honor the clip!
-				// System.out.println("Putting new point into screen: " + p);
-				paintSeeks(gc, p, seeks.get(sp));
-				screen.put(p, sp);
+			// System.out.println("Putting new point into screen: " + p);
+			paintSeeks(gc, p, seeks.get(sp));
+			screen.put(p, sp);
 			// }
 		}
 	}
 
-//	private void drawLegend(GC gc, int height, int width) {
-//		
-//		int y = inset / 4;
-//
-//		if (legendImage == null) {
-//			Image computer = createSingleLegend("Computer", computerColor);
-//			Image rated = createSingleLegend("Rated", ratedColor);
-//			Image unrated = createSingleLegend("Unrated", unratedColor);
-//			Image many = createSingleLegend("Many", manyColor);
-//
-//			legendImage = new Image(gc.getDevice(), computer.getBounds().width
-//					+ rated.getBounds().width + unrated.getBounds().width + many.getBounds().width,
-//					SEEK_SIZE + 5);
-//
-//			GC lg = new GC(legendImage);
-//			int cx = 0;
-//			lg.drawImage(computer, 0, 0);
-//			cx += computer.getBounds().width;
-//			lg.drawImage(rated, cx, 0);
-//			cx += rated.getBounds().width;
-//			lg.drawImage(unrated, cx, 0);
-//			cx += unrated.getBounds().width;
-//			lg.drawImage(many, cx, 0);
-//			lg.dispose();
-//		}
-//
-//		int x = width - legendImage.getBounds().width - inset; 
-//		gc.drawImage(legendImage, x, y);
-//	}
-//
-//	private Image createSingleLegend(String text, Color color) {
-//		LegendLabel legend = new LegendLabel(text, color, SEEK_SIZE);
-//		legend.setSize(80, SEEK_SIZE + 5);
-//		BufferedImage ci = new BufferedImage(legend.getSize().width, legend
-//				.getSize().height, BufferedImage.TYPE_INT_ARGB);
-//		Graphics2D cig = ci.createGraphics();
-//		legend.paint(cig);
-//		cig.dispose();
-//
-//		return ci;
-//	}
-	
-	
+	// private void drawLegend(GC gc, int height, int width) {
+	//		
+	// int y = inset / 4;
+	//
+	// if (legendImage == null) {
+	// Image computer = createSingleLegend("Computer", computerColor);
+	// Image rated = createSingleLegend("Rated", ratedColor);
+	// Image unrated = createSingleLegend("Unrated", unratedColor);
+	// Image many = createSingleLegend("Many", manyColor);
+	//
+	// legendImage = new Image(gc.getDevice(), computer.getBounds().width
+	// + rated.getBounds().width + unrated.getBounds().width +
+	// many.getBounds().width,
+	// SEEK_SIZE + 5);
+	//
+	// GC lg = new GC(legendImage);
+	// int cx = 0;
+	// lg.drawImage(computer, 0, 0);
+	// cx += computer.getBounds().width;
+	// lg.drawImage(rated, cx, 0);
+	// cx += rated.getBounds().width;
+	// lg.drawImage(unrated, cx, 0);
+	// cx += unrated.getBounds().width;
+	// lg.drawImage(many, cx, 0);
+	// lg.dispose();
+	// }
+	//
+	// int x = width - legendImage.getBounds().width - inset;
+	// gc.drawImage(legendImage, x, y);
+	// }
+	//
+	// private Image createSingleLegend(String text, Color color) {
+	// LegendLabel legend = new LegendLabel(text, color, SEEK_SIZE);
+	// legend.setSize(80, SEEK_SIZE + 5);
+	// BufferedImage ci = new BufferedImage(legend.getSize().width, legend
+	// .getSize().height, BufferedImage.TYPE_INT_ARGB);
+	// Graphics2D cig = ci.createGraphics();
+	// legend.paint(cig);
+	// cig.dispose();
+	//
+	// return ci;
+	// }
 
-	private void drawHorizontalLines(GC gc, int height, int plotH,
-			int width, int plotW) {
+	private void drawHorizontalLines(GC gc, int height, int plotH, int width,
+			int plotW) {
 
 		int one = plotH / hfactor;
 
@@ -494,15 +491,17 @@ public class SeekGraph extends Canvas {
 		for (int[] pair : hscale) {
 			factor += pair[1];
 			int h = height - one * factor - inset;
-			gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+			gc.setForeground(Display.getCurrent()
+					.getSystemColor(SWT.COLOR_BLUE));
 			gc.drawLine(inset, h, inset + plotW, h);
-			gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+			gc.setForeground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_BLACK));
 			gc.drawString(String.valueOf(pair[0]), 0, h + 2);
 		}
 	}
 
-	private void drawVerticalLines(GC gc, int height, int plotH,
-			int width, int plotW) {
+	private void drawVerticalLines(GC gc, int height, int plotH, int width,
+			int plotW) {
 
 		int one = plotW / vfactor;
 
@@ -514,9 +513,11 @@ public class SeekGraph extends Canvas {
 		for (int[] pair : vscale) {
 			factor += pair[1];
 			int w = one * factor + inset;
-			gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
+			gc.setForeground(Display.getCurrent()
+					.getSystemColor(SWT.COLOR_BLUE));
 			gc.drawLine(w, height - inset, w, inset);
-			gc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+			gc.setForeground(Display.getCurrent().getSystemColor(
+					SWT.COLOR_BLACK));
 			gc.drawString(String.valueOf(pair[0]), w, height - inset + 2);
 		}
 	}
@@ -527,11 +528,13 @@ public class SeekGraph extends Canvas {
 		if (here.size() == 1) {
 			Seek s = here.get(0);
 			if (s.isComputer()) {
-				if (!showComputer) return;
+				if (!showComputer)
+					return;
 				color = computerColor;
 			} else if (s.isRated()) {
 				color = ratedColor;
-			} else if (!s.isRated() && !showUnrated) return;
+			} else if (!s.isRated() && !showUnrated)
+				return;
 		} else {
 			color = manyColor;
 		}
@@ -597,9 +600,7 @@ public class SeekGraph extends Canvas {
 
 		return result;
 	}
-	
-	
-	
+
 	/**
 	 * @param args
 	 */
@@ -607,7 +608,7 @@ public class SeekGraph extends Canvas {
 		Display display = new Display();
 		Display.setAppName("Seek Graph");
 		Shell shell = new Shell(display, SWT.SHELL_TRIM);
-		
+
 		GridLayout grid = new GridLayout(1, true);
 		shell.setLayout(grid);
 
@@ -618,12 +619,11 @@ public class SeekGraph extends Canvas {
 		graph.addSeek(48, 1500, "Someone", 5, 2, true);
 		graph.addSeek(48, 1500, "Someone", 3, 1, true);
 		graph.addSeek(48, 1500, "Someone", 1, 0, true);
-		
+
 		GridData sg = new GridData(SWT.FILL, SWT.FILL, true, true);
 		sg.widthHint = 400;
 		sg.heightHint = 400;
 		graph.setLayoutData(sg);
-		
 
 		Button acceptButton = new Button(shell, SWT.PUSH);
 		acceptButton.setText("Add seek");
@@ -637,63 +637,62 @@ public class SeekGraph extends Canvas {
 				int rating = random.nextInt(1000) + 1000;
 				int mins = random.nextInt(3);
 				int incr = random.nextInt(10);
-				String[] names = new String[] { "Hi", "Bye", "My",
-				"Try" };
+				String[] names = new String[] { "Hi", "Bye", "My", "Try" };
 				int gameNumber = random.nextInt(1000);
 
-				System.out.println("Adding seek ( " + rating + ", "
-						+ mins + ", " + incr + " )");
+				System.out.println("Adding seek ( " + rating + ", " + mins
+						+ ", " + incr + " )");
 				graph.addSeek(gameNumber, rating, names[random
-				                                        .nextInt(names.length)], mins, incr, random
-				                                        .nextBoolean());
+						.nextInt(names.length)], mins, incr, random
+						.nextBoolean());
 			}
 		});
-		
+
 		GridData b = new GridData(GridData.VERTICAL_ALIGN_END);
 		b.grabExcessVerticalSpace = false;
 		acceptButton.setLayoutData(b);
 
 		shell.pack();
 		shell.open();
-		while( !shell.isDisposed()) {
-			if(!display.readAndDispatch()) 
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
 				display.sleep();
 		}
 		display.dispose();
 	}
 
-//	class AcceptAction extends AbstractAction {
-//		public AcceptAction(String name, int gameNumber) {
-//			super();
-//			putValue(Action.ACTION_COMMAND_KEY, "play " + gameNumber);
-//			putValue(Action.NAME, name);
-//		}
-//
-//		public void actionPerformed(ActionEvent e) {
-//			String command = e.getActionCommand();
-//			hideSelectMenu();
-//			notifyAcceptListeners(Integer.parseInt(command.substring(5)));
-//		}
-//	}
-//
-//	public void addAcceptSeekListener(AcceptSeekListener listener) {
-//		acceptListeners.add(listener);
-//	}
-//
-//	public void hideSelectMenu() {
-//		if (menu != null && menu.isVisible()) {
-//			menu.setVisible(false);
-//			_lastPopupRect = null;
-//		}
-//	}
-//
-//	public void notifyAcceptListeners(int adNumber) {
-//		for (AcceptSeekListener l : acceptListeners) {
-//			l.acceptedSeek(adNumber);
-//		}
-//	}
-//
-//	public void removeAcceptSeekListener(AcceptSeekListener listener) {
-//		acceptListeners.remove(listener);
-//	}
+	// class AcceptAction extends AbstractAction {
+	// public AcceptAction(String name, int gameNumber) {
+	// super();
+	// putValue(Action.ACTION_COMMAND_KEY, "play " + gameNumber);
+	// putValue(Action.NAME, name);
+	// }
+	//
+	// public void actionPerformed(ActionEvent e) {
+	// String command = e.getActionCommand();
+	// hideSelectMenu();
+	// notifyAcceptListeners(Integer.parseInt(command.substring(5)));
+	// }
+	// }
+	//
+	// public void addAcceptSeekListener(AcceptSeekListener listener) {
+	// acceptListeners.add(listener);
+	// }
+	//
+	// public void hideSelectMenu() {
+	// if (menu != null && menu.isVisible()) {
+	// menu.setVisible(false);
+	// _lastPopupRect = null;
+	// }
+	// }
+	//
+	// public void notifyAcceptListeners(int adNumber) {
+	// for (AcceptSeekListener l : acceptListeners) {
+	// l.acceptedSeek(adNumber);
+	// }
+	// }
+	//
+	// public void removeAcceptSeekListener(AcceptSeekListener listener) {
+	// acceptListeners.remove(listener);
+	// }
 }

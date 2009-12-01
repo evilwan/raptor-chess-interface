@@ -216,7 +216,7 @@ public class InactiveController extends ChessBoardController implements
 			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
 					: parent, SWT.FLAT);
 			ChessBoardUtils.addActionsToToolbar(this,
-					RaptorActionContainer.InactiveChessBoard, toolbar, false);
+					RaptorActionContainer.InactiveChessBoard, toolbar, true);
 
 			if (game.getVariant() == Variant.suicide) {
 				setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
