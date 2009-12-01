@@ -309,6 +309,9 @@ public class ExamineController extends ChessBoardController {
 
 	@Override
 	public void init() {
+		board.getArrowDecorator().removeAllArrows();
+		board.getSquareHighlighter().removeAllHighlights();
+
 		board.setWhiteOnTop(initWhiteOnTop);
 
 		/**

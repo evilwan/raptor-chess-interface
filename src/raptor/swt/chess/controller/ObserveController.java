@@ -295,6 +295,9 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void init() {
+		board.getArrowDecorator().removeAllArrows();
+		board.getSquareHighlighter().removeAllHighlights();
+
 		board.setWhiteOnTop(RaptorStringUtils.getBooleanValue(game
 				.getHeader(PgnHeader.WhiteOnTop)));
 
@@ -424,7 +427,7 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	protected void onPlayGameStartSound() {
-		SoundService.getInstance().playSound("gameStart");
+		// SoundService.getInstance().playSound("gameStart");
 	}
 
 	protected void onPlayMoveSound() {

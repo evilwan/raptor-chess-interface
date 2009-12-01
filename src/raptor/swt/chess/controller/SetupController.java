@@ -259,6 +259,9 @@ public class SetupController extends ChessBoardController {
 
 	@Override
 	public void init() {
+		board.getArrowDecorator().removeAllArrows();
+		board.getSquareHighlighter().removeAllHighlights();
+
 		board.setWhiteOnTop(isWhiteOnTopInit);
 		board.setWhitePieceJailOnTop(isWhiteOnTopInit);
 

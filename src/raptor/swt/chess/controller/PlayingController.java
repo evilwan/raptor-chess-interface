@@ -34,6 +34,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
@@ -93,6 +95,20 @@ public class PlayingController extends ChessBoardController {
 
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
+	protected MouseListener clearPremovesLabelListener = new MouseListener() {
+		public void mouseDoubleClick(MouseEvent e) {
+		}
+
+		public void mouseDown(MouseEvent e) {
+			if (e.button == 1) {
+				onClearPremoves();
+			}
+		}
+
+		public void mouseUp(MouseEvent e) {
+		}
+	};
+
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override
@@ -408,6 +424,11 @@ public class PlayingController extends ChessBoardController {
 	public void dispose() {
 		try {
 			connector.getGameService().removeGameServiceListener(listener);
+			board.getCurrentPremovesLabel().removeMouseListener(
+					clearPremovesLabelListener);
+			board.getCurrentPremovesLabel().setImage(null);
+			board.getCurrentPremovesLabel().setToolTipText("");
+
 			super.dispose();
 			if (toolbar != null && !toolbar.isDisposed()) {
 				toolbar.setVisible(false);
@@ -472,6 +493,11 @@ public class PlayingController extends ChessBoardController {
 
 	@Override
 	public void init() {
+		board.getCurrentPremovesLabel().addMouseListener(
+				clearPremovesLabelListener);
+		board.getCurrentPremovesLabel().setToolTipText(
+				"Lists your current premoves. Click to clear premoves");
+
 		board.setWhiteOnTop(RaptorStringUtils.getBooleanValue(game
 				.getHeader(PgnHeader.WhiteOnTop)));
 
@@ -1043,6 +1069,10 @@ public class PlayingController extends ChessBoardController {
 					}
 				}
 			}
+
+			board.getCurrentPremovesLabel().setImage(
+					hasAddedPremove ? Raptor.getInstance().getIcon("redx")
+							: null);
 			setToolItemEnabled(ToolBarItemKey.CLEAR_PREMOVES, hasAddedPremove);
 			board.getCurrentPremovesLabel().setText(labelText);
 		}
