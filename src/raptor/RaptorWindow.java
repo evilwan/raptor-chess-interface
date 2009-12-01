@@ -1182,6 +1182,9 @@ public class RaptorWindow extends ApplicationWindow {
 					if (pingTime == -1) {
 						return;
 					}
+					if (Raptor.getInstance().isDisposed()) {
+						return;
+					}
 					label = new Label(statusBar, SWT.NONE);
 					GridData gridData = new GridData();
 					gridData.grabExcessHorizontalSpace = false;

@@ -283,7 +283,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefaultMonitorBasedSizes();
 
 		// Action
-		setDefault(ACTION_SEPARATOR_SEQUENCE, 200);
+		setDefault(ACTION_SEPARATOR_SEQUENCE, 300);
 
 		// Board
 		setDefault(BOARD_PLAY_CHALLENGE_SOUND, true);
