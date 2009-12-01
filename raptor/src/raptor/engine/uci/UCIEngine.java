@@ -1056,7 +1056,11 @@ public class UCIEngine {
 	}
 
 	protected String readLine() throws Exception {
-		return in.readLine();
+		if (!isConnected()) {
+			return null;
+		} else {
+			return in.readLine();
+		}
 	}
 
 	protected void resetConnectionState() {

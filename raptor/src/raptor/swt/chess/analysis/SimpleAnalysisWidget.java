@@ -31,7 +31,6 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 import raptor.Raptor;
 import raptor.chess.Game;
@@ -42,7 +41,6 @@ import raptor.engine.uci.UCIEngine;
 import raptor.engine.uci.UCIInfo;
 import raptor.engine.uci.UCIInfoListener;
 import raptor.engine.uci.UCIMove;
-import raptor.engine.uci.UCIOption;
 import raptor.engine.uci.info.BestLineFoundInfo;
 import raptor.engine.uci.info.CPULoadInfo;
 import raptor.engine.uci.info.DepthInfo;
@@ -50,7 +48,6 @@ import raptor.engine.uci.info.NodesPerSecondInfo;
 import raptor.engine.uci.info.NodesSearchedInfo;
 import raptor.engine.uci.info.ScoreInfo;
 import raptor.engine.uci.info.TimeInfo;
-import raptor.engine.uci.options.UCIButton;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
@@ -67,14 +64,12 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 	protected ChessBoardController controller;
 	protected Composite composite, topLine;
 	protected UCIEngine currentEngine;
-	protected CLabel engineComboCLabel;
-	protected CLabel nodesPerSecondLabelLabel;
 	protected CLabel nodesPerSecondLabel;
-	protected CLabel cpuPercentageLabelLabel;
 	protected CLabel cpuPercentageLabel;
 	protected Combo engineCombo;
 	protected RaptorTable bestMoves;
-	protected Button stopButton, startButton, propertiesButton;
+	protected CLabel activeLabel;
+	protected Button activeButton, propertiesButton;
 	protected boolean ignoreEngineSelection;
 	protected boolean isInStart = false;
 	protected UCIInfoListener listener = new UCIInfoListener() {
@@ -126,17 +121,20 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 									/ 1000);
 						} else if (info instanceof CPULoadInfo) {
 							CPULoadInfo cpuLoad = (CPULoadInfo) info;
-							cpu = new BigDecimal(
-									cpuLoad.getCpuUsage() / 1000.0 * 100)
-									.setScale(0, BigDecimal.ROUND_HALF_UP)
-									.toString();
-							cpu = StringUtils.rightPad(cpu, 4);
+							cpu = "CPU%: "
+									+ new BigDecimal(
+											cpuLoad.getCpuUsage() / 1000.0 * 100)
+											.setScale(0,
+													BigDecimal.ROUND_HALF_UP)
+											.toString();
 						} else if (info instanceof NodesPerSecondInfo) {
 							NodesPerSecondInfo nodesPerSecondInfo = (NodesPerSecondInfo) info;
-							nps = RaptorStringUtils.formatAsNumber(""
-									+ nodesPerSecondInfo.getNodesPerSecond()
-									/ 1000);
-							nps = StringUtils.rightPad(nps, 6);
+							nps = "NPS(K): "
+									+ RaptorStringUtils
+											.formatAsNumber(""
+													+ nodesPerSecondInfo
+															.getNodesPerSecond()
+													/ 1000);
 						} else if (info instanceof TimeInfo) {
 							TimeInfo timeInfo = (TimeInfo) info;
 							time = new BigDecimal(
@@ -277,8 +275,8 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				bestMoves.clearTable();
-				cpuPercentageLabel.setText("   ");
-				nodesPerSecondLabel.setText("      ");
+				nodesPerSecondLabel.setText("NPS(K):");
+				cpuPercentageLabel.setText("CPU%:");
 			}
 		});
 	}
@@ -289,10 +287,17 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 
 		topLine = new Composite(composite, SWT.LEFT);
 		topLine.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-		topLine.setLayout(new RowLayout());
+		RowLayout rowLayout = new RowLayout();
+		rowLayout.marginBottom = 0;
+		rowLayout.marginTop = 0;
+		rowLayout.marginLeft = 5;
+		rowLayout.marginRight = 5;
+		rowLayout.marginHeight = 2;
+		rowLayout.marginWidth = 2;
+		rowLayout.spacing = 0;
+		topLine.setLayout(rowLayout);
 
-		engineComboCLabel = new CLabel(topLine, SWT.LEFT);
-		engineComboCLabel.setText("Engine:");
+		topLine.setLayout(new RowLayout());
 
 		engineCombo = new Combo(topLine, SWT.DROP_DOWN | SWT.READ_ONLY);
 		engineCombo.addSelectionListener(new SelectionAdapter() {
@@ -338,49 +343,35 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			}
 		});
 
-		nodesPerSecondLabelLabel = new CLabel(topLine, SWT.LEFT);
-		nodesPerSecondLabelLabel.setText("NPS(K):");
-		nodesPerSecondLabelLabel
-				.setToolTipText("Nodes per second in thousands");
-
 		nodesPerSecondLabel = new CLabel(topLine, SWT.LEFT);
 		nodesPerSecondLabel.setToolTipText("Nodes per second in thousands");
-		nodesPerSecondLabel.setText("       ");
-
-		cpuPercentageLabelLabel = new CLabel(topLine, SWT.LEFT);
-		cpuPercentageLabelLabel.setText("CPU%:");
-		cpuPercentageLabelLabel
-				.setToolTipText("Percentage of cpu being used by the engine");
+		nodesPerSecondLabel.setText(StringUtils.rightPad("NPS(K):", 15));
 
 		cpuPercentageLabel = new CLabel(topLine, SWT.LEFT);
-		cpuPercentageLabel.setText("   ");
+		cpuPercentageLabel.setText(StringUtils.rightPad("CPU%:", 10));
 		cpuPercentageLabel
 				.setToolTipText("Percentage of cpu being used by the engine");
 
-		startButton = new Button(topLine, SWT.PUSH);
-		startButton.setText("Start");
-		startButton
-				.setToolTipText("Starts analysis if it is not currently running.");
-		startButton.addSelectionListener(new SelectionAdapter() {
+		activeButton = new Button(topLine, SWT.CHECK);
+		activeButton.setSelection(true);
+		activeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				start();
+				if (activeButton.getSelection()) {
+					start();
+				} else {
+					stop();
+				}
 			}
 		});
 
-		stopButton = new Button(topLine, SWT.PUSH);
-		stopButton.setText("Stop");
-		stopButton.setToolTipText("Stops analysis if it is currently running.");
-		stopButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				stop();
-			}
-		});
+		activeLabel = new CLabel(topLine, SWT.LEFT);
+		activeLabel.setText("Active");
+		activeLabel.setToolTipText("Toggles engine on/off.");
 
-		propertiesButton = new Button(topLine, SWT.PUSH);
-		propertiesButton.setText("Engine Properties");
-		propertiesButton.setToolTipText("Shows the engines custom properties.");
+		propertiesButton = new Button(topLine, SWT.FLAT);
+		propertiesButton.setText("Settings");
+		propertiesButton.setToolTipText("Shows the engines custom settings.");
 		propertiesButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -411,7 +402,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 				1));
 
 		updateEnginesCombo();
-		updateCustomButtons();
+		// updateCustomButtons();
 
 		updateFromPrefs();
 		return composite;
@@ -428,8 +419,9 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 	public void onShow() {
 		clear();
 		updateEnginesCombo();
-		updateCustomButtons();
+		// updateCustomButtons();
 		start();
+		composite.layout(true, true);
 	}
 
 	public void quit() {
@@ -477,16 +469,12 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 				PreferenceKeys.BOARD_STATUS_COLOR);
 		composite.setBackground(background);
 		topLine.setBackground(background);
-		engineComboCLabel.setBackground(background);
-		engineComboCLabel.setForeground(foreground);
-		nodesPerSecondLabelLabel.setBackground(background);
-		nodesPerSecondLabelLabel.setForeground(foreground);
 		nodesPerSecondLabel.setBackground(background);
 		nodesPerSecondLabel.setForeground(foreground);
-		cpuPercentageLabelLabel.setBackground(background);
-		cpuPercentageLabelLabel.setForeground(foreground);
 		cpuPercentageLabel.setBackground(background);
 		cpuPercentageLabel.setForeground(foreground);
+		activeLabel.setForeground(foreground);
+		activeLabel.setBackground(background);
 	}
 
 	public void updateToGame() {
@@ -530,43 +518,42 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 		}
 	}
 
-	protected void updateCustomButtons() {
-		if (currentEngine != null) {
-			for (Control control : topLine.getChildren()) {
-				if (control instanceof Button && control != stopButton
-						&& control != startButton
-						&& control != propertiesButton) {
-					control.dispose();
-				}
-			}
-
-			String[] controlNames = currentEngine.getOptionNames();
-			for (String controlName : controlNames) {
-				final UCIOption option = currentEngine.getOption(controlName);
-				if (option instanceof UCIButton) {
-					Button button = new Button(topLine, SWT.PUSH);
-					button.setText(controlName);
-					button.setToolTipText("Custom engine analyis button.");
-					button.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							ThreadService.getInstance().run(new Runnable() {
-								public void run() {
-									currentEngine.stop();
-									currentEngine.isReady();
-									currentEngine.setOption(option);
-									currentEngine.isReady();
-									start(true);
-								}
-							});
-						}
-					});
-				}
-			}
-			topLine.pack(true);
-			topLine.layout(true, true);
-		}
-	}
+	// protected void updateCustomButtons() {
+	// if (currentEngine != null) {
+	// for (Control control : topLine.getChildren()) {
+	// if (control instanceof Button && control != activeButton
+	// && control != propertiesButton) {
+	// control.dispose();
+	// }
+	// }
+	//
+	// String[] controlNames = currentEngine.getOptionNames();
+	// for (String controlName : controlNames) {
+	// final UCIOption option = currentEngine.getOption(controlName);
+	// if (option instanceof UCIButton) {
+	// Button button = new Button(topLine, SWT.FLAT);
+	// button.setText(controlName);
+	// button.setToolTipText("Custom engine analyis button.");
+	// button.addSelectionListener(new SelectionAdapter() {
+	// @Override
+	// public void widgetSelected(SelectionEvent e) {
+	// ThreadService.getInstance().run(new Runnable() {
+	// public void run() {
+	// currentEngine.stop();
+	// currentEngine.isReady();
+	// currentEngine.setOption(option);
+	// currentEngine.isReady();
+	// start(true);
+	// }
+	// });
+	// }
+	// });
+	// System.err.println("Added button");
+	// }
+	// }
+	// topLine.pack(true);
+	// }
+	// }
 
 	protected void updateEnginesCombo() {
 		ignoreEngineSelection = true;
