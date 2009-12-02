@@ -45,10 +45,10 @@ import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ConnectorQuadrantsPage;
-import raptor.service.ActionService;
+import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
-import raptor.swt.RegExDialog;
+import raptor.swt.RegularExpressionEditorDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleWindowItem;
@@ -471,9 +471,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		Action regexTabAction = new Action("&Regular Expression") {
 			@Override
 			public void run() {
-				RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
-						.getWindow().getShell(), getShortName()
-						+ " Regular Expression Dialog",
+				RegularExpressionEditorDialog regExDialog = new RegularExpressionEditorDialog(
+						Raptor.getInstance().getWindow().getShell(),
+						getShortName() + " Regular Expression Dialog",
 						"Enter the regular expression below:");
 				String regEx = regExDialog.open();
 				if (StringUtils.isNotBlank(regEx)) {
@@ -585,9 +585,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		Action fics2RegexTabAction = new Action("&Regular Expression") {
 			@Override
 			public void run() {
-				RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
-						.getWindow().getShell(), getShortName()
-						+ " Regular Expression Dialog",
+				RegularExpressionEditorDialog regExDialog = new RegularExpressionEditorDialog(
+						Raptor.getInstance().getWindow().getShell(),
+						getShortName() + " Regular Expression Dialog",
 						"Enter the regular expression below:");
 				String regEx = regExDialog.open();
 				if (StringUtils.isNotBlank(regEx)) {
@@ -690,7 +690,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		tabsMenu.add(regexTabAction);
 		ficsMenu.add(tabsMenu);
 		MenuManager linksMenu = new MenuManager("&Links");
-		RaptorAction[] ficsMenuActions = ActionService.getInstance()
+		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
 				.getActions(RaptorActionContainer.FicsMenu);
 		for (final RaptorAction raptorAction : ficsMenuActions) {
 			if (raptorAction instanceof Separator) {

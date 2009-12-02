@@ -34,7 +34,7 @@ import raptor.action.chat.TellsMissedWhileIWasAwayAction;
 import raptor.action.chat.ToggleScrollLock;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatLogger.ChatEventParseListener;
-import raptor.service.ActionService;
+import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.swt.chat.controller.ToolBarItemKey;
 
@@ -45,8 +45,8 @@ public class ChatUtils {
 	public static void addActionsToToolbar(
 			final ChatConsoleController controller,
 			RaptorActionContainer container, ToolBar toolbar) {
-		RaptorAction[] toolbarActions = ActionService.getInstance().getActions(
-				container);
+		RaptorAction[] toolbarActions = ActionScriptService.getInstance()
+				.getActions(container);
 
 		for (RaptorAction action : toolbarActions) {
 			ToolItem item = createToolItem(action, controller, toolbar);
@@ -364,7 +364,7 @@ public class ChatUtils {
 		result.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				RaptorAction loadedAction = ActionService.getInstance()
+				RaptorAction loadedAction = ActionScriptService.getInstance()
 						.getAction(action.getName());
 				loadedAction.setChatConsoleControllerSource(controller);
 				loadedAction.run();

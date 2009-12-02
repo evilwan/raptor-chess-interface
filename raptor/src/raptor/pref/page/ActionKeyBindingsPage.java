@@ -34,7 +34,7 @@ import raptor.Raptor;
 import raptor.action.AbstractRaptorAction;
 import raptor.action.ActionUtils;
 import raptor.action.RaptorAction;
-import raptor.service.ActionService;
+import raptor.service.ActionScriptService;
 import raptor.swt.RaptorTable;
 import raptor.swt.SWTUtils;
 
@@ -166,7 +166,7 @@ public class ActionKeyBindingsPage extends PreferencePage {
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AbstractRaptorAction action = (AbstractRaptorAction) ActionService
+				AbstractRaptorAction action = (AbstractRaptorAction) ActionScriptService
 						.getInstance().getAction(nameText.getText());
 				if (action != null) {
 					if (StringUtils.isNotBlank(keyStrokeText.getText())) {
@@ -182,7 +182,7 @@ public class ActionKeyBindingsPage extends PreferencePage {
 						action.setModifierKey(0);
 					}
 				}
-				ActionService.getInstance().saveAction(action);
+				ActionScriptService.getInstance().saveAction(action);
 				refreshActions();
 				for (int i = 0; i < actionsTable.getTable().getItemCount(); i++) {
 					if (actionsTable.getTable().getItem(i).getText(1).equals(
@@ -205,8 +205,8 @@ public class ActionKeyBindingsPage extends PreferencePage {
 	}
 
 	protected void loadControls(String actionName) {
-		RaptorAction currentAction = ActionService.getInstance().getAction(
-				actionName);
+		RaptorAction currentAction = ActionScriptService.getInstance()
+				.getAction(actionName);
 		if (currentAction != null) {
 			nameText.setText(currentAction.getName());
 			descriptionText.setText(currentAction.getDescription());
@@ -216,7 +216,8 @@ public class ActionKeyBindingsPage extends PreferencePage {
 	}
 
 	protected void refreshActions() {
-		RaptorAction[] scripts = ActionService.getInstance().getAllActions();
+		RaptorAction[] scripts = ActionScriptService.getInstance()
+				.getAllActions();
 		String[][] data = new String[scripts.length][];
 		for (int i = 0; i < data.length; i++) {
 			RaptorAction action = scripts[i];

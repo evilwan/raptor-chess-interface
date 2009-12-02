@@ -21,23 +21,13 @@ import raptor.util.BrowserUtils;
 public class RaptorScriptContext implements ScriptContext {
 
 	protected Connector connector;
-	protected String[] parameters;
 
 	public RaptorScriptContext(Connector connector) {
 		this.connector = connector;
 	}
 
-	public RaptorScriptContext(Connector connector, String[] parameters) {
-		this(connector);
-		this.parameters = parameters;
-	}
-
 	public void alert(String message) {
 		Raptor.getInstance().alert(message);
-	}
-
-	public String[] getParameters() {
-		return parameters == null ? new String[0] : parameters;
 	}
 
 	public long getPingMillis() {

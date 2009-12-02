@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -34,7 +35,7 @@ import raptor.action.RaptorActionFactory;
 import raptor.action.ScriptedAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
-import raptor.service.ActionService;
+import raptor.service.ActionScriptService;
 import raptor.swt.RaptorTable;
 
 public class ActionContainerPage extends PreferencePage {
@@ -48,7 +49,7 @@ public class ActionContainerPage extends PreferencePage {
 	protected Label nameText;
 	protected Label descriptionText;
 	protected Label categoryText;
-	protected Label scriptText;
+	protected CLabel scriptText;
 	protected String description;
 	protected String title;
 
@@ -132,11 +133,11 @@ public class ActionContainerPage extends PreferencePage {
 					}
 
 					if (!isInCurrent) {
-						RaptorAction action = ActionService.getInstance()
+						RaptorAction action = ActionScriptService.getInstance()
 								.getAction(actionName);
 						action.addContainer(container, currentActionsTable
 								.getTable().getItemCount());
-						ActionService.getInstance().saveAction(action);
+						ActionScriptService.getInstance().saveAction(action);
 						refreshCurrentActions();
 					}
 				}
@@ -153,10 +154,10 @@ public class ActionContainerPage extends PreferencePage {
 				if (selectedIndex != -1) {
 					String actionName = currentActionsTable.getTable().getItem(
 							selectedIndex).getText(0);
-					RaptorAction action = ActionService.getInstance()
+					RaptorAction action = ActionScriptService.getInstance()
 							.getAction(actionName);
 					action.removeContainer(container);
-					ActionService.getInstance().saveAction(action);
+					ActionScriptService.getInstance().saveAction(action);
 					refreshCurrentActions();
 				}
 			}
@@ -197,7 +198,7 @@ public class ActionContainerPage extends PreferencePage {
 					TableItem[] items = currentActionsTable.getTable()
 							.getItems();
 					for (int i = 0; i < items.length; i++) {
-						RaptorAction action = ActionService.getInstance()
+						RaptorAction action = ActionScriptService.getInstance()
 								.getAction(items[i].getText());
 						if (i == selectedScript - 1) {
 							action.setContainerOrder(container, i + 1);
@@ -206,7 +207,7 @@ public class ActionContainerPage extends PreferencePage {
 						} else {
 							action.setContainerOrder(container, i);
 						}
-						ActionService.getInstance().saveAction(action);
+						ActionScriptService.getInstance().saveAction(action);
 					}
 					String selectedText = items[selectedScript].getText();
 					items[selectedScript].setText(items[selectedScript - 1]
@@ -230,7 +231,7 @@ public class ActionContainerPage extends PreferencePage {
 					TableItem[] items = currentActionsTable.getTable()
 							.getItems();
 					for (int i = 0; i < items.length; i++) {
-						RaptorAction action = ActionService.getInstance()
+						RaptorAction action = ActionScriptService.getInstance()
 								.getAction(items[i].getText());
 						if (i == selectedScript + 1) {
 							action.setContainerOrder(container, i - 1);
@@ -239,7 +240,7 @@ public class ActionContainerPage extends PreferencePage {
 						} else {
 							action.setContainerOrder(container, i);
 						}
-						ActionService.getInstance().saveAction(action);
+						ActionScriptService.getInstance().saveAction(action);
 					}
 					String selectedText = items[selectedScript].getText();
 					items[selectedScript].setText(items[selectedScript + 1]
@@ -260,7 +261,7 @@ public class ActionContainerPage extends PreferencePage {
 						.createSeparator();
 				separator.addContainer(container, currentActionsTable
 						.getTable().getItemCount());
-				ActionService.getInstance().saveAction(separator);
+				ActionScriptService.getInstance().saveAction(separator);
 				refreshCurrentActions();
 			}
 		});
@@ -312,32 +313,27 @@ public class ActionContainerPage extends PreferencePage {
 				false));
 
 		Composite scriptComposite = new Composite(composite, SWT.NONE);
-		scriptComposite.setLayout(new GridLayout(2, false));
+		scriptComposite.setLayout(new GridLayout(3, false));
 		scriptComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
-
 		Label scriptLabel = new Label(scriptComposite, SWT.NONE);
 		scriptLabel.setText("Script:");
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
-		scriptText = new Label(scriptComposite, SWT.NONE);
+		scriptText = new CLabel(scriptComposite, SWT.NONE);
 		scriptText
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
-		scriptText.setText("\n\n\n");
+		scriptText.setText("\n \n \n \n \n");
 
 		availableActionsTable.sort(0);
 		refreshCurrentActions();
 		refreshAvailableActions();
-
-		availableActionsTable.getTable().setSelection(0);
-		loadControls(availableActionsTable.getTable().getItem(0).getText(0));
-
 		return composite;
 	}
 
 	protected void loadControls(String actionName) {
-		RaptorAction currentAction = ActionService.getInstance().getAction(
-				actionName);
+		RaptorAction currentAction = ActionScriptService.getInstance()
+				.getAction(actionName);
 		nameText.setText(currentAction.getName());
 		descriptionText.setText(currentAction.getDescription());
 		if (currentAction instanceof ScriptedAction) {
@@ -358,7 +354,7 @@ public class ActionContainerPage extends PreferencePage {
 	}
 
 	protected void refreshAvailableActions() {
-		RaptorAction[] availableActions = ActionService.getInstance()
+		RaptorAction[] availableActions = ActionScriptService.getInstance()
 				.getAllActions();
 		String[][] data = new String[availableActions.length][2];
 
@@ -371,7 +367,7 @@ public class ActionContainerPage extends PreferencePage {
 	}
 
 	protected void refreshCurrentActions() {
-		RaptorAction[] availableActions = ActionService.getInstance()
+		RaptorAction[] availableActions = ActionScriptService.getInstance()
 				.getActions(container);
 		String[][] data = new String[availableActions.length][1];
 

@@ -26,17 +26,17 @@ import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
-import raptor.swt.RegExDialog;
+import raptor.swt.RegularExpressionEditorDialog;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.swt.chat.ChatUtils;
+import raptor.util.RegExUtils;
 
 public class RegExController extends ChatConsoleController {
 	protected Pattern pattern;
 
 	public RegExController(Connector connector, String regularExpression) {
 		super(connector);
-		pattern = Pattern.compile(regularExpression, Pattern.MULTILINE
-				| Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+		pattern = RegExUtils.getPattern(regularExpression);
 	}
 
 	@Override
@@ -75,11 +75,7 @@ public class RegExController extends ChatConsoleController {
 
 	@Override
 	public boolean isAcceptingChatEvent(ChatEvent event) {
-		try {
-			return pattern.matcher(event.getMessage()).matches();
-		} catch (Throwable t) {
-			return false;
-		}
+		return RegExUtils.matches(pattern, event.getMessage());
 	}
 
 	@Override
@@ -103,16 +99,16 @@ public class RegExController extends ChatConsoleController {
 	}
 
 	public void onAdjustRegEx() {
-		RegExDialog regExDialog = new RegExDialog(Raptor.getInstance()
-				.getWindow().getShell(), connector.getShortName()
-				+ " Adjust regular expression dialog",
+		RegularExpressionEditorDialog regExDialog = new RegularExpressionEditorDialog(
+				Raptor.getInstance().getWindow().getShell(), connector
+						.getShortName()
+						+ " Adjust regular expression dialog",
 				"Enter the regular expression the new regular expression below:");
 		regExDialog.setInput(pattern.pattern());
 		String regEx = regExDialog.open();
 		if (StringUtils.isNotBlank(regEx)) {
 			chatConsole.getInputText().setText("");
-			pattern = Pattern.compile(regEx, Pattern.MULTILINE | Pattern.DOTALL
-					| Pattern.CASE_INSENSITIVE);
+			pattern = RegExUtils.getPattern(regEx);
 			fireItemChanged();
 			ChatUtils.appendPreviousChatsToController(chatConsole);
 		}

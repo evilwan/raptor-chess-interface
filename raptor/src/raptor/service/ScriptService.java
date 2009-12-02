@@ -14,6 +14,8 @@
 package raptor.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,24 +23,30 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
-import raptor.connector.Connector;
-import raptor.script.ChatScript;
-import raptor.script.GameScript;
-import raptor.script.ChatScript.ChatScriptType;
-import raptor.script.GameScript.GameScriptControllerType;
-import raptor.script.GameScript.GameScriptType;
+import raptor.script.ParameterScript;
+import raptor.script.RegularExpressionScript;
+import raptor.script.ScriptConnectorType;
+import raptor.script.ScriptUtils;
 
 /**
- * Manages the Raptor scripts. There are two types of scripts: system and user
- * scripts. User scripts are stored in the users script directory, while system
- * scripts are stored in the resources/script directory. You can't save or
- * delete a system script. When a system script is saved, it is saved as a user
- * script.
+ * This service manages RegularExpressionScripts and ParamterScripts. Scripts
+ * are either system scripts or user scripts.
+ * <p>
+ * System scripts are loaded from the installed Raptor/resources/scripts folder.
+ * System scripts also can never be deleted.
+ * </p>
+ * <p>
+ * User scripts are loaded from the users .raptor/scripts directory. User
+ * scripts can be deleted. Whenever a script is saved, it is saved as a user
+ * script. When a scripts are loaded, a user script will always take precedence
+ * over a System script.
+ * <p/>
  */
 public class ScriptService {
 	private static final Log LOG = LogFactory.getLog(ScriptService.class);
@@ -46,14 +54,14 @@ public class ScriptService {
 	private static final ScriptService singletonInstance = new ScriptService();
 
 	public static interface ScriptServiceListener {
-		public void onChatScriptsChanged();
+		public void onParameterScriptsChanged();
 
-		public void onGameScriptsChanged();
+		public void onRegularExpressionScriptsChanged();
 	}
 
-	public Map<String, ChatScript> chatScriptMap = new HashMap<String, ChatScript>();
+	public Map<String, RegularExpressionScript> nameToRegularExpressionScript = new HashMap<String, RegularExpressionScript>();
 
-	public Map<String, GameScript> gameScriptMap = new HashMap<String, GameScript>();
+	public Map<String, ParameterScript> nameToParameterScript = new HashMap<String, ParameterScript>();
 
 	public List<ScriptServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<ScriptServiceListener>(5));
@@ -74,106 +82,100 @@ public class ScriptService {
 	 * Deletes the specified script. System scripts , or the scripts in
 	 * resources/script are never touched.
 	 */
-	public boolean deleteChatScript(String scriptName) {
-		chatScriptMap.remove(scriptName);
-		fireChatScriptChanged();
-		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/chat/"
-				+ scriptName + ".properties").delete();
+	public boolean deleteParameterScript(String scriptShortName) {
+		nameToParameterScript.remove(scriptShortName);
+		fireParameterScriptsChanged();
+		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/parameter/"
+				+ scriptShortName + ".properties").delete();
 	}
 
 	/**
 	 * Deletes the specified script. System scripts , or the scripts in
 	 * resources/script are never touched.
 	 */
-	public boolean deleteGameScript(String scriptName) {
-		gameScriptMap.remove(scriptName);
-		fireGameScriptChanged();
-		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/game/"
-				+ scriptName + ".properties").delete();
+	public boolean deleteRegularExpressionScript(String scriptName) {
+		nameToRegularExpressionScript.remove(scriptName);
+		fireRegularExpressionScriptsChanged();
+		return new File(Raptor.USER_RAPTOR_HOME_PATH
+				+ "/scripts/regularExpression/" + scriptName + ".properties")
+				.delete();
 	}
 
 	public void dispose() {
 		listeners.clear();
-		chatScriptMap.clear();
-		gameScriptMap.clear();
+		nameToRegularExpressionScript.clear();
+		nameToParameterScript.clear();
+	}
+
+	public ParameterScript getParameterScript(String shortName) {
+		return nameToParameterScript.get(shortName.toUpperCase());
 	}
 
 	/**
-	 * Returns all chat scripts sorted by name.
+	 * Returns all parameter scripts sorted by name
 	 */
-	public ChatScript[] getAllChatScripts() {
-		ArrayList<ChatScript> chatScripts = new ArrayList<ChatScript>(
-				chatScriptMap.values());
-		Collections
-				.sort(chatScripts, new ChatScript.ChatScriptNameComparator());
-		return chatScripts.toArray(new ChatScript[0]);
+	public ParameterScript[] getParameterScripts() {
+		ArrayList<ParameterScript> result = new ArrayList<ParameterScript>(
+				nameToParameterScript.values());
+		Collections.sort(result);
+		return result.toArray(new ParameterScript[0]);
 	}
 
 	/**
-	 * Returns all game scripts sorted by name.
+	 * Returns all active paramter scripts that match the specified connector
+	 * type and paramter script type. The result is sorted by name.
 	 */
-	public GameScript[] getAllGameScripts() {
-		ArrayList<GameScript> gameScripts = new ArrayList<GameScript>(
-				gameScriptMap.values());
-		Collections
-				.sort(gameScripts, new GameScript.GameScriptNameComparator());
-		return gameScripts.toArray(new GameScript[0]);
-	}
-
-	public ChatScript getChatScript(String name) {
-		return chatScriptMap.get(name);
-	}
-
-	/**
-	 * Returns all active chat scripts that match the specified connector and
-	 * chat script type. The result is sorted by the order field.
-	 */
-	public ChatScript[] getChatScripts(Connector connector, ChatScriptType type) {
-		ArrayList<ChatScript> chatScripts = new ArrayList<ChatScript>(20);
-		for (ChatScript script : chatScriptMap.values()) {
-			if (script.getScriptConnectorType() == connector
-					.getScriptConnectorType()
-					&& script.getChatScriptType() == type && script.isActive()) {
-				chatScripts.add(script);
+	public ParameterScript[] getParameterScripts(
+			ScriptConnectorType connectorType, ParameterScript.Type type) {
+		ArrayList<ParameterScript> result = new ArrayList<ParameterScript>(20);
+		for (ParameterScript script : nameToParameterScript.values()) {
+			if (script.getConnectorType() == connectorType
+					&& script.getType() == type && script.isActive()) {
+				result.add(script);
 			}
 		}
-		Collections.sort(chatScripts);
-		return chatScripts.toArray(new ChatScript[0]);
+		Collections.sort(result);
+		return result.toArray(new ParameterScript[0]);
 	}
 
-	public GameScript getGameScript(String name) {
-		return gameScriptMap.get(name);
+	public RegularExpressionScript getRegularExpressionScript(String name) {
+		return nameToRegularExpressionScript.get(name.toUpperCase());
 	}
 
 	/**
-	 * Returns all active game scripts that match the specified
-	 * connector,controller type, and game script type.
+	 * Returns all regular expression scripts sorted by name.
 	 */
-	public GameScript[] getGameScripts(Connector connector,
-			GameScriptControllerType controllerType,
-			GameScriptType gameScriptType) {
-		ArrayList<GameScript> gameScripts = new ArrayList<GameScript>(20);
+	public RegularExpressionScript[] getRegularExpressionScripts() {
+		ArrayList<RegularExpressionScript> result = new ArrayList<RegularExpressionScript>(
+				nameToRegularExpressionScript.values());
+		Collections.sort(result);
+		return result.toArray(new RegularExpressionScript[0]);
+	}
 
-		for (GameScript script : gameScriptMap.values()) {
-			if (script.getScriptConnectorType() == connector
-					.getScriptConnectorType()
-					&& script.getGameScriptControllerType() == controllerType
-					&& script.getGameScriptType() == gameScriptType) {
-				gameScripts.add(script);
+	/**
+	 * Returns all regular expression scripts sorted by name.
+	 */
+	public RegularExpressionScript[] getRegularExpressionScripts(
+			ScriptConnectorType connectorType) {
+		ArrayList<RegularExpressionScript> result = new ArrayList<RegularExpressionScript>();
+		for (RegularExpressionScript script : nameToRegularExpressionScript
+				.values()) {
+			if (script.getConnectorType() == connectorType) {
+				result.add(script);
 			}
 		}
-		Collections.sort(gameScripts);
-		return gameScripts.toArray(new GameScript[0]);
+		Collections.sort(result);
+		return result.toArray(new RegularExpressionScript[0]);
 	}
 
 	/**
 	 * Reloads all of the scripts.
 	 */
 	public void reload() {
-		chatScriptMap.clear();
-		gameScriptMap.clear();
-		loadGameScripts();
-		loadChatScripts();
+		nameToRegularExpressionScript.clear();
+		nameToParameterScript.clear();
+		loadParameterScripts();
+		loadRegularExpressionScripts();
 	}
 
 	public void removeScriptServiceListener(ScriptServiceListener listener) {
@@ -181,61 +183,82 @@ public class ScriptService {
 	}
 
 	/**
-	 * Saves the chat script. Scripts are always saved in the users home
-	 * directory. System scripts , or the scripts in resources/script are never
-	 * touched.
-	 */
-	public void saveChatScript(ChatScript script) {
-		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/scripts/chat/"
-				+ script.getName() + ".properties";
-		try {
-			ChatScript.store(script, fileName);
-		} catch (IOException ioe) {
-			Raptor.getInstance().onError("Error saving chat script", ioe);
-		}
-		chatScriptMap.put(script.getName(), script);
-		fireChatScriptChanged();
-	}
-
-	/**
 	 * Saves the game script. Scripts are always saved in the users home
 	 * directory. System scripts, or the scripts in resources/script are never
 	 * touched.
 	 */
-	public void saveGameScript(GameScript script) {
-		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/scripts/game/"
+	public void save(ParameterScript script) {
+		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/scripts/parameter/"
 				+ script.getName() + ".properties";
+		FileOutputStream fileOut = null;
 		try {
-			GameScript.store(script, fileName);
+			Properties properties = ScriptUtils.serialize(script);
+			properties.store(fileOut = new FileOutputStream(fileName),
+					"Saved in Raptor by the ScriptService");
+			fileOut.flush();
 		} catch (IOException ioe) {
-			Raptor.getInstance().onError("Error saving game script", ioe);
+			Raptor.getInstance().onError("Error saving parameter script", ioe);
+		} finally {
+			try {
+				fileOut.close();
+			} catch (Throwable t) {
+			}
 		}
-
-		gameScriptMap.put(script.getName(), script);
-		fireGameScriptChanged();
+		nameToParameterScript.put(script.getName().toUpperCase(), script);
+		fireParameterScriptsChanged();
 	}
 
-	protected void fireChatScriptChanged() {
+	/**
+	 * Saves the chat script. Scripts are always saved in the users home
+	 * directory. System scripts , or the scripts in resources/script are never
+	 * touched.
+	 */
+	public void save(RegularExpressionScript script) {
+		String fileName = Raptor.USER_RAPTOR_HOME_PATH
+				+ "/scripts/regularExpression/" + script.getName()
+				+ ".properties";
+		FileOutputStream fileOut = null;
+
+		try {
+			Properties properties = ScriptUtils.serialize(script);
+			properties.store(fileOut = new FileOutputStream(fileName),
+					"Saved in Raptor by the ScriptService");
+			fileOut.flush();
+		} catch (IOException ioe) {
+			Raptor.getInstance().onError(
+					"Error saving regular expression script", ioe);
+		} finally {
+			try {
+				fileOut.close();
+			} catch (Throwable t) {
+			}
+		}
+		nameToRegularExpressionScript.put(script.getName().toUpperCase(),
+				script);
+		fireRegularExpressionScriptsChanged();
+	}
+
+	protected void fireParameterScriptsChanged() {
 		synchronized (listeners) {
 			for (ScriptServiceListener listener : listeners) {
-				listener.onChatScriptsChanged();
+				listener.onParameterScriptsChanged();
 			}
 		}
 	}
 
-	protected void fireGameScriptChanged() {
+	protected void fireRegularExpressionScriptsChanged() {
 		synchronized (listeners) {
 			for (ScriptServiceListener listener : listeners) {
-				listener.onGameScriptsChanged();
+				listener.onRegularExpressionScriptsChanged();
 			}
 		}
 	}
 
-	protected void loadChatScripts() {
+	protected void loadParameterScripts() {
 		int count = 0;
 		long startTime = System.currentTimeMillis();
 
-		File systemScripts = new File("resources/scripts/chat");
+		File systemScripts = new File("resources/scripts/parameter");
 		File[] files = systemScripts.listFiles(new FilenameFilter() {
 
 			public boolean accept(File arg0, String arg1) {
@@ -245,21 +268,31 @@ public class ScriptService {
 
 		if (files != null) {
 			for (File file : files) {
+				FileInputStream fileIn = null;
 				try {
-					ChatScript script = ChatScript.load(file.getAbsolutePath());
-					chatScriptMap.put(script.getName(), script);
+					Properties properties = new Properties();
+					properties.load(fileIn = new FileInputStream(file));
+					ParameterScript script = ScriptUtils
+							.unserializeParameterScript(properties);
+					nameToParameterScript.put(script.getName().toUpperCase(),
+							script);
 					script.setSystemScript(true);
 					count++;
 				} catch (IOException ioe) {
 					Raptor.getInstance().onError(
-							"Error loading game script " + file.getName()
-									+ ",ioe");
+							"Error loading system parameter expression script "
+									+ file.getName() + ",ioe");
+				} finally {
+					try {
+						fileIn.close();
+					} catch (Throwable t) {
+					}
 				}
 			}
 		}
 
 		File userScripts = new File(Raptor.USER_RAPTOR_HOME_PATH
-				+ "/scripts/chat");
+				+ "/scripts/parameter");
 		File[] userFiles = userScripts.listFiles(new FilenameFilter() {
 			public boolean accept(File arg0, String arg1) {
 				return arg1.endsWith(".properties");
@@ -268,29 +301,40 @@ public class ScriptService {
 
 		if (userFiles != null) {
 			for (File file : userFiles) {
+				FileInputStream fileIn = null;
 				try {
-					ChatScript script = ChatScript.load(file.getAbsolutePath());
-					chatScriptMap.put(script.getName(), script);
+					Properties properties = new Properties();
+					properties.load(fileIn = new FileInputStream(file));
+					ParameterScript script = ScriptUtils
+							.unserializeParameterScript(properties);
+					nameToParameterScript.put(script.getName().toUpperCase(),
+							script);
+					script.setSystemScript(false);
 					count++;
 				} catch (IOException ioe) {
 					Raptor.getInstance().onError(
-							"Error loading game script " + file.getName()
-									+ ",ioe");
+							"Error loading user parameter expression script "
+									+ file.getName() + ",ioe");
+				} finally {
+					try {
+						fileIn.close();
+					} catch (Throwable t) {
+					}
 				}
 			}
 		}
 
 		if (LOG.isInfoEnabled()) {
-			LOG.info("Loaded " + count + " chat scripts in "
+			LOG.info("Loaded " + count + " Parameter scripts in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
 		}
 	}
 
-	protected void loadGameScripts() {
+	protected void loadRegularExpressionScripts() {
 		int count = 0;
 		long startTime = System.currentTimeMillis();
 
-		File systemScripts = new File("resources/scripts/game");
+		File systemScripts = new File("resources/scripts/regularExpression");
 		File[] files = systemScripts.listFiles(new FilenameFilter() {
 
 			public boolean accept(File arg0, String arg1) {
@@ -300,21 +344,31 @@ public class ScriptService {
 
 		if (files != null) {
 			for (File file : files) {
+				FileInputStream fileIn = null;
 				try {
-					GameScript script = GameScript.load(file.getAbsolutePath());
+					Properties properties = new Properties();
+					properties.load(fileIn = new FileInputStream(file));
+					RegularExpressionScript script = ScriptUtils
+							.unserializeRegularExpressionScript(properties);
+					nameToRegularExpressionScript.put(script.getName()
+							.toUpperCase(), script);
 					script.setSystemScript(true);
-					gameScriptMap.put(script.getName(), script);
 					count++;
 				} catch (IOException ioe) {
 					Raptor.getInstance().onError(
-							"Error loading game script " + file.getName()
-									+ ",ioe");
+							"Error loading system regular expression script "
+									+ file.getName() + ",ioe");
+				} finally {
+					try {
+						fileIn.close();
+					} catch (Throwable t) {
+					}
 				}
 			}
 		}
 
 		File userScripts = new File(Raptor.USER_RAPTOR_HOME_PATH
-				+ "/scripts/game");
+				+ "/scripts/regularExpression");
 		File[] userFiles = userScripts.listFiles(new FilenameFilter() {
 			public boolean accept(File arg0, String arg1) {
 				return arg1.endsWith(".properties");
@@ -323,20 +377,31 @@ public class ScriptService {
 
 		if (userFiles != null) {
 			for (File file : userFiles) {
+				FileInputStream fileIn = null;
 				try {
-					GameScript script = GameScript.load(file.getAbsolutePath());
-					gameScriptMap.put(script.getName(), script);
+					Properties properties = new Properties();
+					properties.load(fileIn = new FileInputStream(file));
+					RegularExpressionScript script = ScriptUtils
+							.unserializeRegularExpressionScript(properties);
+					nameToRegularExpressionScript.put(script.getName()
+							.toUpperCase(), script);
+					script.setSystemScript(false);
 					count++;
 				} catch (IOException ioe) {
 					Raptor.getInstance().onError(
-							"Error loading game script " + file.getName()
-									+ ",ioe");
+							"Error loading user regular expression script "
+									+ file.getName() + ",ioe");
+				} finally {
+					try {
+						fileIn.close();
+					} catch (Throwable t) {
+					}
 				}
 			}
 		}
 
 		if (LOG.isInfoEnabled()) {
-			LOG.info("Loaded " + count + " game scripts in "
+			LOG.info("Loaded " + count + " regular expression scripts in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
 		}
 	}

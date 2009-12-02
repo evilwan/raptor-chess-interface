@@ -43,7 +43,7 @@ public interface PreferenceKeys {
 	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";
 	public static final String APP_ICON_SIZE = "app-icon-size";
-	public static final String APP_TOOLBAR_PIECE_SIZE = "app-toolbar-font-size";
+	public static final String APP_TOOLBAR_PIECE_SIZE = "app-toolbar-piece-size";
 	public static final String APP_IS_LOGGING_GAMES = "app-is-logging-games";
 	public static final String APP_OPEN_LINKS_IN_EXTERNAL_BROWSER = "app-open-links-in-external-browser";
 	public static final String APP_PING_COLOR = "app-lag-color";

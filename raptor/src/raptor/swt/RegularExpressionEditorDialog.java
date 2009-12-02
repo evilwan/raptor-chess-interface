@@ -13,8 +13,6 @@
  */
 package raptor.swt;
 
-import java.util.regex.Pattern;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -26,7 +24,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class RegExDialog extends InputDialog {
+import raptor.util.RegExUtils;
+
+public class RegularExpressionEditorDialog extends InputDialog {
 	protected StyledText regEx;
 	protected StyledText textToTest;
 
@@ -38,7 +38,8 @@ public class RegExDialog extends InputDialog {
 	 * @param style
 	 *            the style
 	 */
-	public RegExDialog(Shell parent, String title, String question) {
+	public RegularExpressionEditorDialog(Shell parent, String title,
+			String question) {
 		// Let users override the default styles
 		super(parent, title, question);
 		setText(title);
@@ -58,7 +59,7 @@ public class RegExDialog extends InputDialog {
 		createContents(shell);
 		shell.pack();
 		textToTest.setText("");
-		regEx.setText(regEx.getText().trim());
+		regEx.setText(getInput() == null ? "" : getInput().trim());
 		shell.open();
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
@@ -82,9 +83,10 @@ public class RegExDialog extends InputDialog {
 
 		Label label = new Label(shell, SWT.NONE);
 		label
-				.setText("Raptor uses only \\n for newlines. The java.util.regex.Pattern flags \n"
-						+ "CASE_INSENSITIVE, DOTALL, and MULTILINE are enabled.\n"
-						+ "Use .*word.* to search for a word.");
+				.setText("Example: .*word.* will return true whenever word is encountered.\n"
+						+ "For help with regular expressions with regular expressions in Raptor:\n"
+						+ "Help->Raptor Help->Regular Expressions");
+
 		// Show the message
 		label = new Label(shell, SWT.NONE);
 		label.setText(message);
@@ -100,9 +102,6 @@ public class RegExDialog extends InputDialog {
 		regEx.setWordWrap(true);
 		regEx.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3,
 				3));
-		if (getInput() != null) {
-			regEx.setText(getInput() + "\n\n\n\n");
-		}
 
 		// Show the message
 		label = new Label(shell, SWT.NONE);
@@ -138,17 +137,8 @@ public class RegExDialog extends InputDialog {
 		test.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				input = regEx.getText();
-				String testText = textToTest.getText();
-				boolean isSuccessful = false;
-
-				try {
-					Pattern pattern = Pattern.compile(input, Pattern.MULTILINE
-							| Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
-					isSuccessful = pattern.matcher(testText).matches();
-				} catch (Throwable t) {
-				}
-
+				boolean isSuccessful = RegExUtils.matches(regEx.getText(),
+						textToTest.getText());
 				if (isSuccessful) {
 					successLabel.setText("Successful");
 					successLabel.setForeground(shell.getDisplay()
@@ -185,10 +175,5 @@ public class RegExDialog extends InputDialog {
 				shell.close();
 			}
 		});
-
-		// Set the OK button as the default, so
-		// user can type input and press Enter
-		// to dismiss
-		// shell.setDefaultButton(test);
 	}
 }

@@ -39,7 +39,7 @@ import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ConnectorQuadrantsPage;
-import raptor.service.ActionService;
+import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.SWTUtils;
@@ -488,7 +488,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bicsMenu.add(tabsMenu);
 
 		MenuManager linksMenu = new MenuManager("&Links");
-		RaptorAction[] ficsMenuActions = ActionService.getInstance()
+		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
 				.getActions(RaptorActionContainer.BicsMenu);
 		for (final RaptorAction raptorAction : ficsMenuActions) {
 			if (raptorAction instanceof Separator) {

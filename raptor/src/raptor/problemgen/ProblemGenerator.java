@@ -34,10 +34,9 @@ public class ProblemGenerator {
 			for (UCIInfo info : infos) {
 				if (info instanceof ScoreInfo) {
 					score = (ScoreInfo) info;
-					if (!hasIssuedStop
-							&& score.getMateInMoves() != 0
-							|| (!score.isLowerBoundScore() && !score
-									.isUpperBoundScore())) {
+					if (!hasIssuedStop && score.getMateInMoves() != 0
+							|| !score.isLowerBoundScore()
+							&& !score.isUpperBoundScore()) {
 						hasIssuedStop = true;
 						new Thread(new Runnable() {
 							public void run() {
@@ -164,70 +163,6 @@ public class ProblemGenerator {
 		}
 	}
 
-	protected void testForProblem(Game game, MoveList moveList) {
-		game.rollback();
-		game.rollback();
-		game.rollback();
-		game.rollback();
-		for (int i = 0; i < 4; i++) {
-			engine.newGame();
-			engine.setPosition(game.toFen(), null);
-			engine.isReady();
-			ProblemInfoListener listener = new ProblemInfoListener();
-			listener.isWhitesMove = game.isWhitesMove();
-			engine.go("infinite", listener);
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException ie) {
-			}
-			engine.stop();
-			while (!listener.isFinished()) {
-				try {
-					Thread.sleep(100);
-				} catch (Throwable t) {
-				}
-			}
-			double finalScore = getScoreInPawns(listener.score, game
-					.isWhitesMove());
-			if (listener.score.getMateInMoves() != 0
-					|| (Math.abs(listener.bestScore - listener.worstScore) >= 2.0
-					&& Math.abs(finalScore) >= 2.0)) {
-				handleNewProblem(game, listener.bestLineFound);
-				break;
-			}
-			game.move(moveList.get(game.getHalfMoveCount()));
-		}
-	}
-
-	protected void handleNewProblem(Game game, BestLineFoundInfo bestLine) {
-		System.err.println("\nFound problem:\n" + game.toFen() + "\n"
-				+ getLine(game, bestLine) + "\n\n");
-	}
-
-	protected double getScoreInPawns(ScoreInfo score, boolean isWhitesMove) {
-		return !isWhitesMove ? -1 * score.getValueInCentipawns() / 100.0
-				: score.getValueInCentipawns() / 100.0;
-	}
-
-	protected boolean isCandidate() {
-		boolean result = false;
-
-		CandidateInfoListener listener = new CandidateInfoListener();
-		engine.go("infinite", listener);
-		while (!listener.isFinished()) {
-			try {
-				Thread.sleep(100);
-			} catch (Throwable t) {
-			}
-		}
-
-		if (listener.score.getMateInMoves() > 0
-				|| Math.abs(listener.score.getValueInCentipawns() / 100.0) > 3) {
-			result = true;
-		}
-		return result;
-	}
-
 	public String getLine(Game game, BestLineFoundInfo info) {
 		BestLineFoundInfo bestLineFoundInfo = info;
 		StringBuilder line = new StringBuilder(100);
@@ -264,5 +199,69 @@ public class ProblemGenerator {
 			}
 		}
 		return line.toString();
+	}
+
+	protected double getScoreInPawns(ScoreInfo score, boolean isWhitesMove) {
+		return !isWhitesMove ? -1 * score.getValueInCentipawns() / 100.0
+				: score.getValueInCentipawns() / 100.0;
+	}
+
+	protected void handleNewProblem(Game game, BestLineFoundInfo bestLine) {
+		System.err.println("\nFound problem:\n" + game.toFen() + "\n"
+				+ getLine(game, bestLine) + "\n\n");
+	}
+
+	protected boolean isCandidate() {
+		boolean result = false;
+
+		CandidateInfoListener listener = new CandidateInfoListener();
+		engine.go("infinite", listener);
+		while (!listener.isFinished()) {
+			try {
+				Thread.sleep(100);
+			} catch (Throwable t) {
+			}
+		}
+
+		if (listener.score.getMateInMoves() > 0
+				|| Math.abs(listener.score.getValueInCentipawns() / 100.0) > 3) {
+			result = true;
+		}
+		return result;
+	}
+
+	protected void testForProblem(Game game, MoveList moveList) {
+		game.rollback();
+		game.rollback();
+		game.rollback();
+		game.rollback();
+		for (int i = 0; i < 4; i++) {
+			engine.newGame();
+			engine.setPosition(game.toFen(), null);
+			engine.isReady();
+			ProblemInfoListener listener = new ProblemInfoListener();
+			listener.isWhitesMove = game.isWhitesMove();
+			engine.go("infinite", listener);
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException ie) {
+			}
+			engine.stop();
+			while (!listener.isFinished()) {
+				try {
+					Thread.sleep(100);
+				} catch (Throwable t) {
+				}
+			}
+			double finalScore = getScoreInPawns(listener.score, game
+					.isWhitesMove());
+			if (listener.score.getMateInMoves() != 0
+					|| Math.abs(listener.bestScore - listener.worstScore) >= 2.0
+					&& Math.abs(finalScore) >= 2.0) {
+				handleNewProblem(game, listener.bestLineFound);
+				break;
+			}
+			game.move(moveList.get(game.getHalfMoveCount()));
+		}
 	}
 }

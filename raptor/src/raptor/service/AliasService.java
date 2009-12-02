@@ -1,3 +1,16 @@
+/**
+ * New BSD License
+ * http://www.opensource.org/licenses/bsd-license.php
+ * Copyright (c) 2009, RaptorProject (http://code.google.com/p/raptor-chess-interface/)
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ * Neither the name of the RaptorProject nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package raptor.service;
 
 import java.util.ArrayList;
@@ -48,6 +61,24 @@ public class AliasService {
 		aliases.clear();
 	}
 
+	/**
+	 * Returns an alias by name. Returns null if the alias is not found.
+	 * 
+	 * @param name
+	 *            The alias name.
+	 * @return The alias, or null if the alias could not be found.
+	 */
+	public RaptorAlias getAlias(String name) {
+		RaptorAlias result = null;
+		for (RaptorAlias alias : aliases) {
+			if (alias.getName().equalsIgnoreCase(name)) {
+				result = alias;
+				break;
+			}
+		}
+		return result;
+	}
+
 	public RaptorAlias[] getAliases() {
 		return aliases.toArray(new RaptorAlias[0]);
 	}
@@ -65,21 +96,25 @@ public class AliasService {
 		builder.append("<UL>\n");
 		builder.append("<LH>Aliases:</LH>\n");
 		for (RaptorAlias alias : getAliases()) {
-			builder.append("<LI><a href=\"#" + alias.getName() + "\">"
-					+ alias.getName() + "</a></LI>\n");
+			if (!alias.isHidden()) {
+				builder.append("<LI><a href=\"#" + alias.getName() + "\">"
+						+ alias.getName() + "</a></LI>\n");
+			}
 		}
 		builder.append("</UL>\n");
 		builder.append("<br/>\n");
 
 		for (RaptorAlias alias : getAliases()) {
-			builder.append("<a name=\"" + alias.getName() + "\"><h2>"
-					+ alias.getName() + "</h2></a>\n");
-			builder.append("<h3>Description:</h3>\n");
-			builder.append("<p>" + alias.getDescription() + "</p>\n");
-			builder.append("<h3>Usage:</h3>\n");
-			builder.append("<p>" + alias.getUsage() + "</p>\n");
-			builder.append("<br/>\n");
-			builder.append("<br/>\n");
+			if (!alias.isHidden()) {
+				builder.append("<a name=\"" + alias.getName() + "\"><h2>"
+						+ alias.getName() + "</h2></a>\n");
+				builder.append("<h3>Description:</h3>\n");
+				builder.append("<p>" + alias.getDescription() + "</p>\n");
+				builder.append("<h3>Usage:</h3>\n");
+				builder.append("<p>" + alias.getUsage() + "</p>\n");
+				builder.append("<br/>\n");
+				builder.append("<br/>\n");
+			}
 		}
 		builder.append("</body></html>\n");
 		return builder.toString();
