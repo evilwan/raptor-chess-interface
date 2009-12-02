@@ -217,6 +217,9 @@ public interface PreferenceKeys {
 	public static final String CHAT_IS_PLAYING_CHAT_ON_PTELL = "chat-is-playing-chat-on-ptell";
 	public static final String CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL = "chat-is-playing-chat-on-person-tell";
 	public static final String CHAT_IS_SMART_SCROLL_ENABLED = "chat-is-smart-scroll-enabled";
+	public static final String CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS = "chat-open-channel-tab-on-channel-tells";
+	public static final String CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS = "chat-open-person-tab-on-direct-tells";
+	public static final String CHAT_OPEN_PARTNER_TAB_ON_PTELLS = "chat-open-partner-tab-on-ptells";
 
 	// Connector preferences should always use the short name of the connector
 	// followed by the preference.

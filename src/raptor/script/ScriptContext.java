@@ -88,7 +88,7 @@ public interface ScriptContext {
 	/**
 	 * Opens a regex tab if one is not already open.
 	 */
-	public void openRegExTab(String regularExpression);
+	public void openRegularExpressionTab(String regularExpression);
 
 	/**
 	 * Opens the specified url.

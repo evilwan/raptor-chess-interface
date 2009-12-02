@@ -34,8 +34,13 @@ import raptor.action.chat.TellsMissedWhileIWasAwayAction;
 import raptor.action.chat.ToggleScrollLock;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatLogger.ChatEventParseListener;
+import raptor.connector.Connector;
 import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
+import raptor.swt.chat.controller.BughousePartnerController;
+import raptor.swt.chat.controller.ChannelController;
+import raptor.swt.chat.controller.PersonController;
+import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chat.controller.ToolBarItemKey;
 
 public class ChatUtils {
@@ -292,6 +297,51 @@ public class ChatUtils {
 
 		} catch (Exception e) {
 			return null;
+		}
+	}
+
+	public static void openChannelTab(Connector connector, String channel) {
+		if (!Raptor.getInstance().getWindow().containsChannelItem(connector,
+				channel)) {
+			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+					new ChannelController(connector, channel));
+			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
+					false);
+			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
+		}
+	}
+
+	public static void openPartnerTab(Connector connector) {
+		if (!Raptor.getInstance().getWindow()
+				.containsPartnerTellItem(connector)) {
+			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+					new BughousePartnerController(connector));
+			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
+					false);
+			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
+		}
+	}
+
+	public static void openPersonTab(Connector connector, String person) {
+		if (!Raptor.getInstance().getWindow().containsPersonalTellItem(
+				connector, person)) {
+			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+					new PersonController(connector, person));
+			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
+					false);
+			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
+		}
+	}
+
+	public static void openRegularExpressionTab(Connector connector,
+			String regularExpression) {
+		if (!Raptor.getInstance().getWindow()
+				.containsPartnerTellItem(connector)) {
+			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+					new RegExController(connector, regularExpression));
+			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
+					false);
+			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
 		}
 	}
 

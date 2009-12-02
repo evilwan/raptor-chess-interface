@@ -13,12 +13,10 @@
  */
 package raptor.pref.page;
 
-import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FontFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -49,38 +47,6 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 				PreferenceKeys.CHAT_MAX_CONSOLE_CHARS, "Chat Console Size:",
 				CONSOLE_CHARS, getFieldEditorParent());
 		addField(consoleChars);
-
-		BooleanFieldEditor addTimestamps = new BooleanFieldEditor(
-				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE,
-				"Add Timestamps To Messages", getFieldEditorParent());
-		addField(addTimestamps);
-
-		BooleanFieldEditor underlineSingleQuotes = new BooleanFieldEditor(
-				PreferenceKeys.CHAT_UNDERLINE_SINGLE_QUOTES,
-				"Underline single quoted text", getFieldEditorParent());
-		addField(underlineSingleQuotes);
-
-		BooleanFieldEditor smartScroll = new BooleanFieldEditor(
-				PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED,
-				"Smart Scroll (Toggles auto scroll based on the "
-						+ "vertical scrolllbar position)",
-				getFieldEditorParent());
-		addField(smartScroll);
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PTELL,
-				"Play 'chat' sound on all partner tells.",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL,
-				"Play 'chat' sound on all person tells.",
-				getFieldEditorParent()));
-
-		StringFieldEditor timestampFormat = new StringFieldEditor(
-				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE_FORMAT,
-				"Message Timestamp Format (Advanced):", getFieldEditorParent());
-		addField(timestampFormat);
 
 		ColorFieldEditor consoleBackground = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CONSOLE_BACKGROUND_COLOR,
