@@ -1,8 +1,7 @@
 package raptor.problemgen;
 
 import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.Date;
 
 import raptor.chess.Game;
 import raptor.chess.Move;
@@ -21,10 +20,11 @@ import raptor.engine.uci.info.BestLineFoundInfo;
 import raptor.engine.uci.info.ScoreInfo;
 
 public class ProblemGenerator {
-	protected class ProblemGeneratorUCIInfoListener implements UCIInfoListener {
+	protected class CandidateInfoListener implements UCIInfoListener {
 		protected UCIBestMove bestMove;
 		protected ScoreInfo score;
 		protected BestLineFoundInfo bestLineFound;
+		protected boolean hasIssuedStop = false;
 
 		public void engineSentBestMove(UCIBestMove uciBestMove) {
 			bestMove = uciBestMove;
@@ -34,6 +34,17 @@ public class ProblemGenerator {
 			for (UCIInfo info : infos) {
 				if (info instanceof ScoreInfo) {
 					score = (ScoreInfo) info;
+					if (!hasIssuedStop
+							&& score.getMateInMoves() != 0
+							|| (!score.isLowerBoundScore() && !score
+									.isUpperBoundScore())) {
+						hasIssuedStop = true;
+						new Thread(new Runnable() {
+							public void run() {
+								engine.stop();
+							}
+						}).start();
+					}
 				} else if (info instanceof BestLineFoundInfo) {
 					bestLineFound = (BestLineFoundInfo) info;
 				}
@@ -45,6 +56,47 @@ public class ProblemGenerator {
 		}
 	}
 
+	protected class ProblemInfoListener implements UCIInfoListener {
+		protected UCIBestMove bestMove;
+		protected ScoreInfo score;
+		protected BestLineFoundInfo bestLineFound;
+		protected double worstScore = .55599;
+		protected double bestScore = .55599;
+		protected boolean isWhitesMove;
+
+		public void engineSentBestMove(UCIBestMove uciBestMove) {
+			bestMove = uciBestMove;
+		}
+
+		public void engineSentInfo(UCIInfo[] infos) {
+			for (UCIInfo info : infos) {
+				if (info instanceof ScoreInfo) {
+					score = (ScoreInfo) info;
+					if (score.getMateInMoves() == 0) {
+						double scoreInPawns = getScoreInPawns(score,
+								isWhitesMove);
+
+						if (bestScore == .55599) {
+							worstScore = bestScore = scoreInPawns;
+						}
+						if (scoreInPawns > bestScore) {
+							bestScore = scoreInPawns;
+						} else if (scoreInPawns < worstScore) {
+							worstScore = scoreInPawns;
+						}
+					}
+				} else if (info instanceof BestLineFoundInfo) {
+					bestLineFound = (BestLineFoundInfo) info;
+				}
+			}
+		}
+
+		public boolean isFinished() {
+			return bestMove != null;
+		}
+	}
+
+	protected int numGames;
 	protected UCIEngine engine;
 	protected StreamingPgnParser parser;
 	protected String outputFile = "/Users/mindspan/problemGeneratorOutput.txt";
@@ -58,7 +110,7 @@ public class ProblemGenerator {
 		@Override
 		public void gameParsed(Game game, int lineNumber) {
 			if (game.getVariant() == Variant.classic) {
-				checkForProblems(game);
+				checkGameForCandidates(game);
 			}
 		}
 	};
@@ -79,15 +131,16 @@ public class ProblemGenerator {
 		parser.parse();
 	}
 
-	public void checkForProblems(Game game) {
-		System.err.println("Checking game: " + game.getHeader(PgnHeader.Event)
-				+ " " + game.getHeader(PgnHeader.White) + "("
+	public void checkGameForCandidates(Game game) {
+		System.err.println(new Date() + " " + "Checking game: " + numGames++
+				+ " " + game.getHeader(PgnHeader.Event) + " "
+				+ game.getHeader(PgnHeader.White) + "("
 				+ game.getHeader(PgnHeader.WhiteElo) + ") vs "
 				+ game.getHeader(PgnHeader.Black) + "("
 				+ game.getHeader(PgnHeader.BlackElo) + ")");
 
 		MoveList moveList = game.getMoveList().deepCopy();
-		if (moveList.getSize() > 10) {
+		if (moveList.getSize() > 20) {
 			while (game.getMoveList().getSize() > 10) {
 				game.rollback();
 			}
@@ -97,60 +150,82 @@ public class ProblemGenerator {
 			engine.newGame();
 			engine.isReady();
 
-			System.err.println(moveList.getSize() + " "
-					+ game.getHalfMoveCount());
 			while (moveList.getSize() > game.getHalfMoveCount()) {
 				engine.setPosition(game.toFen(), null);
-
-				System.err.println("Checking position: " + game.toFen());
-
-				ProblemGeneratorUCIInfoListener listener = new ProblemGeneratorUCIInfoListener();
-				engine.go("infinite", listener);
-				try {
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
+				if (isCandidate()) {
+					System.err
+							.println("Found candidate. Testing to see if its a real problem.");
+					testForProblem(game, moveList);
+					break;
+				} else {
+					game.move(moveList.get(game.getHalfMoveCount()));
 				}
-				engine.stop();
-				while (!listener.isFinished()) {
-					try {
-						Thread.sleep(100);
-					} catch (Throwable t) {
-					}
-				}
-
-				if (listener.score.getMateInMoves() > 0
-						|| !listener.score.isLowerBoundScore()
-						&& !listener.score.isUpperBoundScore()
-						&& Math
-								.abs(listener.score.getValueInCentipawns() / 100.0) > 3) {
-					String output = game.getHeader(PgnHeader.Event) + " "
-							+ game.getHeader(PgnHeader.White) + "("
-							+ game.getHeader(PgnHeader.WhiteElo) + ") vs "
-							+ game.getHeader(PgnHeader.Black) + "("
-							+ game.getHeader(PgnHeader.BlackElo) + ")\n"
-							+ game.toFen() + "\n"
-							+ getLine(game, listener.bestLineFound) + "\n\n";
-
-					FileWriter writer = null;
-					try {
-						writer = new FileWriter(outputFile, true);
-						writer.append(output);
-						writer.flush();
-					} catch (IOException ioe) {
-						throw new RuntimeException(ioe);
-					} finally {
-						try {
-							writer.close();
-						} catch (IOException ioe) {
-						}
-					}
-					System.err.println("Found problem:\n" + output);
-
-					return;
-				}
-				game.move(moveList.get(game.getHalfMoveCount()));
 			}
 		}
+	}
+
+	protected void testForProblem(Game game, MoveList moveList) {
+		game.rollback();
+		game.rollback();
+		game.rollback();
+		game.rollback();
+		for (int i = 0; i < 4; i++) {
+			engine.newGame();
+			engine.setPosition(game.toFen(), null);
+			engine.isReady();
+			ProblemInfoListener listener = new ProblemInfoListener();
+			listener.isWhitesMove = game.isWhitesMove();
+			engine.go("infinite", listener);
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException ie) {
+			}
+			engine.stop();
+			while (!listener.isFinished()) {
+				try {
+					Thread.sleep(100);
+				} catch (Throwable t) {
+				}
+			}
+			double finalScore = getScoreInPawns(listener.score, game
+					.isWhitesMove());
+			if (listener.score.getMateInMoves() != 0
+					|| (Math.abs(listener.bestScore - listener.worstScore) >= 2.0
+					&& Math.abs(finalScore) >= 2.0)) {
+				handleNewProblem(game, listener.bestLineFound);
+				break;
+			}
+			game.move(moveList.get(game.getHalfMoveCount()));
+		}
+	}
+
+	protected void handleNewProblem(Game game, BestLineFoundInfo bestLine) {
+		System.err.println("\nFound problem:\n" + game.toFen() + "\n"
+				+ getLine(game, bestLine) + "\n\n");
+	}
+
+	protected double getScoreInPawns(ScoreInfo score, boolean isWhitesMove) {
+		return !isWhitesMove ? -1 * score.getValueInCentipawns() / 100.0
+				: score.getValueInCentipawns() / 100.0;
+	}
+
+	protected boolean isCandidate() {
+		boolean result = false;
+
+		CandidateInfoListener listener = new CandidateInfoListener();
+		engine.go("infinite", listener);
+		while (!listener.isFinished()) {
+			try {
+				Thread.sleep(100);
+			} catch (Throwable t) {
+			}
+		}
+
+		if (listener.score.getMateInMoves() > 0
+				|| Math.abs(listener.score.getValueInCentipawns() / 100.0) > 3) {
+			result = true;
+		}
+		return result;
 	}
 
 	public String getLine(Game game, BestLineFoundInfo info) {
