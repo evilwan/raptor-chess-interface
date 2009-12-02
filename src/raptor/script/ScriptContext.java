@@ -28,14 +28,6 @@ public interface ScriptContext {
 	public void alert(String message);
 
 	/**
-	 * Some scripts use parameters. This will return the parameters if any were
-	 * passed in.
-	 * 
-	 * @return The parameters. An empty String[] if there are no parameters.
-	 */
-	public String[] getParameters();
-
-	/**
 	 * Returns the current ping time in milliseconds.
 	 */
 	public long getPingMillis();

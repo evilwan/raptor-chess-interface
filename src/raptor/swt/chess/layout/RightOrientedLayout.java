@@ -23,6 +23,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
+import raptor.Raptor;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardLayout;
@@ -332,7 +334,11 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 		int topLabelNorthMargin = height
 				* TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES[NORTH] / 100;
-		topLabelHeight = height * TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN / 100;
+		topLabelHeight = Math.max(height
+				* TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN / 100, Raptor
+				.getInstance().getPreferences().getInt(
+						PreferenceKeys.APP_TOOLBAR_PIECE_SIZE));
+
 		int topLabelSouthMargin = height
 				* TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES[SOUTH] / 100;
 

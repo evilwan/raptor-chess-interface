@@ -40,10 +40,10 @@ import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.ChessBoardResultsPage;
 import raptor.pref.page.ChessBoardToolbarsPage;
 import raptor.pref.page.EnginesPage;
-import raptor.pref.page.MessageEventScripts;
 import raptor.pref.page.RaptorPage;
 import raptor.pref.page.RaptorWindowPage;
 import raptor.pref.page.RaptorWindowQuadrantsPage;
+import raptor.pref.page.RegularExpressionScripts;
 import raptor.pref.page.SoundPage;
 import raptor.pref.page.SpeechPage;
 import raptor.service.ConnectorService;
@@ -229,7 +229,8 @@ public class PreferenceUtils {
 												+ "buttons screen.You can add new actions on the Action Scripts Page.",
 										RaptorActionContainer.BugButtons)));
 
-		mgr.addToRoot(new PreferenceNode("scripts", new MessageEventScripts()));
+		mgr.addToRoot(new PreferenceNode("scripts",
+				new RegularExpressionScripts()));
 
 		mgr.addToRoot(new PreferenceNode("actionScripts",
 				new ActionScriptsPage()));

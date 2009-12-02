@@ -1,1 +1,0 @@
-This folder contains your saved chat scripts.

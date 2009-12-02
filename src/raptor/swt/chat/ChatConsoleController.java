@@ -67,9 +67,8 @@ import raptor.connector.ConnectorListener;
 import raptor.connector.fics.FicsConnector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
-import raptor.script.ChatScript;
-import raptor.script.ChatScript.ChatScriptType;
-import raptor.service.ActionService;
+import raptor.script.ParameterScript;
+import raptor.service.ActionScriptService;
 import raptor.service.AliasService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
@@ -641,7 +640,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		boolean isConsoleOutputText = event.widget == chatConsole.outputText;
 
 		if (ActionUtils.isValidModifier(event.stateMask)) {
-			RaptorAction action = ActionService.getInstance().getAction(
+			RaptorAction action = ActionScriptService.getInstance().getAction(
 					event.stateMask, event.keyCode);
 			if (action != null) {
 				if (LOG.isDebugEnabled()) {
@@ -653,7 +652,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			}
 		} else if (ActionUtils.isValidKeyCodeWithoutModifier(event.keyCode)) {
-			RaptorAction action = ActionService.getInstance().getAction(
+			RaptorAction action = ActionScriptService.getInstance().getAction(
 					event.stateMask, event.keyCode);
 			if (action != null) {
 				if (LOG.isDebugEnabled()) {
@@ -839,19 +838,26 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
-	protected void addCommandMenuItems(Menu menu, final String message) {
+	protected void addCommandMenuItems(Menu menu, String message) {
 		if (message != null && message.length() <= 200) {
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
 
-			if (message.startsWith("http")) {
+			if (message.startsWith("http") || message.endsWith(".com")
+					|| message.endsWith(".edu") || message.endsWith(".org")) {
+				if (!message.startsWith("http")) {
+					message = "http://" + message;
+				}
+
+				final String url = message;
+
 				MenuItem internalBrowserItem = new MenuItem(menu, SWT.PUSH);
 				internalBrowserItem.setText("Open in internal browser: '"
 						+ message + "'");
 				internalBrowserItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						BrowserUtils.openInternalUrl(message);
+						BrowserUtils.openInternalUrl(url);
 					}
 				});
 
@@ -859,22 +865,25 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				menuItem.setText("Open in external browser: '" + message + "'");
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						BrowserUtils.openExternalUrl(message);
+						BrowserUtils.openExternalUrl(url);
 					}
 				});
-
 			}
 
-			ChatScript[] scripts = ScriptService.getInstance().getChatScripts(
-					getConnector(), ChatScriptType.RightClickOneShot);
+			ParameterScript[] scripts = ScriptService.getInstance()
+					.getParameterScripts(
+							getConnector().getScriptConnectorType(),
+							ParameterScript.Type.ConsoleRightClickScripts);
 
-			for (final ChatScript script : scripts) {
+			for (final ParameterScript script : scripts) {
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
 				menuItem.setText(script.getName() + ": '" + message + "'");
+				final Map<String, String> parameterMap = new HashMap<String, String>();
+				parameterMap.put("selection", message);
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						script.execute(connector.getChatScriptContext(null,
-								message));
+						script.execute(connector
+								.getParameterScriptContext(parameterMap));
 					}
 				});
 			}

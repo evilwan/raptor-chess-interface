@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -19,16 +20,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
-import raptor.script.ChatScript;
+import raptor.script.ParameterScript;
 import raptor.script.ScriptConnectorType;
-import raptor.script.ChatScript.ChatScriptType;
+import raptor.script.ParameterScript.Type;
 import raptor.service.ScriptService;
 import raptor.swt.RaptorTable;
 import raptor.swt.SWTUtils;
+import raptor.swt.ScriptEditorDialog;
 
 public class ChatConsoleRightClickScripts extends PreferencePage {
 
@@ -40,7 +41,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 	protected Text nameText;
 	protected Text descriptionText;
 	protected Button isActiveButton;
-	protected StyledText scriptText;
+	protected CLabel scriptText;
 	protected Combo connectorTypeCombo;
 
 	protected Button saveButton;
@@ -55,11 +56,11 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 	@Override
 	protected Control createContents(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(2, false));
+		composite.setLayout(new GridLayout(3, false));
 
 		Label textLabel = new Label(composite, SWT.WRAP);
 		textLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 2, 1));
+				false, 3, 1));
 		textLabel
 				.setText(WordUtils
 						.wrap(
@@ -118,10 +119,10 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				String selection = icsInactiveScriptsTable.getTable().getItem(
 						selectedIndex).getText(0);
 
-				ChatScript script = ScriptService.getInstance().getChatScript(
-						selection);
+				ParameterScript script = ScriptService.getInstance()
+						.getParameterScript(selection);
 				script.setActive(true);
-				ScriptService.getInstance().saveChatScript(script);
+				ScriptService.getInstance().save(script);
 				refreshTables();
 			}
 		});
@@ -139,10 +140,10 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				String selection = icsActiveScriptsTable.getTable().getItem(
 						selectedIndex).getText(0);
 
-				ChatScript script = ScriptService.getInstance().getChatScript(
-						selection);
+				ParameterScript script = ScriptService.getInstance()
+						.getParameterScript(selection);
 				script.setActive(false);
-				ScriptService.getInstance().saveChatScript(script);
+				ScriptService.getInstance().save(script);
 				refreshTables();
 			}
 		});
@@ -165,86 +166,15 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 					}
 				});
 
-		Composite buttonsComposite = new Composite(composite, SWT.NONE);
-		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false,
-				false, 2, 1));
-		buttonsComposite.setLayout(new RowLayout());
-		Button upButton = new Button(buttonsComposite, SWT.PUSH);
-		upButton.setImage(Raptor.getInstance().getIcon("up"));
-		upButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selectedScript = icsActiveScriptsTable.getTable()
-						.getSelectionIndex();
-				if (selectedScript > 0) {
-					TableItem[] items = icsActiveScriptsTable.getTable()
-							.getItems();
-					for (int i = 0; i < items.length; i++) {
-						ChatScript script = ScriptService.getInstance()
-								.getChatScript(items[i].getText());
-						if (i == selectedScript - 1) {
-							script.setOrder(i + 1);
-						} else if (i == selectedScript) {
-							script.setOrder(i - 1);
-						} else {
-							script.setOrder(i);
-						}
-						ScriptService.getInstance().saveChatScript(script);
-					}
-					String selectedText = items[selectedScript].getText();
-					items[selectedScript].setText(items[selectedScript - 1]
-							.getText());
-					items[selectedScript - 1].setText(selectedText);
-					icsActiveScriptsTable.getTable().setSelection(
-							selectedScript - 1);
-					icsActiveScriptsTable.redraw();
-				}
-			}
-		});
-		Button downButton = new Button(buttonsComposite, SWT.PUSH);
-		downButton.setImage(Raptor.getInstance().getIcon("down"));
-		downButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int selectedScript = icsActiveScriptsTable.getTable()
-						.getSelectionIndex();
-				if (selectedScript < icsActiveScriptsTable.getTable()
-						.getItemCount() - 1) {
-					TableItem[] items = icsActiveScriptsTable.getTable()
-							.getItems();
-					for (int i = 0; i < items.length; i++) {
-						ChatScript script = ScriptService.getInstance()
-								.getChatScript(items[i].getText());
-						if (i == selectedScript + 1) {
-							script.setOrder(i - 1);
-						} else if (i == selectedScript) {
-							script.setOrder(i + 1);
-						} else {
-							script.setOrder(i);
-						}
-						ScriptService.getInstance().saveChatScript(script);
-					}
-					String selectedText = items[selectedScript].getText();
-					items[selectedScript].setText(items[selectedScript + 1]
-							.getText());
-					items[selectedScript + 1].setText(selectedText);
-					icsActiveScriptsTable.getTable().setSelection(
-							selectedScript + 1);
-					icsActiveScriptsTable.redraw();
-				}
-			}
-		});
-
 		isActiveButton = new Button(composite, SWT.CHECK);
-		isActiveButton
-				.setText("Active (Takes effect next time you open a main tab)");
+		isActiveButton.setText("Active");
 		isActiveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1));
+				false, 3, 1));
 
 		Composite nameComposite = new Composite(composite, SWT.NONE);
 		nameComposite.setLayout(SWTUtils.createMarginlessGridLayout(2, false));
 		nameComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 2, 1));
+				false, 3, 1));
 		Label nameLabel = new Label(nameComposite, SWT.NONE);
 		nameLabel.setText("Name: ");
 		nameLabel
@@ -256,7 +186,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		descriptionComposite.setLayout(SWTUtils.createMarginlessGridLayout(2,
 				false));
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 2, 1));
+				true, false, 3, 1));
 		Label descriptionLabel = new Label(descriptionComposite, SWT.NONE);
 		descriptionLabel.setText("Description: ");
 		descriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
@@ -269,7 +199,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		controlsComposite.setLayout(SWTUtils.createMarginlessGridLayout(2,
 				false));
 		controlsComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false, 2, 1));
+				true, false, 3, 1));
 
 		Label connectorTypeLabel = new Label(controlsComposite, SWT.NONE);
 		connectorTypeLabel.setText("Connector: ");
@@ -285,37 +215,51 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		Label scriptLabel = new Label(composite, SWT.NONE);
 		scriptLabel.setText("Script:");
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 2, 1));
-		scriptText = new StyledText(composite, SWT.BORDER | SWT.V_SCROLL
-				| SWT.H_SCROLL);
+				false, 1, 1));
+		scriptText = new CLabel(composite, SWT.LEFT);
 		scriptText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 2, 1));
-		scriptText.setText("\n\n\n\n\n\n");
-		scriptText.setWordWrap(false);
+				false, 1, 1));
+		scriptText.setText("\n \n \n \n \n \n");
+		Button scriptEdit = new Button(composite, SWT.PUSH);
+		scriptEdit.setText("Edit");
+		scriptEdit.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1));
+		scriptEdit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				ScriptEditorDialog dialog = new ScriptEditorDialog(getShell(),
+						"Edit script: " + nameText.getText());
+				dialog.setInput(scriptText.getText());
+				String result = dialog.open();
+				if (StringUtils.isNotBlank(result)) {
+					scriptText.setText(result.trim());
+				}
+			}
+		});
 
 		Composite buttonComposite = new Composite(composite, SWT.NONE);
 		buttonComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true,
-				false, 2, 1));
+				false, 3, 1));
 		buttonComposite.setLayout(new RowLayout());
 		saveButton = new Button(buttonComposite, SWT.PUSH);
 		saveButton.setText("Save");
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ChatScript newScript = ScriptService.getInstance()
-						.getChatScript(nameText.getText());
+				ParameterScript newScript = ScriptService.getInstance()
+						.getParameterScript(nameText.getText());
 				if (newScript == null) {
-					newScript = new ChatScript();
+					newScript = new ParameterScript();
 				}
 				newScript.setActive(isActiveButton.getSelection());
 				newScript.setName(nameText.getText());
 				newScript.setDescription(descriptionText.getText());
 				newScript.setScript(scriptText.getText().trim());
-				newScript.setScriptConnectorType(ScriptConnectorType
+				newScript.setConnectorType(ScriptConnectorType
 						.valueOf(connectorTypeCombo.getItem(connectorTypeCombo
 								.getSelectionIndex())));
-				newScript.setChatScriptType(ChatScriptType.RightClickOneShot);
-				ScriptService.getInstance().saveChatScript(newScript);
+				newScript.setType(Type.ConsoleRightClickScripts);
+				ScriptService.getInstance().save(newScript);
 				refreshTables();
 			}
 		});
@@ -325,8 +269,8 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ChatScript script = ScriptService.getInstance().getChatScript(
-						nameText.getText());
+				ParameterScript script = ScriptService.getInstance()
+						.getParameterScript(nameText.getText());
 				if (script.isSystemScript()) {
 					script.setActive(false);
 					MessageBox messageBox = new MessageBox(getShell(),
@@ -336,7 +280,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 							.setMessage("You can't delete a system script. The script was however made inactive.");
 					messageBox.open();
 				} else {
-					ScriptService.getInstance().deleteChatScript(
+					ScriptService.getInstance().deleteParameterScript(
 							nameText.getText());
 				}
 				refreshTables();
@@ -347,8 +291,8 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 	}
 
 	protected void loadControls(String scriptName) {
-		ChatScript currentScript = ScriptService.getInstance().getChatScript(
-				scriptName);
+		ParameterScript currentScript = ScriptService.getInstance()
+				.getParameterScript(scriptName);
 		nameText.setText(currentScript.getName());
 		descriptionText.setText(currentScript.getDescription());
 		isActiveButton.setSelection(currentScript.isActive());
@@ -356,8 +300,8 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		int connectorTypeSelection = 0;
 		String[] connectorTypeItems = connectorTypeCombo.getItems();
 		for (int i = 0; i < connectorTypeItems.length; i++) {
-			if (connectorTypeItems[i].equals(currentScript
-					.getScriptConnectorType().name())) {
+			if (connectorTypeItems[i].equals(currentScript.getConnectorType()
+					.name())) {
 				connectorTypeSelection = i;
 				break;
 			}
@@ -367,14 +311,15 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 	}
 
 	protected void refreshTables() {
-		ChatScript[] allScripts = ScriptService.getInstance()
-				.getAllChatScripts();
+		ParameterScript[] allScripts = ScriptService.getInstance()
+				.getParameterScripts();
 
-		List<ChatScript> inactiveScripts = new ArrayList<ChatScript>(10);
-		List<ChatScript> activeScripts = new ArrayList<ChatScript>(10);
+		List<ParameterScript> inactiveScripts = new ArrayList<ParameterScript>(
+				10);
+		List<ParameterScript> activeScripts = new ArrayList<ParameterScript>(10);
 
-		for (ChatScript script : allScripts) {
-			if (script.getChatScriptType() == ChatScriptType.RightClickOneShot) {
+		for (ParameterScript script : allScripts) {
+			if (script.getType() == Type.ConsoleRightClickScripts) {
 				if (script.isActive()) {
 					activeScripts.add(script);
 				} else {
@@ -383,8 +328,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 			}
 		}
 		Collections.sort(activeScripts);
-		Collections.sort(inactiveScripts,
-				new ChatScript.ChatScriptNameComparator());
+		Collections.sort(inactiveScripts);
 
 		String[][] activeData = new String[activeScripts.size()][1];
 		String[][] inactiveData = new String[inactiveScripts.size()][1];

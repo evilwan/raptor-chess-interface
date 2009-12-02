@@ -138,6 +138,9 @@ public class SWTUtils {
 	 */
 	public static Font getProportionalFont(Font fontToAdjust,
 			int resizePercentage, int controlHeight) {
+		if (controlHeight <= 0) {
+			return fontToAdjust;
+		}
 
 		Point pixelsPerInch = Raptor.getInstance().getDisplay().getDPI();
 		double pointsPerPixel = 72.0 / pixelsPerInch.y;

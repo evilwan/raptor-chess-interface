@@ -79,6 +79,7 @@ import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
+import raptor.util.RegExUtils;
 
 /**
  * A Raptor window is broken up into quadrants. Each quadrant is tabbed. You can
@@ -1458,26 +1459,11 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(new Separator());
 
 		MenuManager raptorHelp = new MenuManager("&Raptor Help");
-		raptorHelp.add(new Action("Raptor &Aliases") {
+		raptorHelp.add(new Action("&Aliases") {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openHtml(AliasService.getInstance().getAliasHtml());
-			}
-		});
-		raptorHelp.add(new Action("Raptor &Scripting") {
-			@Override
-			public void run() {
-				BrowserUtils
-						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/Scripting");
-			}
-		});
-		raptorHelp.add(new Action("Raptor &Tips") {
-			@Override
-			public void run() {
-				BrowserUtils
-						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/UsefulTips");
-
 			}
 		});
 		raptorHelp.add(new Action("&Frequently Asked Questions") {
@@ -1488,6 +1474,29 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
+		raptorHelp.add(new Action("&Regular Expressions") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openHtml(RegExUtils.getRegularExpressionHelpHtml());
+			}
+		});
+		raptorHelp.add(new Action("&Scripting") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/Scripting");
+			}
+		});
+		raptorHelp.add(new Action("&Tips") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/UsefulTips");
+
+			}
+		});
+		raptorHelp.add(new Separator());
 		raptorHelp.add(new Action("&Show Error Log") {
 			@Override
 			public void run() {

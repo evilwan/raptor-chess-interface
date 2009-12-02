@@ -52,14 +52,14 @@ import raptor.connector.MessageCallback;
 import raptor.connector.ics.timeseal.TimesealingSocket;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
-import raptor.script.ChatScript;
 import raptor.script.ChatScriptContext;
-import raptor.script.GameScriptContext;
+import raptor.script.ParameterScriptContext;
 import raptor.script.RaptorChatScriptContext;
+import raptor.script.RaptorParameterScriptContext;
 import raptor.script.RaptorScriptContext;
+import raptor.script.RegularExpressionScript;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptContext;
-import raptor.script.ChatScript.ChatScriptType;
 import raptor.service.BughouseService;
 import raptor.service.ChatService;
 import raptor.service.GameService;
@@ -84,6 +84,7 @@ import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
+import raptor.util.RegExUtils;
 
 /**
  * An ics (internet chess server) connector. You will need to supply yuor own
@@ -200,20 +201,17 @@ public abstract class IcsConnector implements Connector {
 	protected String userFollowing;
 	protected String[] bughouseSounds = SoundService.getInstance()
 			.getBughouseSoundKeys();
-	protected ChatScript[] personTellMessageScripts = null;
-	protected ChatScript[] channelTellMessageScripts = null;
-	protected ChatScript[] partnerTellMessageScripts = null;
+	protected RegularExpressionScript[] regularExpressionScripts = null;
 	protected List<MessageCallbackEntry> messageCallbackEntries = new ArrayList<MessageCallbackEntry>(
 			20);
 	protected ScriptServiceListener scriptServiceListener = new ScriptServiceListener() {
+		public void onParameterScriptsChanged() {
+		}
 
-		public void onChatScriptsChanged() {
+		public void onRegularExpressionScriptsChanged() {
 			if (isConnected()) {
 				refreshChatScripts();
 			}
-		}
-
-		public void onGameScriptsChanged() {
 		}
 	};
 
@@ -428,9 +426,8 @@ public abstract class IcsConnector implements Connector {
 		return "tell " + channel + " ";
 	}
 
-	public ChatScriptContext getChatScriptContext(ChatEvent event,
-			String... parameters) {
-		return new RaptorChatScriptContext(this, parameters, event);
+	public ChatScriptContext getChatScriptContext(ChatEvent event) {
+		return new RaptorChatScriptContext(this, event);
 	}
 
 	public ChatService getChatService() {
@@ -457,15 +454,16 @@ public abstract class IcsConnector implements Connector {
 		return gameService;
 	}
 
-	public GameScriptContext getGametScriptContext() {
-		return null;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 */
 	public long getLastSendTime() {
 		return lastSendTime;
+	}
+
+	public ParameterScriptContext getParameterScriptContext(
+			Map<String, String> parameterMap) {
+		return new RaptorParameterScriptContext(this, parameterMap);
 	}
 
 	public String getPartnerTellPrefix() {
@@ -532,8 +530,8 @@ public abstract class IcsConnector implements Connector {
 		return ScriptConnectorType.ICS;
 	}
 
-	public ScriptContext getScriptContext(String... params) {
-		return new RaptorScriptContext(this, params);
+	public ScriptContext getScriptContext() {
+		return new RaptorScriptContext(this);
 	}
 
 	/**
@@ -572,9 +570,8 @@ public abstract class IcsConnector implements Connector {
 	public void invokeOnNextMatch(String regularExpression,
 			MessageCallback callback) {
 		MessageCallbackEntry messageCallbackEntry = new MessageCallbackEntry();
-		messageCallbackEntry.regularExpression = Pattern.compile(
-				regularExpression, Pattern.MULTILINE | Pattern.DOTALL
-						| Pattern.CASE_INSENSITIVE);
+		messageCallbackEntry.regularExpression = RegExUtils
+				.getPattern(regularExpression);
 		messageCallbackEntry.isOneShot = true;
 		messageCallbackEntry.callback = callback;
 		messageCallbackEntries.add(messageCallbackEntry);
@@ -794,8 +791,8 @@ public abstract class IcsConnector implements Connector {
 					for (int i = 0; i < messageCallbackEntries.size(); i++) {
 						MessageCallbackEntry entry = messageCallbackEntries
 								.get(i);
-						if (entry.regularExpression.matcher(event.getMessage())
-								.matches()) {
+						if (RegExUtils.matches(entry.regularExpression, event
+								.getMessage())) {
 							if (LOG.isDebugEnabled()) {
 								LOG
 										.debug("Invoking callback "
@@ -872,7 +869,7 @@ public abstract class IcsConnector implements Connector {
 			if (event.getType() == ChatType.PARTNER_TELL
 					|| event.getType() == ChatType.TELL
 					|| event.getType() == ChatType.CHANNEL_TELL) {
-				processScripts(event);
+				processRegularExpressionScripts(event);
 			}
 
 			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
@@ -1661,51 +1658,24 @@ public abstract class IcsConnector implements Connector {
 	 * Processes the scripts for the specified chat event. Script processing is
 	 * kicked off on a different thread.
 	 */
-	protected void processScripts(final ChatEvent event) {
-		ThreadService.getInstance().run(new Runnable() {
-			public void run() {
-				if (personTellMessageScripts != null
-						&& event.getType() == ChatType.TELL) {
-					for (ChatScript script : personTellMessageScripts) {
-						ChatScript newScript = ScriptService.getInstance()
-								.getChatScript(script.getName());
-						if (newScript != null) {
-							newScript.execute(new RaptorChatScriptContext(
-									IcsConnector.this, event));
-						}
-					}
-				} else if (channelTellMessageScripts != null
-						&& event.getType() == ChatType.CHANNEL_TELL) {
-					for (ChatScript script : channelTellMessageScripts) {
-						ChatScript newScript = ScriptService.getInstance()
-								.getChatScript(script.getName());
-						if (newScript != null) {
-							newScript.execute(new RaptorChatScriptContext(
-									IcsConnector.this, event));
-						}
-					}
-				} else if (partnerTellMessageScripts != null
-						&& event.getType() == ChatType.PARTNER_TELL) {
-					for (ChatScript script : partnerTellMessageScripts) {
-						ChatScript newScript = ScriptService.getInstance()
-								.getChatScript(script.getName());
-						if (newScript != null) {
-							newScript.execute(new RaptorChatScriptContext(
-									IcsConnector.this, event));
+	protected void processRegularExpressionScripts(final ChatEvent event) {
+		if (regularExpressionScripts != null) {
+			ThreadService.getInstance().run(new Runnable() {
+				public void run() {
+					for (RegularExpressionScript script : regularExpressionScripts) {
+						if (script.isActive()
+								&& script.matches(event.getMessage())) {
+							script.execute(getChatScriptContext(event));
 						}
 					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 	protected void refreshChatScripts() {
-		personTellMessageScripts = ScriptService.getInstance().getChatScripts(
-				this, ChatScriptType.OnPersonTellMessages);
-		channelTellMessageScripts = ScriptService.getInstance().getChatScripts(
-				this, ChatScriptType.onChannelTellMessages);
-		partnerTellMessageScripts = ScriptService.getInstance().getChatScripts(
-				this, ChatScriptType.OnPartnerTellMessages);
+		regularExpressionScripts = ScriptService.getInstance()
+				.getRegularExpressionScripts(getScriptConnectorType());
 	}
 
 	/**

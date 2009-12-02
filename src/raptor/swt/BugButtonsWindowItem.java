@@ -33,7 +33,7 @@ import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
-import raptor.service.ActionService;
+import raptor.service.ActionScriptService;
 
 public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 	static final Log LOG = LogFactory.getLog(BugButtonsWindowItem.class);
@@ -67,7 +67,7 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
-		RaptorAction[] scripts = ActionService.getInstance().getActions(
+		RaptorAction[] scripts = ActionScriptService.getInstance().getActions(
 				RaptorActionContainer.BugButtons);
 		if (newQuadrant == Quadrant.II) {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, true));
@@ -135,7 +135,7 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 		Raptor.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
 
-		RaptorAction[] actions = ActionService.getInstance().getActions(
+		RaptorAction[] actions = ActionScriptService.getInstance().getActions(
 				RaptorActionContainer.BugButtons);
 
 		composite = new Composite(parent, SWT.NONE);
@@ -170,8 +170,8 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 			button.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					RaptorAction loadedAction = ActionService.getInstance()
-							.getAction(action.getName());
+					RaptorAction loadedAction = ActionScriptService
+							.getInstance().getAction(action.getName());
 					loadedAction.setConnectorSource(connector);
 					loadedAction.run();
 				}

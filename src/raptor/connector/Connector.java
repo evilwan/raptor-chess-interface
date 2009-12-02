@@ -13,6 +13,8 @@
  */
 package raptor.connector;
 
+import java.util.Map;
+
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
@@ -22,7 +24,7 @@ import raptor.chat.ChatType;
 import raptor.chess.Game;
 import raptor.chess.Move;
 import raptor.script.ChatScriptContext;
-import raptor.script.GameScriptContext;
+import raptor.script.ParameterScriptContext;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptContext;
 import raptor.service.BughouseService;
@@ -78,13 +80,9 @@ public interface Connector {
 	public String getChannelTabPrefix(String channel);
 
 	/**
-	 * Returns the ChatScriptContext. Can return null if this connector does'nt
-	 * support scripting.
-	 * 
-	 * Params are optional.
+	 * Returns the ChatScriptContext.
 	 */
-	public ChatScriptContext getChatScriptContext(ChatEvent event,
-			String... parameters);
+	public ChatScriptContext getChatScriptContext(ChatEvent event);
 
 	/**
 	 * Returns the chat service the connector maintains. All ChatEvents are
@@ -111,12 +109,6 @@ public interface Connector {
 	public GameService getGameService();
 
 	/**
-	 * Returns the ChatScriptContext. Can return null if this connector does'nt
-	 * support scripting.
-	 */
-	public GameScriptContext getGametScriptContext();
-
-	/**
 	 * Returns the last time a message was sent in EPOC time.
 	 */
 	public long getLastSendTime();
@@ -126,6 +118,12 @@ public interface Connector {
 	 * connector.
 	 */
 	public MenuManager getMenuManager();
+
+	/**
+	 * Returns the ParameterScriptContext for the specified parameters.
+	 */
+	public ParameterScriptContext getParameterScriptContext(
+			Map<String, String> parameterMap);
 
 	/**
 	 * Returns the prefix to use for partner tells. On fics this would be 'ptell
@@ -172,11 +170,9 @@ public interface Connector {
 	public ScriptConnectorType getScriptConnectorType();
 
 	/**
-	 * Returns a ScriptContext with the specified parameters set.
-	 * 
-	 * @return
+	 * Returns a ScriptContext.
 	 */
-	public ScriptContext getScriptContext(String... params);
+	public ScriptContext getScriptContext();
 
 	/**
 	 * Returns the script variable with the specified name. Null if no variable

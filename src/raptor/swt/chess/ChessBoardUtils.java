@@ -72,7 +72,7 @@ import raptor.chess.Move;
 import raptor.chess.Variant;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
-import raptor.service.ActionService;
+import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.swt.chess.controller.BughouseSuggestController;
@@ -97,8 +97,8 @@ public class ChessBoardUtils implements BoardConstants {
 			final ChessBoardController controller,
 			RaptorActionContainer container, ToolBar toolbar,
 			boolean isUserWhite) {
-		RaptorAction[] toolbarActions = ActionService.getInstance().getActions(
-				container);
+		RaptorAction[] toolbarActions = ActionScriptService.getInstance()
+				.getActions(container);
 
 		for (RaptorAction action : toolbarActions) {
 			ToolItem item = createToolItem(action, controller, toolbar,
@@ -889,7 +889,7 @@ public class ChessBoardUtils implements BoardConstants {
 		result.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				RaptorAction loadedAction = ActionService.getInstance()
+				RaptorAction loadedAction = ActionScriptService.getInstance()
 						.getAction(action.getName());
 				loadedAction.setChessBoardControllerSource(controller);
 				loadedAction.run();

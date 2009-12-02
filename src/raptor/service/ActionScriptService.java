@@ -36,10 +36,13 @@ import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.ContainerOrderComparator;
 import raptor.action.RaptorAction.RaptorActionContainer;
 
-public class ActionService {
-	private static final Log LOG = LogFactory.getLog(ActionService.class);
+/**
+ * This service manages only ActionScripts.
+ */
+public class ActionScriptService {
+	private static final Log LOG = LogFactory.getLog(ActionScriptService.class);
 
-	private static final ActionService singletonInstance = new ActionService();
+	private static final ActionScriptService singletonInstance = new ActionScriptService();
 
 	public static interface ActionServiceListener {
 		public void onActionsChanged();
@@ -50,11 +53,11 @@ public class ActionService {
 	public List<ActionServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<ActionServiceListener>(5));
 
-	public static ActionService getInstance() {
+	public static ActionScriptService getInstance() {
 		return singletonInstance;
 	}
 
-	private ActionService() {
+	private ActionScriptService() {
 		reload();
 	}
 
@@ -69,8 +72,8 @@ public class ActionService {
 	public boolean deleteAction(String actionName) {
 		nameToActionMap.remove(actionName);
 		fireActionsChanged();
-		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/actions/" + actionName
-				+ ".properties").delete();
+		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/action/"
+				+ actionName + ".properties").delete();
 	}
 
 	public void dispose() {
@@ -162,13 +165,13 @@ public class ActionService {
 	 * touched.
 	 */
 	public void saveAction(RaptorAction action) {
-		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/actions/"
+		String fileName = Raptor.USER_RAPTOR_HOME_PATH + "/scripts/action/"
 				+ action.getName() + ".properties";
 		FileOutputStream fileOut = null;
 		try {
-			RaptorActionFactory.save(action)
-					.store(fileOut = new FileOutputStream(fileName),
-							"Saved in Raptor");
+			RaptorActionFactory.save(action).store(
+					fileOut = new FileOutputStream(fileName),
+					"Saved in Raptor by ActionScriptService.");
 		} catch (IOException ioe) {
 			Raptor.getInstance().onError(
 					"Error saving action: " + action.getName(), ioe);
@@ -195,7 +198,7 @@ public class ActionService {
 		int count = 0;
 		long startTime = System.currentTimeMillis();
 
-		File systemScripts = new File(Raptor.RESOURCES_DIR + "actions");
+		File systemScripts = new File(Raptor.RESOURCES_DIR + "scripts/action");
 		File[] files = systemScripts.listFiles(new FilenameFilter() {
 
 			public boolean accept(File arg0, String arg1) {
@@ -225,7 +228,8 @@ public class ActionService {
 			}
 		}
 
-		File userActions = new File(Raptor.USER_RAPTOR_HOME_PATH + "/actions");
+		File userActions = new File(Raptor.USER_RAPTOR_HOME_PATH
+				+ "/scripts/action");
 		File[] userFiles = userActions.listFiles(new FilenameFilter() {
 			public boolean accept(File arg0, String arg1) {
 				return arg1.endsWith(".properties");
