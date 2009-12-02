@@ -314,6 +314,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_PIECE_JAIL_SHADOW_ALPHA, 30);
 		setDefault(BOARD_PIECE_SHADOW_ALPHA, 60);
 		setDefault(BOARD_COORDINATES_SIZE_PERCENTAGE, 26);
+		setDefault(BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME, false);
+		setDefault(BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT, false);
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));

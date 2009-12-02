@@ -85,5 +85,14 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_PLAY_ABORT_REQUEST_SOUND,
 				"Play abort requested sound.", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT,
+				"Announce check when I give check.", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME,
+				"Announce check when opponent gives check.",
+				getFieldEditorParent()));
 	}
 }

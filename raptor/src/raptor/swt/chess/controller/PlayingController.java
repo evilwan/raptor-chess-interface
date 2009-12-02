@@ -198,6 +198,7 @@ public class PlayingController extends ChessBoardController {
 								if (!wasLastMovePremove) {
 									removeAllMoveDecorations();
 								}
+								handleAnnounceCheck();
 								if (!handlePremove()) {
 									if (LOG.isDebugEnabled()) {
 										LOG
@@ -1075,6 +1076,24 @@ public class PlayingController extends ChessBoardController {
 							: null);
 			setToolItemEnabled(ToolBarItemKey.CLEAR_PREMOVES, hasAddedPremove);
 			board.getCurrentPremovesLabel().setText(labelText);
+		}
+	}
+
+	protected void handleAnnounceCheck() {
+		if (game.isInCheck()) {
+			if (isUserWhite && game.isWhitesMove() || !isUserWhite()
+					&& !game.isWhitesMove()) {
+				if (getPreferences().getBoolean(
+						BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME)) {
+					SoundService.getInstance().playSound("check");
+				}
+			} else if (isUserWhite && !game.isWhitesMove() || !isUserWhite()
+					&& game.isWhitesMove()) {
+				if (getPreferences().getBoolean(
+						BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT)) {
+					SoundService.getInstance().playSound("check");
+				}
+			}
 		}
 	}
 

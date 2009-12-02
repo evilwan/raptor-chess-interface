@@ -166,6 +166,8 @@ public interface PreferenceKeys {
 	public static final String BOARD_PIECE_SHADOW_ALPHA = "board-hiding_alpha";
 	public static final String BOARD_PIECE_JAIL_SHADOW_ALPHA = "board-piece-jail-empty-alpha";
 	public static final String BOARD_COORDINATES_SIZE_PERCENTAGE = "board-coordinates-size-percentage";
+	public static final String BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME = "board-announce-check-when-opponent-checks-me";
+	public static final String BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT = "board-announce-check-when-i-check-opponent";
 
 	public static final String ARROW_OBS_OPP_COLOR = "arrow-opponent-color";
 	public static final String ARROW_PREMOVE_COLOR = "arrow-premove-color";
