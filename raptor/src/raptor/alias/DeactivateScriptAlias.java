@@ -18,8 +18,8 @@ import raptor.service.ScriptService;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.util.RaptorStringTokenizer;
 
-public class InactivateScriptAlias extends RaptorAlias {
-	public InactivateScriptAlias() {
+public class DeactivateScriptAlias extends RaptorAlias {
+	public DeactivateScriptAlias() {
 		super("-script", "Deactivates an existing regular expression script. ",
 				"'-script scriptName'" + "Example: '-script mySuperCoolScript'");
 		setHidden(false);

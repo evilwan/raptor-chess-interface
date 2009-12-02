@@ -31,8 +31,8 @@ public class TellLastPersonWhoToldYouAlias extends RaptorAlias {
 		if (command.startsWith("!")) {
 			String message = command.substring(1);
 			return new RaptorAliasResult("tell "
-					+ controller.getSourceOfLastTellReceived() + " " + message,
-					null);
+					+ controller.getSourceOfLastTellReceived() + " "
+					+ message.trim(), null);
 		}
 		return null;
 	}

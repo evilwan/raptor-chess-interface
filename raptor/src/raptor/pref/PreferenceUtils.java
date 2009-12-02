@@ -25,6 +25,7 @@ import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ActionKeyBindingsPage;
 import raptor.pref.page.ActionScriptsPage;
 import raptor.pref.page.BughousePage;
+import raptor.pref.page.ChatConsoleBehaviorPage;
 import raptor.pref.page.ChatConsoleChannelColorsPage;
 import raptor.pref.page.ChatConsoleMessageColorsPage;
 import raptor.pref.page.ChatConsolePage;
@@ -72,8 +73,8 @@ public class PreferenceUtils {
 		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
 		// Currently unused but keeping it around in case more options are
 		// added.
-		// mgr.addTo("chatConsole", new PreferenceNode("behavior",
-		// new ChatConsoleBehaviorPage()));
+		mgr.addTo("chatConsole", new PreferenceNode("behavior",
+				new ChatConsoleBehaviorPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("messageColors",
 				new ChatConsoleMessageColorsPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("channelColors",

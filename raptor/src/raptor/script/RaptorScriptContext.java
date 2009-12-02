@@ -10,12 +10,7 @@ import raptor.chat.ChatType;
 import raptor.connector.Connector;
 import raptor.connector.MessageCallback;
 import raptor.service.SoundService;
-import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
-import raptor.swt.chat.controller.BughousePartnerController;
-import raptor.swt.chat.controller.ChannelController;
-import raptor.swt.chat.controller.PersonController;
-import raptor.swt.chat.controller.RegExController;
 import raptor.util.BrowserUtils;
 
 public class RaptorScriptContext implements ScriptContext {
@@ -61,47 +56,19 @@ public class RaptorScriptContext implements ScriptContext {
 	}
 
 	public void openChannelTab(String channel) {
-		if (!Raptor.getInstance().getWindow().containsChannelItem(connector,
-				channel)) {
-			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-					new ChannelController(connector, channel));
-			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
-			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
-		}
+		ChatUtils.openChannelTab(connector, channel);
 	}
 
 	public void openPartnerTab() {
-		if (!Raptor.getInstance().getWindow()
-				.containsPartnerTellItem(connector)) {
-			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-					new BughousePartnerController(connector));
-			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
-			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
-		}
+		ChatUtils.openPartnerTab(connector);
 	}
 
 	public void openPersonTab(String person) {
-		if (!Raptor.getInstance().getWindow().containsPersonalTellItem(
-				connector, person)) {
-			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-					new PersonController(connector, person));
-			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
-			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
-		}
+		ChatUtils.openPersonTab(connector, person);
 	}
 
-	public void openRegExTab(String regularExpression) {
-		if (!Raptor.getInstance().getWindow()
-				.containsPartnerTellItem(connector)) {
-			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-					new RegExController(connector, regularExpression));
-			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
-			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
-		}
+	public void openRegularExpressionTab(String regularExpression) {
+		ChatUtils.openRegularExpressionTab(connector, regularExpression);
 	}
 
 	public void openUrl(String url) {

@@ -446,6 +446,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PTELL, true);
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL, true);
 		setDefault(CHAT_IS_SMART_SCROLL_ENABLED, true);
+		setDefault(CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS, false);
+		setDefault(CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS, false);
+		setDefault(CHAT_OPEN_PARTNER_TAB_ON_PTELLS, false);
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
