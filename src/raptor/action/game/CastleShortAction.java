@@ -16,9 +16,6 @@ package raptor.action.game;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.action.AbstractRaptorAction;
-import raptor.chess.Move;
-import raptor.chess.PriorityMoveList;
-import raptor.service.SoundService;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardWindowItem;
 
@@ -50,19 +47,6 @@ public class CastleShortAction extends AbstractRaptorAction {
 	}
 
 	protected void makeMove(ChessBoardController controller) {
-		PriorityMoveList legals = controller.getGame().getLegalMoves();
-		Move castlingMove = null;
-		for (Move move : legals.asArray()) {
-			if (move.isCastleShort()) {
-				castlingMove = move;
-				break;
-			}
-		}
-		if (castlingMove == null) {
-			SoundService.getInstance().playSound("illegalMove");
-		} else {
-			controller.userMadeMove(castlingMove.getFrom(), castlingMove
-					.getTo());
-		}
+		controller.getConnector().sendMessage("O-O");
 	}
 }
