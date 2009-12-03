@@ -355,6 +355,10 @@ public class SetupController extends ChessBoardController {
 	public void userMiddleClicked(int square) {
 	}
 
+	@Override
+	public void userMouseWheeled(int count) {
+	}
+
 	/**
 	 * Provides a menu the user can use to drop and clear pieces.
 	 */

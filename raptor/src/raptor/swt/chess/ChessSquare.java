@@ -123,6 +123,20 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	protected boolean ignorePaint = false;
 	protected boolean isHidingPiece;
 	protected boolean isLight;
+	protected long lastWheel;
+
+	Listener mouseWheelListener = new Listener() {
+		public void handleEvent(Event event) {
+			switch (event.type) {
+			case SWT.MouseWheel:
+				if (System.currentTimeMillis() - lastWheel > 250) {
+					board.getController().userMouseWheeled(event.count);
+					lastWheel = System.currentTimeMillis();
+				}
+				break;
+			}
+		}
+	};
 
 	MouseListener mouseListener = new MouseListener() {
 		public void mouseDoubleClick(MouseEvent e) {
@@ -278,6 +292,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		addPaintListener(paintListener);
 		addControlListener(controlListener);
 		addMouseListener(mouseListener);
+		addListener(SWT.MouseWheel, mouseWheelListener);
 		addListener(SWT.MouseDown, dndListener);
 		addListener(SWT.MouseUp, dndListener);
 
