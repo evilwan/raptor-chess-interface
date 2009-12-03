@@ -67,7 +67,7 @@ public class RegularExpressionScript implements
 		try {
 			Interpreter interpeter = new Interpreter();
 			interpeter.set("context", context);
-			interpeter.eval(getScript());
+			interpeter.eval("import raptor.chat.*;\n" + getScript());
 		} catch (Throwable t) {
 			Raptor.getInstance().onError("Error executing script " + getName(),
 					t);

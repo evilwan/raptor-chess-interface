@@ -823,6 +823,7 @@ public abstract class IcsConnector implements Connector {
 			}
 
 			handleOpeningTabs(event);
+			processRegularExpressionScripts(event);
 
 			if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
 				isSimulBugConnector = false;
@@ -866,12 +867,6 @@ public abstract class IcsConnector implements Connector {
 							.getSource())
 							+ " " + getTextAfterColon(event.getMessage())));
 				}
-			}
-
-			if (event.getType() == ChatType.PARTNER_TELL
-					|| event.getType() == ChatType.TELL
-					|| event.getType() == ChatType.CHANNEL_TELL) {
-				processRegularExpressionScripts(event);
 			}
 
 			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
@@ -1687,17 +1682,25 @@ public abstract class IcsConnector implements Connector {
 	 * kicked off on a different thread.
 	 */
 	protected void processRegularExpressionScripts(final ChatEvent event) {
-		if (regularExpressionScripts != null) {
-			ThreadService.getInstance().run(new Runnable() {
-				public void run() {
-					for (RegularExpressionScript script : regularExpressionScripts) {
-						if (script.isActive()
-								&& script.matches(event.getMessage())) {
-							script.execute(getChatScriptContext(event));
+		if (event.getType() != ChatType.INTERNAL
+				&& event.getType() != ChatType.OUTBOUND
+				&& event.getType() != ChatType.MOVES
+				&& event.getType() != ChatType.BUGWHO_AVAILABLE_TEAMS
+				&& event.getType() != ChatType.BUGWHO_GAMES
+				&& event.getType() != ChatType.BUGWHO_UNPARTNERED_BUGGERS
+				&& event.getType() != ChatType.SEEKS) {
+			if (regularExpressionScripts != null) {
+				ThreadService.getInstance().run(new Runnable() {
+					public void run() {
+						for (RegularExpressionScript script : regularExpressionScripts) {
+							if (script.isActive()
+									&& script.matches(event.getMessage())) {
+								script.execute(getChatScriptContext(event));
+							}
 						}
 					}
-				}
-			});
+				});
+			}
 		}
 	}
 

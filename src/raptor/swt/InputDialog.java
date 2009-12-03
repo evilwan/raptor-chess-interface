@@ -31,7 +31,7 @@ public class InputDialog extends Dialog {
 
 	public InputDialog(Shell parent, String title, String question) {
 		// Let users override the default styles
-		super(parent, SWT.DIALOG_TRIM);
+		super(parent, SWT.DIALOG_TRIM | SWT.RESIZE);
 		setText(title);
 		setMessage(question);
 	}

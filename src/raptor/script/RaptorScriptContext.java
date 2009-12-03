@@ -48,7 +48,8 @@ public class RaptorScriptContext implements ScriptContext {
 
 	public void launchProcess(String... commandAndArgs) {
 		try {
-			Runtime.getRuntime().exec(commandAndArgs);
+			ProcessBuilder builder = new ProcessBuilder(commandAndArgs);
+			builder.start();
 		} catch (Throwable t) {
 			connector.onError("Error launching process: "
 					+ Arrays.toString(commandAndArgs), t);
