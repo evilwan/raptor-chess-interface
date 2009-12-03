@@ -834,6 +834,15 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
+	@Override
+	public void userMouseWheeled(int count) {
+		if (count > 0) {
+			onForward();
+		} else {
+			onBack();
+		}
+	}
+
 	/**
 	 * In droppable games this shows a menu of the pieces available for
 	 * dropping. In bughouse the menu includes the premove drop features which

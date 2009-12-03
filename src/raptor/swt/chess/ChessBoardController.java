@@ -648,6 +648,13 @@ public abstract class ChessBoardController implements BoardConstants,
 	public abstract void userMiddleClicked(int square);
 
 	/**
+	 * Invoked when the user mouse wheels. The count is the intensity of the
+	 * wheel. A positive number is an up wheel. A negative number is a down
+	 * wheel.
+	 */
+	public abstract void userMouseWheeled(int count);
+
+	/**
 	 * Invoked when the user right clicks on a square.
 	 * 
 	 * @param square

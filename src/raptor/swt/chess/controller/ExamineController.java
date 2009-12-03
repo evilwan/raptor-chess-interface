@@ -439,6 +439,15 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
+	public void userMouseWheeled(int count) {
+		if (count > 0) {
+			onForward();
+		} else {
+			onBack();
+		}
+	}
+
+	@Override
 	public void userRightClicked(int square) {
 	}
 
