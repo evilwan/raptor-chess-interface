@@ -54,6 +54,11 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END,
+				"Show statistics when a game I am playing ends.",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR,
 				"Invisible Move Enabled (Crosshairs cursor on drag and drops)",
 				getFieldEditorParent()));

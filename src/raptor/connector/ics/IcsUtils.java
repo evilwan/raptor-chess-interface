@@ -447,7 +447,11 @@ public class IcsUtils implements GameConstants {
 		Game result = null;
 		switch (variant) {
 		case classic:
+		case blitz:
+		case lightning:
+		case standard:
 			result = new ClassicGame();
+			result.setHeader(PgnHeader.Variant, variant.name());
 			break;
 		case wild:
 			result = new ClassicGame();
@@ -500,7 +504,11 @@ public class IcsUtils implements GameConstants {
 
 		switch (variant) {
 		case classic:
+		case blitz:
+		case lightning:
+		case standard:
 			result = new ClassicGame();
+			result.setHeader(PgnHeader.Variant, variant.name());
 			break;
 		case wild:
 			result = new ClassicGame();
@@ -589,15 +597,15 @@ public class IcsUtils implements GameConstants {
 		} else if (identifier.indexOf(CRAZYHOUSE_IDENTIFIER) != -1) {
 			result = Variant.crazyhouse;
 		} else if (identifier.indexOf(STANDARD_IDENTIFIER) != -1) {
-			result = Variant.classic;
+			result = Variant.standard;
 		} else if (identifier.indexOf(FISCHER_RANDOM_IDENTIFIER) != -1) {
 			result = Variant.fischerRandom;
 		} else if (identifier.indexOf(WILD_IDENTIFIER) != -1) {
 			result = Variant.wild;
 		} else if (identifier.indexOf(LIGHTNING_IDENTIFIER) != -1) {
-			result = Variant.classic;
+			result = Variant.lightning;
 		} else if (identifier.indexOf(BLITZ_IDENTIFIER) != -1) {
-			result = Variant.classic;
+			result = Variant.blitz;
 		} else if (identifier.indexOf(ATOMIC_IDENTIFIER) != -1) {
 			result = Variant.atomic;
 		} else if (identifier.indexOf(LOSERS_IDENTIFIER) != -1) {

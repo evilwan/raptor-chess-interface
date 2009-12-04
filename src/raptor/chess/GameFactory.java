@@ -3,6 +3,7 @@ package raptor.chess;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.chess.util.ZobristUtils;
 import raptor.util.RaptorStringTokenizer;
@@ -32,8 +33,12 @@ public class GameFactory implements GameConstants {
 
 		switch (variant) {
 		case classic:
+		case blitz:
+		case lightning:
+		case standard:
 		case wild:
 			result = new ClassicGame();
+			result.setHeader(PgnHeader.Variant, variant.name());
 			break;
 		case losers:
 			result = new LosersGame();

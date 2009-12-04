@@ -46,6 +46,8 @@ import org.eclipse.swt.widgets.ToolBar;
 
 import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.chess.Game;
 import raptor.chess.GameCursor;
 import raptor.chess.Move;
@@ -54,6 +56,7 @@ import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
+import raptor.service.PlayingStatisticsService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.service.GameService.GameServiceAdapter;
@@ -143,6 +146,7 @@ public class PlayingController extends ChessBoardController {
 									getGame().getResult());
 							board.redrawSquares();
 							onPlayGameEndSound();
+							handleGameStatistics();
 
 							ChessBoardUtils.appendGameToPgnFile(getGame());
 
@@ -905,6 +909,21 @@ public class PlayingController extends ChessBoardController {
 	protected void handleAutoDraw() {
 		if (isToolItemSelected(ToolBarItemKey.AUTO_DRAW)) {
 			onAutoDraw();
+		}
+	}
+
+	protected void handleGameStatistics() {
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END)) {
+			PlayingStatisticsService.getInstance().addStatisticsForGameEnd(
+					connector, game, isUserWhite);
+			String message = PlayingStatisticsService.getInstance()
+					.getStatisticsString(connector, game, isUserWhite);
+			if (StringUtils.isNotEmpty(message)) {
+				getConnector().publishEvent(
+						new ChatEvent(null, ChatType.PLAYING_STATISTICS,
+								message));
+			}
 		}
 	}
 
