@@ -239,29 +239,32 @@
 			</fileset>
 		</copy>
 
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources" />
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir" />
+
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset dir="${install.dir}/Raptor_${version}/lib" />
+			<fileset file="${install.dir}/Raptor_${version}/bsd-new-license.txt" />
 		</move>
-
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources">
+			<fileset dir="${install.dir}/Raptor_${version}/resources" />
+		</move>
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir">
+			<fileset dir="${install.dir}/Raptor_${version}/defaultHomeDir" />
+		</move>
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
 		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
-		
-		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
-		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
-			<fileset dir="${install.dir}/Raptor_${version}/">
-				<include name="**/*" />
-			</fileset>
-		</move>
-		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}"/>
+
+		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}" />
 
 
 		<exec executable="hdiutil">
 			<arg value="create" />
 			<arg value="-srcfolder" />
-			<arg value="${install.dir}/Raptor_${version}" />
+			<arg value="${install.dir}/Raptor_${version}/Raptor.app" />
 			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
 		</exec>
 
@@ -291,23 +294,32 @@
 			</fileset>
 		</copy>
 
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources" />
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir" />
+
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset dir="${install.dir}/Raptor_${version}/lib" />
+			<fileset file="${install.dir}/Raptor_${version}/bsd-new-license.txt" />
 		</move>
-
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources">
+			<fileset dir="${install.dir}/Raptor_${version}/resources" />
+		</move>
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir">
+			<fileset dir="${install.dir}/Raptor_${version}/defaultHomeDir" />
+		</move>
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
 		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
-		
+
 		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
 			<fileset dir="${install.dir}/Raptor_${version}/">
 				<include name="**/*" />
 			</fileset>
 		</move>
-		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}"/>
+		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}" />
 
 		<exec executable="hdiutil">
 			<arg value="create" />
@@ -342,10 +354,18 @@
 			</fileset>
 		</copy>
 
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources" />
+		<mkdir dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset dir="${install.dir}/Raptor_${version}/lib" />
+			<fileset file="${install.dir}/Raptor_${version}/bsd-new-license.txt" />
 		</move>
-
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources">
+			<fileset dir="${install.dir}/Raptor_${version}/resources" />
+		</move>
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir">
+			<fileset dir="${install.dir}/Raptor_${version}/defaultHomeDir" />
+		</move>
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
 		</move>
@@ -358,8 +378,8 @@
 				<include name="**/*" />
 			</fileset>
 		</move>
-		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}"/>
-			
+		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}" />
+
 		<exec executable="hdiutil">
 			<arg value="create" />
 			<arg value="-srcfolder" />

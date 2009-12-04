@@ -1,6 +1,6 @@
 #!/bin/sh
 BASEDIR=`dirname $0`
-cd $BASEDIR/../../../
+cd $BASEDIR
 exec java \
 -d32 \
 -XstartOnFirstThread \
