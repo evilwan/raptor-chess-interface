@@ -1487,6 +1487,13 @@ public class RaptorWindow extends ApplicationWindow {
 						.openHtml(RegExUtils.getRegularExpressionHelpHtml());
 			}
 		});
+		raptorHelp.add(new Action("&Linux Sound") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NoSoundInLInux");
+			}
+		});
 		raptorHelp.add(new Action("&Scripting") {
 			@Override
 			public void run() {
