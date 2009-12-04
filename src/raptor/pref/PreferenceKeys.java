@@ -210,6 +210,7 @@ public interface PreferenceKeys {
 	public static final String RESULTS_FONT = "results-font";
 	public static final String RESULTS_IS_SHOWING = "results-is-showing";
 
+	public static final String CHAT_REMOVE_SUB_TAB_MESSAGES_FROM_MAIN_TAB = "chat-remove-sub-tab-messages-from-main-tab";
 	public static final String CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO = "chat-event-";
 	public static final String CHAT_CONSOLE_BACKGROUND_COLOR = "chat-console-background-color";
 	public static final String CHAT_INPUT_BACKGROUND_COLOR = "chat-input-background-color";

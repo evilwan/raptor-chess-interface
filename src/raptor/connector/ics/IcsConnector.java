@@ -840,10 +840,10 @@ public abstract class IcsConnector implements Connector {
 
 			if (event.getType() == ChatType.PARTNER_TELL) {
 				playBughouseSounds(event);
-				if (!event.hasBeenHandled()
+				if (!event.hasSoundBeenHandled()
 						&& getPreferences().getBoolean(
 								PreferenceKeys.BUGHOUSE_SPEAK_PARTNER_TELLS)) {
-					event.setHasBeenHandled(speak(getTextAfterColon(event
+					event.setHasSoundBeenHandled(speak(getTextAfterColon(event
 							.getMessage())));
 				}
 			}
@@ -851,8 +851,8 @@ public abstract class IcsConnector implements Connector {
 			if (event.getType() == ChatType.CHANNEL_TELL) {
 				if (!event.getSource().equals(getUserName())
 						&& channelToSpeakTellsFrom.contains(event.getChannel())) {
-					event.setHasBeenHandled(speak(IcsUtils.stripTitles(event
-							.getSource())
+					event.setHasSoundBeenHandled(speak(IcsUtils
+							.stripTitles(event.getSource())
 							+ " "
 							+ event.getChannel()
 							+ " "
@@ -863,8 +863,8 @@ public abstract class IcsConnector implements Connector {
 			if (event.getType() == ChatType.TELL) {
 				if (isSpeakingAllPersonTells
 						|| peopleToSpeakTellsFrom.contains(event.getSource())) {
-					event.setHasBeenHandled(speak(IcsUtils.stripTitles(event
-							.getSource())
+					event.setHasSoundBeenHandled(speak(IcsUtils
+							.stripTitles(event.getSource())
 							+ " " + getTextAfterColon(event.getMessage())));
 				}
 			}
@@ -1664,7 +1664,7 @@ public abstract class IcsConnector implements Connector {
 				message = tok.nextToken().trim();
 				for (String bugSound : bughouseSounds) {
 					if (bugSound.equalsIgnoreCase(message)) {
-						event.setHasBeenHandled(true);
+						event.setHasSoundBeenHandled(true);
 						// This launches it on another thread.
 						SoundService.getInstance().playBughouseSound(bugSound);
 						break;

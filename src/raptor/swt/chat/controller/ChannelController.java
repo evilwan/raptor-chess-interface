@@ -97,7 +97,8 @@ public class ChannelController extends ChatConsoleController {
 		return inboundEvent.getType() == ChatType.CHANNEL_TELL
 				&& StringUtils.equals(inboundEvent.getChannel(), channel)
 				|| inboundEvent.getType() == ChatType.OUTBOUND
-				&& inboundEvent.getMessage().startsWith(getPrependText(true));
+				&& inboundEvent.getMessage().startsWith(
+						connector.getChannelTabPrefix(channel));
 	}
 
 	@Override

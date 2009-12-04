@@ -21,15 +21,56 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
+import raptor.alias.AbbreviatedChannelTellAlias;
+import raptor.alias.AbbreviatedPersonTellAlias;
+import raptor.alias.ActivateScriptAlias;
+import raptor.alias.AliasHelpAlias;
+import raptor.alias.ChannelBotAlias;
+import raptor.alias.ClearCensorAlias;
+import raptor.alias.ClearChannelsAlias;
+import raptor.alias.ClearFingerNotesAlias;
+import raptor.alias.ClearGNotifyAlias;
+import raptor.alias.ClearNoplayAlias;
+import raptor.alias.ClearNotifyAlias;
+import raptor.alias.ClearVariablesAlias;
+import raptor.alias.DeactivateScriptAlias;
+import raptor.alias.DumpGamesAlias;
+import raptor.alias.GrantSpoofAlias;
+import raptor.alias.ListScriptsAlias;
+import raptor.alias.OpenUrlAlias;
 import raptor.alias.RaptorAlias;
 import raptor.alias.RaptorAliasResult;
+import raptor.alias.RelayAlias;
+import raptor.alias.ScriptAlias;
+import raptor.alias.SetConsoleTimeStampOnOffAlias;
+import raptor.alias.SetDebugLevelAlias;
+import raptor.alias.SetPremoveModeAlias;
+import raptor.alias.SetSoundOnOfAlias;
+import raptor.alias.ShowScriptAlias;
+import raptor.alias.TellAllInChannelAlias;
+import raptor.alias.TellLastPersonWhoToldYouAlias;
+import raptor.alias.TimedCommandAlias;
 import raptor.swt.chat.ChatConsoleController;
-import raptor.util.ReflectionUtils;
 
 public class AliasService {
 	private static final Log LOG = LogFactory.getLog(AliasService.class);
-
+	@SuppressWarnings("unchecked")
+	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
+			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
+			AliasHelpAlias.class, ChannelBotAlias.class,
+			ClearCensorAlias.class, ClearChannelsAlias.class,
+			ClearChannelsAlias.class, ClearFingerNotesAlias.class,
+			ClearGNotifyAlias.class, ClearNoplayAlias.class,
+			ClearNotifyAlias.class, ClearVariablesAlias.class,
+			DeactivateScriptAlias.class, DumpGamesAlias.class,
+			GrantSpoofAlias.class, ListScriptsAlias.class, OpenUrlAlias.class,
+			RelayAlias.class, ScriptAlias.class,
+			SetConsoleTimeStampOnOffAlias.class, SetDebugLevelAlias.class,
+			SetPremoveModeAlias.class, SetSoundOnOfAlias.class,
+			ShowScriptAlias.class, TellAllInChannelAlias.class,
+			TellLastPersonWhoToldYouAlias.class, TimedCommandAlias.class };
 	private static final AliasService singletonInstance = new AliasService();
+
 	List<RaptorAlias> aliases = new ArrayList<RaptorAlias>(20);
 
 	public static AliasService getInstance() {
@@ -40,12 +81,8 @@ public class AliasService {
 	private AliasService() {
 		try {
 			long startTime = System.currentTimeMillis();
-			Class[] classes = ReflectionUtils.getClasses("raptor.alias");
-			for (Class clazz : classes) {
-				if (clazz.getName().endsWith("Alias")
-						&& !clazz.getName().endsWith("RaptorAlias")) {
-					aliases.add((RaptorAlias) clazz.newInstance());
-				}
+			for (Class clazz : ALIASES) {
+				aliases.add((RaptorAlias) clazz.newInstance());
 			}
 			Collections.sort(aliases);
 			LOG

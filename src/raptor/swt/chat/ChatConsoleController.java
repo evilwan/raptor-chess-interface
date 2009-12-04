@@ -76,6 +76,7 @@ import raptor.service.ChatService.ChatListener;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.controller.ChannelController;
+import raptor.swt.chat.controller.MainController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.ToolBarItemKey;
 import raptor.util.BrowserUtils;
@@ -105,6 +106,14 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				eventsWhileBeingReparented.add(event);
 			}
 
+		}
+
+		public boolean isHandling(final ChatEvent event) {
+			if (event.getType() == ChatType.TELL) {
+				sourceOfLastTellReceived = event.getSource();
+			}
+
+			return isAcceptingChatEvent(event);
 		}
 	};
 	protected Connector connector;
@@ -469,17 +478,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onChatEvent(ChatEvent event) {
-
-		if (event.getType() == ChatType.TELL) {
-			sourceOfLastTellReceived = event.getSource();
-		}
-
-		if (isAcceptingChatEvent(event)) {
-			onAppendChatEventToInputText(event);
-			if (!isIgnoringActions()) {
-				playSounds(event);
-				updateImageIcon(event);
-			}
+		onAppendChatEventToInputText(event);
+		if (!isIgnoringActions()) {
+			playSounds(event);
+			updateImageIcon(event);
 		}
 	}
 
@@ -1399,7 +1401,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void playSounds(ChatEvent event) {
-		if (!isSoundDisabled && !event.hasBeenHandled()) {
+		if (!isSoundDisabled && !event.hasSoundBeenHandled()) {
 			if (event.getType() == ChatType.TELL
 					&& getPreferences().getBoolean(
 							PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL)) {
@@ -1440,7 +1442,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void registerForChatEvents() {
-		connector.getChatService().addChatServiceListener(chatServiceListener);
+		if (this instanceof MainController) {
+			connector.getChatService().addMainConsoleListener(
+					chatServiceListener);
+		} else {
+			connector.getChatService().addChatServiceListener(
+					chatServiceListener);
+		}
 	}
 
 	protected void removeListenersTiedToChatConsole() {

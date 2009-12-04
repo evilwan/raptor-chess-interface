@@ -50,6 +50,11 @@ public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 		addField(smartScroll);
 
 		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_REMOVE_SUB_TAB_MESSAGES_FROM_MAIN_TAB,
+				"Filter messages handled by other tabs from the main console tab",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PTELL,
 				"Play 'chat' sound on all partner tells.",
 				getFieldEditorParent()));

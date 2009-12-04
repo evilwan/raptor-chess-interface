@@ -23,7 +23,7 @@ public class ChatEvent {
 	protected String source;
 	protected long time;
 	protected ChatType type;
-	protected boolean hasBeenHandled;
+	protected boolean hasSoundBeenHandled;
 
 	public ChatEvent() {
 		time = System.currentTimeMillis();
@@ -101,8 +101,8 @@ public class ChatEvent {
 	/**
 	 * Returns true if this event has been handled.
 	 */
-	public boolean hasBeenHandled() {
-		return hasBeenHandled;
+	public boolean hasSoundBeenHandled() {
+		return hasSoundBeenHandled;
 	}
 
 	public void setChannel(String channel) {
@@ -116,8 +116,8 @@ public class ChatEvent {
 	/**
 	 * Sets the flag denoting this event has been handled.
 	 */
-	public void setHasBeenHandled(boolean hasBeenHandled) {
-		this.hasBeenHandled = hasBeenHandled;
+	public void setHasSoundBeenHandled(boolean hasSoundBeenHandled) {
+		this.hasSoundBeenHandled = hasSoundBeenHandled;
 	}
 
 	public void setMessage(String message) {

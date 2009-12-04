@@ -83,10 +83,15 @@ public class ChatUtils {
 														try {
 															if (!console
 																	.isDisposed()) {
-																console
+																if (console
 																		.getController()
-																		.onChatEvent(
-																				event);
+																		.isAcceptingChatEvent(
+																				event)) {
+																	console
+																			.getController()
+																			.onChatEvent(
+																					event);
+																}
 															}
 														} catch (Throwable t) {
 															console
