@@ -1436,7 +1436,6 @@ public class RaptorWindow extends ApplicationWindow {
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/");
-
 			}
 		});
 		helpMenu.add(new Action("&License") {
@@ -1446,6 +1445,13 @@ public class RaptorWindow extends ApplicationWindow {
 				if (html != null) {
 					BrowserUtils.openHtml(html);
 				}
+			}
+		});
+		helpMenu.add(new Action("T&hanks") {
+			@Override
+			public void run() {
+				BrowserUtils
+				.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/Thanks");
 			}
 		});
 		helpMenu.add(new Action("&Third Party Content") {
