@@ -1526,6 +1526,15 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(raptorHelp);
 
 		MenuManager ficsHelp = new MenuManager("&Fics Help");
+			ficsHelp.add(new Action("&New Users Guide") {
+				@Override
+				public void run() {
+					BrowserUtils
+							.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NewToFics");
+				}
+			});
+			
+			
 		ficsHelp.add(new Action("&Help Page") {
 			@Override
 			public void run() {
