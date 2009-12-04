@@ -286,9 +286,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefaultMonitorBasedSizes();
 
 		// Action
-		setDefault(ACTION_SEPARATOR_SEQUENCE, 300);
+		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// Board
+		setDefault(BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END, true);
 		setDefault(BOARD_PLAY_CHALLENGE_SOUND, true);
 		setDefault(BOARD_PLAY_ABORT_REQUEST_SOUND, true);
 		setDefault(BOARD_PLAY_DRAW_OFFER_SOUND, true);
@@ -557,6 +558,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.INTERNAL
 						+ "-color", new RGB(255, 0, 0));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.PLAYING_STATISTICS + "-color", new RGB(100,
+						149, 237));
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));
 		PreferenceConverter.setDefault(this, CHAT_QUOTE_UNDERLINE_COLOR,

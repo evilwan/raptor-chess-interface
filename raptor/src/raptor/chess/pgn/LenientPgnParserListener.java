@@ -99,6 +99,18 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 					.get(PgnHeader.Event.name()), "crazyhouse")) {
 				variant = Variant.crazyhouse;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.Event.name()), "standard")) {
+				variant = Variant.standard;
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.Event.name()), "blitz")) {
+				variant = Variant.blitz;
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.Event.name()), "lightning")) {
+				variant = Variant.lightning;
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
+					.get(PgnHeader.Event.name()), "bullet")) {
+				variant = Variant.lightning;
+			} else if (StringUtils.containsIgnoreCase(currentHeaders
 					.get(PgnHeader.Event.name()), "atomic")) {
 				variant = Variant.atomic;
 			} else if (StringUtils.containsIgnoreCase(currentHeaders

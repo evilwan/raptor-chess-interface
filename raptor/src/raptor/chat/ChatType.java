@@ -115,4 +115,9 @@ public enum ChatType {
 	 * A message indicating a draw offer.
 	 */
 	DRAW_REQUEST,
+	/**
+	 * An internal message containing statistics after you finish playing a
+	 * game.
+	 */
+	PLAYING_STATISTICS
 }

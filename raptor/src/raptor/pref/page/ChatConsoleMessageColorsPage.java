@@ -99,5 +99,11 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 						+ ChatType.INTERNAL + "-color",
 				"Raptor Message Color:", getFieldEditorParent());
 		addField(internalMessages);
+
+		ColorFieldEditor gameEndStatistics = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.PLAYING_STATISTICS + "-color",
+				"Raptor Game End Statistics:", getFieldEditorParent());
+		addField(gameEndStatistics);
 	}
 }

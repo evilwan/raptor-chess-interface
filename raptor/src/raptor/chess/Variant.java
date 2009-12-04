@@ -34,7 +34,18 @@ public enum Variant {
 	 */
 	classic,
 	/**
-	 * 
+	 * Blitz classic
+	 */
+	blitz,
+	/**
+	 * Standard classic.
+	 */
+	standard,
+	/**
+	 * Lightning classic.
+	 */
+	lightning,
+	/**
 	 * Crazyhouse chess.
 	 */
 	crazyhouse,
