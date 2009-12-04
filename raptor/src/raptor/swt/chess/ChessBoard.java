@@ -418,6 +418,10 @@ public class ChessBoard implements BoardConstants {
 		return boardMoveListSash.isDisposed();
 	}
 
+	public boolean isShowingEngineAnaylsis() {
+		return engineAnalysisWidget.getControl().isVisible();
+	}
+
 	/**
 	 * Returns true if white is on top, false if white is on botton.
 	 */

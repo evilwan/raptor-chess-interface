@@ -13,6 +13,8 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.swt.chat.ChatConsoleController;
 
 public class TellLastPersonWhoToldYouAlias extends RaptorAlias {
@@ -30,9 +32,15 @@ public class TellLastPersonWhoToldYouAlias extends RaptorAlias {
 			String command) {
 		if (command.startsWith("!")) {
 			String message = command.substring(1);
-			return new RaptorAliasResult("tell "
-					+ controller.getSourceOfLastTellReceived() + " "
-					+ message.trim(), null);
+			if (StringUtils
+					.isNotEmpty(controller.getSourceOfLastTellReceived())) {
+				return new RaptorAliasResult("tell "
+						+ controller.getSourceOfLastTellReceived() + " "
+						+ message.trim(), null);
+			} else {
+				return new RaptorAliasResult(null,
+						"There is nobody to tell this to.");
+			}
 		}
 		return null;
 	}
