@@ -59,16 +59,16 @@ public class AliasService {
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
 			AliasHelpAlias.class, ChannelBotAlias.class,
 			ClearCensorAlias.class, ClearChannelsAlias.class,
-			ClearChannelsAlias.class, ClearFingerNotesAlias.class,
-			ClearGNotifyAlias.class, ClearNoplayAlias.class,
-			ClearNotifyAlias.class, ClearVariablesAlias.class,
-			DeactivateScriptAlias.class, DumpGamesAlias.class,
-			GrantSpoofAlias.class, ListScriptsAlias.class, OpenUrlAlias.class,
-			RelayAlias.class, ScriptAlias.class,
-			SetConsoleTimeStampOnOffAlias.class, SetDebugLevelAlias.class,
-			SetPremoveModeAlias.class, SetSoundOnOfAlias.class,
-			ShowScriptAlias.class, TellAllInChannelAlias.class,
-			TellLastPersonWhoToldYouAlias.class, TimedCommandAlias.class };
+			ClearFingerNotesAlias.class, ClearGNotifyAlias.class,
+			ClearNoplayAlias.class, ClearNotifyAlias.class,
+			ClearVariablesAlias.class, DeactivateScriptAlias.class,
+			DumpGamesAlias.class, GrantSpoofAlias.class,
+			ListScriptsAlias.class, OpenUrlAlias.class, RelayAlias.class,
+			ScriptAlias.class, SetConsoleTimeStampOnOffAlias.class,
+			SetDebugLevelAlias.class, SetPremoveModeAlias.class,
+			SetSoundOnOfAlias.class, ShowScriptAlias.class,
+			TellAllInChannelAlias.class, TellLastPersonWhoToldYouAlias.class,
+			TimedCommandAlias.class };
 	private static final AliasService singletonInstance = new AliasService();
 
 	List<RaptorAlias> aliases = new ArrayList<RaptorAlias>(20);
