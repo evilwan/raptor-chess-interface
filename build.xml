@@ -145,8 +145,8 @@
 		<var name="swtEnv" value="LinuxPPC_GTK2" />
 
 		<antcall target="install" />
-		
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
+
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_LinuxPPC_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
@@ -163,8 +163,8 @@
 
 		<antcall target="install" />
 
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
-		
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
+
 		<zip destfile="${uploads.dir}/Raptor_${version}_Linux_x86_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -179,8 +179,8 @@
 		<var name="swtEnv" value="Linux_x86_64_GTK2" />
 
 		<antcall target="install" />
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
-		
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
+
 		<zip destfile="${uploads.dir}/Raptor_${version}_Linux_x86_64_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -195,7 +195,7 @@
 		<var name="swtEnv" value="Solaris10_SPARC_GTK2" />
 
 		<antcall target="install" />
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
 		<zip destfile="${uploads.dir}/Raptor_${version}_Solaris10_SPARC_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -210,7 +210,7 @@
 		<var name="swtEnv" value="Solaris10_x86_GTK2" />
 
 		<antcall target="install" />
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}"/>
+		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
 		<zip destfile="${uploads.dir}/Raptor_${version}_Solaris10_x86_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -248,14 +248,16 @@
 		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
-
+		
 		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
-			<fileset dir="${install.dir}/Raptor_${version}">
-				<exclude name="${install.dir}/Raptor_${version}/Raptor_${version}" />
+			<fileset dir="${install.dir}/Raptor_${version}/">
 				<include name="**/*" />
 			</fileset>
 		</move>
+		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}"/>
+
+
 		<exec executable="hdiutil">
 			<arg value="create" />
 			<arg value="-srcfolder" />
@@ -298,14 +300,15 @@
 		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
-
+		
 		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
-			<fileset dir="${install.dir}/Raptor_${version}">
-				<exclude name="${install.dir}/Raptor_${version}/Raptor_${version}" />
+			<fileset dir="${install.dir}/Raptor_${version}/">
 				<include name="**/*" />
 			</fileset>
 		</move>
+		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}"/>
+
 		<exec executable="hdiutil">
 			<arg value="create" />
 			<arg value="-srcfolder" />
@@ -351,11 +354,12 @@
 
 		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
-			<fileset dir="${install.dir}/Raptor_${version}">
-				<exclude name="${install.dir}/Raptor_${version}/Raptor_${version}" />
+			<fileset dir="${install.dir}/Raptor_${version}/">
 				<include name="**/*" />
 			</fileset>
 		</move>
+		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}"/>
+			
 		<exec executable="hdiutil">
 			<arg value="create" />
 			<arg value="-srcfolder" />
