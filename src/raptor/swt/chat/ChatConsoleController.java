@@ -697,11 +697,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			if (!isConsoleOutputText) {
 				chatConsole.getDisplay().asyncExec(new Runnable() {
 					public void run() {
-						chatConsole.outputText.forceFocus();
+						chatConsole.outputText.setFocus();
 					}
 				});
 			}
-		} else if (event.stateMask != 0) {
+		} else if (event.stateMask != 0 && event.stateMask != SWT.SHIFT) {
 			// eat it.
 			// This prevents control c, control v from getting forwarded.
 		} else if (!isConsoleOutputText && event.character == '\b') {
@@ -713,14 +713,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		} else if (!isConsoleOutputText
 				&& ChatUtils.FORWARD_CHAR.indexOf(event.character) != -1) {
 			onAppendOutputText("" + event.character);
-		} else if (!isConsoleOutputText) {
-			chatConsole.getDisplay().asyncExec(new Runnable() {
-				public void run() {
-					chatConsole.outputText.forceFocus();
-					chatConsole.outputText.setSelection(chatConsole.outputText
-							.getCharCount());
-				}
-			});
 		}
 	}
 
@@ -1279,7 +1271,18 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (StringUtils.isNotBlank(quotedText)) {
 			url = ChatUtils.getUrl(quotedText);
 			if (url == null) {
-				connector.sendMessage(quotedText);
+				RaptorAliasResult alias = AliasService.getInstance()
+						.processAlias(this, quotedText);
+				if (alias == null) {
+					connector.sendMessage(quotedText);
+				} else if (alias.getNewText() != null) {
+					connector.sendMessage(alias.getNewText());
+				}
+
+				if (alias != null && alias.getUserMessage() != null) {
+					onAppendChatEventToInputText(new ChatEvent(null,
+							ChatType.INTERNAL, alias.getUserMessage()));
+				}
 				onForceAutoScroll();
 			} else {
 				BrowserUtils.openUrl(url);

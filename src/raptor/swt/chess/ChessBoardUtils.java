@@ -790,6 +790,11 @@ public class ChessBoardUtils implements BoardConstants {
 					result = new ToolItem(toolbar, SWT.CHECK);
 					controller.addToolItem(
 							ToolBarItemKey.TOGGLE_ANALYSIS_ENGINE, result);
+
+					if (controller.getBoard() != null
+							&& controller.getBoard().isShowingEngineAnaylsis()) {
+						result.setSelection(true);
+					}
 				}
 			}
 
