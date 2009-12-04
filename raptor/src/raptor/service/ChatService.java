@@ -20,6 +20,7 @@ import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatLogger;
 import raptor.connector.Connector;
+import raptor.pref.PreferenceKeys;
 
 /**
  * A service which invokes chatEventOccured on added ChatListeners when a
@@ -29,10 +30,14 @@ public class ChatService {
 
 	public static interface ChatListener {
 		public void chatEventOccured(ChatEvent e);
+
+		public boolean isHandling(ChatEvent e);
 	}
 
 	protected Connector connector = null;
 	protected List<ChatListener> listeners = new ArrayList<ChatListener>(5);
+	protected List<ChatListener> mainConsoleListeners = new ArrayList<ChatListener>(
+			5);
 	protected ChatLogger logger = null;
 
 	/**
@@ -52,6 +57,10 @@ public class ChatService {
 	 */
 	public void addChatServiceListener(ChatListener listener) {
 		listeners.add(listener);
+	}
+
+	public void addMainConsoleListener(ChatListener listener) {
+		mainConsoleListeners.add(listener);
 	}
 
 	/**
@@ -90,8 +99,26 @@ public class ChatService {
 				if (listeners == null) {
 					return;
 				}
+				boolean wasHandled = false;
 				for (ChatListener listener : listeners) {
-					listener.chatEventOccured(event);
+					if (listener.isHandling(event)) {
+						listener.chatEventOccured(event);
+						wasHandled = true;
+					}
+				}
+
+				if (!wasHandled
+						|| !Raptor
+								.getInstance()
+								.getPreferences()
+								.getBoolean(
+										PreferenceKeys.CHAT_REMOVE_SUB_TAB_MESSAGES_FROM_MAIN_TAB)) {
+					for (ChatListener listener : mainConsoleListeners) {
+						if (listener.isHandling(event)) {
+							listener.chatEventOccured(event);
+							wasHandled = true;
+						}
+					}
 				}
 				logger.write(event);
 			}
@@ -103,5 +130,7 @@ public class ChatService {
 	 */
 	public void removeChatServiceListener(ChatListener listener) {
 		listeners.remove(listener);
+		mainConsoleListeners.remove(listener);
 	}
+
 }

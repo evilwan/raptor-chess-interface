@@ -490,6 +490,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS, false);
 		setDefault(CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS, false);
 		setDefault(CHAT_OPEN_PARTNER_TAB_ON_PTELLS, false);
+		setDefault(CHAT_REMOVE_SUB_TAB_MESSAGES_FROM_MAIN_TAB, true);
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
@@ -574,7 +575,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_SPEAK_PARTNER_TELLS, true);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor v.Beta2m1");
+		setDefault(APP_NAME, "Raptor v.Beta2m2");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName,
