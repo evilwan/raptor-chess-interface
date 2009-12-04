@@ -62,6 +62,7 @@ import raptor.action.game.ForwardAction;
 import raptor.action.game.LastAction;
 import raptor.action.game.MatchWinnerAction;
 import raptor.action.game.MoveListAction;
+import raptor.action.game.RematchAction;
 import raptor.action.game.RevertAction;
 import raptor.action.game.ToggleEngineAnalysisAction;
 import raptor.chess.BughouseGame;
@@ -765,6 +766,12 @@ public class ChessBoardUtils implements BoardConstants {
 		if (action instanceof SeparatorAction) {
 			result = new ToolItem(toolbar, SWT.SEPARATOR);
 			return result;
+		} else if (action instanceof RematchAction) {
+			if (controller.getConnector() == null) {
+				return null;
+			}
+			result = new ToolItem(toolbar, SWT.PUSH);
+			result.setText(action.getName());
 		} else if (action instanceof MatchWinnerAction) {
 			if (controller instanceof BughouseSuggestController) {
 				return null;

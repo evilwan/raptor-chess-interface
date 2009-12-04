@@ -70,9 +70,6 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED,
 				"Queueing Premove Enabled", getFieldEditorParent()));
 
-		addField(new BooleanFieldEditor(PreferenceKeys.BOARD_SMARTMOVE_ENABLED,
-				"Smartmove Enabled (Middle Click)", getFieldEditorParent()));
-
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING,
 				"Play move Sound when observing", getFieldEditorParent()));

@@ -22,6 +22,37 @@ import java.util.List;
 
 public class ReflectionUtils {
 	/**
+	 * Code grabbed from http://snippets.dzone.com/posts/show/4831 Scans all
+	 * classes accessible from the context class loader which belong to the
+	 * given package and subpackages.
+	 * 
+	 * @param packageName
+	 *            The base package
+	 * @return The classes
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unchecked")
+	public static Class[] getClasses(String packageName)
+			throws ClassNotFoundException, IOException {
+		ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+
+		assert classLoader != null;
+		String path = packageName.replace('.', '/');
+		Enumeration<URL> resources = classLoader.getResources(path);
+		List<File> dirs = new ArrayList<File>();
+		while (resources.hasMoreElements()) {
+			URL resource = resources.nextElement();
+			dirs.add(new File(resource.getFile().replace("%20", " ")));
+		}
+		ArrayList<Class> classes = new ArrayList<Class>();
+		for (File directory : dirs) {
+			classes.addAll(findClasses(directory, packageName));
+		}
+		return classes.toArray(new Class[classes.size()]);
+	}
+
+	/**
 	 * Code grabbed from http://snippets.dzone.com/posts/show/4831 Recursive
 	 * method used to find all classes in a given directory and subdirs.
 	 * 
@@ -33,7 +64,7 @@ public class ReflectionUtils {
 	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
-	public static List<Class> findClasses(File directory, String packageName)
+	private static List<Class> findClasses(File directory, String packageName)
 			throws ClassNotFoundException {
 		List<Class> classes = new ArrayList<Class>();
 		if (!directory.exists()) {
@@ -53,37 +84,6 @@ public class ReflectionUtils {
 			}
 		}
 		return classes;
-	}
-
-	/**
-	 * Code grabbed from http://snippets.dzone.com/posts/show/4831 Scans all
-	 * classes accessible from the context class loader which belong to the
-	 * given package and subpackages.
-	 * 
-	 * @param packageName
-	 *            The base package
-	 * @return The classes
-	 * @throws ClassNotFoundException
-	 * @throws IOException
-	 */
-	@SuppressWarnings("unchecked")
-	public static Class[] getClasses(String packageName)
-			throws ClassNotFoundException, IOException {
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
-		assert classLoader != null;
-		String path = packageName.replace('.', '/');
-		Enumeration<URL> resources = classLoader.getResources(path);
-		List<File> dirs = new ArrayList<File>();
-		while (resources.hasMoreElements()) {
-			URL resource = resources.nextElement();
-			dirs.add(new File(resource.getFile().replace("%20", " ")));
-		}
-		ArrayList<Class> classes = new ArrayList<Class>();
-		for (File directory : dirs) {
-			classes.addAll(findClasses(directory, packageName));
-		}
-		return classes.toArray(new Class[classes.size()]);
 	}
 
 }

@@ -64,6 +64,7 @@ import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.ClockLabelUpdater;
 import raptor.swt.chess.Highlight;
+import raptor.swt.chess.MouseButtonAction;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -147,7 +148,7 @@ public class PlayingController extends ChessBoardController {
 
 							// Now swap controllers to the inactive controller.
 							InactiveController inactiveController = new InactiveController(
-									game);
+									game, getConnector());
 							getBoard().setController(inactiveController);
 							inactiveController.setBoard(board);
 							inactiveController
@@ -636,10 +637,6 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
-	@Override
-	public void userLeftClicked(int square) {
-	}
-
 	/**
 	 * Invoked when a user makes a dnd move or a click click move on the
 	 * chessboard.
@@ -777,63 +774,6 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
-	/**
-	 * Middle click is smart move. A move is randomly selected that is'nt a drop
-	 * move and played if its enabled.
-	 */
-	@Override
-	public void userMiddleClicked(int square) {
-		if (isDisposed()) {
-			return;
-		}
-
-		if (getPreferences().getBoolean(PreferenceKeys.BOARD_SMARTMOVE_ENABLED)) {
-			if (LOG.isDebugEnabled()) {
-				LOG
-						.debug("On middle click " + getGame().getId() + " "
-								+ square);
-			}
-			if (isUsersMove()) {
-				Move[] moves = getGame().getLegalMoves().asArray();
-				List<Move> foundMoves = new ArrayList<Move>(5);
-				for (Move move : moves) {
-					if (move.getTo() == square
-							&& (move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) == 0) {
-						foundMoves.add(move);
-					}
-				}
-
-				if (foundMoves.size() > 0) {
-					Move move = foundMoves.get(random
-							.nextInt(foundMoves.size()));
-
-					if (game.move(move)) {
-						game.rollback();
-						final Move finalMove = move;
-						ThreadService.getInstance().run(new Runnable() {
-							public void run() {
-								connector.makeMove(game, finalMove);
-							}
-						});
-					} else {
-						throw new IllegalStateException(
-								"Game rejected move in smart move. This is a bug.");
-					}
-
-					removeAllMoveDecorations();
-					refreshForMove(move);
-				} else {
-					onPlayIllegalMoveSound();
-				}
-			} else {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Rejected smart move since its not users move.");
-				}
-				onPlayIllegalMoveSound();
-			}
-		}
-	}
-
 	@Override
 	public void userMouseWheeled(int count) {
 		if (count > 0) {
@@ -844,195 +784,44 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	/**
-	 * In droppable games this shows a menu of the pieces available for
-	 * dropping. In bughouse the menu includes the premove drop features which
-	 * drops a move when the piece becomes available.
+	 * {@inheritDoc}
 	 */
 	@Override
-	public void userRightClicked(final int square) {
-		if (isDisposed() || !getGame().isInState(Game.DROPPABLE_STATE)) {
+	public void userPressedMouseButton(MouseButtonAction button, int square) {
+		PlayingMouseAction action = PlayingMouseAction.valueOf(getPreferences()
+				.getString(PLAYING_CONTROLLER + button.getPreferenceSuffix()));
+
+		if (action == null) {
+			Raptor.getInstance().onError(
+					"PlayingMouseAction was null. This should never happn. "
+							+ button.toString() + " " + square);
 			return;
 		}
 
-		if (!ChessBoardUtils.isPieceJailSquare(square)
-				&& getGame().getPiece(square) == EMPTY) {
-			final int color = isUserWhite() ? WHITE : BLACK;
-			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
-
-			if (isBughouse() && isUsersMove()) {
-				if (getGame().getDropCount(color, PAWN) == 0) {
-					MenuItem item = new MenuItem(menu, SWT.PUSH);
-					item.setText("Premove drop "
-							+ getPieceRepresentation(getColoredPiece(PAWN,
-									color)) + "@" + getSan(square));
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							PremoveInfo premoveInfo = new PremoveInfo();
-							premoveInfo.isPremoveDrop = true;
-							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
-									PAWN, color));
-							premoveInfo.fromPiece = isUserWhite() ? WP : BP;
-							premoves.add(premoveInfo);
-							adjustPremoveLabelHighlightsAndArrows();
-						}
-					});
-				}
-				if (getGame().getDropCount(color, KNIGHT) == 0) {
-					MenuItem item = new MenuItem(menu, SWT.PUSH);
-					item.setText("Premove drop "
-							+ getPieceRepresentation(getColoredPiece(KNIGHT,
-									color)) + "@" + getSan(square));
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							PremoveInfo premoveInfo = new PremoveInfo();
-							premoveInfo.isPremoveDrop = true;
-							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
-									KNIGHT, color));
-							premoveInfo.fromPiece = isUserWhite() ? WN : BN;
-							premoves.add(premoveInfo);
-							adjustPremoveLabelHighlightsAndArrows();
-						}
-					});
-				}
-				if (getGame().getDropCount(color, BISHOP) == 0) {
-					MenuItem item = new MenuItem(menu, SWT.PUSH);
-					item.setText("Premove drop "
-							+ getPieceRepresentation(getColoredPiece(BISHOP,
-									color)) + "@" + getSan(square));
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							PremoveInfo premoveInfo = new PremoveInfo();
-							premoveInfo.isPremoveDrop = true;
-							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
-									BISHOP, color));
-							premoveInfo.fromPiece = isUserWhite() ? WB : BB;
-							premoves.add(premoveInfo);
-							adjustPremoveLabelHighlightsAndArrows();
-						}
-					});
-				}
-				if (getGame().getDropCount(color, ROOK) == 0) {
-					MenuItem item = new MenuItem(menu, SWT.PUSH);
-					item.setText("Premove drop "
-							+ getPieceRepresentation(getColoredPiece(ROOK,
-									color)) + "@" + getSan(square));
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							PremoveInfo premoveInfo = new PremoveInfo();
-							premoveInfo.isPremoveDrop = true;
-							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
-									ROOK, color));
-							premoveInfo.fromPiece = isUserWhite() ? WR : BR;
-							premoves.add(premoveInfo);
-							adjustPremoveLabelHighlightsAndArrows();
-						}
-					});
-				}
-				if (getGame().getDropCount(color, QUEEN) == 0) {
-					MenuItem item = new MenuItem(menu, SWT.PUSH);
-					item.setText("Premove drop "
-							+ getPieceRepresentation(getColoredPiece(QUEEN,
-									color)) + "@" + getSan(square));
-					item.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							PremoveInfo premoveInfo = new PremoveInfo();
-							premoveInfo.isPremoveDrop = true;
-							premoveInfo.toSquare = square;
-							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
-									QUEEN, color));
-							premoveInfo.fromPiece = isUserWhite() ? WQ : BQ;
-							premoves.add(premoveInfo);
-							adjustPremoveLabelHighlightsAndArrows();
-						}
-					});
-				}
-			}
-
-			if (menu.getItemCount() > 0) {
-				new MenuItem(menu, SWT.SEPARATOR);
-			}
-
-			if (getGame().getDropCount(color, PAWN) > 0) {
-				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item
-						.setText(getPieceRepresentation(getColoredPiece(PAWN,
-								color))
-								+ "@" + getSan(square));
-				item.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event event) {
-						userMadeMove(
-								getDropSquareFromColoredPiece(getColoredPiece(
-										PAWN, color)), square);
-
-					}
-				});
-			}
-			if (getGame().getDropCount(color, KNIGHT) > 0) {
-				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(getPieceRepresentation(getColoredPiece(KNIGHT,
-						color))
-						+ "@" + getSan(square));
-				item.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event event) {
-						userMadeMove(
-								getDropSquareFromColoredPiece(getColoredPiece(
-										KNIGHT, color)), square);
-					}
-				});
-			}
-			if (getGame().getDropCount(color, BISHOP) > 0) {
-				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(getPieceRepresentation(getColoredPiece(BISHOP,
-						color))
-						+ "@" + getSan(square));
-				item.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event event) {
-						userMadeMove(
-								getDropSquareFromColoredPiece(getColoredPiece(
-										BISHOP, color)), square);
-					}
-				});
-			}
-			if (getGame().getDropCount(color, ROOK) > 0) {
-				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item
-						.setText(getPieceRepresentation(getColoredPiece(ROOK,
-								color))
-								+ "@" + getSan(square));
-				item.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event event) {
-						userMadeMove(
-								getDropSquareFromColoredPiece(getColoredPiece(
-										ROOK, color)), square);
-					}
-				});
-			}
-			if (getGame().getDropCount(color, QUEEN) > 0) {
-				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText(getPieceRepresentation(getColoredPiece(QUEEN,
-						color))
-						+ "@" + getSan(square));
-				item.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event event) {
-						userMadeMove(
-								getDropSquareFromColoredPiece(getColoredPiece(
-										QUEEN, color)), square);
-					}
-				});
-			}
-
-			menu.setLocation(board.getSquare(square).toDisplay(10, 10));
-			menu.setVisible(true);
-			while (!menu.isDisposed() && menu.isVisible()) {
-				if (!board.getControl().getDisplay().readAndDispatch()) {
-					board.getControl().getDisplay().sleep();
-				}
-			}
-			menu.dispose();
+		switch (action) {
+		case None:
+			break;
+		case OfferDraw:
+			onOfferDraw();
+			break;
+		case PopupMenu:
+			onPopup(square);
+			break;
+		case RandomCapture:
+			onRandomCapture();
+			break;
+		case SmartMove:
+			onSmartMove(square);
+			break;
+		case RandomMove:
+			onRandomMove();
+			break;
+		case RandomRecapture:
+			onRandomRecapture();
+			break;
+		case ClearPremoves:
+			onClearPremoves();
+			break;
 		}
 	}
 
@@ -1304,6 +1093,10 @@ public class PlayingController extends ChessBoardController {
 				|| getGame().getVariant() == Variant.fischerRandomBughouse;
 	}
 
+	protected void onOfferDraw() {
+		getConnector().onDraw(getGame());
+	}
+
 	protected void onPlayGameEndSound() {
 		if (isUserWhite() && game.getResult() == Result.WHITE_WON) {
 			SoundService.getInstance().playSound("win");
@@ -1328,6 +1121,358 @@ public class PlayingController extends ChessBoardController {
 
 	protected void onPlayMoveSound() {
 		SoundService.getInstance().playSound("move");
+	}
+
+	protected void onPopup(final int square) {
+		if (isDisposed() || !getGame().isInState(Game.DROPPABLE_STATE)) {
+			return;
+		}
+
+		if (!ChessBoardUtils.isPieceJailSquare(square)
+				&& getGame().getPiece(square) == EMPTY) {
+			final int color = isUserWhite() ? WHITE : BLACK;
+			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
+
+			if (isBughouse() && isUsersMove()) {
+				if (getGame().getDropCount(color, PAWN) == 0) {
+					MenuItem item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Premove drop "
+							+ getPieceRepresentation(getColoredPiece(PAWN,
+									color)) + "@" + getSan(square));
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							PremoveInfo premoveInfo = new PremoveInfo();
+							premoveInfo.isPremoveDrop = true;
+							premoveInfo.toSquare = square;
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									PAWN, color));
+							premoveInfo.fromPiece = isUserWhite() ? WP : BP;
+							premoves.add(premoveInfo);
+							adjustPremoveLabelHighlightsAndArrows();
+						}
+					});
+				}
+				if (getGame().getDropCount(color, KNIGHT) == 0) {
+					MenuItem item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Premove drop "
+							+ getPieceRepresentation(getColoredPiece(KNIGHT,
+									color)) + "@" + getSan(square));
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							PremoveInfo premoveInfo = new PremoveInfo();
+							premoveInfo.isPremoveDrop = true;
+							premoveInfo.toSquare = square;
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									KNIGHT, color));
+							premoveInfo.fromPiece = isUserWhite() ? WN : BN;
+							premoves.add(premoveInfo);
+							adjustPremoveLabelHighlightsAndArrows();
+						}
+					});
+				}
+				if (getGame().getDropCount(color, BISHOP) == 0) {
+					MenuItem item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Premove drop "
+							+ getPieceRepresentation(getColoredPiece(BISHOP,
+									color)) + "@" + getSan(square));
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							PremoveInfo premoveInfo = new PremoveInfo();
+							premoveInfo.isPremoveDrop = true;
+							premoveInfo.toSquare = square;
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									BISHOP, color));
+							premoveInfo.fromPiece = isUserWhite() ? WB : BB;
+							premoves.add(premoveInfo);
+							adjustPremoveLabelHighlightsAndArrows();
+						}
+					});
+				}
+				if (getGame().getDropCount(color, ROOK) == 0) {
+					MenuItem item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Premove drop "
+							+ getPieceRepresentation(getColoredPiece(ROOK,
+									color)) + "@" + getSan(square));
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							PremoveInfo premoveInfo = new PremoveInfo();
+							premoveInfo.isPremoveDrop = true;
+							premoveInfo.toSquare = square;
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									ROOK, color));
+							premoveInfo.fromPiece = isUserWhite() ? WR : BR;
+							premoves.add(premoveInfo);
+							adjustPremoveLabelHighlightsAndArrows();
+						}
+					});
+				}
+				if (getGame().getDropCount(color, QUEEN) == 0) {
+					MenuItem item = new MenuItem(menu, SWT.PUSH);
+					item.setText("Premove drop "
+							+ getPieceRepresentation(getColoredPiece(QUEEN,
+									color)) + "@" + getSan(square));
+					item.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							PremoveInfo premoveInfo = new PremoveInfo();
+							premoveInfo.isPremoveDrop = true;
+							premoveInfo.toSquare = square;
+							premoveInfo.fromSquare = getDropSquareFromColoredPiece(getColoredPiece(
+									QUEEN, color));
+							premoveInfo.fromPiece = isUserWhite() ? WQ : BQ;
+							premoves.add(premoveInfo);
+							adjustPremoveLabelHighlightsAndArrows();
+						}
+					});
+				}
+			}
+
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+
+			if (getGame().getDropCount(color, PAWN) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item
+						.setText(getPieceRepresentation(getColoredPiece(PAWN,
+								color))
+								+ "@" + getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										PAWN, color)), square);
+
+					}
+				});
+			}
+			if (getGame().getDropCount(color, KNIGHT) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(getPieceRepresentation(getColoredPiece(KNIGHT,
+						color))
+						+ "@" + getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										KNIGHT, color)), square);
+					}
+				});
+			}
+			if (getGame().getDropCount(color, BISHOP) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(getPieceRepresentation(getColoredPiece(BISHOP,
+						color))
+						+ "@" + getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										BISHOP, color)), square);
+					}
+				});
+			}
+			if (getGame().getDropCount(color, ROOK) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item
+						.setText(getPieceRepresentation(getColoredPiece(ROOK,
+								color))
+								+ "@" + getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										ROOK, color)), square);
+					}
+				});
+			}
+			if (getGame().getDropCount(color, QUEEN) > 0) {
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText(getPieceRepresentation(getColoredPiece(QUEEN,
+						color))
+						+ "@" + getSan(square));
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event event) {
+						userMadeMove(
+								getDropSquareFromColoredPiece(getColoredPiece(
+										QUEEN, color)), square);
+					}
+				});
+			}
+
+			menu.setLocation(board.getSquare(square).toDisplay(10, 10));
+			menu.setVisible(true);
+			while (!menu.isDisposed() && menu.isVisible()) {
+				if (!board.getControl().getDisplay().readAndDispatch()) {
+					board.getControl().getDisplay().sleep();
+				}
+			}
+			menu.dispose();
+		}
+	}
+
+	protected void onRandomCapture() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("On onRandomCapture " + getGame().getId());
+		}
+		if (isUsersMove()) {
+			Move[] moves = getGame().getLegalMoves().asArray();
+			List<Move> foundMoves = new ArrayList<Move>(5);
+			for (Move move : moves) {
+				if (move.isCapture()) {
+					foundMoves.add(move);
+				}
+			}
+
+			if (foundMoves.size() > 0) {
+				Move move = foundMoves.get(random.nextInt(foundMoves.size()));
+
+				if (game.move(move)) {
+					game.rollback();
+					final Move finalMove = move;
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							connector.makeMove(game, finalMove);
+						}
+					});
+				} else {
+					throw new IllegalStateException(
+							"Game rejected move in onRandomCapture. This is a bug.");
+				}
+
+				removeAllMoveDecorations();
+				refreshForMove(move);
+			} else {
+				onPlayIllegalMoveSound();
+			}
+		} else {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Rejected onRandomCapture since its not users move.");
+			}
+			onPlayIllegalMoveSound();
+		}
+	}
+
+	protected void onRandomMove() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("On onRandomMove " + getGame().getId());
+		}
+		if (isUsersMove()) {
+			Move[] moves = getGame().getLegalMoves().asArray();
+			if (moves.length > 0) {
+				Move move = moves[random.nextInt(moves.length)];
+				if (game.move(move)) {
+					game.rollback();
+					final Move finalMove = move;
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							connector.makeMove(game, finalMove);
+						}
+					});
+				} else {
+					throw new IllegalStateException(
+							"Game rejected move in random move. This is a bug.");
+				}
+
+				removeAllMoveDecorations();
+				refreshForMove(move);
+			} else {
+				onPlayIllegalMoveSound();
+			}
+		} else {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Rejected onRandomMove its not users move.");
+			}
+			onPlayIllegalMoveSound();
+		}
+	}
+
+	protected void onRandomRecapture() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("On onRandomRecapture " + getGame().getId());
+		}
+		if (isUsersMove() && game.getLastMove() != null
+				&& game.getLastMove().isCapture()) {
+			Move lastMove = game.getLastMove();
+
+			Move[] moves = getGame().getLegalMoves().asArray();
+			List<Move> foundMoves = new ArrayList<Move>(5);
+			for (Move move : moves) {
+				if (move.isCapture() && move.getTo() == lastMove.getTo()) {
+					foundMoves.add(move);
+				}
+			}
+
+			if (foundMoves.size() > 0) {
+				Move move = foundMoves.get(random.nextInt(foundMoves.size()));
+
+				if (game.move(move)) {
+					game.rollback();
+					final Move finalMove = move;
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							connector.makeMove(game, finalMove);
+						}
+					});
+				} else {
+					throw new IllegalStateException(
+							"Game rejected move in onRandomRecapture. This is a bug.");
+				}
+
+				removeAllMoveDecorations();
+				refreshForMove(move);
+			} else {
+				onPlayIllegalMoveSound();
+			}
+		} else {
+			if (LOG.isDebugEnabled()) {
+				LOG
+						.debug("Rejected onRandomRecapture since its not users move.");
+			}
+			onPlayIllegalMoveSound();
+		}
+	}
+
+	protected void onSmartMove(final int square) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("On onSmartMove " + getGame().getId() + " " + square);
+		}
+		if (isUsersMove()) {
+			Move[] moves = getGame().getLegalMoves().asArray();
+			List<Move> foundMoves = new ArrayList<Move>(5);
+			for (Move move : moves) {
+				if (move.getTo() == square
+						&& (move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) == 0) {
+					foundMoves.add(move);
+				}
+			}
+
+			if (foundMoves.size() > 0) {
+				Move move = foundMoves.get(random.nextInt(foundMoves.size()));
+
+				if (game.move(move)) {
+					game.rollback();
+					final Move finalMove = move;
+					ThreadService.getInstance().run(new Runnable() {
+						public void run() {
+							connector.makeMove(game, finalMove);
+						}
+					});
+				} else {
+					throw new IllegalStateException(
+							"Game rejected move in random move. This is a bug.");
+				}
+
+				removeAllMoveDecorations();
+				refreshForMove(move);
+			} else {
+				onPlayIllegalMoveSound();
+			}
+		} else {
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Rejected smart move since its not users move.");
+			}
+			onPlayIllegalMoveSound();
+		}
 	}
 
 }

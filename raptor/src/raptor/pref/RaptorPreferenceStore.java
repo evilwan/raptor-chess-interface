@@ -43,6 +43,9 @@ import raptor.chat.ChatType;
 import raptor.swt.BugPartnersWindowItem;
 import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
+import raptor.swt.chess.controller.InactiveMouseAction;
+import raptor.swt.chess.controller.ObservingMouseAction;
+import raptor.swt.chess.controller.PlayingMouseAction;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -304,7 +307,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				1000L * 60L * 10L + 1L);
 		setDefault(BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS, true);
 		setDefault(BOARD_PREMOVE_ENABLED, true);
-		setDefault(BOARD_SMARTMOVE_ENABLED, true);
 		setDefault(BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING, true);
 		setDefault(BOARD_IS_SHOWING_PIECE_UNICODE_CHARS, true);
 		setDefault(BOARD_QUEUED_PREMOVE_ENABLED, true);
@@ -316,6 +318,43 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_COORDINATES_SIZE_PERCENTAGE, 26);
 		setDefault(BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME, false);
 		setDefault(BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT, false);
+		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.None.toString());
+		setDefault(PLAYING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.PopupMenu.toString());
+		setDefault(PLAYING_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.SmartMove.toString());
+		setDefault(PLAYING_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.None.toString());
+		setDefault(PLAYING_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.None.toString());
+		setDefault(PLAYING_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.None.toString());
+		setDefault(OBSERVING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.MakePrimaryGame.toString());
+		setDefault(OBSERVING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.None.toString());
+		setDefault(OBSERVING_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.MatchWinner.toString());
+		setDefault(OBSERVING_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.None.toString());
+		setDefault(OBSERVING_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.None.toString());
+		setDefault(
+				OBSERVING_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.Rematch.toString());
+		setDefault(INACTIVE_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
@@ -722,11 +761,19 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	@Override
 	public void save() {
+		FileOutputStream fileOut = null;
 		try {
-			super.save();
+			save(fileOut = new FileOutputStream(RAPTOR_PROPERTIES),
+					"Last saved on " + new Date());
+			fileOut.flush();
 		} catch (IOException ioe) {
 			LOG.error("Error saving raptor preferences:", ioe);
 			throw new RuntimeException(ioe);
+		} finally {
+			try {
+				fileOut.close();
+			} catch (Throwable t) {
+			}
 		}
 	}
 

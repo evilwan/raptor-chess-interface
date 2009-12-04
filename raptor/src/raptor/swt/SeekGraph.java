@@ -68,7 +68,7 @@ public class SeekGraph extends Canvas {
 	private Color unratedColor;
 
 	private Color computerColor;
-	
+
 	private Image legendImage;
 	private boolean isDrawingLegend;
 
@@ -91,7 +91,7 @@ public class SeekGraph extends Canvas {
 
 	private boolean showComputer = true;
 	private boolean showUnrated = true;
-	
+
 	// popup tooltip
 	private Rectangle lastPopupRect;
 	private ToolTip tooltip;
@@ -171,12 +171,12 @@ public class SeekGraph extends Canvas {
 		if (seekService != null) {
 			seekService.adSeekServiceListener(seekListener);
 		}
-	    
-	    addPaintListener(new PaintListener() {
-	        public void paintControl(PaintEvent e) {
-	            paintComponent(e);
-	        }
-	    }); 
+
+		addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				paintComponent(e);
+			}
+		});
 
 		seeks = new HashMap<Point, List<Seek>>();
 		screen = new HashMap<Point, Point>();
@@ -187,8 +187,8 @@ public class SeekGraph extends Canvas {
 		ratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		unratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
 
-		tooltip = new ToolTip((Shell)parent, SWT.BALLOON);
-		
+		tooltip = new ToolTip((Shell) parent, SWT.BALLOON);
+
 		addMouseMoveListener(new MouseMoveListener() {
 
 			public void mouseMove(MouseEvent e) {
@@ -207,11 +207,11 @@ public class SeekGraph extends Canvas {
 					}
 				}
 
-				 if (!showing) {
-						 tooltip.setVisible(showing);
-						 // we're not pointing at anything, so reset _lastPopupRect
-						 lastPopupRect = null;
-				 }
+				if (!showing) {
+					tooltip.setVisible(showing);
+					// we're not pointing at anything, so reset _lastPopupRect
+					lastPopupRect = null;
+				}
 			}
 		});
 
@@ -246,10 +246,6 @@ public class SeekGraph extends Canvas {
 	public void redoLegend() {
 		legendImage = null;
 	}
-	
-	public void setDrawingLegend(boolean value) {
-		isDrawingLegend = value;
-	}
 
 	/**
 	 * This is empirically faster then replace by one, as it just does one
@@ -278,6 +274,10 @@ public class SeekGraph extends Canvas {
 
 	public void setComputerColor(Color c) {
 		computerColor = c;
+	}
+
+	public void setDrawingLegend(boolean value) {
+		isDrawingLegend = value;
 	}
 
 	public void setHScale(int[][] scale) {
@@ -319,37 +319,6 @@ public class SeekGraph extends Canvas {
 		vfactor = 0;
 		for (int[] range : vscale) {
 			vfactor += range[1];
-		}
-	}
-
-	private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
-		// are we're already showing for this?
-		if (lastPopupRect == null || !rect.equals(lastPopupRect)) {
-			// recreate the menu
-			List<Seek> existing = seeks.get(screen.get(loc));
-			StringBuilder all = new StringBuilder();
-			for (Seek seek : existing) {
-				String rating = (seek.getRatingAsInt() == -1) ? " (Guest) " : " ("
-					+ seek.getRating() + ") ";
-				String rated = seek.isRated() ? "r" : "ur";
-				String text = new String(
-						seek.getAd() + ": " + 
-						seek.getName()
-						+ rating
-						+ seek.getMinutes()
-						+ " "
-						+ seek.getIncrement()
-						+ " "
-						+ rated
-						+ (seek.getType() != null ? seek.getType().toString() : "")
-						);
-				all.append(text + "\n");
-			}
-			tooltip.setText(all.substring(0, all.length() - 1));
-			lastPopupRect = rect;
-			
-			tooltip.setLocation(toDisplay(loc.x + SEEK_SIZE-2, loc.y + SEEK_SIZE-2));
-			tooltip.setVisible(true);
 		}
 	}
 
@@ -406,7 +375,7 @@ public class SeekGraph extends Canvas {
 				* inset);
 		drawVerticalLines(gc, height, height - 2 * inset, width, width - 2
 				* inset);
-		
+
 		if (isDrawingLegend) {
 			drawLegend(gc, height, width);
 		}
@@ -414,51 +383,6 @@ public class SeekGraph extends Canvas {
 		drawPoints(gc, clip, width, height);
 
 		// TODO: dispose of something???
-	}
-
-	private void drawLegend(GC gc, int height, int width) {
-
-		if (legendImage == null) {
-			Image computer = createSingleLegend("Computer", computerColor);
-			Image rated = createSingleLegend("Rated", ratedColor);
-			Image unrated = createSingleLegend("Unrated", unratedColor);
-			Image many = createSingleLegend("Many", manyColor);
-
-			legendImage = new Image(null, computer.getBounds().width
-					+ rated.getBounds().width + unrated.getBounds().width + many.getBounds().width,
-					25);
-
-			GC lg = new GC(legendImage);
-			int cx = 0;
-			lg.drawImage(computer, 0, 0);
-			cx += computer.getBounds().width;
-			lg.drawImage(rated, cx, 0);
-			cx += rated.getBounds().width;
-			lg.drawImage(unrated, cx, 0);
-			cx += unrated.getBounds().width;
-			lg.drawImage(many, cx, 0);
-			lg.dispose();
-			// Raptor.getInstance().getImageRegistry().put(SEEK_LEGEND_KEY, legendImage);
-		}
-
-		//int y = inset / 4;
-		int y = 0;
-		int x = width - legendImage.getBounds().width - inset; 
-		System.out.println("Drawing legend at: " + new Point(x,y));
-		gc.drawImage(legendImage, x, y);
-	}
-
-	private Image createSingleLegend(String text, Color color) {
-		int height = 15;
-		Image legend = new Image(null, 80, height + 2);
-		GC lgc = new GC(legend);
-		lgc.setBackground(color);
-		lgc.fillOval(0, (height + 2 - SEEK_SIZE)/2, SEEK_SIZE, SEEK_SIZE);
-		lgc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
-		lgc.drawText(text, SEEK_SIZE + 2, 1);
-		lgc.dispose();
-		
-		return legend;
 	}
 
 	protected Point scale(Point p, int width, int height) {
@@ -555,6 +479,19 @@ public class SeekGraph extends Canvas {
 		}
 	}
 
+	private Image createSingleLegend(String text, Color color) {
+		int height = 15;
+		Image legend = new Image(null, 80, height + 2);
+		GC lgc = new GC(legend);
+		lgc.setBackground(color);
+		lgc.fillOval(0, (height + 2 - SEEK_SIZE) / 2, SEEK_SIZE, SEEK_SIZE);
+		lgc.setForeground(Display.getCurrent().getSystemColor(SWT.COLOR_BLACK));
+		lgc.drawText(text, SEEK_SIZE + 2, 1);
+		lgc.dispose();
+
+		return legend;
+	}
+
 	private void drawHorizontalLines(GC gc, int height, int plotH, int width,
 			int plotW) {
 
@@ -574,6 +511,39 @@ public class SeekGraph extends Canvas {
 					SWT.COLOR_BLACK));
 			gc.drawString(String.valueOf(pair[0]), 0, h + 2);
 		}
+	}
+
+	private void drawLegend(GC gc, int height, int width) {
+
+		if (legendImage == null) {
+			Image computer = createSingleLegend("Computer", computerColor);
+			Image rated = createSingleLegend("Rated", ratedColor);
+			Image unrated = createSingleLegend("Unrated", unratedColor);
+			Image many = createSingleLegend("Many", manyColor);
+
+			legendImage = new Image(null, computer.getBounds().width
+					+ rated.getBounds().width + unrated.getBounds().width
+					+ many.getBounds().width, 25);
+
+			GC lg = new GC(legendImage);
+			int cx = 0;
+			lg.drawImage(computer, 0, 0);
+			cx += computer.getBounds().width;
+			lg.drawImage(rated, cx, 0);
+			cx += rated.getBounds().width;
+			lg.drawImage(unrated, cx, 0);
+			cx += unrated.getBounds().width;
+			lg.drawImage(many, cx, 0);
+			lg.dispose();
+			// Raptor.getInstance().getImageRegistry().put(SEEK_LEGEND_KEY,
+			// legendImage);
+		}
+
+		// int y = inset / 4;
+		int y = 0;
+		int x = width - legendImage.getBounds().width - inset;
+		System.out.println("Drawing legend at: " + new Point(x, y));
+		gc.drawImage(legendImage, x, y);
 	}
 
 	private void drawPoints(GC gc, Rectangle clip, int width, int height) {
@@ -642,5 +612,37 @@ public class SeekGraph extends Canvas {
 
 		gc.setBackground(color);
 		gc.fillOval(p.x, p.y, SEEK_SIZE, SEEK_SIZE);
+	}
+
+	private void showAcceptPopup(Point clickLoc, Point loc, Rectangle rect) {
+		// are we're already showing for this?
+		if (lastPopupRect == null || !rect.equals(lastPopupRect)) {
+			// recreate the menu
+			List<Seek> existing = seeks.get(screen.get(loc));
+			StringBuilder all = new StringBuilder();
+			for (Seek seek : existing) {
+				String rating = seek.getRatingAsInt() == -1 ? " (Guest) "
+						: " (" + seek.getRating() + ") ";
+				String rated = seek.isRated() ? "r" : "ur";
+				String text = new String(seek.getAd()
+						+ ": "
+						+ seek.getName()
+						+ rating
+						+ seek.getMinutes()
+						+ " "
+						+ seek.getIncrement()
+						+ " "
+						+ rated
+						+ (seek.getType() != null ? seek.getType().toString()
+								: ""));
+				all.append(text + "\n");
+			}
+			tooltip.setText(all.substring(0, all.length() - 1));
+			lastPopupRect = rect;
+
+			tooltip.setLocation(toDisplay(loc.x + SEEK_SIZE - 2, loc.y
+					+ SEEK_SIZE - 2));
+			tooltip.setVisible(true);
+		}
 	}
 }

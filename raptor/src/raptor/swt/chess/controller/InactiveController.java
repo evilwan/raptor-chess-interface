@@ -42,12 +42,14 @@ import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.TimeTakenForMove;
 import raptor.chess.util.GameUtils;
+import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.swt.chess.MouseButtonAction;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
@@ -77,6 +79,22 @@ public class InactiveController extends ChessBoardController implements
 	public InactiveController(Game game) {
 		this(game, "Inactive", Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES));
+	}
+
+	/**
+	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
+	 * displayed on top or not.
+	 * 
+	 * isReusable will be set to the users preference
+	 * BOARD_TAKEOVER_INACTIVE_GAMES
+	 */
+	public InactiveController(Game game, Connector connector) {
+		super(new GameCursor(game, GameCursor.Mode.MakeMovesOnCursor),
+				connector);
+		cursor = (GameCursor) getGame();
+		title = "Inactive";
+		canBeTakenOver = Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES);
 	}
 
 	/**
@@ -303,157 +321,12 @@ public class InactiveController extends ChessBoardController implements
 		addDecorationsForLastMoveListMove();
 	}
 
-	@Override
-	public void onRevert() {
-		cursor.revert();
-		refresh();
-		addDecorationsForLastMoveListMove();
-	}
-
-	public void onSave() {
-		FileDialog fd = new FileDialog(board.getControl().getShell(), SWT.SAVE);
-		fd.setText("Save To PGN");
-		fd.setFilterPath("");
-		String[] filterExt = { "*.pgn", "*.*" };
-		fd.setFilterExtensions(filterExt);
-		final String selected = fd.open();
-
-		if (selected != null) {
-			String pgn = cursor.toPgn();
-			FileWriter writer = null;
-
-			try {
-				writer = new FileWriter(selected);
-				writer.write(pgn);
-				writer.flush();
-			} catch (IOException ioe) {
-				Raptor.getInstance().onError("Error saving pgn file.", ioe);
-			} finally {
-				try {
-					writer.close();
-				} catch (Throwable t) {
-				}
-			}
-		}
-	}
-
-	@Override
-	public void refresh() {
-		if (isDisposed()) {
-			return;
-		}
-		board.getMoveList().updateToGame();
-		board.getMoveList().select(cursor.getCursorPosition());
-		enableDisableNavButtons();
-		super.refresh();
-		board.getEngineAnalysisWidget().updateToGame();
-	}
-
-	/**
-	 * Sets the toolbar. Useful when controllers are swapping out.
-	 * 
-	 * @param toolbar
-	 */
-	public void setToolbar(ToolBar toolbar) {
-		this.toolbar = toolbar;
-	}
-
-	@Override
-	public void userCancelledMove(int fromSquare) {
-		if (!isDisposed()) {
-			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare);
-			board.unhidePieces();
-			refresh();
-			onPlayIllegalMoveSound();
-		}
-	}
-
-	@Override
-	public void userInitiatedMove(int square) {
-		if (!isDisposed()) {
-			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " ");
-			userMadeAdjustment = true;
-			board.getResultDecorator().setDecoration(null);
-			board.getSquare(square).setHidingPiece(true);
-			board.getSquare(square).redraw();
-		}
-	}
-
-	@Override
-	public void userLeftClicked(int square) {
-	}
-
-	@Override
-	public void userMadeMove(int fromSquare, int toSquare) {
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("userMadeMove " + getGame().getId() + " "
-					+ GameUtils.getSan(fromSquare) + " "
-					+ GameUtils.getSan(toSquare));
-		}
-		board.unhidePieces();
-		removeAllMoveDecorations();
-
-		if (fromSquare == toSquare
-				|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
-			if (LOG.isDebugEnabled()) {
-				LOG
-						.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
-			}
-			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
-					toSquare));
-		}
-
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Processing user move..");
-		}
-
-		Move move = null;
-		if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
-			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare,
-					getAutoPromoteSelection());
-		} else {
-			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare);
-		}
-
-		if (move == null) {
-			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
-					toSquare));
-		} else {
-			addDecorationsForMove(move, true);
-			if (game.move(move)) {
-				refresh();
-				onPlayMoveSound();
-			} else {
-				Raptor.getInstance().onError(
-						"Game.move returned false for a move that should have been legal.Move: "
-								+ move + ".",
-						new Throwable(getGame().toString()));
-				adjustForIllegalMove(move.toString());
-			}
-		}
-	}
-
-	@Override
-	public void userMiddleClicked(int square) {
-		LOG.debug("On middle click " + getGame().getId() + " " + square);
-	}
-
-	@Override
-	public void userMouseWheeled(int count) {
-		if (count > 0) {
-			onForward();
-		} else {
-			onBack();
-		}
-	}
-
 	/**
 	 * In droppable games this shows a menu of the pieces available for
 	 * dropping. In bughouse the menu includes the premove drop features which
 	 * drops a move when the piece becomes available.
 	 */
-	@Override
-	public void userRightClicked(final int square) {
+	public void onPopupMenu(final int square) {
 		if (isDisposed()) {
 			return;
 		}
@@ -541,6 +414,171 @@ public class InactiveController extends ChessBoardController implements
 				}
 			}
 			menu.dispose();
+		}
+	}
+
+	@Override
+	public void onRevert() {
+		cursor.revert();
+		refresh();
+		addDecorationsForLastMoveListMove();
+	}
+
+	public void onSave() {
+		FileDialog fd = new FileDialog(board.getControl().getShell(), SWT.SAVE);
+		fd.setText("Save To PGN");
+		fd.setFilterPath("");
+		String[] filterExt = { "*.pgn", "*.*" };
+		fd.setFilterExtensions(filterExt);
+		final String selected = fd.open();
+
+		if (selected != null) {
+			String pgn = cursor.toPgn();
+			FileWriter writer = null;
+
+			try {
+				writer = new FileWriter(selected);
+				writer.write(pgn);
+				writer.flush();
+			} catch (IOException ioe) {
+				Raptor.getInstance().onError("Error saving pgn file.", ioe);
+			} finally {
+				try {
+					writer.close();
+				} catch (Throwable t) {
+				}
+			}
+		}
+	}
+
+	@Override
+	public void refresh() {
+		if (isDisposed()) {
+			return;
+		}
+		board.getMoveList().updateToGame();
+		board.getMoveList().select(cursor.getCursorPosition());
+		enableDisableNavButtons();
+		super.refresh();
+		board.getEngineAnalysisWidget().updateToGame();
+	}
+
+	/**
+	 * Sets the toolbar. Useful when controllers are swapping out.
+	 * 
+	 * @param toolbar
+	 */
+	public void setToolbar(ToolBar toolbar) {
+		this.toolbar = toolbar;
+	}
+
+	@Override
+	public void userCancelledMove(int fromSquare) {
+		if (!isDisposed()) {
+			LOG.debug("moveCancelled" + getGame().getId() + " " + fromSquare);
+			board.unhidePieces();
+			refresh();
+			onPlayIllegalMoveSound();
+		}
+	}
+
+	@Override
+	public void userInitiatedMove(int square) {
+		if (!isDisposed()) {
+			LOG.debug("moveInitiated" + getGame().getId() + " " + square + " ");
+			userMadeAdjustment = true;
+			board.getResultDecorator().setDecoration(null);
+			board.getSquare(square).setHidingPiece(true);
+			board.getSquare(square).redraw();
+		}
+	}
+
+	@Override
+	public void userMadeMove(int fromSquare, int toSquare) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("userMadeMove " + getGame().getId() + " "
+					+ GameUtils.getSan(fromSquare) + " "
+					+ GameUtils.getSan(toSquare));
+		}
+		board.unhidePieces();
+		removeAllMoveDecorations();
+
+		if (fromSquare == toSquare
+				|| ChessBoardUtils.isPieceJailSquare(toSquare)) {
+			if (LOG.isDebugEnabled()) {
+				LOG
+						.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
+			}
+			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
+					toSquare));
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Processing user move..");
+		}
+
+		Move move = null;
+		if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
+			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare,
+					getAutoPromoteSelection());
+		} else {
+			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare);
+		}
+
+		if (move == null) {
+			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
+					toSquare));
+		} else {
+			addDecorationsForMove(move, true);
+			if (game.move(move)) {
+				refresh();
+				onPlayMoveSound();
+			} else {
+				Raptor.getInstance().onError(
+						"Game.move returned false for a move that should have been legal.Move: "
+								+ move + ".",
+						new Throwable(getGame().toString()));
+				adjustForIllegalMove(move.toString());
+			}
+		}
+	}
+
+	@Override
+	public void userMouseWheeled(int count) {
+		if (count > 0) {
+			onForward();
+		} else {
+			onBack();
+		}
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void userPressedMouseButton(MouseButtonAction button, int square) {
+		InactiveMouseAction action = InactiveMouseAction
+				.valueOf(getPreferences().getString(
+						INACTIVE_CONTROLLER + button.getPreferenceSuffix()));
+
+		if (action == null) {
+			Raptor.getInstance().onError(
+					"INACTIVE_CONTROLLER was null. This should never happn. "
+							+ button.toString() + " " + square);
+			return;
+		}
+
+		switch (action) {
+		case None:
+			break;
+		case PopupMenu:
+			onPopupMenu(square);
+			break;
+		case Rematch:
+			if (connector != null) {
+				connector.onRematch();
+			}
+			break;
 		}
 	}
 

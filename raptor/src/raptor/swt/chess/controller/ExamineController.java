@@ -34,6 +34,7 @@ import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.swt.chess.MouseButtonAction;
 
 /**
  * Examines a game on a backing connector. When examining a game the user is
@@ -396,10 +397,6 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public void userLeftClicked(int square) {
-	}
-
-	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
@@ -435,10 +432,6 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public void userMiddleClicked(int square) {
-	}
-
-	@Override
 	public void userMouseWheeled(int count) {
 		if (count > 0) {
 			onForward();
@@ -448,7 +441,7 @@ public class ExamineController extends ChessBoardController {
 	}
 
 	@Override
-	public void userRightClicked(int square) {
+	public void userPressedMouseButton(MouseButtonAction button, int square) {
 	}
 
 	protected void onPlayGameEndSound() {

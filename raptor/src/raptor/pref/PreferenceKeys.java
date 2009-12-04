@@ -39,6 +39,17 @@ public interface PreferenceKeys {
 	public static final String WINDOW_BOUNDS = "window-bounds";
 	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-info";
 	public static final String MATCH_COMMANDS = "match-commands";
+	public static final String LEFT_MOUSE_BUTTON_ACTION = "left-mouse-button-action";
+	public static final String MIDDLE_MOUSE_BUTTON_ACTION = "middle-mouse-button-action";
+	public static final String RIGHT_MOUSE_BUTTON_ACTION = "right-mouse-button-action";
+	public static final String MISC1_MOUSE_BUTTON_ACTION = "misc1-mouse-button-action";
+	public static final String MISC2_MOUSE_BUTTON_ACTION = "misc2-mouse-button-action";
+	public static final String LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION = "left-double-click-mouse-button-action";
+
+	// The following are not preferences but prefixes of preference names.
+	public static final String PLAYING_CONTROLLER = "board-playing-";
+	public static final String OBSERVING_CONTROLLER = "board-observing-";
+	public static final String INACTIVE_CONTROLLER = "board-inactive-";
 
 	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";
@@ -158,7 +169,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_PREMOVES_COLOR = "board-premoves-color";
 	public static final String BOARD_PREMOVES_FONT = "board-premoves-font";
 	public static final String BOARD_QUEUED_PREMOVE_ENABLED = "board-queued-premove-enabled";
-	public static final String BOARD_SMARTMOVE_ENABLED = "board-smartmove-enabled";
 	public static final String BOARD_SQUARE_BACKGROUND_NAME = "board-square-background-name";
 	public static final String BOARD_STATUS_COLOR = "board-status-color";
 	public static final String BOARD_STATUS_FONT = "board-status-font";
