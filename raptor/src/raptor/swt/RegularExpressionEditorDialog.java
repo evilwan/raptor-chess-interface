@@ -84,7 +84,7 @@ public class RegularExpressionEditorDialog extends InputDialog {
 		Label label = new Label(shell, SWT.NONE);
 		label
 				.setText("Example: .*word.* will return true whenever word is encountered.\n"
-						+ "For help with regular expressions with regular expressions in Raptor:\n"
+						+ "For help with regular expressions with in Raptor:\n"
 						+ "Help->Raptor Help->Regular Expressions");
 
 		// Show the message
