@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
 
+import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.GameCursor;
@@ -33,6 +34,7 @@ import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.swt.chess.MouseButtonAction;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -70,7 +72,7 @@ public class ObserveController extends ChessBoardController {
 							return;
 						}
 
-						handleMatchWinner();
+						onMatchWinner();
 
 						try {
 							board.getResultDecorator().setDecorationFromResult(
@@ -204,6 +206,19 @@ public class ObserveController extends ChessBoardController {
 	};
 	protected ToolBar toolbar;
 	protected boolean unobserveOnDispose = true;
+	protected boolean isBughouseOtherBoard;
+
+	/**
+	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
+	 * displayed on top or not.
+	 */
+	public ObserveController(Game game, boolean isBughouseOtherBoard,
+			Connector connector) {
+		super(new GameCursor(game,
+				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast), connector);
+		cursor = (GameCursor) getGame();
+		this.isBughouseOtherBoard = isBughouseOtherBoard;
+	}
 
 	/**
 	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
@@ -383,16 +398,7 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	@Override
-	public void userLeftClicked(int square) {
-		connector.setPrimaryGame(getGame());
-	}
-
-	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
-	}
-
-	@Override
-	public void userMiddleClicked(int square) {
 	}
 
 	@Override
@@ -404,8 +410,32 @@ public class ObserveController extends ChessBoardController {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public void userRightClicked(int square) {
+	public void userPressedMouseButton(MouseButtonAction button, int square) {
+		ObservingMouseAction action = ObservingMouseAction
+				.valueOf(getPreferences().getString(
+						OBSERVING_CONTROLLER + button.getPreferenceSuffix()));
+
+		if (action == null) {
+			Raptor.getInstance().onError(
+					"ObservingMouseAction was null. This should never happn. "
+							+ button.toString() + " " + square);
+			return;
+		}
+
+		switch (action) {
+		case None:
+			break;
+		case MakePrimaryGame:
+			connector.setPrimaryGame(getGame());
+			break;
+		case MatchWinner:
+			onMatchWinner();
+			break;
+		}
 	}
 
 	/**
@@ -422,7 +452,7 @@ public class ObserveController extends ChessBoardController {
 		addDecorationsForLastMoveListMove();
 	}
 
-	protected void handleMatchWinner() {
+	protected void onMatchWinner() {
 		if (isToolItemSelected(ToolBarItemKey.MATCH_WINNER)) {
 			if (connector instanceof BughouseSuggestController) {
 				return;
@@ -436,7 +466,9 @@ public class ObserveController extends ChessBoardController {
 	}
 
 	protected void onPlayGameStartSound() {
-		// SoundService.getInstance().playSound("gameStart");
+		if (!isBughouseOtherBoard) {
+			SoundService.getInstance().playSound("gameStart");
+		}
 	}
 
 	protected void onPlayMoveSound() {

@@ -337,7 +337,8 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	public boolean isDisposed() {
-		return getInstance() == null || getInstance().getWindow() == null
+		return isShutdown || getInstance() == null
+				|| getInstance().getWindow() == null
 				|| getInstance().getWindow().getShell() != null
 				&& getInstance().getWindow().getShell().isDisposed();
 	}
@@ -506,7 +507,7 @@ public class Raptor implements PreferenceKeys {
 				raptorWindow.close();
 			}
 		} catch (Throwable t) {
-			LOG.warn("Error shutting down raptor window", t);
+			// LOG.warn("Error shutting down raptor window", t);
 		}
 
 		try {

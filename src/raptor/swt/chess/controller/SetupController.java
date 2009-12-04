@@ -37,6 +37,7 @@ import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.swt.chess.MouseButtonAction;
 import raptor.swt.chess.PieceJailChessSquare;
 
 /**
@@ -314,10 +315,6 @@ public class SetupController extends ChessBoardController {
 	}
 
 	@Override
-	public void userLeftClicked(int square) {
-	}
-
-	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Move made " + getGame().getId() + " " + fromSquare + " "
@@ -352,18 +349,88 @@ public class SetupController extends ChessBoardController {
 	}
 
 	@Override
-	public void userMiddleClicked(int square) {
+	public void userMouseWheeled(int count) {
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void userPressedMouseButton(MouseButtonAction button, int square) {
+
+		switch (button) {
+		case Right:
+			onPopupMenu(square);
+			break;
+		}
 	}
 
 	@Override
-	public void userMouseWheeled(int count) {
+	protected void adjustClockColors() {
+		if (!isDisposed()) {
+			if (getGame().getColorToMove() == WHITE) {
+				board.getWhiteClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getBlackClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			} else {
+				board.getBlackClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				board.getWhiteClockLabel().setForeground(
+						getPreferences().getColor(
+								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+			}
+		}
+	}
+
+	/**
+	 * Adjusts the contents of the piece jail based on the game state.
+	 */
+	@Override
+	protected void adjustPieceJail() {
+		if (isDisposed()) {
+			return;
+		}
+
+		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
+			PieceJailChessSquare square = board.getPieceJailSquares()[DROPPABLE_PIECES[i]];
+			square.setPiece(DROPPABLE_PIECES[i]);
+			square.setText("");
+			square.redraw();
+		}
+	}
+
+	protected void adjustToDropMove(Move move, boolean isRedrawing) {
+		removeAllMoveDecorations();
+		addDecorationsForMove(move, true);
+		board.getSquare(move.getTo()).setPiece(
+				ChessBoardUtils.getColoredPiece(move.getPiece(), move
+						.isWhitesMove()));
+
+		if (isRedrawing) {
+			board.redrawSquares();
+		}
+	}
+
+	protected void onPlayGameEndSound() {
+		// SoundService.getInstance().playSound("obsGameEnd");
+	}
+
+	protected void onPlayGameStartSound() {
+		// SoundService.getInstance().playSound("gameStart");
+	}
+
+	protected void onPlayMoveSound() {
+		SoundService.getInstance().playSound("move");
 	}
 
 	/**
 	 * Provides a menu the user can use to drop and clear pieces.
 	 */
-	@Override
-	public void userRightClicked(final int square) {
+	protected void onPopupMenu(final int square) {
 		if (!ChessBoardUtils.isPieceJailSquare(square)) {
 
 			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
@@ -508,67 +575,5 @@ public class SetupController extends ChessBoardController {
 			}
 			menu.dispose();
 		}
-	}
-
-	@Override
-	protected void adjustClockColors() {
-		if (!isDisposed()) {
-			if (getGame().getColorToMove() == WHITE) {
-				board.getWhiteClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-				board.getBlackClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			} else {
-				board.getBlackClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
-				board.getWhiteClockLabel().setForeground(
-						getPreferences().getColor(
-								PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
-			}
-		}
-	}
-
-	/**
-	 * Adjusts the contents of the piece jail based on the game state.
-	 */
-	@Override
-	protected void adjustPieceJail() {
-		if (isDisposed()) {
-			return;
-		}
-
-		for (int i = 0; i < DROPPABLE_PIECES.length; i++) {
-			PieceJailChessSquare square = board.getPieceJailSquares()[DROPPABLE_PIECES[i]];
-			square.setPiece(DROPPABLE_PIECES[i]);
-			square.setText("");
-			square.redraw();
-		}
-	}
-
-	protected void adjustToDropMove(Move move, boolean isRedrawing) {
-		removeAllMoveDecorations();
-		addDecorationsForMove(move, true);
-		board.getSquare(move.getTo()).setPiece(
-				ChessBoardUtils.getColoredPiece(move.getPiece(), move
-						.isWhitesMove()));
-
-		if (isRedrawing) {
-			board.redrawSquares();
-		}
-	}
-
-	protected void onPlayGameEndSound() {
-		// SoundService.getInstance().playSound("obsGameEnd");
-	}
-
-	protected void onPlayGameStartSound() {
-		// SoundService.getInstance().playSound("gameStart");
-	}
-
-	protected void onPlayMoveSound() {
-		SoundService.getInstance().playSound("move");
 	}
 }

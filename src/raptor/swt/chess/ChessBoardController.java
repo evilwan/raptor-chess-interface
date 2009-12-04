@@ -620,16 +620,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	public abstract void userInitiatedMove(int square);
 
 	/**
-	 * Invoked when the user left clicks on a square. This method might not be
-	 * called if the square contains a piece and userInitiatedMove returns
-	 * false.
-	 * 
-	 * @param square
-	 *            The square left clicked on.
-	 */
-	public abstract void userLeftClicked(int square);
-
-	/**
 	 * Invoked when the user has made a move.
 	 * 
 	 * @param fromSquare
@@ -640,14 +630,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	public abstract void userMadeMove(int fromSquare, int toSquare);
 
 	/**
-	 * Invoked when the user middle clicks on a square.
-	 * 
-	 * @param square
-	 *            The square middle clicked on.
-	 */
-	public abstract void userMiddleClicked(int square);
-
-	/**
 	 * Invoked when the user mouse wheels. The count is the intensity of the
 	 * wheel. A positive number is an up wheel. A negative number is a down
 	 * wheel.
@@ -655,12 +637,15 @@ public abstract class ChessBoardController implements BoardConstants,
 	public abstract void userMouseWheeled(int count);
 
 	/**
-	 * Invoked when the user right clicks on a square.
+	 * Invoked when the user presses a mouse button over a square.
 	 * 
+	 * @param button
+	 *            The MouseButton clicked.
 	 * @param square
-	 *            The square right clicked on.
+	 *            THe square clicked on.
 	 */
-	public abstract void userRightClicked(int square);
+	public abstract void userPressedMouseButton(MouseButtonAction button,
+			int square);
 
 	/**
 	 * Invoked when the move list is clicked on. THe halfMoveNumber is the move

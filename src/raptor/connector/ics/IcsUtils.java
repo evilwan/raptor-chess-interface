@@ -252,7 +252,8 @@ public class IcsUtils implements GameConstants {
 					controller = new BughouseSuggestController(game, connector,
 							isPartnerWhite);
 				} else {
-					controller = new ObserveController(game, connector);
+					controller = new ObserveController(game,
+							isBughouseOtherBoard, connector);
 				}
 			} else {
 				controller = new ObserveController(game, connector);

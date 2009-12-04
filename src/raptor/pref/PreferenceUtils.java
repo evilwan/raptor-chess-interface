@@ -41,6 +41,9 @@ import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.ChessBoardResultsPage;
 import raptor.pref.page.ChessBoardToolbarsPage;
 import raptor.pref.page.EnginesPage;
+import raptor.pref.page.InactiveMouseActionsPage;
+import raptor.pref.page.ObservingMouseActionsPage;
+import raptor.pref.page.PlayingMouseActionsPage;
 import raptor.pref.page.RaptorPage;
 import raptor.pref.page.RaptorWindowPage;
 import raptor.pref.page.RaptorWindowQuadrantsPage;
@@ -149,7 +152,12 @@ public class PreferenceUtils {
 				new ChessBoardHighlightsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("results",
 				new ChessBoardResultsPage()));
-
+		mgr.addTo("chessBoard", new PreferenceNode("playingMouseActions",
+				new PlayingMouseActionsPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("observingMouseActions",
+				new ObservingMouseActionsPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("inactiveMouseActions",
+				new InactiveMouseActionsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("toolbar",
 				new ChessBoardToolbarsPage()));
 		mgr

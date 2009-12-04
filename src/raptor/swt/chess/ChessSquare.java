@@ -129,7 +129,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		public void handleEvent(Event event) {
 			switch (event.type) {
 			case SWT.MouseWheel:
-				if (System.currentTimeMillis() - lastWheel > 250) {
+				if (System.currentTimeMillis() - lastWheel > 100) {
 					board.getController().userMouseWheeled(event.count);
 					lastWheel = System.currentTimeMillis();
 				}
@@ -140,16 +140,15 @@ public class ChessSquare extends Canvas implements BoardConstants {
 
 	MouseListener mouseListener = new MouseListener() {
 		public void mouseDoubleClick(MouseEvent e) {
+			if (e.button == 1) {
+				board.controller.userPressedMouseButton(
+						MouseButtonAction.LeftDoubleClick, id);
+			}
 		}
 
 		public void mouseDown(MouseEvent e) {
-			if (e.button == 3) {
-				board.controller.userRightClicked(id);
-			} else if (e.button == 2) {
-				board.controller.userMiddleClicked(id);
-			} else if (e.button == 1) {
-				board.controller.userLeftClicked(id);
-			}
+			board.controller.userPressedMouseButton(MouseButtonAction
+					.buttonFromEvent(e), id);
 		}
 
 		public void mouseUp(MouseEvent e) {
