@@ -64,10 +64,9 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		textLabel
 				.setText(WordUtils
 						.wrap(
-								"\tRight-Click Scripts scripts have one parameter, the text selected when "
+								"\tRight-Click Scripts scripts have one parameter 'selection', the text selected when "
 										+ "the console was right clicked. "
-										+ "See the Scripting wiki on the raptor site "
-										+ "http://code.google.com/p/raptor-chess-interface/wiki/Scripting for more details.",
+										+ "See Help->Raptor Help->Scripting for more details.",
 								70));
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
