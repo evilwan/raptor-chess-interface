@@ -784,8 +784,7 @@ public class ChessBoardUtils implements BoardConstants {
 					|| controller instanceof ExamineController
 					|| controller instanceof ObserveController) {
 
-				if ((controller.getGame().getVariant() == Variant.classic || controller
-						.getGame().getVariant() == Variant.wild)
+				if (Variant.isClassic(controller.getGame().getVariant())
 						&& UCIEngineService.getInstance().getDefaultEngine() != null) {
 					result = new ToolItem(toolbar, SWT.CHECK);
 					controller.addToolItem(

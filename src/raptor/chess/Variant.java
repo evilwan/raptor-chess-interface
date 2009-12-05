@@ -104,4 +104,20 @@ public enum Variant {
 			return null;
 		}
 	}
+
+	public static boolean isBughouse(Variant variant) {
+		return variant == Variant.bughouse
+				|| variant == Variant.fischerRandomBughouse;
+	}
+
+	public static boolean isClassic(Variant variant) {
+		return variant == Variant.wild || variant == Variant.classic
+				|| variant == Variant.blitz || variant == Variant.standard
+				|| variant == Variant.lightning;
+	}
+
+	public static boolean isCrazyhouse(Variant variant) {
+		return variant == Variant.crazyhouse
+				|| variant == Variant.fischerRandomCrazyhouse;
+	}
 }
