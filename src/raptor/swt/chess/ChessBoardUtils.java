@@ -628,7 +628,8 @@ public class ChessBoardUtils implements BoardConstants {
 			return svgImageData;
 
 		} catch (IOException ioe) {
-			throw new RuntimeException(ioe);
+			Raptor.getInstance().onError("Error loading SVG image.", ioe);
+			return null;
 		}
 	}
 
@@ -835,37 +836,37 @@ public class ChessBoardUtils implements BoardConstants {
 			controller.addToolItem(ToolBarItemKey.AUTO_QUEEN, result);
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
-			result.setImage(getChessPieceImage("wiki", isUserWhite ? WQ : BQ,
-					pieceSize, pieceSize));
+			result.setImage(getChessPieceImage("Portable", isUserWhite ? WQ
+					: BQ, pieceSize, pieceSize));
 		} else if (action instanceof AutoKnightAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_KNIGHT, result);
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
-			result.setImage(getChessPieceImage("wiki", isUserWhite ? WN : BN,
-					pieceSize, pieceSize));
+			result.setImage(getChessPieceImage("Portable", isUserWhite ? WN
+					: BN, pieceSize, pieceSize));
 		} else if (action instanceof AutoBishopAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_BISHOP, result);
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
-			result.setImage(getChessPieceImage("wiki", isUserWhite ? WB : BB,
-					pieceSize, pieceSize));
+			result.setImage(getChessPieceImage("Portable", isUserWhite ? WB
+					: BB, pieceSize, pieceSize));
 		} else if (action instanceof AutoRookAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_ROOK, result);
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
-			result.setImage(getChessPieceImage("wiki", isUserWhite ? WR : BR,
-					pieceSize, pieceSize));
+			result.setImage(getChessPieceImage("Portable", isUserWhite ? WR
+					: BR, pieceSize, pieceSize));
 		} else if (action instanceof AutoKingAction
 				&& controller.getGame().getVariant() == Variant.suicide) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_KING, result);
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
-			result.setImage(getChessPieceImage("wiki", isUserWhite ? WK : BK,
-					pieceSize, pieceSize));
+			result.setImage(getChessPieceImage("Portable", isUserWhite ? WK
+					: BK, pieceSize, pieceSize));
 		} else if (action instanceof AutoKingAction) {
 			return null;
 		} else if (action instanceof CastleLongAction
