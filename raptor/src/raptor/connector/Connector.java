@@ -96,6 +96,12 @@ public interface Connector {
 	public String getDescription();
 
 	/**
+	 * Returns the prefix to use when the user sends channel tells. On fics this
+	 * is 'whisper '. e.g. ('whisper ')
+	 */
+	public String getGameChatTabPrefix(String gameId);
+
+	/**
 	 * Returns descriptions and messages to send to the connector. This is
 	 * intended to be used to generate pop-up menus. Returns a String[n][2]
 	 * where 0 is the description and 1 is the message to send to the connector.

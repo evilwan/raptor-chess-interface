@@ -106,6 +106,11 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
+				+ PreferenceKeys.GAME_CHAT_TAB_QUADRANT, "Game Chat Console:",
+				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),
+				getFieldEditorParent()));
+
+		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.PARTNER_TELL_TAB_QUADRANT,
 				"Bughouse Partner Console:",
 				buildQuadrantArray(ChatConsoleWindowItem.MOVE_TO_QUADRANTS),

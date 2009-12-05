@@ -442,6 +442,14 @@ public abstract class IcsConnector implements Connector {
 		return context.getDescription();
 	}
 
+	/**
+	 * Returns the prefix to use when the user sends tells about a game. On fics
+	 * this is 'whisper '. e.g. ('whisper ')
+	 */
+	public String getGameChatTabPrefix(String gameId) {
+		return "whisper ";
+	}
+
 	public String[][] getGameIdActions(String gameId) {
 		return new String[][] {
 				new String[] { "Observe game " + gameId, "observe " + gameId },

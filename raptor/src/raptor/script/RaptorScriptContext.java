@@ -60,6 +60,10 @@ public class RaptorScriptContext implements ScriptContext {
 		ChatUtils.openChannelTab(connector, channel);
 	}
 
+	public void openGameChatTab(String gameId) {
+		ChatUtils.openGameChatTab(connector, gameId);
+	}
+
 	public void openPartnerTab() {
 		ChatUtils.openPartnerTab(connector);
 	}

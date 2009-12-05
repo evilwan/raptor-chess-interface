@@ -73,6 +73,7 @@ import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
+import raptor.swt.chat.controller.GameChatController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardWindowItem;
@@ -723,6 +724,33 @@ public class RaptorWindow extends ApplicationWindow {
 								.getController();
 						if (StringUtils.equalsIgnoreCase(controller
 								.getChannel(), channel)) {
+							result = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns true if this RaptorWindow is managing a game chat tell tab for
+	 * the specified gameId.
+	 */
+	public boolean containsGameChatTab(Connector connector, String gameId) {
+		boolean result = false;
+		for (RaptorTabFolder folder : folders) {
+			for (int i = 0; i < folder.getItemCount(); i++) {
+				if (folder.getRaptorTabItemAt(i).raptorItem instanceof ChatConsoleWindowItem) {
+					ChatConsoleWindowItem item = (ChatConsoleWindowItem) folder
+							.getRaptorTabItemAt(i).raptorItem;
+					if (item.getController().getConnector() == connector
+							&& item.getController() instanceof GameChatController) {
+						GameChatController controller = (GameChatController) item
+								.getController();
+						if (StringUtils.equalsIgnoreCase(
+								controller.getGameId(), gameId)) {
 							result = true;
 							break;
 						}
