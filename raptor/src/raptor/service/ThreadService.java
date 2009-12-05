@@ -20,6 +20,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Date;
+import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -151,15 +152,18 @@ public class ThreadService {
 	 * displayed if they occur.
 	 * 
 	 * @param delay
-	 *            Delay in millis
+	 *            Delay in milliseconds
 	 * @param runnable
 	 *            The runnable.
+	 * @return The Future, may return null if there was an error scheduling the
+	 *         Runnable or if execution was vetoed.
 	 */
-	public void scheduleOneShot(long delay, Runnable runnable) {
+	@SuppressWarnings("unchecked")
+	public Future scheduleOneShot(long delay, Runnable runnable) {
 		if (!Raptor.getInstance().isDisposed() && !isDisposed) {
 			try {
-				executor.schedule(new RunnableExceptionDecorator(runnable),
-						delay, TimeUnit.MILLISECONDS);
+				return executor.schedule(new RunnableExceptionDecorator(
+						runnable), delay, TimeUnit.MILLISECONDS);
 			} catch (RejectedExecutionException rej) {
 				if (!Raptor.getInstance().isDisposed()) {
 					LOG.error("Error executing runnable in scheduleOneShot: ",
@@ -169,7 +173,10 @@ public class ThreadService {
 							"ThreadServie has no more threads. A thread dump can be found at "
 									+ THREAD_DUMP_FILE_PATH);
 				}
+				return null;
 			}
+		} else {
+			return null;
 		}
 	}
 }
