@@ -1,6 +1,8 @@
 package raptor.sound;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -14,16 +16,15 @@ import org.apache.commons.logging.LogFactory;
 import raptor.Raptor;
 
 /**
- * The Linux Audio Sound player. For some reason the old Decaf way of doing it
- * worked. That is what this is.
- * 
- * NOTE: This has issues in OS X Carbon.
+ * The Linux Audio Sound player. There are all sorts of issues with linux sound.
+ * Clips dont work, and you have to do quite a lot of format adjusting. This
+ * class handles all of that.
  */
 public class LinuxSoundPlayer implements SoundPlayer {
 	@SuppressWarnings("unused")
 	private static final Log LOG = LogFactory.getLog(LinuxSoundPlayer.class);
 
-	private static final int BUFFER_SIZE = 128000;
+	protected Map<String, Boolean> soundsPlaying = new HashMap<String, Boolean>();
 
 	public void dispose() {
 	}
@@ -39,53 +40,71 @@ public class LinuxSoundPlayer implements SoundPlayer {
 		play(Raptor.RESOURCES_DIR + "sounds/" + sound + ".wav");
 	}
 
-	protected void play(String fileName) {
-		SourceDataLine dataLine = null;
-		AudioInputStream stream = null;
-		try {
-			stream = AudioSystem.getAudioInputStream(new File(fileName));
+	/**
+	 * Specify the name of a file in resources/sounds/bughouse without the .wav
+	 * to play the sound i.e. "+".
+	 */
+	public void play(final String sound) {
+		Boolean isPlaying = soundsPlaying.get(sound);
+		// This prevents excessive bug sounds from being played.
+		// That can result in maxing out the number of lines
+		// available and cause all kinds of problems in OSX 10.4
+		if (isPlaying == null || !isPlaying) {
+			soundsPlaying.put(sound, true);
+			SourceDataLine auline = null;
+			try {
+				File soundFile = new File(sound);
+				AudioInputStream audioInputStream = AudioSystem
+						.getAudioInputStream(soundFile);
 
-			// At present, ALAW and ULAW encodings must be
-			// converted
-			// to PCM_SIGNED before it can be played
-			AudioFormat format = stream.getFormat();
-			if (format.getEncoding() != AudioFormat.Encoding.PCM_SIGNED) {
-				format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
-						format.getSampleRate(), format.getSampleSizeInBits(),
-						format.getChannels(), format.getFrameSize(), format
-								.getFrameRate(), true); // big
-				// endian
-				stream = AudioSystem.getAudioInputStream(format, stream);
-			}
-
-			// Create the dataLine
-			DataLine.Info info = new DataLine.Info(SourceDataLine.class, stream
-					.getFormat(), ((int) stream.getFrameLength() * format
-					.getFrameSize()));
-			dataLine = (SourceDataLine) AudioSystem.getLine(info);
-
-			// This method does not return until the audio file
-			// is
-			// completely loaded
-			dataLine.open(stream.getFormat());
-
-			// Start playing
-			dataLine.start();
-
-			byte[] buffer = new byte[BUFFER_SIZE];
-			int r = stream.read(buffer, 0, BUFFER_SIZE);
-			while (r != -1) {
-				if (r > 0) {
-					dataLine.write(buffer, 0, r);
+				AudioFormat audioFormat = audioInputStream.getFormat();
+				DataLine.Info info = new DataLine.Info(SourceDataLine.class,
+						audioFormat, audioFormat.getSampleSizeInBits());
+				boolean bIsSupportedDirectly = AudioSystem
+						.isLineSupported(info);
+				if (!bIsSupportedDirectly) {
+					AudioFormat sourceFormat = audioFormat;
+					AudioFormat targetFormat = new AudioFormat(
+							AudioFormat.Encoding.PCM_SIGNED, sourceFormat
+									.getSampleRate(), 16, sourceFormat
+									.getChannels(),
+							sourceFormat.getChannels() * 2, sourceFormat
+									.getSampleRate(), false);
+					audioInputStream.close();
+					audioInputStream = AudioSystem.getAudioInputStream(
+							targetFormat, audioInputStream);
+					audioFormat = audioInputStream.getFormat();
 				}
-				r = stream.read(buffer, 0, BUFFER_SIZE);
-			}
-			dataLine.drain();
-		} catch (Exception e) {
-			Raptor.getInstance().onError("Error playing sound: " + fileName, e);
-		} finally {
-			if (dataLine != null) {
-				dataLine.close();
+
+				AudioFormat format = audioInputStream.getFormat();
+				auline = (SourceDataLine) AudioSystem.getLine(info);
+				auline.open(format);
+
+				auline.start();
+				int nBytesRead = 0;
+				byte[] abData = new byte[524288];
+
+				try {
+					while (nBytesRead != -1) {
+						nBytesRead = audioInputStream.read(abData, 0,
+								abData.length);
+						if (nBytesRead >= 0)
+							auline.write(abData, 0, nBytesRead);
+					}
+				} finally {
+					try {
+						auline.drain();
+					} catch (Throwable t) {
+					}
+				}
+			} catch (Throwable t) {
+				Raptor.getInstance().onError("Error playing sound " + sound, t);
+			} finally {
+				try {
+					auline.close();
+				} catch (Throwable t) {
+				}
+				soundsPlaying.put(sound, false);
 			}
 		}
 	}
