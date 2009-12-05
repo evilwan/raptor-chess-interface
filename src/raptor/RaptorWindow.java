@@ -363,6 +363,10 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		public void onMoveTo(RaptorTabFolder newParent) {
+			onMoveTo(newParent, -1);
+		}
+
+		public void onMoveTo(RaptorTabFolder newParent, int index) {
 			if (!raptorItem.getControl().isReparentable()) {
 				Raptor
 						.getInstance()
@@ -380,7 +384,12 @@ public class RaptorWindow extends ApplicationWindow {
 				raptorItem.getControl().setParent(newParent);
 
 				// Now add the new raptor tab item to the new parent.
-				new RaptorTabItem(newParent, getStyle(), raptorItem, false);
+				if (index == -1) {
+					new RaptorTabItem(newParent, getStyle(), raptorItem, false);
+				} else {
+					new RaptorTabItem(newParent, getStyle(), raptorItem, false,
+							index);
+				}
 
 				// Invoke after move so the item can adjust to its new parent if
 				// needed.
@@ -1852,11 +1861,51 @@ public class RaptorWindow extends ApplicationWindow {
 						});
 					}
 
-					new MenuItem(menu, SWT.SEPARATOR);
+					int itemIndex = -1;
+					for (int i = 0; i < folder.getItemCount(); i++) {
+						if (folder.getItem(i) == raptorTabItem) {
+							itemIndex = i;
+						}
+					}
+
+					final int finalItemIndex = itemIndex;
+
+					if (itemIndex != -1 && itemIndex > 0
+							|| itemIndex < folder.getItemCount() - 1) {
+						new MenuItem(menu, SWT.SEPARATOR);
+					}
+
+					if (itemIndex != -1 && itemIndex > 0) {
+						MenuItem moveLeft = new MenuItem(menu, SWT.PUSH);
+						moveLeft.setText("Move Left");
+						moveLeft.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								raptorTabItem.onMoveTo(folder,
+										finalItemIndex - 2 < 0 ? 0
+												: finalItemIndex - 2);
+							}
+						});
+					}
+					if (itemIndex != -1
+							&& itemIndex < folder.getItemCount() - 1) {
+						MenuItem moveLeft = new MenuItem(menu, SWT.PUSH);
+						moveLeft.setText("Move Right");
+						moveLeft.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								raptorTabItem.onMoveTo(folder,
+										finalItemIndex + 2);
+							}
+						});
+					}
 
 					Quadrant[] availableQuadrants = folder
 							.getRaptorTabItemSelection().raptorItem
 							.getMoveToQuadrants();
+
+					if (availableQuadrants.length > 0) {
+						new MenuItem(menu, SWT.SEPARATOR);
+					}
+
 					for (int i = 0; i < availableQuadrants.length; i++) {
 						if (availableQuadrants[i] != folder.quad) {
 							final Quadrant currentQuadrant = availableQuadrants[i];
@@ -1920,6 +1969,7 @@ public class RaptorWindow extends ApplicationWindow {
 					RaptorTabFolder dropFolder = getFolderContainingCursor();
 					if (dropFolder != null
 							&& dropFolder != dragStartItem.raptorParent) {
+						// Handles dragging and dropping into different folders.
 
 						boolean canMove = false;
 						for (int i = 0; i < dragStartItem.raptorItem
@@ -1945,33 +1995,27 @@ public class RaptorWindow extends ApplicationWindow {
 						}
 					} else if (dropFolder != null
 							&& dropFolder == dragStartItem.raptorParent) {
-						// Please leave commented out. This is code to handle
-						// DND within a tab folder.
-						// Currently it is broken but it will be useful when
-						// looked at again.
+						// Handles dragging and dropping within the same folder.
 
-						// RaptorTabItem tabItem = (RaptorTabItem) dropFolder
-						// .getItem(dragStartItem.raptorParent.toControl(
-						// Raptor.getInstance().getDisplay()
-						// .getCursorLocation()));
-						// System.err.println("tabItem=" + tabItem);
-						// if (tabItem != null && tabItem != dragStartItem) {
-						// int index = folder.indexOf(tabItem) - 1;
-						// index = Math.max(0, index);
-						// System.err.println("Index=" + index);
-						// RaptorTabItem newItem = new RaptorTabItem(
-						// dragStartItem.raptorParent, SWT.NONE,
-						// dragStartItem.raptorItem, false, index);
-						// dragStartItem.setControl(null);
-						// dragStartItem.raptorItem = null;
-						// dragStartItem.dispose();
-						//
-						// dropFolder.setSelection(newItem);
-						//
-						// dropFolder.redraw();
-						//
-						// System.err.println("Moved item");
-						// }
+						RaptorTabItem itemAtCursor = (RaptorTabItem) dropFolder
+								.getItem(dragStartItem.raptorParent
+										.toControl(Raptor.getInstance()
+												.getDisplay()
+												.getCursorLocation()));
+						if (itemAtCursor != null
+								&& itemAtCursor != dragStartItem) {
+							int index = folder.indexOf(itemAtCursor);
+							int oldIndex = folder.indexOf(dragStartItem);
+
+							System.err.println("new index=" + index
+									+ " oldIndex=" + oldIndex);
+
+							if (oldIndex != -1 && index != -1) {
+								int newIndex = oldIndex < index ? index + 1
+										: index;
+								(dragStartItem).onMoveTo(folder, newIndex);
+							}
+						}
 					}
 					isInDrag = false;
 					isExitDrag = false;
