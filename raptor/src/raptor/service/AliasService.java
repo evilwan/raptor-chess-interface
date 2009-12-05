@@ -37,6 +37,7 @@ import raptor.alias.DeactivateScriptAlias;
 import raptor.alias.DumpGamesAlias;
 import raptor.alias.GrantSpoofAlias;
 import raptor.alias.ListScriptsAlias;
+import raptor.alias.OpenBoardAlias;
 import raptor.alias.OpenUrlAlias;
 import raptor.alias.RaptorAlias;
 import raptor.alias.RaptorAliasResult;
@@ -46,6 +47,7 @@ import raptor.alias.SetConsoleTimeStampOnOffAlias;
 import raptor.alias.SetDebugLevelAlias;
 import raptor.alias.SetPremoveModeAlias;
 import raptor.alias.SetSoundOnOfAlias;
+import raptor.alias.ShowFenAlias;
 import raptor.alias.ShowScriptAlias;
 import raptor.alias.TellAllInChannelAlias;
 import raptor.alias.TellLastPersonWhoToldYouAlias;
@@ -63,10 +65,11 @@ public class AliasService {
 			ClearNoplayAlias.class, ClearNotifyAlias.class,
 			ClearVariablesAlias.class, DeactivateScriptAlias.class,
 			DumpGamesAlias.class, GrantSpoofAlias.class,
-			ListScriptsAlias.class, OpenUrlAlias.class, RelayAlias.class,
-			ScriptAlias.class, SetConsoleTimeStampOnOffAlias.class,
-			SetDebugLevelAlias.class, SetPremoveModeAlias.class,
-			SetSoundOnOfAlias.class, ShowScriptAlias.class,
+			ListScriptsAlias.class, OpenBoardAlias.class, OpenUrlAlias.class,
+			RelayAlias.class, ScriptAlias.class,
+			SetConsoleTimeStampOnOffAlias.class, SetDebugLevelAlias.class,
+			SetPremoveModeAlias.class, SetSoundOnOfAlias.class,
+			ShowFenAlias.class, ShowScriptAlias.class,
 			TellAllInChannelAlias.class, TellLastPersonWhoToldYouAlias.class,
 			TimedCommandAlias.class };
 	private static final AliasService singletonInstance = new AliasService();
