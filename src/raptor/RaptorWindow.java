@@ -1528,7 +1528,7 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void run() {
 				BrowserUtils
-						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NoSoundInLInux");
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/LinuxSoundIssues");
 			}
 		});
 		raptorHelp.add(new Action("&Scripting") {
