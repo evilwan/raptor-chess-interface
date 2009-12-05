@@ -17,7 +17,9 @@ public class ObservingMouseActionsPage extends FieldEditorPreferencePage {
 			{ "None", ObservingMouseAction.None.toString() },
 			{ "Make Primary Game (For kib and whisper)",
 					ObservingMouseAction.MakePrimaryGame.toString() },
-			{ "Match Winner", ObservingMouseAction.MatchWinner.toString() } };
+			{ "Match Winner", ObservingMouseAction.MatchWinner.toString() },
+			{ "Open Game Tell Tab",
+					ObservingMouseAction.AddGameChatTab.toString() } };
 
 	public ObservingMouseActionsPage() {
 		// Use the "flat" layout

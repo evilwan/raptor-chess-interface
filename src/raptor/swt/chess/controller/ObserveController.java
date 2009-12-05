@@ -32,6 +32,7 @@ import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
+import raptor.swt.chat.ChatUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.MouseButtonAction;
@@ -434,6 +435,9 @@ public class ObserveController extends ChessBoardController {
 			break;
 		case MatchWinner:
 			onMatchWinner();
+			break;
+		case AddGameChatTab:
+			ChatUtils.openGameChatTab(getConnector(), game.getId());
 			break;
 		}
 	}

@@ -890,7 +890,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
 			MenuItem item = null;
-			String gameId = connector.parseGameId(word);
+			final String gameId = connector.parseGameId(word);
+
+			item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add game chat tab: " + word);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					ChatUtils.openGameChatTab(getConnector(), gameId);
+				}
+			});
 
 			final String[][] gameIdItems = connector.getGameIdActions(gameId);
 			if (gameIdItems != null) {

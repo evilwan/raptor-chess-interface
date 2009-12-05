@@ -39,6 +39,7 @@ import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
+import raptor.swt.chat.controller.GameChatController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chat.controller.ToolBarItemKey;
@@ -310,6 +311,17 @@ public class ChatUtils {
 				channel)) {
 			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 					new ChannelController(connector, channel));
+			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
+					false);
+			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
+		}
+	}
+
+	public static void openGameChatTab(Connector connector, String gameId) {
+		if (!Raptor.getInstance().getWindow().containsGameChatTab(connector,
+				gameId)) {
+			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+					new GameChatController(connector, gameId));
 			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
 					false);
 			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());

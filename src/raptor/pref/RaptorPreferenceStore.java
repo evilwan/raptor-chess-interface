@@ -334,7 +334,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(OBSERVING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				ObservingMouseAction.MakePrimaryGame.toString());
 		setDefault(OBSERVING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
-				ObservingMouseAction.None.toString());
+				ObservingMouseAction.AddGameChatTab.toString());
 		setDefault(OBSERVING_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
 				ObservingMouseAction.MatchWinner.toString());
 		setDefault(OBSERVING_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
@@ -726,6 +726,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics-" + BUG_WHO_QUADRANT, Quadrant.VII);
 		setDefault("fics-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
 		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault("fics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.V);
 
 		setDefault("fics2-" + MAIN_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VI);
@@ -737,6 +738,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics2-" + BUG_WHO_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault("fics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
 
 		setDefault("bics-" + MAIN_TAB_QUADRANT, Quadrant.V);
 		setDefault("bics-" + CHANNEL_TAB_QUADRANT, Quadrant.V);
@@ -748,6 +750,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics-" + BUG_WHO_QUADRANT, Quadrant.VII);
 		setDefault("bics-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
 		setDefault("bics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault("bics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.V);
 
 		setDefault("bics2-" + MAIN_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VI);
@@ -759,6 +762,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + BUG_WHO_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault("bics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
 
 		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
 

@@ -76,6 +76,11 @@ public interface ScriptContext {
 	public void openChannelTab(String channel);
 
 	/**
+	 * Opens a game chat tab for the specified game id.
+	 */
+	public void openGameChatTab(String gameId);
+
+	/**
 	 * Opens a partner, ptell tab, if one is not already opened.
 	 */
 	public void openPartnerTab();

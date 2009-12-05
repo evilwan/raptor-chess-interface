@@ -30,6 +30,7 @@ public interface PreferenceKeys {
 	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrant";
 	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrant";
 	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrant";
+	public static final String GAME_CHAT_TAB_QUADRANT = "game-chat-tab-quadrant";
 	public static final String QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "quad1-quad234567-quad8-sash-weights";
 	public static final String QUAD2_QUAD234567_SASH_WEIGHTS = "quad2-quad234567-sash-weights";
 	public static final String QUAD3_QUAD4_SASH_WEIGHTS = "quad3-quad4-sash-weights";
