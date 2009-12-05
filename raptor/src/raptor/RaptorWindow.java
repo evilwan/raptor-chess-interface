@@ -1451,7 +1451,7 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void run() {
 				BrowserUtils
-				.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/Thanks");
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/Thanks");
 			}
 		});
 		helpMenu.add(new Action("&Third Party Content") {
@@ -1526,15 +1526,14 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(raptorHelp);
 
 		MenuManager ficsHelp = new MenuManager("&Fics Help");
-			ficsHelp.add(new Action("&New Users Guide") {
-				@Override
-				public void run() {
-					BrowserUtils
-							.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NewToFics");
-				}
-			});
-			
-			
+		ficsHelp.add(new Action("&New Users Guide") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NewToFics");
+			}
+		});
+
 		ficsHelp.add(new Action("&Help Page") {
 			@Override
 			public void run() {

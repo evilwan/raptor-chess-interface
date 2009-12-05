@@ -22,9 +22,8 @@ public class ToggleEngineAnalysisAction extends AbstractRaptorAction {
 					|| getChessBoardControllerSource() instanceof ExamineController
 					|| getChessBoardControllerSource() instanceof ObserveController) {
 
-				if (getChessBoardControllerSource().getGame().getVariant() == Variant.classic
-						|| getChessBoardControllerSource().getGame()
-								.getVariant() == Variant.wild) {
+				if (Variant.isClassic(getChessBoardControllerSource().getGame()
+						.getVariant())) {
 					getChessBoardControllerSource().onEngineAnalysis();
 				}
 				wasHandled = true;

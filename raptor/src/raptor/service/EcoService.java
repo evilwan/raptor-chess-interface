@@ -69,7 +69,7 @@ public class EcoService {
 	public String getEco(Game game) {
 		// Don't add debug messages in here. It gets called so often they are
 		// annoying and really slow it down.
-		Map<String, String> map = typeToFenToEco.get(game.getVariant());
+		Map<String, String> map = typeToFenToEco.get(getAdjustedVariant(game));
 		if (map == null) {
 			return null;
 		} else {
@@ -84,11 +84,20 @@ public class EcoService {
 	public String getLongDescription(Game game) {
 		// Don't add debug messages in here. It gets called so often they are
 		// annoying and really slow it down.
-		Map<String, String> map = typeToFenToDescription.get(game.getVariant());
+		Map<String, String> map = typeToFenToDescription
+				.get(getAdjustedVariant(game));
 		if (map == null) {
 			return null;
 		} else {
 			return map.get(getFenKey(game, false));
+		}
+	}
+
+	protected Variant getAdjustedVariant(Game game) {
+		if (Variant.isClassic(game.getVariant())) {
+			return Variant.classic;
+		} else {
+			return game.getVariant();
 		}
 	}
 
