@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -58,6 +59,7 @@ public class UCIEngine {
 			"seldepth", "time", "nodes", "pv", "multipv", "score", "currmove",
 			"currentmovenumber", "hashfull", "nps", "tbhits", "cpuload",
 			"string" };
+	protected static final long CONNECTION_TIMEOUT = 5000;
 
 	protected Process process;
 	protected boolean isUsingThreadService = true;
@@ -85,10 +87,19 @@ public class UCIEngine {
 	 * 
 	 * @return true if connection was successful, false otherwise.
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean connect() {
 		if (isConnected()) {
 			return true;
 		}
+
+		resetConnectionState();
+		Future connectionTimeoutFuture = ThreadService.getInstance()
+				.scheduleOneShot(CONNECTION_TIMEOUT, new Runnable() {
+					public void run() {
+						disconnect();
+					}
+				});
 
 		try {
 			long startTime = System.currentTimeMillis();
@@ -136,6 +147,7 @@ public class UCIEngine {
 						+ (System.currentTimeMillis() - startTime));
 			}
 
+			connectionTimeoutFuture.cancel(true);
 			return true;
 		} catch (Throwable t) {
 			LOG.error("Error connecting to UCI Engine " + this, t);
@@ -151,6 +163,23 @@ public class UCIEngine {
 		try {
 			if (isConnected()) {
 				process.destroy();
+
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Throwable t) {
+					} finally {
+						in = null;
+					}
+				}
+				if (out != null) {
+					try {
+						out.close();
+					} catch (Throwable t) {
+					} finally {
+						out = null;
+					}
+				}
 			}
 		} catch (Throwable t) {
 			LOG.error("Error disconnecting from UCIEngine " + this, t);
