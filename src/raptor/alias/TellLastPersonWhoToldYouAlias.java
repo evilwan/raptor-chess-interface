@@ -20,17 +20,17 @@ import raptor.swt.chat.ChatConsoleController;
 public class TellLastPersonWhoToldYouAlias extends RaptorAlias {
 	public TellLastPersonWhoToldYouAlias() {
 		super(
-				"!",
+				"#",
 				"Similar to '.' on ICS servers, however instead of telling the last person "
 						+ "you told a message to it tells the last person who sent you a message.",
-				"'!message'. Example: '!hello' will send tell XXX hello "
-						+ "where XXX was the last person who sent me a direct tell. Note you do not need to include a space after the !");
+				"'#message'. Example: \"#hello\" will send tell XXX hello "
+						+ "where XXX was the last person who sent me a direct tell. Note you do not need to include a space after the #");
 	}
 
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("!")) {
+		if (command.startsWith("#")) {
 			String message = command.substring(1);
 			if (StringUtils
 					.isNotEmpty(controller.getSourceOfLastTellReceived())) {
