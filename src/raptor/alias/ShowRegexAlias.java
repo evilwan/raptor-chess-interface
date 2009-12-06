@@ -79,7 +79,7 @@ public class ShowRegexAlias extends RaptorAlias {
 																			event
 																					.getTime()))
 																	+ event
-																			.getMessage()
+																			.getMessage().trim()
 																	+ "\n");
 												}
 											}
