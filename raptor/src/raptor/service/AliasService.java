@@ -24,6 +24,7 @@ import raptor.Raptor;
 import raptor.alias.AbbreviatedChannelTellAlias;
 import raptor.alias.AbbreviatedPersonTellAlias;
 import raptor.alias.ActivateScriptAlias;
+import raptor.alias.AddTabAlias;
 import raptor.alias.AliasHelpAlias;
 import raptor.alias.ChannelBotAlias;
 import raptor.alias.ClearCensorAlias;
@@ -48,7 +49,9 @@ import raptor.alias.SetDebugLevelAlias;
 import raptor.alias.SetPremoveModeAlias;
 import raptor.alias.SetSoundOnOfAlias;
 import raptor.alias.ShowFenAlias;
+import raptor.alias.ShowRegexAlias;
 import raptor.alias.ShowScriptAlias;
+import raptor.alias.ShowTellsAlias;
 import raptor.alias.TellAllInChannelAlias;
 import raptor.alias.TellLastPersonWhoToldYouAlias;
 import raptor.alias.TimedCommandAlias;
@@ -59,7 +62,7 @@ public class AliasService {
 	@SuppressWarnings("unchecked")
 	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
-			AliasHelpAlias.class, ChannelBotAlias.class,
+			AddTabAlias.class, AliasHelpAlias.class, ChannelBotAlias.class,
 			ClearCensorAlias.class, ClearChannelsAlias.class,
 			ClearFingerNotesAlias.class, ClearGNotifyAlias.class,
 			ClearNoplayAlias.class, ClearNotifyAlias.class,
@@ -69,9 +72,9 @@ public class AliasService {
 			RelayAlias.class, ScriptAlias.class,
 			SetConsoleTimeStampOnOffAlias.class, SetDebugLevelAlias.class,
 			SetPremoveModeAlias.class, SetSoundOnOfAlias.class,
-			ShowFenAlias.class, ShowScriptAlias.class,
-			TellAllInChannelAlias.class, TellLastPersonWhoToldYouAlias.class,
-			TimedCommandAlias.class };
+			ShowFenAlias.class, ShowRegexAlias.class, ShowTellsAlias.class,
+			ShowScriptAlias.class, TellAllInChannelAlias.class,
+			TellLastPersonWhoToldYouAlias.class, TimedCommandAlias.class };
 	private static final AliasService singletonInstance = new AliasService();
 
 	List<RaptorAlias> aliases = new ArrayList<RaptorAlias>(20);
