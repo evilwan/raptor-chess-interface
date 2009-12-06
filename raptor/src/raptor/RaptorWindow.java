@@ -1502,6 +1502,13 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(new Separator());
 
 		MenuManager raptorHelp = new MenuManager("&Raptor Help");
+		raptorHelp.add(new Action("&Raptor Users Guide") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NewToRaptor");
+			}
+		});
 		raptorHelp.add(new Action("&Aliases") {
 			@Override
 			public void run() {
@@ -1517,18 +1524,18 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
+		raptorHelp.add(new Action("&Linux Sound Issues") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/LinuxSoundIssues");
+			}
+		});
 		raptorHelp.add(new Action("&Regular Expressions") {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openHtml(RegExUtils.getRegularExpressionHelpHtml());
-			}
-		});
-		raptorHelp.add(new Action("&Linux Sound") {
-			@Override
-			public void run() {
-				BrowserUtils
-						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/LinuxSoundIssues");
 			}
 		});
 		raptorHelp.add(new Action("&Scripting") {
@@ -1563,19 +1570,11 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(raptorHelp);
 
 		MenuManager ficsHelp = new MenuManager("&Fics Help");
-		ficsHelp.add(new Action("&New Users Guide") {
+		ficsHelp.add(new Action("&Fics Users Guide") {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NewToFics");
-			}
-		});
-
-		ficsHelp.add(new Action("&Help Page") {
-			@Override
-			public void run() {
-				BrowserUtils
-						.openUrl("http://www.freechess.org/Help/index.html");
 			}
 		});
 		ficsHelp.add(new Action("&Command Help") {
@@ -1592,6 +1591,13 @@ public class RaptorWindow extends ApplicationWindow {
 				BrowserUtils
 						.openUrl("http://www.freechess.org/Help/ficsfaq.html");
 
+			}
+		});
+		ficsHelp.add(new Action("&Help Page") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://www.freechess.org/Help/index.html");
 			}
 		});
 		helpMenu.add(ficsHelp);
