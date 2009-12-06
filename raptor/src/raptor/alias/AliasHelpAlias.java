@@ -47,9 +47,16 @@ public class AliasHelpAlias extends RaptorAlias {
 				aliasHelp
 						.append("Raptor aliases: (Type \"aliashelp aliasName\" for a description and usage.):\n");
 				RaptorAlias[] aliases = AliasService.getInstance().getAliases();
+				int count = 0;
 				for (RaptorAlias alias : aliases) {
 					if (!alias.isHidden) {
-						aliasHelp.append("\t" + alias.getName() + "\n");
+						aliasHelp.append(StringUtils.rightPad(alias.getName(),
+								20));
+						count++;
+						if (count == 3) {
+							aliasHelp.append("\n");
+							count = 0;
+						}
 					}
 				}
 				return new RaptorAliasResult(null, aliasHelp.toString());
