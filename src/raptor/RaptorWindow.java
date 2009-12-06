@@ -1502,7 +1502,7 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(new Separator());
 
 		MenuManager raptorHelp = new MenuManager("&Raptor Help");
-		raptorHelp.add(new Action("&Raptor Users Guide") {
+		raptorHelp.add(new Action("&Raptor New User's Guide") {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1570,7 +1570,7 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(raptorHelp);
 
 		MenuManager ficsHelp = new MenuManager("&Fics Help");
-		ficsHelp.add(new Action("&Fics Users Guide") {
+		ficsHelp.add(new Action("&Fics New User's Guide") {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -2019,7 +2019,7 @@ public class RaptorWindow extends ApplicationWindow {
 							if (oldIndex != -1 && index != -1) {
 								int newIndex = oldIndex < index ? index + 1
 										: index;
-								(dragStartItem).onMoveTo(folder, newIndex);
+								dragStartItem.onMoveTo(folder, newIndex);
 							}
 						}
 					}
