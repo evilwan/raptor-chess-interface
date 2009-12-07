@@ -289,6 +289,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// Board
+		setDefault(BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING, false);
 		setDefault(BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END, true);
 		setDefault(BOARD_PLAY_CHALLENGE_SOUND, true);
 		setDefault(BOARD_PLAY_ABORT_REQUEST_SOUND, true);

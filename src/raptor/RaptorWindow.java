@@ -1275,6 +1275,7 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		getShell().getDisplay().syncExec(new RaptorRunnable() {
+			@Override
 			public void execute() {
 				statusLabel
 						.setText(StringUtils.defaultString(newStatusMessage));
@@ -1750,6 +1751,7 @@ public class RaptorWindow extends ApplicationWindow {
 				if (item.raptorItem.confirmClose()) {
 					event.doit = true;
 					getShell().getDisplay().asyncExec(new RaptorRunnable() {
+						@Override
 						public void execute() {
 							restoreFolders();
 						}

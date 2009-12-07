@@ -25,7 +25,7 @@ import raptor.pref.PreferenceKeys;
 
 public class ChessBoardClocksPage extends FieldEditorPreferencePage {
 	public static final String[][] SHOW_SECONDS_OPTIONS = {
-			{ "Always", "" + Long.MAX_VALUE },
+			{ "Always", "" + Integer.MAX_VALUE },
 			{ "When clock is <= 60 Minutes", "" + (60 * 60 * 1000 + 1) },
 			{ "When clock is <= 30 Minutes", "" + (30 * 60 * 1000 + 1) },
 			{ "When clock is <= 15 Minutes", "" + (15 * 60 * 1000 + 1) },
@@ -38,7 +38,7 @@ public class ChessBoardClocksPage extends FieldEditorPreferencePage {
 			{ "When clock is <= 3 Minute", "" + (3 * 60 * 1000 + 1) },
 			{ "When clock is <= 5 Minute", "" + (5 * 60 * 1000 + 1) },
 			{ "When clock is <= 10 Minute", "" + (10 * 60 * 1000 + 1) },
-			{ "Always", "" + Long.MAX_VALUE } };
+			{ "Always", "" + Integer.MAX_VALUE } };
 
 	public ChessBoardClocksPage() {
 		// Use the "flat" layout

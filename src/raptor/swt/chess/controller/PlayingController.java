@@ -779,10 +779,13 @@ public class PlayingController extends ChessBoardController {
 
 	@Override
 	public void userMouseWheeled(int count) {
-		if (count > 0) {
-			onForward();
-		} else {
-			onBack();
+		if (getPreferences().getBoolean(
+				BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING)) {
+			if (count > 0) {
+				onForward();
+			} else {
+				onBack();
+			}
 		}
 	}
 

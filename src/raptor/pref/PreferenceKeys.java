@@ -130,6 +130,7 @@ public interface PreferenceKeys {
 	public static final String BUG_BUTTONS_FONT = "bugbuttons-font";
 
 	public static final String BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END = "board-show-playing-game-stats-on-game-end";
+	public static final String BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING = "board-allow-mouse-wheel-navigation-when-playing";
 	public static final String BOARD_PLAY_CHALLENGE_SOUND = "board-play-challenge-sound";
 	public static final String BOARD_PLAY_ABORT_REQUEST_SOUND = "board-play-abort-request-sound";
 	public static final String BOARD_PLAY_DRAW_OFFER_SOUND = "board-play-draw-offer-sound";
