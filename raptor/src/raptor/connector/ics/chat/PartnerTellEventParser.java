@@ -33,6 +33,10 @@ public class PartnerTellEventParser extends ChatEventParser {
 					" \r\n", true);
 			if (tok.hasMoreTokens()) {
 				String source = tok.nextToken();
+				if (source.contains("1234567890")) {
+					return null;
+				}
+				
 				if (source.endsWith("%")) {
 					source = tok.nextToken();
 				}
