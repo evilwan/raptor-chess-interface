@@ -96,5 +96,10 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME,
 				"Announce check when opponent gives check.",
 				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING,
+				"Allow mouse wheel move list navigation when playing a game.",
+				getFieldEditorParent()));
 	}
 }
