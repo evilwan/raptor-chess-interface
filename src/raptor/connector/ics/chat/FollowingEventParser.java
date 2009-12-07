@@ -44,7 +44,7 @@ public class FollowingEventParser extends ChatEventParser {
 						ChatType.FOLLOWING, text);
 			} else {
 				if (text.indexOf(IDENTIFIER2) != -1) {
-					return new ChatEvent(null, ChatType.NOT_FOLLOWING, text);
+					return new ChatEvent(null, ChatType.NOT_FOLLOWING, text.trim());
 				} else {
 					return null;
 				}

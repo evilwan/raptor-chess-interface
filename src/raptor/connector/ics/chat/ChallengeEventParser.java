@@ -26,7 +26,7 @@ public class ChallengeEventParser extends ChatEventParser {
 	@Override
 	public ChatEvent parse(String text) {
 		if (text.length() < 600 && text.indexOf(IDENTIFIER) != -1) {
-			return new ChatEvent(null, ChatType.CHALLENGE, text);
+			return new ChatEvent(null, ChatType.CHALLENGE, text.trim().trim());
 		} else {
 			return null;
 		}

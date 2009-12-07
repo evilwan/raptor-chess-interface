@@ -24,6 +24,7 @@ import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -123,6 +124,16 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 					outputText.insert(StringUtils.replaceChars(string, "\n\r",
 							""));
 				}
+			}
+		});
+		
+		
+		outputText.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+				outputText.setFocus();
+			}
+
+			public void widgetSelected(SelectionEvent e) {
 			}
 		});
 
