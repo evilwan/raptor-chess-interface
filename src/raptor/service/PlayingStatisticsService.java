@@ -149,7 +149,7 @@ public class PlayingStatisticsService {
 					if (moveTime != null && moveTime.length > 0) {
 						if (isUserWhite && move.isWhitesMove() || !isUserWhite
 								&& !move.isWhitesMove()) {
-							if (moveTime[0].getMilliseconds() <= 100) {
+							if (moveTime[0].getMilliseconds() <= 150) {
 								playerPremoves++;
 							}
 							numPlayerMoves++;
@@ -157,7 +157,7 @@ public class PlayingStatisticsService {
 									.getMilliseconds();
 
 						} else {
-							if (moveTime[0].getMilliseconds() <= 100) {
+							if (moveTime[0].getMilliseconds() <= 150) {
 								opponentPremoves++;
 							}
 							numOpponentMoves++;
@@ -175,13 +175,13 @@ public class PlayingStatisticsService {
 					: game.getHeader(PgnHeader.White);
 			VsStats vsStats = getVsStats(connector, opponentName);
 
-			String yourAvgMoveTime = numPlayerMoves == 0 ? "UNKNOWN"
+			String yourAvgMoveTime = numPlayerMoves == 0 ? "Unknown"
 					: new BigDecimal(totalPlayerMovesTime / numPlayerMoves
 							/ 1000.0).setScale(1, BigDecimal.ROUND_HALF_UP)
 							.toString()
 							+ "sec";
 
-			String oppAvgMoveTime = numOpponentMoves == 0 ? "UNKNOWN"
+			String oppAvgMoveTime = numOpponentMoves == 0 ? "Unknown"
 					: new BigDecimal(totalOpponentMovesTime / numOpponentMoves
 							/ 1000.0).setScale(1, BigDecimal.ROUND_HALF_UP)
 							.toString()
