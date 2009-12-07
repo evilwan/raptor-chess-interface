@@ -36,6 +36,7 @@ import raptor.swt.chat.ChatUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.MouseButtonAction;
+import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -52,115 +53,109 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void droppablePiecesChanged(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (isDisposed()) {
-							return;
-						}
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
 
-						refreshBoard();
-					}
-				});
+								refreshBoard();
+							}
+						});
 			}
 		}
 
 		@Override
 		public void gameInactive(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (isDisposed()) {
-							return;
-						}
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
+								onMatchWinner();
+								board.getResultDecorator()
+										.setDecorationFromResult(
+												getGame().getResult());
+								board.redrawSquares();
 
-						onMatchWinner();
+								onPlayGameEndSound();
 
-						try {
-							board.getResultDecorator().setDecorationFromResult(
-									getGame().getResult());
-							board.redrawSquares();
+								InactiveController inactiveController = new InactiveController(
+										getGame());
+								getBoard().setController(inactiveController);
+								inactiveController.setBoard(board);
 
-							onPlayGameEndSound();
-
-							InactiveController inactiveController = new InactiveController(
-									getGame());
-							getBoard().setController(inactiveController);
-							inactiveController.setBoard(board);
-
-							getConnector().getGameService()
-									.removeGameServiceListener(listener);
-							inactiveController
-									.setItemChangedListeners(itemChangedListeners);
-							// Clear the cool bar and init the inactive
-							// controller.
-							ChessBoardUtils.clearCoolbar(getBoard());
-							inactiveController.init();
-							// Set the listeners to null so they wont get
-							// cleared and disposed
-							setItemChangedListeners(null);
-							ObserveController.this.dispose();
-						} catch (Throwable t) {
-							getConnector().onError(
-									"ExamineController.gameInactive", t);
-						}
-					}
-				});
+								getConnector().getGameService()
+										.removeGameServiceListener(listener);
+								inactiveController
+										.setItemChangedListeners(itemChangedListeners);
+								// Clear the cool bar and init the inactive
+								// controller.
+								ChessBoardUtils.clearCoolbar(getBoard());
+								inactiveController.init();
+								// Set the listeners to null so they wont get
+								// cleared and disposed
+								setItemChangedListeners(null);
+								ObserveController.this.dispose();
+							}
+						});
 			}
 		}
 
 		@Override
 		public void gameMovesAdded(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (isDisposed()) {
-							return;
-						}
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
 
-						try {
-							cursor.setCursorMasterLast();
-							refresh();
-						} catch (Throwable t) {
-							connector.onError(
-									"ObserveController.gameMovesAdded", t);
-						}
-					}
-				});
+								cursor.setCursorMasterLast();
+								refresh();
+
+							}
+						});
 			}
 		}
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (isDisposed()) {
-							return;
-						}
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
 
-						try {
-							if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
-								cursor.setCursorMasterLast();
+								if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
+									cursor.setCursorMasterLast();
+								}
+								if (isNewMove) {
+									onPlayMoveSound();
+								}
+
+								board.getSquareHighlighter()
+										.removeAllHighlights();
+								board.getArrowDecorator().removeAllArrows();
+
+								Move lastMove = getGame().getLastMove();
+
+								if (lastMove != null) {
+									addDecorationsForMove(lastMove, false);
+								}
+								refresh();
 							}
-							if (isNewMove) {
-								onPlayMoveSound();
-							}
-
-							board.getSquareHighlighter().removeAllHighlights();
-							board.getArrowDecorator().removeAllArrows();
-
-							Move lastMove = getGame().getLastMove();
-
-							if (lastMove != null) {
-								addDecorationsForMove(lastMove, false);
-							}
-							refresh();
-						} catch (Throwable t) {
-							connector.onError(
-									"ObserveController.gameStateChanged", t);
-						}
-					}
-				});
+						});
 			}
 
 		}
@@ -168,40 +163,37 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void observedGameBecameExamined(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							if (isDisposed()) {
-								return;
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
+								ExamineController examineController = new ExamineController(
+										game, board.isWhiteOnTop(), connector);
+								getBoard().setController(examineController);
+								examineController
+										.setItemChangedListeners(itemChangedListeners);
+								examineController.setBoard(board);
+								connector.getGameService()
+										.removeGameServiceListener(listener);
+
+								// Set the listeners to null so they wont
+								// get
+								// cleared and disposed
+								setItemChangedListeners(null);
+
+								// Clear the cool bar and init the
+								// examineController
+								// controller.
+								ChessBoardUtils.clearCoolbar(getBoard());
+								examineController.init();
+
+								unobserveOnDispose = false;
+								ObserveController.this.dispose();
 							}
-							ExamineController examineController = new ExamineController(
-									game, board.isWhiteOnTop(), connector);
-							getBoard().setController(examineController);
-							examineController
-									.setItemChangedListeners(itemChangedListeners);
-							examineController.setBoard(board);
-							connector.getGameService()
-									.removeGameServiceListener(listener);
-
-							// Set the listeners to null so they wont get
-							// cleared and disposed
-							setItemChangedListeners(null);
-
-							// Clear the cool bar and init the examineController
-							// controller.
-							ChessBoardUtils.clearCoolbar(getBoard());
-							examineController.init();
-
-							unobserveOnDispose = false;
-							ObserveController.this.dispose();
-						} catch (Throwable t) {
-							connector
-									.onError(
-											"ObserveController.observedGameBecameExamined",
-											t);
-						}
-					}
-				});
+						});
 			}
 		}
 	};

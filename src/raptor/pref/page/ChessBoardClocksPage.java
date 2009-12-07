@@ -25,24 +25,25 @@ import raptor.pref.PreferenceKeys;
 
 public class ChessBoardClocksPage extends FieldEditorPreferencePage {
 	public static final String[][] SHOW_SECONDS_OPTIONS = {
-			{ "At 60 Minutes", "" + (60 * 60 * 1000 + 1) },
-			{ "At 30 Minutes", "" + (30 * 60 * 1000 + 1) },
-			{ "At 15 Minutes", "" + (15 * 60 * 1000 + 1) },
-			{ "At 10 Minutes", "" + (10 * 10 * 1000 + 1) },
-			{ "Always", "" + Long.MAX_VALUE } };
+			{ "Always", "" + Long.MAX_VALUE },
+			{ "When clock is <= 60 Minutes", "" + (60 * 60 * 1000 + 1) },
+			{ "When clock is <= 30 Minutes", "" + (30 * 60 * 1000 + 1) },
+			{ "When clock is <= 15 Minutes", "" + (15 * 60 * 1000 + 1) },
+			{ "When clock is <= 10 Minutes", "" + (10 * 60 * 1000 + 1) } };
 
 	public static final String[][] SHOW_TENTHS_OPTIONS = {
-			{ "At 10 Seconds", "" + (10 * 1000 + 1) },
-			{ "At 1 Minute", "" + (60 * 1000 + 1) },
-			{ "At 3 Minute", "" + (3 * 60 * 1000 + 1) },
-			{ "At 5 Minute", "" + (5 * 60 * 1000 + 1) },
-			{ "At 10 Minute", "" + (10 * 60 * 1000 + 1) },
+			{ "Never", "" + Integer.MIN_VALUE },
+			{ "When clock is <= 10 Seconds", "" + (10 * 1000 + 1) },
+			{ "When clock is <= 1 Minute", "" + (60 * 1000 + 1) },
+			{ "When clock is <= 3 Minute", "" + (3 * 60 * 1000 + 1) },
+			{ "When clock is <= 5 Minute", "" + (5 * 60 * 1000 + 1) },
+			{ "When clock is <= 10 Minute", "" + (10 * 60 * 1000 + 1) },
 			{ "Always", "" + Long.MAX_VALUE } };
 
 	public ChessBoardClocksPage() {
 		// Use the "flat" layout
 		super(GRID);
-		setTitle("Clock Preferences");
+		setTitle("Clocks");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 

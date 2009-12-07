@@ -51,6 +51,7 @@ import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
+import raptor.util.RaptorRunnable;
 
 public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 
@@ -558,8 +559,9 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	protected void refreshTable() {
-		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
-			public void run() {
+		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
+			@Override
+			public void execute() {
 				if (player1Table.isDisposed()) {
 					return;
 				}

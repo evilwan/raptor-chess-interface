@@ -81,6 +81,7 @@ import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.ToolBarItemKey;
+import raptor.util.RaptorRunnable;
 import raptor.util.SVGUtil;
 
 public class ChessBoardUtils implements BoardConstants {
@@ -655,69 +656,80 @@ public class ChessBoardUtils implements BoardConstants {
 	 */
 	public static void openBoard(final ChessBoardController controller,
 			final boolean isBughouseOtherBoard) {
-		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
-			public void run() {
-				Quadrant quadrant = getQuadrantForController(controller,
-						isBughouseOtherBoard);
-				ChessBoardWindowItem item = null;
+		Raptor.getInstance().getDisplay().asyncExec(
+				new RaptorRunnable(controller.getConnector()) {
+					@Override
+					public void execute() {
+						Quadrant quadrant = getQuadrantForController(
+								controller, isBughouseOtherBoard);
+						ChessBoardWindowItem item = null;
 
-				if (Raptor.getInstance().getPreferences().getBoolean(
-						PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES)) {
-					item = Raptor.getInstance().getWindow()
-							.getChessBoardWindowItemToTakeOver(quadrant);
-					if (item == null
-							&& controller.getGame().getVariant() != Variant.bughouse
-							&& controller.getGame().getVariant() != Variant.fischerRandomBughouse) {
-						item = Raptor.getInstance().getWindow()
-								.getChessBoardWindowItemToTakeOver(
-										quadrant == Quadrant.III ? Quadrant.IV
-												: Quadrant.III);
-					}
+						if (Raptor.getInstance().getPreferences().getBoolean(
+								PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES)) {
+							item = Raptor
+									.getInstance()
+									.getWindow()
+									.getChessBoardWindowItemToTakeOver(quadrant);
+							if (item == null
+									&& controller.getGame().getVariant() != Variant.bughouse
+									&& controller.getGame().getVariant() != Variant.fischerRandomBughouse) {
+								item = Raptor
+										.getInstance()
+										.getWindow()
+										.getChessBoardWindowItemToTakeOver(
+												quadrant == Quadrant.III ? Quadrant.IV
+														: Quadrant.III);
+							}
 
-					if (item != null) {
-						item.getBoard().hideEngineAnalysisWidget();
-						item.getBoard().hideMoveList();
-					}
-				}
+							if (item != null) {
+								item.getBoard().hideEngineAnalysisWidget();
+								item.getBoard().hideMoveList();
+							}
+						}
 
-				if (item == null) {
-					item = new ChessBoardWindowItem(controller,
-							isBughouseOtherBoard);
+						if (item == null) {
+							item = new ChessBoardWindowItem(controller,
+									isBughouseOtherBoard);
 
-					// This block of code overrides the quadrant if there is an
-					// active controller already there observing a chess game.
-					if ((item.getPreferredQuadrant() == Quadrant.III || item
-							.getPreferredQuadrant() == Quadrant.IV)
-							&& item.getController().getGame().getVariant() != Variant.bughouse
-							&& item.getController().getGame().getVariant() != Variant.fischerRandomBughouse) {
-						RaptorWindowItem[] items = Raptor.getInstance()
-								.getWindow().getWindowItems(
-										item.getPreferredQuadrant());
-						boolean swapQuadrants = false;
-						for (RaptorWindowItem currentItem : items) {
-							if (currentItem instanceof ChessBoardWindowItem) {
-								if (((ChessBoardWindowItem) currentItem)
-										.getConnector() != null) {
-									swapQuadrants = true;
+							// This block of code overrides the quadrant if
+							// there is an
+							// active controller already there observing a chess
+							// game.
+							if ((item.getPreferredQuadrant() == Quadrant.III || item
+									.getPreferredQuadrant() == Quadrant.IV)
+									&& item.getController().getGame()
+											.getVariant() != Variant.bughouse
+									&& item.getController().getGame()
+											.getVariant() != Variant.fischerRandomBughouse) {
+								RaptorWindowItem[] items = Raptor.getInstance()
+										.getWindow().getWindowItems(
+												item.getPreferredQuadrant());
+								boolean swapQuadrants = false;
+								for (RaptorWindowItem currentItem : items) {
+									if (currentItem instanceof ChessBoardWindowItem) {
+										if (((ChessBoardWindowItem) currentItem)
+												.getConnector() != null) {
+											swapQuadrants = true;
+										}
+									}
+								}
+								if (swapQuadrants) {
+									if (item.getPreferredQuadrant() == Quadrant.III) {
+										item.setQuadrant(Quadrant.IV);
+									} else if (item.getPreferredQuadrant() == Quadrant.IV) {
+										item.setQuadrant(Quadrant.III);
+									}
 								}
 							}
-						}
-						if (swapQuadrants) {
-							if (item.getPreferredQuadrant() == Quadrant.III) {
-								item.setQuadrant(Quadrant.IV);
-							} else if (item.getPreferredQuadrant() == Quadrant.IV) {
-								item.setQuadrant(Quadrant.III);
-							}
+
+							Raptor.getInstance().getWindow()
+									.addRaptorWindowItem(item);
+						} else {
+							item.takeOver(controller, isBughouseOtherBoard);
+							Raptor.getInstance().getWindow().forceFocus(item);
 						}
 					}
-
-					Raptor.getInstance().getWindow().addRaptorWindowItem(item);
-				} else {
-					item.takeOver(controller, isBughouseOtherBoard);
-					Raptor.getInstance().getWindow().forceFocus(item);
-				}
-			}
-		});
+				});
 	}
 
 	public static String pieceCountToString(int count) {

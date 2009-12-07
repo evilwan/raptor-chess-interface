@@ -34,9 +34,11 @@ public final class PriorityMoveList implements GameConstants {
 	public Move[] asArray() {
 		Move[] result = new Move[lowPrioritySize + highPrioritySize];
 
-		System.arraycopy(lowPriorityMoves, 0, result, 0, lowPrioritySize);
-		System.arraycopy(highPriorityMoves, 0, result, lowPrioritySize,
-				highPrioritySize);
+		if (result.length > 0) {
+			System.arraycopy(lowPriorityMoves, 0, result, 0, lowPrioritySize);
+			System.arraycopy(highPriorityMoves, 0, result, lowPrioritySize,
+					highPrioritySize);
+		}
 
 		return result;
 	}

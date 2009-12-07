@@ -22,6 +22,7 @@ import raptor.Quadrant;
 import raptor.RaptorConnectorWindowItem;
 import raptor.connector.Connector;
 import raptor.swt.ItemChangedListener;
+import raptor.util.RaptorRunnable;
 
 public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
@@ -126,12 +127,14 @@ public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
 		if (isPassive) {
 			console.setLayoutDeferred(false);
 			if (console != null && !console.isDisposed() && controller != null) {
-				console.getDisplay().syncExec(new Runnable() {
-					public void run() {
-						controller.onForceAutoScroll();
-						controller.chatConsole.outputText.forceFocus();
-					}
-				});
+				console.getDisplay().syncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								controller.onForceAutoScroll();
+								controller.chatConsole.outputText.forceFocus();
+							}
+						});
 			}
 			console.getController().onActivate();
 			isPassive = false;

@@ -35,6 +35,7 @@ import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.MouseButtonAction;
+import raptor.util.RaptorRunnable;
 
 /**
  * Examines a game on a backing connector. When examining a game the user is
@@ -49,137 +50,120 @@ public class ExamineController extends ChessBoardController {
 		@Override
 		public void examinedGameBecameSetup(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							if (isDisposed()) {
-								return;
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+
+								if (isDisposed()) {
+									return;
+								}
+								SetupController setupController = new SetupController(
+										game, board.isWhiteOnTop(), connector);
+								getBoard().setController(setupController);
+								setupController
+										.setItemChangedListeners(itemChangedListeners);
+								setupController.setBoard(board);
+								connector.getGameService()
+										.removeGameServiceListener(listener);
+
+								// Set the listeners to null so they wont get
+								// cleared and disposed
+								setItemChangedListeners(null);
+
+								// Clear the cool bar and init the
+								// examineController
+								// controller.
+								ChessBoardUtils.clearCoolbar(getBoard());
+								setupController.init();
+
+								unexamineOnDispose = false;
+								ExamineController.this.dispose();
 							}
-							SetupController setupController = new SetupController(
-									game, board.isWhiteOnTop(), connector);
-							getBoard().setController(setupController);
-							setupController
-									.setItemChangedListeners(itemChangedListeners);
-							setupController.setBoard(board);
-							connector.getGameService()
-									.removeGameServiceListener(listener);
-
-							// Set the listeners to null so they wont get
-							// cleared and disposed
-							setItemChangedListeners(null);
-
-							// Clear the cool bar and init the examineController
-							// controller.
-							ChessBoardUtils.clearCoolbar(getBoard());
-							setupController.init();
-
-							unexamineOnDispose = false;
-							ExamineController.this.dispose();
-						} catch (Throwable t) {
-							connector
-									.onError(
-											"ExamineController.examinedGameBecameSetup",
-											t);
-						}
-					}
-				});
+						});
 			}
 		}
 
 		@Override
 		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (isDisposed()) {
-							return;
-						}
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
 
-						try {
-							onPlayGameEndSound();
-							InactiveController inactiveController = new InactiveController(
-									game);
-							getBoard().setController(inactiveController);
-							inactiveController.setBoard(board);
+								onPlayGameEndSound();
+								InactiveController inactiveController = new InactiveController(
+										game);
+								getBoard().setController(inactiveController);
+								inactiveController.setBoard(board);
 
-							connector.getGameService()
-									.removeGameServiceListener(listener);
-							inactiveController
-									.setItemChangedListeners(itemChangedListeners);
-							// Clear the cool bar and init the inactive
-							// controller.
-							ChessBoardUtils.clearCoolbar(getBoard());
-							inactiveController.init();
+								connector.getGameService()
+										.removeGameServiceListener(listener);
+								inactiveController
+										.setItemChangedListeners(itemChangedListeners);
+								// Clear the cool bar and init the inactive
+								// controller.
+								ChessBoardUtils.clearCoolbar(getBoard());
+								inactiveController.init();
 
-							setItemChangedListeners(null);
-							ExamineController.this.dispose();
-
-						} catch (Throwable t) {
-							connector.onError("ExamineController.gameInactive",
-									t);
-						}
-					}
-				});
+								setItemChangedListeners(null);
+								ExamineController.this.dispose();
+							}
+						});
 			}
 		}
 
 		@Override
 		public void gameMovesAdded(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							if (isDisposed()) {
-								return;
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
+								refresh();
 							}
-
-							refresh();
-						} catch (Throwable t) {
-							connector.onError(
-									"ExamineController.gameMovesAdded", t);
-						}
-					}
-				});
+						});
 			}
 		}
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							if (isDisposed()) {
-								return;
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
+								examinePositionUpdate();
 							}
-
-							examinePositionUpdate();
-						} catch (Throwable t) {
-							connector.onError(
-									"ExamineController.gameStateChanged", t);
-						}
-					}
-				});
+						});
 			}
 		}
 
 		@Override
 		public void illegalMove(Game game, final String move) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							if (isDisposed()) {
-								return;
-							}
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
 
-							examineOnIllegalMove(move);
-						} catch (Throwable t) {
-							connector.onError("ExamineController.illegalMove",
-									t);
-						}
-					}
-				});
+								if (isDisposed()) {
+									return;
+								}
+
+								examineOnIllegalMove(move);
+							}
+						});
 			}
 		}
 

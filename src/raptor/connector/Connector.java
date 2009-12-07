@@ -45,6 +45,15 @@ public interface Connector {
 	public void addConnectorListener(ConnectorListener listener);
 
 	/**
+	 * Attempts to autocomplete the specified word.
+	 * 
+	 * @param word
+	 *            The word to auto-complete.
+	 * @return A string[] of possibilities.
+	 */
+	public String[] autoComplete(String word);
+
+	/**
 	 * Connects to the connector. The connection information should be stored as
 	 * preferences.
 	 */

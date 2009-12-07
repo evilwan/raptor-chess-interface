@@ -23,6 +23,7 @@ import raptor.chat.ChatType;
 import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.service.ThreadService;
 import raptor.swt.chat.ChatConsoleController;
+import raptor.util.RaptorRunnable;
 import raptor.util.RegExUtils;
 
 public class ShowRegexAlias extends RaptorAlias {
@@ -79,17 +80,22 @@ public class ShowRegexAlias extends RaptorAlias {
 																			event
 																					.getTime()))
 																	+ event
-																			.getMessage().trim()
+																			.getMessage()
+																			.trim()
 																	+ "\n");
 												}
 											}
 
 											public void onParseCompleted() {
-												Raptor.getInstance()
+												Raptor
+														.getInstance()
 														.getDisplay()
 														.asyncExec(
-																new Runnable() {
-																	public void run() {
+																new RaptorRunnable(
+																		controller
+																				.getConnector()) {
+																	@Override
+																	public void execute() {
 
 																		controller
 																				.onAppendChatEventToInputText(new ChatEvent(

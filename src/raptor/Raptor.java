@@ -50,6 +50,7 @@ import raptor.swt.RaptorImageRegistry;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
+import raptor.util.RaptorRunnable;
 
 /**
  * Raptor is a singleton representing the application. It contains methods to
@@ -227,8 +228,9 @@ public class Raptor implements PreferenceKeys {
 	public void alert(final String message) {
 		if (!isDisposed()) {
 			getInstance().getWindow().getShell().getDisplay().asyncExec(
-					new Runnable() {
-						public void run() {
+					new RaptorRunnable() {
+						@Override
+						public void execute() {
 							MessageDialog.openInformation(Raptor.getInstance()
 									.getWindow().getShell(), "Alert", message);
 						}

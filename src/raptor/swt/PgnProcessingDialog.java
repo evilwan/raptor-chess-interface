@@ -42,6 +42,7 @@ import raptor.chess.pgn.PgnUtils;
 import raptor.chess.pgn.StreamingPgnParser;
 import raptor.service.ThreadService;
 import raptor.swt.chess.PgnParseResultsWindowItem;
+import raptor.util.RaptorRunnable;
 
 public class PgnProcessingDialog extends Dialog {
 	public static final int MAX_CHARS_IN_FILE = 1048576;
@@ -74,8 +75,9 @@ public class PgnProcessingDialog extends Dialog {
 			} else {
 				games.add(game);
 				if (games.size() % 20 == 0) {
-					shell.getDisplay().asyncExec(new Runnable() {
-						public void run() {
+					shell.getDisplay().asyncExec(new RaptorRunnable() {
+						@Override
+						public void execute() {
 							processMessageLabel.setText("Line number "
 									+ lineNumber + " Games " + games.size()
 									+ " Errors " + errors.size());
@@ -171,9 +173,9 @@ public class PgnProcessingDialog extends Dialog {
 					} catch (Throwable t) {
 					}
 				}
-				shell.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-
+				shell.getDisplay().asyncExec(new RaptorRunnable() {
+					@Override
+					public void execute() {
 						shell.close();
 					}
 				});

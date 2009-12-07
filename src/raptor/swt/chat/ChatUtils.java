@@ -43,6 +43,7 @@ import raptor.swt.chat.controller.GameChatController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chat.controller.ToolBarItemKey;
+import raptor.util.RaptorRunnable;
 
 public class ChatUtils {
 	public static final String FORWARD_CHAR = " `1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./?><MNBVCXZ\":LKJHGFDSA|}{POIUYTREWQ+_)(*&^%$#@!~";
@@ -79,28 +80,23 @@ public class ChatUtils {
 									public void onNewEventParsed(
 											final ChatEvent event) {
 										console.getDisplay().syncExec(
-												new Runnable() {
-													public void run() {
-														try {
-															if (!console
-																	.isDisposed()) {
-																if (console
-																		.getController()
-																		.isAcceptingChatEvent(
-																				event)) {
-																	console
-																			.getController()
-																			.onChatEvent(
-																					event);
-																}
-															}
-														} catch (Throwable t) {
-															console
+												new RaptorRunnable(console
+														.getController()
+														.getConnector()) {
+													@Override
+													public void execute() {
+
+														if (!console
+																.isDisposed()) {
+															if (console
 																	.getController()
-																	.getConnector()
-																	.onError(
-																			"appendPreviousChatsToController",
-																			t);
+																	.isAcceptingChatEvent(
+																			event)) {
+																console
+																		.getController()
+																		.onChatEvent(
+																				event);
+															}
 														}
 													}
 												});

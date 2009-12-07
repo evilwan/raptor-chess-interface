@@ -68,6 +68,7 @@ import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.ClockLabelUpdater;
 import raptor.swt.chess.Highlight;
 import raptor.swt.chess.MouseButtonAction;
+import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -118,153 +119,151 @@ public class PlayingController extends ChessBoardController {
 		@Override
 		public void droppablePiecesChanged(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (isDisposed()) {
-							return;
-						}
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
 
-						if (!handlePremoveDrop()) {
-							refreshBoard();
-						}
-					}
-				});
+								if (isDisposed()) {
+									return;
+								}
+
+								if (!handlePremoveDrop()) {
+									refreshBoard();
+								}
+
+							}
+						});
 			}
 		}
 
 		@Override
 		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							if (isDisposed()) {
-								return;
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+
+								if (isDisposed()) {
+									return;
+								}
+
+								board.getResultDecorator()
+										.setDecorationFromResult(
+												getGame().getResult());
+								board.redrawSquares();
+								onPlayGameEndSound();
+								handleGameStatistics();
+
+								ChessBoardUtils.appendGameToPgnFile(getGame());
+
+								// Now swap controllers to the inactive
+								// controller.
+								InactiveController inactiveController = new InactiveController(
+										game, getConnector());
+								getBoard().setController(inactiveController);
+								inactiveController.setBoard(board);
+								inactiveController
+										.setItemChangedListeners(itemChangedListeners);
+
+								// Detatch from the GameService.
+								connector.getGameService()
+										.removeGameServiceListener(listener);
+
+								// Clear the cool bar and init the inactive
+								// controller.
+								ChessBoardUtils.clearCoolbar(getBoard());
+								inactiveController.init();
+
+								// Set the listeners to null so they wont get
+								// cleared and we wont get notified.
+								setItemChangedListeners(null);
+
+								// And finally dispose.
+								PlayingController.this.dispose();
 							}
-
-							board.getResultDecorator().setDecorationFromResult(
-									getGame().getResult());
-							board.redrawSquares();
-							onPlayGameEndSound();
-							handleGameStatistics();
-
-							ChessBoardUtils.appendGameToPgnFile(getGame());
-
-							// Now swap controllers to the inactive controller.
-							InactiveController inactiveController = new InactiveController(
-									game, getConnector());
-							getBoard().setController(inactiveController);
-							inactiveController.setBoard(board);
-							inactiveController
-									.setItemChangedListeners(itemChangedListeners);
-
-							// Detatch from the GameService.
-							connector.getGameService()
-									.removeGameServiceListener(listener);
-
-							// Clear the cool bar and init the inactive
-							// controller.
-							ChessBoardUtils.clearCoolbar(getBoard());
-							inactiveController.init();
-
-							// Set the listeners to null so they wont get
-							// cleared and we wont get notified.
-							setItemChangedListeners(null);
-
-							// And finally dispose.
-							PlayingController.this.dispose();
-						} catch (Throwable t) {
-							connector.onError("PlayingController.gameInactive",
-									t);
-						}
-					}
-				});
+						});
 			}
 		}
 
 		@Override
 		public void gameStateChanged(Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						if (isDisposed()) {
-							return;
-						}
-
-						try {
-
-							if (LOG.isDebugEnabled()) {
-								LOG.debug("In gameStateChanged "
-										+ getGame().getId() + " " + isNewMove);
-							}
-
-							if (isNewMove) {
-								handleAutoDraw();
-								if (!wasLastMovePremove) {
-									removeAllMoveDecorations();
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
 								}
-								handleAnnounceCheck();
-								if (!handlePremove()) {
-									if (LOG.isDebugEnabled()) {
-										LOG
-												.debug("In did not make premove block "
-														+ getGame().getId()
-														+ " " + isNewMove);
+
+								if (LOG.isDebugEnabled()) {
+									LOG.debug("In gameStateChanged "
+											+ getGame().getId() + " "
+											+ isNewMove);
+								}
+
+								if (isNewMove) {
+									handleAutoDraw();
+									if (!wasLastMovePremove) {
+										removeAllMoveDecorations();
 									}
+									handleAnnounceCheck();
+									if (!handlePremove()) {
+										if (LOG.isDebugEnabled()) {
+											LOG
+													.debug("In did not make premove block "
+															+ getGame().getId()
+															+ " " + isNewMove);
+										}
 
-									boolean wasUserMove = !isUsersMove();
-									addDecorationsForMove(getGame()
-											.getLastMove(), wasUserMove);
+										boolean wasUserMove = !isUsersMove();
+										addDecorationsForMove(getGame()
+												.getLastMove(), wasUserMove);
 
-									if (LOG.isDebugEnabled()) {
-										LOG.debug("Invoking refresh "
-												+ wasUserMove);
+										if (LOG.isDebugEnabled()) {
+											LOG.debug("Invoking refresh "
+													+ wasUserMove);
+										}
+
+										refresh();
+										onPlayMoveSound();
+									} else {
+										if (LOG.isDebugEnabled()) {
+											LOG
+													.debug("Premove was made. Playing move sound. ");
+										}
+										onPlayMoveSound();
 									}
-
-									refresh();
-									onPlayMoveSound();
 								} else {
 									if (LOG.isDebugEnabled()) {
 										LOG
-												.debug("Premove was made. Playing move sound. ");
+												.debug("This isnt an update from a move, doing a full refresh.");
 									}
-									onPlayMoveSound();
-								}
-							} else {
-								if (LOG.isDebugEnabled()) {
-									LOG
-											.debug("This isnt an update from a move, doing a full refresh.");
-								}
 
-								addDecorationsForLastMoveListMove();
-								refresh();
+									addDecorationsForLastMoveListMove();
+									refresh();
+								}
 							}
-						} catch (Throwable t) {
-							connector.onError(
-									"PlayingController.gameStateChanged", t);
-						}
-					}
-				});
+						});
 			}
 		}
 
 		@Override
 		public void illegalMove(Game game, final String move) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						try {
-							if (isDisposed()) {
-								return;
-							}
+				board.getControl().getDisplay().asyncExec(
+						new RaptorRunnable(getConnector()) {
+							@Override
+							public void execute() {
+								if (isDisposed()) {
+									return;
+								}
 
-							adjustForIllegalMove(move, true);
-						} catch (Throwable t) {
-							connector.onError("PlayingController.illegalMove",
-									t);
-						}
-					}
-				});
+								adjustForIllegalMove(move, true);
+							}
+						});
 			}
 		}
 	};
@@ -1333,41 +1332,47 @@ public class PlayingController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("On onRandomCapture " + getGame().getId());
 		}
-		if (isUsersMove()) {
-			Move[] moves = getGame().getLegalMoves().asArray();
-			List<Move> foundMoves = new ArrayList<Move>(5);
-			for (Move move : moves) {
-				if (move.isCapture()) {
-					foundMoves.add(move);
+		try {
+			if (isUsersMove()) {
+				Move[] moves = getGame().getLegalMoves().asArray();
+				List<Move> foundMoves = new ArrayList<Move>(5);
+				for (Move move : moves) {
+					if (move.isCapture()) {
+						foundMoves.add(move);
+					}
 				}
-			}
 
-			if (foundMoves.size() > 0) {
-				Move move = foundMoves.get(random.nextInt(foundMoves.size()));
+				if (foundMoves.size() > 0) {
+					Move move = foundMoves.get(random
+							.nextInt(foundMoves.size()));
 
-				if (game.move(move)) {
-					game.rollback();
-					final Move finalMove = move;
-					ThreadService.getInstance().run(new Runnable() {
-						public void run() {
-							connector.makeMove(game, finalMove);
-						}
-					});
+					if (game.move(move)) {
+						game.rollback();
+						final Move finalMove = move;
+						ThreadService.getInstance().run(new Runnable() {
+							public void run() {
+								connector.makeMove(game, finalMove);
+							}
+						});
+					} else {
+						throw new IllegalStateException(
+								"Game rejected move in onRandomCapture. This is a bug.");
+					}
+
+					removeAllMoveDecorations();
+					refreshForMove(move);
 				} else {
-					throw new IllegalStateException(
-							"Game rejected move in onRandomCapture. This is a bug.");
+					onPlayIllegalMoveSound();
 				}
-
-				removeAllMoveDecorations();
-				refreshForMove(move);
 			} else {
+				if (LOG.isDebugEnabled()) {
+					LOG
+							.debug("Rejected onRandomCapture since its not users move.");
+				}
 				onPlayIllegalMoveSound();
 			}
-		} else {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Rejected onRandomCapture since its not users move.");
-			}
-			onPlayIllegalMoveSound();
+		} catch (Throwable t) {
+			getConnector().onError("PlayingController.onRandomCapture", t);
 		}
 	}
 
@@ -1375,79 +1380,89 @@ public class PlayingController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("On onRandomMove " + getGame().getId());
 		}
-		if (isUsersMove()) {
-			Move[] moves = getGame().getLegalMoves().asArray();
-			if (moves.length > 0) {
-				Move move = moves[random.nextInt(moves.length)];
-				if (game.move(move)) {
-					game.rollback();
-					final Move finalMove = move;
-					ThreadService.getInstance().run(new Runnable() {
-						public void run() {
-							connector.makeMove(game, finalMove);
-						}
-					});
-				} else {
-					throw new IllegalStateException(
-							"Game rejected move in random move. This is a bug.");
-				}
+		try {
+			if (isUsersMove()) {
+				Move[] moves = getGame().getLegalMoves().asArray();
+				if (moves.length > 0) {
+					Move move = moves[random.nextInt(moves.length)];
+					if (game.move(move)) {
+						game.rollback();
+						final Move finalMove = move;
+						ThreadService.getInstance().run(new Runnable() {
+							public void run() {
+								connector.makeMove(game, finalMove);
+							}
+						});
+					} else {
+						throw new IllegalStateException(
+								"Game rejected move in random move. This is a bug.");
+					}
 
-				removeAllMoveDecorations();
-				refreshForMove(move);
+					removeAllMoveDecorations();
+					refreshForMove(move);
+				} else {
+					onPlayIllegalMoveSound();
+				}
 			} else {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Rejected onRandomMove its not users move.");
+				}
 				onPlayIllegalMoveSound();
 			}
-		} else {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Rejected onRandomMove its not users move.");
-			}
-			onPlayIllegalMoveSound();
+		} catch (Throwable t) {
+			getConnector().onError("PlayingController.onRandomMove", t);
 		}
+
 	}
 
 	protected void onRandomRecapture() {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("On onRandomRecapture " + getGame().getId());
 		}
-		if (isUsersMove() && game.getLastMove() != null
-				&& game.getLastMove().isCapture()) {
-			Move lastMove = game.getLastMove();
+		try {
+			if (isUsersMove() && game.getLastMove() != null
+					&& game.getLastMove().isCapture()) {
+				Move lastMove = game.getLastMove();
 
-			Move[] moves = getGame().getLegalMoves().asArray();
-			List<Move> foundMoves = new ArrayList<Move>(5);
-			for (Move move : moves) {
-				if (move.isCapture() && move.getTo() == lastMove.getTo()) {
-					foundMoves.add(move);
+				Move[] moves = getGame().getLegalMoves().asArray();
+				List<Move> foundMoves = new ArrayList<Move>(5);
+				for (Move move : moves) {
+					if (move.isCapture() && move.getTo() == lastMove.getTo()) {
+						foundMoves.add(move);
+					}
 				}
-			}
 
-			if (foundMoves.size() > 0) {
-				Move move = foundMoves.get(random.nextInt(foundMoves.size()));
+				if (foundMoves.size() > 0) {
+					Move move = foundMoves.get(random
+							.nextInt(foundMoves.size()));
 
-				if (game.move(move)) {
-					game.rollback();
-					final Move finalMove = move;
-					ThreadService.getInstance().run(new Runnable() {
-						public void run() {
-							connector.makeMove(game, finalMove);
-						}
-					});
+					if (game.move(move)) {
+						game.rollback();
+						final Move finalMove = move;
+						ThreadService.getInstance().run(new Runnable() {
+							public void run() {
+								connector.makeMove(game, finalMove);
+							}
+						});
+					} else {
+						throw new IllegalStateException(
+								"Game rejected move in onRandomRecapture. This is a bug.");
+					}
+
+					removeAllMoveDecorations();
+					refreshForMove(move);
 				} else {
-					throw new IllegalStateException(
-							"Game rejected move in onRandomRecapture. This is a bug.");
+					onPlayIllegalMoveSound();
 				}
-
-				removeAllMoveDecorations();
-				refreshForMove(move);
 			} else {
+				if (LOG.isDebugEnabled()) {
+					LOG
+							.debug("Rejected onRandomRecapture since its not users move.");
+				}
 				onPlayIllegalMoveSound();
 			}
-		} else {
-			if (LOG.isDebugEnabled()) {
-				LOG
-						.debug("Rejected onRandomRecapture since its not users move.");
-			}
-			onPlayIllegalMoveSound();
+		} catch (Throwable t) {
+			getConnector().onError("PlayingController.onRandomRecapture", t);
 		}
 	}
 
@@ -1455,42 +1470,47 @@ public class PlayingController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("On onSmartMove " + getGame().getId() + " " + square);
 		}
-		if (isUsersMove()) {
-			Move[] moves = getGame().getLegalMoves().asArray();
-			List<Move> foundMoves = new ArrayList<Move>(5);
-			for (Move move : moves) {
-				if (move.getTo() == square
-						&& (move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) == 0) {
-					foundMoves.add(move);
+		try {
+			if (isUsersMove()) {
+				Move[] moves = getGame().getLegalMoves().asArray();
+				List<Move> foundMoves = new ArrayList<Move>(5);
+				for (Move move : moves) {
+					if (move.getTo() == square
+							&& (move.getMoveCharacteristic() & Move.DROP_CHARACTERISTIC) == 0) {
+						foundMoves.add(move);
+					}
 				}
-			}
 
-			if (foundMoves.size() > 0) {
-				Move move = foundMoves.get(random.nextInt(foundMoves.size()));
+				if (foundMoves.size() > 0) {
+					Move move = foundMoves.get(random
+							.nextInt(foundMoves.size()));
 
-				if (game.move(move)) {
-					game.rollback();
-					final Move finalMove = move;
-					ThreadService.getInstance().run(new Runnable() {
-						public void run() {
-							connector.makeMove(game, finalMove);
-						}
-					});
+					if (game.move(move)) {
+						game.rollback();
+						final Move finalMove = move;
+						ThreadService.getInstance().run(new Runnable() {
+							public void run() {
+								connector.makeMove(game, finalMove);
+							}
+						});
+					} else {
+						throw new IllegalStateException(
+								"Game rejected move in random move. This is a bug.");
+					}
+
+					removeAllMoveDecorations();
+					refreshForMove(move);
 				} else {
-					throw new IllegalStateException(
-							"Game rejected move in random move. This is a bug.");
+					onPlayIllegalMoveSound();
 				}
-
-				removeAllMoveDecorations();
-				refreshForMove(move);
 			} else {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Rejected smart move since its not users move.");
+				}
 				onPlayIllegalMoveSound();
 			}
-		} else {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Rejected smart move since its not users move.");
-			}
-			onPlayIllegalMoveSound();
+		} catch (Throwable t) {
+			getConnector().onError("PlayingController.onSmartMove", t);
 		}
 	}
 

@@ -119,6 +119,8 @@ public abstract class IcsConnector implements Connector {
 	protected Set<String> channelToSpeakTellsFrom = new HashSet<String>();
 	protected SeekService seekService;
 	protected boolean isSpeakingAllPersonTells = false;
+	protected List<String> autoCompleteList = new ArrayList<String>(1000);
+
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
 	 */
@@ -151,22 +153,24 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 	};
+
 	protected boolean hasSentLogin = false;
+
 	protected boolean hasVetoPower = true;
+
 	protected boolean hasSentPassword = false;
-
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
-
 	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
-
 	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
 
 	protected ReadableByteChannel inputChannel;
 
 	protected boolean isConnecting;
+
 	protected boolean isLoggedIn = false;
 
 	protected boolean isSimulBugConnector = false;
+
 	protected String simulBugPartnerName;
 	protected Runnable keepAlive = new Runnable() {
 		public void run() {
@@ -191,17 +195,18 @@ public abstract class IcsConnector implements Connector {
 			}
 		}
 	};
+
 	protected long lastPingTime;
 	protected long lastSendTime;
 	protected long lastSendPingTime;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
 	protected Socket socket;
 	protected String userName;
-
 	protected String userFollowing;
 	protected String[] bughouseSounds = SoundService.getInstance()
 			.getBughouseSoundKeys();
 	protected RegularExpressionScript[] regularExpressionScripts = null;
+
 	protected List<MessageCallbackEntry> messageCallbackEntries = new ArrayList<MessageCallbackEntry>(
 			20);
 	protected ScriptServiceListener scriptServiceListener = new ScriptServiceListener() {
@@ -227,6 +232,7 @@ public abstract class IcsConnector implements Connector {
 		gameService = new GameService();
 		gameService.addGameServiceListener(gameServiceListener);
 		setBughouseService(new BughouseService(this));
+		prepopulateAutoCompleteList();
 	}
 
 	public void acceptSeek(String adId) {
@@ -238,6 +244,24 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public void addConnectorListener(ConnectorListener listener) {
 		connectorListeners.add(listener);
+	}
+
+	public String[] autoComplete(String word) {
+		if (word != null && word.length() > 0) {
+			String lowerCaseWord = word.toLowerCase();
+			List<String> result = new ArrayList<String>(5);
+
+			for (int i = 0; i < autoCompleteList.size(); i++) {
+				if (autoCompleteList.get(i).startsWith(lowerCaseWord)) {
+					result.add(autoCompleteList.get(i));
+				} else if (result.size() > 0) {
+					break;
+				}
+			}
+			return (String[]) result.toArray(new String[0]);
+		} else {
+			return new String[0];
+		}
 	}
 
 	public String[] breakUpMessage(StringBuilder message) {
@@ -830,6 +854,7 @@ public abstract class IcsConnector implements Connector {
 				LOG.debug("Publishing event : " + event);
 			}
 
+			updateAutoComplete(event);
 			handleOpeningTabs(event);
 			processRegularExpressionScripts(event);
 
@@ -1169,6 +1194,14 @@ public abstract class IcsConnector implements Connector {
 	public void whisper(Game game, String whisper) {
 		sendMessage("primary " + game.getId(), true);
 		sendMessage("whisper " + whisper);
+	}
+
+	protected void addToAutoComplete(String word) {
+		String lowerCaseWord = word.toLowerCase();
+		if (!autoCompleteList.contains(lowerCaseWord)) {
+			autoCompleteList.add(lowerCaseWord);
+			Collections.sort(autoCompleteList);
+		}
 	}
 
 	/**
@@ -1685,6 +1718,49 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
+	protected void prepopulateAutoCompleteList() {
+		addToAutoComplete("tell");
+		addToAutoComplete("say");
+		addToAutoComplete("kibitz");
+		addToAutoComplete("whisper");
+		addToAutoComplete("journal");
+		addToAutoComplete("examine");
+		addToAutoComplete("history");
+		addToAutoComplete("finger");
+		addToAutoComplete("variables");
+		addToAutoComplete("shout");
+		addToAutoComplete("cshout");
+		addToAutoComplete("messages");
+		addToAutoComplete("clear");
+		addToAutoComplete("quit");
+		addToAutoComplete("bsetup");
+		addToAutoComplete("sposition");
+		addToAutoComplete("channelbot");
+		addToAutoComplete("mamer");
+		addToAutoComplete("watchbot");
+		addToAutoComplete("puzzlebot");
+		addToAutoComplete("endgamebot");
+		addToAutoComplete("forward");
+		addToAutoComplete("back");
+		addToAutoComplete("revert");
+		addToAutoComplete("refresh");
+		addToAutoComplete("commit");
+		addToAutoComplete("help");
+		addToAutoComplete("formula");
+		addToAutoComplete("set");
+		addToAutoComplete("follow");
+		addToAutoComplete("observe");
+		addToAutoComplete("pstat");
+		addToAutoComplete("oldpstat");
+		addToAutoComplete("best");
+		addToAutoComplete("worst");
+		addToAutoComplete("rank");
+		addToAutoComplete("hrank");
+		addToAutoComplete("date");
+		addToAutoComplete("up");
+		addToAutoComplete("ping");
+	}
+
 	/**
 	 * Processes the scripts for the specified chat event. Script processing is
 	 * kicked off on a different thread.
@@ -1741,6 +1817,16 @@ public abstract class IcsConnector implements Connector {
 	protected boolean speak(String message) {
 		message = StringUtils.remove(message, "fics%").trim();
 		return SoundService.getInstance().textToSpeech(message);
+	}
+
+	protected void updateAutoComplete(final ChatEvent event) {
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				if (StringUtils.isNotBlank(event.getSource())) {
+					addToAutoComplete(event.getSource());
+				}
+			}
+		});
 	}
 
 	protected boolean vetoMessage(String message) {
