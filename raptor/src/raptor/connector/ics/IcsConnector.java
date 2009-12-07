@@ -1759,6 +1759,21 @@ public abstract class IcsConnector implements Connector {
 		addToAutoComplete("date");
 		addToAutoComplete("up");
 		addToAutoComplete("ping");
+		addToAutoComplete("follow");
+		addToAutoComplete("help");
+		addToAutoComplete("znotify");
+		addToAutoComplete("+notify");
+		addToAutoComplete("-notify");
+		addToAutoComplete("+gnotify");
+		addToAutoComplete("-gnotify");
+		addToAutoComplete("+censor");
+		addToAutoComplete("-censor");
+		addToAutoComplete("+noplay");
+		addToAutoComplete("-noplay");
+		addToAutoComplete("=noplay");
+		addToAutoComplete("=censor");
+		addToAutoComplete("=gnotify");
+		addToAutoComplete("=notify");
 	}
 
 	/**

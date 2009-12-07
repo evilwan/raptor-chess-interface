@@ -45,7 +45,7 @@ public class TellEventParser extends ChatEventParser {
 							if (s3.equals("you:")) {
 								return new ChatEvent(IcsUtils
 										.stripTitles(source), ChatType.TELL,
-										text);
+										text.trim());
 							}
 						}
 					}

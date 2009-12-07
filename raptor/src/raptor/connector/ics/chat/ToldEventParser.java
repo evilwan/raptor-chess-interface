@@ -36,7 +36,7 @@ public class ToldEventParser extends ChatEventParser {
 				// Ignore the told message to channels.
 				Integer.parseInt(source);
 			} catch (NumberFormatException nfe) {
-				return new ChatEvent(source, ChatType.TOLD, text);
+				return new ChatEvent(source.trim(), ChatType.TOLD, text.trim().trim());
 			}
 			return null;
 		}

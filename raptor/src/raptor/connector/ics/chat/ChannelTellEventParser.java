@@ -13,6 +13,8 @@
  */
 package raptor.connector.ics.chat;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.ics.IcsUtils;
@@ -34,13 +36,14 @@ public class ChannelTellEventParser extends ChatEventParser {
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 						text, ":");
 				if (stringtokenizer.hasMoreTokens()) {
-					String s1 = stringtokenizer.nextToken();
+					String s1 = StringUtils.remove(stringtokenizer.nextToken().trim(),
+							":");
 					int j = s1.lastIndexOf(")");
 					int k = s1.lastIndexOf("(");
 					if (k < j && k != -1 && j != -1) {
 
 						ChatEvent event = new ChatEvent(IcsUtils
-								.stripTitles(s1), ChatType.CHANNEL_TELL, text);
+								.stripTitles(s1), ChatType.CHANNEL_TELL, text.trim());
 						event.setChannel(text.substring(k + 1, j));
 						return event;
 					}

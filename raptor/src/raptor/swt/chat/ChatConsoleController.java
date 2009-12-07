@@ -656,14 +656,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void processInputTextKeystroke(Event event, boolean isKeyUp) {
+		System.err.println("processInputTextKeyStroke " + isKeyUp + " "
+				+ event.stateMask);
 		if (isKeyUp
 				&& (event.keyCode == SWT.PAGE_DOWN || event.keyCode == SWT.PAGE_UP)) {
 			smartScroll();
 		} else if (!isKeyUp) {
-			// Forward to output text.
-			System.err.println("Notifying output text listeners");
-			if (!processOutputTextKeystroke(event) && event.stateMask != 0
-					&& event.stateMask != SWT.SHIFT) {
+
+			// Forward to output text
+			if (!processOutputTextKeystroke(event)
+					&& (event.stateMask == 0 || event.stateMask == SWT.SHIFT)) {
 				String textToInsert = "" + event.character;
 				chatConsole.getOutputText().insert(textToInsert);
 			}
@@ -743,7 +745,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 
 			String wordToAutoComplete = chatConsole.getOutputText().getText(
-					startIndex, endIndex);
+					startIndex, endIndex).trim();
 			if (wordToAutoComplete.length() > 0) {
 
 				String[] autoComplete = getConnector().autoComplete(
@@ -988,6 +990,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					consoleInputKeyDownListener);
 			chatConsole.inputText.addListener(SWT.KeyUp,
 					consoleInputKeyUpListener);
+			if (chatConsole.inputText.getVerticalBar() != null) {
+				chatConsole.inputText.getVerticalBar().addListener(SWT.KeyUp,
+						consoleInputKeyUpListener);
+				chatConsole.inputText.getVerticalBar().addListener(SWT.KeyDown,
+						consoleInputKeyDownListener);
+			}
 
 		}
 	}
@@ -1537,6 +1545,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					consoleInputKeyUpListener);
 			chatConsole.inputText.removeListener(SWT.KeyDown,
 					consoleInputKeyDownListener);
+			if (chatConsole.inputText.getVerticalBar() != null) {
+				chatConsole.inputText.getVerticalBar().removeListener(
+						SWT.KeyUp, consoleInputKeyUpListener);
+				chatConsole.inputText.getVerticalBar().removeListener(
+						SWT.KeyDown, consoleInputKeyDownListener);
+			}
 			chatConsole.inputText.removeMouseListener(inputTextClickListener);
 			chatConsole.inputText.getVerticalBar().removeSelectionListener(
 					verticalScrollbarListener);

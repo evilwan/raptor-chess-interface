@@ -69,6 +69,7 @@ public class ShowRegexAlias extends RaptorAlias {
 														&& event.getType() != ChatType.OUTBOUND
 														&& event.getType() != ChatType.MOVES
 														&& event.getType() != ChatType.PLAYING_STATISTICS
+														&& event.getType() != ChatType.UNKNOWN
 														&& RegExUtils
 																.matches(
 																		regExPattern,
