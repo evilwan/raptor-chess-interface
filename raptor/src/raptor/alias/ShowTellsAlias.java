@@ -25,6 +25,7 @@ import raptor.chat.ChatType;
 import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.service.ThreadService;
 import raptor.swt.chat.ChatConsoleController;
+import raptor.util.RaptorRunnable;
 
 public class ShowTellsAlias extends RaptorAlias {
 	private static final SimpleDateFormat FORMAT = new SimpleDateFormat(
@@ -67,18 +68,22 @@ public class ShowTellsAlias extends RaptorAlias {
 																			event
 																					.getTime()))
 																	+ event
-																			.getMessage().trim()
+																			.getMessage()
+																			.trim()
 																	+ "\n");
 												}
 											}
 
 											public void onParseCompleted() {
-												Raptor.getInstance()
+												Raptor
+														.getInstance()
 														.getDisplay()
 														.asyncExec(
-																new Runnable() {
-																	public void run() {
-
+																new RaptorRunnable(
+																		controller
+																				.getConnector()) {
+																	@Override
+																	public void execute() {
 																		controller
 																				.onAppendChatEventToInputText(new ChatEvent(
 																						null,
@@ -117,7 +122,8 @@ public class ShowTellsAlias extends RaptorAlias {
 																			event
 																					.getTime()))
 																	+ event
-																			.getMessage().trim()
+																			.getMessage()
+																			.trim()
 																	+ "\n");
 												}
 											}
@@ -168,18 +174,22 @@ public class ShowTellsAlias extends RaptorAlias {
 																			event
 																					.getTime()))
 																	+ event
-																			.getMessage().trim()
+																			.getMessage()
+																			.trim()
 																	+ "\n");
 												}
 											}
 
 											public void onParseCompleted() {
-												Raptor.getInstance()
+												Raptor
+														.getInstance()
 														.getDisplay()
 														.asyncExec(
-																new Runnable() {
-																	public void run() {
-
+																new RaptorRunnable(
+																		controller
+																				.getConnector()) {
+																	@Override
+																	public void execute() {
 																		controller
 																				.onAppendChatEventToInputText(new ChatEvent(
 																						null,

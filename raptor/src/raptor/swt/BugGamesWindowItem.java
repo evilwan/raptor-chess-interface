@@ -38,6 +38,7 @@ import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
 import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.util.IntegerComparator;
+import raptor.util.RaptorRunnable;
 import raptor.util.RatingComparator;
 
 public class BugGamesWindowItem implements RaptorConnectorWindowItem {
@@ -221,8 +222,9 @@ public class BugGamesWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	protected void refreshTable() {
-		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
-			public void run() {
+		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
+			@Override
+			public void execute() {
 				if (!bugGamesTable.isDisposed()) {
 					synchronized (bugGamesTable.getTable()) {
 

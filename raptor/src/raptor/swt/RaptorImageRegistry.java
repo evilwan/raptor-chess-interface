@@ -42,6 +42,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.widgets.Display;
 
+import raptor.util.RaptorRunnable;
+
 /**
  * An image registry maintains a mapping between symbolic image names and SWT
  * image objects or special image descriptor objects which defer the creation of
@@ -246,8 +248,9 @@ public class RaptorImageRegistry {
 			if (swtKey != -1) {
 				final Image[] image = new Image[1];
 				final int id = swtKey;
-				display.syncExec(new Runnable() {
-					public void run() {
+				display.syncExec(new RaptorRunnable() {
+					@Override
+					public void execute() {
 						image[0] = display.getSystemImage(id);
 					}
 				});

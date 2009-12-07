@@ -32,14 +32,6 @@ public class LinuxSoundPlayer implements SoundPlayer {
 	public void init() {
 	}
 
-	public void playBughouseSound(final String sound) {
-		play(Raptor.RESOURCES_DIR + "sounds/bughouse/" + sound + ".wav");
-	}
-
-	public void playSound(final String sound) {
-		play(Raptor.RESOURCES_DIR + "sounds/" + sound + ".wav");
-	}
-
 	/**
 	 * Specify the name of a file in resources/sounds/bughouse without the .wav
 	 * to play the sound i.e. "+".
@@ -88,8 +80,9 @@ public class LinuxSoundPlayer implements SoundPlayer {
 					while (nBytesRead != -1) {
 						nBytesRead = audioInputStream.read(abData, 0,
 								abData.length);
-						if (nBytesRead >= 0)
+						if (nBytesRead >= 0) {
 							auline.write(abData, 0, nBytesRead);
+						}
 					}
 				} finally {
 					try {
@@ -107,5 +100,13 @@ public class LinuxSoundPlayer implements SoundPlayer {
 				soundsPlaying.put(sound, false);
 			}
 		}
+	}
+
+	public void playBughouseSound(final String sound) {
+		play(Raptor.RESOURCES_DIR + "sounds/bughouse/" + sound + ".wav");
+	}
+
+	public void playSound(final String sound) {
+		play(Raptor.RESOURCES_DIR + "sounds/" + sound + ".wav");
 	}
 }

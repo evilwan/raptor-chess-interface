@@ -302,8 +302,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "Wood2");
 		setDefault(BOARD_IS_SHOW_COORDINATES, true);
 		setDefault(BOARD_PIECE_SIZE_ADJUSTMENT, .06);
-		setDefault(BOARD_IS_SHOWING_PIECE_JAIL, true);
-		setDefault(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN, 1000L * 10L + 1L);
+		setDefault(BOARD_IS_SHOWING_PIECE_JAIL, false);
+		setDefault(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN, Integer.MIN_VALUE);
 		setDefault(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
 				1000L * 60L * 10L + 1L);
 		setDefault(BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS, true);
@@ -649,7 +649,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
-		setDefault(FICS_CLOSE_TABS_ON_DISCONNECT, true);
+		setDefault(FICS_CLOSE_TABS_ON_DISCONNECT, false);
 		setDefault(FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
 		setDefault(FICS_MATCH_CMMANDS, "1 0,3 0,5 0,15 0");
 
@@ -684,7 +684,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_LOGIN_SCRIPT, "set autoflag 1\n\n");
 		setDefault(BICS_AUTO_CONNECT, false);
 		setDefault(BICS_PROFILE, "Primary");
-		setDefault(BICS_CLOSE_TABS_ON_DISCONNECT, true);
+		setDefault(BICS_CLOSE_TABS_ON_DISCONNECT, false);
 		setDefault(BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
 		setDefault(
 				BICS_MATCH_CMMANDS,

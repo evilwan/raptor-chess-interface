@@ -18,6 +18,7 @@ import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.MessageCallback;
 import raptor.swt.chat.ChatConsoleController;
+import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringTokenizer;
 
 public class ClearChannelsAlias extends RaptorAlias {
@@ -54,8 +55,10 @@ public class ClearChannelsAlias extends RaptorAlias {
 							final int finalItemsRemoved = itemsRemoved;
 
 							Raptor.getInstance().getDisplay().asyncExec(
-									new Runnable() {
-										public void run() {
+									new RaptorRunnable(controller
+											.getConnector()) {
+										@Override
+										public void execute() {
 											controller
 													.onAppendChatEventToInputText(new ChatEvent(
 															null,

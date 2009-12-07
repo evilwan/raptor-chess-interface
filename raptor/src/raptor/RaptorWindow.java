@@ -80,6 +80,7 @@ import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
+import raptor.util.RaptorRunnable;
 import raptor.util.RegExUtils;
 
 /**
@@ -444,8 +445,9 @@ public class RaptorWindow extends ApplicationWindow {
 				public void itemStateChanged() {
 					if (!disposed && item.getControl() != null
 							&& !item.getControl().isDisposed()) {
-						getShell().getDisplay().asyncExec(new Runnable() {
-							public void run() {
+						getShell().getDisplay().asyncExec(new RaptorRunnable() {
+							@Override
+							public void execute() {
 
 								if (LOG.isDebugEnabled()) {
 									LOG
@@ -672,8 +674,9 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		if (!isAsynch) {
-			getShell().getDisplay().syncExec(new Runnable() {
-				public void run() {
+			getShell().getDisplay().syncExec(new RaptorRunnable() {
+				@Override
+				public void execute() {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
 					new RaptorTabItem(folder, SWT.NONE, item);
@@ -682,8 +685,9 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			});
 		} else {
-			getShell().getDisplay().asyncExec(new Runnable() {
-				public void run() {
+			getShell().getDisplay().asyncExec(new RaptorRunnable() {
+				@Override
+				public void execute() {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
 					new RaptorTabItem(folder, SWT.NONE, item);
@@ -900,8 +904,9 @@ public class RaptorWindow extends ApplicationWindow {
 	 * is invoked the item passed in is disposed.
 	 */
 	public void disposeRaptorWindowItem(final RaptorWindowItem item) {
-		getShell().getDisplay().syncExec(new Runnable() {
-			public void run() {
+		getShell().getDisplay().syncExec(new RaptorRunnable() {
+			@Override
+			public void execute() {
 				RaptorTabItem tabItem = null;
 				synchronized (itemsManaged) {
 					for (RaptorTabItem currentTabItem : itemsManaged) {
@@ -923,8 +928,9 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Forces the current window item in view.
 	 */
 	public void forceFocus(final RaptorWindowItem windowItem) {
-		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
-			public void run() {
+		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
+			@Override
+			public void execute() {
 				boolean wasRestored = false;
 				synchronized (itemsManaged) {
 					for (RaptorTabItem currentTabItem : itemsManaged) {
@@ -1213,39 +1219,43 @@ public class RaptorWindow extends ApplicationWindow {
 			return;
 		}
 
-		getShell().getDisplay().syncExec(new Runnable() {
-			public void run() {
-				Label label = pingLabelsMap.get(connector.getShortName());
-				if (label == null) {
+		getShell().getDisplay().syncExec(new RaptorRunnable() {
+			@Override
+			public void execute() {
+				if (pingLabelsMap != null && connector != null) {
+					Label label = pingLabelsMap.get(connector.getShortName());
+					if (label == null) {
+						if (pingTime == -1) {
+							return;
+						}
+						if (Raptor.getInstance().isDisposed()) {
+							return;
+						}
+						label = new Label(statusBar, SWT.NONE);
+						GridData gridData = new GridData();
+						gridData.grabExcessHorizontalSpace = false;
+						gridData.grabExcessVerticalSpace = false;
+						gridData.horizontalAlignment = SWT.END;
+						gridData.verticalAlignment = SWT.CENTER;
+						label.setLayoutData(gridData);
+						pingLabelsMap.put(connector.getShortName(), label);
+						label.setFont(Raptor.getInstance().getPreferences()
+								.getFont(PreferenceKeys.APP_PING_FONT));
+						label.setForeground(Raptor.getInstance()
+								.getPreferences().getColor(
+										PreferenceKeys.APP_PING_COLOR));
+					}
 					if (pingTime == -1) {
-						return;
+						label.setVisible(false);
+						label.dispose();
+						pingLabelsMap.remove(connector.getShortName());
+						statusBar.layout(true, true);
+					} else {
+						label.setText(connector.getShortName() + " ping "
+								+ pingTime + "ms");
+						statusBar.layout(true, true);
+						label.redraw();
 					}
-					if (Raptor.getInstance().isDisposed()) {
-						return;
-					}
-					label = new Label(statusBar, SWT.NONE);
-					GridData gridData = new GridData();
-					gridData.grabExcessHorizontalSpace = false;
-					gridData.grabExcessVerticalSpace = false;
-					gridData.horizontalAlignment = SWT.END;
-					gridData.verticalAlignment = SWT.CENTER;
-					label.setLayoutData(gridData);
-					pingLabelsMap.put(connector.getShortName(), label);
-					label.setFont(Raptor.getInstance().getPreferences()
-							.getFont(PreferenceKeys.APP_PING_FONT));
-					label.setForeground(Raptor.getInstance().getPreferences()
-							.getColor(PreferenceKeys.APP_PING_COLOR));
-				}
-				if (pingTime == -1) {
-					label.setVisible(false);
-					label.dispose();
-					pingLabelsMap.remove(connector.getShortName());
-					statusBar.layout(true, true);
-				} else {
-					label.setText(connector.getShortName() + " ping "
-							+ pingTime + "ms");
-					statusBar.layout(true, true);
-					label.redraw();
 				}
 			}
 		});
@@ -1264,8 +1274,8 @@ public class RaptorWindow extends ApplicationWindow {
 			return;
 		}
 
-		getShell().getDisplay().syncExec(new Runnable() {
-			public void run() {
+		getShell().getDisplay().syncExec(new RaptorRunnable() {
+			public void execute() {
 				statusLabel
 						.setText(StringUtils.defaultString(newStatusMessage));
 			}
@@ -1739,8 +1749,8 @@ public class RaptorWindow extends ApplicationWindow {
 				RaptorTabItem item = (RaptorTabItem) event.item;
 				if (item.raptorItem.confirmClose()) {
 					event.doit = true;
-					getShell().getDisplay().asyncExec(new Runnable() {
-						public void run() {
+					getShell().getDisplay().asyncExec(new RaptorRunnable() {
+						public void execute() {
 							restoreFolders();
 						}
 					});

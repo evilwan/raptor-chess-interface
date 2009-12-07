@@ -28,6 +28,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+import raptor.util.RaptorRunnable;
+
 /**
  * progress bar dialog. the first, you must know your app execute times, you
  * need implement two method:
@@ -63,8 +65,9 @@ public abstract class ProgressBarDialog extends Dialog {
 				if (display.isDisposed()) {
 					return;
 				}
-				display.syncExec(new Runnable() {
-					public void run() {
+				display.syncExec(new RaptorRunnable() {
+					@Override
+					public void execute() {
 						if (progressBar.isDisposed()) {
 							return;
 						}

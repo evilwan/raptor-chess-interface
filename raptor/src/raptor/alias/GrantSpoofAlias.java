@@ -23,6 +23,7 @@ import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.MessageCallback;
 import raptor.swt.chat.ChatConsoleController;
+import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringTokenizer;
 
 public class GrantSpoofAlias extends RaptorAlias {
@@ -96,20 +97,26 @@ public class GrantSpoofAlias extends RaptorAlias {
 										final String finalMessage = StringUtils
 												.replaceChars(message, "\\\n",
 														"");
-										Raptor.getInstance().getDisplay()
-												.asyncExec(new Runnable() {
-													public void run() {
-														controller
-																.onAppendChatEventToInputText(new ChatEvent(
-																		null,
-																		ChatType.INTERNAL,
-																		event
-																				.getSource()
-																				+ " is spoofing: '"
-																				+ finalMessage
-																				+ "'. To kill his/her access type 'grantspoof remove'."));
-													}
-												});
+										Raptor
+												.getInstance()
+												.getDisplay()
+												.asyncExec(
+														new RaptorRunnable(
+																controller
+																		.getConnector()) {
+															@Override
+															public void execute() {
+																controller
+																		.onAppendChatEventToInputText(new ChatEvent(
+																				null,
+																				ChatType.INTERNAL,
+																				event
+																						.getSource()
+																						+ " is spoofing: '"
+																						+ finalMessage
+																						+ "'. To kill his/her access type 'grantspoof remove'."));
+															}
+														});
 										controller.getConnector().sendMessage(
 												finalMessage, true);
 									}
