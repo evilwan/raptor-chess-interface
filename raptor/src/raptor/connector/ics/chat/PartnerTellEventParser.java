@@ -13,6 +13,8 @@
  */
 package raptor.connector.ics.chat;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.ics.IcsUtils;
@@ -33,7 +35,7 @@ public class PartnerTellEventParser extends ChatEventParser {
 					" \r\n", true);
 			if (tok.hasMoreTokens()) {
 				String source = tok.nextToken();
-				if (source.contains("1234567890")) {
+				if (StringUtils.containsAny(source, "1234567890")) {
 					return null;
 				}
 				
