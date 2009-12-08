@@ -25,6 +25,7 @@ import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
+import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.swt.chat.ChatUtils;
 
@@ -84,6 +85,8 @@ public class PersonController extends ChatConsoleController {
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
 			toolbar = new ToolBar(parent, SWT.FLAT);
+			toolbar.setLayout(SWTUtils
+					.createMarginlessRowLayout(SWT.HORIZONTAL));
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.PersonChatConsole, toolbar);
 			adjustAwayButtonEnabled();

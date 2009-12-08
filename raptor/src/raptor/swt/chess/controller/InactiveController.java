@@ -233,6 +233,8 @@ public class InactiveController extends ChessBoardController implements
 		if (toolbar == null) {
 			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
 					: parent, SWT.FLAT);
+			toolbar.setLayout(SWTUtils
+					.createMarginlessRowLayout(SWT.HORIZONTAL));
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.InactiveChessBoard, toolbar, true);
 
