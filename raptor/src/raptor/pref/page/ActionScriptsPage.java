@@ -206,41 +206,7 @@ public class ActionScriptsPage extends PreferencePage {
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ScriptedAction scriptedAction = new ScriptedAction();
-				scriptedAction.setName(nameText.getText());
-				scriptedAction.setDescription(descriptionText.getText());
-				scriptedAction.setScript(scriptText.getText());
-				scriptedAction.setCategory(Category.valueOf(categories
-						.getItem(categories.getSelectionIndex())));
-
-				if (icons.getSelectionIndex() == 0) {
-					scriptedAction.setIcon(null);
-				} else {
-					scriptedAction.setIcon(icons.getItem(icons
-							.getSelectionIndex()));
-				}
-
-				if (StringUtils.isBlank(scriptedAction.getName())) {
-					Raptor.getInstance().alert("Name can not be empty.");
-				} else if (StringUtils.isBlank(scriptedAction.getDescription())) {
-					Raptor.getInstance().alert("Description can not be empty.");
-				} else if (StringUtils.isBlank(scriptedAction.getScript())) {
-					Raptor.getInstance().alert("Script can not be empty");
-				} else {
-					ActionScriptService.getInstance()
-							.saveAction(scriptedAction);
-					refreshActions();
-					scriptedActionsTable.getTable().deselectAll();
-
-					for (int i = 0; i < scriptedActionsTable.getTable()
-							.getItemCount(); i++) {
-						if (scriptedActionsTable.getTable().getItem(i).getText(
-								0).equals(scriptedAction.getName())) {
-							scriptedActionsTable.getTable().select(i);
-							break;
-						}
-					}
-				}
+				onSave();
 			}
 		});
 
@@ -316,6 +282,47 @@ public class ActionScriptsPage extends PreferencePage {
 			}
 		}
 		categories.select(categoryIndex);
+	}
+
+	protected void onSave() {
+		ScriptedAction scriptedAction = new ScriptedAction();
+		scriptedAction.setName(nameText.getText());
+		scriptedAction.setDescription(descriptionText.getText());
+		scriptedAction.setScript(scriptText.getText());
+		scriptedAction.setCategory(Category.valueOf(categories
+				.getItem(categories.getSelectionIndex())));
+
+		if (icons.getSelectionIndex() == 0) {
+			scriptedAction.setIcon(null);
+		} else {
+			scriptedAction.setIcon(icons.getItem(icons.getSelectionIndex()));
+		}
+
+		if (StringUtils.isBlank(scriptedAction.getName())) {
+			Raptor.getInstance().alert("Name can not be empty.");
+		} else if (StringUtils.isBlank(scriptedAction.getDescription())) {
+			Raptor.getInstance().alert("Description can not be empty.");
+		} else if (StringUtils.isBlank(scriptedAction.getScript())) {
+			Raptor.getInstance().alert("Script can not be empty");
+		} else {
+			ActionScriptService.getInstance().saveAction(scriptedAction);
+			refreshActions();
+			scriptedActionsTable.getTable().deselectAll();
+
+			for (int i = 0; i < scriptedActionsTable.getTable().getItemCount(); i++) {
+				if (scriptedActionsTable.getTable().getItem(i).getText(0)
+						.equals(scriptedAction.getName())) {
+					scriptedActionsTable.getTable().select(i);
+					break;
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void performApply() {
+		onSave();
+		super.performApply();
 	}
 
 	protected void refreshActions() {

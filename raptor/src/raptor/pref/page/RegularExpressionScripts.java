@@ -295,40 +295,7 @@ public class RegularExpressionScripts extends PreferencePage {
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (StringUtils.isBlank(nameText.getText())) {
-					Raptor.getInstance().alert("Name is required.");
-					return;
-				}
-				if (StringUtils.isBlank(descriptionText.getText())) {
-					Raptor.getInstance().alert("Description is required.");
-					return;
-				}
-				if (StringUtils.isBlank(regularExpressionText.getText())) {
-					Raptor.getInstance().alert(
-							"Regular Expression is required.");
-					return;
-				}
-				if (StringUtils.isBlank(script.getText())) {
-					Raptor.getInstance().alert("Script is required.");
-					return;
-				}
-
-				RegularExpressionScript newScript = ScriptService.getInstance()
-						.getRegularExpressionScript(nameText.getText());
-				if (newScript == null) {
-					newScript = new RegularExpressionScript();
-				}
-
-				newScript.setActive(isActiveButton.getSelection());
-				newScript.setName(nameText.getText());
-				newScript.setDescription(descriptionText.getText());
-				newScript.setRegularExpression(regularExpressionText.getText());
-				newScript.setScript(script.getText());
-				newScript.setConnectorType(ScriptConnectorType
-						.valueOf(connectorTypeCombo.getItem(connectorTypeCombo
-								.getSelectionIndex())));
-				ScriptService.getInstance().save(newScript);
-				refreshTables();
+				onSave();
 			}
 		});
 
@@ -373,6 +340,48 @@ public class RegularExpressionScripts extends PreferencePage {
 
 		script.setText(currentScript.getScript());
 		regularExpressionText.setText(currentScript.getRegularExpression());
+	}
+
+	protected void onSave() {
+		if (StringUtils.isBlank(nameText.getText())) {
+			Raptor.getInstance().alert("Name is required.");
+			return;
+		}
+		if (StringUtils.isBlank(descriptionText.getText())) {
+			Raptor.getInstance().alert("Description is required.");
+			return;
+		}
+		if (StringUtils.isBlank(regularExpressionText.getText())) {
+			Raptor.getInstance().alert("Regular Expression is required.");
+			return;
+		}
+		if (StringUtils.isBlank(script.getText())) {
+			Raptor.getInstance().alert("Script is required.");
+			return;
+		}
+
+		RegularExpressionScript newScript = ScriptService.getInstance()
+				.getRegularExpressionScript(nameText.getText());
+		if (newScript == null) {
+			newScript = new RegularExpressionScript();
+		}
+
+		newScript.setActive(isActiveButton.getSelection());
+		newScript.setName(nameText.getText());
+		newScript.setDescription(descriptionText.getText());
+		newScript.setRegularExpression(regularExpressionText.getText());
+		newScript.setScript(script.getText());
+		newScript.setConnectorType(ScriptConnectorType
+				.valueOf(connectorTypeCombo.getItem(connectorTypeCombo
+						.getSelectionIndex())));
+		ScriptService.getInstance().save(newScript);
+		refreshTables();
+	}
+
+	@Override
+	protected void performApply() {
+		onSave();
+		super.performApply();
 	}
 
 	protected void refreshTables() {

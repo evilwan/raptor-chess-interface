@@ -80,6 +80,7 @@ import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
+import raptor.util.OSUtils;
 import raptor.util.RaptorRunnable;
 import raptor.util.RegExUtils;
 
@@ -1949,10 +1950,13 @@ public class RaptorWindow extends ApplicationWindow {
 						}
 					}
 
-					final MenuItem imageMenuItem = new MenuItem(menu, SWT.PUSH);
-					imageMenuItem.setImage(Raptor.getInstance().getImage(
-							Raptor.RESOURCES_DIR + "/images/quadrantsSmall"
-									+ folder.quad.toString() + ".png"));
+					if (OSUtils.isLikelyOSX()) {
+						final MenuItem imageMenuItem = new MenuItem(menu,
+								SWT.PUSH);
+						imageMenuItem.setImage(Raptor.getInstance().getImage(
+								Raptor.RESOURCES_DIR + "/images/quadrantsSmall"
+										+ folder.quad.toString() + ".png"));
+					}
 
 					menu.setLocation(folder.toDisplay(e.x, e.y));
 					menu.setVisible(true);
