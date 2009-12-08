@@ -563,6 +563,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.PLAYING_STATISTICS + "-color", new RGB(100,
 						149, 237));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.QTELL
+						+ "-color", new RGB(128, 128, 128));
+
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));
 		PreferenceConverter.setDefault(this, CHAT_QUOTE_UNDERLINE_COLOR,
@@ -581,7 +585,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_SPEAK_PARTNER_TELLS, true);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor Beta2 Milestone 4 Pre");
+		setDefault(APP_NAME, "Raptor Beta2 Milestone 4");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName,

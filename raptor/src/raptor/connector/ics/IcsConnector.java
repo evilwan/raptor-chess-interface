@@ -1197,15 +1197,15 @@ public abstract class IcsConnector implements Connector {
 
 	protected void addToAutoComplete(String word) {
 		String lowerCaseWord = word.toLowerCase();
-		if (StringUtils.containsOnly(word,
-				"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-=")) {
-			if (!autoCompleteList.contains(lowerCaseWord)) {
-				autoCompleteList.add(lowerCaseWord);
-				Collections.sort(autoCompleteList);
-			}
-		} else {
-			LOG.warn("Vetoed addToAutoComplete: " + word);
+		// if (StringUtils.containsOnly(word,
+		// "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-=")) {
+		if (!autoCompleteList.contains(lowerCaseWord)) {
+			autoCompleteList.add(lowerCaseWord);
+			Collections.sort(autoCompleteList);
 		}
+		// } else {
+		// LOG.warn("Vetoed addToAutoComplete: " + word);
+		// }
 	}
 
 	/**
