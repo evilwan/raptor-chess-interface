@@ -1,5 +1,7 @@
 package raptor.script;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Arrays;
@@ -23,6 +25,27 @@ public class RaptorScriptContext implements ScriptContext {
 
 	public void alert(String message) {
 		Raptor.getInstance().alert(message);
+	}
+
+	public void appendToFile(String fileName, String message) {
+		FileWriter writer = null;
+		try {
+			File file = new File(fileName);
+			writer = new FileWriter(file, true);
+			writer.append(message);
+			writer.flush();
+
+		} catch (Throwable t) {
+			Raptor.getInstance().onError("Error writing to file: " + fileName,
+					t);
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Throwable t) {
+				}
+			}
+		}
 	}
 
 	public long getPingMillis() {
@@ -127,5 +150,26 @@ public class RaptorScriptContext implements ScriptContext {
 		} catch (UnsupportedEncodingException uee) {
 		}// Eat it wont happen.
 		return stringToEncode;
+	}
+
+	public void writeToFile(String fileName, String message) {
+		FileWriter writer = null;
+		try {
+			File file = new File(fileName);
+			writer = new FileWriter(file, false);
+			writer.append(message);
+			writer.flush();
+
+		} catch (Throwable t) {
+			Raptor.getInstance().onError("Error writing to file: " + fileName,
+					t);
+		} finally {
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Throwable t) {
+				}
+			}
+		}
 	}
 }

@@ -719,7 +719,7 @@ public abstract class IcsConnector implements Connector {
 		String errorMessage = IcsUtils
 				.cleanupMessage("Critical error occured! We are trying to make Raptor "
 						+ "bug free and we need your help! Please take a moment to report this "
-						+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
+						+ "error by selecting the menu: \n Help -> Report Issue\n\n Error: "
 						+ message
 						+ (t == null ? "" : "\n"
 								+ ExceptionUtils.getFullStackTrace(t)));

@@ -1565,6 +1565,7 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 		raptorHelp.add(new Separator());
+
 		raptorHelp.add(new Action("&Show Error Log") {
 			@Override
 			public void run() {
@@ -1612,6 +1613,14 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 		helpMenu.add(ficsHelp);
+		helpMenu.add(new Separator());
+		helpMenu.add(new Action("&Report an Issue") {
+			@Override
+			public void run() {
+				BrowserUtils
+						.openUrl("http://code.google.com/p/raptor-chess-interface/issues/entry");
+			}
+		});
 
 		menuBar.add(helpMenu);
 		return menuBar;
