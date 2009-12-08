@@ -40,6 +40,11 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(personTellMessages);
 
+		addField(new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.QTELL + "-color", "Qtell message color:",
+				getFieldEditorParent()));
+
 		ColorFieldEditor ptellMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.PARTNER_TELL + "-color",
@@ -103,7 +108,9 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 		ColorFieldEditor gameEndStatistics = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.PLAYING_STATISTICS + "-color",
-				"Raptor Game End Statistics:", getFieldEditorParent());
+				"Raptor Game End Statistics Message Color:",
+				getFieldEditorParent());
 		addField(gameEndStatistics);
+
 	}
 }

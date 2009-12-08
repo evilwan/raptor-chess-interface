@@ -52,6 +52,7 @@ import raptor.connector.ics.chat.KibitzEventParser;
 import raptor.connector.ics.chat.PartnerTellEventParser;
 import raptor.connector.ics.chat.PartnershipCreatedEventParser;
 import raptor.connector.ics.chat.PartnershipEndedEventParser;
+import raptor.connector.ics.chat.QTellParser;
 import raptor.connector.ics.chat.ShoutEventParser;
 import raptor.connector.ics.chat.TellEventParser;
 import raptor.connector.ics.chat.ToldEventParser;
@@ -160,6 +161,7 @@ public class IcsParser implements GameConstants {
 		nonGameEventParsers.add(new KibitzEventParser());
 		nonGameEventParsers.add(new TellEventParser());
 		nonGameEventParsers.add(new WhisperEventParser());
+		nonGameEventParsers.add(new QTellParser());
 
 		// Non tell types of events.
 		nonGameEventParsers.add(new ChallengeEventParser());

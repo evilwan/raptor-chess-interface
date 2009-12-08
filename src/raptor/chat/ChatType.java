@@ -116,6 +116,11 @@ public enum ChatType {
 	 */
 	DRAW_REQUEST,
 	/**
+	 * Bots can send QTells. These are tells that start with the ':' character.
+	 * These messages never contain a source.
+	 */
+	QTELL,
+	/**
 	 * An internal message containing statistics after you finish playing a
 	 * game.
 	 */
