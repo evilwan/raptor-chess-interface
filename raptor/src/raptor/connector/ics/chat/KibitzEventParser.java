@@ -28,7 +28,7 @@ public class KibitzEventParser extends ChatEventParser {
 	 */
 	@Override
 	public ChatEvent parse(String text) {
-		if (text.length() < 1500) {
+		if (text.length() < 600) {
 			RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 					text, " ");
 			if (stringtokenizer.hasMoreTokens()) {

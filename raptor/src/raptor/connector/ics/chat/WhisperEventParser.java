@@ -29,7 +29,7 @@ public class WhisperEventParser extends ChatEventParser {
 	 */
 	@Override
 	public ChatEvent parse(String text) {
-		if (text.length() < 1500) {
+		if (text.length() < 600) {
 			RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 					text, " ");
 			if (stringtokenizer.hasMoreTokens()) {
@@ -40,9 +40,9 @@ public class WhisperEventParser extends ChatEventParser {
 						int j = text.indexOf("[");
 						int k = text.indexOf("]");
 
-						return new ChatEvent(IcsUtils.stripTitles(source).trim(),
-								ChatType.WHISPER, text.trim(), text
-										.substring(j + 1, k));
+						return new ChatEvent(IcsUtils.stripTitles(source)
+								.trim(), ChatType.WHISPER, text.trim(), text
+								.substring(j + 1, k));
 					}
 				}
 			}
