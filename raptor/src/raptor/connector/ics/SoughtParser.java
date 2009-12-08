@@ -30,8 +30,8 @@ import raptor.util.RaptorStringTokenizer;
 public class SoughtParser {
 
 	private static final Log LOG = LogFactory.getLog(SoughtParser.class);
-	private static final String AD_DISPLAYED = "ad displayed.\nfics% ";
-	private static final String ADS_DISPLAYED = "ads displayed.\nfics% ";
+	private static final String AD_DISPLAYED = "ad displayed.";
+	private static final String ADS_DISPLAYED = "ads displayed.";
 
 	public SoughtParser() {
 	}

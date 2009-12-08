@@ -164,103 +164,103 @@ public class MovesParser {
 			int firstColon = string.indexOf(':', 0);
 			boolean startsWithEventStart = string.startsWith(EVENT_START);
 			Style12Message message = null;
+
+			if (lastDash == -1 || firstColon == -1) {
+				return null;
+			}
 			String gameNumber = string.substring(
 					startsWithEventStart ? EVENT_START.length() : EVENT_START_2
 							.length(), firstColon);
 
-			if (lastDash != -1) {
-				try {
+			try {
 
-					int style12Index = string.indexOf("<12>");
-					if (style12Index != -1) {
-						int style12End = string.indexOf("\n", style12Index);
-						if (style12End != -1) {
-							message = style12Parser.parse(string.substring(
-									style12Index, style12End));
-						}
+				int style12Index = string.indexOf("<12>");
+				if (style12Index != -1) {
+					int style12End = string.indexOf("\n", style12Index);
+					if (style12End != -1) {
+						message = style12Parser.parse(string.substring(
+								style12Index, style12End));
 					}
-
-					RaptorStringTokenizer tok = new RaptorStringTokenizer(
-							string.substring(firstColon), "\n", true);
-					tok.nextToken();
-					tok.nextToken();
-					RaptorStringTokenizer tok2 = new RaptorStringTokenizer(tok
-							.nextToken(), " ", true);
-					tok2.nextToken();
-					String gameType = tok2.nextToken();
-
-					String afterDash = string.substring(lastDash);
-					RaptorStringTokenizer multiLineTok = new RaptorStringTokenizer(
-							afterDash, "\n", true);
-					multiLineTok.nextToken();
-
-					List<String> moves = new ArrayList<String>(100);
-					List<Long> moveTimes = new ArrayList<Long>(100);
-
-					while (multiLineTok.hasMoreTokens()) {
-						String currentLine = multiLineTok.nextToken();
-						if (currentLine.trim()
-								.startsWith("{Still in progress}")) {
-							break;
-						} else if (currentLine.trim().startsWith("{")) {
-							break;
-						} else {
-							RaptorStringTokenizer lineTok = new RaptorStringTokenizer(
-									currentLine, " ", true);
-
-							// Parse past white move number.
-							if (lineTok.hasMoreTokens()) {
-								lineTok.nextToken();
-							}
-
-							// White move number.
-							if (lineTok.hasMoreTokens()) {
-								String token = lineTok.nextToken();
-								if (token.equals("...")) {
-									break;
-								} else {
-									moves.add(token);
-								}
-							}
-
-							// White time.
-							if (lineTok.hasMoreTokens()) {
-								String whiteTime = lineTok.nextToken();
-								moveTimes.add(IcsUtils.timeToLong(whiteTime));
-							}
-
-							// Blacks move
-							if (lineTok.hasMoreTokens()) {
-								String token = lineTok.nextToken();
-								if (token.equals("...")) {
-									break;
-								} else {
-									moves.add(token);
-								}
-							}
-
-							// Blacks time
-							if (lineTok.hasMoreTokens()) {
-								String blackTime = lineTok.nextToken();
-								moveTimes.add(IcsUtils.timeToLong(blackTime));
-							}
-						}
-					}
-					MovesMessage result = new MovesMessage();
-					result.style12 = message;
-					result.gameType = gameType;
-					result.moves = moves.toArray(new String[0]);
-					result.timePerMove = moveTimes.toArray(new Long[0]);
-					result.gameId = gameNumber;
-					return result;
-				} catch (Exception e) {
-					LOG.error("Error occured parsing movelist", e);
-					return null;
 				}
-			} else {
+
+				RaptorStringTokenizer tok = new RaptorStringTokenizer(string
+						.substring(firstColon), "\n", true);
+				tok.nextToken();
+				tok.nextToken();
+				RaptorStringTokenizer tok2 = new RaptorStringTokenizer(tok
+						.nextToken(), " ", true);
+				tok2.nextToken();
+				String gameType = tok2.nextToken();
+
+				String afterDash = string.substring(lastDash);
+				RaptorStringTokenizer multiLineTok = new RaptorStringTokenizer(
+						afterDash, "\n", true);
+				multiLineTok.nextToken();
+
+				List<String> moves = new ArrayList<String>(100);
+				List<Long> moveTimes = new ArrayList<Long>(100);
+
+				while (multiLineTok.hasMoreTokens()) {
+					String currentLine = multiLineTok.nextToken();
+					if (currentLine.trim().startsWith("{Still in progress}")) {
+						break;
+					} else if (currentLine.trim().startsWith("{")) {
+						break;
+					} else {
+						RaptorStringTokenizer lineTok = new RaptorStringTokenizer(
+								currentLine, " ", true);
+
+						// Parse past white move number.
+						if (lineTok.hasMoreTokens()) {
+							lineTok.nextToken();
+						}
+
+						// White move number.
+						if (lineTok.hasMoreTokens()) {
+							String token = lineTok.nextToken();
+							if (token.equals("...")) {
+								break;
+							} else {
+								moves.add(token);
+							}
+						}
+
+						// White time.
+						if (lineTok.hasMoreTokens()) {
+							String whiteTime = lineTok.nextToken();
+							moveTimes.add(IcsUtils.timeToLong(whiteTime));
+						}
+
+						// Blacks move
+						if (lineTok.hasMoreTokens()) {
+							String token = lineTok.nextToken();
+							if (token.equals("...")) {
+								break;
+							} else {
+								moves.add(token);
+							}
+						}
+
+						// Blacks time
+						if (lineTok.hasMoreTokens()) {
+							String blackTime = lineTok.nextToken();
+							moveTimes.add(IcsUtils.timeToLong(blackTime));
+						}
+					}
+				}
+				MovesMessage result = new MovesMessage();
+				result.style12 = message;
+				result.gameType = gameType;
+				result.moves = moves.toArray(new String[0]);
+				result.timePerMove = moveTimes.toArray(new Long[0]);
+				result.gameId = gameNumber;
+				return result;
+			} catch (Exception e) {
+				LOG.error("Error occured parsing movelist", e);
 				return null;
 			}
+		} else {
+			return null;
 		}
-		return null;
 	}
 }
