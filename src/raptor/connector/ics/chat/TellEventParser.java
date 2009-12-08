@@ -28,7 +28,7 @@ public class TellEventParser extends ChatEventParser {
 	 */
 	@Override
 	public ChatEvent parse(String text) {
-		if (text.length() < 1500) {
+		if (text.length() < 600) {
 			text = text.trim();
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " \r\n");
 			if (tok.hasMoreTokens()) {

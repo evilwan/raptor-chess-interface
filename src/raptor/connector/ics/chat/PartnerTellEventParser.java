@@ -29,7 +29,7 @@ public class PartnerTellEventParser extends ChatEventParser {
 	 */
 	@Override
 	public ChatEvent parse(String text) {
-		if (text.length() < 1500) {
+		if (text.length() < 600) {
 			text = text.trim();
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(text,
 					" \r\n", true);
@@ -38,15 +38,15 @@ public class PartnerTellEventParser extends ChatEventParser {
 				if (StringUtils.containsAny(source, "1234567890")) {
 					return null;
 				}
-				
+
 				if (source.endsWith("%")) {
 					source = tok.nextToken();
 				}
 				if (tok.hasMoreTokens()) {
 					String s2 = tok.nextToken();
 					if (s2.equals("(your")) {
-						return new ChatEvent(IcsUtils.stripTitles(source).trim(),
-								ChatType.PARTNER_TELL, text.trim());
+						return new ChatEvent(IcsUtils.stripTitles(source)
+								.trim(), ChatType.PARTNER_TELL, text.trim());
 
 					}
 				}

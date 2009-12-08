@@ -30,20 +30,21 @@ public class ChannelTellEventParser extends ChatEventParser {
 	 */
 	@Override
 	public ChatEvent parse(String text) {
-		if (text.length() < 1500) {
+		if (text.length() < 600) {
 			int i = text.indexOf("): ");
 			if (i != -1) {
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 						text, ":");
 				if (stringtokenizer.hasMoreTokens()) {
-					String s1 = StringUtils.remove(stringtokenizer.nextToken().trim(),
-							":");
+					String s1 = StringUtils.remove(stringtokenizer.nextToken()
+							.trim(), ":");
 					int j = s1.lastIndexOf(")");
 					int k = s1.lastIndexOf("(");
 					if (k < j && k != -1 && j != -1) {
 
 						ChatEvent event = new ChatEvent(IcsUtils
-								.stripTitles(s1), ChatType.CHANNEL_TELL, text.trim());
+								.stripTitles(s1), ChatType.CHANNEL_TELL, text
+								.trim());
 						event.setChannel(s1.substring(k + 1, j));
 						return event;
 					}

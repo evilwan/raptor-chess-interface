@@ -28,9 +28,11 @@ public class PartnershipEndedEventParser extends ChatEventParser {
 	public ChatEvent parse(String text) {
 		if (text.length() < 100) {
 			if (text.indexOf(ID_1) != -1) {
-				return new ChatEvent(null, ChatType.PARTNERSHIP_DESTROYED, text.trim());
+				return new ChatEvent(null, ChatType.PARTNERSHIP_DESTROYED, text
+						.trim());
 			} else if (text.indexOf(ID_2) != -1) {
-				return new ChatEvent(null, ChatType.PARTNERSHIP_DESTROYED, text.trim());
+				return new ChatEvent(null, ChatType.PARTNERSHIP_DESTROYED, text
+						.trim());
 			} else {
 				return null;
 			}

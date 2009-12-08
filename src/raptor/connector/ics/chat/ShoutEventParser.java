@@ -31,14 +31,14 @@ public class ShoutEventParser extends ChatEventParser {
 	 */
 	@Override
 	public ChatEvent parse(String text) {
-		if (text.length() < 1500) {
-			if (text.startsWith("\n" + SHOUT_1)) {
+		if (text.length() < 600) {
+			if (text.startsWith(SHOUT_1)) {
 				String name = text.substring(SHOUT_1.length()).trim();
 				RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
 						name, " ");
-				String s1 = IcsUtils.stripTitles(stringtokenizer.nextToken()).trim();
+				String s1 = IcsUtils.stripTitles(stringtokenizer.nextToken())
+						.trim();
 				return new ChatEvent(s1, ChatType.SHOUT, text);
-
 			}
 			RaptorStringTokenizer stringtokenizer1 = new RaptorStringTokenizer(
 					text, " ");
