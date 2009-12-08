@@ -849,7 +849,6 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public void publishEvent(final ChatEvent event) {
 		if (chatService != null) { // Could have been disposed.
-			event.setMessage(filterTrailingPrompts(event.getMessage()));
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Publishing event : " + event);
 			}
@@ -1674,6 +1673,7 @@ public abstract class IcsConnector implements Connector {
 	 * message will always use \n as the line delimiter.
 	 */
 	protected void parseMessage(String message) {
+		message = filterTrailingPrompts(message);
 		ChatEvent[] events = null;
 		try {
 			events = context.getParser().parse(message);

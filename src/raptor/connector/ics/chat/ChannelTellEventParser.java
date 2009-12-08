@@ -44,7 +44,7 @@ public class ChannelTellEventParser extends ChatEventParser {
 
 						ChatEvent event = new ChatEvent(IcsUtils
 								.stripTitles(s1), ChatType.CHANNEL_TELL, text.trim());
-						event.setChannel(text.substring(k + 1, j));
+						event.setChannel(s1.substring(k + 1, j));
 						return event;
 					}
 

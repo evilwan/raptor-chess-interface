@@ -19,15 +19,14 @@ import raptor.util.RaptorStringTokenizer;
 
 public class ToldEventParser extends ChatEventParser {
 	// (told TheTactician)
-	public static final String STARTING_TEXT = "\n(told ";
-	public static final String STARTING_TEXT_2 = "(told ";
+	public static final String STARTING_TEXT = "(told ";
 
 	/**
 	 * Returns null if text does not match the event this class produces.
 	 */
 	@Override
 	public ChatEvent parse(String text) {
-		if (text.startsWith(STARTING_TEXT) || text.startsWith(STARTING_TEXT_2)) {
+		if (text.startsWith(STARTING_TEXT)) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " )",
 					true);
 			tok.nextToken();
@@ -36,7 +35,8 @@ public class ToldEventParser extends ChatEventParser {
 				// Ignore the told message to channels.
 				Integer.parseInt(source);
 			} catch (NumberFormatException nfe) {
-				return new ChatEvent(source.trim(), ChatType.TOLD, text.trim().trim());
+				return new ChatEvent(source.trim(), ChatType.TOLD, text.trim()
+						.trim());
 			}
 			return null;
 		}
