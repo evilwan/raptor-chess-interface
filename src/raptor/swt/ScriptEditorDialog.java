@@ -92,8 +92,9 @@ public class ScriptEditorDialog extends InputDialog {
 		// But it is used to force the textToTest to be four lines long.
 		script.setText("\n\n\n\n\n\n\n\n\n\n");
 		script.setWordWrap(true);
-		script.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3,
-				3));
+		script
+				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 3,
+						3));
 		if (getInput() != null) {
 			script.setText(getInput() + "\n\n\n\n\n\n\n\n\n\n");
 		}
