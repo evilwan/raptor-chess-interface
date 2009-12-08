@@ -28,6 +28,7 @@ import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SoundService;
+import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.ClockLabelUpdater;
 import raptor.swt.chess.MouseButtonAction;
@@ -72,6 +73,8 @@ public class BughouseSuggestController extends ObserveController {
 		if (toolbar == null) {
 			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
 					: parent, SWT.FLAT);
+			toolbar.setLayout(SWTUtils
+					.createMarginlessRowLayout(SWT.HORIZONTAL));
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.BughouseSuggestChessBoard, toolbar,
 					isPartnerWhite);

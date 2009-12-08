@@ -279,6 +279,8 @@ public class ObserveController extends ChessBoardController {
 
 			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
 					: parent, SWT.FLAT);
+			toolbar.setLayout(SWTUtils
+					.createMarginlessRowLayout(SWT.HORIZONTAL));
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.ObservingChessBoard, toolbar, false);
 

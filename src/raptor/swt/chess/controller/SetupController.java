@@ -228,6 +228,8 @@ public class SetupController extends ChessBoardController {
 		if (toolbar == null) {
 			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
 					: parent, SWT.FLAT);
+			toolbar.setLayout(SWTUtils
+					.createMarginlessRowLayout(SWT.HORIZONTAL));
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.SetupChessBoard, toolbar, true);
 			if (isCoolbarMode) {
