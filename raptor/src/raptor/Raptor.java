@@ -380,6 +380,9 @@ public class Raptor implements PreferenceKeys {
 											+ "\n"
 											+ (throwable != null ? ExceptionUtils
 													.getMessage(throwable)
+													+ "\n"
+													+ ExceptionUtils
+															.getFullStackTrace(throwable)
 													: ""));
 							dialog.open();
 						}

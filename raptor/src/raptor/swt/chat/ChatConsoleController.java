@@ -664,8 +664,19 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			// Forward to output text
 			if (!processOutputTextKeystroke(event)
 					&& (event.stateMask == 0 || event.stateMask == SWT.SHIFT)) {
-				String textToInsert = "" + event.character;
-				chatConsole.getOutputText().insert(textToInsert);
+
+				if (event.character == '\b') {
+					if (chatConsole.outputText.getCharCount() > 0) {
+						chatConsole.outputText.setText(chatConsole.outputText
+								.getText().substring(
+										0,
+										chatConsole.outputText.getText()
+												.length() - 1));
+					}
+				} else {
+					String textToInsert = "" + event.character;
+					chatConsole.getOutputText().insert(textToInsert);
+				}
 			}
 		}
 	}
