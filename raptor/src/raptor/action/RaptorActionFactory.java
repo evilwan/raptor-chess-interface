@@ -75,8 +75,8 @@ public class RaptorActionFactory {
 					.getProperty("modifierKey")));
 
 			if (result instanceof ScriptedAction) {
-				((ScriptedAction) result).setScript(properties
-						.getProperty("script"));
+				((ScriptedAction) result).setScript(properties.getProperty(
+						"script").trim());
 			}
 
 			if (StringUtils.isNotBlank(properties.getProperty("containers"))) {
@@ -123,7 +123,8 @@ public class RaptorActionFactory {
 		}
 
 		if (action instanceof ScriptedAction) {
-			properties.put("script", ((ScriptedAction) action).getScript());
+			properties.put("script", ((ScriptedAction) action).getScript()
+					.trim());
 		}
 		return properties;
 	}

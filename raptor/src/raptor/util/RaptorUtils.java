@@ -27,11 +27,10 @@ public class RaptorUtils {
 	 * Returns a String[] containing all of the icon names.
 	 */
 	public static String[] getAllIconNames() {
-		File file = new File(Raptor.RESOURCES_DIR + "icons");
+		File file = new File(Raptor.RESOURCES_DIR + "icons/medium");
 
 		String[] names = file.list(new FilenameFilter() {
 			public boolean accept(File dir, String name) {
-				// TODO Auto-generated method stub
 				return name.endsWith(".png");
 			}
 		});

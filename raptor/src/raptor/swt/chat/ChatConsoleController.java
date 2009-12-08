@@ -656,8 +656,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void processInputTextKeystroke(Event event, boolean isKeyUp) {
-		System.err.println("processInputTextKeyStroke " + isKeyUp + " "
-				+ event.stateMask);
 		if (isKeyUp
 				&& (event.keyCode == SWT.PAGE_DOWN || event.keyCode == SWT.PAGE_UP)) {
 			smartScroll();

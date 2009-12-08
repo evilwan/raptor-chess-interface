@@ -44,6 +44,7 @@ import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.swt.ChessSetOptimizationDialog;
+import raptor.swt.ErrorDialog;
 import raptor.swt.InputDialog;
 import raptor.swt.RaptorCursorRegistry;
 import raptor.swt.RaptorImageRegistry;
@@ -370,19 +371,17 @@ public class Raptor implements PreferenceKeys {
 			getInstance().getWindow().getShell().getDisplay().asyncExec(
 					new Runnable() {
 						public void run() {
-							MessageDialog
-									.openError(
-											Raptor.getInstance().getWindow()
-													.getShell(),
-											"Error",
-											"Critical error occured! We are trying to make Raptor "
-													+ "bug free and we need your help! Please take a moment to report this "
-													+ "error at\nhttp://code.google.com/p/raptor-chess-interface/issues/list\n\n Issue: "
-													+ error
-													+ "\n"
-													+ (throwable != null ? ExceptionUtils
-															.getMessage(throwable)
-															: ""));
+							ErrorDialog dialog = new ErrorDialog(
+									Raptor.getInstance().getWindow().getShell(),
+									"Error occured! We are trying to make Raptor "
+											+ "bug free and we need your help! Please take a moment to report this "
+											+ "issue by selecting the menu:\n  Help -> Report Issue \n\n"
+											+ error
+											+ "\n"
+											+ (throwable != null ? ExceptionUtils
+													.getMessage(throwable)
+													: ""));
+							dialog.open();
 						}
 					});
 		}

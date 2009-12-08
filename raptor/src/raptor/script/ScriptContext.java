@@ -28,6 +28,16 @@ public interface ScriptContext {
 	public void alert(String message);
 
 	/**
+	 * Appends the specified message to the specified file name.
+	 * 
+	 * @param fileName
+	 *            The path to the file.
+	 * @param message
+	 *            The message to append.
+	 */
+	public void appendToFile(String fileName, String message);
+
+	/**
 	 * Returns the current ping time in milliseconds.
 	 */
 	public long getPingMillis();
@@ -197,5 +207,16 @@ public interface ScriptContext {
 	 * @return The encoded string.
 	 */
 	public String urlEncode(String stringToEncode);
+
+	/**
+	 * Writes the specified message to the specified file. The contents of the
+	 * file will be replaced with the specified message.
+	 * 
+	 * @param fileName
+	 *            The name of the file.
+	 * @param message
+	 *            The message.
+	 */
+	public void writeToFile(String fileName, String message);
 
 }

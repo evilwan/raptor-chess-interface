@@ -126,8 +126,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 				}
 			}
 		});
-		
-		
+
 		outputText.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 				outputText.setFocus();

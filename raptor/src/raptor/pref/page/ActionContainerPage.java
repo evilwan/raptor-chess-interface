@@ -337,7 +337,8 @@ public class ActionContainerPage extends PreferencePage {
 		nameText.setText(currentAction.getName());
 		descriptionText.setText(currentAction.getDescription());
 		if (currentAction instanceof ScriptedAction) {
-			scriptText.setText(((ScriptedAction) currentAction).getScript());
+			scriptText.setText(((ScriptedAction) currentAction).getScript()
+					.trim());
 		} else {
 			scriptText.setText("Not a script action");
 		}

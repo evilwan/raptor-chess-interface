@@ -13,6 +13,7 @@
  */
 package raptor.swt;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -21,11 +22,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
-public class ScriptEditorDialog extends InputDialog {
-	protected StyledText script;
+public class ErrorDialog extends InputDialog {
+	protected StyledText errorText;
 
 	/**
 	 * InputDialog constructor
@@ -35,11 +35,11 @@ public class ScriptEditorDialog extends InputDialog {
 	 * @param style
 	 *            the style
 	 */
-	public ScriptEditorDialog(Shell parent, String question) {
+	public ErrorDialog(Shell parent, String errorText) {
 		// Let users override the default styles
-		super(parent, "Script Editor", question);
-		setText("Script Editor");
-		setMessage(question);
+		super(parent, "Raptor Error", "");
+		setText("Raptor Error");
+		setMessage(errorText);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class ScriptEditorDialog extends InputDialog {
 		shell.setText(getText());
 		createContents(shell);
 		shell.pack();
-		script.setText(getInput() == null ? "" : getInput().trim());
+		errorText.setText(getMessage());
 		shell.open();
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
@@ -74,29 +74,18 @@ public class ScriptEditorDialog extends InputDialog {
 	 */
 	@Override
 	protected void createContents(final Shell shell) {
-		shell.setLayout(new GridLayout(3, false));
-
-		Label label = new Label(shell, SWT.NONE);
-		label
-				.setText("To find out more about see Help->Raptor Help->Scripting.");
-		// Show the message
-		label = new Label(shell, SWT.NONE);
-		label.setText(message);
-		label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3,
-				1));
+		shell.setLayout(new GridLayout(1, false));
 
 		// Display the input box
-		script = new StyledText(shell, SWT.V_SCROLL | SWT.MULTI | SWT.BORDER);
-		// Set to 4 newlinews. This will be removed before its shown to the
-		// user.
-		// But it is used to force the textToTest to be four lines long.
-		script.setText("\n\n\n\n\n\n\n\n\n\n");
-		script.setWordWrap(true);
-		script.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3,
-				3));
-		if (getInput() != null) {
-			script.setText(getInput() + "\n\n\n\n\n\n\n\n\n\n");
-		}
+		errorText = new StyledText(shell, SWT.V_SCROLL | SWT.H_SCROLL
+				| SWT.MULTI | SWT.BORDER);
+		errorText.setEditable(false);
+		String line = StringUtils.rightPad("", 80) + "\n";
+		errorText.setText(line + line + line + line + line + line + line + line
+				+ line + line + line);
+		errorText.setWordWrap(true);
+		errorText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1));
 
 		Button ok = new Button(shell, SWT.PUSH);
 		ok.setText("OK");
@@ -104,21 +93,7 @@ public class ScriptEditorDialog extends InputDialog {
 		ok.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
-				input = script.getText();
-				shell.close();
-			}
-		});
-
-		// Create the cancel button and add a handler
-		// so that pressing it will set input to null
-		Button cancel = new Button(shell, SWT.PUSH);
-		cancel.setText("Cancel");
-		cancel.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false, 1,
-				1));
-		cancel.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent event) {
-				input = null;
+				input = "";
 				shell.close();
 			}
 		});
