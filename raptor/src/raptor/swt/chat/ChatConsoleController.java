@@ -664,9 +664,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// Forward to output text
 			if (!processOutputTextKeystroke(event)
-					&& ((event.stateMask == 0 || event.stateMask == SWT.SHIFT))
-					|| (event.stateMask != 0 && (event.character == 'o'
-							|| event.character == 'k' || event.character == 'O' || event.character == 'K'))) {
+					&& (event.stateMask == 0 || event.stateMask == SWT.SHIFT)
+					|| event.stateMask != 0
+					&& (event.character == 'o' || event.character == 'k'
+							|| event.character == 'O' || event.character == 'K')) {
 				// The o and k are to fix some crazy windows issue.
 
 				if (event.character == '\b') {
@@ -676,6 +677,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 										0,
 										chatConsole.outputText.getText()
 												.length() - 1));
+						chatConsole.outputText
+								.setSelection(chatConsole.outputText.getText()
+										.length());
 					}
 				} else {
 					String textToInsert = "" + event.character;
@@ -713,7 +717,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		}
 
-		if (event.keyCode == SWT.ARROW_UP) {
+		if (event.keyCode == SWT.ESC) {
+			chatConsole.outputText.setText("");
+			return true;
+		} else if (event.keyCode == SWT.ARROW_UP) {
 			if (sentTextIndex >= 0) {
 				if (sentTextIndex > 0) {
 					sentTextIndex--;
