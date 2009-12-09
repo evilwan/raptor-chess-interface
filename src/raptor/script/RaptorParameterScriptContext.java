@@ -6,10 +6,10 @@ import raptor.connector.Connector;
 
 public class RaptorParameterScriptContext extends RaptorScriptContext implements
 		ParameterScriptContext {
-	protected Map<String, String> parameterMap;
+	protected Map<String, Object> parameterMap;
 
 	public RaptorParameterScriptContext(Connector connector,
-			Map<String, String> parameterMap) {
+			Map<String, Object> parameterMap) {
 		super(connector);
 		this.parameterMap = parameterMap;
 	}
@@ -18,7 +18,7 @@ public class RaptorParameterScriptContext extends RaptorScriptContext implements
 		return parameterMap.containsKey(parameterName);
 	}
 
-	public String getParameter(String parameterName) {
+	public Object getParameter(String parameterName) {
 		return parameterMap.get(parameterName);
 	}
 }

@@ -59,7 +59,7 @@ public class ShowTellsAlias extends RaptorAlias {
 						controller.getConnector().getChatService()
 								.getChatLogger().parseFile(
 										new ChatEventParseListener() {
-											public void onNewEventParsed(
+											public boolean onNewEventParsed(
 													ChatEvent event) {
 												if (event.getType() == ChatType.TELL) {
 													builder
@@ -72,6 +72,7 @@ public class ShowTellsAlias extends RaptorAlias {
 																			.trim()
 																	+ "\n");
 												}
+												return true;
 											}
 
 											public void onParseCompleted() {
@@ -108,7 +109,7 @@ public class ShowTellsAlias extends RaptorAlias {
 						controller.getConnector().getChatService()
 								.getChatLogger().parseFile(
 										new ChatEventParseListener() {
-											public void onNewEventParsed(
+											public boolean onNewEventParsed(
 													ChatEvent event) {
 												if (event.getType() == ChatType.CHANNEL_TELL
 														&& StringUtils
@@ -126,6 +127,7 @@ public class ShowTellsAlias extends RaptorAlias {
 																			.trim()
 																	+ "\n");
 												}
+												return true;
 											}
 
 											public void onParseCompleted() {
@@ -160,7 +162,7 @@ public class ShowTellsAlias extends RaptorAlias {
 						controller.getConnector().getChatService()
 								.getChatLogger().parseFile(
 										new ChatEventParseListener() {
-											public void onNewEventParsed(
+											public boolean onNewEventParsed(
 													ChatEvent event) {
 												if (event.getType() == ChatType.TELL
 														&& StringUtils
@@ -178,6 +180,7 @@ public class ShowTellsAlias extends RaptorAlias {
 																			.trim()
 																	+ "\n");
 												}
+												return true;
 											}
 
 											public void onParseCompleted() {

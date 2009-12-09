@@ -138,7 +138,7 @@ public interface Connector {
 	 * Returns the ParameterScriptContext for the specified parameters.
 	 */
 	public ParameterScriptContext getParameterScriptContext(
-			Map<String, String> parameterMap);
+			Map<String, Object> parameterMap);
 
 	/**
 	 * Returns the prefix to use for partner tells. On fics this would be 'ptell
@@ -193,7 +193,7 @@ public interface Connector {
 	 * Returns the script variable with the specified name. Null if no variable
 	 * has been set with the name.
 	 */
-	public String getScriptVariable(String variableName);
+	public Object getScriptVariable(String variableName);
 
 	/**
 	 * Returns an array of the secondary preference nodes.
@@ -493,7 +493,7 @@ public interface Connector {
 	 * @param value
 	 *            The variable value.
 	 */
-	public void setScriptVariable(String variableName, String value);
+	public void setScriptVariable(String variableName, Object value);
 
 	/**
 	 * Sets whether or not all person tells are being spoken.

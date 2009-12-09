@@ -28,5 +28,5 @@ public interface ParameterScriptContext extends ScriptContext {
 	 * 
 	 * @return The parameters.
 	 */
-	public String getParameter(String parameterName);
+	public Object getParameter(String parameterName);
 }

@@ -59,6 +59,7 @@ import raptor.action.RaptorAction;
 import raptor.alias.RaptorAliasResult;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
 import raptor.connector.fics.FicsConnector;
@@ -947,7 +948,26 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			for (final ParameterScript script : scripts) {
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
 				menuItem.setText(script.getName() + ": '" + message + "'");
-				final Map<String, String> parameterMap = new HashMap<String, String>();
+				final Map<String, Object> parameterMap = new HashMap<String, Object>();
+				final String line = chatConsole.inputText
+						.getLine(chatConsole.inputText
+								.getLineAtOffset(chatConsole.inputText
+										.getCaretOffset()));
+
+				connector.getChatService().getChatLogger().parseFile(
+						new ChatEventParseListener() {
+
+							public boolean onNewEventParsed(ChatEvent event) {
+								if (event.getMessage().contains(line)) {
+									parameterMap.put("chatEvent", event);
+									return false;
+								}
+								return true;
+							}
+
+							public void onParseCompleted() {
+							}
+						});
 				parameterMap.put("selection", message);
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {

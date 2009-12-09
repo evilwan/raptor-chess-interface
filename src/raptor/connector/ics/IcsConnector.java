@@ -114,7 +114,7 @@ public abstract class IcsConnector implements Connector {
 
 	protected Thread daemonThread;
 	protected GameService gameService;
-	protected Map<String, String> scriptHash = new HashMap<String, String>();
+	protected Map<String, Object> scriptHash = new HashMap<String, Object>();
 	protected Set<String> peopleToSpeakTellsFrom = new HashSet<String>();
 	protected Set<String> channelToSpeakTellsFrom = new HashSet<String>();
 	protected SeekService seekService;
@@ -494,7 +494,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public ParameterScriptContext getParameterScriptContext(
-			Map<String, String> parameterMap) {
+			Map<String, Object> parameterMap) {
 		return new RaptorParameterScriptContext(this, parameterMap);
 	}
 
@@ -569,7 +569,7 @@ public abstract class IcsConnector implements Connector {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getScriptVariable(String variableName) {
+	public Object getScriptVariable(String variableName) {
 		return scriptHash.get(variableName);
 	}
 
@@ -1090,7 +1090,7 @@ public abstract class IcsConnector implements Connector {
 	/**
 	 * /** {@inheritDoc}
 	 */
-	public void setScriptVariable(String variableName, String value) {
+	public void setScriptVariable(String variableName, Object value) {
 		scriptHash.put(variableName, value);
 	}
 
