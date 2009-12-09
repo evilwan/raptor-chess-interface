@@ -664,7 +664,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// Forward to output text
 			if (!processOutputTextKeystroke(event)
-					&& (event.stateMask == 0 || event.stateMask == SWT.SHIFT)) {
+					&& ((event.stateMask == 0 || event.stateMask == SWT.SHIFT))
+					|| (event.stateMask != 0 && (event.character == 'o'
+							|| event.character == 'k' || event.character == 'O' || event.character == 'K'))) {
+				// The o and k are to fix some crazy windows issue.
 
 				if (event.character == '\b') {
 					if (chatConsole.outputText.getCharCount() > 0) {
