@@ -21,7 +21,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -31,6 +30,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
 import raptor.chess.Game;
@@ -52,6 +52,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.swt.RaptorTable;
+import raptor.swt.SWTUtils;
 import raptor.swt.UCIEnginePropertiesDialog;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.EngineAnalysisWidget;
@@ -63,14 +64,13 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			.getLog(SimpleAnalysisWidget.class);
 
 	protected ChessBoardController controller;
-	protected Composite composite, topLine;
+	protected Composite composite, topLine, labelComposite;
 	protected UCIEngine currentEngine;
-	protected CLabel nodesPerSecondLabel;
-	protected CLabel cpuPercentageLabel;
+	protected Label nodesPerSecondLabel;
+	protected Label cpuPercentageLabel;
 	protected Combo engineCombo;
 	protected RaptorTable bestMoves;
-	protected CLabel activeLabel;
-	protected Button activeButton, propertiesButton;
+	protected Button startStopButton, propertiesButton;
 	protected boolean ignoreEngineSelection;
 	protected boolean isInStart = false;
 	protected UCIInfoListener listener = new UCIInfoListener() {
@@ -294,10 +294,12 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 											if (finalCPU != null) {
 												cpuPercentageLabel
 														.setText(finalCPU);
+												topLine.layout(true, true);
 											}
 											if (finalNPS != null) {
 												nodesPerSecondLabel
 														.setText(finalNPS);
+												topLine.layout(true, true);
 											}
 										}
 									});
@@ -380,31 +382,32 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			}
 		});
 
-		nodesPerSecondLabel = new CLabel(topLine, SWT.LEFT);
+		labelComposite = new Composite(topLine, SWT.NONE);
+		labelComposite.setLayout(SWTUtils
+				.createMarginlessRowLayout(SWT.VERTICAL));
+		nodesPerSecondLabel = new Label(labelComposite, SWT.LEFT);
 		nodesPerSecondLabel.setToolTipText("Nodes per second in thousands");
 		nodesPerSecondLabel.setText(StringUtils.rightPad("NPS(K):", 15));
 
-		cpuPercentageLabel = new CLabel(topLine, SWT.LEFT);
+		cpuPercentageLabel = new Label(labelComposite, SWT.LEFT);
 		cpuPercentageLabel.setText(StringUtils.rightPad("CPU%:", 10));
 		cpuPercentageLabel
 				.setToolTipText("Percentage of cpu being used by the engine");
 
-		activeButton = new Button(topLine, SWT.CHECK);
-		activeButton.setSelection(true);
-		activeButton.addSelectionListener(new SelectionAdapter() {
+		startStopButton = new Button(topLine, SWT.FLAT);
+		startStopButton.setText("Stop");
+		startStopButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (activeButton.getSelection()) {
+				if (startStopButton.getText().equals("Start")) {
 					start();
+					startStopButton.setText("Stop");
 				} else {
 					stop();
+					startStopButton.setText("Start");
 				}
 			}
 		});
-
-		activeLabel = new CLabel(topLine, SWT.LEFT);
-		activeLabel.setText("Active");
-		activeLabel.setToolTipText("Toggles engine on/off.");
 
 		propertiesButton = new Button(topLine, SWT.FLAT);
 		propertiesButton.setText("Settings");
@@ -508,12 +511,11 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 				PreferenceKeys.BOARD_STATUS_COLOR);
 		composite.setBackground(background);
 		topLine.setBackground(background);
+		labelComposite.setBackground(background);
 		nodesPerSecondLabel.setBackground(background);
 		nodesPerSecondLabel.setForeground(foreground);
 		cpuPercentageLabel.setBackground(background);
 		cpuPercentageLabel.setForeground(foreground);
-		activeLabel.setForeground(foreground);
-		activeLabel.setBackground(background);
 	}
 
 	public void updateToGame() {
