@@ -108,7 +108,7 @@ public class SWTUtils {
 	 * Returns a RowLayout without any margins or spacing.
 	 */
 	public static RowLayout createMarginlessRowLayout(int type) {
-		RowLayout result = new RowLayout();
+		RowLayout result = new RowLayout(type);
 		result.marginLeft = 0;
 		result.marginTop = 0;
 		result.marginRight = 0;
