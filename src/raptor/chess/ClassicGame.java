@@ -1253,7 +1253,7 @@ public class ClassicGame implements Game {
 		result.append(" " + getFenCastle());
 		result.append(" " + getSan(epSquare));
 		result.append(" " + fiftyMoveCount);
-		result.append(" " + halfMoveCount);
+		result.append(" " + getFullMoveCount());
 
 		return result.toString();
 	}
