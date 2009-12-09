@@ -64,8 +64,8 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		textLabel
 				.setText(WordUtils
 						.wrap(
-								"\tRight-Click Scripts scripts have one parameter 'selection', the text selected when "
-										+ "the console was right clicked. "
+								"\tRight-Click Scripts scripts have two parameter: 'selection', (String) the text selected when "
+										+ "the console was right clicked and 'chatEvent', (ChatEvent) the chatEvent that was right clicked. "
 										+ "See Help->Raptor Help->Scripting for more details.",
 								70));
 

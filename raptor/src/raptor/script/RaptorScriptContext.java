@@ -65,7 +65,7 @@ public class RaptorScriptContext implements ScriptContext {
 		return connector.getUserName();
 	}
 
-	public String getValue(String key) {
+	public Object getValue(String key) {
 		return connector.getScriptVariable(key);
 	}
 
@@ -140,7 +140,7 @@ public class RaptorScriptContext implements ScriptContext {
 		SoundService.getInstance().textToSpeech(message);
 	}
 
-	public void storeValue(String key, String value) {
+	public void storeValue(String key, Object value) {
 		connector.setScriptVariable(key, value);
 	}
 

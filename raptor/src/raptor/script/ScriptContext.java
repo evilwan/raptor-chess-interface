@@ -66,7 +66,7 @@ public interface ScriptContext {
 	 *            The key to retrieve.
 	 * @return May return null if there is no value stored.
 	 */
-	public String getValue(String key);
+	public Object getValue(String key);
 
 	/**
 	 * Launches the process with the specified arguments. This can be used to
@@ -197,7 +197,7 @@ public interface ScriptContext {
 	 * @param value
 	 *            The value to store.
 	 */
-	public void storeValue(String key, String value);
+	public void storeValue(String key, Object value);
 
 	/**
 	 * MIME encodes the passed in string.

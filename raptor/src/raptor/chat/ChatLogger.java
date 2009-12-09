@@ -34,9 +34,10 @@ public class ChatLogger {
 
 	public static interface ChatEventParseListener {
 		/**
-		 * Invoked on each chat event encountered in the file.
+		 * Invoked on each chat event encountered in the file. Returns true if
+		 * the parse should continue, false if it should cease.
 		 */
-		public void onNewEventParsed(ChatEvent event);
+		public boolean onNewEventParsed(ChatEvent event);
 
 		public void onParseCompleted();
 	}
@@ -77,7 +78,9 @@ public class ChatLogger {
 					try {
 						ChatEvent event = ChatEventUtils
 								.deserializeChatEvent(currentLine);
-						listener.onNewEventParsed(event);
+						if (!listener.onNewEventParsed(event)) {
+							break;
+						}
 					} catch (Throwable t) {
 						LOG.warn("Error reading chat event line " + currentLine
 								+ " skipping ChatEvent", t);

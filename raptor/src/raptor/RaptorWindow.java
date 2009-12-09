@@ -1950,7 +1950,7 @@ public class RaptorWindow extends ApplicationWindow {
 						}
 					}
 
-					if (OSUtils.isLikelyOSX()) {
+					if (OSUtils.isLikelyOSX() || OSUtils.isLikelyLinux()) {
 						final MenuItem imageMenuItem = new MenuItem(menu,
 								SWT.PUSH);
 						imageMenuItem.setImage(Raptor.getInstance().getImage(

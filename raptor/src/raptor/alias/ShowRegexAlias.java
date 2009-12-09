@@ -58,7 +58,7 @@ public class ShowRegexAlias extends RaptorAlias {
 						controller.getConnector().getChatService()
 								.getChatLogger().parseFile(
 										new ChatEventParseListener() {
-											public void onNewEventParsed(
+											public boolean onNewEventParsed(
 													ChatEvent event) {
 												if (event.getType() != ChatType.INTERNAL
 														&& event.getType() != ChatType.BUGWHO_AVAILABLE_TEAMS
@@ -85,6 +85,7 @@ public class ShowRegexAlias extends RaptorAlias {
 																			.trim()
 																	+ "\n");
 												}
+												return true;
 											}
 
 											public void onParseCompleted() {

@@ -77,7 +77,7 @@ public class ChatUtils {
 						.getChatLogger().parseFile(
 								new ChatEventParseListener() {
 
-									public void onNewEventParsed(
+									public boolean onNewEventParsed(
 											final ChatEvent event) {
 										console.getDisplay().syncExec(
 												new RaptorRunnable(console
@@ -100,6 +100,7 @@ public class ChatUtils {
 														}
 													}
 												});
+										return true;
 									}
 
 									public void onParseCompleted() {
