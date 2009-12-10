@@ -19,7 +19,7 @@ import raptor.connector.ics.IcsUtils;
 import raptor.util.RaptorStringTokenizer;
 
 public class ShoutEventParser extends ChatEventParser {
-	private static final String SHOUT_1 = "-->";
+	private static final String SHOUT_1 = "--> ";
 
 	private static final String SHOUT_2 = "shouts:";
 
@@ -31,6 +31,7 @@ public class ShoutEventParser extends ChatEventParser {
 	 */
 	@Override
 	public ChatEvent parse(String text) {
+		text = text.trim();
 		if (text.length() < 600) {
 			if (text.startsWith(SHOUT_1)) {
 				String name = text.substring(SHOUT_1.length()).trim();
