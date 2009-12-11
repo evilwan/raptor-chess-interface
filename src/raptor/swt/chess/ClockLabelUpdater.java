@@ -133,57 +133,58 @@ public class ClockLabelUpdater implements Runnable, PreferenceKeys {
 	}
 
 	protected void playCountdownSound(long currentTime) {
-		if (currentTime >= 9000 && currentTime < 10000
+		if (currentTime >= 10000 && currentTime < 11000
 				&& lastCountdownPlayed != 10) {
 			lastCountdownPlayed = 10;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 8000 && currentTime < 9000
+		} else if (currentTime >= 9000 && currentTime < 10000
 				&& lastCountdownPlayed != 9) {
 			lastCountdownPlayed = 9;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 7000 && currentTime < 8000
+		} else if (currentTime >= 8000 && currentTime < 9000
 				&& lastCountdownPlayed != 8) {
 			lastCountdownPlayed = 8;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 6000 && currentTime < 7000
+		} else if (currentTime >= 7000 && currentTime < 8000
 				&& lastCountdownPlayed != 7) {
 			lastCountdownPlayed = 7;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 5000 && currentTime < 6000
+		} else if (currentTime >= 6000 && currentTime < 6000
 				&& lastCountdownPlayed != 6) {
 			lastCountdownPlayed = 6;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 4000 && currentTime < 5000
+		} else if (currentTime >= 5000 && currentTime < 6000
 				&& lastCountdownPlayed != 5) {
 			lastCountdownPlayed = 5;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 3000 && currentTime < 4000
+		} else if (currentTime >= 4000 && currentTime < 5000
 				&& lastCountdownPlayed != 4) {
 			lastCountdownPlayed = 4;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 2000 && currentTime < 3000
+		} else if (currentTime >= 3000 && currentTime < 4000
 				&& lastCountdownPlayed != 3) {
 			lastCountdownPlayed = 3;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 1000 && currentTime < 2000
+		} else if (currentTime >= 2000 && currentTime < 3000
 				&& lastCountdownPlayed != 2) {
 			lastCountdownPlayed = 2;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 0 && currentTime < 1000
+		} else if (currentTime >= 1000 && currentTime < 2000
 				&& lastCountdownPlayed != 1) {
 			lastCountdownPlayed = 1;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime <= 0 && lastCountdownPlayed != 0) {
+		} else if (currentTime >= 0 && currentTime < 1000
+				&& lastCountdownPlayed != 0) {
 			lastCountdownPlayed = 0;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
