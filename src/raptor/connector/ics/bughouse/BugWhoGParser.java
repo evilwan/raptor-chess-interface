@@ -80,8 +80,8 @@ public class BugWhoGParser {
 		// substitute it back after parsing.
 		text = StringUtils.replace(text, "----", "````");
 
-		RaptorStringTokenizer tok = new RaptorStringTokenizer(text,
-				" \n[]-():", true);
+		RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " \n[]-()",
+				true);
 		List<BugGame> result = new ArrayList<BugGame>(10);
 		while (tok.hasMoreTokens()) {
 			BugGame game = new BugGame();
@@ -102,7 +102,7 @@ public class BugWhoGParser {
 			game.getGame1Black().setStatus(BuggerStatus.Available);
 			game.setRated(tok.nextToken().indexOf('r') != -1);
 			game.setTimeControl(tok.nextToken() + " " + tok.nextToken());
-			for (int i = 0; i < 8; i++) {
+			for (int i = 0; i < 6; i++) {
 				tok.nextToken();
 			}
 			game.setGame2Id(tok.nextToken());
@@ -122,7 +122,7 @@ public class BugWhoGParser {
 			game.getGame2Black().setName(tok.nextToken());
 			game.getGame2Black().setStatus(BuggerStatus.Available);
 
-			for (int i = 0; i < 11; i++) {
+			for (int i = 0; i < 9; i++) {
 				tok.nextToken();
 			}
 			result.add(game);
