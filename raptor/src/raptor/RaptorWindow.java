@@ -331,19 +331,21 @@ public class RaptorWindow extends ApplicationWindow {
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
 				RaptorWindowItem item) {
-			this(parent, style, item, true);
+			this(parent, style, item, true, true);
 		}
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
-				final RaptorWindowItem item, boolean isInitingItem) {
+				final RaptorWindowItem item, boolean isInitingItem,
+				boolean isSelecting) {
 			super(parent, style);
-			init(parent, item, isInitingItem);
+			init(parent, item, isInitingItem, isSelecting);
 		}
 
 		public RaptorTabItem(RaptorTabFolder parent, int style,
-				final RaptorWindowItem item, boolean isInitingItem, int index) {
+				final RaptorWindowItem item, boolean isInitingItem,
+				boolean isSelecting, int index) {
 			super(parent, style, index);
-			init(parent, item, isInitingItem);
+			init(parent, item, isInitingItem, isSelecting);
 		}
 
 		@Override
@@ -387,10 +389,11 @@ public class RaptorWindow extends ApplicationWindow {
 
 				// Now add the new raptor tab item to the new parent.
 				if (index == -1) {
-					new RaptorTabItem(newParent, getStyle(), raptorItem, false);
+					new RaptorTabItem(newParent, getStyle(), raptorItem, false,
+							true);
 				} else {
 					new RaptorTabItem(newParent, getStyle(), raptorItem, false,
-							index);
+							true, index);
 				}
 
 				// Invoke after move so the item can adjust to its new parent if
@@ -427,7 +430,8 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		protected void init(RaptorTabFolder parent,
-				final RaptorWindowItem item, boolean isInitingItem) {
+				final RaptorWindowItem item, boolean isInitingItem,
+				boolean isSelecting) {
 			raptorParent = parent;
 
 			if (LOG.isDebugEnabled()) {
@@ -485,7 +489,9 @@ public class RaptorWindow extends ApplicationWindow {
 			setImage(item.getImage());
 			setShowClose(true);
 			// parent.layout(true, true);
-			parent.setSelection(this);
+			if (isSelecting) {
+				parent.setSelection(this);
+			}
 			itemsManaged.add(this);
 		}
 	}
@@ -652,7 +658,7 @@ public class RaptorWindow extends ApplicationWindow {
 	 * as well.
 	 */
 	public void addRaptorWindowItem(final RaptorWindowItem item) {
-		addRaptorWindowItem(item, true);
+		addRaptorWindowItem(item, true, true);
 	}
 
 	/**
@@ -670,6 +676,24 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	public void addRaptorWindowItem(final RaptorWindowItem item,
 			boolean isAsynch) {
+		addRaptorWindowItem(item, isAsynch, true);
+	}
+
+	/**
+	 * Adds a RaptorWindowItem to the RaptorWindow either synchronously or
+	 * asynchronously depending on isAsynch.
+	 * 
+	 * An item listener will be added to the window item. This listeners
+	 * itemChanged should be invoked whenever the title,or icon of the
+	 * RaptorWindowItem change.
+	 * 
+	 * onPassivate and onActivate will be invoked as the item becomes invisible
+	 * and visible again. Multiple calls to activate may occur even if the
+	 * RaptorWindowItem is visible so the RaptorWindowItem should handle these
+	 * as well.
+	 */
+	public void addRaptorWindowItem(final RaptorWindowItem item,
+			boolean isAsynch, final boolean isSelecting) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Adding raptor window item " + item);
 		}
@@ -680,7 +704,7 @@ public class RaptorWindow extends ApplicationWindow {
 				public void execute() {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
-					new RaptorTabItem(folder, SWT.NONE, item);
+					new RaptorTabItem(folder, SWT.NONE, item, true, isSelecting);
 					folder.setMinimized(false);
 					restoreFolders();
 				}
@@ -691,12 +715,11 @@ public class RaptorWindow extends ApplicationWindow {
 				public void execute() {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
-					new RaptorTabItem(folder, SWT.NONE, item);
+					new RaptorTabItem(folder, SWT.NONE, item, true, isSelecting);
 					folder.setMinimized(false);
 					restoreFolders();
 				}
 			});
-
 		}
 	}
 
