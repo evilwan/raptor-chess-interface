@@ -445,9 +445,44 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	/**
-	 * Flips the ChessBoard object.
+	 * Flips the ChessBoard object. If the game is bughouse the other board is
+	 * flipped too.
 	 */
 	public void onFlip() {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("onFlip");
+		}
+		onFlipIgnoreBughouseOtherBoard();
+
+		if (game.getVariant() == Variant.bughouse) {
+			// Code to flip the other board if its bughouse.
+			BughouseGame bughouseGame = null;
+
+			if (game instanceof BughouseGame) {
+				bughouseGame = (BughouseGame) game;
+			} else if (game instanceof GameCursor) {
+				GameCursor cursor = (GameCursor) game;
+				if (cursor.getMasterGame() instanceof BughouseGame) {
+					bughouseGame = (BughouseGame) cursor.getMasterGame();
+				}
+			}
+			if (bughouseGame != null && bughouseGame.getOtherBoard() != null) {
+				ChessBoardWindowItem otherBoardItem = Raptor.getInstance()
+						.getWindow().getChessBoardWindowItem(
+								bughouseGame.getOtherBoard().getId());
+				if (otherBoardItem != null) {
+					otherBoardItem.getController()
+							.onFlipIgnoreBughouseOtherBoard();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Flips the ChessBoard object. If the game is bughouse the other board is
+	 * not flipped.
+	 */
+	public void onFlipIgnoreBughouseOtherBoard() {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("onFlip");
 		}
@@ -456,15 +491,6 @@ public abstract class ChessBoardController implements BoardConstants,
 		board.redrawSquares();
 		board.getControl().layout(true, true);
 		board.getControl().redraw();
-
-		if (game instanceof BughouseGame) {
-			ChessBoardWindowItem otherBoardItem = Raptor.getInstance()
-					.getWindow().getChessBoardWindowItem(
-							((BughouseGame) getGame()).getOtherBoard().getId());
-			if (otherBoardItem != null) {
-				otherBoardItem.getController().onFlip();
-			}
-		}
 	}
 
 	/**
