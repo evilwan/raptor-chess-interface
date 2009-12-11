@@ -19,7 +19,9 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -949,7 +951,7 @@ public abstract class IcsConnector implements Connector {
 					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 							new ChannelController(this, value), quad);
 					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							windowItem, false);
+							windowItem, false, false);
 					ChatUtils.appendPreviousChatsToController(windowItem
 							.getConsole());
 				}
@@ -959,7 +961,7 @@ public abstract class IcsConnector implements Connector {
 					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 							new RegExController(this, value), quad);
 					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							windowItem, false);
+							windowItem, false, false);
 					ChatUtils.appendPreviousChatsToController(windowItem
 							.getConsole());
 				}
@@ -1139,10 +1141,52 @@ public abstract class IcsConnector implements Connector {
 	 * restored when reconnected.
 	 */
 	public void storeTabStates() {
-		if (!Raptor.getInstance().isDisposed()) {
+		if (!Raptor.getInstance().getWindow().getShell().isDisposed()) {
 			String preference = "";
 			RaptorConnectorWindowItem[] items = Raptor.getInstance()
 					.getWindow().getWindowItems(this);
+
+			// Sort to order channels.
+			Arrays.sort(items, new Comparator<RaptorConnectorWindowItem>() {
+
+				public int compare(RaptorConnectorWindowItem arg0,
+						RaptorConnectorWindowItem arg1) {
+					if (arg0 instanceof ChatConsoleWindowItem
+							&& arg1 instanceof ChatConsoleWindowItem) {
+						ChatConsoleWindowItem chatConsole1 = (ChatConsoleWindowItem) arg0;
+						ChatConsoleWindowItem chatConsole2 = (ChatConsoleWindowItem) arg1;
+
+						if (chatConsole1.getController() instanceof ChannelController
+								&& chatConsole2.getController() instanceof ChannelController) {
+							Integer integer1 = new Integer(
+									((ChannelController) chatConsole1
+											.getController()).getChannel());
+							Integer integer2 = new Integer(
+									((ChannelController) chatConsole2
+											.getController()).getChannel());
+							return integer1.compareTo(integer2);
+
+						} else if (!(chatConsole1.getController() instanceof ChannelController)
+								&& chatConsole2.getController() instanceof ChannelController) {
+							return 1;
+						} else if (chatConsole1.getController() instanceof ChannelController
+								&& !(chatConsole2.getController() instanceof ChannelController)) {
+							return -1;
+						} else {
+							return 0;
+						}
+					} else if (arg0 instanceof ChatConsoleWindowItem
+							&& !(arg1 instanceof ChatConsoleWindowItem)) {
+						return -1;
+					} else if (arg1 instanceof ChatConsoleWindowItem
+							&& !(arg0 instanceof ChatConsoleWindowItem)) {
+						return 1;
+					} else {
+						return 0;
+					}
+				}
+			});
+
 			for (RaptorConnectorWindowItem item : items) {
 				if (item instanceof ChatConsoleWindowItem) {
 					ChatConsoleWindowItem chatConsoleItem = (ChatConsoleWindowItem) item;
