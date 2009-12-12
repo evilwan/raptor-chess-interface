@@ -16,9 +16,8 @@ import org.apache.commons.logging.LogFactory;
 import raptor.Raptor;
 
 /**
- * The Linux Audio Sound player. There are all sorts of issues with linux sound.
- * Clips dont work, and you have to do quite a lot of format adjusting. This
- * class handles all of that.
+ * The Linux Audio Sound player. Uses SourceDataLine to play sounds. For some
+ * reason Clip sounds do not work well in linux.
  */
 public class LinuxSoundPlayer implements SoundPlayer {
 	@SuppressWarnings("unused")
@@ -36,16 +35,16 @@ public class LinuxSoundPlayer implements SoundPlayer {
 	 * Specify the name of a file in resources/sounds/bughouse without the .wav
 	 * to play the sound i.e. "+".
 	 */
-	public void play(final String sound) {
-		Boolean isPlaying = soundsPlaying.get(sound);
+	public void play(final String pathToSound) {
+		Boolean isPlaying = soundsPlaying.get(pathToSound);
 		// This prevents excessive bug sounds from being played.
 		// That can result in maxing out the number of lines
 		// available and cause all kinds of problems in OSX 10.4
 		if (isPlaying == null || !isPlaying) {
-			soundsPlaying.put(sound, true);
+			soundsPlaying.put(pathToSound, true);
 			SourceDataLine auline = null;
 			try {
-				File soundFile = new File(sound);
+				File soundFile = new File(pathToSound);
 				AudioInputStream audioInputStream = AudioSystem
 						.getAudioInputStream(soundFile);
 
@@ -91,13 +90,14 @@ public class LinuxSoundPlayer implements SoundPlayer {
 					}
 				}
 			} catch (Throwable t) {
-				Raptor.getInstance().onError("Error playing sound " + sound, t);
+				Raptor.getInstance().onError(
+						"Error playing sound " + pathToSound, t);
 			} finally {
 				try {
 					auline.close();
 				} catch (Throwable t) {
 				}
-				soundsPlaying.put(sound, false);
+				soundsPlaying.put(pathToSound, false);
 			}
 		}
 	}

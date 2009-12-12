@@ -111,6 +111,15 @@ public interface ScriptContext {
 	public void openUrl(String url);
 
 	/**
+	 * Plays the specified sound. Supports all formats.
+	 * 
+	 * @param pathToSound
+	 *            The fully qualified path to the sound.
+	 * @since v.91
+	 */
+	public void play(String pathToSound);
+
+	/**
 	 * Plays the specified bughouse sound.
 	 * 
 	 * @param soundName

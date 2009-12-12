@@ -97,14 +97,28 @@ public class SoundService {
 	}
 
 	/**
+	 * Plays the specified sound.
+	 * 
+	 * @param pathToSound
+	 *            The fully qualified path to the sound.
+	 */
+	public void play(final String pathToSound) {
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.APP_SOUND_ENABLED)
+				&& soundPlayer != null) {
+			ThreadService.getInstance().run(new Runnable() {
+				public void run() {
+					soundPlayer.play(pathToSound);
+				}
+			});
+		}
+	}
+
+	/**
 	 * Specify the name of a file in resources/sounds/bughouse without the .wav
 	 * to play the sound i.e. "+".
 	 */
 	public void playBughouseSound(final String sound) {
-		/**
-		 * I have tried caching the Clips. However i ran out of lines. So now i
-		 * just create a new clip each time.
-		 */
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				PreferenceKeys.APP_SOUND_ENABLED)
 				&& soundPlayer != null) {
