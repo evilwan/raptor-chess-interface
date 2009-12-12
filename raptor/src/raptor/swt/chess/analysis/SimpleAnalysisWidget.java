@@ -497,8 +497,10 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 		if (currentEngine != null) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
-					currentEngine.stop();
-					currentEngine.isReady();
+					if (currentEngine.isConnected()) {
+						currentEngine.stop();
+						currentEngine.isReady();
+					}
 				}
 			});
 		}
@@ -559,43 +561,6 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			});
 		}
 	}
-
-	// protected void updateCustomButtons() {
-	// if (currentEngine != null) {
-	// for (Control control : topLine.getChildren()) {
-	// if (control instanceof Button && control != activeButton
-	// && control != propertiesButton) {
-	// control.dispose();
-	// }
-	// }
-	//
-	// String[] controlNames = currentEngine.getOptionNames();
-	// for (String controlName : controlNames) {
-	// final UCIOption option = currentEngine.getOption(controlName);
-	// if (option instanceof UCIButton) {
-	// Button button = new Button(topLine, SWT.FLAT);
-	// button.setText(controlName);
-	// button.setToolTipText("Custom engine analyis button.");
-	// button.addSelectionListener(new SelectionAdapter() {
-	// @Override
-	// public void widgetSelected(SelectionEvent e) {
-	// ThreadService.getInstance().run(new Runnable() {
-	// public void run() {
-	// currentEngine.stop();
-	// currentEngine.isReady();
-	// currentEngine.setOption(option);
-	// currentEngine.isReady();
-	// start(true);
-	// }
-	// });
-	// }
-	// });
-	// System.err.println("Added button");
-	// }
-	// }
-	// topLine.pack(true);
-	// }
-	// }
 
 	protected void updateEnginesCombo() {
 		ignoreEngineSelection = true;
