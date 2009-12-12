@@ -24,6 +24,13 @@ public interface SoundPlayer {
 	public void init();
 
 	/**
+	 * Specify the fully qualified name of the sound to play.
+	 * 
+	 * @param pathToSound
+	 */
+	public void play(String pathToSound);
+
+	/**
 	 * Specify the name of a file in resources/sounds/bughouse without the .wav
 	 * to play the sound i.e. "+".
 	 */

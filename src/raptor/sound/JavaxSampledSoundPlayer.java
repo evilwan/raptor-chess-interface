@@ -14,8 +14,6 @@
 package raptor.sound;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,23 +29,18 @@ import org.apache.commons.logging.LogFactory;
 import raptor.Raptor;
 
 /**
- * The most advanced and probably most efficient sound player. This should be
- * preferred over the others.
+ * Uses Clips to play sounds. Ignores the encoding.
  */
 public class JavaxSampledSoundPlayer implements SoundPlayer {
 	private static final Log LOG = LogFactory
 			.getLog(JavaxSampledSoundPlayer.class);
 
-	protected Map<String, Clip> soundToClip = new HashMap<String, Clip>();
-	protected Map<String, String> bugSoundToClip = new HashMap<String, String>();
-	protected Map<String, Boolean> bugSoundsPlaying = new HashMap<String, Boolean>();
+	protected Map<String, Boolean> soundsPlaying = new HashMap<String, Boolean>();
 
 	public void dispose() {
 		// Don't bother closing the clips. You get screeching noises if you do.
 		LOG.info("Disposing Sounds");
-		soundToClip.clear();
-		bugSoundToClip.clear();
-		bugSoundsPlaying.clear();
+		soundsPlaying.clear();
 	}
 
 	/**
@@ -55,109 +48,52 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 	 * create a new clip each time.
 	 */
 	public void init() {
-		LOG.info("Initializing JavaxSampledSoundPlayer.");
-		long startTime = System.currentTimeMillis();
-		try {
-			File file = new File(Raptor.RESOURCES_DIR + "sounds/");
-			File[] files = file.listFiles(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.endsWith(".wav");
-				}
-			});
-			for (File currentFile : files) {
-				String key = currentFile.getName();
-				int dotIndex = key.indexOf(".");
-				Clip clip = AudioSystem.getClip();
-
-				AudioInputStream stream = AudioSystem
-						.getAudioInputStream(new FileInputStream(currentFile));
-				clip.open(stream);
-				soundToClip.put(key.substring(0, dotIndex), clip);
-			}
-
-			file = new File(Raptor.RESOURCES_DIR + "sounds/bughouse");
-			files = file.listFiles(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.endsWith(".wav");
-				}
-			});
-			for (File currentFile : files) {
-
-				String key = currentFile.getName();
-				int dotIndex = key.indexOf(".");
-				key = key.substring(0, dotIndex);
-				bugSoundToClip.put(key, currentFile.getAbsolutePath());
-				bugSoundsPlaying.put(key, false);
-			}
-
-		} catch (Throwable t) {
-			Raptor.getInstance().onError("Error loading sounds", t);
-		}
-		LOG.info("Initializing JavaxSampledSoundPlayer complete: "
-				+ (System.currentTimeMillis() - startTime) + "ms");
 	}
 
 	/**
 	 * Specify the name of a file in resources/sounds/bughouse without the .wav
 	 * to play the sound i.e. "+".
 	 */
-	public void playBughouseSound(final String sound) {
-		String soundFile = bugSoundToClip.get(sound);
-		if (soundFile == null) {
-			Raptor.getInstance().onError("Unknown sound " + sound);
-		} else {
+	public void play(final String pathToSound) {
+		Boolean isPlaying = soundsPlaying.get(pathToSound);
+		// This prevents excessive bug sounds from being played.
+		// That can result in maxing out the number of lines
+		// available and cause all kinds of problems in OSX 10.4
+		if (isPlaying == null || !isPlaying) {
+			soundsPlaying.put(pathToSound, true);
+			try {
+				File soundFile = new File(pathToSound);
+				final Clip clip = AudioSystem.getClip();
+				final AudioInputStream stream = AudioSystem
+						.getAudioInputStream(soundFile);
+				clip.open(stream);
+				clip.setFramePosition(0);
+				clip.start();
+				clip.addLineListener(new LineListener() {
+					public void update(LineEvent arg0) {
+						LineEvent.Type type = arg0.getType();
+						if (type == LineEvent.Type.STOP) {
 
-			// This prevents excessive bug sounds from being played.
-			// That can result in maxing out the number of lines
-			// available and cause all kinds of problems in OSX 10.4
-			if (!bugSoundsPlaying.get(sound)) {
-				try {
-					bugSoundsPlaying.put(sound, true);
-					final Clip clip = AudioSystem.getClip();
-					final AudioInputStream stream = AudioSystem
-							.getAudioInputStream(new FileInputStream(soundFile));
-					clip.open(stream);
-					clip.setFramePosition(0);
-					clip.start();
-					clip.addLineListener(new LineListener() {
-						public void update(LineEvent arg0) {
-							LineEvent.Type type = arg0.getType();
-							if (type == LineEvent.Type.STOP) {
-								bugSoundsPlaying.put(sound, false);
-							}
-							try {
-								stream.close();
-							} catch (Throwable t) {
-							}
 						}
-					});
-				} catch (Throwable t) {
-					Raptor.getInstance().onError(
-							"Error playing sound " + sound, t);
-				}
+						try {
+							stream.close();
+						} catch (Throwable t) {
+						}
+					}
+				});
+			} catch (Throwable t) {
+				Raptor.getInstance().onError(
+						"Error playing sound " + pathToSound, t);
+				soundsPlaying.put(pathToSound, false);
 			}
 		}
 	}
 
-	/**
-	 * Specify the name of a file in resources/sounds without the .wav to play
-	 * the sound i.e. "alert".
-	 */
-	public void playSound(final String sound) {
-		Clip clip = soundToClip.get(sound);
+	public void playBughouseSound(final String sound) {
+		play(Raptor.RESOURCES_DIR + "sounds/bughouse/" + sound + ".wav");
+	}
 
-		if (clip == null) {
-			Raptor.getInstance().onError("Unknown sound " + sound);
-		} else {
-			if (!clip.isRunning()) {
-				try {
-					clip.setFramePosition(0);
-					clip.start();
-				} catch (Throwable t) {
-					Raptor.getInstance().onError(
-							"Error playing sound " + sound, t);
-				}
-			}
-		}
+	public void playSound(final String sound) {
+		play(Raptor.RESOURCES_DIR + "sounds/" + sound + ".wav");
 	}
 }

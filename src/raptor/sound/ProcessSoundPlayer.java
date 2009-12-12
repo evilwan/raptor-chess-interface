@@ -33,25 +33,25 @@ public class ProcessSoundPlayer implements SoundPlayer {
 	public void init() {
 	}
 
+	public void play(String pathToSound) {
+		try {
+			Process process = Runtime.getRuntime().exec(
+					new String[] {
+							Raptor.getInstance().getPreferences().getString(
+									PreferenceKeys.SOUND_PROCESS_NAME),
+							pathToSound });
+			process.waitFor();
+		} catch (Exception e) {
+			Raptor.getInstance().onError(
+					"Error occured playing sound file: " + pathToSound, e);
+		}
+	}
+
 	public void playBughouseSound(final String sound) {
 		play(Raptor.RESOURCES_DIR + "sounds/bughouse/" + sound + ".wav");
 	}
 
 	public void playSound(final String sound) {
 		play(Raptor.RESOURCES_DIR + "sounds/" + sound + ".wav");
-	}
-
-	protected void play(String fileName) {
-		try {
-			Process process = Runtime.getRuntime().exec(
-					new String[] {
-							Raptor.getInstance().getPreferences().getString(
-									PreferenceKeys.SOUND_PROCESS_NAME),
-							fileName });
-			process.waitFor();
-		} catch (Exception e) {
-			Raptor.getInstance().onError(
-					"Error occured playing sound file: " + fileName, e);
-		}
 	}
 }

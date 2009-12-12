@@ -103,6 +103,10 @@ public class RaptorScriptContext implements ScriptContext {
 		BrowserUtils.openUrl(url);
 	}
 
+	public void play(String pathToSound) {
+		SoundService.getInstance().play(pathToSound);
+	}
+
 	public void playBughouseSound(String soundName) {
 		SoundService.getInstance().playBughouseSound(soundName);
 	}
