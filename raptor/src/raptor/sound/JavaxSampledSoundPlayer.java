@@ -66,20 +66,20 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 				final Clip clip = AudioSystem.getClip();
 				final AudioInputStream stream = AudioSystem
 						.getAudioInputStream(soundFile);
-				clip.open(stream);
-				clip.setFramePosition(0);
-				clip.start();
 				clip.addLineListener(new LineListener() {
 					public void update(LineEvent arg0) {
 						LineEvent.Type type = arg0.getType();
 						if (type == LineEvent.Type.STOP) {
 							try {
+								soundsPlaying.put(pathToSound, false);
 								stream.close();
 							} catch (Throwable t) {
 							}
 						}
 					}
 				});
+				clip.open(stream);
+				clip.start();
 			} catch (Throwable t) {
 				Raptor.getInstance().onError(
 						"Error playing sound " + pathToSound, t);
