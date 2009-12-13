@@ -247,6 +247,16 @@ public interface PreferenceKeys {
 	public static final String FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "fics-show-bug-buttons-on-partnership";
 	public static final String FICS_MATCH_CMMANDS = "fics-match-commands";
 
+	public static final String FICS_SEEK_GAME_TYPE = "fics-seek-game-type";
+	public static final String FICS_SEEK_MINUTES = "fics-seek-minutes";
+	public static final String FICS_SEEK_INC = "fics-seek-inc";
+	public static final String FICS_SEEK_MIN_RATING = "fics-seek-min-rating";
+	public static final String FICS_SEEK_MAX_RATING = "fics-seek-max-rating";
+	public static final String FICS_SEEK_MANUAL = "fics-seek-manual";
+	public static final String FICS_SEEK_FORMULA = "fics-seek-formula";
+	public static final String FICS_SEEK_RATED = "fics-seek-rated";
+	public static final String FICS_SEEK_COLOR = "fics-seek-color";
+
 	public static final String FICS_PRIMARY_IS_ANON_GUEST = "fics-Primary-is-anon-guest";
 	public static final String FICS_PRIMARY_IS_NAMED_GUEST = "fics-Primary-is-named-guest";
 	public static final String FICS_PRIMARY_PASSWORD = "fics-Primary-password";

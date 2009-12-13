@@ -27,6 +27,7 @@ import raptor.Raptor;
 import raptor.action.RaptorAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.action.chat.FicsSeekAction;
 import raptor.action.chat.PrependAction;
 import raptor.action.chat.SpeakChannelTellsAction;
 import raptor.action.chat.SpeakPersonTellsAction;
@@ -35,6 +36,7 @@ import raptor.action.chat.ToggleScrollLock;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.connector.Connector;
+import raptor.connector.fics.FicsConnector;
 import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.swt.chat.controller.BughousePartnerController;
@@ -386,6 +388,9 @@ public class ChatUtils {
 		if (action instanceof SeparatorAction) {
 			result = new ToolItem(toolbar, SWT.SEPARATOR);
 			return result;
+		} else if (action instanceof FicsSeekAction
+				&& !(controller.getConnector() instanceof FicsConnector)) {
+			return null;
 		} else if (action instanceof ToggleScrollLock) {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			result.setSelection(true);

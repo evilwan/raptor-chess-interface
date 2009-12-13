@@ -658,6 +658,16 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
 		setDefault(FICS_MATCH_CMMANDS, "1 0,3 0,5 0,15 0");
 
+		setDefault(FICS_SEEK_GAME_TYPE, "");
+		setDefault(FICS_SEEK_MINUTES, "5");
+		setDefault(FICS_SEEK_INC, "0");
+		setDefault(FICS_SEEK_MIN_RATING, "Any");
+		setDefault(FICS_SEEK_MAX_RATING, "Any");
+		setDefault(FICS_SEEK_MANUAL, false);
+		setDefault(FICS_SEEK_FORMULA, true);
+		setDefault(FICS_SEEK_RATED, true);
+		setDefault(FICS_SEEK_COLOR, "");
+
 		// Fics Primary
 		setDefault(FICS_PRIMARY_USER_NAME, "");
 		setDefault(FICS_PRIMARY_PASSWORD, "");
