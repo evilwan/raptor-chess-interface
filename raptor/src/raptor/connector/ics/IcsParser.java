@@ -37,7 +37,6 @@ import raptor.chess.Result;
 import raptor.chess.SetupGame;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
-import raptor.connector.Connector;
 import raptor.connector.ics.bughouse.BugWhoGParser;
 import raptor.connector.ics.bughouse.BugWhoPParser;
 import raptor.connector.ics.bughouse.BugWhoUParser;
@@ -66,7 +65,6 @@ import raptor.connector.ics.game.message.NoLongerExaminingGameMessage;
 import raptor.connector.ics.game.message.RemovingObsGameMessage;
 import raptor.connector.ics.game.message.Style12Message;
 import raptor.pref.PreferenceKeys;
-import raptor.service.ConnectorService;
 import raptor.service.GameService;
 import raptor.util.RaptorStringTokenizer;
 
@@ -276,28 +274,6 @@ public class IcsParser implements GameConstants {
 	public void setConnector(IcsConnector connector) {
 		this.connector = connector;
 
-	}
-
-	/**
-	 * If a game is being played on any connector and the preference
-	 * BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING is set then this will veto the
-	 * games creation.
-	 */
-	public boolean vetoGameCreation(Game game, G1Message g1Message) {
-		boolean result = false;
-		if (game.isInState(Game.OBSERVING_STATE)
-				&& (!isBughouse(game) || isBughouse(game)
-						&& !connector.getGameService().isManaging(
-								g1Message.parterGameId))) {
-			for (Connector connector : ConnectorService.getInstance()
-					.getConnectors()) {
-				if (connector.isLoggedInUserPlayingAGame()) {
-					result = true;
-					break;
-				}
-			}
-		}
-		return result;
 	}
 
 	protected void adjustBughouseHeadersAndFollowPartnersGamesForBics(
@@ -839,21 +815,6 @@ public class IcsParser implements GameConstants {
 		IcsUtils.updateNonPositionFields(game, message);
 		IcsUtils.updatePosition(game, message);
 		IcsUtils.verifyLegal(game);
-
-		if (vetoGameCreation(game, g1Message)) {
-			connector.onUnobserve(game);
-			connector
-					.publishEvent(new ChatEvent(
-							null,
-							ChatType.INTERNAL,
-							"Observation of game "
-									+ game.getId()
-									+ " was vetoed because you have the preference set to ignore "
-									+ "observed games while you are playing."
-									+ "To observe this game please unset that in Preferences->ChessBoard->Behavior "
-									+ " and observe it again."));
-			return;
-		}
 
 		if (game instanceof FischerRandomGame) {
 			((FischerRandomGame) game).initialPositionIsSet();
