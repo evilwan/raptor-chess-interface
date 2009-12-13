@@ -70,7 +70,6 @@ import raptor.service.ActionScriptService;
 import raptor.service.AliasService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
-import raptor.service.ThreadService;
 import raptor.service.ChatService.ChatListener;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.SWTUtils;
@@ -187,37 +186,37 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	};
 
-	protected Runnable textFieldFocusRunnable = new Runnable() {
-		public void run() {
-			if (!isDisposed() && isActive) {
-				chatConsole.getDisplay().asyncExec(new RaptorRunnable() {
-					@Override
-					public void execute() {
-						// System.err.println("inputTextCaret = "
-						// + chatConsole.inputText.getCaretOffset()
-						// + " charCount="
-						// + chatConsole.inputText.getCharCount()
-						// + " outputTextFocus="
-						// + chatConsole.outputText.isFocusControl()
-						// + " inputTextFocus="
-						// + chatConsole.inputText.isFocusControl());
-						if (!chatConsole.outputText.isFocusControl()
-								&& chatConsole.inputText.isFocusControl()
-								&& chatConsole.inputText.getSelectionCount() == 0
-								&& System.currentTimeMillis()
-										- lastKeystrokeTime > 2000) {
-							// System.err.println("Requesting output text focus");
-							chatConsole.outputText.setFocus();
-						}
-						ThreadService.getInstance().scheduleOneShot(2000,
-								textFieldFocusRunnable);
-					}
-				});
-			}
-		}
-	};
-
-	protected long lastKeystrokeTime = 0;
+	// protected Runnable textFieldFocusRunnable = new Runnable() {
+	// public void run() {
+	// if (!isDisposed() && isActive) {
+	// chatConsole.getDisplay().asyncExec(new RaptorRunnable() {
+	// @Override
+	// public void execute() {
+	// // System.err.println("inputTextCaret = "
+	// // + chatConsole.inputText.getCaretOffset()
+	// // + " charCount="
+	// // + chatConsole.inputText.getCharCount()
+	// // + " outputTextFocus="
+	// // + chatConsole.outputText.isFocusControl()
+	// // + " inputTextFocus="
+	// // + chatConsole.inputText.isFocusControl());
+	// if (!chatConsole.outputText.isFocusControl()
+	// && chatConsole.inputText.isFocusControl()
+	// && chatConsole.inputText.getSelectionCount() == 0
+	// && System.currentTimeMillis()
+	// - lastKeystrokeTime > 2000) {
+	// // System.err.println("Requesting output text focus");
+	// chatConsole.outputText.setFocus();
+	// }
+	// ThreadService.getInstance().scheduleOneShot(2000,
+	// textFieldFocusRunnable);
+	// }
+	// });
+	// }
+	// }
+	// };
+	//
+	// protected long lastKeystrokeTime = 0;
 	protected boolean isDisposed;
 	protected boolean isDirty;
 	protected boolean isSoundDisabled = false;
@@ -441,10 +440,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			});
 
-			if (OSUtils.isLikelyWindows()) {
-				ThreadService.getInstance().scheduleOneShot(2000,
-						textFieldFocusRunnable);
-			}
+			// if (OSUtils.isLikelyWindows()) {
+			// ThreadService.getInstance().scheduleOneShot(2000,
+			// textFieldFocusRunnable);
+			// }
 		}
 	}
 
@@ -699,36 +698,41 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				&& (event.keyCode == SWT.PAGE_DOWN || event.keyCode == SWT.PAGE_UP)) {
 			smartScroll();
 		} else if (!isKeyUp) {
+			if (OSUtils.isLikelyWindows()) {
+				chatConsole.getOutputText().setFocus();
+			} else {
+				// Forward to output text
+				if (!processOutputTextKeystroke(event)
+						&& (event.stateMask == 0 || event.stateMask == SWT.SHIFT)
+						|| event.stateMask != 0
+						&& (event.character == 'o' || event.character == 'k'
+								|| event.character == 'O' || event.character == 'K')) {
+					// The o and k are to fix some crazy windows issue.
 
-			// Forward to output text
-			if (!processOutputTextKeystroke(event)
-					&& (event.stateMask == 0 || event.stateMask == SWT.SHIFT)
-					|| event.stateMask != 0
-					&& (event.character == 'o' || event.character == 'k'
-							|| event.character == 'O' || event.character == 'K')) {
-				// The o and k are to fix some crazy windows issue.
-
-				if (event.character == '\b') {
-					if (chatConsole.outputText.getCharCount() > 0) {
-						chatConsole.outputText.setText(chatConsole.outputText
-								.getText().substring(
-										0,
-										chatConsole.outputText.getText()
-												.length() - 1));
-						chatConsole.outputText
-								.setSelection(chatConsole.outputText.getText()
-										.length());
+					if (event.character == '\b') {
+						if (chatConsole.outputText.getCharCount() > 0) {
+							chatConsole.outputText
+									.setText(chatConsole.outputText
+											.getText()
+											.substring(
+													0,
+													chatConsole.outputText
+															.getText().length() - 1));
+							chatConsole.outputText
+									.setSelection(chatConsole.outputText
+											.getText().length());
+						}
+					} else {
+						String textToInsert = "" + event.character;
+						chatConsole.getOutputText().insert(textToInsert);
 					}
-				} else {
-					String textToInsert = "" + event.character;
-					chatConsole.getOutputText().insert(textToInsert);
 				}
 			}
 		}
 	}
 
 	public boolean processOutputTextKeystroke(Event event) {
-		lastKeystrokeTime = System.currentTimeMillis();
+		// lastKeystrokeTime = System.currentTimeMillis();
 		if (ActionUtils.isValidModifier(event.stateMask)) {
 			RaptorAction action = ActionScriptService.getInstance().getAction(
 					event.stateMask, event.keyCode);
