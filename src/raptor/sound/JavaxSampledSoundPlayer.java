@@ -73,11 +73,10 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 					public void update(LineEvent arg0) {
 						LineEvent.Type type = arg0.getType();
 						if (type == LineEvent.Type.STOP) {
-
-						}
-						try {
-							stream.close();
-						} catch (Throwable t) {
+							try {
+								stream.close();
+							} catch (Throwable t) {
+							}
 						}
 					}
 				});
