@@ -407,11 +407,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					chatConsole.outputText.setFocus();
 				}
 			});
-
-			// if (OSUtils.isLikelyWindows()) {
-			// ThreadService.getInstance().scheduleOneShot(2000,
-			// textFieldFocusRunnable);
-			// }
 		}
 	}
 
