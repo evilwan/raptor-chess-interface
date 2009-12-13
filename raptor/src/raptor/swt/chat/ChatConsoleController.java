@@ -78,7 +78,6 @@ import raptor.swt.chat.controller.MainController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.ToolBarItemKey;
 import raptor.util.BrowserUtils;
-import raptor.util.OSUtils;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
@@ -185,38 +184,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		}
 	};
-
-	// protected Runnable textFieldFocusRunnable = new Runnable() {
-	// public void run() {
-	// if (!isDisposed() && isActive) {
-	// chatConsole.getDisplay().asyncExec(new RaptorRunnable() {
-	// @Override
-	// public void execute() {
-	// // System.err.println("inputTextCaret = "
-	// // + chatConsole.inputText.getCaretOffset()
-	// // + " charCount="
-	// // + chatConsole.inputText.getCharCount()
-	// // + " outputTextFocus="
-	// // + chatConsole.outputText.isFocusControl()
-	// // + " inputTextFocus="
-	// // + chatConsole.inputText.isFocusControl());
-	// if (!chatConsole.outputText.isFocusControl()
-	// && chatConsole.inputText.isFocusControl()
-	// && chatConsole.inputText.getSelectionCount() == 0
-	// && System.currentTimeMillis()
-	// - lastKeystrokeTime > 2000) {
-	// // System.err.println("Requesting output text focus");
-	// chatConsole.outputText.setFocus();
-	// }
-	// ThreadService.getInstance().scheduleOneShot(2000,
-	// textFieldFocusRunnable);
-	// }
-	// });
-	// }
-	// }
-	// };
-	//
-	// protected long lastKeystrokeTime = 0;
+	
 	protected boolean isDisposed;
 	protected boolean isDirty;
 	protected boolean isSoundDisabled = false;
@@ -698,9 +666,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				&& (event.keyCode == SWT.PAGE_DOWN || event.keyCode == SWT.PAGE_UP)) {
 			smartScroll();
 		} else if (!isKeyUp) {
-			if (OSUtils.isLikelyWindows()) {
-				chatConsole.getOutputText().setFocus();
-			} else {
+				getChatConsole().getOutputText().setFocus();
+
 				// Forward to output text
 				if (!processOutputTextKeystroke(event)
 						&& (event.stateMask == 0 || event.stateMask == SWT.SHIFT)
@@ -727,12 +694,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						chatConsole.getOutputText().insert(textToInsert);
 					}
 				}
-			}
 		}
 	}
 
 	public boolean processOutputTextKeystroke(Event event) {
-		// lastKeystrokeTime = System.currentTimeMillis();
 		if (ActionUtils.isValidModifier(event.stateMask)) {
 			RaptorAction action = ActionScriptService.getInstance().getAction(
 					event.stateMask, event.keyCode);
