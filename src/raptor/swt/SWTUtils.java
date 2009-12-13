@@ -76,6 +76,15 @@ public class SWTUtils {
 	}
 
 	/**
+	 * Returns a RowLayout without any margins or spacing.
+	 */
+	public static RowLayout createCenteredRowLayout(int type) {
+		RowLayout result = new RowLayout(type);
+		result.center = true;
+		return result;
+	}
+
+	/**
 	 * Returns a HORIZONTAL fill layout without any margins or spacing.
 	 */
 	public static FillLayout createMarginlessFillLayout() {
