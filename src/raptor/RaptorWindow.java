@@ -955,6 +955,10 @@ public class RaptorWindow extends ApplicationWindow {
 		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
 			@Override
 			public void execute() {
+				if (!Raptor.getInstance().isShutdown()) {
+					return;
+				}
+
 				boolean wasRestored = false;
 				synchronized (itemsManaged) {
 					for (RaptorTabItem currentTabItem : itemsManaged) {
@@ -1311,6 +1315,12 @@ public class RaptorWindow extends ApplicationWindow {
 		for (RaptorWindowSashForm sash : sashes) {
 			sash.storeSashWeights();
 		}
+	}
+
+	public void storeWindowPreferences() {
+		getPreferences().setCurrentLayoutRectangle(
+				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
+		storeAllSashWeights();
 	}
 
 	/**
@@ -2135,11 +2145,5 @@ public class RaptorWindow extends ApplicationWindow {
 			LOG.debug("Leaving restoreFolders execution in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
 		}
-	}
-
-	protected void storeWindowPreferences() {
-		getPreferences().setCurrentLayoutRectangle(
-				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
-		storeAllSashWeights();
 	}
 }
