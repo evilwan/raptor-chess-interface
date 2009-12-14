@@ -14,28 +14,34 @@
 package raptor.util;
 
 public class OSUtils {
-	public static boolean isLikelyLinux() {
+	protected static boolean isLikelyLinux = false;
+	protected static boolean isLikelyOSX = false;
+	protected static boolean isLikelyWindows = false;
+	
+	static {
 		String osName = System.getProperty("os.name");
-		if (!osName.startsWith("Mac OS") && !osName.startsWith("Windows")) {
-			return true;
+		if (osName.startsWith("Mac OS")) {
+			isLikelyOSX = true;
 		}
-		return false;
+		else if (osName.startsWith("Windows")) {
+			isLikelyWindows = true;
+		}
+		else {
+			isLikelyLinux = true;
+		}
+	}
+	
+	
+	public static boolean isLikelyLinux() {
+		return isLikelyLinux;
 	}
 
 	public static boolean isLikelyOSX() {
-		String osName = System.getProperty("os.name");
-		if (osName.startsWith("Mac OS")) {
-			return true;
-		}
-		return false;
+		return isLikelyOSX;
 	}
 
 	public static boolean isLikelyWindows() {
-		String osName = System.getProperty("os.name");
-		if (osName.startsWith("Windows")) {
-			return true;
-		}
-		return false;
+		return isLikelyWindows;
 	}
 
 }
