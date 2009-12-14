@@ -23,7 +23,7 @@ public class ShowFenAlias extends RaptorAlias {
 			String whatsLeft = command.substring(7).trim();
 
 			if (whatsLeft.equals("")) {
-
+				return new RaptorAliasResult(null, "Invalid FEN " + whatsLeft);
 			} else {
 				try {
 					Game game = GameFactory.createFromFen(whatsLeft,
