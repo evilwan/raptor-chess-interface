@@ -23,7 +23,8 @@ public class ShowFenAlias extends RaptorAlias {
 			String whatsLeft = command.substring(7).trim();
 
 			if (whatsLeft.equals("")) {
-				return new RaptorAliasResult(null, "Invalid FEN " + whatsLeft);
+				return new RaptorAliasResult(null, "Invalid FEN " + whatsLeft
+						+ " \n" + getUsage());
 			} else {
 				try {
 					Game game = GameFactory.createFromFen(whatsLeft,
@@ -33,10 +34,10 @@ public class ShowFenAlias extends RaptorAlias {
 					game.addState(Game.UPDATING_SAN_STATE);
 					ChessBoardUtils.openBoard(new InactiveController(game,
 							"showfen Position", false));
-					return new RaptorAliasResult(null, "Position created.");
+					return new RaptorAliasResult(null, "Loading position.");
 				} catch (Throwable t) {
 					return new RaptorAliasResult(null, "Invalid FEN "
-							+ whatsLeft);
+							+ whatsLeft + " \n" + getUsage());
 				}
 			}
 		}

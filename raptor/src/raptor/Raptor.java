@@ -451,24 +451,15 @@ public class Raptor implements PreferenceKeys {
 		}
 		isShutdown = true;
 
-		if (clipboard != null) {
-			clipboard.dispose();
-		}
+		clipboard.dispose();
 
 		try {
 			if (getInstance().getWindow() != null
 					&& !getInstance().getWindow().getShell().isDisposed()) {
 				getInstance().getWindow().storeWindowPreferences();
-				System.err.println("Stored prefs");
-				getInstance().getWindow().close();
-
 			}
 		} catch (Throwable t) {
-			LOG.warn("Error shutting down RaptorWindow", t);
-		}
-
-		if (!isIgnoringPreferenceSaves) {
-			getPreferences().save();
+			LOG.warn("Error in storeWindowPreferences", t);
 		}
 
 		try {
@@ -540,6 +531,10 @@ public class Raptor implements PreferenceKeys {
 		} catch (Throwable t) {
 			// Eat this one its prob an already disposed exception.
 			// LOG.warn("Error shutting down display", t);
+		}
+
+		if (!isIgnoringPreferenceSaves) {
+			getPreferences().save();
 		}
 
 		LOG.info("Shutdown Raptor");
