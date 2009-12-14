@@ -162,9 +162,17 @@ public abstract class ChessBoardController implements BoardConstants,
 	public void adjustGameStatusLabel() {
 		if (getGame().isInState(Game.ACTIVE_STATE)) {
 			if (getGame().getMoveList().getSize() > 0) {
-				Move lastMove = getGame().getMoveList().get(
-						getGame().getMoveList().getSize() - 1);
-				int moveNumber = getGame().getFullMoveCount();
+				Move lastMove = null;
+				if (getGame() instanceof GameCursor) {
+					lastMove = ((GameCursor) getGame()).getCursorGame()
+							.getMoveList().get(
+									getGame().getMoveList().getSize() - 1);
+				} else {
+					lastMove = getGame().getMoveList().get(
+							getGame().getMoveList().getSize() - 1);
+				}
+
+				int moveNumber = lastMove.getFullMoveCount();
 
 				board.getStatusLabel().setText(
 						"Last Move: "
