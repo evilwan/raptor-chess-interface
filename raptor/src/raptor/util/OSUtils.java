@@ -17,21 +17,18 @@ public class OSUtils {
 	protected static boolean isLikelyLinux = false;
 	protected static boolean isLikelyOSX = false;
 	protected static boolean isLikelyWindows = false;
-	
+
 	static {
 		String osName = System.getProperty("os.name");
 		if (osName.startsWith("Mac OS")) {
 			isLikelyOSX = true;
-		}
-		else if (osName.startsWith("Windows")) {
+		} else if (osName.startsWith("Windows")) {
 			isLikelyWindows = true;
-		}
-		else {
+		} else {
 			isLikelyLinux = true;
 		}
 	}
-	
-	
+
 	public static boolean isLikelyLinux() {
 		return isLikelyLinux;
 	}

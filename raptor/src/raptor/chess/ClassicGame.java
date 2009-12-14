@@ -2535,6 +2535,9 @@ public class ClassicGame implements Game {
 
 	protected void updateEcoHeaders(Move move) {
 		if (isSettingEcoHeaders()) {
+			move.setPreviousEcoHeader(getHeader(PgnHeader.ECO));
+			move.setPreviousOpeningHeader(getHeader(PgnHeader.Opening));
+
 			String ecoCode = EcoService.getInstance().getEco(this);
 			String description = EcoService.getInstance().getLongDescription(
 					this);
@@ -2544,8 +2547,7 @@ public class ClassicGame implements Game {
 			if (StringUtils.isNotBlank(description)) {
 				setHeader(PgnHeader.Opening, description);
 			}
-			move.setPreviousEcoHeader(getHeader(PgnHeader.ECO));
-			move.setPreviousOpeningHeader(getHeader(PgnHeader.Opening));
+
 		}
 	}
 

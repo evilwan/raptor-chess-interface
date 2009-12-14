@@ -190,12 +190,14 @@ public class IcsUtils implements GameConstants {
 			} else {
 
 				while (game.getHalfMoveCount() > currentHalfMove) {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug("Rolled back a move.");
-					}
 					if (game.getLastMove() != null) {
+						if (LOG.isDebugEnabled()) {
+							LOG.debug("Rolled back a move.");
+						}
 						game.rollback();
 					} else {
+						game.removeHeader(PgnHeader.ECO);
+						game.removeHeader(PgnHeader.Opening);
 						resetGame(game, message);
 						connector.sendMessage("moves " + message.gameId, true,
 								ChatType.MOVES);
@@ -1074,9 +1076,5 @@ public class IcsUtils implements GameConstants {
 			throw new IllegalStateException("Position is not legal: "
 					+ game.toString());
 		}
-	}
-
-	protected void replaceMaciejgUnicodeWithUnicode() {
-
 	}
 }
