@@ -20,19 +20,24 @@ public class ShowFenAlias extends RaptorAlias {
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
 		if (command.startsWith("showfen")) {
-			String whatsLeft = command.substring(8).trim();
+			String whatsLeft = command.substring(7).trim();
 
-			try {
-				Game game = GameFactory.createFromFen(whatsLeft,
-						Variant.classic);
-				game.addState(Game.UNTIMED_STATE);
-				game.addState(Game.UPDATING_ECO_HEADERS_STATE);
-				game.addState(Game.UPDATING_SAN_STATE);
-				ChessBoardUtils.openBoard(new InactiveController(game,
-						"showfen Position", false));
-				return new RaptorAliasResult(null, "Position created.");
-			} catch (Throwable t) {
-				return new RaptorAliasResult(null, "Invalid FEN " + whatsLeft);
+			if (whatsLeft.equals("")) {
+
+			} else {
+				try {
+					Game game = GameFactory.createFromFen(whatsLeft,
+							Variant.classic);
+					game.addState(Game.UNTIMED_STATE);
+					game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+					game.addState(Game.UPDATING_SAN_STATE);
+					ChessBoardUtils.openBoard(new InactiveController(game,
+							"showfen Position", false));
+					return new RaptorAliasResult(null, "Position created.");
+				} catch (Throwable t) {
+					return new RaptorAliasResult(null, "Invalid FEN "
+							+ whatsLeft);
+				}
 			}
 		}
 		return null;
