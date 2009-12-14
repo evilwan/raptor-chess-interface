@@ -135,6 +135,13 @@ public class Raptor implements PreferenceKeys {
 
 			createInstance();
 
+			Runtime.getRuntime().addShutdownHook(new Thread() {
+				@Override
+				public void run() {
+					getInstance().shutdown();
+				}
+			});
+
 			display.addListener(SWT.Close, new Listener() {
 				public void handleEvent(Event event) {
 					getInstance().shutdown();
@@ -446,6 +453,18 @@ public class Raptor implements PreferenceKeys {
 
 		if (clipboard != null) {
 			clipboard.dispose();
+		}
+
+		try {
+			if (getInstance().getWindow() != null
+					&& !getInstance().getWindow().getShell().isDisposed()) {
+				getInstance().getWindow().storeWindowPreferences();
+				System.err.println("Stored prefs");
+				getInstance().getWindow().close();
+
+			}
+		} catch (Throwable t) {
+			LOG.warn("Error shutting down RaptorWindow", t);
 		}
 
 		if (!isIgnoringPreferenceSaves) {
