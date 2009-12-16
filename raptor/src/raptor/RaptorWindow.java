@@ -955,7 +955,7 @@ public class RaptorWindow extends ApplicationWindow {
 		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
 			@Override
 			public void execute() {
-				if (!Raptor.getInstance().isShutdown()) {
+				if (Raptor.getInstance().isShutdown()) {
 					return;
 				}
 
