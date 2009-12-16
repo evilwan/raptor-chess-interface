@@ -83,7 +83,7 @@ public class ScriptService {
 	 * resources/script are never touched.
 	 */
 	public boolean deleteParameterScript(String scriptShortName) {
-		nameToParameterScript.remove(scriptShortName);
+		nameToParameterScript.remove(scriptShortName.toUpperCase());
 		fireParameterScriptsChanged();
 		return new File(Raptor.USER_RAPTOR_HOME_PATH + "/scripts/parameter/"
 				+ scriptShortName + ".properties").delete();
@@ -94,7 +94,7 @@ public class ScriptService {
 	 * resources/script are never touched.
 	 */
 	public boolean deleteRegularExpressionScript(String scriptName) {
-		nameToRegularExpressionScript.remove(scriptName);
+		nameToRegularExpressionScript.remove(scriptName.toUpperCase());
 		fireRegularExpressionScriptsChanged();
 		return new File(Raptor.USER_RAPTOR_HOME_PATH
 				+ "/scripts/regularExpression/" + scriptName + ".properties")

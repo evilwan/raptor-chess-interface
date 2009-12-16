@@ -90,6 +90,18 @@ public interface RaptorAction {
 		IcsCommands, Urls, PartnerTells, GameCommands, ConsoleCommands, Misc
 	}
 
+	public static class CategoryNameComparator implements
+			Comparator<RaptorAction> {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			String cat1 = action1.getCategory().toString();
+			String cat2 = action2.getCategory().toString();
+
+			int catCompare = cat1.compareTo(cat2);
+			return catCompare == 0 ? action1.getName().compareTo(
+					action2.getName()) : catCompare;
+		}
+	}
+
 	public static class ContainerOrderComparator implements
 			Comparator<RaptorAction> {
 		protected RaptorActionContainer container;

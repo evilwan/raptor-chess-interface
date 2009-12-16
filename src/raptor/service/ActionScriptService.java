@@ -34,6 +34,7 @@ import raptor.action.RaptorActionFactory;
 import raptor.action.ScriptedAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.Category;
+import raptor.action.RaptorAction.CategoryNameComparator;
 import raptor.action.RaptorAction.ContainerOrderComparator;
 import raptor.action.RaptorAction.NameComparator;
 import raptor.action.RaptorAction.RaptorActionContainer;
@@ -103,20 +104,6 @@ public class ActionScriptService {
 	}
 
 	/**
-	 * Returns all actions in the specified container.
-	 */
-	public RaptorAction[] getActions(RaptorActionContainer container) {
-		ArrayList<RaptorAction> actions = new ArrayList<RaptorAction>(20);
-		for (RaptorAction action : nameToActionMap.values()) {
-			if (action.isIn(container)) {
-				actions.add(action);
-			}
-		}
-		Collections.sort(actions, new ContainerOrderComparator(container));
-		return actions.toArray(new RaptorAction[0]);
-	}
-
-	/**
 	 * Returns all actions in the specified category sorted alphabetically.
 	 */
 	public RaptorAction[] getActions(Category category) {
@@ -127,6 +114,20 @@ public class ActionScriptService {
 			}
 		}
 		Collections.sort(actions, new NameComparator());
+		return actions.toArray(new RaptorAction[0]);
+	}
+
+	/**
+	 * Returns all actions in the specified container.
+	 */
+	public RaptorAction[] getActions(RaptorActionContainer container) {
+		ArrayList<RaptorAction> actions = new ArrayList<RaptorAction>(20);
+		for (RaptorAction action : nameToActionMap.values()) {
+			if (action.isIn(container)) {
+				actions.add(action);
+			}
+		}
+		Collections.sort(actions, new ContainerOrderComparator(container));
 		return actions.toArray(new RaptorAction[0]);
 	}
 
@@ -144,6 +145,8 @@ public class ActionScriptService {
 			}
 		}
 
+		Collections.sort(actions, new CategoryNameComparator());
+
 		return actions.toArray(new RaptorAction[0]);
 	}
 
@@ -159,6 +162,8 @@ public class ActionScriptService {
 				actions.add((ScriptedAction) action);
 			}
 		}
+
+		Collections.sort(actions, new CategoryNameComparator());
 
 		return actions.toArray(new ScriptedAction[0]);
 	}

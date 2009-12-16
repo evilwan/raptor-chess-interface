@@ -232,7 +232,7 @@ public class ActionScriptsPage extends PreferencePage {
 			}
 		});
 
-		scriptedActionsTable.sort(0);
+		// scriptedActionsTable.sort(0);
 		refreshActions();
 		scriptedActionsTable.setSize(scriptedActionsTable.computeSize(
 				SWT.DEFAULT, 200));

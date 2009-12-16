@@ -68,6 +68,14 @@ public class RegularExpressionScripts extends PreferencePage {
 	}
 
 	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			refreshTables();
+		}
+		super.setVisible(visible);
+	}
+
+	@Override
 	protected Control createContents(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(3, false));
@@ -143,6 +151,7 @@ public class RegularExpressionScripts extends PreferencePage {
 				script.setActive(true);
 				ScriptService.getInstance().save(script);
 				refreshTables();
+				loadControls(script.getName());
 			}
 		});
 
@@ -164,6 +173,7 @@ public class RegularExpressionScripts extends PreferencePage {
 				script.setActive(false);
 				ScriptService.getInstance().save(script);
 				refreshTables();
+				loadControls(script.getName());
 			}
 		});
 

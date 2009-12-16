@@ -246,9 +246,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				new PreferenceNode(
 						"ficsMenuActions",
 						new ActionContainerPage(
-								"Fics Menu Actions",
-								"\tOn this page you can configure the actions shown in the fics "
-										+ "menu.You can add new actions on the Action Scripts Page.",
+								"Fics Link Menu Actions",
+								"\tOn this page you can configure the actions shown in the Fics Links "
+										+ "menu. You can add new actions on the Action Scripts Page.",
 								RaptorActionContainer.FicsMenu)) };
 
 	}
