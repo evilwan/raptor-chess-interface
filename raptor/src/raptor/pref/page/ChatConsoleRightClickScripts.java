@@ -123,6 +123,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				script.setActive(true);
 				ScriptService.getInstance().save(script);
 				refreshTables();
+				loadControls(script.getName());
 			}
 		});
 
@@ -144,6 +145,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				script.setActive(false);
 				ScriptService.getInstance().save(script);
 				refreshTables();
+				loadControls(script.getName());
 			}
 		});
 
@@ -159,6 +161,9 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 					public void widgetSelected(SelectionEvent e) {
 						int selectedIndex = icsInactiveScriptsTable.getTable()
 								.getSelectionIndex();
+						if (selectedIndex == -1) {
+							return;
+						}
 						String selection = icsInactiveScriptsTable.getTable()
 								.getItem(selectedIndex).getText(0);
 						loadControls(selection);
@@ -245,21 +250,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				ParameterScript newScript = ScriptService.getInstance()
-						.getParameterScript(nameText.getText());
-				if (newScript == null) {
-					newScript = new ParameterScript();
-				}
-				newScript.setActive(isActiveButton.getSelection());
-				newScript.setName(nameText.getText());
-				newScript.setDescription(descriptionText.getText());
-				newScript.setScript(scriptText.getText().trim());
-				newScript.setConnectorType(ScriptConnectorType
-						.valueOf(connectorTypeCombo.getItem(connectorTypeCombo
-								.getSelectionIndex())));
-				newScript.setType(Type.ConsoleRightClickScripts);
-				ScriptService.getInstance().save(newScript);
-				refreshTables();
+				onSave();
 			}
 		});
 
@@ -307,6 +298,30 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		}
 		connectorTypeCombo.select(connectorTypeSelection);
 		scriptText.setText(currentScript.getScript());
+	}
+
+	protected void onSave() {
+		ParameterScript newScript = ScriptService.getInstance()
+				.getParameterScript(nameText.getText());
+		if (newScript == null) {
+			newScript = new ParameterScript();
+		}
+		newScript.setActive(isActiveButton.getSelection());
+		newScript.setName(nameText.getText());
+		newScript.setDescription(descriptionText.getText());
+		newScript.setScript(scriptText.getText().trim());
+		newScript.setConnectorType(ScriptConnectorType
+				.valueOf(connectorTypeCombo.getItem(connectorTypeCombo
+						.getSelectionIndex())));
+		newScript.setType(Type.ConsoleRightClickScripts);
+		ScriptService.getInstance().save(newScript);
+		refreshTables();
+	}
+
+	@Override
+	protected void performApply() {
+		onSave();
+		super.performApply();
 	}
 
 	protected void refreshTables() {

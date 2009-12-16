@@ -54,6 +54,14 @@ public class ActionKeyBindingsPage extends PreferencePage {
 	}
 
 	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			refreshActions();
+		}
+		super.setVisible(visible);
+	}
+
+	@Override
 	protected Control createContents(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(SWTUtils.createMarginlessGridLayout(3, false));
@@ -166,36 +174,11 @@ public class ActionKeyBindingsPage extends PreferencePage {
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				AbstractRaptorAction action = (AbstractRaptorAction) ActionScriptService
-						.getInstance().getAction(nameText.getText());
-				if (action != null) {
-					if (StringUtils.isNotBlank(keyStrokeText.getText())) {
-						action.setKeyCode(ActionUtils
-								.keyBindingDescriptionToKeyCode(keyStrokeText
-										.getText()));
-						action
-								.setModifierKey(ActionUtils
-										.keyBindingDescriptionToKeyModifier(keyStrokeText
-												.getText()));
-					} else {
-						action.setKeyCode(0);
-						action.setModifierKey(0);
-					}
-				}
-				ActionScriptService.getInstance().saveAction(action);
-				refreshActions();
-				for (int i = 0; i < actionsTable.getTable().getItemCount(); i++) {
-					if (actionsTable.getTable().getItem(i).getText(1).equals(
-							action.getName())) {
-						actionsTable.getTable().select(i);
-						break;
-					}
-				}
-
+				onSave();
 			}
 		});
 
-		actionsTable.sort(1);
+		// actionsTable.sort(1);
 		refreshActions();
 		actionsTable.getTable().setSelection(0);
 		loadControls(actionsTable.getTable().getItem(
@@ -213,6 +196,40 @@ public class ActionKeyBindingsPage extends PreferencePage {
 			keyStrokeText
 					.setText(ActionUtils.keyBindingToString(currentAction));
 		}
+	}
+
+	protected void onSave() {
+		AbstractRaptorAction action = (AbstractRaptorAction) ActionScriptService
+				.getInstance().getAction(nameText.getText());
+		if (action != null) {
+			if (StringUtils.isNotBlank(keyStrokeText.getText())) {
+				action
+						.setKeyCode(ActionUtils
+								.keyBindingDescriptionToKeyCode(keyStrokeText
+										.getText()));
+				action.setModifierKey(ActionUtils
+						.keyBindingDescriptionToKeyModifier(keyStrokeText
+								.getText()));
+			} else {
+				action.setKeyCode(0);
+				action.setModifierKey(0);
+			}
+		}
+		ActionScriptService.getInstance().saveAction(action);
+		refreshActions();
+		for (int i = 0; i < actionsTable.getTable().getItemCount(); i++) {
+			if (actionsTable.getTable().getItem(i).getText(1).equals(
+					action.getName())) {
+				actionsTable.getTable().select(i);
+				break;
+			}
+		}
+	}
+
+	@Override
+	protected void performApply() {
+		onSave();
+		super.performApply();
 	}
 
 	protected void refreshActions() {

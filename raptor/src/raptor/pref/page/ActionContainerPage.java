@@ -64,6 +64,14 @@ public class ActionContainerPage extends PreferencePage {
 	}
 
 	@Override
+	public void setVisible(boolean visible) {
+		if (visible) {
+			refreshAvailableActions();
+		}
+		super.setVisible(visible);
+	}
+
+	@Override
 	protected Control createContents(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(3, false));
@@ -325,7 +333,7 @@ public class ActionContainerPage extends PreferencePage {
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		scriptText.setText("\n \n \n \n \n");
 
-		availableActionsTable.sort(0);
+		// availableActionsTable.sort(0);
 		refreshCurrentActions();
 		refreshAvailableActions();
 		return composite;

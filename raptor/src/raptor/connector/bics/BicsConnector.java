@@ -206,9 +206,9 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				new PreferenceNode(
 						"bicsMenuActions",
 						new ActionContainerPage(
-								"Bics Menu Actions",
-								"\tOn this page you can configure the actions shown in the bics "
-										+ "menu.You can add new actions on the Action Scripts Page.",
+								"Bics Links Menu Actions",
+								"\tOn this page you can configure the actions shown in the Bics "
+										+ "menu. You can add new actions on the Action Scripts Page.",
 								RaptorActionContainer.BicsMenu)) };
 
 	}
