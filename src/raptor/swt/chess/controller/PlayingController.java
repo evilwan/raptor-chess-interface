@@ -156,7 +156,12 @@ public class PlayingController extends ChessBoardController {
 								onPlayGameEndSound();
 								handleGameStatistics();
 
-								ChessBoardUtils.appendGameToPgnFile(getGame());
+								ThreadService.getInstance().run(new Runnable() {
+									public void run() {
+										ChessBoardUtils
+												.prependGameToPgnFile(getGame());
+									}
+								});
 
 								// Now swap controllers to the inactive
 								// controller.

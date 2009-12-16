@@ -451,9 +451,9 @@ public class Raptor implements PreferenceKeys {
 		}
 		isShutdown = true;
 
-		//Dont put a try catch around this.
-		//Leave it.
-		//It will error out if you close from eclipse but that is fine.
+		// Dont put a try catch around this.
+		// Leave it.
+		// It will error out if you close from eclipse but that is fine.
 		clipboard.dispose();
 
 		try {

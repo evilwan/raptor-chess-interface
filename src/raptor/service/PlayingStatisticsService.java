@@ -88,9 +88,12 @@ public class PlayingStatisticsService {
 	}
 
 	/**
-	 * Returns -1 if there is currently no performance rating.
+	 * Returns null if there is currently no performance rating.
+	 * 
+	 * @return array of size 2. index 0 is number of games used in calculation,
+	 *         index 1 is the performance rating.
 	 */
-	public int getPreformanceRating(Connector connector, Variant variant) {
+	public int[] getPreformanceRating(Connector connector, Variant variant) {
 		int n = 0;
 		int totalScore = 0;
 
@@ -114,9 +117,9 @@ public class PlayingStatisticsService {
 		}
 
 		if (n > 0) {
-			return totalScore / n;
+			return new int[] { n, totalScore / n };
 		} else {
-			return -1;
+			return null;
 		}
 	}
 
@@ -169,7 +172,7 @@ public class PlayingStatisticsService {
 				movesProcessed++;
 			}
 
-			int performanceRating = getPreformanceRating(connector, game
+			int[] performanceRating = getPreformanceRating(connector, game
 					.getVariant());
 			String opponentName = isUserWhite ? game.getHeader(PgnHeader.Black)
 					: game.getHeader(PgnHeader.White);
@@ -187,9 +190,9 @@ public class PlayingStatisticsService {
 							.toString()
 							+ "sec";
 
-			String performance = performanceRating != -1 ? "Performance("
-					+ game.getVariant().name() + "): " + performanceRating
-					+ "\n" : "";
+			String performance = performanceRating != null ? "Performance("
+					+ game.getVariant().name() + " " + performanceRating[0]
+					+ " game(s)): " + performanceRating[1] + "\n" : "";
 
 			String vsStat = vsStats.gamesPlayed > 0 ? "Series(" + opponentName
 					+ "): " + vsStats.totalScore + "/" + vsStats.gamesPlayed

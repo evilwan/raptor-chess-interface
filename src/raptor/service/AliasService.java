@@ -24,11 +24,13 @@ import raptor.Raptor;
 import raptor.alias.AbbreviatedChannelTellAlias;
 import raptor.alias.AbbreviatedPersonTellAlias;
 import raptor.alias.ActivateScriptAlias;
+import raptor.alias.AddExtendedCensorAlias;
 import raptor.alias.AddTabAlias;
 import raptor.alias.AliasHelpAlias;
 import raptor.alias.ChannelBotAlias;
 import raptor.alias.ClearCensorAlias;
 import raptor.alias.ClearChannelsAlias;
+import raptor.alias.ClearExtendedCensorAlias;
 import raptor.alias.ClearFingerNotesAlias;
 import raptor.alias.ClearGNotifyAlias;
 import raptor.alias.ClearNoplayAlias;
@@ -44,11 +46,13 @@ import raptor.alias.OpenUrlAlias;
 import raptor.alias.RaptorAlias;
 import raptor.alias.RaptorAliasResult;
 import raptor.alias.RelayAlias;
+import raptor.alias.RemoveExtendedCensorAlias;
 import raptor.alias.ScriptAlias;
 import raptor.alias.SetConsoleTimeStampOnOffAlias;
 import raptor.alias.SetDebugLevelAlias;
 import raptor.alias.SetPremoveModeAlias;
 import raptor.alias.SetSoundOnOfAlias;
+import raptor.alias.ShowExtendedCensor;
 import raptor.alias.ShowFenAlias;
 import raptor.alias.ShowRegexAlias;
 import raptor.alias.ShowScriptAlias;
@@ -63,20 +67,22 @@ public class AliasService {
 	@SuppressWarnings("unchecked")
 	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
-			AddTabAlias.class, AliasHelpAlias.class, ChannelBotAlias.class,
+			AddExtendedCensorAlias.class, AddTabAlias.class,
+			AliasHelpAlias.class, ChannelBotAlias.class,
 			ClearCensorAlias.class, ClearChannelsAlias.class,
-			ClearFingerNotesAlias.class, ClearGNotifyAlias.class,
-			ClearNoplayAlias.class, ClearNotifyAlias.class,
-			ClearScreenAlias.class, ClearVariablesAlias.class,
-			DeactivateScriptAlias.class, DumpGamesAlias.class,
-			GrantSpoofAlias.class, ListScriptsAlias.class,
-			OpenBoardAlias.class, OpenUrlAlias.class, RelayAlias.class,
+			ClearExtendedCensorAlias.class, ClearFingerNotesAlias.class,
+			ClearGNotifyAlias.class, ClearNoplayAlias.class,
+			ClearNotifyAlias.class, ClearScreenAlias.class,
+			ClearVariablesAlias.class, DeactivateScriptAlias.class,
+			DumpGamesAlias.class, GrantSpoofAlias.class,
+			ListScriptsAlias.class, OpenBoardAlias.class, OpenUrlAlias.class,
+			RelayAlias.class, RemoveExtendedCensorAlias.class,
 			ScriptAlias.class, SetConsoleTimeStampOnOffAlias.class,
-			SetDebugLevelAlias.class, SetPremoveModeAlias.class,
-			SetSoundOnOfAlias.class, ShowFenAlias.class, ShowRegexAlias.class,
-			ShowTellsAlias.class, ShowScriptAlias.class,
-			TellAllInChannelAlias.class, TellLastPersonWhoToldYouAlias.class,
-			TimedCommandAlias.class };
+			SetDebugLevelAlias.class, ShowExtendedCensor.class,
+			SetPremoveModeAlias.class, SetSoundOnOfAlias.class,
+			ShowFenAlias.class, ShowRegexAlias.class, ShowTellsAlias.class,
+			ShowScriptAlias.class, TellAllInChannelAlias.class,
+			TellLastPersonWhoToldYouAlias.class, TimedCommandAlias.class };
 	private static final AliasService singletonInstance = new AliasService();
 
 	List<RaptorAlias> aliases = new ArrayList<RaptorAlias>(20);

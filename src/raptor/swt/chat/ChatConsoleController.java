@@ -1122,6 +1122,33 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				}
 			}
+			new MenuItem(menu, SWT.SEPARATOR);
+			if (!connector.isOnExtendedCensor(person)) {
+
+				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
+				extCensor.setText("+extended censor " + person);
+				extCensor.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						connector.addExtendedCensor(person);
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, "Added " + person
+										+ " to extended censor."));
+					}
+				});
+			} else {
+				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
+				extCensor.setText("-extended censor " + person);
+				extCensor.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						boolean result = connector.removeExtendedCensor(person);
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, result ? "Removed " + person
+										+ " to extended censor." : " Person "
+										+ person
+										+ " is not on extended censor."));
+					}
+				});
+			}
 		}
 	}
 

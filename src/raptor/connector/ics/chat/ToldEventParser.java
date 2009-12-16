@@ -26,7 +26,7 @@ public class ToldEventParser extends ChatEventParser {
 	 */
 	@Override
 	public ChatEvent parse(String text) {
-		if (text.startsWith(STARTING_TEXT)) {
+		if (text.startsWith(STARTING_TEXT) || text.startsWith(STARTING_TEXT, 1)) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " ,)",
 					true);
 			tok.nextToken();
@@ -35,8 +35,7 @@ public class ToldEventParser extends ChatEventParser {
 				// Ignore the told message to channels.
 				Integer.parseInt(source);
 			} catch (NumberFormatException nfe) {
-				return new ChatEvent(source.trim(), ChatType.TOLD, text.trim()
-						.trim());
+				return new ChatEvent(source.trim(), ChatType.TOLD, text.trim());
 			}
 			return null;
 		}
