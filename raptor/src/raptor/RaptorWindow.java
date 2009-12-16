@@ -68,7 +68,6 @@ import raptor.swt.BrowserWindowItem;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.PgnProcessingDialog;
-import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.controller.BughousePartnerController;
@@ -1445,13 +1444,13 @@ public class RaptorWindow extends ApplicationWindow {
 		MenuManager fileMenu = new MenuManager("File");
 		MenuManager helpMenu = new MenuManager("&Help");
 
-		fileMenu.add(new Action("View PGN File") {
+		fileMenu.add(new Action("Open PGN File") {
 			@Override
 			public void run() {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 				fd.setText("Select the pgn file to view");
 				fd.setFilterPath("");
-				String[] filterExt = { "*.pgn", "*.bpgn", "*.*" };
+				String[] filterExt = { "*.pgn", "*.*" };
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
 				if (!StringUtils.isBlank(selected)) {
@@ -1461,7 +1460,7 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		fileMenu.add(new Action("View my saved games") {
+		fileMenu.add(new Action("Show my saved games") {
 			@Override
 			public void run() {
 				File file = new File(Raptor.GAMES_PGN_FILE);
@@ -1483,14 +1482,14 @@ public class RaptorWindow extends ApplicationWindow {
 				PreferenceUtils.launchPreferenceDialog();
 			}
 		});
-		fileMenu.add(new Separator());
-		fileMenu.add(new Action("Mini Profiler") {
-			@Override
-			public void run() {
-				ProfileDialog dialog = new ProfileDialog();
-				dialog.open();
-			}
-		});
+		// fileMenu.add(new Separator());
+		// fileMenu.add(new Action("Mini Profiler") {
+		// @Override
+		// public void run() {
+		// ProfileDialog dialog = new ProfileDialog();
+		// dialog.open();
+		// }
+		// });
 
 		String osName = System.getProperty("os.name");
 		if (!osName.startsWith("Mac OS")) {

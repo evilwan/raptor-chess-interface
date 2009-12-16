@@ -105,6 +105,12 @@ public interface RaptorAction {
 		}
 	}
 
+	public static class NameComparator implements Comparator<RaptorAction> {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return action1.getName().compareTo(action2.getName());
+		}
+	}
+
 	/**
 	 * A RaptorAction container is a holder of actions. Usually this is a
 	 * toolbar,menu, or a buttons panel of some type. RaptorActions can be

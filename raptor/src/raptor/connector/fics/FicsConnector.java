@@ -35,6 +35,7 @@ import org.eclipse.jface.preference.PreferencePage;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.action.RaptorAction;
+import raptor.action.RaptorAction.Category;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -52,6 +53,7 @@ import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
+import raptor.swt.FicsSeekDialog;
 import raptor.swt.RegularExpressionEditorDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsole;
@@ -619,6 +621,34 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
+		Action showSeekDialogAction = new Action("Seek A Game") {
+			public void run() {
+				FicsSeekDialog dialog = new FicsSeekDialog(Raptor.getInstance()
+						.getWindow().getShell());
+				String seek = dialog.open();
+				if (seek != null) {
+					sendMessage(seek);
+				}
+			}
+		};
+
+		MenuManager actions = new MenuManager("Actions");
+
+		RaptorAction[] scripts = ActionScriptService.getInstance().getActions(
+				Category.IcsCommands);
+		for (final RaptorAction raptorAction : scripts) {
+			Action action = new Action(raptorAction.getName()) {
+				public void run() {
+					raptorAction.setConnectorSource(FicsConnector.this);
+					raptorAction.run();
+				}
+			};
+			action.setEnabled(false);
+			action.setToolTipText(raptorAction.getDescription());
+			onlyEnabledOnConnectActions.add(action);
+			actions.add(action);
+		}
+
 		connectAction.setEnabled(true);
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
@@ -629,6 +659,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		seekTableAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		bugbuttonsAction.setEnabled(false);
+		showSeekDialogAction.setEnabled(false);
 
 		onlyEnabledOnConnectActions.add(bughouseArenaAvailPartnersAction);
 		onlyEnabledOnConnectActions.add(bughouseArenaPartnershipsAction);
@@ -638,6 +669,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		onlyEnabledOnConnectActions.add(regexTabAction);
 		onlyEnabledOnConnectActions.add(seekTableAction);
 		onlyEnabledOnConnectActions.add(bugbuttonsAction);
+		onlyEnabledOnConnectActions.add(showSeekDialogAction);
 
 		fics2.connectAction.setEnabled(true);
 		fics2DisconnectAction.setEnabled(false);
@@ -687,6 +719,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		ficsMenu.add(fics2Menu);
 
 		ficsMenu.add(new Separator());
+		ficsMenu.add(actions);
 		MenuManager tabsMenu = new MenuManager("&Tabs");
 		tabsMenu.add(seekTableAction);
 		tabsMenu.add(new Separator());
@@ -719,6 +752,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		MenuManager problems = new MenuManager("&Puzzles");
 		addProblemActions(problems);
 		ficsMenu.add(problems);
+		ficsMenu.add(showSeekDialogAction);
 	}
 
 	protected void initFics2() {
