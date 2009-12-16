@@ -59,8 +59,9 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	private static final Log LOG = LogFactory
 			.getLog(PgnParseResultsWindowItem.class);;
 
-	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
-			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
+			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
+			Quadrant.VII, Quadrant.VIII };
 
 	protected Composite composite;
 	protected List<PgnParserError> errors;
@@ -84,7 +85,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
-
+		Raptor.getInstance().getPreferences().setValue(
+				PreferenceKeys.APP_PGN_RESULTS_QUADRANT, newQuadrant);
 	}
 
 	public boolean confirmClose() {

@@ -20,8 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
+import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
 import raptor.connector.Connector;
+import raptor.pref.PreferenceKeys;
 import raptor.service.ChessBoardCacheService;
 import raptor.swt.ItemChangedListener;
 
@@ -36,8 +38,9 @@ import raptor.swt.ItemChangedListener;
 public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
 
-	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
-			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
+			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
+			Quadrant.VII, Quadrant.VIII };
 
 	ChessBoard board;
 	// This is just added as a member variable so it can be stored form the time
@@ -69,7 +72,22 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
-
+		if (controller.getConnector() == null && !isBughouseOtherBoard) {
+			Raptor.getInstance().getPreferences().setValue(
+					PreferenceKeys.APP_CHESS_BOARD_QUADRANT, newQuadrant);
+		} else if (controller.getConnector() == null && isBughouseOtherBoard) {
+			Raptor.getInstance().getPreferences().setValue(
+					PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT, newQuadrant);
+		} else if (controller.getConnector() != null && !isBughouseOtherBoard) {
+			Raptor.getInstance().getPreferences().setValue(
+					controller.getConnector().getShortName() + "-"
+							+ PreferenceKeys.CHESS_BOARD_QUADRANT, newQuadrant);
+		} else {
+			Raptor.getInstance().getPreferences().setValue(
+					controller.getConnector().getShortName() + "-"
+							+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT,
+					newQuadrant);
+		}
 	}
 
 	public boolean confirmClose() {
@@ -130,7 +148,7 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public String getTitle() {
-		return getController().getTitle();
+		return controller == null ? "" : getController().getTitle();
 	}
 
 	public Control getToolbar(Composite parent) {

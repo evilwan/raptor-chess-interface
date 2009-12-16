@@ -20,25 +20,18 @@ package raptor.pref;
  */
 public interface PreferenceKeys {
 	// THe following are not preference names but suffixes of preference names.
-	public static final String CHESS_BOARD_QUADRANT = "chess-board-quadrant";
-	public static final String MAIN_TAB_QUADRANT = "main-quadrant";
-	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrant";
-	public static final String PERSON_TAB_QUADRANT = "person-quadrant";
-	public static final String REGEX_TAB_QUADRANT = "regex-quadrant";
-	public static final String SEEK_TABLE_QUADRANT = "seek-table-quadrant";
-	public static final String BUG_WHO_QUADRANT = "bug-who-quadrant";
-	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrant";
-	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrant";
-	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrant";
-	public static final String GAME_CHAT_TAB_QUADRANT = "game-chat-tab-quadrant";
-	public static final String QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "quad1-quad234567-quad8-sash-weights";
-	public static final String QUAD2_QUAD234567_SASH_WEIGHTS = "quad2-quad234567-sash-weights";
-	public static final String QUAD3_QUAD4_SASH_WEIGHTS = "quad3-quad4-sash-weights";
-	public static final String QUAD34_QUAD567_SASH_WEIGHTS = "quad34-quad567-sash-weights";
-	public static final String QUAD5_QUAD6_SASH_WEIGHTS = "quad5-quad6-sash-weights";
-	public static final String QUAD56_QUAD7_SASH_WEIGHTS = "quad56-quad7-sash-weights";
-	public static final String WINDOW_BOUNDS = "window-bounds";
-	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-info";
+	public static final String CHESS_BOARD_QUADRANT = "chess-board-quadrantv2.0";
+	public static final String MAIN_TAB_QUADRANT = "main-quadrantv2.0";
+	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrantv2.0";
+	public static final String PERSON_TAB_QUADRANT = "person-quadrantv2.0";
+	public static final String REGEX_TAB_QUADRANT = "regex-quadrantv2.0";
+	public static final String SEEK_TABLE_QUADRANT = "seek-table-quadrantv2.0";
+	public static final String BUG_WHO_QUADRANT = "bug-who-quadrantv2.0";
+	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrantv2.0";
+	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrantv2.0";
+	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrantv2.0";
+	public static final String GAME_CHAT_TAB_QUADRANT = "game-chat-tab-quadrantv2.0";
+	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-infov2.0";
 	public static final String MATCH_COMMANDS = "match-commands";
 	public static final String LEFT_MOUSE_BUTTON_ACTION = "left-mouse-button-action";
 	public static final String MIDDLE_MOUSE_BUTTON_ACTION = "middle-mouse-button-action";
@@ -66,8 +59,8 @@ public interface PreferenceKeys {
 	public static final String APP_STATUS_BAR_FONT = "app-status-bar-font";
 	public static final String APP_HOME_URL = "app-home-url";
 	public static final String APP_LAYOUT = "app-layout";
-	public static final String APP_BROWSER_QUADRANT = "app-browser-quadrant";
-	public static final String APP_PGN_RESULTS_QUADRANT = "app-pgn-results-quadrant";
+	public static final String APP_BROWSER_QUADRANT = "app-browser-quadrantv2.0";
+	public static final String APP_PGN_RESULTS_QUADRANT = "app-pgn-results-quadrantv2.0";
 	public static final String APP_WINDOW_ITEM_POLL_INTERVAL = "app-window-item-poll-interval";
 	public static final String APP_CHESS_BOARD_QUADRANT = "app-"
 			+ CHESS_BOARD_QUADRANT;
@@ -75,30 +68,12 @@ public interface PreferenceKeys {
 			+ BUGHOUSE_GAME_2_QUADRANT;
 	public static final String APP_LINUX_UNIX_BROWSER_NAME = "app-linux-unix-browser-name";
 	public static final String APP_IS_LAUNCHNG_HOME_PAGE = "app-is-launching-home-page";
-
-	public static final String APP_LAYOUT1_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout1-quad1-quad234567-quad8-sash-weights";
-	public static final String APP_LAYOUT1_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout1-quad2-quad234567-sash-weights";
-	public static final String APP_LAYOUT1_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout1-quad3-quad4-sash-weights";
-	public static final String APP_LAYOUT1_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout1-quad34-quad567-sash-weights";
-	public static final String APP_LAYOUT1_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout1-quad5-quad6-sash-weights";
-	public static final String APP_LAYOUT1_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout1-quad56-quad7-sash-weights";
-	public static final String APP_LAYOUT1_WINDOW_BOUNDS = "app-Layout1-window-bounds";
-
-	public static final String APP_LAYOUT2_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout2-quad1-quad234567-quad8-sash-weights";
-	public static final String APP_LAYOUT2_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout2-quad2-quad234567-sash-weights";
-	public static final String APP_LAYOUT2_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout2-quad3-quad4-sash-weights";
-	public static final String APP_LAYOUT2_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout2-quad34-quad567-sash-weights";
-	public static final String APP_LAYOUT2_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout2-quad5-quad6-sash-weights";
-	public static final String APP_LAYOUT2_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout2-quad56-quad7-sash-weights";
-	public static final String APP_LAYOUT2_WINDOW_BOUNDS = "app-Layout2-window-bounds";
-
-	public static final String APP_LAYOUT3_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS = "app-Layout3-quad1-quad234567-quad8-sash-weights";
-	public static final String APP_LAYOUT3_QUAD2_QUAD234567_SASH_WEIGHTS = "app-Layout3-quad2-quad234567-sash-weights";
-	public static final String APP_LAYOUT3_QUAD3_QUAD4_SASH_WEIGHTS = "app-Layout3-quad3-quad4-sash-weights";
-	public static final String APP_LAYOUT3_QUAD34_QUAD567_SASH_WEIGHTS = "app-Layout3-quad34-quad567-sash-weights";
-	public static final String APP_LAYOUT3_QUAD5_QUAD6_SASH_WEIGHTS = "app-Layout3-quad5-quad6-sash-weights";
-	public static final String APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS = "app-Layout3-quad56-quad7-sash-weights";
-	public static final String APP_LAYOUT3_WINDOW_BOUNDS = "app-Layout3-window-bounds";
+	public static final String APP_QUAD1_QUAD2345678_SASH_WEIGHTS = "app-quad1-quad2345678-sash-weights";
+	public static final String APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS = "app-quad2-quad3-quad4-quad5-sash-weights";
+	public static final String APP_QUAD2345_QUAD678_SASH_WEIGHTS = "app-quad2345-quad678-sash-weights";
+	public static final String APP_QUAD6_QUAD7_SASH_WEIGHTS = "app-quad6-quad7-sash-weights";
+	public static final String APP_QUAD67_QUAD8_SASH_WEIGHTS = "app-quad67-quad8-sash-weights";
+	public static final String APP_WINDOW_BOUNDS = "app-window-bounds";
 
 	public static final String ACTION_SEPARATOR_SEQUENCE = "action-separator-sequence";
 

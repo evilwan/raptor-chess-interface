@@ -448,6 +448,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					+ date + messageText;
 
 			chatConsole.inputText.append(appendText);
+
 			startIndex = chatConsole.inputText.getCharCount()
 					- appendText.length();
 
@@ -491,10 +492,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			return;
 		}
 
-		chatConsole.inputText.setCaretOffset(chatConsole.inputText
-				.getCharCount());
-		chatConsole.inputText.setSelection(new Point(chatConsole.inputText
-				.getCharCount(), chatConsole.inputText.getCharCount()));
+		int selection = chatConsole.inputText.getContent().getOffsetAtLine(
+				chatConsole.inputText.getLineAtOffset(chatConsole.inputText
+						.getCharCount()));
+		chatConsole.inputText.setCaretOffset(selection);
+		chatConsole.inputText.setSelection(selection);
 	}
 
 	public void onPassivate() {
@@ -1402,7 +1404,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		decorateQuotes(event, message, textStartPosition);
 		decorateLinks(event, message, textStartPosition);
 		decoreateNext(event, message, textStartPosition);
-
 	}
 
 	protected void onInputTextDoubleClick(MouseEvent e) {

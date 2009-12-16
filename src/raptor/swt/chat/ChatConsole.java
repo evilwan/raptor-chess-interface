@@ -94,11 +94,13 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 
 		Raptor.getInstance().getPreferences().addPropertyChangeListener(
 				propertyChangeListener);
-		inputText = new RaptorStyledText(this, SWT.V_SCROLL | SWT.MULTI
-				| SWT.BORDER);
+		inputText = new RaptorStyledText(this, SWT.V_SCROLL | SWT.H_SCROLL
+				| SWT.MULTI | SWT.BORDER);
 		inputText.setLayoutData(new GridData(GridData.FILL_BOTH));
 		inputText.setEditable(false);
-		inputText.setWordWrap(true);
+		inputText.setWordWrap(false);
+		inputText.setLineSpacing(1);
+		inputText.setLeftMargin(3);
 
 		southControlsComposite = new Composite(this, SWT.NONE);
 		southControlsComposite.setLayoutData(new GridData(

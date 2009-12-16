@@ -651,7 +651,7 @@ public class ChessBoardUtils implements BoardConstants {
 										.getInstance()
 										.getWindow()
 										.getChessBoardWindowItemToTakeOver(
-												quadrant == Quadrant.III ? Quadrant.IV
+												quadrant == Quadrant.III ? Quadrant.V
 														: Quadrant.III);
 							}
 
@@ -670,7 +670,7 @@ public class ChessBoardUtils implements BoardConstants {
 							// active controller already there observing a chess
 							// game.
 							if ((item.getPreferredQuadrant() == Quadrant.III || item
-									.getPreferredQuadrant() == Quadrant.IV)
+									.getPreferredQuadrant() == Quadrant.V)
 									&& item.getController().getGame()
 											.getVariant() != Variant.bughouse
 									&& item.getController().getGame()
@@ -689,8 +689,8 @@ public class ChessBoardUtils implements BoardConstants {
 								}
 								if (swapQuadrants) {
 									if (item.getPreferredQuadrant() == Quadrant.III) {
-										item.setQuadrant(Quadrant.IV);
-									} else if (item.getPreferredQuadrant() == Quadrant.IV) {
+										item.setQuadrant(Quadrant.V);
+									} else if (item.getPreferredQuadrant() == Quadrant.V) {
 										item.setQuadrant(Quadrant.III);
 									}
 								}

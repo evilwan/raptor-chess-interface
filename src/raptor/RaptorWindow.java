@@ -543,7 +543,7 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		public void loadFromPreferences() {
-			setWeights(getPreferences().getCurrentLayoutSashWeights(key));
+			setWeights(getPreferences().getIntArray(key));
 		}
 
 		/**
@@ -592,13 +592,14 @@ public class RaptorWindow extends ApplicationWindow {
 			setVisible(numberOfChildrenShowing > 0);
 			setMaximizedControl(numberOfChildrenShowing == 1 ? lastChildToShow
 					: null);
+
+			layout();
 		}
 
 		public void storeSashWeights() {
 			try {
 				if (getMaximizedControl() == null && isVisible()) {
-					getPreferences().setCurrentLayoutSashWeights(key,
-							getWeights());
+					getPreferences().setValue(key, getWeights());
 				}
 			} catch (SWTException swet) {// Eat it its prob a disposed exception
 			}
@@ -626,14 +627,12 @@ public class RaptorWindow extends ApplicationWindow {
 	Log LOG = LogFactory.getLog(RaptorWindow.class);
 	protected Map<String, Label> pingLabelsMap = new HashMap<String, Label>();
 
-	protected RaptorWindowSashForm quad1quad234567quad8Sash;
-	protected RaptorWindowSashForm quad2quad34567Sash;
-	protected RaptorWindowSashForm quad34quad567Sash;
-	protected RaptorWindowSashForm quad3quad4Sash;
-
-	protected RaptorWindowSashForm quad56quad7Sash;
-	protected RaptorWindowSashForm quad5quad6Sash;
-	protected RaptorWindowSashForm[] sashes = new RaptorWindowSashForm[6];
+	protected RaptorWindowSashForm quad1quad2345678;
+	protected RaptorWindowSashForm quad2345quad678Sash;
+	protected RaptorWindowSashForm quad2quad3quad4quad5Sash;
+	protected RaptorWindowSashForm quad67quad8Sash;
+	protected RaptorWindowSashForm quad6quad7Sash;
+	protected RaptorWindowSashForm[] sashes = new RaptorWindowSashForm[5];
 	protected Composite statusBar;
 	protected Label statusLabel;
 
@@ -1231,33 +1230,24 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Sets the ping time on the window for the specified connector. If time is
 	 * -1 the label will disappear.
 	 */
-	public void setPingTime(final Connector connector, final long pingTime) {
-		if (Raptor.getInstance().isDisposed()) {
+	public void setPingTime(final Connector connectorToSet, final long pingTime) {
+		if (Raptor.getInstance().isShutdown()
+				|| Raptor.getInstance().isDisposed()) {
 			return;
 		}
 
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("setPingTime " + connector.getShortName() + " "
+			LOG.debug("setPingTime " + connectorToSet.getShortName() + " "
 					+ pingTime);
 		}
 
-		if (getShell() == null || getShell().getDisplay() == null
-				|| getShell().getDisplay().isDisposed()) {
-			return;
-		}
-
-		getShell().getDisplay().syncExec(new RaptorRunnable() {
+		Raptor.getInstance().getDisplay().syncExec(new RaptorRunnable() {
 			@Override
 			public void execute() {
-				if (pingLabelsMap != null && connector != null) {
-					Label label = pingLabelsMap.get(connector.getShortName());
+				if (pingLabelsMap != null && connectorToSet != null) {
+					Label label = pingLabelsMap.get(connectorToSet
+							.getShortName());
 					if (label == null) {
-						if (pingTime == -1) {
-							return;
-						}
-						if (Raptor.getInstance().isDisposed()) {
-							return;
-						}
 						label = new Label(statusBar, SWT.NONE);
 						GridData gridData = new GridData();
 						gridData.grabExcessHorizontalSpace = false;
@@ -1265,7 +1255,7 @@ public class RaptorWindow extends ApplicationWindow {
 						gridData.horizontalAlignment = SWT.END;
 						gridData.verticalAlignment = SWT.CENTER;
 						label.setLayoutData(gridData);
-						pingLabelsMap.put(connector.getShortName(), label);
+						pingLabelsMap.put(connectorToSet.getShortName(), label);
 						label.setFont(Raptor.getInstance().getPreferences()
 								.getFont(PreferenceKeys.APP_PING_FONT));
 						label.setForeground(Raptor.getInstance()
@@ -1275,11 +1265,12 @@ public class RaptorWindow extends ApplicationWindow {
 					if (pingTime == -1) {
 						label.setVisible(false);
 						label.dispose();
-						pingLabelsMap.remove(connector.getShortName());
+						pingLabelsMap.remove(connectorToSet.getShortName());
 						statusBar.layout(true, true);
 					} else {
-						label.setText(connector.getShortName() + " ping "
+						label.setText(connectorToSet.getShortName() + " ping "
 								+ pingTime + "ms");
+						label.setVisible(true);
 						statusBar.layout(true, true);
 						label.redraw();
 					}
@@ -1317,8 +1308,8 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	public void storeWindowPreferences() {
-		getPreferences().setCurrentLayoutRectangle(
-				PreferenceKeys.WINDOW_BOUNDS, getShell().getBounds());
+		getPreferences().setValue(PreferenceKeys.APP_WINDOW_BOUNDS,
+				getShell().getBounds());
 		storeAllSashWeights();
 	}
 
@@ -1363,12 +1354,19 @@ public class RaptorWindow extends ApplicationWindow {
 				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 
 		if (!isAFolderMinimized) {
-			leftCoolbar.setVisible(false);
+			if (foldersMinimizedToolbar.isVisible()) {
+				foldersMinimizedToolbar.setVisible(false);
+				leftCoolbar.setVisible(false);
+				// windowComposite.layout();
+			}
 		} else {
-			leftCoolbar.setVisible(true);
+			if (!foldersMinimizedToolbar.isVisible()) {
+				foldersMinimizedToolbar.setVisible(true);
+				leftCoolbar.setVisible(true);
+				// windowComposite.layout();
+			}
 		}
-		windowComposite.layout();
-
+		windowComposite.layout(true);
 	}
 
 	/**
@@ -1408,12 +1406,11 @@ public class RaptorWindow extends ApplicationWindow {
 			initFolder(folder);
 		}
 
-		sashes[0] = quad1quad234567quad8Sash;
-		sashes[1] = quad2quad34567Sash;
-		sashes[2] = quad34quad567Sash;
-		sashes[3] = quad3quad4Sash;
-		sashes[4] = quad56quad7Sash;
-		sashes[5] = quad5quad6Sash;
+		sashes[0] = quad1quad2345678;
+		sashes[1] = quad2quad3quad4quad5Sash;
+		sashes[2] = quad2345quad678Sash;
+		sashes[3] = quad67quad8Sash;
+		sashes[4] = quad6quad7Sash;
 
 		for (RaptorWindowSashForm sashe : sashes) {
 			sashe.loadFromPreferences();
@@ -1426,8 +1423,10 @@ public class RaptorWindow extends ApplicationWindow {
 		leftCoolbar = new CoolBar(windowComposite, SWT.FLAT | SWT.VERTICAL);
 		leftCoolbar.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true,
 				1, 1));
+		leftCoolbar.setVisible(false);
 		foldersMinimizedToolbar = new ToolBar(leftCoolbar, SWT.FLAT
 				| SWT.VERTICAL);
+		foldersMinimizedToolbar.setVisible(false);
 
 		foldersMinimiziedCoolItem = new CoolItem(leftCoolbar, SWT.NONE);
 		foldersMinimiziedCoolItem.setControl(foldersMinimizedToolbar);
@@ -1663,50 +1662,47 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Creates the sash hierarchy.
 	 */
 	protected void createQuad1Quad234567QuadControls() {
-		quad1quad234567quad8Sash = new RaptorWindowSashForm(windowComposite,
-				SWT.VERTICAL,
-				PreferenceKeys.QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS);
-		quad1quad234567quad8Sash.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
-				true, true, 1, 1));
+		quad1quad2345678 = new RaptorWindowSashForm(windowComposite,
+				SWT.VERTICAL, PreferenceKeys.APP_QUAD1_QUAD2345678_SASH_WEIGHTS);
+		quad1quad2345678.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+				true, 1, 1));
 
-		folders[Quadrant.I.ordinal()] = new RaptorTabFolder(
-				quad1quad234567quad8Sash, SWT.BORDER, Quadrant.I);
+		folders[Quadrant.I.ordinal()] = new RaptorTabFolder(quad1quad2345678,
+				SWT.BORDER, Quadrant.I);
 
-		quad2quad34567Sash = new RaptorWindowSashForm(quad1quad234567quad8Sash,
-				SWT.HORIZONTAL, PreferenceKeys.QUAD2_QUAD234567_SASH_WEIGHTS);
+		quad2345quad678Sash = new RaptorWindowSashForm(quad1quad2345678,
+				SWT.VERTICAL, PreferenceKeys.APP_QUAD2345_QUAD678_SASH_WEIGHTS);
 
-		folders[Quadrant.VIII.ordinal()] = new RaptorTabFolder(
-				quad1quad234567quad8Sash, SWT.BORDER, Quadrant.VIII);
+		quad2quad3quad4quad5Sash = new RaptorWindowSashForm(
+				quad2345quad678Sash, SWT.HORIZONTAL,
+				PreferenceKeys.APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS);
+
+		quad67quad8Sash = new RaptorWindowSashForm(quad2345quad678Sash,
+				SWT.HORIZONTAL, PreferenceKeys.APP_QUAD67_QUAD8_SASH_WEIGHTS);
 
 		folders[Quadrant.II.ordinal()] = new RaptorTabFolder(
-				quad2quad34567Sash, SWT.BORDER, Quadrant.II);
+				quad2quad3quad4quad5Sash, SWT.BORDER, Quadrant.II);
 
-		quad34quad567Sash = new RaptorWindowSashForm(quad2quad34567Sash,
-				SWT.VERTICAL, PreferenceKeys.QUAD34_QUAD567_SASH_WEIGHTS);
+		folders[Quadrant.III.ordinal()] = new RaptorTabFolder(
+				quad2quad3quad4quad5Sash, SWT.BORDER, Quadrant.III);
 
-		quad3quad4Sash = new RaptorWindowSashForm(quad34quad567Sash,
-				SWT.HORIZONTAL, PreferenceKeys.QUAD3_QUAD4_SASH_WEIGHTS);
+		folders[Quadrant.IV.ordinal()] = new RaptorTabFolder(
+				quad2quad3quad4quad5Sash, SWT.BORDER, Quadrant.IV);
 
-		quad56quad7Sash = new RaptorWindowSashForm(quad34quad567Sash,
-				SWT.HORIZONTAL, PreferenceKeys.QUAD56_QUAD7_SASH_WEIGHTS);
+		folders[Quadrant.V.ordinal()] = new RaptorTabFolder(
+				quad2quad3quad4quad5Sash, SWT.BORDER, Quadrant.V);
 
-		folders[Quadrant.III.ordinal()] = new RaptorTabFolder(quad3quad4Sash,
-				SWT.BORDER, Quadrant.III);
+		quad6quad7Sash = new RaptorWindowSashForm(quad67quad8Sash,
+				SWT.VERTICAL, PreferenceKeys.APP_QUAD6_QUAD7_SASH_WEIGHTS);
 
-		folders[Quadrant.IV.ordinal()] = new RaptorTabFolder(quad3quad4Sash,
-				SWT.BORDER, Quadrant.IV);
-
-		quad5quad6Sash = new RaptorWindowSashForm(quad56quad7Sash,
-				SWT.VERTICAL, PreferenceKeys.QUAD5_QUAD6_SASH_WEIGHTS);
-
-		folders[Quadrant.V.ordinal()] = new RaptorTabFolder(quad5quad6Sash,
-				SWT.BORDER, Quadrant.V);
-
-		folders[Quadrant.VI.ordinal()] = new RaptorTabFolder(quad5quad6Sash,
+		folders[Quadrant.VI.ordinal()] = new RaptorTabFolder(quad6quad7Sash,
 				SWT.BORDER, Quadrant.VI);
 
-		folders[Quadrant.VII.ordinal()] = new RaptorTabFolder(quad56quad7Sash,
+		folders[Quadrant.VII.ordinal()] = new RaptorTabFolder(quad6quad7Sash,
 				SWT.BORDER, Quadrant.VII);
+
+		folders[Quadrant.VIII.ordinal()] = new RaptorTabFolder(quad67quad8Sash,
+				SWT.BORDER, Quadrant.VIII);
 	}
 
 	/**
@@ -2098,8 +2094,8 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected void initializeBounds() {
-		Rectangle screenBounds = getPreferences().getCurrentLayoutRectangle(
-				PreferenceKeys.WINDOW_BOUNDS);
+		Rectangle screenBounds = getPreferences().getRectangle(
+				PreferenceKeys.APP_WINDOW_BOUNDS);
 
 		if (screenBounds.width == -1 || screenBounds.height == -1) {
 			Rectangle fullViewBounds = Display.getCurrent().getPrimaryMonitor()

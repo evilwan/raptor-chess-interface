@@ -19,14 +19,23 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
+import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
 import raptor.connector.Connector;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.ItemChangedListener;
+import raptor.swt.chat.controller.BughousePartnerController;
+import raptor.swt.chat.controller.ChannelController;
+import raptor.swt.chat.controller.GameChatController;
+import raptor.swt.chat.controller.MainController;
+import raptor.swt.chat.controller.PersonController;
+import raptor.swt.chat.controller.RegExController;
 import raptor.util.RaptorRunnable;
 
 public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
-	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
-			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
+			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
+			Quadrant.VII, Quadrant.VIII };
 
 	public static final int TEXT_BLOCK = 5000;
 	ChatConsole console;
@@ -52,7 +61,33 @@ public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
-
+		if (controller instanceof MainController) {
+			Raptor.getInstance().getPreferences().setValue(
+					getConnector().getShortName() + "-"
+							+ PreferenceKeys.MAIN_TAB_QUADRANT, newQuadrant);
+		} else if (controller instanceof PersonController) {
+			Raptor.getInstance().getPreferences().setValue(
+					getConnector().getShortName() + "-"
+							+ PreferenceKeys.PERSON_TAB_QUADRANT, newQuadrant);
+		} else if (controller instanceof BughousePartnerController) {
+			Raptor.getInstance().getPreferences().setValue(
+					getConnector().getShortName() + "-"
+							+ PreferenceKeys.PARTNER_TELL_TAB_QUADRANT,
+					newQuadrant);
+		} else if (controller instanceof ChannelController) {
+			Raptor.getInstance().getPreferences().setValue(
+					getConnector().getShortName() + "-"
+							+ PreferenceKeys.PERSON_TAB_QUADRANT, newQuadrant);
+		} else if (controller instanceof RegExController) {
+			Raptor.getInstance().getPreferences().setValue(
+					getConnector().getShortName() + "-"
+							+ PreferenceKeys.REGEX_TAB_QUADRANT, newQuadrant);
+		} else if (controller instanceof GameChatController) {
+			Raptor.getInstance().getPreferences().setValue(
+					getConnector().getShortName() + "-"
+							+ PreferenceKeys.GAME_CHAT_TAB_QUADRANT,
+					newQuadrant);
+		}
 	}
 
 	public boolean confirmClose() {

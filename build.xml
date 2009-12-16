@@ -271,7 +271,7 @@
 		<exec executable="hdiutil">
 			<arg value="internet-enable" />
 			<arg value="-yes" />
-			<arg value="${uploads.dir}/Raptor${version}_OS_X_Carbon.dmg" />
+			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
 		</exec>
 	</target>
 
