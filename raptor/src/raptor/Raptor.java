@@ -451,11 +451,6 @@ public class Raptor implements PreferenceKeys {
 		}
 		isShutdown = true;
 
-		// Dont put a try catch around this.
-		// Leave it.
-		// It will error out if you close from eclipse but that is fine.
-		clipboard.dispose();
-
 		try {
 			if (getInstance().getWindow() != null
 					&& !getInstance().getWindow().getShell().isDisposed()) {
@@ -470,6 +465,13 @@ public class Raptor implements PreferenceKeys {
 		} catch (Throwable t) {
 			LOG.warn("Error shutting down ConnectorService", t);
 		}
+
+		if (!isIgnoringPreferenceSaves) {
+			getPreferences().save();
+		}
+
+		// Dont try catch around this block. Let eclipse bomb out on it.
+		clipboard.dispose();
 
 		try {
 			EcoService.getInstance().dispose();

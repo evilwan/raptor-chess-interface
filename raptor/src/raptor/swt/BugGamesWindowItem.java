@@ -43,8 +43,9 @@ import raptor.util.RatingComparator;
 
 public class BugGamesWindowItem implements RaptorConnectorWindowItem {
 
-	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
-			Quadrant.IV, Quadrant.V, Quadrant.VI, Quadrant.VII };
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
+			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
+			Quadrant.VII, Quadrant.VIII };
 
 	protected BughouseService service;
 	protected Composite composite;
@@ -89,7 +90,13 @@ public class BugGamesWindowItem implements RaptorConnectorWindowItem {
 	public void addItemChangedListener(ItemChangedListener listener) {
 	}
 
+	/**
+	 * Invoked after this control is moved to a new quadrant.
+	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
+		Raptor.getInstance().getPreferences().setValue(
+				service.getConnector().getShortName() + "-"
+						+ PreferenceKeys.BUG_WHO_QUADRANT, newQuadrant);
 	}
 
 	public boolean confirmClose() {

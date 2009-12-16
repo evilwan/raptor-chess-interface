@@ -46,8 +46,9 @@ import raptor.pref.PreferenceKeys;
 public class BrowserWindowItem implements RaptorWindowItem {
 	private static final Log LOG = LogFactory.getLog(BrowserWindowItem.class);
 
-	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.III,
-			Quadrant.IV, Quadrant.V, Quadrant.VI };
+	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
+			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
+			Quadrant.VII, Quadrant.VIII };
 
 	protected Composite addressBar;
 	protected Browser browser;
@@ -71,6 +72,8 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
+		Raptor.getInstance().getPreferences().setValue(
+				PreferenceKeys.APP_BROWSER_QUADRANT, newQuadrant);
 	}
 
 	public boolean confirmClose() {

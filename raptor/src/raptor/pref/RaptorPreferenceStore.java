@@ -482,7 +482,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(RESULTS_WIDTH_PERCENTAGE, 80);
 
 		// Chat
-		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
+		setDefault(CHAT_MAX_CONSOLE_CHARS, 250000);
 		setDefault(CHAT_TIMESTAMP_CONSOLE, false);
 		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['hh:mma']'");
 		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
@@ -577,7 +577,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Bug house buttons settings.
 		PreferenceConverter.setDefault(this, BUG_BUTTONS_FONT,
 				new FontData[] { new FontData(defaultFontName,
-						defaultLargeFontSize, SWT.BOLD) });
+						defaultSmallFontSize, SWT.BOLD) });
 		// Bug house
 		setDefault(BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD, true);
@@ -607,46 +607,19 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_BROWSER_QUADRANT, Quadrant.III);
 		setDefault(APP_PGN_RESULTS_QUADRANT, Quadrant.III);
 		setDefault(APP_CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault(APP_BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
+		setDefault(APP_BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
 		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 3);
 
 		// Layout 1 settings.
-		setDefault(APP_LAYOUT1_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
-		setDefault(APP_LAYOUT1_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS, new int[] {
-				10, 80, 10 });
-		setDefault(APP_LAYOUT1_QUAD2_QUAD234567_SASH_WEIGHTS, new int[] { 10,
-				90 });
-		setDefault(APP_LAYOUT1_QUAD3_QUAD4_SASH_WEIGHTS, new int[] { 50, 50 });
-		setDefault(APP_LAYOUT1_QUAD56_QUAD7_SASH_WEIGHTS, new int[] { 70, 30 });
-		setDefault(APP_LAYOUT1_QUAD34_QUAD567_SASH_WEIGHTS,
-				new int[] { 50, 50 });
-		setDefault(APP_LAYOUT1_QUAD5_QUAD6_SASH_WEIGHTS, new int[] { 50, 50 });
-
-		// Layout 2 settings.
-		setDefault(APP_LAYOUT2_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
-		setDefault(APP_LAYOUT2_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS, new int[] {
-				10, 80, 10 });
-		setDefault(APP_LAYOUT2_QUAD2_QUAD234567_SASH_WEIGHTS, new int[] { 10,
-				90 });
-		setDefault(APP_LAYOUT2_QUAD3_QUAD4_SASH_WEIGHTS, new int[] { 50, 50 });
-		setDefault(APP_LAYOUT2_QUAD56_QUAD7_SASH_WEIGHTS, new int[] { 70, 30 });
-		setDefault(APP_LAYOUT2_QUAD34_QUAD567_SASH_WEIGHTS,
-				new int[] { 50, 50 });
-		setDefault(APP_LAYOUT2_QUAD5_QUAD6_SASH_WEIGHTS, new int[] { 50, 50 });
-
-		// Layout 3 settings.
-		setDefault(APP_LAYOUT3_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
-		setDefault(APP_LAYOUT3_QUAD1_QUAD234567_QUAD8_SASH_WEIGHTS, new int[] {
-				10, 80, 10 });
-		setDefault(APP_LAYOUT3_QUAD2_QUAD234567_SASH_WEIGHTS, new int[] { 10,
-				90 });
-		setDefault(APP_LAYOUT3_QUAD3_QUAD4_SASH_WEIGHTS, new int[] { 50, 50 });
-		setDefault(APP_LAYOUT3_QUAD56_QUAD7_SASH_WEIGHTS, new int[] { 70, 30 });
-		setDefault(APP_LAYOUT3_QUAD34_QUAD567_SASH_WEIGHTS,
-				new int[] { 50, 50 });
-		setDefault(APP_LAYOUT3_QUAD5_QUAD6_SASH_WEIGHTS, new int[] { 50, 50 });
+		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
+		setDefault(APP_QUAD1_QUAD2345678_SASH_WEIGHTS, new int[] { 10, 90 });
+		setDefault(APP_QUAD2345_QUAD678_SASH_WEIGHTS, new int[] { 70, 30 });
+		setDefault(APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS, new int[] { 10,
+				40, 10, 40 });
+		setDefault(APP_QUAD67_QUAD8_SASH_WEIGHTS, new int[] { 70, 30 });
+		setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
 
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, false);
@@ -731,53 +704,53 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_TERTIARY_TIMESEAL_ENABLED, true);
 
 		// Quadrant settings.
-		setDefault("fics-" + MAIN_TAB_QUADRANT, Quadrant.V);
-		setDefault("fics-" + CHANNEL_TAB_QUADRANT, Quadrant.V);
-		setDefault("fics-" + PERSON_TAB_QUADRANT, Quadrant.V);
-		setDefault("fics-" + REGEX_TAB_QUADRANT, Quadrant.V);
-		setDefault("fics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.V);
+		setDefault("fics-" + MAIN_TAB_QUADRANT, Quadrant.VI);
+		setDefault("fics-" + CHANNEL_TAB_QUADRANT, Quadrant.VI);
+		setDefault("fics-" + PERSON_TAB_QUADRANT, Quadrant.VI);
+		setDefault("fics-" + REGEX_TAB_QUADRANT, Quadrant.VI);
+		setDefault("fics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("fics-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
-		setDefault("fics-" + BUG_WHO_QUADRANT, Quadrant.VII);
-		setDefault("fics-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
+		setDefault("fics-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault("fics-" + BUG_WHO_QUADRANT, Quadrant.VIII);
+		setDefault("fics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
-		setDefault("fics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.V);
+		setDefault("fics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
 
-		setDefault("fics2-" + MAIN_TAB_QUADRANT, Quadrant.VI);
-		setDefault("fics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VI);
-		setDefault("fics2-" + PERSON_TAB_QUADRANT, Quadrant.VI);
-		setDefault("fics2-" + REGEX_TAB_QUADRANT, Quadrant.VI);
-		setDefault("fics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
+		setDefault("fics2-" + MAIN_TAB_QUADRANT, Quadrant.VII);
+		setDefault("fics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VII);
+		setDefault("fics2-" + PERSON_TAB_QUADRANT, Quadrant.VII);
+		setDefault("fics2-" + REGEX_TAB_QUADRANT, Quadrant.VII);
+		setDefault("fics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("fics2-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
-		setDefault("fics2-" + BUG_WHO_QUADRANT, Quadrant.VII);
-		setDefault("fics2-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
+		setDefault("fics2-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault("fics2-" + BUG_WHO_QUADRANT, Quadrant.VIII);
+		setDefault("fics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
-		setDefault("fics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
+		setDefault("fics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
 
-		setDefault("bics-" + MAIN_TAB_QUADRANT, Quadrant.V);
-		setDefault("bics-" + CHANNEL_TAB_QUADRANT, Quadrant.V);
-		setDefault("bics-" + PERSON_TAB_QUADRANT, Quadrant.V);
-		setDefault("bics-" + REGEX_TAB_QUADRANT, Quadrant.V);
-		setDefault("bics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.V);
+		setDefault("bics-" + MAIN_TAB_QUADRANT, Quadrant.VI);
+		setDefault("bics-" + CHANNEL_TAB_QUADRANT, Quadrant.VI);
+		setDefault("bics-" + PERSON_TAB_QUADRANT, Quadrant.VI);
+		setDefault("bics-" + REGEX_TAB_QUADRANT, Quadrant.VI);
+		setDefault("bics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("bics-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
-		setDefault("bics-" + BUG_WHO_QUADRANT, Quadrant.VII);
-		setDefault("bics-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
+		setDefault("bics-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault("bics-" + BUG_WHO_QUADRANT, Quadrant.VIII);
+		setDefault("bics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("bics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
-		setDefault("bics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.V);
+		setDefault("bics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
 
-		setDefault("bics2-" + MAIN_TAB_QUADRANT, Quadrant.VI);
-		setDefault("bics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VI);
-		setDefault("bics2-" + PERSON_TAB_QUADRANT, Quadrant.VI);
-		setDefault("bics2-" + REGEX_TAB_QUADRANT, Quadrant.VI);
-		setDefault("bics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
+		setDefault("bics2-" + MAIN_TAB_QUADRANT, Quadrant.VII);
+		setDefault("bics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VII);
+		setDefault("bics2-" + PERSON_TAB_QUADRANT, Quadrant.VII);
+		setDefault("bics2-" + REGEX_TAB_QUADRANT, Quadrant.VII);
+		setDefault("bics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("bics2-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.IV);
-		setDefault("bics2-" + BUG_WHO_QUADRANT, Quadrant.VII);
-		setDefault("bics2-" + SEEK_TABLE_QUADRANT, Quadrant.VII);
+		setDefault("bics2-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault("bics2-" + BUG_WHO_QUADRANT, Quadrant.VIII);
+		setDefault("bics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
-		setDefault("bics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
+		setDefault("bics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
 
 		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
 
@@ -800,16 +773,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			} catch (Throwable t) {
 			}
 		}
-	}
-
-	public void setCurrentLayoutRectangle(String key, Rectangle rectangle) {
-		key = "app-" + getString(APP_LAYOUT) + "-" + key;
-		setValue(key, rectangle);
-	}
-
-	public void setCurrentLayoutSashWeights(String key, int[] array) {
-		key = "app-" + getString(APP_LAYOUT) + "-" + key;
-		setValue(key, array);
 	}
 
 	public void setDefault(String key, Font font) {

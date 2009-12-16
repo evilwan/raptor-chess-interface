@@ -39,7 +39,8 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 	static final Log LOG = LogFactory.getLog(BugButtonsWindowItem.class);
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
-			Quadrant.II, Quadrant.VIII };
+			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
+			Quadrant.VII, Quadrant.VIII };
 
 	protected Composite composite;
 	protected String title;
@@ -69,7 +70,7 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 	public void afterQuadrantMove(Quadrant newQuadrant) {
 		RaptorAction[] scripts = ActionScriptService.getInstance().getActions(
 				RaptorActionContainer.BugButtons);
-		if (newQuadrant == Quadrant.II) {
+		if (!isHorizontalLayout(newQuadrant)) {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, true));
 		} else {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(
@@ -77,6 +78,10 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 		}
 		removeButtons();
 		addButtons(scripts);
+		Raptor.getInstance().getPreferences().setValue(
+				connector.getShortName() + "-"
+						+ PreferenceKeys.BUG_BUTTONS_QUADRANT, newQuadrant);
+
 		updateFromPrefs();
 		composite.layout(true, true);
 	}
@@ -140,7 +145,7 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 
 		composite = new Composite(parent, SWT.NONE);
 		Quadrant quadrant = getPreferredQuadrant();
-		if (quadrant == Quadrant.II) {
+		if (!isHorizontalLayout(quadrant)) {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, true));
 		} else {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(
@@ -177,6 +182,11 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 				}
 			});
 		}
+	}
+
+	protected boolean isHorizontalLayout(Quadrant quadrant) {
+		return quadrant == Quadrant.I || quadrant == Quadrant.VI
+				|| quadrant == Quadrant.VII;
 	}
 
 	protected void removeButtons() {

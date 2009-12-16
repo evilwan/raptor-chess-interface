@@ -616,6 +616,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 						+ getPreferences().getString(APP_NAME));
 				sendMessage("set style 12", true);
 				sendMessage("set bell 0", true);
+				sendMessage("set width 300", true);
 
 				String loginScript = getPreferences().getString(
 						BICS_LOGIN_SCRIPT);
