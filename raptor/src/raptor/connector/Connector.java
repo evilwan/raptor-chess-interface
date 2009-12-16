@@ -45,6 +45,11 @@ public interface Connector {
 	public void addConnectorListener(ConnectorListener listener);
 
 	/**
+	 * Adds the specified person to extended censor.
+	 */
+	public void addExtendedCensor(String person);
+
+	/**
 	 * Attempts to autocomplete the specified word.
 	 * 
 	 * @param word
@@ -52,6 +57,13 @@ public interface Connector {
 	 * @return A string[] of possibilities.
 	 */
 	public String[] autoComplete(String word);
+
+	/**
+	 * Clears everyone from the extended censor list.
+	 * 
+	 * @return The number of people removed.
+	 */
+	public int clearExtendedCensor();
 
 	/**
 	 * Connects to the connector. The connection information should be stored as
@@ -145,6 +157,13 @@ public interface Connector {
 	 * '
 	 */
 	public String getPartnerTellPrefix();
+
+	/**
+	 * Returns a String[] of all the people on extended censor.
+	 * 
+	 * @return
+	 */
+	public String[] getPeopleOnExtendedCensor();
 
 	/**
 	 * Returns descriptions and messages to send to the connector. This is
@@ -269,6 +288,11 @@ public interface Connector {
 	 * Returns true if isConnected and a user is playing a game.
 	 */
 	public boolean isLoggedInUserPlayingAGame();
+
+	/**
+	 * Returns true if the specified person is on extended censor.
+	 */
+	public boolean isOnExtendedCensor(String person);
 
 	public void kibitz(Game game, String kibitz);
 
@@ -432,6 +456,14 @@ public interface Connector {
 	 * Removes a connector listener from the connector.
 	 */
 	public void removeConnectorListener(ConnectorListener listener);
+
+	/**
+	 * Removes the specified person from extended censor.
+	 * 
+	 * @return True if a the person was on extended censor and is now removed,
+	 *         false if the person was not on extended censor.
+	 */
+	public boolean removeExtendedCensor(String person);
 
 	/**
 	 * Should remove any line breaks from the message (remove any wrapping the

@@ -13,6 +13,7 @@
  */
 package raptor.swt.chess;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,6 +42,7 @@ import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.chess.Game;
 import raptor.chess.GameComparator;
+import raptor.chess.Result;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.PgnParserError;
 import raptor.pref.PreferenceKeys;
@@ -122,6 +124,16 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		return MOVE_TO_QUADRANTS;
 	}
 
+	public String getPercentage(int count, int total) {
+		if (total == 0 || count == 0) {
+			return "0%";
+		} else {
+			return new BigDecimal((double) count / (double) total * 100.0)
+					.setScale(2, BigDecimal.ROUND_HALF_UP).toString()
+					+ "%";
+		}
+	}
+
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
 				PreferenceKeys.APP_PGN_RESULTS_QUADRANT);
@@ -139,8 +151,30 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
 
+		int finishedGames = 0;
+		int whiteWins = 0;
+		int blackWins = 0;
+		int draws = 0;
+
+		for (Game game : games) {
+			if (game.getResult() == Result.WHITE_WON) {
+				whiteWins++;
+				finishedGames++;
+			} else if (game.getResult() == Result.BLACK_WON) {
+				blackWins++;
+				finishedGames++;
+			} else if (game.getResult() == Result.DRAW) {
+				draws++;
+				finishedGames++;
+			}
+		}
+
 		Label gamesTotalLabel = new Label(composite, SWT.LEFT);
-		gamesTotalLabel.setText("Games: " + games.size());
+
+		gamesTotalLabel.setText("Games: " + games.size() + "   White Win: "
+				+ getPercentage(whiteWins, finishedGames) + "   Black Win: "
+				+ getPercentage(blackWins, finishedGames) + "   Draw: "
+				+ getPercentage(draws, finishedGames));
 		gamesTotalLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 

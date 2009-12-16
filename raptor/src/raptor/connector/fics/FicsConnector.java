@@ -15,6 +15,10 @@ package raptor.connector.fics;
 
 import static raptor.chess.util.GameUtils.getChessPieceCharacter;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -165,6 +169,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	 * it will be null.
 	 */
 	protected FicsConnector fics2 = null;
+
+	protected Object extendedCensorSync = new Object();
+	protected static final String EXTENDED_CENSOR_FILE_NAME = Raptor.USER_RAPTOR_HOME_PATH
+			+ "/fics/extendedCensor.txt";
 
 	/**
 	 * This is used by the fics2 connector. You need a reference back to fics1
@@ -763,6 +771,38 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2.fics1 = this;
 	}
 
+	protected void loadExtendedCensorList() {
+		if (new File(EXTENDED_CENSOR_FILE_NAME).exists()) {
+			synchronized (extendedCensorSync) {
+				extendedCensorList.clear();
+				BufferedReader reader = null;
+				try {
+					reader = new BufferedReader(new FileReader(
+							EXTENDED_CENSOR_FILE_NAME));
+					String currentLine = null;
+					while ((currentLine = reader.readLine()) != null) {
+						String user = currentLine.trim();
+						if (StringUtils.isNotBlank(user)) {
+							extendedCensorList.add(IcsUtils.stripTitles(user)
+									.toLowerCase());
+						}
+					}
+
+				} catch (Throwable t) {
+					onError("Error reading " + EXTENDED_CENSOR_FILE_NAME, t);
+
+				} finally {
+					if (reader != null) {
+						try {
+							reader.close();
+						} catch (Throwable t) {
+						}
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	protected void onSuccessfulLogin() {
 		ThreadService.getInstance().run(new Runnable() {
@@ -814,5 +854,28 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				hasVetoPower = true;
 			}
 		});
+	}
+
+	protected void writeExtendedCensorList() {
+		synchronized (extendedCensorSync) {
+			FileWriter writer = null;
+			try {
+				writer = new FileWriter(EXTENDED_CENSOR_FILE_NAME, false);
+				for (String user : extendedCensorList) {
+					writer.write(user + "\n");
+				}
+				writer.flush();
+
+			} catch (Throwable t) {
+				onError("Error writing " + EXTENDED_CENSOR_FILE_NAME, t);
+			} finally {
+				if (writer != null) {
+					try {
+						writer.close();
+					} catch (Throwable t) {
+					}
+				}
+			}
+		}
 	}
 }

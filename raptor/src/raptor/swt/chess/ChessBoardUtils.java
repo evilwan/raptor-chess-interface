@@ -13,7 +13,9 @@
  */
 package raptor.swt.chess;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -65,8 +67,6 @@ import raptor.action.game.MoveListAction;
 import raptor.action.game.RematchAction;
 import raptor.action.game.RevertAction;
 import raptor.action.game.ToggleEngineAnalysisAction;
-import raptor.chess.BughouseGame;
-import raptor.chess.FischerRandomBughouseGame;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
@@ -94,6 +94,8 @@ public class ChessBoardUtils implements BoardConstants {
 	public static final String SQUARE_BACKGROUND_DIR = Raptor.RESOURCES_DIR
 			+ "square/";
 	public static final String SQUARE_BACKGROUND_IMAGE_SUFFIX = ".png";
+
+	public static final Object PGN_PREPEND_SYNCH = new Object();
 
 	public static void addActionsToToolbar(
 			final ChessBoardController controller,
@@ -127,34 +129,6 @@ public class ChessBoardUtils implements BoardConstants {
 				.setPreferredSize(toolbar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		board.getCoolbar().setVisible(true);
 		board.getControl().layout();
-	}
-
-	/**
-	 * Appends the game to the users game pgn file.
-	 */
-	public static void appendGameToPgnFile(Game game) {
-		if (game instanceof BughouseGame
-				|| game instanceof FischerRandomBughouseGame) {
-			return;
-		}
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_IS_LOGGING_GAMES)) {
-			String pgn = game.toPgn();
-			File file = new File(Raptor.GAMES_PGN_FILE);
-			FileWriter fileWriter = null;
-			try {
-				fileWriter = new FileWriter(file, true);
-				fileWriter.append("\n\n");
-				fileWriter.append(pgn);
-			} catch (IOException ioe) {
-				LOG.error("Error saving game", ioe);
-			} finally {
-				try {
-					fileWriter.close();
-				} catch (IOException ioe) {
-				}
-			}
-		}
 	}
 
 	public static boolean arePiecesSameColor(int piece1, int piece2) {
@@ -770,6 +744,77 @@ public class ChessBoardUtils implements BoardConstants {
 
 	public static int pieceJailSquareToPiece(int pieceJailSquare) {
 		return pieceJailSquare - 100;
+	}
+
+	/**
+	 * Prepends the game to the users game pgn file.
+	 */
+	public static void prependGameToPgnFile(Game game) {
+		if (Variant.isBughouse(game.getVariant())) {
+			return;
+		}
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.APP_IS_LOGGING_GAMES)) {
+
+			// synchronized on PGN_PREPEND_SYNCH so just one thread at a time
+			// writes to the file.
+			synchronized (PGN_PREPEND_SYNCH) {
+				String pgn = game.toPgn();
+				File file = new File(Raptor.GAMES_PGN_FILE);
+				FileWriter fileWriter = null;
+				BufferedReader fileReader = null;
+				try {
+					if (file.exists()) {
+						// Write the new pgn to a temp file.
+						File tempFile = File.createTempFile(
+								"RaptorUserPgnFile", ".pgn");
+						fileWriter = new FileWriter(tempFile);
+						fileWriter.append(pgn + "\n\n");
+
+						// Now write the rest of the pgn to the temp file.
+						fileReader = new BufferedReader(new FileReader(file));
+						String currentLine = null;
+						while ((currentLine = fileReader.readLine()) != null) {
+							fileWriter.append(currentLine + "\n");
+						}
+
+						// flush and close.
+						fileWriter.flush();
+						fileWriter.close();
+						fileReader.close();
+
+						// now write the temp file contents to the main file.
+						fileReader = new BufferedReader(
+								new FileReader(tempFile));
+						fileWriter = new FileWriter(file);
+
+						while ((currentLine = fileReader.readLine()) != null) {
+							fileWriter.write(currentLine + "\n");
+						}
+						fileWriter.flush();
+
+						tempFile.delete();
+
+					} else {
+						fileWriter = new FileWriter(file, false);
+						fileWriter.append(pgn);
+						fileWriter.flush();
+					}
+				} catch (IOException ioe) {
+					LOG.error("Error saving game", ioe);
+				} finally {
+					try {
+						if (fileWriter != null) {
+							fileWriter.close();
+						}
+						if (fileReader != null) {
+							fileReader.close();
+						}
+					} catch (IOException ioe) {
+					}
+				}
+			}
+		}
 	}
 
 	protected static ToolItem createToolItem(final RaptorAction action,

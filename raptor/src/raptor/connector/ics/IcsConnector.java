@@ -205,6 +205,7 @@ public abstract class IcsConnector implements Connector {
 	protected Socket socket;
 	protected String userName;
 	protected String userFollowing;
+	protected List<String> extendedCensorList = new ArrayList<String>(300);
 	protected String[] bughouseSounds = SoundService.getInstance()
 			.getBughouseSoundKeys();
 	protected RegularExpressionScript[] regularExpressionScripts = null;
@@ -235,6 +236,11 @@ public abstract class IcsConnector implements Connector {
 		gameService.addGameServiceListener(gameServiceListener);
 		setBughouseService(new BughouseService(this));
 		prepopulateAutoCompleteList();
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				loadExtendedCensorList();
+			}
+		});
 	}
 
 	public void acceptSeek(String adId) {
@@ -246,6 +252,12 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public void addConnectorListener(ConnectorListener listener) {
 		connectorListeners.add(listener);
+	}
+
+	public void addExtendedCensor(String person) {
+		extendedCensorList.add(IcsUtils.stripTitles(person).toLowerCase());
+		Collections.sort(extendedCensorList);
+		writeExtendedCensorList();
 	}
 
 	public String[] autoComplete(String word) {
@@ -303,6 +315,13 @@ public abstract class IcsConnector implements Connector {
 			}
 			return result.toArray(new String[0]);
 		}
+	}
+
+	public int clearExtendedCensor() {
+		int result = extendedCensorList.size();
+		extendedCensorList.clear();
+		writeExtendedCensorList();
+		return result;
 	}
 
 	public void closeAllConnectorWindowsItems() {
@@ -504,6 +523,10 @@ public abstract class IcsConnector implements Connector {
 		return "ptell ";
 	}
 
+	public String[] getPeopleOnExtendedCensor() {
+		return extendedCensorList.toArray(new String[0]);
+	}
+
 	public String[][] getPersonActions(String person) {
 		String matchActions = Raptor.getInstance().getPreferences().getString(
 				getContext().getPreferencePrefix()
@@ -633,6 +656,11 @@ public abstract class IcsConnector implements Connector {
 
 	public boolean isLikelyPerson(String word) {
 		return IcsUtils.isLikelyPerson(word);
+	}
+
+	public boolean isOnExtendedCensor(String person) {
+		return extendedCensorList.contains(IcsUtils.stripTitles(person)
+				.toLowerCase());
 	}
 
 	public boolean isSimulBugConnector() {
@@ -856,6 +884,11 @@ public abstract class IcsConnector implements Connector {
 			}
 
 			updateAutoComplete(event);
+
+			if (isBlockedByExtendedCensor(event)) {
+				return;
+			}
+
 			handleOpeningTabs(event);
 			processRegularExpressionScripts(event);
 
@@ -921,6 +954,16 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public void removeConnectorListener(ConnectorListener listener) {
 		connectorListeners.remove(listener);
+	}
+
+	public boolean removeExtendedCensor(String person) {
+		boolean result = extendedCensorList.remove(IcsUtils.stripTitles(person)
+				.toLowerCase());
+		if (result) {
+			Collections.sort(extendedCensorList);
+			writeExtendedCensorList();
+		}
+		return result;
 	}
 
 	public String removeLineBreaks(String message) {
@@ -1497,6 +1540,31 @@ public abstract class IcsConnector implements Connector {
 
 	}
 
+	protected boolean isBlockedByExtendedCensor(ChatEvent event) {
+		boolean result = false;
+		switch (event.getType()) {
+		case TELL:
+			if (isOnExtendedCensor(event.getSource())) {
+				publishEvent(new ChatEvent(null, ChatType.INTERNAL,
+						"Blocked tell sent from " + event.getSource()
+								+ " because he/she is on extended censor."));
+				result = true;
+			}
+			break;
+		case CHANNEL_TELL:
+		case SHOUT:
+		case CSHOUT:
+		case KIBITZ:
+		case WHISPER:
+		case TOLD:
+			result = isOnExtendedCensor(event.getSource());
+			break;
+		}
+		return result;
+	}
+
+	protected abstract void loadExtendedCensorList();
+
 	/**
 	 * The messageLoop. Reads the inputChannel and then invokes publishInput
 	 * with the text read. Should really never be invoked.
@@ -1779,7 +1847,7 @@ public abstract class IcsConnector implements Connector {
 		addToAutoComplete("variables");
 		addToAutoComplete("shout");
 		addToAutoComplete("cshout");
-		addToAutoComplete("messages");
+		addToAutoComplete("message");
 		addToAutoComplete("clear");
 		addToAutoComplete("quit");
 		addToAutoComplete("bsetup");
@@ -1905,6 +1973,8 @@ public abstract class IcsConnector implements Connector {
 		}
 		return result;
 	}
+
+	protected abstract void writeExtendedCensorList();
 
 	private void setBughouseService(BughouseService bughouseService) {
 		this.bughouseService = bughouseService;
