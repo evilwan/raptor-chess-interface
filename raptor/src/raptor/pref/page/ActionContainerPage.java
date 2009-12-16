@@ -20,6 +20,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -37,6 +38,7 @@ import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.service.ActionScriptService;
 import raptor.swt.RaptorTable;
+import raptor.swt.ScriptEditorDialog;
 
 public class ActionContainerPage extends PreferencePage {
 
@@ -332,6 +334,44 @@ public class ActionContainerPage extends PreferencePage {
 		scriptText
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		scriptText.setText("\n \n \n \n \n");
+		Button editButton = new Button(scriptComposite, SWT.NONE);
+		editButton.setText("Edit");
+		editButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+				false));
+		editButton.addSelectionListener(new SelectionListener() {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				if (StringUtils.isEmpty(nameText.getText())) {
+					Raptor.getInstance().alert(
+							"You must first select a script in a table.");
+				} else {
+					RaptorAction action = ActionScriptService.getInstance()
+							.getAction(nameText.getText());
+					if (action instanceof ScriptedAction) {
+						ScriptedAction scriptedAction = (ScriptedAction) action;
+						ScriptEditorDialog dialog = new ScriptEditorDialog(
+								getShell(), "Edit script: "
+										+ nameText.getText());
+						dialog.setInput(scriptedAction.getScript());
+						String result = dialog.open();
+						if (StringUtils.isNotBlank(result)) {
+							scriptText.setText(result.trim());
+							scriptedAction.setScript(result);
+							ActionScriptService.getInstance().saveAction(
+									scriptedAction);
+						}
+					} else {
+						Raptor.getInstance().alert(
+								"This action is not a scripted action.");
+					}
+				}
+
+			}
+
+		});
 
 		// availableActionsTable.sort(0);
 		refreshCurrentActions();
