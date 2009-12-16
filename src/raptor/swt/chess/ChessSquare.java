@@ -180,16 +180,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							// twice.
 							board.controller.userCancelledMove(initiator.id);
 							board.getControl().setData(CLICK_INITIATOR, null);
-						} else if (ChessBoardUtils.arePiecesSameColor(piece,
-								initiator.piece)) {// Clicked
-							// on
-							// same
-							// piece color
-							// type.
-							board.controller.userCancelledMove(initiator.id);
-							board.controller.userInitiatedMove(id);
-							board.getControl().setData(CLICK_INITIATOR,
-									ChessSquare.this);
 						} else {// A valid move
 							board.controller.userMadeMove(initiator.id, id);
 							board.getControl().setData(CLICK_INITIATOR, null);
