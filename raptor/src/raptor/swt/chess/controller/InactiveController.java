@@ -283,6 +283,8 @@ public class InactiveController extends ChessBoardController implements
 
 		refresh();
 		fireItemChanged();
+
+		System.err.println("Inited inactive controller.");
 	}
 
 	@Override

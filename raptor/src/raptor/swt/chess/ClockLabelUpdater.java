@@ -153,7 +153,7 @@ public class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			lastCountdownPlayed = 7;
 			SoundService.getInstance().playSound(
 					"countdown" + lastCountdownPlayed);
-		} else if (currentTime >= 6000 && currentTime < 6000
+		} else if (currentTime >= 6000 && currentTime < 7000
 				&& lastCountdownPlayed != 6) {
 			lastCountdownPlayed = 6;
 			SoundService.getInstance().playSound(
