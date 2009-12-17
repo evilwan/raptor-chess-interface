@@ -23,7 +23,9 @@ public class GameEndParser {
 
 	public GameEndMessage parse(String message) {
 		GameEndMessage result = null;
+		System.err.println("In game end '" + message + '"');
 		if (message.startsWith(GAME_END) && !message.contains(EXCLUDE)) {
+			System.err.println("is Game end");
 			result = new GameEndMessage();
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
 					" ()", true);

@@ -71,10 +71,10 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 		RaptorAction[] scripts = ActionScriptService.getInstance().getActions(
 				RaptorActionContainer.BugButtons);
 		if (!isHorizontalLayout(newQuadrant)) {
-			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, true));
+			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, false));
 		} else {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(
-					scripts.length / 2, true));
+					scripts.length / 2, false));
 		}
 		removeButtons();
 		addButtons(scripts);
@@ -146,10 +146,10 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 		composite = new Composite(parent, SWT.NONE);
 		Quadrant quadrant = getPreferredQuadrant();
 		if (!isHorizontalLayout(quadrant)) {
-			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, true));
+			composite.setLayout(SWTUtils.createMarginlessGridLayout(2, false));
 		} else {
 			composite.setLayout(SWTUtils.createMarginlessGridLayout(
-					actions.length / 2, true));
+					actions.length / 2, false));
 		}
 
 		addButtons(actions);
@@ -168,7 +168,8 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 	protected void addButtons(RaptorAction[] actions) {
 
 		for (final RaptorAction action : actions) {
-			Button button = new Button(composite, SWT.FLAT | SWT.NO_FOCUS);
+			Button button = new Button(composite, SWT.CENTER | SWT.FLAT
+					| SWT.NO_FOCUS);
 			button.setText(action.getName());
 			button.setToolTipText(action.getDescription());
 			button.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
