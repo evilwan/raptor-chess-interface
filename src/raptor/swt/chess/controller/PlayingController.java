@@ -83,7 +83,7 @@ import raptor.util.RaptorStringUtils;
  * 
  * You can also right click to bring up a menu of available pieces to drop.
  */
-public class PlayingController extends ChessBoardController {
+public class PlayingController extends ChessBoardController { 
 	static final Log LOG = LogFactory.getLog(PlayingController.class);
 
 	/**
@@ -155,50 +155,36 @@ public class PlayingController extends ChessBoardController {
 								board.redrawSquares();
 								onPlayGameEndSound();
 								handleGameStatistics();
-								System.err.println("handled stats.");
-
 								ThreadService.getInstance().run(new Runnable() {
 									public void run() {
 										ChessBoardUtils
 												.prependGameToPgnFile(getGame());
 									}
 								});
-								System.err.println("Launched thread.");
 
 								// Now swap controllers to the inactive
 								// controller.
 								InactiveController inactiveController = new InactiveController(
 										game, getConnector());
-								System.err
-										.println("created inactive controller");
 								getBoard().setController(inactiveController);
-								System.err.println("setController");
 								inactiveController.setBoard(board);
-								System.err.println("setBoard");
 								inactiveController
 										.setItemChangedListeners(itemChangedListeners);
-								System.err.println("inactiveController");
 
 								// Detatch from the GameService.
 								connector.getGameService()
 										.removeGameServiceListener(listener);
-								System.err
-										.println("removed game service listener");
 
 								// Clear the cool bar and init the inactive
 								// controller.
 								ChessBoardUtils.clearCoolbar(getBoard());
-								System.err.println("cleared coolbar");
 								inactiveController.init();
-								System.err.println("inited controller");
 
 								// Set the listeners to null so they wont get
 								// cleared and we wont get notified.
 								setItemChangedListeners(null);
-								System.err.println("setItemListener(null)");
 								// And finally dispose.
 								PlayingController.this.dispose();
-								System.err.println("disposed");
 							}
 						});
 			}
