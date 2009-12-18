@@ -431,7 +431,7 @@ public class ObserveController extends ChessBoardController {
 			onMatchWinner();
 			break;
 		case AddGameChatTab:
-			ChatUtils.openGameChatTab(getConnector(), game.getId());
+			ChatUtils.openGameChatTab(getConnector(), game.getId(), true);
 			break;
 		}
 	}

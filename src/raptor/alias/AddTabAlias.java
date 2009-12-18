@@ -57,7 +57,8 @@ public class AddTabAlias extends RaptorAlias {
 							&& chessBoardItem.getController() instanceof ObserveController) {
 						ChatUtils.openGameChatTab(
 								chessBoardItem.getConnector(), chessBoardItem
-										.getController().getGame().getId());
+										.getController().getGame().getId(),
+								false);
 						games += chessBoardItem.getController().getGame()
 								.getId()
 								+ " ";
@@ -72,11 +73,13 @@ public class AddTabAlias extends RaptorAlias {
 							"Added game tell tab(s): " + games + ".");
 				}
 			} else if (NumberUtils.isDigits(whatsLeft)) {
-				ChatUtils.openChannelTab(controller.getConnector(), whatsLeft);
+				ChatUtils.openChannelTab(controller.getConnector(), whatsLeft,
+						false);
 				return new RaptorAliasResult(null, "Added channel tab: "
 						+ whatsLeft + ".");
 			} else {
-				ChatUtils.openPersonTab(controller.getConnector(), whatsLeft);
+				ChatUtils.openPersonTab(controller.getConnector(), whatsLeft,
+						false);
 				return new RaptorAliasResult(null, "Added person tab: "
 						+ whatsLeft + ".");
 			}
