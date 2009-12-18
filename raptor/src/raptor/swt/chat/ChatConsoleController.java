@@ -1004,7 +1004,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			item.setText("Add game chat tab: " + word);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					ChatUtils.openGameChatTab(getConnector(), gameId);
+					ChatUtils.openGameChatTab(getConnector(), gameId, true);
 				}
 			});
 

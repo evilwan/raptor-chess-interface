@@ -305,46 +305,49 @@ public class ChatUtils {
 		}
 	}
 
-	public static void openChannelTab(Connector connector, String channel) {
+	public static void openChannelTab(Connector connector, String channel,
+			boolean isSelected) {
 		if (!Raptor.getInstance().getWindow().containsChannelItem(connector,
 				channel)) {
 			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 					new ChannelController(connector, channel));
 			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
+					false, isSelected);
 			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
 		}
 	}
 
-	public static void openGameChatTab(Connector connector, String gameId) {
+	public static void openGameChatTab(Connector connector, String gameId,
+			boolean isSelected) {
 		if (!Raptor.getInstance().getWindow().containsGameChatTab(connector,
 				gameId)) {
 			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 					new GameChatController(connector, gameId));
 			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
+					false, isSelected);
 			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
 		}
 	}
 
-	public static void openPartnerTab(Connector connector) {
+	public static void openPartnerTab(Connector connector, boolean isSelected) {
 		if (!Raptor.getInstance().getWindow()
 				.containsPartnerTellItem(connector)) {
 			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 					new BughousePartnerController(connector));
 			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
+					false, isSelected);
 			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
 		}
 	}
 
-	public static void openPersonTab(Connector connector, String person) {
+	public static void openPersonTab(Connector connector, String person,
+			boolean isSelected) {
 		if (!Raptor.getInstance().getWindow().containsPersonalTellItem(
 				connector, person)) {
 			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 					new PersonController(connector, person));
 			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
+					false, isSelected);
 			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
 		}
 	}
