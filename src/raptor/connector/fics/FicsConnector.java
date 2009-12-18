@@ -807,6 +807,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 	protected void loadExtendedCensorList() {
 		if (new File(EXTENDED_CENSOR_FILE_NAME).exists()) {
+			if (LOG.isInfoEnabled()) {
+				LOG.info("Loading " + EXTENDED_CENSOR_FILE_NAME);
+			}
 			synchronized (extendedCensorSync) {
 				extendedCensorList.clear();
 				BufferedReader reader = null;
@@ -833,6 +836,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 						}
 					}
 				}
+			}
+		} else {
+			if (LOG.isInfoEnabled()) {
+				LOG.info("No extended censor list found.");
 			}
 		}
 	}

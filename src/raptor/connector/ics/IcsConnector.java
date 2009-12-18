@@ -236,11 +236,6 @@ public abstract class IcsConnector implements Connector {
 		gameService.addGameServiceListener(gameServiceListener);
 		setBughouseService(new BughouseService(this));
 		prepopulateAutoCompleteList();
-		ThreadService.getInstance().run(new Runnable() {
-			public void run() {
-				loadExtendedCensorList();
-			}
-		});
 	}
 
 	public void acceptSeek(String adId) {
@@ -395,6 +390,7 @@ public abstract class IcsConnector implements Connector {
 					channelToSpeakTellsFrom.clear();
 					isSpeakingAllPersonTells = false;
 					messageCallbackEntries.clear();
+					extendedCensorList.clear();
 				}
 
 				try {
@@ -1303,7 +1299,7 @@ public abstract class IcsConnector implements Connector {
 			throw new IllegalStateException("You are already connected to "
 					+ getShortName() + " . Disconnect before invoking connect.");
 		}
-
+		loadExtendedCensorList();
 		resetConnectionStateVars();
 
 		currentProfileName = profileName;
