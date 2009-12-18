@@ -145,6 +145,9 @@ public class ThreadService {
 				}
 			}
 		}
+		else {
+			LOG.info("Vetoing runnable in ThreadService, raptor is disposed. " + runnable);
+		}
 	}
 
 	/**
@@ -176,6 +179,7 @@ public class ThreadService {
 				return null;
 			}
 		} else {
+			LOG.info("Veoting runnable " + runnable + " raptor is disposed.");
 			return null;
 		}
 	}

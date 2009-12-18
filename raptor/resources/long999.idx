@@ -1,13 +1,13 @@
 1q3rk1/pp3ppp/2r1pn2/2bp4/4P3/2P5/PP1NQPPP/R1B2RK1 w - -
-QGD: Orthodox defense, classical, 13.d1b1 (Maroczy) *
+QGD: Orthodox defense, classical, 13.d1b1 (Maróczy) *
 1r2kb1r/p1pq2pp/Q1n5/3npp2/6b1/P2PPN2/1P3PPP/RNB1KB1R b KQk -
 Sicilian: Najdorf, Poisoned pawn variation *
 1rb2rk1/pp3ppp/5q2/3P4/1n6/2P1Q3/PP3PPP/RN2KB1R w KQ -
 Scotch: Gottschall variation
 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ -
-King's Indian: Samisch, Panno main line
+King's Indian: Sämisch, Panno main line
 1rbq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ -
-King's Indian: Samisch, Ruban variation
+King's Indian: Sämisch, Ruban variation
 1rbqk1nr/pp1pppbp/2n3p1/2p5/4P3/2N3P1/PPPP1PBP/R1BQK1NR w KQk -
 English: closed, 5.Rb1 *
 1rbqk1nr/pp1pppbp/2n3p1/2p5/4P3/2N3PN/PPPP1PBP/R1BQK2R b KQk -
@@ -25,7 +25,7 @@ Sicilian: Richter-Rauzer, Rauzer attack, 7...a6 defense, 8...Bd7 *
 2kr1b1r/pppq2pp/2n1bp2/3np3/8/2NP1NP1/PP2PPBP/R1BQ1RK1 w - -
 Sicilian: dragon, Yugoslav attack, Rauser variation *
 2kr1b1r/pppq2pp/2n2n2/2Pp1p2/3Pp3/2N1P3/PP1NQPPP/R1B2RK1 b - -
-French: classical, St a hlberg variation *
+French: classical, Stahlberg variation *
 2kr1b1r/pppq2pp/2n2n2/4pp2/1P6/P1NPPb2/3BBPPP/R2QK2R w KQ -
 Sicilian: Richter-Rauzer, Rauzer attack, 7...a6 defense, 11.Bxf6 *
 2kr1b1r/pppq2pp/2n5/3Npp2/6b1/3PPN2/PP2BPPP/R1BQ1RK1 b - -
@@ -37,7 +37,7 @@ Sicilian: Richter-Rauzer, Rauzer attack, 7...Be7 defense, 9.f4 *
 2kr1b1r/pppq2pp/2n5/3npp2/6b1/P1NPPN2/1P1BBPPP/R2QK2R b KQ -
 Sicilian: Richter-Rauzer, Rauzer attack, 7...a6 defense, 9...Be7 *
 2kr3r/pp2bppp/2nqbn2/3pp1B1/8/1NN3P1/PPP1PPBP/R2Q1RK1 w - -
-Grunfeld: Russian, Keres variation *
+Grünfeld: Russian, Keres variation *
 2kr3r/ppp2ppp/1bn1bPq1/6N1/2ppNPP1/8/PPP4P/R1BQR1K1 w - -
 Two knights: Max Lange attack, Berger variation
 2kr3r/pppb1ppp/2n1q2n/1Bb1p3/8/2NP1N2/PPP2PPP/R1BQR1K1 w - -
@@ -55,7 +55,7 @@ QGD: exchange, chameleon variation *
 2krr3/pppq1ppp/1bn5/3n4/QPN1p1b1/P2PPN2/1B3PPP/R3KB1R w KQ -
 Sicilian: Najdorf, Ivkov variation *
 2r1kb1r/1pq2ppp/p1n1pn2/2pp4/3P2b1/P1P1PN2/1P1NBPPP/R1BQ1RK1 w k -
-QGD: Orthodox defense, Rubinstein attack, Grunfeld variation *
+QGD: Orthodox defense, Rubinstein attack, Grünfeld variation *
 2r1kb1r/ppq2ppp/2n1pn2/2pp4/3P2b1/2P1PN2/PP1NBPPP/R1BQ1RK1 w k -
 QGD: Orthodox defense, Rubinstein attack (with Rc1) *
 2r1kb1r/ppq2ppp/2n1pn2/2pp4/3P2b1/P1P1PN2/1P1NBPPP/R1BQ1RK1 b k -
@@ -101,9 +101,9 @@ QGD: Orthodox defense, Swiss, Karlsbad variation *
 2rqkb1r/pp3ppp/4pn2/3p4/3P4/1P2B2P/P1P1QPP1/RN3RK1 b k -
 QGD: Tartakower variation *
 2rqkbnr/pp3ppp/2n1p3/2p2b2/2pP4/4BNP1/PP2PPBP/RN1Q1RK1 b k -
-Grunfeld: Grunfeld gambit, Botvinnik variation *
+Grünfeld: Grünfeld gambit, Botvinnik variation *
 2rqkbnr/pp3ppp/2n1p3/2pp1b2/3P4/5NP1/PPP1PPBP/RNBQ1RK1 w k -
-Grunfeld: Grunfeld gambit, Capablanca variation *
+Grünfeld: Grünfeld gambit, Capablanca variation *
 2rqkbnr/pp3ppp/2n1p3/2pp4/3P2b1/4PN2/PPP1BPPP/RNBQ1RK1 w k -
 QGD: Anti-neo-orthodox variation *
 3q1rk1/pp3ppp/2r1p3/2b5/4Q3/2P5/PP3PPP/R1B2RK1 b - -
@@ -149,7 +149,7 @@ Giuoco Piano: Tarrasch variation
 r1b1k2r/1pp2ppp/p1n5/2bpq3/3NP3/2P1K3/PPN3PP/R1BQ1B1R b kq -
 Two knights defense: Fegatello attack, Leonhardt variation *
 r1b1k2r/1pq1bppp/p1nppn2/8/P2NPP2/2N5/1PP1B1PP/R1BQ1R1K b kq -
-Sicilian: Scheveningen, classical, Maroczy system
+Sicilian: Scheveningen, classical, Maróczy system
 r1b1k2r/1pqnbppp/p2ppn2/6B1/3NPP2/2N2Q2/PPP3PP/2KR1B1R w kq -
 Sicilian: Najdorf, 7...Be7 main line
 r1b1k2r/2q1bppp/p2p1n2/npp1p3/P2PP3/2P2N2/1PB2PPP/RNBQR1K1 b kq -
@@ -159,7 +159,7 @@ Two knights defense: Knorre variation
 r1b1k2r/pp1n1ppp/2p1pn2/q2p2B1/1bPP4/2N1P3/PPQN1PPP/R3KB1R b KQkq -
 QGD: Cambridge Springs defense, Bogolyubov variation
 r1b1k2r/pp3ppp/1qn1p3/2bp4/6n1/5NP1/PPPNPPBP/R1BQ1RK1 w kq -
-Grunfeld: Pachman variation *
+Grünfeld: Pachman variation *
 r1b1k2r/pp3ppp/3b1q2/3P4/1P2n3/4PN2/5PPP/R1BQKB1R w KQkq -
 QGD semi-Slav: Meran, Stahlberg variation *
 r1b1k2r/ppp1qppp/5n2/4p1B1/2BnP3/2N5/PPP3PP/R2Q1RK1 b kq -
@@ -193,7 +193,7 @@ Sicilian: Scheveningen, classical variation with ...Qc7 and ...Nc6
 r1b1kb1r/2p1nppp/p1p5/3P4/3Pp3/4P3/PPQ1NP1q/RNB1K1R1 w Qkq -
 French: Winawer, advance, poisoned pawn, Konstantinopolsky variation *
 r1b1kb1r/p1q2pp1/2p2n1p/n3N3/4p3/8/PPPPBPPP/RNBQK2R w KQkq -
-Two knights defense: Goring variation
+Two knights defense: Göring variation
 r1b1kb1r/p1q2ppp/2p2n2/n3p1N1/8/3B1Q2/PPPP1PPP/RNB1K2R b KQkq -
 Two knights defense: Paoli variation
 r1b1kb1r/pp1n1ppp/2p1p3/q2n2B1/3P4/2N1PN2/PP3PPP/R2QKB1R w KQkq -
@@ -213,33 +213,33 @@ English: symmetrical, Geller variation
 r1b1kb1r/pp1p1ppp/4pn2/1Bp5/3nPq2/2N2N2/PPPP1PPP/R1BQR1K1 w kq -
 English: four knights, Stean variation *
 r1b1kb1r/pp2pppp/1qn2n2/2pp4/3P4/5NP1/PPP1PPBP/RNBQK2R w KQkq -
-Grunfeld: Russian variation *
+Grünfeld: Russian variation *
 r1b1kb1r/pp2pppp/1qn2n2/3p2B1/2PP4/2N5/PP3PPP/R2QKBNR w KQkq -
 Caro-Kann: Panov-Botvinnik, Reifir (Spielmann) variation
 r1b1kb1r/pp2pppp/1qnp1n2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq -
-Sicilian: Sozin, Benko variation
+Sicilian: Sozin, Benkö variation
 r1b1kb1r/pp2pppp/2n2n2/q1pp4/3P4/5NP1/PPP1PPBP/RNBQK2R w KQkq -
-Grunfeld: Flohr variation *
+Grünfeld: Flohr variation *
 r1b1kb1r/pp2pppp/2n2n2/q2p2B1/2PP4/2N5/PP3PPP/R2QKBNR w KQkq -
 Caro-Kann: Panov-Botvinnik, Czerniak variation
 r1b1kb1r/pp3ppp/1qn1pn2/2pp4/3P4/4PNP1/PPP2PBP/RNBQ1RK1 b kq -
-Grunfeld: Botvinnik variation *
+Grünfeld: Botvinnik variation *
 r1b1kb1r/pp3ppp/1qn1pn2/2pp4/3P4/5NP1/PPP1PPBP/RNBQ1RK1 w kq -
-Grunfeld with e3 & Qb3 *
+Grünfeld with e3 & Qb3 *
 r1b1kb1r/pp3ppp/2n2n2/2qpp1B1/8/5NP1/PPP1PPBP/RN1Q1RK1 b kq -
-Grunfeld: Russian, Smyslov variation *
+Grünfeld: Russian, Smyslov variation *
 r1b1kb1r/pp3ppp/2n2n2/2qpp3/8/1P3NP1/P1P1PPBP/RNBQ1RK1 b kq -
-Grunfeld: Russian, Levenfish variation *
+Grünfeld: Russian, Levenfish variation *
 r1b1kb1r/pp3ppp/2n2n2/2qpp3/8/2N2NP1/PPP1PPBP/R1BQ1RK1 b kq -
-Grunfeld: Russian, Byrne (Simagin) variation *
+Grünfeld: Russian, Byrne (Simagin) variation *
 r1b1kb1r/pp3ppp/2n2n2/2qpp3/8/2P2NP1/PP2PPBP/RNBQ1RK1 b kq -
-Grunfeld: Russian, Szabo (Boleslavsky) variation *
+Grünfeld: Russian, Szabo (Boleslavsky) variation *
 r1b1kb1r/pp3ppp/2n2n2/2qpp3/8/5NP1/PPP1PPBP/RNBQ1RK1 w kq -
-Grunfeld: Russian variation with e4 *
+Grünfeld: Russian variation with e4 *
 r1b1kb1r/pp3ppp/2n2n2/2qpp3/8/N4NP1/PPP1PPBP/R1BQ1RK1 b kq -
-Grunfeld: Russian, Prins variation *
+Grünfeld: Russian, Prins variation *
 r1b1kb1r/pp3ppp/2n2n2/2qpp3/8/P4NP1/1PP1PPBP/RNBQ1RK1 b kq -
-Grunfeld: Russian, Alekhine (Hungarian) variation *
+Grünfeld: Russian, Alekhine (Hungarian) variation *
 r1b1kb1r/pp3ppp/2n5/2pqp3/8/3P1NP1/PP2PP1P/R1BQKB1R b KQkq -
 Sicilian: accelerated fianchetto, Gurgenidze variation *
 r1b1kb1r/ppppq1pp/2n2n2/3Q4/8/5N2/PPP1PPPP/RNB1KB1R w KQkq -
@@ -283,7 +283,7 @@ Nimzo-Indian: Spielmann, 4...c5, 5.dc Nc6 *
 r1b1kbnr/pp2pppp/1qn5/1Bpp4/8/4PN2/PPPP1PPP/RNBQK2R w KQkq -
 Nimzo-Indian: Spielmann variation *
 r1b1kbnr/pp2pppp/1qn5/2pp4/3P4/5NP1/PPP1PP1P/RNBQKB1R w KQkq -
-Grunfeld: Russian variation *
+Grünfeld: Russian variation *
 r1b1kbnr/pp2pppp/2nq4/1Bpp4/8/4PN2/PPPP1PPP/RNBQK2R w KQkq -
 Nimzo-Indian: Mikenas attack *
 r1b1kbnr/pp3ppp/1qn1p3/2ppP3/3P4/2PB1N2/PP3PPP/RNBQK2R b KQkq -
@@ -337,7 +337,7 @@ Ruy Lopez: Vinogradov variation
 r1b1kbnr/ppq1pppp/2n5/1B1p4/3P4/5N2/PPP2PPP/RNBQK2R b KQkq -
 Nimzo-Indian: classical, Noa variation, 5.cd ed *
 r1b1kbnr/ppq1pppp/2n5/1Bp5/2p5/4PN2/PP1P1PPP/RNBQ1RK1 b kq -
-Nimzo-Indian: classical, Pirc variation *
+Nimzo-Indian: classical, Pirƒá variation *
 r1b1kbnr/ppq1pppp/2n5/1Bpp4/2P5/4PN2/PP1P1PPP/RNBQK2R b KQkq -
 Nimzo-Indian: classical, 4...c5 *
 r1b1kbnr/ppq1pppp/2n5/1Bpp4/3P4/4PN2/PPP2PPP/RNBQK2R b KQkq -
@@ -355,7 +355,7 @@ Sicilian: Flohr variation
 r1b2knr/pppp3p/2n2qP1/2b1p2Q/6P1/8/PPPP1PBP/RNB1K1NR w KQ -
 KGA: bishop's gambit, Fraser variation *
 r1b2rk1/1p2qp1p/2n1pn2/pBbpN1p1/5B2/2P1P3/PP3PPP/RN1Q1RK1 w - -
-QGD Slav: Dutch, Samisch variation *
+QGD Slav: Dutch, Sämisch variation *
 r1b2rk1/1p2qppp/2n1pn2/pBbp4/5B2/2P1PN2/PP3PPP/RN1Q1RK1 w - -
 QGD Slav: Dutch variation, main line *
 r1b2rk1/1pp1qppp/2n2n2/p1bPp3/8/2PP1N2/PP1NBPPP/R1BQ1RK1 b - -
@@ -385,7 +385,7 @@ QGD: Cambridge Springs defense, Argentine variation
 r1b2rk1/pp1nqppp/1bp2n2/4N3/1P1Pp3/P1N1B3/2P1BPPP/R2Q1RK1 w - -
 Ruy Lopez: open, Malkin variation *
 r1b2rk1/pp1nqppp/2n1p3/3pP3/2pP1P2/2N2N2/PPPQ2PP/2KR1B1R w - -
-French: classical, St a hlberg variation
+French: classical, Stahlberg variation
 r1b2rk1/pp1nqppp/2p1p3/3n4/2BP4/2N1PN2/PP3PPP/2RQ1RK1 b - -
 QGD: Orthodox defense, Bd3 line, 11.O-O
 r1b2rk1/pp1nqppp/2p1p3/3n4/2BP4/2N1PN2/PP3PPP/2RQK2R w K -
@@ -393,7 +393,7 @@ QGD: Orthodox defense, Bd3 line
 r1b2rk1/pp1nqppp/2p1p3/3n4/2BPN3/4PN2/PP3PPP/2RQK2R b K -
 QGD: Orthodox defense, Bd3 line, Alekhine variation
 r1b2rk1/pp1nqppp/2p5/4p3/2BP4/2R1PN2/PP3PPP/1Q3RK1 b - -
-QGD: Orthodox defense, classical, 13.d1b1 (Maroczy)
+QGD: Orthodox defense, classical, 13.d1b1 (Maróczy)
 r1b2rk1/pp1nqppp/2p5/4p3/2BP4/2R1PN2/PP3PPP/3Q1RK1 w - -
 QGD: Orthodox defense, classical variation
 r1b2rk1/pp1nqppp/2p5/4p3/2BP4/2R1PN2/PPQ2PPP/5RK1 b - -
@@ -431,13 +431,13 @@ Evans gambit declined, Pavlov variation
 r1bB1rk1/pp3ppp/8/4p3/3nn3/3P4/PPP1KbPP/R2Q1BNR w - -
 Scotch: Sea-cadet mate *
 r1bk1bnr/2p2ppp/p1p5/3P4/3Pp3/4P3/PPQ1NP1q/RNB1K1R1 w Q -
-French: Winawer, advance, poisoned pawn, Euwe-Gligoric variation *
+French: Winawer, advance, poisoned pawn, Euwe-Gligoriƒá variation *
 r1bk2nr/pppp1Qpp/1b6/nP2q3/2B1P3/8/PBPP1PPP/RN2K2R b KQ -
 Evans gambit declined, Hicken variation
 r1bk2nr/pppp1ppp/2n3q1/1N6/8/8/PPPNBPPP/R2Q1RK1 w - -
 Scotch: Rosenthal variation
 r1bk2nr/ppppq1pp/2n5/2b1PP1Q/8/8/PPPP2PP/RNBK1BNR b - -
-KGA: Lopez-Gianutio counter-gambit, Hein variation *
+KGA: López-Gianutio counter-gambit, Hein variation *
 r1bnk2r/ppppnppp/5q2/1Bb5/3NP3/2P1B3/PP3PPP/RN1QK2R w KQkq -
 Scotch: Paulsen, Gunsberg defense
 r1bq1b1r/ppn3pp/2p1k3/3np3/2BPQ3/P1N5/1PP2PPP/R1B1K2R w KQ -
@@ -453,9 +453,9 @@ Vienna: Steinitz gambit, Fraser-Minckwitz variation *
 r1bq1k1r/2p2ppp/p4n2/1pbPR1N1/3n4/1B6/PPPP1PPP/RNBQ2K1 w - -
 Ruy Lopez: Rabinovich variation
 r1bq1k1r/pp2nppp/2n5/4p3/2Pp4/3P1NP1/4PP1P/RN1QKB1R w KQ -
-Benko gambit: Ne2 variation *
+Benkö gambit: Ne2 variation *
 r1bq1knr/pp3p1p/2n3p1/4p3/2Pp4/3P1NP1/4PP1P/RN1QKB1R w KQ -
-Benko gambit *
+Benkö gambit *
 r1bq1knr/ppp3pp/2n5/2bp1P1Q/4p1P1/3P4/PPP2PBP/RNB1K1NR w KQ -
 KGA: bishop's gambit, Grimm attack *
 r1bq1knr/ppp3pp/2n5/2bppP1Q/6P1/8/PPPPNPBP/RNB1K2R b KQ -
@@ -465,7 +465,7 @@ KGA: bishop's gambit, McDonnell attack *
 r1bq1knr/pppp3p/2n3p1/2b1pP1Q/6P1/8/PPPP1PBP/RNB1K1NR w KQ -
 KGA: bishop's gambit, McDonnell attack *
 r1bq1r1k/1pp1b1pp/2n5/p2npp2/8/P1NPPN2/1PQ1BPPP/R1B1K2R w KQ -
-Sicilian: Scheveningen, classical, Maroczy system *
+Sicilian: Scheveningen, classical, Maróczy system *
 r1bq1rk1/1p1n1pbp/2pp1np1/p3p3/2PPP3/2N2N2/PP3PPP/R1BQRBK1 w - -
 King's Indian: orthodox, 7...Nbd7, main line
 r1bq1rk1/1p1nbppp/p1p1pn2/3P2B1/3P4/2N1PN2/PPQ2PPP/2R1KB1R b K -
@@ -473,7 +473,7 @@ QGD: Orthodox defense, Rubinstein attack, main line
 r1bq1rk1/1p1nbppp/p1p1pn2/3p2B1/2PP4/2N1PN2/PPQ2PPP/2R1KB1R w K -
 QGD: Orthodox defense, Rubinstein attack, Karlsbad variation
 r1bq1rk1/1p1nbppp/p1p1pn2/3p2B1/2PP4/P1N1PN2/1PQ2PPP/2R1KB1R b K -
-QGD: Orthodox defense, Rubinstein attack, Grunfeld variation
+QGD: Orthodox defense, Rubinstein attack, Grünfeld variation
 r1bq1rk1/1p1nppbp/2n3p1/p7/2Pp4/P2P1NP1/1P1N1PBP/R1BQR1K1 b - -
 Benoni: fianchetto, 11...Re8 *
 r1bq1rk1/1p2bppp/2n2n2/p3p1B1/2Pp4/P2P1NP1/1P3PBP/RN1Q1RK1 b - -
@@ -491,7 +491,7 @@ Nimzo-Indian: 4.e3, main line with 8...dc and 9...cd *
 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
 King's Indian: fianchetto, Panno variation
 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ -
-King's Indian: Samisch, Panno formation
+King's Indian: Sämisch, Panno formation
 r1bq1rk1/1pp2ppp/1bn5/p2PN3/1P1P4/P7/2P2PPP/R1BQKB1R w KQ -
 Ruy Lopez: open, Berger variation *
 r1bq1rk1/1ppnbppp/p3pn2/3P2B1/3P4/2N1PN2/PP3PPP/2RQKB1R b K -
@@ -545,7 +545,7 @@ Ruy Lopez: Marshall counter-attack, 11...c6
 r1bq1rk1/4bppp/p2p1n2/npp1p3/4P3/2P2N1P/PPBP1PP1/RNBQR1K1 w - -
 Ruy Lopez: closed (10...c5)
 r1bq1rk1/4bppp/ppnppn2/8/2P1P3/N1N5/PP2BPPP/R1BQ1RK1 w - -
-Sicilian, Szen, hedgehog variation
+Sicilian, Szén, hedgehog variation
 r1bq1rk1/5ppp/p1p1pn2/2bp4/2P5/2N1PN2/PP3PPP/R1BQ1RK1 w - -
 Nimzo-Indian: 4.e3, main line *
 r1bq1rk1/5ppp/p1pbpn2/2pp4/2PP4/2N1PN2/PP3PPP/R1BQ1RK1 w - -
@@ -569,7 +569,7 @@ English: symmetrical, main line with b3 *
 r1bq1rk1/p3bppp/2n2n2/1pp1p3/3pP3/3P1NP1/PPP1NPBP/R1BQ1RK1 w - -
 King's Indian: orthodox, Aronin-Taimanov, bayonet attack *
 r1bq1rk1/p3nppp/2p5/2bpp3/8/1P4P1/P1PQPPBP/RNB2RK1 b - -
-Grunfeld: exchange, Larsen variation *
+Grünfeld: exchange, Larsen variation *
 r1bq1rk1/p3ppbp/1pn2np1/2pp4/5P2/3PPN2/PPP1B1PP/RNB1QRK1 w - -
 Dutch: Ilyin-Genevsky variation with b3 *
 r1bq1rk1/p4ppp/2n2n2/2bpp1B1/8/1BNP4/PPP2PPP/R2QK1NR b KQ -
@@ -587,9 +587,9 @@ Ruy Lopez: open, St. Petersburg variation *
 r1bq1rk1/pp1n1ppp/1bp5/3P4/1PN1p1n1/P1N1B3/2P2PPP/R2QKB1R w KQ -
 Ruy Lopez: open, Bernstein variation, Karpov gambit *
 r1bq1rk1/pp1n1ppp/4pn2/2p5/1bBP4/2N1PN2/PP3PPP/R1BQ1RK1 w - -
-Nimzo-Indian: 4.e3, Gligoric system, Bronstein variation
+Nimzo-Indian: 4.e3, Gligoriƒá system, Bronstein variation
 r1bq1rk1/pp1n1ppp/4pn2/2pp4/1bPP4/2NBPN2/PP3PPP/R1BQ1RK1 w - -
-Nimzo-Indian: 4.e3, Gligoric system with 7...Nbd7
+Nimzo-Indian: 4.e3, Gligoriƒá system with 7...Nbd7
 r1bq1rk1/pp1n2pp/2n1pp2/2bpP3/5PQ1/P1N2N2/1PP3PP/R1B1KB1R w KQ -
 French: Steinitz, Brodsky-Jones variation
 r1bq1rk1/pp1nb1pp/2n2p2/4p3/2Pp4/N2P1NP1/PP3PBP/R1BQR1K1 w - -
@@ -623,7 +623,7 @@ Philidor: Nimzovich, Sozin variation
 r1bq1rk1/pp1nbppp/4pn2/2pP2B1/3P4/2N1PN2/PPQ2PPP/R3KB1R b KQ -
 QGD: Orthodox defense, 7.Qc2 c5, 8.cd (Rubinstein)
 r1bq1rk1/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR w KQ -
-Nimzo-Indian: Samisch, main line
+Nimzo-Indian: Sämisch, main line
 r1bq1rk1/pp1pppbp/2n2np1/2p5/2P5/1P2PN2/PB1PBPPP/RN1QK2R b KQ -
 English: symmetrical, hedgehog system *
 r1bq1rk1/pp1pppbp/2n2np1/2p5/2P5/1PN2NP1/P2PPPBP/R1BQ1RK1 b - -
@@ -637,7 +637,7 @@ English: Symmetrical, Keres defense *
 r1bq1rk1/pp2b1pp/2n2n2/2pp4/4pB2/1N2PP2/PPP1B1PP/RN1Q1RK1 b - -
 Alekhine's defense: four pawns attack, Korchnoi variation *
 r1bq1rk1/pp2bppp/2n1pn2/2pp4/4P3/3P1NP1/PPPN1PBP/R1BQR1K1 b - -
-Reti: King's Indian attack, French variation
+Réti: King's Indian attack, French variation
 r1bq1rk1/pp2bppp/2n2n2/2pp2B1/3P4/2N2NP1/PP2PPBP/R2Q1RK1 b - -
 QGD: Tarrasch, Prague variation, 9.Bg5
 r1bq1rk1/pp2bppp/2n2n2/2pp4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
@@ -667,7 +667,7 @@ Sicilian: Richter-Rauzer, Rauzer attack, 7...Be7 defense, 9...Nxd4
 r1bq1rk1/pp2bppp/3ppn2/6B1/3nPP2/2N5/PPPQ2PP/2KR1B1R w - -
 Sicilian: Richter-Rauzer, Rauzer attack, 7...Be7 defense, 9...Nxd4
 r1bq1rk1/pp2bppp/n1n5/2p1p3/8/PPNPPN2/4BPPP/R1BQ1RK1 b - -
-Sicilian, Szen, hedgehog variation *
+Sicilian, Szén, hedgehog variation *
 r1bq1rk1/pp2ppbp/2n2np1/2p5/2Pp4/2NP1NP1/PP2PPBP/R1BQ1RK1 w - -
 King's Indian: fianchetto, Yugoslav Panno *
 r1bq1rk1/pp2ppbp/2n2np1/2pp2B1/8/2NP1NP1/PPP1PPBP/R2Q1RK1 b - -
@@ -701,13 +701,13 @@ King's Indian: fianchetto, Panno variation *
 r1bq1rk1/pp2ppbp/2n2np1/2pp4/Q7/2PP1NP1/PP2PPBP/RNB2RK1 b - -
 King's Indian: fianchetto, Kavalek (Bronstein) variation *
 r1bq1rk1/pp2ppbp/2n2np1/3p4/2PN4/6P1/PP2PPBP/RNBQ1RK1 w - -
-Neo-Grunfeld, 6.cd Nxd5, 7.O-O c5, 8.Nc3 *
+Neo-Grünfeld, 6.cd Nxd5, 7.O-O c5, 8.Nc3 *
 r1bq1rk1/pp2ppbp/2n2np1/3p4/2PP4/2N2N2/PP2BPPP/R1BQ1RK1 b - -
 QGD: Tarrasch, Prague variation, Normal position *
 r1bq1rk1/pp2ppbp/2n2np1/8/2Pp4/3P1NP1/PP1N1PBP/R1BQ1RK1 b - -
 Benoni: fianchetto, 9...Nbd7 *
 r1bq1rk1/pp2ppbp/2n3p1/8/2BPP3/4B3/P3NPPP/R2Q1RK1 b - -
-Grunfeld: Spassky variation, main line, 10...cd, 11.cd
+Grünfeld: Spassky variation, main line, 10...cd, 11.cd
 r1bq1rk1/pp2ppbp/2np1np1/2p5/2P5/2N2NP1/PP1PPPBP/R1BQ1RK1 w - -
 English: symmetrical, main line with d3 *
 r1bq1rk1/pp2ppbp/2np1np1/2pP4/2P5/2N2NP1/PP2PPBP/R1BQ1RK1 b - -
@@ -725,23 +725,23 @@ Sicilian: dragon, Yugoslav attack, Rauser variation
 r1bq1rk1/pp2ppbp/2np1np1/8/4P3/1NN1B3/PPP1BPPP/R2Q1RK1 b - -
 Sicilian: dragon, classical, 9.Nb3
 r1bq1rk1/pp2ppbp/5np1/n7/2BP4/2N2N2/PP3PPP/R1BQ1RK1 w - -
-QGD: Tarrasch, Reti variation *
+QGD: Tarrasch, Réti variation *
 r1bq1rk1/pp3pb1/2n2npp/2ppp3/4P3/2PP1NP1/PP1N1PBP/R1BQ1RK1 w - -
 King's Indian: fianchetto, classical main line *
 r1bq1rk1/pp3pbp/2n2np1/2ppp3/4P3/3P1NP1/PPPN1PBP/R1BQ1RK1 w - -
 King's Indian: fianchetto, classical variation, 8.e4 *
 r1bq1rk1/pp3ppp/2B2n2/2b1N3/3p4/2N5/PPPP1PPP/R1BQK2R w KQ -
-Giuoco Piano: Moller (Therkatz) attack *
+Giuoco Piano: Möller (Therkatz) attack *
 r1bq1rk1/pp3ppp/2B2n2/2bpN3/8/2N5/PPPP1PPP/R1BQK2R b KQ -
 Giuoco Piano *
 r1bq1rk1/pp3ppp/2N2n2/1Bbp4/8/2N5/PPPP1PPP/R1BQK2R b KQ -
 Giuoco Piano: Greco variation *
 r1bq1rk1/pp3ppp/2n1pn2/1Bbp4/2P5/4PN2/PP1N1PPP/R1BQ1RK1 b - -
-Nimzo-Indian: 4.e3, Gligoric system, Bronstein variation *
+Nimzo-Indian: 4.e3, Gligoriƒá system, Bronstein variation *
 r1bq1rk1/pp3ppp/2n1pn2/1Bbp4/2P5/4PN2/PP2QPPP/RNB2RK1 b - -
-Nimzo-Indian: 4.e3, Gligoric system, Smyslov variation *
+Nimzo-Indian: 4.e3, Gligoriƒá system, Smyslov variation *
 r1bq1rk1/pp3ppp/2n1pn2/1Bbp4/2P5/4PN2/PP3PPP/RNBQ1RK1 w - -
-Nimzo-Indian: 4.e3, Gligoric system with 7...dc *
+Nimzo-Indian: 4.e3, Gligoriƒá system with 7...dc *
 r1bq1rk1/pp3ppp/2n1pn2/2p5/2BP4/P1P1PN2/5PPP/R1BQ1RK1 b - -
 Nimzo-Indian: 4.e3, main line
 r1bq1rk1/pp3ppp/2n1pn2/2pp4/1bPP4/2NBPN2/PP3PPP/R1BQ1RK1 w - -
@@ -751,7 +751,7 @@ Nimzo-Indian: 4.e3, main line with 8...Bxc3
 r1bq1rk1/pp3ppp/2n1pn2/8/1bBp4/P1N1PN2/1P3PPP/R1BQ1RK1 w - -
 Nimzo-Indian: 4.e3, main line with 8...dc and 9...cd
 r1bq1rk1/pp3ppp/2n2n2/2bp4/N7/5NP1/PP2PPBP/R1BQ1RK1 b - -
-QGD: Tarrasch, Reti variation
+QGD: Tarrasch, Réti variation
 r1bq1rk1/pp3ppp/2nbpn2/1BPp4/8/2N1PN2/PPP2PPP/R1BQ1RK1 b - -
 Nimzo-Indian: 4.e3, Ragozin variation *
 r1bq1rk1/pp3ppp/2nbpn2/1Bpp4/2PP4/1P2PN2/P4PPP/RNBQ1RK1 b - -
@@ -759,15 +759,15 @@ Nimzo-Indian: 4.e3, Keres variation *
 r1bq1rk1/pp3ppp/2nbpn2/1Bpp4/2PP4/2N1PN2/PP3PPP/R1BQ1RK1 b - -
 Nimzo-Indian: 4.e3, main line with 7...Nc6 *
 r1bq1rk1/pp3ppp/2nbpn2/1Bpp4/2PP4/4PN2/PP1N1PPP/R1BQ1RK1 b - -
-Nimzo-Indian: 4.e3, Gligoric system with 7...Nbd7 *
+Nimzo-Indian: 4.e3, Gligoriƒá system with 7...Nbd7 *
 r1bq1rk1/pp3ppp/2nbpn2/2pp2B1/3P4/2P2NP1/PP2PPBP/RN1Q1RK1 b - -
-Grunfeld: Smyslov defense *
+Grünfeld: Smyslov defense *
 r1bq1rk1/pp3ppp/2nbpn2/2pp4/2PP4/2NBPN2/PP3PPP/R1BQ1RK1 b - -
 QGD: Semi-Tarrasch, symmetrical variation *
 r1bq1rk1/pp3ppp/2nbpn2/2pp4/2PP4/2NBPN2/PP3PPP/R1BQ1RK1 w - -
 QGD: Semi-Tarrasch, symmetrical variation
 r1bq1rk1/pp3ppp/2nbpn2/2pp4/3P1B2/2P2NP1/PP2PPBP/RN1Q1RK1 b - -
-Grunfeld: Flohr defense *
+Grünfeld: Flohr defense *
 r1bq1rk1/pp3ppp/3b4/3P4/1P2n3/4PN2/5PPP/R1BQKB1R w KQ -
 QGD semi-Slav: Meran, Sozin variation *
 r1bq1rk1/pp4bp/2nppnp1/2p5/2P1PPPP/2N5/PP2B3/R1BQK1NR b KQ -
@@ -793,27 +793,27 @@ Four knights: symmetrical, Pillsbury variation
 r1bq1rk1/ppp1nppp/3p1n2/1B2p3/1b1PP3/2N2N2/PPP1QPPP/R1B2RK1 b - -
 Four knights: Alatortsev variation *
 r1bq1rk1/ppp1nppp/3p1n2/1B2p3/1b2P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - -
-Four knights: symmetrical, Maroczy system *
+Four knights: symmetrical, Maróczy system *
 r1bq1rk1/ppp1p1bp/2np1np1/5p2/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
 Dutch: Leningrad, main variation with Nc6
 r1bq1rk1/ppp1ppbp/2n2np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ -
-Grunfeld: Russian, Byrne (Simagin) variation
+Grünfeld: Russian, Byrne (Simagin) variation
 r1bq1rk1/ppp1ppbp/2n3p1/8/2BPP3/2P5/P3NPPP/R1BQK2R w KQ -
-Grunfeld: exchange, Simagin's improved variation
+Grünfeld: exchange, Simagin's improved variation
 r1bq1rk1/ppp1ppbp/2np1np1/8/2PP4/2N2NP1/PP2PPBP/R1BQK2R w KQ -
 King's Indian: fianchetto with ...Nc6
 r1bq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ -
-King's Indian: Samisch, 6...Nc6
+King's Indian: Sämisch, 6...Nc6
 r1bq1rk1/ppp1ppbp/n2p1np1/8/2PPP3/2N2N2/PP2BPPP/R1BQK2R w KQ -
 King's Indian: Kazakh variation
 r1bq1rk1/ppp1ppbp/n4np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ -
-Grunfeld: Russian, Prins variation
+Grünfeld: Russian, Prins variation
 r1bq1rk1/ppp2pbp/2np1np1/4p3/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
 King's Indian: fianchetto, Uhlmann (Szabo) variation
 r1bq1rk1/ppp2pbp/2np1np1/4p3/2PPP3/2N2N2/PP2BPPP/R1BQ1RK1 w - -
 King's Indian: orthodox, Aronin-Taimanov variation (Yugoslav attack / Mar del Plata variation)
 r1bq1rk1/ppp2ppp/1b1p1n2/4p3/N3P3/3P1B2/PPP2PPP/R1BQ1RK1 w - -
-Four knights: Rubinstein counter-gambit Maroczy variation
+Four knights: Rubinstein counter-gambit Maróczy variation
 r1bq1rk1/ppp2ppp/2Bp1n2/4p3/1b2P3/2N2N2/PPPP1PPP/R1BQ1RK1 b - -
 Four knights *
 r1bq1rk1/ppp2ppp/2n1pn2/8/1bpP4/2NBPN2/PP3PPP/R1BQ1RK1 w - -
@@ -833,11 +833,11 @@ Four knights: symmetrical variation *
 r1bq1rk1/ppp2ppp/2np1n2/1B2p3/1b2P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - -
 Four knights: symmetrical variation
 r1bq1rk1/ppp2ppp/2np1n2/1B2p3/1b2P3/3P1N2/PPP1NPPP/R1BQ1RK1 b - -
-Four knights: symmetrical, Maroczy system
+Four knights: symmetrical, Maróczy system
 r1bq1rk1/ppp2ppp/2np1n2/1B2p3/4P3/2PP1N2/P1P2PPP/R1BQR1K1 b - -
 Four knights: Janowski variation
 r1bq1rk1/ppp2ppp/3p1b2/n3p3/4P3/1B1P1N2/PPP2PPP/R1BQ1RK1 b - -
-Four knights: Rubinstein counter-gambit Maroczy variation *
+Four knights: Rubinstein counter-gambit Maróczy variation *
 r1bq1rk1/ppp3pp/2n2P2/2bp1PB1/8/2p5/PPP2P1P/R2QKBNR w KQ -
 Vienna: Pierce gambit, Rushmere attack *
 r1bq1rk1/ppp3pp/2n5/1B1p1p2/1b2p3/2N2N2/PPPP1PPP/R1BQ1RK1 b - -
@@ -857,7 +857,7 @@ King's Indian: fianchetto, classical variation, 8.e4
 r1bq1rk1/pppn1ppp/1b3n2/4N3/1P1Pp3/P1N1B3/2P2PPP/R2QKB1R w KQ -
 Ruy Lopez: open, Bernstein variation *
 r1bq1rk1/pppnbBpp/3p1n2/4p1N1/3PP3/2N5/PPP2PPP/R1BQK2R b KQ -
-Philidor: Nimzovich, Larobok variation
+Philidor: Nimzovich, Lärobok variation
 r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/1QN1PN2/PP3PPP/R3KB1R b KQ -
 QGD: Orthodox defense, Rauzer variation
 r1bq1rk1/pppnbppp/4pn2/3p2B1/2PP4/2N1PN2/PP3PPP/2RQKB1R b K -
@@ -873,13 +873,13 @@ Catalan: closed, 6...Nbd7
 r1bq1rk1/pppnbppp/4pn2/3p4/2PP4/5NP1/PPQ1PPBP/RNB2RK1 b - -
 Catalan: closed, 7.Qc2
 r1bq1rk1/pppnn1bp/3p2p1/3Ppp2/2P1P1P1/2N2P2/PP2B2P/R1BQNRK1 b - -
-King's Indian: orthodox, Aronin-Taimanov, Benko attack
+King's Indian: orthodox, Aronin-Taimanov, Benkö attack
 r1bq1rk1/pppnn1bp/3p2p1/3Ppp2/2P1P3/2N2P2/PP2B1PP/R1BQNRK1 w - -
 King's Indian: orthodox, Aronin-Taimanov, main line
 r1bq1rk1/pppnppbp/3p1np1/8/2PP4/2N2NP1/PP2PPBP/R1BQK2R w KQ -
 King's Indian: fianchetto with ...Nd7
 r1bq1rk1/pppnppbp/5np1/6N1/2BP4/1QN1P3/PP3PPP/R1B1K2R b KQ -
-Grunfeld: Pachman variation
+Grünfeld: Pachman variation
 r1bq1rk1/pppp1ppp/1bn2n2/1B2p3/3PP3/2P2N2/PP3PPP/RNBQ1RK1 w - -
 Ruy Lopez: classical defense, Benelux variation
 r1bq1rk1/pppp1ppp/2B2n2/4p3/1b2P3/2N2N2/PPPP1PPP/R1BQ1RK1 b - -
@@ -911,9 +911,9 @@ Scotch gambit: Hanneken variation
 r1bq1rk1/pppp2pp/2n2n2/2b1pPP1/8/2N5/PPPP1P1P/R1BQKBNR w KQ -
 Vienna: Hamppe-Muzio gambit *
 r1bq2k1/pp3p1p/5n2/2b1r1p1/3p4/3P1B2/PPP1NPPP/R1BQK2R w KQ -
-Giuoco Piano: Moller, bayonet attack *
+Giuoco Piano: Möller, bayonet attack *
 r1bq3r/pp3pkp/2n2np1/4p3/2Pp4/3P1NP1/4PPBP/RN1Q1RK1 w - -
-Benko gambit: main line *
+Benkö gambit: main line *
 r1bq3r/ppp2k1p/2n3p1/2Qp4/3pP3/8/PPP2PPP/RNB1K2R w KQ -
 Scotch gambit: Cochrane-Shumov defense
 r1bq3r/ppp3pp/5k2/3pN3/1n1Pn3/1Q3P2/PP4PP/RN2K2R b KQ -
@@ -927,13 +927,13 @@ Evans gambit declined, Showalter variation
 r1bqk1nr/2pp1ppp/p1n5/1pb1p3/4P3/1B3N2/PPPP1PPP/RNBQK2R w KQkq -
 Ruy Lopez: Graz variation
 r1bqk1nr/5ppp/p1pbp3/2pp4/2P5/2N1PN2/PP1P1PPP/R1BQ1RK1 b kq -
-Nimzo-Indian: Samisch, main line *
+Nimzo-Indian: Sämisch, main line *
 r1bqk1nr/5ppp/p1pbp3/2pp4/3P4/4PN2/PPP2PPP/RNBQ1RK1 w kq -
 Nimzo-Indian: 4.e3, Botvinnik system *
 r1bqk1nr/p1pp1ppp/2n5/bp2p3/2BPP3/2P2N2/P4PPP/RNBQK2R w KQkq -
 Evans gambit: Leonhardt variation
 r1bqk1nr/p4ppp/2p5/2bpp3/8/6P1/PPP1PPBP/RNBQK2R w KQkq -
-Grunfeld: exchange, classical variation *
+Grünfeld: exchange, classical variation *
 r1bqk1nr/pp1n1ppp/2pb4/3p4/2PPp3/1P2P3/P2N1PPP/RNBQKB1R b KQkq -
 French: Tarrasch, Botvinnik variation *
 r1bqk1nr/pp1n1ppp/2pb4/3p4/2PPp3/2N1P3/PP1N1PPP/R1BQKB1R b KQkq -
@@ -957,7 +957,7 @@ Sicilian: closed, Smyslov variation
 r1bqk1nr/pp1p1ppp/2n5/2b5/2pNp3/3PP3/PPP2PPP/RNBQKB1R b KQkq -
 Alekhine's defense: two pawns' attack, Mikenas variation *
 r1bqk1nr/pp1pppbp/2N3p1/8/8/6P1/PPP1PP1P/RNBQKB1R b KQkq -
-English: Anglo-Grunfeld, Smyslov defense *
+English: Anglo-Grünfeld, Smyslov defense *
 r1bqk1nr/pp1pppbp/2n3p1/2p5/2P1P3/2N3P1/PP1P1PBP/R1BQK1NR b KQkq -
 English: symmetrical, Botvinnik system
 r1bqk1nr/pp1pppbp/2n3p1/2p5/2P5/2N2NP1/PP1PPPBP/R1BQK2R b KQkq -
@@ -969,15 +969,15 @@ English: ultra-symmetrical variation
 r1bqk1nr/pp1pppbp/2n3p1/2p5/4P3/2N3P1/PPPP1PBP/R1BQK1NR b KQkq -
 English: closed system *
 r1bqk1nr/pp1pppbp/2n3p1/2p5/4P3/2NPB3/PPP2PPP/R2QKBNR b KQkq -
-English, Troger defense *
+English, Tröger defense *
 r1bqk1nr/pp1pppbp/2n3p1/8/2P5/8/PPN1PPPP/RNBQKB1R b KQkq -
 English: symmetrical, Rubinstein system *
 r1bqk1nr/pp1pppbp/2n3p1/8/2PNP3/4B3/PP3PPP/RN1QKB1R b KQkq -
-Sicilian: accelerated fianchetto, Maroczy bind, 6.Be3
+Sicilian: accelerated fianchetto, Maróczy bind, 6.Be3
 r1bqk1nr/pp1pppbp/2n3p1/8/2PNP3/8/PP3PPP/RNBQKB1R w KQkq -
-Sicilian: accelerated fianchetto, Maroczy bind, 5...Bg7
+Sicilian: accelerated fianchetto, Maróczy bind, 5...Bg7
 r1bqk1nr/pp1pppbp/2n3p1/8/8/1N4P1/PPP1PP1P/RNBQKB1R b KQkq -
-English: Anglo-Grunfeld, Czech defense *
+English: Anglo-Grünfeld, Czech defense *
 r1bqk1nr/pp2b1pp/2n5/2pppp2/8/3P1NP1/PPP1PPBP/RNBQ1RK1 w kq -
 King's Indian: Four pawns attack, 6.Be2 *
 r1bqk1nr/pp2b3/2n5/2p1pppp/2P5/2NPPNP1/PP4BP/R1BQ1RK1 w kq -
@@ -1009,7 +1009,7 @@ Nimzo-Indian: 4.e3 O-O, 5.Bd3 *
 r1bqk1nr/pp3ppp/2nbp3/2pp4/4P3/3P1N2/PPPN1PPP/R1BQKB1R w KQkq -
 Old Indian: Dus-Khotimirsky variation *
 r1bqk1nr/pp3ppp/8/1Pb1p3/1nPp4/3P1N2/4PPPP/RNBQKB1R w KQkq -
-Benko gambit: Nescafe Frappe attack *
+Benkö gambit: Nescafé Frappé attack *
 r1bqk1nr/pp4pp/2n5/4pp2/1bPp4/3P1NP1/PP3PBP/RNBQK2R w KQkq -
 Benoni: Taimanov variation *
 r1bqk1nr/ppp1bp1p/2n5/3pp1p1/8/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
@@ -1029,7 +1029,7 @@ English: closed system
 r1bqk1nr/ppp2ppp/1b1p4/n2P4/2B1P3/5N2/PB3PPP/RN1Q1RK1 b kq -
 Evans gambit: Ulvestad variation
 r1bqk1nr/ppp2ppp/1b1p4/n5B1/2BPP3/2N2N2/P4PPP/R2Q1RK1 b kq -
-Evans gambit: Goring attack
+Evans gambit: Göring attack
 r1bqk1nr/ppp2ppp/1bnp4/4p3/2BPP3/2P2N2/P4PPP/RNBQ1RK1 w kq -
 Evans gambit: Lasker defense
 r1bqk1nr/ppp2ppp/1bnp4/8/2BPP3/2N2N2/P4PPP/R1BQ1RK1 b kq -
@@ -1067,7 +1067,7 @@ Sicilian: closed, 6.f4 *
 r1bqk1nr/ppp3pp/1b1p1p2/n7/2BPP3/2N1BN2/P4PPP/R2Q1RK1 b kq -
 Evans gambit: Steinitz variation
 r1bqk1nr/ppp3pp/2n5/2bppp2/8/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
-Pirc: Austrian attack, Ljubojevic variation *
+Pirc: Austrian attack, Ljubojeviƒá variation *
 r1bqk1nr/pppn1ppp/3p4/2b1p3/4PP2/2N2N2/PPPP2PP/R1BQKB1R w KQkq -
 KGD: classical, Hanham variation
 r1bqk1nr/pppp1Bpp/2n5/2b1p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq -
@@ -1115,7 +1115,7 @@ Evans gambit
 r1bqk1nr/pppp1ppp/2n5/8/1b2P3/1N6/PPP2PPP/RNBQKB1R w KQkq -
 Scotch: Romanishin variation
 r1bqk1nr/pppp1ppp/2n5/8/1b2P3/2N2N2/PP3PPP/R1BQKB1R w KQkq -
-Scotch: Goring gambit
+Scotch: Göring gambit
 r1bqk1nr/pppp1ppp/2n5/8/1bB1P3/2P2N2/P4PPP/RNBQK2R b KQkq -
 Scotch gambit
 r1bqk1nr/pppp1ppp/2n5/8/1bBpP3/5N2/PPP2PPP/RNBQK2R w KQkq -
@@ -1157,7 +1157,7 @@ Center game: Charousek variation
 r1bqk1nr/ppppbppp/8/n3p3/2BPP3/2P2N2/P4PPP/RNBQK2R w KQkq -
 Evans gambit: Cordel variation
 r1bqk2r/1p1p1ppp/p1n1pn2/8/1bPNP3/2N5/PPB2PPP/R1BQK2R b KQkq -
-Sicilian: Kan, Maroczy bind - Bronstein variation
+Sicilian: Kan, Maróczy bind - Bronstein variation
 r1bqk2r/1pp1bppp/p1np1n2/4p3/B3P3/5N2/PPPP1PPP/RNBQR1K1 w kq -
 Ruy Lopez: closed, Averbach variation
 r1bqk2r/1pp1bppp/p5n1/3pn3/8/2N1PN2/PPP1BPPP/R1BQ1RK1 b kq -
@@ -1165,7 +1165,7 @@ French: Winawer, Alekhine gambit, Alatortsev variation *
 r1bqk2r/1ppn1p1p/p4b1Q/1B6/8/2N2N2/PP1P1PPP/n1BK3R w kq -
 Scotch: Berger variation *
 r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 w kq -
-Ruy Lopez: Moller defense
+Ruy Lopez: Möller defense
 r1bqk2r/1pppbppp/p1B2n2/4p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq -
 Ruy Lopez: Exchange variation doubly deferred (DERLD)
 r1bqk2r/1pppbppp/p1n2n2/4p3/B2PP3/5N2/PPP2PPP/RNBQ1RK1 b kq -
@@ -1189,19 +1189,19 @@ Ruy Lopez: Wing attack
 r1bqk2r/4bppp/p2p1n2/1pp5/3QP3/1B6/PPP2PPP/RNB1R1K1 w kq -
 Ruy Lopez: Noah's ark trap
 r1bqk2r/4nppp/p1pb4/2ppp3/2P5/1PN1P3/P2P1PPP/R1BQNRK1 b kq -
-Nimzo-Indian: Samisch, Capablanca variation *
+Nimzo-Indian: Sämisch, Capablanca variation *
 r1bqk2r/5ppp/p1n1pn2/1pb1P3/2B5/5N2/PP2QPPP/RNB2RK1 b kq -
 QGA: classical, Furman variation
 r1bqk2r/p1ppbppp/2p5/4Pn2/8/5N2/PPP1QPPP/RNB2RK1 w kq -
 Ruy Lopez: Berlin defense, Cordel variation
 r1bqk2r/p3nppp/2p5/2bpp3/2P5/6P1/PP2PPBP/RNBQ1RK1 b kq -
-Grunfeld: exchange, Spassky variation *
+Grünfeld: exchange, Spassky variation *
 r1bqk2r/p3nppp/2p5/2bpp3/8/1P4P1/P1P1PPBP/RNBQ1RK1 b kq -
-Grunfeld: exchange, Simagin's lesser variation *
+Grünfeld: exchange, Simagin's lesser variation *
 r1bqk2r/p3nppp/2p5/2bpp3/8/2N3P1/PPP1PPBP/R1BQ1RK1 b kq -
-Grunfeld: exchange, Simagin's improved variation *
+Grünfeld: exchange, Simagin's improved variation *
 r1bqk2r/p4ppp/2pbpn2/2pp4/2P5/2NPPN2/PP3PPP/R1BQK2R b KQkq -
-Nimzo-Indian: e3, Hubner variation *
+Nimzo-Indian: e3, Hübner variation *
 r1bqk2r/pnppbppp/2p5/4P3/2P5/5N2/PP2QPPP/RNB2RK1 b kq -
 Ruy Lopez: Berlin defense, Zukertort variation
 r1bqk2r/pnppbppp/2p5/4P3/3N4/8/PPP1QPPP/RNB2RK1 b kq -
@@ -1233,7 +1233,7 @@ Sicilian: Taimanov, American attack
 r1bqk2r/pp1p1ppp/2nb1n2/2p1p3/8/1P2PN2/PBPP1PPP/RN1QKB1R w KQkq -
 English: Queens Indian, Romanishin variation *
 r1bqk2r/pp1p2pp/2n1p3/2n2p2/1bP5/2N2NP1/PPQBPP1P/R3KB1R b KQkq -
-Nimzo-Indian: Spielmann, Sta hlberg variation
+Nimzo-Indian: Spielmann, Stahlberg variation
 r1bqk2r/pp1pnpbp/2n1p1p1/2p5/4P3/2NP2PN/PPP2PBP/R1BQK2R b KQkq -
 English: closed, Taimanov variation *
 r1bqk2r/pp1pnpbp/2n1p1p1/2p5/4P3/2NPB1P1/PPP2PBP/R2QK1NR b KQkq -
@@ -1249,7 +1249,7 @@ English: symmetrical variation *
 r1bqk2r/pp1pppbp/2n2np1/8/2BNP3/2N1B3/PPP2PPP/R2QK2R b KQkq -
 Sicilian: accelerated fianchetto, modern variation with Bc4
 r1bqk2r/pp1pppbp/2n2np1/8/3NP3/6P1/PPP2PBP/RNBQK2R b KQkq -
-English: Anglo-Grunfeld defense, Korchnoi variation *
+English: Anglo-Grünfeld defense, Korchnoi variation *
 r1bqk2r/pp1pppbp/2n3p1/8/2PNP1n1/2N1B3/PP3PPP/R2QKB1R w KQkq -
 Sicilian: accelerated fianchetto, Breyer variation
 r1bqk2r/pp2b1pp/2n2n2/2p1pp2/2Pp4/3PPNP1/PP3PBP/RNBQ1RK1 w kq -
@@ -1285,7 +1285,7 @@ Benoni: classical without 9.O-O *
 r1bqk2r/pp2bppp/2nppn2/6B1/3NP3/2N5/PPPQ1PPP/R3KB1R w KQkq -
 Sicilian: Richter-Rauzer, Rauzer attack, 7...Be7
 r1bqk2r/pp2bppp/2nppn2/8/2BNP3/2N1B3/PPP1QPPP/R3K2R b KQkq -
-Sicilian: Velimirovic attack
+Sicilian: Velimiroviƒá attack
 r1bqk2r/pp2bppp/2nppn2/8/3NPP2/2N1BQ2/PPP3PP/R3KB1R b KQkq -
 Sicilian: Scheveningen, Tal variation
 r1bqk2r/pp2npbp/2n3p1/2ppp3/4P3/3P1NP1/PPP2PBP/RNBQ1RK1 w kq -
@@ -1317,11 +1317,11 @@ QGD semi-Slav: Meran variation *
 r1bqk2r/pp3ppp/2n1pn2/2bp4/8/2P1PN2/PP1N1PPP/R1BQKB1R w KQkq -
 QGD semi-Slav: 7.Bc4 *
 r1bqk2r/pp3ppp/2n2n2/1Bb1p3/8/2N2N2/PPPP1PPP/R1BQK2R b KQkq -
-Scotch: Goring gambit, Bardeleben variation *
+Scotch: Göring gambit, Bardeleben variation *
 r1bqk2r/pp3ppp/2n2n2/1Bbpp3/8/2N2N2/PPPP1PPP/R1BQK2R w KQkq -
 Giuoco Piano: Greco's attack *
 r1bqk2r/pp3ppp/2nb1n2/1P1pp3/8/P1P1PN2/3N1PPP/R1BQKB1R b KQkq -
-QGD semi-Slav: Meran, Pirc variation *
+QGD semi-Slav: Meran, Pirƒá variation *
 r1bqk2r/pp3ppp/2nb1n2/3p4/1PP1p3/P3PN2/3N1PPP/R1BQKB1R w KQkq -
 QGD semi-Slav: Meran, old main line *
 r1bqk2r/pp3ppp/2nb1n2/3pp3/1PP5/P3PN2/3N1PPP/R1BQKB1R b KQkq -
@@ -1343,7 +1343,7 @@ QGD semi-Slav: Bogolyubov variation *
 r1bqk2r/pp3ppp/2nbpn2/2pp4/3P4/2PBPN2/PP1N1PPP/R1BQK2R b KQkq -
 QGD semi-Slav: Chigorin defense *
 r1bqk2r/pp3ppp/2nbpn2/2pp4/3P4/5NP1/PPP1PPBP/RNBQ1RK1 w kq -
-Grunfeld with e3 & Bd3 *
+Grünfeld with e3 & Bd3 *
 r1bqk2r/pp3ppp/2nbpn2/2ppN3/3P1P2/2P1P3/PP4PP/RNBQKB1R b KQkq -
 QGD semi-Slav: stonewall defense *
 r1bqk2r/pp3ppp/2nbpn2/3p4/1P6/2P1PN2/PB1N1PPP/R2QKB1R b KQkq -
@@ -1353,7 +1353,7 @@ QGD semi-Slav: Meran, 8...a6 *
 r1bqk2r/pp3ppp/2nbpn2/3p4/2PN4/2N1P3/PP3PPP/R1BQKB1R w KQkq -
 QGD: Semi-Tarrasch, 7.Bd3 *
 r1bqk2r/pp3ppp/2nppn2/2p5/2PP4/2PBPN2/P4PPP/R1BQK2R w KQkq -
-Nimzo-Indian: e3, Hubner variation
+Nimzo-Indian: e3, Hübner variation
 r1bqk2r/pp3ppp/3b1n2/3P2N1/1n2p3/P3P3/3N1PPP/R1BQKB1R b KQkq -
 QGD semi-Slav: Meran, Rabinovich variation *
 r1bqk2r/pp3ppp/3b1n2/3P4/1n2N3/P3PN2/5PPP/R1BQKB1R b KQkq -
@@ -1361,15 +1361,15 @@ QGD semi-Slav: Meran, Sozin variation *
 r1bqk2r/pp3ppp/3b1n2/3P4/1n2p3/P3PN2/3N1PPP/R1BQKB1R w KQkq -
 QGD semi-Slav: Meran, Blumenfeld variation *
 r1bqk2r/ppb2ppp/2n5/1Bpnp3/8/P1N1PN2/1P1P1PPP/R1BQK2R w KQkq -
-Sicilian: Kan, Maroczy bind - Bronstein variation *
+Sicilian: Kan, Maróczy bind - Bronstein variation *
 r1bqk2r/ppp1bpp1/5n1p/3P4/2P1p3/5N2/PPP1QPPP/RNB1K2R w KQkq -
-Two knights defense: Maroczy variation
+Two knights defense: Maróczy variation
 r1bqk2r/ppp1bppp/1nn5/4p3/4P3/2NP1N2/PP3PPP/R1BQKB1R w KQkq -
 Sicilian: Boleslavsky variation, 7.Nb3 *
 r1bqk2r/ppp1bppp/2n2n2/3pp3/8/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
 Pirc: classical system, 5.Be2 *
 r1bqk2r/ppp1bppp/2n5/1B1pp3/3Pn3/5N2/PPP1QPPP/RNB2RK1 w kq -
-Ruy Lopez: Berlin defense, Trifunovic variation
+Ruy Lopez: Berlin defense, Trifunoviƒá variation
 r1bqk2r/ppp1bppp/2n5/3np3/4P3/2NP1N2/PP3PPP/R1BQKB1R b KQkq -
 Sicilian: Boleslavsky variation *
 r1bqk2r/ppp1bppp/2n5/3np3/8/2NP1N2/PP2PPPP/R1BQKB1R w KQkq -
@@ -1379,7 +1379,7 @@ Sicilian: modern Scheveningen *
 r1bqk2r/ppp1bppp/2n5/3np3/8/3PPN2/PP3PPP/RNBQKB1R w KQkq -
 Sicilian: Scheveningen, 6.Be2 *
 r1bqk2r/ppp1bppp/2n5/3np3/8/P2P1N2/1P2PPPP/RNBQKB1R w KQkq -
-Sicilian: Najdorf, Opo vensky variation *
+Sicilian: Najdorf, Opoƒçensky variation *
 r1bqk2r/ppp1bppp/2n5/3np3/8/P2PPN2/1P3PPP/RNBQKB1R b KQkq -
 Sicilian: Scheveningen (Paulsen), classical variation *
 r1bqk2r/ppp1bppp/2n5/3p4/2PPn3/3B1N2/PP3PPP/RNBQ1RK1 b kq -
@@ -1393,7 +1393,7 @@ Sicilian: closed, 6.Ne2 e5 (Botvinnik) *
 r1bqk2r/ppp1nppp/1b1p4/n2P4/2B1P3/5N2/PB3PPP/RN1Q1RK1 w kq -
 Evans gambit: Paulsen variation
 r1bqk2r/ppp1nppp/3p1b2/3P4/2B1R1P1/5N2/PP3P1P/R1BQ2K1 b kq -
-Giuoco Piano: Moller, bayonet attack
+Giuoco Piano: Möller, bayonet attack
 r1bqk2r/ppp2pbp/2np2pn/4p3/2P5/2N1P1P1/PP1PNPBP/R1BQK2R w KQkq -
 English: closed, Taimanov variation
 r1bqk2r/ppp2pp1/5n1p/2bP4/2P1p3/8/PPPNQPPP/RNB1K2R b KQkq -
@@ -1413,7 +1413,7 @@ Giuoco Piano: Anderssen variation
 r1bqk2r/ppp2ppp/2n5/2b5/4p3/2PP1NP1/P3PP1P/R1BQKB1R w KQkq -
 Sicilian: Magnus Smith trap *
 r1bqk2r/ppp2ppp/2n5/2bnp3/8/1QNP1N2/PP2PPPP/R1B1KB1R b KQkq -
-Sicilian: Sozin, Benko variation *
+Sicilian: Sozin, Benkö variation *
 r1bqk2r/ppp2ppp/2n5/2bnp3/8/2NP1N2/PP2PPPP/R1BQKB1R w KQkq -
 Sicilian: Sozin, not Scheveningen *
 r1bqk2r/ppp2ppp/2n5/2bnp3/8/2NPPN2/PP3PPP/R1BQKB1R b KQkq -
@@ -1427,7 +1427,7 @@ Two knights defense: Pincus variation
 r1bqk2r/ppp2ppp/2n5/3np3/1b2P3/3P1N2/PP3PPP/RNBQKB1R w KQkq -
 Sicilian: Venice attack *
 r1bqk2r/ppp2ppp/2n5/3np3/1b6/3PPN2/PP3PPP/RNBQKB1R w KQkq -
-Sicilian: Scheveningen, Vitolins variation *
+Sicilian: Scheveningen, Vƒ´toli≈Ü≈° variation *
 r1bqk2r/ppp2ppp/2n5/3p4/2BP4/1Qb2N2/P4PPP/R1B2RK1 w kq -
 Giuoco Piano: Bernstein variation
 r1bqk2r/ppp2ppp/2n5/3p4/2BPn3/B1P2N2/P4PPP/R2Q1RK1 b kq -
@@ -1435,7 +1435,7 @@ Giuoco Piano: Steinitz variation
 r1bqk2r/ppp2ppp/2n5/3pp3/2PPn3/P3P3/1PQ2PPP/R1B1KBNR w KQkq -
 Nimzo-Indian: classical, San Remo variation
 r1bqk2r/ppp2ppp/2n5/3pp3/4P1n1/3P1N2/PPPNBbPP/R1BQ1RK1 w kq -
-Philidor: Nimzovich, Larobok variation *
+Philidor: Nimzovich, Lärobok variation *
 r1bqk2r/ppp2ppp/2nb4/1B1np3/4P3/5N2/PP1P1PPP/RNBQK2R b KQkq -
 Sicilian: Pin, Jaffe variation *
 r1bqk2r/ppp2ppp/2np1n2/2b1p1B1/2B1P3/2NP1N2/PPP2PPP/R2QK2R b KQkq -
@@ -1531,7 +1531,7 @@ Ruy Lopez: exchange, Keres variation *
 r1bqk2r/pppp1ppp/2n2n2/4p3/4P3/P1b2N2/1PPP1PPP/R1BQKB1R w KQkq -
 Four knights: Ranken variation *
 r1bqk2r/pppp1ppp/2n2n2/8/1bB1P3/2N2N2/PP3PPP/R1BQK2R w KQkq -
-Scotch: Goring gambit, Bardeleben variation
+Scotch: Göring gambit, Bardeleben variation
 r1bqk2r/pppp1ppp/2n2n2/8/1bBPP3/2N2N2/PP3PPP/R1BQK2R b KQkq -
 Giuoco Piano: Greco's attack
 r1bqk2r/pppp1ppp/2n2n2/8/1bBPP3/5N2/PP3PPP/RNBQ1K1R b kq -
@@ -1551,7 +1551,7 @@ Giuoco Piano: Ghulam Kassim variation
 r1bqk2r/pppp1ppp/2n5/2bPp3/4n3/2P2N2/PP3PPP/RNBQKB1R w KQkq -
 Ponziani: Fraser defense
 r1bqk2r/pppp1ppp/2n5/3P4/2B1n3/2b2N2/PP3PPP/R1BQ1RK1 b kq -
-Giuoco Piano: Moller (Therkatz) attack
+Giuoco Piano: Möller (Therkatz) attack
 r1bqk2r/pppp1ppp/2n5/3np3/1b2P3/5N2/PPPP1PPP/R1BQKB1R w KQkq -
 Four knights: Rubinstein counter-gambit, exchange variation *
 r1bqk2r/pppp1ppp/2n5/8/1bBP4/2n2N2/PP3PPP/R1BQ1RK1 w kq -
@@ -1561,7 +1561,7 @@ Giuoco Piano: Aitken variation
 r1bqk2r/pppp1ppp/2n5/8/2BPn3/2b2N2/PP3PPP/R1BQ1RK1 w kq -
 Giuoco Piano
 r1bqk2r/pppp2pp/2n2n2/1Bb1pQ2/4P3/8/PPPP1PPP/RNB1K1NR w KQkq -
-KGD: Norwalde variation, Bucker gambit *
+KGD: Norwalde variation, Bücker gambit *
 r1bqk2r/pppp2pp/2n2n2/2b1p3/2P2p2/2N1P1P1/PP1P1PBP/R1BQK1NR w KQkq -
 Sicilian: Grand Prix attack, Schofman variation *
 r1bqk2r/pppp2pp/2n2n2/2b1pPP1/8/8/PPPP1P1P/RNBQKBNR w KQkq -
@@ -1593,7 +1593,7 @@ QGD Slav: Steiner variation *
 r1bqkb1r/1p2pppp/2n2n2/p1Pp4/5B2/2P2N2/PP2PPPP/RN1QKB1R b KQkq -
 QGD Slav: Czech defense *
 r1bqkb1r/1p2pppp/2n2n2/p1Pp4/8/2P1PN2/PP3PPP/RNBQKB1R b KQkq -
-QGD Slav: Soultanbeieff variation *
+QGD Slav: Soultanbéieff variation *
 r1bqkb1r/1p2pppp/2n2n2/p1Pp4/8/2P2N2/PP2PPPP/RNBQKB1R w KQkq -
 QGD Slav accepted: Alapin variation *
 r1bqkb1r/1p2pppp/2n5/p1Pp4/4nB2/2P1PN2/PP3PPP/RN1QKB1R b KQkq -
@@ -1607,7 +1607,7 @@ QGD Slav: Dutch, Lasker variation *
 r1bqkb1r/1p3ppp/2n2n2/p1Ppp1B1/8/N1P2N2/PP2PPPP/R2QKB1R b KQkq -
 QGD Slav: Smyslov variation *
 r1bqkb1r/1p3ppp/p1n1pn2/3p4/2P1P3/N1N5/PP3PPP/R1BQKB1R w KQkq -
-Sicilian, Szen variation, Dely-Kasparov gambit
+Sicilian, Szén variation, Dely-Kasparov gambit
 r1bqkb1r/1p3ppp/p1nppn2/6B1/3NP3/2N5/PPPQ1PPP/R3KB1R w KQkq -
 Sicilian: Richter-Rauzer, Rauzer attack, 7...a6
 r1bqkb1r/1pp1nppp/p1B5/3pP3/8/4P3/PPP2PPP/RNBQK1NR b KQkq -
@@ -1681,7 +1681,7 @@ Ruy Lopez: open, 6.d4 b5
 r1bqkb1r/3n1ppp/p1p1pn2/1p6/3P4/2NBPN2/PP3PPP/R1BQK2R w KQkq -
 QGD semi-Slav: Meran, 8...a6
 r1bqkb1r/3n1ppp/p1p1pn2/8/1p1PP3/2NB1N2/PP3PPP/R1BQK2R w KQkq -
-QGD semi-Slav: Meran, Pirc variation
+QGD semi-Slav: Meran, Pirƒá variation
 r1bqkb1r/3n1ppp/p3p3/1N2P3/3p2n1/3B1N2/PP3PPP/R1BQK2R w KQkq -
 QGD semi-Slav: Meran, Rabinovich variation
 r1bqkb1r/3n1ppp/p3pn2/1N2P3/3p4/3B1N2/PP3PPP/R1BQK2R b KQkq -
@@ -1713,7 +1713,7 @@ Scotch: Mieses variation
 r1bqkb1r/p1pp1ppp/2p2n2/8/4P3/8/PPPN1PPP/R1BQKB1R b KQkq -
 Scotch: Tartakower variation
 r1bqkb1r/p2n1p2/2p1pn2/1p2P1B1/2pP4/2N2Q2/PP3PPP/R3KB1R b KQkq -
-QGD semi-Slav: anti-Meran, Szabo variation
+QGD semi-Slav: anti-Meran, Szabó variation
 r1bqkb1r/p2n1p2/2p1pn2/1p2P1B1/2pP4/2N3P1/PP3P1P/R2QKB1R b KQkq -
 QGD semi-Slav: anti-Meran, Lilienthal variation
 r1bqkb1r/p2n1ppp/2p1pn2/1p6/2BP4/2N1PN2/PP3PPP/R1BQK2R w KQkq -
@@ -1727,9 +1727,9 @@ Two knights defense
 r1bqkb1r/p4pp1/2p2n1p/n3p3/8/7N/PPPPBPPP/RNBQK2R b KQkq -
 Two knights defense: Steinitz variation
 r1bqkb1r/p4ppp/2n1pn2/1ppp4/3P4/5NP1/PPP1PPBP/RNBQ1RK1 w kq -
-Grunfeld: Makogonov variation *
+Grünfeld: Makogonov variation *
 r1bqkb1r/p4ppp/2p2n2/3pp3/8/6P1/PPP1PPBP/RNBQK2R w KQkq -
-Grunfeld: modern exchange variation *
+Grünfeld: modern exchange variation *
 r1bqkb1r/p4ppp/2p2n2/n3p1N1/8/8/PPPPBPPP/RNBQK2R b KQkq -
 Two knights defense
 r1bqkb1r/p4ppp/2p2n2/nB2p1N1/8/5Q2/PPPP1PPP/RNB1K2R b KQkq -
@@ -1779,9 +1779,9 @@ Sicilian: dragon, Levenfish; Flohr variation
 r1bqkb1r/pp1npppp/2n5/8/2Pp4/3P1NP1/PP3P1P/RNBQKB1R w KQkq -
 Benoni: Nimzovich (knight's tour) variation *
 r1bqkb1r/pp1npppp/2n5/8/2Pp4/B2P1NP1/4PP1P/RN1QKB1R w KQkq -
-Benko gambit: Nd2 variation *
+Benkö gambit: Nd2 variation *
 r1bqkb1r/pp1npppp/5n2/1Bpp4/8/4PN2/PPPP1PPP/RNBQK2R w KQkq -
-Bogo-Indian defense, Grunfeld variation *
+Bogo-Indian defense, Grünfeld variation *
 r1bqkb1r/pp1npppp/5n2/2pP4/4p3/2N2P2/PPP3PP/R1BQKBNR b KQkq -
 QGD: Albin counter-gambit, Janowski variation *
 r1bqkb1r/pp1npppp/5n2/2pP4/4p3/2N5/PPP1QPPP/R1B1KBNR b KQkq -
@@ -1827,7 +1827,7 @@ English: Queens Indian formation *
 r1bqkb1r/pp1ppppp/2n2n2/8/2PN4/8/PP2PPPP/RNBQKB1R b KQkq -
 English: symmetrical, three knights system *
 r1bqkb1r/pp1ppppp/2n2n2/8/3N4/8/PPP1PPPP/RNBQKB1R w KQkq -
-English: Anglo-Grunfeld defense *
+English: Anglo-Grünfeld defense *
 r1bqkb1r/pp1ppppp/2n2n2/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq -
 Sicilian defense
 r1bqkb1r/pp1ppppp/2n5/2p1P3/1P4n1/5N2/P1PP1PPP/RNBQKB1R b KQkq -
@@ -1835,7 +1835,7 @@ English: Bellon gambit *
 r1bqkb1r/pp1ppppp/2n5/2pnP3/8/N1P2N2/PP1P1PPP/R1BQKB1R b KQkq -
 Sicilian: 2.c3, Heidenfeld variation
 r1bqkb1r/pp2nppp/2n1p3/1Bpp4/2P5/4PN2/PP1P1PPP/RNBQK2R w KQkq -
-Nimzo-Indian: 4.e3 c5, 5.Ne2 (Rubinstein, anti-Hubner system) *
+Nimzo-Indian: 4.e3 c5, 5.Ne2 (Rubinstein, anti-Hübner system) *
 r1bqkb1r/pp2nppp/2n1p3/1Bpp4/8/1P2PN2/P1PP1PPP/RNBQK2R w KQkq -
 Nimzo-Indian: Fischer variation, 5.Ne2 *
 r1bqkb1r/pp2nppp/2n1p3/1Bpp4/8/4PN2/PPPP1PPP/RNBQ1RK1 w kq -
@@ -1855,7 +1855,7 @@ QGD: Tarrasch, Schlechter-Rubinstein system *
 r1bqkb1r/pp2pp1p/2n2np1/8/2Pp4/3P1NP1/PP3P1P/RNBQKB1R w KQkq -
 Benoni: fianchetto variation *
 r1bqkb1r/pp2pp1p/2n2np1/8/2Pp4/B2P1NP1/4PP1P/RN1QKB1R w KQkq -
-Benko gambit: fianchetto variation *
+Benkö gambit: fianchetto variation *
 r1bqkb1r/pp2pp1p/2n3p1/2pn4/8/1QN1PN2/PP1P1PPP/R1B1KB1R b KQkq -
 English: symmetrical, Geller variation *
 r1bqkb1r/pp2pp1p/2np1np1/6B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq -
@@ -1881,19 +1881,19 @@ QGA, 4.Nc3 *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/2PP4/4PN2/PP3PPP/RNBQKB1R b KQkq -
 QGD: Semi-Tarrasch defense *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/3P4/1QP2N2/PP2PPPP/RNB1KB1R b KQkq -
-QGD Slav: Suchting variation *
+QGD Slav: Süchting variation *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/3P4/2P1PN2/PP3PPP/RNBQKB1R b KQkq -
 QGD semi-Slav *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/3P4/2P2N2/PP2PPPP/RNBQKB1R w KQkq -
 QGD Slav: 4.Nc3 *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/3P4/2P2NP1/PP2PP1P/RNBQKB1R b KQkq -
-QGD Slav\Grunfeld: Schlechter variation *
+QGD Slav/Grünfeld: Schlechter variation *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/3P4/4PN2/PPP2PPP/RNBQKB1R w KQkq -
 QGD: 4.Nf3 *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/3P4/5NP1/PPP1PP1P/RNBQKB1R w KQkq -
-Grunfeld: Three knights variation *
+Grünfeld: Three knights variation *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/3P4/5NP1/PPP1PPBP/RNBQK2R b KQkq -
-Grunfeld: Three knights variation *
+Grünfeld: Three knights variation *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/4P3/3P1N2/PPP2PPP/RNBQKB1R w KQkq -
 Old Indian: Ukrainian variation, 4.Nf3 *
 r1bqkb1r/pp2pppp/2n2n2/2pp4/8/1P2PN2/P1PP1PPP/RNBQKB1R w KQkq -
@@ -1947,7 +1947,7 @@ QGD semi-Slav: 5...Nd7 *
 r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P4/2P1PN2/PP3PPP/RNBQKB1R w KQkq -
 QGD semi-Slav: 5.e3 *
 r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P4/5NP1/PPP1PPBP/RNBQK2R w KQkq -
-Grunfeld: 5.e3 *
+Grünfeld: 5.e3 *
 r1bqkb1r/pp3ppp/2n1pn2/2pp4/3P4/P1P1PN2/1P3PPP/RNBQKB1R b KQkq -
 QGD semi-Slav: accelerated Meran (Alekhine variation) *
 r1bqkb1r/pp3ppp/2n1pn2/3p2B1/2PP4/2N5/PP3PPP/R2QKBNR w KQkq -
@@ -1957,7 +1957,7 @@ QGD: Semi-Tarrasch with e3 *
 r1bqkb1r/pp3ppp/2n1pn2/3p4/3P1B2/5N2/PP2PPPP/RN1QKB1R w KQkq -
 QGD Slav: exchange variation *
 r1bqkb1r/pp3ppp/2n2n2/1B2p3/8/2N5/PPPP1PPP/R1BQK1NR b KQkq -
-Scotch: Goring gambit *
+Scotch: Göring gambit *
 r1bqkb1r/pp3ppp/2n2n2/2Pp4/1P2p3/2P2N2/P3PPPP/RNBQKB1R w KQkq -
 QGD Slav: Tolush-Geller gambit *
 r1bqkb1r/pp3ppp/2n2n2/2Ppp3/8/2P2N2/PP2PPPP/RNBQKB1R w KQkq -
@@ -1987,7 +1987,7 @@ Sicilian: Richter-Rauzer, Rauzer attack
 r1bqkb1r/pp3ppp/2nppn2/6B1/3NP3/2NQ4/PPP2PPP/R3KB1R b KQkq -
 Sicilian: Richter-Rauzer, Keres variation
 r1bqkb1r/pp3ppp/2nppn2/6B1/4P3/1NN5/PPP2PPP/R2QKB1R b KQkq -
-Sicilian: Richter-Rauzer, Pod ebrady variation
+Sicilian: Richter-Rauzer, Podƒõbrady variation
 r1bqkb1r/pp3ppp/2nppn2/8/2BNP3/2N1B3/PPP2PPP/R2QK2R b KQkq -
 Sicilian: Sozin, 7.Be3
 r1bqkb1r/pp3ppp/2nppn2/8/2BNP3/2N5/PPP2PPP/R1BQK2R w KQkq -
@@ -1995,13 +1995,13 @@ Sicilian: Sozin, Leonhardt variation
 r1bqkb1r/pp3ppp/2nppn2/8/3NP3/2N5/PPP1BPPP/R1BQK2R w KQkq -
 Sicilian: modern Scheveningen
 r1bqkb1r/pp3ppp/n1n5/2p1p3/3P4/P1N1PN2/1P3PPP/R1BQKB1R b KQkq -
-Sicilian, Szen variation, Dely-Kasparov gambit *
+Sicilian, Szén variation, Dely-Kasparov gambit *
 r1bqkb1r/pp4pp/2n2n2/2p1pp2/2Pp4/3P1NP1/PP2PPBP/RNBQ1RK1 w kq -
 King's Indian: Four pawns attack, dynamic line *
 r1bqkb1r/pp4pp/2n2n2/4pp2/2Pp4/3P1NP1/PP3PBP/RNBQ1RK1 b kq -
 Benoni: four pawns attack *
 r1bqkb1r/ppp1nppp/2n5/1B1pp3/3P4/4P3/PPP2PPP/RNBQK1NR w KQkq -
-French: Winawer, Alekhine (Maroczy) gambit *
+French: Winawer, Alekhine (Maróczy) gambit *
 r1bqkb1r/ppp1pppp/1nn5/4P3/2PP4/4B3/PP4PP/RN1QKBNR b KQkq -
 Alekhine's defense: four pawns attack, 7.Be3
 r1bqkb1r/ppp1pppp/1nn5/4P3/2PP4/8/PP4PP/RNBQKBNR w KQkq -
@@ -2015,7 +2015,7 @@ Sicilian: Najdorf, Zagreb (fianchetto) variation *
 r1bqkb1r/ppp2p1p/2n5/3np1p1/8/3PPN2/PP3PPP/RNBQKB1R w KQkq -
 Sicilian: Scheveningen, Keres attack *
 r1bqkb1r/ppp2p1p/2n5/3p2p1/Q3nB2/2P2N2/PP2PPPP/RN2KB1R w KQkq -
-Scandinavian defense, Grunfeld variation *
+Scandinavian defense, Grünfeld variation *
 r1bqkb1r/ppp2pp1/2n2n1p/3p2B1/Q7/5N2/PPP1PPPP/RN2KB1R w KQkq -
 Scandinavian defense, Lasker variation *
 r1bqkb1r/ppp2pp1/2n2n1p/3pp3/8/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
@@ -2165,7 +2165,7 @@ Catalan: open, 5.Qa4 Nbd7, 6.Qxc4
 r1bqkb1r/pppn1ppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b KQkq -
 French: Tarrasch, open variation, main line *
 r1bqkb1r/pppn1ppp/5n2/3p4/3P1B2/2N2N2/PP2PPPP/R2QKB1R b KQkq -
-QGD: exchange, Samisch variation
+QGD: exchange, Sämisch variation
 r1bqkb1r/pppn1ppp/5n2/3pp3/3P4/2N1PN2/PPP2PPP/R1BQKB1R b KQkq -
 French: Tarrasch, Guimard main line *
 r1bqkb1r/pppn1ppp/5n2/4N3/4p3/3P4/PPP2PPP/RNBQKB1R w KQkq -
@@ -2185,7 +2185,7 @@ Ruy Lopez: Berlin defense, Nyholm attack
 r1bqkb1r/pppp1ppp/2n2n2/3N4/3pP3/5N2/PPP2PPP/R1BQKB1R b KQkq -
 Four knights: Belgrade gambit
 r1bqkb1r/pppp1ppp/2n2n2/4N3/4P3/2N5/PPPP1PPP/R1BQKB1R b KQkq -
-Four knights: Schultze-Muller gambit
+Four knights: Schultze-Müller gambit
 r1bqkb1r/pppp1ppp/2n2n2/4N3/8/3P4/PPP2PPP/RNBQKB1R w KQkq -
 Petrov: Nimzovich attack *
 r1bqkb1r/pppp1ppp/2n2n2/4p1B1/3P4/2P5/PP2PPPP/RN1QKBNR b KQkq -
@@ -2243,7 +2243,7 @@ Two knights defense, Perreux variation
 r1bqkb1r/pppp1ppp/2n2n2/8/2BpP3/5N2/PPP2PPP/RNBQ1RK1 b kq -
 Two knights defense
 r1bqkb1r/pppp1ppp/2n2n2/8/2BpP3/5N2/PPP2PPP/RNBQK2R w KQkq -
-Scotch gambit: Dubois-Reti defense
+Scotch gambit: Dubois-Réti defense
 r1bqkb1r/pppp1ppp/2n2n2/8/2PPp3/2N2N2/PP2PPPP/R1BQKB1R w KQkq -
 English: Bradley Beach variation
 r1bqkb1r/pppp1ppp/2n2n2/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq -
@@ -2257,7 +2257,7 @@ Ruy Lopez: Berlin defense, open variation
 r1bqkb1r/pppp1ppp/2n5/2n1P3/3N4/8/PPP1QPPP/RNB1KB1R w KQkq -
 Petrov: modern attack, Bardeleben variation
 r1bqkb1r/pppp1ppp/2n5/4p3/4n3/2N2N2/PPPP1PPP/R1BQKB1R w KQkq -
-Four knights: Schultze-Muller gambit *
+Four knights: Schultze-Müller gambit *
 r1bqkb1r/pppp1ppp/2n5/8/2Bpn3/5N2/PPP2PPP/RNBQ1RK1 w kq -
 Two knights defense
 r1bqkb1r/pppp1ppp/2nn4/1B2P3/8/5N2/PPP2PPP/RNBQ1RK1 b kq -
@@ -2297,7 +2297,7 @@ Ruy Lopez: Cozio defense
 r1bqkb1r/ppppnppp/2n5/4p3/2P5/2N5/PP1PPPPP/R1BQKBNR w KQkq -
 Sicilian: chameleon variation *
 r1bqkb1r/ppppnppp/2n5/4p3/4P3/2P2N2/PP1P1PPP/RNBQKB1R w KQkq -
-Ponziani: Reti variation
+Ponziani: Réti variation
 r1bqkb1r/ppppnppp/5n2/1B2p3/4P3/3P1N2/PPP2PPP/RNBQK2R w KQkq -
 Ruy Lopez: Berlin defense, Mortimer variation
 r1bqkb1r/ppppnppp/8/1B6/3pP3/8/PPPP1PPP/RNBQ1RK1 w kq -
@@ -2327,7 +2327,7 @@ Ruy Lopez: modern Steinitz defense, siesta variation
 r1bqkbnr/1pp3pp/p1p2p2/4p3/4P3/2NP1N2/PPP2PPP/R1BQK2R b KQkq -
 Ruy Lopez: exchange, Romanovsky variation
 r1bqkbnr/1pp3pp/p1p2p2/4p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 w kq -
-Ruy Lopez: exchange, Gligoric variation
+Ruy Lopez: exchange, Gligoriƒá variation
 r1bqkbnr/1ppp1p1p/p1n3p1/4p3/B3P3/5N2/PPPP1PPP/RNBQK2R w KQkq -
 Ruy Lopez: fianchetto defense deferred
 r1bqkbnr/1ppp1ppp/p1B5/4p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq -
@@ -2361,27 +2361,27 @@ Ruy Lopez: Caro variation
 r1bqkbnr/2pp1ppp/p7/np2p3/4P3/1B3N2/PPPP1PPP/RNBQK2R w KQkq -
 Ruy Lopez: Taimanov (chase/wing/accelerated counterthrust) variation
 r1bqkbnr/4p1pp/p1p2p2/3p4/2Pp4/4PN2/PP3PPP/RNBQK2R w KQkq -
-Nimzo-Indian: Samisch variation *
+Nimzo-Indian: Sämisch variation *
 r1bqkbnr/4p1pp/p1p2p2/8/2pN1P2/4P3/PP4PP/RNBQK2R b KQkq -
-Nimzo-Indian: Samisch, Romanovsky variation *
+Nimzo-Indian: Sämisch, Romanovsky variation *
 r1bqkbnr/4p1pp/p1p2p2/8/2pN4/4P3/PP3PPP/RNBQK2R w KQkq -
-Nimzo-Indian: Samisch, Keres variation *
+Nimzo-Indian: Sämisch, Keres variation *
 r1bqkbnr/4pppp/p1p5/2pp4/8/4PN2/PPPP1PPP/RNBQ1RK1 b kq -
-Nimzo-Indian: Samisch variation *
+Nimzo-Indian: Sämisch variation *
 r1bqkbnr/4pppp/p1p5/2pp4/8/4PN2/PPPP1PPP/RNBQK2R w KQkq -
-Nimzo-Indian: Samisch variation *
+Nimzo-Indian: Sämisch variation *
 r1bqkbnr/5ppp/p1p1p3/2pp4/2P5/1P2PN2/P2P1PPP/RNBQK2R b KQkq -
-Nimzo-Indian: Samisch, O'Kelly variation *
+Nimzo-Indian: Sämisch, O'Kelly variation *
 r1bqkbnr/5ppp/p1p1p3/2pp4/2P5/4PN2/PP1P1PPP/RNBQK2R w KQkq -
-Nimzo-Indian: Samisch variation *
+Nimzo-Indian: Sämisch variation *
 r1bqkbnr/5ppp/p1p1p3/2pp4/8/4PN2/PPPP1PPP/RNBQ1RK1 w kq -
-Nimzo-Indian: Samisch variation *
+Nimzo-Indian: Sämisch variation *
 r1bqkbnr/5ppp/p2p4/1pp5/3QP3/1B6/PPP2PPP/RNB1K2R w KQkq -
 Ruy Lopez: Noah's ark trap
 r1bqkbnr/6pp/p1p1pp2/3p4/2PN4/4P3/PP3PPP/RNBQ1RK1 b kq -
-Nimzo-Indian: Samisch, Botvinnik variation *
+Nimzo-Indian: Sämisch, Botvinnik variation *
 r1bqkbnr/p1pp1ppp/2n5/1p6/Q7/8/PPP1PPPP/RNB1KBNR w KQkq -
-Scandinavian, Mieses-Kotrvc gambit *
+Scandinavian, Mieses-Kotrƒç gambit *
 r1bqkbnr/p2p1ppp/1pn1p3/2p5/4P3/2NP1N2/PPP2PPP/R1BQKB1R b KQkq -
 Amsterdam attack *
 r1bqkbnr/p3pppp/2p5/2p5/2Pp1P2/6P1/PP1PP2P/RNBQK1NR b KQkq -
@@ -2399,7 +2399,7 @@ Caro-Kann: Steinitz variation
 r1bqkbnr/pp1p1p1p/2n3p1/2p1p3/2P4P/2NP4/PP2PPP1/R1BQKBNR b KQkq -
 Sicilian: Gloria variation *
 r1bqkbnr/pp1p1ppp/2n1p3/1N6/4P3/8/PPP2PPP/RNBQKB1R b KQkq -
-Sicilian, Szen (`anti-Taimanov') variation
+Sicilian, Szén (`anti-Taimanov') variation
 r1bqkbnr/pp1p1ppp/2n1p3/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq -
 Sicilian: Taimanov variation
 r1bqkbnr/pp1p1ppp/2n1p3/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq -
@@ -2413,7 +2413,7 @@ English: Mikenas-Carls variation *
 r1bqkbnr/pp1p1ppp/2n5/2p5/3Pp3/4PN2/PPP2PPP/RNBQKB1R w KQkq -
 English: Mikenas-Carls, Flohr variation *
 r1bqkbnr/pp1p1ppp/2n5/4p3/3NP3/8/PPP2PPP/RNBQKB1R w KQkq -
-Sicilian: Labourdonnais-Lowenthal variation
+Sicilian: Labourdonnais-Löwenthal variation
 r1bqkbnr/pp1ppp1p/2N3p1/8/4P3/8/PPP2PPP/RNBQKB1R b KQkq -
 Sicilian: accelerated fianchetto, exchange variation
 r1bqkbnr/pp1ppp1p/2n3p1/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq -
@@ -2435,7 +2435,7 @@ English: Carls' Bremen system *
 r1bqkbnr/pp1ppp1p/2n3p1/2p5/4P3/5NP1/PPPP1P1P/RNBQKB1R b KQkq -
 English: Bremen system with ...g6 *
 r1bqkbnr/pp1ppp1p/2n3p1/8/2PNP3/8/PP3PPP/RNBQKB1R b KQkq -
-Sicilian: accelerated fianchetto, Maroczy bind
+Sicilian: accelerated fianchetto, Maróczy bind
 r1bqkbnr/pp1ppp1p/2n3p1/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq -
 Sicilian: accelerated fianchetto, modern variation
 r1bqkbnr/pp1ppppp/2n5/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq -
@@ -2451,7 +2451,7 @@ English: symmetrical variation
 r1bqkbnr/pp1ppppp/2n5/2p5/2P5/8/PP1PPPPP/RNBQKBNR w KQkq -
 English: symmetrical variation *
 r1bqkbnr/pp1ppppp/2n5/2p5/3P4/5N2/PPP1PPPP/RNBQKB1R b KQkq -
-English: Anglo-Grunfeld defense *
+English: Anglo-Grünfeld defense *
 r1bqkbnr/pp1ppppp/2n5/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq -
 Sicilian defense
 r1bqkbnr/pp1ppppp/2n5/2p5/4P3/2N3P1/PPPP1P1P/R1BQKBNR b KQkq -
@@ -2483,7 +2483,7 @@ Nimzo-Indian: Kmoch variation *
 r1bqkbnr/pp2pp1p/2n3p1/1Bpp4/8/4PN2/PPPP1PPP/RNBQK2R w KQkq -
 Nimzo-Indian: Romanishin-Kasparov (Steiner) system *
 r1bqkbnr/pp2pp1p/2n5/2pp2p1/3P4/5NP1/PPP1PP1P/RNBQKB1R w KQkq -
-Grunfeld: Spike gambit *
+Grünfeld: Spike gambit *
 r1bqkbnr/pp2ppp1/2np4/2p4p/2P1P3/2N3P1/PP1P1P1P/R1BQKBNR w KQkq -
 Sicilian: Gloria variation
 r1bqkbnr/pp2pppp/2n5/1Bpp4/8/4PN2/PPPP1PPP/RNBQK2R b KQkq -
@@ -2501,7 +2501,7 @@ QGD: 3.Nc3 *
 r1bqkbnr/pp2pppp/2n5/2pp4/3P4/4PN2/PPP2PPP/RNBQKB1R b KQkq -
 QGD: 3...Nf6 *
 r1bqkbnr/pp2pppp/2n5/2pp4/3P4/5NP1/PPP1PP1P/RNBQKB1R b KQkq -
-Grunfeld defense *
+Grünfeld defense *
 r1bqkbnr/pp2pppp/2n5/2pp4/3P4/P3P3/1PP2PPP/RNBQKBNR b KQkq -
 QGD: Janowski variation *
 r1bqkbnr/pp2pppp/2n5/2pp4/3PP3/2P5/PP3PPP/RNBQKBNR b KQkq -
@@ -2525,13 +2525,13 @@ QGD: Tarrasch, von Hennig-Schara gambit *
 r1bqkbnr/pp2pppp/2n5/3p4/2PP4/8/PP3PPP/RNBQKBNR b KQkq -
 QGD: Tarrasch defense, 4.cd ed *
 r1bqkbnr/pp2pppp/2n5/3p4/3N4/6P1/PPP1PP1P/RNBQKB1R b KQkq -
-Grunfeld: exchange variation *
+Grünfeld: exchange variation *
 r1bqkbnr/pp2pppp/2n5/3p4/3NP3/8/PPP2PPP/RNBQKB1R w KQkq -
 Sicilian: Nimzovich variation
 r1bqkbnr/pp2pppp/2n5/3p4/3p4/4PN2/PPP2PPP/RNBQKB1R w KQkq -
 QGD: exchange variation *
 r1bqkbnr/pp2pppp/2n5/8/1pPp4/P4N2/3PPPPP/RNBQKB1R w KQkq -
-Benko gambit: Zaitsev system *
+Benkö gambit: Zaitsev system *
 r1bqkbnr/pp2pppp/8/n2P4/1Pp5/8/P4PPP/RNBQKBNR b KQkq b3
 QGD: Tarrasch defense, Tarrasch gambit *
 r1bqkbnr/pp3p1p/2n3p1/2ppp3/8/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
@@ -2587,13 +2587,13 @@ QGD: Tarrasch defense, Marshall gambit *
 r1bqkbnr/pp3ppp/2n5/4p3/2Pp4/3P1N2/PP3PPP/RNBQKB1R w KQkq -
 Benoni: 6.e4 *
 r1bqkbnr/pp3ppp/2n5/4p3/2Pp4/B2P1N2/4PPPP/RN1QKB1R w KQkq -
-Benko gambit: 7.e4 *
+Benkö gambit: 7.e4 *
 r1bqkbnr/pp3ppp/2np4/1N2p3/4P3/8/PPP2PPP/RNBQKB1R w KQkq -
-Sicilian: Labourdonnais-Lowenthal (Kalashnikov) variation
+Sicilian: Labourdonnais-Löwenthal (Kalashnikov) variation
 r1bqkbnr/pp4pp/2n2p2/2ppp3/8/3P1NP1/PPP1PPBP/RNBQ1RK1 b kq -
-King's Indian: Samisch, 5...O-O *
+King's Indian: Sämisch, 5...O-O *
 r1bqkbnr/pp4pp/2n2p2/2ppp3/8/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
-King's Indian: Samisch variation *
+King's Indian: Sämisch variation *
 r1bqkbnr/pp4pp/2n5/2pppp2/8/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
 King's Indian: Four pawns attack *
 r1bqkbnr/pp4pp/2n5/4pp2/2Pp4/3P1NP1/PP3P1P/RNBQKB1R w KQkq -
@@ -2725,7 +2725,7 @@ Vienna gambit *
 r1bqkbnr/ppp3pp/2np4/4pp2/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq -
 Vienna gambit, Steinitz variation *
 r1bqkbnr/ppp3pp/6n1/3p1p2/8/2P3B1/PP2PPPP/RN1QKBNR w KQkq -
-Caro-Kann: classical, Maroczy attack *
+Caro-Kann: classical, Maróczy attack *
 r1bqkbnr/pppn1ppp/3p4/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq -
 Philidor: Hanham variation
 r1bqkbnr/pppn1ppp/4p3/8/3PN3/8/PPP2PPP/R1BQKBNR w KQkq -
@@ -2837,7 +2837,7 @@ Center game: Hall variation
 r1bqkbnr/pppp1ppp/2n5/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq -
 Scotch game
 r1bqkbnr/pppp1ppp/2n5/8/3Np3/8/PPPPPPPP/RNBQKB1R w KQkq -
-Alekhine's defense: Samisch attack *
+Alekhine's defense: Sämisch attack *
 r1bqkbnr/pppp1ppp/2n5/8/3P4/4p3/PPPNPPPP/RNBQKB1R w KQkq -
 Alekhine's defense: Spielmann variation *
 r1bqkbnr/pppp1ppp/2n5/8/3PPp2/2N5/PPP3PP/R1BQKBNR b KQkq -
@@ -2845,7 +2845,7 @@ Vienna: Steinitz gambit
 r1bqkbnr/pppp1ppp/2n5/8/3QP3/8/PPP2PPP/RNB1KBNR w KQkq -
 Center game
 r1bqkbnr/pppp1ppp/2n5/8/3pP3/2P2N2/PP3PPP/RNBQKB1R b KQkq -
-Scotch: Goring gambit
+Scotch: Göring gambit
 r1bqkbnr/pppp1ppp/2n5/8/4P3/4Q3/PPP2PPP/RNB1KBNR b KQkq -
 Center game: Paulsen attack
 r1bqkbnr/pppp1ppp/2n5/8/4Pp2/2N2N2/PPPP2PP/R1BQKB1R b KQkq -
@@ -2915,11 +2915,11 @@ Lemming defense
 r1bqkbnr/pppppppp/n7/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -
 Durkin's attack *
 r1bqnrk1/p2p1ppp/1pn1p3/2p5/2PPP3/P1PB4/4NPPP/R1BQK2R w KQ -
-Nimzo-Indian: Samisch, Capablanca variation
+Nimzo-Indian: Sämisch, Capablanca variation
 r1bqnrk1/pp2b1pp/2n2p2/2p1p3/3pPP2/3P2P1/PPPNN1BP/R1BQ1RK1 b - -
 King's Indian: orthodox, Aronin-Taimanov, main line *
 r1bqnrk1/pp2b2p/2n2p2/2p1p1p1/3pPP2/3P2P1/PPPNN1BP/R1BQ1RK1 w - -
-King's Indian: orthodox, Aronin-Taimanov, Benko attack *
+King's Indian: orthodox, Aronin-Taimanov, Benkö attack *
 r1bqnrk1/pp2bppp/2n5/2p1p3/3pP3/3P1NP1/PPP1NPBP/R1BQ1RK1 w - -
 King's Indian: orthodox, Aronin-Taimanov, 9.Ne1 *
 r1bqr1k1/1p1n1pbp/p2p1np1/2pP4/P7/2N3P1/1P1NPPBP/R1BQ1RK1 w - -
@@ -2927,7 +2927,7 @@ Benoni: fianchetto, 11...Re8
 r1bqr1k1/p1p2ppp/2pp1n2/4p3/1b2P3/2NP1N2/PPP2PPP/R1BQ1RK1 w - -
 Four knights: Janowski variation *
 r1bqr1k1/pp1n1ppp/2p2n2/b2pp3/4P3/P1NP1N2/1PP1BPPP/R2QBRK1 b - -
-Ruy Lopez: Kecskemet variation *
+Ruy Lopez: Kecskemét variation *
 r1bqr1k1/pp1n1ppp/2pb1n2/3pN1B1/3P1P2/2N5/PPP1B1PP/R2QK2R w KQ -
 Petrov: classical attack, Berger variation *
 r1bqr1k1/pp2bppp/2n2n2/2ppp3/4P3/3P1NP1/PPPN1PBP/R1BQ1RK1 w - -
@@ -2943,7 +2943,7 @@ Ruy Lopez: closed, Chigorin, Yugoslav system *
 r1bqr1k1/ppbn1pp1/2p2n1p/3pp3/1PP1P3/P1NP1N2/2Q1BPPP/R1B2RK1 b - -
 Ruy Lopez: closed, Chigorin, 12...Nc6 *
 r1bqr1k1/ppbn1pp1/2p2n1p/3pp3/1PP1P3/P2P1N2/1B1NBPPP/R2Q1RK1 b - -
-Ruy Lopez: closed, Breyer, Gligoric variation *
+Ruy Lopez: closed, Breyer, Gligoriƒá variation *
 r1bqr1k1/ppbn1pp1/2p2n1p/4p3/1PPpP1P1/P2P1N2/2Q1BP1P/RNB1K2R b KQ -
 Ruy Lopez: closed, Leonhardt variation *
 r1bqr1k1/ppbn1pp1/2p2n1p/4p3/1Pp1P3/P1NP1N2/2Q1BPPP/R1B2RK1 w - -
@@ -2967,7 +2967,7 @@ Four knights: Spielmann variation *
 r1bqr1k1/ppp4p/8/2PPnpp1/6n1/1BN1BpQ1/PPP2PPP/2KR3R b - -
 Two knights: Max Lange attack, Berger variation *
 r1bqr1k1/pppn1pbp/3p1np1/4p3/2PP4/2N1PN2/PP2BPPP/R1BQ1RK1 w - -
-Reti: King's Indian attack, French variation *
+Réti: King's Indian attack, French variation *
 r1bqr1k1/pppp1ppp/2n2n2/3NpQ2/1bP5/4PN2/PP1P1PPP/R1B1KB1R b KQ -
 English: four knights, Stean variation
 r1bqrbk1/pp3ppp/2n2n2/2ppp3/P3P3/2PP1NP1/1P1N1PBP/R1BQ1RK1 b - -
@@ -2985,7 +2985,7 @@ QGA: classical, Smyslov variation *
 r1br2k1/ppq2ppp/2n1pn2/2P5/1P1p4/P3PN2/1BQ2PPP/R3KB1R b KQ -
 QGA: classical, Flohr variation *
 r1q2rk1/pp2ppbp/2npbnp1/8/4PP2/1NN1B3/PPP1B1PP/R2Q1RK1 w - -
-Sicilian: dragon, classical, Reti-Tartakower variation
+Sicilian: dragon, classical, Réti-Tartakower variation
 r1r3k1/pp1bppbp/2np1np1/q7/3NP2P/1BN1BP2/PPPQ2P1/2KR3R b - -
 Sicilian: dragon, Yugoslav attack, 12.h4
 r2n1rk1/ppp1qppp/3p1n2/1B2p1B1/3PP1b1/2P2N2/P1P2PPP/R2QR1K1 w - -
@@ -2995,7 +2995,7 @@ Scotch: Sea-cadet mate
 r2q1knr/pppb1Bpp/1b1p4/n7/3PP3/2N2N2/P1Q2PPP/R1B2RK1 b - -
 Evans gambit: Fraser-Mortimer attack
 r2q1rk1/1b1nbppp/p2p1n2/1pp1p3/3PP3/2P2N1P/PPBN1PP1/R1BQR1K1 w - -
-Ruy Lopez: closed, Breyer, Gligoric variation
+Ruy Lopez: closed, Breyer, Gligoriƒá variation
 r2q1rk1/1bp1bppp/p1np1n2/1p2p3/4P3/1BP2N1P/PP1P1PP1/RNBQR1K1 w - -
 Ruy Lopez: closed, Flohr-Zaitsev system (Lenzerheide variation)
 r2q1rk1/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP1NQPPP/R1B2RK1 b - -
@@ -3015,17 +3015,17 @@ Four knights: symmetrical, Metger unpin *
 r2q1rk1/p3bppp/1pn1bn2/2pp2B1/3P4/2N2NP1/PP2PPBP/2RQ1RK1 w - -
 QGD: Tarrasch, Stoltz variation
 r2q1rk1/p3n1pp/2p1bp2/3pp1B1/N1P5/6P1/PP2PbBP/R2Q1RK1 w - -
-Grunfeld: exchange, Seville variation *
+Grünfeld: exchange, Seville variation *
 r2q1rk1/p3n1pp/3bbp2/3pp3/N7/4B1P1/PP2PPBP/R2Q1RK1 b - -
-Grunfeld: Spassky variation, main line, 13.Bd3 *
+Grünfeld: Spassky variation, main line, 13.Bd3 *
 r2q1rk1/p3n1pp/3bbp2/4p3/N2p4/4B1P1/PP2PPBP/R2Q1RK1 w - -
-Grunfeld: exchange, Sokolsky variation *
+Grünfeld: exchange, Sokolsky variation *
 r2q1rk1/p3nppp/4b3/2bpp3/8/2N3P1/PP2PPBP/R1BQ1RK1 w - -
-Grunfeld: Spassky variation, main line, 10...cd, 11.cd *
+Grünfeld: Spassky variation, main line, 10...cd, 11.cd *
 r2q1rk1/p4ppp/2n1bn2/2bpp3/N7/1B1P1P2/PPP3PP/R1BQK1NR w KQ -
 Evans gambit: Steinitz variation *
 r2q1rk1/p4ppp/2n2n2/2bpp3/N5b1/1B1P4/PPP2PPP/R1BQK1NR w KQ -
-Evans gambit: Goring attack *
+Evans gambit: Göring attack *
 r2q1rk1/p4ppp/b1B2n2/2bp4/8/2N5/PPPP1PPP/R1BQK2R w KQ -
 Giuoco Piano: Aitken variation *
 r2q1rk1/p4ppp/b1p2n2/2bpN3/3P4/2N5/PPP2PPP/R1BQK2R w KQ -
@@ -3047,7 +3047,7 @@ QGD: Tarrasch, Bogolyubov variation
 r2q1rk1/pp2bppp/2npbn2/2p3B1/4P3/2N2N2/PPP1BPPP/R2QR1K1 b - -
 Philidor: Berger variation
 r2q1rk1/pp2pBbp/6p1/n1p5/3PP1b1/2P1BP2/P3N1PP/R2Q1RK1 b - -
-Grunfeld: exchange, Seville variation
+Grünfeld: exchange, Seville variation
 r2q1rk1/pp2ppbp/1nnp2p1/5b2/2PP1B2/2N2N1P/PP2BPP1/R2Q1RK1 b - -
 Alekhine's defense: exchange, Karpov variation
 r2q1rk1/pp2ppbp/2n2np1/3p4/2PP2b1/2N2N2/PP2BPPP/R1BQ1RK1 w - -
@@ -3055,15 +3055,15 @@ QGD: Tarrasch, Prague variation, 9.Bg5 *
 r2q1rk1/pp2ppbp/3p1np1/n4P2/2b1P3/1NNBB3/PPP3PP/R2Q1RK1 b - -
 Sicilian: dragon, classical, Spielmann variation
 r2q1rk1/pp2ppbp/4b1p1/n2P4/4P3/3BBP2/P3N1PP/R2Q1RK1 b - -
-Grunfeld: exchange, Sokolsky variation
+Grünfeld: exchange, Sokolsky variation
 r2q1rk1/pp2ppbp/4b1p1/n7/3PP3/3BBP2/P3N1PP/R2Q1RK1 w - -
-Grunfeld: Spassky variation, main line, 13.Bd3
+Grünfeld: Spassky variation, main line, 13.Bd3
 r2q1rk1/pp2ppbp/5np1/n2p1P2/4P3/1NNPB3/PP4PP/R2Q1RK1 w - -
 Sicilian: dragon, classical, Bernard defense
 r2q1rk1/pp4pp/1nnpb3/4p3/N2P1p2/5NP1/PP2PPBP/R2Q1RK1 b - -
 Sicilian: dragon, classical, Bernard defense *
 r2q1rk1/ppp1b1pp/1nn1b3/4pp2/8/2NPBNP1/PP2PPBP/R1Q2RK1 b - -
-Sicilian: dragon, classical, Reti-Tartakower variation *
+Sicilian: dragon, classical, Réti-Tartakower variation *
 r2q1rk1/ppp1b1pp/1nn1b3/4pp2/8/2NPPN2/PP1BBPPP/R2Q1RK1 w - -
 Sicilian: modern Scheveningen, main line with Nb3 *
 r2q1rk1/ppp1b1pp/2n1b3/3n1p2/4p3/1QNP1NP1/PP2PPBP/R1B2RK1 w - -
@@ -3079,7 +3079,7 @@ Sicilian: dragon, classical, Alekhine variation *
 r2q1rk1/ppp1bppp/2n1b3/3np3/8/2NP1NP1/PP2PPBP/R1BQK2R w KQ -
 Sicilian: dragon, classical, 8.O-O *
 r2q1rk1/ppp1ppbp/1nn3p1/8/3PP1b1/2NQBN2/PP2BPPP/2KR3R b - -
-Grunfeld: Russian, Keres variation
+Grünfeld: Russian, Keres variation
 r2q1rk1/ppp1ppbp/2np1np1/5b2/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
 King's Indian: fianchetto, lesser Simagin (Spassky) variation
 r2q1rk1/ppp1ppbp/2np1np1/8/2PP2b1/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
@@ -3105,7 +3105,7 @@ Scotch: Rosenthal variation *
 r2q2k1/pp3ppp/8/2b1r3/3p4/3P4/PPP1NPPn/R1BQ1RK1 w - -
 Giuoco Piano: Therkatz-Herzog variation *
 r2qbrk1/1pp1bppp/p1np1n2/4p3/B2PP3/2P2N2/PP1N1PPP/R1BQR1K1 w - -
-Ruy Lopez: Kecskemet variation
+Ruy Lopez: Kecskemét variation
 r2qk1nr/pp2bppp/2n1b3/2ppp3/8/3P1NP1/PPP1PPBP/RNBQ1RK1 w kq -
 King's Indian: Semi-Averbakh system *
 r2qk1nr/pp2bppp/2n5/2p1p3/2Pp2b1/3PPNP1/PP3PBP/RNBQ1RK1 b kq -
@@ -3115,7 +3115,7 @@ King's Indian: Averbakh, 6...c5 *
 r2qk1nr/pp2bppp/2n5/2ppp3/6b1/3P1NP1/PPP1PPBP/RNBQ1RK1 w kq -
 King's Indian: Averbakh system *
 r2qk1nr/pp4pp/2nbbp2/2ppp3/8/P1PP1NP1/1P2PPBP/RNBQ1RK1 b kq -
-King's Indian: Samisch, Byrne variation *
+King's Indian: Sämisch, Byrne variation *
 r2qk1nr/ppp1npbp/3pb1p1/3Np3/2P5/4P1P1/PP1P1PBP/R1BQK1NR w KQkq -
 Sicilian: closed, Smyslov variation *
 r2qk1nr/ppp2pbp/2npb1p1/4p3/2P5/2N1P1P1/PP1PNPBP/R1BQK2R w KQkq -
@@ -3141,7 +3141,7 @@ QGA: classical, Smyslov variation
 r2qk2r/1b1nbppp/pp1ppn2/8/2PQ4/1PN2NP1/P3PPBP/R1BR2K1 w kq -
 English: symmetrical, hedgehog, flexible formation
 r2qk2r/1bppbppp/p1n2n2/1p2p3/4P3/1B3N2/PPPP1PPP/RNBQR1K1 w kq -
-Ruy Lopez: Trajkovic counter-attack
+Ruy Lopez: Trajkoviƒá counter-attack
 r2qk2r/1p1bbppp/p1nppn2/6B1/3NPP2/2N5/PPPQ2PP/2KR1B1R w kq -
 Sicilian: Richter-Rauzer, Rauzer attack, 7...a6 defense, 9...Be7
 r2qk2r/2p1bppp/p1n1b3/1p1pP3/2P1n3/1B3N2/PP2QPPP/RNB2RK1 b kq -
@@ -3151,7 +3151,7 @@ Ruy Lopez: open, classical defense
 r2qk2r/2p1bppp/p1n1b3/1p1pP3/4n3/1BP2N2/PP3PPP/RNBQR1K1 b kq -
 Ruy Lopez: open, 9...Be7, 10.Re1
 r2qk2r/2p1bppp/p1np1n2/1p2p3/3PP1b1/1BP2N2/PP2QPPP/RNB1K2R w KQkq -
-Ruy Lopez: Wormald attack, Grunfeld variation
+Ruy Lopez: Wormald attack, Grünfeld variation
 r2qk2r/2p1nppp/p3b3/1pbpP3/4n3/1BPQ1N2/PP3PPP/RNB2RK1 w kq -
 Ruy Lopez: open, Motzko attack, Nenarokov variation
 r2qk2r/2p2ppp/p1n1b3/1pbpP3/4n3/1BP2N2/PP1N1PPP/R1BQ1RK1 b kq -
@@ -3165,15 +3165,15 @@ Sicilian: Richter-Rauzer, Rauzer attack, 7...a6 defense, 11.Bxf6
 r2qk2r/p1pn1ppp/8/3pp3/Np2b1Q1/1B6/PPP2K1P/R1B3R1 w kq -
 Evans gambit declined, Pavlov variation *
 r2qk2r/pp1bppbp/2n2np1/2ppN3/8/1P2P3/PBPPBPPP/RN1QK2R w KQkq -
-Queen's Indian: Opo censky variation *
+Queen's Indian: Opoƒçensky variation *
 r2qk2r/pp2b1pp/2n1b3/2pnpp2/8/2NP1NP1/PP2PPBP/R1BQ1RK1 w kq -
 King's Indian: Four pawns attack, main line *
 r2qk2r/pp2bpp1/2n2nb1/2p1p2p/3pP1PN/3P3P/PPPN1PB1/R1BQ1RK1 w kq -
 King's Indian: Petrosian system, Keres variation *
 r2qk2r/pp2bppp/2n1bn2/2ppp3/4P3/3P1NP1/PPP2PBP/RNBQ1RK1 w kq -
-King's Indian: Gligoric-Taimanov system *
+King's Indian: Gligoriƒá-Taimanov system *
 r2qk2r/pp3ppp/2n1pn2/3p1b2/1b1P1B2/1QN1PN2/PP3PPP/R3KB1R w KQkq -
-QGD Slav: exchange, Trifunovic variation
+QGD Slav: exchange, Trifunoviƒá variation
 r2qk2r/pp3ppp/2nbp3/3p4/3Pn1b1/1P3N2/PBP1BPPP/RN1Q1RK1 w kq -
 QGD: Pillsbury attack *
 r2qk2r/pp3ppp/2nbpn2/2pp4/3P2b1/4PN2/PPPNBPPP/R1BQ1RK1 w kq -
@@ -3205,7 +3205,7 @@ KGD: classical, Svenonius variation
 r2qk2r/ppp3pp/1bn1b3/3npp2/8/2NPPN2/PP2BPPP/R1BQ1RK1 w kq -
 Sicilian: Sozin, Fischer variation *
 r2qk2r/ppp3pp/2n5/3p1p2/2PPn1bb/3B1N2/PP3PPP/RNBQR1K1 w kq -
-Petrov: classical attack, Maroczy variation
+Petrov: classical attack, Maróczy variation
 r2qk2r/pppbbppp/2Bp1n2/4p3/3PP3/2N2N2/PPP2PPP/R1BQ1RK1 b kq -
 Ruy Lopez: closed Berlin defense, Showalter variation
 r2qk2r/pppbbppp/2np1n2/1B2p1B1/3PP3/2N2N2/PPP2PPP/R2Q1RK1 b kq -
@@ -3249,9 +3249,9 @@ QGD: Lasker defense, main line *
 r2qkb1r/pb1n1ppp/2p1pn2/1p6/3P4/2NBPN2/PP3PPP/R1BQK2R w KQkq -
 QGD semi-Slav: Meran, Wade variation
 r2qkb1r/pp1b1ppp/2n1pn2/2pp4/3P4/5NP1/PPP1PPBP/RNBQ1RK1 w kq -
-Grunfeld: Opo censky variation *
+Grünfeld: Opoƒçensky variation *
 r2qkb1r/pp1bppp1/5n1p/1BpP4/4p3/2N5/PPP1QPPP/R3K1NR b KQkq -
-QGD: Albin counter-gambit, Krenosz variation *
+QGD: Albin counter-gambit, Krénosz variation *
 r2qkb1r/pp1bpppp/2np1n2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R w KQkq -
 Sicilian: Richter-Rauzer, Larsen variation
 r2qkb1r/pp1bpppp/2np1n2/6B1/3NP3/2N5/PPPQ1PPP/R3KB1R b KQkq -
@@ -3261,13 +3261,13 @@ QGD: Cambridge Springs defense, Rubinstein variation *
 r2qkb1r/pp1n1ppp/4pn2/2pp4/3P2b1/2P1PN2/PP1N1PPP/R1BQKB1R w KQkq -
 QGD: Capablanca variation *
 r2qkb1r/pp2n1pp/2n1bp2/2p1p3/3PP3/3P1NP1/PP3PBP/RNBQ1RK1 b kq -
-King's Indian: Samisch, orthodox main line *
+King's Indian: Sämisch, orthodox main line *
 r2qkb1r/pp2n1pp/2n1bp2/2ppp3/4P3/2PP1NP1/PP3PBP/RNBQ1RK1 b kq -
-King's Indian: Samisch, orthodox, 7.Nge2 c6 *
+King's Indian: Sämisch, orthodox, 7.Nge2 c6 *
 r2qkb1r/pp2n1pp/2n1bp2/2ppp3/8/2NP1NP1/PPP1PPBP/1RBQ1RK1 b kq -
-King's Indian: Samisch, Ruban variation *
+King's Indian: Sämisch, Ruban variation *
 r2qkb1r/pp2n1pp/2n1bp2/2ppp3/8/P1NP1NP1/1PP1PPBP/R1BQ1RK1 b kq -
-King's Indian: Samisch, Panno formation *
+King's Indian: Sämisch, Panno formation *
 r2qkb1r/pp2pppp/2n2n2/1BPp4/6b1/4PN2/PPP2PPP/RNBQK2R b KQkq -
 QGD: Ragozin, Vienna variation *
 r2qkb1r/pp2pppp/2n2n2/1Bpp3b/8/1P2PN1P/PBPP1PP1/RN1QK2R b KQkq -
@@ -3277,11 +3277,11 @@ QGD semi-Slav: 5.Bg5 dc *
 r2qkb1r/pp2pppp/2n2n2/2pp1b2/3P4/4PN2/PPP1BPPP/RNBQK2R w KQkq -
 QGD: classical variation (5.Bf4) *
 r2qkb1r/pp2pppp/2n2n2/2pp1b2/3P4/5NP1/PPP1PPBP/RNBQK2R w KQkq -
-Grunfeld: 5.Bf4 *
+Grünfeld: 5.Bf4 *
 r2qkb1r/pp2pppp/2n2n2/2pp4/2PP2b1/4PN2/PP3PPP/RNBQKB1R w KQkq -
 QGD: Semi-Tarrasch defense, Pillsbury variation *
 r2qkb1r/pp2pppp/2n2n2/2pp4/3P2b1/5NP1/PPP1PPBP/RNBQK2R w KQkq -
-Grunfeld: 5.Bg5 *
+Grünfeld: 5.Bg5 *
 r2qkb1r/pp2pppp/2n2n2/2pp4/6b1/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
 King's Indian: Smyslov system *
 r2qkb1r/pp2pppp/2n2n2/3p1b2/3P1B2/2N2N2/PP2PPPP/R2QKB1R b KQkq -
@@ -3289,7 +3289,7 @@ QGD Slav: exchange variation, 6.Bf4 Bf5 *
 r2qkb1r/pp2pppp/2n2n2/3p1b2/3P1B2/2N2N2/PP2PPPP/R2QKB1R w KQkq -
 QGD Slav: exchange variation, 6.Bf4 Bf5
 r2qkb1r/pp2pppp/2n2n2/3p1b2/3P4/5N2/PPPN1PPP/R1BQKB1R w KQkq -
-QGD: exchange, Samisch variation *
+QGD: exchange, Sämisch variation *
 r2qkb1r/pp2pppp/2n2n2/8/2Pp2b1/3P1NP1/PP3P1P/RNBQKB1R w KQkq -
 Benoni: Uhlmann variation *
 r2qkb1r/pp2pppp/2n2nb1/2pp4/6PN/1P2P2P/PBPP1P2/RN1QKB1R b KQkq -
@@ -3305,7 +3305,7 @@ Sicilian: accelerated fianchetto, Breyer variation *
 r2qkb1r/pp3ppp/2n1bn2/2ppp3/8/3P1NP1/PPP1PPBP/RNBQ1RK1 w kq -
 King's Indian: Larsen variation *
 r2qkb1r/pp3ppp/2n1pn2/2pp1b2/3P4/5NP1/PPP1PPBP/RNBQ1RK1 w kq -
-Grunfeld with Bf4 & e3 *
+Grünfeld with Bf4 & e3 *
 r2qkb1r/pp3ppp/2n1pn2/2pp3b/3P4/1P2PN1P/P1P1BPP1/RNBQ1RK1 b kq -
 QGD: Tartakower (Makagonov-Bondarevsky) system *
 r2qkb1r/pp3ppp/2n1pn2/2pp3b/3P4/4PN1P/PPP1BPP1/RNBQ1RK1 w kq -
@@ -3351,7 +3351,7 @@ QGD semi-Slav: anti-Meran gambit *
 r2qkb1r/ppp1p1pp/1nn1p3/2P5/3P2b1/5N2/PP4PP/RNBQKB1R b KQkq -
 Alekhine's defense: four pawns attack, Ilyin-Genevsky variation
 r2qkb1r/ppp2ppp/1nn5/4p3/6b1/2NPPN2/PP3PPP/R1BQKB1R w KQkq -
-Sicilian: Richter-Rauzer, Pod ebrady variation *
+Sicilian: Richter-Rauzer, Podƒõbrady variation *
 r2qkb1r/ppp2ppp/2n1b3/3np3/8/2N1P3/PPQP1PPP/R1B1KBNR w KQkq -
 Sicilian: Taimanov variation *
 r2qkb1r/ppp2ppp/2n1b3/3np3/8/3P1NP1/PP2PP1P/RNBQKB1R w KQkq -
@@ -3427,7 +3427,7 @@ Nimzo-Indian: Leningrad variation *
 r2qkbnr/pp2pppp/2n5/2pp1b2/3P4/4PN2/PPP2PPP/RNBQKB1R w KQkq -
 QGD: Harrwitz attack *
 r2qkbnr/pp2pppp/2n5/2pp1b2/3P4/5NP1/PPP1PP1P/RNBQKB1R w KQkq -
-Grunfeld: 4.Bf4 *
+Grünfeld: 4.Bf4 *
 r2qkbnr/pp2pppp/2n5/2pp4/2PP2b1/4PN2/PP3PPP/RNBQKB1R b KQkq -
 QGD: Been-Koomen variation *
 r2qkbnr/pp2pppp/2n5/2pp4/3P2b1/4PN2/PPP1BPPP/RNBQK2R b KQkq -
@@ -3437,7 +3437,7 @@ QGD: 4.Bg5 *
 r2qkbnr/pp2pppp/2n5/2pp4/3P2b1/4PN2/PPPN1PPP/R1BQKB1R b KQkq -
 QGD: 4.Bg5 Nbd7 *
 r2qkbnr/pp2pppp/2n5/2pp4/3P2b1/5NP1/PPP1PP1P/RNBQKB1R w KQkq -
-Grunfeld: Stockholm variation *
+Grünfeld: Stockholm variation *
 r2qkbnr/pp2pppp/2n5/3p4/2Pp2b1/1Q2PN2/PP3PPP/RNB1KB1R b KQkq -
 QGD: Canal (Venice) variation *
 r2qkbnr/pp2pppp/2n5/3p4/2Pp2b1/4PN2/PP3PPP/RNBQKB1R w KQkq -
@@ -3449,7 +3449,7 @@ QGD: exchange, positional line *
 r2qkbnr/pp3ppp/2n1p3/1Bpp4/3P2b1/4PN2/PPPN1PPP/R1BQK2R b KQkq -
 QGD: Manhattan variation *
 r2qkbnr/pp3ppp/2n1p3/2pp1b2/3P4/5NP1/PPP1PPBP/RNBQ1RK1 b kq -
-Grunfeld: Grunfeld gambit *
+Grünfeld: Grünfeld gambit *
 r2qkbnr/pp3ppp/2n1p3/2pp4/3P2b1/2P1PN2/PP1N1PPP/R1BQKB1R b KQkq -
 QGD: 5...c6 *
 r2qkbnr/pp3ppp/2n1p3/2pp4/3P2b1/4PN2/PPP1BPPP/RNBQ1RK1 b kq -
@@ -3469,19 +3469,19 @@ Caro-Kann: Panov-Botvinnik, Czerniak variation *
 r2qkbnr/pp3ppp/2n5/2ppp3/6b1/3P1NP1/PPP1PPBP/RNBQK2R w KQkq -
 King's Indian: accelerated Averbakh system *
 r2qkbnr/pp3ppp/4p3/3p4/3Q4/6P1/PPb1PPBP/RNB2RK1 w kq -
-Grunfeld: Grunfeld gambit accepted *
+Grünfeld: Grünfeld gambit accepted *
 r2qkbnr/pp3ppp/8/3pn3/8/8/PPP1NPPP/RNBQK2R b KQkq -
 Bishop's opening: Lisitsyn variation
 r2qkbnr/pp4pp/2n1bp2/2p1p3/3pP3/2PP1NP1/PP3PBP/RNBQ1RK1 b kq -
-King's Indian: Samisch, orthodox, 7.d5 c6 *
+King's Indian: Sämisch, orthodox, 7.d5 c6 *
 r2qkbnr/pp4pp/2n1bp2/2p1p3/3pP3/3P1NP1/PPP2PBP/RNBQ1RK1 w kq -
-King's Indian: Samisch, orthodox, 7.d5 *
+King's Indian: Sämisch, orthodox, 7.d5 *
 r2qkbnr/pp4pp/2n1bp2/2ppp3/4P3/3P1NP1/PPP2PBP/RNBQ1RK1 b kq -
-King's Indian: Samisch, orthodox variation *
+King's Indian: Sämisch, orthodox variation *
 r2qkbnr/pp4pp/2n1bp2/2ppp3/8/1P1P1NP1/P1P1PPBP/RNBQ1RK1 b kq -
-King's Indian: Samisch, double fianchetto variation *
+King's Indian: Sämisch, double fianchetto variation *
 r2qkbnr/pp4pp/2n1bp2/2ppp3/8/2NP1NP1/PPP1PPBP/R1BQ1RK1 b kq -
-King's Indian: Samisch, 6...Nc6 *
+King's Indian: Sämisch, 6...Nc6 *
 r2qkbnr/ppp1p1pp/2n2p2/3p4/3P1Bb1/5N2/PPP1PPPP/RN1QKB1R w KQkq -
 Richter-Veresov attack, Richter variation *
 r2qkbnr/ppp1pppp/2n5/3p4/3P1B2/5b2/PPP1PPPP/RN1QKB1R w KQkq -
@@ -3491,7 +3491,7 @@ Richter-Veresov attack *
 r2qkbnr/ppp2p1p/2P5/8/2BP1pb1/2N2p2/PPP3PP/R1BQ1RK1 b kq -
 Vienna: Pierce gambit, Rushmere attack
 r2qkbnr/ppp2pp1/2n5/3p3p/2PPp1b1/4P3/PP1NBPPP/RNBQK2R b KQkq -
-French: Albin-Alekhine-Chatard attack, Breyer variation *
+French: Albin-Alekhine-Chaatard attack, Breyer variation *
 r2qkbnr/ppp2pp1/2n5/3p3p/3Pp1b1/4P3/PPPNBPPP/RNBQ1RK1 b kq -
 French: Albin-Alekhine-Chatard attack, Spielmann variation *
 r2qkbnr/ppp2pp1/2n5/3p3p/3Pp1b1/4P3/PPPNBPPP/RNBQK2R w KQkq -
@@ -3499,7 +3499,7 @@ French: Albin-Alekhine-Chatard attack *
 r2qkbnr/ppp2pp1/2n5/3p3p/3Pp1b1/4PP2/PPPNB1PP/RNBQK2R b KQkq -
 French: Albin-Alekhine-Chatard attack, Teichmann variation *
 r2qkbnr/ppp2pp1/2n5/3p3p/3Pp1b1/P3P3/1PPNBPPP/RNBQK2R b KQkq -
-French: Albin-Alekhine-Chatard attack, Maroczy variation *
+French: Albin-Alekhine-Chatard attack, Maróczy variation *
 r2qkbnr/ppp2pp1/2n5/3pP2p/6b1/5NP1/PPPPP2P/RNBQKB1R w KQkq -
 Dutch: Staunton gambit, Alekhine variation *
 r2qkbnr/ppp2ppp/2n1b3/1B1p4/3Pp3/4PN1P/PPP2PP1/RNBQK2R w KQkq -
@@ -3541,7 +3541,7 @@ French: classical, Anderssen variation *
 r2qkbnr/ppp2ppp/2n5/3pp3/6b1/3P1NP1/PPP1PP1P/RNBQKB1R w KQkq -
 Pirc: Byrne variation *
 r2qkbnr/ppp2ppp/2npb3/4p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR w KQkq -
-English, Troger defense
+English, Tröger defense
 r2qkbnr/ppp2ppp/8/3p4/1n1Pp3/4P3/PPPNQPPP/RNB1K2R w KQkq -
 French: classical, Alapin variation *
 r2qkbnr/ppp3pp/2n2p2/3pP3/6b1/5NP1/PPPPP2P/RNBQKB1R w KQkq -
@@ -3563,7 +3563,7 @@ Ruy Lopez: old Steinitz defense, semi-Duras variation
 r2qkbnr/pppb2pp/2npP3/1B3p2/3p4/5N2/PPP2PPP/RNBQK2R b KQkq -
 KGD: Falkbeer, Morphy gambit *
 r2qkbnr/pppnpppp/8/3p4/6b1/5NP1/PPPPPPBP/RNBQK2R w KQkq -
-Reti: King's Indian attack, Keres variation
+Réti: King's Indian attack, Keres variation
 r2qr1k1/p1p2ppp/2p2n2/3pp1B1/1b2P1b1/3P1N2/PPP1QPPP/R2N1RK1 b - -
 Four knights: symmetrical, Capablanca variation *
 r2qr1k1/p1p2ppp/5n2/1p1P3b/Q5P1/2N1Bn1P/PPP1KP2/R4B1R w - -
@@ -3573,11 +3573,11 @@ Philidor: Berger variation *
 r2r2k1/ppq2ppp/2n1pn2/2bp4/2P5/2N1PN1P/PP1BQPP1/R4RK1 b - -
 QGD: Lasker defense, Russian variation *
 r3k1nr/ppp1qppp/2n5/4P3/1bPp4/5N1P/PP1BPPP1/R2QKB1R w KQkq -
-QGD: Albin counter-gambit, Krenosz variation
+QGD: Albin counter-gambit, Krénosz variation
 r3k2r/p2q1ppp/5n2/3pp3/1b6/4P3/PP3PPP/RNBQ1RK1 w kq -
 QGD: Semi-Tarrasch, Kmoch variation *
 r3k2r/ppp1qppp/2n1b3/2bnp3/8/2NPPN2/PP2BPPP/R1BQK2R w KQkq -
-Sicilian: Velimirovic attack *
+Sicilian: Velimiroviƒá attack *
 r3k2r/ppp2ppp/2n1bP2/2b2qN1/2ppN3/8/PPP2PPP/R1BQR1K1 b kq -
 Two knights: Max Lange attack, Marshall variation
 r3k2r/pppq2pp/2n1bp2/2bnp3/8/2NP1NP1/PP1BPPBP/R2Q1RK1 b kq -
@@ -3607,7 +3607,7 @@ QGD Slav: Landau variation *
 r3kb1r/pp1bpppp/1qn2n2/1Bp5/2N5/2N1P3/PP1P1PPP/R1BQK2R b KQkq -
 Nimzo-Indian: Spielmann, San Remo variation *
 r3kb1r/pp1qn1pp/2n1bp2/2ppp3/8/P1NP1NP1/1PP1PPBP/1RBQ1RK1 b kq -
-King's Indian: Samisch, Panno main line *
+King's Indian: Sämisch, Panno main line *
 r3kb1r/pp1qpppp/2np1n2/2p5/3PP3/2P2N2/PP3PPP/RNBQ1RK1 b kq -
 Sicilian: Canal-Sokolsky attack, Bronstein gambit
 r3kb1r/pp2pppp/1qn2n2/2pp4/3P4/2P1PQ1P/PP3PP1/RNB1KB1R w KQkq -
@@ -3617,15 +3617,15 @@ QGD: Semi-Tarrasch, Primitive Pillsbury variation *
 r3kb1r/pp2pppp/2n5/q1p5/1n1PP1b1/P4N2/1P3PPP/RNBQKB1R w KQkq -
 QGD: Semi-Tarrasch, Krause variation *
 r3kb1r/pp3ppp/1qn1bn2/3pp1B1/2P5/6P1/PP1NPPBP/RN1Q1RK1 b kq -
-Grunfeld defense: Smyslov, Yugoslav variation *
+Grünfeld defense: Smyslov, Yugoslav variation *
 r3kb1r/pp3ppp/1qn1bn2/3pp1B1/8/6P1/PPPNPPBP/RN1Q1RK1 w kq -
-Grunfeld defense: Smyslov, main line *
+Grünfeld defense: Smyslov, main line *
 r3kb1r/pp3ppp/1qn1pn2/1B1p1b2/3P1B2/2N1PN2/PP3PPP/R2QK2R b KQkq -
-QGD Slav: exchange, Trifunovic variation *
+QGD Slav: exchange, Trifunoviƒá variation *
 r3kb1r/pp3ppp/1qn1pn2/2pp4/3P2b1/4PN2/PPPNBPPP/R1BQ1RK1 w kq -
 QGD: Orthodox defense, Rauzer variation *
 r3kb1r/pp3ppp/2n2q2/2Pp4/1P2p1b1/2P1PN2/P2N1P2/R1BQKB1R w KQkq -
-QGD semi-Slav: anti-Meran, Szabo variation *
+QGD semi-Slav: anti-Meran, Szabó variation *
 r3kb1r/ppp1q1pp/2n5/3n4/1P2p1b1/P3PN2/2Q2PPP/RNB1KB1R w KQkq -
 Sicilian: Najdorf, Polugayevsky, Simagin variation *
 r3kb1r/ppp2ppp/2n1bP2/5qN1/2ppN3/8/PPP2PPP/R1BQR1K1 w kq -
@@ -3635,7 +3635,7 @@ Sicilian: Richter-Rauzer, Keres variation *
 r3kb1r/ppp3pp/2n1bq2/3npp2/8/2NPPN2/PP2BPPP/R1BQK2R w KQkq -
 Sicilian: Scheveningen, Tal variation *
 r3kb1r/ppp3pp/2n2q2/3npp1b/6P1/P2PPN1P/1P2BP2/RNBQK2R b KQkq -
-Sicilian: Najdorf, Goteborg (Argentine) variation *
+Sicilian: Najdorf, Göteborg (Argentine) variation *
 r3kb1r/ppp3pp/2n2q2/3npp1b/8/P2PPN1P/1PQ1BPP1/RNB1K2R b KQkq -
 Sicilian: Najdorf, Browne variation *
 r3kb1r/ppp3pp/2n2q2/3npp2/6b1/P2PPN2/1PQ1BPPP/RNB1K2R b KQkq -
@@ -3657,7 +3657,7 @@ QGD: Lasker defense, Teichmann variation *
 r3kb1r/ppq2ppp/2n1pn2/3p4/2Pp2b1/4PN2/PP1NBPPP/R1BQ1RK1 w kq -
 QGD: Orthodox defense, 7.Qc2 c5, 8.cd (Rubinstein) *
 r3kb1r/ppqbpp1p/2n2np1/1Bp5/2N2P2/2N1P3/PP1P2PP/R1BQK2R w KQkq -
-Nimzo-Indian: Spielmann, Staa hlberg variation *
+Nimzo-Indian: Spielmann, Stahlberg variation *
 r3kb1r/ppqn1ppp/2n1p3/1Bpp3b/Q2P4/2P1PN2/PP1N1PPP/R1B2RK1 w kq -
 QGD: Cambridge Springs defense, Argentine variation *
 r3kb1r/ppqn1ppp/2n1p3/1Bpp4/Q2P2b1/2P1PN2/PP1N1PPP/R1B1K2R w KQkq -
@@ -3669,7 +3669,7 @@ Ruy Lopez: exchange, Alekhine variation
 r3kbnr/p1pb1ppp/2p5/3pN1q1/3Pp3/4P1PP/PPP2P2/RNBQK2R b KQkq -
 French: MacCutcheon, Lasker variation, 8...g6 *
 r3kbnr/pp1qpppp/8/2ppP3/2P3b1/6P1/PP2PP1P/RNBQKB1R b KQkq -
-Grunfeld: Lundin variation *
+Grünfeld: Lundin variation *
 r3kbnr/ppp2pp1/2n5/1B1p2qP/3P4/4P3/PPP2Pp1/RNBQK1R1 w Qkq -
 French: MacCutcheon, Grigoriev variation *
 r3kbnr/ppp2ppp/2n5/3p2q1/3Pp3/4P3/PPP1BPPP/RNBQK2R w KQkq -
@@ -3697,7 +3697,7 @@ Two knights defense: Yurdansky attack
 r4rk1/2pqb1pp/p1n1p3/1p1pP3/4R3/1BP5/PP3PPP/RNBQ2K1 b - -
 Ruy Lopez: open, Tarrasch trap
 r4rk1/2pqbppp/p1n1b3/3pP3/2B1n3/5N2/PP2QPPP/RNBR2K1 w - -
-Ruy Lopez: open, Howell attack, Ekstrom variation
+Ruy Lopez: open, Howell attack, Ekström variation
 r4rk1/p4ppp/bqn2n2/2b5/B3p3/2N3Q1/PPPPNPPP/R1B1K2R w KQ -
 Evans gambit: compromised defense, Paulsen variation *
 r4rk1/pbqnppbp/1p3np1/2pp4/P2P4/BPP1PN2/3NBPPP/R2Q1RK1 b - -
@@ -3717,11 +3717,11 @@ Sicilian: dragon, classical, Richter variation *
 r4rk1/ppq1ppbp/2n2np1/2pp4/3P1Pb1/2P1PN2/PP2B1PP/RNB1QRK1 w - -
 Dutch: stonewall: Chekhover variation *
 r5nr/pp2k2p/2n2p2/2N1p2q/3pP3/3P2P1/PPP2PBP/RNB2RK1 b - -
-King's Indian: Samisch, orthodox, Bronstein variation *
+King's Indian: Sämisch, orthodox, Bronstein variation *
 rn1q1rk1/1p3pbp/p2p1np1/2pP4/P3P1b1/2N2N2/1P2BPPP/R1BQ1RK1 w - -
 Benoni: classical with ...a6 and 10...Bg4
 rn1q1rk1/4ppbp/3p1np1/2pP4/4P3/2N2NP1/PP3PKP/R1BQ3R b - -
-Benko gambit: main line
+Benkö gambit: main line
 rn1q1rk1/p3ppbp/bp3np1/2pp4/3P1P2/2P1PN2/PP2B1PP/RNBQ1RK1 w - -
 Dutch: stonewall with Ba3 *
 rn1q1rk1/pb1pbppp/1p2pn2/8/2PN4/1P1BP3/PB3PPP/RN1Q1RK1 b - -
@@ -3745,23 +3745,23 @@ Queen's Indian: Euwe variation
 rn1q1rk1/pbppbppp/1p2pn2/8/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 b - -
 Queen's Indian: old main line, 7.Nc3
 rn1q1rk1/pp1nppbp/6p1/2p5/3PP1b1/1QN1BN2/PP3PPP/R3KB1R w KQ -
-Grunfeld defense: Smyslov, Yugoslav variation
+Grünfeld defense: Smyslov, Yugoslav variation
 rn1q1rk1/pp2ppbp/2p2np1/3p1b2/2PP4/2NBPN2/PP3PPP/R1BQ1RK1 w - -
-Grunfeld: Flohr defense
+Grünfeld: Flohr defense
 rn1q1rk1/pp2ppbp/2p2np1/3p4/2PP2b1/2NBPN2/PP3PPP/R1BQ1RK1 w - -
-Grunfeld: Smyslov defense
+Grünfeld: Smyslov defense
 rn1q1rk1/pp2ppbp/2pp1np1/5b2/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
 King's Indian: fianchetto, Larsen system
 rn1q1rk1/pp2ppbp/4bnp1/2Pp4/2P2B2/2N1P3/PP3PPP/2RQKBNR w K -
-Grunfeld: Grunfeld gambit, Botvinnik variation
+Grünfeld: Grünfeld gambit, Botvinnik variation
 rn1q1rk1/pp3ppp/2p1p3/5b2/PbBPn1P1/2N1PN2/1P2QP1P/R1B2RK1 b - -
-QGD Slav: Dutch, Samisch variation
+QGD Slav: Dutch, Sämisch variation
 rn1q1rk1/pp3ppp/2p1pn2/5b2/PbBP4/2N1PN2/1P2QPPP/R1B2RK1 b - -
 QGD Slav: Dutch variation, main line
 rn1q1rk1/ppp1b1pp/1n2pp2/4Pb2/2PP4/2N2N2/PP2B1PP/R1BQ1RK1 w - -
 Alekhine's defense: four pawns attack, Korchnoi variation
 rn1q1rk1/ppp1ppbp/5np1/8/2QPP1b1/2N2N2/PP3PPP/R1B1KB1R w KQ -
-Grunfeld: Russian, Smyslov variation
+Grünfeld: Russian, Smyslov variation
 rn1q1rk1/ppp2ppp/3b4/3p4/2PPn1b1/3B1N2/PP3PPP/RNBQ1RK1 w - -
 Petrov: classical attack, Tarrasch variation
 rn1q1rk1/ppp2ppp/8/2bNp3/4P1b1/3P1N2/PPP2PPP/R1BQK2R b KQ -
@@ -3773,7 +3773,7 @@ Giuoco piano: Rosentreter variation *
 rn1q1rk1/ppp3pp/8/3P1p2/3Pn1b1/3B1N2/PP3PPb/RNBQR1K1 w - -
 Petrov: classical attack, Marshall trap
 rn1q1rk1/pppnppbp/6p1/8/3PP1b1/1QN1BN2/PP3PPP/R3KB1R b KQ -
-Grunfeld defense: Smyslov, main line
+Grünfeld defense: Smyslov, main line
 rn1qk1nr/pb3ppp/8/2b1p3/3P4/8/PPP2PPP/RNBQKBNR b KQkq -
 Danish gambit: Schlechter defense *
 rn1qk1nr/pb3ppp/8/2b1p3/8/8/PPPPQPPP/RNB1KBNR b KQkq -
@@ -3801,7 +3801,7 @@ Queen's Indian: Capablanca variation
 rn1qk2r/pbpp1ppp/5n2/1pb1p3/4P3/1BN5/PPPP1PPP/R1BQK1NR w KQkq -
 Evans gambit declined, Cordel variation *
 rn1qk2r/pbppbppp/1p2p3/8/2PPn3/2N2NP1/PP1BPPBP/R2QK2R b KQkq -
-Queen's Indian: Opov censky variation
+Queen's Indian: Opoƒçensky variation
 rn1qk2r/pbppbppp/1p2pn2/8/2PP4/2N2NP1/PP2PPBP/R1BQK2R b KQkq -
 Queen's Indian: anti-Queen's Indian system
 rn1qk2r/pbppbppp/1p2pn2/8/2PP4/5NP1/PP1BPPBP/RN1QK2R w KQkq -
@@ -3833,21 +3833,21 @@ Two knights defense: Knorre variation *
 rn1qkb1r/1b3ppp/p3pn2/1pp5/3P4/1B2PN2/PP2QPPP/RNB2RK1 w kq -
 QGA: classical, 8...Bb7
 rn1qkb1r/4pp1p/3p1np1/2pP4/4P3/2N3P1/PP3P1P/R1BQ1KNR b kq -
-Benko gambit
+Benkö gambit
 rn1qkb1r/4pp1p/3p1np1/2pP4/4P3/2N5/PP2NPPP/R1BQ1K1R b kq -
-Benko gambit: Ne2 variation
+Benkö gambit: Ne2 variation
 rn1qkb1r/4pp1p/b2p1np1/2pP4/8/2N2NP1/PP2PP1P/R1BQKB1R b KQkq -
-Benko gambit: fianchetto variation
+Benkö gambit: fianchetto variation
 rn1qkb1r/4pp1p/b2p1np1/2pP4/8/2N5/PP1NPPPP/R1BQKB1R b KQkq -
-Benko gambit: Nd2 variation
+Benkö gambit: Nd2 variation
 rn1qkb1r/4pppp/b2p1n2/2pP4/4P3/2N5/PP3PPP/R1BQKBNR b KQkq -
-Benko gambit: 7.e4
+Benkö gambit: 7.e4
 rn1qkb1r/p1pp1ppp/bp2pn2/8/2PP4/5NP1/PP2PP1P/RNBQKB1R w KQkq -
 Queen's Indian: Nimzovich variation (exaggerated fianchetto)
 rn1qkb1r/pb1p1ppp/1p2pn2/2p5/2PP4/4PN2/PP3PPP/RNBQKB1R w KQkq -
 English: Wimpey system *
 rn1qkb1r/pb1p1ppp/1p3n2/2pp2N1/2P5/6P1/PP2PPBP/RNBQK2R b KQkq -
-Queen's Indian: Burger variation
+Queen's Indian: Bürger variation
 rn1qkb1r/pb1p1ppp/1p3n2/2pp4/2P4N/6P1/PP2PPBP/RNBQK2R b KQkq -
 Queen's Indian: Rubinstein variation
 rn1qkb1r/pb1ppppp/1p3n2/2p3B1/3P4/2P2N2/PP2PPPP/RN1QKB1R b KQkq -
@@ -3883,7 +3883,7 @@ English: Capablanca's variation
 rn1qkb1r/pp2pppp/2p2n2/3p4/2P3b1/1P3NP1/P2PPP1P/RNBQKB1R w KQkq -
 English: Torre defensive system
 rn1qkb1r/pp2pppp/2p2n2/3p4/6b1/5NP1/PPPPPPBP/RNBQ1RK1 w kq -
-Reti: King's Indian attack, Yugoslav variation
+Réti: King's Indian attack, Yugoslav variation
 rn1qkb1r/pp2pppp/2p2n2/4Nb2/P1pP4/2N5/1P2PPPP/R1BQKB1R b KQkq -
 QGD Slav: Krause attack
 rn1qkb1r/pp2pppp/2p2n2/5b2/P1pP4/2N1PN2/1P3PPP/R1BQKB1R b KQkq -
@@ -3911,13 +3911,13 @@ Blumenfeld counter-gambit, Spielmann variation *
 rn1qkb1r/pp3ppp/2p1pn2/4Nb2/P1pP4/2N5/1P2PPPP/R1BQKB1R w KQkq -
 QGD Slav: Wiesbaden variation
 rn1qkb1r/pp3ppp/4b3/2pnp3/8/2N3P1/PP1PPPBP/R1BQK1NR w KQkq -
-Sicilian: accelerated fianchetto, Maroczy bind, 6.Be3 *
+Sicilian: accelerated fianchetto, Maróczy bind, 6.Be3 *
 rn1qkb1r/ppn2ppp/2p1b3/4p3/2B5/2N2Q2/PPPPNPPP/R1B1K2R w KQkq -
 Scotch: Meitner variation *
 rn1qkb1r/ppp1pppp/1n1p4/3PP3/2P3b1/5N2/PP3PPP/RNBQKB1R b KQkq -
 Alekhine's defense: modern, Vitolins attack
 rn1qkb1r/ppp1pppp/1n1p4/4Pb2/2PP1P2/8/PP4PP/RNBQKBNR w KQkq -
-Alekhine's defense: four pawns attack, Trifunovic variation
+Alekhine's defense: four pawns attack, Trifunoviƒá variation
 rn1qkb1r/ppp1pppp/3p1n2/5b2/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq -
 Old Indian: Janowski variation
 rn1qkb1r/ppp1pppp/3p4/3nP3/2PP2b1/5N2/PP3PPP/RNBQKB1R b KQkq -
@@ -3965,7 +3965,7 @@ QGD: Albin counter-gambit, Lasker trap *
 rn1qkbnr/pp1bpppp/3p4/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq -
 Sicilian: Canal-Sokolsky attack, 3...Bd7
 rn1qkbnr/pp2pppp/2p3b1/8/3P1P2/6N1/PPP3PP/R1BQKBNR b KQkq -
-Caro-Kann: classical, Maroczy attack
+Caro-Kann: classical, Maróczy attack
 rn1qkbnr/pp2pppp/2p3b1/8/3P3P/6N1/PPP2PP1/R1BQKBNR b KQkq -
 Caro-Kann: classical, 6.h4
 rn1qkbnr/pp2pppp/2p3b1/8/3P4/6NN/PPP2PPP/R1BQKB1R b KQkq -
@@ -3987,9 +3987,9 @@ Alekhine's defense: four pawns attack, 7.Be3 *
 rn1qkbnr/ppp1pppp/3p4/8/3P2b1/5N2/PPP1PPPP/RNBQKB1R w KQkq -
 Old Indian: Tartakower (Wade) variation
 rn1qkbnr/ppp1pppp/3p4/8/4P1b1/5N2/PPPP1PPP/RNBQKB1R w KQkq -
-Reti: Wade defense
+Réti: Wade defense
 rn1qkbnr/ppp1pppp/4b3/8/2p5/4PN2/PP1P1PPP/RNBQKB1R w KQkq -
-Reti accepted: Keres variation
+Réti accepted: Keres variation
 rn1qkbnr/ppp1pppp/8/3p1b2/2PP4/8/PP2PPPP/RNBQKBNR b KQkq -
 Queen's pawn, Mason variation, Steinitz counter-gambit *
 rn1qkbnr/ppp1pppp/8/3p1b2/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -
@@ -4007,7 +4007,7 @@ Levitsky attack (Queen's bishop attack) *
 rn1qkbnr/ppp1pppp/8/3p4/5Pb1/8/PPPPP1PP/RNBQKBNR w KQkq -
 Dutch, 2.Bg5 variation *
 rn1qkbnr/ppp1pppp/8/3p4/6b1/5N2/PPPPPPPP/RNBQKB1R w KQkq -
-Trompovsky attack (Ruth, Opov censky opening) *
+Trompovsky attack (Ruth, Opoƒçensky opening) *
 rn1qkbnr/ppp1pppp/8/8/2Pp2b1/8/PP1PPPBP/RNBQK1NR w KQkq -
 Grob: Romford counter-gambit
 rn1qkbnr/ppp2ppp/2b1p3/8/3PN3/5N2/PPP2PPP/R1BQKB1R w KQkq -
@@ -4027,7 +4027,7 @@ Giuoco Piano: Krause variation *
 rn2kb1r/pp1q1ppp/2p1b3/3np3/2B5/2N2Q2/PPPPNPPP/R1B1K2R w KQkq -
 Scotch: Blackburne attack *
 rn2kb1r/pp2pppp/2p2n2/q3Nb2/3P2P1/2N5/PPP2P1P/R1BQKB1R b KQkq -
-Scandinavian defense, Grunfeld variation
+Scandinavian defense, Grünfeld variation
 rn2kb1r/pp3ppp/2p1q3/1N6/3p4/5Q2/PP3PPP/1RB2RK1 b kq -
 Scotch: Gottschall variation *
 rn2kb1r/ppp1pppp/5n2/q4b2/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq -
@@ -4063,7 +4063,7 @@ French: Winawer, Kondratiyev variation
 rnb1k1nr/ppp2pbp/3p4/4P1p1/2BP1p1q/2N5/PPP3PP/R1BQ1KNR b kq -
 KGA: bishop's gambit, Grimm attack
 rnb1k1nr/ppp2ppp/3b4/3B4/4Pp1q/8/PPPP2PP/RNBQ1KNR w kq -
-KGA: bishop's gambit, Boren-Svenonius variation
+KGA: bishop's gambit, Borén-Svenonius variation
 rnb1k1nr/pppp1pbp/8/6p1/2B1P2q/2N2Qp1/PPPP3P/R1B2KNR b kq -
 KGA: bishop's gambit, Fraser variation
 rnb1k1nr/pppp1pbp/8/6p1/2B1Pp1q/2N3P1/PPPP3P/R1BQ1KNR b kq -
@@ -4073,7 +4073,7 @@ Bishop's opening: del Rio variation
 rnb1k1nr/pppp1ppp/8/2b5/2B1Pp1q/8/PPPP2PP/RNBQ1KNR w kq -
 KGA: bishop's gambit, Greco variation
 rnb1k1nr/pppp1ppp/8/4p3/1bB1Pq2/2N2N2/PPPP2PP/R1BQK2R b KQkq -
-KGD: Norwalde variation, Bucker gambit
+KGD: Norwalde variation, Bücker gambit
 rnb1k1nr/ppppqppp/1b1P4/4p3/2B1P3/2P2N2/PP3PPP/RNBQK2R b KQkq -
 Giuoco Piano: Eisinger variation
 rnb1k1nr/pppq1ppp/4p3/3pP3/1b1P4/2N5/PPP2PPP/R1BQKBNR w KQkq -
@@ -4085,7 +4085,7 @@ French: Winawer, classical variation
 rnb1k1r1/ppq1np1Q/4p3/3pP3/3p4/P1P5/2P1NPPP/R1B1KB1R b KQq -
 French: Winawer, advance, poisoned pawn, Konstantinopolsky variation
 rnb1k1r1/ppq1np1Q/4p3/3pP3/3p4/P1P5/2P2PPP/R1BK1BNR b q -
-French: Winawer, advance, poisoned pawn, Euwe-Gligoric variation
+French: Winawer, advance, poisoned pawn, Euwe-Gligoriƒá variation
 rnb1k2r/1pq1bpp1/p2ppn1p/8/3NPP1B/2N2Q2/PPP3PP/R3KB1R w KQkq -
 Sicilian: Najdorf, Browne variation
 rnb1k2r/1pq1bppp/p2ppn2/6B1/3NPP2/2N2Q2/PPP3PP/R3KB1R w KQkq -
@@ -4099,11 +4099,11 @@ Evans gambit: Tartakower attack *
 rnb1k2r/pp2ppbp/5np1/2pq4/8/1P3N2/PB1PPPPP/RN1QKB1R w KQkq -
 Queen's Indian: Marienbad system, Berg variation *
 rnb1k2r/pp2qppp/1bp2n2/3pp1B1/1P2P3/P1NP1N2/2P1BPPP/R2QK2R b KQkq -
-Ruy Lopez: Wormald attack, Grunfeld variation *
+Ruy Lopez: Wormald attack, Grünfeld variation *
 rnb1k2r/pp3ppp/4p3/q7/1b1PP3/5N2/P2B1PPP/R2QKB1R w KQkq -
 QGD: Semi-Tarrasch, San Sebastian variation
 rnb1k2r/ppp1qppp/5n2/2p1P3/3p4/5N1P/PPP1BPP1/R1BQK2R b KQkq -
-Two knights defense: Maroczy variation *
+Two knights defense: Maróczy variation *
 rnb1k2r/ppp1qppp/5n2/3P4/1bBp4/2P2N2/PP3PPP/RNBQK2R w KQkq -
 Bishop's opening: Urusov gambit, Panov variation
 rnb1k2r/ppp2p1p/4pp2/q7/1b1P4/2N5/PPPQ1PPP/R3KBNR w KQkq -
@@ -4177,7 +4177,7 @@ KGD: classical, Marshall attack *
 rnb1kb1r/pp1ppppp/5n2/q1pP4/8/2N5/PPP1PPPP/R1BQKBNR w KQkq -
 Woozle defense
 rnb1kb1r/pp2pppp/1qp2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq -
-QGD Slav: Suchting variation
+QGD Slav: Süchting variation
 rnb1kb1r/pp2pppp/5n2/q1Pp4/8/5N2/PPP1PPPP/RNBQKB1R w KQkq -
 QGA: Mannheim variation *
 rnb1kb1r/pp3pp1/2p1pq1p/3p4/2PP4/1QN2N2/PP2PPPP/R3KB1R b KQkq -
@@ -4233,9 +4233,9 @@ Dutch, Manhattan (Alapin, Ulvestad) variation *
 rnb1kbnr/ppp1pppp/3q4/8/8/2N5/PPPP1PPP/R1BQKBNR w KQkq -
 Scandinavian: Pytel-Wade variation
 rnb1kbnr/ppp1pppp/8/q7/1P6/2N5/P1PP1PPP/R1BQKBNR b KQkq -
-Scandinavian, Mieses-Kotrv c gambit
+Scandinavian, Mieses-Kotrƒç gambit
 rnb1kbnr/ppp1q1pp/3p4/4Pp2/3p4/5N2/PPP2PPP/RNBQKB1R w KQkq -
-KGD: Falkbeer, Reti variation *
+KGD: Falkbeer, Réti variation *
 rnb1kbnr/ppp1q1pp/8/4Np2/3p4/8/PPP2PPP/RNBQKB1R w KQkq -
 KGD: Falkbeer, Charousek gambit *
 rnb1kbnr/ppp2p1p/8/3B2p1/4Pp1q/6P1/PPPP3P/RNBQ1KNR b kq -
@@ -4323,7 +4323,7 @@ KGA: bishop's gambit, classical defense, Cozio attack *
 rnb2rk1/p1p1qppp/1p3n2/8/4p3/2P5/PNPPBPPP/R1BQK2R w KQ -
 Ruy Lopez: Berlin defense, Pillsbury variation *
 rnb2rk1/p1pqppbp/1p4p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - -
-Grunfeld: exchange, Larsen variation
+Grünfeld: exchange, Larsen variation
 rnb2rk1/p1q1ppbp/1p3np1/2pp4/3P4/2P1PN2/PP1NBPPP/R1BQ1RK1 w - -
 Catalan: closed, Qc2 & b3 *
 rnb2rk1/p4ppp/1qp2n2/2bPp3/B7/2NP4/PPP2PPP/R1BQK1NR w KQ -
@@ -4339,7 +4339,7 @@ QGA: classical, 7...b5 *
 rnb2rk1/pp2qppp/4pn2/2bp4/2P5/P3PN2/1P3PPP/RNBQKB1R w KQ -
 QGA: classical, 7.Qe2 *
 rnb2rk1/pp2qppp/4pn2/2p5/1bBP4/2N1PN2/PP3PPP/R1BQ1RK1 w - -
-Nimzo-Indian: 4.e3, Gligoric system, Smyslov variation
+Nimzo-Indian: 4.e3, Gligoriƒá system, Smyslov variation
 rnb2rk1/pp2qppp/5n2/2b5/1PB1p3/P1N1PN2/5PPP/R1BQK2R w KQ -
 QGA: classical, Furman variation *
 rnb2rk1/pp2qppp/5n2/2p5/4p3/2P5/PNPPBPPP/R1BQK2R w KQ -
@@ -4349,7 +4349,7 @@ Ruy Lopez: open, Motzko attack *
 rnb2rk1/pp3ppp/1bpq1n2/4N3/1PBPp3/P3B3/2P1NPPP/R2QK2R b KQ -
 Ruy Lopez: open, Motzko attack, Nenarokov variation *
 rnb2rk1/ppB1ppbp/6p1/3q4/3P4/4P3/PP3PPP/R2QKBNR b KQ -
-Grunfeld: Grunfeld gambit accepted
+Grünfeld: Grünfeld gambit accepted
 rnb2rk1/ppp1qpp1/4p2p/3P4/3P4/2P1PN2/P4PPP/R2QKB1R b KQ -
 QGD: Lasker defense, main line
 rnb2rk1/ppp1qpp1/4p2p/3p4/2PPn3/2N1PN2/PPQ2PPP/R3KB1R b KQ -
@@ -4357,13 +4357,13 @@ QGD: Lasker defense, Teichmann variation
 rnb2rk1/ppp1qppp/1b3n2/4N3/1P1Pp3/P1N1B3/2P2PPP/R2QKB1R w KQ -
 Ruy Lopez: open, Howell attack *
 rnb2rk1/ppp1qppp/5n2/3pN3/1b1PP3/2N5/PPP1BPPP/R1BQK2R b KQ -
-Ruy Lopez: Berlin defense, Trifunovic variation *
+Ruy Lopez: Berlin defense, Trifunoviƒá variation *
 rnb2rk1/ppp1qppp/5n2/8/4pN2/2P5/P1PPBPPP/R1BQK2R b KQ -
 Ruy Lopez: Berlin defense, Cordel variation *
 rnb2rk1/ppp1qppp/8/3n4/4p3/2P5/PNPPBPPP/R1BQK2R w KQ -
 Ruy Lopez: Berlin defense, Winawer attack *
 rnb2rk1/ppp2pbp/3p2p1/3Pp3/2n1P2Q/2N2P2/PP2K2P/R5NR w - -
-King's Indian: Samisch, orthodox, Bronstein variation
+King's Indian: Sämisch, orthodox, Bronstein variation
 rnb2rk1/ppp2pp1/3q3p/3p4/3P4/1QP1PN2/P4PPP/R3KB1R w KQ -
 QGD: Lasker defense, Bernstein variation
 rnb2rk1/pppp2pp/5q2/2b1pP2/8/2N5/PPPP1P1P/R1BQKBNR b KQ -
@@ -4385,7 +4385,7 @@ Catalan: closed, 7.Qc2 *
 rnbk1b1r/pppnqBpp/8/4Np2/3Q4/8/PPP2PPP/RNB1K2R w KQ -
 KGD: Falkbeer, Alapin variation *
 rnbk1bnr/pppp2pp/8/8/2B1pp1q/2N5/PPPPQ1PP/R1BK2NR w - -
-KGA: Lopez-Gianutio counter-gambit, Hein variation
+KGA: López-Gianutio counter-gambit, Hein variation
 rnbq1bnr/ppp3k1/7p/3B4/3PPppP/8/PPP3P1/RNBQK2R b KQ -
 KGA: Allgaier, Urusov attack
 rnbq1bnr/ppp3k1/7p/4B3/2BPp1pP/8/PPP3P1/RN1QK2R b KQ -
@@ -4425,7 +4425,7 @@ KGA: bishop's gambit, classical defense *
 rnbq1knr/pppp2pp/8/2b1pP1Q/8/2N5/PPPP1PPP/R1B1KBNR b KQ -
 KGA: bishop's gambit, Boden defense *
 rnbq1knr/pppp2pp/8/4pP1Q/3b4/3B4/PPP2PPP/RNB1K1NR b KQ -
-KGA: bishop's gambit, Boren-Svenonius variation *
+KGA: bishop's gambit, Borén-Svenonius variation *
 rnbq1knr/pppp3p/6p1/4pP1Q/3b2P1/8/PPP2P1P/RNB1KBNR w KQ -
 KGA: bishop's gambit, Chigorin's attack (Gifford variation) *
 rnbq1r1k/p1p4P/5n2/2bpp2B/8/8/PPPP1PPP/RNBQK1NR w KQ -
@@ -4433,13 +4433,13 @@ Bishop's opening: Four pawns' gambit *
 rnbq1r1k/pppp3P/5n2/2b1p2B/8/8/PPPP1PPP/RNBQK1NR w KQ -
 KGA: Cunningham, three pawns gambit *
 rnbq1rk1/1p2ppbp/p1pp1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ -
-King's Indian: Samisch, Byrne variation
+King's Indian: Sämisch, Byrne variation
 rnbq1rk1/1p3pbp/p2p1np1/2pP4/P3P3/2N2N2/1P2BPPP/R1BQ1RK1 b - -
 Benoni: classical, 9...a6, 10.a4
 rnbq1rk1/1p3ppp/4pn2/p1bp4/2P5/P3PN2/1P3PPP/RNBQKB1R w KQ -
 QGA: classical, Rubinstein variation *
 rnbq1rk1/1pp1ppbp/p4np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ -
-Grunfeld: Russian, Alekhine (Hungarian) variation
+Grünfeld: Russian, Alekhine (Hungarian) variation
 rnbq1rk1/1pp2pbp/3p1np1/p2Pp3/2P1P3/2N2N2/PP2BPPP/R1BQK2R w KQ -
 King's Indian: Petrosian system, Stein variation
 rnbq1rk1/1pp2ppp/1b3n2/p2NN3/1P1PP3/P7/2P2PPP/R1BQKB1R b KQ -
@@ -4455,11 +4455,11 @@ QGD: Tartakower (Makagonov-Bondarevsky) system, 8.cd Nxd5
 rnbq1rk1/p1p1bpp1/1p2pn1p/3p4/2PP3B/2N1PN2/PP3PPP/R2QKB1R w KQ -
 QGD: Tartakower (Makagonov-Bondarevsky) system
 rnbq1rk1/p1p1ppbp/1p1p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ -
-King's Indian: Samisch, double fianchetto variation
+King's Indian: Sämisch, double fianchetto variation
 rnbq1rk1/p1p1ppbp/1p3np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ -
-Grunfeld: Russian, Levenfish variation
+Grünfeld: Russian, Levenfish variation
 rnbq1rk1/p1p1ppbp/1p4p1/8/2BPP3/2P5/P3NPPP/R1BQK2R w KQ -
-Grunfeld: exchange, Simagin's lesser variation
+Grünfeld: exchange, Simagin's lesser variation
 rnbq1rk1/p1p2ppp/1p2pn2/3p4/1bPP4/2NBPN2/PP3PPP/R1BQK2R w KQ -
 Nimzo-Indian: 4.e3, main line with ...b6
 rnbq1rk1/p1pp1ppp/4pn2/1p6/2PP4/P1Q5/1P2PPPP/R1B1KBNR w KQ -
@@ -4491,7 +4491,7 @@ Evans gambit: normal variation *
 rnbq1rk1/pp1p1ppp/2p2n2/b7/4PB2/P1NP4/1PP3PP/R2QKBNR w KQ -
 Ruy Lopez: Siesta, Kopayev variation *
 rnbq1rk1/pp1p1ppp/4pn2/2P5/1bP5/2N5/PPQ1PPPP/R1B1KBNR w KQ -
-Nimzo-Indian: classical, Pirc variation
+Nimzo-Indian: classical, Pirƒá variation
 rnbq1rk1/pp1pppbp/5np1/2p5/3P4/4PN2/PPP1BPPP/RNBQK2R w KQ -
 English: Neo-Catalan declined *
 rnbq1rk1/pp2b1pp/2p1pn2/3p1p2/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
@@ -4501,9 +4501,9 @@ Dutch: stonewall with Ba3
 rnbq1rk1/pp2p1bp/2pp1np1/5p2/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - -
 Dutch: Leningrad, main variation with c6
 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - -
-Neo-Grunfeld, 6.O-O c6
+Neo-Grünfeld, 6.O-O c6
 rnbq1rk1/pp2ppbp/2p2np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ -
-Grunfeld: Russian, Szabo (Boleslavsky) variation
+Grünfeld: Russian, Szabo (Boleslavsky) variation
 rnbq1rk1/pp2ppbp/3p1np1/2p3B1/2PPP3/2N5/PP2BPPP/R2QK1NR w KQ -
 King's Indian: Averbakh, 6...c5
 rnbq1rk1/pp2ppbp/3p1np1/2p5/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 b - -
@@ -4519,11 +4519,11 @@ Sicilian: dragon, Yugoslav attack, 7...O-O
 rnbq1rk1/pp2ppbp/5np1/2pp4/3P1P2/4PN2/PPP1B1PP/RNBQ1RK1 b - -
 Dutch: stonewall variation *
 rnbq1rk1/pp2ppbp/5np1/2pp4/3P4/2P2NP1/PP2PPBP/RNBQ1RK1 b - -
-Neo-Grunfeld, 6.O-O c6 *
+Neo-Grünfeld, 6.O-O c6 *
 rnbq1rk1/pp2ppbp/5np1/2pp4/3P4/4PN2/PPPNBPPP/R1BQ1RK1 b - -
 Catalan: closed, 6...Nbd7 *
 rnbq1rk1/pp2ppbp/5np1/2pp4/3P4/5NP1/PPP1PPBP/RNBQ1RK1 w - -
-Neo-Grunfeld, 6.O-O *
+Neo-Grünfeld, 6.O-O *
 rnbq1rk1/pp2ppbp/5np1/2pp4/5P2/3PPN2/PPP1B1PP/RNBQ1RK1 b - -
 Dutch: classical variation *
 rnbq1rk1/pp2ppbp/5np1/2pp4/8/1P2PN2/PBPPBPPP/RN1QK2R w KQ -
@@ -4531,25 +4531,25 @@ Queen's Indian: old main line, 6.O-O *
 rnbq1rk1/pp2ppbp/5np1/2ppN3/5P2/4P3/PPPPB1PP/RNBQ1RK1 b - -
 Dutch defense, Alekhine variation *
 rnbq1rk1/pp2ppbp/5np1/3p4/3N4/6P1/PPP1PPBP/RNBQ1RK1 w - -
-Neo-Grunfeld, 6.cd Nxd5, 7.O-O *
+Neo-Grünfeld, 6.cd Nxd5, 7.O-O *
 rnbq1rk1/pp2ppbp/5np1/3p4/3P4/5NP1/PP2PPBP/RNBQ1RK1 b - -
-Neo-Grunfeld, 6.O-O, main line *
+Neo-Grünfeld, 6.O-O, main line *
 rnbq1rk1/pp2ppbp/5np1/3p4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - -
-Neo-Grunfeld, 6.O-O, main line
+Neo-Grünfeld, 6.O-O, main line
 rnbq1rk1/pp2ppbp/5np1/3p4/8/1N4P1/PPP1PPBP/RNBQ1RK1 b - -
-Neo-Grunfeld, 6.cd Nxd5, 7.O-O Nb6 *
+Neo-Grünfeld, 6.cd Nxd5, 7.O-O Nb6 *
 rnbq1rk1/pp2ppbp/5np1/8/2pN4/6P1/PP2PPBP/RNBQ1RK1 w - -
-Neo-Grunfeld, 6.cd Nxd5, 7.O-O c5, 8.dc *
+Neo-Grünfeld, 6.cd Nxd5, 7.O-O c5, 8.dc *
 rnbq1rk1/pp2ppbp/6p1/2Pn4/8/5NP1/PP2PPBP/RNBQ1RK1 b - -
-Neo-Grunfeld, 6.cd Nxd5, 7.O-O c5, 8.dc
+Neo-Grünfeld, 6.cd Nxd5, 7.O-O c5, 8.dc
 rnbq1rk1/pp2ppbp/6p1/2p5/2BPP3/2P5/P3NPPP/R1BQK2R w KQ -
-Grunfeld: exchange, Spassky variation
+Grünfeld: exchange, Spassky variation
 rnbq1rk1/pp2ppbp/6p1/2pn4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 b - -
-Neo-Grunfeld, 6.cd Nxd5, 7.O-O c5, 8.Nc3
+Neo-Grünfeld, 6.cd Nxd5, 7.O-O c5, 8.Nc3
 rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ -
-King's Indian: Samisch, orthodox, 7.d5 c6
+King's Indian: Sämisch, orthodox, 7.d5 c6
 rnbq1rk1/pp3pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ -
-King's Indian: Samisch, orthodox, 7.Nge2 c6
+King's Indian: Sämisch, orthodox, 7.Nge2 c6
 rnbq1rk1/pp3pbp/2pp1np1/4p3/2PPP3/2N2N2/PP2BPPP/R1BQ1RK1 w - -
 King's Indian: orthodox, Donner variation
 rnbq1rk1/pp3pbp/3p1np1/2pP4/4P3/2N2N2/PP2BPPP/R1BQ1RK1 b - -
@@ -4563,7 +4563,7 @@ Benoni: fianchetto variation
 rnbq1rk1/pp3pbp/3p1np1/2ppP3/2P2P2/2N2N2/PP2B1PP/R1BQK2R b KQ -
 King's Indian: Four pawns attack, Florentine gambit
 rnbq1rk1/pp3pbp/3p1np1/3pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R w KQ -
-King's Indian: Samisch, orthodox main line
+King's Indian: Sämisch, orthodox main line
 rnbq1rk1/pp3pbp/3ppnp1/2pP2B1/2P1P3/2N5/PP2BPPP/R2QK1NR w KQ -
 King's Indian: Averbakh, main line
 rnbq1rk1/pp3pbp/3ppnp1/2pP4/2P1PP2/2N2N2/PP2B1PP/R1BQK2R b KQ -
@@ -4595,11 +4595,11 @@ Petrov: classical attack, Jaenisch variation *
 rnbq1rk1/pp3ppp/3b4/2pnp3/8/P2PPNP1/1P3P1P/RNBQKB1R b KQ -
 Sicilian: Kan, Gipslis variation *
 rnbq1rk1/pp3ppp/3b4/2ppN3/3PB3/8/PPP2PPP/RNBQ1RK1 b - -
-Petrov: modern attack, Trifunovic variation *
+Petrov: modern attack, Trifunoviƒá variation *
 rnbq1rk1/pp3ppp/4p3/1B6/3PP3/5N2/P2Q1PPP/R3K2R b KQ -
 QGD: Semi-Tarrasch, Kmoch variation
 rnbq1rk1/pp3ppp/4p3/2pn4/3P4/P1P1PP2/6PP/R1BQKBNR w KQ -
-Nimzo-Indian: Samisch, Botvinnik variation
+Nimzo-Indian: Sämisch, Botvinnik variation
 rnbq1rk1/pp3ppp/4pn2/2bP4/8/4PN2/PP3PPP/RNBQKB1R b KQ -
 QGA: classical, Steinitz variation *
 rnbq1rk1/pp3ppp/4pn2/2bp4/2P5/4PN2/PP3PPP/RNBQKB1R w KQ -
@@ -4607,7 +4607,7 @@ QGA: classical variation, 6.O-O *
 rnbq1rk1/pp3ppp/4pn2/2bp4/2P5/P3PN2/1P3PPP/RNBQKB1R b KQ -
 QGA: classical, 6...a6 *
 rnbq1rk1/pp3ppp/4pn2/2p5/1bBP4/2N1PN2/PP3PPP/R1BQ1RK1 b - -
-Nimzo-Indian: 4.e3, Gligoric system with 7...dc
+Nimzo-Indian: 4.e3, Gligoriƒá system with 7...dc
 rnbq1rk1/pp3ppp/4pn2/2pp4/1bPP4/2NBPN2/PP3PPP/R1BQK2R w KQ -
 Nimzo-Indian: 4.e3, main line with ...c5
 rnbq1rk1/pp3ppp/5n2/2bpp3/2P5/P3PN2/1P3PPP/RNBQKB1R w KQ -
@@ -4639,7 +4639,7 @@ QGD: 6.Nf3
 rnbq1rk1/ppp1bppp/8/3p4/3Pn3/3B1N2/PPP2PPP/RNBQ1RK1 w - -
 Petrov: classical attack, Mason variation
 rnbq1rk1/ppp1ppbp/1n4p1/8/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - -
-Neo-Grunfeld, 6.cd Nxd5, 7.O-O Nb6
+Neo-Grünfeld, 6.cd Nxd5, 7.O-O Nb6
 rnbq1rk1/ppp1ppbp/3p1np1/4P3/3P1P2/2N2N2/PPP3PP/R1BQKB1R b KQ -
 Pirc: Austrian attack, 6.e5
 rnbq1rk1/ppp1ppbp/3p1np1/6B1/2PPP3/2N2N2/PP3PPP/R2QKB1R b KQ -
@@ -4653,11 +4653,11 @@ King's Indian: Larsen variation
 rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N2N2/PP2BPPP/R1BQK2R b KQ -
 King's Indian: 6.Be2
 rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQ -
-King's Indian: Samisch, 5...O-O
+King's Indian: Sämisch, 5...O-O
 rnbq1rk1/ppp1ppbp/3p1np1/8/2PPPP2/2N5/PP2B1PP/R1BQK1NR b KQ -
 King's Indian: Four pawns attack, 6.Be2
 rnbq1rk1/ppp1ppbp/3p1np1/8/3PP3/6P1/PPP1NPBP/RNBQK2R b KQ -
-Reti: King's Indian attack, Pachman system *
+Réti: King's Indian attack, Pachman system *
 rnbq1rk1/ppp1ppbp/3p1np1/8/3PPP2/2N1BN2/PPP3PP/R2QKB1R b KQ -
 Pirc: Austrian attack, 6.Be3
 rnbq1rk1/ppp1ppbp/3p1np1/8/3PPP2/2N2N2/PPP3PP/R1BQKB1R w KQ -
@@ -4665,37 +4665,37 @@ Pirc: Austrian attack
 rnbq1rk1/ppp1ppbp/3p1np1/8/3PPP2/2NB1N2/PPP3PP/R1BQK2R b KQ -
 Pirc: Austrian attack, 6.Bd3
 rnbq1rk1/ppp1ppbp/5np1/3p4/1PPP4/2N1PN2/P4PPP/R1BQKB1R b KQ -
-Grunfeld: Makogonov variation
+Grünfeld: Makogonov variation
 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1P3/PP3PPP/2RQKBNR b K -
-Grunfeld: Grunfeld gambit, Capablanca variation
+Grünfeld: Grünfeld gambit, Capablanca variation
 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1P3/PP3PPP/R2QKBNR w KQ -
-Grunfeld: Grunfeld gambit
+Grünfeld: Grünfeld gambit
 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1PN2/PP3PPP/R2QKB1R b KQ -
-Grunfeld with Bf4 & e3
+Grünfeld with Bf4 & e3
 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R b KQ -
-Grunfeld with e3 & Qb3
+Grünfeld with e3 & Qb3
 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP1B1PPP/R2QKB1R b KQ -
-Grunfeld: Opo censky variation
+Grünfeld: Opoƒçensky variation
 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2NBPN2/PP3PPP/R1BQK2R b KQ -
-Grunfeld with e3 & Bd3
+Grünfeld with e3 & Bd3
 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 b - -
-Neo-Grunfeld, 6.O-O
+Neo-Grünfeld, 6.O-O
 rnbq1rk1/ppp1ppbp/5np1/3p4/5P2/2P3PN/PP1PP1BP/RNBQK2R b KQ -
 Dutch: Leningrad, Basman system *
 rnbq1rk1/ppp1ppbp/5np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R b KQ -
-Grunfeld: Russian variation with e4
+Grünfeld: Russian variation with e4
 rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 b - -
-Neo-Grunfeld, 6.cd Nxd5, 7.O-O
+Neo-Grünfeld, 6.cd Nxd5, 7.O-O
 rnbq1rk1/ppp2pbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ -
-King's Indian: Samisch, orthodox, 7.d5
+King's Indian: Sämisch, orthodox, 7.d5
 rnbq1rk1/ppp2pbp/3p1np1/3Pp3/2P1P3/2N2N2/PP2BPPP/R1BQK2R b KQ -
 King's Indian: Petrosian system
 rnbq1rk1/ppp2pbp/3p1np1/4P3/2P1P3/2N2N2/PP2BPPP/R1BQK2R b KQ -
 King's Indian: Andersson variation
 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N1BN2/PP2BPPP/R2QK2R b KQ -
-King's Indian: Gligoric-Taimanov system
+King's Indian: Gligoriƒá-Taimanov system
 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ -
-King's Indian: Samisch, orthodox variation
+King's Indian: Sämisch, orthodox variation
 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N2N2/PP2BPPP/R1BQ1RK1 b - -
 King's Indian: orthodox variation
 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N2N2/PP2BPPP/R1BQK2R w KQ -
@@ -4703,7 +4703,7 @@ King's Indian: classical variation
 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N3P1/PP2NPBP/R1BQK2R b KQ -
 King's Indian: Pomar system
 rnbq1rk1/ppp2pbp/4pnp1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ -
-Grunfeld: Botvinnik variation
+Grünfeld: Botvinnik variation
 rnbq1rk1/ppp2ppp/1b3n2/3pN3/1P2P3/P1N5/2PP1PPP/R1BQKB1R w KQ -
 Ruy Lopez: open, 7.Bb3 *
 rnbq1rk1/ppp2ppp/1b3n2/4N3/1P1Pp3/P1N1B3/2P2PPP/R2QKB1R b KQ -
@@ -4767,7 +4767,7 @@ Ruy Lopez: open, Richter variation *
 rnbq1rk1/ppp2ppp/8/2b1p3/8/2P1NN2/PP1P1nPP/R1BQKB1R w KQ -
 Scotch: Cochrane variation *
 rnbq1rk1/ppp2ppp/8/3pb3/2PPn3/3B4/PP3PPP/RNBQ1RK1 w - -
-Petrov: modern attack, Trifunovic variation
+Petrov: modern attack, Trifunoviƒá variation
 rnbq1rk1/ppp2ppp/8/b2pN3/1P2n3/P1N5/2PP1PPP/R1BQKB1R w KQ -
 Ruy Lopez: open, Friess attack *
 rnbq1rk1/pppnbppp/4p3/3pP1B1/3P3P/2N5/PPP2PP1/R2QKBNR w KQ -
@@ -4787,9 +4787,9 @@ Nimzo-Indian: 4.e3 e8g8, 5.Nf3, without ...d5
 rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/2NBP3/PP3PPP/R1BQK1NR b KQ -
 Nimzo-Indian: 4.e3 O-O, 5.Bd3
 rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P1P1P3/5PPP/R1BQKBNR b KQ -
-Nimzo-Indian: Samisch variation
+Nimzo-Indian: Sämisch variation
 rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P1P5/4PPPP/R1BQKBNR w KQ -
-Nimzo-Indian: Samisch variation
+Nimzo-Indian: Sämisch variation
 rnbq1rk1/pppp1ppp/5n2/4N3/1b2P3/2N5/PPPP1PPP/R1BQKB1R b KQ -
 Ruy Lopez: Berlin defense, open variation *
 rnbq1rk1/pppp1ppp/5n2/4p3/1b2P3/2N2N2/PPPP1PPP/R1BQKB1R w KQ -
@@ -4799,7 +4799,7 @@ Ruy Lopez: Berlin defense, 4.O-O, d6 *
 rnbq1rk1/pppp1ppp/5n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R b KQ -
 Ruy Lopez: Berlin defense, Beverwijk variation *
 rnbq1rk1/pppp1ppp/5n2/4p3/4P3/P1P2P2/1PP3PP/R1BQKBNR b KQ -
-Ruy Lopez: exchange, Gligoric variation *
+Ruy Lopez: exchange, Gligoriƒá variation *
 rnbq1rk1/pppp1ppp/5n2/4p3/4P3/P1P5/1PP2PPP/R1BQKBNR w KQ -
 Ruy Lopez: exchange variation, 5.O-O *
 rnbq1rk1/pppp1ppp/5n2/4p3/4P3/P1PQ4/1PP2PPP/R1B1KBNR b KQ -
@@ -4809,7 +4809,7 @@ Ruy Lopez: Exchange variation doubly deferred (DERLD) *
 rnbq1rk1/pppp1ppp/5n2/b3N3/4P3/P1N5/1PPP1PPP/R1BQKB1R b KQ -
 Ruy Lopez: open (Tarrasch) defense *
 rnbq1rk1/pppp1ppp/5n2/b3p3/2B1P3/P1N2N2/1PPP1PPP/R1BQK2R b KQ -
-Ruy Lopez: Moller defense *
+Ruy Lopez: Möller defense *
 rnbq1rk1/pppp1ppp/5n2/b3p3/4P3/P1N2N2/1PPP1PPP/R1BQKB1R w KQ -
 Ruy Lopez: 5.O-O *
 rnbq1rk1/pppp1ppp/5n2/b3p3/4P3/P1N2N2/1PPPBPPP/R1BQK2R b KQ -
@@ -4835,7 +4835,7 @@ Dutch defense, Alekhine variation
 rnbq1rk1/ppppb1pp/4pn2/5p2/2PP4/5NP1/PP2PPBP/RNBQK2R w KQ -
 Dutch defense
 rnbq1rk1/ppppppbp/5np1/6B1/3P4/2P2N2/PP2PPPP/RN1QKB1R b KQ -
-Reti: King's Indian attack, Yugoslav variation *
+Réti: King's Indian attack, Yugoslav variation *
 rnbq2k1/pp1p1ppp/1bp5/8/1P1Nr3/P1P5/4BPPP/R1BQ1RK1 b - -
 Ruy Lopez: Marshall counter-attack, 11...c6 *
 rnbq2k1/pp3ppp/1bp5/3p4/1P1Nr3/P1P5/4BPPP/R1BQ1RK1 w - -
@@ -4895,7 +4895,7 @@ Dutch defense *
 rnbqk1nr/pp2ppbp/6p1/2pp4/5P2/4PN2/PPPPB1PP/RNBQK2R b KQkq -
 Dutch defense *
 rnbqk1nr/pp2ppbp/6p1/3p4/3N4/6P1/PPP1PPBP/RNBQK2R b KQkq -
-Neo-Grunfeld, 5.cd *
+Neo-Grünfeld, 5.cd *
 rnbqk1nr/pp3ppp/4p3/2ppP3/1b1P2Q1/2N5/PPP2PPP/R1B1KBNR b KQkq -
 French: Winawer, advance, Russian variation
 rnbqk1nr/pp3ppp/4p3/2ppP3/1b1P4/2N5/PPP2PPP/R1BQKBNR w KQkq -
@@ -4951,7 +4951,7 @@ KGD: classical, 4.c3
 rnbqk1nr/ppp2ppp/3p4/2b1p3/4PP2/8/PPPP2PP/RNBQKBNR w KQkq -
 Bishop's opening: Calabrese counter-gambit, Jaenisch variation *
 rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPP1NPPP/R1BQKB1R b KQkq -
-French: Winawer, Alekhine (Maroczy) gambit
+French: Winawer, Alekhine (Maróczy) gambit
 rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPP2PPP/R1BQKBNR w KQkq -
 French: Winawer (Nimzovich) variation
 rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPPB1PPP/R2QKBNR b KQkq -
@@ -4975,7 +4975,7 @@ KGD: classical counter-gambit
 rnbqk1nr/ppp3pp/4P3/2bp2N1/4p3/2N5/PPP2PPP/R1BQKB1R b KQkq -
 Philidor: Philidor counter-gambit, Berger variation
 rnbqk1nr/ppp3pp/8/2b2p2/2BpP3/2P2N2/PP4PP/RNBQK2R b KQkq -
-KGD: classical, Reti variation
+KGD: classical, Réti variation
 rnbqk1nr/pppp1pbp/8/4N3/4PppP/8/PPPP2P1/RNBQKB1R w KQkq -
 KGA: Kieseritsky, Paulsen defense
 rnbqk1nr/pppp1pbp/8/6p1/2B1Pp1P/5N2/PPPP2P1/RNBQK2R b KQkq -
@@ -5027,11 +5027,11 @@ KGA: bishop's gambit, Bryan counter-gambit *
 rnbqk1nr/pppp2pp/8/2b1pP2/3P4/8/PPP2PPP/RNBQKBNR b KQkq -
 KGA: bishop's gambit, Bledow variation *
 rnbqk1nr/pppp2pp/8/2b1pP2/5P2/8/PPPP2PP/RNBQKBNR b KQkq -
-KGA: bishop's gambit, Lopez-Gianutio counter-gambit *
+KGA: bishop's gambit, López-Gianutio counter-gambit *
 rnbqk1nr/pppp2pp/8/2b1pP2/8/2N5/PPPP1PPP/R1BQKBNR b KQkq -
 KGA: bishop's gambit, Maurian defense *
 rnbqk1nr/pppp2pp/8/2b1pP2/8/2P5/PP1P1PPP/RNBQKBNR b KQkq -
-KGA: bishop's gambit, Ruy Lopez defense *
+KGA: bishop's gambit, Ruy López defense *
 rnbqk1nr/pppp2pp/8/2b1pP2/8/5N2/PPPP1PPP/RNBQKB1R b KQkq -
 KGA: bishop's gambit, Cozio (Morphy) defense *
 rnbqk1nr/pppp2pp/8/2b1pP2/8/8/PPPP1PPP/RNBQKBNR w KQkq -
@@ -5065,13 +5065,13 @@ Grob: spike attack *
 rnbqk1r1/ppp2pP1/4p3/3p4/1b1P2Qp/2N5/PPP2PP1/R3KBNR b KQq -
 French: MacCutcheon, Grigoriev variation
 rnbqk2r/1p2bp2/p2ppn1p/6p1/3NPP1B/2N2Q2/PPP3PP/R3KB1R w KQkq -
-Sicilian: Najdorf, Goteborg (Argentine) variation
+Sicilian: Najdorf, Göteborg (Argentine) variation
 rnbqk2r/1p2bppp/p2ppn2/6B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq -
 Sicilian: Najdorf, 7...Be7
 rnbqk2r/1pp2ppp/1b3n2/p2p4/4p3/1N1P2P1/PPP1PPBP/RNBQK2R w KQkq -
 Alekhine's defense: modern, Keres variation *
 rnbqk2r/1ppnbppp/p3p3/3pP1B1/3P3P/2N5/PPP2PP1/R2QKBNR w KQkq -
-French: Albin-Alekhine-Chatard attack, Maroczy variation
+French: Albin-Alekhine-Chatard attack, Maróczy variation
 rnbqk2r/2pp1ppp/5n2/ppb1p3/4P3/1BN5/PPPP1PPP/R1BQK1NR w KQkq -
 Evans gambit declined, 5.a4 *
 rnbqk2r/p1p2ppp/1p1bpn2/3p4/2PP4/4PN2/PP3PPP/RNBQKB1R w KQkq -
@@ -5093,7 +5093,7 @@ Evans gambit declined, Lange variation *
 rnbqk2r/p2p1pp1/4pn1p/1ppP4/1bP4B/2N5/PP2PPPP/R2QKBNR w KQkq -
 Nimzo-Indian: Leningrad, ...b5 gambit
 rnbqk2r/p2p1ppp/1p2pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq -
-Nimzo-Indian: Samisch, O'Kelly variation
+Nimzo-Indian: Sämisch, O'Kelly variation
 rnbqk2r/p2p1ppp/2p2n2/1pb1p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq -
 Giuoco Piano: Bird's attack *
 rnbqk2r/p2p1ppp/2p2n2/2b1p3/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq -
@@ -5143,13 +5143,13 @@ Ruy Lopez: modern Steinitz defense, siesta variation *
 rnbqk2r/pp1p1ppp/4p3/2pP4/1bP1n3/2N2N2/PP2PPPP/R1BQKB1R w KQkq -
 Nimzo-Indian: three knights, Euwe variation
 rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N1P3/PP2NPPP/R1BQKB1R b KQkq -
-Nimzo-Indian: 4.e3 c5, 5.Ne2 (Rubinstein, anti-Hubner system)
+Nimzo-Indian: 4.e3 c5, 5.Ne2 (Rubinstein, anti-Hübner system)
 rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N1P3/PP3PPP/R1BQKBNR w KQkq -
 Nimzo-Indian: 4.e3 c5
 rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N5/PPQ1PPPP/R1B1KBNR w KQkq -
 Nimzo-Indian: classical, 4...c5
 rnbqk2r/pp1p1ppp/4pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR b KQkq -
-Nimzo-Indian: Samisch variation
+Nimzo-Indian: Sämisch variation
 rnbqk2r/pp1p1ppp/4pn2/2pP4/1bP5/2N2N2/PP2PPPP/R1BQKB1R b KQkq -
 Nimzo-Indian: three knights, Korchnoi variation
 rnbqk2r/pp1p1ppp/4pn2/4P3/1b1N4/2N5/PPP2PPP/R1BQKB1R b KQkq -
@@ -5169,7 +5169,7 @@ English: Neo-Catalan accepted *
 rnbqk2r/pp1pppbp/5np1/2p5/1P6/P3PN2/2PP1PPP/RNBQKB1R b KQkq -
 English: Romanishin gambit *
 rnbqk2r/pp2npbp/6p1/3pp3/8/1N4P1/PPP1PPBP/RNBQK2R w KQkq -
-Neo-Grunfeld, 5.cd, main line *
+Neo-Grünfeld, 5.cd, main line *
 rnbqk2r/pp2nppp/4p3/2ppP3/3P2Q1/P1P5/2P2PPP/R1B1KBNR b KQkq -
 French: Winawer, advance, poisoned pawn variation
 rnbqk2r/pp2nppp/4p3/2ppP3/3P4/P1P2N2/2P2PPP/R1BQKB1R b KQkq -
@@ -5193,7 +5193,7 @@ Catalan: open, 5.Nf3 *
 rnbqk2r/pp2ppbp/5np1/2pp4/3P4/4PN2/PPP1BPPP/RNBQK2R w KQkq -
 Catalan: closed, 5.Nf3 *
 rnbqk2r/pp2ppbp/5np1/2pp4/3P4/5NP1/PPP1PPBP/RNBQK2R w KQkq -
-Neo-Grunfeld, 5.Nf3 *
+Neo-Grünfeld, 5.Nf3 *
 rnbqk2r/pp2ppbp/5np1/2pp4/5P2/4PN2/PPPPB1PP/RNBQ1RK1 b kq -
 Dutch defense *
 rnbqk2r/pp2ppbp/5np1/2pp4/5P2/5NP1/PPPPP1BP/RNBQK2R w KQkq -
@@ -5203,7 +5203,7 @@ Queen's Indian: 5.Bg2 Be7 *
 rnbqk2r/pp2ppbp/6p1/2p4n/2PP4/1P3N2/PB1P1PPP/RN1QKB1R w KQkq -
 Queen's Indian: Rubinstein variation *
 rnbqk2r/pp2ppbp/6p1/2p5/2PP2n1/1P3N2/PB1P1PPP/RN1QKB1R w KQkq -
-Queen's Indian: Burger variation *
+Queen's Indian: Bürger variation *
 rnbqk2r/pp3pbp/3p1np1/1BpP4/4PP2/2N5/PP4PP/R1BQK1NR b KQkq -
 Benoni: Taimanov variation
 rnbqk2r/pp3pbp/3p1np1/2pP2B1/4P3/2N2N2/PP3PPP/R2QKB1R b KQkq -
@@ -5243,13 +5243,13 @@ Ruy Lopez: Berlin defense, Duras variation *
 rnbqk2r/pp3ppp/3p1n2/b1p1p3/4P3/P1NP1N2/1PP2PPP/R1BQKB1R w KQkq -
 Ruy Lopez: Morphy defense, Duras variation *
 rnbqk2r/pp3ppp/4p3/2Pn4/8/P1P2P2/4P1PP/R1BQKBNR b KQkq -
-Nimzo-Indian: Samisch, Keres variation
+Nimzo-Indian: Sämisch, Keres variation
 rnbqk2r/pp3ppp/4pn2/2b3B1/3p4/P3P3/1PP2PPP/RN1QKBNR w KQkq -
 QGA: Alekhine defense, Alatortsev variation *
 rnbqk2r/pp3ppp/4pn2/2bp4/2P5/4PN2/PP3PPP/RNBQKB1R b KQkq -
 QGA: classical variation *
 rnbqk2r/pp3ppp/4pn2/2pP4/3P4/P1P2P2/4P1PP/R1BQKBNR b KQkq -
-Nimzo-Indian: Samisch variation
+Nimzo-Indian: Sämisch variation
 rnbqk2r/pp3ppp/5n2/1B1pN3/1b1Pp3/2N5/PPP2PPP/R1BQK2R b KQkq -
 Giuoco Piano: Anderssen variation *
 rnbqk2r/pp3ppp/5n2/2bpp3/2B5/2N2N2/PPPP1PPP/R1BQK2R w KQkq -
@@ -5259,9 +5259,9 @@ Giuoco Piano: LaBourdonnais variation *
 rnbqk2r/pp3ppp/5n2/2ppp3/1b2P3/2NP4/PPPB1PPP/R2QKBNR w KQkq -
 Ruy Lopez: old Steinitz defense, semi-Duras variation *
 rnbqk2r/pp4pp/2p2n2/2bPp3/2B2P2/8/PPP3PP/RNBQK1NR w KQkq -
-KGD: classical, Reti variation *
+KGD: classical, Réti variation *
 rnbqk2r/pp4pp/4p3/2Pn1p2/8/P1P2P2/4P1PP/R1BQKBNR w KQkq -
-Nimzo-Indian: Samisch, Romanovsky variation
+Nimzo-Indian: Sämisch, Romanovsky variation
 rnbqk2r/ppn1bppp/8/2p1p3/8/2NP2PN/PP2PPBP/R1BQK2R b KQkq -
 Sicilian: accelerated fianchetto, Simagin variation *
 rnbqk2r/ppp1b1pp/3p1n2/3Pp3/4N3/2PB4/PP3PPP/RNBQK2R w KQkq -
@@ -5293,25 +5293,25 @@ Tayler opening *
 rnbqk2r/ppp1bppp/8/3pP3/4n3/2N2N2/PPPP2PP/R1BQKB1R w KQkq -
 Vienna gambit: Breyer variation
 rnbqk2r/ppp1npbp/6p1/3pp3/8/3P1NP1/PPP1PPBP/RNBQ1RK1 w kq -
-Reti: King's Indian attack, Pachman system
+Réti: King's Indian attack, Pachman system
 rnbqk2r/ppp1nppp/8/8/3PN3/8/PP3PPP/R2QKBNR w KQkq -
 Bishop's opening: Lisitsyn variation *
 rnbqk2r/ppp1ppbp/1n1p2p1/4P3/P2P4/1B3N2/1PP2PPP/RNBQK2R b KQkq -
 Alekhine's defense: modern, Keres variation
 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/6P1/PP2NPBP/RNBQK2R b KQkq -
-Neo-Grunfeld, 5.cd, main line
+Neo-Grünfeld, 5.cd, main line
 rnbqk2r/ppp1ppbp/3p1np1/6B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b KQkq -
 King's Indian: Smyslov system
 rnbqk2r/ppp1ppbp/3p1np1/6B1/2PPP3/2N5/PP3PPP/R2QKBNR b KQkq -
 King's Indian: accelerated Averbakh system
 rnbqk2r/ppp1ppbp/3p1np1/8/2BPPP2/2N5/PPP3PP/R1BQK1NR b KQkq -
-Pirc: Austrian attack, Ljubojevic variation
+Pirc: Austrian attack, Ljubojeviƒá variation
 rnbqk2r/ppp1ppbp/3p1np1/8/2PP4/2N2NP1/PP2PP1P/R1BQKB1R b KQkq -
 King's Indian: fianchetto variation
 rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq -
 King's Indian: 5.Nf3
 rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR b KQkq -
-King's Indian: Samisch variation
+King's Indian: Sämisch variation
 rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N3P1/PP3P1P/R1BQKBNR b KQkq -
 King's Indian with e4 & g3
 rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N4P/PP3PP1/R1BQKBNR b KQkq -
@@ -5333,29 +5333,29 @@ Pirc: classical system, 5.Be2
 rnbqk2r/ppp1ppbp/3p1np1/8/3PP3/2N2N2/PPP2PPP/R1BQKB1R w KQkq -
 Pirc: classical (Two knights) system
 rnbqk2r/ppp1ppbp/5np1/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b KQkq -
-Grunfeld: 5.Bg5
+Grünfeld: 5.Bg5
 rnbqk2r/ppp1ppbp/5np1/3p4/2P5/1P3N2/PB1PPPPP/RN1QKB1R b KQkq -
 Queen's Indian: Marienbad system *
 rnbqk2r/ppp1ppbp/5np1/3p4/2PP1B2/2N2N2/PP2PPPP/R2QKB1R b KQkq -
-Grunfeld: 5.Bf4
+Grünfeld: 5.Bf4
 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq -
-Grunfeld: Russian variation
+Grünfeld: Russian variation
 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R b KQkq -
-Grunfeld: 5.e3
+Grünfeld: 5.e3
 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq -
-Grunfeld: Three knights variation
+Grünfeld: Three knights variation
 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R b KQkq -
-Neo-Grunfeld, 5.Nf3
+Neo-Grünfeld, 5.Nf3
 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR w KQkq -
 King's Indian: 3.g3, counterthrust variation
 rnbqk2r/ppp1ppbp/5np1/3p4/Q1PP4/2N2N2/PP2PPPP/R1B1KB1R b KQkq -
-Grunfeld: Flohr variation
+Grünfeld: Flohr variation
 rnbqk2r/ppp1ppbp/6p1/3n4/3P4/6P1/PP2PPBP/RNBQK1NR w KQkq -
-Neo-Grunfeld, 5.cd
+Neo-Grünfeld, 5.cd
 rnbqk2r/ppp1ppbp/6p1/8/2BPP3/2P5/P4PPP/R1BQK1NR b KQkq -
-Grunfeld: exchange, classical variation
+Grünfeld: exchange, classical variation
 rnbqk2r/ppp1ppbp/6p1/8/3PP3/2P2N2/P4PPP/R1BQKB1R b KQkq -
-Grunfeld: modern exchange variation
+Grünfeld: modern exchange variation
 rnbqk2r/ppp1ppbp/6pn/3p4/5P2/4PN2/PPPP2PP/RNBQKB1R w KQkq -
 Dutch defense, Blackburne variation *
 rnbqk2r/ppp1ppbp/6pn/3p4/5P2/6P1/PPPPP1BP/RNBQK1NR w KQkq -
@@ -5365,7 +5365,7 @@ KGA: Kieseritsky, Rice gambit
 rnbqk2r/ppp2p2/4p1pp/3pP3/3Pn1Q1/2P5/P1PB1PPP/R3KBNR w KQkq -
 French: MacCutcheon, Lasker variation, 8...g6
 rnbqk2r/ppp2pbp/6p1/3np3/8/2N2NP1/PP1PPPBP/R1BQK2R w KQkq -
-English: Anglo-Grunfeld defense, Korchnoi variation
+English: Anglo-Grünfeld defense, Korchnoi variation
 rnbqk2r/ppp2pp1/4pP1p/3p2B1/1b1P4/2N5/PPP2PPP/R2QKBNR b KQkq -
 French: MacCutcheon, Chigorin variation
 rnbqk2r/ppp2pp1/4pn1p/3pP3/1b1P3B/2N5/PPP2PPP/R2QKBNR b KQkq -
@@ -5431,7 +5431,7 @@ Scotch gambit *
 rnbqk2r/ppp2ppp/5n2/2bPp3/1PP5/8/P2P1PPP/RNBQKBNR b KQkq -
 Center game, Kieseritsky variation *
 rnbqk2r/ppp2ppp/5n2/2bPp3/8/2N2N2/PPPP1PPP/R1BQKB1R b KQkq -
-Scotch gambit: Dubois-Reti defense *
+Scotch gambit: Dubois-Réti defense *
 rnbqk2r/ppp2ppp/5n2/2bPp3/8/2N5/PPPP1PPP/R1BQKBNR w KQkq -
 Scotch gambit *
 rnbqk2r/ppp2ppp/5n2/2bPp3/8/2N5/PPPPBPPP/R1BQK1NR b KQkq -
@@ -5457,7 +5457,7 @@ Two knights defense: Pincus variation *
 rnbqk2r/ppp2ppp/8/2bPp3/2B3n1/2N5/PPPP1PPP/R1BQK1NR w KQkq -
 Scotch gambit *
 rnbqk2r/ppp2ppp/8/2bPp3/5P2/3P3N/PPP3Pn/RNBQKB1R w KQkq -
-Philidor: Lopez counter-gambit, Jaenisch variation *
+Philidor: López counter-gambit, Jaenisch variation *
 rnbqk2r/ppp2ppp/8/2bPp3/6n1/2N2N2/PPPP1PPP/R1BQKB1R w KQkq -
 Two knights defense, Perreux variation *
 rnbqk2r/ppp2ppp/8/2bp4/3NP1n1/2N5/PPP2PPP/R1BQKB1R w KQkq -
@@ -5503,11 +5503,11 @@ Nimzo-Indian: classical variation
 rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2NQ4/PP2PPPP/R1B1KBNR b KQkq -
 Nimzo-Indian: Mikenas attack
 rnbqk2r/pppp1ppp/4pn2/8/1bPP4/5N2/PP1NPPPP/R1BQKB1R b KQkq -
-Bogo-Indian defense, Grunfeld variation
+Bogo-Indian defense, Grünfeld variation
 rnbqk2r/pppp1ppp/4pn2/8/1bPP4/5N2/PP2PPPP/RNBQKB1R w KQkq -
 Bogo-Indian defense
 rnbqk2r/pppp1ppp/4pn2/8/2PP4/P1P5/4PPPP/R1BQKBNR b KQkq -
-Nimzo-Indian: Samisch variation
+Nimzo-Indian: Sämisch variation
 rnbqk2r/pppp1ppp/5n2/1B2p3/1b2P3/2N5/PPPP1PPP/R1BQK1NR b KQkq -
 Ruy Lopez: Alapin's defense *
 rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/2N5/PPPP1PPP/R1BQK1NR b KQkq -
@@ -5523,7 +5523,7 @@ Petrov: Italian variation *
 rnbqk2r/pppp1ppp/5n2/2b1p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq -
 Rousseau gambit *
 rnbqk2r/pppp1ppp/5n2/2b1p3/4PP2/3P4/PPP3PP/RNBQKBNR b KQkq -
-Philidor: Lopez counter-gambit *
+Philidor: López counter-gambit *
 rnbqk2r/pppp1ppp/5n2/2b1p3/4PP2/8/PPPP2PP/RNBQKBNR w KQkq -
 Latvian gambit, 3.Bc4 *
 rnbqk2r/pppp1ppp/5n2/3Np3/1b2P3/8/PPPP1PPP/R1BQKBNR b KQkq -
@@ -5649,7 +5649,7 @@ KGA: Cunningham, Euwe defense
 rnbqk2r/ppppbppp/7n/8/N3P3/2P2N1P/P4PP1/R1BQKB1R w KQkq -
 Two knights defense: Steinitz variation *
 rnbqk2r/ppppbppp/8/4P3/N3n3/2P2N1P/P1Q2PP1/R1B1KB1R b KQkq -
-Two knights defense: Goring variation *
+Two knights defense: Göring variation *
 rnbqk2r/ppppbppp/8/8/N3P1n1/2P2N1P/P4PP1/R1BQKB1R b KQkq -
 Two knights defense *
 rnbqk2r/ppppbppp/8/8/N3P1n1/2P2N2/P4PPP/R1BQKB1R w KQkq -
@@ -5659,9 +5659,9 @@ Dutch: Leningrad, main variation
 rnbqk2r/ppppp2p/6pb/5P2/3P4/8/PPP2PPP/RN1QKBNR b KQkq -
 Amar gambit *
 rnbqk2r/ppppppbp/5np1/6B1/3P4/8/PPPNPPPP/R2QKBNR b KQkq -
-Reti: King's Indian attack, Keres variation *
+Réti: King's Indian attack, Keres variation *
 rnbqk2r/ppppppbp/5np1/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -
-Reti: King's Indian attack *
+Réti: King's Indian attack *
 rnbqk2r/ppppppbp/5np1/8/2PPP3/2N5/PP3PPP/R1BQKBNR b KQkq -
 King's Indian: 4.e4
 rnbqkb1r/1p2pppp/p2p1n2/6B1/3NP3/2N5/PPP2PPP/R2QKB1R b KQkq -
@@ -5675,7 +5675,7 @@ Sicilian: Najdorf, Zagreb (fianchetto) variation
 rnbqkb1r/1p2pppp/p2p1n2/8/3NP3/2N4P/PPP2PP1/R1BQKB1R b KQkq -
 Sicilian: Najdorf, Adams attack
 rnbqkb1r/1p2pppp/p2p1n2/8/3NP3/2N5/PPP1BPPP/R1BQK2R b KQkq -
-Sicilian: Najdorf, Opov censky variation
+Sicilian: Najdorf, Opoƒçensky variation
 rnbqkb1r/1p2pppp/p2p1n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R w KQkq -
 Sicilian: Najdorf
 rnbqkb1r/1p2pppp/p2p1n2/8/3NPP2/2N5/PPP3PP/R1BQKB1R b KQkq -
@@ -5711,13 +5711,13 @@ Dzindzikhashvili defense
 rnbqkb1r/2pp1ppp/p3pn2/1p6/2P5/5NP1/PP1PPPBP/RNBQK2R w KQkq -
 English: Romanishin gambit
 rnbqkb1r/3ppppp/P4n2/2pP4/8/8/PP2PPPP/RNBQKBNR b KQkq -
-Benko gambit accepted
+Benkö gambit accepted
 rnbqkb1r/3ppppp/p4n2/1PpP4/8/2N5/PP2PPPP/R1BQKBNR b KQkq -
-Benko gambit: Zaitsev system
+Benkö gambit: Zaitsev system
 rnbqkb1r/3ppppp/p4n2/1PpP4/8/8/PP2PPPP/RNBQKBNR w KQkq -
-Benko gambit half accepted
+Benkö gambit half accepted
 rnbqkb1r/4pppp/3p1n2/1NpP4/1pB1P3/8/PP3PPP/R1BQK1NR b KQkq -
-Benko gambit: Nescafe Frappe attack
+Benkö gambit: Nescafé Frappé attack
 rnbqkb1r/5ppp/p2ppn2/1p4B1/3NPP2/2N5/PPP3PP/R2QKB1R w KQkq -
 Sicilian: Najdorf, Polugayevsky variation
 rnbqkb1r/5ppp/p2ppn2/1p6/3NP3/1BN5/PPP2PPP/R1BQK2R w KQkq -
@@ -5751,17 +5751,17 @@ Dutch: Staunton gambit, Nimzovich variation
 rnbqkb1r/p1pppp1p/5np1/1p1P4/2P5/8/PP2PPPP/RNBQKBNR w KQkq -
 King's Indian: Danube gambit
 rnbqkb1r/p1pppp1p/5np1/1p6/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq -
-Reti: King's Indian attack, Reti-Smyslov variation *
+Réti: King's Indian attack, Réti-Smyslov variation *
 rnbqkb1r/p1pppppp/1p3n2/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -
 Queen's Indian accelerated
 rnbqkb1r/p1pppppp/1p3n2/8/3P4/5N2/PPP1PPPP/RNBQKB1R w KQkq -
 Queen's Indian defense
 rnbqkb1r/p1pppppp/1p3n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -
-Reti: Nimzovich-Larsen attack *
+Réti: Nimzovich-Larsen attack *
 rnbqkb1r/p1pppppp/5n2/1p6/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -
 Santasiere's folly *
 rnbqkb1r/p1pppppp/5n2/1p6/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq -
-Reti: King's Indian attack, Spassky's variation
+Réti: King's Indian attack, Spassky's variation
 rnbqkb1r/p1pppppp/8/1p1nP3/3P4/8/PPP2PPP/RNBQKBNR w KQkq -
 Alekhine's defense: O'Sullivan gambit
 rnbqkb1r/p2n1ppp/1p2p3/2ppP3/3P4/2PB4/PP1N1PPP/R1BQK1NR w KQkq -
@@ -5781,7 +5781,7 @@ English: Caro-Kann defensive system, Bogolyubov variation *
 rnbqkb1r/p2ppppp/1p3n2/2p5/3P4/2P5/PP2PPPP/RNBQKBNR w KQkq -
 English: Caro-Kann defensive system *
 rnbqkb1r/p2ppppp/5n2/1ppP4/2P5/8/PP2PPPP/RNBQKBNR w KQkq -
-Benko gambit
+Benkö gambit
 rnbqkb1r/p3pppp/2p2n2/1p2P3/2pP4/2N2N2/PP3PPP/R1BQKB1R b KQkq -
 QGD Slav: Tolush-Geller gambit
 rnbqkb1r/p3pppp/5n2/1ppP4/2p1P3/2N5/PP3PPP/R1BQKBNR w KQkq -
@@ -5807,7 +5807,7 @@ Ponziani opening *
 rnbqkb1r/pp1p1ppp/2p2n2/4p3/4P3/2N5/PPPPBPPP/R1BQK1NR b KQkq -
 Ponziani: Romanishin variation *
 rnbqkb1r/pp1p1ppp/2p2n2/4p3/4P3/2N5/PPPPNPPP/R1BQKB1R b KQkq -
-Ponziani: Reti variation *
+Ponziani: Réti variation *
 rnbqkb1r/pp1p1ppp/2p2n2/4p3/4PP2/2N5/PPPP2PP/R1BQKBNR b KQkq -
 Ponziani counter-gambit *
 rnbqkb1r/pp1p1ppp/2p2n2/8/2B1Pp2/2N5/PPPP2PP/R1BQK1NR w KQkq -
@@ -5815,7 +5815,7 @@ KGA: bishop's gambit, Jaenisch variation
 rnbqkb1r/pp1p1ppp/2p5/3Nn3/1P1NP3/8/P1P2PPP/R1BQKB1R w KQkq -
 Two knights defense: Fritz, Gruber variation *
 rnbqkb1r/pp1p1ppp/4pn2/2P5/8/4B3/PPP1PPPP/RN1QKBNR b KQkq -
-Reti accepted: Keres variation *
+Réti accepted: Keres variation *
 rnbqkb1r/pp1p1ppp/4pn2/2p3B1/3PP3/5N2/PPP2PPP/RN1QKB1R b KQkq -
 Queen's pawn: Torre attack, Wagner gambit
 rnbqkb1r/pp1p1ppp/4pn2/2p5/2P1P3/2N5/PP1P1PPP/R1BQKBNR w KQkq -
@@ -5851,7 +5851,7 @@ Alekhine's defense: Kmoch variation
 rnbqkb1r/pp1ppppp/2p2n2/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq -
 Caro-Masi defense
 rnbqkb1r/pp1ppppp/5n2/2P5/8/8/PPP1PPPP/RNBQKBNR b KQkq -
-Reti accepted *
+Réti accepted *
 rnbqkb1r/pp1ppppp/5n2/2p1P3/8/8/PPPP1PPP/RNBQKBNR b KQkq -
 English, Nimzovich, Flohr variation *
 rnbqkb1r/pp1ppppp/5n2/2p5/2P5/2N3P1/PP1PPP1P/R1BQKBNR b KQkq -
@@ -5863,7 +5863,7 @@ Benoni defense
 rnbqkb1r/pp1ppppp/5n2/2p5/3P4/4P3/PPP2PPP/RNBQKBNR b KQkq -
 English opening: Agincourt variation *
 rnbqkb1r/pp1ppppp/5n2/2p5/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -
-Reti opening *
+Réti opening *
 rnbqkb1r/pp1ppppp/5n2/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq -
 Sicilian: Nimzovich-Rubinstein variation
 rnbqkb1r/pp1ppppp/5n2/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -
@@ -5873,7 +5873,7 @@ English opening *
 rnbqkb1r/pp1ppppp/5n2/2pP4/8/5N2/PPP1PPPP/RNBQKB1R b KQkq -
 Old Benoni defense
 rnbqkb1r/pp1ppppp/5n2/2pP4/8/8/PPP1PPPP/RNBQKBNR b KQkq -
-Reti: advance variation *
+Réti: advance variation *
 rnbqkb1r/pp1ppppp/5n2/2pP4/8/8/PPP1PPPP/RNBQKBNR w KQkq -
 Old Benoni defense
 rnbqkb1r/pp1ppppp/5n2/3P4/2p5/5N2/PPP1PPPP/RNBQKB1R w KQkq -
@@ -5883,7 +5883,7 @@ Vulture defense
 rnbqkb1r/pp2pp1p/2p2np1/3p4/2P5/1P3N2/PB1PPPPP/RN1QKB1R w KQkq -
 English: Bled variation
 rnbqkb1r/pp2pp1p/2p2np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq -
-QGD Slav\Grunfeld: Schlechter variation
+QGD Slav/Grünfeld: Schlechter variation
 rnbqkb1r/pp2pp1p/2p2p2/8/3P4/8/PPP2PPP/R1BQKBNR w KQkq -
 Caro-Kann: Bronstein-Larsen variation
 rnbqkb1r/pp2pp1p/2pp1np1/8/3PP3/2N1B3/PPPQ1PPP/R3KBNR b KQkq -
@@ -5905,7 +5905,7 @@ Queen's Indian: Nimzovich variation (exaggerated fianchetto) *
 rnbqkb1r/pp2pp1p/5np1/3p4/2PP4/2N5/PP3PPP/R1BQKBNR w KQkq -
 Caro-Kann: Panov-Botvinnik attack, 5...g6
 rnbqkb1r/pp2pp1p/6p1/2p3B1/2PPp3/8/PP1QPPPP/R3KBNR w KQkq -
-Grunfeld: Lundin variation
+Grünfeld: Lundin variation
 rnbqkb1r/pp2pppp/2p2n2/3P4/2P5/8/PP1P1PPP/RNBQKBNR w KQkq -
 Scandinavian gambit
 rnbqkb1r/pp2pppp/2p2n2/3p4/2P5/1P3N2/PB1PPPPP/RN1QKB1R b KQkq -
@@ -5959,7 +5959,7 @@ English: symmetrical, Benoni formation *
 rnbqkb1r/pp2pppp/5n2/2pp4/3P4/2P5/PP2PPPP/RNBQKBNR w KQkq -
 QGD Slav: 3.Nf3 *
 rnbqkb1r/pp2pppp/5n2/2pp4/3P4/5NP1/PPP1PP1P/RNBQKB1R b KQkq -
-Neo-Grunfeld defense *
+Neo-Grünfeld defense *
 rnbqkb1r/pp2pppp/5n2/2pp4/5P2/4PN2/PPPP2PP/RNBQKB1R w KQkq -
 Bird's opening: Lasker variation
 rnbqkb1r/pp2pppp/5n2/2pp4/8/1P2PN2/P1PP1PPP/RNBQKB1R b KQkq -
@@ -5971,7 +5971,7 @@ King's Indian, 3.Nf3 *
 rnbqkb1r/pp2pppp/5n2/2pp4/8/P3PN2/1PPP1PPP/RNBQKB1R b KQkq -
 Dzindzikhashvili defense *
 rnbqkb1r/pp2pppp/5n2/2ppN3/8/4P3/PPPP1PPP/RNBQKB1R b KQkq -
-Dory defense *
+Döry defense *
 rnbqkb1r/pp2pppp/5n2/3p4/2PP4/2N5/PP3PPP/R1BQKBNR b KQkq -
 Caro-Kann: Panov-Botvinnik attack
 rnbqkb1r/pp2pppp/5n2/3p4/3P4/5N2/PP2PPPP/RNBQKB1R b KQkq -
@@ -6011,11 +6011,11 @@ QGD semi-Slav: 5.Bg5 dc
 rnbqkb1r/pp3ppp/2p1pn2/6B1/2pPP3/2N2N2/PP3PPP/R2QKB1R b KQkq -
 QGD semi-Slav: Botvinnik system (anti-Meran)
 rnbqkb1r/pp3ppp/2p1pn2/8/P1pP4/2N2N2/1P2PPPP/R1BQKB1R w KQkq -
-QGD Slav: Soultanbeieff variation
+QGD Slav: Soultanbéieff variation
 rnbqkb1r/pp3ppp/2p2n2/3Pp3/4P3/8/PP1P1PPP/RNBQKBNR w KQkq -
 Sicilian: Andreaschek gambit *
 rnbqkb1r/pp3ppp/2p2n2/3Pp3/8/2N5/PPPP1PPP/R1BQKBNR w KQkq -
-Scotch: Goring gambit *
+Scotch: Göring gambit *
 rnbqkb1r/pp3ppp/2p2n2/3Pp3/8/3P4/PP2PPPP/RNBQKBNR w KQkq -
 Sicilian: Tartakower variation *
 rnbqkb1r/pp3ppp/2p2n2/3p2B1/3P4/2N5/PP2PPPP/R2QKBNR w KQkq -
@@ -6115,11 +6115,11 @@ Alekhine's defense: modern, Alekhine variation *
 rnbqkb1r/pp3ppp/5n2/2ppp1B1/8/3P2P1/PPP1PPBP/RN1QK1NR b KQkq -
 Robatsch defense: Rossolimo variation *
 rnbqkb1r/pp3ppp/8/2pnp3/8/2N3P1/PP1PPP1P/R1BQKBNR w KQkq -
-Sicilian: accelerated fianchetto, Maroczy bind *
+Sicilian: accelerated fianchetto, Maróczy bind *
 rnbqkb1r/pp3ppp/8/2pnp3/8/2N3P1/PP1PPPBP/R1BQK1NR b KQkq -
-Sicilian: accelerated fianchetto, Maroczy bind, 5...Bg7 *
+Sicilian: accelerated fianchetto, Maróczy bind, 5...Bg7 *
 rnbqkb1r/pp3ppp/8/2pnp3/8/P3P3/1P1P1PPP/RNBQKBNR w KQkq -
-Sicilian: Kan, Maroczy bind (Reti variation) *
+Sicilian: Kan, Maróczy bind (Réti variation) *
 rnbqkb1r/pp4pp/2p1p3/3p1p2/2PPn3/2NBPN2/PP3PPP/R1BQK2R w KQkq -
 QGD semi-Slav: stonewall defense
 rnbqkb1r/pp4pp/2p1p3/3p1p2/2PPn3/3BPN2/PP1N1PPP/R1BQK2R w KQkq -
@@ -6135,7 +6135,7 @@ Alekhine's defense: four pawns attack, fianchetto variation
 rnbqkb1r/ppp1pp1p/1n1p4/4P1p1/2PP1P2/8/PP4PP/RNBQKBNR w KQkq -
 Alekhine's defense: four pawns attack, Planinc variation
 rnbqkb1r/ppp1pp1p/1n4p1/8/8/2N3P1/PP1PPPBP/R1BQK1NR w KQkq -
-English: Anglo-Grunfeld, Czech defense
+English: Anglo-Grünfeld, Czech defense
 rnbqkb1r/ppp1pp1p/3p1np1/6B1/3PP3/2N5/PPP2PPP/R2QKBNR b KQkq -
 Pirc: Byrne variation
 rnbqkb1r/ppp1pp1p/3p1np1/8/2BPP3/2N5/PPP2PPP/R1BQK1NR b KQkq -
@@ -6155,31 +6155,31 @@ Alekhine's defense: modern, fianchetto variation
 rnbqkb1r/ppp1pp1p/5np1/3P4/3P4/8/PPP2PPP/RNBQKBNR w KQkq -
 Scandinavian: Richter variation
 rnbqkb1r/ppp1pp1p/5np1/3p2B1/2PP4/2N5/PP2PPPP/R2QKBNR b KQkq -
-Grunfeld: Stockholm variation
+Grünfeld: Stockholm variation
 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP1B2/2N5/PP2PPPP/R2QKBNR b KQkq -
-Grunfeld: 4.Bf4
+Grünfeld: 4.Bf4
 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP2P1/2N5/PP2PP1P/R1BQKBNR b KQkq -
-Grunfeld: Spike gambit
+Grünfeld: Spike gambit
 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/1QN5/PP2PPPP/R1B1KBNR b KQkq -
-Grunfeld: Russian variation
+Grünfeld: Russian variation
 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq -
-Grunfeld: Three knights variation
+Grünfeld: Three knights variation
 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq -
-Grunfeld defense
+Grünfeld defense
 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R w KQkq -
-Neo-Grunfeld defense
+Neo-Grünfeld defense
 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/5P2/PP2P1PP/RNBQKBNR w KQkq -
-Neo-Grunfeld defense
+Neo-Grünfeld defense
 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/6P1/PP2PP1P/RNBQKBNR w KQkq -
-Neo-Grunfeld (Kemeri) defense
+Neo-Grünfeld (Kemeri) defense
 rnbqkb1r/ppp1pp1p/5np1/3p4/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq -
 King's Indian: fianchetto without c4 *
 rnbqkb1r/ppp1pp1p/5np1/8/2pP4/4PN2/PP3PPP/RNBQKB1R w KQkq -
 QGA, Smyslov variation
 rnbqkb1r/ppp1pp1p/6p1/3n4/3P4/2N5/PP2PPPP/R1BQKBNR w KQkq -
-Grunfeld: exchange variation
+Grünfeld: exchange variation
 rnbqkb1r/ppp1pp1p/6p1/8/8/2n3P1/PP1PPPBP/R1BQK1NR w KQkq -
-English: Anglo-Grunfeld, Smyslov defense
+English: Anglo-Grünfeld, Smyslov defense
 rnbqkb1r/ppp1pppp/1n1P4/8/2PP4/8/PP3PPP/RNBQKBNR b KQkq -
 Alekhine's defense: exchange variation
 rnbqkb1r/ppp1pppp/1n1p4/4P3/2PP1P2/8/PP4PP/RNBQKBNR b KQkq -
@@ -6189,7 +6189,7 @@ Alekhine's defense: modern, Schmid variation
 rnbqkb1r/ppp1pppp/3p1n2/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -
 Old Indian defense
 rnbqkb1r/ppp1pppp/3p1n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -
-Reti: old Indian attack *
+Réti: old Indian attack *
 rnbqkb1r/ppp1pppp/3p1n2/8/3PP3/8/PPP2PPP/RNBQKBNR w KQkq -
 Pirc defense
 rnbqkb1r/ppp1pppp/3p4/3nP3/2BP4/8/PPP2PPP/RNBQK1NR b KQkq -
@@ -6213,7 +6213,7 @@ Torre attack (Tartakower variation)
 rnbqkb1r/ppp1pppp/5n2/3p2B1/8/3P4/PPP1PPPP/RN1QKBNR b KQkq -
 Old Indian: Tartakower (Wade) variation *
 rnbqkb1r/ppp1pppp/5n2/3p4/2P5/2N5/PP1PPPPP/R1BQKBNR w KQkq -
-English: Anglo-Grunfeld defense
+English: Anglo-Grünfeld defense
 rnbqkb1r/ppp1pppp/5n2/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq -
 Queen's pawn game, Krause variation *
 rnbqkb1r/ppp1pppp/5n2/3p4/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -
@@ -6247,7 +6247,7 @@ Queen's pawn game *
 rnbqkb1r/ppp1pppp/5n2/3p4/8/5NP1/PPPPPP1P/RNBQKB1R b KQkq -
 King's Indian: East Indian defense *
 rnbqkb1r/ppp1pppp/5n2/3pN3/8/8/PPPPPPPP/RNBQKB1R b KQkq -
-Dory defense *
+Döry defense *
 rnbqkb1r/ppp1pppp/5n2/8/2Pp4/5N2/PP1PPPPP/RNBQKB1R w KQkq -
 Old Benoni defense *
 rnbqkb1r/ppp1pppp/5n2/8/2pP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq -
@@ -6261,7 +6261,7 @@ QGA: Mannheim variation
 rnbqkb1r/ppp1pppp/8/3n4/3P4/8/PPP2PPP/RNBQKBNR w KQkq -
 Scandinavian: Marshall variation
 rnbqkb1r/ppp1pppp/8/3n4/8/2N2N2/PP1PPPPP/R1BQKB1R b KQkq -
-English: Anglo-Grunfeld defense
+English: Anglo-Grünfeld defense
 rnbqkb1r/ppp1pppp/8/3np3/3P4/5N2/PPP2PPP/RNBQKB1R w KQkq -
 Alekhine's defense: modern, Larsen variation
 rnbqkb1r/ppp1pppp/8/8/1nPP4/8/PP3PPP/RNBQKBNR w KQkq -
@@ -6297,7 +6297,7 @@ Old Indian: Ukrainian variation
 rnbqkb1r/ppp2ppp/3p1n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq -
 Philidor: Nimzovich (Jaenisch) variation
 rnbqkb1r/ppp2ppp/3p1n2/4p3/5P2/5N2/PPPPP1PP/RNBQKB1R w KQkq -
-Reti: Lisitsin gambit deferred *
+Réti: Lisitsin gambit deferred *
 rnbqkb1r/ppp2ppp/3p1n2/8/2N1P3/8/PPPP1PPP/RNBQKB1R b KQkq -
 Petrov: Paulsen attack
 rnbqkb1r/ppp2ppp/3p1n2/8/3NP3/8/PPP2PPP/RNBQKB1R w KQkq -
@@ -6385,7 +6385,7 @@ KGD: Falkbeer, 5.de
 rnbqkb1r/ppp2ppp/5n2/3P4/4pP2/2N5/PPPPQ1PP/R1B1KBNR b KQkq -
 KGD: Falkbeer, Rubinstein variation
 rnbqkb1r/ppp2ppp/5n2/3P4/4pP2/3P4/PPP1Q1PP/RNB1KBNR b KQkq -
-KGD: Falkbeer, Reti variation
+KGD: Falkbeer, Réti variation
 rnbqkb1r/ppp2ppp/5n2/3P4/4pP2/3P4/PPPN2PP/R1BQKBNR b KQkq -
 KGD: Falkbeer, Keres variation
 rnbqkb1r/ppp2ppp/5n2/3P4/5p2/5N2/PPPP2PP/RNBQKB1R w KQkq -
@@ -6459,7 +6459,7 @@ Scotch game *
 rnbqkb1r/ppp2ppp/8/3np3/3P4/2N5/PP2PPPP/R1BQKBNR b KQkq -
 Sicilian: Nimzovich variation *
 rnbqkb1r/ppp2ppp/8/3np3/4P3/2N5/PP1P1PPP/R1BQKBNR b KQkq -
-Sicilian: Labourdonnais-Lowenthal variation *
+Sicilian: Labourdonnais-Löwenthal variation *
 rnbqkb1r/ppp2ppp/8/3np3/8/2N1P3/PP1P1PPP/R1BQKBNR b KQkq -
 Sicilian defense *
 rnbqkb1r/ppp2ppp/8/3np3/8/2N2N2/PP1PPPPP/R1BQKB1R b KQkq -
@@ -6497,9 +6497,9 @@ Philidor: Philidor counter-gambit, del Rio attack *
 rnbqkb1r/ppp2ppp/8/4p2Q/1n6/2N5/PPPP1PPP/R1B1KBNR w KQkq -
 Scotch: Horwitz attack *
 rnbqkb1r/ppp2ppp/8/4p3/1n2P3/2NP4/PP3PPP/R1BQKBNR b KQkq -
-Sicilian: Labourdonnais-Lowenthal (Kalashnikov) variation *
+Sicilian: Labourdonnais-Löwenthal (Kalashnikov) variation *
 rnbqkb1r/ppp2ppp/8/4p3/1n6/2N1P3/PP1P1PPP/R1BQKBNR w KQkq -
-Sicilian, Szen (`anti-Taimanov') variation *
+Sicilian, Szén (`anti-Taimanov') variation *
 rnbqkb1r/ppp2ppp/8/4p3/8/2n3P1/PP1PPP1P/R1BQKBNR w KQkq -
 Sicilian: accelerated fianchetto, exchange variation *
 rnbqkb1r/ppp2ppp/8/8/4p3/2P2N2/P1PP1PPP/R1BQKB1R w KQkq -
@@ -6507,7 +6507,7 @@ Scotch: Mieses variation *
 rnbqkb1r/ppp3p1/8/3ppPPp/8/7P/PPPP1K2/RNBQ1BNR w kq -
 KGA: Allgaier, Thorold variation *
 rnbqkb1r/ppp3pN/3p3n/5p2/2BpP3/8/PPP2PPP/RNBQK2R b KQkq -
-Philidor: Lopez counter-gambit, Jaenisch variation
+Philidor: López counter-gambit, Jaenisch variation
 rnbqkb1r/ppp3pp/5n2/3ppP2/6P1/8/PPPP1P1P/RNBQKBNR w KQkq -
 KGA: Rosentreter gambit *
 rnbqkb1r/ppp3pp/5p2/3np3/8/3P1N2/PP2PPPP/RNBQKB1R w KQkq -
@@ -6517,7 +6517,7 @@ Vienna gambit: Heyde variation
 rnbqkb1r/ppp3pp/8/3pPp2/4n3/2N2Q2/PPPP2PP/R1B1KBNR w KQkq f6
 Vienna gambit: Bardeleben variation
 rnbqkb1r/ppp3pp/8/3ppPP1/4n3/8/PPPP1P1P/RNBQKBNR w KQkq -
-KGA: So rensen gambit *
+KGA: Sorensen gambit *
 rnbqkb1r/pppn1ppp/4p3/3pP3/3P2Q1/2N5/PPP2PPP/R1B1KBNR b KQkq -
 French: Steinitz, Gledhill attack
 rnbqkb1r/pppnpppp/4P3/3p4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq -
@@ -6535,7 +6535,7 @@ Konstantinopolsky opening *
 rnbqkb1r/pppp1ppp/2n5/8/2P1PP2/8/PP4PP/RNBQKBNR w KQkq -
 Budapest: Alekhine, Abonyi variation
 rnbqkb1r/pppp1ppp/4p3/8/2PPn3/5N2/PP2PPPP/RNBQKB1R w KQkq -
-Dory defense
+Döry defense
 rnbqkb1r/pppp1ppp/4pn2/6B1/2PP4/8/PP2PPPP/RN1QKBNR b KQkq -
 Neo-Indian (Seirawan) attack
 rnbqkb1r/pppp1ppp/4pn2/6B1/3P4/5N2/PPP1PPPP/RN1QKB1R b KQkq -
@@ -6553,7 +6553,7 @@ Queen's pawn game
 rnbqkb1r/pppp1ppp/4pn2/8/3P4/4PN2/PPP2PPP/RNBQKB1R b KQkq -
 Queen's pawn: Yusupov-Rubinstein system
 rnbqkb1r/pppp1ppp/5n2/4p1B1/8/3P4/PPP1PPPP/RN1QKBNR b KQkq -
-Reti: Wade defense *
+Réti: Wade defense *
 rnbqkb1r/pppp1ppp/5n2/4p3/2B1P3/2N5/PPPP1PPP/R1BQK1NR b KQkq -
 Vienna game
 rnbqkb1r/pppp1ppp/5n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq -
@@ -6627,7 +6627,7 @@ KGD: 2...Nf6
 rnbqkb1r/pppp1ppp/5n2/4p3/5P2/2N5/PPPPP1PP/R1BQKBNR b KQkq -
 KP: Colorado counter *
 rnbqkb1r/pppp1ppp/5n2/4p3/5P2/8/PPPPP1PP/RNBQKBNR w KQkq -
-Reti: Pirc-Lisitsin gambit *
+Réti: Pirc-Lisitsin gambit *
 rnbqkb1r/pppp1ppp/5n2/4p3/8/2N5/PPPPPPPP/R1BQKBNR w KQkq -
 KP: Nimzovich defense *
 rnbqkb1r/pppp1ppp/5n2/4p3/8/4P3/PPPP1PPP/RNBQKBNR w KQkq -
@@ -6711,7 +6711,7 @@ Latvian: corkscrew counter-gambit
 rnbqkb1r/pppp2pp/5n2/4p3/2B1p3/3P4/PPP2PPP/RNBQK1NR w KQkq -
 KGD: classical, Soldatenkov variation *
 rnbqkb1r/pppp2pp/5n2/4pP2/3P4/8/PPP2PPP/RNBQKBNR b KQkq -
-KGA: Abbazia defense (classical defense, modern defense[!]) *
+KGA: Abbazia defense (classical defense, modern defense) *
 rnbqkb1r/pppp2pp/5n2/4pP2/5P2/8/PPPP2PP/RNBQKBNR b KQkq -
 KGA: Gianutio counter-gambit *
 rnbqkb1r/pppp2pp/5n2/4pP2/8/3P4/PPP2PPP/RNBQKBNR b KQkq -
@@ -6747,7 +6747,7 @@ Dutch defense
 rnbqkb1r/ppppp1pp/5n2/5p2/3P2P1/2N5/PPP1PP1P/R1BQKBNR b KQkq -
 Dutch, Spielmann gambit
 rnbqkb1r/ppppp1pp/5n2/5p2/4P3/3P1N2/PPP2PPP/RNBQKB1R b KQkq -
-Reti: Lisitsin gambit deferred
+Réti: Lisitsin gambit deferred
 rnbqkb1r/ppppp1pp/5n2/6B1/3Pp3/2N5/PPP2PPP/R2QKBNR b KQkq -
 Dutch: Staunton gambit, Staunton's line
 rnbqkb1r/ppppp1pp/5n2/8/3Pp1P1/2N5/PPP2P1P/R1BQKBNR b KQkq -
@@ -6769,13 +6769,13 @@ Hippopotamus defense
 rnbqkb1r/ppppp2p/6pn/5p2/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq -
 Dutch defense: Bladel variation
 rnbqkb1r/pppppp1p/5np1/3P4/2P5/8/PP2PPPP/RNBQKBNR b KQkq -
-King's Indian: Anti-Grunfeld
+King's Indian: Anti-Grünfeld
 rnbqkb1r/pppppp1p/5np1/6B1/3P4/5N2/PPP1PPPP/RN1QKB1R b KQkq -
 King's Indian: Torre attack
 rnbqkb1r/pppppp1p/5np1/8/1P6/5N2/P1PPPPPP/RNBQKB1R b KQkq -
-Reti: King's Indian attack, Spassky's variation *
+Réti: King's Indian attack, Spassky's variation *
 rnbqkb1r/pppppp1p/5np1/8/1P6/5NP1/P1PPPP1P/RNBQKB1R b KQkq -
-Reti: King's Indian attack, Reti-Smyslov variation
+Réti: King's Indian attack, Réti-Smyslov variation
 rnbqkb1r/pppppp1p/5np1/8/2PP4/2N5/PP2PPPP/R1BQKBNR b KQkq -
 King's Indian defense, 3.Nc3
 rnbqkb1r/pppppp1p/5np1/8/2PP4/5N2/PP2PPPP/RNBQKB1R b KQkq -
@@ -6783,7 +6783,7 @@ King's Indian, 3.Nf3
 rnbqkb1r/pppppp1p/5np1/8/2PP4/6P1/PP2PP1P/RNBQKBNR b KQkq -
 King's Indian: 3.g3
 rnbqkb1r/pppppp1p/5np1/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq -
-Reti: King's Indian attack (with ...c5) *
+Réti: King's Indian attack (with ...c5) *
 rnbqkb1r/pppppp1p/5np1/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -
 King's Indian defense
 rnbqkb1r/pppppp1p/5np1/8/2PP4/8/PPQ1PPPP/RNB1KBNR b KQkq -
@@ -6795,15 +6795,15 @@ King's Indian: East Indian defense
 rnbqkb1r/pppppp1p/5np1/8/3P4/5NP1/PPP1PP1P/RNBQKB1R b KQkq -
 King's Indian: fianchetto without c4
 rnbqkb1r/pppppp1p/5np1/8/3P4/6P1/PPP1PP1P/RNBQKBNR b KQkq -
-Reti: King's Indian attack *
+Réti: King's Indian attack *
 rnbqkb1r/pppppp1p/5np1/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -
-Reti: King's Indian attack (Barcza system) *
+Réti: King's Indian attack (Barcza system) *
 rnbqkb1r/pppppp1p/5np1/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -
 Benko's opening: reversed Alekhine *
 rnbqkb1r/pppppp1p/5np1/8/8/5NP1/PPPPPP1P/RNBQKB1R b KQkq -
-Reti: King's Indian attack *
+Réti: King's Indian attack *
 rnbqkb1r/pppppp1p/5np1/8/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq -
-Reti: King's Indian attack
+Réti: King's Indian attack
 rnbqkb1r/ppppppnp/6p1/4P3/3P2P1/8/PPP2P1P/RNBQKBNR w KQkq -
 Norwegian defense
 rnbqkb1r/pppppppp/1n6/2P1P3/8/8/PP1P1PPP/RNBQKBNR b KQkq -
@@ -6811,7 +6811,7 @@ Alekhine's defense: two pawns' (Lasker's) attack
 rnbqkb1r/pppppppp/1n6/4P3/2P5/1P6/P2P1PPP/RNBQKBNR b KQkq -
 Alekhine's defense: Steiner variation
 rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq -
-Trompovsky attack (Ruth, Opov censky opening)
+Trompovsky attack (Ruth, Opocensky opening)
 rnbqkb1r/pppppppp/5n2/8/1PP5/8/P2PPPPP/RNBQKBNR b KQkq -
 English orang-utan
 rnbqkb1r/pppppppp/5n2/8/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq -
@@ -6835,29 +6835,29 @@ Queen's pawn game
 rnbqkb1r/pppppppp/5n2/8/3P4/5P2/PPP1P1PP/RNBQKBNR b KQkq -
 Paleface attack
 rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq -
-Reti opening *
+Réti opening *
 rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq -
 Queen's pawn game
 rnbqkb1r/pppppppp/5n2/8/4P3/3P4/PPP2PPP/RNBQKBNR b KQkq -
-Alekhine's defense: Maroczy variation
+Alekhine's defense: Maróczy variation
 rnbqkb1r/pppppppp/5n2/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -
 Alekhine's defense
 rnbqkb1r/pppppppp/5n2/8/5P2/8/PPPPP1PP/RNBQKBNR b KQkq -
-Reti v Dutch *
+Réti v Dutch *
 rnbqkb1r/pppppppp/5n2/8/6P1/8/PPPPPP1P/RNBQKBNR b KQkq -
-Reti: Herrstrom gambit *
+Réti: Herrström gambit *
 rnbqkb1r/pppppppp/5n2/8/8/1P6/P1PPPPPP/RNBQKBNR w KQkq -
 Nimzovich-Larsen attack: Indian variation
 rnbqkb1r/pppppppp/5n2/8/8/3P4/PPP1PPPP/RNBQKBNR b KQkq -
-Reti opening *
+Réti opening *
 rnbqkb1r/pppppppp/5n2/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq -
-Reti opening *
+Réti opening *
 rnbqkb1r/pppppppp/5n2/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq -
-Reti opening
+Réti opening
 rnbqkb1r/pppppppp/5n2/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -
-Reti opening *
+Réti opening *
 rnbqkb1r/pppppppp/7n/8/1P6/8/P1PPPPPP/RNBQKBNR w KQkq -
-Polish: Tubingen variation
+Polish: Tübingen variation
 rnbqkb1r/pppppppp/7n/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -
 Amar (Paris) opening *
 rnbqkb1r/pppppppp/8/3nP3/2P5/8/PP1P1PPP/RNBQKBNR b KQkq -
@@ -6867,17 +6867,17 @@ Alekhine's defense
 rnbqkb1r/pppppppp/8/3nP3/8/1P6/P1PP1PPP/RNBQKBNR b KQkq -
 Alekhine's defense: Welling variation
 rnbqkb1r/pppppppp/8/3nP3/8/2N5/PPPP1PPP/R1BQKBNR b KQkq -
-Alekhine's defense: Samisch attack
+Alekhine's defense: Sämisch attack
 rnbqkb1r/pppppppp/8/3nP3/8/8/PPPP1PPP/RNBQKBNR w KQkq -
 Alekhine's defense
 rnbqkb1r/pppppppp/8/4P3/4n3/8/PPPP1PPP/RNBQKBNR w KQkq -
-Alekhine's defense: Mokele Mbembe (Bucker) variation
+Alekhine's defense: Mokele Mbembe (Bücker) variation
 rnbqkb1r/pppppppp/8/8/3Pn3/5N2/PPP1PPPP/RNBQKB1R w KQkq -
-Dory defense
+Döry defense
 rnbqkbnr/1p1p1p1p/p3p1p1/8/3NP3/3B4/PPP2PPP/RNBQK2R w KQkq -
 Sicilian: Kan, Swiss cheese variation
 rnbqkbnr/1p1p1ppp/p3p3/8/2PNP3/8/PP3PPP/RNBQKB1R b KQkq -
-Sicilian: Kan, Maroczy bind (Reti variation)
+Sicilian: Kan, Maróczy bind (Réti variation)
 rnbqkbnr/1p1p1ppp/p3p3/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq -
 Sicilian: Kan, 5.Nc3
 rnbqkbnr/1p1p1ppp/p3p3/8/3NP3/3B4/PPP2PPP/RNBQK2R b KQkq -
@@ -6921,7 +6921,7 @@ QGD: Alapin variation
 rnbqkbnr/p1pp1ppp/1p2p3/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq -
 Queen's pawn: Keres defense
 rnbqkbnr/p1pp1ppp/1p6/4p3/8/4P3/PPPP1PPP/RNBQKBNR w KQkq -
-French: Reti (Spielmann) variation *
+French: Réti (Spielmann) variation *
 rnbqkbnr/p1pp1ppp/1p6/8/3Np3/8/PPPPPPPP/RNBQKB1R w KQkq -
 Alekhine's defense: Welling variation *
 rnbqkbnr/p1pp1ppp/8/1p2p3/2P5/8/PP1PPPPP/RNBQKBNR w KQkq -
@@ -6961,7 +6961,7 @@ Nimzovich-Larsen attack: Polish variation
 rnbqkbnr/p1pppppp/8/1p6/8/2P5/PP1PPPPP/RNBQKBNR b KQkq -
 Polish: Outflank variation *
 rnbqkbnr/p1pppppp/8/1p6/8/7N/PPPPPPPP/RNBQKB1R b KQkq -
-Polish: Tubingen variation *
+Polish: Tübingen variation *
 rnbqkbnr/p1pppppp/8/1p6/8/8/PPPPPPPP/RNBQKBNR w KQkq -
 Polish (Sokolsky) opening *
 rnbqkbnr/p2p1ppp/1p6/2p5/4p3/1N6/PPPPPPPP/RNBQKB1R w KQkq -
@@ -6987,7 +6987,7 @@ Sicilian: Alapin's variation (2.c3) *
 rnbqkbnr/pp1p1ppp/2p5/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -
 KP: Lopez opening *
 rnbqkbnr/pp1p1ppp/2p5/8/2B1Pp2/8/PPPP2PP/RNBQK1NR w KQkq -
-KGA: bishop's gambit, Ruy Lopez defense
+KGA: bishop's gambit, Ruy López defense
 rnbqkbnr/pp1p1ppp/4p3/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq -
 Sicilian defense
 rnbqkbnr/pp1p1ppp/4p3/2pP4/4P3/8/PPP2PPP/RNBQKBNR b KQkq -
@@ -7093,13 +7093,13 @@ Sicilian: Smith-Morra gambit
 rnbqkbnr/pp1ppppp/8/8/4P3/p7/2PP1PPP/RNBQKBNR w KQkq -
 Sicilian: wing gambit, Carlsbad variation
 rnbqkbnr/pp2p1pp/5p2/2pp4/3P4/5NP1/PPP1PP1P/RNBQKB1R b KQkq -
-Neo-Grunfeld defense *
+Neo-Grünfeld defense *
 rnbqkbnr/pp2pp1p/2p3p1/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR w KQkq -
 Caro-Kann: Gurgenidze system
 rnbqkbnr/pp2pp1p/3p2p1/2pP4/8/2N5/PPP1PPPP/R1BQKBNR w KQkq -
 Old Benoni: Schmid's system
 rnbqkbnr/pp2pp1p/6p1/2pp4/3P4/5NP1/PPP1PP1P/RNBQKB1R b KQkq -
-Neo-Grunfeld (Kemeri) defense *
+Neo-Grünfeld (Kemeri) defense *
 rnbqkbnr/pp2pp1p/6p1/2pp4/5P2/5N2/PPPPP1PP/RNBQKB1R w KQkq -
 Dutch with c4 & g3 *
 rnbqkbnr/pp2pp1p/6p1/2pp4/5P2/5NP1/PPPPP2P/RNBQKB1R b KQkq -
@@ -7171,7 +7171,7 @@ Budapest defense *
 rnbqkbnr/pp2pppp/8/2p5/1P1p4/5NP1/P1PPPP1P/RNBQKB1R b KQkq -
 King's Indian: Danube gambit *
 rnbqkbnr/pp2pppp/8/2p5/1PPp4/5N2/P2PPPPP/RNBQKB1R b KQkq -
-Benko gambit *
+Benkö gambit *
 rnbqkbnr/pp2pppp/8/2p5/2Pp4/3P1N2/PP2PPPP/RNBQKB1R b KQkq -
 Benoni defense, Hromodka system *
 rnbqkbnr/pp2pppp/8/2p5/2Pp4/4PN2/PP1P1PPP/RNBQKB1R b KQkq -
@@ -7179,7 +7179,7 @@ Benoni defense *
 rnbqkbnr/pp2pppp/8/2p5/2PpP3/5N2/PP1P1PPP/RNBQKB1R b KQkq e3
 Czech Benoni defense *
 rnbqkbnr/pp2pppp/8/2p5/3p4/5NP1/PPPPPP1P/RNBQKB1R w KQkq -
-King's Indian: Anti-Grunfeld *
+King's Indian: Anti-Grünfeld *
 rnbqkbnr/pp2pppp/8/2pp4/2P5/5N2/PP1PPPPP/RNBQKB1R b KQkq -
 Benoni defense *
 rnbqkbnr/pp2pppp/8/2pp4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq -
@@ -7229,17 +7229,17 @@ Queen's pawn game *
 rnbqkbnr/pp2pppp/8/2pp4/8/5NP1/PPPPPP1P/RNBQKB1R b KQkq -
 King's Indian defense *
 rnbqkbnr/pp2pppp/8/2pp4/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq -
-Reti: King's Indian attack (with ...c5)
+Réti: King's Indian attack (with ...c5)
 rnbqkbnr/pp2pppp/8/2pp4/8/5NP1/PPPPPPBP/RNBQK2R b KQkq -
-Reti: King's Indian attack
+Réti: King's Indian attack
 rnbqkbnr/pp2pppp/8/3p4/2PP4/8/PP3PPP/RNBQKBNR b KQkq -
 Caro-Kann: Panov-Botvinnik attack
 rnbqkbnr/pp2pppp/8/3p4/3p4/2P5/PP2PPPP/RNBQKBNR w KQkq -
 QGD Slav defense: exchange variation *
 rnbqkbnr/pp2pppp/8/8/1pPp4/P4N2/3PPPPP/RNBQKB1R b KQkq -
-Benko gambit half accepted *
+Benkö gambit half accepted *
 rnbqkbnr/pp2pppp/8/8/2Pp4/p4N2/3PPPPP/RNBQKB1R w KQkq -
-Benko gambit accepted *
+Benkö gambit accepted *
 rnbqkbnr/pp3ppp/2p1p3/3p4/2P5/5NP1/PP1PPP1P/RNBQKB1R w KQkq -
 English: Kurajica defense
 rnbqkbnr/pp3ppp/2p1p3/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq -
@@ -7251,7 +7251,7 @@ QGD: semi-Slav, Noteboom variation
 rnbqkbnr/pp3ppp/2p5/3B4/4Pp2/8/PPPP2PP/RNBQK1NR w KQkq -
 KGA: bishop's gambit, Anderssen variation
 rnbqkbnr/pp3ppp/2p5/3Pp3/3P4/8/PPP2PPP/RNBQKBNR b KQkq -
-Danish gambit: So rensen defense *
+Danish gambit: Sorensen defense *
 rnbqkbnr/pp3ppp/2p5/3Pp3/5P2/8/PPPP2PP/RNBQKBNR w KQkq -
 KGD: Nimzovich counter-gambit
 rnbqkbnr/pp3ppp/2p5/3Pp3/8/8/PP1PPPPP/RNBQKBNR w KQkq -
@@ -7331,7 +7331,7 @@ Alekhine's defense: four pawns attack, fianchetto variation *
 rnbqkbnr/pp4pp/8/2pp1p2/4p3/1N1P4/PPP1PPPP/RNBQKB1R w KQkq -
 Alekhine's defense: four pawns attack *
 rnbqkbnr/pp4pp/8/2pp1p2/4pB2/1N1P4/PPP1PPPP/RN1QKB1R b KQkq -
-Alekhine's defense: four pawns attack, Trifunovic variation *
+Alekhine's defense: four pawns attack, Trifunoviƒá variation *
 rnbqkbnr/pp4pp/8/2pp4/4p3/1NN5/PPP1PPPP/R1BQKB1R b KQkq -
 Alekhine's defense: four pawns attack, 6...Nc6 *
 rnbqkbnr/ppp1p1pp/3p4/5p2/3PP3/8/PPP2PPP/RNBQKBNR w KQkq -
@@ -7347,7 +7347,7 @@ Gedult attack *
 rnbqkbnr/ppp1pp1p/6p1/3p4/5P2/8/PPPPP1PP/RNBQKBNR w KQkq -
 Dutch defense *
 rnbqkbnr/ppp1pp1p/6p1/3p4/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq -
-Reti: King's Indian attack
+Réti: King's Indian attack
 rnbqkbnr/ppp1pp1p/8/3p2p1/5P2/8/PPPPP1PP/RNBQKBNR w KQkq -
 Dutch, Krejcik gambit *
 rnbqkbnr/ppp1pp1p/8/3p2p1/8/5N2/PPPPPPPP/RNBQKB1R w KQkq -
@@ -7361,7 +7361,7 @@ Queen's Pawn
 rnbqkbnr/ppp1pppp/3p4/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq -
 Mieses opening *
 rnbqkbnr/ppp1pppp/3p4/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq -
-Reti opening
+Réti opening
 rnbqkbnr/ppp1pppp/3p4/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -
 Mieses opening *
 rnbqkbnr/ppp1pppp/8/3p2B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq -
@@ -7373,7 +7373,7 @@ Polish defense *
 rnbqkbnr/ppp1pppp/8/3p4/2P2P2/8/PP1PP1PP/RNBQKBNR b KQkq -
 Mujannah opening
 rnbqkbnr/ppp1pppp/8/3p4/2P5/5N2/PP1PPPPP/RNBQKB1R b KQkq -
-Reti opening
+Réti opening
 rnbqkbnr/ppp1pppp/8/3p4/2P5/8/PP1PPPPP/RNBQKBNR b KQkq -
 Old Benoni defense *
 rnbqkbnr/ppp1pppp/8/3p4/2PP4/8/PP2PPPP/RNBQKBNR b KQkq -
@@ -7403,7 +7403,7 @@ Dutch *
 rnbqkbnr/ppp1pppp/8/3p4/5P2/8/PPPPP1PP/RNBQKBNR w KQkq -
 Bird's opening
 rnbqkbnr/ppp1pppp/8/3p4/8/1P3N2/P1PPPPPP/RNBQKB1R b KQkq -
-Reti: Nimzovich-Larsen attack
+Réti: Nimzovich-Larsen attack
 rnbqkbnr/ppp1pppp/8/3p4/8/1P6/P1PPPPPP/RNBQKBNR b KQkq -
 Queen's pawn: English defense *
 rnbqkbnr/ppp1pppp/8/3p4/8/1P6/P1PPPPPP/RNBQKBNR w KQkq -
@@ -7411,7 +7411,7 @@ Nimzovich-Larsen attack: classical variation
 rnbqkbnr/ppp1pppp/8/3p4/8/2N5/PPPPPPPP/R1BQKBNR b KQkq -
 Queen's pawn: Lundin (Kevitz-Mikenas) defense *
 rnbqkbnr/ppp1pppp/8/3p4/8/3P1N2/PPP1PPPP/RNBQKB1R b KQkq -
-Reti: old Indian attack
+Réti: old Indian attack
 rnbqkbnr/ppp1pppp/8/3p4/8/3P4/PPP1PPPP/RNBQKBNR b KQkq -
 Queen's Pawn *
 rnbqkbnr/ppp1pppp/8/3p4/8/4P3/PPPP1PPP/RNBQKBNR b KQkq -
@@ -7419,9 +7419,9 @@ Queen's pawn *
 rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R b KQkq -
 Queen's pawn game *
 rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R w KQkq -
-Reti opening
+Réti opening
 rnbqkbnr/ppp1pppp/8/3p4/8/5NP1/PPPPPP1P/RNBQKB1R b KQkq -
-Reti: King's Indian attack (Barcza system)
+Réti: King's Indian attack (Barcza system)
 rnbqkbnr/ppp1pppp/8/3p4/8/6P1/PPPPPP1P/RNBQKBNR b KQkq -
 Modern defense *
 rnbqkbnr/ppp1pppp/8/3p4/8/8/PPPPPPPP/RNBQKBNR w KQkq -
@@ -7433,11 +7433,11 @@ Old Benoni defense *
 rnbqkbnr/ppp1pppp/8/8/2Pp4/5N2/PP1PPPPP/RNBQKB1R b KQkq -
 Old Benoni defense *
 rnbqkbnr/ppp1pppp/8/8/2Pp4/5N2/PP1PPPPP/RNBQKB1R w KQkq -
-Reti: advance variation
+Réti: advance variation
 rnbqkbnr/ppp1pppp/8/8/2PpP3/8/PP1P1PPP/RNBQKBNR b KQkq e3
 Old Benoni defense *
 rnbqkbnr/ppp1pppp/8/8/2p5/5N2/PP1PPPPP/RNBQKB1R w KQkq -
-Reti accepted
+Réti accepted
 rnbqkbnr/ppp1pppp/8/8/2pP4/5N2/PP2PPPP/RNBQKB1R b KQkq -
 QGA: 3.Nf3
 rnbqkbnr/ppp1pppp/8/8/2pP4/8/PP2PPPP/RNBQKBNR w KQkq -
@@ -7467,7 +7467,7 @@ Caro-Kann: closed (Breyer) variation *
 rnbqkbnr/ppp2ppp/3p4/4p3/8/4P3/PPPP1PPP/RNBQKBNR w KQkq -
 French: King's Indian attack *
 rnbqkbnr/ppp2ppp/3p4/4p3/8/5N2/PPPPPPPP/RNBQKB1R w KQkq -
-Alekhine's defense: Maroczy variation *
+Alekhine's defense: Maróczy variation *
 rnbqkbnr/ppp2ppp/3p4/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq -
 Philidor: exchange variation
 rnbqkbnr/ppp2ppp/3p4/8/3pP3/5N2/PPP2PPP/RNBQKB1R w KQkq -
@@ -7541,9 +7541,9 @@ Scandinavian defense *
 rnbqkbnr/ppp2ppp/8/3p4/3p4/5NP1/PPP1PP1P/RNBQKB1R b KQkq -
 Scandinavian: Richter variation *
 rnbqkbnr/ppp2ppp/8/3p4/3pP3/2P5/PP3PPP/RNBQKBNR w KQkq -
-Danish gambit: So rensen defense
+Danish gambit: Sorensen defense
 rnbqkbnr/ppp2ppp/8/3p4/4Pp2/5N2/PPPP2PP/RNBQKB1R w KQkq -
-KGA: Abbazia defense (classical defense, modern defense[!])
+KGA: Abbazia defense (classical defense, modern defense!)
 rnbqkbnr/ppp2ppp/8/3pP3/8/8/PPPPP1PP/RNBQKBNR b KQkq -
 Dutch: Staunton gambit *
 rnbqkbnr/ppp2ppp/8/3pp3/2P5/8/PP1PPPPP/RNBQKBNR w KQkq -
@@ -7601,7 +7601,7 @@ French: advance, Steinitz variation *
 rnbqkbnr/ppp3pp/3p4/4Pp2/3p4/8/PPP2PPP/RNBQKBNR w KQkq -
 KGD: Falkbeer, 4.d3 *
 rnbqkbnr/ppp3pp/3p4/4pp2/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq -
-Philidor: Lopez counter-gambit
+Philidor: López counter-gambit
 rnbqkbnr/ppp3pp/3p4/4pp2/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq -
 Philidor: Philidor counter-gambit, Zukertort variation
 rnbqkbnr/ppp3pp/3p4/4pp2/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq -
@@ -7633,7 +7633,7 @@ Sicilian: Steinitz variation *
 rnbqkbnr/pppp1p1p/8/4N3/2B1Ppp1/8/PPPP2PP/RNBQK2R b KQkq -
 KGA: Salvio gambit
 rnbqkbnr/pppp1p1p/8/4N3/3PPpp1/8/PPP3PP/RNBQKB1R b KQkq -
-KGA: So rensen gambit
+KGA: Sorensen gambit
 rnbqkbnr/pppp1p1p/8/6N1/4PppP/8/PPPP2P1/RNBQKB1R b KQkq -
 KGA: Allgaier gambit
 rnbqkbnr/pppp1p1p/8/6p1/2B1Pp2/5N2/PPPP2PP/RNBQK2R b KQkq -
@@ -7665,7 +7665,7 @@ Queen's pawn
 rnbqkbnr/pppp1ppp/4p3/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq -
 French defense
 rnbqkbnr/pppp1ppp/4p3/8/4P3/1P6/P1PP1PPP/RNBQKBNR b KQkq -
-French: Reti (Spielmann) variation
+French: Réti (Spielmann) variation
 rnbqkbnr/pppp1ppp/4p3/8/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq -
 French defense
 rnbqkbnr/pppp1ppp/4p3/8/4P3/3P4/PPP2PPP/RNBQKBNR b KQkq -
@@ -7681,7 +7681,7 @@ French: Labourdonnais variation
 rnbqkbnr/pppp1ppp/4p3/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -
 Van't Kruijs opening *
 rnbqkbnr/pppp1ppp/8/4N3/4p3/8/PPPPPPPP/RNBQKB1R b KQkq -
-Alekhine's defense: Mokele Mbembe (Bucker) variation *
+Alekhine's defense: Mokele Mbembe (Bücker) variation *
 rnbqkbnr/pppp1ppp/8/4p2Q/4P3/8/PPPP1PPP/RNB1KBNR b KQkq -
 KP: Patzer opening
 rnbqkbnr/pppp1ppp/8/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR b KQkq -
@@ -7855,7 +7855,7 @@ King's gambit *
 rnbqkbnr/pppp2pp/8/4pp2/8/4P3/PPPP1PPP/RNBQKBNR w KQkq -
 French: Labourdonnais variation *
 rnbqkbnr/pppp2pp/8/5p2/2B1Pp2/8/PPPP2PP/RNBQK1NR w KQkq -
-KGA: bishop's gambit, Lopez-Gianutio counter-gambit
+KGA: bishop's gambit, López-Gianutio counter-gambit
 rnbqkbnr/pppp2pp/8/5p2/3pP3/2P5/PP3PPP/RNBQKBNR b KQkq -
 KGD: Nimzovich counter-gambit *
 rnbqkbnr/pppp2pp/8/5p2/3pP3/8/PPP2PPP/RNBQKBNR w KQkq -
@@ -7887,7 +7887,7 @@ Dutch
 rnbqkbnr/ppppp1pp/8/5p2/3PP3/8/PPP2PPP/RNBQKBNR b KQkq -
 Dutch: Staunton gambit
 rnbqkbnr/ppppp1pp/8/5p2/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq -
-Reti: Pirc-Lisitsin gambit
+Réti: Pirc-Lisitsin gambit
 rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR b KQkq -
 Bird: From gambit *
 rnbqkbnr/ppppp1pp/8/5p2/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -
@@ -7897,7 +7897,7 @@ Bird: Hobbs gambit *
 rnbqkbnr/ppppp1pp/8/5p2/8/1P6/P1PPPPPP/RNBQKBNR w KQkq -
 Nimzovich-Larsen attack: Dutch variation
 rnbqkbnr/ppppp1pp/8/5p2/8/5N2/PPPPPPPP/RNBQKB1R w KQkq -
-Reti v Dutch
+Réti v Dutch
 rnbqkbnr/ppppp1pp/8/5p2/8/8/PPPPPPPP/RNBQKBNR w KQkq -
 Bird's opening *
 rnbqkbnr/ppppp1pp/8/5pB1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq -
@@ -7919,7 +7919,7 @@ Reversed Grob (Borg/Basman defense/macho Grob)
 rnbqkbnr/pppppp1p/8/6p1/5P2/8/PPPPP1PP/RNBQKBNR w KQkq -
 Bird: Hobbs gambit
 rnbqkbnr/pppppp1p/8/6p1/8/5N2/PPPPPPPP/RNBQKB1R w KQkq -
-Reti: Herrstrom gambit
+Réti: Herrström gambit
 rnbqkbnr/pppppp1p/8/6p1/8/8/PPPPPPPP/RNBQKBNR w KQkq -
 Grob's attack *
 rnbqkbnr/ppppppp1/7p/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq -
@@ -7957,7 +7957,7 @@ Mieses opening
 rnbqkbnr/pppppppp/8/8/8/4P3/PPPP1PPP/RNBQKBNR b KQkq -
 Van't Kruijs opening
 rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq -
-Reti opening
+Réti opening
 rnbqkbnr/pppppppp/8/8/8/5P2/PPPPP1PP/RNBQKBNR b KQkq -
 Gedult's opening
 rnbqkbnr/pppppppp/8/8/8/6P1/PPPPPP1P/RNBQKBNR b KQkq -
@@ -8037,7 +8037,7 @@ Ruy Lopez: closed, Pilnik variation *
 rnbqr1k1/pp3ppp/3b1n2/2ppN1B1/3P1P2/2N5/PPP1B1PP/R2QK2R w KQ -
 Petrov: classical attack, Krause variation *
 rnbqr1k1/pp3ppp/3b1n2/2ppN1BB/3P1P2/2N5/PPP3PP/R2QK2R b KQ -
-Petrov: classical attack, Maroczy variation *
+Petrov: classical attack, Maróczy variation *
 rnbqr1k1/ppb2pp1/2p2n1p/3pp3/1PP1P3/P1NP1N2/4BPPP/R1BQ1RK1 b - -
 Ruy Lopez: closed, Borisenko defense *
 rnbqr1k1/ppb2pp1/2p2n1p/3pp3/NP2P3/P1PP1N2/2Q1BPPP/R1B2RK1 b - -
@@ -8061,7 +8061,7 @@ Two knights: Max Lange attack, Schlechter variation *
 rnbqr1k1/ppp2ppp/8/2PP4/2B3n1/2N1BpP1/PPP2P1P/R2QK2R b KQ -
 Two knights: Max Lange attack, Loman defense *
 rnbqr1k1/pppp1ppp/1b3n2/4p3/1P2P3/P1N2N2/1BPPBPPP/R2QK2R b KQ -
-Ruy Lopez: Trajkovic counter-attack *
+Ruy Lopez: Trajkoviƒá counter-attack *
 rnbqr1k1/pppp1ppp/1b3n2/4p3/1P2P3/P1N2N2/2PPBPPP/R1BQ1RK1 b - -
 Ruy Lopez: closed, 7...O-O *
 rnbqr1k1/pppp1ppp/1b3n2/4p3/1P2P3/P1N2N2/2PPBPPP/R1BQK2R w KQ -
@@ -8071,6 +8071,6 @@ Ruy Lopez: closed, Averbach variation *
 rnbr2k1/1pq1ppbp/5np1/p1pp4/3P4/1PP1PN2/P2NBPPP/R1BQ1RK1 w - -
 Catalan: closed, Zagoryansky variation *
 rnbr2k1/pp2qppp/5n2/2b1N3/3Pp3/P1N1B3/2PQBPPP/R4RK1 b - -
-Ruy Lopez: open, Howell attack, Ekstrom variation *
+Ruy Lopez: open, Howell attack, Ekström variation *
 rnq1kb1r/pp3ppp/4pn2/3p1b2/3P4/NQ2PN2/PP1B1PPP/R3KB1R b KQkq -
 QGD Slav: Landau variation
