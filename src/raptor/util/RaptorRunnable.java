@@ -50,9 +50,11 @@ public abstract class RaptorRunnable implements Runnable {
 			if (connector == null || !Raptor.getInstance().isDisposed()) {
 				execute();
 			} else {
-				LOG
-						.warn("Execution of runnable vetoed beause raptor is disposed "
-								+ this);
+				if (LOG.isInfoEnabled()) {
+					LOG
+							.info("Execution of runnable vetoed beause raptor is disposed "
+									+ this);
+				}
 			}
 		} catch (Throwable t) {
 			if (connector != null) {
