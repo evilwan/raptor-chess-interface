@@ -829,7 +829,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	}
 
 	protected boolean isSmartMoveOption(String option) {
-		System.err.println("Option=" + option);
 		return option != null
 				&& (option.equals(PlayingMouseAction.SmartMove.toString())
 						|| option.equals(PlayingMouseAction.RandomCapture
