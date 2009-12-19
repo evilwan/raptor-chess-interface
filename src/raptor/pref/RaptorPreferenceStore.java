@@ -585,7 +585,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_SPEAK_PARTNER_TELLS, true);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor v.92Pre");
+		setDefault(APP_NAME, "Raptor v.92PreII");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName,
@@ -614,6 +614,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
+		setDefault(APP_QUAD9_QUAD12345678_SASH_WEIGHTS, new int[] { 10, 90 });
 		setDefault(APP_QUAD1_QUAD2345678_SASH_WEIGHTS, new int[] { 10, 90 });
 		setDefault(APP_QUAD2345_QUAD678_SASH_WEIGHTS, new int[] { 70, 30 });
 		setDefault(APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS, new int[] { 10,
