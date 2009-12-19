@@ -38,5 +38,5 @@ package raptor;
  * </pre>
  */
 public enum Quadrant {
-	I, II, III, IV, V, VI, VII, VIII,IX
+	I, II, III, IV, V, VI, VII, VIII, IX
 }
