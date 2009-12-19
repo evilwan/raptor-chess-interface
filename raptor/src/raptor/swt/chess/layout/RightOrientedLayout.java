@@ -155,8 +155,8 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	@Override
 	public void dispose() {
 		super.dispose();
-		if (board.isDisposed()) {
-			board.getControl().removeControlListener(controlListener);
+		if (!board.isDisposed()) {
+			board.getBoardComposite().removeControlListener(controlListener);
 		}
 		if (LOG.isInfoEnabled()) {
 			LOG.info("Dispoed RightOrientedLayout");

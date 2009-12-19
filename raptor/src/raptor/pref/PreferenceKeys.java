@@ -68,6 +68,7 @@ public interface PreferenceKeys {
 			+ BUGHOUSE_GAME_2_QUADRANT;
 	public static final String APP_LINUX_UNIX_BROWSER_NAME = "app-linux-unix-browser-name";
 	public static final String APP_IS_LAUNCHNG_HOME_PAGE = "app-is-launching-home-page";
+	public static final String APP_QUAD9_QUAD12345678_SASH_WEIGHTS = "app-quad9-quad2345678-sash-weights";
 	public static final String APP_QUAD1_QUAD2345678_SASH_WEIGHTS = "app-quad1-quad2345678-sash-weights";
 	public static final String APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS = "app-quad2-quad3-quad4-quad5-sash-weights";
 	public static final String APP_QUAD2345_QUAD678_SASH_WEIGHTS = "app-quad2345-quad678-sash-weights";

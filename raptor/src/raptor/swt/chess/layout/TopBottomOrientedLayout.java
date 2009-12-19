@@ -63,6 +63,17 @@ public class TopBottomOrientedLayout extends ChessBoardLayout {
 	}
 
 	@Override
+	public void dispose() {
+		super.dispose();
+		if (!board.isDisposed()) {
+			board.getBoardComposite().removeControlListener(controlListener);
+		}
+		if (LOG.isInfoEnabled()) {
+			LOG.info("Dispoed TopBottomOrientedLayout");
+		}
+	}
+
+	@Override
 	public void adjustFontSizes() {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Adjusting font sizes.");

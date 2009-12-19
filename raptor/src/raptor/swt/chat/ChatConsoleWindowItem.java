@@ -35,7 +35,7 @@ import raptor.util.RaptorRunnable;
 public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
-			Quadrant.VII, Quadrant.VIII };
+			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 
 	public static final int TEXT_BLOCK = 5000;
 	ChatConsole console;

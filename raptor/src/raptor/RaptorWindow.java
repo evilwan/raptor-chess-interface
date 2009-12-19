@@ -626,12 +626,13 @@ public class RaptorWindow extends ApplicationWindow {
 	Log LOG = LogFactory.getLog(RaptorWindow.class);
 	protected Map<String, Label> pingLabelsMap = new HashMap<String, Label>();
 
+	protected RaptorWindowSashForm quad9quad12345678;
 	protected RaptorWindowSashForm quad1quad2345678;
 	protected RaptorWindowSashForm quad2345quad678Sash;
 	protected RaptorWindowSashForm quad2quad3quad4quad5Sash;
 	protected RaptorWindowSashForm quad67quad8Sash;
 	protected RaptorWindowSashForm quad6quad7Sash;
-	protected RaptorWindowSashForm[] sashes = new RaptorWindowSashForm[5];
+	protected RaptorWindowSashForm[] sashes = new RaptorWindowSashForm[6];
 	protected Composite statusBar;
 	protected Label statusLabel;
 
@@ -701,7 +702,7 @@ public class RaptorWindow extends ApplicationWindow {
 				public void execute() {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
-					new RaptorTabItem(folder, SWT.NONE, item, true, isSelecting);
+					new RaptorTabItem(folder, SWT.NONE, item, true, folder.getItemCount() == 0 ? true :  isSelecting);
 					folder.setMinimized(false);
 					restoreFolders();
 				}
@@ -712,7 +713,7 @@ public class RaptorWindow extends ApplicationWindow {
 				public void execute() {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
-					new RaptorTabItem(folder, SWT.NONE, item, true, isSelecting);
+					new RaptorTabItem(folder, SWT.NONE, item, true, folder.getItemCount() == 0 ? true : isSelecting);
 					folder.setMinimized(false);
 					restoreFolders();
 				}
@@ -1405,11 +1406,12 @@ public class RaptorWindow extends ApplicationWindow {
 			initFolder(folder);
 		}
 
-		sashes[0] = quad1quad2345678;
-		sashes[1] = quad2quad3quad4quad5Sash;
-		sashes[2] = quad2345quad678Sash;
-		sashes[3] = quad67quad8Sash;
-		sashes[4] = quad6quad7Sash;
+		sashes[0] = quad9quad12345678;
+		sashes[1] = quad1quad2345678;
+		sashes[2] = quad2quad3quad4quad5Sash;
+		sashes[3] = quad2345quad678Sash;
+		sashes[4] = quad67quad8Sash;
+		sashes[5] = quad6quad7Sash;
 
 		for (RaptorWindowSashForm sashe : sashes) {
 			sashe.loadFromPreferences();
@@ -1661,10 +1663,19 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Creates the sash hierarchy.
 	 */
 	protected void createQuad1Quad234567QuadControls() {
-		quad1quad2345678 = new RaptorWindowSashForm(windowComposite,
-				SWT.VERTICAL, PreferenceKeys.APP_QUAD1_QUAD2345678_SASH_WEIGHTS);
-		quad1quad2345678.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+
+		quad9quad12345678 = new RaptorWindowSashForm(windowComposite,
+				SWT.HORIZONTAL,
+				PreferenceKeys.APP_QUAD9_QUAD12345678_SASH_WEIGHTS);
+
+		quad9quad12345678.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true, 1, 1));
+
+		folders[Quadrant.IX.ordinal()] = new RaptorTabFolder(quad9quad12345678,
+				SWT.BORDER, Quadrant.IX);
+
+		quad1quad2345678 = new RaptorWindowSashForm(quad9quad12345678,
+				SWT.VERTICAL, PreferenceKeys.APP_QUAD1_QUAD2345678_SASH_WEIGHTS);
 
 		folders[Quadrant.I.ordinal()] = new RaptorTabFolder(quad1quad2345678,
 				SWT.BORDER, Quadrant.I);
@@ -2082,7 +2093,6 @@ public class RaptorWindow extends ApplicationWindow {
 		};
 		folder.addListener(SWT.DragDetect, listener);
 		folder.addListener(SWT.MouseUp, listener);
-
 	}
 
 	/**
