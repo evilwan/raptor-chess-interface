@@ -777,10 +777,10 @@ public class ChessBoardUtils implements BoardConstants {
 				blackRating = StringUtils.remove(blackRating, 'P');
 
 				if (!NumberUtils.isDigits(whiteRating)) {
-					game.setHeader(PgnHeader.WhiteElo,"?");
+					game.removeHeader(PgnHeader.WhiteElo);
 				}
 				if (!NumberUtils.isDigits(blackRating)) {
-					game.setHeader(PgnHeader.BlackElo,"?");
+					game.removeHeader(PgnHeader.BlackElo);
 				}
 
 				String pgn = game.toPgn();
