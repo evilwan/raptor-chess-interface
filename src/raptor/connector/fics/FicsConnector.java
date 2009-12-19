@@ -60,6 +60,7 @@ import raptor.swt.chat.ChatConsole;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.RegExController;
+import raptor.swt.chess.controller.PlayingMouseAction;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -805,6 +806,35 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2.fics1 = this;
 	}
 
+	protected boolean isSmartMoveEnabled() {
+		return isSmartMoveOption(getPreferences().getString(
+				PreferenceKeys.PLAYING_CONTROLLER
+						+ PreferenceKeys.RIGHT_MOUSE_BUTTON_ACTION))
+				|| isSmartMoveOption(getPreferences()
+						.getString(
+								PreferenceKeys.PLAYING_CONTROLLER
+										+ PreferenceKeys.LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION))
+				|| isSmartMoveOption(getPreferences().getString(
+						PreferenceKeys.PLAYING_CONTROLLER
+								+ PreferenceKeys.LEFT_MOUSE_BUTTON_ACTION))
+				|| isSmartMoveOption(getPreferences().getString(
+						PreferenceKeys.PLAYING_CONTROLLER
+								+ PreferenceKeys.MIDDLE_MOUSE_BUTTON_ACTION))
+				|| isSmartMoveOption(getPreferences().getString(
+						PreferenceKeys.PLAYING_CONTROLLER
+								+ PreferenceKeys.MISC1_MOUSE_BUTTON_ACTION))
+				|| isSmartMoveOption(getPreferences().getString(
+						PreferenceKeys.PLAYING_CONTROLLER
+								+ PreferenceKeys.MISC2_MOUSE_BUTTON_ACTION));
+	}
+
+	protected boolean isSmartMoveOption(String option) {
+		return option != null && option.equals(PlayingMouseAction.SmartMove)
+				|| option.equals(PlayingMouseAction.RandomCapture)
+				|| option.equals(PlayingMouseAction.RandomMove)
+				|| option.equals(PlayingMouseAction.RandomRecapture);
+	}
+
 	protected void loadExtendedCensorList() {
 		if (new File(EXTENDED_CENSOR_FILE_NAME).exists()) {
 			if (LOG.isInfoEnabled()) {
@@ -856,6 +886,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				sendMessage("iset ms 1", true);
 				sendMessage("iset allresults 1", true);
 				sendMessage("iset startpos 1", true);
+				sendMessage("iset nowrap 1", true);
+				sendMessage("iset smartmove "
+						+ (isSmartMoveEnabled() ? "1" : "0"), true);
 				sendMessage(
 						"iset premove "
 								+ (getPreferences().getBoolean(

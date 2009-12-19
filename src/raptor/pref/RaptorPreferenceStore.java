@@ -396,7 +396,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						defaultTinyFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PLAYER_NAME_FONT,
 				new FontData[] { new FontData(defaultFontName,
-						defaultMediumFontSize, 0) });
+						defaultLargeFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultMediumFontSize, 0) });
@@ -408,10 +408,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						defaultTinyFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_GAME_DESCRIPTION_FONT,
 				new FontData[] { new FontData(defaultFontName,
-						defaultSmallFontSize, 0) });
+						defaultTinyFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
 				new FontData[] { new FontData(defaultFontName,
-						defaultSmallFontSize, 0) });
+						defaultTinyFontSize, 0) });
 
 		// BugArena
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
@@ -624,7 +624,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, false);
 		setDefault(FICS_AUTO_CONNECT, false);
-		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n\n");
+		setDefault(FICS_LOGIN_SCRIPT,
+				"set seek 0\nset autoflag 1\nset width 120\n");
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
 		setDefault(FICS_CLOSE_TABS_ON_DISCONNECT, false);
