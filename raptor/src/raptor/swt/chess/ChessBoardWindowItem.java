@@ -80,6 +80,9 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 					PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT, newQuadrant);
 		} else if (controller.getConnector() != null && !isBughouseOtherBoard) {
 			Raptor.getInstance().getPreferences().setValue(
+					PreferenceKeys.APP_CHESS_BOARD_QUADRANT, newQuadrant);
+
+			Raptor.getInstance().getPreferences().setValue(
 					controller.getConnector().getShortName() + "-"
 							+ PreferenceKeys.CHESS_BOARD_QUADRANT, newQuadrant);
 		} else {
@@ -87,6 +90,8 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 					controller.getConnector().getShortName() + "-"
 							+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT,
 					newQuadrant);
+			Raptor.getInstance().getPreferences().setValue(
+					PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT, newQuadrant);
 		}
 	}
 

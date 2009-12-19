@@ -641,6 +641,17 @@ public class ChessBoardUtils implements BoardConstants {
 								controller, isBughouseOtherBoard);
 						ChessBoardWindowItem item = null;
 
+						Quadrant primaryQuadrant = Raptor
+								.getInstance()
+								.getPreferences()
+								.getQuadrant(
+										PreferenceKeys.APP_CHESS_BOARD_QUADRANT);
+						Quadrant secondaryQuadrant = Raptor
+								.getInstance()
+								.getPreferences()
+								.getQuadrant(
+										PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT);
+
 						if (Raptor.getInstance().getPreferences().getBoolean(
 								PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES)) {
 							item = Raptor
@@ -654,8 +665,8 @@ public class ChessBoardUtils implements BoardConstants {
 										.getInstance()
 										.getWindow()
 										.getChessBoardWindowItemToTakeOver(
-												quadrant == Quadrant.III ? Quadrant.V
-														: Quadrant.III);
+												quadrant == primaryQuadrant ? secondaryQuadrant
+														: primaryQuadrant);
 							}
 
 							if (item != null) {
@@ -672,8 +683,8 @@ public class ChessBoardUtils implements BoardConstants {
 							// there is an
 							// active controller already there observing a chess
 							// game.
-							if ((item.getPreferredQuadrant() == Quadrant.III || item
-									.getPreferredQuadrant() == Quadrant.V)
+							if ((item.getPreferredQuadrant() == primaryQuadrant || item
+									.getPreferredQuadrant() == secondaryQuadrant)
 									&& item.getController().getGame()
 											.getVariant() != Variant.bughouse
 									&& item.getController().getGame()
@@ -691,10 +702,10 @@ public class ChessBoardUtils implements BoardConstants {
 									}
 								}
 								if (swapQuadrants) {
-									if (item.getPreferredQuadrant() == Quadrant.III) {
-										item.setQuadrant(Quadrant.V);
-									} else if (item.getPreferredQuadrant() == Quadrant.V) {
-										item.setQuadrant(Quadrant.III);
+									if (item.getPreferredQuadrant() == primaryQuadrant) {
+										item.setQuadrant(secondaryQuadrant);
+									} else if (item.getPreferredQuadrant() == secondaryQuadrant) {
+										item.setQuadrant(primaryQuadrant);
 									}
 								}
 							}
