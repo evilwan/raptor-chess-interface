@@ -57,7 +57,7 @@ public class BugTeamsWindowItem implements RaptorConnectorWindowItem {
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
-			Quadrant.VII, Quadrant.VIII ,Quadrant.IX};
+			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 
 	protected BughouseService service;
 	protected Composite composite;

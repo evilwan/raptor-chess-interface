@@ -702,7 +702,8 @@ public class RaptorWindow extends ApplicationWindow {
 				public void execute() {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
-					new RaptorTabItem(folder, SWT.NONE, item, true, folder.getItemCount() == 0 ? true :  isSelecting);
+					new RaptorTabItem(folder, SWT.NONE, item, true, folder
+							.getItemCount() == 0 ? true : isSelecting);
 					folder.setMinimized(false);
 					restoreFolders();
 				}
@@ -713,7 +714,8 @@ public class RaptorWindow extends ApplicationWindow {
 				public void execute() {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
-					new RaptorTabItem(folder, SWT.NONE, item, true, folder.getItemCount() == 0 ? true : isSelecting);
+					new RaptorTabItem(folder, SWT.NONE, item, true, folder
+							.getItemCount() == 0 ? true : isSelecting);
 					folder.setMinimized(false);
 					restoreFolders();
 				}
