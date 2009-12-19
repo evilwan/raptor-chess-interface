@@ -829,10 +829,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	}
 
 	protected boolean isSmartMoveOption(String option) {
-		return option != null && option.equals(PlayingMouseAction.SmartMove)
-				|| option.equals(PlayingMouseAction.RandomCapture)
-				|| option.equals(PlayingMouseAction.RandomMove)
-				|| option.equals(PlayingMouseAction.RandomRecapture);
+		System.err.println("Option=" + option);
+		return option != null
+				&& (option.equals(PlayingMouseAction.SmartMove.toString())
+						|| option.equals(PlayingMouseAction.RandomCapture
+								.toString())
+						|| option.equals(PlayingMouseAction.RandomMove
+								.toString()) || option
+						.equals(PlayingMouseAction.RandomRecapture.toString()));
 	}
 
 	protected void loadExtendedCensorList() {
