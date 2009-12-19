@@ -29,16 +29,18 @@ public abstract class ChessBoardLayout extends Layout implements BoardConstants 
 		this.board = board;
 	}
 
+	public abstract void adjustFontSizes();
+
 	public void dispose() {
 	}
+
+	public abstract int getAlignment(Field field);
 
 	public ChessBoard getBoard() {
 		return board;
 	}
 
 	public abstract String getName();
-
-	public abstract int getStyle(Field field);
 
 	@Override
 	protected Point computeSize(Composite composite, int hint, int hint2,

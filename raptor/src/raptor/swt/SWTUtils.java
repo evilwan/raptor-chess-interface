@@ -131,6 +131,11 @@ public class SWTUtils {
 		return result;
 	}
 
+	public static int getPixels(int fontPointSize) {
+		Point pixelsPerInch = Raptor.getInstance().getDisplay().getDPI();
+		return (int) (72.0 / pixelsPerInch.y) * fontPointSize;
+	}
+
 	/**
 	 * Returns a new font resizing the font size by resizePercentage of the
 	 * controls height. This method caches fonts in Raptor's font registry so

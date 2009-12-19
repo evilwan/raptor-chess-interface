@@ -83,7 +83,7 @@ import raptor.util.RaptorStringUtils;
  * 
  * You can also right click to bring up a menu of available pieces to drop.
  */
-public class PlayingController extends ChessBoardController { 
+public class PlayingController extends ChessBoardController {
 	static final Log LOG = LogFactory.getLog(PlayingController.class);
 
 	/**

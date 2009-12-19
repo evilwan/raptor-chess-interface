@@ -167,47 +167,55 @@ public class Raptor implements PreferenceKeys {
 
 			display.timerExec(500, new Runnable() {
 				public void run() {
-					// Launch the home page after a half second it requires a
-					// RaptorWindow.
-					if (getInstance().getPreferences().getBoolean(
-							APP_IS_LAUNCHNG_HOME_PAGE)) {
-						BrowserUtils.openUrl(getInstance().getPreferences()
-								.getString(PreferenceKeys.APP_HOME_URL));
-					}
+					try {
+						// Launch the home page after a half second it requires
+						// a
+						// RaptorWindow.
+						if (getInstance().getPreferences().getBoolean(
+								APP_IS_LAUNCHNG_HOME_PAGE)) {
+							BrowserUtils.openUrl(getInstance().getPreferences()
+									.getString(PreferenceKeys.APP_HOME_URL));
+						}
 
-					// Initialize this after a half second it requires a
-					// RaptorWindow.
-					Raptor.getInstance().cursorRegistry.setDefaultCursor(Raptor
-							.getInstance().getWindow().getShell().getCursor());
+						// Initialize this after a half second it requires a
+						// RaptorWindow.
+						Raptor.getInstance().cursorRegistry
+								.setDefaultCursor(Raptor.getInstance()
+										.getWindow().getShell().getCursor());
 
-					// Initialize this after a half second. It requires a
-					// RaptorWindow.
-					ChessBoardCacheService.getInstance();
+						// Initialize this after a half second. It requires a
+						// RaptorWindow.
+						ChessBoardCacheService.getInstance();
 
-					// Initialize the UCIEngineService after a half second.
-					// Requires a raptor window in case there is an error.
-					UCIEngineService.getInstance();
+						// Initialize the UCIEngineService after a half second.
+						// Requires a raptor window in case there is an error.
+						UCIEngineService.getInstance();
 
-					String currentChessSet = getInstance().getPreferences()
-							.getString(PreferenceKeys.BOARD_CHESS_SET_NAME);
+						String currentChessSet = getInstance().getPreferences()
+								.getString(PreferenceKeys.BOARD_CHESS_SET_NAME);
 
-					// Prompt for set optimization if set is not optimized..
-					if (!ChessBoardUtils.isChessSetOptimized(currentChessSet)
-							&& Raptor
-									.getInstance()
-									.confirm(
-											"Your current chess set "
-													+ currentChessSet
-													+ " is not optimized. "
-													+ "It is strongly suggested that you optimize your current chess sets. "
-													+ "It will boost Raptor performance."
-													+ "Would you like to optimize?")) {
-						ChessSetOptimizationDialog dialog = new ChessSetOptimizationDialog(
-								Raptor.getInstance().getWindow().getShell(),
-								"Chess Set " + currentChessSet
-										+ " Optimization.", currentChessSet);
-						dialog.open();
+						// Prompt for set optimization if set is not optimized..
+						if (!ChessBoardUtils
+								.isChessSetOptimized(currentChessSet)
+								&& Raptor
+										.getInstance()
+										.confirm(
+												"Your current chess set "
+														+ currentChessSet
+														+ " is not optimized. "
+														+ "It is strongly suggested that you optimize your current chess sets. "
+														+ "It will boost Raptor performance."
+														+ "Would you like to optimize?")) {
+							ChessSetOptimizationDialog dialog = new ChessSetOptimizationDialog(
+									Raptor.getInstance().getWindow().getShell(),
+									"Chess Set " + currentChessSet
+											+ " Optimization.", currentChessSet);
+							dialog.open();
 
+						}
+					} catch (Throwable t) {
+						Raptor.getInstance().onError(
+								"Error initializing Raptor", t);
 					}
 				}
 			});

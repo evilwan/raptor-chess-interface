@@ -40,8 +40,11 @@ import raptor.swt.chess.ChessSquare;
 import raptor.swt.chess.PieceJailChessSquare;
 
 public class ChessBoardPage extends FieldEditorPreferencePage {
-	public static final String[][] LAYOUTS = { { "Right Oriented Layout",
-			"raptor.swt.chess.layout.RightOrientedLayout" } };
+	public static final String[][] LAYOUTS = {
+			{ "Right Oriented Layout",
+					"raptor.swt.chess.layout.RightOrientedLayout" },
+			{ "Top/Bottom Oriented Layout",
+					"raptor.swt.chess.layout.TopBottomOrientedLayout" } };
 
 	public static final String[][] PIECE_RESIZE_PERCENTAGE = {
 			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
@@ -67,10 +70,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "35", "35" }, { "40", "40" }, { "50", "50" }, { "60", "60" },
 			{ "70", "70" }, { "80", "80" }, { "90", "90" }, { "100", "100" },
 			{ "125", "125" }, { "150", "150" } };
-
-	public static final String[][] PIECE_WEIGHT_PERCENTAGE = { {
-			"Right Oriented Layout",
-			"raptor.swt.chess.layout.RightOrientedLayout" } };
 
 	public class PieceJailSquarePageSquare extends PieceJailChessSquare {
 

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -71,6 +72,7 @@ import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
 import raptor.chess.Variant;
+import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ActionScriptService;
@@ -754,11 +756,27 @@ public class ChessBoardUtils implements BoardConstants {
 			return;
 		}
 		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_IS_LOGGING_GAMES)) {
+				PreferenceKeys.APP_IS_LOGGING_GAMES)
+				&& game.getMoveList().getSize() > 0) {
 
 			// synchronized on PGN_PREPEND_SYNCH so just one thread at a time
 			// writes to the file.
 			synchronized (PGN_PREPEND_SYNCH) {
+
+				String whiteRating = game.getHeader(PgnHeader.WhiteElo);
+				String blackRating = game.getHeader(PgnHeader.BlackElo);
+
+				whiteRating = StringUtils.remove(whiteRating, 'E');
+				whiteRating = StringUtils.remove(whiteRating, 'P');
+				blackRating = StringUtils.remove(blackRating, 'E');
+				blackRating = StringUtils.remove(blackRating, 'P');
+
+				if (!NumberUtils.isDigits(whiteRating)
+						|| !NumberUtils.isDigits(blackRating)) {
+					game.removeHeader(PgnHeader.WhiteElo);
+					game.removeHeader(PgnHeader.BlackElo);
+				}
+
 				String pgn = game.toPgn();
 				File file = new File(Raptor.GAMES_PGN_FILE);
 				FileWriter fileWriter = null;

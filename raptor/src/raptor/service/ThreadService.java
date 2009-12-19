@@ -144,9 +144,9 @@ public class ThreadService {
 									+ THREAD_DUMP_FILE_PATH, rej);
 				}
 			}
-		}
-		else {
-			LOG.info("Vetoing runnable in ThreadService, raptor is disposed. " + runnable);
+		} else {
+			LOG.info("Vetoing runnable in ThreadService, raptor is disposed. "
+					+ runnable);
 		}
 	}
 
