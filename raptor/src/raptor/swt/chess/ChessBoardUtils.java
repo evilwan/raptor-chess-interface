@@ -70,6 +70,7 @@ import raptor.action.game.RevertAction;
 import raptor.action.game.ToggleEngineAnalysisAction;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
+import raptor.chess.GameCursor;
 import raptor.chess.Move;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
@@ -763,6 +764,10 @@ public class ChessBoardUtils implements BoardConstants {
 			// writes to the file.
 			synchronized (PGN_PREPEND_SYNCH) {
 
+				if (game instanceof GameCursor) {
+					game = ((GameCursor) game).getMasterGame();
+				}
+
 				String whiteRating = game.getHeader(PgnHeader.WhiteElo);
 				String blackRating = game.getHeader(PgnHeader.BlackElo);
 
@@ -771,10 +776,11 @@ public class ChessBoardUtils implements BoardConstants {
 				blackRating = StringUtils.remove(blackRating, 'E');
 				blackRating = StringUtils.remove(blackRating, 'P');
 
-				if (!NumberUtils.isDigits(whiteRating)
-						|| !NumberUtils.isDigits(blackRating)) {
-					game.removeHeader(PgnHeader.WhiteElo);
-					game.removeHeader(PgnHeader.BlackElo);
+				if (!NumberUtils.isDigits(whiteRating)) {
+					game.setHeader(PgnHeader.WhiteElo,"?");
+				}
+				if (!NumberUtils.isDigits(blackRating)) {
+					game.setHeader(PgnHeader.BlackElo,"?");
 				}
 
 				String pgn = game.toPgn();
