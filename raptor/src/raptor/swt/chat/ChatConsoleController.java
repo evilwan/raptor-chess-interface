@@ -54,6 +54,7 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.RaptorWindowItem;
 import raptor.action.ActionUtils;
 import raptor.action.RaptorAction;
 import raptor.alias.RaptorAliasResult;
@@ -77,6 +78,8 @@ import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.MainController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.ToolBarItemKey;
+import raptor.swt.chess.ChessBoardWindowItem;
+import raptor.swt.chess.controller.PlayingController;
 import raptor.util.BrowserUtils;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
@@ -724,7 +727,19 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 
 		if (event.keyCode == SWT.ESC) {
+			//Clear output text.
 			chatConsole.outputText.setText("");
+
+			//Clear premoves.
+			RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+					.getWindowItems(ChessBoardWindowItem.class);
+			for (RaptorWindowItem item : items) {
+				ChessBoardWindowItem chessBoardItem = (ChessBoardWindowItem) item;
+				if (chessBoardItem.getController() instanceof PlayingController) {
+					((PlayingController) chessBoardItem.getController())
+							.onClearPremoves();
+				}
+			}
 			return true;
 		} else if (event.keyCode == SWT.ARROW_UP) {
 			if (sentTextIndex >= 0) {
