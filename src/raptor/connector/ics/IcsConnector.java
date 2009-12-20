@@ -1606,6 +1606,8 @@ public abstract class IcsConnector implements Connector {
 				}
 			}
 		} catch (Throwable t) {
+			if (t instanceof InterruptedException) {
+			}
 			if (t instanceof IOException) {
 				LOG
 						.debug(
