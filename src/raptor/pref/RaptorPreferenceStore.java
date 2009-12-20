@@ -607,7 +607,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_BROWSER_QUADRANT, Quadrant.III);
 		setDefault(APP_PGN_RESULTS_QUADRANT, Quadrant.III);
 		setDefault(APP_CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault(APP_BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault(APP_CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
 		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 3);
@@ -712,7 +712,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics-" + REGEX_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("fics-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault("fics-" + CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault("fics-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("fics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
@@ -724,7 +724,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics2-" + REGEX_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("fics2-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault("fics2-" + CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault("fics2-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("fics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
@@ -736,7 +736,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics-" + REGEX_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("bics-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault("bics-" + CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault("bics-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("bics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("bics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
@@ -748,7 +748,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + REGEX_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("bics2-" + BUGHOUSE_GAME_2_QUADRANT, Quadrant.V);
+		setDefault("bics2-" + CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault("bics2-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("bics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);

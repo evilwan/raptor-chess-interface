@@ -81,7 +81,8 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT, "Bughouse Board 2:",
+				+ PreferenceKeys.CHESS_BOARD_SECONDARY_QUADRANT,
+				"Secondary Chess Board:",
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 

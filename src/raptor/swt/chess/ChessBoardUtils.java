@@ -331,16 +331,20 @@ public class ChessBoardUtils implements BoardConstants {
 		if (controller.getConnector() == null) {
 			if (isBughouseOtherBoard) {
 				return Raptor.getInstance().getPreferences().getQuadrant(
-						PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT);
+						PreferenceKeys.APP_CHESS_BOARD_SECONDARY_QUADRANT);
 			} else {
 				return Raptor.getInstance().getPreferences().getQuadrant(
 						PreferenceKeys.APP_CHESS_BOARD_QUADRANT);
 			}
 		} else {
 			if (isBughouseOtherBoard) {
-				return Raptor.getInstance().getPreferences().getQuadrant(
-						controller.getConnector().getShortName() + "-"
-								+ PreferenceKeys.BUGHOUSE_GAME_2_QUADRANT);
+				return Raptor
+						.getInstance()
+						.getPreferences()
+						.getQuadrant(
+								controller.getConnector().getShortName()
+										+ "-"
+										+ PreferenceKeys.CHESS_BOARD_SECONDARY_QUADRANT);
 
 			} else {
 				return Raptor.getInstance().getPreferences().getQuadrant(
@@ -641,16 +645,32 @@ public class ChessBoardUtils implements BoardConstants {
 								controller, isBughouseOtherBoard);
 						ChessBoardWindowItem item = null;
 
-						Quadrant primaryQuadrant = Raptor
+						Quadrant primaryQuadrant = controller.getConnector() == null ? Raptor
 								.getInstance()
 								.getPreferences()
 								.getQuadrant(
-										PreferenceKeys.APP_CHESS_BOARD_QUADRANT);
-						Quadrant secondaryQuadrant = Raptor
+										PreferenceKeys.APP_CHESS_BOARD_QUADRANT)
+								: Raptor
+										.getInstance()
+										.getPreferences()
+										.getQuadrant(
+												controller.getConnector()
+														.getShortName()
+														+ "-"
+														+ PreferenceKeys.CHESS_BOARD_QUADRANT);
+						Quadrant secondaryQuadrant = controller.getConnector() == null ? Raptor
 								.getInstance()
 								.getPreferences()
 								.getQuadrant(
-										PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT);
+										PreferenceKeys.APP_CHESS_BOARD_SECONDARY_QUADRANT)
+								: Raptor
+										.getInstance()
+										.getPreferences()
+										.getQuadrant(
+												controller.getConnector()
+														.getShortName()
+														+ "-"
+														+ PreferenceKeys.CHESS_BOARD_SECONDARY_QUADRANT);
 
 						if (Raptor.getInstance().getPreferences().getBoolean(
 								PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES)) {
@@ -685,10 +705,8 @@ public class ChessBoardUtils implements BoardConstants {
 							// game.
 							if ((item.getPreferredQuadrant() == primaryQuadrant || item
 									.getPreferredQuadrant() == secondaryQuadrant)
-									&& item.getController().getGame()
-											.getVariant() != Variant.bughouse
-									&& item.getController().getGame()
-											.getVariant() != Variant.fischerRandomBughouse) {
+									&& !Variant.isBughouse(item.getController()
+											.getGame().getVariant())) {
 								RaptorWindowItem[] items = Raptor.getInstance()
 										.getWindow().getWindowItems(
 												item.getPreferredQuadrant());

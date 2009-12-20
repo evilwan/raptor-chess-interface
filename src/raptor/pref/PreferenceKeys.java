@@ -28,7 +28,7 @@ public interface PreferenceKeys {
 	public static final String SEEK_TABLE_QUADRANT = "seek-table-quadrantv2.0";
 	public static final String BUG_WHO_QUADRANT = "bug-who-quadrantv2.0";
 	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrantv2.0";
-	public static final String BUGHOUSE_GAME_2_QUADRANT = "bughouse-game-2-quadrantv2.0";
+	public static final String CHESS_BOARD_SECONDARY_QUADRANT = "chess-board-secondary-game-quadrantv2.0";
 	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrantv2.0";
 	public static final String GAME_CHAT_TAB_QUADRANT = "game-chat-tab-quadrantv2.0";
 	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-infov2.0";
@@ -64,8 +64,8 @@ public interface PreferenceKeys {
 	public static final String APP_WINDOW_ITEM_POLL_INTERVAL = "app-window-item-poll-interval";
 	public static final String APP_CHESS_BOARD_QUADRANT = "app-"
 			+ CHESS_BOARD_QUADRANT;
-	public static final String APP_BUGHOUSE_GAME_2_QUADRANT = "app-"
-			+ BUGHOUSE_GAME_2_QUADRANT;
+	public static final String APP_CHESS_BOARD_SECONDARY_QUADRANT = "app-"
+			+ CHESS_BOARD_SECONDARY_QUADRANT;
 	public static final String APP_LINUX_UNIX_BROWSER_NAME = "app-linux-unix-browser-name";
 	public static final String APP_IS_LAUNCHNG_HOME_PAGE = "app-is-launching-home-page";
 	public static final String APP_QUAD9_QUAD12345678_SASH_WEIGHTS = "app-quad9-quad2345678-sash-weights";
