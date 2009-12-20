@@ -617,9 +617,7 @@ public class RaptorWindow extends ApplicationWindow {
 	protected RaptorTabItem dragStartItem;
 
 	protected RaptorTabFolder[] folders = new RaptorTabFolder[Quadrant.values().length];
-	protected ToolBar foldersMinimizedToolbar;
 
-	protected CoolItem foldersMinimiziedCoolItem;
 	protected boolean isExitDrag = false;
 	protected boolean isInDrag = false;
 	protected CoolBar leftCoolbar;
@@ -1319,11 +1317,6 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Adjusts the left coolbar for quadrants minimized.
 	 */
 	protected void adjustToFoldersItemsMinimizied() {
-		ToolItem[] folderMinItems = foldersMinimizedToolbar.getItems();
-		for (ToolItem item : folderMinItems) {
-			item.dispose();
-		}
-
 		boolean isAFolderMinimized = false;
 		for (RaptorTabFolder folder : folders) {
 			if (folder.getMinimized()) {
@@ -1333,6 +1326,30 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		if (isAFolderMinimized) {
+			leftCoolbar.setVisible(true);
+			ToolBar foldersMinimizedToolbar = null;
+
+			CoolItem foldersMinimiziedCoolItem = null;
+
+			if (leftCoolbar.getItemCount() > 0) {
+				foldersMinimiziedCoolItem = (CoolItem) leftCoolbar.getItem(0);
+				foldersMinimizedToolbar = (ToolBar) foldersMinimiziedCoolItem
+						.getControl();
+
+				ToolItem[] items = foldersMinimizedToolbar.getItems();
+				for (ToolItem item : items) {
+					item.dispose();
+				}
+			} else {
+				foldersMinimiziedCoolItem = new CoolItem(leftCoolbar, SWT.NONE);
+				foldersMinimizedToolbar = new ToolBar(leftCoolbar, SWT.FLAT
+						| SWT.VERTICAL);
+				foldersMinimiziedCoolItem.setControl(foldersMinimizedToolbar);
+				foldersMinimiziedCoolItem
+						.setPreferredSize(foldersMinimizedToolbar.computeSize(
+								SWT.DEFAULT, SWT.DEFAULT));
+			}
+
 			for (Quadrant quadrant : Quadrant.values()) {
 				if (getRaptorTabFolder(quadrant).getMinimized()) {
 					ToolItem item = new ToolItem(foldersMinimizedToolbar,
@@ -1349,24 +1366,25 @@ public class RaptorWindow extends ApplicationWindow {
 					});
 				}
 			}
-		}
 
-		foldersMinimizedToolbar.pack();
-		foldersMinimiziedCoolItem.setPreferredSize(foldersMinimizedToolbar
-				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-
-		if (!isAFolderMinimized) {
-			if (foldersMinimizedToolbar.isVisible()) {
-				foldersMinimizedToolbar.setVisible(false);
-				leftCoolbar.setVisible(false);
-				// windowComposite.layout();
-			}
+			foldersMinimizedToolbar.pack();
+			foldersMinimiziedCoolItem.setPreferredSize(foldersMinimizedToolbar
+					.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		} else {
-			if (!foldersMinimizedToolbar.isVisible()) {
-				foldersMinimizedToolbar.setVisible(true);
-				leftCoolbar.setVisible(true);
-				// windowComposite.layout();
+			if (leftCoolbar.getItemCount() > 0) {
+				CoolItem foldersMinimiziedCoolItem = (CoolItem) leftCoolbar.getItem(0);
+				ToolBar foldersMinimizedToolbar = (ToolBar) foldersMinimiziedCoolItem
+						.getControl();
+	
+				ToolItem[] items = foldersMinimizedToolbar.getItems();
+				for (ToolItem item : items) {
+					item.dispose();
+				}
+	
+				foldersMinimizedToolbar.dispose();
+				foldersMinimiziedCoolItem.dispose();
 			}
+			leftCoolbar.setVisible(false);
 		}
 		windowComposite.layout(true);
 	}
@@ -1427,14 +1445,6 @@ public class RaptorWindow extends ApplicationWindow {
 		leftCoolbar.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true,
 				1, 1));
 		leftCoolbar.setVisible(false);
-		foldersMinimizedToolbar = new ToolBar(leftCoolbar, SWT.FLAT
-				| SWT.VERTICAL);
-		foldersMinimizedToolbar.setVisible(false);
-
-		foldersMinimiziedCoolItem = new CoolItem(leftCoolbar, SWT.NONE);
-		foldersMinimiziedCoolItem.setControl(foldersMinimizedToolbar);
-		foldersMinimiziedCoolItem.setPreferredSize(foldersMinimizedToolbar
-				.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 
 	/**
