@@ -173,8 +173,7 @@ public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
 			}
 			console.getController().onActivate();
 			isPassive = false;
-		}
-		else {
+		} else {
 			console.getController().onActivate();
 		}
 	}

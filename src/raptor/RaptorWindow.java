@@ -1332,7 +1332,7 @@ public class RaptorWindow extends ApplicationWindow {
 			CoolItem foldersMinimiziedCoolItem = null;
 
 			if (leftCoolbar.getItemCount() > 0) {
-				foldersMinimiziedCoolItem = (CoolItem) leftCoolbar.getItem(0);
+				foldersMinimiziedCoolItem = leftCoolbar.getItem(0);
 				foldersMinimizedToolbar = (ToolBar) foldersMinimiziedCoolItem
 						.getControl();
 
@@ -1372,15 +1372,15 @@ public class RaptorWindow extends ApplicationWindow {
 					.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 		} else {
 			if (leftCoolbar.getItemCount() > 0) {
-				CoolItem foldersMinimiziedCoolItem = (CoolItem) leftCoolbar.getItem(0);
+				CoolItem foldersMinimiziedCoolItem = leftCoolbar.getItem(0);
 				ToolBar foldersMinimizedToolbar = (ToolBar) foldersMinimiziedCoolItem
 						.getControl();
-	
+
 				ToolItem[] items = foldersMinimizedToolbar.getItems();
 				for (ToolItem item : items) {
 					item.dispose();
 				}
-	
+
 				foldersMinimizedToolbar.dispose();
 				foldersMinimiziedCoolItem.dispose();
 			}

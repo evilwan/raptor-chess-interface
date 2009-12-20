@@ -50,6 +50,11 @@ public class FicsPage extends FieldEditorPreferencePage {
 				"Show bughouse buttons on partnerships (excluding simul)",
 				getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.FICS_NO_WRAP_ENABLED,
+				"Remove server line wrapping (*Requires reconnect to take effect)",
+				getFieldEditorParent()));
+
 		addField(new TextFieldEditor(PreferenceKeys.FICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
 
