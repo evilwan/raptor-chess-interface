@@ -90,8 +90,8 @@ public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(
-				PreferenceKeys.APP_BUGHOUSE_GAME_2_QUADRANT,
-				"PGN Bughouse Game 2:",
+				PreferenceKeys.APP_CHESS_BOARD_SECONDARY_QUADRANT,
+				"PGN Secondary Game:",
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 	}
