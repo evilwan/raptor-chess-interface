@@ -172,15 +172,20 @@ public abstract class ChessBoardController implements BoardConstants,
 							getGame().getMoveList().getSize() - 1);
 				}
 
-				int moveNumber = lastMove.getFullMoveCount();
+				if (lastMove != null) {
+					int moveNumber = lastMove.getFullMoveCount();
 
-				board.getStatusLabel().setText(
-						"Last Move: "
-								+ moveNumber
-								+ ") "
-								+ (lastMove.isWhitesMove() ? "" : "... ")
-								+ GameUtils.convertSanToUseUnicode(lastMove
-										.toString(), !game.isWhitesMove()));
+					board.getStatusLabel().setText(
+							"Last Move: "
+									+ moveNumber
+									+ ") "
+									+ (lastMove.isWhitesMove() ? "" : "... ")
+									+ GameUtils.convertSanToUseUnicode(lastMove
+											.toString(), lastMove
+											.isWhitesMove()));
+				} else {
+					board.getStatusLabel().setText("");
+				}
 
 			} else {
 				board.getStatusLabel().setText("");

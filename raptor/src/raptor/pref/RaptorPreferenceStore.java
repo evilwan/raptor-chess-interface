@@ -585,7 +585,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_SPEAK_PARTNER_TELLS, true);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor v.92PreII");
+		setDefault(APP_NAME, "Raptor v.92");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName,
@@ -625,12 +625,12 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, false);
 		setDefault(FICS_AUTO_CONNECT, false);
-		setDefault(FICS_LOGIN_SCRIPT,
-				"set seek 0\nset autoflag 1\nset width 120\n");
+		setDefault(FICS_LOGIN_SCRIPT, "set seek 0\nset autoflag 1\n");
 		setDefault(FICS_AUTO_CONNECT, false);
 		setDefault(FICS_PROFILE, "Primary");
 		setDefault(FICS_CLOSE_TABS_ON_DISCONNECT, false);
 		setDefault(FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
+		setDefault(FICS_NO_WRAP_ENABLED, true);
 		setDefault(FICS_MATCH_CMMANDS, "1 0,3 0,5 0,15 0");
 
 		setDefault(FICS_SEEK_GAME_TYPE, "");

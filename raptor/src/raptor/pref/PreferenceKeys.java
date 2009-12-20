@@ -222,6 +222,7 @@ public interface PreferenceKeys {
 	public static final String FICS_CLOSE_TABS_ON_DISCONNECT = "fics-close-tabs-on-disconnect";
 	public static final String FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "fics-show-bug-buttons-on-partnership";
 	public static final String FICS_MATCH_CMMANDS = "fics-match-commands";
+	public static final String FICS_NO_WRAP_ENABLED = "fics-no-wrap-enabled";
 
 	public static final String FICS_SEEK_GAME_TYPE = "fics-seek-game-type";
 	public static final String FICS_SEEK_MINUTES = "fics-seek-minutes";
