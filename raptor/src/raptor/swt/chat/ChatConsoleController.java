@@ -407,6 +407,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					chatConsole.outputText.setFocus();
 				}
 			});
+		} else {
+			if (isAutoScrolling()) {
+				onForceAutoScroll();
+			}
 		}
 	}
 
