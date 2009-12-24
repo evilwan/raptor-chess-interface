@@ -49,7 +49,7 @@ public class LosersGame extends ClassicGame {
 	 */
 	@Override
 	public PriorityMoveList getLegalMoves() {
-		PriorityMoveList result = getPseudoLegalMoves();
+		PriorityMoveList result = super.getLegalMoves();
 		boolean hasCapture = false;
 		for (int i = 0; i < result.getHighPrioritySize(); i++) {
 			setSan(result.getHighPriority(i));

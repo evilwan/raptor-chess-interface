@@ -889,7 +889,9 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	protected void handleAnnounceCheck() {
-		if (game.isInCheck() && !game.isCheckmate()) {
+		if (game.getVariant() != Variant.suicide
+				&& game.getVariant() != Variant.losers && game.isInCheck()
+				&& !game.isCheckmate()) {
 			if (isUserWhite && game.isWhitesMove() || !isUserWhite()
 					&& !game.isWhitesMove()) {
 				if (getPreferences().getBoolean(
