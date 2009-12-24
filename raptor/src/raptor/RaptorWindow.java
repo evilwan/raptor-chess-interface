@@ -64,6 +64,7 @@ import raptor.pref.PreferenceUtils;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.AliasService;
 import raptor.service.ConnectorService;
+import raptor.service.SoundService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.ItemChangedListener;
@@ -1004,7 +1005,6 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-
 	}
 
 	/**
@@ -1524,7 +1524,15 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		}
 
-		helpMenu.add(new Action("&About") {
+		helpMenu.add(new Action(getPreferences().getString(
+				PreferenceKeys.APP_NAME)) {
+			public void run() {
+				SoundService.getInstance().play(
+						Raptor.RESOURCES_DIR + "sounds/misc/raptorRoar.wav");
+			}
+		});
+
+		helpMenu.add(new Action("&Raptor Home Page") {
 			@Override
 			public void run() {
 				BrowserUtils
