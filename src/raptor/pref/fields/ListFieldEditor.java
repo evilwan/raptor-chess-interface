@@ -1,6 +1,5 @@
 package raptor.pref.fields;
 
-import org.eclipse.jface.preference.ListEditor;
 import org.eclipse.swt.widgets.Composite;
 
 import raptor.util.RaptorStringUtils;
@@ -11,6 +10,12 @@ public class ListFieldEditor extends ListEditor {
 	public ListFieldEditor(String name, String labelText, Composite parent,
 			char fieldDelimiter) {
 		super(name, labelText, parent);
+		delimiter = fieldDelimiter;
+	}
+
+	public ListFieldEditor(String name, String labelText, Composite parent,
+			char fieldDelimiter, int heightHint) {
+		super(name, labelText, parent, heightHint);
 		delimiter = fieldDelimiter;
 	}
 

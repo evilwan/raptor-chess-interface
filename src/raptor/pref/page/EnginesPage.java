@@ -21,12 +21,10 @@ import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
 import raptor.engine.uci.UCIEngine;
-import raptor.pref.fields.ListFieldEditor;
 import raptor.service.UCIEngineService;
 import raptor.swt.UCIEnginePropertiesDialog;
 
 public class EnginesPage extends PreferencePage {
-	protected ListFieldEditor parameters;
 	protected Combo enginesCombo;
 	protected Text userNameText;
 	protected Text processLocationText;

@@ -482,7 +482,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(RESULTS_WIDTH_PERCENTAGE, 80);
 
 		// Chat
-		setDefault(CHAT_MAX_CONSOLE_CHARS, 250000);
+		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
 		setDefault(CHAT_TIMESTAMP_CONSOLE, false);
 		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['hh:mma']'");
 		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
@@ -631,7 +631,17 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_CLOSE_TABS_ON_DISCONNECT, false);
 		setDefault(FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
 		setDefault(FICS_NO_WRAP_ENABLED, true);
-		setDefault(FICS_MATCH_CMMANDS, "1 0,3 0,5 0,15 0");
+		setDefault(FICS_CHANNEL_COMMANDS,
+				"+channel $channel,-channel $channel,in $channel");
+		setDefault(
+				FICS_PERSON_COMMANDS,
+				"finger $person,variables $person,history $person,partner $person,"
+						+ "observe $person,follow $person,pstat $userName $person,"
+						+ "oldpstat $userName $person,separator,"
+						+ "+censor $person,-censor $person,+notify $person,-notify $person,+gnotify $person,-gnotify $person,separator,"
+						+ "match $person 1 0,match $person 3 0,match $person 4 0,match $person 5 0");
+		setDefault(FICS_GAME_COMMANDS,
+				"observe $gameId,allobservers $gameId,moves $gameId");
 
 		setDefault(FICS_SEEK_GAME_TYPE, "");
 		setDefault(FICS_SEEK_MINUTES, "5");
@@ -642,6 +652,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_SEEK_FORMULA, true);
 		setDefault(FICS_SEEK_RATED, true);
 		setDefault(FICS_SEEK_COLOR, "");
+		setDefault(FICS_KEEP_ALIVE_COMMAND, "set busy in another window");
 
 		// Fics Primary
 		setDefault(FICS_PRIMARY_USER_NAME, "");
@@ -676,9 +687,19 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_PROFILE, "Primary");
 		setDefault(BICS_CLOSE_TABS_ON_DISCONNECT, false);
 		setDefault(BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
+		setDefault(BICS_KEEP_ALIVE_COMMAND, "set busy in another window");
+		setDefault(BICS_CHANNEL_COMMANDS,
+				"+channel $channel,-channel $channel,in $channel");
 		setDefault(
-				BICS_MATCH_CMMANDS,
-				"1 0 zh,3 0 zh,1 0 zh fr,3 0 zh fr,1 0 bughouse,2 0 bughouse,1 0 bughouse fr,2 0 bughouse fr,1 0 bughouse w5,2 0 bughouse w5");
+				BICS_PERSON_COMMANDS,
+				"finger $person,variables $person,history $person,partner $person,"
+						+ "observe $person,follow $person,pstat $userName $person,"
+						+ "oldpstat $userName $person,separator,"
+						+ "+censor $person,-censor $person,+notify $person,-notify $person,+gnotify $person,-gnotify $person,separator,"
+						+ "match $person 1 0 zh,match $person 3 0 zh,match $person 1 0 zh fr,match $person 3 0 zh fr,match $person 2 0 bughouse,"
+						+ "match $person 2 0 bughouse fr, match $person 2 0 bughouse w5");
+		setDefault(BICS_GAME_COMMANDS,
+				"observe $gameId,allobservers $gameId,moves $gameId");
 
 		// Bics Primary
 		setDefault(BICS_PRIMARY_USER_NAME, "");

@@ -1526,6 +1526,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 		helpMenu.add(new Action(getPreferences().getString(
 				PreferenceKeys.APP_NAME)) {
+			@Override
 			public void run() {
 				SoundService.getInstance().play(
 						Raptor.RESOURCES_DIR + "sounds/misc/raptorRoar.wav");

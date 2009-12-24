@@ -15,6 +15,7 @@ package raptor.connector.fics.pref;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -55,11 +56,20 @@ public class FicsPage extends FieldEditorPreferencePage {
 				"Remove server line wrapping (*Requires reconnect to take effect)",
 				getFieldEditorParent()));
 
+		addField(new StringFieldEditor(PreferenceKeys.FICS_KEEP_ALIVE_COMMAND,
+				"Keep-Alive command", getFieldEditorParent()));
+
 		addField(new TextFieldEditor(PreferenceKeys.FICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
 
-		addField(new ListFieldEditor(PreferenceKeys.FICS_MATCH_CMMANDS,
-				"Right Click Person Match Commands:", getFieldEditorParent(),
-				','));
+		addField(new ListFieldEditor(PreferenceKeys.FICS_PERSON_COMMANDS,
+				"Right Click Person Commands:", getFieldEditorParent(), ',', 75));
+
+		addField(new ListFieldEditor(PreferenceKeys.FICS_GAME_COMMANDS,
+				"Right Click Game Commands:", getFieldEditorParent(), ',', 75));
+
+		addField(new ListFieldEditor(PreferenceKeys.FICS_CHANNEL_COMMANDS,
+				"Right Click Channel Commands:", getFieldEditorParent(), ',',
+				75));
 	}
 }

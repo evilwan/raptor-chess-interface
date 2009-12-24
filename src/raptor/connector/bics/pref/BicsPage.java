@@ -15,6 +15,7 @@ package raptor.connector.bics.pref;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.StringFieldEditor;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -46,11 +47,21 @@ public class BicsPage extends FieldEditorPreferencePage {
 				"Show bughouse buttons on partnerships (excluding simul)",
 				getFieldEditorParent()));
 
+		addField(new StringFieldEditor(PreferenceKeys.BICS_KEEP_ALIVE_COMMAND,
+				"Keep-Alive command", getFieldEditorParent()));
+
 		addField(new TextFieldEditor(PreferenceKeys.BICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
 
-		addField(new ListFieldEditor(PreferenceKeys.BICS_MATCH_CMMANDS,
-				"Right Click Person Match Commands:", getFieldEditorParent(),
-				','));
+		addField(new ListFieldEditor(PreferenceKeys.BICS_PERSON_COMMANDS,
+				"Right Click Person Commands:", getFieldEditorParent(), ',', 75));
+
+		addField(new ListFieldEditor(PreferenceKeys.BICS_GAME_COMMANDS,
+				"Right Click Game Commands:", getFieldEditorParent(), ',', 75));
+
+		addField(new ListFieldEditor(PreferenceKeys.BICS_CHANNEL_COMMANDS,
+				"Right Click Channel Commands:", getFieldEditorParent(), ',',
+				75));
+
 	}
 }
