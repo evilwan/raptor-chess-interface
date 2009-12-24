@@ -189,14 +189,10 @@ public class ChessBoard implements BoardConstants {
 				}
 			});
 
-			adjustChessBoardLayout();
-			boardComposite.setLayout(chessBoardLayout);
-
 			createSquares();
 			createPieceJailControls();
 
-			whiteNameRatingLabel = new CLabel(boardComposite, chessBoardLayout
-					.getAlignment(ChessBoardLayout.Field.NAME_RATING_LABEL));
+			whiteNameRatingLabel = new CLabel(boardComposite, SWT.NONE);
 			whiteNameRatingLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent e) {
@@ -205,8 +201,7 @@ public class ChessBoard implements BoardConstants {
 					}
 				}
 			});
-			blackNameRatingLabel = new CLabel(boardComposite, chessBoardLayout
-					.getAlignment(ChessBoardLayout.Field.NAME_RATING_LABEL));
+			blackNameRatingLabel = new CLabel(boardComposite, SWT.NONE);
 			blackNameRatingLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent e) {
@@ -215,26 +210,14 @@ public class ChessBoard implements BoardConstants {
 					}
 				}
 			});
-			whiteClockLabel = new CLabel(boardComposite, chessBoardLayout
-					.getAlignment(ChessBoardLayout.Field.CLOCK_LABEL));
-			blackClockLabel = new CLabel(boardComposite, chessBoardLayout
-					.getAlignment(ChessBoardLayout.Field.CLOCK_LABEL));
-			whiteLagLabel = new CLabel(boardComposite, chessBoardLayout
-					.getAlignment(ChessBoardLayout.Field.LAG_LABEL));
-			blackLagLabel = new CLabel(boardComposite, chessBoardLayout
-					.getAlignment(ChessBoardLayout.Field.LAG_LABEL));
-			openingDescriptionLabel = new CLabel(
-					boardComposite,
-					chessBoardLayout
-							.getAlignment(ChessBoardLayout.Field.OPENING_DESCRIPTION_LABEL));
-			statusLabel = new CLabel(boardComposite, chessBoardLayout
-					.getAlignment(ChessBoardLayout.Field.STATUS_LABEL));
-			gameDescriptionLabel = new CLabel(
-					boardComposite,
-					chessBoardLayout
-							.getAlignment(ChessBoardLayout.Field.GAME_DESCRIPTION_LABEL));
-			currentPremovesLabel = new CLabel(boardComposite, chessBoardLayout
-					.getAlignment(ChessBoardLayout.Field.CURRENT_PREMOVE_LABEL));
+			whiteClockLabel = new CLabel(boardComposite, SWT.NONE);
+			blackClockLabel = new CLabel(boardComposite, SWT.NONE);
+			whiteLagLabel = new CLabel(boardComposite, SWT.NONE);
+			blackLagLabel = new CLabel(boardComposite, SWT.NONE);
+			openingDescriptionLabel = new CLabel(boardComposite, SWT.NONE);
+			statusLabel = new CLabel(boardComposite, SWT.NONE);
+			gameDescriptionLabel = new CLabel(boardComposite, SWT.NONE);
+			currentPremovesLabel = new CLabel(boardComposite, SWT.NONE);
 
 			Raptor.getInstance().getPreferences().addPropertyChangeListener(
 					propertyChangeListener);
@@ -243,6 +226,8 @@ public class ChessBoard implements BoardConstants {
 			squareHighlighter = new SquareHighlighter(this);
 			arrowDecorator = new ArrowDecorator(this);
 			resultDecorator = new ResultDecorator(this);
+
+			adjustChessBoardLayout();
 
 			updateFromPrefs();
 
@@ -663,44 +648,41 @@ public class ChessBoard implements BoardConstants {
 						layoutClassName).getConstructor(ChessBoard.class)
 						.newInstance(this);
 
-				boardComposite.setLayout(chessBoardLayout);
-
-				if (whiteNameRatingLabel != null) {
-					whiteNameRatingLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.NAME_RATING_LABEL));
-					blackNameRatingLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.NAME_RATING_LABEL));
-
-					whiteLagLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.LAG_LABEL));
-					blackLagLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.LAG_LABEL));
-
-					whiteClockLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.CLOCK_LABEL));
-					blackClockLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.CLOCK_LABEL));
-
-					gameDescriptionLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.GAME_DESCRIPTION_LABEL));
-					statusLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.STATUS_LABEL));
-					currentPremovesLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.CURRENT_PREMOVE_LABEL));
-					openingDescriptionLabel.setAlignment(chessBoardLayout
-							.getAlignment(Field.OPENING_DESCRIPTION_LABEL));
-					chessBoardLayout.adjustFontSizes();
-				}
-
 				if (oldLayout != null) {
+					boardComposite.setLayout(null);
 					oldLayout.dispose();
 				}
+				boardComposite.setLayout(chessBoardLayout);
+
+				whiteNameRatingLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.NAME_RATING_LABEL));
+				blackNameRatingLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.NAME_RATING_LABEL));
+
+				whiteLagLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.LAG_LABEL));
+				blackLagLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.LAG_LABEL));
+
+				whiteClockLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.CLOCK_LABEL));
+				blackClockLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.CLOCK_LABEL));
+
+				gameDescriptionLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.GAME_DESCRIPTION_LABEL));
+				statusLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.STATUS_LABEL));
+				currentPremovesLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.CURRENT_PREMOVE_LABEL));
+				openingDescriptionLabel.setAlignment(chessBoardLayout
+						.getAlignment(Field.OPENING_DESCRIPTION_LABEL));
+				chessBoardLayout.adjustFontSizes();
 
 			} catch (Throwable t) {
 				throw new RuntimeException("Error creating chessBoardLayout "
 						+ layoutClassName, t);
 			}
-
 		}
 	}
 
