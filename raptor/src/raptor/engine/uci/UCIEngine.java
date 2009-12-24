@@ -159,7 +159,7 @@ public class UCIEngine {
 	/**
 	 * Disconnects from the engine
 	 */
-	public void disconnect() {
+	protected void disconnect() {
 		try {
 			if (isConnected()) {
 				process.destroy();
@@ -472,10 +472,17 @@ public class UCIEngine {
 
 		send("quit");
 		try {
-			Thread.sleep(500);
+			Thread.sleep(100);
 		} catch (InterruptedException ie) {
 		}
 		disconnect();
+	}
+
+	/**
+	 * Invokes quit.
+	 */
+	protected void finalize() {
+		quit();
 	}
 
 	/**

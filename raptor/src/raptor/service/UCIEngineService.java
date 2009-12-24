@@ -39,7 +39,7 @@ public class UCIEngineService {
 			try {
 				UCIEngine engine = userNameToEngine.get(userName);
 				if (engine != null) {
-					engine.disconnect();
+					engine.quit();
 
 					new File(Raptor.ENGINES_DIR + "/" + userName
 							+ ".properties").delete();
@@ -112,7 +112,7 @@ public class UCIEngineService {
 
 	protected void disconnectAll() {
 		for (UCIEngine engine : getUCIEngines()) {
-			engine.disconnect();
+			engine.quit();
 		}
 	}
 

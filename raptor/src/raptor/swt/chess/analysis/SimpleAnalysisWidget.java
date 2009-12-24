@@ -21,6 +21,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -323,6 +325,14 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 	public Composite create(Composite parent) {
 		composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(1, false));
+
+		composite.addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				if (currentEngine != null) {
+					currentEngine.quit();
+				}
+			}
+		});
 
 		topLine = new Composite(composite, SWT.LEFT);
 		topLine.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));

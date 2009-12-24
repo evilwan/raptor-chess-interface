@@ -74,7 +74,7 @@ public class EnginesPage extends PreferencePage {
 			public void widgetSelected(SelectionEvent e) {
 				if (!isBuildingEnginesCombo) {
 					if (currentEngine != null) {
-						currentEngine.disconnect();
+						currentEngine.quit();
 					}
 					loadEngine(UCIEngineService.getInstance().getUCIEngine(
 							enginesCombo.getText()));
@@ -120,7 +120,7 @@ public class EnginesPage extends PreferencePage {
 					}
 
 					if (currentEngine != null) {
-						currentEngine.disconnect();
+						currentEngine.quit();
 					}
 					currentEngine = new UCIEngine();
 					currentEngine.setProcessPath(processLocationText.getText());
