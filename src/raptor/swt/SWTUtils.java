@@ -131,9 +131,10 @@ public class SWTUtils {
 		return result;
 	}
 
-	public static int getPixels(int fontPointSize) {
+	public static int getHeightInPixels(int fontPointSize) {
 		Point pixelsPerInch = Raptor.getInstance().getDisplay().getDPI();
-		return (int) (72.0 / pixelsPerInch.y) * fontPointSize;
+		int result =  (int) (pixelsPerInch.y * (1.0/72.0) * fontPointSize);
+		return result;
 	}
 
 	/**
