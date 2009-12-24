@@ -46,44 +46,40 @@ public class PlayingStatisticsService {
 
 	public void addStatisticsForGameEnd(Connector connector, Game game,
 			boolean isUserWhite) {
-		if (game.getVariant() != Variant.bughouse
-				&& game.getVariant() != Variant.fischerRandomBughouse) {
-			double score = -1.0;
+		double score = -1.0;
 
-			if (game.getResult() == Result.BLACK_WON) {
-				score = isUserWhite ? 0.0 : 1.0;
-			} else if (game.getResult() == Result.WHITE_WON) {
-				score = isUserWhite ? 1.0 : 0.0;
-			} else if (game.getResult() == Result.DRAW) {
-				score = .5;
+		if (game.getResult() == Result.BLACK_WON) {
+			score = isUserWhite ? 0.0 : 1.0;
+		} else if (game.getResult() == Result.WHITE_WON) {
+			score = isUserWhite ? 1.0 : 0.0;
+		} else if (game.getResult() == Result.DRAW) {
+			score = .5;
+		}
+
+		if (score != -1.0) {
+			PlayingGameResult gameResult = new PlayingGameResult();
+			gameResult.score = score;
+			gameResult.variant = game.getVariant();
+			gameResult.opponentName = isUserWhite ? game
+					.getHeader(PgnHeader.Black) : game
+					.getHeader(PgnHeader.White);
+			String opponentRating = isUserWhite ? game
+					.getHeader(PgnHeader.BlackElo) : game
+					.getHeader(PgnHeader.WhiteElo);
+			if (opponentRating.contains("E")) {
+				gameResult.opponentRating = 1600;
+
+			} else if (StringUtils.isNumeric(opponentRating)) {
+				gameResult.opponentRating = Integer.parseInt(opponentRating);
 			}
 
-			if (score != -1.0) {
-				PlayingGameResult gameResult = new PlayingGameResult();
-				gameResult.score = score;
-				gameResult.variant = game.getVariant();
-				gameResult.opponentName = isUserWhite ? game
-						.getHeader(PgnHeader.Black) : game
-						.getHeader(PgnHeader.White);
-				String opponentRating = isUserWhite ? game
-						.getHeader(PgnHeader.BlackElo) : game
-						.getHeader(PgnHeader.WhiteElo);
-				if (opponentRating.contains("E")) {
-					gameResult.opponentRating = 1600;
-
-				} else if (StringUtils.isNumeric(opponentRating)) {
-					gameResult.opponentRating = Integer
-							.parseInt(opponentRating);
-				}
-
-				List<PlayingGameResult> results = connectorToResultsList
-						.get(connector);
-				if (results == null) {
-					results = new ArrayList<PlayingGameResult>(20);
-					connectorToResultsList.put(connector, results);
-				}
-				results.add(gameResult);
+			List<PlayingGameResult> results = connectorToResultsList
+					.get(connector);
+			if (results == null) {
+				results = new ArrayList<PlayingGameResult>(20);
+				connectorToResultsList.put(connector, results);
 			}
+			results.add(gameResult);
 		}
 	}
 
