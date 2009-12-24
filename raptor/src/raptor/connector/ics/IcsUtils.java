@@ -63,7 +63,7 @@ public class IcsUtils implements GameConstants {
 
 	public static final String BUGHOUSE_IDENTIFIER = "bughouse";
 
-	public static final String CHANNEL_STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]";
+	public static final String CHANNEL_STRIP_CHARS = "()~!@#$%^&*()-=+_`}{[]'\";/?<>.,:[]";
 
 	public static final String CRAZYHOUSE_IDENTIFIER = "crazyhouse";
 
@@ -80,7 +80,7 @@ public class IcsUtils implements GameConstants {
 
 	public static final String STANDARD_IDENTIFIER = "standard";
 
-	public static final String STRIP_CHARS = "()~!@?#$%^&*_+|}{'\";/?<>.,:[]1234567890";
+	public static final String STRIP_CHARS = "()~!@#$%^&*()-=+_`}{[]'\";/?<>.,:[]1234567890";
 
 	public static final String SUICIDE_IDENTIFIER = "suicide";
 

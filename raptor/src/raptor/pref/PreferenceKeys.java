@@ -32,7 +32,10 @@ public interface PreferenceKeys {
 	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrantv2.0";
 	public static final String GAME_CHAT_TAB_QUADRANT = "game-chat-tab-quadrantv2.0";
 	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-infov2.0";
-	public static final String MATCH_COMMANDS = "match-commands";
+	public static final String GAME_COMMANDS = "games-commands";
+	public static final String PERSON_COMMANDS = "person-commands";
+	public static final String CHANNEL_COMMANDS = "channel-commands";
+	public static final String KEEP_ALIVE_COMMAND = "keep-alive-command";
 	public static final String LEFT_MOUSE_BUTTON_ACTION = "left-mouse-button-action";
 	public static final String MIDDLE_MOUSE_BUTTON_ACTION = "middle-mouse-button-action";
 	public static final String RIGHT_MOUSE_BUTTON_ACTION = "right-mouse-button-action";
@@ -221,8 +224,11 @@ public interface PreferenceKeys {
 	public static final String FICS_PROFILE = "fics-profile";
 	public static final String FICS_CLOSE_TABS_ON_DISCONNECT = "fics-close-tabs-on-disconnect";
 	public static final String FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "fics-show-bug-buttons-on-partnership";
-	public static final String FICS_MATCH_CMMANDS = "fics-match-commands";
+	public static final String FICS_GAME_COMMANDS = "fics-games-commands";
+	public static final String FICS_CHANNEL_COMMANDS = "fics-channel-commands";
+	public static final String FICS_PERSON_COMMANDS = "fics-person-commands";
 	public static final String FICS_NO_WRAP_ENABLED = "fics-no-wrap-enabled";
+	public static final String FICS_KEEP_ALIVE_COMMAND = "fics-keep-alive-command";
 
 	public static final String FICS_SEEK_GAME_TYPE = "fics-seek-game-type";
 	public static final String FICS_SEEK_MINUTES = "fics-seek-minutes";
@@ -264,7 +270,10 @@ public interface PreferenceKeys {
 	public static final String BICS_PROFILE = "bics-profile";
 	public static final String BICS_CLOSE_TABS_ON_DISCONNECT = "bics-close-tabs-on-disconnect";
 	public static final String BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "bics-show-bug-buttons-on-partnership";
-	public static final String BICS_MATCH_CMMANDS = "bics-match-commands";
+	public static final String BICS_GAME_COMMANDS = "bics-games-commands";
+	public static final String BICS_CHANNEL_COMMANDS = "bics-channel-commands";
+	public static final String BICS_PERSON_COMMANDS = "bics-person-commands";
+	public static final String BICS_KEEP_ALIVE_COMMAND = "bics-keep-alive-command";
 
 	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
 	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";

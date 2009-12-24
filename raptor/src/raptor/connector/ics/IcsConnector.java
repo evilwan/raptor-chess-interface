@@ -179,18 +179,17 @@ public abstract class IcsConnector implements Connector {
 			if (isConnected()
 					&& getPreferences().getBoolean(
 							context.getShortName() + "-keep-alive")) {
-				if (LOG.isInfoEnabled()) {
-					LOG.info("In keep alive ...");
-				}
 				if (System.currentTimeMillis() - lastSendTime > 1000 * 60 * 50) {
-					sendMessage("date", true);
-					publishEvent(new ChatEvent("", ChatType.INTERNAL,
-							"The \"date\" command was just sent as a keep alive."));
-				} else {
-					if (LOG.isInfoEnabled()) {
-						LOG
-								.info("No need to send keep alive rescheduling for 30 minutes.");
+					String command = getPreferences().getString(
+							context.getPreferencePrefix()
+									+ PreferenceKeys.KEEP_ALIVE_COMMAND);
+
+					if (StringUtils.isBlank(command)) {
+						command = "date";
 					}
+					sendMessage(command, true);
+					publishEvent(new ChatEvent("", ChatType.INTERNAL, "The \""
+							+ command + "\" was just sent as a keep alive."));
 				}
 				ThreadService.getInstance()
 						.scheduleOneShot(1000 * 60 * 5, this);
@@ -457,10 +456,23 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[][] getChannelActions(String channel) {
-		return new String[][] {
-				new String[] { "+channel " + channel, "+channel " + channel },
-				new String[] { "-channel " + channel, "-channel " + channel },
-				new String[] { "in " + channel, "in " + channel } };
+		String channelActions = Raptor.getInstance().getPreferences()
+				.getString(
+						getContext().getPreferencePrefix()
+								+ PreferenceKeys.CHANNEL_COMMANDS);
+		String[] channelActionsArray = RaptorStringUtils.stringArrayFromString(
+				channelActions, ',');
+
+		String[][] result = new String[channelActionsArray.length][2];
+
+		for (int i = 0; i < channelActionsArray.length; i++) {
+			String action = channelActionsArray[i];
+			action = action.replace("$channel", channel);
+			action = action.replace("$userName", userName);
+			result[i][0] = action;
+			result[i][1] = action;
+		}
+		return result;
 	}
 
 	public String getChannelTabPrefix(String channel) {
@@ -492,11 +504,22 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[][] getGameIdActions(String gameId) {
-		return new String[][] {
-				new String[] { "Observe game " + gameId, "observe " + gameId },
-				new String[] { "All observers in game " + gameId,
-						"allobs " + gameId },
-				{ "Move list for game " + gameId, "moves " + gameId } };
+		String matchActions = Raptor.getInstance().getPreferences().getString(
+				getContext().getPreferencePrefix()
+						+ PreferenceKeys.GAME_COMMANDS);
+		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
+				matchActions, ',');
+
+		String[][] result = new String[matchActionsArray.length][2];
+
+		for (int i = 0; i < matchActionsArray.length; i++) {
+			String action = matchActionsArray[i];
+			action = action.replace("$gameId", gameId);
+			action = action.replace("$userName", userName);
+			result[i][0] = action;
+			result[i][1] = action;
+		}
+		return result;
 	}
 
 	public GameService getGameService() {
@@ -526,36 +549,18 @@ public abstract class IcsConnector implements Connector {
 	public String[][] getPersonActions(String person) {
 		String matchActions = Raptor.getInstance().getPreferences().getString(
 				getContext().getPreferencePrefix()
-						+ PreferenceKeys.MATCH_COMMANDS);
+						+ PreferenceKeys.PERSON_COMMANDS);
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
 
-		String[][] result = new String[18 + matchActionsArray.length][2];
-
-		result[0] = new String[] { "finger " + person, "finger " + person };
-		result[1] = new String[] { "variables " + person, "vars " + person };
-		result[2] = new String[] { "history " + person, "history " + person };
-		result[3] = new String[] { "partner " + person, "partner " + person };
-		result[4] = new String[] { "observe " + person, "observe " + person };
-		result[5] = new String[] { "follow " + person, "follow " + person };
-		result[6] = new String[] { "pstat " + userName + " " + person,
-				"pstat " + userName + " " + person };
-		result[7] = new String[] { "oldpstat " + userName + " " + person,
-				"oldpstat " + userName + " " + person };
-		result[8] = new String[] { "separator", "separator" };
-		result[9] = new String[] { "+censor " + person, "+censor " + person };
-		result[10] = new String[] { "-censor " + person, "-censor " + person };
-		result[11] = new String[] { "+noplay " + person, "+noplay " + person };
-		result[12] = new String[] { "-noplay " + person, "-noplay " + person };
-		result[13] = new String[] { "+notify " + person, "+notify " + person };
-		result[14] = new String[] { "-notify " + person, "-notify " + person };
-		result[15] = new String[] { "+gnotify " + person, "+gnotify " + person };
-		result[16] = new String[] { "-gnotify " + person, "-gnotify " + person };
-		result[17] = new String[] { "separator", "separator" };
+		String[][] result = new String[matchActionsArray.length][2];
 
 		for (int i = 0; i < matchActionsArray.length; i++) {
-			result[18 + i] = new String[] { "match " + matchActionsArray[i],
-					"match " + person + " " + matchActionsArray[i] };
+			String action = matchActionsArray[i];
+			action = action.replace("$person", person);
+			action = action.replace("$userName", userName);
+			result[i][0] = action;
+			result[i][1] = action;
 		}
 		return result;
 	}

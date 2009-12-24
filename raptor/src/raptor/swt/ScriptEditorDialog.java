@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -54,6 +55,9 @@ public class ScriptEditorDialog extends InputDialog {
 		shell.setText(getText());
 		createContents(shell);
 		shell.pack();
+		Point preferredSize = shell.computeSize(SWT.DEFAULT, SWT.DEFAULT);
+		shell.setSize(preferredSize.x > 700 ? 700 : preferredSize.x,
+				preferredSize.y > 550 ? 550 : preferredSize.y);
 		script.setText(getInput() == null ? "" : getInput().trim());
 		shell.open();
 		Display display = getParent().getDisplay();
