@@ -13,7 +13,6 @@
  */
 package raptor.chess;
 
-import org.apache.commons.lang.StringUtils;
 
 /**
  * @author John Nahlen (johnthegreat)
@@ -23,14 +22,22 @@ public class EcoInfo {
 	private String ecoCode;
 	private String openingName;
 	private String positionOnlyFen;
-	private String variationName = "";
 
-	public EcoInfo(String positionOnlyFen, String eco, String opening,
-			String variation) {
+	/**
+	 * 
+	 * @param positionOnlyFen
+	 *            The fen not containing the move count or half moves since
+	 *            unchangeable move.
+	 *            rnb1k2r/ppppnpbp/8/6p1/2BPPp1q/2N3P1/PPP4P/R1BQ1KNR b kq -
+	 * @param eco
+	 *            The eco code.
+	 * @param opening
+	 *            The opening name.
+	 */
+	public EcoInfo(String positionOnlyFen, String eco, String opening) {
 		this.positionOnlyFen = positionOnlyFen;
 		ecoCode = eco.toUpperCase();
 		openingName = opening;
-		variationName = variation;
 	}
 
 	/**
@@ -55,22 +62,10 @@ public class EcoInfo {
 	}
 
 	/**
-	 * @return The variation name of the opening.
-	 */
-	public String getVariation() {
-		return variationName;
-	}
-
-	/**
 	 * @return <code>getOpening() + " : " + getVariation()</code>
 	 */
 	@Override
 	public String toString() {
-		if (StringUtils.isBlank(variationName)) {
-			return getEcoCode() + " " + getOpening();
-		} else {
-			return getEcoCode() + " " + getOpening() + "(" + getVariation()
-					+ ")";
-		}
+		return getEcoCode() + " " + getOpening();
 	}
 }

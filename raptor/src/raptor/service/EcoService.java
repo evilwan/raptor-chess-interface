@@ -19,15 +19,18 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.chess.EcoInfo;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Variant;
 import raptor.chess.util.GameUtils;
+import raptor.util.RaptorStringTokenizer;
 
 /**
  * A singleton service which can be used to lookup the opening description and
@@ -42,9 +45,7 @@ public class EcoService {
 
 	private static final EcoService singletonInstance = new EcoService();
 
-	private Map<Variant, Map<String, String>> typeToFenToEco = new HashMap<Variant, Map<String, String>>();
-
-	private Map<Variant, Map<String, String>> typeToFenToDescription = new HashMap<Variant, Map<String, String>>();
+	private Map<Variant, Map<String, EcoInfo>> typeToFenToEco = new HashMap<Variant, Map<String, EcoInfo>>();
 
 	public static EcoService getInstance() {
 		return singletonInstance;
@@ -59,7 +60,6 @@ public class EcoService {
 	 */
 	public void dispose() {
 		typeToFenToEco.clear();
-		typeToFenToDescription.clear();
 	}
 
 	/**
@@ -69,11 +69,12 @@ public class EcoService {
 	public String getEco(Game game) {
 		// Don't add debug messages in here. It gets called so often they are
 		// annoying and really slow it down.
-		Map<String, String> map = typeToFenToEco.get(getAdjustedVariant(game));
+		Map<String, EcoInfo> map = typeToFenToEco.get(getAdjustedVariant(game));
 		if (map == null) {
 			return null;
 		} else {
-			return map.get(getFenKey(game, true));
+			EcoInfo info = map.get(getFenKey(game, true));
+			return info == null ? null : info.getEcoCode();
 		}
 	}
 
@@ -84,12 +85,12 @@ public class EcoService {
 	public String getLongDescription(Game game) {
 		// Don't add debug messages in here. It gets called so often they are
 		// annoying and really slow it down.
-		Map<String, String> map = typeToFenToDescription
-				.get(getAdjustedVariant(game));
+		Map<String, EcoInfo> map = typeToFenToEco.get(getAdjustedVariant(game));
 		if (map == null) {
 			return null;
 		} else {
-			return map.get(getFenKey(game, false));
+			EcoInfo info = map.get(getFenKey(game, false));
+			return info == null ? null : info.getOpening();
 		}
 	}
 
@@ -114,10 +115,8 @@ public class EcoService {
 	}
 
 	private void initClassic() {
-		File file = new File(raptor.Raptor.RESOURCES_DIR + "eco999.idx");
+		File file = new File(raptor.Raptor.RESOURCES_DIR + "scidECO.txt");
 		typeToFenToEco.put(Variant.classic, parse(file));
-		file = new File(raptor.Raptor.RESOURCES_DIR + "long999.idx");
-		typeToFenToDescription.put(Variant.classic, parse(file));
 	}
 
 	/**
@@ -130,22 +129,36 @@ public class EcoService {
 	 * @throws IOException
 	 *             If something goes wrong during reading.
 	 */
-	private Map<String, String> parse(File file) {
+	private Map<String, EcoInfo> parse(File file) {
 		if (LOG.isDebugEnabled()) {
 			LOG.info("parse(" + file.getAbsolutePath() + ")");
 		}
 		long startTime = System.currentTimeMillis();
-		Map<String, String> result = new HashMap<String, String>();
+		Map<String, EcoInfo> result = new TreeMap<String, EcoInfo>();
 
 		BufferedReader reader = null;
 
 		try {
 			reader = new BufferedReader(new FileReader(file));
-			while (reader.ready()) {
-				String fen = reader.readLine();
-				String line2 = StringUtils.replaceChars(reader.readLine(),
-						"\\", "");
-				result.put(fen, line2);
+			String currentLine = null;
+			while ((currentLine = reader.readLine()) != null) {
+				if (StringUtils.isNotBlank(currentLine)) {
+
+					RaptorStringTokenizer tok = new RaptorStringTokenizer(
+							currentLine, " ", true);
+					String eco = tok.nextToken();
+					String description = tok.nextToken();
+
+					String lastToken = null;
+					while (!(lastToken = tok.nextToken()).contains("/")) {
+						description += " " + lastToken;
+					}
+					String fen = lastToken + " " + tok.nextToken() + " "
+							+ tok.nextToken() + " " + tok.nextToken();
+
+					result.put(fen, new EcoInfo(fen, eco, description));
+				}
+
 			}
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
