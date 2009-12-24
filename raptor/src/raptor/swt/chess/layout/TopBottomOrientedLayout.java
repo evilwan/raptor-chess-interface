@@ -284,9 +284,9 @@ public class TopBottomOrientedLayout extends ChessBoardLayout {
 		int topBottomSouthMargin = height
 				* TOP_BOTTOM_MARGIN_PERCENTAGES[SOUTH] / 100;
 
-		int topBottomLabelHeight = Math.max(SWTUtils.getPixels(board
+		int topBottomLabelHeight = Math.max(SWTUtils.getHeightInPixels(board
 				.getWhiteNameRatingLabel().getFont().getFontData()[0]
-				.getHeight()), SWTUtils.getPixels(board.getWhiteClockLabel()
+				.getHeight()), SWTUtils.getHeightInPixels(board.getWhiteClockLabel()
 				.getFont().getFontData()[0].getHeight()));
 
 		int bottomLabelHeight = topBottomLabelHeight;
@@ -310,8 +310,7 @@ public class TopBottomOrientedLayout extends ChessBoardLayout {
 		int topHeight = topBottomNorthMargin + topBottomSouthMargin
 				+ topBottomLabelHeight;
 
-		int bottomControlStartY = topHeight + 8 * squareSize
-				+ topBottomNorthMargin;
+		int bottomControlStartY = topHeight + 8 * squareSize;
 
 		boardTopLeft = new Point(boardWidthPixelsWest, topHeight);
 
@@ -336,10 +335,10 @@ public class TopBottomOrientedLayout extends ChessBoardLayout {
 				oneHalfSquareSize);
 
 		topNameLabelRect = new Rectangle(boardWidthPixelsWest,
-				topBottomNorthMargin, 4 * squareSize, topBottomLabelHeight);
+				0, 4 * squareSize, topBottomLabelHeight);
 		topClockRect = new Rectangle(boardWidthPixelsWest + 4 * squareSize,
-				topBottomNorthMargin, 4 * squareSize, topBottomLabelHeight);
-		topLagRect = new Rectangle(rightControlStartX, topBottomNorthMargin,
+				0, 4 * squareSize, topBottomLabelHeight);
+		topLagRect = new Rectangle(rightControlStartX, 0,
 				rightControlWidth, topBottomLabelHeight);
 
 		bottomNameLabelRect = new Rectangle(boardWidthPixelsWest,
