@@ -19,7 +19,6 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -39,6 +38,7 @@ import raptor.chess.GameConstants;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.swt.RaptorLabel;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
@@ -61,19 +61,19 @@ public class ChessBoard implements BoardConstants {
 
 	static final Log LOG = LogFactory.getLog(ChessBoard.class);
 
-	protected CLabel blackClockLabel;
-	protected CLabel blackLagLabel;
-	protected CLabel blackNameRatingLabel;
+	protected RaptorLabel blackClockLabel;
+	protected RaptorLabel blackLagLabel;
+	protected RaptorLabel blackNameRatingLabel;
 	protected Composite boardComposite;
 	protected ChessBoardLayout chessBoardLayout;
 	protected ChessBoardController controller;
-	protected CLabel currentPremovesLabel;
-	protected CLabel gameDescriptionLabel;
+	protected RaptorLabel currentPremovesLabel;
+	protected RaptorLabel gameDescriptionLabel;
 	protected boolean isWhiteOnTop = false;
 	protected boolean isWhitePieceJailOnTop = true;
 	protected ChessBoardMoveList moveList;
 	protected EngineAnalysisWidget engineAnalysisWidget;
-	protected CLabel openingDescriptionLabel;
+	protected RaptorLabel openingDescriptionLabel;
 	protected CoolBar coolbar;
 
 	/**
@@ -98,10 +98,10 @@ public class ChessBoard implements BoardConstants {
 	protected SashForm boardMoveListSash;
 	protected SashForm analysisSash;
 	protected ChessSquare[][] squares = new ChessSquare[8][8];
-	protected CLabel statusLabel;
-	protected CLabel whiteClockLabel;
-	protected CLabel whiteLagLabel;
-	protected CLabel whiteNameRatingLabel;
+	protected RaptorLabel statusLabel;
+	protected RaptorLabel whiteClockLabel;
+	protected RaptorLabel whiteLagLabel;
+	protected RaptorLabel whiteNameRatingLabel;
 
 	public ChessBoard() {
 	}
@@ -192,7 +192,7 @@ public class ChessBoard implements BoardConstants {
 			createSquares();
 			createPieceJailControls();
 
-			whiteNameRatingLabel = new CLabel(boardComposite, SWT.NONE);
+			whiteNameRatingLabel = new RaptorLabel(boardComposite, SWT.NONE);
 			whiteNameRatingLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent e) {
@@ -201,7 +201,7 @@ public class ChessBoard implements BoardConstants {
 					}
 				}
 			});
-			blackNameRatingLabel = new CLabel(boardComposite, SWT.NONE);
+			blackNameRatingLabel = new RaptorLabel(boardComposite, SWT.NONE);
 			blackNameRatingLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent e) {
@@ -210,14 +210,14 @@ public class ChessBoard implements BoardConstants {
 					}
 				}
 			});
-			whiteClockLabel = new CLabel(boardComposite, SWT.NONE);
-			blackClockLabel = new CLabel(boardComposite, SWT.NONE);
-			whiteLagLabel = new CLabel(boardComposite, SWT.NONE);
-			blackLagLabel = new CLabel(boardComposite, SWT.NONE);
-			openingDescriptionLabel = new CLabel(boardComposite, SWT.NONE);
-			statusLabel = new CLabel(boardComposite, SWT.NONE);
-			gameDescriptionLabel = new CLabel(boardComposite, SWT.NONE);
-			currentPremovesLabel = new CLabel(boardComposite, SWT.NONE);
+			whiteClockLabel = new RaptorLabel(boardComposite, SWT.NONE);
+			blackClockLabel = new RaptorLabel(boardComposite, SWT.NONE);
+			whiteLagLabel = new RaptorLabel(boardComposite, SWT.NONE);
+			blackLagLabel = new RaptorLabel(boardComposite, SWT.NONE);
+			openingDescriptionLabel = new RaptorLabel(boardComposite, SWT.NONE);
+			statusLabel = new RaptorLabel(boardComposite, SWT.NONE);
+			gameDescriptionLabel = new RaptorLabel(boardComposite, SWT.NONE);
+			currentPremovesLabel = new RaptorLabel(boardComposite, SWT.NONE);
 
 			Raptor.getInstance().getPreferences().addPropertyChangeListener(
 					propertyChangeListener);
@@ -247,15 +247,15 @@ public class ChessBoard implements BoardConstants {
 		return arrowDecorator;
 	}
 
-	public synchronized CLabel getBlackClockLabel() {
+	public synchronized RaptorLabel getBlackClockLabel() {
 		return blackClockLabel;
 	}
 
-	public synchronized CLabel getBlackLagLabel() {
+	public synchronized RaptorLabel getBlackLagLabel() {
 		return blackLagLabel;
 	}
 
-	public synchronized CLabel getBlackNameRatingLabel() {
+	public synchronized RaptorLabel getBlackNameRatingLabel() {
 		return blackNameRatingLabel;
 	}
 
@@ -282,7 +282,7 @@ public class ChessBoard implements BoardConstants {
 		return coolbar;
 	}
 
-	public synchronized CLabel getCurrentPremovesLabel() {
+	public synchronized RaptorLabel getCurrentPremovesLabel() {
 		return currentPremovesLabel;
 	}
 
@@ -290,7 +290,7 @@ public class ChessBoard implements BoardConstants {
 		return engineAnalysisWidget;
 	}
 
-	public synchronized CLabel getGameDescriptionLabel() {
+	public synchronized RaptorLabel getGameDescriptionLabel() {
 		return gameDescriptionLabel;
 	}
 
@@ -298,7 +298,7 @@ public class ChessBoard implements BoardConstants {
 		return moveList;
 	}
 
-	public synchronized CLabel getOpeningDescriptionLabel() {
+	public synchronized RaptorLabel getOpeningDescriptionLabel() {
 		return openingDescriptionLabel;
 	}
 
@@ -363,19 +363,19 @@ public class ChessBoard implements BoardConstants {
 		return squares;
 	}
 
-	public synchronized CLabel getStatusLabel() {
+	public synchronized RaptorLabel getStatusLabel() {
 		return statusLabel;
 	}
 
-	public synchronized CLabel getWhiteClockLabel() {
+	public synchronized RaptorLabel getWhiteClockLabel() {
 		return whiteClockLabel;
 	}
 
-	public synchronized CLabel getWhiteLagLabel() {
+	public synchronized RaptorLabel getWhiteLagLabel() {
 		return whiteLagLabel;
 	}
 
-	public synchronized CLabel getWhiteNameRatingLabel() {
+	public synchronized RaptorLabel getWhiteNameRatingLabel() {
 		return whiteNameRatingLabel;
 	}
 
@@ -736,7 +736,7 @@ public class ChessBoard implements BoardConstants {
 		}
 	}
 
-	protected void onNameLabelRightClick(MouseEvent e, CLabel label) {
+	protected void onNameLabelRightClick(MouseEvent e, RaptorLabel label) {
 		if (StringUtils.isNotBlank(label.getText()) && getController() != null
 				&& getController().getConnector() != null) {
 
