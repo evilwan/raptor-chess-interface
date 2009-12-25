@@ -306,7 +306,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_IS_SHOWING_PIECE_JAIL, false);
 		setDefault(BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN, Integer.MIN_VALUE);
 		setDefault(BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
-				1000L * 60L * 10L + 1L);
+				1000L * 60L * 60L + 1L);
 		setDefault(BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS, true);
 		setDefault(BOARD_PREMOVE_ENABLED, true);
 		setDefault(BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING, true);

@@ -39,15 +39,11 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	public static final int BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
 	public static final int[] BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
 	public static final int[] BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1 };
-	public static final int CLOCK_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 100;
 
 	public static final int EAST = 1;
 
-	public static final int FONT_RESIZE_PERCENTAGE = 90;
-	public static final int LAG_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 30;
 	private static final Log LOG = LogFactory.getLog(RightOrientedLayout.class);
 
-	public static final int NAME_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE = 70;
 	public static final int NORTH = 0;
 	public static final int SOUTH = 1;
 
@@ -108,20 +104,20 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 		board.getGameDescriptionLabel().setFont(
 				SWTUtils.getProportionalFont(board.getGameDescriptionLabel()
-						.getFont(), 80, topLabelHeight));
+						.getFont(), 75, topLabelHeight));
 		board.getCurrentPremovesLabel().setFont(
 				SWTUtils.getProportionalFont(board.getCurrentPremovesLabel()
-						.getFont(), 80, topLabelHeight));
+						.getFont(), 75, topLabelHeight));
 		board.getStatusLabel().setFont(
 				SWTUtils.getProportionalFont(board.getStatusLabel().getFont(),
 						80, bottomLabelHeight));
 		board.getOpeningDescriptionLabel().setFont(
 				SWTUtils.getProportionalFont(board.getOpeningDescriptionLabel()
-						.getFont(), 80, bottomLabelHeight));
+						.getFont(), 75, bottomLabelHeight));
 
 		Font nameFont = SWTUtils.getProportionalFont(board
-				.getWhiteNameRatingLabel().getFont(), hasHeightProblem ? 60
-				: hasSevereHeightProblem ? 50 : 70, topNameLabelRect.height);
+				.getWhiteNameRatingLabel().getFont(), hasHeightProblem ? 70
+				: hasSevereHeightProblem ? 60 : 80, topNameLabelRect.height);
 		board.getWhiteNameRatingLabel().setFont(nameFont);
 		board.getBlackNameRatingLabel().setFont(nameFont);
 
@@ -147,7 +143,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		}
 
 		Font clockFont = SWTUtils.getProportionalFont(board
-				.getWhiteClockLabel().getFont(), 80, topClockRect.height);
+				.getWhiteClockLabel().getFont(), 90, topClockRect.height);
 		board.getWhiteClockLabel().setFont(clockFont);
 		board.getBlackClockLabel().setFont(clockFont);
 	}
@@ -340,28 +336,29 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 		int topLabelNorthMargin = height
 				* TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES[NORTH] / 100;
-		topLabelHeight = Math.max(height
-				* TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN / 100, Raptor
-				.getInstance().getPreferences().getInt(
-						PreferenceKeys.APP_TOOLBAR_PIECE_SIZE));
 
 		int topLabelSouthMargin = height
 				* TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES[SOUTH] / 100;
 
+		topLabelHeight = Math.max(height
+				* TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN / 100, Raptor
+				.getInstance().getPreferences().getInt(
+						PreferenceKeys.APP_TOOLBAR_PIECE_SIZE))
+				+ topLabelNorthMargin + topLabelSouthMargin;
+
 		int bottomLabelNorthMargin = height
 				* BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES[NORTH] / 100;
-		bottomLabelHeight = height * BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN
-				/ 100;
 		int bottomLabelSouthMargin = height
 				* BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES[SOUTH] / 100;
+		bottomLabelHeight = height * BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN
+				/ 100 + bottomLabelNorthMargin + bottomLabelSouthMargin;
 
 		int boardWidthPixelsWest = width * BOARD_WIDTH_MARGIN_PERCENTAGES[WEST]
 				/ 100;
 		int boardWidthPixelsEast = width * BOARD_WIDTH_MARGIN_PERCENTAGES[EAST]
 				/ 100;
 
-		squareSize = (height - bottomLabelSouthMargin - bottomLabelHeight
-				- bottomLabelNorthMargin - topLabelSouthMargin - topLabelHeight - topLabelNorthMargin) / 8;
+		squareSize = (height - bottomLabelHeight - topLabelHeight) / 8;
 
 		while (width < squareSize * 11 + boardWidthPixelsWest
 				+ boardWidthPixelsEast) {
@@ -383,41 +380,35 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		int gameStatusWidth = bottonLabelPixelsWest + boardHeight;
 		int openingDescriptionWidth = width - gameStatusWidth;
 
-		int topHeight = topLabelNorthMargin + topLabelHeight
-				+ topLabelSouthMargin;
-
-		gameDescriptionLabelRect = new Rectangle(topLabelPixelsWest,
-				topLabelNorthMargin, gameDescriptionWidth, topLabelHeight);
+		gameDescriptionLabelRect = new Rectangle(topLabelPixelsWest, 0,
+				gameDescriptionWidth, topLabelHeight);
 		currentPremovesLabelRect = new Rectangle(topLabelPixelsWest
-				+ gameDescriptionLabelRect.width, topLabelNorthMargin,
-				currentPremovesWidth, topLabelHeight);
+				+ gameDescriptionLabelRect.width, 0, currentPremovesWidth,
+				topLabelHeight);
 
-		statusLabelRect = new Rectangle(bottonLabelPixelsWest, topHeight + 8
-				* squareSize + bottomLabelNorthMargin, gameStatusWidth,
-				bottomLabelHeight);
+		statusLabelRect = new Rectangle(bottonLabelPixelsWest, topLabelHeight
+				+ 8 * squareSize, gameStatusWidth, bottomLabelHeight);
 		openingDescriptionLabelRect = new Rectangle(bottonLabelPixelsWest
-				+ statusLabelRect.width, topHeight + 8 * squareSize
-				+ bottomLabelNorthMargin, openingDescriptionWidth,
-				bottomLabelHeight);
+				+ statusLabelRect.width, topLabelHeight + 8 * squareSize,
+				openingDescriptionWidth, bottomLabelHeight);
 
-		boardTopLeft = new Point(boardWidthPixelsWest, topHeight);
+		boardTopLeft = new Point(boardWidthPixelsWest, topLabelHeight);
 
 		int nameLabelStartX = boardWidthPixelsWest + boardHeight
 				+ boardWidthPixelsEast;
 
-		Point nameLabelSize = new Point(width - nameLabelStartX, squareSize
-				* NAME_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE / 100);
-
 		int clockStartX = boardWidthPixelsWest + boardHeight
 				+ boardWidthPixelsEast;
 
-		Point clockLabelSize = new Point(width - clockStartX, squareSize
-				* CLOCK_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE / 100);
+		Point clockLabelSize = new Point(width - clockStartX, squareSize);
 
-		Point lagLabelSize = new Point(width - nameLabelStartX, squareSize
-				* LAG_LABEL_HEIGHT_PERCENTAGE_OF_BOARD_SQUARE / 100);
+		Point lagLabelSize = new Point(width - nameLabelStartX,
+				(int) (.3 * squareSize));
 
-		int nameStartY = topHeight;
+		Point nameLabelSize = new Point(width - nameLabelStartX, squareSize
+				- lagLabelSize.y);
+
+		int nameStartY = topLabelHeight;
 		int bottomHeightStart = nameStartY + 4 * squareSize;
 
 		topNameLabelRect = new Rectangle(nameLabelStartX, nameStartY,
@@ -436,13 +427,13 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		bottomClockRect = new Rectangle(clockStartX, bottomHeightStart
 				+ squareSize, clockLabelSize.x, clockLabelSize.y);
 
-		topPieceJailRow1Point = new Point(clockStartX, topHeight + 2
+		topPieceJailRow1Point = new Point(clockStartX, topLabelHeight + 2
 				* squareSize);
-		topPieceJailRow2Point = new Point(clockStartX, topHeight + 3
+		topPieceJailRow2Point = new Point(clockStartX, topLabelHeight + 3
 				* squareSize);
-		bottomPieceJailRow1Point = new Point(clockStartX, topHeight + 6
+		bottomPieceJailRow1Point = new Point(clockStartX, topLabelHeight + 6
 				* squareSize);
-		bottomPieceJailRow2Point = new Point(clockStartX, topHeight + 7
+		bottomPieceJailRow2Point = new Point(clockStartX, topLabelHeight + 7
 				* squareSize);
 	}
 }
