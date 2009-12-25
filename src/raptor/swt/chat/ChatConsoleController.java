@@ -499,10 +499,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			return;
 		}
 
-		chatConsole.inputText.setCaretOffset(chatConsole.inputText
-				.getCharCount());
-		chatConsole.inputText.setSelection(new Point(chatConsole.inputText
-				.getCharCount(), chatConsole.inputText.getCharCount()));
+		int chars = chatConsole.inputText.getCharCount();
+		chatConsole.inputText.setCaretOffset(chars);
+		chatConsole.inputText.setSelection(chars + 1, chars + 1);
 	}
 
 	public void onPassivate() {
@@ -727,10 +726,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 
 		if (event.keyCode == SWT.ESC) {
-			//Clear output text.
+			// Clear output text.
 			chatConsole.outputText.setText("");
 
-			//Clear premoves.
+			// Clear premoves.
 			RaptorWindowItem[] items = Raptor.getInstance().getWindow()
 					.getWindowItems(ChessBoardWindowItem.class);
 			for (RaptorWindowItem item : items) {
