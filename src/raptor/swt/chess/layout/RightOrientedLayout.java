@@ -23,8 +23,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
-import raptor.Raptor;
-import raptor.pref.PreferenceKeys;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardLayout;
@@ -36,7 +34,7 @@ import raptor.swt.chess.ChessBoardLayout;
 public class RightOrientedLayout extends ChessBoardLayout {
 	public static final int[] BOARD_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
 
-	public static final int BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
+	public static final int BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 3;
 	public static final int[] BOTTOM_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
 	public static final int[] BUTTOM_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1 };
 
@@ -48,7 +46,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	public static final int SOUTH = 1;
 
 	public static final int[] TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES = { 1, 1, };
-	public static final int TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 4;
+	public static final int TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 3;
 	public static final int[] TOP_LABEL_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
 	public static final int WEST = 0;
 
@@ -104,16 +102,16 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 		board.getGameDescriptionLabel().setFont(
 				SWTUtils.getProportionalFont(board.getGameDescriptionLabel()
-						.getFont(), 75, topLabelHeight));
+						.getFont(), 80, topLabelHeight, 20));
 		board.getCurrentPremovesLabel().setFont(
 				SWTUtils.getProportionalFont(board.getCurrentPremovesLabel()
-						.getFont(), 75, topLabelHeight));
+						.getFont(), 80, topLabelHeight, 20));
 		board.getStatusLabel().setFont(
 				SWTUtils.getProportionalFont(board.getStatusLabel().getFont(),
-						80, bottomLabelHeight));
+						80, bottomLabelHeight, 20));
 		board.getOpeningDescriptionLabel().setFont(
 				SWTUtils.getProportionalFont(board.getOpeningDescriptionLabel()
-						.getFont(), 75, bottomLabelHeight));
+						.getFont(), 80, bottomLabelHeight, 20));
 
 		Font nameFont = SWTUtils.getProportionalFont(board
 				.getWhiteNameRatingLabel().getFont(), hasHeightProblem ? 70
@@ -340,10 +338,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		int topLabelSouthMargin = height
 				* TOP_LABEL_HEIGHT_MARGIN_PERCENTAGES[SOUTH] / 100;
 
-		topLabelHeight = Math.max(height
-				* TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN / 100, Raptor
-				.getInstance().getPreferences().getInt(
-						PreferenceKeys.APP_TOOLBAR_PIECE_SIZE))
+		topLabelHeight = height * TOP_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN / 100
 				+ topLabelNorthMargin + topLabelSouthMargin;
 
 		int bottomLabelNorthMargin = height
