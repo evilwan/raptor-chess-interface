@@ -158,7 +158,7 @@ public class SWTUtils {
 		}
 
 		Point pixelsPerInch = Raptor.getInstance().getDisplay().getDPI();
-		double pointsPerPixel = 72.0 / pixelsPerInch.y;
+		double pointsPerPixel = 70.0 / pixelsPerInch.y;
 
 		double heightInPoints = controlHeight * pointsPerPixel;
 
