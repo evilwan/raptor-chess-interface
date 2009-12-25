@@ -21,7 +21,7 @@ public class RaptorLabel extends Composite {
 		setLayout(SWTUtils.createMarginlessGridLayout(1, true));
 		label = new CLabel(this, labelStyle);
 		label.setLayoutData(new GridData(SWT.FILL, verticalAlignment, true,
-				false));
+				true));
 	}
 
 	public CLabel getLabel() {
