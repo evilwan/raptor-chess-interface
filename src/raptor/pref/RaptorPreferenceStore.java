@@ -299,8 +299,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_PIECE_JAIL_LABEL_PERCENTAGE, 40);
 		setDefault(BOARD_COOLBAR_MODE, true);
 		setDefault(BOARD_COOLBAR_ON_TOP, true);
-		setDefault(BOARD_CHESS_SET_NAME, "Portable");
-		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "Wood2");
+		setDefault(BOARD_CHESS_SET_NAME, "Wiki");
+		setDefault(BOARD_SQUARE_BACKGROUND_NAME, "GreenMarble");
 		setDefault(BOARD_IS_SHOW_COORDINATES, true);
 		setDefault(BOARD_PIECE_SIZE_ADJUSTMENT, .06);
 		setDefault(BOARD_IS_SHOWING_PIECE_JAIL, false);
