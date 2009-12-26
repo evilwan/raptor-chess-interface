@@ -41,7 +41,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys {
 			{ "Wild 8 (Pawns start on 4th rank)", "wild 8" },
 			{ "Wild 8a (Pawns on 5th rank)", "wild 8a" }, };
 
-	protected static final String[][] MINUTES = { { "Untimed", "untimed" },
+	protected static final String[][] MINUTES = { { "Untimed", "0" },
 			{ "0 minutes", "0" }, { "1 minutes", "1" }, { "2 minutes", "2" },
 			{ "3 minutes", "3" }, { "4 minutes", "4" }, { "5 minutes", "5" },
 			{ "10 minutes", "10" }, { "15 minutes", "15" },
