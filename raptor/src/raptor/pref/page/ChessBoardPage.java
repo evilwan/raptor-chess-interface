@@ -16,8 +16,6 @@ package raptor.pref.page;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.util.IPropertyChangeListener;
-import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -324,17 +322,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				"Square Background", backgroundNameValues,
 				getFieldEditorParent());
 		addField(backgroundFieldEditor);
-
-		pieceJailBackground = new ColorFieldEditor(
-				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
-				"Piece Jail Background Color:", getFieldEditorParent());
-		pieceJailBackground.getColorSelector().addListener(
-				new IPropertyChangeListener() {
-					public void propertyChange(PropertyChangeEvent arg0) {
-						valuesChanged();
-					}
-				});
-		addField(pieceJailBackground);
 
 		ComboFieldEditor layoutsFieldEditor = new ComboFieldEditor(
 				PreferenceKeys.BOARD_LAYOUT, "Chess Board Control Layout:",

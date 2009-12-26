@@ -34,13 +34,17 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(defaultMessages);
 
+		addField(new ColorFieldEditor(
+				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
+				"Piece Jail Background Color:", getFieldEditorParent()));
+
 		ColorFieldEditor coordinatesColor = new ColorFieldEditor(
 				PreferenceKeys.BOARD_COORDINATES_COLOR, "Coordinates Color:",
 				getFieldEditorParent());
 		addField(coordinatesColor);
 
 		ColorFieldEditor lagLabelColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_LAG_COLOR, "Lag Color:",
+				PreferenceKeys.BOARD_CONTROL_COLOR, "Label Color:",
 				getFieldEditorParent());
 		addField(lagLabelColor);
 
@@ -49,34 +53,15 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 				"Lag Over 20 Seconds Color:", getFieldEditorParent());
 		addField(lagOver20LabelColor);
 
-		ColorFieldEditor playerNameRatingColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_PLAYER_NAME_COLOR, "Name/Rating Color:",
-				getFieldEditorParent());
-		addField(playerNameRatingColor);
-
-		ColorFieldEditor gameDescriptionColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_GAME_DESCRIPTION_COLOR,
-				"Game Type Color:", getFieldEditorParent());
-		addField(gameDescriptionColor);
-
-		ColorFieldEditor openingDescription = new ColorFieldEditor(
-				PreferenceKeys.BOARD_OPENING_DESC_COLOR, "Opening Color:",
-				getFieldEditorParent());
-		addField(openingDescription);
-
-		ColorFieldEditor premovesColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_PREMOVES_COLOR, "Premoves Color:",
-				getFieldEditorParent());
-		addField(premovesColor);
-
-		ColorFieldEditor lastMoveColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_STATUS_COLOR, "Last Move Color:",
-				getFieldEditorParent());
-		addField(lastMoveColor);
-
-		ColorFieldEditor jailLabelColor = new ColorFieldEditor(
+		addField(new ColorFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR,
-				"Piece Jail/Drop Square Number Color:", getFieldEditorParent());
-		addField(jailLabelColor);
+				"Piece Jail/Drop Square Number Color:", getFieldEditorParent()));
+
+		addField(new ColorFieldEditor(PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR,
+				"Active Clock Color:", getFieldEditorParent()));
+
+		addField(new ColorFieldEditor(
+				PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR,
+				"Inactive Clock Color:", getFieldEditorParent()));
 	}
 }

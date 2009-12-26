@@ -29,7 +29,7 @@ public class PlayingMouseActionsPage extends FieldEditorPreferencePage {
 	public PlayingMouseActionsPage() {
 		// Use the "flat" layout
 		super(GRID);
-		setTitle("Playing Mouse Buttons");
+		setTitle("Playing");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 

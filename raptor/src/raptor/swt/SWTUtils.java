@@ -133,7 +133,7 @@ public class SWTUtils {
 
 	public static int getHeightInPixels(int fontPointSize) {
 		Point pixelsPerInch = Raptor.getInstance().getDisplay().getDPI();
-		int result =  (int) (pixelsPerInch.y * (1.0/70.0) * fontPointSize);
+		int result = (int) (pixelsPerInch.y * (1.0 / 70.0) * fontPointSize);
 		return result;
 	}
 
@@ -149,10 +149,13 @@ public class SWTUtils {
 	 *            be. (i.e. 80 for 80%).
 	 * @param controlHeight
 	 *            The controls height to adjust for.
+	 * @param maxPointSize
+	 *            The font will never be larger than the specified point size.
+	 *            -1 if there is no max point size.
 	 * @return The new font.
 	 */
 	public static Font getProportionalFont(Font fontToAdjust,
-			int resizePercentage, int controlHeight) {
+			int resizePercentage, int controlHeight, int maxPointSize) {
 		if (controlHeight <= 0) {
 			return fontToAdjust;
 		}
@@ -163,6 +166,10 @@ public class SWTUtils {
 		double heightInPoints = controlHeight * pointsPerPixel;
 
 		int requestedHeightInPoints = (int) (heightInPoints * resizePercentage / 100.0);
+
+		if (maxPointSize > 0 && requestedHeightInPoints > maxPointSize) {
+			requestedHeightInPoints = maxPointSize;
+		}
 
 		String key = fontToAdjust.getFontData()[0].getName() + "_"
 				+ requestedHeightInPoints + "_"
@@ -183,6 +190,26 @@ public class SWTUtils {
 			Raptor.getInstance().getFontRegistry().put(key, fontDataArray);
 			return Raptor.getInstance().getFontRegistry().get(key);
 		}
+	}
+
+	/**
+	 * Returns a new font resizing the font size by resizePercentage of the
+	 * controls height. This method caches fonts in Raptor's font registry so
+	 * there is no need to dispose of any fonts.
+	 * 
+	 * @param fontToAdjust
+	 *            The old font to adjust.
+	 * @param resizePercentage
+	 *            The percent of the controls height the new fonts height should
+	 *            be. (i.e. 80 for 80%).
+	 * @param controlHeight
+	 *            The controls height to adjust for.
+	 * @return The new font.
+	 */
+	public static Font getProportionalFont(Font fontToAdjust,
+			int resizePercentage, int controlHeight) {
+		return getProportionalFont(fontToAdjust, resizePercentage,
+				controlHeight, -1);
 	}
 
 	/**

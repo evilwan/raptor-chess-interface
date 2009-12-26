@@ -520,7 +520,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 		Color background = Raptor.getInstance().getPreferences().getColor(
 				PreferenceKeys.BOARD_BACKGROUND_COLOR);
 		Color foreground = Raptor.getInstance().getPreferences().getColor(
-				PreferenceKeys.BOARD_STATUS_COLOR);
+				PreferenceKeys.BOARD_CONTROL_COLOR);
 		composite.setBackground(background);
 		topLine.setBackground(background);
 		labelComposite.setBackground(background);

@@ -24,7 +24,7 @@ public class ObservingMouseActionsPage extends FieldEditorPreferencePage {
 	public ObservingMouseActionsPage() {
 		// Use the "flat" layout
 		super(GRID);
-		setTitle("Observing Mouse Buttons");
+		setTitle("Observing");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 

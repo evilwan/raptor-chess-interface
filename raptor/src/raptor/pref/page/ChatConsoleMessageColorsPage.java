@@ -31,7 +31,7 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		ColorFieldEditor defaultMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR,
-				"Default Message Color:", getFieldEditorParent());
+				"Default Color:", getFieldEditorParent());
 		addField(defaultMessages);
 
 		ColorFieldEditor personTellMessages = new ColorFieldEditor(
@@ -42,7 +42,7 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.QTELL + "-color", "Qtell message color:",
+						+ ChatType.QTELL + "-color", "Qtell Message color:",
 				getFieldEditorParent()));
 
 		ColorFieldEditor ptellMessages = new ColorFieldEditor(
