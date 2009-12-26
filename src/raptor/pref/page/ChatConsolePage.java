@@ -59,9 +59,14 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 				"Console Background Color:", getFieldEditorParent());
 		addField(inputTextBackground);
 
-		ColorFieldEditor outputTextForeground = new ColorFieldEditor(
-				PreferenceKeys.CHAT_OUTPUT_TEXT_COLOR, "Text To Send Color:",
+		FontFieldEditor inputFont = new FontFieldEditor(
+				PreferenceKeys.CHAT_INPUT_FONT, "Chat Console Font",
 				getFieldEditorParent());
+		addField(inputFont);
+
+		ColorFieldEditor outputTextForeground = new ColorFieldEditor(
+				PreferenceKeys.CHAT_OUTPUT_TEXT_COLOR,
+				"Command Line Text Color:", getFieldEditorParent());
 		addField(outputTextForeground);
 
 		ColorFieldEditor outputTextBackground = new ColorFieldEditor(
@@ -74,24 +79,19 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 				"Command Line Prompt Label Color:", getFieldEditorParent());
 		addField(promptColor);
 
-		ColorFieldEditor quoteUnderlineColor = new ColorFieldEditor(
-				PreferenceKeys.CHAT_QUOTE_UNDERLINE_COLOR,
-				"Quoted text Color:", getFieldEditorParent());
-		addField(quoteUnderlineColor);
-
-		ColorFieldEditor linkTextColor = new ColorFieldEditor(
-				PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR, "Links Color:",
-				getFieldEditorParent());
-		addField(linkTextColor);
-
-		FontFieldEditor inputFont = new FontFieldEditor(
-				PreferenceKeys.CHAT_INPUT_FONT, "Chat Console Font",
-				getFieldEditorParent());
-		addField(inputFont);
-
 		FontFieldEditor outputFont = new FontFieldEditor(
 				PreferenceKeys.CHAT_OUTPUT_FONT, "Command Line Font",
 				getFieldEditorParent());
 		addField(outputFont);
+
+		ColorFieldEditor quoteUnderlineColor = new ColorFieldEditor(
+				PreferenceKeys.CHAT_QUOTE_UNDERLINE_COLOR,
+				"Quoted Text Underline Color:", getFieldEditorParent());
+		addField(quoteUnderlineColor);
+
+		ColorFieldEditor linkTextColor = new ColorFieldEditor(
+				PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR, "Links Underline Color:",
+				getFieldEditorParent());
+		addField(linkTextColor);
 	}
 }
