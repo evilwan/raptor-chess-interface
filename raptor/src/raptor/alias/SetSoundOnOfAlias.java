@@ -13,6 +13,8 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.ChatConsoleController;
@@ -27,7 +29,7 @@ public class SetSoundOnOfAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("set sound ")) {
+		if (StringUtils.startsWith(command,"set sound ")) {
 			String whatsLeft = command.substring(10).trim();
 			if (whatsLeft.equals("on") || whatsLeft.equals("1")) {
 				Raptor.getInstance().getPreferences().setValue(

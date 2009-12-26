@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.script.RegularExpressionScript;
 import raptor.service.ScriptService;
 import raptor.swt.chat.ChatConsoleController;
@@ -31,7 +33,7 @@ public class ListScriptsAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("=script")) {
+		if (StringUtils.startsWithIgnoreCase(command,"=script")) {
 			RegularExpressionScript[] scripts = ScriptService.getInstance()
 					.getRegularExpressionScripts();
 			StringBuilder text = new StringBuilder(2000);

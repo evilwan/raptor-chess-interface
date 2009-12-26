@@ -17,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -42,7 +44,7 @@ public class ShowRegexAlias extends RaptorAlias {
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
 		command = command.trim();
-		if (command.startsWith("=regex")) {
+		if (StringUtils.startsWith(command,"=regex")) {
 
 			final String whatsLeft = command.length() == 7 ? "" : command
 					.substring(7).trim();

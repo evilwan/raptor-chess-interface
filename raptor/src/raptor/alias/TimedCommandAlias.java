@@ -15,6 +15,7 @@ package raptor.alias;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import raptor.service.ThreadService;
@@ -37,7 +38,7 @@ public class TimedCommandAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			final String command) {
-		if (command.startsWith("timed")) {
+		if (StringUtils.startsWith(command,"timed")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

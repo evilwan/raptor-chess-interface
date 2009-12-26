@@ -24,7 +24,7 @@ public class ClearFingerNotesAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equals("clear finger")) {
+		if (command.equalsIgnoreCase("clear finger")) {
 			RaptorAliasResult result = new RaptorAliasResult(null,
 					"Clearing your finger notes.");
 			controller.getConnector().sendMessage("set 9", true);

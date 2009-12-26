@@ -44,7 +44,7 @@ public class ShowTellsAlias extends RaptorAlias {
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
 		command = command.trim();
-		if (command.startsWith("=tells")) {
+		if (StringUtils.startsWith(command,"=tells")) {
 
 			final String whatsLeft = command.length() == 6 ? "" : command
 					.substring(7).trim();

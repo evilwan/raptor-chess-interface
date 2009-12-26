@@ -33,7 +33,7 @@ public class AliasHelpAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("aliashelp")) {
+		if (StringUtils.startsWithIgnoreCase(command, "+aliashelp")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

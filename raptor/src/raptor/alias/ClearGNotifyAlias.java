@@ -31,7 +31,7 @@ public class ClearGNotifyAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equals("clear gnotify")) {
+		if (command.equalsIgnoreCase("clear gnotify")) {
 			RaptorAliasResult result = new RaptorAliasResult("=gnotify", null);
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- gnotify list\\:.*", new MessageCallback() {

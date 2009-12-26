@@ -30,7 +30,7 @@ public class ClearNoplayAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equals("clear noplay")) {
+		if (command.equalsIgnoreCase("clear noplay")) {
 			RaptorAliasResult result = new RaptorAliasResult("=noplay", null);
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- noplay list\\:.*", new MessageCallback() {

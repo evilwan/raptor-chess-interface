@@ -25,7 +25,7 @@ public class ClearCensorAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equals("clear extcensor")) {
+		if (command.equalsIgnoreCase("clear extcensor")) {
 			int names = controller.getConnector().clearExtendedCensor();
 			return new RaptorAliasResult(null, "Removed " + names
 					+ " from extended censor.");
