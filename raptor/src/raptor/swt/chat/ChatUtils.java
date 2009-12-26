@@ -28,6 +28,7 @@ import raptor.action.RaptorAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.action.chat.FicsSeekAction;
+import raptor.action.chat.PendingChallangesAction;
 import raptor.action.chat.PrependAction;
 import raptor.action.chat.SpeakChannelTellsAction;
 import raptor.action.chat.SpeakPersonTellsAction;
@@ -415,6 +416,9 @@ public class ChatUtils {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			controller.addToolItem(ToolBarItemKey.SPEAK_TELLS, result);
 			result.setSelection(false);
+		} else if (action instanceof PendingChallangesAction) {
+			result = new ToolItem(toolbar, SWT.PUSH);
+			controller.addToolItem(ToolBarItemKey.PendingChallenges, result);
 		} else {
 			result = new ToolItem(toolbar, SWT.PUSH);
 		}

@@ -71,6 +71,7 @@ import raptor.connector.ics.game.message.RemovingObsGameMessage;
 import raptor.connector.ics.game.message.Style12Message;
 import raptor.pref.PreferenceKeys;
 import raptor.service.GameService;
+import raptor.service.GameService.Challenge;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -477,6 +478,10 @@ public class IcsParser implements GameConstants {
 					continue;
 				}
 
+				if (processPendInfo(line)) {
+					continue;
+				}
+
 				NoLongerExaminingGameMessage noLonerExaminingGameMessage = noLongerExaminingParser
 						.parse(line);
 				if (noLonerExaminingGameMessage != null) {
@@ -508,6 +513,55 @@ public class IcsParser implements GameConstants {
 			}
 			return result.toString();
 		}
+	}
+
+	/**
+	 * Handles the fics pendinfo messages.
+	 * 
+	 * @param line
+	 *            THe line being parsed.
+	 * @return True if it was a pendinfo message and was processed, false
+	 *         otherwise.
+	 */
+	protected boolean processPendInfo(String line) {
+		if (line.startsWith("<pf>")) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
+					true);
+			Challenge challenge = new Challenge();
+			challenge.setLoggedInUserChanneling(false);
+			tok.nextToken();
+			challenge.setId(tok.nextToken());
+			tok.nextToken();
+			challenge.setUserChallenging(tok.nextToken());
+			tok.nextToken();
+			tok.nextToken();
+			tok.nextToken();
+			challenge.setDescription(tok.getWhatsLeft());
+			connector.getGameService().fireChallengeReceived(challenge);
+			return true;
+		} else if (line.startsWith("<pt>")) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
+					true);
+			Challenge challenge = new Challenge();
+			challenge.setLoggedInUserChanneling(true);
+			tok.nextToken();
+			challenge.setId(tok.nextToken());
+			tok.nextToken();
+			challenge.setUserChallenged(tok.nextToken());
+			tok.nextToken();
+			tok.nextToken();
+			tok.nextToken();
+			challenge.setDescription(tok.getWhatsLeft());
+			connector.getGameService().fireChallengeReceived(challenge);
+			return true;
+		} else if (line.startsWith("<pr>")) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
+					true);
+			tok.nextToken();
+			connector.getGameService().fireChallengeRemoved(tok.nextToken());
+			return true;
+		}
+		return false;
 	}
 
 	/**
