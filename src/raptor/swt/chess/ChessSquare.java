@@ -76,6 +76,17 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				if (e.button != 1) {
 					return;
 				}
+				Long lastDropTime = (Long) board.getControl().getData(
+						LAST_DROP_TIME);
+
+				// In windows a mouse down event gets sent right after the mouse
+				// up and produce a ghost on the drop square. This is an attempt
+				// to fix it.
+				if (lastDropTime != null
+						&& ((System.currentTimeMillis() - lastDropTime) < 50)) {
+					return;
+				}
+
 				if (piece != EMPTY
 						&& board.getController().canUserInitiateMoveFrom(id)) {
 					board.getControl()
@@ -114,6 +125,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				}
 				board.getControl().setData(DRAG_INITIATOR, null);
 				board.getControl().setData(CLICK_INITIATOR, null);
+				board.getControl().setData(LAST_DROP_TIME,
+						System.currentTimeMillis());
 				break;
 			}
 			}
@@ -162,7 +175,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				Long lastDropTime = (Long) board.getControl().getData(
 						LAST_DROP_TIME);
 				if (lastDropTime == null
-						|| System.currentTimeMillis() - lastDropTime > 100) {
+						|| System.currentTimeMillis() - lastDropTime > 50) {
 					ChessSquare initiator = (ChessSquare) board.getControl()
 							.getData(CLICK_INITIATOR);
 
@@ -180,9 +193,13 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							// twice.
 							board.controller.userCancelledMove(initiator.id);
 							board.getControl().setData(CLICK_INITIATOR, null);
+							board.getControl().setData(LAST_DROP_TIME,
+									System.currentTimeMillis());
 						} else {// A valid move
 							board.controller.userMadeMove(initiator.id, id);
 							board.getControl().setData(CLICK_INITIATOR, null);
+							board.getControl().setData(LAST_DROP_TIME,
+									System.currentTimeMillis());
 						}
 					}
 				}
