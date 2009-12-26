@@ -17,19 +17,65 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
+import raptor.service.GameService.Challenge;
+import raptor.service.GameService.GameServiceAdapter;
+import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.swt.chat.ChatUtils;
+import raptor.util.RaptorRunnable;
 
 public class MainController extends ChatConsoleController {
+	protected GameServiceListener listener = new GameServiceAdapter() {
+		@Override
+		public void challengeIssued(Challenge challenge) {
+			updateChallengesPending();
+		}
+
+		@Override
+		public void challengeReceived(Challenge challenge) {
+			updateChallengesPending();
+		}
+
+		@Override
+		public void challengeRemoved(Challenge challenge) {
+			updateChallengesPending();
+		}
+	};
+
 	public MainController(Connector connector) {
 		super(connector);
+		connector.getGameService().addGameServiceListener(listener);
+	}
+
+	public void updateChallengesPending() {
+		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
+			@Override
+			public void execute() {
+				Challenge[] challenges = getConnector().getGameService()
+						.getChallenges();
+				ToolItem item = getToolItem(ToolBarItemKey.PendingChallenges);
+
+				if (challenges.length == 0) {
+					if (item != null) {
+						item.setImage(Raptor.getInstance().getIcon(
+								"dimLightbulb"));
+					}
+				} else {
+					if (item != null) {
+						item.setImage(Raptor.getInstance().getIcon(
+								"litLightbulb"));
+					}
+				}
+			}
+		});
 	}
 
 	@Override
@@ -51,6 +97,7 @@ public class MainController extends ChatConsoleController {
 	@Override
 	public void dispose() {
 		connector.setSpeakingAllPersonTells(false);
+		connector.getGameService().removeGameServiceListener(listener);
 		super.dispose();
 	}
 

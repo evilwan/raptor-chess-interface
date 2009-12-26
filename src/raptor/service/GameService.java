@@ -56,6 +56,15 @@ public class GameService {
 
 		public void setupGameBecameExamined(Game game) {
 		}
+
+		public void challengeIssued(Challenge challenge) {
+		}
+
+		public void challengeReceived(Challenge challenge) {
+		}
+
+		public void challengeRemoved(Challenge challenge) {
+		}
 	}
 
 	public static interface GameServiceListener {
@@ -112,12 +121,80 @@ public class GameService {
 		 * examine mode.
 		 */
 		public void setupGameBecameExamined(Game game);
+
+		/**
+		 * Invoked when a challenge is removed.
+		 */
+		public void challengeRemoved(Challenge challenge);
+
+		/**
+		 * Invoked when a challenge is received.
+		 */
+		public void challengeReceived(Challenge challenge);
+
+		/**
+		 * Invoked when a challenge is issued.
+		 */
+		public void challengeIssued(Challenge challenge);
+	}
+
+	public static class Challenge {
+		protected boolean isLoggedInUserChanneling;
+		protected String userChallenging;
+		protected String userChallenged;
+		protected String description;
+		protected String id;
+
+		public boolean isLoggedInUserChanneling() {
+			return isLoggedInUserChanneling;
+		}
+
+		public void setLoggedInUserChanneling(boolean isLoggedInUserChanneling) {
+			this.isLoggedInUserChanneling = isLoggedInUserChanneling;
+		}
+
+		public String getUserChallenging() {
+			return userChallenging;
+		}
+
+		public void setUserChallenging(String userChallenging) {
+			this.userChallenging = userChallenging;
+		}
+
+		public String getUserChallenged() {
+			return userChallenged;
+		}
+
+		public void setUserChallenged(String userChallenged) {
+			this.userChallenged = userChallenged;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
 	}
 
 	protected HashMap<String, Game> gameMap = new HashMap<String, Game>();
+	protected List<Challenge> challenges = new ArrayList<Challenge>(10);
 
 	protected List<GameServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<GameServiceListener>(20));
+
+	public Challenge[] getChallenges() {
+		return challenges.toArray(new Challenge[0]);
+	}
 
 	public void addGame(Game game) {
 		gameMap.put(game.getId(), game);
@@ -129,6 +206,60 @@ public class GameService {
 
 	public void dispose() {
 		gameMap.clear();
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 * 
+	 * @param challenge
+	 *            The challenge received.
+	 */
+	public void fireChallengeReceived(Challenge challenge) {
+		challenges.add(challenge);
+		synchronized (listeners) {
+			for (GameServiceListener listener : listeners) {
+				listener.challengeReceived(challenge);
+			}
+		}
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 * 
+	 * @param challenge
+	 *            The challenge issued.
+	 */
+	public void fireChallengeIssued(Challenge challenge) {
+		challenges.add(challenge);
+		synchronized (listeners) {
+			for (GameServiceListener listener : listeners) {
+				listener.challengeIssued(challenge);
+			}
+		}
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 * 
+	 * @param id
+	 *            The id of the challange to remove.
+	 */
+	public void fireChallengeRemoved(String id) {
+		Challenge foundChallenge = null;
+		for (Challenge challenge : challenges) {
+			if (challenge.getId().equals(id)) {
+				foundChallenge = challenge;
+				break;
+			}
+		}
+		if (foundChallenge != null) {
+			challenges.remove(foundChallenge);
+			synchronized (listeners) {
+				for (GameServiceListener listener : listeners) {
+					listener.challengeRemoved(foundChallenge);
+				}
+			}
+		}
 	}
 
 	/**
