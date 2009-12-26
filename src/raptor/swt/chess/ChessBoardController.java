@@ -38,6 +38,7 @@ import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.service.SoundService;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.chess.controller.ToolBarItemKey;
 
@@ -99,6 +100,88 @@ public abstract class ChessBoardController implements BoardConstants,
 	public ChessBoardController(Game game, Connector connector) {
 		this.game = game;
 		this.connector = connector;
+	}
+
+	public void speakResults(Game game) {
+		String text = getGame().getHeader(PgnHeader.ResultDescription);
+		if (text == null) {
+			switch (game.getResult()) {
+			case BLACK_WON: {
+				text = "zero one";
+				break;
+			}
+			case WHITE_WON: {
+				text = "one zero";
+				break;
+			}
+			case DRAW: {
+				text = "one half one half";
+				break;
+			}
+			case UNDETERMINED: {
+				text = "Game ended.";
+				break;
+			}
+			case ON_GOING: {
+				text = "Game ended";
+				break;
+			}
+			}
+		}
+		SoundService.getInstance().textToSpeech(text);
+	}
+
+	public void speakMove(Move move) {
+		String text = "";
+
+		switch (move.getPiece()) {
+		case PAWN:
+			text += "pawn ";
+			break;
+		case KNIGHT:
+			text += "knight ";
+			break;
+		case BISHOP:
+			text += "bishop ";
+			break;
+		case ROOK:
+			text += "rook ";
+			break;
+		case QUEEN:
+			text += "queen ";
+			break;
+		case KING:
+			text += "king ";
+			break;
+		}
+
+		if (move.isCapture()) {
+			text += "takes ";
+		} else {
+			text += "to ";
+		}
+
+		text += GameUtils.getSan(move.getTo()) + " ";
+		if (move.isPromotion()) {
+			switch (move.getPiecePromotedTo()) {
+			case KNIGHT:
+				text += "knight ";
+				break;
+			case BISHOP:
+				text += "bishop ";
+				break;
+			case ROOK:
+				text += "rook ";
+				break;
+			case QUEEN:
+				text += "queen ";
+				break;
+			case KING:
+				text += "king ";
+				break;
+			}
+		}
+		SoundService.getInstance().textToSpeech(text);
 	}
 
 	public void addDecorationsForLastMoveListMove() {

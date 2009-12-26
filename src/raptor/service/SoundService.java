@@ -170,6 +170,12 @@ public class SoundService {
 		return result;
 	}
 
+	public boolean isSpeechSetup() {
+		return Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.APP_SOUND_ENABLED)
+				&& speech != null;
+	}
+
 	/**
 	 * I have tried caching the Clips. However i ran out of lines. So now i just
 	 * create a new clip each time.

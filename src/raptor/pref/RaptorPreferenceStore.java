@@ -320,6 +320,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_COORDINATES_SIZE_PERCENTAGE, 26);
 		setDefault(BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME, false);
 		setDefault(BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT, false);
+		setDefault(BOARD_SPEAK_MOVES_OPP_MAKES, false);
+		setDefault(BOARD_SPEAK_MOVES_I_MAKE, false);
+		setDefault(BOARD_SPEAK_WHEN_OBSERVING, false);
+		setDefault(BOARD_SPEAK_RESULTS,false);
+
 		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				PlayingMouseAction.None.toString());
 		setDefault(PLAYING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,

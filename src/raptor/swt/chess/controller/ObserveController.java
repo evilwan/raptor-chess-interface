@@ -68,7 +68,7 @@ public class ObserveController extends ChessBoardController {
 		}
 
 		@Override
-		public void gameInactive(Game game) {
+		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(
 						new RaptorRunnable(getConnector()) {
@@ -83,7 +83,9 @@ public class ObserveController extends ChessBoardController {
 												getGame().getResult());
 								board.redrawSquares();
 
-								onPlayGameEndSound();
+								if (!handleSpeakResults(game)) {
+									onPlayGameEndSound();
+								}
 
 								InactiveController inactiveController = new InactiveController(
 										getGame());
@@ -127,7 +129,7 @@ public class ObserveController extends ChessBoardController {
 		}
 
 		@Override
-		public void gameStateChanged(Game game, final boolean isNewMove) {
+		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(
 						new RaptorRunnable(getConnector()) {
@@ -141,7 +143,9 @@ public class ObserveController extends ChessBoardController {
 									cursor.setCursorMasterLast();
 								}
 								if (isNewMove) {
-									onPlayMoveSound();
+									if (!handleSpeakMove(game.getLastMove())) {
+										onPlayMoveSound();
+									}
 								}
 
 								board.getSquareHighlighter()
@@ -221,6 +225,28 @@ public class ObserveController extends ChessBoardController {
 		super(new GameCursor(game,
 				GameCursor.Mode.MakeMovesOnMasterSetCursorToLast), connector);
 		cursor = (GameCursor) getGame();
+	}
+
+	protected boolean handleSpeakResults(Game game) {
+		boolean result = false;
+		if (SoundService.getInstance().isSpeechSetup()
+				&& getPreferences().getBoolean(
+						PreferenceKeys.BOARD_SPEAK_RESULTS)) {
+			speakResults(game);
+			result = true;
+		}
+		return result;
+	}
+
+	protected boolean handleSpeakMove(Move move) {
+		boolean result = false;
+		if (SoundService.getInstance().isSpeechSetup()
+				&& getPreferences().getBoolean(
+						PreferenceKeys.BOARD_SPEAK_WHEN_OBSERVING)) {
+			speakMove(move);
+			result = true;
+		}
+		return result;
 	}
 
 	@Override
