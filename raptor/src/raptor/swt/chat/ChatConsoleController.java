@@ -1197,7 +1197,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void decorateBugWhoLinks(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() == ChatType.BUG_WHO_ALL
+		if (event.getType() == ChatType.BUGWHO_ALL
 				|| event.getType() == ChatType.BUGWHO_GAMES) {
 			// Currently this will only work with FICS games messages that are
 			// in bugwho games format.
@@ -1227,7 +1227,90 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
 				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_LINK_UNDERLINE_COLOR);
+						CHAT_QUOTE_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ linkRange[0], linkRange[1] - linkRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
+	protected boolean isPossibleNewsMessage(String message) {
+		return message.startsWith("Index of news items ")
+				|| message.startsWith("Index of news items ", 1)
+				|| message.startsWith("Index of all news items:")
+				|| message.startsWith("Index of all news items:", 1)
+				|| message.startsWith("Index of the last few news items:")
+				|| message.contains("\nIndex of the last few news items:")
+				|| message.startsWith("\nIndex of new news items:")
+				|| message.startsWith("\nIndex of new news items:", 1)
+				|| message.contains("\nIndex of new news items:");
+	}
+
+	protected void decorateNewsLinks(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() == ChatType.UNKNOWN
+				&& isPossibleNewsMessage(message)) {
+			// Currently this will only work with FICS messages that contain:
+			// Index of the last few news items:
+			// 1371 (Tue, Jun 23) www.ficsgames.com is back online
+			// 1378 (Fri, Aug 28) Unofficial Fics Forum
+			// 1383 (Sun, Oct 4) mamer help files now available in French
+			// 1390 (Sat, Nov 14) 1 hour waiting period for adjudications
+			// 1391 (Wed, Nov 18) FICS on Facebook
+			// 1392 (Sat, Nov 21) Torrent available with 100,000,000 FICS games
+			// 1393 (Fri, Dec 4) 1^ OTB OpenChessCup
+			// 1394 (Sat, Dec 5) ChessLecture Prize Tourney No Longer a Daily
+			// Event
+			// 1396 (Tue, Dec 22) Adjudications working again.
+			// 1397 (Thu, Dec 24) Merry Christmas!
+
+			List<int[]> linkRanges = new ArrayList<int[]>(5);
+
+			int lastNewlineIndex = 0;
+			int newLineIndex = 0;
+			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+				String line = message.substring(lastNewlineIndex + 1,
+						newLineIndex).trim();
+				if (StringUtils.isNotBlank(line)
+						&& (line.contains("(") || line.contains(")"))
+						&& !line.contains("W:") && !line.contains("B:")) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (NumberUtils.isDigits(firstWord)) {
+							linkRanges.add(new int[] { lastNewlineIndex + 1,
+									newLineIndex });
+						}
+					}
+				}
+				lastNewlineIndex = newLineIndex;
+			}
+
+			// handle the last line.
+			if (lastNewlineIndex != 0) {
+				String line = message.substring(lastNewlineIndex + 1,
+						message.length()).trim();
+				if (StringUtils.isNotBlank(line)
+						&& (line.contains("(") || line.contains(")"))
+						&& !line.contains("W:") && !line.contains("B:")) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (NumberUtils.isDigits(firstWord)) {
+							linkRanges.add(new int[] { lastNewlineIndex + 1,
+									message.length() });
+						}
+					}
+				}
+			}
+
+			// add all the ranges that were found.
+			for (int[] linkRange : linkRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
 						underlineColor, chatConsole.inputText.getBackground());
@@ -1301,7 +1384,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
 				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_LINK_UNDERLINE_COLOR);
+						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
 						underlineColor, chatConsole.inputText.getBackground());
@@ -1396,7 +1479,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
 				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_LINK_UNDERLINE_COLOR);
+						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
 						underlineColor, chatConsole.inputText.getBackground());
@@ -1483,7 +1566,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
 				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_LINK_UNDERLINE_COLOR);
+						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
 						underlineColor, chatConsole.inputText.getBackground());
@@ -1495,7 +1578,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void decorateLinks(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() != ChatType.OUTBOUND) {
+		if (event.getType() != ChatType.OUTBOUND
+				&& event.getType() != ChatType.GAMES
+				&& event.getType() != ChatType.BUGWHO_ALL
+				&& event.getType() != ChatType.BUGWHO_GAMES
+				&& event.getType() != ChatType.BUGWHO_AVAILABLE_TEAMS
+				&& event.getType() != ChatType.BUGWHO_UNPARTNERED_BUGGERS
+				&& !message.endsWith("(*) indicates system administrator.")) {
 			List<int[]> linkRanges = new ArrayList<int[]>(5);
 
 			// First check http://,https://,www.
@@ -1718,13 +1807,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void onDecorateInputText(final ChatEvent event,
 			final String message, final int textStartPosition) {
 		decorateForegroundColor(event, message, textStartPosition);
-		decorateQuotes(event, message, textStartPosition);
-		decorateLinks(event, message, textStartPosition);
 		decoreateNext(event, message, textStartPosition);
 		decorateHistoryLinks(event, message, textStartPosition);
 		decorateGamesLinks(event, message, textStartPosition);
 		decorateJournalLinks(event, message, textStartPosition);
 		decorateBugWhoLinks(event, message, textStartPosition);
+		decorateNewsLinks(event, message, textStartPosition);
+
+		// Decorate these last. They might override others.
+		decorateQuotes(event, message, textStartPosition);
+		decorateLinks(event, message, textStartPosition);
+
 	}
 
 	protected boolean isExaminingAGame() {
@@ -1832,6 +1925,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			else if (NumberUtils.isDigits(firstWord)
 					&& (line.contains("W:") || line.contains("B:"))) {
 				getConnector().sendMessage("observe " + firstWord, true);
+			}
+			// News
+			// Games and BugWho games
+			else if (NumberUtils.isDigits(firstWord) && !line.contains("W:")
+					&& !line.contains("B:") && line.contains("(")
+					&& line.contains(")")) {
+				getConnector().sendMessage("news " + firstWord, true);
 			}
 		}
 
