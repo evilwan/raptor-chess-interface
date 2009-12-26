@@ -100,7 +100,6 @@ public class PlayingController extends ChessBoardController {
 
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
-	protected long lastMoveMadeTime = 0;
 
 	protected MouseListener clearPremovesLabelListener = new MouseListener() {
 		public void mouseDoubleClick(MouseEvent e) {
