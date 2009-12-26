@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -193,7 +192,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
+		RaptorLabel label = new RaptorLabel(ratingFilterComposite, SWT.LEFT);
 		label.setText(">= Rating <=");
 		maxRatingsFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
@@ -215,11 +214,15 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		label = new CLabel(ratingFilterComposite, SWT.LEFT);
+		Composite ratedComposite = new Composite(composite, SWT.NONE);
+		ratedComposite.setLayout(new RowLayout());
+		ratedComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false));
+
+		label = new RaptorLabel(ratedComposite, SWT.LEFT);
 		label.setText("Rated:");
-		ratedFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
-				| SWT.READ_ONLY);
-		ratedFilter.add("Either");
+		ratedFilter = new Combo(ratedComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
+		ratedFilter.add("Rated and Unrated");
 		ratedFilter.add("Rated");
 		ratedFilter.add("Unrated");
 		ratedFilter.select(Raptor.getInstance().getPreferences().getInt(
@@ -241,7 +244,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		typeFilterComposite.setLayout(new GridLayout(3, false));
 
 		isShowingComputers = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingComputers.setText("Show Computers");
+		isShowingComputers.setText("Computers");
 		isShowingComputers.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_COMPUTERS));
 		isShowingComputers.addSelectionListener(new SelectionListener() {
@@ -258,7 +261,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingLightning = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingLightning.setText("Show Lightning");
+		isShowingLightning.setText("Lightning");
 		isShowingLightning.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_LIGHTNING));
 		isShowingLightning.addSelectionListener(new SelectionListener() {
@@ -275,7 +278,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingBlitz = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingBlitz.setText("Show Blitz");
+		isShowingBlitz.setText("Blitz");
 		isShowingBlitz.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_BLITZ));
 		isShowingBlitz.addSelectionListener(new SelectionListener() {
@@ -292,7 +295,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingStandard = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingStandard.setText("Show Standard");
+		isShowingStandard.setText("Standard");
 		isShowingStandard.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_STANDARD));
 		isShowingStandard.addSelectionListener(new SelectionListener() {
@@ -309,7 +312,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingAtomic = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingAtomic.setText("Show Atomic");
+		isShowingAtomic.setText("Atomic");
 		isShowingAtomic.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_ATOMIC));
 		isShowingAtomic.addSelectionListener(new SelectionListener() {
@@ -326,7 +329,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingSuicide = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingSuicide.setText("Show Suicide");
+		isShowingSuicide.setText("Suicide");
 		isShowingSuicide.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_SUICIDE));
 		isShowingSuicide.addSelectionListener(new SelectionListener() {
@@ -343,7 +346,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingLosers = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingLosers.setText("Show Losers");
+		isShowingLosers.setText("Losers");
 		isShowingLosers.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_LOSERS));
 		isShowingLosers.addSelectionListener(new SelectionListener() {
@@ -360,7 +363,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingCrazyhouse = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingCrazyhouse.setText("Show Crazyhouse");
+		isShowingCrazyhouse.setText("Crazyhouse");
 		isShowingCrazyhouse.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_CRAZYHOUSE));
 		isShowingCrazyhouse.addSelectionListener(new SelectionListener() {
@@ -377,7 +380,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingFR = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingFR.setText("Show Fischer Random");
+		isShowingFR.setText("Fischer Random");
 		isShowingFR.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_FR));
 		isShowingFR.addSelectionListener(new SelectionListener() {
@@ -394,7 +397,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingWild = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingWild.setText("Show Wild");
+		isShowingWild.setText("Wild");
 		isShowingWild.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_WILD));
 		isShowingWild.addSelectionListener(new SelectionListener() {
@@ -410,7 +413,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 		isShowingUntimed = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingUntimed.setText("Show Untimed");
+		isShowingUntimed.setText("Untimed");
 		isShowingUntimed.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_UNTIMED));
 		isShowingUntimed.addSelectionListener(new SelectionListener() {
