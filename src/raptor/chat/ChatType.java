@@ -124,5 +124,24 @@ public enum ChatType {
 	 * An internal message containing statistics after you finish playing a
 	 * game.
 	 */
-	PLAYING_STATISTICS
+	PLAYING_STATISTICS,
+	/**
+	 * A message containing finger notes. Source contains the user whose finger
+	 * it is.(On fics this is the finger command).
+	 */
+	FINGER,
+	/**
+	 * A message containing recent game history information. Source contains the
+	 * user whose history it is.(On fics this is the history command).
+	 */
+	HISTORY,
+	/**
+	 * A message containing game jounal entries. Source contains the user whose
+	 * journal it is.(On fics this is the journal playerName command).
+	 */
+	JOURNAL,
+	/**
+	 * A message containing games. (On fics this is from the games command).
+	 */
+	GAMES
 }

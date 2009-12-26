@@ -32,10 +32,12 @@ public class RaptorLabel extends Composite {
 		this.label = label;
 	}
 
+	@Override
 	public void addMouseListener(MouseListener listener) {
 		label.addMouseListener(listener);
 	}
 
+	@Override
 	public void removeMouseListener(MouseListener listener) {
 		label.removeMouseListener(listener);
 	}

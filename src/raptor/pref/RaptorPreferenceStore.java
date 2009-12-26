@@ -556,6 +556,18 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.QTELL
 						+ "-color", new RGB(128, 128, 128));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.FINGER
+						+ "-color", new RGB(128, 128, 128));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.GAMES
+						+ "-color", new RGB(128, 128, 128));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.HISTORY
+						+ "-color", new RGB(128, 128, 128));
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.JOURNAL
+						+ "-color", new RGB(128, 128, 128));
 
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));
