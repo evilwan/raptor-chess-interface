@@ -128,20 +128,28 @@ public enum ChatType {
 	/**
 	 * A message containing finger notes. Source contains the user whose finger
 	 * it is.(On fics this is the finger command).
+	 * 
+	 * @since .94
 	 */
 	FINGER,
 	/**
 	 * A message containing recent game history information. Source contains the
 	 * user whose history it is.(On fics this is the history command).
+	 * 
+	 * @since .94
 	 */
 	HISTORY,
 	/**
 	 * A message containing game jounal entries. Source contains the user whose
 	 * journal it is.(On fics this is the journal playerName command).
+	 * 
+	 * @since .94
 	 */
 	JOURNAL,
 	/**
 	 * A message containing games. (On fics this is from the games command).
+	 * 
+	 * @since .94
 	 */
 	GAMES
 }
