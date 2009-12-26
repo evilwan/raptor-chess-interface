@@ -36,8 +36,6 @@ import raptor.pref.PreferenceKeys;
  * on the bottom.
  */
 public class ArrowDecorator {
-	static final Log LOG = LogFactory.getLog(ArrowDecorator.class);
-
 	/**
 	 * Contains the code to draw an arrow segment on a square. Arrow segments
 	 * are always drawn from the perspective of what being on the bottom. The
@@ -774,6 +772,8 @@ public class ArrowDecorator {
 			}
 		}
 	}
+
+	static final Log LOG = LogFactory.getLog(ArrowDecorator.class);
 
 	protected ChessBoard board;
 

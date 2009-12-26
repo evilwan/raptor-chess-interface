@@ -38,7 +38,7 @@ public class TellAllInChannelAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"tellall")) {
+		if (StringUtils.startsWith(command, "tellall")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

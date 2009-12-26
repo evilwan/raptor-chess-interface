@@ -33,14 +33,18 @@ public class BughousePage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(
+				PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD,
+				"Auto open partners board on games I observe",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD,
 				"Auto open partners board on games I play",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD,
-				"Auto open partners board on games I observe",
-				getFieldEditorParent()));
+				PreferenceKeys.BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME,
+				"Show up time indicator", getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD,
@@ -49,10 +53,6 @@ public class BughousePage extends FieldEditorPreferencePage {
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_SPEAK_PARTNER_TELLS,
 				"Speak partner tells.", getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME,
-				"Show up time indicator", getFieldEditorParent()));
 
 		addField(new FontFieldEditor(PreferenceKeys.BUG_BUTTONS_FONT,
 				"Button Font:", getFieldEditorParent()));

@@ -59,11 +59,19 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 
+	public static final String[] getRatings() {
+		return new String[] { "0", "1", "700", "1000", "1100", "1200", "1300",
+				"1400", "1500", "1600", "1700", "1800", "1900", "2000", "2100",
+				"2200", "2300", "2400", "2500", "2600", "2700", "2800", "3000",
+				"9999" };
+	}
+
 	protected BughouseService service;
 	protected Composite composite;
 	protected Combo minAvailablePartnersFilter;
 	protected Combo maxAvailablePartnersFilter;
 	protected boolean isActive = false;
+
 	protected RaptorTable table;
 
 	protected Runnable timer = new Runnable() {
@@ -94,13 +102,6 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 			refreshTable();
 		}
 	};
-
-	public static final String[] getRatings() {
-		return new String[] { "0", "1", "700", "1000", "1100", "1200", "1300",
-				"1400", "1500", "1600", "1700", "1800", "1900", "2000", "2100",
-				"2200", "2300", "2400", "2500", "2600", "2700", "2800", "3000",
-				"9999" };
-	}
 
 	public BugPartnersWindowItem(BughouseService service) {
 		this.service = service;

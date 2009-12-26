@@ -57,62 +57,19 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				USER_MOVE_INPUT_MODE_ARRAY, getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(
-				PreferenceKeys.BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
-				"Show seconds on clock:", SHOW_SECONDS_OPTIONS,
-				getFieldEditorParent()));
-
-		addField(new ComboFieldEditor(
 				PreferenceKeys.BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN,
 				"Show tenths of seconds on clock:", SHOW_TENTHS_OPTIONS,
 				getFieldEditorParent()));
 
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES,
-				"Inactive games can be taken over by new games. (Improves performance)",
+		addField(new ComboFieldEditor(
+				PreferenceKeys.BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
+				"Show seconds on clock:", SHOW_SECONDS_OPTIONS,
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL, "Show Piece Jail",
+				PreferenceKeys.BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING,
+				"Allow mouse wheel move list navigation when playing a game.",
 				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_IS_SHOW_COORDINATES, "Show Coordinates",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END,
-				"Show statistics when a game I am playing ends.",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR,
-				"Invisible Move Enabled (Crosshairs cursor on drag and drops)",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS,
-				"Show chess piece unicode chars (e.g. \u2654\u2655\u2656\u2657\u2658\u2659)",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(PreferenceKeys.BOARD_PREMOVE_ENABLED,
-				"Premove Enabled", getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED,
-				"Queueing Premove Enabled", getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING,
-				"Play move Sound when observing", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_PLAY_CHALLENGE_SOUND,
-				"Play challenge sound.", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_PLAY_DRAW_OFFER_SOUND,
-				"Play draw offered sound.", getFieldEditorParent()));
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_PLAY_ABORT_REQUEST_SOUND,
-				"Play abort requested sound.", getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT,
@@ -124,17 +81,59 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING,
-				"Allow mouse wheel move list navigation when playing a game.",
+				PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES,
+				"Inactive games can be taken over by new games. (Improves performance)",
 				getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR,
+				"Invisible Move Enabled (Crosshairs cursor on drag and drops)",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_ABORT_REQUEST_SOUND,
+				"Play abort requested sound.", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_CHALLENGE_SOUND,
+				"Play challenge sound.", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_DRAW_OFFER_SOUND,
+				"Play draw offered sound.", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING,
+				"Play move Sound when observing", getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS,
 				"Play 10 second countdown sounds", getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(PreferenceKeys.BOARD_PREMOVE_ENABLED,
+				"Premove Enabled", getFieldEditorParent()));
+
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_SPEAK_MOVES_OPP_MAKES,
-				"Speak moves my opponent makes (*Requires speech setup).",
+				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED,
+				"Queueing Premove Enabled", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_SHOW_COORDINATES, "Show Coordinates",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS,
+				"Show chess piece unicode chars (e.g. \u2654\u2655\u2656\u2657\u2658\u2659)",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL, "Show Piece Jail",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END,
+				"Show statistics when a game I am playing ends.",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_SPEAK_RESULTS,
+				"Speak game results when observing and playing (*Requires speech setup).",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
@@ -143,14 +142,13 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_SPEAK_WHEN_OBSERVING,
-				"Speak moves when observing a game (*Requires speech setup).",
+				PreferenceKeys.BOARD_SPEAK_MOVES_OPP_MAKES,
+				"Speak moves my opponent makes (*Requires speech setup).",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_SPEAK_RESULTS,
-				"Speak game results when observing and playing (*Requires speech setup).",
+				PreferenceKeys.BOARD_SPEAK_WHEN_OBSERVING,
+				"Speak moves when observing a game (*Requires speech setup).",
 				getFieldEditorParent()));
-
 	}
 }

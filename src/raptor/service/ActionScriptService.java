@@ -43,22 +43,22 @@ import raptor.action.RaptorAction.RaptorActionContainer;
  * This service manages only ActionScripts.
  */
 public class ActionScriptService {
+	public static interface ActionServiceListener {
+		public void onActionsChanged();
+	}
+
 	private static final Log LOG = LogFactory.getLog(ActionScriptService.class);
 
 	private static final ActionScriptService singletonInstance = new ActionScriptService();
 
-	public static interface ActionServiceListener {
-		public void onActionsChanged();
+	public static ActionScriptService getInstance() {
+		return singletonInstance;
 	}
 
 	public Map<String, RaptorAction> nameToActionMap = new HashMap<String, RaptorAction>();
 
 	public List<ActionServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<ActionServiceListener>(5));
-
-	public static ActionScriptService getInstance() {
-		return singletonInstance;
-	}
 
 	private ActionScriptService() {
 		reload();

@@ -156,38 +156,6 @@ public class UCIEngine {
 		}
 	}
 
-	/**
-	 * Disconnects from the engine
-	 */
-	protected void disconnect() {
-		try {
-			if (isConnected()) {
-				process.destroy();
-
-				if (in != null) {
-					try {
-						in.close();
-					} catch (Throwable t) {
-					} finally {
-						in = null;
-					}
-				}
-				if (out != null) {
-					try {
-						out.close();
-					} catch (Throwable t) {
-					} finally {
-						out = null;
-					}
-				}
-			}
-		} catch (Throwable t) {
-			LOG.error("Error disconnecting from UCIEngine " + this, t);
-		} finally {
-			resetConnectionState();
-		}
-	}
-
 	public UCIEngine getDeepCopy() {
 		UCIEngine result = new UCIEngine();
 		result.setProcessPath(getProcessPath());
@@ -479,13 +447,6 @@ public class UCIEngine {
 	}
 
 	/**
-	 * Invokes quit.
-	 */
-	protected void finalize() {
-		quit();
-	}
-
-	/**
 	 * debug [ on | off ] switch the debug mode of the engine on and off. In
 	 * debug mode the engine should sent additional infos to the GUI, e.g. with
 	 * the "info string" command, to help debugging, e.g. the commands that the
@@ -701,6 +662,45 @@ public class UCIEngine {
 	@Override
 	public String toString() {
 		return engineName != null ? engineName : processPath;
+	}
+
+	/**
+	 * Disconnects from the engine
+	 */
+	protected void disconnect() {
+		try {
+			if (isConnected()) {
+				process.destroy();
+
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Throwable t) {
+					} finally {
+						in = null;
+					}
+				}
+				if (out != null) {
+					try {
+						out.close();
+					} catch (Throwable t) {
+					} finally {
+						out = null;
+					}
+				}
+			}
+		} catch (Throwable t) {
+			LOG.error("Error disconnecting from UCIEngine " + this, t);
+		} finally {
+			resetConnectionState();
+		}
+	}
+
+	/**
+	 * Invokes quit.
+	 */
+	protected void finalize() {
+		quit();
 	}
 
 	protected boolean isSupportedInfoType(String type) {

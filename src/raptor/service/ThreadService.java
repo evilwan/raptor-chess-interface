@@ -38,11 +38,6 @@ import raptor.Raptor;
  * This service provides exception handling, and pooling
  */
 public class ThreadService {
-	private static final ThreadService instance = new ThreadService();
-	private static final Log LOG = LogFactory.getLog(ThreadService.class);
-	public static final String THREAD_DUMP_FILE_PATH = Raptor.USER_RAPTOR_HOME_PATH
-			+ "/logs/threaddump_" + System.currentTimeMillis() + ".txt";
-
 	protected static final class RunnableExceptionDecorator implements Runnable {
 		protected Runnable runnable;
 
@@ -61,9 +56,11 @@ public class ThreadService {
 
 	}
 
-	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(20);
+	private static final ThreadService instance = new ThreadService();
+	private static final Log LOG = LogFactory.getLog(ThreadService.class);
 
-	protected boolean isDisposed = false;
+	public static final String THREAD_DUMP_FILE_PATH = Raptor.USER_RAPTOR_HOME_PATH
+			+ "/logs/threaddump_" + System.currentTimeMillis() + ".txt";
 
 	public static ThreadService getInstance() {
 		return instance;
@@ -110,6 +107,10 @@ public class ThreadService {
 			}
 		}
 	}
+
+	ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(20);
+
+	protected boolean isDisposed = false;
 
 	private ThreadService() {
 		executor.setCorePoolSize(20);

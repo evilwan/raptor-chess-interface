@@ -41,13 +41,14 @@ import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.ChessBoardResultsPage;
 import raptor.pref.page.ChessBoardToolbarsPage;
 import raptor.pref.page.ChessEnginesPage;
+import raptor.pref.page.General;
 import raptor.pref.page.InactiveMouseActionsPage;
 import raptor.pref.page.ObservingMouseActionsPage;
 import raptor.pref.page.PlayingMouseActionsPage;
-import raptor.pref.page.RaptorPage;
 import raptor.pref.page.RaptorWindowPage;
 import raptor.pref.page.RaptorWindowQuadrantsPage;
 import raptor.pref.page.RegularExpressionScripts;
+import raptor.pref.page.ScriptsPage;
 import raptor.pref.page.SoundPage;
 import raptor.pref.page.SpeechPage;
 import raptor.service.ConnectorService;
@@ -66,77 +67,22 @@ public class PreferenceUtils {
 		// Create the preference manager
 		PreferenceManager mgr = new PreferenceManager('/');
 
-		mgr.addToRoot(new PreferenceNode("raptor", new RaptorPage()));
-		mgr
-				.addToRoot(new PreferenceNode("raptorWindow",
-						new RaptorWindowPage()));
-		mgr.addTo("raptorWindow", new PreferenceNode("layout1",
+		mgr.addToRoot(new PreferenceNode("general", new General()));
+		mgr.addTo("general", new PreferenceNode("layout1",
 				new RaptorWindowQuadrantsPage("1")));
-
-		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
-		// Currently unused but keeping it around in case more options are
-		// added.
-		mgr.addTo("chatConsole", new PreferenceNode("behavior",
-				new ChatConsoleBehaviorPage()));
-		mgr.addTo("chatConsole", new PreferenceNode("messageColors",
-				new ChatConsoleMessageColorsPage()));
-		mgr.addTo("chatConsole", new PreferenceNode("channelColors",
-				new ChatConsoleChannelColorsPage()));
-		mgr.addTo("chatConsole", new PreferenceNode("rightClickScripts",
-				new ChatConsoleRightClickScripts()));
-		mgr.addTo("chatConsole", new PreferenceNode("toolbar",
-				new ChatConsoleToolbarsPage()));
+		mgr.addTo("general", new PreferenceNode("window",
+				new RaptorWindowPage()));
+		mgr.addToRoot(new PreferenceNode("bughouse", new BughousePage()));
 		mgr
 				.addTo(
-						"chatConsole/toolbar",
+						"bughouse",
 						new PreferenceNode(
-								"main",
+								"buttons",
 								new ActionContainerPage(
-										"Main",
-										"\tOn this page you can configure the toolbar for the "
-												+ "main chat console. You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.MainChatConsole)));
-		mgr
-				.addTo(
-						"chatConsole/toolbar",
-						new PreferenceNode(
-								"person",
-								new ActionContainerPage(
-										"Person",
-										"\tOn this page you can configure the toolbar for the "
-												+ "person chat console. You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.PersonChatConsole)));
-		mgr
-				.addTo(
-						"chatConsole/toolbar",
-						new PreferenceNode(
-								"channel",
-								new ActionContainerPage(
-										"Channel",
-										"\tOn this page you can configure the toolbar for the "
-												+ "channel chat console. You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.ChannelChatConsole)));
-		mgr
-				.addTo(
-						"chatConsole/toolbar",
-						new PreferenceNode(
-								"partner",
-								new ActionContainerPage(
-										"Partner",
-										"\tOn this page you can configure the toolbar for the "
-												+ "bughouse partner console. You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.BughousePartnerChatConsole)));
-		mgr
-				.addTo(
-						"chatConsole/toolbar",
-						new PreferenceNode(
-								"regex",
-								new ActionContainerPage(
-										"Regular Expression",
-										"\tOn this page you can configure the toolbar for the "
-												+ "regular expression console. You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.RegExChatConsole)));
-
+										"Buttons",
+										"\tOn this page you can configure the bughouse button actions shown in the bughouse"
+												+ "buttons screen.You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.BugButtons)));
 		mgr.addToRoot(new PreferenceNode("chessBoard", new ChessBoardPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("arrows",
 				new ChessBoardArrowsPage()));
@@ -146,6 +92,8 @@ public class PreferenceUtils {
 				new ChessBoardColorsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("fonts",
 				new ChessBoardFontsPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("results",
+				new ChessBoardResultsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("highlights",
 				new ChessBoardHighlightsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("mouseActions",
@@ -156,8 +104,6 @@ public class PreferenceUtils {
 				new PlayingMouseActionsPage()));
 		mgr.addTo("chessBoard/mouseActions", new PreferenceNode("observing",
 				new ObservingMouseActionsPage()));
-		mgr.addTo("chessBoard", new PreferenceNode("results",
-				new ChessBoardResultsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("toolbar",
 				new ChessBoardToolbarsPage()));
 		mgr
@@ -196,17 +142,6 @@ public class PreferenceUtils {
 				.addTo(
 						"chessBoard/toolbar",
 						new PreferenceNode(
-								"playing",
-								new ActionContainerPage(
-										"Playing",
-										"\tOn this page you can configure the toolbar "
-												+ "for the playing chess board,on fics this is shown when you are playing a "
-												+ "game. You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.PlayingChessBoard)));
-		mgr
-				.addTo(
-						"chessBoard/toolbar",
-						new PreferenceNode(
 								"observing",
 								new ActionContainerPage(
 										"Observing",
@@ -218,6 +153,17 @@ public class PreferenceUtils {
 				.addTo(
 						"chessBoard/toolbar",
 						new PreferenceNode(
+								"playing",
+								new ActionContainerPage(
+										"Playing",
+										"\tOn this page you can configure the toolbar "
+												+ "for the playing chess board,on fics this is shown when you are playing a "
+												+ "game. You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.PlayingChessBoard)));
+		mgr
+				.addTo(
+						"chessBoard/toolbar",
+						new PreferenceNode(
 								"setup",
 								new ActionContainerPage(
 										"Setup",
@@ -225,30 +171,80 @@ public class PreferenceUtils {
 												+ "chess board,on fics this is shown during bsetup. You can add new actions on the "
 												+ "Action Scripts Page.",
 										RaptorActionContainer.SetupChessBoard)));
-		mgr.addToRoot(new PreferenceNode("bughouse", new BughousePage()));
+		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
+		// Currently unused but keeping it around in case more options are
+		// added.
+		mgr.addTo("chatConsole", new PreferenceNode("behavior",
+				new ChatConsoleBehaviorPage()));
+		mgr.addTo("chatConsole", new PreferenceNode("channelColors",
+				new ChatConsoleChannelColorsPage()));
+		mgr.addTo("chatConsole", new PreferenceNode("messageColors",
+				new ChatConsoleMessageColorsPage()));
+		mgr.addTo("chatConsole", new PreferenceNode("toolbar",
+				new ChatConsoleToolbarsPage()));
 		mgr
 				.addTo(
-						"bughouse",
+						"chatConsole/toolbar",
 						new PreferenceNode(
-								"buttons",
+								"channel",
 								new ActionContainerPage(
-										"Buttons",
-										"\tOn this page you can configure the bughouse button actions shown in the bughouse"
-												+ "buttons screen.You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.BugButtons)));
-
-		mgr.addToRoot(new PreferenceNode("scripts",
-				new RegularExpressionScripts()));
-
-		mgr.addToRoot(new PreferenceNode("actionScripts",
+										"Channel",
+										"\tOn this page you can configure the toolbar for the "
+												+ "channel chat console. You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.ChannelChatConsole)));
+		mgr
+				.addTo(
+						"chatConsole/toolbar",
+						new PreferenceNode(
+								"main",
+								new ActionContainerPage(
+										"Main",
+										"\tOn this page you can configure the toolbar for the "
+												+ "main chat console. You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.MainChatConsole)));
+		mgr
+				.addTo(
+						"chatConsole/toolbar",
+						new PreferenceNode(
+								"partner",
+								new ActionContainerPage(
+										"Partner",
+										"\tOn this page you can configure the toolbar for the "
+												+ "bughouse partner console. You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.BughousePartnerChatConsole)));
+		mgr
+				.addTo(
+						"chatConsole/toolbar",
+						new PreferenceNode(
+								"person",
+								new ActionContainerPage(
+										"Person",
+										"\tOn this page you can configure the toolbar for the "
+												+ "person chat console. You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.PersonChatConsole)));
+		mgr
+				.addTo(
+						"chatConsole/toolbar",
+						new PreferenceNode(
+								"regex",
+								new ActionContainerPage(
+										"Regular Expression",
+										"\tOn this page you can configure the toolbar for the "
+												+ "regular expression console. You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.RegExChatConsole)));
+		mgr.addToRoot(new PreferenceNode("engines", new ChessEnginesPage()));
+		mgr.addToRoot(new PreferenceNode("scripts", new ScriptsPage()));
+		mgr.addTo("scripts", new PreferenceNode("actionScripts",
 				new ActionScriptsPage()));
-
-		mgr.addToRoot(new PreferenceNode("actionScriptKeys",
+		mgr.addTo("scripts", new PreferenceNode("actionScriptKeys",
 				new ActionKeyBindingsPage()));
+		mgr.addTo("scripts", new PreferenceNode("regex",
+				new RegularExpressionScripts()));
+		mgr.addTo("scripts", new PreferenceNode("rightClickScripts",
+				new ChatConsoleRightClickScripts()));
 
 		mgr.addToRoot(new PreferenceNode("sound", new SoundPage()));
 		mgr.addToRoot(new PreferenceNode("speech", new SpeechPage()));
-		mgr.addToRoot(new PreferenceNode("engines", new ChessEnginesPage()));
 
 		// Add the connector preference nodes.
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();

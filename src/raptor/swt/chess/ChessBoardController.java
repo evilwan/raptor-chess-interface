@@ -102,90 +102,6 @@ public abstract class ChessBoardController implements BoardConstants,
 		this.connector = connector;
 	}
 
-	public void speakResults(Game game) {
-		String text = getGame().getHeader(PgnHeader.ResultDescription);
-		if (text == null) {
-			switch (game.getResult()) {
-			case BLACK_WON: {
-				text = "zero one";
-				break;
-			}
-			case WHITE_WON: {
-				text = "one zero";
-				break;
-			}
-			case DRAW: {
-				text = "one half one half";
-				break;
-			}
-			case UNDETERMINED: {
-				text = "Game ended.";
-				break;
-			}
-			case ON_GOING: {
-				text = "Game ended";
-				break;
-			}
-			}
-		}
-		SoundService.getInstance().textToSpeech(text);
-	}
-
-	public void speakMove(Move move) {
-		String text = "";
-
-		switch (move.getPiece()) {
-		case PAWN:
-			text += "pawn ";
-			break;
-		case KNIGHT:
-			text += "knight ";
-			break;
-		case BISHOP:
-			text += "bishop ";
-			break;
-		case ROOK:
-			text += "rook ";
-			break;
-		case QUEEN:
-			text += "queen ";
-			break;
-		case KING:
-			text += "king ";
-			break;
-		}
-
-		if (move.isCapture()) {
-			text += "takes ";
-		} else {
-			text += "to ";
-		}
-
-		text += GameUtils.getSan(move.getTo()) + " ";
-		
-		if (move.isPromotion()) {
-			text += GameUtils.getSan(move.getTo()) + "equals ";
-			switch (move.getPiecePromotedTo()) {
-			case KNIGHT:
-				text += "knight ";
-				break;
-			case BISHOP:
-				text += "bishop ";
-				break;
-			case ROOK:
-				text += "rook ";
-				break;
-			case QUEEN:
-				text += "queen ";
-				break;
-			case KING:
-				text += "king ";
-				break;
-			}
-		}
-		SoundService.getInstance().textToSpeech(text);
-	}
-
 	public void addDecorationsForLastMoveListMove() {
 		removeAllMoveDecorations();
 		Move lastMove = getGame().getLastMove();
@@ -727,6 +643,90 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 	}
 
+	public void speakMove(Move move) {
+		String text = "";
+
+		switch (move.getPiece()) {
+		case PAWN:
+			text += "pawn ";
+			break;
+		case KNIGHT:
+			text += "knight ";
+			break;
+		case BISHOP:
+			text += "bishop ";
+			break;
+		case ROOK:
+			text += "rook ";
+			break;
+		case QUEEN:
+			text += "queen ";
+			break;
+		case KING:
+			text += "king ";
+			break;
+		}
+
+		if (move.isCapture()) {
+			text += "takes ";
+		} else {
+			text += "to ";
+		}
+
+		text += GameUtils.getSan(move.getTo()) + " ";
+
+		if (move.isPromotion()) {
+			text += GameUtils.getSan(move.getTo()) + "promote to ";
+			switch (move.getPiecePromotedTo()) {
+			case KNIGHT:
+				text += "knight";
+				break;
+			case BISHOP:
+				text += "bishop";
+				break;
+			case ROOK:
+				text += "rook";
+				break;
+			case QUEEN:
+				text += "queen";
+				break;
+			case KING:
+				text += "king";
+				break;
+			}
+		}
+		SoundService.getInstance().textToSpeech(text);
+	}
+
+	public void speakResults(Game game) {
+		String text = getGame().getHeader(PgnHeader.ResultDescription);
+		if (text == null) {
+			switch (game.getResult()) {
+			case BLACK_WON: {
+				text = "zero one";
+				break;
+			}
+			case WHITE_WON: {
+				text = "one zero";
+				break;
+			}
+			case DRAW: {
+				text = "one half one half";
+				break;
+			}
+			case UNDETERMINED: {
+				text = "Game ended.";
+				break;
+			}
+			case ON_GOING: {
+				text = "Game ended";
+				break;
+			}
+			}
+		}
+		SoundService.getInstance().textToSpeech(text);
+	}
+
 	/**
 	 * Invoked when the user cancels a move.
 	 */
@@ -1184,7 +1184,8 @@ public abstract class ChessBoardController implements BoardConstants,
 					blackClockUpdater.getRemainingTimeMillis(), false));
 		}
 
-		if (getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
+		if (updateClocksFromGame
+				&& getGame().isInState(Game.IS_CLOCK_TICKING_STATE)) {
 			if (getGame().getColorToMove() == WHITE) {
 				whiteClockUpdater.start();
 			} else {

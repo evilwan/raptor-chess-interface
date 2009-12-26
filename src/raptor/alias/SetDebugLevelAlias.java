@@ -36,7 +36,7 @@ public class SetDebugLevelAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"debuglevel")) {
+		if (StringUtils.startsWith(command, "debuglevel")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

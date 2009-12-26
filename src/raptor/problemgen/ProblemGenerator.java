@@ -95,10 +95,19 @@ public class ProblemGenerator {
 		}
 	}
 
+	public static void main(String[] args) throws Exception {
+		UCIEngine engine = new UCIEngine();
+		engine.setUsingThreadService(false);
+		engine.setProcessPath("/Applications/HIARCS/Hiarcs12.1SPUCI");
+		new ProblemGenerator(engine,
+				"/Users/mindspan/raptor/raptor/projectFiles/test/Alekhine4Pawns.pgn");
+	}
+
 	protected int numGames;
 	protected UCIEngine engine;
 	protected StreamingPgnParser parser;
 	protected String outputFile = "/Users/mindspan/problemGeneratorOutput.txt";
+
 	protected LenientPgnParserListener parserLisetener = new LenientPgnParserListener() {
 
 		@Override
@@ -113,14 +122,6 @@ public class ProblemGenerator {
 			}
 		}
 	};
-
-	public static void main(String[] args) throws Exception {
-		UCIEngine engine = new UCIEngine();
-		engine.setUsingThreadService(false);
-		engine.setProcessPath("/Applications/HIARCS/Hiarcs12.1SPUCI");
-		new ProblemGenerator(engine,
-				"/Users/mindspan/raptor/raptor/projectFiles/test/Alekhine4Pawns.pgn");
-	}
 
 	public ProblemGenerator(UCIEngine engine, String pgnFile) throws Exception {
 		this.engine = engine;

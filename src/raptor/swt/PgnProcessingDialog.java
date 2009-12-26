@@ -45,10 +45,6 @@ import raptor.swt.chess.PgnParseResultsWindowItem;
 import raptor.util.RaptorRunnable;
 
 public class PgnProcessingDialog extends Dialog {
-	public static final int MAX_CHARS_IN_FILE = 1048576;
-
-	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);
-
 	public class ProfressPgnParserListener extends LenientPgnParserListener {
 		private ArrayList<PgnParserError> errors = new ArrayList<PgnParserError>();
 
@@ -96,7 +92,11 @@ public class PgnProcessingDialog extends Dialog {
 			return games;
 		}
 
-	};
+	}
+
+	public static final int MAX_CHARS_IN_FILE = 1048576;
+
+	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);;
 
 	private Button cancelButton;
 	private Composite cancelComposite;

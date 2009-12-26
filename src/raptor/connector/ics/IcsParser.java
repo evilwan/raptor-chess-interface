@@ -516,55 +516,6 @@ public class IcsParser implements GameConstants {
 	}
 
 	/**
-	 * Handles the fics pendinfo messages.
-	 * 
-	 * @param line
-	 *            THe line being parsed.
-	 * @return True if it was a pendinfo message and was processed, false
-	 *         otherwise.
-	 */
-	protected boolean processPendInfo(String line) {
-		if (line.startsWith("<pf>")) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
-					true);
-			Challenge challenge = new Challenge();
-			challenge.setLoggedInUserChanneling(false);
-			tok.nextToken();
-			challenge.setId(tok.nextToken());
-			tok.nextToken();
-			challenge.setUserChallenging(tok.nextToken());
-			tok.nextToken();
-			tok.nextToken();
-			tok.nextToken();
-			challenge.setDescription(tok.getWhatsLeft());
-			connector.getGameService().fireChallengeReceived(challenge);
-			return true;
-		} else if (line.startsWith("<pt>")) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
-					true);
-			Challenge challenge = new Challenge();
-			challenge.setLoggedInUserChanneling(true);
-			tok.nextToken();
-			challenge.setId(tok.nextToken());
-			tok.nextToken();
-			challenge.setUserChallenged(tok.nextToken());
-			tok.nextToken();
-			tok.nextToken();
-			tok.nextToken();
-			challenge.setDescription(tok.getWhatsLeft());
-			connector.getGameService().fireChallengeReceived(challenge);
-			return true;
-		} else if (line.startsWith("<pr>")) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
-					true);
-			tok.nextToken();
-			connector.getGameService().fireChallengeRemoved(tok.nextToken());
-			return true;
-		}
-		return false;
-	}
-
-	/**
 	 * Parses out the Moves message from inboundEvent. It is assumed moves
 	 * messages will never contain other messages.
 	 * 
@@ -924,6 +875,55 @@ public class IcsParser implements GameConstants {
 			connector.sendMessage("moves " + message.gameId, true,
 					ChatType.MOVES);
 		}
+	}
+
+	/**
+	 * Handles the fics pendinfo messages.
+	 * 
+	 * @param line
+	 *            THe line being parsed.
+	 * @return True if it was a pendinfo message and was processed, false
+	 *         otherwise.
+	 */
+	protected boolean processPendInfo(String line) {
+		if (line.startsWith("<pf>")) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
+					true);
+			Challenge challenge = new Challenge();
+			challenge.setLoggedInUserChanneling(false);
+			tok.nextToken();
+			challenge.setId(tok.nextToken());
+			tok.nextToken();
+			challenge.setUserChallenging(tok.nextToken());
+			tok.nextToken();
+			tok.nextToken();
+			tok.nextToken();
+			challenge.setDescription(tok.getWhatsLeft());
+			connector.getGameService().fireChallengeReceived(challenge);
+			return true;
+		} else if (line.startsWith("<pt>")) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
+					true);
+			Challenge challenge = new Challenge();
+			challenge.setLoggedInUserChanneling(true);
+			tok.nextToken();
+			challenge.setId(tok.nextToken());
+			tok.nextToken();
+			challenge.setUserChallenged(tok.nextToken());
+			tok.nextToken();
+			tok.nextToken();
+			tok.nextToken();
+			challenge.setDescription(tok.getWhatsLeft());
+			connector.getGameService().fireChallengeReceived(challenge);
+			return true;
+		} else if (line.startsWith("<pr>")) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
+					true);
+			tok.nextToken();
+			connector.getGameService().fireChallengeRemoved(tok.nextToken());
+			return true;
+		}
+		return false;
 	}
 
 	protected ChatEvent processSought(String message) {

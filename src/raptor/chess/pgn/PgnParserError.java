@@ -18,8 +18,6 @@ import java.io.Serializable;
 import raptor.util.RaptorStringUtils;
 
 public class PgnParserError implements Serializable {
-	static final long serialVersionUID = 1;
-
 	public static enum Action {
 		IGNORING, IGNORING_CURRENT_GAME, IGNORING_CURRENT_SUBLINE, IGNORIONG_HEADER, NONE,
 	}
@@ -57,6 +55,8 @@ public class PgnParserError implements Serializable {
 		 **/
 		UNSUPPORTED_PGN_HEADER
 	}
+
+	static final long serialVersionUID = 1;
 
 	private Action action;
 

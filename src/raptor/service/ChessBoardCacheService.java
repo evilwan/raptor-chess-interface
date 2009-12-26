@@ -42,20 +42,21 @@ public class ChessBoardCacheService {
 
 	protected static final ChessBoardCacheService singletonInstance = new ChessBoardCacheService();
 
+	public static ChessBoardCacheService getInstance() {
+		return singletonInstance;
+	}
+
 	/**
 	 * An invisible composite Raptor uses to tie cached chess boards to.
 	 */
 	protected Composite composite;
+
 	/**
 	 * A cache of chess boards. Instead of disposing chess board a maximum of
 	 * CHESS_BOARD_CACHE_SIZE are cached and reused. This is experimental.
 	 */
 	protected List<ChessBoard> chessBoardCache = new ArrayList<ChessBoard>(
 			CHESS_BOARD_CACHE_SIZE);
-
-	public static ChessBoardCacheService getInstance() {
-		return singletonInstance;
-	}
 
 	private ChessBoardCacheService() {
 		init();

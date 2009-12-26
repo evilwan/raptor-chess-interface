@@ -41,20 +41,20 @@ public class BicsPage extends FieldEditorPreferencePage {
 				"Close all bics tabs on disconnect", getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP,
-				"Show bughouse buttons on partnerships (excluding simul)",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
 				PreferenceKeys.BICS_KEEP_ALIVE,
 				"Keep Alive (Sends Keep-Alive command below to avoid the hour idle kickout)",
 				getFieldEditorParent()));
 
-		addField(new StringFieldEditor(PreferenceKeys.BICS_KEEP_ALIVE_COMMAND,
-				"Keep-Alive command", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP,
+				"Show bughouse buttons on partnerships (excluding simul)",
+				getFieldEditorParent()));
 
 		addField(new TextFieldEditor(PreferenceKeys.BICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
+
+		addField(new StringFieldEditor(PreferenceKeys.BICS_KEEP_ALIVE_COMMAND,
+				"Keep-Alive command", getFieldEditorParent()));
 
 		addField(new LabelFieldEditor(
 				"none",

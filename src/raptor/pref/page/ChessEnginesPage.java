@@ -218,8 +218,10 @@ public class ChessEnginesPage extends PreferencePage {
 		} else if (StringUtils.isBlank(userNameText.getText())) {
 			Raptor.getInstance().alert("Nickname location can not be empty.");
 		} else if (currentEngine == null) {
-			Raptor.getInstance().alert(
-					"There is no current engine connected. Please select an engine process.");
+			Raptor
+					.getInstance()
+					.alert(
+							"There is no current engine connected. Please select an engine process.");
 		} else {
 			if (currentEngine != null) {
 			} else {

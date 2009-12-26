@@ -14,7 +14,7 @@ public class ShowExtendedCensor extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"=extcensor")) {
+		if (StringUtils.startsWith(command, "=extcensor")) {
 			String[] users = controller.getConnector()
 					.getPeopleOnExtendedCensor();
 

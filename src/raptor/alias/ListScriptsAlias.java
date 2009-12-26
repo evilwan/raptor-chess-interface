@@ -33,7 +33,7 @@ public class ListScriptsAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWithIgnoreCase(command,"=script")) {
+		if (StringUtils.startsWithIgnoreCase(command, "=script")) {
 			RegularExpressionScript[] scripts = ScriptService.getInstance()
 					.getRegularExpressionScripts();
 			StringBuilder text = new StringBuilder(2000);

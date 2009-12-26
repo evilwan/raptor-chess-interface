@@ -38,37 +38,6 @@ import raptor.swt.chess.ChessSquare;
 import raptor.swt.chess.PieceJailChessSquare;
 
 public class ChessBoardPage extends FieldEditorPreferencePage {
-	public static final String[][] LAYOUTS = {
-			{ "Right Oriented Layout",
-					"raptor.swt.chess.layout.RightOrientedLayout" },
-			{ "Top/Bottom Oriented Layout",
-					"raptor.swt.chess.layout.TopBottomOrientedLayout" } };
-
-	public static final String[][] PIECE_RESIZE_PERCENTAGE = {
-			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
-			{ "4%", "0.04" }, { "6%", "0.06" }, { "7%", "0.07" },
-			{ "8%", "0.08" }, { "9%", "0.09" }, { "10%", "0.1" },
-			{ "11%", "0.09" }, { "12%", "0.12" }, { "14%", "0.14" },
-			{ "16%", "0.16" }, { "18%", "0.18" }, { "20%", "0.20" },
-			{ "22%", "0.22" }, { "25%", "0.25" }, { "30%", "0.30" },
-			{ "35%", "0.35" }, { "40%", "0.40" }, { "45%", "0.45" },
-			{ "50%", "0.50" } };
-
-	public static final String[][] COORDINATES_SIZE_PERCENTAGE = {
-			{ "18%", "18" }, { "20%", "20" }, { "22%", "22" }, { "24%", "24" },
-			{ "26%", "26" }, { "28%", "28" }, { "30%", "30" }, { "32%", "32" },
-			{ "34%", "34" }, { "36%", "36" }, { "38%", "38" }, { "40%", "40" } };
-
-	public static final String[][] DROP_SQUARE_PERCENT = { { "20%", "20" },
-			{ "25%", "25" }, { "30%", "30" }, { "35%", "35" }, { "40%", "40" },
-			{ "45%", "45" }, { "50%", "50" } };
-
-	public static final String[][] ALPHAS = { { "0", "0" }, { "5", "5" },
-			{ "10", "10" }, { "15", "15" }, { "25", "25" }, { "30", "30" },
-			{ "35", "35" }, { "40", "40" }, { "50", "50" }, { "60", "60" },
-			{ "70", "70" }, { "80", "80" }, { "90", "90" }, { "100", "100" },
-			{ "125", "125" }, { "150", "150" } };
-
 	public class PieceJailSquarePageSquare extends PieceJailChessSquare {
 
 		public PieceJailSquarePageSquare(Composite parent, int id,
@@ -222,6 +191,37 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 
 	}
+
+	public static final String[][] LAYOUTS = {
+			{ "Right Oriented Layout",
+					"raptor.swt.chess.layout.RightOrientedLayout" },
+			{ "Top/Bottom Oriented Layout",
+					"raptor.swt.chess.layout.TopBottomOrientedLayout" } };
+
+	public static final String[][] PIECE_RESIZE_PERCENTAGE = {
+			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
+			{ "4%", "0.04" }, { "6%", "0.06" }, { "7%", "0.07" },
+			{ "8%", "0.08" }, { "9%", "0.09" }, { "10%", "0.1" },
+			{ "11%", "0.09" }, { "12%", "0.12" }, { "14%", "0.14" },
+			{ "16%", "0.16" }, { "18%", "0.18" }, { "20%", "0.20" },
+			{ "22%", "0.22" }, { "25%", "0.25" }, { "30%", "0.30" },
+			{ "35%", "0.35" }, { "40%", "0.40" }, { "45%", "0.45" },
+			{ "50%", "0.50" } };
+
+	public static final String[][] COORDINATES_SIZE_PERCENTAGE = {
+			{ "18%", "18" }, { "20%", "20" }, { "22%", "22" }, { "24%", "24" },
+			{ "26%", "26" }, { "28%", "28" }, { "30%", "30" }, { "32%", "32" },
+			{ "34%", "34" }, { "36%", "36" }, { "38%", "38" }, { "40%", "40" } };
+
+	public static final String[][] DROP_SQUARE_PERCENT = { { "20%", "20" },
+			{ "25%", "25" }, { "30%", "30" }, { "35%", "35" }, { "40%", "40" },
+			{ "45%", "45" }, { "50%", "50" } };
+
+	public static final String[][] ALPHAS = { { "0", "0" }, { "5", "5" },
+			{ "10", "10" }, { "15", "15" }, { "25", "25" }, { "30", "30" },
+			{ "35", "35" }, { "40", "40" }, { "50", "50" }, { "60", "60" },
+			{ "70", "70" }, { "80", "80" }, { "90", "90" }, { "100", "100" },
+			{ "125", "125" }, { "150", "150" } };
 
 	ChessBoardPageComboFieldEditor backgroundFieldEditor;
 	ChessBoardPageComboFieldEditor highlightPercentage;

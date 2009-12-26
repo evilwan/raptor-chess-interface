@@ -36,7 +36,7 @@ public class RelayAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"relay")) {
+		if (StringUtils.startsWith(command, "relay")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

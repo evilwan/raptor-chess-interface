@@ -87,11 +87,11 @@ public class AliasService {
 			TimedCommandAlias.class };
 	private static final AliasService singletonInstance = new AliasService();
 
-	List<RaptorAlias> aliases = new ArrayList<RaptorAlias>(20);
-
 	public static AliasService getInstance() {
 		return singletonInstance;
 	}
+
+	List<RaptorAlias> aliases = new ArrayList<RaptorAlias>(20);
 
 	@SuppressWarnings("unchecked")
 	private AliasService() {

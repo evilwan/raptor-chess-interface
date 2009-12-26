@@ -32,27 +32,35 @@ public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
+		StringFieldEditor timestampFormat = new StringFieldEditor(
+				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE_FORMAT,
+				"Message Timestamp Format (Java SimpleDateFormat):",
+				getFieldEditorParent());
+		addField(timestampFormat);
+
 		BooleanFieldEditor addTimestamps = new BooleanFieldEditor(
 				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE,
 				"Add Timestamps To Messages", getFieldEditorParent());
 		addField(addTimestamps);
 
-		BooleanFieldEditor underlineSingleQuotes = new BooleanFieldEditor(
-				PreferenceKeys.CHAT_UNDERLINE_SINGLE_QUOTES,
-				"Underline single quoted text", getFieldEditorParent());
-		addField(underlineSingleQuotes);
-
-		BooleanFieldEditor smartScroll = new BooleanFieldEditor(
-				PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED,
-				"Smart Scroll (Toggles auto scroll based on the "
-						+ "vertical scrolllbar position)",
-				getFieldEditorParent());
-		addField(smartScroll);
-
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_REMOVE_SUB_TAB_MESSAGES_FROM_MAIN_TAB,
 				"Filter messages handled by other tabs from the main console tab",
 				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS,
+				"Open channel tabs on new channel tells.",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_OPEN_PARTNER_TAB_ON_PTELLS,
+				"Open partner tab on new partner tells.",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS,
+				"Open person tabs on new person tells.", getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PTELL,
@@ -64,25 +72,17 @@ public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 				"Play 'chat' sound on all person tells.",
 				getFieldEditorParent()));
 
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS,
-				"Open channel tabs on new channel tells.",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS,
-				"Open person tabs on new person tells.", getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.CHAT_OPEN_PARTNER_TAB_ON_PTELLS,
-				"Open partner tab on new partner tells.",
-				getFieldEditorParent()));
-
-		StringFieldEditor timestampFormat = new StringFieldEditor(
-				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE_FORMAT,
-				"Message Timestamp Format (Java SimpleDateFormat):",
+		BooleanFieldEditor smartScroll = new BooleanFieldEditor(
+				PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED,
+				"Smart Scroll (Toggles auto scroll based on the "
+						+ "vertical scrolllbar position)",
 				getFieldEditorParent());
-		addField(timestampFormat);
+		addField(smartScroll);
+
+		BooleanFieldEditor underlineSingleQuotes = new BooleanFieldEditor(
+				PreferenceKeys.CHAT_UNDERLINE_SINGLE_QUOTES,
+				"Underline single quoted text", getFieldEditorParent());
+		addField(underlineSingleQuotes);
 
 	}
 }

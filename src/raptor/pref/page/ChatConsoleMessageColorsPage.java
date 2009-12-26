@@ -34,16 +34,11 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(defaultMessages);
 
-		ColorFieldEditor personTellMessages = new ColorFieldEditor(
+		ColorFieldEditor abortRequest = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.TELL + "-color", "Person Tell Color:",
-				getFieldEditorParent());
-		addField(personTellMessages);
-
-		addField(new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.QTELL + "-color", "Qtell Message color:",
-				getFieldEditorParent()));
+						+ ChatType.ABORT_REQUEST + "-color",
+				"Abort Request Message Color:", getFieldEditorParent());
+		addField(abortRequest);
 
 		ColorFieldEditor ptellMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
@@ -57,29 +52,22 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 				"Challenge Message Color:", getFieldEditorParent());
 		addField(challengeMessages);
 
-		ColorFieldEditor drawRequest = new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.DRAW_REQUEST + "-color",
-				"Draw Request Message Color:", getFieldEditorParent());
-		addField(drawRequest);
-
-		ColorFieldEditor abortRequest = new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.ABORT_REQUEST + "-color",
-				"Abort Request Message Color:", getFieldEditorParent());
-		addField(abortRequest);
-
 		ColorFieldEditor cshoutMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.CSHOUT + "-color", "C-Shout Message Color:",
 				getFieldEditorParent());
 		addField(cshoutMessages);
 
-		ColorFieldEditor shoutMessages = new ColorFieldEditor(
+		ColorFieldEditor drawRequest = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.SHOUT + "-color", "Shout Message Color:",
-				getFieldEditorParent());
-		addField(shoutMessages);
+						+ ChatType.DRAW_REQUEST + "-color",
+				"Draw Request Message Color:", getFieldEditorParent());
+		addField(drawRequest);
+
+		addField(new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.FINGER + "-color", "Finger Notes Color:",
+				getFieldEditorParent()));
 
 		ColorFieldEditor kibitzMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
@@ -87,37 +75,10 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(kibitzMessages);
 
-		ColorFieldEditor whisperMessages = new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.WHISPER + "-color",
-				"Whisper Message Color:", getFieldEditorParent());
-		addField(whisperMessages);
-
 		addField(new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.FINGER + "-color", "Finger Notes Color:",
+						+ ChatType.QTELL + "-color", "Qtell Message color:",
 				getFieldEditorParent()));
-
-		addField(new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.HISTORY + "-color", "History Color:",
-				getFieldEditorParent()));
-
-		addField(new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.JOURNAL + "-color", "Journal Color:",
-				getFieldEditorParent()));
-
-		addField(new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.GAMES + "-color", "Games Color:",
-				getFieldEditorParent()));
-
-		ColorFieldEditor outboundMessages = new ColorFieldEditor(
-				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.OUTBOUND + "-color", "Sent Message Color:",
-				getFieldEditorParent());
-		addField(outboundMessages);
 
 		ColorFieldEditor internalMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
@@ -132,5 +93,28 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(gameEndStatistics);
 
+		ColorFieldEditor outboundMessages = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.OUTBOUND + "-color", "Sent Message Color:",
+				getFieldEditorParent());
+		addField(outboundMessages);
+
+		ColorFieldEditor shoutMessages = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.SHOUT + "-color", "Shout Message Color:",
+				getFieldEditorParent());
+		addField(shoutMessages);
+
+		ColorFieldEditor personTellMessages = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.TELL + "-color", "Tell Color:",
+				getFieldEditorParent());
+		addField(personTellMessages);
+
+		ColorFieldEditor whisperMessages = new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.WHISPER + "-color",
+				"Whisper Message Color:", getFieldEditorParent());
+		addField(whisperMessages);
 	}
 }

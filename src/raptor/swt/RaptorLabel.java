@@ -24,17 +24,17 @@ public class RaptorLabel extends Composite {
 				true));
 	}
 
+	@Override
+	public void addMouseListener(MouseListener listener) {
+		label.addMouseListener(listener);
+	}
+
 	public CLabel getLabel() {
 		return label;
 	}
 
-	public void setLabel(CLabel label) {
-		this.label = label;
-	}
-
-	@Override
-	public void addMouseListener(MouseListener listener) {
-		label.addMouseListener(listener);
+	public String getText() {
+		return label.getText();
 	}
 
 	@Override
@@ -42,8 +42,8 @@ public class RaptorLabel extends Composite {
 		label.removeMouseListener(listener);
 	}
 
-	public void setImage(Image image) {
-		label.setImage(image);
+	public void setAlignment(int style) {
+		label.setAlignment(style);
 	}
 
 	@Override
@@ -64,16 +64,16 @@ public class RaptorLabel extends Composite {
 		label.setForeground(color);
 	}
 
-	public String getText() {
-		return label.getText();
+	public void setImage(Image image) {
+		label.setImage(image);
+	}
+
+	public void setLabel(CLabel label) {
+		this.label = label;
 	}
 
 	public void setText(String text) {
 		label.setText(text);
-	}
-
-	public void setAlignment(int style) {
-		label.setAlignment(style);
 	}
 
 }

@@ -28,10 +28,6 @@ import bsh.Interpreter;
  */
 public class RegularExpressionScript implements
 		Comparable<RegularExpressionScript> {
-	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory
-			.getLog(RegularExpressionScript.class);
-
 	public static class ChatScriptNameComparator implements
 			Comparator<RegularExpressionScript> {
 		public int compare(RegularExpressionScript script1,
@@ -39,6 +35,10 @@ public class RegularExpressionScript implements
 			return script1.getName().compareTo(script2.getName());
 		}
 	}
+
+	@SuppressWarnings("unused")
+	private static final Log LOG = LogFactory
+			.getLog(RegularExpressionScript.class);
 
 	protected String regularExpression;
 	protected String name = "";

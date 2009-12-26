@@ -149,6 +149,26 @@ public class SWTUtils {
 	 *            be. (i.e. 80 for 80%).
 	 * @param controlHeight
 	 *            The controls height to adjust for.
+	 * @return The new font.
+	 */
+	public static Font getProportionalFont(Font fontToAdjust,
+			int resizePercentage, int controlHeight) {
+		return getProportionalFont(fontToAdjust, resizePercentage,
+				controlHeight, -1);
+	}
+
+	/**
+	 * Returns a new font resizing the font size by resizePercentage of the
+	 * controls height. This method caches fonts in Raptor's font registry so
+	 * there is no need to dispose of any fonts.
+	 * 
+	 * @param fontToAdjust
+	 *            The old font to adjust.
+	 * @param resizePercentage
+	 *            The percent of the controls height the new fonts height should
+	 *            be. (i.e. 80 for 80%).
+	 * @param controlHeight
+	 *            The controls height to adjust for.
 	 * @param maxPointSize
 	 *            The font will never be larger than the specified point size.
 	 *            -1 if there is no max point size.
@@ -190,26 +210,6 @@ public class SWTUtils {
 			Raptor.getInstance().getFontRegistry().put(key, fontDataArray);
 			return Raptor.getInstance().getFontRegistry().get(key);
 		}
-	}
-
-	/**
-	 * Returns a new font resizing the font size by resizePercentage of the
-	 * controls height. This method caches fonts in Raptor's font registry so
-	 * there is no need to dispose of any fonts.
-	 * 
-	 * @param fontToAdjust
-	 *            The old font to adjust.
-	 * @param resizePercentage
-	 *            The percent of the controls height the new fonts height should
-	 *            be. (i.e. 80 for 80%).
-	 * @param controlHeight
-	 *            The controls height to adjust for.
-	 * @return The new font.
-	 */
-	public static Font getProportionalFont(Font fontToAdjust,
-			int resizePercentage, int controlHeight) {
-		return getProportionalFont(fontToAdjust, resizePercentage,
-				controlHeight, -1);
 	}
 
 	/**

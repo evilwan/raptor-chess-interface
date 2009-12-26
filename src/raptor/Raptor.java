@@ -87,30 +87,6 @@ public class Raptor implements PreferenceKeys {
 				5000);
 	}
 
-	/**
-	 * Don't make this static.
-	 */
-	private final Log LOG = LogFactory.getLog(Raptor.class);
-
-	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
-			Display.getCurrent());
-
-	protected FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
-
-	protected ColorRegistry colorRegistry = new ColorRegistry(Display
-			.getCurrent());
-
-	protected RaptorCursorRegistry cursorRegistry = new RaptorCursorRegistry(
-			Display.getCurrent());
-
-	protected RaptorPreferenceStore preferences;
-
-	protected RaptorWindow raptorWindow;
-
-	protected Clipboard clipboard;
-
-	protected boolean isShutdown = false;
-
 	public static void createInstance() {
 		instance = new Raptor();
 		instance.init();
@@ -233,6 +209,30 @@ public class Raptor implements PreferenceKeys {
 			}
 		}
 	}
+
+	/**
+	 * Don't make this static.
+	 */
+	private final Log LOG = LogFactory.getLog(Raptor.class);
+
+	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
+			Display.getCurrent());
+
+	protected FontRegistry fontRegistry = new FontRegistry(Display.getCurrent());
+
+	protected ColorRegistry colorRegistry = new ColorRegistry(Display
+			.getCurrent());
+
+	protected RaptorCursorRegistry cursorRegistry = new RaptorCursorRegistry(
+			Display.getCurrent());
+
+	protected RaptorPreferenceStore preferences;
+
+	protected RaptorWindow raptorWindow;
+
+	protected Clipboard clipboard;
+
+	protected boolean isShutdown = false;
 
 	public Raptor() {
 		clipboard = new Clipboard(getDisplay());

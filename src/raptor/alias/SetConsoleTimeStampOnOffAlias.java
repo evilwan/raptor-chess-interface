@@ -30,7 +30,7 @@ public class SetConsoleTimeStampOnOffAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"set timestamp ")) {
+		if (StringUtils.startsWith(command, "set timestamp ")) {
 			String whatsLeft = command.substring(14).trim();
 			if (whatsLeft.equals("on") || whatsLeft.equals("1")) {
 				Raptor.getInstance().getPreferences().setValue(

@@ -19,7 +19,7 @@ public class ShowScriptAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"showscript")) {
+		if (StringUtils.startsWith(command, "showscript")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

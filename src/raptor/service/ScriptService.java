@@ -49,14 +49,18 @@ import raptor.script.ScriptUtils;
  * <p/>
  */
 public class ScriptService {
-	private static final Log LOG = LogFactory.getLog(ScriptService.class);
-
-	private static final ScriptService singletonInstance = new ScriptService();
-
 	public static interface ScriptServiceListener {
 		public void onParameterScriptsChanged();
 
 		public void onRegularExpressionScriptsChanged();
+	}
+
+	private static final Log LOG = LogFactory.getLog(ScriptService.class);
+
+	private static final ScriptService singletonInstance = new ScriptService();
+
+	public static ScriptService getInstance() {
+		return singletonInstance;
 	}
 
 	public Map<String, RegularExpressionScript> nameToRegularExpressionScript = new HashMap<String, RegularExpressionScript>();
@@ -65,10 +69,6 @@ public class ScriptService {
 
 	public List<ScriptServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<ScriptServiceListener>(5));
-
-	public static ScriptService getInstance() {
-		return singletonInstance;
-	}
 
 	private ScriptService() {
 		reload();

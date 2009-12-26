@@ -56,6 +56,13 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 
+	public static final String[] getRatings() {
+		return new String[] { "0", "1", "700", "1000", "1100", "1200", "1300",
+				"1400", "1500", "1600", "1700", "1800", "1900", "2000", "2100",
+				"2200", "2300", "2400", "2500", "2600", "2700", "2800", "3000",
+				"9999" };
+	}
+
 	protected SeekService service;
 	protected Composite composite;
 	protected Combo minRatingsFilter;
@@ -73,6 +80,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 	protected Button isShowingLosers;
 	protected Button isShowingUntimed;
 	protected RaptorTable seeksTable;
+
 	protected boolean isActive = false;
 
 	protected Runnable timer = new Runnable() {
@@ -97,13 +105,6 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			refreshTable();
 		}
 	};
-
-	public static final String[] getRatings() {
-		return new String[] { "0", "1", "700", "1000", "1100", "1200", "1300",
-				"1400", "1500", "1600", "1700", "1800", "1900", "2000", "2100",
-				"2200", "2300", "2400", "2500", "2600", "2700", "2800", "3000",
-				"9999" };
-	}
 
 	public SeekTableWindowItem(SeekService service) {
 		this.service = service;

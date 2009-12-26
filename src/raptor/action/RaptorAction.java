@@ -25,62 +25,6 @@ import raptor.swt.chess.ChessBoardController;
  */
 public interface RaptorAction {
 
-	public static Comparator<RaptorAction> NAME_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {
-		public int compare(RaptorAction action1, RaptorAction action2) {
-			return action1.getName().compareTo(action2.getName());
-		}
-	};
-
-	public static Comparator<RaptorAction> NAME_COMPARATOR_DESCENDING = new Comparator<RaptorAction>() {
-		public int compare(RaptorAction action1, RaptorAction action2) {
-			return -1 * action1.getName().compareTo(action2.getName());
-		}
-	};
-
-	public static Comparator<RaptorAction> CATEGORY_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {
-		public int compare(RaptorAction action1, RaptorAction action2) {
-			return action1.getCategory().toString().compareTo(
-					action2.getCategory().toString());
-		}
-	};
-
-	public static Comparator<RaptorAction> CATEGORY_COMPARATOR_DESCENDING = new Comparator<RaptorAction>() {
-		public int compare(RaptorAction action1, RaptorAction action2) {
-			return -1
-					* action1.getCategory().toString().compareTo(
-							action2.getCategory().toString());
-		}
-	};
-
-	public static Comparator<RaptorAction> DESCRIPTION_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {
-		public int compare(RaptorAction action1, RaptorAction action2) {
-			return action1.getDescription().compareTo(action2.getDescription());
-		}
-	};
-
-	public static Comparator<RaptorAction> DESCRIPTION_COMPARATOR_DESCENDING = new Comparator<RaptorAction>() {
-		public int compare(RaptorAction action1, RaptorAction action2) {
-			return -1
-					* action1.getDescription().compareTo(
-							action2.getDescription());
-		}
-	};
-
-	public static Comparator<RaptorAction> KEYBINDING_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {
-		public int compare(RaptorAction action1, RaptorAction action2) {
-			return ActionUtils.keyBindingToString(action1).compareTo(
-					ActionUtils.keyBindingToString(action2));
-		}
-	};
-
-	public static Comparator<RaptorAction> KEYBINDING_COMPARATOR_DESCENDING = new Comparator<RaptorAction>() {
-		public int compare(RaptorAction action1, RaptorAction action2) {
-			return -1
-					* ActionUtils.keyBindingToString(action1).compareTo(
-							ActionUtils.keyBindingToString(action2));
-		}
-	};
-
 	/**
 	 * Just used so there is a nice way to group RaptorActions in tables. This
 	 * gives the user something to sort on to easily find certain types of
@@ -185,7 +129,63 @@ public interface RaptorAction {
 		 * Used for populating the actions in the BICS Menu.
 		 */
 		BicsMenu
+	}
+
+	public static Comparator<RaptorAction> NAME_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return action1.getName().compareTo(action2.getName());
+		}
 	};
+
+	public static Comparator<RaptorAction> NAME_COMPARATOR_DESCENDING = new Comparator<RaptorAction>() {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return -1 * action1.getName().compareTo(action2.getName());
+		}
+	};
+
+	public static Comparator<RaptorAction> CATEGORY_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return action1.getCategory().toString().compareTo(
+					action2.getCategory().toString());
+		}
+	};
+
+	public static Comparator<RaptorAction> CATEGORY_COMPARATOR_DESCENDING = new Comparator<RaptorAction>() {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return -1
+					* action1.getCategory().toString().compareTo(
+							action2.getCategory().toString());
+		}
+	};
+
+	public static Comparator<RaptorAction> DESCRIPTION_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return action1.getDescription().compareTo(action2.getDescription());
+		}
+	};
+
+	public static Comparator<RaptorAction> DESCRIPTION_COMPARATOR_DESCENDING = new Comparator<RaptorAction>() {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return -1
+					* action1.getDescription().compareTo(
+							action2.getDescription());
+		}
+	};
+
+	public static Comparator<RaptorAction> KEYBINDING_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return ActionUtils.keyBindingToString(action1).compareTo(
+					ActionUtils.keyBindingToString(action2));
+		}
+	};
+
+	public static Comparator<RaptorAction> KEYBINDING_COMPARATOR_DESCENDING = new Comparator<RaptorAction>() {
+		public int compare(RaptorAction action1, RaptorAction action2) {
+			return -1
+					* ActionUtils.keyBindingToString(action1).compareTo(
+							ActionUtils.keyBindingToString(action2));
+		}
+	};;
 
 	/**
 	 * Adds the specified RaptorActionToolbar to the list of containers this

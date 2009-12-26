@@ -902,7 +902,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				sendMessage("iset ms 1", true);
 				sendMessage("iset allresults 1", true);
 				sendMessage("iset startpos 1", true);
-				sendMessage("iset pendinfo 1",true);
+				sendMessage("iset pendinfo 1", true);
 
 				if (getPreferences().getBoolean(
 						PreferenceKeys.FICS_NO_WRAP_ENABLED)) {

@@ -24,7 +24,7 @@ import raptor.pref.PreferenceKeys;
 public class RaptorWindowPage extends FieldEditorPreferencePage {
 	public RaptorWindowPage() {
 		super(GRID);
-		setTitle("Raptor Window");
+		setTitle("Window");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 

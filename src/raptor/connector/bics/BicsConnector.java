@@ -54,8 +54,6 @@ import raptor.util.RaptorStringTokenizer;
  * The connector used to connect to www.freechess.org.
  */
 public class BicsConnector extends IcsConnector implements PreferenceKeys {
-	private static final Log LOG = LogFactory.getLog(BicsConnector.class);
-
 	public static class BicsConnectorContext extends IcsConnectorContext {
 		public BicsConnectorContext() {
 			super(new IcsParser(true));
@@ -116,6 +114,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			return "bics";
 		}
 	}
+
+	private static final Log LOG = LogFactory.getLog(BicsConnector.class);
 
 	/**
 	 * Raptor allows connecting to bics twice with different profiles. Override

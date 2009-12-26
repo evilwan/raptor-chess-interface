@@ -1178,23 +1178,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		setToolItemEnabled(ToolBarItemKey.AWAY_BUTTON, !awayList.isEmpty());
 	}
 
-	protected void decorateForegroundColor(ChatEvent event, String message,
-			int textStartPosition) {
-		Color color = getPreferences().getColor(event);
-		if (color == null) {
-			color = chatConsole.inputText.getForeground();
-		}
-
-		String prompt = connector.getPrompt();
-		if (message.endsWith(prompt)) {
-			message = message.substring(0, message.length() - prompt.length());
-		}
-
-		chatConsole.inputText
-				.setStyleRange(new StyleRange(textStartPosition, message
-						.length(), color, chatConsole.inputText.getBackground()));
-	}
-
 	protected void decorateBugWhoLinks(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() == ChatType.BUGWHO_ALL
@@ -1237,87 +1220,21 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
-	protected boolean isPossibleNewsMessage(String message) {
-		return message.startsWith("Index of news items ")
-				|| message.startsWith("Index of news items ", 1)
-				|| message.startsWith("Index of all news items:")
-				|| message.startsWith("Index of all news items:", 1)
-				|| message.startsWith("Index of the last few news items:")
-				|| message.contains("\nIndex of the last few news items:")
-				|| message.startsWith("\nIndex of new news items:")
-				|| message.startsWith("\nIndex of new news items:", 1)
-				|| message.contains("\nIndex of new news items:");
-	}
-
-	protected void decorateNewsLinks(ChatEvent event, String message,
+	protected void decorateForegroundColor(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() == ChatType.UNKNOWN
-				&& isPossibleNewsMessage(message)) {
-			// Currently this will only work with FICS messages that contain:
-			// Index of the last few news items:
-			// 1371 (Tue, Jun 23) www.ficsgames.com is back online
-			// 1378 (Fri, Aug 28) Unofficial Fics Forum
-			// 1383 (Sun, Oct 4) mamer help files now available in French
-			// 1390 (Sat, Nov 14) 1 hour waiting period for adjudications
-			// 1391 (Wed, Nov 18) FICS on Facebook
-			// 1392 (Sat, Nov 21) Torrent available with 100,000,000 FICS games
-			// 1393 (Fri, Dec 4) 1^ OTB OpenChessCup
-			// 1394 (Sat, Dec 5) ChessLecture Prize Tourney No Longer a Daily
-			// Event
-			// 1396 (Tue, Dec 22) Adjudications working again.
-			// 1397 (Thu, Dec 24) Merry Christmas!
-
-			List<int[]> linkRanges = new ArrayList<int[]>(5);
-
-			int lastNewlineIndex = 0;
-			int newLineIndex = 0;
-			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
-				String line = message.substring(lastNewlineIndex + 1,
-						newLineIndex).trim();
-				if (StringUtils.isNotBlank(line)
-						&& (line.contains("(") || line.contains(")"))
-						&& !line.contains("W:") && !line.contains("B:")) {
-					int spaceIndex = line.indexOf(' ');
-					if (spaceIndex != -1) {
-						String firstWord = line.substring(0, spaceIndex);
-						if (NumberUtils.isDigits(firstWord)) {
-							linkRanges.add(new int[] { lastNewlineIndex + 1,
-									newLineIndex });
-						}
-					}
-				}
-				lastNewlineIndex = newLineIndex;
-			}
-
-			// handle the last line.
-			if (lastNewlineIndex != 0) {
-				String line = message.substring(lastNewlineIndex + 1,
-						message.length()).trim();
-				if (StringUtils.isNotBlank(line)
-						&& (line.contains("(") || line.contains(")"))
-						&& !line.contains("W:") && !line.contains("B:")) {
-					int spaceIndex = line.indexOf(' ');
-					if (spaceIndex != -1) {
-						String firstWord = line.substring(0, spaceIndex);
-						if (NumberUtils.isDigits(firstWord)) {
-							linkRanges.add(new int[] { lastNewlineIndex + 1,
-									message.length() });
-						}
-					}
-				}
-			}
-
-			// add all the ranges that were found.
-			for (int[] linkRange : linkRanges) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
-				StyleRange range = new StyleRange(textStartPosition
-						+ linkRange[0], linkRange[1] - linkRange[0],
-						underlineColor, chatConsole.inputText.getBackground());
-				range.underline = true;
-				chatConsole.inputText.setStyleRange(range);
-			}
+		Color color = getPreferences().getColor(event);
+		if (color == null) {
+			color = chatConsole.inputText.getForeground();
 		}
+
+		String prompt = connector.getPrompt();
+		if (message.endsWith(prompt)) {
+			message = message.substring(0, message.length() - prompt.length());
+		}
+
+		chatConsole.inputText
+				.setStyleRange(new StyleRange(textStartPosition, message
+						.length(), color, chatConsole.inputText.getBackground()));
 	}
 
 	protected void decorateGamesLinks(ChatEvent event, String message,
@@ -1380,6 +1297,93 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 
 			// skip the last line
+
+			// add all the ranges that were found.
+			for (int[] linkRange : linkRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_QUOTE_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ linkRange[0], linkRange[1] - linkRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
+	protected void decorateHistoryLinks(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() == ChatType.HISTORY) {
+
+			// Currently this will only work with FICS historys that are
+			// formatted like this:
+			// History for CDay:
+			// Opponent Type ECO End Date
+			// 54: - 1850 W 1756 rsherry [ zr 2 0] --- Fla Fri Dec 25, 19:44 EST
+			// 2009
+			// 55: - 1796 B 1522 Bogg [ Br 2 0] --- Mat Fri Dec 25, 19:52 EST
+			// 2009
+			// 56: + 1803 W 1515 Bogg [ Br 2 0] --- Mat Fri Dec 25, 19:55 EST
+			// 2009
+			// 57: + 1807 B 2029 Betzero [ Br 2 0] --- Mat Fri Dec 25, 19:57 EST
+			// 2009
+			// 58: + 1811 W 2025 Betzero [ Br 2 0] --- Mat Fri Dec 25, 19:59 EST
+			// 2009
+			// 59: + 1815 B 2021 Betzero [ Br 2 0] --- PW Fri Dec 25, 20:02 EST
+			// 2009
+			// 60: + 1819 W 2017 Betzero [ Br 2 0] --- Res Fri Dec 25, 20:05 EST
+			// 2009
+			// 61: + 1822 B 1514 rsherry [ Br 2 0] --- PW Fri Dec 25, 20:32 EST
+			// 2009
+			// 62: + 1825 W 1511 rsherry [ Br 2 0] --- PW Fri Dec 25, 20:35 EST
+			// 2009
+			// 63: + 1828 B 1508 rsherry [ Br 2 0] --- Mat Fri Dec 25, 20:37 EST
+			// 2009
+
+			List<int[]> linkRanges = new ArrayList<int[]>(5);
+
+			int lastNewlineIndex = 0;
+			int newLineIndex = 0;
+			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+				String line = message.substring(lastNewlineIndex + 1,
+						newLineIndex);
+				if (StringUtils.isNotBlank(line)) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (firstWord.endsWith(":")) {
+							firstWord = firstWord.substring(0, firstWord
+									.length() - 1);
+							if (NumberUtils.isDigits(firstWord)) {
+								linkRanges.add(new int[] {
+										lastNewlineIndex + 1, newLineIndex });
+							}
+						}
+					}
+				}
+				lastNewlineIndex = newLineIndex;
+			}
+
+			// handle the last line.
+			if (lastNewlineIndex != 0) {
+				String line = message.substring(lastNewlineIndex + 1, message
+						.length());
+				if (StringUtils.isNotBlank(line)) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (firstWord.endsWith(":")) {
+							firstWord = firstWord.substring(0, firstWord
+									.length() - 1);
+							if (NumberUtils.isDigits(firstWord)) {
+								linkRanges
+										.add(new int[] { lastNewlineIndex + 1,
+												message.length() });
+							}
+						}
+					}
+				}
+			}
 
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
@@ -1470,93 +1474,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								}
 								linkRanges.add(new int[] {
 										lastNewlineIndex + 1, lastIndex + 1 });
-							}
-						}
-					}
-				}
-			}
-
-			// add all the ranges that were found.
-			for (int[] linkRange : linkRanges) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
-				StyleRange range = new StyleRange(textStartPosition
-						+ linkRange[0], linkRange[1] - linkRange[0],
-						underlineColor, chatConsole.inputText.getBackground());
-				range.underline = true;
-				chatConsole.inputText.setStyleRange(range);
-			}
-		}
-	}
-
-	protected void decorateHistoryLinks(ChatEvent event, String message,
-			int textStartPosition) {
-		if (event.getType() == ChatType.HISTORY) {
-
-			// Currently this will only work with FICS historys that are
-			// formatted like this:
-			// History for CDay:
-			// Opponent Type ECO End Date
-			// 54: - 1850 W 1756 rsherry [ zr 2 0] --- Fla Fri Dec 25, 19:44 EST
-			// 2009
-			// 55: - 1796 B 1522 Bogg [ Br 2 0] --- Mat Fri Dec 25, 19:52 EST
-			// 2009
-			// 56: + 1803 W 1515 Bogg [ Br 2 0] --- Mat Fri Dec 25, 19:55 EST
-			// 2009
-			// 57: + 1807 B 2029 Betzero [ Br 2 0] --- Mat Fri Dec 25, 19:57 EST
-			// 2009
-			// 58: + 1811 W 2025 Betzero [ Br 2 0] --- Mat Fri Dec 25, 19:59 EST
-			// 2009
-			// 59: + 1815 B 2021 Betzero [ Br 2 0] --- PW Fri Dec 25, 20:02 EST
-			// 2009
-			// 60: + 1819 W 2017 Betzero [ Br 2 0] --- Res Fri Dec 25, 20:05 EST
-			// 2009
-			// 61: + 1822 B 1514 rsherry [ Br 2 0] --- PW Fri Dec 25, 20:32 EST
-			// 2009
-			// 62: + 1825 W 1511 rsherry [ Br 2 0] --- PW Fri Dec 25, 20:35 EST
-			// 2009
-			// 63: + 1828 B 1508 rsherry [ Br 2 0] --- Mat Fri Dec 25, 20:37 EST
-			// 2009
-
-			List<int[]> linkRanges = new ArrayList<int[]>(5);
-
-			int lastNewlineIndex = 0;
-			int newLineIndex = 0;
-			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
-				String line = message.substring(lastNewlineIndex + 1,
-						newLineIndex);
-				if (StringUtils.isNotBlank(line)) {
-					int spaceIndex = line.indexOf(' ');
-					if (spaceIndex != -1) {
-						String firstWord = line.substring(0, spaceIndex);
-						if (firstWord.endsWith(":")) {
-							firstWord = firstWord.substring(0, firstWord
-									.length() - 1);
-							if (NumberUtils.isDigits(firstWord)) {
-								linkRanges.add(new int[] {
-										lastNewlineIndex + 1, newLineIndex });
-							}
-						}
-					}
-				}
-				lastNewlineIndex = newLineIndex;
-			}
-
-			// handle the last line.
-			if (lastNewlineIndex != 0) {
-				String line = message.substring(lastNewlineIndex + 1, message
-						.length());
-				if (StringUtils.isNotBlank(line)) {
-					int spaceIndex = line.indexOf(' ');
-					if (spaceIndex != -1) {
-						String firstWord = line.substring(0, spaceIndex);
-						if (firstWord.endsWith(":")) {
-							firstWord = firstWord.substring(0, firstWord
-									.length() - 1);
-							if (NumberUtils.isDigits(firstWord)) {
-								linkRanges
-										.add(new int[] { lastNewlineIndex + 1,
-												message.length() });
 							}
 						}
 					}
@@ -1694,6 +1611,77 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	protected void decorateNewsLinks(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() == ChatType.UNKNOWN
+				&& isPossibleNewsMessage(message)) {
+			// Currently this will only work with FICS messages that contain:
+			// Index of the last few news items:
+			// 1371 (Tue, Jun 23) www.ficsgames.com is back online
+			// 1378 (Fri, Aug 28) Unofficial Fics Forum
+			// 1383 (Sun, Oct 4) mamer help files now available in French
+			// 1390 (Sat, Nov 14) 1 hour waiting period for adjudications
+			// 1391 (Wed, Nov 18) FICS on Facebook
+			// 1392 (Sat, Nov 21) Torrent available with 100,000,000 FICS games
+			// 1393 (Fri, Dec 4) 1^ OTB OpenChessCup
+			// 1394 (Sat, Dec 5) ChessLecture Prize Tourney No Longer a Daily
+			// Event
+			// 1396 (Tue, Dec 22) Adjudications working again.
+			// 1397 (Thu, Dec 24) Merry Christmas!
+
+			List<int[]> linkRanges = new ArrayList<int[]>(5);
+
+			int lastNewlineIndex = 0;
+			int newLineIndex = 0;
+			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+				String line = message.substring(lastNewlineIndex + 1,
+						newLineIndex).trim();
+				if (StringUtils.isNotBlank(line)
+						&& (line.contains("(") || line.contains(")"))
+						&& !line.contains("W:") && !line.contains("B:")) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (NumberUtils.isDigits(firstWord)) {
+							linkRanges.add(new int[] { lastNewlineIndex + 1,
+									newLineIndex });
+						}
+					}
+				}
+				lastNewlineIndex = newLineIndex;
+			}
+
+			// handle the last line.
+			if (lastNewlineIndex != 0) {
+				String line = message.substring(lastNewlineIndex + 1,
+						message.length()).trim();
+				if (StringUtils.isNotBlank(line)
+						&& (line.contains("(") || line.contains(")"))
+						&& !line.contains("W:") && !line.contains("B:")) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (NumberUtils.isDigits(firstWord)) {
+							linkRanges.add(new int[] { lastNewlineIndex + 1,
+									message.length() });
+						}
+					}
+				}
+			}
+
+			// add all the ranges that were found.
+			for (int[] linkRange : linkRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_QUOTE_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ linkRange[0], linkRange[1] - linkRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
 	protected void decorateQuotes(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() != ChatType.OUTBOUND) {
@@ -1793,6 +1781,19 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	protected boolean isExaminingAGame() {
+		Game[] games = getConnector().getGameService().getAllActiveGames();
+		boolean result = false;
+		for (Game game : games) {
+			if (game.isInState(Game.EXAMINING_STATE)
+					|| game.isInState(Game.SETUP_STATE)) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+
 	protected boolean isInRanges(int location, List<int[]> ranges) {
 		boolean result = false;
 		for (int[] range : ranges) {
@@ -1802,6 +1803,18 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		}
 		return result;
+	}
+
+	protected boolean isPossibleNewsMessage(String message) {
+		return message.startsWith("Index of news items ")
+				|| message.startsWith("Index of news items ", 1)
+				|| message.startsWith("Index of all news items:")
+				|| message.startsWith("Index of all news items:", 1)
+				|| message.startsWith("Index of the last few news items:")
+				|| message.contains("\nIndex of the last few news items:")
+				|| message.startsWith("\nIndex of new news items:")
+				|| message.startsWith("\nIndex of new news items:", 1)
+				|| message.contains("\nIndex of new news items:");
 	}
 
 	protected void onDecorateInputText(final ChatEvent event,
@@ -1818,19 +1831,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		decorateQuotes(event, message, textStartPosition);
 		decorateLinks(event, message, textStartPosition);
 
-	}
-
-	protected boolean isExaminingAGame() {
-		Game[] games = getConnector().getGameService().getAllActiveGames();
-		boolean result = false;
-		for (Game game : games) {
-			if (game.isInState(Game.EXAMINING_STATE)
-					|| game.isInState(Game.SETUP_STATE)) {
-				result = true;
-				break;
-			}
-		}
-		return result;
 	}
 
 	protected void onInputTextDoubleClick(MouseEvent e) {
