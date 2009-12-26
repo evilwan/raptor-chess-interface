@@ -24,7 +24,7 @@ import raptor.engine.uci.UCIEngine;
 import raptor.service.UCIEngineService;
 import raptor.swt.UCIEnginePropertiesDialog;
 
-public class EnginesPage extends PreferencePage {
+public class ChessEnginesPage extends PreferencePage {
 	protected Combo enginesCombo;
 	protected Text userNameText;
 	protected Text processLocationText;
@@ -38,7 +38,7 @@ public class EnginesPage extends PreferencePage {
 	protected Composite parent;
 	protected boolean isBuildingEnginesCombo = false;
 
-	public EnginesPage() {
+	public ChessEnginesPage() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 		setTitle("Chess Engines");
@@ -105,8 +105,6 @@ public class EnginesPage extends PreferencePage {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 				fd.setText("Select the UCI chess engine location");
 				fd.setFilterPath("");
-				String[] filterExt = { "*.*" };
-				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
 				if (!StringUtils.isBlank(selected)) {
 					try {
@@ -221,8 +219,7 @@ public class EnginesPage extends PreferencePage {
 			Raptor.getInstance().alert("Nickname location can not be empty.");
 		} else if (currentEngine == null) {
 			Raptor.getInstance().alert(
-					"You need to test the engine by clicking the "
-							+ "connect button before applying.");
+					"There is no current engine connected. Please select an engine process.");
 		} else {
 			if (currentEngine != null) {
 			} else {
