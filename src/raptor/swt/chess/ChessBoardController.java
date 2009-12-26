@@ -826,7 +826,8 @@ public abstract class ChessBoardController implements BoardConstants,
 							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
 		} else {
 			board.getWhiteLagLabel().setForeground(
-					getPreferences().getColor(PreferenceKeys.BOARD_CONTROL_COLOR));
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_CONTROL_COLOR));
 		}
 
 		if (lagTimes[BLACK] > 20000) {
@@ -835,7 +836,8 @@ public abstract class ChessBoardController implements BoardConstants,
 							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
 		} else {
 			board.getBlackLagLabel().setForeground(
-					getPreferences().getColor(PreferenceKeys.BOARD_CONTROL_COLOR));
+					getPreferences().getColor(
+							PreferenceKeys.BOARD_CONTROL_COLOR));
 		}
 
 		board.whiteLagLabel.setText(ChessBoardUtils

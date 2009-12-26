@@ -151,5 +151,13 @@ public enum ChatType {
 	 * 
 	 * @since .94
 	 */
-	GAMES
+	GAMES,
+	/**
+	 * A message containing the full bugwho message. (On fics this is from the
+	 * bugwho command).
+	 * 
+	 * @since .94
+	 */
+	BUG_WHO_ALL
+
 }

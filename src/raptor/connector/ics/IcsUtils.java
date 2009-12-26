@@ -691,10 +691,10 @@ public class IcsUtils implements GameConstants {
 	 */
 	public static boolean isLikelyPerson(String word) {
 		String strippedWord = stripWord(word);
-		if (word != null && strippedWord.length() > 2) {
+		if (strippedWord != null && strippedWord.length() > 2) {
 			boolean result = true;
 			for (int i = 0; result && i < strippedWord.length(); i++) {
-				result = VALID_PERSON_CHARS.indexOf(word.charAt(i)) != -1;
+				result = VALID_PERSON_CHARS.indexOf(strippedWord.charAt(i)) != -1;
 			}
 			return result;
 		} else {
@@ -816,8 +816,7 @@ public class IcsUtils implements GameConstants {
 	}
 
 	public static String stripTitles(String playerName) {
-		StringTokenizer stringtokenizer = new StringTokenizer(playerName,
-				"()~!@#$%^&*_+|}{';/.,:[]");
+		StringTokenizer stringtokenizer = new StringTokenizer(playerName, "()");
 		if (stringtokenizer.hasMoreTokens()) {
 			return stringtokenizer.nextToken();
 		} else {
@@ -831,13 +830,13 @@ public class IcsUtils implements GameConstants {
 	 */
 	public static String stripWord(String word) {
 		if (word != null) {
-			RaptorStringTokenizer stringtokenizer = new RaptorStringTokenizer(
-					word, STRIP_CHARS, true);
-			if (stringtokenizer.hasMoreTokens()) {
-				return stringtokenizer.nextToken();
-			} else {
-				return word;
+			word = stripTitles(word);
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(word,
+					STRIP_CHARS, true);
+			while (tok.hasMoreTokens()) {
+				word = tok.nextToken();
 			}
+			return word;
 		}
 		return null;
 	}
