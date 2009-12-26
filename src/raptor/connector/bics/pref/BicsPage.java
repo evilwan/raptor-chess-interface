@@ -13,6 +13,7 @@
  */
 package raptor.connector.bics.pref;
 
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -20,6 +21,7 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.TextFieldEditor;
+import raptor.pref.fields.LabelFieldEditor;
 import raptor.pref.fields.ListFieldEditor;
 
 public class BicsPage extends FieldEditorPreferencePage {
@@ -42,7 +44,7 @@ public class BicsPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP,
 				"Show bughouse buttons on partnerships (excluding simul)",
 				getFieldEditorParent()));
-		
+
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BICS_KEEP_ALIVE,
 				"Keep Alive (Sends Keep-Alive command below to avoid the hour idle kickout)",
@@ -53,6 +55,13 @@ public class BicsPage extends FieldEditorPreferencePage {
 
 		addField(new TextFieldEditor(PreferenceKeys.BICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
+
+		addField(new LabelFieldEditor(
+				"none",
+				WordUtils
+						.wrap(
+								"You can use $person for the person right clicked on, and $userName for the logged in user name in the scripts below.",
+								70) + "\n ", getFieldEditorParent()));
 
 		addField(new ListFieldEditor(PreferenceKeys.BICS_PERSON_COMMANDS,
 				"Right Click Person Commands:", getFieldEditorParent(), ',', 75));
