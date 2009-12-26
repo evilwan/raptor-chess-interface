@@ -30,8 +30,8 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 			{ "1 Million Characters", "1000000" },
 			{ "5 Million Characters", "5000000" },
 			{ "10 Million Characters", "10000000" },
-			{ "15 Million Characters", "10000000" },
-			{ "20 Million Characters", "10000000" } };
+			{ "15 Million Characters", "15000000" },
+			{ "20 Million Characters", "20000000" } };
 
 	LabelButtonFieldEditor labelButtonFieldEditor;
 
@@ -44,8 +44,9 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		ComboFieldEditor consoleChars = new ComboFieldEditor(
-				PreferenceKeys.CHAT_MAX_CONSOLE_CHARS, "Chat Console Size:",
-				CONSOLE_CHARS, getFieldEditorParent());
+				PreferenceKeys.CHAT_MAX_CONSOLE_CHARS,
+				"Chat Console Buffer Size:", CONSOLE_CHARS,
+				getFieldEditorParent());
 		addField(consoleChars);
 
 		ColorFieldEditor consoleBackground = new ColorFieldEditor(
