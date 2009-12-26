@@ -19,7 +19,7 @@ public class BugWhoAllEventParser extends ChatEventParser {
 		ChatEvent result = null;
 		if (text.endsWith(END_MESSAGE) && text.startsWith(START_MESSAGE)
 				|| text.startsWith(START_MESSAGE, 1)) {
-			result = new ChatEvent(null, ChatType.BUG_WHO_ALL, text);
+			result = new ChatEvent(null, ChatType.BUGWHO_ALL, text);
 		}
 		return result;
 	}

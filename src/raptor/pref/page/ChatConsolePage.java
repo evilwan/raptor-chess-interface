@@ -86,7 +86,8 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 
 		ColorFieldEditor quoteUnderlineColor = new ColorFieldEditor(
 				PreferenceKeys.CHAT_QUOTE_UNDERLINE_COLOR,
-				"Quoted Text Underline Color:", getFieldEditorParent());
+				"Quoted Text And Command Shortcut Underline Color:",
+				getFieldEditorParent());
 		addField(quoteUnderlineColor);
 
 		ColorFieldEditor linkTextColor = new ColorFieldEditor(

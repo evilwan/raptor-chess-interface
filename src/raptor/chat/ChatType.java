@@ -158,6 +158,6 @@ public enum ChatType {
 	 * 
 	 * @since .94
 	 */
-	BUG_WHO_ALL
+	BUGWHO_ALL
 
 }
