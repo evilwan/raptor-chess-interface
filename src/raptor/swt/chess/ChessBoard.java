@@ -527,21 +527,21 @@ public class ChessBoard implements BoardConstants {
 		whiteNameRatingLabel.setFont(preferences
 				.getFont(BOARD_PLAYER_NAME_FONT));
 		whiteNameRatingLabel.setForeground(preferences
-				.getColor(BOARD_PLAYER_NAME_COLOR));
+				.getColor(BOARD_CONTROL_COLOR));
 		whiteNameRatingLabel.setBackground(background);
 
 		blackNameRatingLabel.setFont(preferences
 				.getFont(BOARD_PLAYER_NAME_FONT));
 		blackNameRatingLabel.setForeground(preferences
-				.getColor(BOARD_PLAYER_NAME_COLOR));
+				.getColor(BOARD_CONTROL_COLOR));
 		blackNameRatingLabel.setBackground(background);
 
 		whiteLagLabel.setFont(preferences.getFont(BOARD_LAG_FONT));
-		whiteLagLabel.setForeground(preferences.getColor(BOARD_LAG_COLOR));
+		whiteLagLabel.setForeground(preferences.getColor(BOARD_CONTROL_COLOR));
 		whiteLagLabel.setBackground(background);
 
 		blackLagLabel.setFont(preferences.getFont(BOARD_LAG_FONT));
-		blackLagLabel.setForeground(preferences.getColor(BOARD_LAG_COLOR));
+		blackLagLabel.setForeground(preferences.getColor(BOARD_CONTROL_COLOR));
 		blackLagLabel.setBackground(background);
 
 		whiteClockLabel.setFont(preferences.getFont(BOARD_CLOCK_FONT));
@@ -557,22 +557,22 @@ public class ChessBoard implements BoardConstants {
 		openingDescriptionLabel.setFont(preferences
 				.getFont(BOARD_OPENING_DESC_FONT));
 		openingDescriptionLabel.setForeground(preferences
-				.getColor(BOARD_OPENING_DESC_COLOR));
+				.getColor(BOARD_CONTROL_COLOR));
 		openingDescriptionLabel.setBackground(background);
 
 		statusLabel.setFont(preferences.getFont(BOARD_STATUS_FONT));
-		statusLabel.setForeground(preferences.getColor(BOARD_STATUS_COLOR));
+		statusLabel.setForeground(preferences.getColor(BOARD_CONTROL_COLOR));
 		statusLabel.setBackground(background);
 
 		gameDescriptionLabel.setFont(preferences
 				.getFont(BOARD_GAME_DESCRIPTION_FONT));
 		gameDescriptionLabel.setForeground(preferences
-				.getColor(BOARD_GAME_DESCRIPTION_COLOR));
+				.getColor(BOARD_CONTROL_COLOR));
 		gameDescriptionLabel.setBackground(background);
 
 		currentPremovesLabel.setFont(preferences.getFont(BOARD_PREMOVES_FONT));
 		currentPremovesLabel.setForeground(preferences
-				.getColor(BOARD_PREMOVES_COLOR));
+				.getColor(BOARD_CONTROL_COLOR));
 		currentPremovesLabel.setBackground(background);
 
 		adjustChessBoardLayout();

@@ -22,7 +22,7 @@ public class InactiveMouseActionsPage extends FieldEditorPreferencePage {
 	public InactiveMouseActionsPage() {
 		// Use the "flat" layout
 		super(GRID);
-		setTitle("Inactive Mouse Buttons");
+		setTitle("Inactive");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 

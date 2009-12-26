@@ -366,24 +366,14 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				0, 255, 0));
 		PreferenceConverter.setDefault(this, BOARD_INACTIVE_CLOCK_COLOR,
 				new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this, BOARD_LAG_COLOR, new RGB(128, 128,
-				128));
+		PreferenceConverter.setDefault(this, BOARD_CONTROL_COLOR, new RGB(128,
+				128, 128));
 		PreferenceConverter.setDefault(this, BOARD_LAG_OVER_20_SEC_COLOR,
 				new RGB(255, 0, 0));
-		PreferenceConverter.setDefault(this, BOARD_PLAYER_NAME_COLOR, new RGB(
-				128, 128, 128));
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_LABEL_COLOR,
 				new RGB(0, 255, 0));
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(this, BOARD_OPENING_DESC_COLOR, new RGB(
-				128, 128, 128));
-		PreferenceConverter.setDefault(this, BOARD_GAME_DESCRIPTION_COLOR,
-				new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this, BOARD_PREMOVES_COLOR, new RGB(128,
-				128, 128));
-		PreferenceConverter.setDefault(this, BOARD_STATUS_COLOR, new RGB(128,
-				128, 128));
 
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName,

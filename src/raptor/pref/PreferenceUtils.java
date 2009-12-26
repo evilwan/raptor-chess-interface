@@ -33,10 +33,10 @@ import raptor.pref.page.ChatConsoleRightClickScripts;
 import raptor.pref.page.ChatConsoleToolbarsPage;
 import raptor.pref.page.ChessBoardArrowsPage;
 import raptor.pref.page.ChessBoardBehaviorPage;
-import raptor.pref.page.ChessBoardClocksPage;
 import raptor.pref.page.ChessBoardColorsPage;
 import raptor.pref.page.ChessBoardFontsPage;
 import raptor.pref.page.ChessBoardHighlightsPage;
+import raptor.pref.page.ChessBoardMouseActions;
 import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.ChessBoardResultsPage;
 import raptor.pref.page.ChessBoardToolbarsPage;
@@ -138,28 +138,60 @@ public class PreferenceUtils {
 										RaptorActionContainer.RegExChatConsole)));
 
 		mgr.addToRoot(new PreferenceNode("chessBoard", new ChessBoardPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("arrows",
+				new ChessBoardArrowsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("behavior",
 				new ChessBoardBehaviorPage()));
-		mgr.addTo("chessBoard", new PreferenceNode("clocks",
-				new ChessBoardClocksPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("colors",
 				new ChessBoardColorsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("fonts",
 				new ChessBoardFontsPage()));
-		mgr.addTo("chessBoard", new PreferenceNode("arrows",
-				new ChessBoardArrowsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("highlights",
 				new ChessBoardHighlightsPage()));
+		mgr.addTo("chessBoard", new PreferenceNode("mouseActions",
+				new ChessBoardMouseActions()));
+		mgr.addTo("chessBoard/mouseActions", new PreferenceNode("inactive",
+				new InactiveMouseActionsPage()));
+		mgr.addTo("chessBoard/mouseActions", new PreferenceNode("playing",
+				new PlayingMouseActionsPage()));
+		mgr.addTo("chessBoard/mouseActions", new PreferenceNode("observing",
+				new ObservingMouseActionsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("results",
 				new ChessBoardResultsPage()));
-		mgr.addTo("chessBoard", new PreferenceNode("playingMouseActions",
-				new PlayingMouseActionsPage()));
-		mgr.addTo("chessBoard", new PreferenceNode("observingMouseActions",
-				new ObservingMouseActionsPage()));
-		mgr.addTo("chessBoard", new PreferenceNode("inactiveMouseActions",
-				new InactiveMouseActionsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("toolbar",
 				new ChessBoardToolbarsPage()));
+		mgr
+				.addTo(
+						"chessBoard/toolbar",
+						new PreferenceNode(
+								"bugSuggest",
+								new ActionContainerPage(
+										"Bughouse Suggest",
+										"\tOn this page you can configure the toolbar for the "
+												+ "bughouse suggest chess board, i.e. your partners chess board when you are playing a bughouse "
+												+ "game. You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.BughouseSuggestChessBoard)));
+		mgr
+				.addTo(
+						"chessBoard/toolbar",
+						new PreferenceNode(
+								"examining",
+								new ActionContainerPage(
+										"Examining",
+										"\tOn this page you can configure the toolbar "
+												+ "for the examine chess board,on fics this is shown when you are examining a game. "
+												+ "You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.ExaminingChessBoard)));
+		mgr
+				.addTo(
+						"chessBoard/toolbar",
+						new PreferenceNode(
+								"inactive",
+								new ActionContainerPage(
+										"Inactive",
+										"\tOn this page you can configure the toolbar for the inactive "
+												+ "chessboards. You can add new actions on the Action Scripts Page.",
+										RaptorActionContainer.InactiveChessBoard)));
 		mgr
 				.addTo(
 						"chessBoard/toolbar",
@@ -186,17 +218,6 @@ public class PreferenceUtils {
 				.addTo(
 						"chessBoard/toolbar",
 						new PreferenceNode(
-								"examining",
-								new ActionContainerPage(
-										"Examining",
-										"\tOn this page you can configure the toolbar "
-												+ "for the examine chess board,on fics this is shown when you are examining a game. "
-												+ "You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.ExaminingChessBoard)));
-		mgr
-				.addTo(
-						"chessBoard/toolbar",
-						new PreferenceNode(
 								"setup",
 								new ActionContainerPage(
 										"Setup",
@@ -204,28 +225,6 @@ public class PreferenceUtils {
 												+ "chess board,on fics this is shown during bsetup. You can add new actions on the "
 												+ "Action Scripts Page.",
 										RaptorActionContainer.SetupChessBoard)));
-		mgr
-				.addTo(
-						"chessBoard/toolbar",
-						new PreferenceNode(
-								"bugSuggest",
-								new ActionContainerPage(
-										"Bughouse Suggest",
-										"\tOn this page you can configure the toolbar for the "
-												+ "bughouse suggest chess board, i.e. your partners chess board when you are playing a bughouse "
-												+ "game. You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.BughouseSuggestChessBoard)));
-		mgr
-				.addTo(
-						"chessBoard/toolbar",
-						new PreferenceNode(
-								"inactive",
-								new ActionContainerPage(
-										"Inactive",
-										"\tOn this page you can configure the toolbar for the inactive "
-												+ "chessboards. You can add new actions on the Action Scripts Page.",
-										RaptorActionContainer.InactiveChessBoard)));
-
 		mgr.addToRoot(new PreferenceNode("bughouse", new BughousePage()));
 		mgr
 				.addTo(

@@ -27,6 +27,22 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 			{ "Drag And Drop", UserMoveInputMode.DragAndDrop.toString() },
 			{ "Click Click Move", UserMoveInputMode.ClickClickMove.toString() } };
 
+	public static final String[][] SHOW_SECONDS_OPTIONS = {
+			{ "Always", "" + Integer.MAX_VALUE },
+			{ "When clock is <= 60 Minutes", "" + (60 * 60 * 1000 + 1) },
+			{ "When clock is <= 30 Minutes", "" + (30 * 60 * 1000 + 1) },
+			{ "When clock is <= 15 Minutes", "" + (15 * 60 * 1000 + 1) },
+			{ "When clock is <= 10 Minutes", "" + (10 * 60 * 1000 + 1) } };
+
+	public static final String[][] SHOW_TENTHS_OPTIONS = {
+			{ "Never", "" + Integer.MIN_VALUE },
+			{ "When clock is <= 10 Seconds", "" + (10 * 1000 + 1) },
+			{ "When clock is <= 1 Minute", "" + (60 * 1000 + 1) },
+			{ "When clock is <= 3 Minute", "" + (3 * 60 * 1000 + 1) },
+			{ "When clock is <= 5 Minute", "" + (5 * 60 * 1000 + 1) },
+			{ "When clock is <= 10 Minute", "" + (10 * 60 * 1000 + 1) },
+			{ "Always", "" + Integer.MAX_VALUE } };
+
 	public ChessBoardBehaviorPage() {
 		// Use the "flat" layout
 		super(GRID);
@@ -39,6 +55,16 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 		addField(new ComboFieldEditor(
 				PreferenceKeys.BOARD_USER_MOVE_INPUT_MODE, "Move input mode:",
 				USER_MOVE_INPUT_MODE_ARRAY, getFieldEditorParent()));
+
+		addField(new ComboFieldEditor(
+				PreferenceKeys.BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
+				"Show seconds on clock:", SHOW_SECONDS_OPTIONS,
+				getFieldEditorParent()));
+
+		addField(new ComboFieldEditor(
+				PreferenceKeys.BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN,
+				"Show tenths of seconds on clock:", SHOW_TENTHS_OPTIONS,
+				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES,
@@ -101,5 +127,9 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING,
 				"Allow mouse wheel move list navigation when playing a game.",
 				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS,
+				"Play 10 second countdown sounds", getFieldEditorParent()));
 	}
 }

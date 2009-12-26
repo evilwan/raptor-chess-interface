@@ -794,7 +794,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		Color inactiveColor = getPreferences().getColor(
 				PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR);
 		Color nameLabelInactive = getPreferences().getColor(
-				PreferenceKeys.BOARD_PLAYER_NAME_COLOR);
+				PreferenceKeys.BOARD_CONTROL_COLOR);
 
 		boolean isWhitesMove = getGame().getColorToMove() == WHITE;
 
@@ -826,7 +826,7 @@ public abstract class ChessBoardController implements BoardConstants,
 							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
 		} else {
 			board.getWhiteLagLabel().setForeground(
-					getPreferences().getColor(PreferenceKeys.BOARD_LAG_COLOR));
+					getPreferences().getColor(PreferenceKeys.BOARD_CONTROL_COLOR));
 		}
 
 		if (lagTimes[BLACK] > 20000) {
@@ -835,7 +835,7 @@ public abstract class ChessBoardController implements BoardConstants,
 							PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
 		} else {
 			board.getBlackLagLabel().setForeground(
-					getPreferences().getColor(PreferenceKeys.BOARD_LAG_COLOR));
+					getPreferences().getColor(PreferenceKeys.BOARD_CONTROL_COLOR));
 		}
 
 		board.whiteLagLabel.setText(ChessBoardUtils
