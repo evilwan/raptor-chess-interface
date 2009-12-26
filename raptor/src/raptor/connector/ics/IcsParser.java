@@ -41,6 +41,7 @@ import raptor.connector.ics.bughouse.BugWhoGParser;
 import raptor.connector.ics.bughouse.BugWhoPParser;
 import raptor.connector.ics.bughouse.BugWhoUParser;
 import raptor.connector.ics.chat.AbortRequestedEventParser;
+import raptor.connector.ics.chat.BugWhoAllEventParser;
 import raptor.connector.ics.chat.CShoutEventParser;
 import raptor.connector.ics.chat.ChallengeEventParser;
 import raptor.connector.ics.chat.ChannelTellEventParser;
@@ -176,6 +177,7 @@ public class IcsParser implements GameConstants {
 		nonGameEventParsers.add(new HistoryEventParser());
 		nonGameEventParsers.add(new JournalEventParser());
 		nonGameEventParsers.add(new FingerEventParser());
+		nonGameEventParsers.add(new BugWhoAllEventParser());
 
 	}
 
@@ -700,7 +702,7 @@ public class IcsParser implements GameConstants {
 							+ message, new Exception());
 		} else {
 			game.setHeader(PgnHeader.ResultDescription,
-					"Interrupted by uexamine.");
+					"Interrupted by unexamine.");
 			game.setHeader(PgnHeader.Result, Result.UNDETERMINED
 					.getDescription());
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);

@@ -13,7 +13,6 @@
  */
 package raptor.chess;
 
-
 /**
  * @author John Nahlen (johnthegreat)
  */

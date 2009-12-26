@@ -61,7 +61,8 @@ public class BicsPage extends FieldEditorPreferencePage {
 				WordUtils
 						.wrap(
 								"You can use $person for the person right clicked on, and $userName for the logged in user name in the scripts below.",
-								70) + "\n ", getFieldEditorParent()));
+								70)
+						+ "\n ", getFieldEditorParent()));
 
 		addField(new ListFieldEditor(PreferenceKeys.BICS_PERSON_COMMANDS,
 				"Right Click Person Commands:", getFieldEditorParent(), ',', 75));

@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -61,6 +62,7 @@ import raptor.alias.RaptorAliasResult;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.chat.ChatLogger.ChatEventParseListener;
+import raptor.chess.Game;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
 import raptor.connector.fics.FicsConnector;
@@ -82,6 +84,7 @@ import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.PlayingController;
 import raptor.util.BrowserUtils;
 import raptor.util.RaptorRunnable;
+import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
 public abstract class ChatConsoleController implements PreferenceKeys {
@@ -1192,6 +1195,304 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						.length(), color, chatConsole.inputText.getBackground()));
 	}
 
+	protected void decorateBugWhoLinks(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() == ChatType.BUG_WHO_ALL
+				|| event.getType() == ChatType.BUGWHO_GAMES) {
+			// Currently this will only work with FICS games messages that are
+			// in bugwho games format.
+			List<int[]> linkRanges = new ArrayList<int[]>(5);
+
+			int lastNewlineIndex = 0;
+			int newLineIndex = 0;
+			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+				String line = message.substring(lastNewlineIndex + 1,
+						newLineIndex).trim();
+				if (StringUtils.isNotBlank(line)
+						&& (line.contains("W:") || line.contains("B:"))) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (NumberUtils.isDigits(firstWord)) {
+							linkRanges.add(new int[] { lastNewlineIndex + 1,
+									newLineIndex });
+						}
+					}
+				}
+				lastNewlineIndex = newLineIndex;
+			}
+
+			// skip the last line
+
+			// add all the ranges that were found.
+			for (int[] linkRange : linkRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_LINK_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ linkRange[0], linkRange[1] - linkRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
+	protected void decorateGamesLinks(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() == ChatType.GAMES) {
+			// Currently this will only work with FICS games messages that are
+			// formatted like this:
+			// 200 1878 InsaneMania 1747 jova [ br 5 0] 3:51 - 3:57 (32-31) B:
+			// 19
+			// 17 1787 Ymar 1842 slapsky [ br 3 0] 1:36 - 1:42 (32-31) W: 21
+			// 27 1736 PoindexterI 1940 noexplode [ Br 2 0] 1:14 - 0:59 (27-25)
+			// W: 30
+			// 171 1729 bugowner 1889 yolin [ Br 2 0] 1:23 - 0:56 (51-53) W: 18
+			// 38 2297 plink 1364 CruzerC [ sr 15 0] 15:00 - 14:53 (39-39) B: 5
+			// 39 1866 celu 1821 Timoka [ br 3 0] 2:31 - 2:22 (35-35) B: 12
+			// 217 1867 BRUZLEE 1858 ianleewc [ bu 3 1] 2:26 - 2:50 (35-35) W:
+			// 13
+			// 54 1648 nemotyro 2098 dfgordon [ sr 20 5] 12:48 - 20:02 (34-34)
+			// W: 13
+			// 94 1867 Kobac 1911 Benyz [ sr 6 15] 0:10 - 1:18 (31-30) W: 24
+			// 201 1759 kecapi 2027 BenWeaver [ sr 15 0] 13:27 - 11:54 (26-26)
+			// B: 15
+			// 85 1886 report 1902 lakelandch [ br 3 0] 2:08 - 1:53 (32-32) B:
+			// 18
+			// 90 1832 lapham 1993 berkutchi [ br 3 0] 1:32 - 1:28 (28-27) B: 21
+			// 247 1830 Gurkan 2001 FDog [ sr 20 10] 19:43 - 18:05 (38-38) B: 8
+			// 129 2049 tentacle 2062 RuReti [ br 5 12] 0:08 - 11:03 ( 5- 5) W:
+			// 113
+			// 81 2041 IMgooeyjim 2079 iseeo [ sr 15 0] 12:21 - 10:58 (35-34) W:
+			// 18
+			// 64 2147 ragez 2127 wxvr [ br 3 0] 1:23 - 1:34 (17-17) B: 29
+			// 6 2207 owlce 2073 parrot [ br 5 0] 3:35 - 3:17 (30-27) B: 29
+			// 110 2168 Zeck 2153 Mori [ zr 2 0] 1:34 - 1:38 (39-39) W: 12
+			// 45 2228 Ukimix 2217 GrandLapin [ xr 3 1] 1:28 - 0:10 (23-22) W:
+			// 18
+			// 230 2765 Hephasto 2690 Angledust [ sr 15 0] 12:28 - 12:18 (28-27)
+			// B: 21
+			//
+			// 262 games displayed.
+
+			List<int[]> linkRanges = new ArrayList<int[]>(5);
+
+			int lastNewlineIndex = 0;
+			int newLineIndex = 0;
+			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+				String line = message.substring(lastNewlineIndex + 1,
+						newLineIndex).trim();
+				if (StringUtils.isNotBlank(line)
+						&& (line.contains("W:") || line.contains("B:"))) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (NumberUtils.isDigits(firstWord)) {
+							linkRanges.add(new int[] { lastNewlineIndex + 1,
+									newLineIndex });
+						}
+					}
+				}
+				lastNewlineIndex = newLineIndex;
+			}
+
+			// skip the last line
+
+			// add all the ranges that were found.
+			for (int[] linkRange : linkRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_LINK_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ linkRange[0], linkRange[1] - linkRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
+	protected void decorateJournalLinks(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() == ChatType.JOURNAL) {
+
+			// Currently this will only work with FICS journals that are
+			// formatted like this:
+			// Journal for CDay:
+			// White Rating Black Rating Type ECO End Result
+			// %01: MarkG 1639 CDay 1690 [ br 5 0] C11 Res 0-1
+			// %02: CDay 1724 cbu 1857 [ br 5 0] C30 Res 1-0
+			// %03: CDay 1630 sonareclipse 1727 [ br 5 0] B23 Fla 1-0
+			// %04: Drukkarg 1788 TheRaven 2060 [ Br 2 0] --- Res 1-0
+			// %05: Liverppol 1481 BillJr 1472 [ Br 2 0] --- Fla 1-0
+			// %06: CDay 1795 caspiwins 1735 [ Br 2 0] --- PW 0-1
+			// %09: nomaster 1710 CDay 1589 [ br 3 0] B06 Fla 1-0
+			// %11: CDay 2082 Flesh 2183 [ zr 1 0] --- Mat 1-0
+			// %12: Morteza 1787 Rusman 1552 [ Br 2 0] --- Res 0-1
+			// %13: JellyRoll 1751 CDay 1758 [ Br 2 0] --- PW 1-0
+			// %14: CDay 1674 pacancabal 1662 [ br 5 0] B03 Res 1-0
+			// %15: CDay 1666 borisak 1606 [ br 5 0] B90 Res 1-0
+
+			List<int[]> linkRanges = new ArrayList<int[]>(5);
+
+			int lastNewlineIndex = 0;
+			int newLineIndex = 0;
+			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+				String line = message.substring(lastNewlineIndex + 1,
+						newLineIndex);
+				if (StringUtils.isNotBlank(line)) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (firstWord.endsWith(":")) {
+							firstWord = firstWord.substring(1, firstWord
+									.length() - 1);
+							if (NumberUtils.isDigits(firstWord)) {
+								firstWord = firstWord.substring(0, firstWord
+										.length() - 1);
+								if (NumberUtils.isDigits(firstWord)) {
+
+									int lastIndex = newLineIndex;
+									while (Character.isWhitespace(message
+											.charAt(lastIndex))) {
+										lastIndex--;
+									}
+									linkRanges
+											.add(new int[] {
+													lastNewlineIndex + 1,
+													lastIndex + 1 });
+								}
+							}
+						}
+					}
+				}
+				lastNewlineIndex = newLineIndex;
+			}
+
+			// handle the last line.
+			if (lastNewlineIndex != 0) {
+				String line = message.substring(lastNewlineIndex + 1, message
+						.length());
+				if (StringUtils.isNotBlank(line)) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (firstWord.endsWith(":")) {
+							firstWord = firstWord.substring(1, firstWord
+									.length() - 1);
+							if (NumberUtils.isDigits(firstWord)) {
+								int lastIndex = message.length() - 1;
+								while (Character.isWhitespace(message
+										.charAt(lastIndex))) {
+									lastIndex--;
+								}
+								linkRanges.add(new int[] {
+										lastNewlineIndex + 1, lastIndex + 1 });
+							}
+						}
+					}
+				}
+			}
+
+			// add all the ranges that were found.
+			for (int[] linkRange : linkRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_LINK_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ linkRange[0], linkRange[1] - linkRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
+	protected void decorateHistoryLinks(ChatEvent event, String message,
+			int textStartPosition) {
+		if (event.getType() == ChatType.HISTORY) {
+
+			// Currently this will only work with FICS historys that are
+			// formatted like this:
+			// History for CDay:
+			// Opponent Type ECO End Date
+			// 54: - 1850 W 1756 rsherry [ zr 2 0] --- Fla Fri Dec 25, 19:44 EST
+			// 2009
+			// 55: - 1796 B 1522 Bogg [ Br 2 0] --- Mat Fri Dec 25, 19:52 EST
+			// 2009
+			// 56: + 1803 W 1515 Bogg [ Br 2 0] --- Mat Fri Dec 25, 19:55 EST
+			// 2009
+			// 57: + 1807 B 2029 Betzero [ Br 2 0] --- Mat Fri Dec 25, 19:57 EST
+			// 2009
+			// 58: + 1811 W 2025 Betzero [ Br 2 0] --- Mat Fri Dec 25, 19:59 EST
+			// 2009
+			// 59: + 1815 B 2021 Betzero [ Br 2 0] --- PW Fri Dec 25, 20:02 EST
+			// 2009
+			// 60: + 1819 W 2017 Betzero [ Br 2 0] --- Res Fri Dec 25, 20:05 EST
+			// 2009
+			// 61: + 1822 B 1514 rsherry [ Br 2 0] --- PW Fri Dec 25, 20:32 EST
+			// 2009
+			// 62: + 1825 W 1511 rsherry [ Br 2 0] --- PW Fri Dec 25, 20:35 EST
+			// 2009
+			// 63: + 1828 B 1508 rsherry [ Br 2 0] --- Mat Fri Dec 25, 20:37 EST
+			// 2009
+
+			List<int[]> linkRanges = new ArrayList<int[]>(5);
+
+			int lastNewlineIndex = 0;
+			int newLineIndex = 0;
+			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+				String line = message.substring(lastNewlineIndex + 1,
+						newLineIndex);
+				if (StringUtils.isNotBlank(line)) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (firstWord.endsWith(":")) {
+							firstWord = firstWord.substring(0, firstWord
+									.length() - 1);
+							if (NumberUtils.isDigits(firstWord)) {
+								linkRanges.add(new int[] {
+										lastNewlineIndex + 1, newLineIndex });
+							}
+						}
+					}
+				}
+				lastNewlineIndex = newLineIndex;
+			}
+
+			// handle the last line.
+			if (lastNewlineIndex != 0) {
+				String line = message.substring(lastNewlineIndex + 1, message
+						.length());
+				if (StringUtils.isNotBlank(line)) {
+					int spaceIndex = line.indexOf(' ');
+					if (spaceIndex != -1) {
+						String firstWord = line.substring(0, spaceIndex);
+						if (firstWord.endsWith(":")) {
+							firstWord = firstWord.substring(0, firstWord
+									.length() - 1);
+							if (NumberUtils.isDigits(firstWord)) {
+								linkRanges
+										.add(new int[] { lastNewlineIndex + 1,
+												message.length() });
+							}
+						}
+					}
+				}
+			}
+
+			// add all the ranges that were found.
+			for (int[] linkRange : linkRanges) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_LINK_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ linkRange[0], linkRange[1] - linkRange[0],
+						underlineColor, chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+			}
+		}
+	}
+
 	protected void decorateLinks(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() != ChatType.OUTBOUND) {
@@ -1416,11 +1717,27 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void onDecorateInputText(final ChatEvent event,
 			final String message, final int textStartPosition) {
-
 		decorateForegroundColor(event, message, textStartPosition);
 		decorateQuotes(event, message, textStartPosition);
 		decorateLinks(event, message, textStartPosition);
 		decoreateNext(event, message, textStartPosition);
+		decorateHistoryLinks(event, message, textStartPosition);
+		decorateGamesLinks(event, message, textStartPosition);
+		decorateJournalLinks(event, message, textStartPosition);
+		decorateBugWhoLinks(event, message, textStartPosition);
+	}
+
+	protected boolean isExaminingAGame() {
+		Game[] games = getConnector().getGameService().getAllActiveGames();
+		boolean result = false;
+		for (Game game : games) {
+			if (game.isInState(Game.EXAMINING_STATE)
+					|| game.isInState(Game.SETUP_STATE)) {
+				result = true;
+				break;
+			}
+		}
+		return result;
 	}
 
 	protected void onInputTextDoubleClick(MouseEvent e) {
@@ -1431,33 +1748,122 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			return;
 		}
 
-		String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
+		/**
+		 * The following code is specific to fics and handles history,journal,
+		 * and games messages.
+		 */
+		int lineIndex = chatConsole.inputText.getContent().getLineAtOffset(
+				caretPosition);
+		String line = chatConsole.inputText.getContent().getLine(lineIndex)
+				.trim();
+		boolean isHandled = false;
+		int spaceIndex = line.indexOf(' ');
+		if (spaceIndex != -1) {
+			String firstWord = line.trim().substring(0, spaceIndex);
+			// Journal.
+			if (firstWord.startsWith("%") && firstWord.endsWith(":")) {
+				firstWord = firstWord.substring(1, firstWord.length() - 1);
+				if (NumberUtils.isDigits(firstWord)) {
+					int linesBackCounter = 0;
+					lineIndex--;
+					while (lineIndex > 0 && linesBackCounter < 50) {
+						String newLine = chatConsole.inputText.getContent()
+								.getLine(lineIndex);
+						if (newLine.startsWith("Journal for ")) {
+							RaptorStringTokenizer tok = new RaptorStringTokenizer(
+									newLine, " :", true);
+							tok.nextToken();
+							tok.nextToken();
+							String user = tok.nextToken();
 
-		if (StringUtils.isNotBlank(url)) {
-			BrowserUtils.openUrl(url);
-			return;
+							if (user != null) {
+								isHandled = true;
+
+								if (isExaminingAGame()) {
+									getConnector().sendMessage("unexamine",
+											true);
+								}
+								getConnector().sendMessage(
+										"examine " + user + " %" + firstWord,
+										true);
+							}
+							break;
+						}
+						lineIndex--;
+						linesBackCounter++;
+					}
+				}
+			}
+			// History.
+			else if (firstWord.endsWith(":")) {
+				firstWord = firstWord.substring(0, firstWord.length() - 1);
+				if (NumberUtils.isDigits(firstWord)) {
+					int linesBackCounter = 0;
+					lineIndex--;
+					while (lineIndex > 0 && linesBackCounter < 12) {
+						String newLine = chatConsole.inputText.getContent()
+								.getLine(lineIndex);
+						if (newLine.startsWith("History for ")) {
+							RaptorStringTokenizer tok = new RaptorStringTokenizer(
+									newLine, " :", true);
+							tok.nextToken();
+							tok.nextToken();
+							String user = tok.nextToken();
+
+							if (user != null) {
+								isHandled = true;
+
+								if (isExaminingAGame()) {
+									getConnector().sendMessage("unexamine",
+											true);
+								}
+								getConnector().sendMessage(
+										"examine " + user + " " + firstWord,
+										true);
+							}
+							break;
+						}
+						lineIndex--;
+						linesBackCounter++;
+					}
+				}
+			}
+			// Games and BugWho games
+			else if (NumberUtils.isDigits(firstWord)
+					&& (line.contains("W:") || line.contains("B:"))) {
+				getConnector().sendMessage("observe " + firstWord, true);
+			}
 		}
 
-		String quotedText = ChatUtils.getQuotedText(chatConsole.inputText,
-				caretPosition);
-		if (StringUtils.isNotBlank(quotedText)) {
-			url = ChatUtils.getUrl(quotedText);
-			if (url == null) {
-				RaptorAliasResult alias = AliasService.getInstance()
-						.processAlias(this, quotedText);
-				if (alias == null) {
-					connector.sendMessage(quotedText);
-				} else if (alias.getNewText() != null) {
-					connector.sendMessage(alias.getNewText());
-				}
+		if (!isHandled) {
+			String url = ChatUtils.getUrl(chatConsole.inputText, caretPosition);
 
-				if (alias != null && alias.getUserMessage() != null) {
-					onAppendChatEventToInputText(new ChatEvent(null,
-							ChatType.INTERNAL, alias.getUserMessage()));
-				}
-				onForceAutoScroll();
-			} else {
+			if (StringUtils.isNotBlank(url)) {
 				BrowserUtils.openUrl(url);
+				return;
+			}
+
+			String quotedText = ChatUtils.getQuotedText(chatConsole.inputText,
+					caretPosition);
+			if (StringUtils.isNotBlank(quotedText)) {
+				url = ChatUtils.getUrl(quotedText);
+				if (url == null) {
+					RaptorAliasResult alias = AliasService.getInstance()
+							.processAlias(this, quotedText);
+					if (alias == null) {
+						connector.sendMessage(quotedText);
+					} else if (alias.getNewText() != null) {
+						connector.sendMessage(alias.getNewText());
+					}
+
+					if (alias != null && alias.getUserMessage() != null) {
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, alias.getUserMessage()));
+					}
+					onForceAutoScroll();
+				} else {
+					BrowserUtils.openUrl(url);
+				}
 			}
 		}
 	}

@@ -90,8 +90,8 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 		addField(quoteUnderlineColor);
 
 		ColorFieldEditor linkTextColor = new ColorFieldEditor(
-				PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR, "Links Underline Color:",
-				getFieldEditorParent());
+				PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR,
+				"Links Underline Color:", getFieldEditorParent());
 		addField(linkTextColor);
 	}
 }
