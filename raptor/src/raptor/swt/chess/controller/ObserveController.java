@@ -138,7 +138,7 @@ public class ObserveController extends ChessBoardController {
 								if (isDisposed()) {
 									return;
 								}
-								
+
 								if (isNewMove) {
 									if (!handleSpeakMove(game.getLastMove())) {
 										onPlayMoveSound();
@@ -146,7 +146,7 @@ public class ObserveController extends ChessBoardController {
 								}
 
 								if (isForceUpdate()) {
-									
+
 									cursor.setCursorMasterLast();
 
 									board.getSquareHighlighter()
@@ -371,8 +371,11 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public void onForward() {
 		cursor.setCursorNext();
-		refresh(cursor.getCursorGame().getHalfMoveCount() == cursor
-				.getMasterGame().getHalfMoveCount());
+		boolean isLast = !cursor.hasNext();
+		if (isLast) {
+			cursor.setCursorMasterLast();
+		}
+		refresh(isLast);
 		addDecorationsForLastMoveListMove();
 	}
 

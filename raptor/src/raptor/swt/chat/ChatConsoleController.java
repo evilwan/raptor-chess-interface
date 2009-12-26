@@ -1346,7 +1346,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			int newLineIndex = 0;
 			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
 				String line = message.substring(lastNewlineIndex + 1,
-						newLineIndex);
+						newLineIndex).trim();
 				if (StringUtils.isNotBlank(line)) {
 					int spaceIndex = line.indexOf(' ');
 					if (spaceIndex != -1) {
@@ -1366,8 +1366,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// handle the last line.
 			if (lastNewlineIndex != 0) {
-				String line = message.substring(lastNewlineIndex + 1, message
-						.length());
+				String line = message.substring(lastNewlineIndex + 1,
+						message.length()).trim();
 				if (StringUtils.isNotBlank(line)) {
 					int spaceIndex = line.indexOf(' ');
 					if (spaceIndex != -1) {

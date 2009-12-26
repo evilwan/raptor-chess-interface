@@ -213,6 +213,7 @@ public class PlayingController extends ChessBoardController {
 								}
 
 								if (isNewMove) {
+									cursor.setCursorMasterLast();
 									handleAutoDraw();
 									if (!wasLastMovePremove) {
 										removeAllMoveDecorations();
@@ -599,19 +600,30 @@ public class PlayingController extends ChessBoardController {
 	@Override
 	public void onForward() {
 		cursor.setCursorNext();
-		refresh(false);
+		boolean isLast = !cursor.hasNext();
+
+		if (isLast) {
+			cursor.setCursorMasterLast();
+		}
+
+		refresh(isLast);
 		addDecorationsForLastMoveListMove();
+
+		if (isLast) {
+			adjustPremoveLabelHighlightsAndArrows();
+		}
 	}
 
 	@Override
 	public void onLast() {
 		cursor.setCursorMasterLast();
-		refresh(false);
+		refresh(true);
 		addDecorationsForLastMoveListMove();
+		adjustPremoveLabelHighlightsAndArrows();
 	}
 
 	@Override
-	public void refresh() {
+	public void refresh(boolean value) {
 		if (isDisposed()) {
 			return;
 		}
@@ -619,7 +631,7 @@ public class PlayingController extends ChessBoardController {
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(getGame().getMoveList().getSize());
 		enableDisableNavButtons();
-		super.refresh();
+		super.refresh(value);
 	}
 
 	/**
@@ -649,8 +661,8 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		if (!isDisposed() && board.getSquare(square).getPiece() != EMPTY) {
-				board.getSquare(square).setHidingPiece(true);
-				board.redrawSquares();
+			board.getSquare(square).setHidingPiece(true);
+			board.redrawSquares();
 		}
 	}
 

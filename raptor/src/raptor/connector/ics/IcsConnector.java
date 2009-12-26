@@ -1884,6 +1884,8 @@ public abstract class IcsConnector implements Connector {
 		addToAutoComplete("znotify");
 		addToAutoComplete("+notify");
 		addToAutoComplete("-notify");
+		addToAutoComplete("+channel");
+		addToAutoComplete("-channel");
 		addToAutoComplete("+gnotify");
 		addToAutoComplete("-gnotify");
 		addToAutoComplete("+censor");
