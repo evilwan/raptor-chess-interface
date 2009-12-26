@@ -40,7 +40,7 @@ import raptor.pref.page.ChessBoardMouseActions;
 import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.ChessBoardResultsPage;
 import raptor.pref.page.ChessBoardToolbarsPage;
-import raptor.pref.page.EnginesPage;
+import raptor.pref.page.ChessEnginesPage;
 import raptor.pref.page.InactiveMouseActionsPage;
 import raptor.pref.page.ObservingMouseActionsPage;
 import raptor.pref.page.PlayingMouseActionsPage;
@@ -248,7 +248,7 @@ public class PreferenceUtils {
 
 		mgr.addToRoot(new PreferenceNode("sound", new SoundPage()));
 		mgr.addToRoot(new PreferenceNode("speech", new SpeechPage()));
-		mgr.addToRoot(new PreferenceNode("engines", new EnginesPage()));
+		mgr.addToRoot(new PreferenceNode("engines", new ChessEnginesPage()));
 
 		// Add the connector preference nodes.
 		Connector[] connectors = ConnectorService.getInstance().getConnectors();

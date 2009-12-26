@@ -162,7 +162,9 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 
 		text += GameUtils.getSan(move.getTo()) + " ";
+		
 		if (move.isPromotion()) {
+			text += GameUtils.getSan(move.getTo()) + "equals ";
 			switch (move.getPiecePromotedTo()) {
 			case KNIGHT:
 				text += "knight ";
