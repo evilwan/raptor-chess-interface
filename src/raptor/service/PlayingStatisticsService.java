@@ -83,6 +83,16 @@ public class PlayingStatisticsService {
 		}
 	}
 
+	public Connector[] getConnetorsWithStats() {
+		List<Connector> result = new ArrayList<Connector>(5);
+		for (Connector connector : connectorToResultsList.keySet()) {
+			if (!result.contains(connector)) {
+				result.add(connector);
+			}
+		}
+		return result.toArray(new Connector[0]);
+	}
+
 	/**
 	 * Returns null if there is currently no performance rating.
 	 * 
