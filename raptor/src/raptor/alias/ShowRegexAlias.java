@@ -44,7 +44,7 @@ public class ShowRegexAlias extends RaptorAlias {
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
 		command = command.trim();
-		if (StringUtils.startsWith(command,"=regex")) {
+		if (StringUtils.startsWith(command, "=regex")) {
 
 			final String whatsLeft = command.length() == 7 ? "" : command
 					.substring(7).trim();

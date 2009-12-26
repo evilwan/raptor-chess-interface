@@ -24,11 +24,11 @@ public class UCIEngineService {
 
 	public static final UCIEngineService singletonInstance = new UCIEngineService();
 
-	protected Map<String, UCIEngine> userNameToEngine = new HashMap<String, UCIEngine>();
-
 	public static UCIEngineService getInstance() {
 		return singletonInstance;
 	}
+
+	protected Map<String, UCIEngine> userNameToEngine = new HashMap<String, UCIEngine>();
 
 	private UCIEngineService() {
 		loadEngines();

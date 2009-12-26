@@ -112,92 +112,6 @@ public abstract class ListEditor extends FieldEditor {
 		createControl(parent);
 	}
 
-	public int getHeightHint() {
-		return heightHint;
-	}
-
-	public void setHeightHint(int heightHint) {
-		this.heightHint = heightHint;
-	}
-
-	/**
-	 * Notifies that the Add button has been pressed.
-	 */
-	private void addPressed() {
-		setPresentsDefaultValue(false);
-		String input = getNewInputObject();
-
-		if (input != null) {
-			int index = list.getSelectionIndex();
-			if (index >= 0) {
-				list.add(input, index + 1);
-			} else {
-				list.add(input, 0);
-			}
-			selectionChanged();
-		}
-	}
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	protected void adjustForNumColumns(int numColumns) {
-		Control control = getLabelControl();
-		((GridData) control.getLayoutData()).horizontalSpan = numColumns;
-		((GridData) list.getLayoutData()).horizontalSpan = numColumns - 1;
-	}
-
-	/**
-	 * Creates the Add, Remove, Up, and Down button in the given button box.
-	 * 
-	 * @param box
-	 *            the box for the buttons
-	 */
-	private void createButtons(Composite box) {
-		addButton = createPushButton(box, "ListEditor.add");//$NON-NLS-1$
-		removeButton = createPushButton(box, "ListEditor.remove");//$NON-NLS-1$
-		upButton = createPushButton(box, "ListEditor.up");//$NON-NLS-1$
-		downButton = createPushButton(box, "ListEditor.down");//$NON-NLS-1$
-	}
-
-	/**
-	 * Combines the given list of items into a single string. This method is the
-	 * converse of <code>parseString</code>.
-	 * <p>
-	 * Subclasses must implement this method.
-	 * </p>
-	 * 
-	 * @param items
-	 *            the list of items
-	 * @return the combined string
-	 * @see #parseString
-	 */
-	protected abstract String createList(String[] items);
-
-	/**
-	 * Helper method to create a push button.
-	 * 
-	 * @param parent
-	 *            the parent control
-	 * @param key
-	 *            the resource name used to supply the button's label text
-	 * @return Button
-	 */
-	private Button createPushButton(Composite parent, String key) {
-		Button button = new Button(parent, SWT.PUSH);
-		button.setText(JFaceResources.getString(key));
-		button.setFont(parent.getFont());
-		GridData data = new GridData(GridData.FILL_HORIZONTAL);
-		int widthHint = convertHorizontalDLUsToPixels(button,
-				IDialogConstants.BUTTON_WIDTH);
-		data.widthHint = Math.max(widthHint, button.computeSize(SWT.DEFAULT,
-				SWT.DEFAULT, true).x);
-		button.setLayoutData(data);
-		button.addSelectionListener(getSelectionListener());
-		return button;
-	}
-
 	/**
 	 * Creates a selection listener.
 	 */
@@ -220,6 +134,126 @@ public abstract class ListEditor extends FieldEditor {
 			}
 		};
 	}
+
+	/**
+	 * Returns this field editor's button box containing the Add, Remove, Up,
+	 * and Down button.
+	 * 
+	 * @param parent
+	 *            the parent control
+	 * @return the button box
+	 */
+	public Composite getButtonBoxControl(Composite parent) {
+		if (buttonBox == null) {
+			buttonBox = new Composite(parent, SWT.NULL);
+			GridLayout layout = new GridLayout();
+			layout.marginWidth = 0;
+			buttonBox.setLayout(layout);
+			createButtons(buttonBox);
+			buttonBox.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent event) {
+					addButton = null;
+					removeButton = null;
+					upButton = null;
+					downButton = null;
+					buttonBox = null;
+				}
+			});
+
+		} else {
+			checkParent(buttonBox, parent);
+		}
+
+		selectionChanged();
+		return buttonBox;
+	}
+
+	public int getHeightHint() {
+		return heightHint;
+	}
+
+	/**
+	 * Returns this field editor's list control.
+	 * 
+	 * @param parent
+	 *            the parent control
+	 * @return the list control
+	 */
+	public List getListControl(Composite parent) {
+		if (list == null) {
+			list = new List(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL
+					| SWT.H_SCROLL);
+			list.setFont(parent.getFont());
+			list.addSelectionListener(getSelectionListener());
+			list.addDisposeListener(new DisposeListener() {
+				public void widgetDisposed(DisposeEvent event) {
+					list = null;
+				}
+			});
+		} else {
+			checkParent(list, parent);
+		}
+		return list;
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
+	public int getNumberOfControls() {
+		return 2;
+	}
+
+	/*
+	 * @see FieldEditor.setEnabled(boolean,Composite).
+	 */
+	@Override
+	public void setEnabled(boolean enabled, Composite parent) {
+		super.setEnabled(enabled, parent);
+		getListControl(parent).setEnabled(enabled);
+		addButton.setEnabled(enabled);
+		removeButton.setEnabled(enabled);
+		upButton.setEnabled(enabled);
+		downButton.setEnabled(enabled);
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
+	public void setFocus() {
+		if (list != null) {
+			list.setFocus();
+		}
+	}
+
+	public void setHeightHint(int heightHint) {
+		this.heightHint = heightHint;
+	}
+
+	/*
+	 * (non-) Method declared on FieldEditor.
+	 */
+	@Override
+	protected void adjustForNumColumns(int numColumns) {
+		Control control = getLabelControl();
+		((GridData) control.getLayoutData()).horizontalSpan = numColumns;
+		((GridData) list.getLayoutData()).horizontalSpan = numColumns - 1;
+	}
+
+	/**
+	 * Combines the given list of items into a single string. This method is the
+	 * converse of <code>parseString</code>.
+	 * <p>
+	 * Subclasses must implement this method.
+	 * </p>
+	 * 
+	 * @param items
+	 *            the list of items
+	 * @return the combined string
+	 * @see #parseString
+	 */
+	protected abstract String createList(String[] items);
 
 	/*
 	 * (non-) Method declared on FieldEditor.
@@ -287,70 +321,6 @@ public abstract class ListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Notifies that the Down button has been pressed.
-	 */
-	private void downPressed() {
-		swap(false);
-	}
-
-	/**
-	 * Returns this field editor's button box containing the Add, Remove, Up,
-	 * and Down button.
-	 * 
-	 * @param parent
-	 *            the parent control
-	 * @return the button box
-	 */
-	public Composite getButtonBoxControl(Composite parent) {
-		if (buttonBox == null) {
-			buttonBox = new Composite(parent, SWT.NULL);
-			GridLayout layout = new GridLayout();
-			layout.marginWidth = 0;
-			buttonBox.setLayout(layout);
-			createButtons(buttonBox);
-			buttonBox.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent event) {
-					addButton = null;
-					removeButton = null;
-					upButton = null;
-					downButton = null;
-					buttonBox = null;
-				}
-			});
-
-		} else {
-			checkParent(buttonBox, parent);
-		}
-
-		selectionChanged();
-		return buttonBox;
-	}
-
-	/**
-	 * Returns this field editor's list control.
-	 * 
-	 * @param parent
-	 *            the parent control
-	 * @return the list control
-	 */
-	public List getListControl(Composite parent) {
-		if (list == null) {
-			list = new List(parent, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL
-					| SWT.H_SCROLL);
-			list.setFont(parent.getFont());
-			list.addSelectionListener(getSelectionListener());
-			list.addDisposeListener(new DisposeListener() {
-				public void widgetDisposed(DisposeEvent event) {
-					list = null;
-				}
-			});
-		} else {
-			checkParent(list, parent);
-		}
-		return list;
-	}
-
-	/**
 	 * Creates and returns a new item for the list.
 	 * <p>
 	 * Subclasses must implement this method.
@@ -359,27 +329,6 @@ public abstract class ListEditor extends FieldEditor {
 	 * @return a new item
 	 */
 	protected abstract String getNewInputObject();
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	public int getNumberOfControls() {
-		return 2;
-	}
-
-	/**
-	 * Returns this field editor's selection listener. The listener is created
-	 * if nessessary.
-	 * 
-	 * @return the selection listener
-	 */
-	private SelectionListener getSelectionListener() {
-		if (selectionListener == null) {
-			createSelectionListener();
-		}
-		return selectionListener;
-	}
 
 	/**
 	 * Returns this field editor's shell.
@@ -412,6 +361,80 @@ public abstract class ListEditor extends FieldEditor {
 	protected abstract String[] parseString(String stringList);
 
 	/**
+	 * Notifies that the Add button has been pressed.
+	 */
+	private void addPressed() {
+		setPresentsDefaultValue(false);
+		String input = getNewInputObject();
+
+		if (input != null) {
+			int index = list.getSelectionIndex();
+			if (index >= 0) {
+				list.add(input, index + 1);
+			} else {
+				list.add(input, 0);
+			}
+			selectionChanged();
+		}
+	}
+
+	/**
+	 * Creates the Add, Remove, Up, and Down button in the given button box.
+	 * 
+	 * @param box
+	 *            the box for the buttons
+	 */
+	private void createButtons(Composite box) {
+		addButton = createPushButton(box, "ListEditor.add");//$NON-NLS-1$
+		removeButton = createPushButton(box, "ListEditor.remove");//$NON-NLS-1$
+		upButton = createPushButton(box, "ListEditor.up");//$NON-NLS-1$
+		downButton = createPushButton(box, "ListEditor.down");//$NON-NLS-1$
+	}
+
+	/**
+	 * Helper method to create a push button.
+	 * 
+	 * @param parent
+	 *            the parent control
+	 * @param key
+	 *            the resource name used to supply the button's label text
+	 * @return Button
+	 */
+	private Button createPushButton(Composite parent, String key) {
+		Button button = new Button(parent, SWT.PUSH);
+		button.setText(JFaceResources.getString(key));
+		button.setFont(parent.getFont());
+		GridData data = new GridData(GridData.FILL_HORIZONTAL);
+		int widthHint = convertHorizontalDLUsToPixels(button,
+				IDialogConstants.BUTTON_WIDTH);
+		data.widthHint = Math.max(widthHint, button.computeSize(SWT.DEFAULT,
+				SWT.DEFAULT, true).x);
+		button.setLayoutData(data);
+		button.addSelectionListener(getSelectionListener());
+		return button;
+	}
+
+	/**
+	 * Notifies that the Down button has been pressed.
+	 */
+	private void downPressed() {
+		swap(false);
+	}
+
+	/**
+	 * Returns this field editor's selection listener. The listener is created
+	 * if nessessary.
+	 * 
+	 * @return the selection listener
+	 */
+	private SelectionListener getSelectionListener() {
+		if (selectionListener == null) {
+			createSelectionListener();
+		}
+		return selectionListener;
+	}
+
+	/**
 	 * Notifies that the Remove button has been pressed.
 	 */
 	private void removePressed() {
@@ -434,16 +457,6 @@ public abstract class ListEditor extends FieldEditor {
 		removeButton.setEnabled(index >= 0);
 		upButton.setEnabled(size > 1 && index > 0);
 		downButton.setEnabled(size > 1 && index >= 0 && index < size - 1);
-	}
-
-	/*
-	 * (non-) Method declared on FieldEditor.
-	 */
-	@Override
-	public void setFocus() {
-		if (list != null) {
-			list.setFocus();
-		}
 	}
 
 	/**
@@ -473,18 +486,5 @@ public abstract class ListEditor extends FieldEditor {
 	 */
 	private void upPressed() {
 		swap(true);
-	}
-
-	/*
-	 * @see FieldEditor.setEnabled(boolean,Composite).
-	 */
-	@Override
-	public void setEnabled(boolean enabled, Composite parent) {
-		super.setEnabled(enabled, parent);
-		getListControl(parent).setEnabled(enabled);
-		addButton.setEnabled(enabled);
-		removeButton.setEnabled(enabled);
-		upButton.setEnabled(enabled);
-		downButton.setEnabled(enabled);
 	}
 }

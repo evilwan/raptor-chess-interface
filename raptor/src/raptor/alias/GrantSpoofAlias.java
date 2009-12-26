@@ -47,7 +47,7 @@ public class GrantSpoofAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"grantspoof")) {
+		if (StringUtils.startsWith(command, "grantspoof")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

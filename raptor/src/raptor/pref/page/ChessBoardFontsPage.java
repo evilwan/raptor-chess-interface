@@ -28,47 +28,47 @@ public class ChessBoardFontsPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
+		addField(new FontFieldEditor(PreferenceKeys.BOARD_CLOCK_FONT,
+				"Clock Font:", getFieldEditorParent()));
+
 		FontFieldEditor coordinatesFont = new FontFieldEditor(
 				PreferenceKeys.BOARD_COORDINATES_FONT, "Coordinates Font:",
 				getFieldEditorParent());
 		addField(coordinatesFont);
 
+		FontFieldEditor gameDescriptionFont = new FontFieldEditor(
+				PreferenceKeys.BOARD_GAME_DESCRIPTION_FONT,
+				"Game Description Font:", getFieldEditorParent());
+		addField(gameDescriptionFont);
+
 		FontFieldEditor lagFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_LAG_FONT, "Total Lag Font:",
+				PreferenceKeys.BOARD_LAG_FONT, "Lag Font:",
 				getFieldEditorParent());
 		addField(lagFont);
 
-		FontFieldEditor playerNameFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_PLAYER_NAME_FONT,
-				"Player Name/Rating Font:", getFieldEditorParent());
-		addField(playerNameFont);
-
-		FontFieldEditor pieceJailFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_PIECE_JAIL_FONT,
-				"Piece Jail/Drop Square Number Font:", getFieldEditorParent());
-		addField(pieceJailFont);
+		FontFieldEditor lastMoveFont = new FontFieldEditor(
+				PreferenceKeys.BOARD_STATUS_FONT, "Last Move/Result Font:",
+				getFieldEditorParent());
+		addField(lastMoveFont);
 
 		FontFieldEditor openingDescriptionFont = new FontFieldEditor(
 				PreferenceKeys.BOARD_OPENING_DESC_FONT, "Opening Font:",
 				getFieldEditorParent());
 		addField(openingDescriptionFont);
 
+		FontFieldEditor pieceJailFont = new FontFieldEditor(
+				PreferenceKeys.BOARD_PIECE_JAIL_FONT,
+				"Piece Jail Number Font:", getFieldEditorParent());
+		addField(pieceJailFont);
+
+		FontFieldEditor playerNameFont = new FontFieldEditor(
+				PreferenceKeys.BOARD_PLAYER_NAME_FONT,
+				"Player Name and Rating Font:", getFieldEditorParent());
+		addField(playerNameFont);
+
 		FontFieldEditor premovesFont = new FontFieldEditor(
 				PreferenceKeys.BOARD_OPENING_DESC_FONT, "Premoves Font:",
 				getFieldEditorParent());
 		addField(premovesFont);
-
-		FontFieldEditor gameDescriptionFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_GAME_DESCRIPTION_FONT, "Game Type Font:",
-				getFieldEditorParent());
-		addField(gameDescriptionFont);
-
-		FontFieldEditor lastMoveFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_STATUS_FONT, "Last Move Font:",
-				getFieldEditorParent());
-		addField(lastMoveFont);
-
-		addField(new FontFieldEditor(PreferenceKeys.BOARD_CLOCK_FONT,
-				"Clock Font:", getFieldEditorParent()));
 	}
 }

@@ -26,11 +26,11 @@ import raptor.connector.fics.FicsConnector;
 public class ConnectorService {
 	private static final ConnectorService instance = new ConnectorService();
 
-	Map<String, Connector> shortNameToConnector = new HashMap<String, Connector>();
-
 	public static ConnectorService getInstance() {
 		return instance;
 	}
+
+	Map<String, Connector> shortNameToConnector = new HashMap<String, Connector>();
 
 	private ConnectorService() {
 		FicsConnector ficsConnector = new FicsConnector();

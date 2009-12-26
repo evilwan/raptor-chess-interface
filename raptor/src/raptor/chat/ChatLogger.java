@@ -30,8 +30,6 @@ import org.apache.commons.logging.LogFactory;
  * 
  */
 public class ChatLogger {
-	private static final Log LOG = LogFactory.getLog(ChatLogger.class);
-
 	public static interface ChatEventParseListener {
 		/**
 		 * Invoked on each chat event encountered in the file. Returns true if
@@ -41,6 +39,8 @@ public class ChatLogger {
 
 		public void onParseCompleted();
 	}
+
+	private static final Log LOG = LogFactory.getLog(ChatLogger.class);
 
 	protected String pathToFile;
 

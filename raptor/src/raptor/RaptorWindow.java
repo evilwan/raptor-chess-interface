@@ -1308,9 +1308,15 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	public void storeWindowPreferences() {
-		getPreferences().setValue(PreferenceKeys.APP_WINDOW_BOUNDS,
-				getShell().getBounds());
-		storeAllSashWeights();
+		// Don't use a RaptorRunnable for this it might be called when shutdown.
+		Raptor.getInstance().getDisplay().syncExec(new Runnable() {
+			public void run() {
+
+				getPreferences().setValue(PreferenceKeys.APP_WINDOW_BOUNDS,
+						getShell().getBounds());
+				storeAllSashWeights();
+			}
+		});
 	}
 
 	/**
@@ -1618,21 +1624,6 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
-		raptorHelp.add(new Separator());
-
-		raptorHelp.add(new Action("&Show Error Log") {
-			@Override
-			public void run() {
-				String html = FileUtils
-						.fileAsString(Raptor.USER_RAPTOR_HOME_PATH
-								+ "/logs/error.log");
-				if (html != null) {
-					html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
-							+ html + "</pre>\n</body>\n</html>\n";
-					BrowserUtils.openHtml(html);
-				}
-			}
-		});
 		helpMenu.add(raptorHelp);
 
 		MenuManager ficsHelp = new MenuManager("&Fics Help");
@@ -1673,6 +1664,19 @@ public class RaptorWindow extends ApplicationWindow {
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/issues/entry");
+			}
+		});
+		helpMenu.add(new Action("&Show Error Log") {
+			@Override
+			public void run() {
+				String html = FileUtils
+						.fileAsString(Raptor.USER_RAPTOR_HOME_PATH
+								+ "/logs/error.log");
+				if (html != null) {
+					html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
+							+ html + "</pre>\n</body>\n</html>\n";
+					BrowserUtils.openHtml(html);
+				}
 			}
 		});
 

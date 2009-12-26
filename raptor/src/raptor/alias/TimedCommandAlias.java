@@ -38,7 +38,7 @@ public class TimedCommandAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			final String command) {
-		if (StringUtils.startsWith(command,"timed")) {
+		if (StringUtils.startsWith(command, "timed")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

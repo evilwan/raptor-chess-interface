@@ -32,7 +32,7 @@ public class SetPremoveModeAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"set premove ")) {
+		if (StringUtils.startsWith(command, "set premove ")) {
 			String whatsLeft = command.substring(12).trim();
 			if (whatsLeft.equals("on") || whatsLeft.equals("1")) {
 				Raptor.getInstance().getPreferences().setValue(

@@ -35,14 +35,14 @@ import raptor.chess.Variant;
  * 
  */
 public abstract class LenientPgnParserListener implements PgnParserListener {
-	private static final Log LOG = LogFactory
-			.getLog(LenientPgnParserListener.class);
-
 	protected static class NagWordTrimResult {
 		String move;
 
 		Nag nag;
 	}
+
+	private static final Log LOG = LogFactory
+			.getLog(LenientPgnParserListener.class);
 
 	protected SublineNode currentAnalysisLine;
 

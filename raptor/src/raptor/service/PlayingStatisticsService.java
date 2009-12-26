@@ -20,8 +20,6 @@ import raptor.connector.Connector;
  * Keeps track of statistics on games played by the user.
  */
 public class PlayingStatisticsService {
-	private static final PlayingStatisticsService singletonInstance = new PlayingStatisticsService();
-
 	public static class VsStats {
 		int gamesPlayed;
 		double totalScore;
@@ -34,11 +32,13 @@ public class PlayingStatisticsService {
 		int opponentRating = -1;
 	}
 
-	protected Map<Connector, List<PlayingGameResult>> connectorToResultsList = new HashMap<Connector, List<PlayingGameResult>>();
+	private static final PlayingStatisticsService singletonInstance = new PlayingStatisticsService();
 
 	public static PlayingStatisticsService getInstance() {
 		return singletonInstance;
 	}
+
+	protected Map<Connector, List<PlayingGameResult>> connectorToResultsList = new HashMap<Connector, List<PlayingGameResult>>();
 
 	private PlayingStatisticsService() {
 

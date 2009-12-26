@@ -45,8 +45,6 @@ import org.apache.commons.logging.LogFactory;
  * I would like to rewrite this using ChannelSocket in Raptor to speed it up.
  */
 public class TimesealingSocket extends Socket implements Runnable {
-	private static final Log LOG = LogFactory.getLog(TimesealingSocket.class);
-
 	private class CryptOutputStream extends OutputStream {
 
 		private byte buffer[];
@@ -123,6 +121,8 @@ public class TimesealingSocket extends Socket implements Runnable {
 			return bytesInLength;
 		}
 	}
+
+	private static final Log LOG = LogFactory.getLog(TimesealingSocket.class);
 
 	private CryptOutputStream cryptedOutputStream;
 

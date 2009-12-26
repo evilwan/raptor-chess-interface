@@ -60,7 +60,8 @@ public class PendingChallangesAction extends AbstractRaptorAction {
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
 							if (challenge.isLoggedInUserChanneling()) {
-								getChatConsoleControllerSource().getConnector()
+								getChatConsoleControllerSource()
+										.getConnector()
 										.sendMessage(
 												"withdraw " + challenge.getId(),
 												true);

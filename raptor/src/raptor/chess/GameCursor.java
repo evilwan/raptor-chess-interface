@@ -29,8 +29,6 @@ import raptor.chess.pgn.PgnHeader;
  */
 public class GameCursor implements Game {
 
-	static final Log LOG = LogFactory.getLog(GameCursor.class);
-
 	public enum Mode {
 		/**
 		 * All moves and are made on the cursor game. The move list reflects the
@@ -53,6 +51,8 @@ public class GameCursor implements Game {
 		 */
 		MakeMovesOnMasterSetCursorToLast
 	}
+
+	static final Log LOG = LogFactory.getLog(GameCursor.class);
 
 	protected Game cursor;
 	protected int cursorPosition;

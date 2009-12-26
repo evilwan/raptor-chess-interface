@@ -88,10 +88,6 @@ public enum Nag implements MoveAnnotation {
 			"$135"), NAG_136("$136"), NAG_137("$137"), NAG_138("$138"), NAG_139(
 			"$139");
 
-	private String symbol;
-
-	private String nag;
-
 	public static Nag get(String nagString) {
 		// if (nagString.equals("$0")) {
 		// return NAG_0;
@@ -378,6 +374,10 @@ public enum Nag implements MoveAnnotation {
 			return null;
 		}
 	}
+
+	private String symbol;
+
+	private String nag;
 
 	private Nag(String nag) {
 		this.nag = nag;

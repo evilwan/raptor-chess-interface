@@ -42,27 +42,27 @@ public class FicsPage extends FieldEditorPreferencePage {
 				PreferenceKeys.FICS_CLOSE_TABS_ON_DISCONNECT,
 				"Close all fics tabs on disconnect", getFieldEditorParent()));
 
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP,
-				"Show bughouse buttons on partnerships (excluding simul)",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.FICS_NO_WRAP_ENABLED,
-				"Remove server line wrapping (*Requires reconnect to take effect)",
-				getFieldEditorParent()));
-
 		BooleanFieldEditor bfe2 = new BooleanFieldEditor(
 				PreferenceKeys.FICS_KEEP_ALIVE,
 				"Keep Alive (Sends Keep-Alive command below to avoid the hour idle kickout)",
 				getFieldEditorParent());
 		addField(bfe2);
 
-		addField(new StringFieldEditor(PreferenceKeys.FICS_KEEP_ALIVE_COMMAND,
-				"Keep-Alive command", getFieldEditorParent()));
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.FICS_NO_WRAP_ENABLED,
+				"Remove server line wrapping (*Requires reconnect to take effect)",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP,
+				"Show bughouse buttons on partnerships (excluding simul)",
+				getFieldEditorParent()));
 
 		addField(new TextFieldEditor(PreferenceKeys.FICS_LOGIN_SCRIPT,
 				"Login Script:", getFieldEditorParent()));
+
+		addField(new StringFieldEditor(PreferenceKeys.FICS_KEEP_ALIVE_COMMAND,
+				"Keep-Alive command", getFieldEditorParent()));
 
 		addField(new LabelFieldEditor(
 				"none",

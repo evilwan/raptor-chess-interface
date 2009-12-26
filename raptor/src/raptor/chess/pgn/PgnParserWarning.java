@@ -18,14 +18,14 @@ import java.io.Serializable;
 import raptor.util.RaptorStringUtils;
 
 public class PgnParserWarning implements Serializable {
-	static final long serialVersionUID = 1;
-
 	/**
 	 * Provided for internationalization support. To add a new cause add it to
 	 * this enum and update the resource bundles which use it.
 	 */
 	public static enum Type {
 	}
+
+	static final long serialVersionUID = 1;
 
 	private String[] args;
 

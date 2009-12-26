@@ -35,9 +35,6 @@ import raptor.chess.pgn.StreamingPgnParser;
 
 public class TestPgnParsing {
 
-	public static final String[] PGN_TEST_FILES = new String[] {// "error.pgn"};//,
-	"nestedsublines.pgn" };// , "test2.pgn" };
-
 	public static class LoggingPgnParserListener implements PgnParserListener {
 
 		public void onAnnotation(PgnParser parser, String annotation) {
@@ -130,6 +127,9 @@ public class TestPgnParsing {
 		public void onUnknown(PgnParser parser, String unknown) {
 		}
 	}
+
+	public static final String[] PGN_TEST_FILES = new String[] {// "error.pgn"};//,
+	"nestedsublines.pgn" };// , "test2.pgn" };
 
 	@Test
 	public void speedTest() throws Exception {

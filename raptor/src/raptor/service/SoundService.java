@@ -35,16 +35,17 @@ public class SoundService {
 	private static final Log LOG = LogFactory.getLog(SoundService.class);
 	private static final SoundService instance = new SoundService();
 
-	protected String[] bughouseSounds;
-	protected SoundPlayer soundPlayer;
-	protected Speech speech = null;
-
 	/**
 	 * Returns the singleton instance.
 	 */
 	public static SoundService getInstance() {
 		return instance;
 	}
+
+	protected String[] bughouseSounds;
+	protected SoundPlayer soundPlayer;
+
+	protected Speech speech = null;
 
 	private SoundService() {
 		init();
@@ -94,6 +95,12 @@ public class SoundService {
 			Raptor.getInstance().onError("Error initializing speech", t);
 			speech = null;
 		}
+	}
+
+	public boolean isSpeechSetup() {
+		return Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.APP_SOUND_ENABLED)
+				&& speech != null;
 	}
 
 	/**
@@ -168,12 +175,6 @@ public class SoundService {
 			}
 		}
 		return result;
-	}
-
-	public boolean isSpeechSetup() {
-		return Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_SOUND_ENABLED)
-				&& speech != null;
 	}
 
 	/**

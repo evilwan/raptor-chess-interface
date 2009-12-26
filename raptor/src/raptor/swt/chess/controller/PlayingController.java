@@ -84,8 +84,6 @@ import raptor.util.RaptorStringUtils;
  * You can also right click to bring up a menu of available pieces to drop.
  */
 public class PlayingController extends ChessBoardController {
-	static final Log LOG = LogFactory.getLog(PlayingController.class);
-
 	/**
 	 * A class containing the details of a premove.
 	 */
@@ -97,6 +95,8 @@ public class PlayingController extends ChessBoardController {
 		int toSquare;
 		boolean isPremoveDrop = false;
 	}
+
+	static final Log LOG = LogFactory.getLog(PlayingController.class);
 
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
@@ -318,34 +318,6 @@ public class PlayingController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("isUserWhite=" + isUserWhite);
 		}
-	}
-
-	protected boolean handleSpeakResults(Game game) {
-		boolean result = false;
-		if (SoundService.getInstance().isSpeechSetup()
-				&& getPreferences().getBoolean(
-						PreferenceKeys.BOARD_SPEAK_RESULTS)) {
-			speakResults(game);
-			result = true;
-		}
-		return result;
-	}
-
-	protected boolean isUserMove(Move move) {
-		return (isUserWhite && move.isWhitesMove())
-				|| (!isUserWhite && !move.isWhitesMove());
-	}
-
-	protected boolean handleSpeakMove(Move move) {
-		boolean result = false;
-		if (SoundService.getInstance().isSpeechSetup()
-				&& ((isUserMove(move) && getPreferences().getBoolean(
-						PreferenceKeys.BOARD_SPEAK_MOVES_I_MAKE)) || (!isUserMove(move) && getPreferences()
-						.getBoolean(PreferenceKeys.BOARD_SPEAK_MOVES_OPP_MAKES)))) {
-			speakMove(move);
-			result = true;
-		}
-		return result;
 	}
 
 	/**
@@ -1139,6 +1111,29 @@ public class PlayingController extends ChessBoardController {
 		return result;
 	}
 
+	protected boolean handleSpeakMove(Move move) {
+		boolean result = false;
+		if (SoundService.getInstance().isSpeechSetup()
+				&& ((isUserMove(move) && getPreferences().getBoolean(
+						PreferenceKeys.BOARD_SPEAK_MOVES_I_MAKE)) || (!isUserMove(move) && getPreferences()
+						.getBoolean(PreferenceKeys.BOARD_SPEAK_MOVES_OPP_MAKES)))) {
+			speakMove(move);
+			result = true;
+		}
+		return result;
+	}
+
+	protected boolean handleSpeakResults(Game game) {
+		boolean result = false;
+		if (SoundService.getInstance().isSpeechSetup()
+				&& getPreferences().getBoolean(
+						PreferenceKeys.BOARD_SPEAK_RESULTS)) {
+			speakResults(game);
+			result = true;
+		}
+		return result;
+	}
+
 	@Override
 	protected void initClockUpdaters() {
 		if (whiteClockUpdater == null) {
@@ -1154,6 +1149,11 @@ public class PlayingController extends ChessBoardController {
 	protected boolean isBughouse() {
 		return getGame().getVariant() == Variant.bughouse
 				|| getGame().getVariant() == Variant.fischerRandomBughouse;
+	}
+
+	protected boolean isUserMove(Move move) {
+		return (isUserWhite && move.isWhitesMove())
+				|| (!isUserWhite && !move.isWhitesMove());
 	}
 
 	protected void onOfferDraw() {

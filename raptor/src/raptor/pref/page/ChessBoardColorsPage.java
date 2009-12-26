@@ -29,14 +29,18 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
+
+		addField(new ColorFieldEditor(PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR,
+				"Clock Ticking Color:", getFieldEditorParent()));
+
+		addField(new ColorFieldEditor(
+				PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR,
+				"Clock Stopped Color:", getFieldEditorParent()));
+
 		ColorFieldEditor defaultMessages = new ColorFieldEditor(
 				PreferenceKeys.BOARD_BACKGROUND_COLOR, "Background Color:",
 				getFieldEditorParent());
 		addField(defaultMessages);
-
-		addField(new ColorFieldEditor(
-				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
-				"Piece Jail Background Color:", getFieldEditorParent()));
 
 		ColorFieldEditor coordinatesColor = new ColorFieldEditor(
 				PreferenceKeys.BOARD_COORDINATES_COLOR, "Coordinates Color:",
@@ -54,14 +58,12 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 		addField(lagOver20LabelColor);
 
 		addField(new ColorFieldEditor(
+				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
+				"Piece Jail Background Color:", getFieldEditorParent()));
+
+		addField(new ColorFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR,
 				"Piece Jail/Drop Square Number Color:", getFieldEditorParent()));
 
-		addField(new ColorFieldEditor(PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR,
-				"Active Clock Color:", getFieldEditorParent()));
-
-		addField(new ColorFieldEditor(
-				PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR,
-				"Inactive Clock Color:", getFieldEditorParent()));
 	}
 }

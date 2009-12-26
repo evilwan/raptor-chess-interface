@@ -43,14 +43,6 @@ import raptor.util.RaptorStringUtils;
  */
 public class RaptorTable extends Composite {
 
-	private static final Log LOG = LogFactory.getLog(RaptorTable.class);
-
-	protected static final Comparator<String> STRING_COMPARATOR = new Comparator<String>() {
-		public int compare(String arg0, String arg1) {
-			return arg0.compareTo(arg1);
-		}
-	};
-
 	public static class RaptorTableAdapter implements RaptorTableListener {
 		/**
 		 * @{inheritDoc
@@ -148,6 +140,14 @@ public class RaptorTable extends Composite {
 					* comparator.compare(string1, string2);
 		}
 	}
+
+	private static final Log LOG = LogFactory.getLog(RaptorTable.class);
+
+	protected static final Comparator<String> STRING_COMPARATOR = new Comparator<String>() {
+		public int compare(String arg0, String arg1) {
+			return arg0.compareTo(arg1);
+		}
+	};
 
 	protected int lastIndex = -1;
 	protected Table table;

@@ -311,7 +311,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_PREMOVE_ENABLED, true);
 		setDefault(BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING, true);
 		setDefault(BOARD_IS_SHOWING_PIECE_UNICODE_CHARS, true);
-		setDefault(BOARD_QUEUED_PREMOVE_ENABLED, true);
+		setDefault(BOARD_QUEUED_PREMOVE_ENABLED, false);
 		setDefault(BOARD_IS_USING_CROSSHAIRS_CURSOR, false);
 		setDefault(BOARD_LAYOUT, "raptor.swt.chess.layout.RightOrientedLayout");
 		setDefault(BOARD_TAKEOVER_INACTIVE_GAMES, true);
@@ -323,7 +323,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SPEAK_MOVES_OPP_MAKES, false);
 		setDefault(BOARD_SPEAK_MOVES_I_MAKE, false);
 		setDefault(BOARD_SPEAK_WHEN_OBSERVING, false);
-		setDefault(BOARD_SPEAK_RESULTS,false);
+		setDefault(BOARD_SPEAK_RESULTS, false);
 
 		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				PlayingMouseAction.None.toString());
@@ -563,15 +563,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						+ "-color", new RGB(128, 128, 128));
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.FINGER
-						+ "-color", new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.GAMES
-						+ "-color", new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.HISTORY
-						+ "-color", new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.JOURNAL
 						+ "-color", new RGB(128, 128, 128));
 
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,

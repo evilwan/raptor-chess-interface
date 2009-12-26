@@ -138,26 +138,28 @@ public class ObserveController extends ChessBoardController {
 								if (isDisposed()) {
 									return;
 								}
-
-								if (isToolItemSelected(ToolBarItemKey.FORCE_UPDATE)) {
-									cursor.setCursorMasterLast();
-								}
+								
 								if (isNewMove) {
 									if (!handleSpeakMove(game.getLastMove())) {
 										onPlayMoveSound();
 									}
 								}
 
-								board.getSquareHighlighter()
-										.removeAllHighlights();
-								board.getArrowDecorator().removeAllArrows();
+								if (isForceUpdate()) {
+									
+									cursor.setCursorMasterLast();
 
-								Move lastMove = getGame().getLastMove();
+									board.getSquareHighlighter()
+											.removeAllHighlights();
+									board.getArrowDecorator().removeAllArrows();
 
-								if (lastMove != null) {
-									addDecorationsForMove(lastMove, false);
+									Move lastMove = getGame().getLastMove();
+
+									if (lastMove != null) {
+										addDecorationsForMove(lastMove, false);
+									}
+									refresh();
 								}
-								refresh();
 							}
 						});
 			}
@@ -227,26 +229,13 @@ public class ObserveController extends ChessBoardController {
 		cursor = (GameCursor) getGame();
 	}
 
-	protected boolean handleSpeakResults(Game game) {
-		boolean result = false;
-		if (SoundService.getInstance().isSpeechSetup()
-				&& getPreferences().getBoolean(
-						PreferenceKeys.BOARD_SPEAK_RESULTS)) {
-			speakResults(game);
-			result = true;
+	protected boolean isForceUpdate() {
+		if (getToolItem(ToolBarItemKey.FORCE_UPDATE) == null) {
+			return true;
+		} else {
+			return isToolItemSelected(ToolBarItemKey.FORCE_UPDATE);
 		}
-		return result;
-	}
 
-	protected boolean handleSpeakMove(Move move) {
-		boolean result = false;
-		if (SoundService.getInstance().isSpeechSetup()
-				&& getPreferences().getBoolean(
-						PreferenceKeys.BOARD_SPEAK_WHEN_OBSERVING)) {
-			speakMove(move);
-			result = true;
-		}
-		return result;
 	}
 
 	@Override
@@ -382,7 +371,8 @@ public class ObserveController extends ChessBoardController {
 	@Override
 	public void onForward() {
 		cursor.setCursorNext();
-		refresh(false);
+		refresh(cursor.getCursorGame().getHalfMoveCount() == cursor
+				.getMasterGame().getHalfMoveCount());
 		addDecorationsForLastMoveListMove();
 	}
 
@@ -390,7 +380,7 @@ public class ObserveController extends ChessBoardController {
 	public void onLast() {
 		cursor.setCursorMasterLast();
 		setToolItemEnabled(ToolBarItemKey.FORCE_UPDATE, true);
-		refresh(false);
+		refresh(true);
 		addDecorationsForLastMoveListMove();
 	}
 
@@ -474,6 +464,28 @@ public class ObserveController extends ChessBoardController {
 		cursor.setCursor(halfMoveNumber);
 		refresh(false);
 		addDecorationsForLastMoveListMove();
+	}
+
+	protected boolean handleSpeakMove(Move move) {
+		boolean result = false;
+		if (SoundService.getInstance().isSpeechSetup()
+				&& getPreferences().getBoolean(
+						PreferenceKeys.BOARD_SPEAK_WHEN_OBSERVING)) {
+			speakMove(move);
+			result = true;
+		}
+		return result;
+	}
+
+	protected boolean handleSpeakResults(Game game) {
+		boolean result = false;
+		if (SoundService.getInstance().isSpeechSetup()
+				&& getPreferences().getBoolean(
+						PreferenceKeys.BOARD_SPEAK_RESULTS)) {
+			speakResults(game);
+			result = true;
+		}
+		return result;
 	}
 
 	protected void onMatchWinner() {

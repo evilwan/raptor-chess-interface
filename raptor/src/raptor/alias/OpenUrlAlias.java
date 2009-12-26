@@ -28,7 +28,7 @@ public class OpenUrlAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (StringUtils.startsWith(command,"openurl")) {
+		if (StringUtils.startsWith(command, "openurl")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

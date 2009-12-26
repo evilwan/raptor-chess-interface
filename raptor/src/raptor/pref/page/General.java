@@ -30,7 +30,7 @@ import raptor.pref.fields.LabelFieldEditor;
 import raptor.util.FileUtils;
 import raptor.util.RaptorStringUtils;
 
-public class RaptorPage extends FieldEditorPreferencePage {
+public class General extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
 
 	public static final String[][] POLLING_REFRESH = {
@@ -39,9 +39,9 @@ public class RaptorPage extends FieldEditorPreferencePage {
 			{ "Every 6 Seconds", "" + 6 }, { "Every 7 Seconds", "" + 7 },
 			{ "Every 8 Seconds", "" + 8 }, };
 
-	public RaptorPage() {
+	public General() {
 		super(FLAT);
-		setTitle("Raptor");
+		setTitle("General");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -53,27 +53,27 @@ public class RaptorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(userHomeDir);
 
-		BooleanFieldEditor isPlayingSound = new BooleanFieldEditor(
-				PreferenceKeys.APP_SOUND_ENABLED, "Sound Enabled",
-				getFieldEditorParent());
-		addField(isPlayingSound);
-
-		BooleanFieldEditor isSavingGamePgn = new BooleanFieldEditor(
-				PreferenceKeys.APP_IS_LOGGING_GAMES, "Save my games to "
-						+ Raptor.GAMES_PGN_FILE, getFieldEditorParent());
-		addField(isSavingGamePgn);
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
+				"Launch browser on startup", getFieldEditorParent()));
 
 		BooleanFieldEditor launchExternalLinkx = new BooleanFieldEditor(
 				PreferenceKeys.APP_OPEN_LINKS_IN_EXTERNAL_BROWSER,
 				"Launch links in external browser", getFieldEditorParent());
 		addField(launchExternalLinkx);
 
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
-				"Launch startup browser", getFieldEditorParent()));
+		BooleanFieldEditor isSavingGamePgn = new BooleanFieldEditor(
+				PreferenceKeys.APP_IS_LOGGING_GAMES, "Save my games to "
+						+ Raptor.GAMES_PGN_FILE, getFieldEditorParent());
+		addField(isSavingGamePgn);
+
+		BooleanFieldEditor isPlayingSound = new BooleanFieldEditor(
+				PreferenceKeys.APP_SOUND_ENABLED, "Sound Enabled",
+				getFieldEditorParent());
+		addField(isPlayingSound);
 
 		StringFieldEditor homePage = new StringFieldEditor(
-				PreferenceKeys.APP_HOME_URL, "Startup Browser Url:",
+				PreferenceKeys.APP_HOME_URL, "Browser Home Page:",
 				getFieldEditorParent());
 		addField(homePage);
 
@@ -91,17 +91,6 @@ public class RaptorPage extends FieldEditorPreferencePage {
 				size += currentFile.length();
 			}
 		}
-
-		StringFieldEditor linuxBrowserPage = new StringFieldEditor(
-				PreferenceKeys.APP_LINUX_UNIX_BROWSER_NAME,
-				"External Browser Name (Linux/Unix Only) (Advanced):",
-				getFieldEditorParent());
-		addField(linuxBrowserPage);
-
-		StringFieldEditor timesealInitString = new StringFieldEditor(
-				PreferenceKeys.TIMESEAL_INIT_STRING,
-				"Timeseal Init String (Advanced):", getFieldEditorParent());
-		addField(timesealInitString);
 
 		labelButtonFieldEditor = new LabelButtonFieldEditor(
 				"NONE",
@@ -139,10 +128,21 @@ public class RaptorPage extends FieldEditorPreferencePage {
 				});
 		addField(labelButtonFieldEditor);
 
+		StringFieldEditor linuxBrowserPage = new StringFieldEditor(
+				PreferenceKeys.APP_LINUX_UNIX_BROWSER_NAME,
+				"External Browser Name (Linux/Unix Only) (Advanced):",
+				getFieldEditorParent());
+		addField(linuxBrowserPage);
+
 		addField(new ComboFieldEditor(
 				PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL,
 				"Polling Refresh Interval (Seek Table,Bug Partners,Bug Teams,etc):",
 				POLLING_REFRESH, getFieldEditorParent()));
+
+		StringFieldEditor timesealInitString = new StringFieldEditor(
+				PreferenceKeys.TIMESEAL_INIT_STRING,
+				"Timeseal Init String (Advanced):", getFieldEditorParent());
+		addField(timesealInitString);
 
 		addField(new LabelButtonFieldEditor("NONE", "", getFieldEditorParent(),
 				"Reset Raptor To Defaults", new SelectionAdapter() {

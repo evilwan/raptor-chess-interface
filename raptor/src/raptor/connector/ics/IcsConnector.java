@@ -94,14 +94,14 @@ import raptor.util.RegExUtils;
  * override some methods in order to get it working.
  */
 public abstract class IcsConnector implements Connector {
-	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
-
 	protected class MessageCallbackEntry {
 		protected boolean isOneShot;
 		protected int missCount;
 		protected Pattern regularExpression;
 		protected MessageCallback callback;
 	}
+
+	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
 
 	protected BughouseService bughouseService;
 

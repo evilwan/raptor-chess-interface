@@ -55,29 +55,6 @@ public class MainController extends ChatConsoleController {
 		connector.getGameService().addGameServiceListener(listener);
 	}
 
-	public void updateChallengesPending() {
-		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
-			@Override
-			public void execute() {
-				Challenge[] challenges = getConnector().getGameService()
-						.getChallenges();
-				ToolItem item = getToolItem(ToolBarItemKey.PendingChallenges);
-
-				if (challenges.length == 0) {
-					if (item != null) {
-						item.setImage(Raptor.getInstance().getIcon(
-								"dimLightbulb"));
-					}
-				} else {
-					if (item != null) {
-						item.setImage(Raptor.getInstance().getIcon(
-								"litLightbulb"));
-					}
-				}
-			}
-		});
-	}
-
 	@Override
 	public boolean confirmClose() {
 		boolean result = true;
@@ -155,5 +132,28 @@ public class MainController extends ChatConsoleController {
 	@Override
 	public boolean isSearchable() {
 		return true;
+	}
+
+	public void updateChallengesPending() {
+		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
+			@Override
+			public void execute() {
+				Challenge[] challenges = getConnector().getGameService()
+						.getChallenges();
+				ToolItem item = getToolItem(ToolBarItemKey.PendingChallenges);
+
+				if (challenges.length == 0) {
+					if (item != null) {
+						item.setImage(Raptor.getInstance().getIcon(
+								"dimLightbulb"));
+					}
+				} else {
+					if (item != null) {
+						item.setImage(Raptor.getInstance().getIcon(
+								"litLightbulb"));
+					}
+				}
+			}
+		});
 	}
 }
