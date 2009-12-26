@@ -1,5 +1,7 @@
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.swt.chat.ChatConsoleController;
 
 public class RemoveExtendedCensorAlias extends RaptorAlias {
@@ -12,7 +14,7 @@ public class RemoveExtendedCensorAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("-extcensor")) {
+		if (StringUtils.startsWith(command,"-extcensor")) {
 			if (command.length() < 13) {
 				return new RaptorAliasResult(null, "Invalid command: "
 						+ command + "\n" + getUsage());

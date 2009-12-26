@@ -13,6 +13,7 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import raptor.Raptor;
@@ -37,7 +38,7 @@ public class TellAllInChannelAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("tellall")) {
+		if (StringUtils.startsWith(command,"tellall")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

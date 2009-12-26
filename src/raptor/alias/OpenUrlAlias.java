@@ -13,6 +13,8 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.swt.chat.ChatConsoleController;
 import raptor.util.BrowserUtils;
 import raptor.util.RaptorStringTokenizer;
@@ -26,7 +28,7 @@ public class OpenUrlAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("openurl")) {
+		if (StringUtils.startsWith(command,"openurl")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

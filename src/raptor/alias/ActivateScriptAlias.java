@@ -13,6 +13,8 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.script.RegularExpressionScript;
 import raptor.service.ScriptService;
 import raptor.swt.chat.ChatConsoleController;
@@ -28,7 +30,7 @@ public class ActivateScriptAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("+script")) {
+		if (StringUtils.startsWithIgnoreCase(command, "+script")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

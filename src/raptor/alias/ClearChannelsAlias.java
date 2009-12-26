@@ -31,7 +31,7 @@ public class ClearChannelsAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equals("clear channels")) {
+		if (command.equalsIgnoreCase("clear channels")) {
 			RaptorAliasResult result = new RaptorAliasResult("=chan", null);
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- channel list\\:.*", new MessageCallback() {

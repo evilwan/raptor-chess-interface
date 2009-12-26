@@ -30,7 +30,7 @@ public class ClearNotifyAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equals("clear notify")) {
+		if (command.equalsIgnoreCase("clear notify")) {
 			RaptorAliasResult result = new RaptorAliasResult("=notify", null);
 			controller.getConnector().invokeOnNextMatch(
 					"\\-\\- notify list\\:.*", new MessageCallback() {

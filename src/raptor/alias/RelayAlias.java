@@ -13,6 +13,8 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.MessageCallback;
@@ -34,7 +36,7 @@ public class RelayAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("relay")) {
+		if (StringUtils.startsWith(command,"relay")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

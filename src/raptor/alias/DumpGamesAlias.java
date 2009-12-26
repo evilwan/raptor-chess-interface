@@ -13,6 +13,8 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.chess.Game;
 import raptor.swt.chat.ChatConsoleController;
 
@@ -29,7 +31,7 @@ public class DumpGamesAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("dumpgames")) {
+		if (StringUtils.startsWithIgnoreCase(command, "dumpgames")) {
 			StringBuilder output = new StringBuilder(8000);
 			output.append("dumpgames output:\n");
 			Game[] games = controller.getConnector().getGameService()

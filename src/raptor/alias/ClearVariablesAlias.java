@@ -24,7 +24,7 @@ public class ClearVariablesAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equals("clear vars")) {
+		if (command.equalsIgnoreCase("clear vars")) {
 			RaptorAliasResult result = new RaptorAliasResult(null,
 					"Clearing your variables.");
 			controller.getConnector().sendMessage("set f9", true);

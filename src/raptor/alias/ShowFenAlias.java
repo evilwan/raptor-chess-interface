@@ -1,45 +1,40 @@
 package raptor.alias;
 
+import raptor.Raptor;
+import raptor.RaptorWindowItem;
 import raptor.chess.Game;
-import raptor.chess.GameFactory;
-import raptor.chess.Variant;
 import raptor.swt.chat.ChatConsoleController;
-import raptor.swt.chess.ChessBoardUtils;
-import raptor.swt.chess.controller.InactiveController;
+import raptor.swt.chess.ChessBoardWindowItem;
 
 public class ShowFenAlias extends RaptorAlias {
 
 	public ShowFenAlias() {
-		super(
-				"showfen",
-				"Brings up an inactive board from a specified FEN string. Currently only supports classic chess.",
-				"showfen fenString. Example: \"showfen rnbbkrqn/pppppppp/8/8/8/8/PPPPPPPP/RNBBKRQN w KQkq - 0 1\"");
+		super("fen",
+				"Shows the FEN for all of the boards currently being viwed.",
+				"showfen fenString. Example: \"showfen\"");
 	}
 
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("showfen")) {
-			String whatsLeft = command.substring(7).trim();
+		if (command.equalsIgnoreCase("fen")) {
+			RaptorWindowItem[] windowItems = Raptor.getInstance().getWindow()
+					.getWindowItems(ChessBoardWindowItem.class);
 
-			if (whatsLeft.equals("")) {
-				return new RaptorAliasResult(null, "Invalid FEN " + whatsLeft
-						+ " \n" + getUsage());
-			} else {
-				try {
-					Game game = GameFactory.createFromFen(whatsLeft,
-							Variant.classic);
-					game.addState(Game.UNTIMED_STATE);
-					game.addState(Game.UPDATING_ECO_HEADERS_STATE);
-					game.addState(Game.UPDATING_SAN_STATE);
-					ChessBoardUtils.openBoard(new InactiveController(game,
-							"showfen Position", false));
-					return new RaptorAliasResult(null, "Loading position.");
-				} catch (Throwable t) {
-					return new RaptorAliasResult(null, "Invalid FEN "
-							+ whatsLeft + " \n" + getUsage());
+			StringBuilder text = new StringBuilder(400);
+			if (windowItems.length > 0) {
+				text.append("FEN for opened boards:\n");
+				for (RaptorWindowItem item : windowItems) {
+					Game game = ((ChessBoardWindowItem) item).getController()
+							.getGame();
+					text.append("Game " + game.getId() + "\t" + game.toFen());
 				}
+			} else {
+				text.append("There are no open boards to display FEN for.");
 			}
+
+			return new RaptorAliasResult(null, text.toString());
+
 		}
 		return null;
 	}

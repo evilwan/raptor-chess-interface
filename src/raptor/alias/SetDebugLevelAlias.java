@@ -13,6 +13,7 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -35,7 +36,7 @@ public class SetDebugLevelAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("debuglevel")) {
+		if (StringUtils.startsWith(command,"debuglevel")) {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();

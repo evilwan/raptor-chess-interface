@@ -11,7 +11,7 @@ public class ClearScreenAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equals("cls")) {
+		if (command.equalsIgnoreCase("cls")) {
 			controller.getChatConsole().getInputText().setText("");
 			return new RaptorAliasResult(null, null);
 		} else {

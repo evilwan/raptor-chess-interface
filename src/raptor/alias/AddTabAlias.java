@@ -38,7 +38,7 @@ public class AddTabAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("+tab")) {
+		if (StringUtils.startsWithIgnoreCase(command, "+tab")) {
 			String whatsLeft = command.substring(5).trim();
 
 			if (whatsLeft.contains(" ")) {

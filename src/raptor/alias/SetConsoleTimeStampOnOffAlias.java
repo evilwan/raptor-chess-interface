@@ -13,6 +13,8 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.chat.ChatConsoleController;
@@ -28,7 +30,7 @@ public class SetConsoleTimeStampOnOffAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("set timestamp ")) {
+		if (StringUtils.startsWith(command,"set timestamp ")) {
 			String whatsLeft = command.substring(14).trim();
 			if (whatsLeft.equals("on") || whatsLeft.equals("1")) {
 				Raptor.getInstance().getPreferences().setValue(
