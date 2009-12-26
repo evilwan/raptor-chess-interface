@@ -153,7 +153,11 @@ public class PlayingController extends ChessBoardController {
 										.setDecorationFromResult(
 												getGame().getResult());
 								board.redrawSquares();
-								onPlayGameEndSound();
+
+								if (!handleSpeakResults(game)) {
+									onPlayGameEndSound();
+								}
+
 								handleGameStatistics();
 								ThreadService.getInstance().run(new Runnable() {
 									public void run() {
@@ -191,7 +195,7 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		@Override
-		public void gameStateChanged(Game game, final boolean isNewMove) {
+		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(
 						new RaptorRunnable(getConnector()) {
@@ -231,13 +235,17 @@ public class PlayingController extends ChessBoardController {
 										}
 
 										refresh();
-										onPlayMoveSound();
+										if (!handleSpeakMove(game.getLastMove())) {
+											onPlayMoveSound();
+										}
 									} else {
 										if (LOG.isDebugEnabled()) {
 											LOG
 													.debug("Premove was made. Playing move sound. ");
 										}
-										onPlayMoveSound();
+										if (!handleSpeakMove(game.getLastMove())) {
+											onPlayMoveSound();
+										}
 									}
 								} else {
 									if (LOG.isDebugEnabled()) {
@@ -310,6 +318,34 @@ public class PlayingController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("isUserWhite=" + isUserWhite);
 		}
+	}
+
+	protected boolean handleSpeakResults(Game game) {
+		boolean result = false;
+		if (SoundService.getInstance().isSpeechSetup()
+				&& getPreferences().getBoolean(
+						PreferenceKeys.BOARD_SPEAK_RESULTS)) {
+			speakResults(game);
+			result = true;
+		}
+		return result;
+	}
+
+	protected boolean isUserMove(Move move) {
+		return (isUserWhite && move.isWhitesMove())
+				|| (!isUserWhite && !move.isWhitesMove());
+	}
+
+	protected boolean handleSpeakMove(Move move) {
+		boolean result = false;
+		if (SoundService.getInstance().isSpeechSetup()
+				&& ((isUserMove(move) && getPreferences().getBoolean(
+						PreferenceKeys.BOARD_SPEAK_MOVES_I_MAKE)) || (!isUserMove(move) && getPreferences()
+						.getBoolean(PreferenceKeys.BOARD_SPEAK_MOVES_OPP_MAKES)))) {
+			speakMove(move);
+			result = true;
+		}
+		return result;
 	}
 
 	/**

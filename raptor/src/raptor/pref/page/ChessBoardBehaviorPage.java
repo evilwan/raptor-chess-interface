@@ -131,5 +131,26 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS,
 				"Play 10 second countdown sounds", getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_SPEAK_MOVES_OPP_MAKES,
+				"Speak moves my opponent makes (*Requires speech setup).",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_SPEAK_MOVES_I_MAKE,
+				"Speak moves I make (*Requires speech setup).",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_SPEAK_WHEN_OBSERVING,
+				"Speak moves when observing a game (*Requires speech setup).",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_SPEAK_RESULTS,
+				"Speak game results when observing and playing (*Requires speech setup).",
+				getFieldEditorParent()));
+
 	}
 }
