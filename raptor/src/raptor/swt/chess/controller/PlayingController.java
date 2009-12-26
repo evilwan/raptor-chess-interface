@@ -100,6 +100,8 @@ public class PlayingController extends ChessBoardController {
 
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
+	protected long lastMoveMadeTime = 0;
+
 	protected MouseListener clearPremovesLabelListener = new MouseListener() {
 		public void mouseDoubleClick(MouseEvent e) {
 		}
@@ -648,8 +650,8 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		if (!isDisposed() && board.getSquare(square).getPiece() != EMPTY) {
-			board.getSquare(square).setHidingPiece(true);
-			board.redrawSquares();
+				board.getSquare(square).setHidingPiece(true);
+				board.redrawSquares();
 		}
 	}
 
