@@ -31,12 +31,6 @@ public class FicsPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
-		BooleanFieldEditor bfe2 = new BooleanFieldEditor(
-				PreferenceKeys.FICS_KEEP_ALIVE,
-				"Keep Alive (Sends date to stop the 60 minute idle kick out)",
-				getFieldEditorParent());
-		addField(bfe2);
-
 		BooleanFieldEditor bfe = new BooleanFieldEditor(
 				PreferenceKeys.FICS_AUTO_CONNECT, "Auto Connect",
 				getFieldEditorParent());
@@ -55,6 +49,12 @@ public class FicsPage extends FieldEditorPreferencePage {
 				PreferenceKeys.FICS_NO_WRAP_ENABLED,
 				"Remove server line wrapping (*Requires reconnect to take effect)",
 				getFieldEditorParent()));
+
+		BooleanFieldEditor bfe2 = new BooleanFieldEditor(
+				PreferenceKeys.FICS_KEEP_ALIVE,
+				"Keep Alive (Sends Keep-Alive command below to avoid the hour idle kickout)",
+				getFieldEditorParent());
+		addField(bfe2);
 
 		addField(new StringFieldEditor(PreferenceKeys.FICS_KEEP_ALIVE_COMMAND,
 				"Keep-Alive command", getFieldEditorParent()));
