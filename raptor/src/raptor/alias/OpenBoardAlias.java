@@ -2,6 +2,8 @@ package raptor.alias;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.Game;
 import raptor.chess.GameFactory;
@@ -13,6 +15,7 @@ import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
 public class OpenBoardAlias extends RaptorAlias {
+	private static final Log LOG = LogFactory.getLog(OpenBoardAlias.class);
 
 	public OpenBoardAlias() {
 		super(
@@ -39,8 +42,17 @@ public class OpenBoardAlias extends RaptorAlias {
 				RaptorStringTokenizer tok = new RaptorStringTokenizer(
 						whatsLeft, " ", true);
 				variant = tok.nextToken();
-				if (tok.hasMoreTokens()) {
-					fen = tok.getWhatsLeft();
+				try {
+					if (Variant.valueOf(variant) == null) {
+						fen = whatsLeft;
+						variant = Variant.classic.toString();
+					}
+					if (tok.hasMoreTokens()) {
+						fen = tok.getWhatsLeft();
+					}
+				} catch (Throwable t) {
+					fen = whatsLeft;
+					variant = Variant.classic.toString();
 				}
 			}
 
@@ -60,6 +72,7 @@ public class OpenBoardAlias extends RaptorAlias {
 						"openboard " + variant + " Position", false));
 				return new RaptorAliasResult(null, "Position created.");
 			} catch (Throwable t) {
+				LOG.info("Error parsing openboard:", t);
 				return new RaptorAliasResult(null, "Invalid command: "
 						+ getUsage());
 			}
