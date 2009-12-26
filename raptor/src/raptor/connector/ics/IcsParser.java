@@ -46,7 +46,11 @@ import raptor.connector.ics.chat.ChallengeEventParser;
 import raptor.connector.ics.chat.ChannelTellEventParser;
 import raptor.connector.ics.chat.ChatEventParser;
 import raptor.connector.ics.chat.DrawOfferedEventParser;
+import raptor.connector.ics.chat.FingerEventParser;
 import raptor.connector.ics.chat.FollowingEventParser;
+import raptor.connector.ics.chat.GamesEventParser;
+import raptor.connector.ics.chat.HistoryEventParser;
+import raptor.connector.ics.chat.JournalEventParser;
 import raptor.connector.ics.chat.KibitzEventParser;
 import raptor.connector.ics.chat.PartnerTellEventParser;
 import raptor.connector.ics.chat.PartnershipCreatedEventParser;
@@ -168,6 +172,10 @@ public class IcsParser implements GameConstants {
 		nonGameEventParsers.add(new FollowingEventParser());
 		nonGameEventParsers.add(new DrawOfferedEventParser());
 		nonGameEventParsers.add(new AbortRequestedEventParser());
+		nonGameEventParsers.add(new GamesEventParser());
+		nonGameEventParsers.add(new HistoryEventParser());
+		nonGameEventParsers.add(new JournalEventParser());
+		nonGameEventParsers.add(new FingerEventParser());
 
 	}
 

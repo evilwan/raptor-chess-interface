@@ -30,8 +30,8 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		ColorFieldEditor defaultMessages = new ColorFieldEditor(
-				PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR,
-				"Default Color:", getFieldEditorParent());
+				PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR, "Default Color:",
+				getFieldEditorParent());
 		addField(defaultMessages);
 
 		ColorFieldEditor personTellMessages = new ColorFieldEditor(
@@ -92,6 +92,26 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 						+ ChatType.WHISPER + "-color",
 				"Whisper Message Color:", getFieldEditorParent());
 		addField(whisperMessages);
+
+		addField(new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.FINGER + "-color", "Finger Notes Color:",
+				getFieldEditorParent()));
+
+		addField(new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.HISTORY + "-color", "History Color:",
+				getFieldEditorParent()));
+
+		addField(new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.JOURNAL + "-color", "Journal Color:",
+				getFieldEditorParent()));
+
+		addField(new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.GAMES + "-color", "Games Color:",
+				getFieldEditorParent()));
 
 		ColorFieldEditor outboundMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
