@@ -691,7 +691,8 @@ public class IcsUtils implements GameConstants {
 	 */
 	public static boolean isLikelyPerson(String word) {
 		String strippedWord = stripWord(word);
-		if (strippedWord != null && strippedWord.length() > 2) {
+		if (strippedWord != null && strippedWord.length() > 2
+				&& strippedWord.length() <= 17) {
 			boolean result = true;
 			for (int i = 0; result && i < strippedWord.length(); i++) {
 				result = VALID_PERSON_CHARS.indexOf(strippedWord.charAt(i)) != -1;
