@@ -66,12 +66,12 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 
 		ColorFieldEditor outputTextBackground = new ColorFieldEditor(
 				PreferenceKeys.CHAT_OUTPUT_BACKGROUND_COLOR,
-				"Text To Send Background Color:", getFieldEditorParent());
+				"Command Line Background Color:", getFieldEditorParent());
 		addField(outputTextBackground);
 
 		ColorFieldEditor promptColor = new ColorFieldEditor(
 				PreferenceKeys.CHAT_PROMPT_COLOR,
-				"Text To Send Prompt Label Color:", getFieldEditorParent());
+				"Command Line Prompt Label Color:", getFieldEditorParent());
 		addField(promptColor);
 
 		ColorFieldEditor quoteUnderlineColor = new ColorFieldEditor(
@@ -90,13 +90,8 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 		addField(inputFont);
 
 		FontFieldEditor outputFont = new FontFieldEditor(
-				PreferenceKeys.CHAT_OUTPUT_FONT, "Text To Send Font",
+				PreferenceKeys.CHAT_OUTPUT_FONT, "Command Line Font",
 				getFieldEditorParent());
 		addField(outputFont);
-
-		FontFieldEditor promptFont = new FontFieldEditor(
-				PreferenceKeys.CHAT_PROMPT_FONT,
-				"Text To Send Prompt Label Font", getFieldEditorParent());
-		addField(promptFont);
 	}
 }
