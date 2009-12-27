@@ -138,8 +138,7 @@ public class MainController extends ChatConsoleController {
 		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
 			@Override
 			public void execute() {
-				Offer[] offers = getConnector().getGameService()
-						.getOffers();
+				Offer[] offers = getConnector().getGameService().getOffers();
 				ToolItem item = getToolItem(ToolBarItemKey.PendingChallenges);
 
 				if (offers.length == 0) {

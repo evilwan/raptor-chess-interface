@@ -160,6 +160,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_SPEAK_MOVES_I_MAKE = "board-speak-moves-i-make";
 	public static final String BOARD_SPEAK_WHEN_OBSERVING = "board-speak-moves-when-observing";
 	public static final String BOARD_SPEAK_RESULTS = "board-speak-results";
+	public static final String BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING = "board-ignore-observed-games-if-playing";
 
 	public static final String ARROW_OBS_OPP_COLOR = "arrow-opponent-color";
 	public static final String ARROW_PREMOVE_COLOR = "arrow-premove-color";

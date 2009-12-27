@@ -22,6 +22,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.Raptor;
 import raptor.chat.Bugger;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -37,6 +38,7 @@ import raptor.chess.Result;
 import raptor.chess.SetupGame;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
+import raptor.connector.Connector;
 import raptor.connector.ics.bughouse.BugWhoGParser;
 import raptor.connector.ics.bughouse.BugWhoPParser;
 import raptor.connector.ics.bughouse.BugWhoUParser;
@@ -70,6 +72,7 @@ import raptor.connector.ics.game.message.NoLongerExaminingGameMessage;
 import raptor.connector.ics.game.message.RemovingObsGameMessage;
 import raptor.connector.ics.game.message.Style12Message;
 import raptor.pref.PreferenceKeys;
+import raptor.service.ConnectorService;
 import raptor.service.GameService;
 import raptor.service.GameService.Offer;
 import raptor.service.GameService.Offer.OfferType;
@@ -286,6 +289,29 @@ public class IcsParser implements GameConstants {
 	public void setConnector(IcsConnector connector) {
 		this.connector = connector;
 
+	}
+
+	/**
+	 * If a game is being played on any connector and the preference
+	 * BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING is set then this will veto the
+	 * games creation.
+	 */
+	public boolean vetoGameCreation(Game game, G1Message g1Message) {
+		boolean result = false;
+		if (game.isInState(Game.OBSERVING_STATE)
+				&& Raptor.getInstance().getPreferences().getBoolean(
+						PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING)
+				&& (!isBughouse(game) || (isBughouse(game) && !connector
+						.getGameService().isManaging(g1Message.parterGameId)))) {
+			for (Connector connector : ConnectorService.getInstance()
+					.getConnectors()) {
+				if (connector.isLoggedInUserPlayingAGame()) {
+					result = true;
+					break;
+				}
+			}
+		}
+		return result;
 	}
 
 	protected void adjustBughouseHeadersAndFollowPartnersGamesForBics(
@@ -849,37 +875,45 @@ public class IcsParser implements GameConstants {
 				|| game.getVariant() == Variant.fischerRandom) {
 			game.setHeader(PgnHeader.FEN, game.toFen());
 		}
-		service.addGame(game);
 
-		adjustWhiteOnTopHeader(game, message);
+		if (vetoGameCreation(game, g1Message)) {
+			connector.publishEvent(new ChatEvent(null, ChatType.INTERNAL,
+					"Vetoing observing game " + game.getId()
+							+ " because you are playing a game.", null));
+			connector.onUnobserve(game);
+		} else {
+			service.addGame(game);
 
-		if (isBughouse(game)) {
+			adjustWhiteOnTopHeader(game, message);
+
+			if (isBughouse(game)) {
+
+				/**
+				 * BICS does'nt have the partner game id in the G1 so you have
+				 * to handle BICS and FICS differently.
+				 */
+				if (g1Message.parterGameId.equals("0")) {
+					adjustBughouseHeadersAndFollowPartnersGamesForBics(game,
+							message, service);
+				} else {
+					adjustBughouseHeadersAndFollowPartnersGamesForFics(game,
+							g1Message, message, service);
+				}
+			}
+
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Firing game created.");
+			}
+			service.fireGameCreated(game.getId());
 
 			/**
-			 * BICS does'nt have the partner game id in the G1 so you have to
-			 * handle BICS and FICS differently.
+			 * Send a request for the moves.
 			 */
-			if (g1Message.parterGameId.equals("0")) {
-				adjustBughouseHeadersAndFollowPartnersGamesForBics(game,
-						message, service);
-			} else {
-				adjustBughouseHeadersAndFollowPartnersGamesForFics(game,
-						g1Message, message, service);
+			if (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
+					&& !message.isWhitesMoveAfterMoveIsMade) {
+				connector.sendMessage("moves " + message.gameId, true,
+						ChatType.MOVES);
 			}
-		}
-
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Firing game created.");
-		}
-		service.fireGameCreated(game.getId());
-
-		/**
-		 * Send a request for the moves.
-		 */
-		if (message.fullMoveNumber > 1 || message.fullMoveNumber == 1
-				&& !message.isWhitesMoveAfterMoveIsMade) {
-			connector.sendMessage("moves " + message.gameId, true,
-					ChatType.MOVES);
 		}
 	}
 
