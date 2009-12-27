@@ -69,6 +69,7 @@ import raptor.service.ScriptService;
 import raptor.service.SeekService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
+import raptor.service.GameService.Challenge;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.service.ScriptService.ScriptServiceListener;
@@ -127,6 +128,13 @@ public abstract class IcsConnector implements Connector {
 	 * Adds the game windows to the RaptorAppWindow.
 	 */
 	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
+
+		@Override
+		public void challengeReceived(Challenge challenge) {
+			if (challenge.isBughousePartnership()) {
+				onPartnershipReceived();
+			}
+		}
 
 		@Override
 		public void gameCreated(Game game) {
@@ -1783,6 +1791,13 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
+	protected void onPartnershipReceived() {
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND)) {
+			SoundService.getInstance().playSound("partnershipOffered");
+		}
+	}
+
 	protected abstract void onSuccessfulLogin();
 
 	/**
@@ -1884,18 +1899,29 @@ public abstract class IcsConnector implements Connector {
 		addToAutoComplete("znotify");
 		addToAutoComplete("+notify");
 		addToAutoComplete("-notify");
+		addToAutoComplete("=notify");
 		addToAutoComplete("+channel");
 		addToAutoComplete("-channel");
+		addToAutoComplete("=channel");
 		addToAutoComplete("+gnotify");
 		addToAutoComplete("-gnotify");
+		addToAutoComplete("=gnotify");
 		addToAutoComplete("+censor");
 		addToAutoComplete("-censor");
+		addToAutoComplete("=censor");
 		addToAutoComplete("+noplay");
 		addToAutoComplete("-noplay");
 		addToAutoComplete("=noplay");
-		addToAutoComplete("=censor");
-		addToAutoComplete("=gnotify");
-		addToAutoComplete("=notify");
+		addToAutoComplete("match");
+		addToAutoComplete("bughouse");
+		addToAutoComplete("suicide");
+		addToAutoComplete("losers");
+		addToAutoComplete("atmoic");
+		addToAutoComplete("wild");
+		addToAutoComplete("ptell");
+		addToAutoComplete("abort");
+		addToAutoComplete("adjourn");
+
 	}
 
 	/**

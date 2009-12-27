@@ -31,6 +31,24 @@ public class GameService {
 		protected String userChallenged;
 		protected String description;
 		protected String id;
+		protected boolean isMatch;
+		protected boolean isBughousePartnership;
+
+		public boolean isMatch() {
+			return isMatch;
+		}
+
+		public void setMatch(boolean isMatch) {
+			this.isMatch = isMatch;
+		}
+
+		public boolean isBughousePartnership() {
+			return isBughousePartnership;
+		}
+
+		public void setBughousePartnership(boolean isBughousePartnership) {
+			this.isBughousePartnership = isBughousePartnership;
+		}
 
 		public String getDescription() {
 			return description;

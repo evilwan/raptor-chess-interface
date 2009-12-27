@@ -581,6 +581,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_SPEAK_PARTNER_TELLS, true);
+		setDefault(BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND,true);
 
 		// App settings.
 		setDefault(APP_NAME, "Raptor .94a");

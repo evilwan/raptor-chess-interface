@@ -105,6 +105,7 @@ public interface PreferenceKeys {
 	public static final String BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD = "bughouse-observing-open-partner-board";
 	public static final String BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD = "bughouse-speak-countdown-on-partner-board";
 	public static final String BUGHOUSE_SPEAK_PARTNER_TELLS = "bughouse-speak-partner-tells";
+	public static final String BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND = "bughouse-play-partnership-offered-sound";
 
 	public static final String BUG_BUTTONS_FONT = "bugbuttons-font";
 

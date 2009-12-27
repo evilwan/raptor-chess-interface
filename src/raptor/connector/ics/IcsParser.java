@@ -901,9 +901,13 @@ public class IcsParser implements GameConstants {
 			if (type.equals("partner")) {
 				challenge.setDescription("partnership offer from "
 						+ challenge.getUserChallenging());
+				challenge.setMatch(false);
+				challenge.setBughousePartnership(true);
 			} else {
 				tok.nextToken();
 				challenge.setDescription("challenge " + tok.getWhatsLeft());
+				challenge.setMatch(true);
+				challenge.setBughousePartnership(false);
 			}
 			connector.getGameService().fireChallengeReceived(challenge);
 			return true;
@@ -922,9 +926,13 @@ public class IcsParser implements GameConstants {
 			if (type.equals("partner")) {
 				challenge.setDescription("partnership offer to "
 						+ challenge.getUserChallenged());
+				challenge.setMatch(false);
+				challenge.setBughousePartnership(true);
 			} else {
 				tok.nextToken();
 				challenge.setDescription("challenge " + tok.getWhatsLeft());
+				challenge.setMatch(true);
+				challenge.setBughousePartnership(false);
 			}
 			connector.getGameService().fireChallengeReceived(challenge);
 			return true;
