@@ -887,6 +887,7 @@ public class IcsParser implements GameConstants {
 	 */
 	protected boolean processPendInfo(String line) {
 		if (line.startsWith("<pf>")) {
+			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
 			Challenge challenge = new Challenge();
@@ -896,12 +897,18 @@ public class IcsParser implements GameConstants {
 			tok.nextToken();
 			challenge.setUserChallenging(tok.nextToken());
 			tok.nextToken();
-			tok.nextToken();
-			tok.nextToken();
-			challenge.setDescription(tok.getWhatsLeft());
+			String type = tok.nextToken();
+			if (type.equals("partner")) {
+				challenge.setDescription("partnership offer from "
+						+ challenge.getUserChallenging());
+			} else {
+				tok.nextToken();
+				challenge.setDescription("challenge " + tok.getWhatsLeft());
+			}
 			connector.getGameService().fireChallengeReceived(challenge);
 			return true;
 		} else if (line.startsWith("<pt>")) {
+			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
 			Challenge challenge = new Challenge();
@@ -911,12 +918,18 @@ public class IcsParser implements GameConstants {
 			tok.nextToken();
 			challenge.setUserChallenged(tok.nextToken());
 			tok.nextToken();
-			tok.nextToken();
-			tok.nextToken();
-			challenge.setDescription(tok.getWhatsLeft());
+			String type = tok.nextToken();
+			if (type.equals("partner")) {
+				challenge.setDescription("partnership offer to "
+						+ challenge.getUserChallenged());
+			} else {
+				tok.nextToken();
+				challenge.setDescription("challenge " + tok.getWhatsLeft());
+			}
 			connector.getGameService().fireChallengeReceived(challenge);
 			return true;
 		} else if (line.startsWith("<pr>")) {
+			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
 			tok.nextToken();
