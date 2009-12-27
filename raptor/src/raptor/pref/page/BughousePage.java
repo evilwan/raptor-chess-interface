@@ -43,6 +43,11 @@ public class BughousePage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
+				PreferenceKeys.BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND,
+				"Play partnership offered sound on partnership offers.",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME,
 				"Show up time indicator", getFieldEditorParent()));
 
