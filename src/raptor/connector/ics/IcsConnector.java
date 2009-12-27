@@ -69,9 +69,10 @@ import raptor.service.ScriptService;
 import raptor.service.SeekService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
-import raptor.service.GameService.Challenge;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.service.GameService.Offer;
+import raptor.service.GameService.Offer.OfferType;
 import raptor.service.ScriptService.ScriptServiceListener;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.BugGamesWindowItem;
@@ -130,8 +131,8 @@ public abstract class IcsConnector implements Connector {
 	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
 
 		@Override
-		public void challengeReceived(Challenge challenge) {
-			if (challenge.isBughousePartnership()) {
+		public void offerReceived(Offer offer) {
+			if (offer.getType() == OfferType.partner && offer.isReceiving()) {
 				onPartnershipReceived();
 			}
 		}

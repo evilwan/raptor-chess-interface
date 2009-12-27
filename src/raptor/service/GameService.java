@@ -25,69 +25,100 @@ import raptor.chess.Game;
  */
 public class GameService {
 
-	public static class Challenge {
-		protected boolean isLoggedInUserChanneling;
-		protected String userChallenging;
-		protected String userChallenged;
+	public static class Offer {
+		public static enum OfferType {
+			match, partner, draw, abort, adjourn, takeback
+		};
+
+		protected boolean isReceiving;
+		protected String source;
 		protected String description;
 		protected String id;
-		protected boolean isMatch;
-		protected boolean isBughousePartnership;
+		protected String command;
+		protected OfferType type;
+		protected boolean isDeclinable;
+		protected String declineCommand;
+		protected String declineAllCommand;
+		protected String declineDescription;
 
-		public boolean isMatch() {
-			return isMatch;
+		public String getDeclineDescription() {
+			return declineDescription;
 		}
 
-		public void setMatch(boolean isMatch) {
-			this.isMatch = isMatch;
+		public void setDeclineDescription(String declineDescription) {
+			this.declineDescription = declineDescription;
 		}
 
-		public boolean isBughousePartnership() {
-			return isBughousePartnership;
+		public boolean isDeclinable() {
+			return isDeclinable;
 		}
 
-		public void setBughousePartnership(boolean isBughousePartnership) {
-			this.isBughousePartnership = isBughousePartnership;
+		public void setDeclinable(boolean isDeclinable) {
+			this.isDeclinable = isDeclinable;
+		}
+
+		public String getDeclineCommand() {
+			return declineCommand;
+		}
+
+		public void setDeclineCommand(String declineCommand) {
+			this.declineCommand = declineCommand;
+		}
+
+		public String getDeclineAllCommand() {
+			return declineAllCommand;
+		}
+
+		public void setDeclineAllCommand(String declineAllCommand) {
+			this.declineAllCommand = declineAllCommand;
+		}
+
+		public boolean isReceiving() {
+			return isReceiving;
+		}
+
+		public void setReceiving(boolean isReceiving) {
+			this.isReceiving = isReceiving;
+		}
+
+		public String getSource() {
+			return source;
+		}
+
+		public void setSource(String source) {
+			this.source = source;
 		}
 
 		public String getDescription() {
 			return description;
 		}
 
-		public String getId() {
-			return id;
-		}
-
-		public String getUserChallenged() {
-			return userChallenged;
-		}
-
-		public String getUserChallenging() {
-			return userChallenging;
-		}
-
-		public boolean isLoggedInUserChanneling() {
-			return isLoggedInUserChanneling;
-		}
-
 		public void setDescription(String description) {
 			this.description = description;
+		}
+
+		public String getId() {
+			return id;
 		}
 
 		public void setId(String id) {
 			this.id = id;
 		}
 
-		public void setLoggedInUserChanneling(boolean isLoggedInUserChanneling) {
-			this.isLoggedInUserChanneling = isLoggedInUserChanneling;
+		public String getCommand() {
+			return command;
 		}
 
-		public void setUserChallenged(String userChallenged) {
-			this.userChallenged = userChallenged;
+		public void setCommand(String command) {
+			this.command = command;
 		}
 
-		public void setUserChallenging(String userChallenging) {
-			this.userChallenging = userChallenging;
+		public OfferType getType() {
+			return type;
+		}
+
+		public void setType(OfferType type) {
+			this.type = type;
 		}
 	}
 
@@ -96,13 +127,13 @@ public class GameService {
 	 * GameServiceListener interface.
 	 */
 	public static class GameServiceAdapter implements GameServiceListener {
-		public void challengeIssued(Challenge challenge) {
+		public void offerIssued(Offer offer) {
 		}
 
-		public void challengeReceived(Challenge challenge) {
+		public void offerReceived(Offer offer) {
 		}
 
-		public void challengeRemoved(Challenge challenge) {
+		public void offerRemoved(Offer offer) {
 		}
 
 		public void droppablePiecesChanged(Game game) {
@@ -136,19 +167,19 @@ public class GameService {
 	public static interface GameServiceListener {
 
 		/**
-		 * Invoked when a challenge is issued.
+		 * Invoked when an offer is issued.
 		 */
-		public void challengeIssued(Challenge challenge);
+		public void offerIssued(Offer offer);
 
 		/**
-		 * Invoked when a challenge is received.
+		 * Invoked when an offer is received.
 		 */
-		public void challengeReceived(Challenge challenge);
+		public void offerReceived(Offer offer);
 
 		/**
-		 * Invoked when a challenge is removed.
+		 * Invoked when an offer is removed.
 		 */
-		public void challengeRemoved(Challenge challenge);
+		public void offerRemoved(Offer offer);
 
 		/**
 		 * Invoked when the drop pieces you are holding change in droppable
@@ -205,7 +236,7 @@ public class GameService {
 	}
 
 	protected HashMap<String, Game> gameMap = new HashMap<String, Game>();
-	protected List<Challenge> challenges = new ArrayList<Challenge>(10);
+	protected List<Offer> offers = new ArrayList<Offer>(10);
 
 	protected List<GameServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<GameServiceListener>(20));
@@ -225,14 +256,14 @@ public class GameService {
 	/**
 	 * This method should only be invoked from a connector.
 	 * 
-	 * @param challenge
-	 *            The challenge issued.
+	 * @param offer
+	 *            The offer issued.
 	 */
-	public void fireChallengeIssued(Challenge challenge) {
-		challenges.add(challenge);
+	public void fireOfferIssued(Offer offer) {
+		offers.add(offer);
 		synchronized (listeners) {
 			for (GameServiceListener listener : listeners) {
-				listener.challengeIssued(challenge);
+				listener.offerIssued(offer);
 			}
 		}
 	}
@@ -240,14 +271,14 @@ public class GameService {
 	/**
 	 * This method should only be invoked from a connector.
 	 * 
-	 * @param challenge
-	 *            The challenge received.
+	 * @param offer
+	 *            The offer received.
 	 */
-	public void fireChallengeReceived(Challenge challenge) {
-		challenges.add(challenge);
+	public void fireOfferReceived(Offer offer) {
+		offers.add(offer);
 		synchronized (listeners) {
 			for (GameServiceListener listener : listeners) {
-				listener.challengeReceived(challenge);
+				listener.offerReceived(offer);
 			}
 		}
 	}
@@ -258,19 +289,19 @@ public class GameService {
 	 * @param id
 	 *            The id of the challange to remove.
 	 */
-	public void fireChallengeRemoved(String id) {
-		Challenge foundChallenge = null;
-		for (Challenge challenge : challenges) {
+	public void fireOfferRemoved(String id) {
+		Offer foundChallenge = null;
+		for (Offer challenge : offers) {
 			if (challenge.getId().equals(id)) {
 				foundChallenge = challenge;
 				break;
 			}
 		}
 		if (foundChallenge != null) {
-			challenges.remove(foundChallenge);
+			offers.remove(foundChallenge);
 			synchronized (listeners) {
 				for (GameServiceListener listener : listeners) {
-					listener.challengeRemoved(foundChallenge);
+					listener.offerRemoved(foundChallenge);
 				}
 			}
 		}
@@ -420,8 +451,8 @@ public class GameService {
 		return result.toArray(new Game[0]);
 	}
 
-	public Challenge[] getChallenges() {
-		return challenges.toArray(new Challenge[0]);
+	public Offer[] getOffers() {
+		return offers.toArray(new Offer[0]);
 	}
 
 	/**

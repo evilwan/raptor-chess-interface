@@ -24,9 +24,9 @@ import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
-import raptor.service.GameService.Challenge;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.service.GameService.Offer;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.swt.chat.ChatUtils;
@@ -35,18 +35,18 @@ import raptor.util.RaptorRunnable;
 public class MainController extends ChatConsoleController {
 	protected GameServiceListener listener = new GameServiceAdapter() {
 		@Override
-		public void challengeIssued(Challenge challenge) {
-			updateChallengesPending();
+		public void offerIssued(Offer offer) {
+			updateOffersPending();
 		}
 
 		@Override
-		public void challengeReceived(Challenge challenge) {
-			updateChallengesPending();
+		public void offerReceived(Offer offer) {
+			updateOffersPending();
 		}
 
 		@Override
-		public void challengeRemoved(Challenge challenge) {
-			updateChallengesPending();
+		public void offerRemoved(Offer offer) {
+			updateOffersPending();
 		}
 	};
 
@@ -134,15 +134,15 @@ public class MainController extends ChatConsoleController {
 		return true;
 	}
 
-	public void updateChallengesPending() {
+	public void updateOffersPending() {
 		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
 			@Override
 			public void execute() {
-				Challenge[] challenges = getConnector().getGameService()
-						.getChallenges();
+				Offer[] offers = getConnector().getGameService()
+						.getOffers();
 				ToolItem item = getToolItem(ToolBarItemKey.PendingChallenges);
 
-				if (challenges.length == 0) {
+				if (offers.length == 0) {
 					if (item != null) {
 						item.setImage(Raptor.getInstance().getIcon(
 								"dimLightbulb"));
