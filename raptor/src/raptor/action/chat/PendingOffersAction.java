@@ -65,7 +65,7 @@ public class PendingOffersAction extends AbstractRaptorAction {
 				Raptor
 						.getInstance()
 						.alert(
-								"There are no challenges pending or challanges issued.");
+								"There are no pending offers.");
 			} else {
 				Collections.sort(items, new Comparator<String[]>() {
 
