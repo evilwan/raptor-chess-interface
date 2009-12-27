@@ -131,13 +131,6 @@ public abstract class IcsConnector implements Connector {
 	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
 
 		@Override
-		public void offerReceived(Offer offer) {
-			if (offer.getType() == OfferType.partner && offer.isReceiving()) {
-				onPartnershipReceived();
-			}
-		}
-
-		@Override
 		public void gameCreated(Game game) {
 			if (game instanceof BughouseGame) {
 				if (isSimulBugConnector && game.isInState(Game.PLAYING_STATE)) {
@@ -161,6 +154,13 @@ public abstract class IcsConnector implements Connector {
 			} else {
 				ChessBoardUtils.openBoard(IcsUtils.buildController(game,
 						IcsConnector.this));
+			}
+		}
+
+		@Override
+		public void offerReceived(Offer offer) {
+			if (offer.getType() == OfferType.partner && offer.isReceiving()) {
+				onPartnershipReceived();
 			}
 		}
 	};
@@ -1072,38 +1072,6 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	/**
-	 * Handles automatically sending an unexamine if the user is examining a
-	 * game.
-	 * 
-	 * @param message
-	 *            The message being sent.
-	 */
-	protected void handleUnexamine(String message) {
-		if (StringUtils.startsWithIgnoreCase(message, "getgame")
-				|| StringUtils.startsWithIgnoreCase(message, "play ")
-				|| StringUtils.startsWithIgnoreCase(message, "seek ")
-				|| StringUtils.startsWithIgnoreCase(message, "match ")
-				|| StringUtils.startsWithIgnoreCase(message, "matc ")
-				|| StringUtils.startsWithIgnoreCase(message, "mat ")
-				|| StringUtils.startsWithIgnoreCase(message, "ma ")
-				|| StringUtils.startsWithIgnoreCase(message, "m ")) {
-			Game[] games = gameService.getAllActiveGames();
-			Game examinedGame = null;
-			for (Game game : games) {
-				if (game.isInState(Game.EXAMINING_STATE)
-						|| game.isInState(Game.SETUP_STATE)) {
-					examinedGame = game;
-					break;
-				}
-			}
-
-			if (examinedGame != null) {
-				onUnexamine(examinedGame);
-			}
-		}
-	}
-
-	/**
 	 * Sends a message to the connector. A ChatEvent of OUTBOUND type should
 	 * only be published containing the message if isHidingFromUser is false.
 	 * The next message the connector reads in that is of the specified type
@@ -1117,7 +1085,7 @@ public abstract class IcsConnector implements Connector {
 				return;
 			}
 
-			handleUnexamine(message);
+			handleUnexamineOnSendMessage(message);
 
 			StringBuilder builder = new StringBuilder(message);
 			IcsUtils.filterOutbound(builder);
@@ -1582,6 +1550,38 @@ public abstract class IcsConnector implements Connector {
 			}
 		});
 
+	}
+
+	/**
+	 * Handles automatically sending an unexamine if the user is examining a
+	 * game.
+	 * 
+	 * @param message
+	 *            The message being sent.
+	 */
+	protected void handleUnexamineOnSendMessage(String message) {
+		if (StringUtils.startsWithIgnoreCase(message, "getgame")
+				|| StringUtils.startsWithIgnoreCase(message, "play ")
+				|| StringUtils.startsWithIgnoreCase(message, "seek ")
+				|| StringUtils.startsWithIgnoreCase(message, "match ")
+				|| StringUtils.startsWithIgnoreCase(message, "matc ")
+				|| StringUtils.startsWithIgnoreCase(message, "mat ")
+				|| StringUtils.startsWithIgnoreCase(message, "ma ")
+				|| StringUtils.startsWithIgnoreCase(message, "m ")) {
+			Game[] games = gameService.getAllActiveGames();
+			Game examinedGame = null;
+			for (Game game : games) {
+				if (game.isInState(Game.EXAMINING_STATE)
+						|| game.isInState(Game.SETUP_STATE)) {
+					examinedGame = game;
+					break;
+				}
+			}
+
+			if (examinedGame != null) {
+				onUnexamine(examinedGame);
+			}
+		}
 	}
 
 	protected boolean isBlockedByExtendedCensor(ChatEvent event) {
