@@ -513,9 +513,9 @@ public class UCIEngine {
 			}
 
 			if (option instanceof UCIButton) {
-				send("setoption " + option.getName());
+				send("setoption name " + option.getName());
 			} else {
-				send("setoption " + option.getName() + " value "
+				send("setoption name " + option.getName() + " value "
 						+ option.getValue());
 			}
 
