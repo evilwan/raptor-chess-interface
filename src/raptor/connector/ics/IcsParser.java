@@ -425,6 +425,8 @@ public class IcsParser implements GameConstants {
 				LOG.debug("Raw message in: " + inboundMessage);
 			}
 
+			boolean trimAtEnd = false;
+
 			StringBuilder result = new StringBuilder(inboundMessage.length());
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(
 					inboundMessage, "\n");
@@ -438,6 +440,7 @@ public class IcsParser implements GameConstants {
 				G1Message g1Message = g1Parser.parse(line);
 				if (g1Message != null) {
 					process(g1Message, connector.getGameService());
+					trimAtEnd = true;
 					continue;
 				}
 
@@ -480,6 +483,7 @@ public class IcsParser implements GameConstants {
 				}
 
 				if (processPendInfo(line)) {
+					trimAtEnd = true;
 					continue;
 				}
 
@@ -512,7 +516,7 @@ public class IcsParser implements GameConstants {
 
 				result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 			}
-			return result.toString();
+			return trimAtEnd ? result.toString().trim() : result.toString();
 		}
 	}
 
