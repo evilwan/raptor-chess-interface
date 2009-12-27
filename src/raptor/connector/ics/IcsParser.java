@@ -462,6 +462,7 @@ public class IcsParser implements GameConstants {
 				if (gameEndMessage != null) {
 					process(gameEndMessage, connector.getGameService());
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
+					trimAtEnd = true;
 					continue;
 				}
 
