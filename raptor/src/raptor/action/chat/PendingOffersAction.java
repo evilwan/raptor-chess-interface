@@ -62,10 +62,7 @@ public class PendingOffersAction extends AbstractRaptorAction {
 			}
 
 			if (items.size() == 0) {
-				Raptor
-						.getInstance()
-						.alert(
-								"There are no pending offers.");
+				Raptor.getInstance().alert("There are no pending offers.");
 			} else {
 				Collections.sort(items, new Comparator<String[]>() {
 

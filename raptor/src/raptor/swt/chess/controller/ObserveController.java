@@ -229,15 +229,6 @@ public class ObserveController extends ChessBoardController {
 		cursor = (GameCursor) getGame();
 	}
 
-	protected boolean isForceUpdate() {
-		if (getToolItem(ToolBarItemKey.FORCE_UPDATE) == null) {
-			return true;
-		} else {
-			return isToolItemSelected(ToolBarItemKey.FORCE_UPDATE);
-		}
-
-	}
-
 	@Override
 	public void adjustGameDescriptionLabel() {
 		if (!isDisposed()) {
@@ -489,6 +480,15 @@ public class ObserveController extends ChessBoardController {
 			result = true;
 		}
 		return result;
+	}
+
+	protected boolean isForceUpdate() {
+		if (getToolItem(ToolBarItemKey.FORCE_UPDATE) == null) {
+			return true;
+		} else {
+			return isToolItemSelected(ToolBarItemKey.FORCE_UPDATE);
+		}
+
 	}
 
 	protected void onMatchWinner() {

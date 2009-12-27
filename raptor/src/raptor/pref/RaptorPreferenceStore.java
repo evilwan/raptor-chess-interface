@@ -324,6 +324,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SPEAK_MOVES_I_MAKE, false);
 		setDefault(BOARD_SPEAK_WHEN_OBSERVING, false);
 		setDefault(BOARD_SPEAK_RESULTS, false);
+		setDefault(BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING, false);
 
 		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				PlayingMouseAction.None.toString());
@@ -581,10 +582,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_SPEAK_PARTNER_TELLS, true);
-		setDefault(BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND,true);
+		setDefault(BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND, true);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor .94b");
+		setDefault(APP_NAME, "Raptor .94c");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName,

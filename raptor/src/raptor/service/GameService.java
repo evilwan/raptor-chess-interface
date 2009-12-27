@@ -25,117 +25,11 @@ import raptor.chess.Game;
  */
 public class GameService {
 
-	public static class Offer {
-		public static enum OfferType {
-			match, partner, draw, abort, adjourn, takeback
-		};
-
-		protected boolean isReceiving;
-		protected String source;
-		protected String description;
-		protected String id;
-		protected String command;
-		protected OfferType type;
-		protected boolean isDeclinable;
-		protected String declineCommand;
-		protected String declineAllCommand;
-		protected String declineDescription;
-
-		public String getDeclineDescription() {
-			return declineDescription;
-		}
-
-		public void setDeclineDescription(String declineDescription) {
-			this.declineDescription = declineDescription;
-		}
-
-		public boolean isDeclinable() {
-			return isDeclinable;
-		}
-
-		public void setDeclinable(boolean isDeclinable) {
-			this.isDeclinable = isDeclinable;
-		}
-
-		public String getDeclineCommand() {
-			return declineCommand;
-		}
-
-		public void setDeclineCommand(String declineCommand) {
-			this.declineCommand = declineCommand;
-		}
-
-		public String getDeclineAllCommand() {
-			return declineAllCommand;
-		}
-
-		public void setDeclineAllCommand(String declineAllCommand) {
-			this.declineAllCommand = declineAllCommand;
-		}
-
-		public boolean isReceiving() {
-			return isReceiving;
-		}
-
-		public void setReceiving(boolean isReceiving) {
-			this.isReceiving = isReceiving;
-		}
-
-		public String getSource() {
-			return source;
-		}
-
-		public void setSource(String source) {
-			this.source = source;
-		}
-
-		public String getDescription() {
-			return description;
-		}
-
-		public void setDescription(String description) {
-			this.description = description;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public String getCommand() {
-			return command;
-		}
-
-		public void setCommand(String command) {
-			this.command = command;
-		}
-
-		public OfferType getType() {
-			return type;
-		}
-
-		public void setType(OfferType type) {
-			this.type = type;
-		}
-	}
-
 	/**
 	 * An adapter class which provides default implementations for the
 	 * GameServiceListener interface.
 	 */
 	public static class GameServiceAdapter implements GameServiceListener {
-		public void offerIssued(Offer offer) {
-		}
-
-		public void offerReceived(Offer offer) {
-		}
-
-		public void offerRemoved(Offer offer) {
-		}
-
 		public void droppablePiecesChanged(Game game) {
 		}
 
@@ -160,26 +54,20 @@ public class GameService {
 		public void observedGameBecameExamined(Game game) {
 		}
 
+		public void offerIssued(Offer offer) {
+		}
+
+		public void offerReceived(Offer offer) {
+		}
+
+		public void offerRemoved(Offer offer) {
+		}
+
 		public void setupGameBecameExamined(Game game) {
 		}
 	}
 
 	public static interface GameServiceListener {
-
-		/**
-		 * Invoked when an offer is issued.
-		 */
-		public void offerIssued(Offer offer);
-
-		/**
-		 * Invoked when an offer is received.
-		 */
-		public void offerReceived(Offer offer);
-
-		/**
-		 * Invoked when an offer is removed.
-		 */
-		public void offerRemoved(Offer offer);
 
 		/**
 		 * Invoked when the drop pieces you are holding change in droppable
@@ -229,10 +117,122 @@ public class GameService {
 		public void observedGameBecameExamined(Game game);
 
 		/**
+		 * Invoked when an offer is issued.
+		 */
+		public void offerIssued(Offer offer);
+
+		/**
+		 * Invoked when an offer is received.
+		 */
+		public void offerReceived(Offer offer);
+
+		/**
+		 * Invoked when an offer is removed.
+		 */
+		public void offerRemoved(Offer offer);
+
+		/**
 		 * Invoked when a game which was previously in setup mode has entered
 		 * examine mode.
 		 */
 		public void setupGameBecameExamined(Game game);
+	}
+
+	public static class Offer {
+		public static enum OfferType {
+			match, partner, draw, abort, adjourn, takeback
+		};
+
+		protected boolean isReceiving;
+		protected String source;
+		protected String description;
+		protected String id;
+		protected String command;
+		protected OfferType type;
+		protected boolean isDeclinable;
+		protected String declineCommand;
+		protected String declineAllCommand;
+		protected String declineDescription;
+
+		public String getCommand() {
+			return command;
+		}
+
+		public String getDeclineAllCommand() {
+			return declineAllCommand;
+		}
+
+		public String getDeclineCommand() {
+			return declineCommand;
+		}
+
+		public String getDeclineDescription() {
+			return declineDescription;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public String getSource() {
+			return source;
+		}
+
+		public OfferType getType() {
+			return type;
+		}
+
+		public boolean isDeclinable() {
+			return isDeclinable;
+		}
+
+		public boolean isReceiving() {
+			return isReceiving;
+		}
+
+		public void setCommand(String command) {
+			this.command = command;
+		}
+
+		public void setDeclinable(boolean isDeclinable) {
+			this.isDeclinable = isDeclinable;
+		}
+
+		public void setDeclineAllCommand(String declineAllCommand) {
+			this.declineAllCommand = declineAllCommand;
+		}
+
+		public void setDeclineCommand(String declineCommand) {
+			this.declineCommand = declineCommand;
+		}
+
+		public void setDeclineDescription(String declineDescription) {
+			this.declineDescription = declineDescription;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public void setReceiving(boolean isReceiving) {
+			this.isReceiving = isReceiving;
+		}
+
+		public void setSource(String source) {
+			this.source = source;
+		}
+
+		public void setType(OfferType type) {
+			this.type = type;
+		}
 	}
 
 	protected HashMap<String, Game> gameMap = new HashMap<String, Game>();
@@ -251,60 +251,6 @@ public class GameService {
 
 	public void dispose() {
 		gameMap.clear();
-	}
-
-	/**
-	 * This method should only be invoked from a connector.
-	 * 
-	 * @param offer
-	 *            The offer issued.
-	 */
-	public void fireOfferIssued(Offer offer) {
-		offers.add(offer);
-		synchronized (listeners) {
-			for (GameServiceListener listener : listeners) {
-				listener.offerIssued(offer);
-			}
-		}
-	}
-
-	/**
-	 * This method should only be invoked from a connector.
-	 * 
-	 * @param offer
-	 *            The offer received.
-	 */
-	public void fireOfferReceived(Offer offer) {
-		offers.add(offer);
-		synchronized (listeners) {
-			for (GameServiceListener listener : listeners) {
-				listener.offerReceived(offer);
-			}
-		}
-	}
-
-	/**
-	 * This method should only be invoked from a connector.
-	 * 
-	 * @param id
-	 *            The id of the challange to remove.
-	 */
-	public void fireOfferRemoved(String id) {
-		Offer foundChallenge = null;
-		for (Offer challenge : offers) {
-			if (challenge.getId().equals(id)) {
-				foundChallenge = challenge;
-				break;
-			}
-		}
-		if (foundChallenge != null) {
-			offers.remove(foundChallenge);
-			synchronized (listeners) {
-				for (GameServiceListener listener : listeners) {
-					listener.offerRemoved(foundChallenge);
-				}
-			}
-		}
 	}
 
 	/**
@@ -426,6 +372,60 @@ public class GameService {
 
 	/**
 	 * This method should only be invoked from a connector.
+	 * 
+	 * @param offer
+	 *            The offer issued.
+	 */
+	public void fireOfferIssued(Offer offer) {
+		offers.add(offer);
+		synchronized (listeners) {
+			for (GameServiceListener listener : listeners) {
+				listener.offerIssued(offer);
+			}
+		}
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 * 
+	 * @param offer
+	 *            The offer received.
+	 */
+	public void fireOfferReceived(Offer offer) {
+		offers.add(offer);
+		synchronized (listeners) {
+			for (GameServiceListener listener : listeners) {
+				listener.offerReceived(offer);
+			}
+		}
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
+	 * 
+	 * @param id
+	 *            The id of the challange to remove.
+	 */
+	public void fireOfferRemoved(String id) {
+		Offer foundChallenge = null;
+		for (Offer challenge : offers) {
+			if (challenge.getId().equals(id)) {
+				foundChallenge = challenge;
+				break;
+			}
+		}
+		if (foundChallenge != null) {
+			offers.remove(foundChallenge);
+			synchronized (listeners) {
+				for (GameServiceListener listener : listeners) {
+					listener.offerRemoved(foundChallenge);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method should only be invoked from a connector.
 	 */
 	public void fireSetupGameBecameExamined(String gameId) {
 		Game game = getGame(gameId);
@@ -451,10 +451,6 @@ public class GameService {
 		return result.toArray(new Game[0]);
 	}
 
-	public Offer[] getOffers() {
-		return offers.toArray(new Offer[0]);
-	}
-
 	/**
 	 * Returns the game with the specified id.
 	 */
@@ -467,6 +463,10 @@ public class GameService {
 	 */
 	public int getGameCount() {
 		return gameMap.values().size();
+	}
+
+	public Offer[] getOffers() {
+		return offers.toArray(new Offer[0]);
 	}
 
 	public boolean isManaging(String gameId) {
