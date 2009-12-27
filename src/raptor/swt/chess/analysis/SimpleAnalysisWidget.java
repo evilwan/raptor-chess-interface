@@ -374,6 +374,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 					});
 
 				}
+				startStopButton.setText("Stop");
 				ThreadService.getInstance().run(new Runnable() {
 					public void run() {
 						try {
@@ -431,10 +432,14 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 
 				ThreadService.getInstance().run(new Runnable() {
 					public void run() {
+						boolean isStarted = currentEngine.isProcessingGo();
 						currentEngine.stop();
 						currentEngine.quit();
 						currentEngine.connect();
-						start(true);
+
+						if (isStarted) {
+							start(true);
+						}
 					}
 				});
 			}

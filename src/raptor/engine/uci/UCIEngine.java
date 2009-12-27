@@ -273,7 +273,7 @@ public class UCIEngine {
 				LOG.debug("Entering go(" + options + ",...)");
 			}
 
-			if (StringUtils.isNotBlank(options)) {
+			if (StringUtils.isBlank(options)) {
 				send("go");
 			} else {
 				send("go " + options);
