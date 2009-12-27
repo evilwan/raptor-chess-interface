@@ -570,7 +570,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, CHAT_QUOTE_UNDERLINE_COLOR,
 				new RGB(0, 255, 0));
 		PreferenceConverter.setDefault(this, CHAT_LINK_UNDERLINE_COLOR,
-				new RGB(0, 0, 238));
+				new RGB(11, 133, 238));
 
 		// Bug house buttons settings.
 		PreferenceConverter.setDefault(this, BUG_BUTTONS_FONT,
