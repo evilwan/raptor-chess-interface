@@ -13,8 +13,10 @@
  */
 package raptor.action.chat;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
@@ -24,12 +26,12 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import raptor.Raptor;
 import raptor.action.AbstractRaptorAction;
-import raptor.service.GameService.Challenge;
+import raptor.service.GameService.Offer;
 
-public class PendingChallangesAction extends AbstractRaptorAction {
-	public PendingChallangesAction() {
-		setName("Show Pending Challenges");
-		setDescription("Lights up if there is a pending offer. When clicking on the icon you are presented with a popup menu to accept/remove a challenge.");
+public class PendingOffersAction extends AbstractRaptorAction {
+	public PendingOffersAction() {
+		setName("Show Pending Offers");
+		setDescription("Lights up if there is a pending offer. When clicking on the icon you are presented with a popup menu to accept/decline/withdraw offers.");
 		setCategory(Category.ConsoleCommands);
 		setIcon("dimLightbulb");
 	}
@@ -37,52 +39,50 @@ public class PendingChallangesAction extends AbstractRaptorAction {
 	public void run() {
 		boolean wasHandled = false;
 		if (getChatConsoleControllerSource() != null) {
-			Challenge[] challenges = getChatConsoleControllerSource()
-					.getConnector().getGameService().getChallenges();
+			Offer[] offers = getChatConsoleControllerSource().getConnector()
+					.getGameService().getOffers();
 
-			if (challenges.length == 0) {
+			List<String[]> items = new ArrayList<String[]>(10);
+
+			int declineCounter = 0;
+			String declineAllCommand = null;
+			for (Offer offer : offers) {
+				if (offer.isDeclinable()) {
+					items.add(new String[] { offer.getDeclineDescription(),
+							offer.getDeclineCommand() });
+					declineCounter++;
+					declineAllCommand = offer.getDeclineAllCommand();
+				}
+				items.add(new String[] { offer.getDescription(),
+						offer.getCommand() });
+			}
+
+			if (declineCounter > 1) {
+				items.add(new String[] { "Decline all", declineAllCommand });
+			}
+
+			if (items.size() == 0) {
 				Raptor
 						.getInstance()
 						.alert(
 								"There are no challenges pending or challanges issued.");
 			} else {
-				Arrays.sort(challenges, new Comparator<Challenge>() {
+				Collections.sort(items, new Comparator<String[]>() {
 
-					public int compare(Challenge arg0, Challenge arg1) {
-						if (arg0.isLoggedInUserChanneling()
-								&& !arg1.isLoggedInUserChanneling()) {
-							return 1;
-						} else if (!arg0.isLoggedInUserChanneling()
-								&& arg1.isLoggedInUserChanneling()) {
-							return -1;
-						} else {
-							return arg0.getId().compareTo(arg1.getId());
-						}
+					public int compare(String[] arg0, String[] arg1) {
+						return arg0[0].compareTo(arg1[0]);
 					}
 				});
 
 				Menu menu = new Menu(getChatConsoleControllerSource()
 						.getChatConsole().getShell(), SWT.POP_UP);
-				for (final Challenge challenge : challenges) {
+				for (final String[] array : items) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
-					item
-							.setText(challenge.isLoggedInUserChanneling() ? "remove "
-									+ challenge.getDescription()
-									: "accept " + challenge.getDescription());
+					item.setText(array[0]);
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
-							if (challenge.isLoggedInUserChanneling()) {
-								getChatConsoleControllerSource()
-										.getConnector()
-										.sendMessage(
-												"withdraw " + challenge.getId(),
-												true);
-							} else {
-								getChatConsoleControllerSource().getConnector()
-										.sendMessage(
-												"accept " + challenge.getId(),
-												true);
-							}
+							getChatConsoleControllerSource().getConnector()
+									.sendMessage(array[1], true);
 						}
 					});
 				}

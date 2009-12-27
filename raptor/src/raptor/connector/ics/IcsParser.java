@@ -71,7 +71,8 @@ import raptor.connector.ics.game.message.RemovingObsGameMessage;
 import raptor.connector.ics.game.message.Style12Message;
 import raptor.pref.PreferenceKeys;
 import raptor.service.GameService;
-import raptor.service.GameService.Challenge;
+import raptor.service.GameService.Offer;
+import raptor.service.GameService.Offer.OfferType;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -890,58 +891,142 @@ public class IcsParser implements GameConstants {
 			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
-			Challenge challenge = new Challenge();
-			challenge.setLoggedInUserChanneling(false);
+			Offer offer = new Offer();
+			offer.setReceiving(true);
 			tok.nextToken();
-			challenge.setId(tok.nextToken());
+			offer.setId(tok.nextToken());
 			tok.nextToken();
-			challenge.setUserChallenging(tok.nextToken());
+			offer.setSource(tok.nextToken());
 			tok.nextToken();
 			String type = tok.nextToken();
 			if (type.equals("partner")) {
-				challenge.setDescription("partnership offer from "
-						+ challenge.getUserChallenging());
-				challenge.setMatch(false);
-				challenge.setBughousePartnership(true);
-			} else {
+				offer.setType(OfferType.partner);
+				offer.setDeclineCommand("decline " + offer.getId());
+				offer.setDeclinable(true);
+				offer.setDeclineAllCommand("decline t all");
+				offer.setCommand("accept " + offer.getId());
+				offer.setDescription("Accept partnership offer from "
+						+ offer.getSource());
+				offer.setDeclineDescription("Decline partnership offer from "
+						+ offer.getSource());
+			} else if (type.equals("match")) {
+				offer.setType(OfferType.match);
+				offer.setCommand("accept " + offer.getId());
+				offer.setDeclinable(true);
+				offer.setDeclineCommand("decline " + offer.getId());
+				offer.setDeclineAllCommand("decline t all");
 				tok.nextToken();
-				challenge.setDescription("challenge " + tok.getWhatsLeft());
-				challenge.setMatch(true);
-				challenge.setBughousePartnership(false);
+				String challengeDescription = tok.getWhatsLeft();
+				offer.setDeclineDescription("Decline challenge "
+						+ challengeDescription);
+				offer
+						.setDescription("Accept challenge "
+								+ challengeDescription);
+			} else if (type.equals("draw")) {
+				offer.setType(OfferType.draw);
+				offer.setCommand("accept " + offer.getId());
+				offer.setDeclinable(true);
+				offer.setDeclineCommand("decline " + offer.getId());
+				offer.setDeclineAllCommand("decline t all");
+				offer.setDeclineDescription("Decline draw offer from "
+						+ offer.getSource());
+				offer.setDescription("Accept draw offer from "
+						+ offer.getSource());
+			} else if (type.equals("adjourn")) {
+				offer.setType(OfferType.adjourn);
+				offer.setCommand("accept " + offer.getId());
+				offer.setDeclinable(true);
+				offer.setDeclineCommand("decline " + offer.getId());
+				offer.setDeclineAllCommand("decline t all");
+				offer.setDescription("Accept adjourn offer from "
+						+ offer.getSource());
+				offer.setDeclineDescription("Decline adjourn offer from "
+						+ offer.getSource());
+			} else if (type.equals("abort")) {
+				offer.setType(OfferType.abort);
+				offer.setCommand("accept " + offer.getId());
+				offer.setDeclinable(true);
+				offer.setDeclineCommand("decline " + offer.getId());
+				offer.setDeclineAllCommand("decline t all");
+				offer.setDescription("Accept abort offer from "
+						+ offer.getSource());
+				offer.setDeclineDescription("Decline abort offer from "
+						+ offer.getSource());
+			} else if (type.equals("takeback")) {
+				offer.setType(OfferType.takeback);
+				offer.setCommand("accept " + offer.getId());
+				offer.setDeclinable(true);
+				offer.setDeclineCommand("decline " + offer.getId());
+				offer.setDeclineAllCommand("decline t all");
+				tok.nextToken();
+				String taokebackMoves = tok.getWhatsLeft();
+				offer.setDescription("Accept takeback " + taokebackMoves
+						+ " halfmoves offer from " + offer.getSource());
+				offer.setDeclineDescription("Decline takeback "
+						+ taokebackMoves + " halfmoves offer from "
+						+ offer.getSource());
+			} else {
+				return true;
 			}
-			connector.getGameService().fireChallengeReceived(challenge);
+			connector.getGameService().fireOfferReceived(offer);
 			return true;
 		} else if (line.startsWith("<pt>")) {
 			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
-			Challenge challenge = new Challenge();
-			challenge.setLoggedInUserChanneling(true);
+			Offer offer = new Offer();
+			offer.setReceiving(false);
 			tok.nextToken();
-			challenge.setId(tok.nextToken());
+			offer.setId(tok.nextToken());
 			tok.nextToken();
-			challenge.setUserChallenged(tok.nextToken());
+			offer.setSource(tok.nextToken());
 			tok.nextToken();
 			String type = tok.nextToken();
+
 			if (type.equals("partner")) {
-				challenge.setDescription("partnership offer to "
-						+ challenge.getUserChallenged());
-				challenge.setMatch(false);
-				challenge.setBughousePartnership(true);
-			} else {
+				offer.setType(OfferType.partner);
+				offer.setCommand("withdraw " + offer.getId());
+				offer.setDescription("Withdraw partnership offer to "
+						+ offer.getSource());
+			} else if (type.equals("match")) {
+				offer.setType(OfferType.match);
+				offer.setCommand("withdraw " + offer.getId());
 				tok.nextToken();
-				challenge.setDescription("challenge " + tok.getWhatsLeft());
-				challenge.setMatch(true);
-				challenge.setBughousePartnership(false);
+				offer
+						.setDescription("Withdraw challenge "
+								+ tok.getWhatsLeft());
+			} else if (type.equals("draw")) {
+				offer.setType(OfferType.draw);
+				offer.setCommand("withdraw " + offer.getId());
+				offer.setDescription("Withdraw draw offer to "
+						+ offer.getSource());
+			} else if (type.equals("adjourn")) {
+				offer.setType(OfferType.adjourn);
+				offer.setCommand("withdraw " + offer.getId());
+				offer.setDescription("Withdraw adjourn offer to "
+						+ offer.getSource());
+			} else if (type.equals("abort")) {
+				offer.setType(OfferType.abort);
+				offer.setCommand("withdraw " + offer.getId());
+				offer.setDescription("Withdraw abort offer to "
+						+ offer.getSource());
+			} else if (type.equals("takeback")) {
+				offer.setType(OfferType.takeback);
+				offer.setCommand("withdraw " + offer.getId());
+				tok.nextToken();
+				offer.setDescription("Withdraw takeback " + tok.getWhatsLeft()
+						+ " halfmoves offer to " + offer.getSource());
+			} else {
+				return true;
 			}
-			connector.getGameService().fireChallengeReceived(challenge);
+			connector.getGameService().fireOfferReceived(offer);
 			return true;
 		} else if (line.startsWith("<pr>")) {
 			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
 			tok.nextToken();
-			connector.getGameService().fireChallengeRemoved(tok.nextToken());
+			connector.getGameService().fireOfferRemoved(tok.nextToken());
 			return true;
 		}
 		return false;
