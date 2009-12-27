@@ -66,10 +66,9 @@ public class PendingChallangesAction extends AbstractRaptorAction {
 				for (final Challenge challenge : challenges) {
 					MenuItem item = new MenuItem(menu, SWT.PUSH);
 					item
-							.setText(challenge.isLoggedInUserChanneling() ? "remove challenge "
+							.setText(challenge.isLoggedInUserChanneling() ? "remove "
 									+ challenge.getDescription()
-									: "accept challenge "
-											+ challenge.getDescription());
+									: "accept " + challenge.getDescription());
 					item.addListener(SWT.Selection, new Listener() {
 						public void handleEvent(Event e) {
 							if (challenge.isLoggedInUserChanneling()) {
