@@ -1561,6 +1561,13 @@ public abstract class IcsConnector implements Connector {
 	 */
 	protected void handleUnexamineOnSendMessage(String message) {
 		if (StringUtils.startsWithIgnoreCase(message, "getgame")
+				|| StringUtils.startsWithIgnoreCase(message, "examine ")
+				|| StringUtils.startsWithIgnoreCase(message, "$$examine ")
+				|| StringUtils.startsWithIgnoreCase(message, "examin ")
+				|| StringUtils.startsWithIgnoreCase(message, "exami ")
+				|| StringUtils.startsWithIgnoreCase(message, "exam ")
+				|| StringUtils.startsWithIgnoreCase(message, "exa ")
+				|| StringUtils.startsWithIgnoreCase(message, "ex ")
 				|| StringUtils.startsWithIgnoreCase(message, "play ")
 				|| StringUtils.startsWithIgnoreCase(message, "seek ")
 				|| StringUtils.startsWithIgnoreCase(message, "match ")
