@@ -56,46 +56,6 @@ public class SeekGraph extends Canvas {
 
 	private static final int SEEK_SIZE = 10;
 
-	private final Map<Point, List<Seek>> seeks;
-
-	private final Map<Point, Point> screen;
-
-	private int inset;
-
-	private Color manyColor;
-
-	private Color ratedColor;
-
-	private Color unratedColor;
-
-	private Color computerColor;
-
-	private Image legendImage;
-	private boolean isDrawingLegend;
-
-	private int hstart = 1000;
-
-	// Allows more space where needed
-	private int[][] hscale = { { 1300, 1 }, { 1500, 2 }, { 1700, 2 },
-			{ 1900, 2 }, { 2100, 1 }, { 2500, 1 } };
-
-	// this should be the sum of second column
-	int hfactor = 9;
-
-	// Same as for hscale
-	private int vstart = 0;
-
-	int[][] vscale = { { 1, 1 }, { 3, 2 }, { 5, 2 }, { 10, 1 }, { 15, 1 },
-			{ 20, 1 } };
-
-	private int vfactor = 8;
-
-	// popup tooltip
-	private Rectangle lastPopupRect;
-	private ToolTip tooltip;
-
-	private SeekService seekService;
-
 	/**
 	 * @param args
 	 */
@@ -157,6 +117,46 @@ public class SeekGraph extends Canvas {
 		display.dispose();
 	}
 
+	private final Map<Point, List<Seek>> seeks;
+
+	private final Map<Point, Point> screen;
+
+	private int inset;
+
+	private Color manyColor;
+
+	private Color ratedColor;
+
+	private Color unratedColor;
+
+	private Color computerColor;
+	private Image legendImage;
+
+	private boolean isDrawingLegend;
+
+	private int hstart = 1000;
+
+	// Allows more space where needed
+	private int[][] hscale = { { 1300, 1 }, { 1500, 2 }, { 1700, 2 },
+			{ 1900, 2 }, { 2100, 1 }, { 2500, 1 } };
+
+	// this should be the sum of second column
+	int hfactor = 9;
+
+	// Same as for hscale
+	private int vstart = 0;
+
+	int[][] vscale = { { 1, 1 }, { 3, 2 }, { 5, 2 }, { 10, 1 }, { 15, 1 },
+			{ 20, 1 } };
+
+	private int vfactor = 8;
+	// popup tooltip
+	private Rectangle lastPopupRect;
+
+	private ToolTip tooltip;
+
+	private SeekService seekService;
+
 	public SeekGraph(final Composite parent, final SeekService seekService) {
 
 		super(parent, SWT.NO_REDRAW_RESIZE);
@@ -214,21 +214,6 @@ public class SeekGraph extends Canvas {
 				acceptGameAt(relative);
 			}
 		});
-	}
-
-	private void addSeek(final int gameNumber, final int rating,
-			final String name, final int mins, final int incr,
-			final boolean rated) {
-
-		final Seek seek = new Seek();
-		seek.setAd(String.valueOf(gameNumber));
-		seek.setRating(String.valueOf(rating));
-		seek.setName(name);
-		seek.setMinutes(mins);
-		seek.setIncrement(incr);
-		seek.setRated(rated);
-
-		addSeek(seek, false);
 	}
 
 	public void redoLegend() {
@@ -434,6 +419,21 @@ public class SeekGraph extends Canvas {
 		}
 
 		return result;
+	}
+
+	private void addSeek(final int gameNumber, final int rating,
+			final String name, final int mins, final int incr,
+			final boolean rated) {
+
+		final Seek seek = new Seek();
+		seek.setAd(String.valueOf(gameNumber));
+		seek.setRating(String.valueOf(rating));
+		seek.setName(name);
+		seek.setMinutes(mins);
+		seek.setIncrement(incr);
+		seek.setRated(rated);
+
+		addSeek(seek, false);
 	}
 
 	private void addSeek(Seek seek, boolean fullRepaint) {

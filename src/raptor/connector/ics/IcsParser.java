@@ -51,7 +51,6 @@ import raptor.connector.ics.chat.ChatEventParser;
 import raptor.connector.ics.chat.DrawOfferedEventParser;
 import raptor.connector.ics.chat.FingerEventParser;
 import raptor.connector.ics.chat.FollowingEventParser;
-import raptor.connector.ics.chat.GamesEventParser;
 import raptor.connector.ics.chat.HistoryEventParser;
 import raptor.connector.ics.chat.JournalEventParser;
 import raptor.connector.ics.chat.KibitzEventParser;
@@ -74,6 +73,7 @@ import raptor.connector.ics.game.message.Style12Message;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ConnectorService;
 import raptor.service.GameService;
+import raptor.service.GameService.GameInfo;
 import raptor.service.GameService.Offer;
 import raptor.service.GameService.Offer.OfferType;
 import raptor.util.RaptorStringTokenizer;
@@ -102,6 +102,9 @@ public class IcsParser implements GameConstants {
 	protected BugWhoGParser bugWhoGParser;
 	protected BugWhoPParser bugWhoPParser;
 	protected BugWhoUParser bugWhoUParser;
+
+	protected GameInfoParser gameInfoParser;
+
 	/**
 	 * Used for BICS parsing. Bics sends a B1 right after you make a move then a
 	 * style 12 and another B1. This breaks Raptor, since it uses the game
@@ -159,6 +162,7 @@ public class IcsParser implements GameConstants {
 			bugWhoGParser = new BugWhoGParser();
 			bugWhoPParser = new BugWhoPParser();
 			bugWhoUParser = new BugWhoUParser();
+			gameInfoParser = new GameInfoParser();
 		}
 
 		nonGameEventParsers.add(new PartnerTellEventParser());
@@ -178,7 +182,6 @@ public class IcsParser implements GameConstants {
 		nonGameEventParsers.add(new FollowingEventParser());
 		nonGameEventParsers.add(new DrawOfferedEventParser());
 		nonGameEventParsers.add(new AbortRequestedEventParser());
-		nonGameEventParsers.add(new GamesEventParser());
 		nonGameEventParsers.add(new HistoryEventParser());
 		nonGameEventParsers.add(new JournalEventParser());
 		nonGameEventParsers.add(new FingerEventParser());
@@ -220,19 +223,24 @@ public class IcsParser implements GameConstants {
 					ChatEvent soughtEvent = processSought(afterGameEvents);
 
 					if (soughtEvent == null) {
-						// Its not a game,bugwho,or sought event so now try the
-						// other parsers.
-						for (ChatEventParser parser : nonGameEventParsers) {
-							ChatEvent event = parser.parse(afterGameEvents);
-							if (event != null) {
-								events.add(event);
-								break;
+						ChatEvent gameInfoEvent = processGameInfo(afterGameEvents);
+						if (gameInfoEvent == null) {
+							// Its not a game,gameInfo,bugwho,or sought event so
+							// now try the other parsers.
+							for (ChatEventParser parser : nonGameEventParsers) {
+								ChatEvent event = parser.parse(afterGameEvents);
+								if (event != null) {
+									events.add(event);
+									break;
+								}
 							}
-						}
-						// Its an unhandled event
-						if (events.isEmpty()) {
-							events.add(new ChatEvent(null, ChatType.UNKNOWN,
-									afterGameEvents));
+							// Its an unhandled event
+							if (events.isEmpty()) {
+								events.add(new ChatEvent(null,
+										ChatType.UNKNOWN, afterGameEvents));
+							}
+						} else {
+							events.add(gameInfoEvent);
 						}
 					} else {
 						events.add(soughtEvent);
@@ -915,6 +923,19 @@ public class IcsParser implements GameConstants {
 						ChatType.MOVES);
 			}
 		}
+	}
+
+	protected ChatEvent processGameInfo(String message) {
+		ChatEvent result = null;
+		if (gameInfoParser != null) {
+			GameInfo[] gameInfos = gameInfoParser.parse(message);
+			if (gameInfos != null) {
+				connector.getGameService().fireGameInfoChanged(gameInfos);
+				result = new ChatEvent(null, ChatType.GAMES, message);
+			}
+		}
+		return result;
+
 	}
 
 	/**

@@ -145,29 +145,6 @@ public abstract class ListEditor extends FieldEditor {
 	}
 
 	/**
-	 * Prompts a user for the answer to a question. The user enters text. The
-	 * text the user entered is returned.
-	 */
-	public String promptForText(final String question) {
-		InputDialog dialog = new InputDialog(getShell(), "Enter Text", question,true);
-		return dialog.open();
-	}
-
-	/**
-	 * Prompts a user for the answer to a question. The user enters text. The
-	 * text the user entered is returned.
-	 * 
-	 * @answer the initial text to place in the users answer.
-	 */
-	public String promptForText(final String question, String answer) {
-		InputDialog dialog = new InputDialog(getShell(), "Enter Text", question,true);
-		if (answer != null) {
-			dialog.setInput(answer);
-		}
-		return dialog.open();
-	}
-
-	/**
 	 * Returns this field editor's button box containing the Add, Remove, Up,
 	 * and Down button.
 	 * 
@@ -235,6 +212,29 @@ public abstract class ListEditor extends FieldEditor {
 	@Override
 	public int getNumberOfControls() {
 		return 2;
+	}
+
+	/**
+	 * Prompts a user for the answer to a question. The user enters text. The
+	 * text the user entered is returned.
+	 */
+	public String promptForText(final String question) {
+		InputDialog dialog = new InputDialog(getShell(), "Enter Text", question,true);
+		return dialog.open();
+	}
+
+	/**
+	 * Prompts a user for the answer to a question. The user enters text. The
+	 * text the user entered is returned.
+	 * 
+	 * @answer the initial text to place in the users answer.
+	 */
+	public String promptForText(final String question, String answer) {
+		InputDialog dialog = new InputDialog(getShell(), "Enter Text", question,true);
+		if (answer != null) {
+			dialog.setInput(answer);
+		}
+		return dialog.open();
 	}
 
 	/*
@@ -411,16 +411,6 @@ public abstract class ListEditor extends FieldEditor {
 		}
 	}
 
-	private void editPressed() {
-		setPresentsDefaultValue(false);
-		String value = list.getItem(list.getSelectionIndex());
-		value = promptForText("Enter new value:", value);
-		if (value != null) {
-			list.setItem(list.getSelectionIndex(), value);
-			selectionChanged();
-		}
-	}
-
 	/**
 	 * Creates the Add, Remove, Up, and Down button in the given button box.
 	 * 
@@ -465,6 +455,16 @@ public abstract class ListEditor extends FieldEditor {
 	 */
 	private void downPressed() {
 		swap(false);
+	}
+
+	private void editPressed() {
+		setPresentsDefaultValue(false);
+		String value = list.getItem(list.getSelectionIndex());
+		value = promptForText("Enter new value:", value);
+		if (value != null) {
+			list.setItem(list.getSelectionIndex(), value);
+			selectionChanged();
+		}
 	}
 
 	/**

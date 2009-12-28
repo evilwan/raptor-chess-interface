@@ -142,6 +142,25 @@ public class BugWhoWindowItem implements RaptorConnectorWindowItem {
 				PreferenceKeys.BUG_ARENA_SELECTED_TAB));
 	}
 
+	public void onActivate() {
+		if (!isActive) {
+			isActive = true;
+			activateSelectedControl();
+		}
+	}
+
+	public void onPassivate() {
+		if (isActive) {
+			isActive = false;
+			bugTeams.onPassivate();
+			bugPartners.onPassivate();
+			bugGames.onPassivate();
+		}
+	}
+
+	public void removeItemChangedListener(ItemChangedListener listener) {
+	}
+
 	protected void activateSelectedControl() {
 		Control selectedControl = tabFolder.getItem(
 				tabFolder.getSelectionIndex()).getControl();
@@ -160,24 +179,5 @@ public class BugWhoWindowItem implements RaptorConnectorWindowItem {
 			bugPartners.onActivate();
 			bugGames.onPassivate();
 		}
-	}
-
-	public void onActivate() {
-		if (!isActive) {
-			isActive = true;
-			activateSelectedControl();
-		}
-	}
-
-	public void onPassivate() {
-		if (isActive) {
-			isActive = false;
-			bugTeams.onPassivate();
-			bugPartners.onPassivate();
-			bugGames.onPassivate();
-		}
-	}
-
-	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 }
