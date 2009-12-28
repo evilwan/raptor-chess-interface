@@ -19,7 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -51,7 +52,7 @@ import raptor.service.SeekService;
  */
 public class SeekGraph extends Canvas {
 
-	private static final Logger logger = Logger.getLogger(SeekGraph.class);
+	private static final Log logger = LogFactory.getLog(SeekGraph.class);
 
 	private static final int SEEK_SIZE = 10;
 
@@ -92,7 +93,7 @@ public class SeekGraph extends Canvas {
 	// popup tooltip
 	private Rectangle lastPopupRect;
 	private ToolTip tooltip;
-	
+
 	private SeekService seekService;
 
 	/**
@@ -159,7 +160,7 @@ public class SeekGraph extends Canvas {
 	public SeekGraph(final Composite parent, final SeekService seekService) {
 
 		super(parent, SWT.NO_REDRAW_RESIZE);
-		
+
 		this.seekService = seekService;
 
 		addPaintListener(new PaintListener() {
@@ -245,8 +246,12 @@ public class SeekGraph extends Canvas {
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 
 			public void run() {
+				if (isDisposed()) {
+					return;
+				}
+
 				long before = System.nanoTime();
-				
+
 				screen.clear();
 				seeks.clear();
 				lastPopupRect = null;
@@ -314,17 +319,20 @@ public class SeekGraph extends Canvas {
 	protected void acceptGameAt(Point where) {
 		if (seekService != null) {
 			for (Point loc : screen.keySet()) {
-				Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
-	
+				Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE,
+						SEEK_SIZE);
+
 				if (rect.contains(where)) {
 					List<Seek> existing = seeks.get(screen.get(loc));
 					if (existing.size() == 1) {
-						seekService.getConnector().acceptSeek(existing.get(0).getAd());
+						seekService.getConnector().acceptSeek(
+								existing.get(0).getAd());
 					} else {
 						// TODO: show dialog to pick one
-						seekService.getConnector().acceptSeek(existing.get(0).getAd());
+						seekService.getConnector().acceptSeek(
+								existing.get(0).getAd());
 					}
-	
+
 					break;
 				}
 			}
@@ -345,7 +353,7 @@ public class SeekGraph extends Canvas {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Clip: " + clip);
 		}
-		
+
 		// fix resize problem
 		if (clip.width == width && clip.height == height) {
 			// we're probably resizing, this will invalidate screen map

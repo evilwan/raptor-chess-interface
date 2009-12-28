@@ -83,6 +83,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 	protected Button isShowingUntimed;
 	protected RaptorTable seeksTable;
 	protected SeekGraph seekGraph;
+	protected Composite settings;
 	protected boolean isActive = false;
 
 	protected Runnable timer = new Runnable() {
@@ -165,11 +166,8 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		return null;
 	}
 
-	public void init(Composite parent) {
-		composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
-
-		Composite ratingFilterComposite = new Composite(composite, SWT.NONE);
+	protected void buildSettingsComposite(Composite parent) {
+		Composite ratingFilterComposite = new Composite(parent, SWT.NONE);
 		ratingFilterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false));
 		ratingFilterComposite.setLayout(new RowLayout());
@@ -217,7 +215,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		Composite ratedComposite = new Composite(composite, SWT.NONE);
+		Composite ratedComposite = new Composite(parent, SWT.NONE);
 		ratedComposite.setLayout(new RowLayout());
 		ratedComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false));
@@ -243,8 +241,8 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		Composite typeFilterComposite = new Composite(composite, SWT.NONE);
-		typeFilterComposite.setLayout(new GridLayout(4, false));
+		Composite typeFilterComposite = new Composite(parent, SWT.NONE);
+		typeFilterComposite.setLayout(new GridLayout(3, false));
 
 		isShowingComputers = new Button(typeFilterComposite, SWT.CHECK);
 		isShowingComputers.setText("Computers");
@@ -431,16 +429,30 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 				refreshSeekView();
 			}
 		});
-		
+
+	}
+
+	public void init(Composite parent) {
+		composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
+
 		final TabFolder tabFolder = new TabFolder(composite, SWT.BORDER);
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		TabItem controlsTab = new TabItem(tabFolder, SWT.NONE);
+		controlsTab.setText("Settings");
+		settings = new Composite(tabFolder, SWT.NONE);
+		settings.setLayout(new GridLayout(1, false));
+		buildSettingsComposite(settings);
+		controlsTab.setControl(settings);
+
 		TabItem tableTab = new TabItem(tabFolder, SWT.NULL);
 		tableTab.setText("Seek Table");
-		
+
 		Composite tableComposite = new Composite(tabFolder, SWT.NONE);
 		tableComposite.setLayout(new GridLayout(1, false));
 		tableTab.setControl(tableComposite);
-		
+
 		seeksTable = new RaptorTable(tableComposite, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		seeksTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -456,7 +468,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		// Sort twice so when data is refreshed it will be on elo descending.
 		seeksTable.sort(1);
 		seeksTable.sort(1);
-		
+
 		seekGraph = new SeekGraph(tabFolder, service);
 		TabItem graphTab = new TabItem(tabFolder, SWT.NULL);
 		graphTab.setText("Seek Graph");
@@ -487,37 +499,17 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		Composite buttonsComposite = new Composite(tableComposite, SWT.NONE);
-		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
-				false));
-		buttonsComposite.setLayout(new RowLayout());
-
-		Button acceptButton = new Button(buttonsComposite, SWT.PUSH);
-		acceptButton.setText("Accept");
-		acceptButton.addSelectionListener(new SelectionListener() {
+		tabFolder.setSelection(Raptor.getInstance().getPreferences().getInt(
+				PreferenceKeys.SEEK_TABLE_SELECTED_TAB));
+		
+		tabFolder.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
-
 			public void widgetSelected(SelectionEvent e) {
-				int[] selectedIndexes = null;
-				synchronized (seeksTable) {
-					selectedIndexes = seeksTable.getTable()
-							.getSelectionIndices();
-				}
-				if (selectedIndexes == null || selectedIndexes.length == 0) {
-					Raptor.getInstance().alert(
-							"You must first select 1 or more seeks to accept.");
-				} else {
-					synchronized (seeksTable) {
-						for (int i = 0; i < selectedIndexes.length; i++) {
-							service.getConnector().acceptSeek(
-									seeksTable.getTable().getItem(
-											selectedIndexes[i]).getText(0));
-						}
-					}
-				}
+				Raptor.getInstance().getPreferences().setValue(PreferenceKeys.SEEK_TABLE_SELECTED_TAB, tabFolder.getSelectionIndex());	
 			}
 		});
+		
 		service.refreshSeeks();
 		refreshSeekView();
 	}

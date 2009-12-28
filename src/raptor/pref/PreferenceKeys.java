@@ -87,6 +87,7 @@ public interface PreferenceKeys {
 	public static final String BUG_ARENA_TEAMS_IS_RATED = "bughosue-arena-teams-is-rated";
 
 	public static final String SEEK_TABLE_RATINGS_INDEX = "seek-table-ratings-index";
+	public static final String SEEK_TABLE_SELECTED_TAB = "seek-table-selected-tab-index";
 	public static final String SEEK_TABLE_MAX_RATINGS_INDEX = "seek-table-max-ratings-index";
 	public static final String SEEK_TABLE_RATED_INDEX = "seek-table-rated-index";
 	public static final String SEEK_TABLE_SHOW_COMPUTERS = "seek-table-show-computers";
