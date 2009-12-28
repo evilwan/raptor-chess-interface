@@ -35,7 +35,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
 import raptor.RaptorWindowItem;
@@ -992,29 +991,18 @@ public abstract class IcsConnector implements Connector {
 		while (tok.hasMoreTokens()) {
 			String type = tok.nextToken();
 			String value = tok.nextToken();
+			@SuppressWarnings("unused")
 			String quadString = tok.nextToken();
-			Quadrant quad = StringUtils.isNotBlank(quadString) ? Quadrant
-					.valueOf(quadString) : null;
 
 			if (type.equals("Channel")) {
 				if (!Raptor.getInstance().getWindow().containsChannelItem(this,
 						value)) {
-					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-							new ChannelController(this, value), quad);
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							windowItem, false, false);
-					ChatUtils.appendPreviousChatsToController(windowItem
-							.getConsole());
+					ChatUtils.openChannelTab(this, value, false);
 				}
 			} else if (type.equals("RegEx")) {
 				if (!Raptor.getInstance().getWindow().containsRegExItem(this,
 						value)) {
-					ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-							new RegExController(this, value), quad);
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							windowItem, false, false);
-					ChatUtils.appendPreviousChatsToController(windowItem
-							.getConsole());
+					ChatUtils.openRegularExpressionTab(this, value, false);
 				}
 			} else if (type.equals("SeekTableWindowItem")) {
 				SWTUtils.openSeekTableWindowItem(this);
@@ -1264,7 +1252,7 @@ public abstract class IcsConnector implements Connector {
 				} else if (item instanceof BugWhoWindowItem) {
 					preference += (preference.equals("") ? "" : "`")
 							+ "BugWhoWindowItem` " + "` ";
-				}  else if (item instanceof BugButtonsWindowItem) {
+				} else if (item instanceof BugButtonsWindowItem) {
 					preference += (preference.equals("") ? "" : "`")
 							+ "BugButtonsWindowItem` " + "` ";
 				}
@@ -1555,7 +1543,7 @@ public abstract class IcsConnector implements Connector {
 				|| StringUtils.startsWithIgnoreCase(message, "exami")
 				|| StringUtils.startsWithIgnoreCase(message, "exam")
 				|| StringUtils.startsWithIgnoreCase(message, "exa")
-				|| StringUtils.startsWithIgnoreCase(message, "ex" )
+				|| StringUtils.startsWithIgnoreCase(message, "ex")
 				|| StringUtils.startsWithIgnoreCase(message, "bsetup")
 				|| StringUtils.startsWithIgnoreCase(message, "$$bsetup")
 				|| StringUtils.startsWithIgnoreCase(message, "play ")

@@ -96,7 +96,7 @@ public class RaptorScriptContext implements ScriptContext {
 	}
 
 	public void openRegularExpressionTab(String regularExpression) {
-		ChatUtils.openRegularExpressionTab(connector, regularExpression);
+		ChatUtils.openRegularExpressionTab(connector, regularExpression, false);
 	}
 
 	public void openUrl(String url) {
