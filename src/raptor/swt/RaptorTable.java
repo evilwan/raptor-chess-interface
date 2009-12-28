@@ -548,13 +548,15 @@ public class RaptorTable extends Composite {
 			cursor.setSelection(row, column);
 			cursor.setVisible(true);
 		}
-		table.redraw();
 		if (cursor != null) {
 			try {
+				cursor.layout(true);
 				cursor.redraw();
 			} catch (NullPointerException npe) {
 			}
 		}
+		table.layout();
+		table.redraw();
 	}
 
 	/**
