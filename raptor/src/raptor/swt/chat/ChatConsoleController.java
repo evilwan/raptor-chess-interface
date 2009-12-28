@@ -1237,6 +1237,39 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						.length(), color, chatConsole.inputText.getBackground()));
 	}
 
+	protected void decorateGameNotifyLinks(ChatEvent event, String message,
+			int textStartPosition) {
+		System.err.println(event.getType().toString() + " " + message);
+		if (event.getType() == ChatType.UNKNOWN
+				&& message.startsWith("\nGame notification: ")
+				|| message.startsWith("Game notification: ")) {
+			// Currently this will only work with FICS games messages that
+			// are
+			// formatted like this:
+			// Game notification: sgs (1567) vs. FireFics (1416) rated
+			// bughouse 3 0: Game 182
+
+			int startIndex = message.indexOf("Game notification:");
+			int endIndex = -1;
+			for (int i = startIndex; i < message.length(); i++) {
+				if (!Character.isWhitespace(message.charAt(i))) {
+					endIndex = i;
+				}
+			}
+
+			if (endIndex != -1) {
+				Color underlineColor = chatConsole.getPreferences().getColor(
+						CHAT_QUOTE_UNDERLINE_COLOR);
+				StyleRange range = new StyleRange(textStartPosition
+						+ startIndex, endIndex - startIndex, underlineColor,
+						chatConsole.inputText.getBackground());
+				range.underline = true;
+				chatConsole.inputText.setStyleRange(range);
+				System.err.println("underlined");
+			}
+		}
+	}
+
 	protected void decorateGamesLinks(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() == ChatType.GAMES) {
@@ -1826,6 +1859,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		decorateJournalLinks(event, message, textStartPosition);
 		decorateBugWhoLinks(event, message, textStartPosition);
 		decorateNewsLinks(event, message, textStartPosition);
+		decorateGameNotifyLinks(event, message, textStartPosition);
 
 		// Decorate these last. They might override others.
 		decorateQuotes(event, message, textStartPosition);
@@ -1925,6 +1959,19 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			else if (NumberUtils.isDigits(firstWord)
 					&& (line.contains("W:") || line.contains("B:"))) {
 				getConnector().sendMessage("observe " + firstWord, true);
+			}
+			// Game notifiucations
+			else if (line.startsWith("Game notification:")) {
+				RaptorStringTokenizer tok = new RaptorStringTokenizer(line,
+						" ", true);
+				String lastWord = null;
+				while (tok.hasMoreTokens()) {
+					lastWord = tok.nextToken();
+				}
+
+				if (lastWord != null && NumberUtils.isDigits(lastWord)) {
+					getConnector().sendMessage("observe " + lastWord, true);
+				}
 			}
 			// News
 			// Games and BugWho games
