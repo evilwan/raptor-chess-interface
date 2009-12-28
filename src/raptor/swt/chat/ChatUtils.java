@@ -354,13 +354,13 @@ public class ChatUtils {
 	}
 
 	public static void openRegularExpressionTab(Connector connector,
-			String regularExpression) {
+			String regularExpression,boolean isSelected) {
 		if (!Raptor.getInstance().getWindow()
 				.containsPartnerTellItem(connector)) {
 			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 					new RegExController(connector, regularExpression));
 			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false);
+					false,isSelected);
 			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
 		}
 	}
