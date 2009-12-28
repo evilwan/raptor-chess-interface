@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="MacCarbon" />
 
-	<property name="version" value="v94d" />
+	<property name="version" value="v95" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
