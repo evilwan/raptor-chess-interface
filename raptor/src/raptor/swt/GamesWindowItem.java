@@ -187,15 +187,13 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		gamesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		gamesTable.addColumn("ID", SWT.LEFT, 8, true, new IntegerComparator());
+		gamesTable.addColumn("ID", SWT.LEFT, 10, true, new IntegerComparator());
 		gamesTable
-				.addColumn("W ELO", SWT.LEFT, 10, true, new RatingComparator());
+				.addColumn("W ELO", SWT.LEFT, 15, true, new RatingComparator());
 		gamesTable.addColumn("White", SWT.LEFT, 20, true, null);
-		gamesTable.addColumn("B ELO", SWT.LEFT, 10, true, null);
+		gamesTable.addColumn("B ELO", SWT.LEFT, 15, true, null);
 		gamesTable.addColumn("Black", SWT.LEFT, 20, true, null);
-		gamesTable.addColumn("Category", SWT.LEFT, 12, true, null);
-		gamesTable.addColumn("Rated", SWT.LEFT, 10, true, null);
-		gamesTable.addColumn("Move#", SWT.LEFT, 10, true, null);
+		gamesTable.addColumn("Type", SWT.LEFT, 20, true, null);
 
 		// Sort twice so when data is refreshed it will be on elo descending.
 		gamesTable.sort(1);
@@ -722,17 +720,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 				}
 				synchronized (gamesTable.getTable()) {
 					GameInfo[] gameInfos = getFilteredGameInfo();
-					String[][] data = new String[gameInfos.length][8];
-					gamesTable.addColumn("ID", SWT.LEFT, 8, true,
-							new IntegerComparator());
-					gamesTable.addColumn("W ELO", SWT.LEFT, 10, true,
-							new RatingComparator());
-					gamesTable.addColumn("White", SWT.LEFT, 20, true, null);
-					gamesTable.addColumn("B ELO", SWT.LEFT, 10, true, null);
-					gamesTable.addColumn("Black", SWT.LEFT, 20, true, null);
-					gamesTable.addColumn("Category", SWT.LEFT, 12, true, null);
-					gamesTable.addColumn("Rated", SWT.LEFT, 10, true, null);
-					gamesTable.addColumn("Move#", SWT.LEFT, 10, true, null);
+					String[][] data = new String[gameInfos.length][6];
 
 					for (int i = 0; i < data.length; i++) {
 						GameInfo info = gameInfos[i];
@@ -742,9 +730,6 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 						data[i][3] = info.getBlackElo();
 						data[i][4] = info.getBlackName();
 						data[i][5] = info.getCategory().toString();
-						data[i][6] = "" + info.isRated();
-						data[i][7] = (info.isWhitesMove() ? "W: " : "B: ")
-								+ info.getMoveNumber();
 					}
 					gamesTable.refreshTable(data);
 				}
