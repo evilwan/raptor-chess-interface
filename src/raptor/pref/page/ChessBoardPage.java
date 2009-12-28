@@ -13,13 +13,11 @@
  */
 package raptor.pref.page;
 
-import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -234,7 +232,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	ChessBoardPageComboFieldEditor pieceJailHidingAlphaCombo;
 	ChessBoardPageComboFieldEditor coordinatesPercentageCombo;
 	ChessBoardPageComboFieldEditor pieceJailPercentageCombo;
-	ColorFieldEditor pieceJailBackground;
 	ChessBoardPageSquare[][] squares = null;
 	PieceJailSquarePageSquare[] dropSquares = null;
 	ChessBoardPageSquare[] hiddenPieceAlphas;
@@ -258,8 +255,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		for (PieceJailSquarePageSquare element : dropSquares) {
 			element.clearCache();
-			element.setBackground(new Color(Raptor.getInstance().getDisplay(),
-					pieceJailBackground.getColorSelector().getColorValue()));
 			element.redraw();
 		}
 		dropSquaresBoard.layout(true, true);
@@ -270,8 +265,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 		for (PieceJailSquarePageSquare element : pieceJailAlphas) {
 			element.clearCache();
-			element.setBackground(new Color(Raptor.getInstance().getDisplay(),
-					pieceJailBackground.getColorSelector().getColorValue()));
 			element.redraw();
 		}
 		shadowsComposite.layout(true, true);
