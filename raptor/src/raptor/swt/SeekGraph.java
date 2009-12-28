@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.ToolTip;
 import raptor.Raptor;
 import raptor.chat.Seek;
 import raptor.service.SeekService;
-import raptor.service.SeekService.SeekServiceListener;
 
 /**
  * Seek Plot Component Shows seeks on a time vs. rating scatter plot
