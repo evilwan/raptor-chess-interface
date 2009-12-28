@@ -1134,6 +1134,7 @@ public class UCIEngine {
 			UCIOption option = getOption(overrideOption);
 			if (option != null) {
 				option.setValue(overrideOptions.get(overrideOption));
+				setOption(option);
 			} else {
 				LOG.warn("Could not set default value for property "
 						+ overrideOption);
