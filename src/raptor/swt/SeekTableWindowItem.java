@@ -242,7 +242,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		Composite typeFilterComposite = new Composite(composite, SWT.NONE);
-		typeFilterComposite.setLayout(new GridLayout(3, false));
+		typeFilterComposite.setLayout(new GridLayout(4, false));
 
 		isShowingComputers = new Button(typeFilterComposite, SWT.CHECK);
 		isShowingComputers.setText("Computers");
