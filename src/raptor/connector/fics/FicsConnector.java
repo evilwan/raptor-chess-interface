@@ -457,7 +457,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action seekTableAction = new Action("&Seek Table") {
+		Action seekTableAction = new Action("&Seeks") {
 			@Override
 			public void run() {
 				SWTUtils.openSeekTableWindowItem(FicsConnector.this);
@@ -577,7 +577,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action fics2SeekTableAction = new Action("&Seek Table") {
+		Action fics2SeekTableAction = new Action("&Seeks") {
 			@Override
 			public void run() {
 				SWTUtils.openSeekTableWindowItem(fics2);
