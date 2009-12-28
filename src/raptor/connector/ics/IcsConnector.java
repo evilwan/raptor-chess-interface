@@ -75,9 +75,7 @@ import raptor.service.GameService.Offer;
 import raptor.service.GameService.Offer.OfferType;
 import raptor.service.ScriptService.ScriptServiceListener;
 import raptor.swt.BugButtonsWindowItem;
-import raptor.swt.BugGamesWindowItem;
-import raptor.swt.BugPartnersWindowItem;
-import raptor.swt.BugTeamsWindowItem;
+import raptor.swt.BugWhoWindowItem;
 import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
@@ -1020,12 +1018,8 @@ public abstract class IcsConnector implements Connector {
 				}
 			} else if (type.equals("SeekTableWindowItem")) {
 				SWTUtils.openSeekTableWindowItem(this);
-			} else if (type.equals("BugPartnersWindowItem")) {
-				SWTUtils.openBugPartnersWindowItem(this);
-			} else if (type.equals("BugGamesWindowItem")) {
-				SWTUtils.openBugGamesWindowItem(this);
-			} else if (type.equals("BugTeamsWindowItem")) {
-				SWTUtils.openBugTeamsWindowItem(this);
+			} else if (type.equals("BugWhoWindowItem")) {
+				SWTUtils.openBugWhoWindowItem(this);
 			} else if (type.equals("BugButtonsWindowItem")) {
 				SWTUtils.openBugButtonsWindowItem(this);
 			}
@@ -1267,16 +1261,10 @@ public abstract class IcsConnector implements Connector {
 				} else if (item instanceof SeekTableWindowItem) {
 					preference += (preference.equals("") ? "" : "`")
 							+ "SeekTableWindowItem` " + "` ";
-				} else if (item instanceof BugPartnersWindowItem) {
+				} else if (item instanceof BugWhoWindowItem) {
 					preference += (preference.equals("") ? "" : "`")
-							+ "BugPartnersWindowItem` " + "` ";
-				} else if (item instanceof BugGamesWindowItem) {
-					preference += (preference.equals("") ? "" : "`")
-							+ "BugGamesWindowItem` " + "` ";
-				} else if (item instanceof BugTeamsWindowItem) {
-					preference += (preference.equals("") ? "" : "`")
-							+ "BugTeamsWindowItem` " + "` ";
-				} else if (item instanceof BugButtonsWindowItem) {
+							+ "BugWhoWindowItem` " + "` ";
+				}  else if (item instanceof BugButtonsWindowItem) {
 					preference += (preference.equals("") ? "" : "`")
 							+ "BugButtonsWindowItem` " + "` ";
 				}

@@ -464,24 +464,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action bughouseArenaAvailPartnersAction = new Action("Bug &Partners") {
+		Action bugwhoAction = new Action("Bug Who") {
 			@Override
 			public void run() {
-				SWTUtils.openBugPartnersWindowItem(FicsConnector.this);
-			}
-		};
-
-		Action bughouseArenaPartnershipsAction = new Action("Bug &Teams") {
-			@Override
-			public void run() {
-				SWTUtils.openBugTeamsWindowItem(FicsConnector.this);
-			}
-		};
-
-		Action bughouseArenaGamesAction = new Action("Bug &Games") {
-			@Override
-			public void run() {
-				SWTUtils.openBugGamesWindowItem(FicsConnector.this);
+				SWTUtils.openBugWhoWindowItem(FicsConnector.this);
 			}
 		};
 
@@ -584,25 +570,11 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action fics2BughouseArenaAvailPartnersAction = new Action(
-				"Bug &Partners") {
+		Action fics2bugwhoAction = new Action(
+				"Bug &Who") {
 			@Override
 			public void run() {
-				SWTUtils.openBugPartnersWindowItem(fics2);
-			}
-		};
-
-		Action fics2BughouseArenaPartnershipsAction = new Action("Bug &Teams") {
-			@Override
-			public void run() {
-				SWTUtils.openBugTeamsWindowItem(fics2);
-			}
-		};
-
-		Action fics2BughouseArenaGamesAction = new Action("Bug &Games") {
-			@Override
-			public void run() {
-				SWTUtils.openBugGamesWindowItem(fics2);
+				SWTUtils.openBugWhoWindowItem(fics2);
 			}
 		};
 
@@ -667,17 +639,13 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		disconnectAction.setEnabled(false);
 		reconnectAction.setEnabled(false);
 		autoConnectAction.setEnabled(true);
-		bughouseArenaPartnershipsAction.setEnabled(false);
-		bughouseArenaAvailPartnersAction.setEnabled(false);
-		bughouseArenaGamesAction.setEnabled(false);
+		bugwhoAction.setEnabled(false);
 		seekTableAction.setEnabled(false);
 		regexTabAction.setEnabled(false);
 		bugbuttonsAction.setEnabled(false);
 		showSeekDialogAction.setEnabled(false);
 
-		onlyEnabledOnConnectActions.add(bughouseArenaAvailPartnersAction);
-		onlyEnabledOnConnectActions.add(bughouseArenaPartnershipsAction);
-		onlyEnabledOnConnectActions.add(bughouseArenaGamesAction);
+		onlyEnabledOnConnectActions.add(bugwhoAction);
 		onlyEnabledOnConnectActions.add(disconnectAction);
 		onlyEnabledOnConnectActions.add(reconnectAction);
 		onlyEnabledOnConnectActions.add(regexTabAction);
@@ -689,17 +657,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2DisconnectAction.setEnabled(false);
 		fics2ReconnectAction.setEnabled(false);
 		fics2SeekTableAction.setEnabled(false);
-		fics2BughouseArenaPartnershipsAction.setEnabled(false);
-		fics2BughouseArenaAvailPartnersAction.setEnabled(false);
-		fics2BughouseArenaGamesAction.setEnabled(false);
+		fics2bugwhoAction.setEnabled(false);
 		fics2RegexTabAction.setEnabled(false);
 		fics2BugbuttonsAction.setEnabled(false);
 
 		fics2.onlyEnabledOnConnectActions
-				.add(fics2BughouseArenaAvailPartnersAction);
-		fics2.onlyEnabledOnConnectActions
-				.add(fics2BughouseArenaPartnershipsAction);
-		fics2.onlyEnabledOnConnectActions.add(fics2BughouseArenaGamesAction);
+				.add(fics2bugwhoAction);
 		fics2.onlyEnabledOnConnectActions.add(fics2DisconnectAction);
 		fics2.onlyEnabledOnConnectActions.add(fics2ReconnectAction);
 		fics2.onlyEnabledOnConnectActions.add(fics2RegexTabAction);
@@ -724,9 +687,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2TabsMenu.add(fics2SeekTableAction);
 		fics2Menu.add(new Separator());
 		fics2TabsMenu.add(fics2BugbuttonsAction);
-		fics2TabsMenu.add(fics2BughouseArenaAvailPartnersAction);
-		fics2TabsMenu.add(fics2BughouseArenaPartnershipsAction);
-		fics2TabsMenu.add(fics2BughouseArenaGamesAction);
+		fics2TabsMenu.add(fics2bugwhoAction);
 		fics2TabsMenu.add(new Separator());
 		fics2TabsMenu.add(fics2RegexTabAction);
 		fics2Menu.add(fics2TabsMenu);
@@ -738,9 +699,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		tabsMenu.add(seekTableAction);
 		tabsMenu.add(new Separator());
 		tabsMenu.add(bugbuttonsAction);
-		tabsMenu.add(bughouseArenaAvailPartnersAction);
-		tabsMenu.add(bughouseArenaPartnershipsAction);
-		tabsMenu.add(bughouseArenaGamesAction);
+		tabsMenu.add(bugwhoAction);
 		tabsMenu.add(new Separator());
 		tabsMenu.add(regexTabAction);
 		ficsMenu.add(tabsMenu);

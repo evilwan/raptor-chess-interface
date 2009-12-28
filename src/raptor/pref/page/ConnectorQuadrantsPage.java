@@ -24,7 +24,7 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.BugButtonsWindowItem;
-import raptor.swt.BugGamesWindowItem;
+import raptor.swt.BugGames;
 import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chess.ChessBoardWindowItem;
@@ -126,7 +126,7 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.BUG_WHO_QUADRANT,
 				"Bug Who (Partners,Teams,Games):",
-				buildQuadrantArray(BugGamesWindowItem.MOVE_TO_QUADRANTS),
+				buildQuadrantArray(BugGames.MOVE_TO_QUADRANTS),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"

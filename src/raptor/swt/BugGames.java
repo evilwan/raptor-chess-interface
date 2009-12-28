@@ -17,17 +17,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 
 import raptor.Quadrant;
 import raptor.Raptor;
-import raptor.RaptorConnectorWindowItem;
 import raptor.chat.BugGame;
 import raptor.chat.Bugger;
 import raptor.chat.Partnership;
@@ -41,14 +38,20 @@ import raptor.util.IntegerComparator;
 import raptor.util.RaptorRunnable;
 import raptor.util.RatingComparator;
 
-public class BugGamesWindowItem implements RaptorConnectorWindowItem {
+public class BugGames extends Composite {
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 
+	public BugGames(Composite parent, BughouseService service) {
+		super(parent, SWT.NONE);
+		this.service = service;
+		init();
+		service.addBughouseServiceListener(listener);
+	}
+
 	protected BughouseService service;
-	protected Composite composite;
 	protected RaptorTable bugGamesTable;
 	protected boolean isActive = false;
 
@@ -82,68 +85,14 @@ public class BugGamesWindowItem implements RaptorConnectorWindowItem {
 		}
 	};
 
-	public BugGamesWindowItem(BughouseService service) {
-		this.service = service;
-		service.addBughouseServiceListener(listener);
-	}
-
-	public void addItemChangedListener(ItemChangedListener listener) {
-	}
-
-	/**
-	 * Invoked after this control is moved to a new quadrant.
-	 */
-	public void afterQuadrantMove(Quadrant newQuadrant) {
-		Raptor.getInstance().getPreferences().setValue(
-				service.getConnector().getShortName() + "-"
-						+ PreferenceKeys.BUG_WHO_QUADRANT, newQuadrant);
-	}
-
-	public boolean confirmClose() {
-		return true;
-	}
-
-	public void dispose() {
-		isActive = false;
-		composite.dispose();
-		service.removeBughouseServiceListener(listener);
-	}
-
 	public Connector getConnector() {
 		return service.getConnector();
 	}
 
-	public Control getControl() {
-		return composite;
-	}
+	public void init() {
+		setLayout(new GridLayout(1, false));
 
-	public Image getImage() {
-		return null;
-	}
-
-	public Quadrant[] getMoveToQuadrants() {
-		return MOVE_TO_QUADRANTS;
-	}
-
-	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getQuadrant(
-				service.getConnector().getShortName() + "-"
-						+ PreferenceKeys.BUG_WHO_QUADRANT);
-	}
-
-	public String getTitle() {
-		return service.getConnector().getShortName() + "(Bug Games)";
-	}
-
-	public Control getToolbar(Composite parent) {
-		return null;
-	}
-
-	public void init(Composite parent) {
-		composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
-
-		bugGamesTable = new RaptorTable(composite, SWT.BORDER | SWT.H_SCROLL
+		bugGamesTable = new RaptorTable(this, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		bugGamesTable
 				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
@@ -171,7 +120,7 @@ public class BugGamesWindowItem implements RaptorConnectorWindowItem {
 		bugGamesTable.sort(2);
 		bugGamesTable.sort(2);
 
-		Composite buttonsComposite = new Composite(composite, SWT.NONE);
+		Composite buttonsComposite = new Composite(this, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
 				false));
 		buttonsComposite.setLayout(new RowLayout());
@@ -223,9 +172,6 @@ public class BugGamesWindowItem implements RaptorConnectorWindowItem {
 		if (isActive) {
 			isActive = false;
 		}
-	}
-
-	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 
 	protected void refreshTable() {

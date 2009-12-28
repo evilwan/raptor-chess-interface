@@ -240,15 +240,15 @@ public class SWTUtils {
 	 * Opens a bug games window item if one is not already open for the
 	 * specified connector.
 	 */
-	public static void openBugGamesWindowItem(Connector connector) {
+	public static void openBugWhoWindowItem(Connector connector) {
 		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
-				.getWindowItems(BugGamesWindowItem.class);
+				.getWindowItems(BugWhoWindowItem.class);
 
 		boolean openNewWindow = true;
 
 		for (RaptorWindowItem item : items) {
-			BugGamesWindowItem bugGamesItem = (BugGamesWindowItem) item;
-			if (bugGamesItem.getConnector() == connector) {
+			BugWhoWindowItem bugWhoWindowItem = (BugWhoWindowItem) item;
+			if (bugWhoWindowItem.getConnector() == connector) {
 				Raptor.getInstance().getWindow().forceFocus(item);
 				openNewWindow = false;
 				break;
@@ -256,59 +256,7 @@ public class SWTUtils {
 		}
 
 		if (openNewWindow) {
-			BugGamesWindowItem item = new BugGamesWindowItem(connector
-					.getBughouseService());
-			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
-		}
-	}
-
-	/**
-	 * Opens a bug partners window item if one is not already open for the
-	 * specified connector.
-	 */
-	public static void openBugPartnersWindowItem(Connector connector) {
-		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
-				.getWindowItems(BugPartnersWindowItem.class);
-
-		boolean openNewWindow = true;
-
-		for (RaptorWindowItem item : items) {
-			BugPartnersWindowItem bugPartnersItem = (BugPartnersWindowItem) item;
-			if (bugPartnersItem.getConnector() == connector) {
-				Raptor.getInstance().getWindow().forceFocus(item);
-				openNewWindow = false;
-				break;
-			}
-		}
-
-		if (openNewWindow) {
-			BugPartnersWindowItem item = new BugPartnersWindowItem(connector
-					.getBughouseService());
-			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
-		}
-	}
-
-	/**
-	 * Opens a bug games teams window item if one is not already open for the
-	 * specified connector.
-	 */
-	public static void openBugTeamsWindowItem(Connector connector) {
-		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
-				.getWindowItems(BugTeamsWindowItem.class);
-
-		boolean openNewWindow = true;
-
-		for (RaptorWindowItem item : items) {
-			BugTeamsWindowItem bugTeamsItem = (BugTeamsWindowItem) item;
-			if (bugTeamsItem.getConnector() == connector) {
-				Raptor.getInstance().getWindow().forceFocus(item);
-				openNewWindow = false;
-				break;
-			}
-		}
-
-		if (openNewWindow) {
-			BugTeamsWindowItem item = new BugTeamsWindowItem(connector
+			BugWhoWindowItem item = new BugWhoWindowItem(connector
 					.getBughouseService());
 			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 		}

@@ -30,8 +30,14 @@ public class InputDialog extends Dialog {
 	protected String message;
 
 	public InputDialog(Shell parent, String title, String question) {
+		this(parent, title, question, false);
+	}
+
+	public InputDialog(Shell parent, String title, String question,
+			boolean isModal) {
 		// Let users override the default styles
-		super(parent, SWT.DIALOG_TRIM | SWT.RESIZE);
+		super(parent, isModal ? SWT.DIALOG_TRIM | SWT.RESIZE
+				| SWT.APPLICATION_MODAL : SWT.DIALOG_TRIM | SWT.RESIZE);
 		setText(title);
 		setMessage(question);
 	}

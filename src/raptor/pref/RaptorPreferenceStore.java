@@ -40,7 +40,7 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
-import raptor.swt.BugPartnersWindowItem;
+import raptor.swt.BugPartners;
 import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chess.controller.InactiveMouseAction;
@@ -411,10 +411,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// BugArena
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
-		setDefault(BUG_ARENA_MAX_PARTNERS_INDEX, BugPartnersWindowItem
-				.getRatings().length - 1);
+		setDefault(BUG_ARENA_MAX_PARTNERS_INDEX,
+				BugPartners.getRatings().length - 1);
 		setDefault(BUG_ARENA_TEAMS_INDEX, 0);
 		setDefault(BUG_ARENA_TEAMS_IS_RATED, true);
+		setDefault(BUG_ARENA_SELECTED_TAB, 0);
 
 		// SeekTable
 		setDefault(SEEK_TABLE_RATINGS_INDEX, 0);
@@ -586,7 +587,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND, true);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor .94d");
+		setDefault(APP_NAME, "Raptor .95");
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName,
