@@ -335,14 +335,18 @@ public class SeekGraph extends Canvas {
 	protected void paintComponent(PaintEvent event) {
 
 		Rectangle clientArea = getClientArea();
-		System.out.println("ClientArea: " + clientArea);
+		if (logger.isDebugEnabled()) {
+			logger.debug("ClientArea: " + clientArea);
+		}
 
 		int width = clientArea.width;
 		int height = clientArea.height;
 
 		Rectangle clip = event.gc.getClipping();
-		System.out.println("Clip: " + clip);
-
+		if (logger.isDebugEnabled()) {
+			logger.debug("Clip: " + clip);
+		}
+		
 		// fix resize problem
 		if (clip.width == width && clip.height == height) {
 			// we're probably resizing, this will invalidate screen map
@@ -521,7 +525,9 @@ public class SeekGraph extends Canvas {
 		// int y = inset / 4;
 		int y = 0;
 		int x = width - legendImage.getBounds().width - inset;
-		System.out.println("Drawing legend at: " + new Point(x, y));
+		if (logger.isDebugEnabled()) {
+			logger.debug("Drawing legend at: " + x + ", " + y);
+		}
 		gc.drawImage(legendImage, x, y);
 	}
 
@@ -531,9 +537,7 @@ public class SeekGraph extends Canvas {
 			p.y = height - inset - p.y - SEEK_SIZE / 2;
 			p.x = p.x + inset - SEEK_SIZE / 2;
 			// TODO: fix this...
-			// System.out.println("Painting point: " + p);
 			// if (clip.contains(p)) { // we will honor the clip!
-			// System.out.println("Putting new point into screen: " + p);
 			paintSeeks(gc, p, seeks.get(sp));
 			screen.put(p, sp);
 			// }
