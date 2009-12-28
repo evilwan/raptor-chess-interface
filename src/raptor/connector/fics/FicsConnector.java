@@ -703,8 +703,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2Menu.add(fics2DisconnectAction);
 		fics2Menu.add(fics2ReconnectAction);
 		fics2Menu.add(new Separator());
-		fics2TabsMenu.add(fics2SeekTableAction);
 		fics2TabsMenu.add(fics2GamesAction);
+		fics2TabsMenu.add(fics2SeekTableAction);
 		fics2Menu.add(new Separator());
 		fics2TabsMenu.add(fics2BugbuttonsAction);
 		fics2TabsMenu.add(fics2bugwhoAction);
@@ -716,8 +716,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		ficsMenu.add(new Separator());
 		ficsMenu.add(actions);
 		MenuManager tabsMenu = new MenuManager("&Tabs");
-		tabsMenu.add(seekTableAction);
 		tabsMenu.add(gamesAction);
+		tabsMenu.add(seekTableAction);
 		tabsMenu.add(new Separator());
 		tabsMenu.add(bugbuttonsAction);
 		tabsMenu.add(bugwhoAction);
