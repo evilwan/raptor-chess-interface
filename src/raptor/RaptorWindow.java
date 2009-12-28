@@ -69,6 +69,7 @@ import raptor.swt.BrowserWindowItem;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.PgnProcessingDialog;
+import raptor.swt.ProfileDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.controller.BughousePartnerController;
@@ -1500,14 +1501,6 @@ public class RaptorWindow extends ApplicationWindow {
 				PreferenceUtils.launchPreferenceDialog();
 			}
 		});
-		// fileMenu.add(new Separator());
-		// fileMenu.add(new Action("Mini Profiler") {
-		// @Override
-		// public void run() {
-		// ProfileDialog dialog = new ProfileDialog();
-		// dialog.open();
-		// }
-		// });
 
 		String osName = System.getProperty("os.name");
 		if (!osName.startsWith("Mac OS")) {
@@ -1658,7 +1651,16 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 		helpMenu.add(ficsHelp);
+
 		helpMenu.add(new Separator());
+		helpMenu.add(new Action("&Mini Profiler") {
+			@Override
+			public void run() {
+				ProfileDialog dialog = new ProfileDialog();
+				dialog.open();
+			}
+		});
+
 		helpMenu.add(new Action("&Report an Issue") {
 			@Override
 			public void run() {
