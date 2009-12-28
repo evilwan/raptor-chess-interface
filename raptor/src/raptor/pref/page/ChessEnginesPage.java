@@ -206,6 +206,9 @@ public class ChessEnginesPage extends PreferencePage {
 
 	protected void onDelete() {
 		if (StringUtils.isNotBlank(userNameText.getText())) {
+			if (currentEngine != null) {
+				currentEngine.quit();
+			}
 			UCIEngineService.getInstance().deleteConfiguration(
 					userNameText.getText());
 			reload();
@@ -224,6 +227,7 @@ public class ChessEnginesPage extends PreferencePage {
 							"There is no current engine connected. Please select an engine process.");
 		} else {
 			if (currentEngine != null) {
+				currentEngine.quit();
 			} else {
 				currentEngine = new UCIEngine();
 			}
@@ -247,6 +251,7 @@ public class ChessEnginesPage extends PreferencePage {
 							+ "connect button before applying.");
 		} else {
 			if (currentEngine != null) {
+				currentEngine.quit();
 			} else {
 				currentEngine = new UCIEngine();
 			}
