@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolTip;
 
+import raptor.Raptor;
 import raptor.chat.Seek;
 import raptor.service.SeekService;
 import raptor.service.SeekService.SeekServiceListener;
@@ -54,6 +55,46 @@ public class SeekGraph extends Canvas {
 	private static final Logger logger = Logger.getLogger(SeekGraph.class);
 
 	private static final int SEEK_SIZE = 10;
+
+	private final Map<Point, List<Seek>> seeks;
+
+	private final Map<Point, Point> screen;
+
+	private int inset;
+
+	private Color manyColor;
+
+	private Color ratedColor;
+
+	private Color unratedColor;
+
+	private Color computerColor;
+
+	private Image legendImage;
+	private boolean isDrawingLegend;
+
+	private int hstart = 1000;
+
+	// Allows more space where needed
+	private int[][] hscale = { { 1300, 1 }, { 1500, 2 }, { 1700, 2 },
+			{ 1900, 2 }, { 2100, 1 }, { 2500, 1 } };
+
+	// this should be the sum of second column
+	int hfactor = 9;
+
+	// Same as for hscale
+	private int vstart = 0;
+
+	int[][] vscale = { { 1, 1 }, { 3, 2 }, { 5, 2 }, { 10, 1 }, { 15, 1 },
+			{ 20, 1 } };
+
+	private int vfactor = 8;
+
+	// popup tooltip
+	private Rectangle lastPopupRect;
+	private ToolTip tooltip;
+	
+	private SeekService seekService;
 
 	/**
 	 * @param args
@@ -116,61 +157,11 @@ public class SeekGraph extends Canvas {
 		display.dispose();
 	}
 
-	private final Map<Point, List<Seek>> seeks;
+	public SeekGraph(final Composite parent, final SeekService seekService) {
 
-	private final Map<Point, Point> screen;
-
-	private int inset;
-
-	private Color manyColor;
-
-	private Color ratedColor;
-
-	private Color unratedColor;
-
-	private Color computerColor;
-	private Image legendImage;
-
-	private boolean isDrawingLegend;
-
-	private int hstart = 1000;
-
-	// Allows more space where needed
-	private int[][] hscale = { { 1300, 1 }, { 1500, 2 }, { 1700, 2 },
-			{ 1900, 2 }, { 2100, 1 }, { 2500, 1 } };
-
-	// this should be the sum of second column
-	int hfactor = 9;
-
-	// Same as for hscale
-	private int vstart = 0;
-
-	int[][] vscale = { { 1, 1 }, { 3, 2 }, { 5, 2 }, { 10, 1 }, { 15, 1 },
-			{ 20, 1 } };
-
-	private int vfactor = 8;
-	private boolean showComputer = true;
-
-	private boolean showUnrated = true;
-	// popup tooltip
-	private Rectangle lastPopupRect;
-
-	private ToolTip tooltip;
-
-	private SeekService seekService;
-
-	protected SeekServiceListener seekListener = new SeekServiceListener() {
-		public void seeksChanged(Seek[] seeks) {
-			replaceBy(seeks);
-		}
-	};
-
-	public SeekGraph(final Composite parent, SeekService service) {
 		super(parent, SWT.NO_REDRAW_RESIZE);
-		seekService = service;
-		if (seekService != null) {
-			seekService.adSeekServiceListener(seekListener);
-		}
+		
+		this.seekService = seekService;
 
 		addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
@@ -187,7 +178,7 @@ public class SeekGraph extends Canvas {
 		ratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
 		unratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
 
-		tooltip = new ToolTip((Shell) parent, SWT.BALLOON);
+		tooltip = new ToolTip(parent.getShell(), SWT.BALLOON);
 
 		addMouseMoveListener(new MouseMoveListener() {
 
@@ -220,19 +211,16 @@ public class SeekGraph extends Canvas {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				Point relative = new Point(e.x, e.y);
-				System.out.println(relative);
-				// Point real = new Point(relative);
-				// SwingUtilities.convertPointToScreen(real, e.getComponent());
 				acceptGameAt(relative);
 			}
 		});
 	}
 
-	public void addSeek(final int gameNumber, final int rating,
+	private void addSeek(final int gameNumber, final int rating,
 			final String name, final int mins, final int incr,
 			final boolean rated) {
 
-		Seek seek = new Seek();
+		final Seek seek = new Seek();
 		seek.setAd(String.valueOf(gameNumber));
 		seek.setRating(String.valueOf(rating));
 		seek.setName(name);
@@ -255,21 +243,28 @@ public class SeekGraph extends Canvas {
 	 */
 	public void replaceBy(final Seek[] incoming) {
 
-		long before = System.nanoTime();
-		screen.clear();
-		seeks.clear();
-		lastPopupRect = null;
-		tooltip.setVisible(false);
+		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 
-		for (Seek seek : incoming) {
-			addSeek(seek, true);
-		}
-		redraw();
-		long after = System.nanoTime();
+			@Override
+			public void run() {
+				long before = System.nanoTime();
+				
+				screen.clear();
+				seeks.clear();
+				lastPopupRect = null;
+				tooltip.setVisible(false);
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Time to reload: " + (after - before));
-		}
+				for (Seek seek : incoming) {
+					addSeek(seek, true);
+				}
+				redraw();
+				long after = System.nanoTime();
+
+				if (logger.isDebugEnabled()) {
+					logger.debug("Time to reload: " + (after - before));
+				}
+			}
+		});
 	}
 
 	public void setComputerColor(Color c) {
@@ -301,14 +296,6 @@ public class SeekGraph extends Canvas {
 		ratedColor = c;
 	}
 
-	public void setShowComputerSeeks(boolean value) {
-		showComputer = value;
-	}
-
-	public void setShowUnratedSeeks(boolean value) {
-		showUnrated = value;
-	}
-
 	public void setUnratedColor(Color c) {
 		unratedColor = c;
 	}
@@ -327,20 +314,21 @@ public class SeekGraph extends Canvas {
 	}
 
 	protected void acceptGameAt(Point where) {
-		for (Point loc : screen.keySet()) {
-
-			Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
-
-			if (rect.contains(where)) {
-				List<Seek> existing = seeks.get(screen.get(loc));
-				if (existing.size() == 1) {
-					System.out.println("Will send game request!");
-					// notifyAcceptListeners(existing.get(0).getAd());
-				} else {
-					// showAcceptPopup(where, loc, rect);
+		if (seekService != null) {
+			for (Point loc : screen.keySet()) {
+				Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE, SEEK_SIZE);
+	
+				if (rect.contains(where)) {
+					List<Seek> existing = seeks.get(screen.get(loc));
+					if (existing.size() == 1) {
+						seekService.getConnector().acceptSeek(existing.get(0).getAd());
+					} else {
+						// TODO: show dialog to pick one
+						seekService.getConnector().acceptSeek(existing.get(0).getAd());
+					}
+	
+					break;
 				}
-
-				break;
 			}
 		}
 	}
@@ -439,14 +427,6 @@ public class SeekGraph extends Canvas {
 	}
 
 	private void addSeek(Seek seek, boolean fullRepaint) {
-
-		if (seek.isComputer() && !showComputer) {
-			return;
-		}
-
-		if (!seek.isRated() && !showUnrated) {
-			return;
-		}
 
 		Point loc = new Point(getX(seek), getY(seek));
 		List<Seek> existing = seeks.get(loc);
@@ -597,14 +577,9 @@ public class SeekGraph extends Canvas {
 		if (here.size() == 1) {
 			Seek s = here.get(0);
 			if (s.isComputer()) {
-				if (!showComputer) {
-					return;
-				}
 				color = computerColor;
 			} else if (s.isRated()) {
 				color = ratedColor;
-			} else if (!s.isRated() && !showUnrated) {
-				return;
 			}
 		} else {
 			color = manyColor;
@@ -633,6 +608,7 @@ public class SeekGraph extends Canvas {
 						+ seek.getIncrement()
 						+ " "
 						+ rated
+						+ " "
 						+ (seek.getType() != null ? seek.getType().toString()
 								: ""));
 				all.append(text + "\n");

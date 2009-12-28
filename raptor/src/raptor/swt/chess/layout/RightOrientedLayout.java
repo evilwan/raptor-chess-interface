@@ -153,7 +153,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 			board.getBoardComposite().removeControlListener(controlListener);
 		}
 		if (LOG.isInfoEnabled()) {
-			LOG.info("Dispoed RightOrientedLayout");
+			LOG.info("Disposed RightOrientedLayout");
 		}
 	}
 

@@ -32,6 +32,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
@@ -80,7 +82,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 	protected Button isShowingLosers;
 	protected Button isShowingUntimed;
 	protected RaptorTable seeksTable;
-
+	protected SeekGraph seekGraph;
 	protected boolean isActive = false;
 
 	protected Runnable timer = new Runnable() {
@@ -102,7 +104,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 
 	protected SeekServiceListener listener = new SeekServiceListener() {
 		public void seeksChanged(Seek[] seeks) {
-			refreshTable();
+			refreshSeekView();
 		}
 	};
 
@@ -189,7 +191,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_RATINGS_INDEX,
 						minRatingsFilter.getSelectionIndex());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -211,7 +213,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_MAX_RATINGS_INDEX,
 						maxRatingsFilter.getSelectionIndex());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -237,7 +239,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_RATED_INDEX,
 						ratedFilter.getSelectionIndex());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -257,7 +259,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_COMPUTERS,
 						isShowingComputers.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -274,7 +276,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_LIGHTNING,
 						isShowingLightning.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -291,7 +293,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_BLITZ,
 						isShowingBlitz.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -308,7 +310,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_STANDARD,
 						isShowingStandard.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -325,7 +327,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_ATOMIC,
 						isShowingAtomic.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -342,7 +344,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_SUICIDE,
 						isShowingSuicide.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -359,7 +361,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_LOSERS,
 						isShowingLosers.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -376,7 +378,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_CRAZYHOUSE,
 						isShowingCrazyhouse.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -393,7 +395,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_FR,
 						isShowingFR.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 
@@ -410,7 +412,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_WILD,
 						isShowingWild.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
 		isShowingUntimed = new Button(typeFilterComposite, SWT.CHECK);
@@ -426,11 +428,20 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 						PreferenceKeys.SEEK_TABLE_SHOW_UNTIMED,
 						isShowingUntimed.getSelection());
 				Raptor.getInstance().getPreferences().save();
-				refreshTable();
+				refreshSeekView();
 			}
 		});
-
-		seeksTable = new RaptorTable(composite, SWT.BORDER | SWT.H_SCROLL
+		
+		final TabFolder tabFolder = new TabFolder(composite, SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		TabItem tableTab = new TabItem(tabFolder, SWT.NULL);
+		tableTab.setText("Seek Table");
+		
+		Composite tableComposite = new Composite(tabFolder, SWT.NONE);
+		tableComposite.setLayout(new GridLayout(1, false));
+		tableTab.setControl(tableComposite);
+		
+		seeksTable = new RaptorTable(tableComposite, SWT.BORDER | SWT.H_SCROLL
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		seeksTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
@@ -445,6 +456,11 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		// Sort twice so when data is refreshed it will be on elo descending.
 		seeksTable.sort(1);
 		seeksTable.sort(1);
+		
+		seekGraph = new SeekGraph(tabFolder, service);
+		TabItem graphTab = new TabItem(tabFolder, SWT.NULL);
+		graphTab.setText("Seek Graph");
+		graphTab.setControl(seekGraph);
 
 		seeksTable.addRaptorTableListener(new RaptorTableAdapter() {
 
@@ -471,7 +487,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		Composite buttonsComposite = new Composite(composite, SWT.NONE);
+		Composite buttonsComposite = new Composite(tableComposite, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
 				false));
 		buttonsComposite.setLayout(new RowLayout());
@@ -503,7 +519,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 		service.refreshSeeks();
-		refreshTable();
+		refreshSeekView();
 	}
 
 	public void onActivate() {
@@ -651,7 +667,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		return result;
 	}
 
-	protected void refreshTable() {
+	protected void refreshSeekView() {
 		Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
 			@Override
 			public void execute() {
@@ -660,6 +676,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 				}
 				synchronized (seeksTable.getTable()) {
 					Seek[] seeks = getFilteredSeeks();
+					seekGraph.replaceBy(seeks);
 
 					String[][] data = new String[seeks.length][7];
 					for (int i = 0; i < data.length; i++) {
