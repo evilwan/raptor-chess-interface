@@ -75,6 +75,7 @@ import raptor.service.GameService.Offer.OfferType;
 import raptor.service.ScriptService.ScriptServiceListener;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.BugWhoWindowItem;
+import raptor.swt.GamesWindowItem;
 import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
@@ -1010,6 +1011,8 @@ public abstract class IcsConnector implements Connector {
 				SWTUtils.openBugWhoWindowItem(this);
 			} else if (type.equals("BugButtonsWindowItem")) {
 				SWTUtils.openBugButtonsWindowItem(this);
+			} else if (type.equals("GamesWindowItem")) {
+				SWTUtils.openGamesWindowItem(this);
 			}
 		}
 
@@ -1255,6 +1258,9 @@ public abstract class IcsConnector implements Connector {
 				} else if (item instanceof BugButtonsWindowItem) {
 					preference += (preference.equals("") ? "" : "`")
 							+ "BugButtonsWindowItem` " + "` ";
+				} else if (item instanceof GamesWindowItem) {
+					preference += (preference.equals("") ? "" : "`")
+							+ "GamesWindowItem` ` ";
 				}
 			}
 			Raptor.getInstance().getPreferences().setValue(

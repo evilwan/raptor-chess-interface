@@ -111,7 +111,6 @@ public class GameInfoParser {
 
 					RaptorStringTokenizer gameTok = new RaptorStringTokenizer(
 							line, " []", true);
-					System.err.println(line);
 					GameInfo info = new GameInfo();
 					info.setId(gameTok.nextToken());
 					info.setWhiteElo(gameTok.nextToken());

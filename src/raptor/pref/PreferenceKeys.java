@@ -26,6 +26,7 @@ public interface PreferenceKeys {
 	public static final String PERSON_TAB_QUADRANT = "person-quadrantv2.0";
 	public static final String REGEX_TAB_QUADRANT = "regex-quadrantv2.0";
 	public static final String SEEK_TABLE_QUADRANT = "seek-table-quadrantv2.0";
+	public static final String GAMES_TAB_QUADRANT = "games-tab-quadrantv2.0";
 	public static final String BUG_WHO_QUADRANT = "bug-who-quadrantv2.0";
 	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrantv2.0";
 	public static final String CHESS_BOARD_SECONDARY_QUADRANT = "chess-board-secondary-game-quadrantv2.0";
@@ -86,6 +87,24 @@ public interface PreferenceKeys {
 	public static final String BUG_ARENA_TEAMS_INDEX = "bughouse-arena-teams-index";
 	public static final String BUG_ARENA_TEAMS_IS_RATED = "bughosue-arena-teams-is-rated";
 	public static final String BUG_ARENA_SELECTED_TAB = "bughosue-arena-selectedTab";
+	
+	public static final String GAMES_TABLE_SELECTED_TAB = "games-table-selected-tab-index"; 
+	public static final String GAMES_TABLE_RATINGS_INDEX = "games-table-ratings-index";
+	public static final String GAMES_TABLE_MAX_RATINGS_INDEX = "games-table-max-ratings-index";
+	public static final String GAMES_TABLE_RATED_INDEX = "games-table-rated-index";
+	public static final String GAMES_TABLE_SHOW_BUGHOUSE = "games-table-show-bughouse";
+	public static final String GAMES_TABLE_SHOW_LIGHTNING = "games-table-show-lightning";
+	public static final String GAMES_TABLE_SHOW_BLITZ = "games-table-show-blitz";
+	public static final String GAMES_TABLE_SHOW_STANDARD = "games-table-show-standard";
+	public static final String GAMES_TABLE_SHOW_CRAZYHOUSE = "games-table-show-crazyhouse";
+	public static final String GAMES_TABLE_SHOW_EXAMINED = "games-table-show-examined";
+	public static final String GAMES_TABLE_SHOW_WILD = "games-table-show-wild";
+	public static final String GAMES_TABLE_SHOW_ATOMIC = "games-table-show-atomic";
+	public static final String GAMES_TABLE_SHOW_SUICIDE = "games-table-show-suicide";
+	public static final String GAMES_TABLE_SHOW_LOSERS = "games-table-show-losers";
+	public static final String GAMES_TABLE_SHOW_UNTIMED = "games-table-show-untimed";
+	public static final String GAMES_TABLE_SHOW_NONSTANDARD = "games-table-show-nonstandard";
+	public static final String GAMES_TABLE_SHOW_PRIVATE = "games-table-show-private";
 
 	public static final String SEEK_TABLE_RATINGS_INDEX = "seek-table-ratings-index";
 	public static final String SEEK_TABLE_SELECTED_TAB = "seek-table-selected-tab-index";
