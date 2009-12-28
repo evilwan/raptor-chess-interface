@@ -29,6 +29,8 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
+import raptor.swt.InputDialog;
+
 /**
  * A clone of the SWT list editor. This version has a height hint you can set.
  * Useful to keep lists from growing far to large.
@@ -61,6 +63,11 @@ public abstract class ListEditor extends FieldEditor {
 	 * The Up button.
 	 */
 	private Button upButton;
+
+	/**
+	 * The edit button.
+	 */
+	private Button editButton;
 
 	/**
 	 * The Down button.
@@ -122,6 +129,8 @@ public abstract class ListEditor extends FieldEditor {
 				Widget widget = event.widget;
 				if (widget == addButton) {
 					addPressed();
+				} else if (widget == editButton) {
+					editPressed();
 				} else if (widget == removeButton) {
 					removePressed();
 				} else if (widget == upButton) {
@@ -133,6 +142,29 @@ public abstract class ListEditor extends FieldEditor {
 				}
 			}
 		};
+	}
+
+	/**
+	 * Prompts a user for the answer to a question. The user enters text. The
+	 * text the user entered is returned.
+	 */
+	public String promptForText(final String question) {
+		InputDialog dialog = new InputDialog(getShell(), "Enter Text", question,true);
+		return dialog.open();
+	}
+
+	/**
+	 * Prompts a user for the answer to a question. The user enters text. The
+	 * text the user entered is returned.
+	 * 
+	 * @answer the initial text to place in the users answer.
+	 */
+	public String promptForText(final String question, String answer) {
+		InputDialog dialog = new InputDialog(getShell(), "Enter Text", question,true);
+		if (answer != null) {
+			dialog.setInput(answer);
+		}
+		return dialog.open();
 	}
 
 	/**
@@ -154,6 +186,7 @@ public abstract class ListEditor extends FieldEditor {
 				public void widgetDisposed(DisposeEvent event) {
 					addButton = null;
 					removeButton = null;
+					editButton = null;
 					upButton = null;
 					downButton = null;
 					buttonBox = null;
@@ -212,6 +245,7 @@ public abstract class ListEditor extends FieldEditor {
 		super.setEnabled(enabled, parent);
 		getListControl(parent).setEnabled(enabled);
 		addButton.setEnabled(enabled);
+		editButton.setEnabled(enabled);
 		removeButton.setEnabled(enabled);
 		upButton.setEnabled(enabled);
 		downButton.setEnabled(enabled);
@@ -365,15 +399,24 @@ public abstract class ListEditor extends FieldEditor {
 	 */
 	private void addPressed() {
 		setPresentsDefaultValue(false);
-		String input = getNewInputObject();
-
-		if (input != null) {
+		String value = promptForText("Enter new value:");
+		if (value != null) {
 			int index = list.getSelectionIndex();
 			if (index >= 0) {
-				list.add(input, index + 1);
+				list.add(value, index + 1);
 			} else {
-				list.add(input, 0);
+				list.add(value, 0);
 			}
+			selectionChanged();
+		}
+	}
+
+	private void editPressed() {
+		setPresentsDefaultValue(false);
+		String value = list.getItem(list.getSelectionIndex());
+		value = promptForText("Enter new value:", value);
+		if (value != null) {
+			list.setItem(list.getSelectionIndex(), value);
 			selectionChanged();
 		}
 	}
@@ -385,10 +428,11 @@ public abstract class ListEditor extends FieldEditor {
 	 *            the box for the buttons
 	 */
 	private void createButtons(Composite box) {
-		addButton = createPushButton(box, "ListEditor.add");//$NON-NLS-1$
-		removeButton = createPushButton(box, "ListEditor.remove");//$NON-NLS-1$
-		upButton = createPushButton(box, "ListEditor.up");//$NON-NLS-1$
-		downButton = createPushButton(box, "ListEditor.down");//$NON-NLS-1$
+		addButton = createPushButton(box, "ListEditor.add", null);//$NON-NLS-1$
+		editButton = createPushButton(box, null, "Edit");
+		removeButton = createPushButton(box, "ListEditor.remove", null);//$NON-NLS-1$
+		upButton = createPushButton(box, "ListEditor.up", null);//$NON-NLS-1$
+		downButton = createPushButton(box, "ListEditor.down", null);//$NON-NLS-1$
 	}
 
 	/**
@@ -400,9 +444,11 @@ public abstract class ListEditor extends FieldEditor {
 	 *            the resource name used to supply the button's label text
 	 * @return Button
 	 */
-	private Button createPushButton(Composite parent, String key) {
+	private Button createPushButton(Composite parent, String key,
+			String keyOverride) {
 		Button button = new Button(parent, SWT.PUSH);
-		button.setText(JFaceResources.getString(key));
+		button.setText(key != null ? JFaceResources.getString(key)
+				: keyOverride);
 		button.setFont(parent.getFont());
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		int widthHint = convertHorizontalDLUsToPixels(button,
@@ -455,6 +501,7 @@ public abstract class ListEditor extends FieldEditor {
 		int size = list.getItemCount();
 
 		removeButton.setEnabled(index >= 0);
+		editButton.setEnabled(index >= 0);
 		upButton.setEnabled(size > 1 && index > 0);
 		downButton.setEnabled(size > 1 && index >= 0 && index < size - 1);
 	}

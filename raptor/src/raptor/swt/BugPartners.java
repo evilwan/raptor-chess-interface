@@ -18,26 +18,24 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
 
-import raptor.Quadrant;
 import raptor.Raptor;
-import raptor.RaptorConnectorWindowItem;
 import raptor.chat.BugGame;
 import raptor.chat.Bugger;
 import raptor.chat.Partnership;
@@ -53,11 +51,7 @@ import raptor.swt.chat.controller.PersonController;
 import raptor.util.RaptorRunnable;
 import raptor.util.RatingComparator;
 
-public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
-
-	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
-			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
-			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
+public class BugPartners extends Composite {
 
 	public static final String[] getRatings() {
 		return new String[] { "0", "1", "700", "1000", "1100", "1200", "1300",
@@ -67,7 +61,6 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	protected BughouseService service;
-	protected Composite composite;
 	protected Combo minAvailablePartnersFilter;
 	protected Combo maxAvailablePartnersFilter;
 	protected boolean isActive = false;
@@ -103,68 +96,27 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 		}
 	};
 
-	public BugPartnersWindowItem(BughouseService service) {
+	public BugPartners(Composite parent, final BughouseService service) {
+		super(parent, SWT.NONE);
 		this.service = service;
+		init();
 		service.addBughouseServiceListener(listener);
-	}
-
-	public void addItemChangedListener(ItemChangedListener listener) {
-	}
-
-	/**
-	 * Invoked after this control is moved to a new quadrant.
-	 */
-	public void afterQuadrantMove(Quadrant newQuadrant) {
-		Raptor.getInstance().getPreferences().setValue(
-				service.getConnector().getShortName() + "-"
-						+ PreferenceKeys.BUG_WHO_QUADRANT, newQuadrant);
-	}
-
-	public boolean confirmClose() {
-		return true;
-	}
-
-	public void dispose() {
-		isActive = false;
-		composite.dispose();
-		service.removeBughouseServiceListener(listener);
+		addDisposeListener(new DisposeListener() {
+			public void widgetDisposed(DisposeEvent e) {
+				isActive = false;
+				service.removeBughouseServiceListener(listener);
+			}
+		});
 	}
 
 	public Connector getConnector() {
 		return service.getConnector();
 	}
 
-	public Control getControl() {
-		return composite;
-	}
+	public void init() {
+		setLayout(new GridLayout(1, false));
 
-	public Image getImage() {
-		return null;
-	}
-
-	public Quadrant[] getMoveToQuadrants() {
-		return MOVE_TO_QUADRANTS;
-	}
-
-	public Quadrant getPreferredQuadrant() {
-		return Raptor.getInstance().getPreferences().getQuadrant(
-				service.getConnector().getShortName() + "-"
-						+ PreferenceKeys.BUG_WHO_QUADRANT);
-	}
-
-	public String getTitle() {
-		return service.getConnector().getShortName() + "(Partners)";
-	}
-
-	public Control getToolbar(Composite parent) {
-		return null;
-	}
-
-	public void init(Composite parent) {
-		composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
-
-		Composite ratingFilterComposite = new Composite(composite, SWT.NONE);
+		Composite ratingFilterComposite = new Composite(this, SWT.NONE);
 		ratingFilterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false));
 		ratingFilterComposite.setLayout(new RowLayout());
@@ -213,8 +165,8 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 					}
 				});
 
-		table = new RaptorTable(composite, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		table = new RaptorTable(this, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL
+				| SWT.SINGLE | SWT.FULL_SELECTION);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		table.addColumn("Rating", SWT.LEFT, 25, true, new RatingComparator());
@@ -235,15 +187,15 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 
 			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
-				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
+				Menu menu = new Menu(BugPartners.this.getShell(), SWT.POP_UP);
 				addPersonMenuItems(menu, rowData[1]);
 				if (menu.getItemCount() > 0) {
 					menu.setLocation(table.getTable().toDisplay(event.x,
 							event.y));
 					menu.setVisible(true);
 					while (!menu.isDisposed() && menu.isVisible()) {
-						if (!composite.getDisplay().readAndDispatch()) {
-							composite.getDisplay().sleep();
+						if (!BugPartners.this.getDisplay().readAndDispatch()) {
+							BugPartners.this.getDisplay().sleep();
 						}
 					}
 				}
@@ -252,7 +204,7 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		Composite buttonsComposite = new Composite(composite, SWT.NONE);
+		Composite buttonsComposite = new Composite(this, SWT.NONE);
 		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
 				false));
 		buttonsComposite.setLayout(new RowLayout());
@@ -324,9 +276,6 @@ public class BugPartnersWindowItem implements RaptorConnectorWindowItem {
 		if (isActive) {
 			isActive = false;
 		}
-	}
-
-	public void removeItemChangedListener(ItemChangedListener listener) {
 	}
 
 	protected void addPersonMenuItems(Menu menu, String word) {

@@ -85,6 +85,7 @@ public interface PreferenceKeys {
 	public static final String BUG_ARENA_MAX_PARTNERS_INDEX = "bughouse-arena-max-partners-index";
 	public static final String BUG_ARENA_TEAMS_INDEX = "bughouse-arena-teams-index";
 	public static final String BUG_ARENA_TEAMS_IS_RATED = "bughosue-arena-teams-is-rated";
+	public static final String BUG_ARENA_SELECTED_TAB = "bughosue-arena-selectedTab";
 
 	public static final String SEEK_TABLE_RATINGS_INDEX = "seek-table-ratings-index";
 	public static final String SEEK_TABLE_SELECTED_TAB = "seek-table-selected-tab-index";
