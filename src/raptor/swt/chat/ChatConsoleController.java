@@ -1239,7 +1239,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void decorateGameNotifyLinks(ChatEvent event, String message,
 			int textStartPosition) {
-		System.err.println(event.getType().toString() + " " + message);
 		if (event.getType() == ChatType.UNKNOWN
 				&& message.startsWith("\nGame notification: ")
 				|| message.startsWith("Game notification: ")) {
