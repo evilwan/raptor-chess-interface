@@ -536,7 +536,9 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 	}
 
 	public void updateToGame() {
-		start();
+		if (startStopButton.getText().equals("Stop")) {
+			start();
+		}
 	}
 
 	protected void start(boolean override) {
