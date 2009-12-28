@@ -244,7 +244,6 @@ public class SeekGraph extends Canvas {
 
 		Raptor.getInstance().getDisplay().asyncExec(new Runnable() {
 
-			@Override
 			public void run() {
 				long before = System.nanoTime();
 				
