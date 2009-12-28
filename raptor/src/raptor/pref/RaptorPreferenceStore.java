@@ -41,6 +41,7 @@ import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.swt.BugPartners;
+import raptor.swt.GamesWindowItem;
 import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chess.controller.InactiveMouseAction;
@@ -435,6 +436,26 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(SEEK_TABLE_SHOW_UNTIMED, true);
 		setDefault(SEEK_TABLE_SELECTED_TAB, 2);
 
+		//Games table
+		setDefault(GAMES_TABLE_SELECTED_TAB, 1);
+		setDefault(GAMES_TABLE_RATINGS_INDEX, 0);
+		setDefault(GAMES_TABLE_MAX_RATINGS_INDEX,
+				GamesWindowItem.getRatings().length - 1);
+		setDefault(GAMES_TABLE_RATED_INDEX, 0);
+		setDefault(GAMES_TABLE_SHOW_BUGHOUSE, true);
+		setDefault(GAMES_TABLE_SHOW_LIGHTNING, true);
+		setDefault(GAMES_TABLE_SHOW_BLITZ, true);
+		setDefault(GAMES_TABLE_SHOW_STANDARD, true);
+		setDefault(GAMES_TABLE_SHOW_CRAZYHOUSE, true);
+		setDefault(GAMES_TABLE_SHOW_EXAMINED, true);
+		setDefault(GAMES_TABLE_SHOW_WILD, true);
+		setDefault(GAMES_TABLE_SHOW_ATOMIC, true);
+		setDefault(GAMES_TABLE_SHOW_SUICIDE, true);
+		setDefault(GAMES_TABLE_SHOW_LOSERS, true);
+		setDefault(GAMES_TABLE_SHOW_UNTIMED, true);
+		setDefault(GAMES_TABLE_SHOW_NONSTANDARD, true);
+		setDefault(GAMES_TABLE_SHOW_PRIVATE, true);
+
 		// Arrows
 		PreferenceConverter.setDefault(this, ARROW_OBS_OPP_COLOR, new RGB(255,
 				0, 255));
@@ -612,7 +633,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
-		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 3);
+		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 5);
 
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
@@ -740,6 +761,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 		setDefault("fics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
+		setDefault("fics-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
 		setDefault("fics2-" + MAIN_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VII);
@@ -752,6 +774,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 		setDefault("fics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
+		setDefault("fics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
 		setDefault("bics-" + MAIN_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + CHANNEL_TAB_QUADRANT, Quadrant.VI);
@@ -764,6 +787,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("bics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 		setDefault("bics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
+		setDefault("bics-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
 		setDefault("bics2-" + MAIN_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VII);
@@ -776,6 +800,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 		setDefault("bics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
+		setDefault("bics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
 		setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
 

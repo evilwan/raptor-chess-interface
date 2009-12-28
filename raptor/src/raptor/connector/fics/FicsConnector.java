@@ -477,6 +477,13 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				SWTUtils.openBugButtonsWindowItem(FicsConnector.this);
 			}
 		};
+		
+		Action gamesAction = new Action("&Games") {
+			@Override
+			public void run() {
+				SWTUtils.openGamesWindowItem(FicsConnector.this);
+			}
+		};
 
 		Action regexTabAction = new Action("&Regular Expression") {
 			@Override
@@ -569,6 +576,13 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				SWTUtils.openSeekTableWindowItem(fics2);
 			}
 		};
+		
+		Action fics2GamesAction = new Action("&Games") {
+			@Override
+			public void run() {
+				SWTUtils.openGamesWindowItem(fics2);
+			}
+		};
 
 		Action fics2bugwhoAction = new Action(
 				"Bug &Who") {
@@ -644,6 +658,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		regexTabAction.setEnabled(false);
 		bugbuttonsAction.setEnabled(false);
 		showSeekDialogAction.setEnabled(false);
+		gamesAction.setEnabled(false);
+		
 
 		onlyEnabledOnConnectActions.add(bugwhoAction);
 		onlyEnabledOnConnectActions.add(disconnectAction);
@@ -652,6 +668,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		onlyEnabledOnConnectActions.add(seekTableAction);
 		onlyEnabledOnConnectActions.add(bugbuttonsAction);
 		onlyEnabledOnConnectActions.add(showSeekDialogAction);
+		onlyEnabledOnConnectActions.add(gamesAction);
 
 		fics2.connectAction.setEnabled(true);
 		fics2DisconnectAction.setEnabled(false);
@@ -660,6 +677,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2bugwhoAction.setEnabled(false);
 		fics2RegexTabAction.setEnabled(false);
 		fics2BugbuttonsAction.setEnabled(false);
+		fics2GamesAction.setEnabled(false);
 
 		fics2.onlyEnabledOnConnectActions
 				.add(fics2bugwhoAction);
@@ -668,6 +686,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2.onlyEnabledOnConnectActions.add(fics2RegexTabAction);
 		fics2.onlyEnabledOnConnectActions.add(fics2SeekTableAction);
 		fics2.onlyEnabledOnConnectActions.add(fics2BugbuttonsAction);
+		fics2.onlyEnabledOnConnectActions.add(fics2GamesAction);
 
 		autoConnectAction.setChecked(getPreferences().getBoolean(
 				context.getPreferencePrefix() + "auto-connect"));
@@ -685,6 +704,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2Menu.add(fics2ReconnectAction);
 		fics2Menu.add(new Separator());
 		fics2TabsMenu.add(fics2SeekTableAction);
+		fics2TabsMenu.add(fics2GamesAction);
 		fics2Menu.add(new Separator());
 		fics2TabsMenu.add(fics2BugbuttonsAction);
 		fics2TabsMenu.add(fics2bugwhoAction);
@@ -697,6 +717,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		ficsMenu.add(actions);
 		MenuManager tabsMenu = new MenuManager("&Tabs");
 		tabsMenu.add(seekTableAction);
+		tabsMenu.add(gamesAction);
 		tabsMenu.add(new Separator());
 		tabsMenu.add(bugbuttonsAction);
 		tabsMenu.add(bugwhoAction);

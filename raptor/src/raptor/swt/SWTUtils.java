@@ -213,6 +213,30 @@ public class SWTUtils {
 	}
 
 	/**
+	 * Opens a games window item if one is not already open.
+	 */
+	public static void openGamesWindowItem(Connector connector) {
+		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+				.getWindowItems(GamesWindowItem.class);
+
+		boolean openNewWindow = true;
+
+		for (RaptorWindowItem item : items) {
+			GamesWindowItem gameWindowsItem = (GamesWindowItem) item;
+			if (gameWindowsItem.getConnector() == connector) {
+				Raptor.getInstance().getWindow().forceFocus(item);
+				openNewWindow = false;
+				break;
+			}
+		}
+
+		if (openNewWindow) {
+			Raptor.getInstance().getWindow().addRaptorWindowItem(
+					new GamesWindowItem(connector));
+		}
+	}
+
+	/**
 	 * Opens a bug buttons window item if one is not already open.
 	 */
 	public static void openBugButtonsWindowItem(Connector connector) {

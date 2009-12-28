@@ -375,6 +375,10 @@ public class GameService {
 	protected List<GameServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<GameServiceListener>(20));
 
+	public GameInfo[] getGameInfos() {
+		return (GameInfo[]) gameInfo.toArray(new GameInfo[0]);
+	}
+
 	public void addGame(Game game) {
 		gameMap.put(game.getId(), game);
 	}
