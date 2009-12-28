@@ -108,6 +108,7 @@ public class SimpleMoveList implements ChessBoardMoveList {
 			}
 
 			movesTable.select(row, column);
+			
 
 			ignoreSelection = false;
 		}

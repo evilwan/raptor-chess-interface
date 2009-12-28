@@ -1260,7 +1260,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				Color underlineColor = chatConsole.getPreferences().getColor(
 						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
-						+ startIndex, endIndex - startIndex, underlineColor,
+						+ startIndex, (endIndex - startIndex) + 1, underlineColor,
 						chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);

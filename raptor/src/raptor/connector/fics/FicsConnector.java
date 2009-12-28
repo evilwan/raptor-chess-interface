@@ -705,7 +705,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2Menu.add(new Separator());
 		fics2TabsMenu.add(fics2GamesAction);
 		fics2TabsMenu.add(fics2SeekTableAction);
-		fics2Menu.add(new Separator());
+		fics2TabsMenu.add(new Separator());
 		fics2TabsMenu.add(fics2BugbuttonsAction);
 		fics2TabsMenu.add(fics2bugwhoAction);
 		fics2TabsMenu.add(new Separator());
