@@ -927,7 +927,6 @@ public class IcsParser implements GameConstants {
 	 */
 	protected boolean processPendInfo(String line) {
 		if (line.startsWith("<pf>")) {
-			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
 			Offer offer = new Offer();
@@ -1010,7 +1009,6 @@ public class IcsParser implements GameConstants {
 			connector.getGameService().fireOfferReceived(offer);
 			return true;
 		} else if (line.startsWith("<pt>")) {
-			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
 			Offer offer = new Offer();
@@ -1061,7 +1059,6 @@ public class IcsParser implements GameConstants {
 			connector.getGameService().fireOfferReceived(offer);
 			return true;
 		} else if (line.startsWith("<pr>")) {
-			System.err.println(line);
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(line, " =",
 					true);
 			tok.nextToken();
