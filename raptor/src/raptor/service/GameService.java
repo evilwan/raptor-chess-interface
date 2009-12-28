@@ -25,6 +25,130 @@ import raptor.chess.Game;
  */
 public class GameService {
 
+	public static class GameInfo {
+		public static enum GameInfoCategory {
+			blitz, lightning, untimed, examined, standard, wild, atomic, crazyhouse, bughouse, losers, suicide, nonstandard
+		};
+
+		protected String id;
+		protected String whiteName;
+		protected String blackName;
+		protected String whiteElo;
+		protected String blackElo;
+		protected boolean isRated;
+		protected boolean isWhitesMove;
+		protected boolean isBeingExamined;
+		protected boolean isPrivate;
+		protected GameInfoCategory category;
+		protected int moveNumber;
+		protected int time;
+		protected int inc;
+
+		public String getBlackElo() {
+			return blackElo;
+		}
+
+		public String getBlackName() {
+			return blackName;
+		}
+
+		public GameInfoCategory getCategory() {
+			return category;
+		}
+
+		public String getId() {
+			return id;
+		}
+
+		public int getInc() {
+			return inc;
+		}
+
+		public int getMoveNumber() {
+			return moveNumber;
+		}
+
+		public int getTime() {
+			return time;
+		}
+
+		public String getWhiteElo() {
+			return whiteElo;
+		}
+
+		public String getWhiteName() {
+			return whiteName;
+		}
+
+		public boolean isBeingExamined() {
+			return isBeingExamined;
+		}
+
+		public boolean isPrivate() {
+			return isPrivate;
+		}
+
+		public boolean isRated() {
+			return isRated;
+		}
+
+		public boolean isWhitesMove() {
+			return isWhitesMove;
+		}
+
+		public void setBeingExamined(boolean isBeingExamined) {
+			this.isBeingExamined = isBeingExamined;
+		}
+
+		public void setBlackElo(String blackElo) {
+			this.blackElo = blackElo;
+		}
+
+		public void setBlackName(String blackName) {
+			this.blackName = blackName;
+		}
+
+		public void setCategory(GameInfoCategory category) {
+			this.category = category;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public void setInc(int inc) {
+			this.inc = inc;
+		}
+
+		public void setMoveNumber(int moveNumber) {
+			this.moveNumber = moveNumber;
+		}
+
+		public void setPrivate(boolean isPrivate) {
+			this.isPrivate = isPrivate;
+		}
+
+		public void setRated(boolean isRated) {
+			this.isRated = isRated;
+		}
+
+		public void setTime(int time) {
+			this.time = time;
+		}
+
+		public void setWhiteElo(String whiteElo) {
+			this.whiteElo = whiteElo;
+		}
+
+		public void setWhiteName(String whiteName) {
+			this.whiteName = whiteName;
+		}
+
+		public void setWhitesMove(boolean isWhitesMove) {
+			this.isWhitesMove = isWhitesMove;
+		}
+	}
+
 	/**
 	 * An adapter class which provides default implementations for the
 	 * GameServiceListener interface.
@@ -40,6 +164,10 @@ public class GameService {
 		}
 
 		public void gameInactive(Game game) {
+		}
+
+		public void gameInfoChanged() {
+
 		}
 
 		public void gameMovesAdded(Game game) {
@@ -93,6 +221,11 @@ public class GameService {
 		 * removed from the GameService.
 		 */
 		public void gameInactive(Game game);
+
+		/**
+		 * Invoked when the gameInfo information changed;
+		 */
+		public void gameInfoChanged();
 
 		/**
 		 * Invoked when the starting moves for this game are added to a game.
@@ -237,6 +370,7 @@ public class GameService {
 
 	protected HashMap<String, Game> gameMap = new HashMap<String, Game>();
 	protected List<Offer> offers = new ArrayList<Offer>(10);
+	protected List<GameInfo> gameInfo = new ArrayList<GameInfo>(400);
 
 	protected List<GameServiceListener> listeners = Collections
 			.synchronizedList(new ArrayList<GameServiceListener>(20));
@@ -311,6 +445,20 @@ public class GameService {
 				}
 			}
 			removeGame(game);
+		}
+	}
+
+	public void fireGameInfoChanged(GameInfo[] gameInfos) {
+		synchronized (gameInfo) {
+			gameInfo.clear();
+			for (GameInfo info : gameInfos) {
+				gameInfo.add(info);
+			}
+			synchronized (listeners) {
+				for (GameServiceListener listener : listeners) {
+					listener.gameInfoChanged();
+				}
+			}
 		}
 	}
 

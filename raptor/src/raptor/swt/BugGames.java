@@ -44,17 +44,10 @@ public class BugGames extends Composite {
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 
-	public BugGames(Composite parent, BughouseService service) {
-		super(parent, SWT.NONE);
-		this.service = service;
-		init();
-		service.addBughouseServiceListener(listener);
-	}
-
 	protected BughouseService service;
+
 	protected RaptorTable bugGamesTable;
 	protected boolean isActive = false;
-
 	protected Runnable timer = new Runnable() {
 		public void run() {
 			if (isActive) {
@@ -84,6 +77,13 @@ public class BugGames extends Composite {
 
 		}
 	};
+
+	public BugGames(Composite parent, BughouseService service) {
+		super(parent, SWT.NONE);
+		this.service = service;
+		init();
+		service.addBughouseServiceListener(listener);
+	}
 
 	public Connector getConnector() {
 		return service.getConnector();

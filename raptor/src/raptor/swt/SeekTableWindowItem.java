@@ -166,6 +166,158 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		return null;
 	}
 
+	public void init(Composite parent) {
+		composite = new Composite(parent, SWT.NONE);
+		composite.setLayout(new GridLayout(1, false));
+
+		final TabFolder tabFolder = new TabFolder(composite, SWT.BORDER);
+		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		TabItem controlsTab = new TabItem(tabFolder, SWT.NONE);
+		controlsTab.setText("Settings");
+		settings = new Composite(tabFolder, SWT.NONE);
+		settings.setLayout(new GridLayout(1, false));
+		buildSettingsComposite(settings);
+		controlsTab.setControl(settings);
+
+		TabItem tableTab = new TabItem(tabFolder, SWT.NULL);
+		tableTab.setText("Seek Table");
+
+		Composite tableComposite = new Composite(tabFolder, SWT.NONE);
+		tableComposite.setLayout(new GridLayout(1, false));
+		tableTab.setControl(tableComposite);
+
+		seeksTable = new RaptorTable(tableComposite, SWT.BORDER | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		seeksTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+
+		seeksTable.addColumn("Ad", SWT.LEFT, 8, true, new IntegerComparator());
+		seeksTable.addColumn("Elo", SWT.LEFT, 11, true, new RatingComparator());
+		seeksTable.addColumn("Time", SWT.LEFT, 11, true, null);
+		seeksTable.addColumn("Type", SWT.LEFT, 14, true, null);
+		seeksTable.addColumn("Name", SWT.LEFT, 27, true, null);
+		seeksTable.addColumn("Rating Range", SWT.LEFT, 19, true, null);
+		seeksTable.addColumn("Flags", SWT.LEFT, 10, true, null);
+
+		// Sort twice so when data is refreshed it will be on elo descending.
+		seeksTable.sort(1);
+		seeksTable.sort(1);
+
+		seekGraph = new SeekGraph(tabFolder, service);
+		TabItem graphTab = new TabItem(tabFolder, SWT.NULL);
+		graphTab.setText("Seek Graph");
+		graphTab.setControl(seekGraph);
+
+		seeksTable.addRaptorTableListener(new RaptorTableAdapter() {
+
+			@Override
+			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
+				service.getConnector().acceptSeek(rowData[0]);
+			}
+
+			@Override
+			public void rowRightClicked(MouseEvent event, String[] rowData) {
+				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
+				addPersonMenuItems(menu, rowData[4]);
+				if (menu.getItemCount() > 0) {
+					menu.setLocation(seeksTable.getTable().toDisplay(event.x,
+							event.y));
+					menu.setVisible(true);
+					while (!menu.isDisposed() && menu.isVisible()) {
+						if (!composite.getDisplay().readAndDispatch()) {
+							composite.getDisplay().sleep();
+						}
+					}
+				}
+				menu.dispose();
+			}
+		});
+
+		tabFolder.setSelection(Raptor.getInstance().getPreferences().getInt(
+				PreferenceKeys.SEEK_TABLE_SELECTED_TAB));
+		
+		tabFolder.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance().getPreferences().setValue(PreferenceKeys.SEEK_TABLE_SELECTED_TAB, tabFolder.getSelectionIndex());	
+			}
+		});
+		
+		service.refreshSeeks();
+		refreshSeekView();
+	}
+
+	public void onActivate() {
+		if (!isActive) {
+			isActive = true;
+			service.refreshSeeks();
+			ThreadService
+					.getInstance()
+					.scheduleOneShot(
+							Raptor
+									.getInstance()
+									.getPreferences()
+									.getInt(
+											PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
+							timer);
+		}
+
+	}
+
+	public void onPassivate() {
+		if (isActive) {
+			isActive = false;
+		}
+	}
+
+	public void removeItemChangedListener(ItemChangedListener listener) {
+	}
+
+	protected void addPersonMenuItems(Menu menu, String word) {
+		if (getConnector().isLikelyPerson(word)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String person = getConnector().parsePerson(word);
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add a tab for person: " + person);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					if (!Raptor.getInstance().getWindow()
+							.containsPersonalTellItem(getConnector(), person)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new PersonController(getConnector(), person));
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
+						ChatUtils.appendPreviousChatsToController(windowItem
+								.getConsole());
+					}
+				}
+			});
+
+			final String[][] connectorPersonItems = getConnector()
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					if (connectorPersonItems[i][0].equals("separator")) {
+						new MenuItem(menu, SWT.SEPARATOR);
+					} else {
+						item = new MenuItem(menu, SWT.PUSH);
+						item.setText(connectorPersonItems[i][0]);
+						final int index = i;
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								getConnector().sendMessage(
+										connectorPersonItems[index][1]);
+							}
+						});
+					}
+				}
+			}
+		}
+	}
+
 	protected void buildSettingsComposite(Composite parent) {
 		Composite ratingFilterComposite = new Composite(parent, SWT.NONE);
 		ratingFilterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
@@ -430,158 +582,6 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-	}
-
-	public void init(Composite parent) {
-		composite = new Composite(parent, SWT.NONE);
-		composite.setLayout(new GridLayout(1, false));
-
-		final TabFolder tabFolder = new TabFolder(composite, SWT.BORDER);
-		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		TabItem controlsTab = new TabItem(tabFolder, SWT.NONE);
-		controlsTab.setText("Settings");
-		settings = new Composite(tabFolder, SWT.NONE);
-		settings.setLayout(new GridLayout(1, false));
-		buildSettingsComposite(settings);
-		controlsTab.setControl(settings);
-
-		TabItem tableTab = new TabItem(tabFolder, SWT.NULL);
-		tableTab.setText("Seek Table");
-
-		Composite tableComposite = new Composite(tabFolder, SWT.NONE);
-		tableComposite.setLayout(new GridLayout(1, false));
-		tableTab.setControl(tableComposite);
-
-		seeksTable = new RaptorTable(tableComposite, SWT.BORDER | SWT.H_SCROLL
-				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-		seeksTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-
-		seeksTable.addColumn("Ad", SWT.LEFT, 8, true, new IntegerComparator());
-		seeksTable.addColumn("Elo", SWT.LEFT, 11, true, new RatingComparator());
-		seeksTable.addColumn("Time", SWT.LEFT, 11, true, null);
-		seeksTable.addColumn("Type", SWT.LEFT, 14, true, null);
-		seeksTable.addColumn("Name", SWT.LEFT, 27, true, null);
-		seeksTable.addColumn("Rating Range", SWT.LEFT, 19, true, null);
-		seeksTable.addColumn("Flags", SWT.LEFT, 10, true, null);
-
-		// Sort twice so when data is refreshed it will be on elo descending.
-		seeksTable.sort(1);
-		seeksTable.sort(1);
-
-		seekGraph = new SeekGraph(tabFolder, service);
-		TabItem graphTab = new TabItem(tabFolder, SWT.NULL);
-		graphTab.setText("Seek Graph");
-		graphTab.setControl(seekGraph);
-
-		seeksTable.addRaptorTableListener(new RaptorTableAdapter() {
-
-			@Override
-			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
-				service.getConnector().acceptSeek(rowData[0]);
-			}
-
-			@Override
-			public void rowRightClicked(MouseEvent event, String[] rowData) {
-				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
-				addPersonMenuItems(menu, rowData[4]);
-				if (menu.getItemCount() > 0) {
-					menu.setLocation(seeksTable.getTable().toDisplay(event.x,
-							event.y));
-					menu.setVisible(true);
-					while (!menu.isDisposed() && menu.isVisible()) {
-						if (!composite.getDisplay().readAndDispatch()) {
-							composite.getDisplay().sleep();
-						}
-					}
-				}
-				menu.dispose();
-			}
-		});
-
-		tabFolder.setSelection(Raptor.getInstance().getPreferences().getInt(
-				PreferenceKeys.SEEK_TABLE_SELECTED_TAB));
-		
-		tabFolder.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(PreferenceKeys.SEEK_TABLE_SELECTED_TAB, tabFolder.getSelectionIndex());	
-			}
-		});
-		
-		service.refreshSeeks();
-		refreshSeekView();
-	}
-
-	public void onActivate() {
-		if (!isActive) {
-			isActive = true;
-			service.refreshSeeks();
-			ThreadService
-					.getInstance()
-					.scheduleOneShot(
-							Raptor
-									.getInstance()
-									.getPreferences()
-									.getInt(
-											PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
-							timer);
-		}
-
-	}
-
-	public void onPassivate() {
-		if (isActive) {
-			isActive = false;
-		}
-	}
-
-	public void removeItemChangedListener(ItemChangedListener listener) {
-	}
-
-	protected void addPersonMenuItems(Menu menu, String word) {
-		if (getConnector().isLikelyPerson(word)) {
-			if (menu.getItemCount() > 0) {
-				new MenuItem(menu, SWT.SEPARATOR);
-			}
-			final String person = getConnector().parsePerson(word);
-			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add a tab for person: " + person);
-			item.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					if (!Raptor.getInstance().getWindow()
-							.containsPersonalTellItem(getConnector(), person)) {
-						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-								new PersonController(getConnector(), person));
-						Raptor.getInstance().getWindow().addRaptorWindowItem(
-								windowItem, false);
-						ChatUtils.appendPreviousChatsToController(windowItem
-								.getConsole());
-					}
-				}
-			});
-
-			final String[][] connectorPersonItems = getConnector()
-					.getPersonActions(person);
-			if (connectorPersonItems != null) {
-				for (int i = 0; i < connectorPersonItems.length; i++) {
-					if (connectorPersonItems[i][0].equals("separator")) {
-						new MenuItem(menu, SWT.SEPARATOR);
-					} else {
-						item = new MenuItem(menu, SWT.PUSH);
-						item.setText(connectorPersonItems[i][0]);
-						final int index = i;
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								getConnector().sendMessage(
-										connectorPersonItems[index][1]);
-							}
-						});
-					}
-				}
-			}
-		}
 	}
 
 	protected Seek[] getFilteredSeeks() {
