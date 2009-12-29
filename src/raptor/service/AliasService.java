@@ -33,6 +33,7 @@ import raptor.alias.ClearChannelsAlias;
 import raptor.alias.ClearExtendedCensorAlias;
 import raptor.alias.ClearFingerNotesAlias;
 import raptor.alias.ClearGNotifyAlias;
+import raptor.alias.ClearMemosAlias;
 import raptor.alias.ClearNoplayAlias;
 import raptor.alias.ClearNotifyAlias;
 import raptor.alias.ClearScreenAlias;
@@ -41,6 +42,7 @@ import raptor.alias.DeactivateScriptAlias;
 import raptor.alias.DumpGamesAlias;
 import raptor.alias.GrantSpoofAlias;
 import raptor.alias.ListScriptsAlias;
+import raptor.alias.MemosAlias;
 import raptor.alias.OpenBoardAlias;
 import raptor.alias.OpenUrlAlias;
 import raptor.alias.PerformanceRatingAlias;
@@ -69,9 +71,9 @@ public class AliasService {
 	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
 			AddExtendedCensorAlias.class, AddTabAlias.class,
-			AliasHelpAlias.class, ChannelBotAlias.class,
-			ClearCensorAlias.class, ClearChannelsAlias.class,
-			ClearExtendedCensorAlias.class, ClearFingerNotesAlias.class,
+			AliasHelpAlias.class, ChannelBotAlias.class, ClearMemosAlias.class,
+			ClearExtendedCensorAlias.class, ClearChannelsAlias.class,
+			ClearCensorAlias.class, ClearFingerNotesAlias.class,
 			ClearGNotifyAlias.class, ClearNoplayAlias.class,
 			ClearNotifyAlias.class, ClearScreenAlias.class,
 			ClearVariablesAlias.class, DeactivateScriptAlias.class,
@@ -81,8 +83,8 @@ public class AliasService {
 			RemoveExtendedCensorAlias.class, ScriptAlias.class,
 			SetConsoleTimeStampOnOffAlias.class, SetDebugLevelAlias.class,
 			ShowExtendedCensor.class, SetPremoveModeAlias.class,
-			SetSoundOnOfAlias.class, ShowFenAlias.class, ShowRegexAlias.class,
-			ShowTellsAlias.class, ShowScriptAlias.class,
+			MemosAlias.class, SetSoundOnOfAlias.class, ShowFenAlias.class,
+			ShowRegexAlias.class, ShowTellsAlias.class, ShowScriptAlias.class,
 			TellAllInChannelAlias.class, TellLastPersonWhoToldYouAlias.class,
 			TimedCommandAlias.class };
 	private static final AliasService singletonInstance = new AliasService();

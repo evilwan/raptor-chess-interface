@@ -45,13 +45,29 @@ public class ChatLogger {
 	protected String pathToFile;
 
 	/**
+	 * Constructs a ChatLogger which writes to the specified file. Deletes the
+	 * file if it already exists.
+	 * 
+	 * @param pathToFile
+	 *            The path to the backing file.
+	 */
+	public ChatLogger(String pathToFile) {
+		this(pathToFile, true);
+	}
+
+	/**
 	 * Constructs a ChatLogger which writes to the specified file.
 	 * 
 	 * @param pathToFile
+	 *            The path to the backing file.
+	 * @param isDeleting
+	 *            True if an existing file should be deleted, false otherwise.
 	 */
-	public ChatLogger(String pathToFile) {
+	public ChatLogger(String pathToFile, boolean isDeleting) {
 		this.pathToFile = pathToFile;
-		delete();
+		if (isDeleting) {
+			delete();
+		}
 	}
 
 	/**
@@ -101,10 +117,21 @@ public class ChatLogger {
 		}
 	}
 
+	protected boolean vetoWrite(ChatEvent event) {
+		return event.getType() == ChatType.GAMES
+				|| event.getType() == ChatType.BUGWHO_ALL
+				|| event.getType() == ChatType.BUGWHO_AVAILABLE_TEAMS
+				|| event.getType() == ChatType.BUGWHO_UNPARTNERED_BUGGERS
+				|| event.getType() == ChatType.SEEKS;
+	}
+
 	/**
 	 * Writes a chat even to this chat logger.
 	 */
 	public void write(ChatEvent event) {
+		if (vetoWrite(event)) {
+			return;
+		}
 		synchronized (this) {
 			if (event.getMessage().length() < 1500) {
 				@SuppressWarnings("unused")

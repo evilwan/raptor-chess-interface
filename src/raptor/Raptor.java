@@ -39,6 +39,7 @@ import raptor.service.AliasService;
 import raptor.service.ChessBoardCacheService;
 import raptor.service.ConnectorService;
 import raptor.service.EcoService;
+import raptor.service.MemoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
@@ -530,6 +531,12 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		try {
+			MemoService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting down MemoService", t);
+		}
+
+		try {
 			if (raptorWindow != null && !raptorWindow.getShell().isDisposed()) {
 				raptorWindow.close();
 			}
@@ -564,6 +571,7 @@ public class Raptor implements PreferenceKeys {
 
 		// Make sure all of the Singleton services get loaded.
 		ThreadService.getInstance();
+		MemoService.getInstance();
 		EcoService.getInstance();
 		ConnectorService.getInstance();
 		SoundService.getInstance();
