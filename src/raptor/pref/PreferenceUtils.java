@@ -92,8 +92,6 @@ public class PreferenceUtils {
 				new ChessBoardColorsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("fonts",
 				new ChessBoardFontsPage()));
-		mgr.addTo("chessBoard", new PreferenceNode("results",
-				new ChessBoardResultsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("highlights",
 				new ChessBoardHighlightsPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("mouseActions",
@@ -171,6 +169,8 @@ public class PreferenceUtils {
 												+ "chess board,on fics this is shown during bsetup. You can add new actions on the "
 												+ "Action Scripts Page.",
 										RaptorActionContainer.SetupChessBoard)));
+		mgr.addTo("chessBoard", new PreferenceNode("results",
+				new ChessBoardResultsPage()));
 		mgr.addToRoot(new PreferenceNode("chatConsole", new ChatConsolePage()));
 		// Currently unused but keeping it around in case more options are
 		// added.
