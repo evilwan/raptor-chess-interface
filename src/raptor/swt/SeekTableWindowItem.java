@@ -235,15 +235,18 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 
 		tabFolder.setSelection(Raptor.getInstance().getPreferences().getInt(
 				PreferenceKeys.SEEK_TABLE_SELECTED_TAB));
-		
+
 		tabFolder.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
+
 			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(PreferenceKeys.SEEK_TABLE_SELECTED_TAB, tabFolder.getSelectionIndex());	
+				Raptor.getInstance().getPreferences().setValue(
+						PreferenceKeys.SEEK_TABLE_SELECTED_TAB,
+						tabFolder.getSelectionIndex());
 			}
 		});
-		
+
 		service.refreshSeeks();
 		refreshSeekView();
 	}
@@ -396,35 +399,18 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		Composite typeFilterComposite = new Composite(parent, SWT.NONE);
 		typeFilterComposite.setLayout(new GridLayout(3, false));
 
-		isShowingComputers = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingComputers.setText("Computers");
-		isShowingComputers.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_COMPUTERS));
-		isShowingComputers.addSelectionListener(new SelectionListener() {
+		isShowingAtomic = new Button(typeFilterComposite, SWT.CHECK);
+		isShowingAtomic.setText("Atomic");
+		isShowingAtomic.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_ATOMIC));
+		isShowingAtomic.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
 				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.SEEK_TABLE_SHOW_COMPUTERS,
-						isShowingComputers.getSelection());
-				Raptor.getInstance().getPreferences().save();
-				refreshSeekView();
-			}
-		});
-
-		isShowingLightning = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingLightning.setText("Lightning");
-		isShowingLightning.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_LIGHTNING));
-		isShowingLightning.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.SEEK_TABLE_SHOW_LIGHTNING,
-						isShowingLightning.getSelection());
+						PreferenceKeys.SEEK_TABLE_SHOW_ATOMIC,
+						isShowingAtomic.getSelection());
 				Raptor.getInstance().getPreferences().save();
 				refreshSeekView();
 			}
@@ -447,69 +433,18 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		isShowingStandard = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingStandard.setText("Standard");
-		isShowingStandard.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_STANDARD));
-		isShowingStandard.addSelectionListener(new SelectionListener() {
+		isShowingComputers = new Button(typeFilterComposite, SWT.CHECK);
+		isShowingComputers.setText("Computers");
+		isShowingComputers.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_COMPUTERS));
+		isShowingComputers.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
 				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.SEEK_TABLE_SHOW_STANDARD,
-						isShowingStandard.getSelection());
-				Raptor.getInstance().getPreferences().save();
-				refreshSeekView();
-			}
-		});
-
-		isShowingAtomic = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingAtomic.setText("Atomic");
-		isShowingAtomic.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_ATOMIC));
-		isShowingAtomic.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.SEEK_TABLE_SHOW_ATOMIC,
-						isShowingAtomic.getSelection());
-				Raptor.getInstance().getPreferences().save();
-				refreshSeekView();
-			}
-		});
-
-		isShowingSuicide = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingSuicide.setText("Suicide");
-		isShowingSuicide.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_SUICIDE));
-		isShowingSuicide.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.SEEK_TABLE_SHOW_SUICIDE,
-						isShowingSuicide.getSelection());
-				Raptor.getInstance().getPreferences().save();
-				refreshSeekView();
-			}
-		});
-
-		isShowingLosers = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingLosers.setText("Losers");
-		isShowingLosers.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_LOSERS));
-		isShowingLosers.addSelectionListener(new SelectionListener() {
-			public void widgetDefaultSelected(SelectionEvent e) {
-			}
-
-			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.SEEK_TABLE_SHOW_LOSERS,
-						isShowingLosers.getSelection());
+						PreferenceKeys.SEEK_TABLE_SHOW_COMPUTERS,
+						isShowingComputers.getSelection());
 				Raptor.getInstance().getPreferences().save();
 				refreshSeekView();
 			}
@@ -549,22 +484,74 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
-		isShowingWild = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingWild.setText("Wild");
-		isShowingWild.setSelection(Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_WILD));
-		isShowingWild.addSelectionListener(new SelectionListener() {
+		isShowingLightning = new Button(typeFilterComposite, SWT.CHECK);
+		isShowingLightning.setText("Lightning");
+		isShowingLightning.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_LIGHTNING));
+		isShowingLightning.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
 				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.SEEK_TABLE_SHOW_WILD,
-						isShowingWild.getSelection());
+						PreferenceKeys.SEEK_TABLE_SHOW_LIGHTNING,
+						isShowingLightning.getSelection());
 				Raptor.getInstance().getPreferences().save();
 				refreshSeekView();
 			}
 		});
+
+		isShowingLosers = new Button(typeFilterComposite, SWT.CHECK);
+		isShowingLosers.setText("Losers");
+		isShowingLosers.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_LOSERS));
+		isShowingLosers.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance().getPreferences().setValue(
+						PreferenceKeys.SEEK_TABLE_SHOW_LOSERS,
+						isShowingLosers.getSelection());
+				Raptor.getInstance().getPreferences().save();
+				refreshSeekView();
+			}
+		});
+
+		isShowingStandard = new Button(typeFilterComposite, SWT.CHECK);
+		isShowingStandard.setText("Standard");
+		isShowingStandard.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_STANDARD));
+		isShowingStandard.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance().getPreferences().setValue(
+						PreferenceKeys.SEEK_TABLE_SHOW_STANDARD,
+						isShowingStandard.getSelection());
+				Raptor.getInstance().getPreferences().save();
+				refreshSeekView();
+			}
+		});
+
+		isShowingSuicide = new Button(typeFilterComposite, SWT.CHECK);
+		isShowingSuicide.setText("Suicide");
+		isShowingSuicide.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_SUICIDE));
+		isShowingSuicide.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance().getPreferences().setValue(
+						PreferenceKeys.SEEK_TABLE_SHOW_SUICIDE,
+						isShowingSuicide.getSelection());
+				Raptor.getInstance().getPreferences().save();
+				refreshSeekView();
+			}
+		});
+
 		isShowingUntimed = new Button(typeFilterComposite, SWT.CHECK);
 		isShowingUntimed.setText("Untimed");
 		isShowingUntimed.setSelection(Raptor.getInstance().getPreferences()
@@ -582,6 +569,22 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 			}
 		});
 
+		isShowingWild = new Button(typeFilterComposite, SWT.CHECK);
+		isShowingWild.setText("Wild");
+		isShowingWild.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_WILD));
+		isShowingWild.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance().getPreferences().setValue(
+						PreferenceKeys.SEEK_TABLE_SHOW_WILD,
+						isShowingWild.getSelection());
+				Raptor.getInstance().getPreferences().save();
+				refreshSeekView();
+			}
+		});
 	}
 
 	protected Seek[] getFilteredSeeks() {
