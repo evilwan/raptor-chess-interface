@@ -515,6 +515,12 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 					if (currentEngine.isConnected()) {
 						currentEngine.stop();
 						currentEngine.isReady();
+						Raptor.getInstance().getDisplay().asyncExec(
+								new RaptorRunnable() {
+									public void execute() {
+										startStopButton.setText("Start");
+									}
+								});
 					}
 				}
 			});
@@ -569,6 +575,13 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 						currentEngine.isReady();
 						currentEngine.go(currentEngine
 								.getGoAnalysisParameters(), listener);
+						Raptor.getInstance().getDisplay().asyncExec(
+								new RaptorRunnable() {
+									public void execute() {
+										startStopButton.setText("Stop");
+									}
+								});
+
 					} catch (Throwable t) {
 						LOG.error("Error starting engine", t);
 					} finally {
