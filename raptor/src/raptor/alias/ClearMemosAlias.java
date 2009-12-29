@@ -13,22 +13,22 @@
  */
 package raptor.alias;
 
+import raptor.service.MemoService;
 import raptor.swt.chat.ChatConsoleController;
 
-public class ClearExtendedCensorAlias extends RaptorAlias {
-	public ClearExtendedCensorAlias() {
-		super("clear extcensor",
-				"Removes everyone currently in your extended censor list.",
-				"'clear extcensor' " + "Example: 'clear extcensor'");
+public class ClearMemosAlias extends RaptorAlias {
+	public ClearMemosAlias() {
+		super("clear memos", "Removes all of your memos..", "'clear memos' "
+				+ "Example: 'clear memos'");
 	}
 
 	@Override
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
-		if (command.equalsIgnoreCase("clear extcensor")) {
-			int names = controller.getConnector().clearExtendedCensor();
-			return new RaptorAliasResult(null, "Removed " + names
-					+ " from extended censor.");
+		if (command.equalsIgnoreCase("clear memos")) {
+			MemoService.getInstance().clearMemos();
+			return new RaptorAliasResult(null, "Your memos have been cleared.");
+
 		} else {
 			return null;
 		}

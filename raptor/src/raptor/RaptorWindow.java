@@ -64,6 +64,7 @@ import raptor.pref.PreferenceUtils;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.AliasService;
 import raptor.service.ConnectorService;
+import raptor.service.MemoService;
 import raptor.service.SoundService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.BugButtonsWindowItem;
@@ -1492,6 +1493,14 @@ public class RaptorWindow extends ApplicationWindow {
 							getShell(), Raptor.GAMES_PGN_FILE);
 					dialog.open();
 				}
+			}
+		});
+		fileMenu.add(new Separator());
+		fileMenu.add(new Action("Show memos") {
+			@Override
+			public void run() {
+				String html = MemoService.getInstance().getMemosHTML();
+				BrowserUtils.openHtml(html);
 			}
 		});
 		fileMenu.add(new Separator());

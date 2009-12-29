@@ -71,6 +71,7 @@ import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ParameterScript;
 import raptor.service.ActionScriptService;
 import raptor.service.AliasService;
+import raptor.service.MemoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ChatService.ChatListener;
@@ -941,7 +942,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
-	protected void addCommandMenuItems(Menu menu, String message) {
+	protected void addCommandMenuItems(Menu menu, String message,
+			int caretPosition) {
 		if (message != null && message.length() <= 200) {
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
@@ -973,41 +975,59 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				});
 			}
 
-			ParameterScript[] scripts = ScriptService.getInstance()
-					.getParameterScripts(
-							getConnector().getScriptConnectorType(),
-							ParameterScript.Type.ConsoleRightClickScripts);
+			final Map<String, Object> parameterMap = new HashMap<String, Object>();
+			final String line = chatConsole.inputText
+					.getLine(chatConsole.inputText
+							.getLineAtOffset(caretPosition));
 
-			for (final ParameterScript script : scripts) {
+			connector.getChatService().getChatLogger().parseFile(
+					new ChatEventParseListener() {
+
+						public boolean onNewEventParsed(ChatEvent event) {
+							if (event.getMessage().contains(line)) {
+								parameterMap.put("chatEvent", event);
+								return false;
+							}
+							return true;
+						}
+
+						public void onParseCompleted() {
+						}
+					});
+			parameterMap.put("selection", message);
+
+			if (parameterMap.containsKey("chatEvent")) {
+
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText(script.getName() + ": '" + message + "'");
-				final Map<String, Object> parameterMap = new HashMap<String, Object>();
-				final String line = chatConsole.inputText
-						.getLine(chatConsole.inputText
-								.getLineAtOffset(chatConsole.inputText
-										.getCaretOffset()));
-
-				connector.getChatService().getChatLogger().parseFile(
-						new ChatEventParseListener() {
-
-							public boolean onNewEventParsed(ChatEvent event) {
-								if (event.getMessage().contains(line)) {
-									parameterMap.put("chatEvent", event);
-									return false;
-								}
-								return true;
-							}
-
-							public void onParseCompleted() {
-							}
-						});
-				parameterMap.put("selection", message);
+				menuItem.setText("Add as memo");
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
-						script.execute(connector
-								.getParameterScriptContext(parameterMap));
+						MemoService.getInstance().addMemo(
+								(ChatEvent) parameterMap.get("chatEvent"));
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, "Added memo."));
 					}
 				});
+
+				ParameterScript[] scripts = ScriptService.getInstance()
+						.getParameterScripts(
+								getConnector().getScriptConnectorType(),
+								ParameterScript.Type.ConsoleRightClickScripts);
+
+				if (scripts.length > 0) {
+					new MenuItem(menu, SWT.SEPARATOR);
+				}
+
+				for (final ParameterScript script : scripts) {
+					menuItem = new MenuItem(menu, SWT.PUSH);
+					menuItem.setText(script.getName() + ": '" + message + "'");
+					menuItem.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							script.execute(connector
+									.getParameterScriptContext(parameterMap));
+						}
+					});
+				}
 			}
 		}
 	}
@@ -1260,8 +1280,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				Color underlineColor = chatConsole.getPreferences().getColor(
 						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
-						+ startIndex, (endIndex - startIndex) + 1, underlineColor,
-						chatConsole.inputText.getBackground());
+						+ startIndex, (endIndex - startIndex) + 1,
+						underlineColor, chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 				System.err.println("underlined");
@@ -2056,7 +2076,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			});
 		}
-		addCommandMenuItems(menu, word);
+		addCommandMenuItems(menu, word, caretPosition);
 		addPersonMenuItems(menu, word);
 		addChannelMenuItems(menu, word);
 		addGameIdMenuItems(menu, word);
