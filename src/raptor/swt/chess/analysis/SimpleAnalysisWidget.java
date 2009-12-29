@@ -517,6 +517,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 						currentEngine.isReady();
 						Raptor.getInstance().getDisplay().asyncExec(
 								new RaptorRunnable() {
+									@Override
 									public void execute() {
 										startStopButton.setText("Start");
 									}
@@ -577,6 +578,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 								.getGoAnalysisParameters(), listener);
 						Raptor.getInstance().getDisplay().asyncExec(
 								new RaptorRunnable() {
+									@Override
 									public void execute() {
 										startStopButton.setText("Stop");
 									}

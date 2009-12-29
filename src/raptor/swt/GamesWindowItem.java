@@ -195,8 +195,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		gamesTable.addColumn("Black", SWT.LEFT, 20, true, null);
 		gamesTable.addColumn("Type", SWT.LEFT, 20, true, null);
 
-		// Sort twice so when data is refreshed it will be on elo descending.
-		gamesTable.sort(1);
+		// Sort once so when data is refreshed it will be on elo descending.
 		gamesTable.sort(1);
 		tableTab.setControl(tableComposite);
 

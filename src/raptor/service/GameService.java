@@ -376,7 +376,7 @@ public class GameService {
 			.synchronizedList(new ArrayList<GameServiceListener>(20));
 
 	public GameInfo[] getGameInfos() {
-		return (GameInfo[]) gameInfo.toArray(new GameInfo[0]);
+		return gameInfo.toArray(new GameInfo[0]);
 	}
 
 	public void addGame(Game game) {

@@ -173,8 +173,7 @@ public class BugPartners extends Composite {
 		table.addColumn("Name", SWT.LEFT, 50, true, null);
 		table.addColumn("Status", SWT.LEFT, 25, true, null);
 
-		// Sort twice so it will sort by rating descending.
-		table.sort(0);
+		// Sort once so it will sort by rating descending.
 		table.sort(0);
 
 		table.addRaptorTableListener(new RaptorTableAdapter() {

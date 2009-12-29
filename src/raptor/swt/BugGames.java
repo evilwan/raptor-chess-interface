@@ -115,9 +115,8 @@ public class BugGames extends Composite {
 			}
 		});
 
-		// sort twice so it will be on white elo descending when new data
+		// sort once so it will be on white elo descending when new data
 		// arrives.
-		bugGamesTable.sort(2);
 		bugGamesTable.sort(2);
 
 		Composite buttonsComposite = new Composite(this, SWT.NONE);
