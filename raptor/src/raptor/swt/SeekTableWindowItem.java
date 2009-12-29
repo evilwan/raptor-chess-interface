@@ -199,8 +199,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		seeksTable.addColumn("Rating Range", SWT.LEFT, 19, true, null);
 		seeksTable.addColumn("Flags", SWT.LEFT, 10, true, null);
 
-		// Sort twice so when data is refreshed it will be on elo descending.
-		seeksTable.sort(1);
+		// Sort once so when data is refreshed it will be on elo descending.
 		seeksTable.sort(1);
 
 		seekGraph = new SeekGraph(tabFolder, service);

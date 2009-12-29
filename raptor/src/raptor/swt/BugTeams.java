@@ -14,6 +14,7 @@
 package raptor.swt;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -503,6 +504,7 @@ public class BugTeams extends Composite {
 				result.add(partnership);
 			}
 		}
+		Collections.sort(result);
 		return result.toArray(new Partnership[0]);
 	}
 

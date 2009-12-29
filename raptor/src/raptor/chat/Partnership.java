@@ -23,8 +23,8 @@ public class Partnership implements Comparable<Partnership> {
 	public int compareTo(Partnership partnership) {
 		int teamRating1 = getTeamRating();
 		int teamRating2 = partnership.getTeamRating();
-		return teamRating1 < teamRating2 ? -1 : teamRating1 == teamRating2 ? 0
-				: 1;
+		return teamRating1 < teamRating2 ? 1 : teamRating1 == teamRating2 ? 0
+				: -1;
 	}
 
 	public Bugger getBugger1() {
