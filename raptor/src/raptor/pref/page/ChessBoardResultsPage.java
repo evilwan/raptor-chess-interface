@@ -35,7 +35,7 @@ public class ChessBoardResultsPage extends FieldEditorPreferencePage {
 
 	public ChessBoardResultsPage() {
 		super(GRID);
-		setTitle("Game End Result");
+		setTitle("Results");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
