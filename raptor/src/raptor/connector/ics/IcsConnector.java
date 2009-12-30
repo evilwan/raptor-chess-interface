@@ -1816,7 +1816,6 @@ public abstract class IcsConnector implements Connector {
 						i--;
 					}
 				}
-
 				int nameStartIndex = inboundMessageBuffer.indexOf(context
 						.getLoggedInMessage())
 						+ context.getLoggedInMessage().length();
