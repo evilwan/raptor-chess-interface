@@ -1997,7 +1997,6 @@ public abstract class IcsConnector implements Connector {
 					String word = message
 							.substring("--> ".length(), spaceIndex);
 					IcsUtils.stripWord(word);
-					System.err.println("Word=" + word);
 					String[] titles = UserTagService.getInstance()
 							.getTags(word);
 					Arrays.sort(titles);
@@ -2076,6 +2075,50 @@ public abstract class IcsConnector implements Connector {
 					result = firstWord + message.substring(firstNonLetterChar);
 				}
 			}
+		} else if (type == ChatType.CHALLENGE) {
+			message = message.trim();
+			if (message.startsWith("Challenge: ")) {
+				int playerStart = "Challenge: ".length();
+				int playerEnd = message.indexOf(" ", playerStart);
+				if (playerEnd != -1) {
+					String name = message.substring(playerStart, playerEnd);
+					String[] titles = UserTagService.getInstance()
+							.getTags(name);
+					Arrays.sort(titles);
+					if (titles.length > 0) {
+						for (String title : titles) {
+							name += "(" + title + ")";
+						}
+					}
+					int secondPlayerStart = message.indexOf(")");
+					if (secondPlayerStart != -1) {
+						secondPlayerStart = secondPlayerStart + 2;
+						int secondPlayerEnd = message.indexOf(" ",
+								secondPlayerStart);
+						if (secondPlayerEnd != -1) {
+							String secondName = message.substring(
+									secondPlayerStart, secondPlayerEnd);
+							titles = UserTagService.getInstance().getTags(
+									secondName);
+							Arrays.sort(titles);
+							if (titles.length > 0) {
+								for (String title : titles) {
+									secondName += "(" + title + ")";
+								}
+							}
+
+							result = message.substring(0, playerStart)
+									+ name
+									+ message.substring(playerEnd + 1,
+											secondPlayerStart)
+									+ secondName
+									+ message.substring(secondPlayerEnd + 1,
+											message.length());
+						}
+					}
+				}
+			}
+
 		}
 		return result;
 	}
