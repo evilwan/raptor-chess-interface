@@ -56,7 +56,7 @@
 	</target>
 
 	<target name="compile" depends="init" description="Compile the Java source code">
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="class.path" debug="true" deprecation="true" optimize="false">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="class.path" debug="false" deprecation="true" optimize="true">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 	</target>
