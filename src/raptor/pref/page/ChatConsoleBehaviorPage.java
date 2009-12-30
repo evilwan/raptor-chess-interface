@@ -79,10 +79,16 @@ public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(smartScroll);
 
-		BooleanFieldEditor underlineSingleQuotes = new BooleanFieldEditor(
-				PreferenceKeys.CHAT_UNDERLINE_SINGLE_QUOTES,
-				"Underline single quoted text", getFieldEditorParent());
-		addField(underlineSingleQuotes);
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_UNDERLINE_URLS,
+				"Underline urls", getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_UNDERLINE_SINGLE_QUOTES,
+				"Underline single quoted text", getFieldEditorParent()));
+		
+		addField( new BooleanFieldEditor(
+				PreferenceKeys.CHAT_UNDERLINE_QUOTED_TEXT,
+				"Underline quoted text", getFieldEditorParent()));
 	}
 }
