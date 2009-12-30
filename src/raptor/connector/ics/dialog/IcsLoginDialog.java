@@ -67,6 +67,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	protected boolean wasLoginPressed;
 	protected boolean isShowingSimulBug;
 	protected boolean isSimulBugLogin;
+	protected boolean isShowingAutoLogin = true;
 
 	public IcsLoginDialog(String profilePrefix, String title) {
 		super(Raptor.getInstance().getWindow().getShell());
@@ -130,11 +131,13 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		data.horizontalSpan = 2;
 		timesealEnabledCheckBox.setLayoutData(data);
 
-		autoLoginCheckBox = new Button(content, SWT.CHECK);
-		autoLoginCheckBox.setText("Automatically log me in me next time.");
-		data = new GridData();
-		data.horizontalSpan = 2;
-		autoLoginCheckBox.setLayoutData(data);
+		if (isShowingAutoLogin) {
+			autoLoginCheckBox = new Button(content, SWT.CHECK);
+			autoLoginCheckBox.setText("Automatically log me in me next time.");
+			data = new GridData();
+			data.horizontalSpan = 2;
+			autoLoginCheckBox.setLayoutData(data);
+		}
 
 		if (isShowingSimulBug()) {
 			simulBugButton = new Button(content, SWT.CHECK);
@@ -237,6 +240,14 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		return content;
 	}
 
+	public boolean isShowingAutoLogin() {
+		return isShowingAutoLogin;
+	}
+
+	public void setShowingAutoLogin(boolean isShowingAutoLogin) {
+		this.isShowingAutoLogin = isShowingAutoLogin;
+	}
+
 	public String getSelectedProfile() {
 		return lastSelection;
 	}
@@ -305,8 +316,10 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 				|| prefs.getBoolean(prefix + "is-named-guest"));
 		timesealEnabledCheckBox.setSelection(prefs.getBoolean(prefix
 				+ "timeseal-enabled"));
-		autoLoginCheckBox.setSelection(prefs.getBoolean(profilePrefix
-				+ "auto-connect"));
+		if (autoLoginCheckBox != null) {
+			autoLoginCheckBox.setSelection(prefs.getBoolean(profilePrefix
+					+ "auto-connect"));
+		}
 		LOG.info("Loaded loadFromProfile " + profileName);
 		adjustToCheckBoxControls();
 	}
@@ -336,8 +349,10 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 				&& StringUtils.isBlank(handleField.getText()));
 		prefs.setValue(prefix + "timeseal-enabled", timesealEnabledCheckBox
 				.getSelection());
-		prefs.setValue(profilePrefix + "auto-connect", autoLoginCheckBox
-				.getSelection());
+		if (autoLoginCheckBox != null) {
+			prefs.setValue(profilePrefix + "auto-connect", autoLoginCheckBox
+					.getSelection());
+		}
 
 		// Don't store off the the profileName-profile here.
 		// It should'nt be stored for fics2/bics2 logins.
