@@ -26,6 +26,7 @@ import raptor.alias.AbbreviatedPersonTellAlias;
 import raptor.alias.ActivateScriptAlias;
 import raptor.alias.AddExtendedCensorAlias;
 import raptor.alias.AddTabAlias;
+import raptor.alias.AddTagAlias;
 import raptor.alias.AliasHelpAlias;
 import raptor.alias.ChannelBotAlias;
 import raptor.alias.ClearCensorAlias;
@@ -51,6 +52,7 @@ import raptor.alias.RaptorAlias;
 import raptor.alias.RaptorAliasResult;
 import raptor.alias.RelayAlias;
 import raptor.alias.RemoveExtendedCensorAlias;
+import raptor.alias.RemoveTagAlias;
 import raptor.alias.ScriptAlias;
 import raptor.alias.SetConsoleTimeStampOnOffAlias;
 import raptor.alias.SetDebugLevelAlias;
@@ -72,7 +74,7 @@ public class AliasService {
 	@SuppressWarnings("unchecked")
 	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
-			AddExtendedCensorAlias.class, AddTabAlias.class,
+			AddExtendedCensorAlias.class, AddTabAlias.class,AddTagAlias.class,
 			AliasHelpAlias.class, ChannelBotAlias.class, ClearMemosAlias.class,
 			ClearExtendedCensorAlias.class, ClearChannelsAlias.class,
 			ClearCensorAlias.class, ClearFingerNotesAlias.class,
@@ -82,7 +84,7 @@ public class AliasService {
 			DeactivateScriptAlias.class, DumpGamesAlias.class,
 			GrantSpoofAlias.class, ListScriptsAlias.class,
 			OpenBoardAlias.class, OpenUrlAlias.class,
-			PerformanceRatingAlias.class, RelayAlias.class,
+			PerformanceRatingAlias.class, RelayAlias.class,RemoveTagAlias.class,
 			RemoveExtendedCensorAlias.class, ScriptAlias.class,
 			SetConsoleTimeStampOnOffAlias.class, SetDebugLevelAlias.class,
 			ShowExtendedCensor.class, SetPremoveModeAlias.class,

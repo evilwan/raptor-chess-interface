@@ -13,54 +13,40 @@
  */
 package raptor.alias;
 
-import java.util.Arrays;
-
 import org.apache.commons.lang.StringUtils;
 
 import raptor.service.UserTagService;
 import raptor.swt.chat.ChatConsoleController;
+import raptor.util.RaptorStringTokenizer;
 
-public class ShowTagsAlias extends RaptorAlias {
-
-	public ShowTagsAlias() {
-		super("=tag", "Shows the all of the users currently tagged.", "=tags");
+public class AddTagAlias extends RaptorAlias {
+	public AddTagAlias() {
+		super("+tag", "Adds a tag to a user. ", "'+tag tagName userName'"
+				+ "Examples: '+tag Noob RJJ', '+tag Troll Marv' ");
+		setHidden(false);
 	}
 
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.equalsIgnoreCase("=tags")) {
-			StringBuilder builder = new StringBuilder(1000);
+		if (StringUtils.startsWithIgnoreCase(command, "+tag")) {
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
+					true);
+			tok.nextToken();
+			String tag = tok.nextToken();
+			String user = tok.nextToken();
 
-			String[] tags = UserTagService.getInstance().getTags();
-			Arrays.sort(tags);
+			if (tag == null || user == null) {
+				return new RaptorAliasResult(null, "Invalid command: "
+						+ command + "\n" + getUsage());
 
-			builder.append("Available Tags: ");
-			for (String tag : tags) {
-				builder.append(tag + " ");
+			} else {
+				UserTagService.getInstance().addUser(tag, user);
+				return new RaptorAliasResult(null, "Added tag " + tag
+						+ " to user " + user);
 			}
-
-			builder.append("\n\nTagged users:\n");
-			for (String tag : tags) {
-				String[] users = UserTagService.getInstance()
-						.getUsersInTag(tag);
-				if (users.length > 0) {
-					builder.append(tag + ":\n");
-					Arrays.sort(users);
-					int counter = 0;
-					for (int i = 0; i < users.length; i++) {
-						builder.append(StringUtils.rightPad(users[i], 20));
-						counter++;
-						if (counter == 3) {
-							counter = 0;
-							builder.append("\n");
-						}
-					}
-					builder.append("\n\n");
-				}
-			}
-			return new RaptorAliasResult(null, builder.toString().trim());
+		} else {
+			return null;
 		}
-		return null;
 	}
 }
