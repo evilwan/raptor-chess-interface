@@ -103,6 +103,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
+	public static final String LOGIN_CHARACTERS_TO_FILTER = "ÿûÿü";
 
 	protected BughouseService bughouseService;
 
@@ -1569,7 +1570,6 @@ public abstract class IcsConnector implements Connector {
 				}
 			}
 		});
-
 	}
 
 	/**
@@ -1721,6 +1721,9 @@ public abstract class IcsConnector implements Connector {
 	protected void onLoginEvent(String message, boolean isLoginPrompt) {
 		String profilePrefix = context.getPreferencePrefix()
 				+ currentProfileName + "-";
+
+		message = StringUtils.replaceChars(message, LOGIN_CHARACTERS_TO_FILTER,
+				"");
 		if (isLoginPrompt) {
 			if (getPreferences().getBoolean(profilePrefix + "is-anon-guest")
 					&& !hasSentLogin) {
@@ -1811,7 +1814,16 @@ public abstract class IcsConnector implements Connector {
 						+ context.getLoggedInMessage().length();
 				int endIndex = inboundMessageBuffer.indexOf("****",
 						nameStartIndex);
+
 				if (endIndex != -1) {
+					for (int i = 0; i < inboundMessageBuffer.length(); i++) {
+						char character = inboundMessageBuffer.charAt(i);
+						if (LOGIN_CHARACTERS_TO_FILTER.indexOf(character) != -1) {
+							inboundMessageBuffer.deleteCharAt(i);
+							i--;
+						}
+					}
+
 					userName = IcsUtils.stripTitles(inboundMessageBuffer
 							.substring(nameStartIndex, endIndex).trim());
 					LOG.info(context.getShortName() + "Connector "
@@ -1854,6 +1866,8 @@ public abstract class IcsConnector implements Connector {
 									.indexOf(context.getLoginErrorMessage());
 							if (errorMessageIndex != -1) {
 								String event = drainInboundMessageBuffer();
+								event = StringUtils.replaceChars(event, "ÿûÿü",
+										"");
 								parseMessage(event);
 							}
 						}
