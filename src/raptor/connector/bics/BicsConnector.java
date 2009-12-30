@@ -43,6 +43,7 @@ import raptor.connector.ics.IcsUtils;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
+import raptor.pref.page.ConnectorMessageBlockPage;
 import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
@@ -201,15 +202,17 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] {
-				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics")),
-				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics2")),
+				new PreferenceNode("bics",
+						new ConnectorMessageBlockPage("bics")),
 				new PreferenceNode(
 						"bicsMenuActions",
 						new ActionContainerPage(
-								"Bics Links Menu Actions",
+								"Bics Menu URLs",
 								"\tOn this page you can configure the actions shown in the Bics "
 										+ "menu. You can add new actions on the Action Scripts Page.",
-								RaptorActionContainer.BicsMenu)) };
+								RaptorActionContainer.BicsMenu)),
+				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics")),
+				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics2")) };
 
 	}
 

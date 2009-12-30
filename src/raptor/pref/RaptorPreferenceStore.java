@@ -525,7 +525,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS, true);
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES, false);
 
-
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
 						defaultLargeFontSize, 0) });
@@ -697,6 +696,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						+ "match $person 1 0,match $person 3 0,match $person 5 0,match $person 15 0");
 		setDefault(FICS_GAME_COMMANDS,
 				"observe $gameId,allobservers $gameId,moves $gameId");
+		setDefault(
+				FICS_REGULAR_EXPRESSIONS_TO_BLOCK,
+				"defprompt set\\.,gameinfo set\\.,ms set\\.,startpos set\\.,"
+						+ "pendinfo set\\.,nowrap set\\.,smartmove set\\.,premove set\\.,"
+						+ "Style 12 set\\.,Your prompt will now not show the time\\.,"
+						+ "You will not see seek ads\\.,You will not see seek ads.\\.,"
+						+ "Auto-flagging enabled\\.,lock set\\.,set seek 0,set autoflag 1,"
+						+ "all results set\\.,Bell off\\.,set interface Raptor .*,"
+						+ "You are not examining or setting up a game\\.");
 
 		setDefault(FICS_SEEK_GAME_TYPE, "");
 		setDefault(FICS_SEEK_MINUTES, "5");
@@ -755,6 +763,13 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						+ "match $person 2 0 bughouse fr, match $person 2 0 bughouse w5");
 		setDefault(BICS_GAME_COMMANDS,
 				"observe $gameId,allobservers $gameId,moves $gameId");
+		setDefault(
+				BICS_REGULAR_EXPRESSIONS_TO_BLOCK,
+				"defprompt set\\.,gameinfo set\\.,ms set\\.,startpos set\\.,"
+						+ "pendinfo set\\.,nowrap set\\.,smartmove set\\.,premove set\\.,"
+						+ "Style 12 set\\.,Your prompt will now not show the time\\.,"
+						+ "You will not see seek ads\\.,You will not see seek ads.\\.,"
+						+ "Auto-flagging enabled\\.,lock set\\.");
 
 		// Bics Primary
 		setDefault(BICS_PRIMARY_USER_NAME, "");
