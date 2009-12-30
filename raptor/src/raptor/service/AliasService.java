@@ -37,6 +37,7 @@ import raptor.alias.ClearMemosAlias;
 import raptor.alias.ClearNoplayAlias;
 import raptor.alias.ClearNotifyAlias;
 import raptor.alias.ClearScreenAlias;
+import raptor.alias.ClearTagsAlias;
 import raptor.alias.ClearVariablesAlias;
 import raptor.alias.DeactivateScriptAlias;
 import raptor.alias.DumpGamesAlias;
@@ -59,6 +60,7 @@ import raptor.alias.ShowExtendedCensor;
 import raptor.alias.ShowFenAlias;
 import raptor.alias.ShowRegexAlias;
 import raptor.alias.ShowScriptAlias;
+import raptor.alias.ShowTagsAlias;
 import raptor.alias.ShowTellsAlias;
 import raptor.alias.TellAllInChannelAlias;
 import raptor.alias.TellLastPersonWhoToldYouAlias;
@@ -76,17 +78,18 @@ public class AliasService {
 			ClearCensorAlias.class, ClearFingerNotesAlias.class,
 			ClearGNotifyAlias.class, ClearNoplayAlias.class,
 			ClearNotifyAlias.class, ClearScreenAlias.class,
-			ClearVariablesAlias.class, DeactivateScriptAlias.class,
-			DumpGamesAlias.class, GrantSpoofAlias.class,
-			ListScriptsAlias.class, OpenBoardAlias.class, OpenUrlAlias.class,
+			ClearTagsAlias.class, ClearVariablesAlias.class,
+			DeactivateScriptAlias.class, DumpGamesAlias.class,
+			GrantSpoofAlias.class, ListScriptsAlias.class,
+			OpenBoardAlias.class, OpenUrlAlias.class,
 			PerformanceRatingAlias.class, RelayAlias.class,
 			RemoveExtendedCensorAlias.class, ScriptAlias.class,
 			SetConsoleTimeStampOnOffAlias.class, SetDebugLevelAlias.class,
 			ShowExtendedCensor.class, SetPremoveModeAlias.class,
 			MemosAlias.class, SetSoundOnOfAlias.class, ShowFenAlias.class,
-			ShowRegexAlias.class, ShowTellsAlias.class, ShowScriptAlias.class,
-			TellAllInChannelAlias.class, TellLastPersonWhoToldYouAlias.class,
-			TimedCommandAlias.class };
+			ShowRegexAlias.class, ShowTellsAlias.class, ShowTagsAlias.class,
+			ShowScriptAlias.class, TellAllInChannelAlias.class,
+			TellLastPersonWhoToldYouAlias.class, TimedCommandAlias.class };
 	private static final AliasService singletonInstance = new AliasService();
 
 	public static AliasService getInstance() {

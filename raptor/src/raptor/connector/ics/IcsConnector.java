@@ -68,6 +68,7 @@ import raptor.service.ScriptService;
 import raptor.service.SeekService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
+import raptor.service.UserTagService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.service.GameService.Offer;
@@ -897,6 +898,8 @@ public abstract class IcsConnector implements Connector {
 				return;
 			}
 
+			event.setMessage(substituteTitles(event.getMessage(), event
+					.getType()));
 			handleOpeningTabs(event);
 			processRegularExpressionScripts(event);
 
@@ -1981,6 +1984,83 @@ public abstract class IcsConnector implements Connector {
 				});
 			}
 		}
+	}
+
+	protected String substituteTitles(String message, ChatType type) {
+		// Currently only handles fics formatting.
+		String result = message;
+		if (type == ChatType.SHOUT) {
+			message = message.trim();
+			if (message.startsWith("--> ")) {
+				int spaceIndex = message.indexOf(' ', 4);
+				if (spaceIndex != -1) {
+					String word = message.substring(5, spaceIndex);
+					IcsUtils.stripWord(word);
+					String[] titles = UserTagService.getInstance()
+							.getTags(word);
+					Arrays.sort(titles);
+					if (titles.length > 0) {
+						for (String title : titles) {
+							word += "(" + title + ")";
+						}
+						result = "--> " + word + message.substring(spaceIndex);
+					}
+				}
+			} else {
+				int firstSpace = message.indexOf(' ');
+				if (firstSpace != -1) {
+					String firstWord = message.substring(0, firstSpace);
+					String[] titles = UserTagService.getInstance().getTags(
+							firstWord);
+					Arrays.sort(titles);
+					if (titles.length > 0) {
+						for (String title : titles) {
+							firstWord += "(" + title + ")";
+						}
+						result = firstWord + message.substring(firstSpace);
+					}
+				}
+			}
+		} else if (type == ChatType.TELL) {
+			message = message.trim();
+			int firstSpace = message.indexOf(' ');
+			if (firstSpace != -1) {
+				String firstWord = message.substring(0, firstSpace);
+				String[] titles = UserTagService.getInstance().getTags(
+						firstWord);
+				Arrays.sort(titles);
+				if (titles.length > 0) {
+					for (String title : titles) {
+						firstWord += "(" + title + ")";
+					}
+					result = firstWord + message.substring(firstSpace);
+				}
+			}
+		} else if (type == ChatType.CHANNEL_TELL) {
+			message = message.trim();
+			int firstNonLetterChar = 0;
+			for (int i = 0; i < message.length(); i++) {
+				if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+						.indexOf(message.charAt(i)) == -1) {
+					firstNonLetterChar = i;
+					break;
+				}
+			}
+
+			if (firstNonLetterChar != -1) {
+				String firstWord = message.substring(0, firstNonLetterChar);
+				String[] titles = UserTagService.getInstance().getTags(
+						firstWord);
+				Arrays.sort(titles);
+				if (titles.length > 0) {
+					for (String title : titles) {
+						firstWord += "(" + title + ")";
+					}
+					result = firstWord + message.substring(firstNonLetterChar);
+				}
+			}
+		}
+		return result;
 	}
 
 	protected void refreshChatScripts() {

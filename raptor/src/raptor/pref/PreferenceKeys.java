@@ -51,6 +51,7 @@ public interface PreferenceKeys {
 
 	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";
+	public static final String APP_USER_TAGS = "app-user-tags";
 	public static final String APP_ICON_SIZE = "app-icon-size";
 	public static final String APP_TOOLBAR_PIECE_SIZE = "app-toolbar-piece-size";
 	public static final String APP_IS_LOGGING_GAMES = "app-is-logging-games";
@@ -87,8 +88,8 @@ public interface PreferenceKeys {
 	public static final String BUG_ARENA_TEAMS_INDEX = "bughouse-arena-teams-index";
 	public static final String BUG_ARENA_TEAMS_IS_RATED = "bughosue-arena-teams-is-rated";
 	public static final String BUG_ARENA_SELECTED_TAB = "bughosue-arena-selectedTab";
-	
-	public static final String GAMES_TABLE_SELECTED_TAB = "games-table-selected-tab-index"; 
+
+	public static final String GAMES_TABLE_SELECTED_TAB = "games-table-selected-tab-index";
 	public static final String GAMES_TABLE_RATINGS_INDEX = "games-table-ratings-index";
 	public static final String GAMES_TABLE_MAX_RATINGS_INDEX = "games-table-max-ratings-index";
 	public static final String GAMES_TABLE_RATED_INDEX = "games-table-rated-index";
