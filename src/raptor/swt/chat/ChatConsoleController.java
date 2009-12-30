@@ -1010,26 +1010,26 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								ChatType.INTERNAL, "Added memo."));
 					}
 				});
+			}
 
-				ParameterScript[] scripts = ScriptService.getInstance()
-						.getParameterScripts(
-								getConnector().getScriptConnectorType(),
-								ParameterScript.Type.ConsoleRightClickScripts);
+			ParameterScript[] scripts = ScriptService.getInstance()
+					.getParameterScripts(
+							getConnector().getScriptConnectorType(),
+							ParameterScript.Type.ConsoleRightClickScripts);
 
-				if (scripts.length > 0) {
-					new MenuItem(menu, SWT.SEPARATOR);
-				}
+			if (scripts.length > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
 
-				for (final ParameterScript script : scripts) {
-					menuItem = new MenuItem(menu, SWT.PUSH);
-					menuItem.setText(script.getName() + ": '" + message + "'");
-					menuItem.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							script.execute(connector
-									.getParameterScriptContext(parameterMap));
-						}
-					});
-				}
+			for (final ParameterScript script : scripts) {
+				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+				menuItem.setText(script.getName() + ": '" + message + "'");
+				menuItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						script.execute(connector
+								.getParameterScriptContext(parameterMap));
+					}
+				});
 			}
 		}
 	}
