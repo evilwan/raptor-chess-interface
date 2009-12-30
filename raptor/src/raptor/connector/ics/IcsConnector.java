@@ -123,6 +123,7 @@ public abstract class IcsConnector implements Connector {
 	protected SeekService seekService;
 	protected boolean isSpeakingAllPersonTells = false;
 	protected List<String> autoCompleteList = new ArrayList<String>(1000);
+	protected List<Pattern> patternsToBlock = new ArrayList<Pattern>(20);
 
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
@@ -243,6 +244,24 @@ public abstract class IcsConnector implements Connector {
 		gameService.addGameServiceListener(gameServiceListener);
 		setBughouseService(new BughouseService(this));
 		prepopulateAutoCompleteList();
+	}
+
+	protected void setRegexPatternsToBlock() {
+		patternsToBlock.clear();
+		String[] regexPatterns = getPreferences().getStringArray(
+				context.getPreferencePrefix()
+						+ PreferenceKeys.REGULAR_EXPRESSIONS_TO_BLOCK);
+		if (regexPatterns != null) {
+			for (String regex : regexPatterns) {
+				Pattern pattern = RegExUtils.getPattern(regex);
+				if (pattern == null) {
+					LOG.error("Invalid regex pattern: " + pattern
+							+ ". Will be ignored.");
+				} else {
+					patternsToBlock.add(pattern);
+				}
+			}
+		}
 	}
 
 	public void acceptSeek(String adId) {
@@ -882,6 +901,18 @@ public abstract class IcsConnector implements Connector {
 		});
 	}
 
+	protected boolean isBlockedByRegularExpressionBlocks(ChatEvent event) {
+		String message = event.getMessage().trim();
+		boolean result = false;
+		for (Pattern pattern : patternsToBlock) {
+			if (RegExUtils.matches(pattern, message)) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+
 	/**
 	 * Publishes the specified event to the chat service. Currently all messages
 	 * are published on separate threads via ThreadService.
@@ -895,6 +926,9 @@ public abstract class IcsConnector implements Connector {
 			updateAutoComplete(event);
 
 			if (isBlockedByExtendedCensor(event)) {
+				return;
+			}
+			if (isBlockedByRegularExpressionBlocks(event)) {
 				return;
 			}
 
@@ -1300,6 +1334,7 @@ public abstract class IcsConnector implements Connector {
 			throw new IllegalStateException("You are already connected to "
 					+ getShortName() + " . Disconnect before invoking connect.");
 		}
+		setRegexPatternsToBlock();
 		loadExtendedCensorList();
 		resetConnectionStateVars();
 

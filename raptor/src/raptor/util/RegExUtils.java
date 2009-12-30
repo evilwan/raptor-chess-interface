@@ -22,8 +22,15 @@ public class RegExUtils {
 	private static final Log LOG = LogFactory.getLog(RegExUtils.class);
 
 	public static Pattern getPattern(String regularExpression) {
-		return Pattern.compile(regularExpression, Pattern.MULTILINE
-				| Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+		try {
+			return Pattern.compile(regularExpression, Pattern.MULTILINE
+					| Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+		} catch (Throwable t) {
+			LOG.warn(
+					"RegularExpression pattern creation threw an exception. regex="
+							+ regularExpression, t);
+			return null;
+		}
 	}
 
 	public static String getRegularExpressionHelpHtml() {

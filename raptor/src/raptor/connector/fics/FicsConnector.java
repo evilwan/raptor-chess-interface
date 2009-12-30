@@ -49,6 +49,7 @@ import raptor.connector.ics.IcsUtils;
 import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
+import raptor.pref.page.ConnectorMessageBlockPage;
 import raptor.pref.page.ConnectorQuadrantsPage;
 import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
@@ -255,15 +256,16 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] {
-				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics")),
-				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics2")),
 				new PreferenceNode(
 						"ficsMenuActions",
 						new ActionContainerPage(
-								"Fics Link Menu Actions",
+								"Fics Menu URLs",
 								"\tOn this page you can configure the actions shown in the Fics Links "
 										+ "menu. You can add new actions on the Action Scripts Page.",
-								RaptorActionContainer.FicsMenu)) };
+								RaptorActionContainer.FicsMenu)),
+								new PreferenceNode("fics",new ConnectorMessageBlockPage("fics")),
+								new PreferenceNode("fics", new ConnectorQuadrantsPage("fics")),
+								new PreferenceNode("fics", new ConnectorQuadrantsPage("fics2")),};
 
 	}
 
