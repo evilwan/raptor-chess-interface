@@ -474,7 +474,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		reduceInputTextIfNeeded();
 	}
 
-
 	public void onAppendOutputText(String string) {
 		chatConsole.outputText.append(string);
 	}
@@ -1163,8 +1162,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						public void handleEvent(Event e) {
 							UserTagService.getInstance().addUser(tag, person);
 							onAppendChatEventToInputText(new ChatEvent(null,
-									ChatType.INTERNAL, "Added " + tag + " to "
-											+ person));
+									ChatType.INTERNAL, "Added " + tag
+											+ " tag to " + person));
 						}
 					});
 				}
@@ -1186,7 +1185,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							UserTagService.getInstance().clearTag(tag, person);
 							onAppendChatEventToInputText(new ChatEvent(null,
 									ChatType.INTERNAL, "Removed " + tag
-											+ " from " + person));
+											+ " tag from " + person));
 						}
 					});
 				}

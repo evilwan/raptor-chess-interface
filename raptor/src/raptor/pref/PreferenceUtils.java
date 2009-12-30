@@ -30,6 +30,7 @@ import raptor.pref.page.ChatConsoleChannelColorsPage;
 import raptor.pref.page.ChatConsoleMessageColorsPage;
 import raptor.pref.page.ChatConsolePage;
 import raptor.pref.page.ChatConsoleRightClickScripts;
+import raptor.pref.page.ChatConsoleTagsPage;
 import raptor.pref.page.ChatConsoleToolbarsPage;
 import raptor.pref.page.ChessBoardArrowsPage;
 import raptor.pref.page.ChessBoardBehaviorPage;
@@ -180,6 +181,8 @@ public class PreferenceUtils {
 				new ChatConsoleChannelColorsPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("messageColors",
 				new ChatConsoleMessageColorsPage()));
+		mgr.addTo("chatConsole", new PreferenceNode("tags",
+				new ChatConsoleTagsPage()));
 		mgr.addTo("chatConsole", new PreferenceNode("toolbar",
 				new ChatConsoleToolbarsPage()));
 		mgr
