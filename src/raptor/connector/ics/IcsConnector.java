@@ -2007,7 +2007,17 @@ public abstract class IcsConnector implements Connector {
 		addToAutoComplete("ptell");
 		addToAutoComplete("abort");
 		addToAutoComplete("adjourn");
-
+		addToAutoComplete("aliashelp");
+		addToAutoComplete("+tag");
+		addToAutoComplete("-tag");
+		addToAutoComplete("=tag");
+		addToAutoComplete("+extcensor");
+		addToAutoComplete("-extcensor");
+		addToAutoComplete("=extcensor");
+		addToAutoComplete("clear");
+		addToAutoComplete("timestamp");
+		addToAutoComplete("sound");
+		addToAutoComplete("performance");
 	}
 
 	/**
