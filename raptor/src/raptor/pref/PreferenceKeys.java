@@ -240,6 +240,9 @@ public interface PreferenceKeys {
 	public static final String CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS = "chat-open-channel-tab-on-channel-tells";
 	public static final String CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS = "chat-open-person-tab-on-direct-tells";
 	public static final String CHAT_OPEN_PARTNER_TAB_ON_PTELLS = "chat-open-partner-tab-on-ptells";
+	public static final String CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS = "chat-play-notification-sound-on-arrivals";
+	public static final String CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES = "chat-play-notification-sound-on-departures";
+
 
 	// Connector preferences should always use the short name of the connector
 	// followed by the preference.

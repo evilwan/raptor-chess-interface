@@ -72,6 +72,16 @@ public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 				"Play 'chat' sound on all person tells.",
 				getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS,
+				"Play 'notificationArrived' sound on all notification arrivals.",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES,
+				"Play 'notificationDeparted' sound on all notification departures.",
+				getFieldEditorParent()));
+
 		BooleanFieldEditor smartScroll = new BooleanFieldEditor(
 				PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED,
 				"Smart Scroll (Toggles auto scroll based on the "
@@ -79,15 +89,14 @@ public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(smartScroll);
 
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.CHAT_UNDERLINE_URLS,
+		addField(new BooleanFieldEditor(PreferenceKeys.CHAT_UNDERLINE_URLS,
 				"Underline urls", getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_UNDERLINE_SINGLE_QUOTES,
 				"Underline single quoted text", getFieldEditorParent()));
-		
-		addField( new BooleanFieldEditor(
+
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_UNDERLINE_QUOTED_TEXT,
 				"Underline quoted text", getFieldEditorParent()));
 	}

@@ -2211,6 +2211,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					&& getPreferences().getBoolean(
 							PreferenceKeys.BOARD_PLAY_CHALLENGE_SOUND)) {
 				SoundService.getInstance().playSound("drawRequested");
+			} else if (event.getType() == ChatType.NOTIFICATION_ARRIVAL
+					&& getPreferences()
+							.getBoolean(
+									PreferenceKeys.CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS)) {
+				SoundService.getInstance().playSound("notificationArrival");
+			} else if (event.getType() == ChatType.NOTIFICATION_DEPARTURE
+					&& getPreferences()
+							.getBoolean(
+									PreferenceKeys.CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES)) {
+				SoundService.getInstance().playSound("notificationDeparture");
 			}
 		}
 	}

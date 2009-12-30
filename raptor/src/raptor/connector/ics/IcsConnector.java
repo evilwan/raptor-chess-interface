@@ -1590,6 +1590,8 @@ public abstract class IcsConnector implements Connector {
 			}
 			break;
 		case CHANNEL_TELL:
+		case NOTIFICATION_ARRIVAL:
+		case NOTIFICATION_DEPARTURE:
 		case SHOUT:
 		case CSHOUT:
 		case KIBITZ:
