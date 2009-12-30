@@ -1992,10 +1992,12 @@ public abstract class IcsConnector implements Connector {
 		if (type == ChatType.SHOUT) {
 			message = message.trim();
 			if (message.startsWith("--> ")) {
-				int spaceIndex = message.indexOf(' ', 4);
+				int spaceIndex = message.indexOf(' ', "--> ".length());
 				if (spaceIndex != -1) {
-					String word = message.substring(5, spaceIndex);
+					String word = message
+							.substring("--> ".length(), spaceIndex);
 					IcsUtils.stripWord(word);
+					System.err.println("Word=" + word);
 					String[] titles = UserTagService.getInstance()
 							.getTags(word);
 					Arrays.sort(titles);
@@ -2019,6 +2021,21 @@ public abstract class IcsConnector implements Connector {
 						}
 						result = firstWord + message.substring(firstSpace);
 					}
+				}
+			}
+		} else if (type == ChatType.CSHOUT) {
+			message = message.trim();
+			int firstSpace = message.indexOf(' ');
+			if (firstSpace != -1) {
+				String firstWord = message.substring(0, firstSpace);
+				String[] titles = UserTagService.getInstance().getTags(
+						firstWord);
+				Arrays.sort(titles);
+				if (titles.length > 0) {
+					for (String title : titles) {
+						firstWord += "(" + title + ")";
+					}
+					result = firstWord + message.substring(firstSpace);
 				}
 			}
 		} else if (type == ChatType.TELL) {
