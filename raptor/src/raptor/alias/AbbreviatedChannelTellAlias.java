@@ -13,6 +13,8 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.swt.chat.ChatConsoleController;
 import raptor.util.RaptorStringTokenizer;
 
@@ -28,6 +30,9 @@ public class AbbreviatedChannelTellAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
+		if (StringUtils.isBlank(command)) {
+			return null;
+		}
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 				true);
 		String firstWord = tok.nextToken();
