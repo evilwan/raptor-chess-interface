@@ -146,6 +146,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				|| event.getType() == ChatType.BUGWHO_UNPARTNERED_BUGGERS) {
 			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.BUGWHO_ALL
 					+ "-color";
+		} else if (event.getType() == ChatType.NOTIFICATION_DEPARTURE) {
+			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+					+ ChatType.NOTIFICATION_ARRIVAL + "-color";
 		} else {
 			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType()
 					+ "-color";
@@ -519,6 +522,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_UNDERLINE_URLS, true);
 		setDefault(CHAT_UNDERLINE_QUOTED_TEXT, true);
 		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
+		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS, true);
+		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES, false);
+
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
@@ -607,6 +613,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this,
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.BUGWHO_ALL
 						+ "-color", new RGB(128, 128, 128));
+
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.NOTIFICATION_ARRIVAL + "-color", new RGB(
+						255, 0, 0));
 
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));

@@ -92,6 +92,11 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+						+ ChatType.NOTIFICATION_ARRIVAL + "-color",
+				"Notification:", getFieldEditorParent()));
+
+		addField(new ColorFieldEditor(
+				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.QTELL + "-color", "Qtell:",
 				getFieldEditorParent()));
 

@@ -158,6 +158,17 @@ public enum ChatType {
 	 * 
 	 * @since .94
 	 */
-	BUGWHO_ALL
-
+	BUGWHO_ALL,
+	/**
+	 * Notification message, source is the user arriving.
+	 * 
+	 * @since .95
+	 */
+	NOTIFICATION_ARRIVAL,
+	/**
+	 * Notification message, source is the user departing.
+	 * 
+	 * @since .95
+	 */
+	NOTIFICATION_DEPARTURE
 }
