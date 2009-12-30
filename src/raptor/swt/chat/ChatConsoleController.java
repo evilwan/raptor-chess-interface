@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,6 +75,7 @@ import raptor.service.AliasService;
 import raptor.service.MemoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
+import raptor.service.UserTagService;
 import raptor.service.ChatService.ChatListener;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.SWTUtils;
@@ -471,6 +473,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		onDecorateInputText(event, appendText, startIndex);
 		reduceInputTextIfNeeded();
 	}
+
 
 	public void onAppendOutputText(String string) {
 		chatConsole.outputText.append(string);
@@ -1145,6 +1148,50 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
 
+			String[] tags = UserTagService.getInstance().getTags();
+			Arrays.sort(tags);
+			if (tags.length > 0) {
+				MenuItem addTagsItem = new MenuItem(menu, SWT.CASCADE);
+				addTagsItem.setText("Add tag to '" + person + "'");
+				Menu addTags = new Menu(menu);
+				addTagsItem.setMenu(addTags);
+
+				for (final String tag : tags) {
+					MenuItem tagMenuItem = new MenuItem(addTags, SWT.PUSH);
+					tagMenuItem.setText(tag);
+					tagMenuItem.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							UserTagService.getInstance().addUser(tag, person);
+							onAppendChatEventToInputText(new ChatEvent(null,
+									ChatType.INTERNAL, "Added " + tag + " to "
+											+ person));
+						}
+					});
+				}
+			}
+
+			tags = UserTagService.getInstance().getTags(person);
+			Arrays.sort(tags);
+			if (tags.length > 0) {
+				MenuItem addTagsItem = new MenuItem(menu, SWT.CASCADE);
+				addTagsItem.setText("Remove tags from '" + person + "'");
+				Menu addTags = new Menu(menu);
+				addTagsItem.setMenu(addTags);
+
+				for (final String tag : tags) {
+					MenuItem tagMenuItem = new MenuItem(addTags, SWT.PUSH);
+					tagMenuItem.setText(tag);
+					tagMenuItem.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							UserTagService.getInstance().clearTag(tag, person);
+							onAppendChatEventToInputText(new ChatEvent(null,
+									ChatType.INTERNAL, "Removed " + tag
+											+ " from " + person));
+						}
+					});
+				}
+			}
+
 			final String[][] connectorPersonItems = connector
 					.getPersonActions(person);
 			if (connectorPersonItems != null) {
@@ -1284,7 +1331,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						underlineColor, chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
-				System.err.println("underlined");
 			}
 		}
 	}

@@ -436,7 +436,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(SEEK_TABLE_SHOW_UNTIMED, true);
 		setDefault(SEEK_TABLE_SELECTED_TAB, 2);
 
-		//Games table
+		// Games table
 		setDefault(GAMES_TABLE_SELECTED_TAB, 1);
 		setDefault(GAMES_TABLE_RATINGS_INDEX, 0);
 		setDefault(GAMES_TABLE_MAX_RATINGS_INDEX,
@@ -624,6 +624,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_HOME_URL,
 				"http://code.google.com/p/raptor-chess-interface/");
 		setDefault(APP_SOUND_ENABLED, true);
+		setDefault(APP_USER_TAGS,
+				"+Partner,-Partner,Cheater,Cool,Dupe,Friend,Jerk,Lagger,Noob,Premover,Troll");
 		setDefault(APP_IS_LOGGING_GAMES, true);
 		setDefault(APP_LAYOUT, "Layout1");
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);

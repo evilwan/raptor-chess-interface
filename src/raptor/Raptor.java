@@ -44,6 +44,7 @@ import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
+import raptor.service.UserTagService;
 import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.ErrorDialog;
 import raptor.swt.InputDialog;
@@ -535,6 +536,12 @@ public class Raptor implements PreferenceKeys {
 		} catch (Throwable t) {
 			LOG.warn("Error shutting down MemoService", t);
 		}
+		
+		try {
+			UserTagService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting down UserTagService", t);
+		}
 
 		try {
 			if (raptorWindow != null && !raptorWindow.getShell().isDisposed()) {
@@ -572,6 +579,7 @@ public class Raptor implements PreferenceKeys {
 		// Make sure all of the Singleton services get loaded.
 		ThreadService.getInstance();
 		MemoService.getInstance();
+		UserTagService.getInstance();
 		EcoService.getInstance();
 		ConnectorService.getInstance();
 		SoundService.getInstance();
