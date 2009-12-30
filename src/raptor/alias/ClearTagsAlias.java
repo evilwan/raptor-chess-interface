@@ -35,6 +35,7 @@ public class ClearTagsAlias extends RaptorAlias {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();
+			tok.nextToken();
 			String tag = null;
 			if (tok.hasMoreTokens()) {
 				tag = tok.nextToken();
