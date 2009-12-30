@@ -654,7 +654,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"http://code.google.com/p/raptor-chess-interface/");
 		setDefault(APP_SOUND_ENABLED, true);
 		setDefault(APP_USER_TAGS,
-				"+Partner,-Partner,Cheater,Cool,Dupe,Friend,Jerk,Lagger,Noob,Premover,Troll");
+				"+Partner,-Partner,Cool,Dupe,Friend,Jerk,Lagger,Noob,Premover,Troll,Strange");
 		setDefault(APP_IS_LOGGING_GAMES, true);
 		setDefault(APP_LAYOUT, "Layout1");
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
