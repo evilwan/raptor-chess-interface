@@ -1809,6 +1809,14 @@ public abstract class IcsConnector implements Connector {
 			int loggedInMessageIndex = inboundMessageBuffer.indexOf(context
 					.getLoggedInMessage());
 			if (loggedInMessageIndex != -1) {
+				for (int i = 0; i < inboundMessageBuffer.length(); i++) {
+					char character = inboundMessageBuffer.charAt(i);
+					if (LOGIN_CHARACTERS_TO_FILTER.indexOf(character) != -1) {
+						inboundMessageBuffer.deleteCharAt(i);
+						i--;
+					}
+				}
+
 				int nameStartIndex = inboundMessageBuffer.indexOf(context
 						.getLoggedInMessage())
 						+ context.getLoggedInMessage().length();
@@ -1816,13 +1824,6 @@ public abstract class IcsConnector implements Connector {
 						nameStartIndex);
 
 				if (endIndex != -1) {
-					for (int i = 0; i < inboundMessageBuffer.length(); i++) {
-						char character = inboundMessageBuffer.charAt(i);
-						if (LOGIN_CHARACTERS_TO_FILTER.indexOf(character) != -1) {
-							inboundMessageBuffer.deleteCharAt(i);
-							i--;
-						}
-					}
 
 					userName = IcsUtils.stripTitles(inboundMessageBuffer
 							.substring(nameStartIndex, endIndex).trim());
