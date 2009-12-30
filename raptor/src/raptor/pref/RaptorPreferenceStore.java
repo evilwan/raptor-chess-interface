@@ -141,6 +141,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		if (event.getType() == ChatType.CHANNEL_TELL) {
 			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType() + "-"
 					+ event.getChannel() + "-color";
+		} else if (event.getType() == ChatType.BUGWHO_AVAILABLE_TEAMS
+				|| event.getType() == ChatType.BUGWHO_GAMES
+				|| event.getType() == ChatType.BUGWHO_UNPARTNERED_BUGGERS) {
+			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.BUGWHO_ALL
+					+ "-color";
 		} else {
 			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType()
 					+ "-color";
@@ -504,7 +509,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
 		setDefault(CHAT_TIMESTAMP_CONSOLE, false);
 		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['hh:mma']'");
-		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PTELL, true);
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL, true);
 		setDefault(CHAT_IS_SMART_SCROLL_ENABLED, true);
@@ -512,6 +516,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS, false);
 		setDefault(CHAT_OPEN_PARTNER_TAB_ON_PTELLS, false);
 		setDefault(CHAT_REMOVE_SUB_TAB_MESSAGES_FROM_MAIN_TAB, true);
+		setDefault(CHAT_UNDERLINE_URLS, true);
+		setDefault(CHAT_UNDERLINE_QUOTED_TEXT, true);
+		setDefault(CHAT_UNDERLINE_SINGLE_QUOTES, false);
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
@@ -589,6 +596,18 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.FINGER
 						+ "-color", new RGB(128, 128, 128));
 
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.HISTORY
+						+ "-color", new RGB(128, 128, 128));
+
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.GAMES
+						+ "-color", new RGB(128, 128, 128));
+
+		PreferenceConverter.setDefault(this,
+				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.BUGWHO_ALL
+						+ "-color", new RGB(128, 128, 128));
+
 		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
 				128, 128));
 		PreferenceConverter.setDefault(this, CHAT_QUOTE_UNDERLINE_COLOR,
@@ -660,11 +679,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"+channel $channel,-channel $channel,in $channel");
 		setDefault(
 				FICS_PERSON_COMMANDS,
-				"finger $person,variables $person,history $person,partner $person,"
-						+ "observe $person,follow $person,pstat $userName $person,"
-						+ "oldpstat $userName $person,separator,"
-						+ "+censor $person,-censor $person,+notify $person,-notify $person,+gnotify $person,-gnotify $person,separator,"
-						+ "match $person 1 0,match $person 3 0,match $person 4 0,match $person 5 0");
+				"finger $person,follow $person,history &person,joural $person,partner $person,"
+						+ "observe $person,oldpstat $userName $person,pstat $userName $person,"
+						+ "stored $person,variables $person,separator,"
+						+ "+censor $person,-censor $person,+gnotify $person,-gnotify $person,+noplay $person,-noplay $person,+notify $person,-notify $person,separator,"
+						+ "match $person 1 0,match $person 3 0,match $person 5 0,match $person 15 0");
 		setDefault(FICS_GAME_COMMANDS,
 				"observe $gameId,allobservers $gameId,moves $gameId");
 
@@ -717,10 +736,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"+channel $channel,-channel $channel,in $channel");
 		setDefault(
 				BICS_PERSON_COMMANDS,
-				"finger $person,variables $person,history $person,partner $person,"
-						+ "observe $person,follow $person,pstat $userName $person,"
-						+ "oldpstat $userName $person,separator,"
-						+ "+censor $person,-censor $person,+notify $person,-notify $person,+gnotify $person,-gnotify $person,separator,"
+				"finger $person,follow $person,history &person,joural $person,partner $person,"
+						+ "observe $person,oldpstat $userName $person,pstat $userName $person,"
+						+ "stored $person,variables $person,separator,"
+						+ "+censor $person,-censor $person,+gnotify $person,-gnotify $person,+noplay $person,-noplay $person,+notify $person,-notify $person,separator,"
 						+ "match $person 1 0 zh,match $person 3 0 zh,match $person 1 0 zh fr,match $person 3 0 zh fr,match $person 2 0 bughouse,"
 						+ "match $person 2 0 bughouse fr, match $person 2 0 bughouse w5");
 		setDefault(BICS_GAME_COMMANDS,

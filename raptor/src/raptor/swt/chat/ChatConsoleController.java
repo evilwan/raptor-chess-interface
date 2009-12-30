@@ -1080,7 +1080,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				chatConsole.inputText.getVerticalBar().addListener(SWT.KeyDown,
 						consoleInputKeyDownListener);
 			}
-
 		}
 	}
 
@@ -1190,6 +1189,32 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					});
 				}
 			}
+			if (!connector.isOnExtendedCensor(person)) {
+
+				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
+				extCensor.setText("+extcensor " + person);
+				extCensor.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						connector.addExtendedCensor(person);
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, "Added " + person
+										+ " to extended censor."));
+					}
+				});
+			} else {
+				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
+				extCensor.setText("-extcensor " + person);
+				extCensor.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						boolean result = connector.removeExtendedCensor(person);
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, result ? "Removed " + person
+										+ " to extended censor." : " Person "
+										+ person
+										+ " is not on extended censor."));
+					}
+				});
+			}
 
 			final String[][] connectorPersonItems = connector
 					.getPersonActions(person);
@@ -1209,33 +1234,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						});
 					}
 				}
-			}
-			new MenuItem(menu, SWT.SEPARATOR);
-			if (!connector.isOnExtendedCensor(person)) {
-
-				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
-				extCensor.setText("+extended censor " + person);
-				extCensor.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						connector.addExtendedCensor(person);
-						onAppendChatEventToInputText(new ChatEvent(null,
-								ChatType.INTERNAL, "Added " + person
-										+ " to extended censor."));
-					}
-				});
-			} else {
-				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
-				extCensor.setText("-extended censor " + person);
-				extCensor.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						boolean result = connector.removeExtendedCensor(person);
-						onAppendChatEventToInputText(new ChatEvent(null,
-								ChatType.INTERNAL, result ? "Removed " + person
-										+ " to extended censor." : " Person "
-										+ person
-										+ " is not on extended censor."));
-					}
-				});
 			}
 		}
 	}
@@ -1275,11 +1273,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						underlineColor, chatConsole.inputText.getBackground());
+						getPreferences().getColor(event), chatConsole.inputText
+								.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1323,11 +1320,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 
 			if (endIndex != -1) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ startIndex, (endIndex - startIndex) + 1,
-						underlineColor, chatConsole.inputText.getBackground());
+						getPreferences().getColor(event), chatConsole.inputText
+								.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1397,11 +1393,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						underlineColor, chatConsole.inputText.getBackground());
+						getPreferences().getColor(event), chatConsole.inputText
+								.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1484,11 +1479,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						underlineColor, chatConsole.inputText.getBackground());
+						getPreferences().getColor(event), chatConsole.inputText
+								.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1579,11 +1573,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						underlineColor, chatConsole.inputText.getBackground());
+						getPreferences().getColor(event), chatConsole.inputText
+								.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1593,6 +1586,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void decorateLinks(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() != ChatType.OUTBOUND
+				&& getPreferences().getBoolean(CHAT_UNDERLINE_URLS)
 				&& event.getType() != ChatType.GAMES
 				&& event.getType() != ChatType.BUGWHO_ALL
 				&& event.getType() != ChatType.BUGWHO_GAMES
@@ -1768,11 +1762,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// add all the ranges that were found.
 			for (int[] linkRange : linkRanges) {
-				Color underlineColor = chatConsole.getPreferences().getColor(
-						CHAT_QUOTE_UNDERLINE_COLOR);
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						underlineColor, chatConsole.inputText.getBackground());
+						getPreferences().getColor(event), chatConsole.inputText
+								.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1784,15 +1777,24 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (event.getType() != ChatType.OUTBOUND) {
 			boolean isUnderliningSingleQuotes = getPreferences().getBoolean(
 					CHAT_UNDERLINE_SINGLE_QUOTES);
+			boolean isUnderliningDoubleQuotes = getPreferences().getBoolean(
+					CHAT_UNDERLINE_QUOTED_TEXT);
+
+			if (!isUnderliningSingleQuotes && !isUnderliningDoubleQuotes) {
+				return;
+			}
+
 			List<int[]> quotedRanges = new ArrayList<int[]>(5);
 
-			int quoteIndex = message.indexOf("\"");
+			int quoteIndex = !isUnderliningDoubleQuotes ? -1 : message
+					.indexOf("\"");
 			if (quoteIndex == -1 && isUnderliningSingleQuotes) {
 				quoteIndex = message.indexOf("'");
 			}
 
 			while (quoteIndex != -1) {
-				int endQuote = message.indexOf("\"", quoteIndex + 1);
+				int endQuote = !isUnderliningDoubleQuotes ? -1 : message
+						.indexOf("\"", quoteIndex + 1);
 				if (endQuote == -1 && isUnderliningSingleQuotes) {
 					endQuote = message.indexOf("'", quoteIndex + 1);
 				}
@@ -1826,7 +1828,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				}
 
-				quoteIndex = message.indexOf("\"", endQuote + 1);
+				quoteIndex = !isUnderliningDoubleQuotes ? -1 : message.indexOf(
+						"\"", endQuote + 1);
 				if (quoteIndex == -1 && isUnderliningSingleQuotes) {
 					quoteIndex = message.indexOf("'", endQuote + 1);
 				}
@@ -1861,7 +1864,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				StyleRange range = new StyleRange(textStartPosition
 						+ nextRange[0], nextRange[1] - nextRange[0],
 						underlineColor, chatConsole.inputText.getBackground());
-				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
 		}
