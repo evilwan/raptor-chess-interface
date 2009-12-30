@@ -29,7 +29,7 @@ public class ShowTagsAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.equalsIgnoreCase("=tags")) {
+		if (command.equalsIgnoreCase("=tag")) {
 			StringBuilder builder = new StringBuilder(1000);
 
 			String[] tags = UserTagService.getInstance().getTags();
