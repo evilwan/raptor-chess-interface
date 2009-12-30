@@ -13,31 +13,46 @@
  */
 package raptor.alias;
 
-import org.apache.commons.lang.math.NumberUtils;
-
 import raptor.swt.chat.ChatConsoleController;
 import raptor.util.RaptorStringTokenizer;
 
 public class AbbreviatedChannelTellAlias extends RaptorAlias {
 	public AbbreviatedChannelTellAlias() {
 		super(
-				"@###",
-				"Expands '@### message' into 'tell channel msg'",
-				"'@### message' where ### is a number between 0 and 255. "
-						+ "Example: '@37 Why am I here?' will expand out into 'tell 37 Why am I here?'.");
+				"###Message",
+				"Expands '###Message' into 'tell ### msg'",
+				"'###message' where ### is a number between 0 and 255. "
+						+ "Example: '36Why am I here?' will expand out into 'tell 37 Why am I here?'.");
 	}
 
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (command.startsWith("@") && !command.startsWith("@@")) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
-					true);
-			String firstWord = tok.nextToken().substring(1);
+		RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
+				true);
+		String firstWord = tok.nextToken();
+		String channel = "";
 
-			if (!firstWord.equals("") && NumberUtils.isDigits(firstWord)) {
-				return new RaptorAliasResult("tell " + firstWord + " "
-						+ tok.getWhatsLeft(), null);
+		int firstNonDigitIndex = -1;
+		for (int i = 0; i < firstWord.length(); i++) {
+			if (Character.isDigit(firstWord.charAt(i))) {
+				channel += firstWord.charAt(i);
+			} else {
+				firstNonDigitIndex = i;
+				break;
+			}
+		}
+
+		if (firstNonDigitIndex > 0) {
+			try {
+				int channelNumber = Integer.parseInt(channel);
+				if (channelNumber >= 0 && channelNumber <= 255) {
+					return new RaptorAliasResult("tell " + channel + " "
+							+ firstWord.substring(firstNonDigitIndex)
+							+ tok.getWhatsLeft(), null);
+				}
+			} catch (Throwable t) {
+				return null;
 			}
 		}
 		return null;
