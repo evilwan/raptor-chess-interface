@@ -162,13 +162,13 @@ public enum ChatType {
 	/**
 	 * Notification message, source is the user arriving.
 	 * 
-	 * @since .95
+	 * @since .96
 	 */
 	NOTIFICATION_ARRIVAL,
 	/**
 	 * Notification message, source is the user departing.
 	 * 
-	 * @since .95
+	 * @since .96
 	 */
 	NOTIFICATION_DEPARTURE
 }

@@ -408,6 +408,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				if (isConnected()) {
 					dialog.setShowingSimulBug(true);
 				}
+				dialog.setShowingAutoLogin(false);
 				dialog.open();
 				autoConnectAction.setChecked(getPreferences().getBoolean(
 						context.getPreferencePrefix() + "auto-connect"));

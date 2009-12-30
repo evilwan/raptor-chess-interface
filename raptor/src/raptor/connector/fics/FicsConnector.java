@@ -263,9 +263,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 								"\tOn this page you can configure the actions shown in the Fics Links "
 										+ "menu. You can add new actions on the Action Scripts Page.",
 								RaptorActionContainer.FicsMenu)),
-								new PreferenceNode("fics",new ConnectorMessageBlockPage("fics")),
-								new PreferenceNode("fics", new ConnectorQuadrantsPage("fics")),
-								new PreferenceNode("fics", new ConnectorQuadrantsPage("fics2")),};
+				new PreferenceNode("fics",
+						new ConnectorMessageBlockPage("fics")),
+				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics")),
+				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics2")), };
 
 	}
 
@@ -479,7 +480,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				SWTUtils.openBugButtonsWindowItem(FicsConnector.this);
 			}
 		};
-		
+
 		Action gamesAction = new Action("&Games") {
 			@Override
 			public void run() {
@@ -528,6 +529,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				if (isConnected()) {
 					dialog.setShowingSimulBug(true);
 				}
+				dialog.setShowingAutoLogin(false);
 				dialog.open();
 				if (autoConnectAction != null) {
 					autoConnectAction.setChecked(getPreferences().getBoolean(
@@ -578,7 +580,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				SWTUtils.openSeekTableWindowItem(fics2);
 			}
 		};
-		
+
 		Action fics2GamesAction = new Action("&Games") {
 			@Override
 			public void run() {
@@ -586,8 +588,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action fics2bugwhoAction = new Action(
-				"Bug &Who") {
+		Action fics2bugwhoAction = new Action("Bug &Who") {
 			@Override
 			public void run() {
 				SWTUtils.openBugWhoWindowItem(fics2);
@@ -661,7 +662,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		bugbuttonsAction.setEnabled(false);
 		showSeekDialogAction.setEnabled(false);
 		gamesAction.setEnabled(false);
-		
 
 		onlyEnabledOnConnectActions.add(bugwhoAction);
 		onlyEnabledOnConnectActions.add(disconnectAction);
@@ -681,8 +681,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2BugbuttonsAction.setEnabled(false);
 		fics2GamesAction.setEnabled(false);
 
-		fics2.onlyEnabledOnConnectActions
-				.add(fics2bugwhoAction);
+		fics2.onlyEnabledOnConnectActions.add(fics2bugwhoAction);
 		fics2.onlyEnabledOnConnectActions.add(fics2DisconnectAction);
 		fics2.onlyEnabledOnConnectActions.add(fics2ReconnectAction);
 		fics2.onlyEnabledOnConnectActions.add(fics2RegexTabAction);

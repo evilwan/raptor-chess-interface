@@ -703,7 +703,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						+ "Style 12 set\\.,Your prompt will now not show the time\\.,"
 						+ "You will not see seek ads\\.,You will not see seek ads.\\.,"
 						+ "Auto-flagging enabled\\.,lock set\\.,set seek 0,set autoflag 1,"
-						+ "all results set\\.,Bell off\\.,set interface Raptor .*,"
+						+ "allresults set\\.,Bell off\\.,set interface Raptor .*,"
 						+ "You are not examining or setting up a game\\.");
 
 		setDefault(FICS_SEEK_GAME_TYPE, "");
