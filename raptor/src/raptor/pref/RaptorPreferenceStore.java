@@ -689,7 +689,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"+channel $channel,-channel $channel,in $channel");
 		setDefault(
 				FICS_PERSON_COMMANDS,
-				"finger $person,follow $person,history &person,joural $person,partner $person,"
+				"finger $person,follow $person,history $person,joural $person,partner $person,"
 						+ "observe $person,oldpstat $userName $person,pstat $userName $person,"
 						+ "stored $person,variables $person,separator,"
 						+ "+censor $person,-censor $person,+gnotify $person,-gnotify $person,+noplay $person,-noplay $person,+notify $person,-notify $person,separator,"
@@ -755,7 +755,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"+channel $channel,-channel $channel,in $channel");
 		setDefault(
 				BICS_PERSON_COMMANDS,
-				"finger $person,follow $person,history &person,joural $person,partner $person,"
+				"finger $person,follow $person,history $person,joural $person,partner $person,"
 						+ "observe $person,oldpstat $userName $person,pstat $userName $person,"
 						+ "stored $person,variables $person,separator,"
 						+ "+censor $person,-censor $person,+gnotify $person,-gnotify $person,+noplay $person,-noplay $person,+notify $person,-notify $person,separator,"
