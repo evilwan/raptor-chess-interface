@@ -17,6 +17,7 @@ public class OSUtils {
 	protected static boolean isLikelyLinux = false;
 	protected static boolean isLikelyOSX = false;
 	protected static boolean isLikelyWindows = false;
+	protected static boolean isLikelyWindowsXP = false;
 
 	static {
 		String osName = System.getProperty("os.name");
@@ -24,6 +25,7 @@ public class OSUtils {
 			isLikelyOSX = true;
 		} else if (osName.startsWith("Windows")) {
 			isLikelyWindows = true;
+			isLikelyWindowsXP = osName.contains("XP");
 		} else {
 			isLikelyLinux = true;
 		}
@@ -41,4 +43,11 @@ public class OSUtils {
 		return isLikelyWindows;
 	}
 
+	public static boolean isLikelyWindowsXP() {
+		return isLikelyWindowsXP;
+	}
+
+	public static void setLikelyWindowsXP(boolean isLikelyWindowsXP) {
+		OSUtils.isLikelyWindowsXP = isLikelyWindowsXP;
+	}
 }
