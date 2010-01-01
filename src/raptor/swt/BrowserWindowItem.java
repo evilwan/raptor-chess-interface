@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -143,7 +144,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		addressBar = new Composite(composite, SWT.NONE);
 		addressBar
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		addressBar.setLayout(SWTUtils.createMarginlessGridLayout(5, false));
+		addressBar.setLayout(new GridLayout(5, false));
 
 		Button backButton = new Button(addressBar, SWT.FLAT);
 		backButton.setImage(Raptor.getInstance().getIcon("back"));
