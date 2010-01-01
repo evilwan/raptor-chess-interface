@@ -947,7 +947,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		int toolbarPieceSize = 12;
 
 		String iconSize = "tiny";
-		defaultLargeFontSize = 10;
+		defaultLargeFontSize = 12;
 		defaultMediumFontSize = 10;
 		defaultSmallFontSize = 8;
 		defaultTinyFontSize = 6;
@@ -965,10 +965,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			defaultMediumFontSize = 14;
 			defaultSmallFontSize = 12;
 			defaultTinyFontSize = 10;
-		} else if (fullViewBounds.height >= 800) {
+		} else if (fullViewBounds.height >= 670) {
 			iconSize = "small";
 			toolbarPieceSize = 16;
-			defaultLargeFontSize = 12;
+			defaultLargeFontSize = 14;
 			defaultMediumFontSize = 12;
 			defaultSmallFontSize = 10;
 			defaultTinyFontSize = 8;
