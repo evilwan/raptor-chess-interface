@@ -47,6 +47,7 @@ import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chess.controller.InactiveMouseAction;
 import raptor.swt.chess.controller.ObservingMouseAction;
 import raptor.swt.chess.controller.PlayingMouseAction;
+import raptor.util.OSUtils;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -298,6 +299,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// App settings.
 		setDefault(APP_NAME, "Raptor .97");
+		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS, !OSUtils
+				.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName,
@@ -357,7 +360,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS, true);
 		setDefault(BOARD_PREMOVE_ENABLED, true);
 		setDefault(BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING, true);
-		setDefault(BOARD_IS_SHOWING_PIECE_UNICODE_CHARS, true);
 		setDefault(BOARD_QUEUED_PREMOVE_ENABLED, false);
 		setDefault(BOARD_IS_USING_CROSSHAIRS_CURSOR, false);
 		setDefault(BOARD_LAYOUT, "raptor.swt.chess.layout.RightOrientedLayout");

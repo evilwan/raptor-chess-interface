@@ -76,7 +76,7 @@ public class GameUtils implements GameConstants {
 
 	public static String convertSanToUseUnicode(String san, boolean isWhitesMove) {
 		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+				PreferenceKeys.APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS)) {
 
 			StringBuilder result = new StringBuilder(san.length());
 			for (int i = 0; i < san.length(); i++) {
@@ -206,7 +206,7 @@ public class GameUtils implements GameConstants {
 
 	public static String getChessPieceCharacter(int piece) {
 		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+				PreferenceKeys.APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS)) {
 			switch (piece) {
 			case PAWN:
 				return "\u2659";
@@ -234,7 +234,7 @@ public class GameUtils implements GameConstants {
 
 	public static String getChessPieceCharacter(int piece, boolean isWhite) {
 		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+				PreferenceKeys.APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS)) {
 			switch (piece) {
 			case PAWN:
 				return isWhite ? "\u2659" : "\u265F";
@@ -349,7 +349,7 @@ public class GameUtils implements GameConstants {
 			boolean useUnicode) {
 		if (useUnicode
 				&& Raptor.getInstance().getPreferences().getBoolean(
-						PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS)) {
+						PreferenceKeys.APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS)) {
 			switch (coloredPiece) {
 			case WK:
 				return "\u2654";

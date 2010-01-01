@@ -123,11 +123,6 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_IS_SHOWING_PIECE_UNICODE_CHARS,
-				"Show chess piece unicode chars (e.g. \u2654\u2655\u2656\u2657\u2658\u2659)",
-				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL, "Show Piece Jail",
 				getFieldEditorParent()));
 
