@@ -54,7 +54,7 @@ public class AbbreviatedChannelTellAlias extends RaptorAlias {
 				if (channelNumber >= 0 && channelNumber <= 255) {
 					return new RaptorAliasResult("tell " + channel + " "
 							+ firstWord.substring(firstNonDigitIndex)
-							+ tok.getWhatsLeft(), null);
+							+ " " + tok.getWhatsLeft(), null);
 				}
 			} catch (Throwable t) {
 				return null;

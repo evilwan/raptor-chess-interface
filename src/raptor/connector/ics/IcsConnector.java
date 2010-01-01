@@ -103,7 +103,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
-	public static final String LOGIN_CHARACTERS_TO_FILTER = "ÿûÿü";
+	public static final String LOGIN_CHARACTERS_TO_FILTER = "ÿûÿüØž";
 
 	protected BughouseService bughouseService;
 
