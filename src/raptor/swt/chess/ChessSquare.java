@@ -291,7 +291,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 */
 	public ChessSquare(Composite parent, ChessBoard chessBoard, int id,
 			boolean isLight) {
-		super(parent, SWT.DOUBLE_BUFFERED);
+		super(parent, SWT.DOUBLE_BUFFERED | SWT.NO_BACKGROUND);
 		board = chessBoard;
 		this.id = id;
 		this.isLight = isLight;

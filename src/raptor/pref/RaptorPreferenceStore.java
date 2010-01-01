@@ -438,8 +438,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new FontData[] { new FontData(defaultFontName,
 						defaultMediumFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_CLOCK_FONT,
-				new FontData[] { new FontData(defaultMonospacedFontName, 24,
-						SWT.BOLD) });
+				new FontData[] { new FontData(defaultMonospacedFontName, 24,0) });
 		PreferenceConverter.setDefault(this, BOARD_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultTinyFontSize, 0) });

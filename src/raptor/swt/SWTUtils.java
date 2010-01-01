@@ -36,8 +36,8 @@ import raptor.connector.Connector;
  */
 public class SWTUtils {
 
-	public static final String[] OSX_MONOSPACED_FONTS = { "Monaco", "Andale",
-			"Andale Mono", "Courier" };
+	public static final String[] OSX_MONOSPACED_FONTS = { "Minlo", "Monaco",
+			"Andale", "Andale Mono", "Courier" };
 	public static final String[] WINDOWS_MONOSPACED_FONTS = { "Monaco",
 			"Andale Mono", "Consolas", "Lucida Console", "Fixedsys", "Courier" };
 	public static final String[] OTHER_MONOSPACED_FONTS = { "Monospace",
@@ -75,7 +75,7 @@ public class SWTUtils {
 			}
 		}
 	}
-	
+
 	public static ToolBar createToolbar(Composite parent) {
 		return new ToolBar(parent, SWT.FLAT | SWT.WRAP | SWT.RIGHT);
 	}
