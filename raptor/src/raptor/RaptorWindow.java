@@ -1935,6 +1935,7 @@ public class RaptorWindow extends ApplicationWindow {
 					}
 					if (folder.getItemCount() > 0) {
 						manager.add(new Action("Close All") {
+							@Override
 							public void run() {
 								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
 										folder.getItemCount());
@@ -1975,6 +1976,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 					if (itemIndex != -1 && itemIndex > 0) {
 						manager.add(new Action("Move Left") {
+							@Override
 							public void run() {
 								raptorTabItem.onMoveTo(folder,
 										finalItemIndex - 2 < 0 ? 0

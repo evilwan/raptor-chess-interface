@@ -24,6 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTException;
 import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -201,10 +202,18 @@ public class Raptor implements PreferenceKeys {
 			// Open the app window
 			instance.raptorWindow.open();
 		} catch (Throwable t) {
-			instance.LOG
-					.error(
-							"Error occured in main: (If this is a widget is disposed error just ignore it its nothing)",
-							t);
+			if (t instanceof SWTException) {
+				instance.LOG
+						.info(
+								"SWTException: (If this is a widget is disposed error just ignore it its nothing)",
+								t);
+
+			} else {
+				instance.LOG
+						.error(
+								"Error occured in main: (If this is a widget is disposed error just ignore it its nothing)",
+								t);
+			}
 		} finally {
 			if (instance != null) {
 				instance.shutdown();
