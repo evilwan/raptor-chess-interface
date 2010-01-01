@@ -36,6 +36,7 @@ import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -84,8 +85,10 @@ import raptor.swt.chat.controller.MainController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.ToolBarItemKey;
 import raptor.swt.chess.ChessBoardWindowItem;
+import raptor.swt.chess.ChessSquare;
 import raptor.swt.chess.controller.PlayingController;
 import raptor.util.BrowserUtils;
+import raptor.util.OSUtils;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
@@ -183,6 +186,26 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		}
 
+	};
+
+	/**
+	 * In windows you can only receive mouse wheel events when you have focus.
+	 * This method handles wheeling over a chess board in windows.
+	 */
+	protected MouseWheelListener chessBoardMouseWheelListener = new MouseWheelListener() {
+		long lastWheel = System.currentTimeMillis();
+
+		@Override
+		public void mouseScrolled(MouseEvent e) {
+			Control cursorControl = Raptor.getInstance().getDisplay()
+					.getCursorControl();
+			if (cursorControl instanceof ChessSquare) {
+				if (System.currentTimeMillis() - lastWheel > 100) {
+					((ChessSquare) cursorControl).getChessBoard()
+							.getController().userMouseWheeled(e.count);
+				}
+			}
+		}
 	};
 
 	protected MouseListener outputTextClickListener = new MouseAdapter() {
@@ -1087,6 +1110,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (!isIgnoringActions()) {
 			chatConsole.inputText.addMouseListener(inputTextClickListener);
 			chatConsole.outputText.addMouseListener(outputTextClickListener);
+			if (OSUtils.isLikelyWindows()) {
+				chatConsole.inputText
+						.addMouseWheelListener(chessBoardMouseWheelListener);
+				chatConsole.outputText
+						.addMouseWheelListener(chessBoardMouseWheelListener);
+			}
 		}
 	}
 
@@ -2272,6 +2301,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					consoleInputKeyUpListener);
 			chatConsole.inputText.removeListener(SWT.KeyDown,
 					consoleInputKeyDownListener);
+			if (OSUtils.isLikelyWindows()) {
+				chatConsole.inputText
+						.removeMouseWheelListener(chessBoardMouseWheelListener);
+				chatConsole.outputText
+						.removeMouseWheelListener(chessBoardMouseWheelListener);
+			}
+
 			if (chatConsole.inputText.getVerticalBar() != null) {
 				chatConsole.inputText.getVerticalBar().removeListener(
 						SWT.KeyUp, consoleInputKeyUpListener);

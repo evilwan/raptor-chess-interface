@@ -544,4 +544,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		getShell().setCursor(
 				Raptor.getInstance().getCursorRegistry().getDefaultCursor());
 	}
+	
+	public ChessBoard getChessBoard() {
+		return board;
+	}
 }
