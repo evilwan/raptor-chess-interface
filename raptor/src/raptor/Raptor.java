@@ -113,12 +113,12 @@ public class Raptor implements PreferenceKeys {
 
 			createInstance();
 
-//			Runtime.getRuntime().addShutdownHook(new Thread() {
-//				@Override
-//				public void run() {
-//					getInstance().shutdown();
-//				}
-//			});
+			// Runtime.getRuntime().addShutdownHook(new Thread() {
+			// @Override
+			// public void run() {
+			// getInstance().shutdown();
+			// }
+			// });
 
 			display.addListener(SWT.Close, new Listener() {
 				public void handleEvent(Event event) {
@@ -451,7 +451,7 @@ public class Raptor implements PreferenceKeys {
 	public void shutdown() {
 		shutdown(false);
 	}
-	
+
 	public void shutdownWithoutExit(boolean isIgnoringPreferenceSaves) {
 		if (isShutdown()) {
 			return;
@@ -533,7 +533,7 @@ public class Raptor implements PreferenceKeys {
 		} catch (Throwable t) {
 			LOG.warn("Error shutting down MemoService", t);
 		}
-		
+
 		try {
 			UserTagService.getInstance().dispose();
 		} catch (Throwable t) {
@@ -545,7 +545,7 @@ public class Raptor implements PreferenceKeys {
 				raptorWindow.close();
 			}
 		} catch (Throwable t) {
-			 LOG.warn("Error shutting down raptor window", t);
+			LOG.warn("Error shutting down raptor window", t);
 		}
 
 		try {
@@ -562,7 +562,7 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		LOG.info("Shutdown Raptor");
-		
+
 	}
 
 	/**
@@ -570,7 +570,6 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public void shutdown(boolean isIgnoringPreferenceSaves) {
 		shutdownWithoutExit(isIgnoringPreferenceSaves);
-		System.err.println("Exited");
 		System.exit(0);
 	}
 
