@@ -16,6 +16,7 @@ package raptor.pref.page;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -155,8 +156,10 @@ public class GeneralPage extends FieldEditorPreferencePage {
 												+ "Raptor will also exit after executing this action, and will "
 												+ "have to be restarted. "
 												+ "Do you wish to continue?")) {
-							FileUtils.deleteDir(Raptor.USER_RAPTOR_DIR);
 							Raptor.getInstance().shutdownWithoutExit(true);
+							LogFactory.releaseAll();
+							FileUtils.deleteDir(Raptor.USER_RAPTOR_DIR);
+							System.exit(0);
 						}
 					}
 				}));
