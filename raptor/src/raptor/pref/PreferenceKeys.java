@@ -235,6 +235,7 @@ public interface PreferenceKeys {
 	public static final String CHAT_TIMESTAMP_CONSOLE = "chat-timestamp-console";
 	public static final String CHAT_TIMESTAMP_CONSOLE_FORMAT = "chat-timestamp-console-format";
 	public static final String CHAT_UNDERLINE_SINGLE_QUOTES = "chat-underline-single-quotes";
+	public static final String CHAT_UNDERLINE_COMMANDS = "chat-under-line-links";
 	public static final String CHAT_IS_PLAYING_CHAT_ON_PTELL = "chat-is-playing-chat-on-ptell";
 	public static final String CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL = "chat-is-playing-chat-on-person-tell";
 	public static final String CHAT_IS_SMART_SCROLL_ENABLED = "chat-is-smart-scroll-enabled";
