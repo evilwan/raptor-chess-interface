@@ -52,6 +52,7 @@ public interface PreferenceKeys {
 
 	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";
+	public static final String APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS = "board-is-showing-piece-unicode-chars";
 	public static final String APP_USER_TAGS = "app-user-tags";
 	public static final String APP_ICON_SIZE = "app-icon-size";
 	public static final String APP_TOOLBAR_PIECE_SIZE = "app-toolbar-piece-size";
@@ -155,7 +156,6 @@ public interface PreferenceKeys {
 	public static final String BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS = "board-is-playing-10-second-countdown-sounds";
 	public static final String BOARD_IS_SHOW_COORDINATES = "board-show-coordinates";
 	public static final String BOARD_IS_SHOWING_PIECE_JAIL = "board-is-showing-piece-jail";
-	public static final String BOARD_IS_SHOWING_PIECE_UNICODE_CHARS = "board-is-showing-piece-unicode-chars";
 	public static final String BOARD_IS_USING_CROSSHAIRS_CURSOR = "board-is-using-crosshairs-cursor";
 	public static final String BOARD_LAG_FONT = "board-lag-font";
 	public static final String BOARD_LAG_OVER_20_SEC_COLOR = "board-over-20-sec-lag-color";

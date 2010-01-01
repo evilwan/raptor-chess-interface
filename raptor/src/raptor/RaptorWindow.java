@@ -1987,6 +1987,7 @@ public class RaptorWindow extends ApplicationWindow {
 					if (itemIndex != -1
 							&& itemIndex < folder.getItemCount() - 1) {
 						manager.add(new Action("Move Right") {
+							@Override
 							public void run() {
 								raptorTabItem.onMoveTo(folder,
 										finalItemIndex + 2);
@@ -2009,6 +2010,7 @@ public class RaptorWindow extends ApplicationWindow {
 							final Quadrant currentQuadrant = availableQuadrants[i];
 							Action moveToAction = new Action("Quad "
 									+ currentQuadrant.toString()) {
+								@Override
 								public void run() {
 									raptorTabItem
 											.onMoveTo(folders[currentQuadrant

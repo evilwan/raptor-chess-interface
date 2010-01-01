@@ -157,6 +157,12 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				PreferenceKeys.TIMESEAL_INIT_STRING,
 				"Timeseal Init String (Advanced):", getFieldEditorParent());
 		addField(timesealInitString);
+		
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
+				"Show chess piece unicode chars (e.g. \u2654\u2655\u2656\u2657\u2658\u2659)",
+				getFieldEditorParent()));
 
 		addField(new LabelButtonFieldEditor("NONE", "", getFieldEditorParent(),
 				"Reset Raptor To Defaults", new SelectionAdapter() {
