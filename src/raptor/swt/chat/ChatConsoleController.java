@@ -777,7 +777,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			onSendOutputText();
 			return true;
 
-		} else if (event.character == ' '
+		} else if ((event.character == ' ' || event.character == 0)
 				&& ((event.stateMask & SWT.CONTROL) != 0
 						|| (event.stateMask & SWT.ALT) != 0 || (event.stateMask & SWT.COMMAND) != 0)) {
 			int endIndex = chatConsole.getOutputText().getCaretPosition();
