@@ -20,8 +20,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.ToolBar;
-
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chess.Game;
 import raptor.chess.util.GameUtils;
@@ -71,10 +69,8 @@ public class BughouseSuggestController extends ObserveController {
 		boolean isCoolbarMode = getPreferences().getBoolean(
 				PreferenceKeys.BOARD_COOLBAR_MODE);
 		if (toolbar == null) {
-			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
-					: parent, SWT.FLAT);
-			toolbar.setLayout(SWTUtils
-					.createMarginlessRowLayout(SWT.HORIZONTAL));
+			toolbar = SWTUtils.createToolbar(isCoolbarMode ? getBoard().getCoolbar()
+					: parent);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.BughouseSuggestChessBoard, toolbar,
 					isPartnerWhite);

@@ -42,7 +42,7 @@ import raptor.pref.page.ChessBoardPage;
 import raptor.pref.page.ChessBoardResultsPage;
 import raptor.pref.page.ChessBoardToolbarsPage;
 import raptor.pref.page.ChessEnginesPage;
-import raptor.pref.page.General;
+import raptor.pref.page.GeneralPage;
 import raptor.pref.page.InactiveMouseActionsPage;
 import raptor.pref.page.ObservingMouseActionsPage;
 import raptor.pref.page.PlayingMouseActionsPage;
@@ -68,7 +68,7 @@ public class PreferenceUtils {
 		// Create the preference manager
 		PreferenceManager mgr = new PreferenceManager('/');
 
-		mgr.addToRoot(new PreferenceNode("general", new General()));
+		mgr.addToRoot(new PreferenceNode("general", new GeneralPage()));
 		mgr.addTo("general", new PreferenceNode("layout1",
 				new RaptorWindowQuadrantsPage("1")));
 		mgr.addTo("general", new PreferenceNode("window",

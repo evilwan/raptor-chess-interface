@@ -15,7 +15,6 @@ package raptor.swt.chess.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -283,10 +282,8 @@ public class ObserveController extends ChessBoardController {
 				PreferenceKeys.BOARD_COOLBAR_MODE);
 		if (toolbar == null) {
 
-			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
-					: parent, SWT.FLAT);
-			toolbar.setLayout(SWTUtils
-					.createMarginlessRowLayout(SWT.HORIZONTAL));
+			toolbar = SWTUtils.createToolbar(isCoolbarMode ? getBoard().getCoolbar()
+					: parent);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.ObservingChessBoard, toolbar, false);
 

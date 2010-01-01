@@ -451,11 +451,8 @@ public class Raptor implements PreferenceKeys {
 	public void shutdown() {
 		shutdown(false);
 	}
-
-	/**
-	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
-	 */
-	public void shutdown(boolean isIgnoringPreferenceSaves) {
+	
+	public void shutdownWithoutExit(boolean isIgnoringPreferenceSaves) {
 		if (isShutdown()) {
 			return;
 		}
@@ -565,6 +562,14 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		LOG.info("Shutdown Raptor");
+		
+	}
+
+	/**
+	 * Cleanly shuts down raptor. Please use this method instead of System.exit!
+	 */
+	public void shutdown(boolean isIgnoringPreferenceSaves) {
+		shutdownWithoutExit(isIgnoringPreferenceSaves);
 		System.exit(1);
 	}
 

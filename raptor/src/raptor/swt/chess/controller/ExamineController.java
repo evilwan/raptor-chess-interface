@@ -1,5 +1,5 @@
 /**
- * New BSD License
+Ä * New BSD License
  * http://www.opensource.org/licenses/bsd-license.php
  * Copyright (c) 2009, RaptorProject (http://code.google.com/p/raptor-chess-interface/)
  * All rights reserved.
@@ -15,7 +15,6 @@ package raptor.swt.chess.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -266,10 +265,8 @@ public class ExamineController extends ChessBoardController {
 		boolean isCoolbarMode = getPreferences().getBoolean(
 				PreferenceKeys.BOARD_COOLBAR_MODE);
 		if (toolbar == null) {
-			toolbar = new ToolBar(isCoolbarMode ? getBoard().getCoolbar()
-					: parent, SWT.FLAT);
-			toolbar.setLayout(SWTUtils
-					.createMarginlessRowLayout(SWT.HORIZONTAL));
+			toolbar = SWTUtils.createToolbar(isCoolbarMode ? getBoard().getCoolbar()
+					: parent);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.ExaminingChessBoard, toolbar, true);
 

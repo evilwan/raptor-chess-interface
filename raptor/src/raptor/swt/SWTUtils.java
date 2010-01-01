@@ -22,6 +22,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -73,6 +74,10 @@ public class SWTUtils {
 				toolItem.dispose();
 			}
 		}
+	}
+	
+	public static ToolBar createToolbar(Composite parent) {
+		return new ToolBar(parent, SWT.FLAT | SWT.WRAP | SWT.RIGHT);
 	}
 
 	/**

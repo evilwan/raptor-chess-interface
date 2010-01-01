@@ -30,7 +30,7 @@ import raptor.pref.fields.LabelFieldEditor;
 import raptor.util.FileUtils;
 import raptor.util.RaptorStringUtils;
 
-public class General extends FieldEditorPreferencePage {
+public class GeneralPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
 
 	public static final String[][] POLLING_REFRESH = {
@@ -39,7 +39,7 @@ public class General extends FieldEditorPreferencePage {
 			{ "Every 6 Seconds", "" + 6 }, { "Every 7 Seconds", "" + 7 },
 			{ "Every 8 Seconds", "" + 8 }, };
 
-	public General() {
+	public GeneralPage() {
 		super(FLAT);
 		setTitle("General");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
@@ -156,7 +156,7 @@ public class General extends FieldEditorPreferencePage {
 												+ "have to be restarted. "
 												+ "Do you wish to continue?")) {
 							FileUtils.deleteDir(Raptor.USER_RAPTOR_DIR);
-							Raptor.getInstance().shutdown(true);
+							Raptor.getInstance().shutdownWithoutExit(true);
 						}
 					}
 				}));
