@@ -338,6 +338,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_QUAD67_QUAD8_SASH_WEIGHTS, new int[] { 70, 30 });
 		setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
 
+		if (OSUtils.isLikelyWindows()) {
+			setDefault(SPEECH_PROCESS_NAME, "SayStatic");
+		}
+
 		// Board
 		setDefault(BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING, false);
 		setDefault(BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END, true);
