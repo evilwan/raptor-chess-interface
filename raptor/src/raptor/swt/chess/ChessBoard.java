@@ -116,7 +116,8 @@ public class ChessBoard implements BoardConstants {
 			}
 			long startTime = System.currentTimeMillis();
 
-			componentComposite = new Composite(parent, SWT.NONE);
+			componentComposite = new Composite(parent, SWT.DOUBLE_BUFFERED
+					| SWT.NO_BACKGROUND);
 			componentComposite.setLayout(SWTUtils.createMarginlessGridLayout(1,
 					true));
 			if (Raptor.getInstance().getPreferences().getBoolean(
