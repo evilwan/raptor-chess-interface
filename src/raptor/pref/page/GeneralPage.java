@@ -16,6 +16,7 @@ package raptor.pref.page;
 import java.io.File;
 import java.io.FilenameFilter;
 
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
@@ -53,6 +54,18 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				"Raptor user's home directory: " + Raptor.USER_RAPTOR_HOME_PATH,
 				getFieldEditorParent());
 		addField(userHomeDir);
+
+		LabelFieldEditor javaVersion = new LabelFieldEditor("NONE",
+				WordUtils.wrap("Java Version: "
+						+ System.getProperty("java.version"), 70),
+				getFieldEditorParent());
+		addField(javaVersion);
+
+		LabelFieldEditor osVersion = new LabelFieldEditor("NONE", WordUtils
+				.wrap("Operating System: " + System.getProperty("os.name")
+						+ " " + System.getProperty("os.version"), 70),
+				getFieldEditorParent());
+		addField(osVersion);
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
