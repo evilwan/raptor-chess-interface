@@ -14,6 +14,7 @@
 package raptor.connector.ics.chat;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -45,10 +46,14 @@ public class ChannelTellEventParser extends ChatEventParser {
 						ChatEvent event = new ChatEvent(IcsUtils
 								.stripTitles(s1), ChatType.CHANNEL_TELL, text
 								.trim());
-						event.setChannel(s1.substring(k + 1, j));
-						return event;
+						String channel = s1.substring(k + 1, j);
+						if (NumberUtils.isDigits(channel)) {
+							event.setChannel(channel);
+							return event;
+						} else {
+							return null;
+						}
 					}
-
 				}
 			}
 			return null;
