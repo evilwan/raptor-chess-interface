@@ -113,12 +113,12 @@ public class Raptor implements PreferenceKeys {
 
 			createInstance();
 
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				@Override
-				public void run() {
-					getInstance().shutdown();
-				}
-			});
+//			Runtime.getRuntime().addShutdownHook(new Thread() {
+//				@Override
+//				public void run() {
+//					getInstance().shutdown();
+//				}
+//			});
 
 			display.addListener(SWT.Close, new Listener() {
 				public void handleEvent(Event event) {
@@ -545,7 +545,7 @@ public class Raptor implements PreferenceKeys {
 				raptorWindow.close();
 			}
 		} catch (Throwable t) {
-			// LOG.warn("Error shutting down raptor window", t);
+			 LOG.warn("Error shutting down raptor window", t);
 		}
 
 		try {
@@ -554,7 +554,7 @@ public class Raptor implements PreferenceKeys {
 			}
 		} catch (Throwable t) {
 			// Eat this one its prob an already disposed exception.
-			// LOG.warn("Error shutting down display", t);
+			LOG.warn("Error shutting down display", t);
 		}
 
 		if (!isIgnoringPreferenceSaves) {
@@ -570,7 +570,8 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public void shutdown(boolean isIgnoringPreferenceSaves) {
 		shutdownWithoutExit(isIgnoringPreferenceSaves);
-		System.exit(1);
+		System.err.println("Exited");
+		System.exit(0);
 	}
 
 	/**
