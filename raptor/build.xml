@@ -10,9 +10,9 @@
 	    IMPORTANT to run the application you will need to specify your environment here.
 	    This is the folder located in projectFiles/swt to use for your compile,run.
 	  -->
-	<property name="swtEnv" value="MacCarbon" />
+	<property name="swtEnv" value="Windows32" />
 
-	<property name="version" value="v96a" />
+	<property name="version" value="v97" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -30,7 +30,6 @@
 	    You need to add theant-contrib-*.jar to your ant lib directory. 
 	    It can be found in the projectFiles/antlib directory. 
 	    -->
-	<taskdef resource="net/sf/antcontrib/antcontrib.properties" />
 
 	<path id="class.path">
 		<fileset dir="${lib.dir}">
@@ -112,9 +111,14 @@
 
 	<target name="windows32Zip" depends="init">
 		<delete dir="${install.dir}" />
-		<var name="swtEnv" value="Windows32" />
 
 		<antcall target="install" />
+
+		<copy todir="${install.dir}">
+			<fileset dir="projectFiles/Windows">
+				<include name="**/*" />
+			</fileset>
+		</copy>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows32.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
@@ -130,6 +134,12 @@
 		<var name="swtEnv" value="Windows64" />
 
 		<antcall target="install" />
+		
+		<copy todir="${install.dir}">
+			<fileset dir="projectFiles/Windows">
+				<include name="**/*" />
+			</fileset>
+		</copy>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows64.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
