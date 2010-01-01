@@ -27,6 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -53,7 +54,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
@@ -1891,13 +1891,12 @@ public class RaptorWindow extends ApplicationWindow {
 					if (raptorTabItem == null) {
 						return;
 					}
-					Menu menu = new Menu(folder.getShell(), SWT.POP_UP);
+					MenuManager manager = new MenuManager();
 
 					if (folder.getItemCount() > 0) {
-						MenuItem item = new MenuItem(menu, SWT.PUSH);
-						item.setText("Close");
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
+						manager.add(new Action("Close") {
+							@Override
+							public void run() {
 								if (folder.getRaptorTabItemSelection() != null) {
 									if (raptorTabItem.raptorItem.confirmClose()) {
 										raptorTabItem.dispose();
@@ -1914,10 +1913,9 @@ public class RaptorWindow extends ApplicationWindow {
 						});
 					}
 					if (folder.getItemCount() > 1) {
-						MenuItem item = new MenuItem(menu, SWT.PUSH);
-						item.setText("Close Others");
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
+						manager.add(new Action("Close Others") {
+							@Override
+							public void run() {
 								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
 										folder.getItemCount());
 								for (int i = 0; i < folder.getItemCount(); i++) {
@@ -1936,10 +1934,8 @@ public class RaptorWindow extends ApplicationWindow {
 						});
 					}
 					if (folder.getItemCount() > 0) {
-						MenuItem item = new MenuItem(menu, SWT.PUSH);
-						item.setText("Close All");
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
+						manager.add(new Action("Close All") {
+							public void run() {
 								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
 										folder.getItemCount());
 								for (int i = 0; i < folder.getItemCount(); i++) {
@@ -1974,14 +1970,12 @@ public class RaptorWindow extends ApplicationWindow {
 
 					if (itemIndex != -1 && itemIndex > 0
 							|| itemIndex < folder.getItemCount() - 1) {
-						new MenuItem(menu, SWT.SEPARATOR);
+						manager.add(new Separator());
 					}
 
 					if (itemIndex != -1 && itemIndex > 0) {
-						MenuItem moveLeft = new MenuItem(menu, SWT.PUSH);
-						moveLeft.setText("Move Left");
-						moveLeft.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
+						manager.add(new Action("Move Left") {
+							public void run() {
 								raptorTabItem.onMoveTo(folder,
 										finalItemIndex - 2 < 0 ? 0
 												: finalItemIndex - 2);
@@ -1990,10 +1984,8 @@ public class RaptorWindow extends ApplicationWindow {
 					}
 					if (itemIndex != -1
 							&& itemIndex < folder.getItemCount() - 1) {
-						MenuItem moveLeft = new MenuItem(menu, SWT.PUSH);
-						moveLeft.setText("Move Right");
-						moveLeft.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
+						manager.add(new Action("Move Right") {
+							public void run() {
 								raptorTabItem.onMoveTo(folder,
 										finalItemIndex + 2);
 							}
@@ -2005,30 +1997,38 @@ public class RaptorWindow extends ApplicationWindow {
 							.getMoveToQuadrants();
 
 					if (availableQuadrants.length > 0) {
-						new MenuItem(menu, SWT.SEPARATOR);
+						manager.add(new Separator());
 					}
 
+					MenuManager moveTo = new MenuManager("Move To Quadrant");
+					manager.add(moveTo);
 					for (int i = 0; i < availableQuadrants.length; i++) {
 						if (availableQuadrants[i] != folder.quad) {
 							final Quadrant currentQuadrant = availableQuadrants[i];
-							MenuItem item = new MenuItem(menu, SWT.PUSH);
-							item.setText("Move to " + currentQuadrant.name());
-							item.addListener(SWT.Selection, new Listener() {
-								public void handleEvent(Event e) {
+							Action moveToAction = new Action("Quad "
+									+ currentQuadrant.toString()) {
+								public void run() {
 									raptorTabItem
 											.onMoveTo(folders[currentQuadrant
 													.ordinal()]);
-
 								}
-							});
+							};
+							moveToAction
+									.setHoverImageDescriptor(ImageDescriptor
+											.createFromImage(Raptor
+													.getInstance()
+													.getImage(
+															Raptor.RESOURCES_DIR
+																	+ "/images/quadrantsSmall"
+																	+ currentQuadrant
+																			.toString()
+																	+ ".png")));
+							moveTo.add(moveToAction);
+							moveTo.add(new Separator());
 						}
 					}
 
-					final MenuItem imageMenuItem = new MenuItem(menu, SWT.RADIO);
-					imageMenuItem.setImage(Raptor.getInstance().getImage(
-							Raptor.RESOURCES_DIR + "/images/quadrantsSmall"
-									+ folder.quad.toString() + ".png"));
-
+					Menu menu = manager.createContextMenu(folder);
 					menu.setLocation(folder.toDisplay(e.x, e.y));
 					menu.setVisible(true);
 					while (!menu.isDisposed() && menu.isVisible()) {
@@ -2037,6 +2037,7 @@ public class RaptorWindow extends ApplicationWindow {
 						}
 					}
 					menu.dispose();
+					manager.dispose();
 				}
 			}
 		});
