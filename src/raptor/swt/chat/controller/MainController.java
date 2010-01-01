@@ -13,10 +13,8 @@
  */
 package raptor.swt.chat.controller;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Quadrant;
@@ -97,9 +95,7 @@ public class MainController extends ChatConsoleController {
 	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
-			toolbar = new ToolBar(parent, SWT.FLAT);
-			toolbar.setLayout(SWTUtils
-					.createMarginlessRowLayout(SWT.HORIZONTAL));
+			toolbar = SWTUtils.createToolbar(parent);
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.MainChatConsole, toolbar);
 			adjustAwayButtonEnabled();

@@ -36,6 +36,7 @@ import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
@@ -125,12 +126,14 @@ public class ChessBoardUtils implements BoardConstants {
 	public static void adjustCoolbar(ChessBoard board, ToolBar toolbar) {
 		clearCoolbar(board);
 		toolbar.pack();
+		Point size = toolbar.getSize();
+		board.getCoolbar().setVisible(true);
+		board.getCoolbar().setLocked(true);
 		CoolItem coolItem = new CoolItem(board.getCoolbar(), SWT.NONE);
 		coolItem.setControl(toolbar);
-		toolbar.pack();
-		coolItem
-				.setPreferredSize(toolbar.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-		board.getCoolbar().setVisible(true);
+		coolItem.setSize(size.x,size.y);
+		coolItem.setPreferredSize(size.x,size.y);
+		coolItem.setMinimumSize(size);
 		board.getControl().layout();
 	}
 
@@ -881,7 +884,7 @@ public class ChessBoardUtils implements BoardConstants {
 			if (controller.getConnector() == null) {
 				return null;
 			}
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			result.setText(action.getName());
 		} else if (action instanceof MatchWinnerAction) {
 			if (controller instanceof BughouseSuggestController) {
@@ -915,22 +918,22 @@ public class ChessBoardUtils implements BoardConstants {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			controller.addToolItem(ToolBarItemKey.AUTO_DRAW, result);
 		} else if (action instanceof BackAction) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			controller.addToolItem(ToolBarItemKey.BACK_NAV, result);
 		} else if (action instanceof ForwardAction) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			controller.addToolItem(ToolBarItemKey.NEXT_NAV, result);
 		} else if (action instanceof FirstAction) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			controller.addToolItem(ToolBarItemKey.FIRST_NAV, result);
 		} else if (action instanceof LastAction) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			controller.addToolItem(ToolBarItemKey.LAST_NAV, result);
 		} else if (action instanceof RevertAction) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			controller.addToolItem(ToolBarItemKey.REVERT_NAV, result);
 		} else if (action instanceof CommitAction) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			controller.addToolItem(ToolBarItemKey.COMMIT_NAV, result);
 		} else if (action instanceof ClearPremovesAction) {
 			result = new ToolItem(toolbar, SWT.CHECK);
@@ -981,18 +984,18 @@ public class ChessBoardUtils implements BoardConstants {
 			return null;
 		} else if (action instanceof CastleLongAction
 				&& controller.getGame().isInState(Game.FISCHER_RANDOM_STATE)) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			controller.addToolItem(ToolBarItemKey.CASTLE_LONG, result);
 		} else if (action instanceof CastleLongAction) {
 			return null;
 		} else if (action instanceof CastleShortAction
 				&& controller.getGame().isInState(Game.FISCHER_RANDOM_STATE)) {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 			controller.addToolItem(ToolBarItemKey.CASTLE_SHORT, result);
 		} else if (action instanceof CastleShortAction) {
 			return null;
 		} else {
-			result = new ToolItem(toolbar, SWT.PUSH);
+			result = new ToolItem(toolbar, SWT.FLAT);
 		}
 
 		if (StringUtils.isBlank(result.getText())

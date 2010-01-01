@@ -105,7 +105,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				save(fileOut = new FileOutputStream(RAPTOR_PROPERTIES),
 						"Last saved on " + new Date());
 			}
-			setFilename(RAPTOR_PROPERTIES.getAbsolutePath());
 		} catch (Exception e) {
 			LOG.error("Error reading or writing to file ", e);
 			throw new RuntimeException(e);
@@ -296,6 +295,45 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// Action
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
+
+		// App settings.
+		setDefault(APP_NAME, "Raptor .97l");
+		setDefault(APP_SASH_WIDTH, 8);
+		PreferenceConverter.setDefault(this, APP_PING_FONT,
+				new FontData[] { new FontData(defaultFontName,
+						defaultSmallFontSize, 0) });
+		PreferenceConverter.setDefault(this, APP_PING_COLOR, new RGB(0, 0, 0));
+
+		PreferenceConverter.setDefault(this, APP_STATUS_BAR_FONT,
+				new FontData[] { new FontData(defaultFontName,
+						defaultSmallFontSize, 0) });
+		PreferenceConverter.setDefault(this, APP_STATUS_BAR_COLOR, new RGB(0,
+				0, 0));
+		setDefault(APP_HOME_URL,
+				"http://code.google.com/p/raptor-chess-interface/");
+		setDefault(APP_SOUND_ENABLED, true);
+		setDefault(APP_USER_TAGS,
+				"+Partner,-Partner,Cool,Dupe,Friend,Jerk,Lagger,Noob,Premover,Troll,Strange");
+		setDefault(APP_IS_LOGGING_GAMES, true);
+		setDefault(APP_LAYOUT, "Layout1");
+		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
+		setDefault(APP_BROWSER_QUADRANT, Quadrant.III);
+		setDefault(APP_PGN_RESULTS_QUADRANT, Quadrant.III);
+		setDefault(APP_CHESS_BOARD_QUADRANT, Quadrant.III);
+		setDefault(APP_CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
+		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
+		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
+		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 5);
+
+		// Layout 1 settings.
+		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
+		setDefault(APP_QUAD9_QUAD12345678_SASH_WEIGHTS, new int[] { 10, 90 });
+		setDefault(APP_QUAD1_QUAD2345678_SASH_WEIGHTS, new int[] { 10, 90 });
+		setDefault(APP_QUAD2345_QUAD678_SASH_WEIGHTS, new int[] { 70, 30 });
+		setDefault(APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS, new int[] { 10,
+				40, 10, 40 });
+		setDefault(APP_QUAD67_QUAD8_SASH_WEIGHTS, new int[] { 70, 30 });
+		setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
 
 		// Board
 		setDefault(BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING, false);
@@ -635,46 +673,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD, true);
 		setDefault(BUGHOUSE_SPEAK_PARTNER_TELLS, true);
 		setDefault(BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND, true);
-
-		// App settings.
-		setDefault(APP_NAME, "Raptor .96a");
-		setDefault(APP_SASH_WIDTH, 8);
-		PreferenceConverter.setDefault(this, APP_PING_FONT,
-				new FontData[] { new FontData(defaultFontName,
-						defaultSmallFontSize, 0) });
-		PreferenceConverter.setDefault(this, APP_PING_COLOR, new RGB(0, 0, 0));
-
-		PreferenceConverter.setDefault(this, APP_STATUS_BAR_FONT,
-				new FontData[] { new FontData(defaultFontName,
-						defaultSmallFontSize, 0) });
-		PreferenceConverter.setDefault(this, APP_STATUS_BAR_COLOR, new RGB(0,
-				0, 0));
-
-		setDefault(APP_HOME_URL,
-				"http://code.google.com/p/raptor-chess-interface/");
-		setDefault(APP_SOUND_ENABLED, true);
-		setDefault(APP_USER_TAGS,
-				"+Partner,-Partner,Cool,Dupe,Friend,Jerk,Lagger,Noob,Premover,Troll,Strange");
-		setDefault(APP_IS_LOGGING_GAMES, true);
-		setDefault(APP_LAYOUT, "Layout1");
-		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
-		setDefault(APP_BROWSER_QUADRANT, Quadrant.III);
-		setDefault(APP_PGN_RESULTS_QUADRANT, Quadrant.III);
-		setDefault(APP_CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault(APP_CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
-		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
-		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
-		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 5);
-
-		// Layout 1 settings.
-		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
-		setDefault(APP_QUAD9_QUAD12345678_SASH_WEIGHTS, new int[] { 10, 90 });
-		setDefault(APP_QUAD1_QUAD2345678_SASH_WEIGHTS, new int[] { 10, 90 });
-		setDefault(APP_QUAD2345_QUAD678_SASH_WEIGHTS, new int[] { 70, 30 });
-		setDefault(APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS, new int[] { 10,
-				40, 10, 40 });
-		setDefault(APP_QUAD67_QUAD8_SASH_WEIGHTS, new int[] { 70, 30 });
-		setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
 
 		// Fics
 		setDefault(FICS_KEEP_ALIVE, false);

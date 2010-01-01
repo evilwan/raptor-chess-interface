@@ -16,10 +16,8 @@ package raptor.swt.chat.controller;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.ToolBar;
 
 import raptor.Quadrant;
 import raptor.Raptor;
@@ -64,9 +62,7 @@ public class RegExController extends ChatConsoleController {
 	@Override
 	public Control getToolbar(Composite parent) {
 		if (toolbar == null) {
-			toolbar = new ToolBar(parent, SWT.FLAT);
-			toolbar.setLayout(SWTUtils
-					.createMarginlessRowLayout(SWT.HORIZONTAL));
+			toolbar = SWTUtils.createToolbar(parent);
 			ChatUtils.addActionsToToolbar(this,
 					RaptorActionContainer.RegExChatConsole, toolbar);
 			adjustAwayButtonEnabled();
