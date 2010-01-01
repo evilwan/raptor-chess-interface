@@ -1244,8 +1244,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void decorateBugWhoLinks(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() == ChatType.BUGWHO_ALL
-				|| event.getType() == ChatType.BUGWHO_GAMES) {
+		if ((event.getType() == ChatType.BUGWHO_ALL || event.getType() == ChatType.BUGWHO_GAMES)
+				&& getPreferences().getBoolean(
+						PreferenceKeys.CHAT_UNDERLINE_COMMANDS)) {
 			// Currently this will only work with FICS games messages that are
 			// in bugwho games format.
 			List<int[]> linkRanges = new ArrayList<int[]>(5);
@@ -1303,8 +1304,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void decorateGameNotifyLinks(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() == ChatType.UNKNOWN
-				&& message.startsWith("\nGame notification: ")
-				|| message.startsWith("Game notification: ")) {
+				&& (message.startsWith("\nGame notification: ") || message
+						.startsWith("Game notification: "))
+				&& getPreferences().getBoolean(
+						PreferenceKeys.CHAT_UNDERLINE_COMMANDS)) {
 			// Currently this will only work with FICS games messages that
 			// are
 			// formatted like this:
@@ -1332,7 +1335,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void decorateGamesLinks(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() == ChatType.GAMES) {
+		if (event.getType() == ChatType.GAMES
+				&& getPreferences().getBoolean(
+						PreferenceKeys.CHAT_UNDERLINE_COMMANDS)) {
 			// Currently this will only work with FICS games messages that are
 			// formatted like this:
 			// 200 1878 InsaneMania 1747 jova [ br 5 0] 3:51 - 3:57 (32-31) B:
@@ -1405,7 +1410,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void decorateHistoryLinks(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() == ChatType.HISTORY) {
+		if (event.getType() == ChatType.HISTORY
+				&& getPreferences().getBoolean(
+						PreferenceKeys.CHAT_UNDERLINE_COMMANDS)) {
 
 			// Currently this will only work with FICS historys that are
 			// formatted like this:
@@ -1491,7 +1498,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void decorateJournalLinks(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() == ChatType.JOURNAL) {
+		if (event.getType() == ChatType.JOURNAL
+				&& getPreferences().getBoolean(
+						PreferenceKeys.CHAT_UNDERLINE_COMMANDS)) {
 
 			// Currently this will only work with FICS journals that are
 			// formatted like this:
@@ -1705,7 +1714,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void decorateNewsLinks(ChatEvent event, String message,
 			int textStartPosition) {
 		if (event.getType() == ChatType.UNKNOWN
-				&& isPossibleNewsMessage(message)) {
+				&& isPossibleNewsMessage(message)
+				&& getPreferences().getBoolean(
+						PreferenceKeys.CHAT_UNDERLINE_COMMANDS)) {
 			// Currently this will only work with FICS messages that contain:
 			// Index of the last few news items:
 			// 1371 (Tue, Jun 23) www.ficsgames.com is back online
@@ -1849,7 +1860,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void decoreateNext(ChatEvent event, String message,
 			int textStartPosition) {
-		if (event.getType() != ChatType.OUTBOUND) {
+		if (event.getType() != ChatType.OUTBOUND
+				&& getPreferences().getBoolean(
+						PreferenceKeys.CHAT_UNDERLINE_COMMANDS)) {
 			List<int[]> nextRanges = new ArrayList<int[]>(5);
 
 			int nextIndex = message.indexOf("[next]");
