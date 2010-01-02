@@ -13,41 +13,46 @@
  */
 package raptor.swt.chess;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Table;
-import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.chess.Game;
-import raptor.chess.GameComparator;
 import raptor.chess.Result;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.PgnParserError;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.ItemChangedListener;
+import raptor.swt.RaptorTable;
+import raptor.swt.RaptorTable.RaptorTableListener;
 import raptor.swt.chess.controller.InactiveController;
+import raptor.util.IntegerComparator;
 
 /**
  * A window item that displays a list of games from a PGN file.
@@ -64,18 +69,21 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 
 	protected Composite composite;
+	protected RaptorTable gamesTable;
+	protected RaptorTable errorsTable;
+
 	protected List<PgnParserError> errors;
 	protected List<Game> games;
-	protected boolean isPassive = true;
-	protected TableColumn lastStortedColumn;
 	protected String title;
-	protected boolean wasLastSortAscending;
+	protected boolean isPassive;
+	protected String pathToFile;
 
 	public PgnParseResultsWindowItem(String title, List<PgnParserError> errors,
-			List<Game> games) {
+			List<Game> games, String pathToFile) {
 		this.errors = errors;
 		this.games = games;
 		this.title = title;
+		this.pathToFile = pathToFile;
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -180,275 +188,148 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		gamesTotalLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 
-		Composite gamesTableComposite = new Composite(composite, SWT.NONE);
-		gamesTableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
-				true, true));
-		gamesTableComposite.setLayout(new FillLayout());
-		final Table gamesTable = new Table(gamesTableComposite, SWT.BORDER
-				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
-		final TableColumn type = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn date = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn white = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn whiteElo = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn black = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn blackElo = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn result = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn eco = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn opening = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn event = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn site = new TableColumn(gamesTable, SWT.LEFT);
-		final TableColumn round = new TableColumn(gamesTable, SWT.LEFT);
+		gamesTable = new RaptorTable(composite, SWT.BORDER | SWT.H_SCROLL
+				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+		gamesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		gamesTable.addMouseListener(new MouseAdapter() {
+		gamesTable.addColumn("ID", SWT.LEFT, 3, true, new IntegerComparator());
+		gamesTable.addColumn("Variant", SWT.LEFT, 5, true, null);
+		gamesTable.addColumn("Date", SWT.LEFT, 10, true, null);
+		gamesTable.addColumn("Event", SWT.LEFT, 15, true, null);
+		gamesTable.addColumn("White", SWT.LEFT, 15, true, null);
+		gamesTable
+				.addColumn("WELO", SWT.LEFT, 5, true, new IntegerComparator());
+		gamesTable.addColumn("Black", SWT.LEFT, 15, true, null);
+		gamesTable
+				.addColumn("BELO", SWT.LEFT, 5, true, new IntegerComparator());
+		gamesTable.addColumn("Result", SWT.LEFT, 3, true, null);
+		gamesTable.addColumn("ECO", SWT.LEFT, 3, true, null);
+		gamesTable.addColumn("Opening", SWT.LEFT, 21, true, null);
+
+		gamesTable.addRaptorTableListener(new RaptorTableListener() {
+
 			@Override
-			public void mouseDoubleClick(MouseEvent e) {
-				if (gamesTable.getSelectionIndex() != -1) {
-					openGame(gamesTable.getSelectionIndex());
+			public void cursorMoved(int row, int column) {
+			}
+
+			@Override
+			public void rowDoubleClicked(MouseEvent event, String[] rowData) {
+				openGame(Integer.parseInt(rowData[0]));
+			}
+
+			@Override
+			public void rowRightClicked(MouseEvent event, final String[] rowData) {
+				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
+				MenuItem deleteItem = new MenuItem(menu, SWT.PUSH);
+				deleteItem.setText("Delete game " + rowData[0]);
+				deleteItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						String id = rowData[0];
+						int rowId = -1;
+						for (int i = 0; i < gamesTable.getRowCount(); i++) {
+							if (gamesTable.getText(i, 0).equals(id)) {
+								rowId = i;
+								break;
+							}
+						}
+						gamesTable.removeRow(rowId);
+					}
+				});
+				menu.setLocation(gamesTable.getTable().toDisplay(event.x,
+						event.y));
+				menu.setVisible(true);
+				while (!menu.isDisposed() && menu.isVisible()) {
+					if (!gamesTable.getDisplay().readAndDispatch()) {
+						gamesTable.getDisplay().sleep();
+					}
 				}
+				menu.dispose();
+			}
+
+			@Override
+			public void tableSorted() {
+			}
+
+			@Override
+			public void tableUpdated() {
 			}
 		});
 
-		date.addSelectionListener(new SelectionAdapter() {
+		populateGamesTable();
+
+		Button saveButton = new Button(composite, SWT.PUSH);
+		saveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+				false));
+		saveButton.setText("Save");
+		saveButton.addSelectionListener(new SelectionListener() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == date ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = date;
-
-				Collections.sort(games, new GameComparator(PgnHeader.Date,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
+			public void widgetDefaultSelected(SelectionEvent e) {
 			}
-		});
-		white.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				if (games.size() == 0) {
+					Raptor.getInstance().alert("There are no games to save.");
+					return;
+				}
 
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == white ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = white;
-
-				Collections.sort(games, new GameComparator(PgnHeader.White,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		whiteElo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == whiteElo ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = whiteElo;
-
-				Collections.sort(games, new GameComparator(PgnHeader.WhiteElo,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		black.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == black ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = black;
-
-				Collections.sort(games, new GameComparator(PgnHeader.Black,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		blackElo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == blackElo ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = blackElo;
-
-				Collections.sort(games, new GameComparator(PgnHeader.BlackElo,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		result.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == result ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = result;
-
-				Collections.sort(games, new GameComparator(PgnHeader.Result,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		eco.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == eco ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = eco;
-
-				Collections.sort(games, new GameComparator(PgnHeader.ECO,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		opening.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == opening ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = opening;
-
-				Collections.sort(games, new GameComparator(PgnHeader.Opening,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		event.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == event ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = event;
-
-				Collections.sort(games, new GameComparator(PgnHeader.Event,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		site.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == site ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = site;
-
-				Collections.sort(games, new GameComparator(PgnHeader.Site,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-		round.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-				wasLastSortAscending = lastStortedColumn == null ? true
-						: lastStortedColumn == round ? !wasLastSortAscending
-								: true;
-				lastStortedColumn = round;
-
-				Collections.sort(games, new GameComparator(PgnHeader.Round,
-						wasLastSortAscending));
-				disposeAllItems(gamesTable);
-				populateGamesTable(gamesTable);
-			}
-		});
-
-		type.setText("Type");
-		date.setText("Date");
-		white.setText("White");
-		whiteElo.setText("White ELO");
-		black.setText("Black");
-		blackElo.setText("Black ELO");
-		result.setText("Result");
-		eco.setText("ECO");
-		opening.setText("Opening");
-		event.setText("Event");
-		site.setText("Site");
-		round.setText("Round");
-
-		type.setWidth(80);
-		date.setWidth(80);
-		event.setWidth(150);
-		site.setWidth(100);
-		round.setWidth(50);
-		white.setWidth(100);
-		whiteElo.setWidth(60);
-		black.setWidth(100);
-		blackElo.setWidth(60);
-		result.setWidth(50);
-		eco.setWidth(40);
-		opening.setWidth(300);
-		gamesTable.setHeaderVisible(true);
-
-		Collections.sort(games, new GameComparator(PgnHeader.Date, false));
-		lastStortedColumn = date;
-		wasLastSortAscending = false;
-
-		populateGamesTable(gamesTable);
-
-		Button button = new Button(composite, SWT.PUSH);
-		button.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		button.setText("View");
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (gamesTable.getSelectionIndex() != -1) {
-					openGame(gamesTable.getSelectionIndex());
+				FileDialog fd = new FileDialog(composite.getShell(), SWT.SAVE);
+				fd.setText("Select file to save.");
+				File file = new File(pathToFile);
+				fd.setFilterPath(file.getParent());
+				fd.setFileName(file.getName());
+				final String selected = fd.open();
+				if (!StringUtils.isBlank(selected)) {
+					pathToFile = selected;
+					FileWriter fileWriter = null;
+					try {
+						fileWriter = new FileWriter(new File(pathToFile), false);
+						for (int i = 0; i < gamesTable.getRowCount(); i++) {
+							int id = Integer.parseInt(gamesTable.getText(0, 0));
+							Game game = games.get(id);
+							fileWriter.write(game.toPgn() + "\n\n");
+							fileWriter.flush();
+						}
+						Raptor.getInstance().alert(
+								"Saved " + gamesTable.getRowCount()
+										+ " to file " + pathToFile + ".");
+					} catch (Throwable t) {
+						Raptor.getInstance().onError(
+								"Error saving pgn file: " + pathToFile);
+					} finally {
+						if (fileWriter != null) {
+							try {
+								fileWriter.close();
+							} catch (Throwable t) {
+							}
+						}
+					}
 				}
 			}
 		});
 
 		if (!errors.isEmpty()) {
-
 			Label errorsLabel = new Label(composite, SWT.LEFT);
 			errorsLabel.setText("Errors: " + errors.size());
 			errorsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 					false));
 
-			Composite errorTableComposite = new Composite(composite, SWT.NONE);
-			errorTableComposite.setLayoutData(new GridData(SWT.FILL,
-					SWT.CENTER, true, false));
-			Table errorTable = new Table(errorTableComposite, SWT.BORDER
-					| SWT.H_SCROLL | SWT.V_SCROLL | SWT.SINGLE
-					| SWT.FULL_SELECTION);
-			TableColumn tc1 = new TableColumn(errorTable, SWT.LEFT);
-			TableColumn tc2 = new TableColumn(errorTable, SWT.LEFT);
-			TableColumn tc3 = new TableColumn(errorTable, SWT.LEFT);
-			tc1.setText("PGN Error");
-			tc2.setText("Action Taken");
-			tc3.setText("Line Number");
-			tc1.setWidth(200);
-			tc2.setWidth(200);
-			tc3.setWidth(80);
-			errorTable.setHeaderVisible(true);
-			errorTable.setSize(errorTable.computeSize(SWT.DEFAULT, 150, true));
-
-			for (PgnParserError error : errors) {
-				TableItem item = new TableItem(errorTable, SWT.NONE);
-				item.setText(new String[] { error.getType().name(),
-						error.getAction().name(), "" + error.getLineNumber() });
+			errorsTable = new RaptorTable(composite, SWT.BORDER | SWT.H_SCROLL
+					| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+			errorsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+					true));
+			errorsTable.addColumn("PGN Error", SWT.LEFT, 50, true, null);
+			errorsTable.addColumn("Action Taken", SWT.LEFT, 40, true, null);
+			errorsTable.addColumn("Line Number", SWT.LEFT, 10, true,
+					new IntegerComparator());
+			String[][] content = new String[errors.size()][3];
+			for (int i = 0; i < errors.size(); i++) {
+				PgnParserError error = errors.get(i);
+				content[i][0] = error.getType().name();
+				content[i][1] = error.getAction().name();
+				content[i][2] = "" + error.getLineNumber();
 			}
+			errorsTable.refreshTable(content);
 		}
 	}
 
@@ -484,36 +365,33 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 						false)));
 	}
 
-	protected void populateGamesTable(Table gamesTable) {
-
-		for (Game game : games) {
-			TableItem item = new TableItem(gamesTable, SWT.NONE);
-			item.setText(new String[] {
-					StringUtils.defaultString(
-							game.getHeader(PgnHeader.Variant), "?"),
-					StringUtils.defaultString(game.getHeader(PgnHeader.Date),
-							"?"),
-					StringUtils.defaultString(game.getHeader(PgnHeader.White),
-							"?"),
-					StringUtils.defaultString(game
-							.getHeader(PgnHeader.WhiteElo), "?"),
-					StringUtils.defaultString(game.getHeader(PgnHeader.Black),
-							"?"),
-					StringUtils.defaultString(game
-							.getHeader(PgnHeader.BlackElo), "?"),
-					StringUtils.defaultString(game.getHeader(PgnHeader.Result),
-							"?"),
-					StringUtils
-							.defaultString(game.getHeader(PgnHeader.ECO), ""),
-					StringUtils.defaultString(
-							game.getHeader(PgnHeader.Opening), ""),
-					StringUtils.defaultString(game.getHeader(PgnHeader.Event),
-							"?"),
-					StringUtils.defaultString(game.getHeader(PgnHeader.Site),
-							"?"),
-					StringUtils.defaultString(game.getHeader(PgnHeader.Round),
-							"?"), });
+	protected void populateGamesTable() {
+		String[][] gamesData = new String[games.size()][11];
+		for (int i = 0; i < games.size(); i++) {
+			Game game = games.get(i);
+			gamesData[i][0] = "" + i;
+			gamesData[i][1] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.Variant), "?");
+			gamesData[i][2] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.Date), "?");
+			gamesData[i][3] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.Event), "?");
+			gamesData[i][4] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.White), "?");
+			gamesData[i][5] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.WhiteElo), "?");
+			gamesData[i][6] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.Black), "?");
+			gamesData[i][7] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.BlackElo), "?");
+			gamesData[i][8] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.Result), "?");
+			gamesData[i][9] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.ECO), "");
+			gamesData[i][10] = StringUtils.defaultString(game
+					.getHeader(PgnHeader.Opening), "");
 		}
+		gamesTable.refreshTable(gamesData);
 	}
 
 }
