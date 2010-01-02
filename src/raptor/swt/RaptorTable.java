@@ -210,6 +210,9 @@ public class RaptorTable extends Composite {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
+				if (e.button != 1) {
+					return;
+				}
 				TableItem item = table.getItem(new Point(e.x, e.y));
 
 				if (item != null) {

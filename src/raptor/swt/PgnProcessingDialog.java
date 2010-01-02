@@ -158,7 +158,7 @@ public class PgnProcessingDialog extends Dialog {
 
 					PgnParseResultsWindowItem windowItem = new PgnParseResultsWindowItem(
 							file.getName(), listener.getErrors(), listener
-									.getGames());
+									.getGames(), file.getAbsolutePath());
 					Raptor.getInstance().getWindow().addRaptorWindowItem(
 							windowItem);
 				} catch (Throwable t) {
