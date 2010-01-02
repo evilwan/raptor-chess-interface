@@ -800,9 +800,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			onSendOutputText();
 			return true;
 
-		} else if ((event.character == ' ' || event.character == 0)
-				&& ((event.stateMask & SWT.CONTROL) != 0
-						|| (event.stateMask & SWT.ALT) != 0 || (event.stateMask & SWT.COMMAND) != 0)) {
+		} else if (isAutoCompleteTrigger(event)) {
 			int endIndex = chatConsole.getOutputText().getCaretPosition();
 			int startIndex = endIndex - 1;
 			for (; startIndex >= 0; startIndex--) {
@@ -848,6 +846,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				Raptor.getInstance().getDisplay().beep();
 			}
 			event.doit = false;
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean isAutoCompleteTrigger(Event keyEvent) {
+		boolean isMaskedKey = (keyEvent.stateMask & SWT.CONTROL) != 0
+				|| (keyEvent.stateMask & SWT.ALT) != 0
+				|| (keyEvent.stateMask & SWT.COMMAND) != 0;
+		if (isMaskedKey
+				&& (keyEvent.character == ' ' || keyEvent.keyCode == ' ')) {
 			return true;
 		}
 		return false;
