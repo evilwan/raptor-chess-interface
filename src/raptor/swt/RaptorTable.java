@@ -224,7 +224,7 @@ public class RaptorTable extends Composite {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				if (e.button == 3) {
+				if (SWTUtils.isRightClick(e)) {
 					TableItem item = table.getItem(new Point(e.x, e.y));
 					if (item != null) {
 						for (RaptorTableListener listener : tableListeners) {

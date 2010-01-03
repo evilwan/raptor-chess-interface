@@ -181,7 +181,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		@Override
 		public void mouseUp(MouseEvent e) {
-			if (e.button == 3) {
+			if (SWTUtils.isRightClick(e)) {
 				onInputTextRightClick(e);
 			}
 		}
