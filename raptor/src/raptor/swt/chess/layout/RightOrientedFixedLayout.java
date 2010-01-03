@@ -23,7 +23,8 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 
-import raptor.swt.SWTUtils;
+import raptor.Raptor;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardLayout;
 
@@ -31,7 +32,7 @@ import raptor.swt.chess.ChessBoardLayout;
  * This layout adjusts the font sizes to match the viewing area. It displays all
  * labels.
  */
-public class RightOrientedLayout extends ChessBoardLayout {
+public class RightOrientedFixedLayout extends ChessBoardLayout {
 	public static final int[] BOARD_WIDTH_MARGIN_PERCENTAGES = { 1, 1 };
 
 	public static final int BOTTOM_LABEL_HEIGHT_PERCENTAGE_OF_SCREEN = 3;
@@ -40,7 +41,8 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 	public static final int EAST = 1;
 
-	private static final Log LOG = LogFactory.getLog(RightOrientedLayout.class);
+	private static final Log LOG = LogFactory
+			.getLog(RightOrientedFixedLayout.class);
 
 	public static final int NORTH = 0;
 	public static final int SOUTH = 1;
@@ -74,7 +76,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 	protected Point topPieceJailRow1Point;
 	protected Point topPieceJailRow2Point;
 
-	public RightOrientedLayout(ChessBoard board) {
+	public RightOrientedFixedLayout(ChessBoard board) {
 		super(board);
 
 		board.getBoardComposite().addControlListener(
@@ -85,65 +87,39 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 					public void controlResized(ControlEvent e) {
 						setLayoutData();
-						adjustFontSizes();
 					}
 				});
+	}
+
+	protected Font getFont(String property) {
+		return Raptor.getInstance().getPreferences().getFont(property);
 	}
 
 	@Override
 	public void adjustFontSizes() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Adjusting name labels.");
+			LOG.debug("Adjusting font sizes.");
 		}
-
-		if (topNameLabelRect == null) {
-			setLayoutData();
-		}
-
 		board.getGameDescriptionLabel().setFont(
-				SWTUtils.getProportionalFont(board.getGameDescriptionLabel()
-						.getFont(), 80, topLabelHeight, 20));
+				getFont(PreferenceKeys.BOARD_GAME_DESCRIPTION_FONT));
 		board.getCurrentPremovesLabel().setFont(
-				SWTUtils.getProportionalFont(board.getCurrentPremovesLabel()
-						.getFont(), 80, topLabelHeight, 20));
+				getFont(PreferenceKeys.BOARD_PREMOVES_FONT));
 		board.getStatusLabel().setFont(
-				SWTUtils.getProportionalFont(board.getStatusLabel().getFont(),
-						80, bottomLabelHeight, 20));
+				getFont(PreferenceKeys.BOARD_STATUS_FONT));
 		board.getOpeningDescriptionLabel().setFont(
-				SWTUtils.getProportionalFont(board.getOpeningDescriptionLabel()
-						.getFont(), 80, bottomLabelHeight, 20));
-
-		Font nameFont = SWTUtils.getProportionalFont(board
-				.getWhiteNameRatingLabel().getFont(), hasHeightProblem ? 70
-				: hasSevereHeightProblem ? 60 : 80, topNameLabelRect.height);
-		board.getWhiteNameRatingLabel().setFont(nameFont);
-		board.getBlackNameRatingLabel().setFont(nameFont);
-
-		Font lagFont = SWTUtils.getProportionalFont(board.getWhiteLagLabel()
-				.getFont(), 70, topLagRect.height);
-		board.getWhiteLagLabel().setFont(lagFont);
-		board.getBlackLagLabel().setFont(lagFont);
-
-		Point nameSize = board.getWhiteNameRatingLabel().computeSize(
-				SWT.DEFAULT, SWT.DEFAULT, true);
-		Point lagSize = board.getWhiteLagLabel().computeSize(SWT.DEFAULT,
-				SWT.DEFAULT, true);
-
-		if (nameSize.y + lagSize.y <= squareSize) {
-			topNameLabelRect.height = nameSize.y;
-			bottomNameLabelRect.height = nameSize.y;
-
-			topLagRect.y = topNameLabelRect.y + topNameLabelRect.height;
-			topLagRect.height = lagSize.y;
-			bottomLagRect.y = bottomNameLabelRect.y
-					+ bottomNameLabelRect.height;
-			bottomLagRect.height = lagSize.y;
-		}
-
-		Font clockFont = SWTUtils.getProportionalFont(board
-				.getWhiteClockLabel().getFont(), 90, topClockRect.height);
-		board.getWhiteClockLabel().setFont(clockFont);
-		board.getBlackClockLabel().setFont(clockFont);
+				getFont(PreferenceKeys.BOARD_OPENING_DESC_FONT));
+		board.getWhiteNameRatingLabel().setFont(
+				getFont(PreferenceKeys.BOARD_PLAYER_NAME_FONT));
+		board.getBlackNameRatingLabel().setFont(
+				getFont(PreferenceKeys.BOARD_PLAYER_NAME_FONT));
+		board.getWhiteLagLabel()
+				.setFont(getFont(PreferenceKeys.BOARD_LAG_FONT));
+		board.getBlackLagLabel()
+				.setFont(getFont(PreferenceKeys.BOARD_LAG_FONT));
+		board.getWhiteClockLabel().setFont(
+				getFont(PreferenceKeys.BOARD_CLOCK_FONT));
+		board.getBlackClockLabel().setFont(
+				getFont(PreferenceKeys.BOARD_CLOCK_FONT));
 	}
 
 	@Override
@@ -183,7 +159,7 @@ public class RightOrientedLayout extends ChessBoardLayout {
 
 	@Override
 	public String getName() {
-		return "Right Oriented Dynamic Fonts";
+		return "Right Oriented Fixed Font";
 	}
 
 	@Override
@@ -431,4 +407,5 @@ public class RightOrientedLayout extends ChessBoardLayout {
 		bottomPieceJailRow2Point = new Point(clockStartX, topLabelHeight + 7
 				* squareSize);
 	}
+
 }

@@ -1467,13 +1467,21 @@ public class RaptorWindow extends ApplicationWindow {
 		fileMenu.add(new Action("Open PGN File") {
 			@Override
 			public void run() {
+				String lastFile = getPreferences().getString(PreferenceKeys.BOARD_LAST_OPEN_PGN);
+				
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
+				if (StringUtils.isNotBlank(lastFile)) {
+					fd.setFilterPath(lastFile);
+				}
+				else {
+					fd.setFilterPath("");					
+				}
 				fd.setText("Select the pgn file to view");
-				fd.setFilterPath("");
-				String[] filterExt = { "*.pgn", "*.*" };
+				String[] filterExt = { "*.pgn", "*" };
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
 				if (!StringUtils.isBlank(selected)) {
+					getPreferences().setValue(PreferenceKeys.BOARD_LAST_OPEN_PGN,selected);
 					PgnProcessingDialog dialog = new PgnProcessingDialog(
 							getShell(), selected);
 					dialog.open();
@@ -1885,7 +1893,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 			@Override
 			public void mouseDown(MouseEvent e) {
-				if (e.button == 3) {
+				if (SWTUtils.isRightClick(e)) {
 					final RaptorTabItem raptorTabItem = (RaptorTabItem) folder
 							.getItem(new Point(e.x, e.y));
 					if (raptorTabItem == null) {

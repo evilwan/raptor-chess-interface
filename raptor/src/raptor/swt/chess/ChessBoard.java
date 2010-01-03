@@ -197,7 +197,7 @@ public class ChessBoard implements BoardConstants {
 			whiteNameRatingLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent e) {
-					if (e.button == 3) {
+					if (SWTUtils.isRightClick(e)) {
 						onNameLabelRightClick(e, whiteNameRatingLabel);
 					}
 				}
@@ -206,7 +206,7 @@ public class ChessBoard implements BoardConstants {
 			blackNameRatingLabel.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDown(MouseEvent e) {
-					if (e.button == 3) {
+					if (SWTUtils.isRightClick(e)) {
 						onNameLabelRightClick(e, blackNameRatingLabel);
 					}
 				}

@@ -15,6 +15,7 @@ package raptor.swt;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Point;
@@ -43,6 +44,13 @@ public class SWTUtils {
 	public static final String[] OTHER_MONOSPACED_FONTS = { "Monospace",
 			"Monaco", "DejaVu Sans Mono", "Nimbus Mono L",
 			"WenQuanYi Zen Hei Mono", "Courier 10 Pitch", "Courier" };
+	
+	public static boolean isRightClick(MouseEvent e) {
+		boolean isRightClickKeyMask = (e.stateMask & SWT.ALT) != 0
+		|| (e.stateMask & SWT.COMMAND) != 0
+		|| (e.stateMask & SWT.CONTROL) != 0;
+        return e.button == 3 || (e.button == 1 && isRightClickKeyMask);
+	}
 
 	/**
 	 * Centers the shell in the RaptorWindow.

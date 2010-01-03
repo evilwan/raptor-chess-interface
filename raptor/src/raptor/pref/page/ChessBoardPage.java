@@ -191,8 +191,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	}
 
 	public static final String[][] LAYOUTS = {
-			{ "Right Oriented Layout",
+			{ "Right Oriented Layout (Fonts adjust to board size)",
 					"raptor.swt.chess.layout.RightOrientedLayout" },
+			{ "Right Oriented Layout (Fonts do not adjust to board size)",
+					"raptor.swt.chess.layout.RightOrientedFixedLayout" },
 			{ "Top/Bottom Oriented Layout",
 					"raptor.swt.chess.layout.TopBottomOrientedLayout" } };
 
