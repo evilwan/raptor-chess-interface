@@ -10,9 +10,9 @@
 	    IMPORTANT to run the application you will need to specify your environment here.
 	    This is the folder located in projectFiles/swt to use for your compile,run.
 	  -->
-	<property name="swtEnv" value="Windows32" />
+	<property name="swtEnv" value="Linux_x86_GTK2" />
 
-	<property name="version" value="v97" />
+	<property name="version" value="v97a" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -123,6 +123,7 @@
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows32.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
+				<exclude name="Raptor.jar" />
 				<exclude name="Thumbs.db" />
 				<exclude name=".svn" />
 			</zipfileset>
@@ -169,7 +170,6 @@
 
 	<target name="Linux_x86Zip" depends="init">
 		<delete dir="${install.dir}" />
-		<var name="swtEnv" value="Linux_x86_GTK2" />
 
 		<antcall target="install" />
 
