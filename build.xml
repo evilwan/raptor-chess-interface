@@ -48,7 +48,7 @@
 	</target>
 
 	<target name="compile" depends="init" description="Compile the Java source code">
-		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="class.path" debug="false" deprecation="true" optimize="true">
+		<javac srcdir="${src.dir}" destdir="${classes.dir}" target="1.5" classpathref="class.path" debug="false" deprecation="true" optimize="true">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
 	</target>
@@ -213,7 +213,7 @@
 		</zip>
 	</target>
 
-	<target name="osxCarbonDMG" depends="init" description="Builds Raptor.app for Carbon">
+	<target name="osxCarbonDMG" depends="init" description="Builds Raptor dmg for Carbon">
 		<delete dir="${install.dir}" />
 		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
 
@@ -268,7 +268,7 @@
 		</exec>
 	</target>
 
-	<target name="osxCocoa64DMG" depends="init" description="Builds Raptor.app for Cocoa64">
+	<target name="osxCocoa64DMG" depends="init" description="Builds Raptor dmg for Cocoa64">
 		<delete dir="${install.dir}" />
 		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Cocoa64.dmg" />
 
@@ -328,7 +328,7 @@
 		</exec>
 	</target>
 
-	<target name="osxCocoa32DMG" depends="init" description="Builds Raptor.app for Cocoa32">
+	<target name="osxCocoa32DMG" depends="init" description="Builds Raptor dmg for Cocoa32">
 		<delete dir="${install.dir}" />
 		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Cocoa32.dmg" />
 
