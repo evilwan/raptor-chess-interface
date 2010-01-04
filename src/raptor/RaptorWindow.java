@@ -1559,7 +1559,7 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(new Action("&License") {
 			@Override
 			public void run() {
-				String html = FileUtils.fileAsString("bsd-new-license.txt");
+				String html = FileUtils.fileAsString("bsd-new-license.html");
 				if (html != null) {
 					BrowserUtils.openHtml(html);
 				}
