@@ -10,7 +10,7 @@
 	    IMPORTANT to run the application you will need to specify your environment here.
 	    This is the folder located in projectFiles/swt to use for your compile,run.
 	  -->
-	<property name="swtEnv" value="Linux_x86_GTK2" />
+	<property name="swtEnv" value="MacCocoa64" />
 
 	<property name="version" value="v97a" />
 	<property name="dist.dir" value="install" />
@@ -24,13 +24,6 @@
 	<property name="javadoc.dir" value="${docs.dir}" />
 	<property name="lib.dir" value="lib" />
 
-
-	<!--
-	    http://ant-contrib.sourceforge.net/
-	    You need to add theant-contrib-*.jar to your ant lib directory. 
-	    It can be found in the projectFiles/antlib directory. 
-	    -->
-
 	<path id="class.path">
 		<fileset dir="${lib.dir}">
 			<include name="common/*.jar" />
@@ -40,7 +33,7 @@
 		</fileset>
 	</path>
 
-	<target name="init">
+	<target name="init" description="Creates the directories needed for builds.">
 		<echo>Your swtEnv is set to ${swtEnv}.</echo>
 		<echo>If this is incorrect please edit the build.xml file and change your swtEnv!</echo>
 		<mkdir dir="${build.dir}" />
@@ -50,7 +43,7 @@
 		<mkdir dir="${uploads.dir}" />
 	</target>
 
-	<target name="clean">
+	<target name="clean" description="Removes the target directory">
 		<delete dir="${build.dir}" />
 	</target>
 
@@ -101,6 +94,7 @@
 		<copy todir="${install.dir}" overwrite="true">
 			<fileset dir=".">
 				<include name="bsd-new-license.txt" />
+				<include name="bsd-new-license.html" />
 			</fileset>
 		</copy>
 
@@ -109,38 +103,26 @@
 		</jar>
 	</target>
 
-	<target name="windows32Zip" depends="init">
+	<target name="windows32Zip" depends="init" description="Builds the Raptor.zip for Windows 32.">
 		<delete dir="${install.dir}" />
+		<property name="swtEnv" value="Windows32" />
 
 		<antcall target="install" />
-
-		<copy todir="${install.dir}">
-			<fileset dir="projectFiles/Windows">
-				<include name="**/*" />
-			</fileset>
-		</copy>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows32.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
-				<exclude name="Raptor.jar" />
 				<exclude name="Thumbs.db" />
 				<exclude name=".svn" />
 			</zipfileset>
 		</zip>
 	</target>
 
-	<target name="windows64Zip" depends="init">
+	<target name="windows64Zip" depends="init" description="Builds the Raptor.zip for windows64.">
 		<delete dir="${install.dir}" />
-		<var name="swtEnv" value="Windows64" />
+		<property name="swtEnv" value="Windows64" />
 
 		<antcall target="install" />
-		
-		<copy todir="${install.dir}">
-			<fileset dir="projectFiles/Windows">
-				<include name="**/*" />
-			</fileset>
-		</copy>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows64.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
@@ -151,9 +133,9 @@
 		</zip>
 	</target>
 
-	<target name="linuxPPCZip" depends="init">
+	<target name="linuxPPCZip" depends="init" description="Builds the Raptor.zip for linux PPC.">
 		<delete dir="${install.dir}" />
-		<var name="swtEnv" value="LinuxPPC_GTK2" />
+		<property name="swtEnv" value="LinuxPPC_GTK2" />
 
 		<antcall target="install" />
 
@@ -168,8 +150,9 @@
 		</zip>
 	</target>
 
-	<target name="Linux_x86Zip" depends="init">
+	<target name="Linux_x86Zip" depends="init" description="Builds the Raptor.zip for linux x86.">
 		<delete dir="${install.dir}" />
+		<property name="swtEnv" value="Linux_x86_GTK2" />
 
 		<antcall target="install" />
 
@@ -184,9 +167,9 @@
 		</zip>
 	</target>
 
-	<target name="Linux_x86_64Zip" depends="init" description="Builds Raptor.exe">
+	<target name="Linux_x86_64Zip" depends="init" description="Builds the Raptor.zip for linux x86_64.">
 		<delete dir="${install.dir}" />
-		<var name="swtEnv" value="Linux_x86_64_GTK2" />
+		<property name="swtEnv" value="Linux_x86_64_GTK2" />
 
 		<antcall target="install" />
 		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
@@ -200,9 +183,9 @@
 		</zip>
 	</target>
 
-	<target name="Solaris10_SPARC_GTK2Zip" depends="init">
+	<target name="Solaris10_SPARC_GTK2Zip" depends="init" description="Builds the Raptor zip for Solaris10 SPARC.">
 		<delete dir="${install.dir}" />
-		<var name="swtEnv" value="Solaris10_SPARC_GTK2" />
+		<property name="swtEnv" value="Solaris10_SPARC_GTK2" />
 
 		<antcall target="install" />
 		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
@@ -215,9 +198,9 @@
 		</zip>
 	</target>
 
-	<target name="Solaris10_x86_GTK2Zip" depends="init">
+	<target name="Solaris10_x86_GTK2Zip" depends="init" description="Builds the Raptor zip for Solaris10 x86.">
 		<delete dir="${install.dir}" />
-		<var name="swtEnv" value="Solaris10_x86_GTK2" />
+		<property name="swtEnv" value="Solaris10_x86_GTK2" />
 
 		<antcall target="install" />
 		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
@@ -230,11 +213,11 @@
 		</zip>
 	</target>
 
-	<target name="osxCarbonApp" depends="init" description="Builds Raptor.app">
+	<target name="osxCarbonDMG" depends="init" description="Builds Raptor.app for Carbon">
 		<delete dir="${install.dir}" />
 		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
 
-		<var name="swtEnv" value="MacCarbon" />
+		<property name="swtEnv" value="MacCarbon" />
 
 		<antcall target="install" />
 
@@ -285,11 +268,11 @@
 		</exec>
 	</target>
 
-	<target name="osxCocoa64App" depends="init" description="Builds Raptor.app">
+	<target name="osxCocoa64DMG" depends="init" description="Builds Raptor.app for Cocoa64">
 		<delete dir="${install.dir}" />
 		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Cocoa64.dmg" />
 
-		<var name="swtEnv" value="MacCocoa64" />
+		<property name="swtEnv" value="MacCocoa64" />
 
 		<antcall target="install" />
 
@@ -345,11 +328,11 @@
 		</exec>
 	</target>
 
-	<target name="osxCocoa32App" depends="init" description="Builds Raptor.app">
+	<target name="osxCocoa32DMG" depends="init" description="Builds Raptor.app for Cocoa32">
 		<delete dir="${install.dir}" />
 		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Cocoa32.dmg" />
 
-		<var name="swtEnv" value="MacCocoa32" />
+		<property name="swtEnv" value="MacCocoa32" />
 
 		<antcall target="install" />
 
@@ -404,21 +387,41 @@
 		</exec>
 	</target>
 
-	<target name="createUploads">
-		<antcall target="osxCarbonApp" />
-		<antcall target="osxCocoa64App" />
-		<antcall target="osxCocoa32App" />
-		<antcall target="windows32Zip" />
-		<antcall target="windows64Zip" />
-		<antcall target="linuxPPCZip" />
-		<antcall target="Linux_x86Zip" />
-		<antcall target="Linux_x86_64Zip" />
-		<antcall target="Solaris10_SPARC_GTK2Zip" />
-		<antcall target="Solaris10_x86_GTK2Zip" />
+	<target name="createUploads" description="Performs a build. Output files are located in target/uploads">
+		<ant antfile="build.xml" target="osxCarbonDMG">
+			<property name="swtEnv" value="MacCarbon" />
+		</ant>
+		<ant antfile="build.xml" target="osxCocoa64DMG">
+			<property name="swtEnv" value="MacCocoa64" />
+		</ant>
+		<ant antfile="build.xml" target="osxCocoa32DMG">
+			<property name="swtEnv" value="MacCocoa32" />
+		</ant>
+		<ant antfile="build.xml" target="windows32Zip">
+			<property name="swtEnv" value="Windows32" />
+		</ant>
+		<ant antfile="build.xml" target="windows64Zip">
+			<property name="swtEnv" value="Windows64" />
+		</ant>
+		<ant antfile="build.xml" target="linuxPPCZip">
+			<property name="swtEnv" value="LinuxPPC_GTK2" />
+		</ant>
+		<ant antfile="build.xml" target="Linux_x86Zip">
+			<property name="swtEnv" value="Linux_x86_GTK2" />
+		</ant>
+		<ant antfile="build.xml" target="Linux_x86_64Zip">
+			<property name="swtEnv" value="Linux_x86_64_GTK2" />
+		</ant>
+		<ant antfile="build.xml" target="Solaris10_SPARC_GTK2Zip">
+			<property name="swtEnv" value="Solaris10_SPARC_GTK2" />
+		</ant>
+		<ant antfile="build.xml" target="Solaris10_x86_GTK2Zip">
+			<property name="swtEnv" value="Solaris10_x86_GTK2" />
+		</ant>
 	</target>
 
 
-	<target name="run" depends="compile" description="Raptor">
+	<target name="run" depends="compile" description="Runs raptor with the specified swt environment in the build.xml file. Will not work in Mac OS X use runOSX to run there.">
 		<path id="run.class.path">
 			<fileset dir="${lib.dir}">
 				<include name="common/*.jar" />
@@ -431,7 +434,7 @@
 		<java classname="raptor.Raptor" classpathref="run.class.path" fork="true" />
 	</target>
 
-	<target name="runOSX" depends="compile" description="Raptor">
+	<target name="runOSX" depends="compile" description="Runs raptor with the specvified environment in the build.xml file for Mac OS X.">
 		<path id="run.class.path">
 			<fileset dir="${lib.dir}">
 				<include name="common/*.jar" />
