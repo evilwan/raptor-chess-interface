@@ -108,6 +108,12 @@
 		<property name="swtEnv" value="Windows32" />
 
 		<antcall target="install" />
+		
+		<copy todir="${install.dir}">
+			<fileset dir="projectFiles/Windows">
+				<include name="**/*" />
+			</fileset>
+		</copy>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows32.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
@@ -123,6 +129,12 @@
 		<property name="swtEnv" value="Windows64" />
 
 		<antcall target="install" />
+		
+		<copy todir="${install.dir}">
+			<fileset dir="projectFiles/Windows">
+				<include name="**/*" />
+			</fileset>
+		</copy>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows64.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
