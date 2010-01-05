@@ -27,7 +27,7 @@ public class ShowFenAlias extends RaptorAlias {
 				for (RaptorWindowItem item : windowItems) {
 					Game game = ((ChessBoardWindowItem) item).getController()
 							.getGame();
-					text.append("Game " + game.getId() + "\t" + game.toFen());
+					text.append("Game " + game.getId() + "\t" + game.toFen() + "\n");
 				}
 			} else {
 				text.append("There are no open boards to display FEN for.");
