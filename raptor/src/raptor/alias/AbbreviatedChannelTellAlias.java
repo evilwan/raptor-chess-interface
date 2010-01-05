@@ -30,7 +30,7 @@ public class AbbreviatedChannelTellAlias extends RaptorAlias {
 	@Override
 	public RaptorAliasResult apply(ChatConsoleController controller,
 			String command) {
-		if (StringUtils.isBlank(command)) {
+		if (StringUtils.isBlank(command) || command.equals("0-0")) {
 			return null;
 		}
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
@@ -53,8 +53,8 @@ public class AbbreviatedChannelTellAlias extends RaptorAlias {
 				int channelNumber = Integer.parseInt(channel);
 				if (channelNumber >= 0 && channelNumber <= 255) {
 					return new RaptorAliasResult("tell " + channel + " "
-							+ firstWord.substring(firstNonDigitIndex)
-							+ " " + tok.getWhatsLeft(), null);
+							+ firstWord.substring(firstNonDigitIndex) + " "
+							+ tok.getWhatsLeft(), null);
 				}
 			} catch (Throwable t) {
 				return null;
