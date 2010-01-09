@@ -169,7 +169,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				reconnectAction.setEnabled(false);
 				autoConnectAction.setEnabled(true);
 				bugbuttonsAction.setEnabled(false);
-
 				super.disconnect();
 			}
 		}
