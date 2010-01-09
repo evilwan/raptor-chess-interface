@@ -188,8 +188,8 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		gamesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		gamesTable.addColumn("ID", SWT.LEFT, 10, true, new IntegerComparator());
-		gamesTable
-				.addColumn("W ELO", SWT.LEFT, 15, true, new RatingComparator());
+		gamesTable.addColumn("W ELO", SWT.LEFT, 15, true,
+				new RatingComparator());
 		gamesTable.addColumn("White", SWT.LEFT, 20, true, null);
 		gamesTable.addColumn("B ELO", SWT.LEFT, 15, true, null);
 		gamesTable.addColumn("Black", SWT.LEFT, 20, true, null);
@@ -663,6 +663,9 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 				if (!isShowingPrivate.getSelection()) {
 					result = !info.isPrivate();
 				}
+				if (info.isBeingExamined()) {
+					result = isShowingExamined.getSelection();
+				}
 				if (result) {
 					switch (info.getCategory()) {
 					case standard:
@@ -728,7 +731,8 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 						data[i][2] = info.getWhiteName();
 						data[i][3] = info.getBlackElo();
 						data[i][4] = info.getBlackName();
-						data[i][5] = info.getCategory().toString();
+						data[i][5] = info.getCategory().toString()
+								+ (info.isBeingExamined() ? "(examine)" : "");
 					}
 					gamesTable.refreshTable(data);
 				}

@@ -62,6 +62,7 @@ public class GameInfoParser {
 					info.setWhiteName(examineTok.nextToken());
 					info.setBlackElo(examineTok.nextToken());
 					info.setBlackName(examineTok.nextToken());
+					info.setBeingExamined(true);
 					String flags = examineTok.nextToken();
 					if (flags.length() > 3) {
 						int firstDigitIndex = -1;
@@ -117,6 +118,7 @@ public class GameInfoParser {
 					info.setWhiteName(gameTok.nextToken());
 					info.setBlackElo(gameTok.nextToken());
 					info.setBlackName(gameTok.nextToken());
+					info.setBeingExamined(false);
 					String flags = gameTok.nextToken();
 					if (flags.length() > 3) {
 						int firstDigitIndex = -1;
