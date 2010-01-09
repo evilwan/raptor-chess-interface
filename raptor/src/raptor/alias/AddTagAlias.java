@@ -21,8 +21,8 @@ import raptor.util.RaptorStringTokenizer;
 
 public class AddTagAlias extends RaptorAlias {
 	public AddTagAlias() {
-		super("+tag", "Adds a tag to a user. ", "'+tag tagName userName'"
-				+ "Examples: '+tag Noob RJJ', '+tag Troll Marv' ");
+		super("+tag", "Adds a tag to a user. ", "'+tag userName tagName'"
+				+ "Examples: '+tag RJJ Noob', '+tag Marv Troll' ");
 		setHidden(false);
 	}
 
@@ -33,8 +33,9 @@ public class AddTagAlias extends RaptorAlias {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(command, " ",
 					true);
 			tok.nextToken();
-			String tag = tok.nextToken();
 			String user = tok.nextToken();
+			String tag = tok.nextToken();
+
 
 			if (tag == null || user == null) {
 				return new RaptorAliasResult(null, "Invalid command: "
@@ -42,8 +43,7 @@ public class AddTagAlias extends RaptorAlias {
 
 			} else {
 				UserTagService.getInstance().addUser(tag, user);
-				return new RaptorAliasResult(null, "Added tag " + tag
-						+ " to user " + user);
+				return new RaptorAliasResult(null, user + " is now tagged as " + tag);
 			}
 		} else {
 			return null;

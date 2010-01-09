@@ -817,7 +817,8 @@ public class IcsUtils implements GameConstants {
 	}
 
 	public static String stripTitles(String playerName) {
-		StringTokenizer stringtokenizer = new StringTokenizer(playerName, "()");
+		StringTokenizer stringtokenizer = new StringTokenizer(playerName,
+				"()[]");
 		if (stringtokenizer.hasMoreTokens()) {
 			return stringtokenizer.nextToken();
 		} else {
@@ -826,8 +827,8 @@ public class IcsUtils implements GameConstants {
 	}
 
 	/**
-	 * Returns the word with all characters in: ()~!@?#$%^&*_+|}{'\";/?<>.,
-	 * :[]1234567890\t\r\n removed.
+	 * Returns the word with all characters in STRIP_CHARS removed. If word contains multiple tokens, the last
+	 * word is returned.
 	 */
 	public static String stripWord(String word) {
 		if (word != null) {

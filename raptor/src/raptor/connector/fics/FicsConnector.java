@@ -201,25 +201,27 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	@Override
 	public void disconnect() {
 
-		if (isConnected()) {
-			try {
-				for (Game game : getGameService().getAllActiveGames()) {
-					if (game.isInState(Game.PLAYING_STATE)) {
-						onResign(game);
+		synchronized (this) {
+			if (isConnected()) {
+				try {
+					for (Game game : getGameService().getAllActiveGames()) {
+						if (game.isInState(Game.PLAYING_STATE)) {
+							onResign(game);
+						}
 					}
+				} catch (Throwable t) {
+					LOG.warn("Error trying to resign game:", t);
 				}
-			} catch (Throwable t) {
-				LOG.warn("Error trying to resign game:", t);
-			}
-		}
 
-		super.disconnect();
-		connectAction.setEnabled(true);
-		if (autoConnectAction != null) {
-			autoConnectAction.setEnabled(true);
-		}
-		for (Action action : onlyEnabledOnConnectActions) {
-			action.setEnabled(false);
+				super.disconnect();
+				connectAction.setEnabled(true);
+				if (autoConnectAction != null) {
+					autoConnectAction.setEnabled(true);
+				}
+				for (Action action : onlyEnabledOnConnectActions) {
+					action.setEnabled(false);
+				}
+			}
 		}
 	}
 
@@ -395,24 +397,28 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 	@Override
 	protected void connect(final String profileName) {
-		super.connect(profileName);
-		if (isConnecting) {
-			connectAction.setEnabled(false);
-			if (autoConnectAction != null) {
-				autoConnectAction.setChecked(getPreferences().getBoolean(
-						context.getPreferencePrefix() + "auto-connect"));
-				autoConnectAction.setEnabled(true);
-			}
+		synchronized (this) {
+			if (!isConnected()) {
+				for (Action action : onlyEnabledOnConnectActions) {
+					action.setEnabled(true);
+				}
+				connectAction.setEnabled(false);
+				if (autoConnectAction != null) {
+					autoConnectAction.setChecked(getPreferences().getBoolean(
+							context.getPreferencePrefix() + "auto-connect"));
+					autoConnectAction.setEnabled(true);
+				}
 
-			for (Action action : onlyEnabledOnConnectActions) {
-				action.setEnabled(true);
-			}
+				super.connect(profileName);
 
-			if (getPreferences().getBoolean(
-					context.getPreferencePrefix()
-							+ "show-bugbuttons-on-connect")) {
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						new BugButtonsWindowItem(this));
+				if (isConnecting) {
+					if (getPreferences().getBoolean(
+							context.getPreferencePrefix()
+									+ "show-bugbuttons-on-connect")) {
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								new BugButtonsWindowItem(this));
+					}
+				}
 			}
 		}
 	}
