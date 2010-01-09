@@ -162,12 +162,17 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 	@Override
 	public void disconnect() {
-		super.disconnect();
-		connectAction.setEnabled(true);
-		disconnectAction.setEnabled(false);
-		reconnectAction.setEnabled(false);
-		autoConnectAction.setEnabled(true);
-		bugbuttonsAction.setEnabled(false);
+		synchronized (this) {
+			if (isConnected()) {
+				connectAction.setEnabled(true);
+				disconnectAction.setEnabled(false);
+				reconnectAction.setEnabled(false);
+				autoConnectAction.setEnabled(true);
+				bugbuttonsAction.setEnabled(false);
+
+				super.disconnect();
+			}
+		}
 	}
 
 	@Override
@@ -321,20 +326,24 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 	@Override
 	protected void connect(final String profileName) {
-		super.connect(profileName);
-		if (isConnecting) {
-			connectAction.setEnabled(false);
-			autoConnectAction.setChecked(getPreferences().getBoolean(
-					context.getPreferencePrefix() + "auto-connect"));
-			disconnectAction.setEnabled(true);
-			reconnectAction.setEnabled(true);
-			bugbuttonsAction.setEnabled(true);
 
-			if (getPreferences().getBoolean(
-					context.getPreferencePrefix()
-							+ "show-bugbuttons-on-connect")) {
-				Raptor.getInstance().getWindow().addRaptorWindowItem(
-						new BugButtonsWindowItem(this));
+		synchronized (this) {
+			if (!isConnected()) {
+				super.connect(profileName);
+
+				connectAction.setEnabled(false);
+				autoConnectAction.setChecked(getPreferences().getBoolean(
+						context.getPreferencePrefix() + "auto-connect"));
+				disconnectAction.setEnabled(true);
+				reconnectAction.setEnabled(true);
+				bugbuttonsAction.setEnabled(true);
+
+				if (getPreferences().getBoolean(
+						context.getPreferencePrefix()
+								+ "show-bugbuttons-on-connect")) {
+					Raptor.getInstance().getWindow().addRaptorWindowItem(
+							new BugButtonsWindowItem(this));
+				}
 			}
 		}
 	}
