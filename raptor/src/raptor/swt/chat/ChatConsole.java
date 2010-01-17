@@ -60,7 +60,8 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 	protected Label promptLabel;
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
-			if (event.getProperty().startsWith("chat")) {
+			if (event.getProperty().startsWith("chat")
+					|| event.getProperty().equals(APP_ZOOM_FACTOR)) {
 				updateFromPrefs();
 				redraw();
 			}
@@ -189,6 +190,11 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		promptLabel.setForeground(prefs.getColor(CHAT_PROMPT_COLOR));
 		promptLabel
 				.setBackground(prefs.getColor(CHAT_CONSOLE_BACKGROUND_COLOR));
+		layout(true, true);
+		
+		if (controller.isAutoScrolling()) {
+			controller.onForceAutoScroll();
+		}
 	}
 
 	protected void addButtons() {

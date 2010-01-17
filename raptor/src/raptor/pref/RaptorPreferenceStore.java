@@ -248,23 +248,48 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		return result;
 	}
 
-	/**
-	 * Returns the font for the specified key. Returns the default font if key
-	 * was not found.
-	 */
-	public Font getFont(String key) {
+	public Font getFont(String key, boolean isAdjustingForZoomFactor) {
 		try {
-			if (!Raptor.getInstance().getFontRegistry().hasValueFor(key)) {
+			String adjustedKey = key;
+			if (isAdjustingForZoomFactor) {
+				double zoomFactor = getDouble(APP_ZOOM_FACTOR);
+				adjustedKey = key + zoomFactor;
+			}
+
+			if (!Raptor.getInstance().getFontRegistry()
+					.hasValueFor(adjustedKey)) {
 				FontData[] fontData = PreferenceConverter.getFontDataArray(
 						this, key);
-				Raptor.getInstance().getFontRegistry().put(key, fontData);
+
+				if (isAdjustingForZoomFactor) {
+					double zoomFactor = getDouble(APP_ZOOM_FACTOR);
+					// Convert font to zoom factor.
+					for (int i = 0; i < fontData.length; i++) {
+						fontData[i]
+								.setHeight((int) (fontData[i].getHeight() * zoomFactor));
+					}
+				}
+
+				Raptor.getInstance().getFontRegistry().put(adjustedKey,
+						fontData);
 			}
-			return Raptor.getInstance().getFontRegistry().get(key);
+			return Raptor.getInstance().getFontRegistry().get(adjustedKey);
 		} catch (Throwable t) {
 			LOG.error("Error in getFont(" + key + ") Returning default font.",
 					t);
 			return Raptor.getInstance().getFontRegistry().defaultFont();
 		}
+	}
+
+	/**
+	 * Returns the font for the specified key. Returns the default font if key
+	 * was not found.
+	 * 
+	 * Fonts returned from this method will be adjusted to the APP_ZOOM_FACTOR
+	 * preference.
+	 */
+	public Font getFont(String key) {
+		return getFont(key, true);
 	}
 
 	public int[] getIntArray(String key) {
@@ -337,6 +362,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				40, 10, 40 });
 		setDefault(APP_QUAD67_QUAD8_SASH_WEIGHTS, new int[] { 70, 30 });
 		setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
+		setDefault(APP_ZOOM_FACTOR, 1.0);
 
 		if (OSUtils.isLikelyWindows()) {
 			setDefault(SPEECH_PROCESS_NAME, "SayStatic");
@@ -344,8 +370,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		if (OSUtils.isLikelyLinux()) {
 			try {
-				if (Runtime.getRuntime()
-						.exec(new String[] { "which", "play" }).waitFor() == 0) {
+				if (Runtime.getRuntime().exec(new String[] { "which", "play" })
+						.waitFor() == 0) {
 					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "aplay");
 				} else if (Runtime.getRuntime().exec(
 						new String[] { "which", "aplay" }).waitFor() == 0) {
@@ -738,7 +764,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_SEEK_FORMULA, true);
 		setDefault(FICS_SEEK_RATED, true);
 		setDefault(FICS_SEEK_COLOR, "");
-		setDefault(FICS_KEEP_ALIVE_COMMAND, "set busy in another window");
+		setDefault(FICS_KEEP_ALIVE_COMMAND, "set busy is away from the keyboard.");
 
 		// Fics Primary
 		setDefault(FICS_PRIMARY_USER_NAME, "");
@@ -773,7 +799,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_PROFILE, "Primary");
 		setDefault(BICS_CLOSE_TABS_ON_DISCONNECT, false);
 		setDefault(BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
-		setDefault(BICS_KEEP_ALIVE_COMMAND, "set busy in another window");
+		setDefault(BICS_KEEP_ALIVE_COMMAND, "set busy is away from the keyboard.");
 		setDefault(BICS_CHANNEL_COMMANDS,
 				"+channel $channel,-channel $channel,in $channel");
 		setDefault(

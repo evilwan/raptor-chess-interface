@@ -84,7 +84,8 @@ public class ChessBoard implements BoardConstants {
 
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent arg) {
-			if (arg.getProperty().startsWith("board")) {
+			if (arg.getProperty().startsWith("board")
+					|| arg.getProperty().equals(APP_ZOOM_FACTOR)) {
 				updateFromPrefs();
 			}
 		}

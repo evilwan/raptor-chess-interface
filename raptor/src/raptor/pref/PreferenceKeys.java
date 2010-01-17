@@ -82,6 +82,7 @@ public interface PreferenceKeys {
 	public static final String APP_QUAD6_QUAD7_SASH_WEIGHTS = "app-quad6-quad7-sash-weights";
 	public static final String APP_QUAD67_QUAD8_SASH_WEIGHTS = "app-quad67-quad8-sash-weights";
 	public static final String APP_WINDOW_BOUNDS = "app-window-bounds";
+	public static final String APP_ZOOM_FACTOR="app-zoom-factor";
 
 	public static final String ACTION_SEPARATOR_SEQUENCE = "action-separator-sequence";
 

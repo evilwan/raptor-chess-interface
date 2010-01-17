@@ -23,6 +23,8 @@ public class ShoutEventParser extends ChatEventParser {
 
 	private static final String SHOUT_2 = "shouts:";
 
+	public static final String VALID_HANDLE_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 	public ShoutEventParser() {
 	}
 
@@ -39,6 +41,15 @@ public class ShoutEventParser extends ChatEventParser {
 						name, " ");
 				String s1 = IcsUtils.stripTitles(stringtokenizer.nextToken())
 						.trim();
+
+				// Trim away invalid characters ... prevents --> CDay<-- blah
+				// from registering as CDay<-- as the source.
+				for (int i = 0; i < s1.length(); i++) {
+					if (VALID_HANDLE_CHARS.indexOf(s1.charAt(i)) == -1) {
+						s1 = s1.substring(0, i);
+						break;
+					}
+				}
 				return new ChatEvent(s1, ChatType.SHOUT, text);
 			}
 			RaptorStringTokenizer stringtokenizer1 = new RaptorStringTokenizer(

@@ -43,6 +43,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
@@ -636,6 +637,7 @@ public class RaptorWindow extends ApplicationWindow {
 	protected RaptorWindowSashForm quad6quad7Sash;
 	protected RaptorWindowSashForm[] sashes = new RaptorWindowSashForm[6];
 	protected Composite statusBar;
+	protected Combo zoomCombo;
 	protected Label statusLabel;
 
 	protected Composite windowComposite;
@@ -1251,6 +1253,7 @@ public class RaptorWindow extends ApplicationWindow {
 					Label label = pingLabelsMap.get(connectorToSet
 							.getShortName());
 					if (label == null) {
+						zoomCombo.dispose();
 						label = new Label(statusBar, SWT.NONE);
 						GridData gridData = new GridData();
 						gridData.grabExcessHorizontalSpace = false;
@@ -1260,10 +1263,13 @@ public class RaptorWindow extends ApplicationWindow {
 						label.setLayoutData(gridData);
 						pingLabelsMap.put(connectorToSet.getShortName(), label);
 						label.setFont(Raptor.getInstance().getPreferences()
-								.getFont(PreferenceKeys.APP_PING_FONT));
+								.getFont(PreferenceKeys.APP_PING_FONT, false));
 						label.setForeground(Raptor.getInstance()
 								.getPreferences().getColor(
 										PreferenceKeys.APP_PING_COLOR));
+						label.setToolTipText("An estimate of ping time.");
+						createZoomCombo();
+						statusBar.layout(true, true);
 					}
 					if (pingTime == -1) {
 						label.setVisible(false);
@@ -1271,8 +1277,8 @@ public class RaptorWindow extends ApplicationWindow {
 						pingLabelsMap.remove(connectorToSet.getShortName());
 						statusBar.layout(true, true);
 					} else {
-						label.setText(connectorToSet.getShortName() + " ping "
-								+ pingTime + "ms");
+						label.setText(" " + connectorToSet.getShortName()
+								+ " (" + pingTime + "ms) ");
 						label.setVisible(true);
 						statusBar.layout(true, true);
 						label.redraw();
@@ -1768,23 +1774,72 @@ public class RaptorWindow extends ApplicationWindow {
 		statusBar = new Composite(windowComposite, SWT.NONE);
 		statusBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				2, 1));
-		GridLayout layout = new GridLayout(10, false);
-		layout.marginTop = 0;
-		layout.marginBottom = 0;
-		layout.marginHeight = 0;
-		statusBar.setLayout(layout);
+		GridLayout statusBarLayout = SWTUtils.createMarginlessGridLayout(20,
+				false);
+		statusBar.setLayout(statusBarLayout);
 
 		statusLabel = new Label(statusBar, SWT.NONE);
-		GridData gridData = new GridData();
-		gridData.grabExcessHorizontalSpace = true;
-		gridData.grabExcessVerticalSpace = false;
-		gridData.horizontalAlignment = SWT.FILL;
-		gridData.verticalAlignment = SWT.CENTER;
-		statusLabel.setLayoutData(gridData);
+		statusLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false));
 		statusLabel.setFont(Raptor.getInstance().getPreferences().getFont(
-				PreferenceKeys.APP_STATUS_BAR_FONT));
+				PreferenceKeys.APP_STATUS_BAR_FONT, false));
 		statusLabel.setForeground(Raptor.getInstance().getPreferences()
 				.getColor(PreferenceKeys.APP_STATUS_BAR_COLOR));
+
+		createZoomCombo();
+	}
+
+	protected void createZoomCombo() {
+		zoomCombo = new Combo(statusBar, SWT.READ_ONLY | SWT.BORDER);
+		zoomCombo.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false,
+				false, 1, 1));
+		zoomCombo.add("25%");
+		zoomCombo.add("50%");
+		zoomCombo.add("70%");
+		zoomCombo.add("80%");
+		zoomCombo.add("90%");
+		zoomCombo.add("100%");
+		zoomCombo.add("110%");
+		zoomCombo.add("120%");
+		zoomCombo.add("130%");
+		zoomCombo.add("150%");
+		zoomCombo.add("175%");
+		zoomCombo.add("200%");
+		zoomCombo.add("250%");
+		zoomCombo.add("300%");
+		zoomCombo.add("400%");
+
+		zoomCombo
+				.setToolTipText("Adjusts font size percentages in chat consoles and chess boards.");
+
+		int selection = -1;
+
+		int resizePercentage = (int) (Raptor.getInstance().getPreferences()
+				.getDouble(PreferenceKeys.APP_ZOOM_FACTOR) * 100);
+		String resizeValue = resizePercentage + "%";
+		for (int i = 0; i < zoomCombo.getItemCount(); i++) {
+			if (resizeValue.equals(zoomCombo.getItem(i))) {
+				selection = i;
+				break;
+			}
+		}
+		zoomCombo.select(selection);
+
+		zoomCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String selection = zoomCombo.getText();
+				if (StringUtils.isNotBlank(selection)) {
+					selection = selection.substring(0, selection.length() - 1);
+					double resize = Integer.parseInt(selection) / 100.0;
+					Raptor.getInstance().getPreferences().setValue(
+							PreferenceKeys.APP_ZOOM_FACTOR, resize);
+				}
+
+			}
+		});
+		zoomCombo.setFont(Raptor.getInstance().getPreferences().getFont(
+				PreferenceKeys.APP_STATUS_BAR_FONT, false));
 	}
 
 	protected RaptorTabFolder getFolderContainingCursor() {

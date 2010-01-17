@@ -17,6 +17,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import raptor.chess.Game;
 import raptor.chess.util.GameUtils;
@@ -35,6 +37,20 @@ public class SimpleMoveList implements ChessBoardMoveList {
 	protected ChessBoardController controller;
 	protected boolean ignoreSelection;
 	protected RaptorTable movesTable;
+	protected long lastWheel;
+
+	Listener mouseWheelListener = new Listener() {
+		public void handleEvent(Event event) {
+			switch (event.type) {
+			case SWT.MouseWheel:
+				if (System.currentTimeMillis() - lastWheel > 100) {
+					getChessBoardController().userMouseWheeled(event.count);
+					lastWheel = System.currentTimeMillis();
+				}
+				break;
+			}
+		}
+	};
 
 	/**
 	 * {@inheritDoc}
@@ -108,7 +124,6 @@ public class SimpleMoveList implements ChessBoardMoveList {
 			}
 
 			movesTable.select(row, column);
-			
 
 			ignoreSelection = false;
 		}
@@ -187,6 +202,8 @@ public class SimpleMoveList implements ChessBoardMoveList {
 	protected void createControls(Composite parent) {
 		movesTable = new RaptorTable(parent, SWT.SINGLE | SWT.V_SCROLL, true,
 				true);
+		//Mouse wheel listener does'. ohnt work well on the table because of the scrolling.
+		//movesTable.getTable().addListener(SWT.MouseWheel, mouseWheelListener);
 		movesTable.addColumn("White", SWT.LEFT, 60, false, null);
 		movesTable.addColumn("Black", SWT.LEFT, 40, false, null);
 
