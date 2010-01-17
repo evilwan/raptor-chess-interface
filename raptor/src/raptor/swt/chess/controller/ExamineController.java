@@ -360,12 +360,11 @@ public class ExamineController extends ChessBoardController {
 		if (isDisposed()) {
 			return;
 		}
-		
-		
 
 		removeAllMoveDecorations();
-		Move lastMove = game.getMoveList().getSize() > 0  ? game.getMoveList().getLast() : null;
-		
+		Move lastMove = game.getMoveList().getSize() > 0 ? game.getMoveList()
+				.getLast() : null;
+
 		if (lastMove != null) {
 			addDecorationsForMove(lastMove, false);
 		}
