@@ -265,8 +265,8 @@ public class ExamineController extends ChessBoardController {
 		boolean isCoolbarMode = getPreferences().getBoolean(
 				PreferenceKeys.BOARD_COOLBAR_MODE);
 		if (toolbar == null) {
-			toolbar = SWTUtils.createToolbar(isCoolbarMode ? getBoard().getCoolbar()
-					: parent);
+			toolbar = SWTUtils.createToolbar(isCoolbarMode ? getBoard()
+					.getCoolbar() : parent);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.ExaminingChessBoard, toolbar, true);
 
@@ -360,6 +360,17 @@ public class ExamineController extends ChessBoardController {
 		if (isDisposed()) {
 			return;
 		}
+		
+		
+
+		removeAllMoveDecorations();
+		Move lastMove = game.getMoveList().getSize() > 0  ? game.getMoveList().getLast() : null;
+		
+		System.err.println("In ExamineController.refresh() " + lastMove);
+		if (lastMove != null) {
+			addDecorationsForMove(lastMove, false);
+		}
+
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(getGame().getMoveList().getSize());
 		super.refresh(isUpdatingClocks);
