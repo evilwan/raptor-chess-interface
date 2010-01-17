@@ -342,6 +342,23 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			setDefault(SPEECH_PROCESS_NAME, "SayStatic");
 		}
 
+		if (OSUtils.isLikelyLinux()) {
+			try {
+				if (Runtime.getRuntime()
+						.exec(new String[] { "which", "play" }).waitFor() == 0) {
+					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "aplay");
+				} else if (Runtime.getRuntime().exec(
+						new String[] { "which", "aplay" }).waitFor() == 0) {
+					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "play");
+				}
+			} catch (Throwable t) {
+				LOG
+						.warn(
+								"Error launching which to determine sound process in linux.",
+								t);
+			}
+		}
+
 		// Board
 		setDefault(BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING, false);
 		setDefault(BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END, true);
@@ -437,8 +454,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultMediumFontSize, 0) });
-		PreferenceConverter.setDefault(this, BOARD_CLOCK_FONT,
-				new FontData[] { new FontData(defaultMonospacedFontName, 24,0) });
+		PreferenceConverter
+				.setDefault(this, BOARD_CLOCK_FONT,
+						new FontData[] { new FontData(
+								defaultMonospacedFontName, 24, 0) });
 		PreferenceConverter.setDefault(this, BOARD_LAG_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultTinyFontSize, 0) });
