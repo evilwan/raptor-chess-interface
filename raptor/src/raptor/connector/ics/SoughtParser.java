@@ -43,9 +43,9 @@ public class SoughtParser {
 
 			List<Seek> seeks = new LinkedList<Seek>();
 
-			for (int i = 0; i < lines.length - 2; i++) {
+			for (int i = 0; i < lines.length - 1; i++) {
 				// we don't care
-				// about last 2 lines
+				// about last 1 lines
 				String line = lines[i];
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Sought line: " + line);
