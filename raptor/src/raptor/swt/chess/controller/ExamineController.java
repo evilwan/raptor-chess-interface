@@ -366,7 +366,6 @@ public class ExamineController extends ChessBoardController {
 		removeAllMoveDecorations();
 		Move lastMove = game.getMoveList().getSize() > 0  ? game.getMoveList().getLast() : null;
 		
-		System.err.println("In ExamineController.refresh() " + lastMove);
 		if (lastMove != null) {
 			addDecorationsForMove(lastMove, false);
 		}
