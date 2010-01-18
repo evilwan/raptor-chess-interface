@@ -39,6 +39,7 @@ import raptor.service.ActionScriptService;
 import raptor.service.AliasService;
 import raptor.service.ChessBoardCacheService;
 import raptor.service.ConnectorService;
+import raptor.service.DictionaryService;
 import raptor.service.EcoService;
 import raptor.service.MemoService;
 import raptor.service.ScriptService;
@@ -550,6 +551,12 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		try {
+			DictionaryService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting down DictionaryService", t);
+		}
+
+		try {
 			if (raptorWindow != null && !raptorWindow.getShell().isDisposed()) {
 				raptorWindow.close();
 			}
@@ -592,6 +599,7 @@ public class Raptor implements PreferenceKeys {
 
 		// Make sure all of the Singleton services get loaded.
 		ThreadService.getInstance();
+		DictionaryService.getInstance();
 		MemoService.getInstance();
 		UserTagService.getInstance();
 		EcoService.getInstance();

@@ -34,8 +34,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.Text;
-
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
@@ -53,10 +51,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 	protected ChatConsoleController controller;
 	protected StyledText inputText;
 
-	// There is a good reason this is not a StyledText.
-	// Making it a regular Text fixed some issues around focus and forwarding
-	// characters.
-	protected Text outputText;
+	protected StyledText outputText;
 	protected Label promptLabel;
 	IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 		public void propertyChange(PropertyChangeEvent event) {
@@ -117,7 +112,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		promptLabel = new Label(southControlsComposite, SWT.NONE);
 		promptLabel.setText(controller.getPrompt());
 
-		outputText = new Text(southControlsComposite, SWT.SINGLE | SWT.BORDER);
+		outputText = new StyledText(southControlsComposite, SWT.SINGLE | SWT.BORDER);
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		outputText.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {
@@ -162,7 +157,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		return inputText;
 	}
 
-	public Text getOutputText() {
+	public StyledText getOutputText() {
 		return outputText;
 	}
 

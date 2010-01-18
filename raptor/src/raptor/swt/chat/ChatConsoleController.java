@@ -1,6 +1,6 @@
 /**
- * New BSD License
  * http://www.opensource.org/licenses/bsd-license.php
+ * New BSD License
  * Copyright (c) 2009, RaptorProject (http://code.google.com/p/raptor-chess-interface/)
  * All rights reserved.
  * 
@@ -73,6 +73,7 @@ import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ParameterScript;
 import raptor.service.ActionScriptService;
 import raptor.service.AliasService;
+import raptor.service.DictionaryService;
 import raptor.service.MemoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
@@ -236,6 +237,68 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public ChatConsoleController(Connector connector) {
 		this.connector = connector;
 		connector.addConnectorListener(connectorListener);
+	}
+
+	public void onSpellCheck() {
+		String outputText = chatConsole.getOutputText().getText();
+		List<int[]> ranges = new ArrayList<int[]>(10);
+
+		// reset style.
+		StyleRange resetRange = new StyleRange(0, outputText.length(),
+				chatConsole.getOutputText().getForeground(), chatConsole
+						.getOutputText().getBackground());
+		chatConsole.getOutputText().setStyleRange(resetRange);
+
+		int wordStart = -1;
+		for (int i = 0; i < outputText.length(); i++) {
+			char currentChar = outputText.charAt(i);
+
+			switch (currentChar) {
+			case ' ':
+			case '\t':
+			case '\r':
+			case '\n': {
+				if (wordStart != -1) {
+					if (!DictionaryService.getInstance().isValidWord(
+							outputText.substring(wordStart, i))) {
+						ranges.add(new int[] { wordStart, i });
+					}
+				}
+				wordStart = -1;
+				continue;
+			}
+			default: {
+				if (wordStart == -1) {
+					wordStart = i;
+					continue;
+				}
+			}
+			}
+		}
+
+		// Add last word if there is one.
+		if (wordStart != -1) {
+			if (!DictionaryService.getInstance().isValidWord(
+					outputText.substring(wordStart, outputText.length()))) {
+				ranges.add(new int[] { wordStart, outputText.length() });
+			}
+		}
+
+		// add all the ranges that were found.
+		for (int[] linkRange : ranges) {
+			StyleRange range = new StyleRange(linkRange[0], linkRange[1]
+					- linkRange[0],
+					chatConsole.getOutputText().getForeground(), chatConsole
+							.getOutputText().getBackground());
+
+			System.err.println("Adding range: " + linkRange[0] + "-"
+					+ linkRange[1]);
+			range.underline = true;
+			range.underlineColor = Raptor.getInstance().getDisplay()
+					.getSystemColor(SWT.COLOR_RED);
+			range.underlineStyle = SWT.UNDERLINE_SQUIGGLE;
+			chatConsole.getOutputText().setStyleRange(range);
+		}
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -801,7 +864,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			return true;
 
 		} else if (isAutoCompleteTrigger(event)) {
-			int endIndex = chatConsole.getOutputText().getCaretPosition();
+			int endIndex = chatConsole.getOutputText().getCaretOffset();
 			int startIndex = endIndex - 1;
 			for (; startIndex >= 0; startIndex--) {
 				if (chatConsole.getOutputText().getText(startIndex, startIndex)
@@ -848,6 +911,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			event.doit = false;
 			return true;
 		}
+		onSpellCheck();
 		return false;
 	}
 
