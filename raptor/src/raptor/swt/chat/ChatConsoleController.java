@@ -252,6 +252,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onSpellCheck() {
+		if (!getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
+			return;
+		}
 		String outputText = chatConsole.getOutputText().getText();
 		List<int[]> ranges = new ArrayList<int[]>(10);
 
@@ -857,6 +860,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				if (!sentText.isEmpty()) {
 					chatConsole.outputText.setText("");
 					chatConsole.outputText.append(sentText.get(sentTextIndex));
+					chatConsole.outputText
+							.setCaretOffset(chatConsole.outputText
+									.getCharCount());
+					onSpellCheck();
 				}
 			}
 			return true;
@@ -865,6 +872,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				sentTextIndex++;
 				chatConsole.outputText.setText("");
 				chatConsole.outputText.append(sentText.get(sentTextIndex));
+				chatConsole.outputText.setCaretOffset(chatConsole.outputText
+						.getCharCount());
+				onSpellCheck();
 			} else {
 				chatConsole.outputText.setText("");
 			}

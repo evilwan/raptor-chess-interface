@@ -89,6 +89,10 @@ public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(smartScroll);
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.CHAT_COMMAND_LINE_SPELL_CHECK,
+				"Spell Check Enabled (Command Line)", getFieldEditorParent()));
+
 		addField(new BooleanFieldEditor(PreferenceKeys.CHAT_UNDERLINE_COMMANDS,
 				"Underline link commands (history,journal,bugwho,etc)",
 				getFieldEditorParent()));

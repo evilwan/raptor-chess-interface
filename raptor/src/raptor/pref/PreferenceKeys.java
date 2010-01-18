@@ -82,7 +82,7 @@ public interface PreferenceKeys {
 	public static final String APP_QUAD6_QUAD7_SASH_WEIGHTS = "app-quad6-quad7-sash-weights";
 	public static final String APP_QUAD67_QUAD8_SASH_WEIGHTS = "app-quad67-quad8-sash-weights";
 	public static final String APP_WINDOW_BOUNDS = "app-window-bounds";
-	public static final String APP_ZOOM_FACTOR="app-zoom-factor";
+	public static final String APP_ZOOM_FACTOR = "app-zoom-factor";
 
 	public static final String ACTION_SEPARATOR_SEQUENCE = "action-separator-sequence";
 
@@ -246,7 +246,7 @@ public interface PreferenceKeys {
 	public static final String CHAT_OPEN_PARTNER_TAB_ON_PTELLS = "chat-open-partner-tab-on-ptells";
 	public static final String CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS = "chat-play-notification-sound-on-arrivals";
 	public static final String CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES = "chat-play-notification-sound-on-departures";
-
+	public static final String CHAT_COMMAND_LINE_SPELL_CHECK = "chat-command-line-spell-check";
 
 	// Connector preferences should always use the short name of the connector
 	// followed by the preference.
@@ -261,7 +261,8 @@ public interface PreferenceKeys {
 	public static final String FICS_PERSON_COMMANDS = "fics-person-commands";
 	public static final String FICS_NO_WRAP_ENABLED = "fics-no-wrap-enabled";
 	public static final String FICS_KEEP_ALIVE_COMMAND = "fics-keep-alive-command";
-	public static final String FICS_REGULAR_EXPRESSIONS_TO_BLOCK = "fics-" + REGULAR_EXPRESSIONS_TO_BLOCK;
+	public static final String FICS_REGULAR_EXPRESSIONS_TO_BLOCK = "fics-"
+			+ REGULAR_EXPRESSIONS_TO_BLOCK;
 
 	public static final String FICS_SEEK_GAME_TYPE = "fics-seek-game-type";
 	public static final String FICS_SEEK_MINUTES = "fics-seek-minutes";
@@ -307,7 +308,8 @@ public interface PreferenceKeys {
 	public static final String BICS_CHANNEL_COMMANDS = "bics-channel-commands";
 	public static final String BICS_PERSON_COMMANDS = "bics-person-commands";
 	public static final String BICS_KEEP_ALIVE_COMMAND = "bics-keep-alive-command";
-	public static final String BICS_REGULAR_EXPRESSIONS_TO_BLOCK = "bics-" + REGULAR_EXPRESSIONS_TO_BLOCK;
+	public static final String BICS_REGULAR_EXPRESSIONS_TO_BLOCK = "bics-"
+			+ REGULAR_EXPRESSIONS_TO_BLOCK;
 
 	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
 	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";
