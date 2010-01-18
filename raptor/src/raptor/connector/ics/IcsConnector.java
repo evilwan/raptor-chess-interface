@@ -282,6 +282,43 @@ public abstract class IcsConnector implements Connector {
 		writeExtendedCensorList();
 	}
 
+	/**
+	 * Returns true if the specified word is likely a command preceding a person
+	 * name. e.g. finger, history, tell, etc.
+	 * 
+	 * @param word
+	 *            The word to check
+	 * @return The result.
+	 */
+	public boolean isLikelyCommandPrecedingPersonName(String command) {
+		command = command.toLowerCase();
+		return "tell".startsWith(command) ||
+		       "history".startsWith(command) ||
+		       "variables".startsWith(command) ||
+		       "match".startsWith(command) ||
+		       "ivars".startsWith(command) ||
+		       "journal".startsWith(command) || 
+		       "resign".startsWith(command) ||
+		       "message".startsWith(command) ||
+		       "shout".startsWith(command) ||
+		       "cshout".startsWith(command) ||
+		       "finger".startsWith(command);
+		       
+
+	}
+
+	/**
+	 * Returns true if the specified word is in the connectors auto-complete
+	 * list.
+	 * 
+	 * @param word
+	 *            The word
+	 * @return True if in auto complete, false otherwise.
+	 */
+	public boolean isInAutoComplete(String word) {
+		return autoCompleteList.contains(word.toLowerCase());
+	}
+
 	public String[] autoComplete(String word) {
 		if (word != null && word.length() > 0) {
 			String lowerCaseWord = word.toLowerCase();

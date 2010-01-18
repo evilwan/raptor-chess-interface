@@ -290,6 +290,26 @@ public interface Connector {
 	public boolean isLoggedInUserPlayingAGame();
 
 	/**
+	 * Returns true if the specified word is in the connectors auto-complete
+	 * list.
+	 * 
+	 * @param word
+	 *            The word
+	 * @return True if in auto complete, false otherwise.
+	 */
+	public boolean isInAutoComplete(String word);
+	
+	/**
+	 * Returns true if the specified word is likely a command preceding a person
+	 * name. e.g. finger, history, tell, etc.
+	 * 
+	 * @param word
+	 *            The word to check
+	 * @return The result.
+	 */
+	public boolean isLikelyCommandPrecedingPersonName(String word);
+
+	/**
 	 * Returns true if the specified person is on extended censor.
 	 */
 	public boolean isOnExtendedCensor(String person);

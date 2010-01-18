@@ -239,6 +239,18 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		connector.addConnectorListener(connectorListener);
 	}
 
+	protected boolean isSpelledCorrectly(String previousWord, String word) {
+		if (previousWord != null
+				&& getConnector().isLikelyCommandPrecedingPersonName(
+						previousWord)) {
+			return true;
+		} else {
+			return getConnector().isLikelyCommandPrecedingPersonName(word)
+					|| getConnector().isInAutoComplete(word)
+					|| DictionaryService.getInstance().isValidWord(word);
+		}
+	}
+
 	public void onSpellCheck() {
 		String outputText = chatConsole.getOutputText().getText();
 		List<int[]> ranges = new ArrayList<int[]>(10);
@@ -249,7 +261,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						.getOutputText().getBackground());
 		chatConsole.getOutputText().setStyleRange(resetRange);
 
+		String firstWord = null;
 		int wordStart = -1;
+		int wordsCounted = 0;
 		for (int i = 0; i < outputText.length(); i++) {
 			char currentChar = outputText.charAt(i);
 
@@ -259,10 +273,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			case '\r':
 			case '\n': {
 				if (wordStart != -1) {
-					if (!DictionaryService.getInstance().isValidWord(
-							outputText.substring(wordStart, i))) {
+					String word = outputText.substring(wordStart, i);
+					if (!isSpelledCorrectly(wordsCounted == 1 ? firstWord
+							: null, word)) {
 						ranges.add(new int[] { wordStart, i });
 					}
+
+					if (firstWord == null) {
+						firstWord = word;
+					}
+					wordsCounted++;
 				}
 				wordStart = -1;
 				continue;
@@ -278,8 +298,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		// Add last word if there is one.
 		if (wordStart != -1) {
-			if (!DictionaryService.getInstance().isValidWord(
-					outputText.substring(wordStart, outputText.length()))) {
+			String word = outputText.substring(wordStart, outputText.length());
+			if (!isSpelledCorrectly(wordsCounted == 1 ? firstWord : null, word)) {
 				ranges.add(new int[] { wordStart, outputText.length() });
 			}
 		}
@@ -290,9 +310,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					- linkRange[0],
 					chatConsole.getOutputText().getForeground(), chatConsole
 							.getOutputText().getBackground());
-
-			System.err.println("Adding range: " + linkRange[0] + "-"
-					+ linkRange[1]);
 			range.underline = true;
 			range.underlineColor = Raptor.getInstance().getDisplay()
 					.getSystemColor(SWT.COLOR_RED);
@@ -867,15 +884,19 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			int endIndex = chatConsole.getOutputText().getCaretOffset();
 			int startIndex = endIndex - 1;
 			for (; startIndex >= 0; startIndex--) {
-				if (chatConsole.getOutputText().getText(startIndex, startIndex)
-						.equals(" ")) {
+				if (chatConsole.getOutputText().getContent().getTextRange(
+						startIndex, 1).equals(" ")) {
 					startIndex++;
 					break;
 				}
 			}
+			if (startIndex < 0) {
+				startIndex = 0;
+			}
 
-			String wordToAutoComplete = chatConsole.getOutputText().getText(
-					startIndex, endIndex).trim();
+			String wordToAutoComplete = chatConsole.getOutputText()
+					.getContent().getTextRange(startIndex,
+							endIndex - startIndex).trim();
 			if (wordToAutoComplete.length() > 0) {
 
 				String[] autoComplete = getConnector().autoComplete(
@@ -889,6 +910,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					chatConsole.getOutputText().insert(
 							autoComplete[0].substring(wordToAutoComplete
 									.length()));
+					chatConsole.getOutputText().setCaretOffset(
+							startIndex + autoComplete[0].length());
 				} else {
 					StringBuilder matchesBuilder = new StringBuilder(100);
 					matchesBuilder.append("Auto-Complete matches:\n");
