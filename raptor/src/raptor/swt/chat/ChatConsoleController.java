@@ -212,7 +212,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected MouseListener outputTextClickListener = new MouseAdapter() {
 		@Override
 		public void mouseUp(MouseEvent e) {
-			if (e.button == 3) {
+			if (SWTUtils.isRightClick(e)) {
 				onOutputTextRightClick(e);
 			}
 		}
@@ -2294,16 +2294,30 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void onOutputTextRightClick(MouseEvent e) {
-		String word = chatConsole.outputText.getSelectionText();
+		int caretPosition = 0;
+		try {
+			caretPosition = chatConsole.getOutputText().getOffsetAtLocation(
+					new Point(e.x, e.y));
+		} catch (IllegalArgumentException iae) {
+			return;
+		}
+
+		String word = chatConsole.getOutputText().getSelectionText();
 		boolean wasSelectedText = true;
 
 		if (StringUtils.isBlank(word)) {
+			word = ChatUtils
+					.getWord(chatConsole.getOutputText(), caretPosition);
 			wasSelectedText = false;
+		} else {
+			word = connector.removeLineBreaks(word);
 		}
+
+		final String finalWord = word;
 
 		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
 		if (wasSelectedText) {
-			MenuItem copyItem = new MenuItem(menu, SWT.POP_UP);
+			MenuItem copyItem = new MenuItem(menu, SWT.PUSH);
 			copyItem.setText("copy");
 			copyItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
@@ -2312,13 +2326,25 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			});
 		}
 
-		MenuItem pasteItem = new MenuItem(menu, SWT.POP_UP);
+		MenuItem pasteItem = new MenuItem(menu, SWT.PUSH);
 		pasteItem.setText("paste");
 		pasteItem.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				chatConsole.outputText.paste();
 			}
 		});
+
+		if (word != null && !isSpelledCorrectly(null, word)) {
+			new MenuItem(menu, SWT.SEPARATOR);
+			MenuItem addWord = new MenuItem(menu, SWT.PUSH);
+			addWord.setText("add " + word + " to dictionary");
+			addWord.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					DictionaryService.getInstance().addWord(finalWord);
+				}
+
+			});
+		}
 
 		if (menu.getItemCount() > 0) {
 			if (LOG.isDebugEnabled()) {

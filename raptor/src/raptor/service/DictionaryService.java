@@ -3,6 +3,8 @@ package raptor.service;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.Set;
 import java.util.TreeSet;
@@ -19,9 +21,11 @@ import raptor.util.RegExUtils;
 public class DictionaryService {
 	private static final Log LOG = LogFactory.getLog(DictionaryService.class);
 	private static final String DICTIONARY_PATH = Raptor.RESOURCES_DIR
-			+ "words";
+			+ "words.txt";
 	private static final String FICS_DICTIONARY_PATH = Raptor.RESOURCES_DIR
-			+ "ficsWords";
+			+ "customDictionary.txt";
+	private static final String USER_DICTIONARY_PATH = Raptor.USER_RAPTOR_HOME_PATH
+			+ "/customDictionary.txt";
 
 	private static final Pattern VALID_WORD_PATTERN = RegExUtils
 			.getPattern("\\p{Alpha}*");
@@ -37,6 +41,32 @@ public class DictionaryService {
 
 	public static DictionaryService getInstance() {
 		return singletonInstance;
+	}
+
+	public void addWord(String word) {
+		if (!ficsWords.contains(word.toLowerCase())) {
+			ficsWords.add(word);
+			FileWriter writer = null;
+			try {
+				writer = new FileWriter(Raptor.USER_RAPTOR_HOME_PATH
+						+ "/customDictionary.txt", false);
+				for (String currentWord : ficsWords) {
+					writer.write(currentWord + "\n");
+				}
+				writer.flush();
+			} catch (Throwable t) {
+				Raptor.getInstance().onError(
+						"Error occured saving dictionary file "
+								+ USER_DICTIONARY_PATH, t);
+			} finally {
+				if (writer != null) {
+					try {
+						writer.close();
+					} catch (IOException ioe) {
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -125,7 +155,13 @@ public class DictionaryService {
 		ficsWords.clear();
 		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new FileReader(FICS_DICTIONARY_PATH));
+			File userFile = new File(USER_DICTIONARY_PATH);
+			if (userFile.exists()) {
+				reader = new BufferedReader(new FileReader(userFile));
+			} else {
+				reader = new BufferedReader(
+						new FileReader(FICS_DICTIONARY_PATH));
+			}
 			String currentLine = null;
 			while ((currentLine = reader.readLine()) != null) {
 				if (StringUtils.isNotBlank(currentLine)
@@ -159,7 +195,7 @@ public class DictionaryService {
 	public boolean isValidWord(String word) {
 		if (RegExUtils.matches(VALID_WORD_PATTERN, word)
 				&& !RegExUtils.matches(MIXED_CASE_PATTERN, word)
-				&& !ficsWords.contains(word)) {
+				&& !ficsWords.contains(word.toLowerCase())) {
 			return binarySearch(DICTIONARY_PATH, word);
 		} else {
 			return true;

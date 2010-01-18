@@ -113,8 +113,8 @@ public class ThreadService {
 	protected boolean isDisposed = false;
 
 	private ThreadService() {
-		executor.setCorePoolSize(20);
-		executor.setMaximumPoolSize(50);
+		executor.setCorePoolSize(10);
+		executor.setMaximumPoolSize(25);
 		executor.setKeepAliveTime(180, TimeUnit.SECONDS);
 		executor.prestartAllCoreThreads();
 	}
