@@ -25,9 +25,13 @@ import raptor.pref.PreferenceKeys;
 public class ChessBoardResultsPage extends FieldEditorPreferencePage {
 
 	public static final String[][] RESULTS_ANIMATION_DELAY_OPTIONS = {
-			{ "100 milliseconds", "100" }, { "200 milliseconds", "200" },
-			{ "300 milliseconds", "300" }, { "500 milliseconds", "500" },
-			{ "750 milliseconds", "750" }, { "1 second", "1000" } };
+		{ "10 milliseconds", "10" }, { "20 milliseconds", "20" },
+		{ "30 milliseconds", "30" }, { "40 milliseconds", "40" },
+		{ "50 milliseconds", "50" }, { "60 milliseconds", "60" },
+		{ "70 milliseconds", "70" }, { "80 milliseconds", "80" },
+		{ "90 milliseconds", "90" }, { "100 milliseconds", "100" },
+		{ "125 millseconds", "125" }, { "150 millseconds", "150" },
+		{ "175 millseconds", "175" }, { "200 millseconds", "200" } };
 
 	public static final String[][] RESULTS_PERCENTAGE = { { "50%", "50" },
 			{ "60%", "60" }, { "70%", "70" }, { "75%", "75" }, { "80%", "80" },

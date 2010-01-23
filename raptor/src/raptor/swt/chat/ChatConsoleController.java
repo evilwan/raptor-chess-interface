@@ -2334,7 +2334,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		});
 
-		if (word != null && !isSpelledCorrectly(null, word)) {
+		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)
+				&& word != null && !isSpelledCorrectly(null, word)) {
 			new MenuItem(menu, SWT.SEPARATOR);
 			MenuItem addWord = new MenuItem(menu, SWT.PUSH);
 			addWord.setText("add " + word + " to dictionary");
@@ -2342,7 +2343,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				public void handleEvent(Event e) {
 					DictionaryService.getInstance().addWord(finalWord);
 				}
-
 			});
 		}
 

@@ -565,7 +565,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ARROW_SHOW_ON_MOVE_LIST_MOVES, true);
 		setDefault(ARROW_SHOW_ON_MY_PREMOVES, true);
 		setDefault(ARROW_SHOW_ON_MY_MOVES, false);
-		setDefault(ARROW_ANIMATION_DELAY, 300L);
+		setDefault(ARROW_ANIMATION_DELAY, 50L);
 		setDefault(ARROW_FADE_AWAY_MODE, true);
 		setDefault(ARROW_WIDTH_PERCENTAGE, 15);
 
@@ -583,7 +583,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(HIGHLIGHT_SHOW_ON_MY_PREMOVES, true);
 		setDefault(HIGHLIGHT_SHOW_ON_MY_MOVES, false);
 		setDefault(HIGHLIGHT_FADE_AWAY_MODE, false);
-		setDefault(HIGHLIGHT_ANIMATION_DELAY, 300L);
+		setDefault(HIGHLIGHT_ANIMATION_DELAY, 50L);
 		setDefault(HIGHLIGHT_WIDTH_PERCENTAGE, 3);
 
 		// Game Results
@@ -593,7 +593,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						SWT.BOLD) });
 		setDefault(RESULTS_IS_SHOWING, true);
 		setDefault(RESULTS_FADE_AWAY_MODE, true);
-		setDefault(RESULTS_ANIMATION_DELAY, 500L);
+		setDefault(RESULTS_ANIMATION_DELAY, 50L);
 		setDefault(RESULTS_WIDTH_PERCENTAGE, 80);
 
 		// Chat
@@ -613,7 +613,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS, true);
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES, false);
 		setDefault(CHAT_UNDERLINE_COMMANDS, true);
-		setDefault(CHAT_COMMAND_LINE_SPELL_CHECK,true);
+		setDefault(CHAT_COMMAND_LINE_SPELL_CHECK, true);
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
@@ -765,7 +765,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_SEEK_FORMULA, true);
 		setDefault(FICS_SEEK_RATED, true);
 		setDefault(FICS_SEEK_COLOR, "");
-		setDefault(FICS_KEEP_ALIVE_COMMAND, "set busy is away from the keyboard.");
+		setDefault(FICS_KEEP_ALIVE_COMMAND,
+				"set busy is away from the keyboard.");
 
 		// Fics Primary
 		setDefault(FICS_PRIMARY_USER_NAME, "");
@@ -800,7 +801,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_PROFILE, "Primary");
 		setDefault(BICS_CLOSE_TABS_ON_DISCONNECT, false);
 		setDefault(BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP, true);
-		setDefault(BICS_KEEP_ALIVE_COMMAND, "set busy is away from the keyboard.");
+		setDefault(BICS_KEEP_ALIVE_COMMAND,
+				"set busy is away from the keyboard.");
 		setDefault(BICS_CHANNEL_COMMANDS,
 				"+channel $channel,-channel $channel,in $channel");
 		setDefault(

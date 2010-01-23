@@ -745,7 +745,7 @@ public class ArrowDecorator {
 					}
 
 					e.gc.setAdvanced(true);
-					e.gc.setAlpha(50 * spec.arrow.frame);
+					e.gc.setAlpha(10 * spec.arrow.frame);
 
 					ArrowSegment segment = board.isWhiteOnTop() ? spec.segment
 							.rotate180() : spec.segment;
@@ -1273,8 +1273,8 @@ public class ArrowDecorator {
 		// Use for loops here with int. If you dont you can get concurrent
 		// modification errors.
 		for (int i = 0; i < decorators.length; i++) {
+			decorators[i].square.redraw();
 			if (!decorators[i].specs.isEmpty()) {
-				decorators[i].square.redraw();
 			}
 		}
 	}

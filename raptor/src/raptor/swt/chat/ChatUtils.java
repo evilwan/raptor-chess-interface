@@ -198,6 +198,7 @@ public class ChatUtils {
 	 */
 	public static String getWord(StyledText text, int position) {
 		try {
+			
 			int lineStart;
 			int lineEnd;
 
@@ -222,8 +223,9 @@ public class ChatUtils {
 
 			return trimDateStampFromWord(text.getText(lineStart + 1,
 					lineEnd - 1));
-
+			
 		} catch (Exception e) {
+			LOG.info("Error obtaining word: ",e);
 			return null;
 		}
 	}
