@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.graphics.Color;
 
 import raptor.util.RaptorStringUtils;
 
@@ -161,6 +163,11 @@ public class RaptorTable extends Composite {
 	protected int fixedHeight;
 	protected TableCursor cursor;
 	protected boolean ignoreCursorSelection;
+	
+	private static boolean useLinuxWorkaround = System.getProperty("os.name")
+			.startsWith("Linux");
+	private static Color activeMoveColor = Display.getCurrent().getSystemColor(
+			SWT.COLOR_BLUE);
 
 	/**
 	 * Creates a RaptorTable that shows headers and does'nt use a table cursor.
@@ -237,13 +244,17 @@ public class RaptorTable extends Composite {
 		if (usesTableCursor) {
 
 			// A trick to hide the row selection.
-			table.addListener(SWT.EraseItem, new Listener() {
-				public void handleEvent(Event event) {
-					if ((event.detail & SWT.SELECTED) != 0) {
-						event.detail &= ~SWT.SELECTED;
+			// doesn't work properly in Linux with GTK+
+			if (!useLinuxWorkaround) {
+				table.addListener(SWT.EraseItem, new Listener() {
+					public void handleEvent(Event event) {
+						if ((event.detail & SWT.SELECTED) != 0) {
+							event.detail &= ~SWT.SELECTED;
+
+						}
 					}
-				}
-			});
+				});
+			}
 
 			cursor = new TableCursor(table, SWT.NONE);
 			cursor.addSelectionListener(new SelectionAdapter() {
@@ -544,22 +555,28 @@ public class RaptorTable extends Composite {
 	/**
 	 * If usesTableCursor this will select the specified row and column.
 	 */
-	public void select(int row, int column) {
+	public void select(int row, int column) {                                 
 		table.deselectAll();
-		table.setSelection(row);
-		if (cursor != null) {
-			cursor.setSelection(row, column);
-			cursor.setVisible(true);
-		}
-		if (cursor != null) {
-			try {
-				cursor.layout(true);
-				cursor.redraw();
-			} catch (NullPointerException npe) {
+
+		if (useLinuxWorkaround) {
+			TableItem item = table.getItem(row);
+			item.setForeground(column, activeMoveColor);
+		} else {
+			table.setSelection(row);
+			if (cursor != null) {
+				cursor.setSelection(row, column);
+				cursor.setVisible(true);
 			}
+			if (cursor != null) {
+				try {
+					cursor.layout(true);
+					cursor.redraw();
+				} catch (NullPointerException npe) {
+				}
+			}
+			table.layout();
+			table.redraw();
 		}
-		table.layout();
-		table.redraw();
 	}
 
 	/**
@@ -567,6 +584,12 @@ public class RaptorTable extends Composite {
 	 */
 	public void setCursorEnd() {
 		synchronized (table) {
+			if (useLinuxWorkaround) {
+				table.getItem(table.getItemCount() - 1).setForeground(0,
+						activeMoveColor);
+				return;
+			}
+			
 			if (table.getItemCount() > 0) {
 				table.deselectAll();
 				table.setSelection(table.getItemCount() - 1);
