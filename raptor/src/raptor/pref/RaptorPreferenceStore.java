@@ -412,7 +412,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_LAYOUT, "raptor.swt.chess.layout.RightOrientedLayout");
 		setDefault(BOARD_TAKEOVER_INACTIVE_GAMES, true);
 		setDefault(BOARD_PIECE_JAIL_SHADOW_ALPHA, 30);
-		setDefault(BOARD_PIECE_SHADOW_ALPHA, 60);
+		setDefault(BOARD_PIECE_SHADOW_ALPHA, 40);
 		setDefault(BOARD_COORDINATES_SIZE_PERCENTAGE, 26);
 		setDefault(BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME, false);
 		setDefault(BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT, false);

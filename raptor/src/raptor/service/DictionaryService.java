@@ -41,12 +41,10 @@ public class DictionaryService {
 			+ "/customDictionary.txt";
 
 	private static final Pattern VALID_WORD_PATTERN = RegExUtils
-			.getPattern("\\p{Alpha}*");
-	private static final Pattern MIXED_CASE_PATTERN = RegExUtils
-			.getPattern(".*\\p{Upper}.*");
+			.getPattern("[a-zA-Z']*");
 	private static final DictionaryService singletonInstance = new DictionaryService();
 
-	public Set<String> ficsWords = new TreeSet<String>();
+	public Set<String> customDictionary = new TreeSet<String>();
 
 	private DictionaryService() {
 		init();
@@ -57,13 +55,13 @@ public class DictionaryService {
 	}
 
 	public void addWord(String word) {
-		if (!ficsWords.contains(word.toLowerCase())) {
-			ficsWords.add(word);
+		if (!customDictionary.contains(word.toLowerCase())) {
+			customDictionary.add(word);
 			FileWriter writer = null;
 			try {
 				writer = new FileWriter(Raptor.USER_RAPTOR_HOME_PATH
 						+ "/customDictionary.txt", false);
-				for (String currentWord : ficsWords) {
+				for (String currentWord : customDictionary) {
 					writer.write(currentWord + "\n");
 				}
 				writer.flush();
@@ -87,7 +85,7 @@ public class DictionaryService {
 	 * http://stackoverflow.com/questions/736556/binary
 	 * -search-in-a-sorted-memory-mapped-file-in-java
 	 * 
-	 * It has been altered to be case insensitive and return a boolean.
+	 * It has been altered to fix some bugs.
 	 */
 	protected boolean binarySearch(String filename, String string) {
 		string = string.toLowerCase();
@@ -116,15 +114,24 @@ public class DictionaryService {
 				if (p < 0)
 					raf.seek(0);
 				String line = raf.readLine();
+				// Useful for debugging
 				// System.out.println("-- " + mid + " " + line);
-				if (line.toLowerCase().compareTo(string) < 0)
-					low = mid + 1;
-				else
-					high = mid;
+				if (line == null) {
+					low = high;
+				} else {
+					int compare = line.compareTo(string);
+					if (compare < 0) {
+						low = mid + 1;
+					} else if (compare == 0) {
+						return true;
+					} else {
+						high = mid;
+					}
+				}
 			}
 
 			p = low;
-			while (p >= 0) {
+			while (p >= 0 && p < high) {
 				raf.seek(p);
 				if (((char) raf.readByte()) == '\n')
 					break;
@@ -135,12 +142,17 @@ public class DictionaryService {
 				raf.seek(0);
 
 			while (true) {
-				String line = raf.readLine().toLowerCase();
-				if (!line.startsWith(string)) {
+				String line = raf.readLine();
+				// Useful for debugging.
+				// System.out.println("searching forwards " + line);
+				if (line == null) {
 					result = false;
 					break;
 				} else if (line.equals(string)) {
 					result = true;
+					break;
+				} else if (!line.startsWith(string)) {
+					result = false;
 					break;
 				}
 			}
@@ -165,7 +177,7 @@ public class DictionaryService {
 
 	protected void init() {
 		long startTime = System.currentTimeMillis();
-		ficsWords.clear();
+		customDictionary.clear();
 		BufferedReader reader = null;
 		try {
 			File userFile = new File(USER_DICTIONARY_PATH);
@@ -181,7 +193,7 @@ public class DictionaryService {
 						&& !currentLine.startsWith("#")) {
 					RaptorStringTokenizer tok = new RaptorStringTokenizer(
 							currentLine, " /", true);
-					ficsWords.add(tok.nextToken());
+					customDictionary.add(tok.nextToken());
 				}
 			}
 		} catch (Throwable t) {
@@ -195,23 +207,22 @@ public class DictionaryService {
 				}
 			}
 		}
-		LOG.info("Initialized Dictionary Service " + ficsWords.size()
+		LOG.info("Initialized Dictionary Service " + customDictionary.size()
 				+ " words in " + (System.currentTimeMillis() - startTime)
 				+ "ms");
 	}
 
 	public void dispose() {
-		ficsWords.clear();
-		ficsWords = null;
+		customDictionary.clear();
+		customDictionary = null;
 	}
 
 	public boolean isValidWord(String word) {
-		if (RegExUtils.matches(VALID_WORD_PATTERN, word)
-				&& !RegExUtils.matches(MIXED_CASE_PATTERN, word)
-				&& !ficsWords.contains(word.toLowerCase())) {
-			return binarySearch(DICTIONARY_PATH, word);
-		} else {
+		if (!RegExUtils.matches(VALID_WORD_PATTERN, word)
+				|| customDictionary.contains(word.toLowerCase())) {
 			return true;
+		} else {
+			return binarySearch(DICTIONARY_PATH, word);
 		}
 	}
 
