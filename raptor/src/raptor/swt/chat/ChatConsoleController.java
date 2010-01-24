@@ -1058,8 +1058,14 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			final String[][] connectorChannelItems = connector
 					.getChannelActions(channel);
 			if (connectorChannelItems != null) {
+				MenuItem channelItem = new MenuItem(menu, SWT.CASCADE);
+				channelItem.setText(getConnector().getShortName()
+						+ " channel commands: " + channel);
+				Menu channelItemMenu = new Menu(menu);
+				channelItem.setMenu(channelItemMenu);
+
 				for (int i = 0; i < connectorChannelItems.length; i++) {
-					item = new MenuItem(menu, SWT.PUSH);
+					item = new MenuItem(channelItemMenu, SWT.PUSH);
 					item.setText(connectorChannelItems[i][0]);
 					final int index = i;
 					item.addListener(SWT.Selection, new Listener() {
@@ -1078,6 +1084,41 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (message != null && message.length() <= 200) {
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
+			}
+
+			final Map<String, Object> parameterMap = new HashMap<String, Object>();
+			final String line = chatConsole.inputText
+					.getLine(chatConsole.inputText
+							.getLineAtOffset(caretPosition));
+
+			connector.getChatService().getChatLogger().parseFile(
+					new ChatEventParseListener() {
+
+						public boolean onNewEventParsed(ChatEvent event) {
+							if (event.getMessage().contains(line)) {
+								parameterMap.put("chatEvent", event);
+								return false;
+							}
+							return true;
+						}
+
+						public void onParseCompleted() {
+						}
+					});
+			parameterMap.put("selection", message);
+
+			if (parameterMap.containsKey("chatEvent")) {
+
+				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+				menuItem.setText("Add message as a memo");
+				menuItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						MemoService.getInstance().addMemo(
+								(ChatEvent) parameterMap.get("chatEvent"));
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, "Added memo."));
+					}
+				});
 			}
 
 			if (message.startsWith("http") || message.endsWith(".com")
@@ -1106,52 +1147,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				});
 			}
 
-			final Map<String, Object> parameterMap = new HashMap<String, Object>();
-			final String line = chatConsole.inputText
-					.getLine(chatConsole.inputText
-							.getLineAtOffset(caretPosition));
-
-			connector.getChatService().getChatLogger().parseFile(
-					new ChatEventParseListener() {
-
-						public boolean onNewEventParsed(ChatEvent event) {
-							if (event.getMessage().contains(line)) {
-								parameterMap.put("chatEvent", event);
-								return false;
-							}
-							return true;
-						}
-
-						public void onParseCompleted() {
-						}
-					});
-			parameterMap.put("selection", message);
-
-			if (parameterMap.containsKey("chatEvent")) {
-
-				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText("Add as memo");
-				menuItem.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						MemoService.getInstance().addMemo(
-								(ChatEvent) parameterMap.get("chatEvent"));
-						onAppendChatEventToInputText(new ChatEvent(null,
-								ChatType.INTERNAL, "Added memo."));
-					}
-				});
-			}
-
+			MenuItem scriptsItem = new MenuItem(menu, SWT.CASCADE);
+			scriptsItem.setText("Right Click Scripts");
+			Menu scriptsMenu = new Menu(menu);
+			scriptsItem.setMenu(scriptsMenu);
 			ParameterScript[] scripts = ScriptService.getInstance()
 					.getParameterScripts(
 							getConnector().getScriptConnectorType(),
 							ParameterScript.Type.ConsoleRightClickScripts);
 
-			if (scripts.length > 0) {
-				new MenuItem(menu, SWT.SEPARATOR);
-			}
-
 			for (final ParameterScript script : scripts) {
-				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
+				MenuItem menuItem = new MenuItem(scriptsMenu, SWT.PUSH);
 				menuItem.setText(script.getName() + ": '" + message + "'");
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
@@ -1181,8 +1187,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			final String[][] gameIdItems = connector.getGameIdActions(gameId);
 			if (gameIdItems != null) {
+				MenuItem gameCommands = new MenuItem(menu, SWT.CASCADE);
+				gameCommands.setText(getConnector().getShortName()
+						+ " game commands: " + word);
+				Menu gameCommandsMenu = new Menu(menu);
+				gameCommands.setMenu(gameCommandsMenu);
 				for (int i = 0; i < gameIdItems.length; i++) {
-					item = new MenuItem(menu, SWT.PUSH);
+					item = new MenuItem(gameCommandsMenu, SWT.PUSH);
 					item.setText(gameIdItems[i][0]);
 					final int index = i;
 					item.addListener(SWT.Selection, new Listener() {
@@ -1247,9 +1258,40 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			});
 
-			if (connector instanceof FicsConnector) {
+			if (!connector.isOnExtendedCensor(person)) {
 
-				MenuItem ficsGamesHistory = new MenuItem(menu, SWT.PUSH);
+				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
+				extCensor.setText("+extcensor " + person);
+				extCensor.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						connector.addExtendedCensor(person);
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, "Added " + person
+										+ " to extended censor."));
+					}
+				});
+			} else {
+				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
+				extCensor.setText("-extcensor " + person);
+				extCensor.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						boolean result = connector.removeExtendedCensor(person);
+						onAppendChatEventToInputText(new ChatEvent(null,
+								ChatType.INTERNAL, result ? "Removed " + person
+										+ " to extended censor." : " Person "
+										+ person
+										+ " is not on extended censor."));
+					}
+				});
+			}
+
+			if (connector instanceof FicsConnector) {
+				MenuItem websiteLookupItem = new MenuItem(menu, SWT.CASCADE);
+				websiteLookupItem.setText("Website lookups: " + person);
+				Menu websiteMenu = new Menu(menu);
+				websiteLookupItem.setMenu(websiteMenu);
+
+				MenuItem ficsGamesHistory = new MenuItem(websiteMenu, SWT.PUSH);
 				ficsGamesHistory.setText("ficsgames.com history: " + person);
 				ficsGamesHistory.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
@@ -1259,7 +1301,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				});
 
-				MenuItem ficsGamesStats = new MenuItem(menu, SWT.PUSH);
+				MenuItem ficsGamesStats = new MenuItem(websiteMenu, SWT.PUSH);
 				ficsGamesStats.setText("ficsgames.com statistics: " + person);
 				ficsGamesStats.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
@@ -1269,7 +1311,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					}
 				});
 
-				MenuItem watchBotStats = new MenuItem(menu, SWT.PUSH);
+				MenuItem watchBotStats = new MenuItem(websiteMenu, SWT.PUSH);
 				watchBotStats.setText("WatchBot history: " + person);
 				watchBotStats.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
@@ -1277,8 +1319,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								.getWatchBotJavascript(person));
 					}
 				});
-
-				new MenuItem(menu, SWT.SEPARATOR);
 			}
 
 			String[] tags = UserTagService.getInstance().getTags();
@@ -1324,41 +1364,21 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					});
 				}
 			}
-			if (!connector.isOnExtendedCensor(person)) {
-
-				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
-				extCensor.setText("+extcensor " + person);
-				extCensor.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						connector.addExtendedCensor(person);
-						onAppendChatEventToInputText(new ChatEvent(null,
-								ChatType.INTERNAL, "Added " + person
-										+ " to extended censor."));
-					}
-				});
-			} else {
-				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
-				extCensor.setText("-extcensor " + person);
-				extCensor.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						boolean result = connector.removeExtendedCensor(person);
-						onAppendChatEventToInputText(new ChatEvent(null,
-								ChatType.INTERNAL, result ? "Removed " + person
-										+ " to extended censor." : " Person "
-										+ person
-										+ " is not on extended censor."));
-					}
-				});
-			}
 
 			final String[][] connectorPersonItems = connector
 					.getPersonActions(person);
 			if (connectorPersonItems != null) {
+				MenuItem personCommands = new MenuItem(menu, SWT.CASCADE);
+				personCommands.setText(getConnector().getShortName()
+						+ " commands: '" + person + "'");
+				Menu personCommandsMenu = new Menu(menu);
+				personCommands.setMenu(personCommandsMenu);
+
 				for (int i = 0; i < connectorPersonItems.length; i++) {
 					if (connectorPersonItems[i][0].equals("separator")) {
-						new MenuItem(menu, SWT.SEPARATOR);
+						new MenuItem(personCommandsMenu, SWT.SEPARATOR);
 					} else {
-						item = new MenuItem(menu, SWT.PUSH);
+						item = new MenuItem(personCommandsMenu, SWT.PUSH);
 						item.setText(connectorPersonItems[i][0]);
 						final int index = i;
 						item.addListener(SWT.Selection, new Listener() {

@@ -233,7 +233,9 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		browser.addLocationListener(new LocationAdapter() {
 			@Override
 			public void changed(LocationEvent event) {
-				urlText.setText(event.location);
+				if (!urlText.isDisposed()) {
+					urlText.setText(event.location);
+				}
 			}
 		});
 
