@@ -51,6 +51,11 @@ import raptor.util.RaptorRunnable;
 public class ChatUtils {
 	public static final String FORWARD_CHAR = " `1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./?><MNBVCXZ\":LKJHGFDSA|}{POIUYTREWQ+_)(*&^%$#@!~";
 	private static final Log LOG = LogFactory.getLog(ChatUtils.class);
+	public static final String whiteSpaceChars = " \r\n\t";
+
+	public static boolean isWhiteSpaceChar(char c) {
+		return whiteSpaceChars.indexOf(c) != -1;
+	}
 
 	public static void addActionsToToolbar(
 			final ChatConsoleController controller,
@@ -173,15 +178,23 @@ public class ChatUtils {
 			return text;
 		} else if (text != null
 				&& (text.endsWith(".com") || text.endsWith(".org")
-						|| text.endsWith(".edu") || text.startsWith("www."))
-				&& !text.contains("@")) {
+						|| text.endsWith(".gov") || text.endsWith(".edu") || text
+						.startsWith("www."))) {
 			if (text.endsWith(".") || text.endsWith(",")) {
 				text = text.substring(0, text.length() - 1);
 			}
 			return "http://" + text;
-		} else {
-			return null;
+		} else if (text != null) {
+			int httpIndex = text.indexOf("http://");
+			if (httpIndex != -1) {
+				return text.substring(httpIndex);
+			}
+			int httpsIndex = text.indexOf("https://");
+			if (httpsIndex != -1) {
+				return text.substring(httpsIndex);
+			}
 		}
+		return null;
 	}
 
 	/**
@@ -189,8 +202,13 @@ public class ChatUtils {
 	 * method handles ICS wrapping and will remove it and return just the url.
 	 */
 	public static String getUrl(StyledText text, int position) {
-		String candidateWord = getWrappedWord(text, position);
-		return getUrl(candidateWord);
+		String candidateWord = getWord(text, position);
+
+		if (candidateWord != null) {
+			return getUrl(candidateWord);
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -205,11 +223,11 @@ public class ChatUtils {
 			int currentPosition = position;
 			char currentChar = charAt(text, currentPosition);
 
-			while (currentPosition >= 0 && !Character.isWhitespace(currentChar)) {
+			while (currentPosition >= 0 && !isWhiteSpaceChar(currentChar)) {
 				currentChar = charAt(text, currentPosition--);
 			}
 
-			if (Character.isWhitespace(currentChar)) {
+			if (isWhiteSpaceChar(currentChar)) {
 				currentPosition++;
 			}
 
@@ -219,10 +237,10 @@ public class ChatUtils {
 			currentChar = charAt(text, currentPosition);
 
 			while (currentPosition < text.getCharCount()
-					&& !Character.isWhitespace(currentChar)) {
+					&& !isWhiteSpaceChar(currentChar)) {
 				currentChar = charAt(text, currentPosition++);
 			}
-			if (Character.isWhitespace(currentChar)) {
+			if (isWhiteSpaceChar(currentChar)) {
 				currentPosition--;
 			}
 
@@ -237,84 +255,6 @@ public class ChatUtils {
 
 		} catch (Exception e) {
 			LOG.info("Error obtaining word: ", e);
-			return null;
-		}
-	}
-
-	/**
-	 * Returns null if the current position isn't a wrapped word, otherwise
-	 * returns the word with the ICS wrapping removed.
-	 */
-	public static String getWrappedWord(StyledText text, int position) {
-		try {
-			String result = null;
-			int lineStart;
-			int lineEnd;
-
-			int currentPosition = position;
-			char currentChar = charAt(text, currentPosition);
-
-			// This method currently does'nt check backwards through all the
-			// wraps.
-			// This should probably be added in the future sometime so you can
-			// click on
-			// the second or third wrapped line of a link and it will work.
-			while (currentPosition > 0 && !Character.isWhitespace(currentChar)) {
-				currentChar = charAt(text, --currentPosition);
-			}
-
-			lineStart = currentPosition;
-
-			currentPosition = position;
-			currentChar = charAt(text, currentPosition);
-
-			while (currentPosition < text.getCharCount() - 1
-					&& !Character.isWhitespace(currentChar)) {
-				currentChar = charAt(text, ++currentPosition);
-			}
-
-			lineEnd = currentPosition;
-
-			if (text.getContent().getLineAtOffset(lineEnd) == text.getContent()
-					.getLineCount() - 1) {
-				result = text.getText(lineStart + 1, text.getCharCount() - 1);
-			} else {
-				result = text.getText(lineStart + 1, lineEnd - 1);
-
-				// now check to see if its a wrap
-				while (Character.isWhitespace(currentChar)
-						&& currentPosition < text.getCharCount() - 1) {
-					currentChar = charAt(text, ++currentPosition);
-				}
-				while (currentChar == '\\') {
-					currentChar = charAt(text, ++currentPosition);
-					while (Character.isWhitespace(currentChar)
-							&& currentPosition < text.getCharCount() - 1) {
-						currentChar = charAt(text, ++currentPosition);
-					}
-
-					lineStart = currentPosition - 1;
-					while (!Character.isWhitespace(currentChar)
-							&& currentPosition < text.getCharCount() - 1) {
-						currentChar = charAt(text, ++currentPosition);
-					}
-
-					lineEnd = currentPosition;
-					result += text.getText(lineStart + 1, lineEnd - 1);
-
-					while (Character.isWhitespace(currentChar)
-							&& currentPosition < text.getCharCount() - 1) {
-						currentChar = charAt(text, ++currentPosition);
-					}
-				}
-			}
-
-			if (result != null) {
-				return stripDoubleUrls(trimDateStampFromWord(result));
-			}
-			return result;
-
-		} catch (Exception e) {
 			return null;
 		}
 	}

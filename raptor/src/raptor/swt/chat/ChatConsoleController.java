@@ -2082,10 +2082,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void onInputTextDoubleClick(MouseEvent e) {
-		int caretPosition = chatConsole.inputText.getCaretOffset();
-
 		if (chatConsole.inputText.getSelectionText().equals("next")) {
 			connector.sendMessage("next", true);
+			return;
+		}
+
+		int caretPosition = 0;
+		try {
+			caretPosition = chatConsole.inputText
+					.getOffsetAtLocation(new Point(e.x, e.y));
+		} catch (IllegalArgumentException iae) {
 			return;
 		}
 
@@ -2308,7 +2314,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (StringUtils.isBlank(word)) {
 			word = ChatUtils
 					.getWord(chatConsole.getOutputText(), caretPosition);
-			System.err.println(word);
 			wasSelectedText = false;
 		} else {
 			word = connector.removeLineBreaks(word);
