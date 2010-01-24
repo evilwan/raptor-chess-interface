@@ -198,15 +198,19 @@ public class ChatUtils {
 	 */
 	public static String getWord(StyledText text, int position) {
 		try {
-			
+
 			int lineStart;
 			int lineEnd;
 
 			int currentPosition = position;
 			char currentChar = charAt(text, currentPosition);
 
-			while (currentPosition > 0 && !Character.isWhitespace(currentChar)) {
-				currentChar = charAt(text, --currentPosition);
+			while (currentPosition >= 0 && !Character.isWhitespace(currentChar)) {
+				currentChar = charAt(text, currentPosition--);
+			}
+
+			if (Character.isWhitespace(currentChar)) {
+				currentPosition++;
 			}
 
 			lineStart = currentPosition;
@@ -216,16 +220,23 @@ public class ChatUtils {
 
 			while (currentPosition < text.getCharCount()
 					&& !Character.isWhitespace(currentChar)) {
-				currentChar = charAt(text, ++currentPosition);
+				currentChar = charAt(text, currentPosition++);
+			}
+			if (Character.isWhitespace(currentChar)) {
+				currentPosition--;
 			}
 
 			lineEnd = currentPosition;
 
-			return trimDateStampFromWord(text.getText(lineStart + 1,
-					lineEnd - 1));
-			
+			if (lineStart < lineEnd) {
+				return trimDateStampFromWord(text.getText(lineStart + 1,
+						lineEnd - 1));
+			} else {
+				return null;
+			}
+
 		} catch (Exception e) {
-			LOG.info("Error obtaining word: ",e);
+			LOG.info("Error obtaining word: ", e);
 			return null;
 		}
 	}
@@ -356,13 +367,13 @@ public class ChatUtils {
 	}
 
 	public static void openRegularExpressionTab(Connector connector,
-			String regularExpression,boolean isSelected) {
+			String regularExpression, boolean isSelected) {
 		if (!Raptor.getInstance().getWindow()
 				.containsPartnerTellItem(connector)) {
 			ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 					new RegExController(connector, regularExpression));
 			Raptor.getInstance().getWindow().addRaptorWindowItem(windowItem,
-					false,isSelected);
+					false, isSelected);
 			ChatUtils.appendPreviousChatsToController(windowItem.getConsole());
 		}
 	}

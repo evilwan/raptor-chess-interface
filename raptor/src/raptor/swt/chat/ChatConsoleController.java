@@ -2308,6 +2308,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (StringUtils.isBlank(word)) {
 			word = ChatUtils
 					.getWord(chatConsole.getOutputText(), caretPosition);
+			System.err.println(word);
 			wasSelectedText = false;
 		} else {
 			word = connector.removeLineBreaks(word);
