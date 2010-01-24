@@ -172,7 +172,10 @@ public class TimesealingSocket extends Socket implements Runnable {
 					super.getInputStream());
 			raptor.connector.ics.timeseal.TimesealOutputStream timesealOutputStream = timesealPipe
 					.getTimesealOutputStream();
-			String timesealRequest = "\n\r[G]\n\r";
+			//Timeseal 1
+			//String timesealRequest = "\n\r[G]\n\r";
+			//Timeseal 2
+			String timesealRequest = "[G]\0";
 			byte timesealRequestBytes[] = new byte[timesealRequest.length()];
 			int i = 0;
 			int j = 0;
