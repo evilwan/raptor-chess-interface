@@ -123,8 +123,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	protected void issueGamesMessage() {
-		if (connector != null && connector.isConnected()
-				&& !connector.isConnecting()) {
+		if (connector != null && connector.isLoggedIn()) {
 			Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
 				public void execute() {
 					lastRefreshLabel.setText("Refreshing...");
@@ -276,7 +275,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public void sendGamesMessage() {
-		if (isActive && connector.isConnected()) {
+		if (isActive && connector.isLoggedIn()) {
 			connector.sendMessage("$$games", true, ChatType.GAMES);
 		}
 	}

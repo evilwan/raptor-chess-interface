@@ -292,18 +292,13 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public boolean isLikelyCommandPrecedingPersonName(String command) {
 		command = command.toLowerCase();
-		return "tell".startsWith(command) ||
-		       "history".startsWith(command) ||
-		       "variables".startsWith(command) ||
-		       "match".startsWith(command) ||
-		       "ivars".startsWith(command) ||
-		       "journal".startsWith(command) || 
-		       "resign".startsWith(command) ||
-		       "message".startsWith(command) ||
-		       "shout".startsWith(command) ||
-		       "cshout".startsWith(command) ||
-		       "finger".startsWith(command);
-		       
+		return "tell".startsWith(command) || "history".startsWith(command)
+				|| "variables".startsWith(command)
+				|| "match".startsWith(command) || "ivars".startsWith(command)
+				|| "journal".startsWith(command)
+				|| "resign".startsWith(command)
+				|| "message".startsWith(command) || "shout".startsWith(command)
+				|| "cshout".startsWith(command) || "finger".startsWith(command);
 
 	}
 
@@ -1104,15 +1099,21 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void sendBugAvailableTeamsMessage() {
-		sendMessage("$$bugwho p", true, ChatType.BUGWHO_AVAILABLE_TEAMS);
+		if (isConnected() && isLoggedIn()) {
+			sendMessage("$$bugwho p", true, ChatType.BUGWHO_AVAILABLE_TEAMS);
+		}
 	}
 
 	public void sendBugGamesMessage() {
-		sendMessage("$$bugwho g", true, ChatType.BUGWHO_GAMES);
+		if (isConnected() && isLoggedIn()) {
+			sendMessage("$$bugwho g", true, ChatType.BUGWHO_GAMES);
+		}
 	}
 
 	public void sendBugUnpartneredBuggersMessage() {
-		sendMessage("$$bugwho u", true, ChatType.BUGWHO_UNPARTNERED_BUGGERS);
+		if (isConnected() && isLoggedIn()) {
+			sendMessage("$$bugwho u", true, ChatType.BUGWHO_UNPARTNERED_BUGGERS);
+		}
 	}
 
 	public void sendGetSeeksMessage() {
@@ -1805,6 +1806,13 @@ public abstract class IcsConnector implements Connector {
 				parseMessage(message);
 			}
 		}
+	}
+
+	/**
+	 * Returns true if the user is currently logged in.
+	 */
+	public boolean isLoggedIn() {
+		return isConnected() && isLoggedIn;
 	}
 
 	/**

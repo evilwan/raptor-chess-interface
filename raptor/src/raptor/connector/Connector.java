@@ -283,6 +283,11 @@ public interface Connector {
 	 * parsePerson with this word would return the actual persons name.
 	 */
 	public boolean isLikelyPerson(String word);
+	
+	/**
+	 * Returns true if the user is currently logged in.
+	 */
+	public boolean isLoggedIn();
 
 	/**
 	 * Returns true if isConnected and a user is playing a game.
