@@ -1,0 +1,27 @@
+[Event "Microsoft, Blitz:10"] 
+[Site "Microsoft"] 
+[Date "2010.01.18"] 
+[Round "3"] 
+[White "Junior 2010 UCI"] 
+[Black "Rybka 3"] 
+[Result "1-0"] 
+[ECO "C92"] 
+[PlyCount "243"] 
+
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Bb7 
+10. d3 Na5 11. Bc2 c5 12. Nbd2 Re8 13. Nf1 Qc7 14. Ng3 d5 15. exd5 Bxd5 16. Nf5 Bd8 17. a4 
+b4 18. Ne3 Bc6 19. Nd2 Qb7 20. c4 Bc7 21. b3 Rad8 22. Bb2 Bd7 23. g4 Be6 24. g5 Nd7 25. Ne4 
+Bxh3 26. Qh5 Be6 27. Kh2 Qc6 28. Rg1 Nb7 29. Raf1 Bb8 30. Bd1 Bd6 31. Rh1 Nf8 32. Kg1 Be7 
+33. Bxe5 Rxd3 34. Bf3 Bd7 35. Nf6+ Bxf6 36. Bxc6 Rxe5 37. Be4 g6 38. Bxd3 gxh5 39. gxf6 Na5 
+40. Bc2 Bc6 41. Rh3 Nd7 42. Rd1 Nxf6 43. Rd8+ Kg7 44.Nf5+ Kg6 45. Nd6+ Kg7 46. f4 Re1+ 
+47. Kf2 Rc1 48. Nf5+ Kg6 49. Ne3+ Kg7 50. Rg3+ Ng4+ 51. Ke2 f5 52. Kd2 Rh1 53. Nxf5+ Kf7 
+54. Rc8 Rh2+ 55. Kc1 Ke6 56. Ng7+ Kd7 57. Re8 Rh1+ 58. Kd2 Kc7 59. Re1 Rh2+ 60. Re2 Rh1 
+61. Ne6+ Kb6 62. Bxh7 h4 63. Rxg4 Nxb3+ 64. Ke3 Rh3+ 65. Kf2 Rh2+ 66. Kf1 Nd2+ 67. Rxd2 
+Rxd2 68. a5+ Kxa5 69. Nxc5 Kb6 70. Nb3 Rd8 71. Rxh4 a5 72. Rh6 a4 73. Be4 axb3 74. Rxc6+ 
+Ka5 75. Rc5+ Ka4 76. Rd5 Rh8 77. c5 b2 78. c6 Rh4 79. Rf5 Rh1+ 80. Ke2 Rc1 81. Kd2 Rc4 82. 
+Bb1 b3 83. Re5 Rxc6 84. Re1 Kb4 85. f5 Rd6+ 86. Ke3 Rc6 87. Be4 Rf6 88. Kd4 Rf8 89. Rf1 
+Rd8+ 90. Ke3 Rf8 91. f6 Kc5 92. f7 Kc4 93. Bd3+ Kd5 94. Kd2 Kc5 95. Kc3 Kd6 96. Kxb2 Kd5 
+97. Rf3 Ke5 98. Bc4 Kd4 99. Rf4+ Ke5 100. Rg4 Kf6 101. Rg8 Rxf7 102. Bxf7 Kxf7 103. Rg5 Ke6 
+104. Kxb3 Kf7 105. Kc4 Kf6 106. Rh5 Kg6 107. Re5 Kf7 108. Kd5 Kf6 109. Kd6 Kg7 110. Rf5 
+Kh6 111. Ke5 Kg7 112. Rf6 Kg8 113. Ke6 Kg7 114. Kf5 Kh7 115. Rf7+ Kh8 116. Kg6 Kg8 117. 
+Kf6 Kh8 118. Rb7 Kg8 119. Rb8+ Kh7 120. Rb1 Kg8 121. Rh1 Kf8 122. Rh8# 1-0

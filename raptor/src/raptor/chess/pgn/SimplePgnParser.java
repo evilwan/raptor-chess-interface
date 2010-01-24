@@ -13,6 +13,9 @@
  */
 package raptor.chess.pgn;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import raptor.chess.Result;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
@@ -22,6 +25,8 @@ import raptor.util.RaptorStringUtils;
  * 
  */
 public class SimplePgnParser extends AbstractPgnParser {
+	@SuppressWarnings("unused")
+	private static final Log LOG = LogFactory.getLog(SimplePgnParser.class);
 
 	/**
 	 * OLD SLOW REGEX private static final String STARTS_WITH_MOVE_NUMBER_REGEX
@@ -51,7 +56,7 @@ public class SimplePgnParser extends AbstractPgnParser {
 			throw new IllegalArgumentException("pgn cant be null or empty.");
 		}
 		this.pgn = pgn;
-		lineTokenizer = new RaptorStringTokenizer(pgn, "\n\r", false);
+		lineTokenizer = new RaptorStringTokenizer(pgn, "\n\r", true);
 	}
 
 	public int getLineNumber() {
@@ -118,7 +123,7 @@ public class SimplePgnParser extends AbstractPgnParser {
 			String nextWord = wordTok.nextToken();
 
 			do {
-				if (nextWord == null) {
+				if (nextWord == null || "".equals(nextWord)) {
 					// We have reached the end of the line, read in the next
 					// line.
 					readNextLine();
@@ -236,6 +241,7 @@ public class SimplePgnParser extends AbstractPgnParser {
 						}
 					}
 				} else {
+					System.err.println(nextWord);
 					String[] moveNumberSplit = splitOutGameMoveNumber(nextWord);
 					if (moveNumberSplit != null) {
 						int moveNumber = Integer.parseInt(moveNumberSplit[0]);
