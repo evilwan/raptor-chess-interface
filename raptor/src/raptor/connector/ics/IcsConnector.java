@@ -1116,7 +1116,9 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public void sendGetSeeksMessage() {
-		sendMessage("$$sought all", true, ChatType.SEEKS);
+		if (isLoggedIn && isConnected()) {
+			sendMessage("$$sought all", true, ChatType.SEEKS);
+		}
 	}
 
 	public void sendMessage(String message) {
