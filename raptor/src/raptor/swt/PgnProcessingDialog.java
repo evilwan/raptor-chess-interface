@@ -96,7 +96,7 @@ public class PgnProcessingDialog extends Dialog {
 
 	public static final int MAX_CHARS_IN_FILE = 1048576;
 
-	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);;
+	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);
 
 	private Button cancelButton;
 	private Composite cancelComposite;
