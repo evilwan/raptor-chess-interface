@@ -364,7 +364,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
 		setDefault(APP_ZOOM_FACTOR, 1.0);
 
-		if (OSUtils.isLikelyWindows()) {
+		if (OSUtils.isLikelyWindows() && !OSUtils.isLikelyWindows7()) {
 			setDefault(SPEECH_PROCESS_NAME, "SayStatic");
 		}
 
@@ -901,8 +901,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
-		//Timeseal 1 connect string
-		//setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
+		// Timeseal 1 connect string
+		// setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
 		setDefault(TIMESEAL_INIT_STRING, "TIMESEAL2|raptorUser|OpenSeal|");
 
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
