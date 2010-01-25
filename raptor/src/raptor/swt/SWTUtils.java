@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.connector.Connector;
+import raptor.connector.fics.FicsConnector;
 
 /**
  * A class containing SWT and JFace utilities.
@@ -324,5 +325,32 @@ public class SWTUtils {
 			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 		}
 	}
+	
+	/**
+	 * Opens a seek table window item if one is not already open for the
+	 * specified connector.
+	 */
+	public static void openGamesBotWindowItem(FicsConnector connector,String playerName) {
+		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+				.getWindowItems(GameBotWindowItem.class);
+
+		boolean openNewWindow = true;
+
+		for (RaptorWindowItem item : items) {
+			GameBotWindowItem gamesBotWindowItem = (GameBotWindowItem) item;
+			if (gamesBotWindowItem.getConnector() instanceof FicsConnector) {
+				gamesBotWindowItem.setPlayerName(playerName);
+				Raptor.getInstance().getWindow().forceFocus(item);
+				openNewWindow = false;
+				break;
+			}
+		}
+
+		if (openNewWindow) {
+			GameBotWindowItem item = new GameBotWindowItem(connector,playerName);
+			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
+		}
+	}
+
 
 }

@@ -125,6 +125,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 	protected void issueGamesMessage() {
 		if (connector != null && connector.isLoggedIn()) {
 			Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
+				@Override
 				public void execute() {
 					lastRefreshLabel.setText("Refreshing...");
 				}

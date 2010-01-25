@@ -184,6 +184,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	 * fics1 connector, otherwise its null.
 	 */
 	protected FicsConnector fics1 = null;
+	protected GameBotService gameBotService = new GameBotService(this);
+	protected GameBotParser gameBotParser = new GameBotParser(this);
 	protected String partnerOnConnect;
 
 	public FicsConnector() {
@@ -196,6 +198,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		initFics2();
 		createMenuActions();
 
+	}
+
+	public GameBotService getGameBotService() {
+		return gameBotService;
+	}
+
+	public void setGameBotService(GameBotService gameBotService) {
+		this.gameBotService = gameBotService;
 	}
 
 	@Override
@@ -303,6 +313,23 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	@Override
 	public void publishEvent(final ChatEvent event) {
 		if (chatService != null) { // Could have been disposed.
+
+			// handle gamebot tab messages.
+			GameBotParseResults gameBotResults = gameBotParser.parse(event);
+			if (gameBotResults != null) {
+				System.err.println("Was gamebot results \n" + event.getMessage());
+				if (!gameBotResults.isIncomplete()) {
+					if (gameBotResults.isPlayerInDb()) {
+						gameBotService.fireGameBotPageArrived(gameBotResults
+								.getRows(), gameBotResults.hasNextPage);
+					} else {
+						gameBotService
+								.fireGameBotPlayerNotInDb(gameBotResults.playerName);
+					}
+				}
+				return;
+			}
+
 			if (event.getType() == ChatType.PARTNERSHIP_CREATED) {
 				if (fics2 != null
 						&& isConnected()
@@ -371,7 +398,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 					}
 				}
 			}
-
 			super.publishEvent(event);
 		}
 	}

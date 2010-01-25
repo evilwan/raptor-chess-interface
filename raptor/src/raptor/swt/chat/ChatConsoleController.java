@@ -1258,6 +1258,17 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			});
 
+			if (connector instanceof FicsConnector) {
+				MenuItem gamebotItem = new MenuItem(menu, SWT.PUSH);
+				gamebotItem.setText("gamebot history: " + person);
+				gamebotItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						SWTUtils.openGamesBotWindowItem(
+								(FicsConnector) connector, person);
+					}
+				});
+			}
+
 			if (!connector.isOnExtendedCensor(person)) {
 
 				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);

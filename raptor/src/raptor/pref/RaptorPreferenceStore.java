@@ -861,6 +861,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 		setDefault("fics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
+		setDefault("fics-" + GAME_BOT_QUADRANT, Quadrant.VIII);
 
 		setDefault("fics2-" + MAIN_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + CHANNEL_TAB_QUADRANT, Quadrant.VII);
@@ -874,6 +875,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
 		setDefault("fics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
+		setDefault("fics2-" + GAME_BOT_QUADRANT, Quadrant.VIII);
 
 		setDefault("bics-" + MAIN_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + CHANNEL_TAB_QUADRANT, Quadrant.VI);

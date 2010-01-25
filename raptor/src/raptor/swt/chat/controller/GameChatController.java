@@ -16,6 +16,7 @@ package raptor.swt.chat.controller;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;

@@ -27,6 +27,7 @@ public interface PreferenceKeys {
 	public static final String REGEX_TAB_QUADRANT = "regex-quadrantv2.0";
 	public static final String SEEK_TABLE_QUADRANT = "seek-table-quadrantv2.0";
 	public static final String GAMES_TAB_QUADRANT = "games-tab-quadrantv2.0";
+	public static final String GAME_BOT_QUADRANT = "game-bot-quadrantv2.0";
 	public static final String BUG_WHO_QUADRANT = "bug-who-quadrantv2.0";
 	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrantv2.0";
 	public static final String CHESS_BOARD_SECONDARY_QUADRANT = "chess-board-secondary-game-quadrantv2.0";
