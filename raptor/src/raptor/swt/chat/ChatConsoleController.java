@@ -77,6 +77,7 @@ import raptor.service.DictionaryService;
 import raptor.service.MemoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
+import raptor.service.ThreadService;
 import raptor.service.UserTagService;
 import raptor.service.ChatService.ChatListener;
 import raptor.swt.ItemChangedListener;
@@ -96,6 +97,7 @@ import raptor.util.RaptorStringUtils;
 
 public abstract class ChatConsoleController implements PreferenceKeys {
 	public static final double CLEAN_PERCENTAGE = .33;
+	public static final long SPELL_CHECK_DELAY = 1000;
 	private static final Log LOG = LogFactory
 			.getLog(ChatConsoleController.class);
 	public static final int TEXT_CHUNK_SIZE = 1000;
@@ -173,8 +175,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected boolean hasUnseenText;
 	protected boolean ignoreAwayList;
 	protected boolean isActive;
-	protected MouseListener inputTextClickListener = new MouseAdapter() {
+	protected long lastCommandLineKeystrokeTime;
+	protected String lastSpellCheckLine;
 
+	protected MouseListener inputTextClickListener = new MouseAdapter() {
 		@Override
 		public void mouseDoubleClick(MouseEvent e) {
 			onInputTextDoubleClick(e);
@@ -186,7 +190,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				onInputTextRightClick(e);
 			}
 		}
-
 	};
 
 	/**
@@ -214,6 +217,22 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		public void mouseUp(MouseEvent e) {
 			if (SWTUtils.isRightClick(e)) {
 				onOutputTextRightClick(e);
+			}
+		}
+	};
+
+	protected Runnable spellCheckRunnable = new Runnable() {
+		public void run() {
+			if (!isDisposed && chatConsole != null && !chatConsole.isDisposed()
+					&& isActive) {
+				Raptor.getInstance().getDisplay().asyncExec(
+						new RaptorRunnable() {
+							public void execute() {
+								onSpellCheck();
+							}
+						});
+				ThreadService.getInstance().scheduleOneShot(SPELL_CHECK_DELAY,
+						spellCheckRunnable);
 			}
 		}
 	};
@@ -252,10 +271,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onSpellCheck() {
-		if (!getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
+		String outputText = chatConsole.getOutputText().getText();
+		if (!getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)
+				|| outputText == null
+				|| outputText.length() == 0
+				|| (lastSpellCheckLine != null && lastSpellCheckLine
+						.equals(outputText))) {
 			return;
 		}
-		String outputText = chatConsole.getOutputText().getText();
+
 		List<int[]> ranges = new ArrayList<int[]>(10);
 
 		// reset style.
@@ -319,6 +343,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			range.underlineStyle = SWT.UNDERLINE_SQUIGGLE;
 			chatConsole.getOutputText().setStyleRange(range);
 		}
+		lastSpellCheckLine = outputText;
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -522,6 +547,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					chatConsole.outputText.setFocus();
 				}
 			});
+			ThreadService.getInstance().scheduleOneShot(SPELL_CHECK_DELAY,
+					spellCheckRunnable);
 		} else {
 			if (isAutoScrolling()) {
 				onForceAutoScroll();
@@ -810,6 +837,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public boolean processOutputTextKeystroke(Event event) {
+		lastCommandLineKeystrokeTime = System.currentTimeMillis();
+
 		if (ActionUtils.isValidModifier(event.stateMask)) {
 			RaptorAction action = ActionScriptService.getInstance().getAction(
 					event.stateMask, event.keyCode);
@@ -944,7 +973,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			event.doit = false;
 			return true;
 		}
-		onSpellCheck();
 		return false;
 	}
 
