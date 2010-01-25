@@ -332,12 +332,12 @@ public class SWTUtils {
 	 */
 	public static void openGamesBotWindowItem(FicsConnector connector,String playerName) {
 		RaptorWindowItem[] items = Raptor.getInstance().getWindow()
-				.getWindowItems(GameBotWindowItem.class);
+				.getWindowItems(GameBotHistoryWindowItem.class);
 
 		boolean openNewWindow = true;
 
 		for (RaptorWindowItem item : items) {
-			GameBotWindowItem gamesBotWindowItem = (GameBotWindowItem) item;
+			GameBotHistoryWindowItem gamesBotWindowItem = (GameBotHistoryWindowItem) item;
 			if (gamesBotWindowItem.getConnector() instanceof FicsConnector) {
 				gamesBotWindowItem.setPlayerName(playerName);
 				Raptor.getInstance().getWindow().forceFocus(item);
@@ -347,7 +347,7 @@ public class SWTUtils {
 		}
 
 		if (openNewWindow) {
-			GameBotWindowItem item = new GameBotWindowItem(connector,playerName);
+			GameBotHistoryWindowItem item = new GameBotHistoryWindowItem(connector,playerName);
 			Raptor.getInstance().getWindow().addRaptorWindowItem(item);
 		}
 	}

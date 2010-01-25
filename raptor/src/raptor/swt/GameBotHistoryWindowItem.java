@@ -47,7 +47,7 @@ import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
 import raptor.util.RaptorRunnable;
 
-public class GameBotWindowItem implements RaptorConnectorWindowItem {
+public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
@@ -133,7 +133,7 @@ public class GameBotWindowItem implements RaptorConnectorWindowItem {
 		return result;
 	}
 
-	public GameBotWindowItem(FicsConnector connector, String player) {
+	public GameBotHistoryWindowItem(FicsConnector connector, String player) {
 		this.connector = connector;
 		this.player = player;
 		connector.getGameBotService().addGameBotListener(listener);
@@ -197,7 +197,7 @@ public class GameBotWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public String getTitle() {
-		return getConnector().getShortName() + "(GamesBot)";
+		return getConnector().getShortName() + "(GameBot History)";
 	}
 
 	public Control getToolbar(Composite parent) {
