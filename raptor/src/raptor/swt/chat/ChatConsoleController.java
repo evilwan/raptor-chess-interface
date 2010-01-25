@@ -226,6 +226,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					&& isActive) {
 				Raptor.getInstance().getDisplay().asyncExec(
 						new RaptorRunnable() {
+							@Override
 							public void execute() {
 								onSpellCheck();
 							}

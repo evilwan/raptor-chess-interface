@@ -176,7 +176,7 @@ public class GeneralPage extends FieldEditorPreferencePage {
 
 		addField(new ComboFieldEditor(
 				PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL,
-				"Polling Refresh Interval (Seek Table,Bug Partners,Bug Teams,etc):",
+				"Polling Refresh Interval (Seek Tab,BugWho Tab, etc):",
 				POLLING_REFRESH, getFieldEditorParent()));
 
 		StringFieldEditor timesealInitString = new StringFieldEditor(

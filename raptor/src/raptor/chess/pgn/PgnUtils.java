@@ -14,7 +14,9 @@
 package raptor.chess.pgn;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -23,10 +25,16 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import raptor.Raptor;
+import raptor.chess.Game;
+import raptor.chess.GameCursor;
 import raptor.chess.Move;
+import raptor.chess.Variant;
+import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -43,6 +51,62 @@ public class PgnUtils {
 	private static final Log LOG = LogFactory.getLog(PgnUtils.class);
 
 	public static final String PGN_MIME_TYPE = "application/x-chess-pgn";
+	private static final Object PGN_APPEND_SYNCH = new Object();
+
+	/**
+	 * Prepends the game to the users game pgn file.
+	 */
+	public static void appendGameToFile(Game game) {
+		if (Variant.isBughouse(game.getVariant())) {
+			return;
+		}
+		if (Raptor.getInstance().getPreferences().getBoolean(
+				PreferenceKeys.APP_IS_LOGGING_GAMES)
+				&& game.getMoveList().getSize() > 0) {
+
+			// synchronized on PGN_APPEND_SYNCH so just one thread at a time
+			// writes to the file.
+			synchronized (PGN_APPEND_SYNCH) {
+
+				if (game instanceof GameCursor) {
+					game = ((GameCursor) game).getMasterGame();
+				}
+
+				String whiteRating = game.getHeader(PgnHeader.WhiteElo);
+				String blackRating = game.getHeader(PgnHeader.BlackElo);
+
+				whiteRating = StringUtils.remove(whiteRating, 'E');
+				whiteRating = StringUtils.remove(whiteRating, 'P');
+				blackRating = StringUtils.remove(blackRating, 'E');
+				blackRating = StringUtils.remove(blackRating, 'P');
+
+				if (!NumberUtils.isDigits(whiteRating)) {
+					game.removeHeader(PgnHeader.WhiteElo);
+				}
+				if (!NumberUtils.isDigits(blackRating)) {
+					game.removeHeader(PgnHeader.BlackElo);
+				}
+
+				String pgn = game.toPgn();
+				File file = new File(Raptor.GAMES_PGN_FILE);
+				FileWriter fileWriter = null;
+				try {
+					fileWriter = new FileWriter(file, true);
+					fileWriter.append(pgn + "/n/n");
+					fileWriter.flush();
+				} catch (IOException ioe) {
+					LOG.error("Error saving game", ioe);
+				} finally {
+					try {
+						if (fileWriter != null) {
+							fileWriter.close();
+						}
+					} catch (IOException ioe) {
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * Returns the approximate number of games in the specified file.

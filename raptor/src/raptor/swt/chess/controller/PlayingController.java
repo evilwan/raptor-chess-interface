@@ -54,6 +54,7 @@ import raptor.chess.Move;
 import raptor.chess.Result;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
+import raptor.chess.pgn.PgnUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.PlayingStatisticsService;
@@ -162,8 +163,7 @@ public class PlayingController extends ChessBoardController {
 								handleGameStatistics();
 								ThreadService.getInstance().run(new Runnable() {
 									public void run() {
-										ChessBoardUtils
-												.prependGameToPgnFile(getGame());
+										PgnUtils.appendGameToFile(getGame());
 									}
 								});
 
@@ -480,8 +480,8 @@ public class PlayingController extends ChessBoardController {
 				PreferenceKeys.BOARD_COOLBAR_MODE);
 
 		if (toolbar == null) {
-			toolbar = SWTUtils.createToolbar(isCoolbarMode ? getBoard().getCoolbar()
-					: parent);
+			toolbar = SWTUtils.createToolbar(isCoolbarMode ? getBoard()
+					.getCoolbar() : parent);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.PlayingChessBoard, toolbar,
 					isUserWhite());

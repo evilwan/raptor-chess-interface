@@ -219,6 +219,7 @@ public class ChatLogger {
 	 */
 	protected void writeToLogFiles(final ChatEvent event) {
 		ThreadService.getInstance().run(new RaptorRunnable() {
+			@Override
 			public void execute() {
 				if (Raptor.getInstance().getPreferences().getBoolean(
 						PreferenceKeys.APP_IS_LOGGING_CONSOLE)
