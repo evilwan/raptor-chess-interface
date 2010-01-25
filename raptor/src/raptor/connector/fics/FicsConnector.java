@@ -317,7 +317,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			// handle gamebot tab messages.
 			GameBotParseResults gameBotResults = gameBotParser.parse(event);
 			if (gameBotResults != null) {
-				System.err.println("Was gamebot results \n" + event.getMessage());
 				if (!gameBotResults.isIncomplete()) {
 					if (gameBotResults.isPlayerInDb()) {
 						gameBotService.fireGameBotPageArrived(gameBotResults
