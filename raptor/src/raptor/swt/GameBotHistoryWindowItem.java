@@ -367,7 +367,7 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 					return;
 				}
 				synchronized (gameBotPageTable.getTable()) {
-					statusLabel.setText("Player " + player + " ("
+					statusLabel.setText("Player " + player + ": ("
 							+ (currentPage + 1) + " of "
 							+ (hasRetrievedAllPages ? pages.size() : "?")
 							+ " pages.)");
