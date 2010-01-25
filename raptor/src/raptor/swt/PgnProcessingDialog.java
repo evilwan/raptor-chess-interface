@@ -94,7 +94,7 @@ public class PgnProcessingDialog extends Dialog {
 
 	}
 
-	public static final int MAX_CHARS_IN_FILE = 1048576 * 5;
+	public static final int MAX_BYTES_IN_FILE = 1048576 * 5;
 
 	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);
 
@@ -120,12 +120,12 @@ public class PgnProcessingDialog extends Dialog {
 		super(parent);
 		this.file = new File(file);
 
-		if (this.file.length() > MAX_CHARS_IN_FILE) {
+		if (this.file.length() > MAX_BYTES_IN_FILE) {
 			Raptor
 					.getInstance()
 					.alert(
 							"Large file detected. Raptor will only parse the first "
-									+ MAX_CHARS_IN_FILE
+									+ MAX_BYTES_IN_FILE
 									+ " characters from this file. Future support is planned for large pgn files.");
 
 		}
@@ -142,7 +142,7 @@ public class PgnProcessingDialog extends Dialog {
 				try {
 					// start work
 					StreamingPgnParser parser = new StreamingPgnParser(
-							reader = new FileReader(file), MAX_CHARS_IN_FILE);
+							reader = new FileReader(file), MAX_BYTES_IN_FILE);
 					ProfressPgnParserListener listener = new ProfressPgnParserListener();
 					parser.addPgnParserListener(listener);
 
