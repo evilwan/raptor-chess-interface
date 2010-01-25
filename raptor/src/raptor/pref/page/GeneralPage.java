@@ -76,6 +76,27 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				"Launch links in external browser", getFieldEditorParent());
 		addField(launchExternalLinkx);
 
+		addField(new BooleanFieldEditor(PreferenceKeys.APP_IS_LOGGING_CONSOLE,
+				"Log console messages to " + Raptor.USER_RAPTOR_HOME_PATH
+						+ "/logs/${ConnectorName}-Console.log",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.APP_IS_LOGGING_PERSON_TELLS,
+				"Log person tells to " + Raptor.USER_RAPTOR_HOME_PATH
+						+ "/logs/${ConnectorName}-${PersonName}.log",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.APP_IS_LOGGING_CHANNEL_TELLS,
+				"Log person tells to " + Raptor.USER_RAPTOR_HOME_PATH
+						+ "/logs/${ConnectorName}-${Channel}.log",
+				getFieldEditorParent()));
+
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
+				"Launch browser on startup", getFieldEditorParent()));
+
 		BooleanFieldEditor isSavingGamePgn = new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LOGGING_GAMES, "Save my games to "
 						+ Raptor.GAMES_PGN_FILE, getFieldEditorParent());

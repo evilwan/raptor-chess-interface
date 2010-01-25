@@ -84,6 +84,11 @@ public interface PreferenceKeys {
 	public static final String APP_QUAD67_QUAD8_SASH_WEIGHTS = "app-quad67-quad8-sash-weights";
 	public static final String APP_WINDOW_BOUNDS = "app-window-bounds";
 	public static final String APP_ZOOM_FACTOR = "app-zoom-factor";
+	
+	
+	public static final String APP_IS_LOGGING_CONSOLE = "app-is-logging-console";
+	public static final String APP_IS_LOGGING_PERSON_TELLS = "app-is-logging-person-tells";
+	public static final String APP_IS_LOGGING_CHANNEL_TELLS = "app-is-logging-channel-tells";
 
 	public static final String ACTION_SEPARATOR_SEQUENCE = "action-separator-sequence";
 

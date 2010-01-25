@@ -149,7 +149,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		public void widgetSelected(SelectionEvent e) {
 			smartScroll();
 		}
-
 	};
 
 	protected Listener consoleInputKeyUpListener = new Listener() {

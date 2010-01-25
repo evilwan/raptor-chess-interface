@@ -47,8 +47,8 @@ public class ChatService {
 	 */
 	public ChatService(Connector connector) {
 		this.connector = null;
-		logger = new ChatLogger(Raptor.USER_RAPTOR_HOME_PATH + "/chatcache/"
-				+ connector.getShortName() + ".txt");
+		logger = new ChatLogger(connector, Raptor.USER_RAPTOR_HOME_PATH
+				+ "/chatcache/" + connector.getShortName() + ".txt");
 	}
 
 	/**

@@ -352,6 +352,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
 		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 5);
+		setDefault(APP_IS_LOGGING_CONSOLE, false);
+		setDefault(APP_IS_LOGGING_PERSON_TELLS, false);
+		setDefault(APP_IS_LOGGING_CHANNEL_TELLS, false);
 
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
