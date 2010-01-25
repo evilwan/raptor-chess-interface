@@ -94,7 +94,7 @@ public class PgnProcessingDialog extends Dialog {
 
 	}
 
-	public static final int MAX_BYTES_IN_FILE = 1048576 * 5;
+	public static final int MAX_BYTES_IN_FILE = 1048576 * 15;
 
 	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);
 
@@ -126,7 +126,7 @@ public class PgnProcessingDialog extends Dialog {
 					.alert(
 							"Large file detected. Raptor will only parse the first "
 									+ MAX_BYTES_IN_FILE
-									+ " characters from this file. Future support is planned for large pgn files.");
+									+ " bytes from this file. Future support is planned for large pgn files.");
 
 		}
 	}
