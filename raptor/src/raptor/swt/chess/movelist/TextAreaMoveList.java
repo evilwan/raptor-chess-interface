@@ -59,6 +59,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	 */
 	protected int movesTextStart;
 	protected Color moveSelectionColor;
+	private int selectedHalfmove;
 
 	/**
 	 * {@inheritDoc}
@@ -113,8 +114,8 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	 * {@inheritDoc}
 	 */
 	public void select(int halfMoveIndex) {
-		if (halfMoveIndex >= moveNodes.size()
-				|| halfMoveIndex < 0)
+		if (halfMoveIndex >= moveNodes.size() || halfMoveIndex < 0
+				|| selectedHalfmove == halfMoveIndex)
 			return;
 
 		StyleRange sR = new StyleRange();
@@ -124,6 +125,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		textPanel.replaceStyleRanges(movesTextStart, textPanel.getCharCount()
 				- movesTextStart, new StyleRange[] { sR });
 		textPanel.setCaretOffset(sR.start+sR.length);
+		selectedHalfmove = halfMoveIndex;
 	}
 
 	/**
@@ -142,13 +144,13 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		
 			if (textPanel.getCharCount() == 0) {
 				String sd = textPanel.getLineDelimiter();
-				textPanel.append(controller.getGame()
-						.getHeader(PgnHeader.White) + " vs "
-						+ controller.getGame().getHeader(PgnHeader.Black)
-						+ sd + sd);
+				String title = controller.getGame().getHeader(PgnHeader.White)
+						+ " vs " + controller.getGame().getHeader(PgnHeader.Black)
+						+ sd + sd;
+				textPanel.append(title);
 				StyleRange styleRange = new StyleRange();
 				styleRange.start = 0;
-				styleRange.length = controller.getTitle().length();
+				styleRange.length = title.length();
 				styleRange.fontStyle = SWT.BOLD;
 				textPanel.setStyleRange(styleRange);
 				movesTextStart = textPanel.getCharCount();
@@ -156,34 +158,29 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 
 			Game game = controller.getGame();
 			int moveListSize = game.getMoveList().getSize();
-			if (moveListSize == 0) {
+			if (moveListSize == 0 && textPanel.getCharCount() != 0) {
 				textPanel.replaceTextRange(movesTextStart, textPanel
 						.getCharCount(), "");
 			} else {
-				if (moveListSize-moveNodes.size() == 1) {
-					appendMove(moveListSize);
+				if (moveListSize == moveNodes.size())
+					return;
+
+				StringBuffer buff = new StringBuffer();
+				for (int i = moveNodes.size(); i < moveListSize; i++) {
+					int start, length;
+					start = textPanel.getCharCount() + buff.length();
+					String move = getMoveNumber(i)
+							+ GameUtils.convertSanToUseUnicode(game
+									.getMoveList().get(i).toString(), true);
+					buff.append(move);
+					length = move.length();
+					moveNodes.add(start);
+					moveNodesLengths.add(length);
+					buff.append(" ");
 				}
-				else {
-					if (moveListSize==moveNodes.size())
-						return;					
-					
-					StringBuffer buff = new StringBuffer();
-					for (int i = 0; i < moveListSize; i++) {
-						int start, length;
-						start = movesTextStart+buff.length();
-						buff.append((i % 2 == 0) ? Integer.toString((i+3)/2)
-								+ "." : "");
-						buff.append(GameUtils.convertSanToUseUnicode(game
-								.getMoveList().get(i)
-								.toString(), true));
-						length = buff.length()-(start-movesTextStart);
-						moveNodes.add(start);
-						moveNodesLengths.add(length);
-						buff.append(" ");						
-					}
-					textPanel.append(buff.toString());
-					select(moveListSize-1);
-				}
+				textPanel.append(buff.toString());
+				select(moveListSize - 1);
+
 			}
 			
 			if (LOG.isDebugEnabled()) {
@@ -194,9 +191,15 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		
 	}
 
-	private void appendMove(int moveListSize) {
-		// TODO Auto-generated method stub
-		
+	protected void appendMove(int moveListSize) {
+		textPanel.append(getMoveNumber(moveListSize)
+				+ GameUtils.convertSanToUseUnicode(controller.getGame()
+						.getMoveList().get(moveListSize).toString(), true));
+		select(moveListSize-1);
+	}
+	
+	private String getMoveNumber(int i) {
+		return (i % 2 == 0) ? Integer.toString((i+3)/2) + "." : "";
 	}
 	
 }
