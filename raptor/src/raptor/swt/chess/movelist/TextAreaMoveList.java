@@ -21,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -87,6 +89,21 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		moveSelectionColor = new Color(Display.getCurrent(), 165, 192, 255);
 		moveNodes = new ArrayList<Integer>();
 		moveNodesLengths = new ArrayList<Integer>();
+		textPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDown(MouseEvent e) {
+				int caretOffset = textPanel.getCaretOffset();
+				int count = 0;
+				for (int nodeOffset: moveNodes) {
+					if (nodeOffset > caretOffset) {
+						controller.userSelectedMoveListMove(count-1);
+						select(count-1);
+						break;
+					}
+					count++;	
+				}
+			}
+		});
 	}
 
 	/**
