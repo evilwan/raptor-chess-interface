@@ -38,8 +38,7 @@ public class PieceJailChessSquare extends ChessSquare {
 
 			int imageSide = getImageSize();
 			if (pieceImage == null) {
-				pieceImage = getChessPieceImage(pieceJailPiece, imageSide,
-						imageSide);
+				pieceImage = getChessPieceImage(pieceJailPiece, imageSide);
 			}
 
 			int pieceImageX = (size.x - imageSide) / 2;

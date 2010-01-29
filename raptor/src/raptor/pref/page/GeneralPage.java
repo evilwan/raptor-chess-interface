@@ -13,9 +13,6 @@
  */
 package raptor.pref.page;
 
-import java.io.File;
-import java.io.FilenameFilter;
-
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
@@ -30,7 +27,6 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
 import raptor.util.FileUtils;
-import raptor.util.RaptorStringUtils;
 
 public class GeneralPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
@@ -116,57 +112,6 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				PreferenceKeys.APP_HOME_URL, "Browser Home Page:",
 				getFieldEditorParent());
 		addField(homePage);
-
-		File file = new File(Raptor.USER_RAPTOR_DIR + "/imagecache");
-		final File[] files = file.listFiles(new FilenameFilter() {
-
-			public boolean accept(File dir, String name) {
-				return name.endsWith(".png");
-			}
-		});
-
-		long size = 0;
-		if (files != null) {
-			for (File currentFile : files) {
-				size += currentFile.length();
-			}
-		}
-
-		labelButtonFieldEditor = new LabelButtonFieldEditor(
-				"NONE",
-				"Current image cache size: "
-						+ RaptorStringUtils.getMegs(size)
-						+ "\n (Advanced: This could negatively impact Raptor performance)",
-				getFieldEditorParent(), "Clear Cache", new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						for (File currentFile : files) {
-							currentFile.delete();
-						}
-
-						File file = new File(Raptor.USER_RAPTOR_DIR
-								+ "/imagecache");
-						final File[] files = file
-								.listFiles(new FilenameFilter() {
-
-									public boolean accept(File dir, String name) {
-										return name.endsWith(".png");
-									}
-								});
-
-						long size = 0;
-						if (files != null) {
-							for (File currentFile : files) {
-								size += currentFile.length();
-							}
-						}
-						labelButtonFieldEditor
-								.setLabelText("Current image cache size: "
-										+ size / 1024 + "K");
-					}
-
-				});
-		addField(labelButtonFieldEditor);
 
 		StringFieldEditor linuxBrowserPage = new StringFieldEditor(
 				PreferenceKeys.APP_LINUX_UNIX_BROWSER_NAME,

@@ -47,12 +47,10 @@ import raptor.service.SoundService;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.service.UserTagService;
-import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.ErrorDialog;
 import raptor.swt.InputDialog;
 import raptor.swt.RaptorCursorRegistry;
 import raptor.swt.RaptorImageRegistry;
-import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
 import raptor.util.RaptorRunnable;
@@ -170,29 +168,9 @@ public class Raptor implements PreferenceKeys {
 						// Initialize the UCIEngineService after a half second.
 						// Requires a raptor window in case there is an error.
 						UCIEngineService.getInstance();
-
-						String currentChessSet = getInstance().getPreferences()
-								.getString(PreferenceKeys.BOARD_CHESS_SET_NAME);
-
-						// Prompt for set optimization if set is not optimized..
-						if (!ChessBoardUtils
-								.isChessSetOptimized(currentChessSet)
-								&& Raptor
-										.getInstance()
-										.confirm(
-												"Your current chess set "
-														+ currentChessSet
-														+ " is not optimized. "
-														+ "It is strongly suggested that you optimize your current chess sets. "
-														+ "It will boost Raptor performance."
-														+ "Would you like to optimize?")) {
-							ChessSetOptimizationDialog dialog = new ChessSetOptimizationDialog(
-									Raptor.getInstance().getWindow().getShell(),
-									"Chess Set " + currentChessSet
-											+ " Optimization.", currentChessSet);
-							dialog.open();
-
-						}
+						
+						//Remove the old imageCache user directory if its there. (version .98)
+						FileUtils.deleteDir(new File(USER_RAPTOR_HOME_PATH + "/imagecache"));
 					} catch (Throwable t) {
 						Raptor.getInstance().onError(
 								"Error initializing Raptor", t);

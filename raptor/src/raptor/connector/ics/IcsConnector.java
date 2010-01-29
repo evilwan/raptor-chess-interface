@@ -198,7 +198,7 @@ public abstract class IcsConnector implements Connector {
 						command = "date";
 					}
 					sendMessage(command, true);
-					publishEvent(new ChatEvent("", ChatType.INTERNAL, "The \""
+					publishEvent(new ChatEvent("", ChatType.INTERNAL, "The messsage: \""
 							+ command + "\" was just sent as a keep alive."));
 				}
 				ThreadService.getInstance()

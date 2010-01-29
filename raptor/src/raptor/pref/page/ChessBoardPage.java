@@ -16,8 +16,6 @@ package raptor.pref.page;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -28,8 +26,6 @@ import raptor.Raptor;
 import raptor.chess.GameConstants;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.fields.LabelButtonFieldEditor;
-import raptor.swt.ChessSetOptimizationDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.ChessSquare;
@@ -44,10 +40,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 
 		@Override
-		protected Image getChessPieceImage(int piece, int width, int height) {
+		protected Image getChessPieceImage(int piece, int size) {
 			try {
 				return ChessBoardUtils.getChessPieceImage(setFieldEditor
-						.getValue(), piece, width, height);
+						.getValue(), piece, size);
 			} catch (Exception e) {
 				return null;
 			}
@@ -131,10 +127,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 
 		@Override
-		protected Image getChessPieceImage(int piece, int width, int height) {
+		protected Image getChessPieceImage(int piece, int size) {
 			try {
 				return ChessBoardUtils.getChessPieceImage(setFieldEditor
-						.getValue(), piece, width, height);
+						.getValue(), piece, size);
 			} catch (Exception e) {
 				return null;
 			}
@@ -274,24 +270,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
-
-		LabelButtonFieldEditor labelButtonFieldEditor = new LabelButtonFieldEditor(
-				"NONE",
-				"Optimize chess set (Convert from svg to pgns)\n"
-						+ "This may take a few minutes but is highly recommended.",
-				getFieldEditorParent(), "Optimize", new SelectionAdapter() {
-					@Override
-					public void widgetSelected(SelectionEvent e) {
-						ChessSetOptimizationDialog dialog = new ChessSetOptimizationDialog(
-								getShell(), "Chess Set "
-										+ setFieldEditor.getValue()
-										+ " Optimization.", setFieldEditor
-										.getValue());
-						dialog.open();
-					}
-				});
-		addField(labelButtonFieldEditor);
-
 		String[] sets = ChessBoardUtils.getChessSetNames();
 		String[][] setNameValues = new String[sets.length][2];
 

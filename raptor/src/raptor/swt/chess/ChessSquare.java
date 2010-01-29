@@ -223,7 +223,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				int imageSide = getImageSize();
 
 				if (pieceImage == null && piece != EMPTY) {
-					pieceImage = getChessPieceImage(piece, imageSide, imageSide);
+					pieceImage = getChessPieceImage(piece, imageSide);
 				}
 
 				if (pieceImage != null) {
@@ -412,8 +412,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * Provided so it can easily be overridden.By default uses the
 	 * RaptorPreferenceStore setting.
 	 */
-	protected Image getChessPieceImage(int piece, int width, int height) {
-		return ChessBoardUtils.getChessPieceImage(piece, width, height);
+	protected Image getChessPieceImage(int piece, int size) {
+		return ChessBoardUtils.getChessPieceImage(piece, size);
 	}
 
 	/**
@@ -532,8 +532,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		} else {
 			int imageSide = getImageSize();
 			getShell().setCursor(
-					ChessBoardUtils.getCursorForPiece(piece, imageSide,
-							imageSide));
+					ChessBoardUtils.getCursorForPiece(piece, imageSide));
 		}
 	}
 
@@ -544,7 +543,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		getShell().setCursor(
 				Raptor.getInstance().getCursorRegistry().getDefaultCursor());
 	}
-	
+
 	public ChessBoard getChessBoard() {
 		return board;
 	}

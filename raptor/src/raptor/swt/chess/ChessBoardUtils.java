@@ -15,8 +15,6 @@ package raptor.swt.chess;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
-import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +29,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
@@ -72,7 +69,6 @@ import raptor.chess.Variant;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ActionScriptService;
-import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.swt.chess.controller.BughouseSuggestController;
 import raptor.swt.chess.controller.ExamineController;
@@ -80,15 +76,13 @@ import raptor.swt.chess.controller.InactiveController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.ToolBarItemKey;
 import raptor.util.RaptorRunnable;
-import raptor.util.SVGUtil;
 
 public class ChessBoardUtils implements BoardConstants {
 	public static final String CHESS_SET_DIR = Raptor.RESOURCES_DIR + "set/";
 	public static final int DARK_IMAGE_INDEX = 1;
 	public static final int LIGHT_IMAGE_INDEX = 0;
 	private static final Log LOG = LogFactory.getLog(ChessBoardUtils.class);
-	public static final String PIECE_IMAGE_SUFFIX = ".svg";
-	private static SecureRandom secureRandom = new SecureRandom();
+	public static final String PIECE_IMAGE_SUFFIX = ".png";
 	public static final String SQUARE_BACKGROUND_DIR = Raptor.RESOURCES_DIR
 			+ "square/";
 	public static final String SQUARE_BACKGROUND_IMAGE_SUFFIX = ".png";
@@ -191,12 +185,12 @@ public class ChessBoardUtils implements BoardConstants {
 	 * Otherwise the users image cache is checked, if its not there then it is
 	 * loaded form the svg file and cached in the users image cache.
 	 */
-	public static Image getChessPieceImage(int type, int width, int height) {
+	public static Image getChessPieceImage(int type, int size) {
 		if (type == EMPTY) {
 			return null;
 		} else {
 
-			return getChessPieceImage(getChessSetName(), type, width, height);
+			return getChessPieceImage(getChessSetName(), type, size);
 		}
 	}
 
@@ -206,23 +200,24 @@ public class ChessBoardUtils implements BoardConstants {
 	 * Otherwise the users image cache is checked, if its not there then it is
 	 * loaded form the svg file and cached in the users image cache.
 	 */
-	public static Image getChessPieceImage(String name, int type, int width,
-			int height) {
+	public static Image getChessPieceImage(String name, int type, int size) {
 		if (type == EMPTY) {
 			return null;
 		} else {
 
-			if (width <= 0 || height <= 0) {
-				width = 10;
-				height = 10;
+			if (size < 8) {
+				size = 8;
+			}
+			if (size > 160) {
+				size = 160;
 			}
 
-			String key = name + "_" + type + "_" + width + "x" + height;
+			String key = name + "_" + type + "_" + size + "x" + size;
 			Image image = Raptor.getInstance().getImageRegistry().get(key);
 
 			if (image == null) {
-				Image result = new Image(Display.getCurrent(),
-						loadChessPieceFromUserCache(name, type, width, height));
+				Image result = new Image(Display.getCurrent(), CHESS_SET_DIR
+						+ name + "/" + size + "/" + getPieceName(type));
 				Raptor.getInstance().getImageRegistry().put(key, result);
 				return result;
 			} else {
@@ -292,15 +287,14 @@ public class ChessBoardUtils implements BoardConstants {
 	 *            The piece type.
 	 * @return
 	 */
-	public static Cursor getCursorForPiece(int type, int width, int height) {
+	public static Cursor getCursorForPiece(int type, int size) {
 
-		String key = getChessSetName() + "_" + type + "_" + width + "x"
-				+ height;
+		String key = getChessSetName() + "_" + type + "_" + size + "x" + size;
 
 		Cursor result = Raptor.getInstance().getCursorRegistry().get(key);
 
 		if (result == null) {
-			ImageData pieceImageData = getChessPieceImage(type, width, height)
+			ImageData pieceImageData = getChessPieceImage(type, size)
 					.getImageData();
 
 			int hotx = pieceImageData.width / 2;
@@ -439,9 +433,8 @@ public class ChessBoardUtils implements BoardConstants {
 	/**
 	 * Returns the path to the specified svg chess piece.
 	 */
-	public static String getSVGChessPieceName(String chessSetName, int piece) {
-		return CHESS_SET_DIR + chessSetName + "/" + PIECE_TO_NAME[piece]
-				+ PIECE_IMAGE_SUFFIX;
+	public static String getPieceName(int piece) {
+		return PIECE_TO_NAME[piece] + PIECE_IMAGE_SUFFIX;
 	}
 
 	/**
@@ -539,77 +532,6 @@ public class ChessBoardUtils implements BoardConstants {
 		int tenths = (int) (lag % 1000) / 100;
 
 		return "Lag " + seconds + "." + tenths + " sec";
-	}
-
-	/**
-	 * Attempts to load the png file from the users cache. If the file wasnt
-	 * there it loads the SVG file, which will save the png file for later
-	 * loading.
-	 */
-	public static ImageData loadChessPieceFromUserCache(String setName,
-			int type, int width, int height) {
-		long startTime = System.currentTimeMillis();
-
-		String userCacheFilePath = getUserImageCachePieceName(setName, type,
-				width, height);
-		try {
-			return new ImageData(userCacheFilePath);
-		} catch (Throwable t) {
-			LOG.debug("Could not find " + userCacheFilePath
-					+ " in the users cache. Loading from svg.");
-			return loadChessPieceImageFromSVG(setName, type, width, height);
-		} finally {
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Loaded piece from user cache in "
-						+ (System.currentTimeMillis() - startTime));
-			}
-		}
-	}
-
-	/**
-	 * Loads the image from the svg file and saves a png version in the users
-	 * cache on a seperate thread.
-	 */
-	public static ImageData loadChessPieceImageFromSVG(final String setName,
-			final int type, final int width, final int height) {
-		try {
-			long startTime = System.currentTimeMillis();
-
-			String svgFileName = getSVGChessPieceName(setName, type);
-			final ImageData svgImageData = SVGUtil.loadSVG(svgFileName, width,
-					height);
-
-			long delay = 10000 + secureRandom.nextInt(200) * 1000;
-
-			// Now save it in the users piece cache so it is available next
-			// time.
-			ThreadService.getInstance().scheduleOneShot(delay, new Runnable() {
-				public void run() {
-					try {
-						ImageLoader loader = new ImageLoader();
-						loader.data = new ImageData[] { svgImageData };
-						String userCacheFileName = getUserImageCachePieceName(
-								setName, type, width, height);
-						if (LOG.isDebugEnabled()) {
-							LOG.debug("Saving " + userCacheFileName);
-						}
-						loader.save(userCacheFileName, SWT.IMAGE_PNG);
-					} catch (Throwable t) {
-						LOG.error("Error writing image to image cache.", t);
-					}
-				}
-			});
-
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Loading " + svgFileName + " in "
-						+ (System.currentTimeMillis() - startTime));
-			}
-			return svgImageData;
-
-		} catch (IOException ioe) {
-			Raptor.getInstance().onError("Error loading SVG image.", ioe);
-			return null;
-		}
 	}
 
 	/**
@@ -852,28 +774,28 @@ public class ChessBoardUtils implements BoardConstants {
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WQ
-					: BQ, pieceSize, pieceSize));
+					: BQ, pieceSize));
 		} else if (action instanceof AutoKnightAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_KNIGHT, result);
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WN
-					: BN, pieceSize, pieceSize));
+					: BN, pieceSize));
 		} else if (action instanceof AutoBishopAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_BISHOP, result);
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WB
-					: BB, pieceSize, pieceSize));
+					: BB, pieceSize));
 		} else if (action instanceof AutoRookAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_ROOK, result);
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WR
-					: BR, pieceSize, pieceSize));
+					: BR, pieceSize));
 		} else if (action instanceof AutoKingAction
 				&& controller.getGame().getVariant() == Variant.suicide) {
 			result = new ToolItem(toolbar, SWT.RADIO);
@@ -881,7 +803,7 @@ public class ChessBoardUtils implements BoardConstants {
 			int pieceSize = Raptor.getInstance().getPreferences().getInt(
 					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WK
-					: BK, pieceSize, pieceSize));
+					: BK, pieceSize));
 		} else if (action instanceof AutoKingAction) {
 			return null;
 		} else if (action instanceof CastleLongAction
