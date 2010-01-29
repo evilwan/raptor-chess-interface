@@ -92,7 +92,7 @@ public class PgnUtils {
 				FileWriter fileWriter = null;
 				try {
 					fileWriter = new FileWriter(file, true);
-					fileWriter.append(pgn + "/n/n");
+					fileWriter.append(pgn + "\n\n");
 					fileWriter.flush();
 				} catch (IOException ioe) {
 					LOG.error("Error saving game", ioe);
