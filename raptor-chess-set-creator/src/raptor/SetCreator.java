@@ -91,7 +91,7 @@ public class SetCreator {
 		long startTime = System.currentTimeMillis();
 		System.out.println("Creating pngs from set " + sourceDirectory + "..."
 				+ " set is named " + setName);
-		for (int i = 8; i <= 180; i += 2) {
+		for (int i = 8; i <= 100; i += 2) {
 			ProcessBuilder builder = new ProcessBuilder(new String[] { "java",
 					"-jar", "batik-1.7/batik-rasterizer.jar", "-d",
 					"target/" + setName + "/" + i, "-w", "" + i, "-h", "" + i,
