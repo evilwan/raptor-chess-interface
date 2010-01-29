@@ -23,6 +23,7 @@ import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -62,6 +63,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	protected int movesTextStart;
 	protected Color moveSelectionColor;
 	private int selectedHalfmove;
+	protected long lastWheel;
 
 	/**
 	 * {@inheritDoc}
@@ -93,14 +95,27 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				int caretOffset = textPanel.getCaretOffset();
+				
+				if (caretOffset > moveNodes.get(moveNodes.size() - 1)) {
+					controller.userSelectedMoveListMove(moveNodes.size() - 1);
+					return;
+				}
+
 				int count = 0;
 				for (int nodeOffset: moveNodes) {
 					if (nodeOffset > caretOffset) {
 						controller.userSelectedMoveListMove(count-1);
-						select(count-1);
 						break;
 					}
 					count++;	
+				}
+			}
+		});
+		textPanel.addMouseWheelListener(new MouseWheelListener() {
+			public void mouseScrolled(MouseEvent e) {
+				if (System.currentTimeMillis() - lastWheel > 100) {
+					getChessBoardController().userMouseWheeled(e.count);
+					lastWheel = System.currentTimeMillis();
 				}
 			}
 		});
