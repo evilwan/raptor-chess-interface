@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="raptor-chess-set-creator" default="dist" basedir=".">
+
+	<path id="class.path">
+		<fileset dir="batik-1.7">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init" description="Creates the directories needed for builds.">
+		<mkdir dir="build" />
+		<mkdir dir="build/classes" />
+		<mkdir dir="build/project" />
+		<mkdir dir="build/dist" />
+	</target>
+	
+	<target name="clean" description="Removes the target and build directories">
+		<delete dir="build" />
+		<delete dir="target" />
+	</target>
+	
+	<target name="jar" depends="compile" description="Creates raptorSetCreator.jar">
+		<jar jarfile="build/project/raptorSetCreator.jar" basedir="build/classes">
+			<include name="**/*" />
+		</jar>
+	</target>
+	
+	<target name="dist" depends="jar" description="Creates the distribution zip file">
+		<copy todir="build/project/batik-1.7">
+			<fileset dir="batik-1.7">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<copy todir="build/project">
+			<fileset dir="projectFiles">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		<copy todir="build/project/set">
+			<fileset dir="set">
+				<include name="**/*" />
+			</fileset>
+		</copy>
+		
+		<zip destfile="build/dist/RaptorSetCreator.zip">
+			<zipfileset dir="build/project" prefix="RaptorSetCreator" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		
+	</target>
+
+	<target name="compile" depends="init" description="Compile the Java source code">
+		<javac srcdir="src" destdir="build/classes" target="1.5" classpathref="class.path" debug="false" deprecation="true" optimize="true">
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+	</target>
+		
+	<target name="run" depends="compile" description="Runs raptor with the specified swt environment in the build.xml file. Will not work in Mac OS X use runOSX to run there.">
+		<path id="run.class.path">
+			<fileset dir="batik-1.7">
+				<include name="**/*.jar" />
+			</fileset>
+			<pathelement location="build/classes" />
+		</path>
+		<java classname="raptor.SetCreator" classpathref="run.class.path" fork="false" />
+	</target>
+</project>

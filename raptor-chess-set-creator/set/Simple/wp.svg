@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="45"
+   height="45"
+   id="svg3128">
+  <defs
+     id="defs3130" />
+  <g
+     id="layer1">
+    <rect
+       width="25"
+       height="5"
+       rx="2.5"
+       x="10"
+       y="37.5"
+       id="rect5206"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <rect
+       width="20"
+       height="5"
+       rx="2.5"
+       x="12.5"
+       y="32.5"
+       id="rect5208"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <g
+       transform="matrix(1,0,0,0.7986799,0.119199,7.3250824)"
+       id="g5254"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.11895764;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">
+      <path
+         d="M 17.581967,31.418033 C 17.581967,31.418033 27.298831,31.418033 27.298831,31.418033 C 27.298831,31.418033 32.380798,24 27.380801,19 C 22.5,19 22.5,19 17.5,19 C 12.5,24 17.58197,31.418033 17.58197,31.418033 L 17.581967,31.418033 z"
+         id="path5210-2"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.11895764;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <rect
+       width="15"
+       height="5"
+       rx="2.5"
+       x="15"
+       y="17.5"
+       id="rect5234"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="M 27.5,5 A 5,5 0 1 1 17.5,5 A 5,5 0 1 1 27.5,5 z"
+       transform="matrix(0.8,0,0,0.8,4.5,9.5)"
+       id="path5238"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>

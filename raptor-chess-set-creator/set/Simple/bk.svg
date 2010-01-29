@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="45"
+   height="45"
+   id="svg3128">
+  <defs
+     id="defs3130" />
+  <g
+     id="layer1">
+    <rect
+       width="30"
+       height="5"
+       rx="2.5"
+       x="7.5"
+       y="37.5"
+       id="rect8811"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="M 22.5,7.75 C 20.3125,7.75 18.605469,8.6229248 17.375,9.96875 C 16.706326,9.8267203 7.5,7.9928354 7.5,14.5 C 7.5,19 15.0625,32.46875 15.0625,32.46875 L 23.28125,32.46875 L 25,32.5 C 25,32.5 24.999868,32.469046 25,32.46875 L 29.9375,32.46875 C 29.9375,32.46875 37.5,19 37.5,14.5 C 37.5,7.9928354 28.293674,9.8267203 27.625,9.96875 C 26.394531,8.6229248 24.6875,7.75 22.5,7.75 z"
+       id="path8888-5"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.94868332px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+    <path
+       d="M 22.5,2.5 L 22.5,7.5"
+       id="path8919"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+    <path
+       d="M 20,5 L 25,5"
+       id="path8921"
+       style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+    <rect
+       width="25"
+       height="5"
+       rx="2.5"
+       x="10"
+       y="32.5"
+       id="rect8813"
+       style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="M 25.125,32 C 25.16109,31.91875 30.125,20.764893 30.125,16.28125 C 30.125,13.75 29.332031,11.230347 27.75,9.5 C 27.72505,9.5053 27.625,9.53125 27.625,9.53125 M 17.5,9.5 C 15.917969,11.230347 15.125,13.75 15.125,16.28125 C 15.125,20.78125 19.96875,31.9375 19.96875,31.9375"
+       id="path8888-5-9"
+       style="fill:none;fill-opacity:1;stroke:#ffffff;stroke-width:0.94868332px;stroke-linecap:round;stroke-linejoin:round;stroke-opacity:1" />
+  </g>
+</svg>

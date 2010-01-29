@@ -1,0 +1,4 @@
+#!/bin/sh
+#Usage setCreator svgSourceDir setName
+# (c) 2010 Raptor Project (All rights reserved)
+java -classpath raptorSetCreator.jar raptor.SetCreator $1 $2
