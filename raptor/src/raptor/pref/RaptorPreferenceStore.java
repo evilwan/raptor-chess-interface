@@ -89,6 +89,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	};
 
+	protected void resetChessSetIfDeleted() {
+		String chessSet = getString(BOARD_CHESS_SET_NAME);
+		File file = new File(Raptor.RESOURCES_DIR + "set/" + chessSet);
+		if (!file.exists() || !file.isDirectory()) {
+			setValue(BOARD_CHESS_SET_NAME,
+					getDefaultString(BOARD_CHESS_SET_NAME));
+		}
+	}
+
 	public RaptorPreferenceStore() {
 		super();
 		FileInputStream fileIn = null;
@@ -100,6 +109,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			loadDefaults();
 			if (RAPTOR_PROPERTIES.exists()) {
 				load(fileIn = new FileInputStream(RAPTOR_PROPERTIES));
+				resetChessSetIfDeleted();
 			} else {
 				RAPTOR_PROPERTIES.getParentFile().mkdir();
 				RAPTOR_PROPERTIES.createNewFile();
