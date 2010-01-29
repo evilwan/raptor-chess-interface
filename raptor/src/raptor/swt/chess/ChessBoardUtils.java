@@ -208,8 +208,8 @@ public class ChessBoardUtils implements BoardConstants {
 			if (size < 8) {
 				size = 8;
 			}
-			if (size > 160) {
-				size = 160;
+			if (size > 100) {
+				size = 100;
 			}
 
 			String key = name + "_" + type + "_" + size + "x" + size;
