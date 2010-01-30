@@ -6,8 +6,6 @@ import java.io.FileFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
 
 public class UpdatePreview {
 	public static final String[] PIECE_TO_NAME = { "", "wp", "wb", "wn", "wr",
