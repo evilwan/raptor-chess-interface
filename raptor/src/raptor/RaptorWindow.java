@@ -69,6 +69,7 @@ import raptor.service.MemoService;
 import raptor.service.SoundService;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.BugButtonsWindowItem;
+import raptor.swt.ChessSetInstallDialog;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.PgnProcessingDialog;
 import raptor.swt.ProfileDialog;
@@ -1524,6 +1525,24 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void run() {
 				PreferenceUtils.launchPreferenceDialog();
+			}
+		});
+		fileMenu.add(new Separator());
+		fileMenu.add(new Action("Install chess set") {
+			@Override
+			public void run() {
+				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
+				fd.setFilterPath("");
+
+				fd.setText("Select the chess set to install");
+				String[] filterExt = { "*.zip" };
+				fd.setFilterExtensions(filterExt);
+				final String selected = fd.open();
+				if (!StringUtils.isBlank(selected)) {
+					ChessSetInstallDialog dialog = new ChessSetInstallDialog(
+							getShell(), selected);
+					dialog.open();
+				}
 			}
 		});
 
