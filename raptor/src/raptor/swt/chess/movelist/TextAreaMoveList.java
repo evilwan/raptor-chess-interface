@@ -21,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseWheelListener;
@@ -38,7 +40,6 @@ import raptor.swt.chess.ChessBoardMoveList;
  * Simple movelist that uses SWT StyledText. This would allow to support
  * annotation and variation trees within the widget.
  * 
- * TODO add MouseListener to support choosing a move
  * TODO allow annotations
  */
 public class TextAreaMoveList implements ChessBoardMoveList {
@@ -116,6 +117,18 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				if (System.currentTimeMillis() - lastWheel > 100) {
 					getChessBoardController().userMouseWheeled(e.count);
 					lastWheel = System.currentTimeMillis();
+				}
+			}
+		});
+		textPanel.addKeyListener(new KeyAdapter() {
+			public void keyReleased(KeyEvent e) {
+				switch (e.keyCode) {
+				case 16777219: // left key
+					controller.userSelectedMoveListMove(selectedHalfmove-1);
+					break;
+				case 16777220: // right key
+					controller.userSelectedMoveListMove(selectedHalfmove+1);
+					break;
 				}
 			}
 		});
