@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="79.860001"
+   height="79.864571"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.47pre4 r22446"
+   version="1.0"
+   sodipodi:docname="br.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
+   inkscape:export-xdpi="56.25"
+   inkscape:export-ydpi="56.25">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="292.20289"
+     inkscape:cy="110.2768"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="480px"
+     height="280px"
+     inkscape:window-width="1227"
+     inkscape:window-height="603"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     showgrid="true"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid11041"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 39.932285 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="54.937489 : 39.932285 : 1"
+       inkscape:persp3d-origin="27.468744 : 26.621524 : 1"
+       id="perspective11039" />
+    <filter
+       id="filter3517"
+       inkscape:label="Stained glass"
+       inkscape:menu="Bevels"
+       inkscape:menu-tooltip="Illuminated stained glass effect"
+       height="1.5"
+       width="1.5"
+       y="-0.25"
+       x="-0.25"
+       color-interpolation-filters="sRGB">
+      <feBlend
+         id="feBlend3519"
+         in2="SourceGraphic"
+         result="result1"
+         mode="screen" />
+      <feGaussianBlur
+         id="feGaussianBlur3521"
+         stdDeviation="7"
+         result="result6" />
+      <feComposite
+         id="feComposite3523"
+         in2="result6"
+         operator="xor"
+         in="result6"
+         result="result7" />
+      <feComposite
+         id="feComposite3525"
+         in2="result1"
+         operator="atop"
+         in="result6"
+         result="result92" />
+      <feComposite
+         id="feComposite3527"
+         in2="result92"
+         result="result4"
+         in="result7"
+         operator="xor" />
+      <feGaussianBlur
+         id="feGaussianBlur3529"
+         result="result3"
+         stdDeviation="0.7"
+         in="result4" />
+      <feSpecularLighting
+         id="feSpecularLighting3531"
+         result="result5"
+         specularExponent="50"
+         specularConstant="1.5"
+         surfaceScale="4">
+        <fePointLight
+           id="fePointLight3533"
+           z="20000"
+           y="-8000"
+           x="-5000" />
+      </feSpecularLighting>
+      <feComposite
+         id="feComposite3535"
+         in2="SourceGraphic"
+         in="result3"
+         k3="1"
+         k2="1"
+         operator="arithmetic"
+         result="result93" />
+      <feComposite
+         id="feComposite3537"
+         in2="result93"
+         in="result5"
+         operator="atop"
+         result="result94" />
+      <feBlend
+         id="feBlend3539"
+         in2="result94"
+         mode="multiply" />
+    </filter>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Chess Pieces Set</dc:title>
+        <dc:date>21 jan 2008</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Alessandro [AkiRoss] Re</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Alessandro Re</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:description>http://www.ale-re.net</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-360.45493,-208.63543)">
+    <path
+       sodipodi:nodetypes="cccccccccccccc"
+       id="BRook"
+       d="M 419.89867,226.60835 L 419.87367,231.40835 C 419.87367,255.56726 419.26703,275.33211 399.92368,286.5 C 380.30275,275.17185 379.94868,256.32139 379.94868,231.40835 L 379.94868,226.60835 L 386.84868,226.60835 L 386.84868,233.3304 L 396.44868,233.3304 L 396.44868,226.60835 L 403.37368,226.60835 L 403.37368,233.3304 L 412.99867,233.3304 L 412.99867,226.60835 L 419.89867,226.60835 z"
+       style="opacity:1;fill:#404040;fill-opacity:1;fill-rule:nonzero;stroke:#919191;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter3517)"
+       inkscape:label="Black Rook" />
+  </g>
+</svg>

@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="112.81"
+   height="112.81"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.47pre4 r22446"
+   version="1.0"
+   sodipodi:docname="wb.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   inkscape:export-filename="/home/akiross/Works/Painting/chess.png"
+   inkscape:export-xdpi="56.25"
+   inkscape:export-ydpi="56.25">
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="464.70289"
+     inkscape:cy="110.2768"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="480px"
+     height="280px"
+     inkscape:window-width="1227"
+     inkscape:window-height="603"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     showgrid="true"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       enabled="true"
+       visible="true"
+       id="grid10341"
+       type="xygrid" />
+  </sodipodi:namedview>
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       id="perspective10339"
+       inkscape:persp3d-origin="27.46875 : 37.604167 : 1"
+       inkscape:vp_z="54.9375 : 56.40625 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 56.40625 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <filter
+       color-interpolation-filters="sRGB"
+       x="-0.25"
+       y="-0.25"
+       width="1.5"
+       height="1.5"
+       inkscape:menu-tooltip="Illuminated stained glass effect"
+       inkscape:menu="Bevels"
+       inkscape:label="Stained glass"
+       id="filter3674">
+      <feBlend
+         mode="screen"
+         result="result1"
+         in2="SourceGraphic"
+         id="feBlend3676" />
+      <feGaussianBlur
+         result="result6"
+         stdDeviation="7"
+         id="feGaussianBlur3678" />
+      <feComposite
+         result="result7"
+         in="result6"
+         operator="xor"
+         in2="result6"
+         id="feComposite3680" />
+      <feComposite
+         result="result92"
+         in="result6"
+         operator="atop"
+         in2="result1"
+         id="feComposite3682" />
+      <feComposite
+         operator="xor"
+         in="result7"
+         result="result4"
+         in2="result92"
+         id="feComposite3684" />
+      <feGaussianBlur
+         in="result4"
+         stdDeviation="0.7"
+         result="result3"
+         id="feGaussianBlur3686" />
+      <feSpecularLighting
+         surfaceScale="4"
+         specularConstant="1.5"
+         specularExponent="50"
+         result="result5"
+         id="feSpecularLighting3688">
+        <fePointLight
+           x="-5000"
+           y="-8000"
+           z="20000"
+           id="fePointLight3690" />
+      </feSpecularLighting>
+      <feComposite
+         result="result93"
+         operator="arithmetic"
+         k2="1"
+         k3="1"
+         in="result3"
+         in2="SourceGraphic"
+         id="feComposite3692" />
+      <feComposite
+         result="result94"
+         operator="atop"
+         in="result5"
+         in2="result93"
+         id="feComposite3694" />
+      <feBlend
+         mode="multiply"
+         in2="result94"
+         id="feBlend3696" />
+    </filter>
+  </defs>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Chess Pieces Set</dc:title>
+        <dc:date>21 jan 2008</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Alessandro [AkiRoss] Re</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Alessandro Re</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:description>http://www.ale-re.net</dc:description>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/2.5/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/2.5/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-206.33702,-175.6875)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <path
+       inkscape:label="Black Bishop"
+       style="opacity:1;fill:#ececec;fill-opacity:1;fill-rule:nonzero;stroke:#333333;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter3674)"
+       d="M 262.27452,178.188 L 283.64952,195.938 L 275.77452,218.53175 C 279.86966,222.22177 282.46202,227.55774 282.46202,233.5005 C 282.46202,240.34091 279.02091,246.39109 273.80577,250.03175 C 281.34723,250.66783 286.52452,251.8919 286.52452,253.313 C 286.52452,254.9886 279.36826,256.36395 269.55577,256.84425 C 271.23,277.46288 287.27452,260.55173 287.27452,280.03175 L 287.27452,286.0005 L 237.33702,286.0005 L 237.33702,280.03175 C 237.33702,260.55823 253.37254,277.41306 255.05577,256.84425 C 245.22713,256.36544 238.02452,254.99038 238.02452,253.313 C 238.02452,251.8919 243.23306,250.66783 250.77452,250.03175 C 245.5478,246.39518 242.14952,240.34913 242.14952,233.5005 C 242.14952,227.57351 244.6983,222.25198 248.77452,218.563 L 240.89952,195.938 L 262.27452,178.188 z M 262.30577,191.6255 C 261.68252,191.6255 261.18077,192.12725 261.18077,192.7505 L 261.18077,198.188 L 255.52452,198.188 C 254.90127,198.188 254.39952,198.60613 254.39952,199.1255 C 254.39952,199.64488 254.90127,200.063 255.52452,200.063 L 261.18077,200.063 L 261.18077,209.5005 C 261.18077,210.12375 261.68252,210.6255 262.30577,210.6255 C 262.92902,210.6255 263.43077,210.12375 263.43077,209.5005 L 263.43077,200.063 L 269.08702,200.063 C 269.71027,200.063 270.21202,199.64488 270.21202,199.1255 C 270.21202,198.60613 269.71027,198.188 269.08702,198.188 L 263.43077,198.188 L 263.43077,192.7505 C 263.43077,192.12725 262.92902,191.6255 262.30577,191.6255 z"
+       id="BBishop" />
+  </g>
+</svg>
