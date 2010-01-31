@@ -43,7 +43,7 @@ import raptor.swt.chess.ChessBoardMoveList;
  * TODO allow annotations
  */
 public class TextAreaMoveList implements ChessBoardMoveList {
-	private static final Log LOG = LogFactory.getLog(TextAreaMoveList.class);
+	private static final Log LOG = LogFactory.getLog(SimpleMoveList.class);
 	
 	protected ChessBoardController controller;
 	protected StyledText textPanel;
@@ -121,7 +121,6 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			}
 		});
 		textPanel.addKeyListener(new KeyAdapter() {
-			@Override
 			public void keyReleased(KeyEvent e) {
 				switch (e.keyCode) {
 				case 16777219: // left key
@@ -160,17 +159,19 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	 * {@inheritDoc}
 	 */
 	public void select(int halfMoveIndex) {
-		if (halfMoveIndex >= moveNodes.size() || halfMoveIndex < 0
-				|| selectedHalfmove == halfMoveIndex)
+		if (halfMoveIndex >= moveNodes.size())
+			halfMoveIndex = moveNodes.size() - 1;
+
+		if (halfMoveIndex < 0 || selectedHalfmove == halfMoveIndex)
 			return;
 
 		StyleRange sR = new StyleRange();
-	    sR.background = moveSelectionColor;
-	    sR.start = moveNodes.get(halfMoveIndex);
-	    sR.length = moveNodesLengths.get(halfMoveIndex);;
+		sR.background = moveSelectionColor;
+		sR.start = moveNodes.get(halfMoveIndex);
+		sR.length = moveNodesLengths.get(halfMoveIndex);		
 		textPanel.replaceStyleRanges(movesTextStart, textPanel.getCharCount()
 				- movesTextStart, new StyleRange[] { sR });
-		textPanel.setCaretOffset(sR.start+sR.length);
+		textPanel.setCaretOffset(sR.start + sR.length);
 		selectedHalfmove = halfMoveIndex;
 	}
 
