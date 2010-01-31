@@ -192,6 +192,7 @@ public interface PreferenceKeys {
 	public static final String BOARD_SPEAK_RESULTS = "board-speak-results";
 	public static final String BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING = "board-ignore-observed-games-if-playing";
 	public static final String BOARD_LAST_OPEN_PGN = "board-last-open-pgn";
+	public static final String BOARD_MOVE_LIST_CLASS = "board-move-list-class";
 
 	public static final String ARROW_OBS_OPP_COLOR = "arrow-opponent-color";
 	public static final String ARROW_PREMOVE_COLOR = "arrow-premove-color";

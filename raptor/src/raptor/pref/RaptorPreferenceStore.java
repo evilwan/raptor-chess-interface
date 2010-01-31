@@ -434,6 +434,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SPEAK_WHEN_OBSERVING, false);
 		setDefault(BOARD_SPEAK_RESULTS, false);
 		setDefault(BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING, false);
+		setDefault(BOARD_MOVE_LIST_CLASS,"raptor.swt.chess.movelist.TextAreaMoveList");
 
 		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				PlayingMouseAction.None.toString());

@@ -194,6 +194,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "Top/Bottom Oriented Layout",
 					"raptor.swt.chess.layout.TopBottomOrientedLayout" } };
 
+	public static final String[][] MOVE_LISTS = {
+			{ "Table", "raptor.swt.chess.movelist.TableMoveList" },
+			{ "Text", "raptor.swt.chess.movelist.TextAreaMoveList" } };
+
 	public static final String[][] PIECE_RESIZE_PERCENTAGE = {
 			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
 			{ "4%", "0.04" }, { "6%", "0.06" }, { "7%", "0.07" },
@@ -300,6 +304,11 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_LAYOUT, "Chess Board Control Layout:",
 				LAYOUTS, getFieldEditorParent());
 		addField(layoutsFieldEditor);
+		
+		ComboFieldEditor moveListLayoutEditor = new ComboFieldEditor(
+				PreferenceKeys.BOARD_MOVE_LIST_CLASS, "Move List Type:",
+				MOVE_LISTS, getFieldEditorParent());
+		addField(moveListLayoutEditor);
 
 		pieceResize = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_SIZE_ADJUSTMENT,

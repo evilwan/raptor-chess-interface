@@ -45,7 +45,6 @@ import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chess.ChessBoardLayout.Field;
 import raptor.swt.chess.analysis.SimpleAnalysisWidget;
-import raptor.swt.chess.movelist.SimpleMoveList;
 
 /**
  * A GUI representation of a chess board, and all controls associated with it
@@ -142,10 +141,7 @@ public class ChessBoard implements BoardConstants {
 
 			boardMoveListSash = new SashForm(analysisSash, SWT.HORIZONTAL);
 			boardComposite = new Composite(boardMoveListSash, SWT.NONE);
-			createMoveList();
-			moveList.create(boardMoveListSash);
-			boardMoveListSash.setMaximizedControl(boardComposite);
-			moveList.getControl().setVisible(false);
+			adjustMoveList();
 
 			createEngineAnalysisWidget();
 			engineAnalysisWidget.create(analysisSash);
@@ -388,8 +384,11 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	public void hideMoveList() {
-		boardMoveListSash.setMaximizedControl(boardComposite);
-		moveList.getControl().setVisible(false);
+		if (moveList != null && moveList.getControl() != null
+				&& moveList.getControl().isVisible()) {
+			boardMoveListSash.setMaximizedControl(boardComposite);
+			moveList.getControl().setVisible(false);
+		}
 	}
 
 	/**
@@ -577,6 +576,7 @@ public class ChessBoard implements BoardConstants {
 				.getColor(BOARD_CONTROL_COLOR));
 		currentPremovesLabel.setBackground(background);
 
+		adjustMoveList();
 		adjustChessBoardLayout();
 
 		boardComposite.setBackground(preferences
@@ -630,6 +630,46 @@ public class ChessBoard implements BoardConstants {
 						});
 					}
 				}
+			}
+		}
+	}
+
+	protected void adjustMoveList() {
+		String moveListClassName = Raptor.getInstance().getPreferences()
+				.getString(PreferenceKeys.BOARD_MOVE_LIST_CLASS);
+
+		ChessBoardMoveList oldMoveList = moveList;
+
+		if (oldMoveList == null
+				|| !moveListClassName.equals(chessBoardLayout.getClass()
+						.getName())) {
+
+			try {
+				moveList = (ChessBoardMoveList) Class
+						.forName(moveListClassName).getConstructor()
+						.newInstance();
+
+				boolean wasVisible = false;
+				if (oldMoveList != null && oldMoveList.getControl() != null
+						&& !oldMoveList.getControl().isDisposed()) {
+					wasVisible = oldMoveList.getControl().getVisible();
+					oldMoveList.getControl().setVisible(false);
+					oldMoveList.getControl().dispose();
+					hideMoveList();
+				}
+
+				moveList.create(boardMoveListSash);
+				moveList.setController(getController());
+
+				if (wasVisible) {
+					boardMoveListSash.setMaximizedControl(null);
+					moveList.getControl().setVisible(true);
+				} else {
+					boardMoveListSash.setMaximizedControl(boardComposite);
+					moveList.getControl().setVisible(false);
+				}
+			} catch (Throwable t) {
+				Raptor.getInstance().onError("Error creating move list.", t);
 			}
 		}
 	}
@@ -691,11 +731,6 @@ public class ChessBoard implements BoardConstants {
 	protected void createEngineAnalysisWidget() {
 		engineAnalysisWidget = new SimpleAnalysisWidget();
 		engineAnalysisWidget.setController(controller);
-	}
-
-	protected void createMoveList() {
-		moveList = new SimpleMoveList();
-		moveList.setController(controller);
 	}
 
 	protected void createPieceJailControls() {
