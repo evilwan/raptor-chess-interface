@@ -98,14 +98,14 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				int caretOffset = textPanel.getCaretOffset();
 				
 				if (caretOffset > moveNodes.get(moveNodes.size() - 1)) {
-					controller.userSelectedMoveListMove(moveNodes.size() - 1);
+					controller.userSelectedMoveListMove(moveNodes.size());
 					return;
 				}
 
 				int count = 0;
 				for (int nodeOffset: moveNodes) {
 					if (nodeOffset > caretOffset) {
-						controller.userSelectedMoveListMove(count-1);
+						controller.userSelectedMoveListMove(count);
 						break;
 					}
 					count++;	
@@ -159,20 +159,24 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	 * {@inheritDoc}
 	 */
 	public void select(int halfMoveIndex) {
-		if (halfMoveIndex >= moveNodes.size())
-			halfMoveIndex = moveNodes.size() - 1;
-
-		if (halfMoveIndex < 0 || selectedHalfmove == halfMoveIndex)
+		if (selectedHalfmove == halfMoveIndex || moveNodes.size() == 0)
 			return;
+		
+		if (halfMoveIndex >= moveNodes.size())
+			halfMoveIndex = moveNodes.size();
 
+		if (halfMoveIndex <= 0)
+			halfMoveIndex = 1;
+
+		halfMoveIndex--;
 		StyleRange sR = new StyleRange();
 		sR.background = moveSelectionColor;
 		sR.start = moveNodes.get(halfMoveIndex);
-		sR.length = moveNodesLengths.get(halfMoveIndex);		
+		sR.length = moveNodesLengths.get(halfMoveIndex);
 		textPanel.replaceStyleRanges(movesTextStart, textPanel.getCharCount()
 				- movesTextStart, new StyleRange[] { sR });
 		textPanel.setCaretOffset(sR.start + sR.length);
-		selectedHalfmove = halfMoveIndex;
+		selectedHalfmove = halfMoveIndex+1;
 	}
 
 	/**
@@ -188,12 +192,13 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	public void updateToGame() {
 		if (textPanel.isVisible()) {
 			long startTime = System.currentTimeMillis();
-		
+
 			if (textPanel.getCharCount() == 0) {
 				String sd = textPanel.getLineDelimiter();
 				String title = controller.getGame().getHeader(PgnHeader.White)
-						+ " vs " + controller.getGame().getHeader(PgnHeader.Black)
-						+ sd + sd;
+						+ " vs "
+						+ controller.getGame().getHeader(PgnHeader.Black) + sd
+						+ sd;
 				textPanel.append(title);
 				StyleRange styleRange = new StyleRange();
 				styleRange.start = 0;
@@ -211,6 +216,14 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			} else {
 				if (moveListSize == moveNodes.size())
 					return;
+				else if (moveListSize <= moveNodes.size()) { // move list
+					// shrinked
+					textPanel.replaceTextRange(movesTextStart, textPanel
+							.getCharCount()
+							- movesTextStart, "");
+					moveNodes.clear();
+					moveNodesLengths.clear();
+				}
 
 				StringBuffer buff = new StringBuffer();
 				for (int i = moveNodes.size(); i < moveListSize; i++) {
@@ -226,7 +239,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 					buff.append(" ");
 				}
 				textPanel.append(buff.toString());
-				select(moveListSize - 1);
+				select(moveListSize + 1);
 
 			}
 			
