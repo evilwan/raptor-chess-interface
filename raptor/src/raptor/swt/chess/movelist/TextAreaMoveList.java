@@ -43,7 +43,7 @@ import raptor.swt.chess.ChessBoardMoveList;
  * TODO allow annotations
  */
 public class TextAreaMoveList implements ChessBoardMoveList {
-	private static final Log LOG = LogFactory.getLog(SimpleMoveList.class);
+	private static final Log LOG = LogFactory.getLog(TextAreaMoveList.class);
 	
 	protected ChessBoardController controller;
 	protected StyledText textPanel;
