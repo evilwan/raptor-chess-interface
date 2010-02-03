@@ -813,6 +813,9 @@ public class IcsUtils implements GameConstants {
 	}
 
 	public static String stripGameId(String gameId) {
+		if (gameId.endsWith(")"))
+			return gameId.substring(0, gameId.length()-1);
+		
 		return gameId;
 	}
 
