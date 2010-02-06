@@ -1199,6 +1199,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void addGameIdMenuItems(Menu menu, String word) {
 		if (connector.isLikelyGameId(word)) {
+			word = connector.parseGameId(word);
 			if (menu.getItemCount() > 0) {
 				new MenuItem(menu, SWT.SEPARATOR);
 			}
