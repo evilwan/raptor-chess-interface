@@ -67,6 +67,8 @@ import raptor.service.AliasService;
 import raptor.service.ConnectorService;
 import raptor.service.MemoService;
 import raptor.service.SoundService;
+import raptor.service.ThemeService;
+import raptor.service.ThemeService.Theme;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.ChessSetInstallDialog;
@@ -1470,6 +1472,7 @@ public class RaptorWindow extends ApplicationWindow {
 	protected MenuManager createMenuManager() {
 		MenuManager menuBar = new MenuManager("Main");
 		MenuManager fileMenu = new MenuManager("File");
+		MenuManager windowMenu = new MenuManager("&Window");
 		MenuManager helpMenu = new MenuManager("&Help");
 
 		fileMenu.add(new Action("Open PGN File") {
@@ -1566,6 +1569,48 @@ public class RaptorWindow extends ApplicationWindow {
 				menuBar.add(manager);
 			}
 		}
+		
+		final MenuManager themesSubMenu = new MenuManager("&Load Theme");
+		String[] themeNames = ThemeService.getInstance().getThemeNames();
+		for (String themeName : themeNames) {
+			final Theme theme = ThemeService.getInstance().getTheme(themeName);
+
+			themesSubMenu.add(new Action(theme.getName()) {
+				@Override
+				public void run() {
+					ThemeService.getInstance().applyTheme(theme);
+				}
+			});
+		}
+
+		MenuManager themesMenu = new MenuManager("&Themes");
+		windowMenu.add(themesMenu);
+		themesMenu.add(new Action("&Save Current As Theme") {
+			@Override
+			public void run() {
+				String themeName = Raptor.getInstance().promptForText(
+						"Enter the name of the new theme:");
+				if (StringUtils.isNotBlank(themeName)) {
+					ThemeService.getInstance().saveCurrentAsTheme(themeName);
+					
+					//Reload the themeSubMenu so it will show up next time.
+					themesSubMenu.removeAll();
+					String[] themeNames = ThemeService.getInstance().getThemeNames();
+					for (String currentThemeName : themeNames) {
+						final Theme theme = ThemeService.getInstance().getTheme(currentThemeName);
+						themesSubMenu.add(new Action(theme.getName()) {
+							@Override
+							public void run() {
+								ThemeService.getInstance().applyTheme(theme);
+							}
+						});
+					}
+				}
+			}
+		});
+		
+		themesMenu.add(themesSubMenu);
+		menuBar.add(windowMenu);
 
 		helpMenu.add(new Action(getPreferences().getString(
 				PreferenceKeys.APP_NAME)) {
@@ -1825,9 +1870,6 @@ public class RaptorWindow extends ApplicationWindow {
 		zoomCombo.add("175%");
 		zoomCombo.add("200%");
 		zoomCombo.add("250%");
-		zoomCombo.add("300%");
-		zoomCombo.add("400%");
-
 		zoomCombo
 				.setToolTipText("Adjusts font size percentages in chat consoles and chess boards.");
 

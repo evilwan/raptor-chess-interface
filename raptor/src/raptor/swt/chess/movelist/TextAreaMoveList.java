@@ -121,6 +121,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			}
 		});
 		textPanel.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyReleased(KeyEvent e) {
 				switch (e.keyCode) {
 				case 16777219: // left key

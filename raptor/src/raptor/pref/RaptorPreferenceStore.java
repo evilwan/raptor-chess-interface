@@ -141,28 +141,20 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	}
 
 	/**
-	 * Returns the foreground color to use for the specified chat event. Returns
-	 * null if no special color should be used.
+	 * Returns null for CHANNEL_TELL type.
 	 */
-	public Color getColor(ChatEvent event) {
-		Color result = null;
-
+	public Color getColor(ChatType type) {
 		String key = null;
-		if (event.getType() == ChatType.CHANNEL_TELL) {
-			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType() + "-"
-					+ event.getChannel() + "-color";
-		} else if (event.getType() == ChatType.BUGWHO_AVAILABLE_TEAMS
-				|| event.getType() == ChatType.BUGWHO_GAMES
-				|| event.getType() == ChatType.BUGWHO_UNPARTNERED_BUGGERS) {
-			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.BUGWHO_ALL
-					+ "-color";
-		} else if (event.getType() == ChatType.NOTIFICATION_DEPARTURE) {
-			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-					+ ChatType.NOTIFICATION_ARRIVAL + "-color";
+		if (type == ChatType.CHANNEL_TELL) {
+			return null;
 		} else {
-			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType()
-					+ "-color";
+			key = getKeyForChatType(type);
 		}
+		return getColorForKeyWithoutDefault(key);
+	}
+
+	protected Color getColorForKeyWithoutDefault(String key) {
+		Color result = null;
 		try {
 			if (!Raptor.getInstance().getColorRegistry().hasValueFor(key)) {
 				// We don't want the default color if not found we want to
@@ -183,6 +175,44 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			result = Raptor.getInstance().getColorRegistry().get(key);
 		} catch (Throwable t) {
 			result = null;
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the foreground color to use for the specified chat event. Returns
+	 * null if no special color should be used.
+	 */
+	public Color getColor(ChatEvent event) {
+		String key = null;
+		if (event.getType() == ChatType.CHANNEL_TELL) {
+			key = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + event.getType() + "-"
+					+ event.getChannel() + "-color";
+		} else {
+			key = getKeyForChatType(event.getType());
+		}
+		return getColorForKeyWithoutDefault(key);
+	}
+
+	/**
+	 * Returns null for CHANNEL_TELL type.
+	 * 
+	 * @return
+	 */
+	public String getKeyForChatType(ChatType type) {
+		String result = null;
+		if (type == ChatType.CHANNEL_TELL) {
+			result = null;
+		} else if (type == ChatType.BUGWHO_AVAILABLE_TEAMS
+				|| type == ChatType.BUGWHO_GAMES
+				|| type == ChatType.BUGWHO_UNPARTNERED_BUGGERS) {
+			result = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.BUGWHO_ALL
+					+ "-color";
+		} else if (type == ChatType.NOTIFICATION_DEPARTURE) {
+			result = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+					+ ChatType.NOTIFICATION_ARRIVAL + "-color";
+		} else {
+			result = CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + type + "-color";
 		}
 		return result;
 	}
@@ -434,7 +464,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SPEAK_WHEN_OBSERVING, false);
 		setDefault(BOARD_SPEAK_RESULTS, false);
 		setDefault(BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING, false);
-		setDefault(BOARD_MOVE_LIST_CLASS,"raptor.swt.chess.movelist.TextAreaMoveList");
+		setDefault(BOARD_MOVE_LIST_CLASS,
+				"raptor.swt.chess.movelist.TextAreaMoveList");
 
 		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				PlayingMouseAction.None.toString());

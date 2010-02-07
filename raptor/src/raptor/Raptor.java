@@ -44,6 +44,7 @@ import raptor.service.EcoService;
 import raptor.service.MemoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
+import raptor.service.ThemeService;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.service.UserTagService;
@@ -485,6 +486,12 @@ public class Raptor implements PreferenceKeys {
 		} catch (Throwable t) {
 			LOG.warn("Error shutting ChessBoardCacheService", t);
 		}
+		
+		try {
+			ThemeService.getInstance().dispose();
+		} catch (Throwable t) {
+			LOG.warn("Error shutting ThemeService", t);
+		}
 
 		try {
 			UCIEngineService.getInstance().dispose();
@@ -579,6 +586,7 @@ public class Raptor implements PreferenceKeys {
 		ThreadService.getInstance();
 		DictionaryService.getInstance();
 		MemoService.getInstance();
+		ThemeService.getInstance();
 		UserTagService.getInstance();
 		EcoService.getInstance();
 		ConnectorService.getInstance();
