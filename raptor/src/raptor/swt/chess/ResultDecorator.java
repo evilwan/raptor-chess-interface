@@ -234,7 +234,7 @@ public class ResultDecorator implements BoardConstants {
 
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				RESULTS_FADE_AWAY_MODE)) {
-			frame = 25;
+			frame = 10;
 			Raptor.getInstance().getDisplay().timerExec(
 					Raptor.getInstance().getPreferences().getInt(
 							PreferenceKeys.RESULTS_ANIMATION_DELAY),
@@ -282,7 +282,7 @@ public class ResultDecorator implements BoardConstants {
 
 			if (frame != -1) {
 				e.gc.setAdvanced(true);
-				e.gc.setAlpha(10 * frame);
+				e.gc.setAlpha(25 * frame);
 				e.gc.drawString(text, e.width / 2 - extent.x / 2, e.height / 2
 						- extent.y / 2, true);
 				e.gc.setAlpha(255);

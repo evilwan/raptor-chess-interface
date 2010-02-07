@@ -24,13 +24,13 @@ import raptor.pref.PreferenceKeys;
 public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 
 	public static final String[][] HIGHLIGHT_ANIMATION_DELAY_OPTIONS = {
-		{ "10 milliseconds", "10" }, { "20 milliseconds", "20" },
-		{ "30 milliseconds", "30" }, { "40 milliseconds", "40" },
-		{ "50 milliseconds", "50" }, { "60 milliseconds", "60" },
-		{ "70 milliseconds", "70" }, { "80 milliseconds", "80" },
-		{ "90 milliseconds", "90" }, { "100 milliseconds", "100" },
-		{ "125 millseconds", "125" }, { "150 millseconds", "150" },
-		{ "175 millseconds", "175" }, { "200 millseconds", "200" } };
+		{ "100 milliseconds", "100" }, { "150 milliseconds", "150" },
+		{ "175 milliseconds", "175" }, { "200 milliseconds", "200" },
+		{ "250 milliseconds", "250" }, { "300 milliseconds", "300" },
+		{ "350 millseconds", "350" }, { "400 millseconds", "400" },
+		{ "500 millseconds", "500" }, { "600 millseconds", "600" },
+		{ "700 millseconds", "700" }, { "800 millseconds", "800" },
+		{ "900 millseconds", "900" }, { "1000 millseconds", "1000" }, };
 
 	public static final String[][] HIGHLIGHT_BORDER_PERCENTAGE_OPTIONS = {
 			{ "2%", "2" }, { "3%", "3" }, { "5%", "4" }, { "8%", "8" },

@@ -65,7 +65,7 @@ public class SquareHighlighter {
 
 				if (highlight.frame != -1) {
 					e.gc.setAdvanced(true);
-					e.gc.setAlpha(10 * highlight.frame);
+					e.gc.setAlpha(25 * highlight.frame);
 				}
 
 				e.gc.setForeground(highlight.getColor());

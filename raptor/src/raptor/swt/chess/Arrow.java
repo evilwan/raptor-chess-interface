@@ -41,7 +41,7 @@ public class Arrow {
 		if (!isFadeAway) {
 			frame = -1;
 		} else {
-			frame = 25;
+			frame = 10;
 		}
 	}
 

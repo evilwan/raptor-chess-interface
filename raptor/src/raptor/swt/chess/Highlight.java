@@ -44,7 +44,7 @@ public class Highlight {
 		if (!isFadeAway) {
 			frame = -1;
 		} else {
-			frame = 25;
+			frame = 10;
 		}
 	}
 
@@ -64,7 +64,7 @@ public class Highlight {
 		if (!isFadeAway) {
 			frame = -1;
 		} else {
-			frame = 25;
+			frame = 10;
 		}
 	}
 
