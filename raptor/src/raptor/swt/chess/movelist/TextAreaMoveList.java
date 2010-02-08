@@ -1,7 +1,7 @@
 /**
  * New BSD License
  * http://www.opensource.org/licenses/bsd-license.php
- * Copyright (c) 2009, RaptorProject (http://code.google.com/p/raptor-chess-interface/)
+ * Copyright (c) 2010, RaptorProject (http://code.google.com/p/raptor-chess-interface/)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -178,6 +178,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				- movesTextStart, new StyleRange[] { sR });
 		textPanel.setCaretOffset(sR.start + sR.length);
 		selectedHalfmove = halfMoveIndex+1;
+		textPanel.setSelection(sR.start+sR.length);
 	}
 
 	/**
