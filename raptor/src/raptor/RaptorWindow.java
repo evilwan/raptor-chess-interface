@@ -116,6 +116,13 @@ public class RaptorWindow extends ApplicationWindow {
 			super(raptorSash, style);
 			this.quad = quad;
 			this.raptorSash = raptorSash;
+			
+			setSimple(false);
+			setUnselectedImageVisible(true);
+			setUnselectedCloseVisible(true);
+			setMaximizeVisible(true);
+			setMinimizeVisible(true);
+
 
 			setSelectionBackground(getDisplay().getSystemColor(
 					SWT.COLOR_LIST_SELECTION));
@@ -1938,11 +1945,6 @@ public class RaptorWindow extends ApplicationWindow {
 	 * @param folder
 	 */
 	protected void initFolder(final RaptorTabFolder folder) {
-		folder.setSimple(false);
-		folder.setUnselectedImageVisible(true);
-		folder.setUnselectedCloseVisible(true);
-		folder.setMaximizeVisible(true);
-		folder.setMinimizeVisible(true);
 
 		folder.addSelectionListener(new SelectionAdapter() {
 			@Override
