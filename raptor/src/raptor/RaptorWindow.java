@@ -123,7 +123,6 @@ public class RaptorWindow extends ApplicationWindow {
 			setMaximizeVisible(true);
 			setMinimizeVisible(true);
 
-
 			setSelectionBackground(getDisplay().getSystemColor(
 					SWT.COLOR_LIST_SELECTION));
 			setSelectionForeground(getDisplay().getSystemColor(
