@@ -1,1 +1,1 @@
-This directory contains raptor Themes.
+This directory contains custom raptor Themes.
