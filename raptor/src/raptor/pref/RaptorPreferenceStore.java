@@ -83,6 +83,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				// Adjust all the zoomed fonts, as well as the font being
 				// changed,
 				// in the FontRegistry.
+
+				// Add all the fonts to change to a list to avoid the
+				// concurrency issues.
 				List<String> fontKeysToChange = new ArrayList<String>();
 				for (Object fontRegistryKey : Raptor.getInstance()
 						.getFontRegistry().getKeySet()) {
@@ -106,13 +109,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 								zoomFont(key, zoomFactor));
 					}
 				}
-
-				Raptor.getInstance().getFontRegistry().put(
-						key,
-						PreferenceConverter.getFontDataArray(
-								RaptorPreferenceStore.this, key));
-				System.err.println("Adjusted font: " + key + " "
-						+ getFont(key).getFontData()[0].getHeight());
 			}
 		}
 	};
