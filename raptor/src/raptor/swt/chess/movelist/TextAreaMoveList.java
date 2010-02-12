@@ -1,7 +1,7 @@
 /**
  * New BSD License
  * http://www.opensource.org/licenses/bsd-license.php
- * Copyright (c) 2010, RaptorProject (http://code.google.com/p/raptor-chess-interface/)
+ * Copyright (c) 2009, RaptorProject (http://code.google.com/p/raptor-chess-interface/)
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 import raptor.chess.Game;
+import raptor.chess.pgn.Comment;
+import raptor.chess.pgn.Nag;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.swt.chess.ChessBoardController;
@@ -40,7 +42,7 @@ import raptor.swt.chess.ChessBoardMoveList;
  * Simple movelist that uses SWT StyledText. This would allow to support
  * annotation and variation trees within the widget.
  * 
- * TODO allow annotations
+ * TODO support customization
  */
 public class TextAreaMoveList implements ChessBoardMoveList {
 	private static final Log LOG = LogFactory.getLog(TextAreaMoveList.class);
@@ -174,8 +176,17 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		sR.background = moveSelectionColor;
 		sR.start = moveNodes.get(halfMoveIndex);
 		sR.length = moveNodesLengths.get(halfMoveIndex);
-		textPanel.replaceStyleRanges(movesTextStart, textPanel.getCharCount()
-				- movesTextStart, new StyleRange[] { sR });
+
+		selectedHalfmove--;
+		if (selectedHalfmove >= 0) { 
+			// clear previous move selection
+			StyleRange cL = new StyleRange();
+			cL.start = moveNodes.get(selectedHalfmove);
+			cL.length = moveNodesLengths.get(selectedHalfmove);
+			textPanel.setStyleRange(cL);
+		}
+		
+		textPanel.setStyleRange(sR);
 		textPanel.setCaretOffset(sR.start + sR.length);
 		selectedHalfmove = halfMoveIndex+1;
 		textPanel.setSelection(sR.start+sR.length);
@@ -236,6 +247,20 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 									.getMoveList().get(i).toString(), true);
 					buff.append(move);
 					length = move.length();
+					
+					for (Nag nag : game.getMoveList().get(i).getNags()) {
+						if (nag.hasSymbol()) {
+							buff.append(nag.getSymbol());
+							length += nag.getSymbol().length();
+						}
+					}
+
+					for (Comment comment : game.getMoveList().get(i)
+							.getComments()) {
+						buff.append(" ");
+						buff.append(comment);
+					}
+					
 					moveNodes.add(start);
 					moveNodesLengths.add(length);
 					buff.append(" ");
