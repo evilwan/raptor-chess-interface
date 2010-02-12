@@ -69,10 +69,10 @@ public class AliasHelpAlias extends RaptorAlias {
 				} else {
 					StringBuilder aliasHelp = new StringBuilder(2000);
 					aliasHelp.append("Alias '" + aliasName + "':\n");
-					aliasHelp.append("\tDescription: " + alias.getDescription()
+					aliasHelp.append("    Description: " + alias.getDescription()
 							+ "\n");
 					aliasHelp.append("\n");
-					aliasHelp.append("\tUsage: " + alias.getUsage() + "\n");
+					aliasHelp.append("    Usage: " + alias.getUsage() + "\n");
 					return new RaptorAliasResult(null, aliasHelp.toString());
 				}
 			}

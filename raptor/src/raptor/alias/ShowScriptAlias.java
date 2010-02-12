@@ -50,10 +50,10 @@ public class ShowScriptAlias extends RaptorAlias {
 							+ " not found.");
 				} else {
 					return new RaptorAliasResult(null, "Script " + scriptName
-							+ "\n" + "\tDescription: "
-							+ script.getDescription() + "\n\tActive: "
-							+ script.isActive() + "\n\tRegular Expressoin:"
-							+ script.getRegularExpression() + "\n\tScript:\n"
+							+ "\n" + "    Description: "
+							+ script.getDescription() + "\n    Active: "
+							+ script.isActive() + "\n    Regular Expressoin:"
+							+ script.getRegularExpression() + "\n    Script:\n"
 							+ script.getScript());
 				}
 			}
