@@ -78,10 +78,6 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 		}
 		removeButtons();
 		addButtons(scripts);
-		Raptor.getInstance().getPreferences().setValue(
-				connector.getShortName() + "-"
-						+ PreferenceKeys.BUG_BUTTONS_QUADRANT, newQuadrant);
-
 		updateFromPrefs();
 		composite.layout(true, true);
 	}

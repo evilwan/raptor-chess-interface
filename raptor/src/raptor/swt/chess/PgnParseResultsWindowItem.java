@@ -93,8 +93,6 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
-		Raptor.getInstance().getPreferences().setValue(
-				PreferenceKeys.APP_PGN_RESULTS_QUADRANT, newQuadrant);
 	}
 
 	public boolean confirmClose() {

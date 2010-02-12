@@ -78,21 +78,10 @@ public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 				getFieldEditorParent());
 		addField(internalBrowserQuad);
 
-		ComboFieldEditor bughouseArena = new ComboFieldEditor(
-				PreferenceKeys.APP_PGN_RESULTS_QUADRANT, "PGN Game List:",
+		ComboFieldEditor pgnResuoltsPageQuad = new ComboFieldEditor(
+				PreferenceKeys.APP_PGN_RESULTS_QUADRANT, "Pgn Game List:",
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
-		addField(bughouseArena);
-
-		addField(new ComboFieldEditor(PreferenceKeys.APP_CHESS_BOARD_QUADRANT,
-				"PGN Game:",
-				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent()));
-
-		addField(new ComboFieldEditor(
-				PreferenceKeys.APP_CHESS_BOARD_SECONDARY_QUADRANT,
-				"PGN Secondary Game:",
-				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent()));
+		addField(pgnResuoltsPageQuad);
 	}
 }

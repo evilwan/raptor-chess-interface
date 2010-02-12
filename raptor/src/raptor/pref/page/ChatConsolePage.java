@@ -13,10 +13,14 @@
  */
 package raptor.pref.page;
 
+import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FontFieldEditor;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -25,13 +29,10 @@ import raptor.pref.fields.LabelButtonFieldEditor;
 public class ChatConsolePage extends FieldEditorPreferencePage {
 
 	public static final String[][] CONSOLE_CHARS = {
-			{ "1/4 Million Characters", "250000" },
-			{ "1/2 Million Characters", "500000" },
-			{ "1 Million Characters", "1000000" },
-			{ "5 Million Characters", "5000000" },
-			{ "10 Million Characters", "10000000" },
-			{ "15 Million Characters", "15000000" },
-			{ "20 Million Characters", "20000000" } };
+			{ "100,000 characters", "100000" },
+			{ "250,000 characters", "250000" },
+			{ "500,000 characters", "500000" },
+			{ "1,000,000 characters", "1000000" } };
 
 	LabelButtonFieldEditor labelButtonFieldEditor;
 
@@ -44,8 +45,9 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		ComboFieldEditor consoleChars = new ComboFieldEditor(
-				PreferenceKeys.CHAT_MAX_CONSOLE_CHARS, "Console Buffer Size:",
-				CONSOLE_CHARS, getFieldEditorParent());
+				PreferenceKeys.CHAT_MAX_CONSOLE_CHARS,
+				"Console Buffer Size (*):", CONSOLE_CHARS,
+				getFieldEditorParent());
 		addField(consoleChars);
 
 		ColorFieldEditor inputTextBackground = new ColorFieldEditor(
@@ -78,20 +80,28 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 				"Command Line Text Color:", getFieldEditorParent());
 		addField(outputTextForeground);
 
-		FontFieldEditor outputFont = new FontFieldEditor(
+		addField(new FontFieldEditor(
 				PreferenceKeys.CHAT_OUTPUT_FONT, "Command Line Font",
-				getFieldEditorParent());
-		addField(outputFont);
+				getFieldEditorParent()));
 
 		ColorFieldEditor linkTextColor = new ColorFieldEditor(
-				PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR,
-				"URL Color:", getFieldEditorParent());
+				PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR, "URL Color:",
+				getFieldEditorParent());
 		addField(linkTextColor);
 
 		ColorFieldEditor quoteUnderlineColor = new ColorFieldEditor(
 				PreferenceKeys.CHAT_QUOTE_UNDERLINE_COLOR,
-				"Quoted Text Color:",
-				getFieldEditorParent());
+				"Quoted Text Color:", getFieldEditorParent());
 		addField(quoteUnderlineColor);
+
+		Label warningLabel = new Label(getFieldEditorParent(), SWT.NONE);
+		warningLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 3, 1));
+		warningLabel
+				.setText(WordUtils
+						.wrap(
+								"* The recommended console size is 100,000 characters. You can go "
+										+ "beyond that but you may experiece some delays when adjusting console tabs that contain more than 100,000 characters.",
+								70));
 	}
 }

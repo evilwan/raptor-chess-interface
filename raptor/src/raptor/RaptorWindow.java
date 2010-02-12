@@ -60,6 +60,8 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.connector.Connector;
+import raptor.layout.Layout;
+import raptor.layout.LayoutUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtils;
 import raptor.pref.RaptorPreferenceStore;
@@ -98,7 +100,6 @@ import raptor.util.RegExUtils;
  * visible quadrants.
  */
 public class RaptorWindow extends ApplicationWindow {
-
 	/**
 	 * A RaptorTabFolder which keeps track of the Quadrant it is in in and its
 	 * parent RaptorSashForm. Also provides a raptorMaximize and a raptorRestore
@@ -116,7 +117,7 @@ public class RaptorWindow extends ApplicationWindow {
 			super(raptorSash, style);
 			this.quad = quad;
 			this.raptorSash = raptorSash;
-			
+
 			setSimple(false);
 			setUnselectedImageVisible(true);
 			setUnselectedCloseVisible(true);
@@ -271,7 +272,6 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 
 		public void updateToolbar(boolean force) {
-
 			// This method currently leaks toolBars.
 			// However, it is the only way I have found to pull this off.
 			// Care is taken in RaptorWindowItems to remove all menu items from
@@ -1082,13 +1082,9 @@ public class RaptorWindow extends ApplicationWindow {
 				if (currentTabItem.raptorParent.quad == quadrant
 						&& currentTabItem.raptorItem instanceof ChessBoardWindowItem) {
 					ChessBoardWindowItem item = (ChessBoardWindowItem) currentTabItem.raptorItem;
-
-					if (item.getController() instanceof InactiveController) {
-						if (((InactiveController) item.getController())
-								.canBeTakenOver()) {
-							result = item;
-							break;
-						}
+					if (item.isTakeOverable()) {
+						result = item;
+						break;
 					}
 				}
 			}
@@ -1133,7 +1129,6 @@ public class RaptorWindow extends ApplicationWindow {
 	@SuppressWarnings("unchecked")
 	public RaptorWindowItem[] getSelectedWindowItems(Class windowItemClass) {
 		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
-
 		synchronized (itemsManaged) {
 			for (RaptorTabItem currentTabItem : itemsManaged) {
 				if (windowItemClass.isInstance(currentTabItem.raptorItem)
@@ -1144,7 +1139,6 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		}
-
 		return result.toArray(new RaptorWindowItem[0]);
 	}
 
@@ -1575,7 +1569,28 @@ public class RaptorWindow extends ApplicationWindow {
 				menuBar.add(manager);
 			}
 		}
-		
+
+		MenuManager layoutsMenu = new MenuManager("&Layouts");
+		MenuManager bughouseLayoutsMenu = new MenuManager("&Bughouose Layouts");
+		Layout[] bughouseLayouts = LayoutUtils.getBughouseLayouts();
+		for (final Layout bugLayout : bughouseLayouts) {
+			bughouseLayoutsMenu.add(new Action(bugLayout.getName(), null) {
+				public void run() {
+					bugLayout.apply();
+				}
+			});
+		}
+		layoutsMenu.add(bughouseLayoutsMenu);
+		Layout[] layouts = LayoutUtils.getLayouts();
+		for (final Layout layout : layouts) {
+			layoutsMenu.add(new Action(layout.getName(), null) {
+				public void run() {
+					layout.apply();
+				}
+			});
+		}
+		windowMenu.add(layoutsMenu);
+
 		final MenuManager themesSubMenu = new MenuManager("&Load Theme");
 		String[] themeNames = ThemeService.getInstance().getThemeNames();
 		for (String themeName : themeNames) {
@@ -1598,12 +1613,14 @@ public class RaptorWindow extends ApplicationWindow {
 						"Enter the name of the new theme:");
 				if (StringUtils.isNotBlank(themeName)) {
 					ThemeService.getInstance().saveCurrentAsTheme(themeName);
-					
-					//Reload the themeSubMenu so it will show up next time.
+
+					// Reload the themeSubMenu so it will show up next time.
 					themesSubMenu.removeAll();
-					String[] themeNames = ThemeService.getInstance().getThemeNames();
+					String[] themeNames = ThemeService.getInstance()
+							.getThemeNames();
 					for (String currentThemeName : themeNames) {
-						final Theme theme = ThemeService.getInstance().getTheme(currentThemeName);
+						final Theme theme = ThemeService.getInstance()
+								.getTheme(currentThemeName);
 						themesSubMenu.add(new Action(theme.getName()) {
 							@Override
 							public void run() {
@@ -1614,8 +1631,8 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		
 		themesMenu.add(themesSubMenu);
+
 		menuBar.add(windowMenu);
 
 		helpMenu.add(new Action(getPreferences().getString(
@@ -1935,6 +1952,30 @@ public class RaptorWindow extends ApplicationWindow {
 	protected void handleShellCloseEvent() {
 		storeWindowPreferences();
 		Raptor.getInstance().shutdown();
+	}
+
+	public void resetLayout() {
+		RaptorTabItem[] tabItems = null;
+		synchronized (itemsManaged) {
+			tabItems = itemsManaged.toArray(new RaptorTabItem[0]);
+		}
+		LOG.info("Resetting layout ...");
+		long time = System.currentTimeMillis();
+		for (RaptorTabItem item : tabItems) {
+			Quadrant currentQuadrant = item.raptorParent.quad;
+			Quadrant newQuadrant = item.raptorItem.getPreferredQuadrant();
+			if (currentQuadrant != newQuadrant) {
+				item.onMoveTo(folders[newQuadrant.ordinal()]);
+			}
+		}
+
+		for (RaptorWindowSashForm raptorSash : sashes) {
+			raptorSash.loadFromPreferences();
+
+		}
+
+		LOG.info("Reset layout in " + (System.currentTimeMillis() - time)
+				+ "ms");
 	}
 
 	/**

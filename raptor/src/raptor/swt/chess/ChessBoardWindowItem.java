@@ -26,6 +26,7 @@ import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ChessBoardCacheService;
 import raptor.swt.ItemChangedListener;
+import raptor.swt.chess.controller.InactiveController;
 
 /**
  * You should only use this class directly when you don't want to use the
@@ -52,6 +53,7 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 
 	boolean isPassive = true;
 	boolean isBughouseOtherBoard = false;
+	Boolean isTakeoverOverride = null;
 	Quadrant quadrant;
 
 	public ChessBoardWindowItem(ChessBoardController controller) {
@@ -64,6 +66,29 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 		this.isBughouseOtherBoard = isBughouseOtherBoard;
 	}
 
+	/**
+	 * Returns the takeover overide. If it is null then the default takeover
+	 * behavior is used, where inactive controllers can be taken over if the
+	 * preference is set. Otherwise the value returned is what will be used to
+	 * determine if a ChessBoardWindowItem can be taken over.
+	 */
+	public Boolean getIsTakeoverOverride() {
+		return isTakeoverOverride;
+	}
+
+	/**
+	 * Sets the takeover overide. If it is null then the default takeover
+	 * behavior is used, where inactive controllers can be taken over if the
+	 * preference is set. Otherwise the value set is what will be used to
+	 * determine if a ChessBoardWindowItem can be taken over.
+	 * 
+	 * This method allows a ChessBoardWindowItem to avoid being taken over if it
+	 * has an InactiveChessBoardController.
+	 */
+	public void setIsTakeoverOverride(Boolean isTakeoverOverride) {
+		this.isTakeoverOverride = isTakeoverOverride;
+	}
+
 	public void addItemChangedListener(ItemChangedListener listener) {
 		getController().addItemChangedListener(listener);
 	}
@@ -72,29 +97,6 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 	 * Invoked after this control is moved to a new quadrant.
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
-		if (controller.getConnector() == null && !isBughouseOtherBoard) {
-			Raptor.getInstance().getPreferences().setValue(
-					PreferenceKeys.APP_CHESS_BOARD_QUADRANT, newQuadrant);
-		} else if (controller.getConnector() == null && isBughouseOtherBoard) {
-			Raptor.getInstance().getPreferences().setValue(
-					PreferenceKeys.APP_CHESS_BOARD_SECONDARY_QUADRANT,
-					newQuadrant);
-		} else if (controller.getConnector() != null && !isBughouseOtherBoard) {
-			Raptor.getInstance().getPreferences().setValue(
-					PreferenceKeys.APP_CHESS_BOARD_QUADRANT, newQuadrant);
-
-			Raptor.getInstance().getPreferences().setValue(
-					controller.getConnector().getShortName() + "-"
-							+ PreferenceKeys.CHESS_BOARD_QUADRANT, newQuadrant);
-		} else {
-			Raptor.getInstance().getPreferences().setValue(
-					controller.getConnector().getShortName() + "-"
-							+ PreferenceKeys.CHESS_BOARD_SECONDARY_QUADRANT,
-					newQuadrant);
-			Raptor.getInstance().getPreferences().setValue(
-					PreferenceKeys.APP_CHESS_BOARD_SECONDARY_QUADRANT,
-					newQuadrant);
-		}
 	}
 
 	public boolean confirmClose() {
@@ -216,6 +218,22 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 	 */
 	public void setQuadrant(Quadrant quadrant) {
 		this.quadrant = quadrant;
+	}
+
+	/**
+	 * Returns true if this ChessBoardWindowItem can be taken over by a new
+	 * ChessBoardWindowItem as needed.
+	 */
+	public boolean isTakeOverable() {
+		if (isTakeoverOverride != null) {
+			return isTakeoverOverride;
+		} else {
+			boolean allowTakeover = Raptor.getInstance().getPreferences()
+					.getBoolean(PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES);
+			ChessBoardController controller = getController();
+			return !allowTakeover || controller == null ? false
+					: controller instanceof InactiveController;
+		}
 	}
 
 	/**

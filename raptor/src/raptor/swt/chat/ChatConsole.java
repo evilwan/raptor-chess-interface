@@ -28,7 +28,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -113,8 +112,11 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		promptLabel = new Label(southControlsComposite, SWT.NONE);
 		promptLabel.setText(controller.getPrompt());
 
-		outputText = new StyledText(southControlsComposite, SWT.SINGLE | SWT.BORDER);
+		outputText = new StyledText(southControlsComposite, SWT.SINGLE
+				| SWT.BORDER);
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		// Removes \n\r when text is pasted.
 		outputText.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {
 				String string = e.text;
@@ -135,17 +137,17 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 			}
 		});
 
-		buttonComposite = new Composite(southControlsComposite, SWT.NONE);
-		RowLayout rowLayout = new RowLayout();
-		rowLayout.marginBottom = 0;
-		rowLayout.marginHeight = 0;
-		rowLayout.marginRight = 0;
-		rowLayout.marginLeft = 0;
-		rowLayout.marginTop = 0;
-		rowLayout.pack = false;
-		rowLayout.wrap = false;
-		buttonComposite.setLayout(rowLayout);
-		addButtons();
+		// buttonComposite = new Composite(southControlsComposite, SWT.NONE);
+		// RowLayout rowLayout = new RowLayout();
+		// rowLayout.marginBottom = 0;
+		// rowLayout.marginHeight = 0;
+		// rowLayout.marginRight = 0;
+		// rowLayout.marginLeft = 0;
+		// rowLayout.marginTop = 0;
+		// rowLayout.pack = false;
+		// rowLayout.wrap = false;
+		// buttonComposite.setLayout(rowLayout);
+		// addButtons();
 
 		updateFromPrefs();
 	}
@@ -170,7 +172,6 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		RaptorPreferenceStore prefs = getPreferences();
 		Color consoleBackground = prefs.getColor(CHAT_CONSOLE_BACKGROUND_COLOR);
 
-		buttonComposite.setBackground(consoleBackground);
 		southControlsComposite.setBackground(consoleBackground);
 		setBackground(consoleBackground);
 
@@ -181,13 +182,15 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		outputText.setBackground(prefs.getColor(CHAT_OUTPUT_BACKGROUND_COLOR));
 		outputText.setForeground(prefs.getColor(CHAT_OUTPUT_TEXT_COLOR));
 		outputText.setFont(prefs.getFont(CHAT_OUTPUT_FONT));
+		outputText.layout(true);
 
-		promptLabel.setFont(prefs.getFont(CHAT_PROMPT_FONT));
+		promptLabel.setFont(prefs.getFont(CHAT_OUTPUT_FONT));
 		promptLabel.setForeground(prefs.getColor(CHAT_PROMPT_COLOR));
 		promptLabel
 				.setBackground(prefs.getColor(CHAT_CONSOLE_BACKGROUND_COLOR));
+
 		layout(true, true);
-		
+
 		if (controller.isAutoScrolling()) {
 			controller.onForceAutoScroll();
 		}

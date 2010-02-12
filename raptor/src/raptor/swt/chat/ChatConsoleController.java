@@ -2473,11 +2473,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			LOG.info("Cleaning chat console");
 			long startTime = System.currentTimeMillis();
 			int cleanTo = (int) (charCount * CLEAN_PERCENTAGE);
-			chatConsole.inputText.getContent().replaceTextRange(0, cleanTo, "");
+			int lineNumber = chatConsole.inputText.getContent()
+					.getLineAtOffset(cleanTo);
+			cleanTo = chatConsole.inputText.getContent().getOffsetAtLine(
+					lineNumber++);
+			chatConsole.inputText.replaceTextRange(0, cleanTo, "");
+			setCaretToOutputTextEnd();
+			onForceAutoScroll();
 			LOG.info("Cleaned console in "
 					+ (System.currentTimeMillis() - startTime));
 		}
-
 	}
 
 	protected void registerForChatEvents() {

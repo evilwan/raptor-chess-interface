@@ -27,7 +27,6 @@ import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.BugGames;
 import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chat.ChatConsoleWindowItem;
-import raptor.swt.chess.ChessBoardWindowItem;
 
 public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 	protected String connectorShortName;
@@ -74,17 +73,6 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 				2, 1));
 		label.setImage(Raptor.getInstance().getImage(
 				Raptor.RESOURCES_DIR + "/images/quadrants.png"));
-
-		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.CHESS_BOARD_QUADRANT, "Chess Board:",
-				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent()));
-
-		addField(new ComboFieldEditor(connectorShortName + "-"
-				+ PreferenceKeys.CHESS_BOARD_SECONDARY_QUADRANT,
-				"Secondary Chess Board:",
-				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
-				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.BUG_BUTTONS_QUADRANT, "BughouseButtons:",

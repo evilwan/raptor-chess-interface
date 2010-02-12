@@ -20,7 +20,6 @@ package raptor.pref;
  */
 public interface PreferenceKeys {
 	// THe following are not preference names but suffixes of preference names.
-	public static final String CHESS_BOARD_QUADRANT = "chess-board-quadrantv2.0";
 	public static final String MAIN_TAB_QUADRANT = "main-quadrantv2.0";
 	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrantv2.0";
 	public static final String PERSON_TAB_QUADRANT = "person-quadrantv2.0";
@@ -30,7 +29,6 @@ public interface PreferenceKeys {
 	public static final String GAME_BOT_QUADRANT = "game-bot-quadrantv2.0";
 	public static final String BUG_WHO_QUADRANT = "bug-who-quadrantv2.0";
 	public static final String BUG_BUTTONS_QUADRANT = "bug-buttons-quadrantv2.0";
-	public static final String CHESS_BOARD_SECONDARY_QUADRANT = "chess-board-secondary-game-quadrantv2.0";
 	public static final String CHANNEL_TAB_QUADRANT = "channel-quadrantv2.0";
 	public static final String GAME_CHAT_TAB_QUADRANT = "game-chat-tab-quadrantv2.0";
 	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-infov2.0";
@@ -68,12 +66,9 @@ public interface PreferenceKeys {
 	public static final String APP_HOME_URL = "app-home-url";
 	public static final String APP_LAYOUT = "app-layout";
 	public static final String APP_BROWSER_QUADRANT = "app-browser-quadrantv2.0";
-	public static final String APP_PGN_RESULTS_QUADRANT = "app-pgn-results-quadrantv2.0";
 	public static final String APP_WINDOW_ITEM_POLL_INTERVAL = "app-window-item-poll-interval";
-	public static final String APP_CHESS_BOARD_QUADRANT = "app-"
-			+ CHESS_BOARD_QUADRANT;
-	public static final String APP_CHESS_BOARD_SECONDARY_QUADRANT = "app-"
-			+ CHESS_BOARD_SECONDARY_QUADRANT;
+	public static final String APP_CHESS_BOARD_QUADRANTS = "app-chess-board-quadrants";
+	public static final String APP_PGN_RESULTS_QUADRANT = "app-pgn-results-quadrant";
 	public static final String APP_LINUX_UNIX_BROWSER_NAME = "app-linux-unix-browser-name";
 	public static final String APP_IS_LAUNCHNG_HOME_PAGE = "app-is-launching-home-page";
 	public static final String APP_QUAD9_QUAD12345678_SASH_WEIGHTS = "app-quad9-quad2345678-sash-weights";
@@ -239,7 +234,6 @@ public interface PreferenceKeys {
 	public static final String CHAT_OUTPUT_FONT = "chat-output-font";
 	public static final String CHAT_OUTPUT_TEXT_COLOR = "chat-output-text-color";
 	public static final String CHAT_PROMPT_COLOR = "chat-prompt-color";
-	public static final String CHAT_PROMPT_FONT = "chat-prompt-font";
 	public static final String CHAT_QUOTE_UNDERLINE_COLOR = "chat-quote-underline-color";
 	public static final String CHAT_TIMESTAMP_CONSOLE = "chat-timestamp-console";
 	public static final String CHAT_TIMESTAMP_CONSOLE_FORMAT = "chat-timestamp-console-format";

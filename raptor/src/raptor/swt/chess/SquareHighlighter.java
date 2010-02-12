@@ -235,6 +235,10 @@ public class SquareHighlighter {
 	 * Redraws all squares that have arrow segments.
 	 */
 	protected void redrawSquares() {
+		if (decorators == null) {
+			return;
+		}
+
 		// Use for loops hwere with int. If you dont you can get concurrent
 		// modification errors.
 		for (int i = 0; i < decorators.length; i++) {

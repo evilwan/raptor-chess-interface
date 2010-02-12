@@ -317,32 +317,64 @@ public class ChessBoardUtils implements BoardConstants {
 		return getQuadrantForController(controller, false);
 	}
 
+	/**
+	 * Returns an array of quadrants available for chess boards. This does not
+	 * do any filtering on games currently being played or bughouse, it just
+	 * returns a list of all possible quadrants boards can be placed at.
+	 */
+	public static Quadrant[] getQuadrantsAvailableForBoards() {
+		String[] boardQuadrants = Raptor.getInstance().getPreferences()
+				.getStringArray(PreferenceKeys.APP_CHESS_BOARD_QUADRANTS);
+
+		Quadrant[] result = new Quadrant[boardQuadrants.length];
+		for (int i = 0; i < boardQuadrants.length; i++) {
+			result[i] = Quadrant.valueOf(boardQuadrants[i]);
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the ideal quadrant for this controller. Criteria used for making
+	 * this decision include: available quadrants for a chess board, if the game
+	 * is bughouse, and if an item can be taken over.
+	 */
 	public static Quadrant getQuadrantForController(
 			ChessBoardController controller, boolean isBughouseOtherBoard) {
-		if (controller.getConnector() == null) {
-			if (isBughouseOtherBoard) {
-				return Raptor.getInstance().getPreferences().getQuadrant(
-						PreferenceKeys.APP_CHESS_BOARD_SECONDARY_QUADRANT);
-			} else {
-				return Raptor.getInstance().getPreferences().getQuadrant(
-						PreferenceKeys.APP_CHESS_BOARD_QUADRANT);
-			}
-		} else {
-			if (isBughouseOtherBoard) {
-				return Raptor
-						.getInstance()
-						.getPreferences()
-						.getQuadrant(
-								controller.getConnector().getShortName()
-										+ "-"
-										+ PreferenceKeys.CHESS_BOARD_SECONDARY_QUADRANT);
+		Quadrant[] availableQuadrants = getQuadrantsAvailableForBoards();
+		Quadrant result = null;
 
+		if (availableQuadrants.length == 1) {
+			result = availableQuadrants[0];
+		} else {
+			if (Variant.isBughouse(controller.getGame().getVariant())) {
+				result = isBughouseOtherBoard ? availableQuadrants[1]
+						: availableQuadrants[0];
 			} else {
-				return Raptor.getInstance().getPreferences().getQuadrant(
-						controller.getConnector().getShortName() + "-"
-								+ PreferenceKeys.CHESS_BOARD_QUADRANT);
+				quadrantLoop: for (Quadrant currentQuadrant : availableQuadrants) {
+					// If a board is already open in this quadrant, be nice and
+					// open it in another quadrant if possible.
+					RaptorWindowItem[] items = Raptor.getInstance().getWindow()
+							.getWindowItems(currentQuadrant);
+
+					if (items == null || items.length == 0) {
+						result = currentQuadrant;
+						break;
+					} else {
+						for (RaptorWindowItem currentItem : items) {
+							if (currentItem instanceof ChessBoardWindowItem) {
+								ChessBoardWindowItem chessBoardItem = (ChessBoardWindowItem) currentItem;
+								if (chessBoardItem.isTakeOverable()) {
+									result = currentQuadrant;
+									break quadrantLoop;
+								}
+							}
+						}
+					}
+					result = availableQuadrants[0];
+				}
 			}
 		}
+		return result;
 	}
 
 	/**
@@ -564,33 +596,6 @@ public class ChessBoardUtils implements BoardConstants {
 								controller, isBughouseOtherBoard);
 						ChessBoardWindowItem item = null;
 
-						Quadrant primaryQuadrant = controller.getConnector() == null ? Raptor
-								.getInstance()
-								.getPreferences()
-								.getQuadrant(
-										PreferenceKeys.APP_CHESS_BOARD_QUADRANT)
-								: Raptor
-										.getInstance()
-										.getPreferences()
-										.getQuadrant(
-												controller.getConnector()
-														.getShortName()
-														+ "-"
-														+ PreferenceKeys.CHESS_BOARD_QUADRANT);
-						Quadrant secondaryQuadrant = controller.getConnector() == null ? Raptor
-								.getInstance()
-								.getPreferences()
-								.getQuadrant(
-										PreferenceKeys.APP_CHESS_BOARD_SECONDARY_QUADRANT)
-								: Raptor
-										.getInstance()
-										.getPreferences()
-										.getQuadrant(
-												controller.getConnector()
-														.getShortName()
-														+ "-"
-														+ PreferenceKeys.CHESS_BOARD_SECONDARY_QUADRANT);
-
 						if (Raptor.getInstance().getPreferences().getBoolean(
 								PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES)) {
 							item = Raptor
@@ -600,56 +605,22 @@ public class ChessBoardUtils implements BoardConstants {
 							if (item == null
 									&& controller.getGame().getVariant() != Variant.bughouse
 									&& controller.getGame().getVariant() != Variant.fischerRandomBughouse) {
-								item = Raptor
-										.getInstance()
-										.getWindow()
+								item = Raptor.getInstance().getWindow()
 										.getChessBoardWindowItemToTakeOver(
-												quadrant == primaryQuadrant ? secondaryQuadrant
-														: primaryQuadrant);
-							}
-
-							if (item != null) {
-								item.getBoard().hideEngineAnalysisWidget();
-								item.getBoard().hideMoveList();
+												quadrant);
 							}
 						}
 
 						if (item == null) {
+							// No item to take over so create one.
 							item = new ChessBoardWindowItem(controller,
 									isBughouseOtherBoard);
-
-							// This block of code overrides the quadrant if
-							// there is an
-							// active controller already there observing a chess
-							// game.
-							if ((item.getPreferredQuadrant() == primaryQuadrant || item
-									.getPreferredQuadrant() == secondaryQuadrant)
-									&& !Variant.isBughouse(item.getController()
-											.getGame().getVariant())) {
-								RaptorWindowItem[] items = Raptor.getInstance()
-										.getWindow().getWindowItems(
-												item.getPreferredQuadrant());
-								boolean swapQuadrants = false;
-								for (RaptorWindowItem currentItem : items) {
-									if (currentItem instanceof ChessBoardWindowItem) {
-										if (((ChessBoardWindowItem) currentItem)
-												.getConnector() != null) {
-											swapQuadrants = true;
-										}
-									}
-								}
-								if (swapQuadrants) {
-									if (item.getPreferredQuadrant() == primaryQuadrant) {
-										item.setQuadrant(secondaryQuadrant);
-									} else if (item.getPreferredQuadrant() == secondaryQuadrant) {
-										item.setQuadrant(primaryQuadrant);
-									}
-								}
-							}
-
 							Raptor.getInstance().getWindow()
 									.addRaptorWindowItem(item);
 						} else {
+							// Take over the item.
+							item.getBoard().hideEngineAnalysisWidget();
+							item.getBoard().hideMoveList();
 							item.takeOver(controller, isBughouseOtherBoard);
 							Raptor.getInstance().getWindow().forceFocus(item);
 						}

@@ -17,7 +17,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -70,21 +72,47 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 
-		public void propertyChange(PropertyChangeEvent arg0) {
-			if (arg0.getProperty().endsWith("color")) {
-				Raptor.getInstance().getColorRegistry()
-						.put(
-								arg0.getProperty(),
-								PreferenceConverter.getColor(
-										RaptorPreferenceStore.this, arg0
-												.getProperty()));
-			} else if (arg0.getProperty().endsWith("font")) {
-				Raptor.getInstance().getFontRegistry()
-						.put(
-								arg0.getProperty(),
+		public void propertyChange(PropertyChangeEvent event) {
+			String key = event.getProperty();
+			if (key.endsWith("color")) {
+				Raptor.getInstance().getColorRegistry().put(
+						key,
+						PreferenceConverter.getColor(
+								RaptorPreferenceStore.this, key));
+			} else if (key.endsWith("font")) {
+				// Adjust all the zoomed fonts, as well as the font being
+				// changed,
+				// in the FontRegistry.
+				List<String> fontKeysToChange = new ArrayList<String>();
+				for (Object fontRegistryKey : Raptor.getInstance()
+						.getFontRegistry().getKeySet()) {
+					String fontKey = fontRegistryKey.toString();
+					if (fontKey.startsWith(key)) {
+						fontKeysToChange.add(fontKey);
+					}
+				}
+
+				for (String fontKey : fontKeysToChange) {
+					if (fontKey.equals(key)) {
+						Raptor.getInstance().getFontRegistry().put(
+								key,
 								PreferenceConverter.getFontDataArray(
-										RaptorPreferenceStore.this, arg0
-												.getProperty()));
+										RaptorPreferenceStore.this, key));
+					} else {
+						double zoomFactor = Double.parseDouble(fontKey
+								.substring(key.length() + 1));
+
+						Raptor.getInstance().getFontRegistry().put(fontKey,
+								zoomFont(key, zoomFactor));
+					}
+				}
+
+				Raptor.getInstance().getFontRegistry().put(
+						key,
+						PreferenceConverter.getFontDataArray(
+								RaptorPreferenceStore.this, key));
+				System.err.println("Adjusted font: " + key + " "
+						+ getFont(key).getFontData()[0].getHeight());
 			}
 		}
 	};
@@ -288,26 +316,36 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		return result;
 	}
 
+	protected FontData[] zoomFont(String key, double zoomFactor) {
+		FontData[] fontData = PreferenceConverter.getFontDataArray(this, key);
+		// Convert font to zoom factor.
+		for (int i = 0; i < fontData.length; i++) {
+			fontData[i].setHeight((int) (fontData[i].getHeight() * zoomFactor));
+		}
+		return fontData;
+
+	}
+
+	protected String getZoomFontKey(String key, double zoomFactor) {
+		return key + "-" + zoomFactor;
+	}
+
 	public Font getFont(String key, boolean isAdjustingForZoomFactor) {
 		try {
 			String adjustedKey = key;
 			if (isAdjustingForZoomFactor) {
 				double zoomFactor = getDouble(APP_ZOOM_FACTOR);
-				adjustedKey = key + zoomFactor;
+				adjustedKey = getZoomFontKey(key, zoomFactor);
 			}
 
 			if (!Raptor.getInstance().getFontRegistry()
 					.hasValueFor(adjustedKey)) {
-				FontData[] fontData = PreferenceConverter.getFontDataArray(
-						this, key);
+				FontData[] fontData = null;
 
-				if (isAdjustingForZoomFactor) {
-					double zoomFactor = getDouble(APP_ZOOM_FACTOR);
-					// Convert font to zoom factor.
-					for (int i = 0; i < fontData.length; i++) {
-						fontData[i]
-								.setHeight((int) (fontData[i].getHeight() * zoomFactor));
-					}
+				if (!isAdjustingForZoomFactor) {
+					fontData = PreferenceConverter.getFontDataArray(this, key);
+				} else {
+					fontData = zoomFont(key, getDouble(APP_ZOOM_FACTOR));
 				}
 
 				Raptor.getInstance().getFontRegistry().put(adjustedKey,
@@ -386,10 +424,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_LAYOUT, "Layout1");
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_BROWSER_QUADRANT, Quadrant.III);
+		setDefault(APP_CHESS_BOARD_QUADRANTS, new String[] {
+				Quadrant.III.toString(), Quadrant.IV.toString(),
+				Quadrant.V.toString() });
 		setDefault(APP_PGN_RESULTS_QUADRANT, Quadrant.III);
-		setDefault(APP_CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault(APP_CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
-		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
 		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 5);
 		setDefault(APP_IS_LOGGING_CONSOLE, false);
@@ -642,7 +680,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(RESULTS_WIDTH_PERCENTAGE, 80);
 
 		// Chat
-		setDefault(CHAT_MAX_CONSOLE_CHARS, 500000);
+		setDefault(CHAT_MAX_CONSOLE_CHARS, 100000);
 		setDefault(CHAT_TIMESTAMP_CONSOLE, false);
 		setDefault(CHAT_TIMESTAMP_CONSOLE_FORMAT, "'['hh:mma']'");
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PTELL, true);
@@ -665,10 +703,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						defaultLargeFontSize, 0) });
 		PreferenceConverter.setDefault(this, CHAT_OUTPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
-						defaultLargeFontSize, 0) });
-		PreferenceConverter.setDefault(this, CHAT_PROMPT_FONT,
-				new FontData[] { new FontData(defaultMonospacedFontName,
-						defaultLargeFontSize, 0) });
+						defaultMediumFontSize, 0) });
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
@@ -899,8 +934,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics-" + PERSON_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics-" + REGEX_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
-		setDefault("fics-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("fics-" + CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault("fics-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("fics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
@@ -913,8 +946,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics2-" + PERSON_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + REGEX_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VII);
-		setDefault("fics2-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("fics2-" + CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault("fics2-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("fics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
@@ -927,8 +958,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics-" + PERSON_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + REGEX_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
-		setDefault("bics-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("bics-" + CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault("bics-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("bics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("bics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
@@ -940,8 +969,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + PERSON_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + REGEX_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VII);
-		setDefault("bics2-" + CHESS_BOARD_QUADRANT, Quadrant.III);
-		setDefault("bics2-" + CHESS_BOARD_SECONDARY_QUADRANT, Quadrant.V);
 		setDefault("bics2-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("bics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
