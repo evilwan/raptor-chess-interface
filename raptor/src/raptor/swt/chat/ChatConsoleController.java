@@ -2400,9 +2400,38 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		});
 
+		new MenuItem(menu, SWT.SEPARATOR);
+		MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
+		showWordsThatStartWithAction.setText("show words that start with '"
+				+ word + "'");
+		showWordsThatStartWithAction.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(Event e) {
+				String[] words = DictionaryService.getInstance()
+						.getWordsThatStartWith(finalWord);
+				StringBuilder output = new StringBuilder(2000);
+
+				if (words == null || words.length == 0) {
+					output.append("No words found.");
+				} else {
+					output.append("Words starting with " + finalWord + ":\n");
+					int count = 0;
+					for (int i = 0; i < words.length; i++) {
+						output.append(StringUtils.rightPad(words[i], 20));
+						count++;
+						if (count == 3) {
+							output.append("\n");
+							count = 0;
+						}
+					}
+				}
+				onAppendChatEventToInputText(new ChatEvent(null,
+						ChatType.INTERNAL, output.toString()));
+			}
+		});
+
 		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)
 				&& word != null && !isSpelledCorrectly(null, word)) {
-			new MenuItem(menu, SWT.SEPARATOR);
+
 			MenuItem addWord = new MenuItem(menu, SWT.PUSH);
 			addWord.setText("add " + word + " to dictionary");
 			addWord.addListener(SWT.Selection, new Listener() {
