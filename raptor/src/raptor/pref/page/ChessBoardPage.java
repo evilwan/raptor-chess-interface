@@ -477,7 +477,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		boolean isLight = true;
 		for (int i = 2; i >= 0; i--) {
 			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j] = new ChessBoardPageSquare(miniBoard, j + i * 8,
+				squares[i][j] = new ChessBoardPageSquare(miniBoard, j + i * 8 ,
 						isLight);
 				squares[i][j].setLayoutData(new GridData(50, 50));
 				isLight = !isLight;
