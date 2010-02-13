@@ -502,44 +502,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"raptor.swt.chess.movelist.TextAreaMoveList");
 		setDefault(BOARD_IS_USING_SOLID_BACKGROUND_COLORS, false);
 
-		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
-				PlayingMouseAction.None.toString());
-		setDefault(PLAYING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
-				PlayingMouseAction.PopupMenu.toString());
-		setDefault(PLAYING_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
-				PlayingMouseAction.SmartMove.toString());
-		setDefault(PLAYING_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
-				PlayingMouseAction.None.toString());
-		setDefault(PLAYING_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
-				PlayingMouseAction.None.toString());
-		setDefault(PLAYING_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
-				PlayingMouseAction.None.toString());
-		setDefault(OBSERVING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
-				ObservingMouseAction.MakePrimaryGame.toString());
-		setDefault(OBSERVING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
-				ObservingMouseAction.AddGameChatTab.toString());
-		setDefault(OBSERVING_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
-				ObservingMouseAction.MatchWinner.toString());
-		setDefault(OBSERVING_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
-				ObservingMouseAction.None.toString());
-		setDefault(OBSERVING_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
-				ObservingMouseAction.None.toString());
-		setDefault(
-				OBSERVING_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
-				ObservingMouseAction.None.toString());
-		setDefault(INACTIVE_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
-				InactiveMouseAction.None.toString());
-		setDefault(INACTIVE_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
-				InactiveMouseAction.None.toString());
-		setDefault(INACTIVE_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
-				InactiveMouseAction.Rematch.toString());
-		setDefault(INACTIVE_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
-				InactiveMouseAction.None.toString());
-		setDefault(INACTIVE_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
-				InactiveMouseAction.None.toString());
-		setDefault(INACTIVE_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
-				InactiveMouseAction.None.toString());
-
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_COLOR, new RGB(
@@ -580,7 +542,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						defaultMediumFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_OPENING_DESC_FONT,
 				new FontData[] { new FontData(defaultFontName,
-						defaultTinyFontSize, 0) });
+						defaultTinyFontSize, 0) }); 
 		PreferenceConverter.setDefault(this, BOARD_STATUS_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultTinyFontSize, 0) });
@@ -590,6 +552,45 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultTinyFontSize, 0) });
+		
+		//Controller button preferences.
+		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.None.toString());
+		setDefault(PLAYING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.PopupMenu.toString());
+		setDefault(PLAYING_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.SmartMove.toString());
+		setDefault(PLAYING_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.None.toString());
+		setDefault(PLAYING_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.None.toString());
+		setDefault(PLAYING_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
+				PlayingMouseAction.None.toString());
+		setDefault(OBSERVING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.MakePrimaryGame.toString());
+		setDefault(OBSERVING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.AddGameChatTab.toString());
+		setDefault(OBSERVING_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.MatchWinner.toString());
+		setDefault(OBSERVING_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.None.toString());
+		setDefault(OBSERVING_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.None.toString());
+		setDefault(
+				OBSERVING_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
+				ObservingMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + MIDDLE_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.Rematch.toString());
+		setDefault(INACTIVE_CONTROLLER + MISC1_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + MISC2_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
+		setDefault(INACTIVE_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
+				InactiveMouseAction.None.toString());
 
 		// BugArena
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
