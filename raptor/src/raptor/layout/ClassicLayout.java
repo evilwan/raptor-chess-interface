@@ -61,7 +61,7 @@ public class ClassicLayout extends AbstractLayout {
 				RaptorStringUtils.toString(new int[] { 10, 90 }));
 		preferenceAdjustments.put(
 				PreferenceKeys.APP_QUAD1_QUAD2345678_SASH_WEIGHTS,
-				RaptorStringUtils.toString(new int[] { 50, 90 }));
+				RaptorStringUtils.toString(new int[] { 50, 50 }));
 		preferenceAdjustments.put(
 				PreferenceKeys.APP_QUAD2345_QUAD678_SASH_WEIGHTS,
 				RaptorStringUtils.toString(new int[] { 70, 30 }));

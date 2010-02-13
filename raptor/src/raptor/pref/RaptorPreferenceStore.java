@@ -419,10 +419,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_IS_LOGGING_GAMES, true);
 		setDefault(APP_LAYOUT, "Layout1");
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
-		setDefault(APP_BROWSER_QUADRANT, Quadrant.III);
+		setDefault(APP_BROWSER_QUADRANT, Quadrant.II);
 		setDefault(APP_CHESS_BOARD_QUADRANTS, new String[] {
-				Quadrant.III.toString(), Quadrant.IV.toString(),
-				Quadrant.V.toString() });
+				Quadrant.II.toString(), Quadrant.III.toString(),
+				Quadrant.IV.toString(), Quadrant.V.toString() });
 		setDefault(APP_PGN_RESULTS_QUADRANT, Quadrant.III);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
 		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 5);
@@ -433,10 +433,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
 		setDefault(APP_QUAD9_QUAD12345678_SASH_WEIGHTS, new int[] { 10, 90 });
-		setDefault(APP_QUAD1_QUAD2345678_SASH_WEIGHTS, new int[] { 10, 90 });
+		setDefault(APP_QUAD1_QUAD2345678_SASH_WEIGHTS, new int[] { 50, 50 });
 		setDefault(APP_QUAD2345_QUAD678_SASH_WEIGHTS, new int[] { 70, 30 });
-		setDefault(APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS, new int[] { 10,
-				40, 10, 40 });
+		setDefault(APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS, new int[] { 25,
+				25, 25, 25 });
 		setDefault(APP_QUAD67_QUAD8_SASH_WEIGHTS, new int[] { 70, 30 });
 		setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
 		setDefault(APP_ZOOM_FACTOR, 1.0);
@@ -932,7 +932,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("fics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
-		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault("fics-" + BUG_BUTTONS_QUADRANT, Quadrant.IX);
 		setDefault("fics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
 		setDefault("fics-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 		setDefault("fics-" + GAME_BOT_QUADRANT, Quadrant.VIII);
@@ -944,7 +944,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("fics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("fics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
-		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault("fics2-" + BUG_BUTTONS_QUADRANT, Quadrant.IX);
 		setDefault("fics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
 		setDefault("fics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 		setDefault("fics2-" + GAME_BOT_QUADRANT, Quadrant.VIII);
@@ -956,7 +956,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("bics-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
-		setDefault("bics-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault("bics-" + BUG_BUTTONS_QUADRANT, Quadrant.IX);
 		setDefault("bics-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VI);
 		setDefault("bics-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
@@ -967,7 +967,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + PARTNER_TELL_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + BUG_WHO_QUADRANT, Quadrant.VIII);
 		setDefault("bics2-" + SEEK_TABLE_QUADRANT, Quadrant.VIII);
-		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.II);
+		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.IX);
 		setDefault("bics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
