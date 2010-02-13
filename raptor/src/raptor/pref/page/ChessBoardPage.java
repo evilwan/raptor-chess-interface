@@ -13,10 +13,15 @@
  */
 package raptor.pref.page;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -108,10 +113,91 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 	}
 
+	protected class ChessBoardPageBooleanFieldEditor extends BooleanFieldEditor {
+
+		String key = null;
+		String value = null;
+
+		public ChessBoardPageBooleanFieldEditor(String name, String labelText,
+				Composite parent) {
+			super(name, labelText, parent);
+			key = name;
+		}
+
+		public String getValue() {
+			value = value == null ? getPreferenceStore().getString(key) : value;
+			enableDisableControls(value);
+			return value;
+		}
+
+		@Override
+		protected void fireValueChanged(String property, Object oldValue,
+				Object newValue) {
+			value = newValue.toString();
+			super.fireValueChanged(property, oldValue, newValue);
+			valuesChanged();
+			enableDisableControls(value);
+
+		}
+
+		protected void enableDisableControls(String value) {
+			if (value.equals("true")) {
+				lightSquareSolidColor.setEnabled(true, getFieldEditorParent());
+				darkSquareSolidColor.setEnabled(true, getFieldEditorParent());
+				backgroundFieldEditor.setEnabled(false, getFieldEditorParent());
+			} else {
+				lightSquareSolidColor.setEnabled(false, getFieldEditorParent());
+				darkSquareSolidColor.setEnabled(false, getFieldEditorParent());
+				backgroundFieldEditor.setEnabled(true, getFieldEditorParent());
+			}
+		}
+	}
+
+	protected class ChessBoardPageColorFieldEditor extends ColorFieldEditor {
+
+		String key = null;
+		RGB value = null;
+
+		public ChessBoardPageColorFieldEditor(String name, String labelText,
+				Composite parent) {
+			super(name, labelText, parent);
+			key = name;
+		}
+
+		public RGB getValue() {
+			return value == null ? StringConverter.asRGB(getPreferenceStore()
+					.getString(key)) : value;
+		}
+
+		@Override
+		protected void fireValueChanged(String property, Object oldValue,
+				Object newValue) {
+			System.err.println(newValue.getClass().getName() + " |  "
+					+ newValue.toString());
+			value = (RGB) newValue;
+			super.fireValueChanged(property, oldValue, newValue);
+			valuesChanged();
+		}
+	}
+
 	protected class ChessBoardPageSquare extends ChessSquare {
 
 		public ChessBoardPageSquare(Composite parent, int id, boolean isLight) {
 			super(parent, id, isLight);
+		}
+
+		protected boolean isUsingSolidBackgroundColors() {
+			return Boolean.parseBoolean(isUsingSolidColorsEditor.getValue());
+		}
+
+		protected Color getSolidBackgroundColor() {
+			RGB rgb = isLight() ? lightSquareSolidColor.getValue()
+					: darkSquareSolidColor.getValue();
+
+			Raptor.getInstance().getColorRegistry().put(
+					"chess-board-page-solid-bg-color", rgb);
+			return Raptor.getInstance().getColorRegistry().get(
+					"chess-board-page-solid-bg-color");
 		}
 
 		@Override
@@ -234,6 +320,9 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	ChessBoardPageComboFieldEditor pieceJailHidingAlphaCombo;
 	ChessBoardPageComboFieldEditor coordinatesPercentageCombo;
 	ChessBoardPageComboFieldEditor pieceJailPercentageCombo;
+	ChessBoardPageBooleanFieldEditor isUsingSolidColorsEditor;
+	ChessBoardPageColorFieldEditor lightSquareSolidColor;
+	ChessBoardPageColorFieldEditor darkSquareSolidColor;
 	ChessBoardPageSquare[][] squares = null;
 	PieceJailSquarePageSquare[] dropSquares = null;
 	ChessBoardPageSquare[] hiddenPieceAlphas;
@@ -287,6 +376,21 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				setNameValues, getFieldEditorParent());
 		addField(setFieldEditor);
 
+		isUsingSolidColorsEditor = new ChessBoardPageBooleanFieldEditor(
+				PreferenceKeys.BOARD_IS_USING_SOLID_BACKGROUND_COLORS,
+				"Use solid background colors", getFieldEditorParent());
+		addField(isUsingSolidColorsEditor);
+
+		lightSquareSolidColor = new ChessBoardPageColorFieldEditor(
+				PreferenceKeys.BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR,
+				"Light Square Background Color:", getFieldEditorParent());
+		addField(lightSquareSolidColor);
+
+		darkSquareSolidColor = new ChessBoardPageColorFieldEditor(
+				PreferenceKeys.BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR,
+				"Dark Square Background Color:", getFieldEditorParent());
+		addField(darkSquareSolidColor);
+
 		String[] backgrounds = ChessBoardUtils.getSquareBackgroundNames();
 		String[][] backgroundNameValues = new String[backgrounds.length][2];
 		for (int i = 0; i < backgrounds.length; i++) {
@@ -296,7 +400,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		backgroundFieldEditor = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_SQUARE_BACKGROUND_NAME,
-				"Square Background", backgroundNameValues,
+				"Square Background Pattern", backgroundNameValues,
 				getFieldEditorParent());
 		addField(backgroundFieldEditor);
 
@@ -304,7 +408,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_LAYOUT, "Chess Board Control Layout:",
 				LAYOUTS, getFieldEditorParent());
 		addField(layoutsFieldEditor);
-		
+
 		ComboFieldEditor moveListLayoutEditor = new ComboFieldEditor(
 				PreferenceKeys.BOARD_MOVE_LIST_CLASS, "Move List Type:",
 				MOVE_LISTS, getFieldEditorParent());

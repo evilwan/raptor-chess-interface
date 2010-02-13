@@ -22,6 +22,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Canvas;
@@ -214,10 +215,16 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			Point size = getSize();
 			if (!ignorePaint) {
 				e.gc.setAdvanced(true);
-				Image backgroundImage = getBackgrondImage(isLight, size.x,
-						size.y);
-				if (backgroundImage != null) {
-					e.gc.drawImage(backgroundImage, 0, 0);
+
+				if (isUsingSolidBackgroundColors()) {
+					e.gc.setBackground(getSolidBackgroundColor());
+					e.gc.fillRectangle(0, 0, size.x, size.y);
+				} else {
+					Image backgroundImage = getBackgrondImage(isLight, size.x,
+							size.y);
+					if (backgroundImage != null) {
+						e.gc.drawImage(backgroundImage, 0, 0);
+					}
 				}
 
 				int imageSide = getImageSize();
@@ -398,6 +405,24 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			this.piece = piece;
 			pieceImage = null;
 		}
+	}
+
+	/**
+	 * Returns true if solid background colors should be used, false if a
+	 * background image should be used.
+	 */
+	protected boolean isUsingSolidBackgroundColors() {
+		return getPreferences().getBoolean(
+				BOARD_IS_USING_SOLID_BACKGROUND_COLORS);
+	}
+
+	/**
+	 * Returns the solid background color to use for this square.
+	 */
+	protected Color getSolidBackgroundColor() {
+		return getPreferences().getColor(
+				isLight ? BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR
+						: BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR);
 	}
 
 	/**

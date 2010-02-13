@@ -147,6 +147,9 @@ public interface PreferenceKeys {
 	public static final String BOARD_BACKGROUND_COLOR = "board-background-color";
 	public static final String BOARD_COOLBAR_MODE = "board-coolbar-mode";
 	public static final String BOARD_COOLBAR_ON_TOP = "board-coolbar-on-top";
+	public static final String BOARD_IS_USING_SOLID_BACKGROUND_COLORS = "board-is-using-solid-background-colors";
+	public static final String BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR = "board-light-square-solid-background-color";
+	public static final String BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR = "board-dark-square-solid-background-color";
 	public static final String BOARD_CHESS_SET_NAME = "board-chess-set-name";
 	public static final String BOARD_CLOCK_FONT = "board-clock-font";
 	public static final String BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN = "board-clock-show-millis-when-less-than";

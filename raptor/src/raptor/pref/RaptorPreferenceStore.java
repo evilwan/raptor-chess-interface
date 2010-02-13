@@ -500,6 +500,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING, false);
 		setDefault(BOARD_MOVE_LIST_CLASS,
 				"raptor.swt.chess.movelist.TextAreaMoveList");
+		setDefault(BOARD_IS_USING_SOLID_BACKGROUND_COLORS, false);
 
 		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				PlayingMouseAction.None.toString());
@@ -555,6 +556,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new RGB(0, 255, 0));
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
+		PreferenceConverter.setDefault(this,
+				BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(255, 255,
+						255));
+		PreferenceConverter.setDefault(this,
+				BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 0, 0));
 
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName,

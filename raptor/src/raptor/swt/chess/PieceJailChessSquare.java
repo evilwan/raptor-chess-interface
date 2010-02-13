@@ -86,6 +86,7 @@ public class PieceJailChessSquare extends ChessSquare {
 	 */
 	public PieceJailChessSquare(Composite parent, int id, int pieceJailPiece) {
 		super(parent, id, true);
+		ignorePaint = true;
 		this.pieceJailPiece = pieceJailPiece;
 		addPaintListener(paintListener);
 	}
