@@ -367,11 +367,18 @@ public class ChessBoardUtils implements BoardConstants {
 									result = currentQuadrant;
 									break quadrantLoop;
 								}
+								else {
+									continue quadrantLoop;
+								}
 							}
 						}
+						result = currentQuadrant;
+						break;
 					}
-					result = availableQuadrants[0];
 				}
+			    if (result == null) {
+			    	result = availableQuadrants[0];
+			    }
 			}
 		}
 		return result;
