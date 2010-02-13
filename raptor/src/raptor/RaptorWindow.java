@@ -61,12 +61,12 @@ import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.connector.Connector;
 import raptor.layout.Layout;
-import raptor.layout.LayoutUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtils;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.AliasService;
 import raptor.service.ConnectorService;
+import raptor.service.LayoutService;
 import raptor.service.MemoService;
 import raptor.service.SoundService;
 import raptor.service.ThemeService;
@@ -1150,6 +1150,23 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	/**
+	 * Returns an array of all RaptorWindowItem's being managed.
+	 * 
+	 * @return
+	 */
+	public RaptorWindowItem[] getWindowItems() {
+		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
+
+		synchronized (itemsManaged) {
+			for (RaptorTabItem currentTabItem : itemsManaged) {
+				result.add(currentTabItem.raptorItem);
+			}
+		}
+
+		return result.toArray(new RaptorWindowItem[0]);
+	}
+
+	/**
 	 * Returns all RaptorWindowItems that are being managed and are of the
 	 * specified class type.
 	 * 
@@ -1570,9 +1587,29 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		}
 
-		MenuManager layoutsMenu = new MenuManager("&Layouts");
+		final MenuManager layoutsMenu = new MenuManager("&Layouts");
+		layoutsMenu.add(new Action("&Save Current As Layout") {
+			@Override
+			public void run() {
+				String layoutName = Raptor.getInstance().promptForText(
+						"Enter the name of the new layout:");
+				if (StringUtils.isNotBlank(layoutName)) {
+					final Layout newLayout = LayoutService.getInstance()
+							.saveCurrentAsCustomLayout(layoutName);
+
+					layoutsMenu.add(new Action(newLayout.getName(), null) {
+						public void run() {
+							newLayout.apply();
+						}
+					});
+				}
+			}
+		});
+		layoutsMenu.add(new Separator());
+
 		MenuManager bughouseLayoutsMenu = new MenuManager("&Bughouose Layouts");
-		Layout[] bughouseLayouts = LayoutUtils.getBughouseLayouts();
+		Layout[] bughouseLayouts = LayoutService.getInstance()
+				.getBughouoseSystemLayouts();
 		for (final Layout bugLayout : bughouseLayouts) {
 			bughouseLayoutsMenu.add(new Action(bugLayout.getName(), null) {
 				public void run() {
@@ -1581,8 +1618,20 @@ public class RaptorWindow extends ApplicationWindow {
 			});
 		}
 		layoutsMenu.add(bughouseLayoutsMenu);
-		Layout[] layouts = LayoutUtils.getLayouts();
+
+		Layout[] layouts = LayoutService.getInstance()
+				.getNonBughouseSystemLayouts();
 		for (final Layout layout : layouts) {
+			layoutsMenu.add(new Action(layout.getName(), null) {
+				public void run() {
+					layout.apply();
+				}
+			});
+		}
+
+		layoutsMenu.add(new Separator());
+		Layout[] customLayouts = LayoutService.getInstance().getCustomLayouts();
+		for (final Layout layout : customLayouts) {
 			layoutsMenu.add(new Action(layout.getName(), null) {
 				public void run() {
 					layout.apply();

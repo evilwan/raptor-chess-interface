@@ -38,7 +38,7 @@ import raptor.swt.chess.controller.InactiveController;
 public class ChessBoardCacheService {
 	static final Log LOG = LogFactory.getLog(ChessBoardCacheService.class);
 
-	protected static final int CHESS_BOARD_CACHE_SIZE = 8;
+	protected static final int CHESS_BOARD_CACHE_SIZE = 4;
 
 	protected static final ChessBoardCacheService singletonInstance = new ChessBoardCacheService();
 
