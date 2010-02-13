@@ -15,9 +15,11 @@ package raptor.swt.chess;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
@@ -75,6 +77,7 @@ import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.ToolBarItemKey;
+import raptor.util.ImageUtil;
 import raptor.util.RaptorRunnable;
 
 public class ChessBoardUtils implements BoardConstants {
@@ -88,6 +91,7 @@ public class ChessBoardUtils implements BoardConstants {
 	public static final String SQUARE_BACKGROUND_IMAGE_SUFFIX = ".png";
 
 	public static final Object PGN_PREPEND_SYNCH = new Object();
+	private static Random RANDOM = new SecureRandom();
 
 	public static void addActionsToToolbar(
 			final ChessBoardController controller,
@@ -366,8 +370,7 @@ public class ChessBoardUtils implements BoardConstants {
 								if (chessBoardItem.isTakeOverable()) {
 									result = currentQuadrant;
 									break quadrantLoop;
-								}
-								else {
+								} else {
 									continue quadrantLoop;
 								}
 							}
@@ -376,9 +379,9 @@ public class ChessBoardUtils implements BoardConstants {
 						break;
 					}
 				}
-			    if (result == null) {
-			    	result = availableQuadrants[0];
-			    }
+				if (result == null) {
+					result = availableQuadrants[0];
+				}
 			}
 		}
 		return result;
@@ -387,30 +390,67 @@ public class ChessBoardUtils implements BoardConstants {
 	/**
 	 * Returns the Image for users current background name
 	 */
-	public static Image getSquareBackgroundImage(boolean isLight, int width,
-			int height) {
-		return getSquareBackgroundImage(getSquareBackgroundName(), isLight,
-				width, height);
+	public static Image getSquareBackgroundImage(boolean isLight, int squareId,
+			int width, int height) {
+		SquareBackgroundImageEffect effect = SquareBackgroundImageEffect
+				.valueOf(Raptor.getInstance().getPreferences().getString(
+						BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT));
+
+		return getSquareBackgroundImage(getSquareBackgroundName(), effect,
+				isLight, squareId, width, height);
 	}
 
 	/**
 	 * Returns the Image for users current background name
 	 */
-	public static Image getSquareBackgroundImage(String name, boolean isLight,
+	public static Image getSquareBackgroundImage(String name,
+			SquareBackgroundImageEffect effect, boolean isLight, int squareId,
 			int width, int height) {
-
 		if (width <= 0 || height <= 0) {
 			width = 10;
 			height = 10;
 		}
 
-		String key = name + "_" + isLight + "_" + width + "x" + height;
+		String key = name + "_" + effect + "_" + squareId + "_" + width + "x"
+				+ height;
 
 		Image result = Raptor.getInstance().getImageRegistry().get(key);
 
 		if (result == null) {
-			result = new Image(Display.getCurrent(), getSquareBackgroundMold(
-					name, isLight).getImageData().scaledTo(width, height));
+			Image moldImage = getSquareBackgroundMold(name, isLight);
+
+			// If the image is smaller than the width/height needed then just
+			// scale it and ignore the effect.
+			if (moldImage.getImageData().width < width
+					|| moldImage.getImageData().height < height) {
+				effect = SquareBackgroundImageEffect.Scale;
+			}
+
+			switch (effect) {
+			case Scale:
+				result = new Image(Display.getCurrent(),
+						getSquareBackgroundMold(name, isLight).getImageData()
+								.scaledTo(width, height));
+				break;
+			case Crop:
+				result = ImageUtil.cropImage(moldImage, 0, 0, width, height);
+				break;
+			case RandomCrop:
+				int x = RANDOM.nextInt(moldImage.getImageData().width - width);
+				int y = RANDOM
+						.nextInt(moldImage.getImageData().height - height);
+
+				// Add some more randomness by flipping the image 180 degrees.
+				// This is safe for most images, including wood grain.
+				if (RANDOM.nextBoolean()) {
+					result = ImageUtil
+							.cropImage(moldImage, x, y, width, height);
+				} else {
+					result = ImageUtil.flipAndCrop(moldImage, x, y, width,
+							height);
+				}
+				break;
+			}
 			Raptor.getInstance().getImageRegistry().put(key, result);
 			return result;
 		} else {

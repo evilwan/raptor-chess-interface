@@ -14,9 +14,12 @@
 package raptor.util;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.graphics.Transform;
 
 public class ImageUtil {
 
@@ -26,6 +29,27 @@ public class ImageUtil {
 				"resources/images/circle_green30x30.png", 255, 255, 255, 30,
 				30, SWT.IMAGE_PNG);
 
+	}
+	
+	public static Image flipAndCrop(Image image, int x, int y, int width,
+			int height) {
+		GC gc = new GC(image);
+		Image result = new Image(image.getDevice(), width, height);
+		Transform tr = new Transform(gc.getDevice());
+		tr.rotate(180);
+		gc.setTransform(tr);
+		gc.copyArea(result, x, y);
+		gc.dispose();
+		return result;
+	}
+
+	public static Image cropImage(Image image, int x, int y, int width,
+			int height) {
+		GC gc = new GC(image);
+		Image result = new Image(image.getDevice(), width, height);
+		gc.copyArea(result, x, y);
+		gc.dispose();
+		return result;
 	}
 
 	public static void scaleImage(String imagePath, String destinationPath,

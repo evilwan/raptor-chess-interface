@@ -430,7 +430,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * RaptorPreferenceStore setting.
 	 */
 	protected Image getBackgrondImage(boolean isLight, int width, int height) {
-		return ChessBoardUtils.getSquareBackgroundImage(isLight, width, height);
+		return ChessBoardUtils.getSquareBackgroundImage(isLight, id, width,
+				height);
 	}
 
 	/**

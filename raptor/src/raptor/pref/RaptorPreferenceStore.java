@@ -46,6 +46,7 @@ import raptor.swt.BugPartners;
 import raptor.swt.GamesWindowItem;
 import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
+import raptor.swt.chess.SquareBackgroundImageEffect;
 import raptor.swt.chess.controller.InactiveMouseAction;
 import raptor.swt.chess.controller.ObservingMouseAction;
 import raptor.swt.chess.controller.PlayingMouseAction;
@@ -502,6 +503,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_MOVE_LIST_CLASS,
 				"raptor.swt.chess.movelist.TextAreaMoveList");
 		setDefault(BOARD_IS_USING_SOLID_BACKGROUND_COLORS, false);
+		setDefault(BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT,
+				SquareBackgroundImageEffect.RandomCrop.toString());
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));

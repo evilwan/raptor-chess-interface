@@ -13,17 +13,25 @@
  */
 package raptor.pref.page;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.resource.StringConverter;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 
@@ -31,10 +39,12 @@ import raptor.Raptor;
 import raptor.chess.GameConstants;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
+import raptor.swt.FileDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.ChessSquare;
 import raptor.swt.chess.PieceJailChessSquare;
+import raptor.swt.chess.SquareBackgroundImageEffect;
 
 public class ChessBoardPage extends FieldEditorPreferencePage {
 	public class PieceJailSquarePageSquare extends PieceJailChessSquare {
@@ -145,10 +155,12 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				lightSquareSolidColor.setEnabled(true, getFieldEditorParent());
 				darkSquareSolidColor.setEnabled(true, getFieldEditorParent());
 				backgroundFieldEditor.setEnabled(false, getFieldEditorParent());
+				backgroundEffectCombo.setEnabled(false, getFieldEditorParent());
 			} else {
 				lightSquareSolidColor.setEnabled(false, getFieldEditorParent());
 				darkSquareSolidColor.setEnabled(false, getFieldEditorParent());
 				backgroundFieldEditor.setEnabled(true, getFieldEditorParent());
+				backgroundEffectCombo.setEnabled(true, getFieldEditorParent());
 			}
 		}
 	}
@@ -203,9 +215,11 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		@Override
 		protected Image getBackgrondImage(boolean isLight, int width, int height) {
 			try {
+				SquareBackgroundImageEffect effect = SquareBackgroundImageEffect
+						.valueOf(backgroundEffectCombo.getValue());
 				return ChessBoardUtils.getSquareBackgroundImage(
-						backgroundFieldEditor.getValue(), isLight, width,
-						height);
+						backgroundFieldEditor.getValue(), effect, isLight, id,
+						width, height);
 			} catch (Exception e) {
 				e.printStackTrace();
 				return null;
@@ -284,6 +298,11 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "Table", "raptor.swt.chess.movelist.TableMoveList" },
 			{ "Text", "raptor.swt.chess.movelist.TextAreaMoveList" } };
 
+	public static final String[][] BACKGROUND_EFFECT_VALUES = {
+			{ "Crop", SquareBackgroundImageEffect.Crop.toString() },
+			{ "Random Crop", SquareBackgroundImageEffect.RandomCrop.toString() },
+			{ "Scale", SquareBackgroundImageEffect.Scale.toString() } };
+
 	public static final String[][] PIECE_RESIZE_PERCENTAGE = {
 			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
 			{ "4%", "0.04" }, { "6%", "0.06" }, { "7%", "0.07" },
@@ -320,6 +339,8 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	ChessBoardPageComboFieldEditor pieceJailHidingAlphaCombo;
 	ChessBoardPageComboFieldEditor coordinatesPercentageCombo;
 	ChessBoardPageComboFieldEditor pieceJailPercentageCombo;
+	ChessBoardPageComboFieldEditor backgroundEffectCombo;
+
 	ChessBoardPageBooleanFieldEditor isUsingSolidColorsEditor;
 	ChessBoardPageColorFieldEditor lightSquareSolidColor;
 	ChessBoardPageColorFieldEditor darkSquareSolidColor;
@@ -327,6 +348,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	PieceJailSquarePageSquare[] dropSquares = null;
 	ChessBoardPageSquare[] hiddenPieceAlphas;
 	PieceJailSquarePageSquare[] pieceJailAlphas;
+	Composite chessSetInfoComposite = null;
+
+	Label authorLabel;
+	Button licenseButton;
 
 	public ChessBoardPage() {
 		// Use the "grid" layout
@@ -336,6 +361,8 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	}
 
 	public void valuesChanged() {
+		updateSetFields(setFieldEditor.getValue());
+
 		for (ChessBoardPageSquare[] square : squares) {
 			for (ChessBoardPageSquare element : square) {
 				element.clearCache();
@@ -400,9 +427,15 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		backgroundFieldEditor = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_SQUARE_BACKGROUND_NAME,
-				"Square Background Pattern", backgroundNameValues,
+				"Square Background Images ", backgroundNameValues,
 				getFieldEditorParent());
 		addField(backgroundFieldEditor);
+
+		backgroundEffectCombo = new ChessBoardPageComboFieldEditor(
+				PreferenceKeys.BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT,
+				"Square Background Images Effect", BACKGROUND_EFFECT_VALUES,
+				getFieldEditorParent());
+		addField(backgroundEffectCombo);
 
 		ComboFieldEditor layoutsFieldEditor = new ComboFieldEditor(
 				PreferenceKeys.BOARD_LAYOUT, "Chess Board Control Layout:",
@@ -433,9 +466,9 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		addField(pieceJailPercentageCombo);
 
 		Composite boards = new Composite(getFieldEditorParent(), SWT.NONE);
-		boards.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false,
-				3, 1));
-		boards.setLayout(new GridLayout(3, false));
+		boards.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 3,
+				1));
+		boards.setLayout(new GridLayout(4, false));
 		squares = new ChessBoardPageSquare[3][3];
 		miniBoard = new Composite(boards, SWT.NONE);
 
@@ -487,6 +520,29 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		dropSquares[1].setPiece(GameConstants.BN);
 		dropSquares[0].setText("" + 2);
 
+		chessSetInfoComposite = new Composite(boards, SWT.NONE);
+		chessSetInfoComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP,
+				true, false));
+		chessSetInfoComposite.setLayout(new GridLayout(1, false));
+		authorLabel = new Label(chessSetInfoComposite, SWT.RIGHT);
+		authorLabel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true,
+				false));
+
+		licenseButton = new Button(chessSetInfoComposite, SWT.PUSH);
+		licenseButton.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false,
+				false));
+		licenseButton.setText("Chess Set License");
+		licenseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String set = setFieldEditor.getValue();
+				FileDialog fileDialog = new FileDialog(getShell(),
+						"License for Chess Set " + set,
+						getLicenseForSet(setFieldEditor.getValue()));
+				fileDialog.open();
+			}
+		});
+
 		boardHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_SHADOW_ALPHA,
 				"Piece Shadow (0 is transparent, 255 is opaque):", ALPHAS,
@@ -529,5 +585,63 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				.getColor(PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
 		pieceJailAlphas[1].setBackground(Raptor.getInstance().getPreferences()
 				.getColor(PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
+
+		updateSetFields(Raptor.getInstance().getPreferences().getString(
+				PreferenceKeys.BOARD_CHESS_SET_NAME));
+	}
+
+	protected void updateSetFields(String setName) {
+		String author = getAuthorForSet(setName);
+		String license = getLicenseForSet(setName);
+
+		if (StringUtils.isEmpty(author)) {
+			authorLabel.setText(setName + " Author: anonymous");
+		} else {
+			authorLabel.setText(setName + " Author: " + author);
+		}
+
+		if (StringUtils.isEmpty(license)) {
+			licenseButton.setEnabled(false);
+		} else {
+			licenseButton.setEnabled(true);
+		}
+
+		chessSetInfoComposite.layout(true, true);
+
+	}
+
+	protected String getLicenseForSet(String setName) {
+		File licenseFile = new File(Raptor.RESOURCES_DIR + "set/" + setName
+				+ "/license.txt");
+		if (licenseFile.exists()) {
+			return licenseFile.getAbsolutePath();
+		} else {
+			return null;
+		}
+	}
+
+	protected String getAuthorForSet(String setName) {
+		File authorFile = new File(Raptor.RESOURCES_DIR + "set/" + setName
+				+ "/author.txt");
+		if (authorFile.exists()) {
+			BufferedReader reader = null;
+			try {
+				reader = new BufferedReader(new FileReader(authorFile));
+				String result = reader.readLine();
+				if (result != null) {
+					result = result.trim();
+				}
+				return result;
+			} catch (Throwable t) {
+				return null;
+			} finally {
+				try {
+					reader.close();
+				} catch (Throwable t) {
+				}
+			}
+		} else {
+			return null;
+		}
 	}
 }
