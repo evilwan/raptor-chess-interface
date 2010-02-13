@@ -19,7 +19,7 @@ import raptor.util.RaptorStringUtils;
 
 public class ChatOnRightLayout  extends AbstractLayout {
 	public ChatOnRightLayout() {
-		super(null, "Console on right (Channel/Person Tabs top");
+		super(null, "Console on right");
 
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,

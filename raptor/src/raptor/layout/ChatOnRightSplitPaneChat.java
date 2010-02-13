@@ -19,7 +19,7 @@ import raptor.util.RaptorStringUtils;
 
 public class ChatOnRightSplitPaneChat extends AbstractLayout {
 	public ChatOnRightSplitPaneChat() {
-		super(null, "Console on right (Channels/Person Tabs Bottom)");
+		super(null, "Console on right (Split pane consoles)");
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,
 				Quadrant.I.toString());
