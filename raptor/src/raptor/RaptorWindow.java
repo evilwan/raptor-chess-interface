@@ -1520,14 +1520,15 @@ public class RaptorWindow extends ApplicationWindow {
 		fileMenu.add(new Action("Show my saved games") {
 			@Override
 			public void run() {
-				File file = new File(Raptor.GAMES_PGN_FILE);
+				File file = new File(getPreferences().getString(
+						PreferenceKeys.APP_PGN_FILE));
 				if (!file.exists()) {
 					Raptor.getInstance().alert(
 							"You currently do not have any games saved in "
-									+ Raptor.GAMES_PGN_FILE);
+									+ file.getAbsolutePath());
 				} else {
 					PgnProcessingDialog dialog = new PgnProcessingDialog(
-							getShell(), Raptor.GAMES_PGN_FILE);
+							getShell(), file.getAbsolutePath());
 					dialog.open();
 				}
 			}

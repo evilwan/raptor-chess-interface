@@ -416,7 +416,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_SOUND_ENABLED, true);
 		setDefault(APP_USER_TAGS,
 				"+Partner,-Partner,Cool,Dupe,Friend,Jerk,Lagger,Noob,Premover,Troll,Strange");
-		setDefault(APP_IS_LOGGING_GAMES, true);
+		setDefault(APP_PGN_FILE, Raptor.USER_RAPTOR_HOME_PATH
+				+ "/games/raptorGames.pgn");
 		setDefault(APP_LAYOUT, "Layout1");
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_BROWSER_QUADRANT, Quadrant.II);
@@ -518,9 +519,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new RGB(0, 255, 0));
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(this,
-				BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 153,
-						197));
+		PreferenceConverter
+				.setDefault(this, BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR,
+						new RGB(0, 153, 197));
 		PreferenceConverter.setDefault(this,
 				BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 0, 0));
 
@@ -542,7 +543,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						defaultMediumFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_OPENING_DESC_FONT,
 				new FontData[] { new FontData(defaultFontName,
-						defaultTinyFontSize, 0) }); 
+						defaultTinyFontSize, 0) });
 		PreferenceConverter.setDefault(this, BOARD_STATUS_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultTinyFontSize, 0) });
@@ -552,8 +553,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultTinyFontSize, 0) });
-		
-		//Controller button preferences.
+
+		// Controller button preferences.
 		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				PlayingMouseAction.None.toString());
 		setDefault(PLAYING_CONTROLLER + RIGHT_MOUSE_BUTTON_ACTION,

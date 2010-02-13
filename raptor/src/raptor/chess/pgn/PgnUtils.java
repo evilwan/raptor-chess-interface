@@ -60,10 +60,13 @@ public class PgnUtils {
 		if (Variant.isBughouse(game.getVariant())) {
 			return;
 		}
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_IS_LOGGING_GAMES)
-				&& game.getMoveList().getSize() > 0) {
+		if (game.getMoveList().getSize() == 0) {
+			return;
+		}
 
+		String pgnFilePath = Raptor.getInstance().getPreferences().getString(
+				PreferenceKeys.APP_PGN_FILE);
+		if (StringUtils.isNotEmpty(pgnFilePath)) {
 			// synchronized on PGN_APPEND_SYNCH so just one thread at a time
 			// writes to the file.
 			synchronized (PGN_APPEND_SYNCH) {
@@ -88,7 +91,7 @@ public class PgnUtils {
 				}
 
 				String pgn = game.toPgn();
-				File file = new File(Raptor.GAMES_PGN_FILE);
+				File file = new File(pgnFilePath);
 				FileWriter fileWriter = null;
 				try {
 					fileWriter = new FileWriter(file, true);

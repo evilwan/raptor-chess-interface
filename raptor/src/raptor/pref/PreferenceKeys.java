@@ -55,7 +55,6 @@ public interface PreferenceKeys {
 	public static final String APP_USER_TAGS = "app-user-tags";
 	public static final String APP_ICON_SIZE = "app-icon-size";
 	public static final String APP_TOOLBAR_PIECE_SIZE = "app-toolbar-piece-size";
-	public static final String APP_IS_LOGGING_GAMES = "app-is-logging-games";
 	public static final String APP_OPEN_LINKS_IN_EXTERNAL_BROWSER = "app-open-links-in-external-browser";
 	public static final String APP_PING_COLOR = "app-lag-color";
 	public static final String APP_PING_FONT = "app-lag-font";
@@ -79,6 +78,7 @@ public interface PreferenceKeys {
 	public static final String APP_QUAD67_QUAD8_SASH_WEIGHTS = "app-quad67-quad8-sash-weights";
 	public static final String APP_WINDOW_BOUNDS = "app-window-bounds";
 	public static final String APP_ZOOM_FACTOR = "app-zoom-factor";
+	public static final String APP_PGN_FILE = "app-pgn-file";
 	
 	
 	public static final String APP_IS_LOGGING_CONSOLE = "app-is-logging-console";

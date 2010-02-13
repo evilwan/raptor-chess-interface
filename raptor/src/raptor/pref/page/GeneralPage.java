@@ -18,6 +18,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -92,11 +93,11 @@ public class GeneralPage extends FieldEditorPreferencePage {
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
 				"Launch browser on startup", getFieldEditorParent()));
+		
+		addField(new FileFieldEditor(
+				PreferenceKeys.APP_PGN_FILE, "Save my games in PGN format to: ",
+				getFieldEditorParent()));
 
-		BooleanFieldEditor isSavingGamePgn = new BooleanFieldEditor(
-				PreferenceKeys.APP_IS_LOGGING_GAMES, "Save my games to "
-						+ Raptor.GAMES_PGN_FILE, getFieldEditorParent());
-		addField(isSavingGamePgn);
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
