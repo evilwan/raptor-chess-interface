@@ -557,8 +557,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_BACKGROUND_COLOR,
 				new RGB(0, 0, 0));
 		PreferenceConverter.setDefault(this,
-				BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(255, 255,
-						255));
+				BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 153,
+						197));
 		PreferenceConverter.setDefault(this,
 				BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 0, 0));
 
