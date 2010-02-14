@@ -17,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,8 +57,6 @@ import org.eclipse.swt.widgets.ToolItem;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
-import raptor.action.ActionUtils;
-import raptor.action.RaptorAction;
 import raptor.alias.RaptorAliasResult;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -67,24 +64,20 @@ import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.chess.Game;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
-import raptor.connector.fics.FicsConnector;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ParameterScript;
-import raptor.service.ActionScriptService;
 import raptor.service.AliasService;
 import raptor.service.DictionaryService;
 import raptor.service.MemoService;
 import raptor.service.ScriptService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
-import raptor.service.UserTagService;
 import raptor.service.ChatService.ChatListener;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.MainController;
-import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.ToolBarItemKey;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.ChessSquare;
@@ -823,6 +816,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		} else if (!isKeyUp) {
 
+			// Process actions.
+			if (ChatUtils.processHotkeyActions(this, event)) {
+				return;
+			}
+
 			boolean dontForwardKeystroke = false;
 
 			for (int i = 0; i < DONT_FORWARD_KEYSTROKES.length; i++) {
@@ -871,33 +869,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public boolean processOutputTextKeystroke(Event event) {
 		lastCommandLineKeystrokeTime = System.currentTimeMillis();
 
-		if (ActionUtils.isValidModifier(event.stateMask)) {
-			RaptorAction action = ActionScriptService.getInstance().getAction(
-					event.stateMask, event.keyCode);
-			if (action != null) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Executing action from keybinding: "
-							+ action.getName());
-				}
-				action.setChatConsoleControllerSource(this);
-				action.run();
-				return true;
-			}
+		if (ChatUtils.processHotkeyActions(this, event)) {
+			return true;
 		}
-		if (ActionUtils.isValidKeyCodeWithoutModifier(event.keyCode)) {
-			RaptorAction action = ActionScriptService.getInstance().getAction(
-					event.stateMask, event.keyCode);
-			if (action != null) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Executing action from keybinding: "
-							+ action.getName());
-				}
-				action.setChatConsoleControllerSource(this);
-				action.run();
-				return true;
-			}
-		}
-
 		if (event.keyCode == SWT.ESC) {
 			// Clear output text.
 			chatConsole.outputText.setText("");
@@ -1298,195 +1272,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void addPersonMenuItems(Menu menu, String word) {
-		if (connector.isLikelyPerson(word)) {
-			if (menu.getItemCount() > 0) {
-				new MenuItem(menu, SWT.SEPARATOR);
-			}
-			final String person = connector.parsePerson(word);
-			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add person tab: " + person);
-			item.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					if (!Raptor.getInstance().getWindow()
-							.containsPersonalTellItem(connector, person)) {
-						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-								new PersonController(connector, person));
-						Raptor.getInstance().getWindow().addRaptorWindowItem(
-								windowItem, false);
-						ChatUtils
-								.appendPreviousChatsToController(windowItem.console);
-					}
-				}
-			});
-
-			if (connector instanceof FicsConnector) {
-				MenuItem gamebotItem = new MenuItem(menu, SWT.PUSH);
-				gamebotItem.setText("Add gamebot tab: " + person);
-				gamebotItem.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						SWTUtils.openGamesBotWindowItem(
-								(FicsConnector) connector, person);
-					}
-				});
-			}
-
-			// Add quick items for the connector.
-			final String[][] connectorPersonQuickItems = connector
-					.getPersonQuickActions(person);
-			if (connectorPersonQuickItems != null) {
-				for (int i = 0; i < connectorPersonQuickItems.length; i++) {
-					if (connectorPersonQuickItems[i][0].equals("separator")) {
-						new MenuItem(menu, SWT.SEPARATOR);
-					} else {
-						item = new MenuItem(menu, SWT.PUSH);
-						item.setText(connectorPersonQuickItems[i][0]);
-						final int index = i;
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								connector
-										.sendMessage(connectorPersonQuickItems[index][1]);
-							}
-						});
-					}
-				}
-			}
-
-			// Add the sub-menu of options for the connector.
-			final String[][] connectorPersonItems = connector
-					.getPersonActions(person);
-			if (connectorPersonItems != null) {
-				MenuItem personCommands = new MenuItem(menu, SWT.CASCADE);
-				personCommands.setText("Other " + getConnector().getShortName()
-						+ " commands:");
-				Menu personCommandsMenu = new Menu(menu);
-				personCommands.setMenu(personCommandsMenu);
-
-				for (int i = 0; i < connectorPersonItems.length; i++) {
-					if (connectorPersonItems[i][0].equals("separator")) {
-						new MenuItem(personCommandsMenu, SWT.SEPARATOR);
-					} else {
-						item = new MenuItem(personCommandsMenu, SWT.PUSH);
-						item.setText(connectorPersonItems[i][0]);
-						final int index = i;
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								connector
-										.sendMessage(connectorPersonItems[index][1]);
-							}
-						});
-					}
-				}
-			}
-
-			if (!connector.isOnExtendedCensor(person)) {
-
-				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
-				extCensor.setText("+extcensor " + person);
-				extCensor.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						connector.addExtendedCensor(person);
-						onAppendChatEventToInputText(new ChatEvent(null,
-								ChatType.INTERNAL, "Added " + person
-										+ " to extended censor."));
-					}
-				});
-			} else {
-				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
-				extCensor.setText("-extcensor " + person);
-				extCensor.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						boolean result = connector.removeExtendedCensor(person);
-						onAppendChatEventToInputText(new ChatEvent(null,
-								ChatType.INTERNAL, result ? "Removed " + person
-										+ " to extended censor." : " Person "
-										+ person
-										+ " is not on extended censor."));
-					}
-				});
-			}
-
-			String[] tags = UserTagService.getInstance().getTags();
-			Arrays.sort(tags);
-			if (tags.length > 0) {
-				MenuItem addTagsItem = new MenuItem(menu, SWT.CASCADE);
-				addTagsItem.setText("Add tag to '" + person + "'");
-				Menu addTags = new Menu(menu);
-				addTagsItem.setMenu(addTags);
-
-				for (final String tag : tags) {
-					MenuItem tagMenuItem = new MenuItem(addTags, SWT.PUSH);
-					tagMenuItem.setText(tag);
-					tagMenuItem.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							UserTagService.getInstance().addUser(tag, person);
-							onAppendChatEventToInputText(new ChatEvent(null,
-									ChatType.INTERNAL, "Added " + tag
-											+ " tag to " + person));
-						}
-					});
-				}
-			}
-
-			tags = UserTagService.getInstance().getTags(person);
-			Arrays.sort(tags);
-			if (tags.length > 0) {
-				MenuItem addTagsItem = new MenuItem(menu, SWT.CASCADE);
-				addTagsItem.setText("Remove tags from '" + person + "'");
-				Menu addTags = new Menu(menu);
-				addTagsItem.setMenu(addTags);
-
-				for (final String tag : tags) {
-					MenuItem tagMenuItem = new MenuItem(addTags, SWT.PUSH);
-					tagMenuItem.setText(tag);
-					tagMenuItem.addListener(SWT.Selection, new Listener() {
-						public void handleEvent(Event e) {
-							UserTagService.getInstance().clearTag(tag, person);
-							onAppendChatEventToInputText(new ChatEvent(null,
-									ChatType.INTERNAL, "Removed " + tag
-											+ " tag from " + person));
-						}
-					});
-				}
-			}
-
-			if (connector instanceof FicsConnector) {
-				MenuItem websiteLookupItem = new MenuItem(menu, SWT.CASCADE);
-				websiteLookupItem.setText("Website lookups: " + person);
-				Menu websiteMenu = new Menu(menu);
-				websiteLookupItem.setMenu(websiteMenu);
-
-				MenuItem ficsGamesHistory = new MenuItem(websiteMenu, SWT.PUSH);
-				ficsGamesHistory.setText("http://www.ficsgames.com history: "
-						+ person);
-				ficsGamesHistory.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						BrowserUtils
-								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
-										+ person + "&showhistory=showhistory");
-					}
-				});
-
-				MenuItem ficsGamesStats = new MenuItem(websiteMenu, SWT.PUSH);
-				ficsGamesStats.setText("http://www.ficsgames.com statistics: "
-						+ person);
-				ficsGamesStats.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						BrowserUtils
-								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
-										+ person + "&showstats=showstats");
-					}
-				});
-
-				MenuItem watchBotStats = new MenuItem(websiteMenu, SWT.PUSH);
-				watchBotStats.setText("WatchBot history: " + person);
-				watchBotStats.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						BrowserUtils.openHtml(BrowserUtils
-								.getWatchBotJavascript(person));
-					}
-				});
-			}
-		}
+		ChatUtils.addPersonMenuItems(menu, getConnector(), word);
 	}
 
 	protected void adjustAwayButtonEnabled() {

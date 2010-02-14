@@ -28,10 +28,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 
 import raptor.Raptor;
 import raptor.chess.GameConstants;
@@ -40,9 +37,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.RaptorLabel;
 import raptor.swt.SWTUtils;
-import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
-import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chess.ChessBoardLayout.Field;
 import raptor.swt.chess.analysis.SimpleAnalysisWidget;
 
@@ -588,49 +583,10 @@ public class ChessBoard implements BoardConstants {
 		engineAnalysisWidget.updateFromPrefs();
 	}
 
-	protected void addPersonMenuItems(Menu menu, String word) {
-		if (controller.getConnector().isLikelyPerson(word)) {
-			if (menu.getItemCount() > 0) {
-				new MenuItem(menu, SWT.SEPARATOR);
-			}
-			final String person = controller.getConnector().parsePerson(word);
-			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add a tab for person: " + person);
-			item.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					if (!Raptor.getInstance().getWindow()
-							.containsPersonalTellItem(
-									controller.getConnector(), person)) {
-						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-								new PersonController(controller.getConnector(),
-										person));
-						Raptor.getInstance().getWindow().addRaptorWindowItem(
-								windowItem, false);
-						ChatUtils.appendPreviousChatsToController(windowItem
-								.getConsole());
-					}
-				}
-			});
-
-			final String[][] connectorPersonItems = controller.getConnector()
-					.getPersonActions(person);
-			if (connectorPersonItems != null) {
-				for (int i = 0; i < connectorPersonItems.length; i++) {
-					if (connectorPersonItems[i][0].equals("separator")) {
-						new MenuItem(menu, SWT.SEPARATOR);
-					} else {
-						item = new MenuItem(menu, SWT.PUSH);
-						item.setText(connectorPersonItems[i][0]);
-						final int index = i;
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								controller.getConnector().sendMessage(
-										connectorPersonItems[index][1]);
-							}
-						});
-					}
-				}
-			}
+	protected void addPersonMenuItems(Menu menu, String person) {
+		if (controller != null && controller.getConnector() != null) {
+			ChatUtils.addPersonMenuItems(menu, controller.getConnector(),
+					person);
 		}
 	}
 

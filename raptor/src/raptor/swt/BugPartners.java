@@ -29,10 +29,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Raptor;
@@ -45,9 +42,7 @@ import raptor.service.BughouseService;
 import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
 import raptor.swt.RaptorTable.RaptorTableAdapter;
-import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
-import raptor.swt.chat.controller.PersonController;
 import raptor.util.RaptorRunnable;
 import raptor.util.RatingComparator;
 
@@ -187,7 +182,7 @@ public class BugPartners extends Composite {
 			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
 				Menu menu = new Menu(BugPartners.this.getShell(), SWT.POP_UP);
-				addPersonMenuItems(menu, rowData[1]);
+				ChatUtils.addPersonMenuItems(menu, getConnector(), rowData[1]);
 				if (menu.getItemCount() > 0) {
 					menu.setLocation(table.getTable().toDisplay(event.x,
 							event.y));
@@ -274,50 +269,6 @@ public class BugPartners extends Composite {
 	public void onPassivate() {
 		if (isActive) {
 			isActive = false;
-		}
-	}
-
-	protected void addPersonMenuItems(Menu menu, String word) {
-		if (getConnector().isLikelyPerson(word)) {
-			if (menu.getItemCount() > 0) {
-				new MenuItem(menu, SWT.SEPARATOR);
-			}
-			final String person = getConnector().parsePerson(word);
-			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add a tab for person: " + person);
-			item.addListener(SWT.Selection, new Listener() {
-				public void handleEvent(Event e) {
-					if (!Raptor.getInstance().getWindow()
-							.containsPersonalTellItem(getConnector(), person)) {
-						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
-								new PersonController(getConnector(), person));
-						Raptor.getInstance().getWindow().addRaptorWindowItem(
-								windowItem, false);
-						ChatUtils.appendPreviousChatsToController(windowItem
-								.getConsole());
-					}
-				}
-			});
-
-			final String[][] connectorPersonItems = getConnector()
-					.getPersonActions(person);
-			if (connectorPersonItems != null) {
-				for (int i = 0; i < connectorPersonItems.length; i++) {
-					if (connectorPersonItems[i][0].equals("separator")) {
-						new MenuItem(menu, SWT.SEPARATOR);
-					} else {
-						item = new MenuItem(menu, SWT.PUSH);
-						item.setText(connectorPersonItems[i][0]);
-						final int index = i;
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								getConnector().sendMessage(
-										connectorPersonItems[index][1]);
-							}
-						});
-					}
-				}
-			}
 		}
 	}
 

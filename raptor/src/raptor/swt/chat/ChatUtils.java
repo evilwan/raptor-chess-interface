@@ -13,6 +13,8 @@
  */
 package raptor.swt.chat;
 
+import java.util.Arrays;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,10 +22,15 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.Raptor;
+import raptor.action.ActionUtils;
 import raptor.action.RaptorAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
@@ -35,17 +42,21 @@ import raptor.action.chat.SpeakPersonTellsAction;
 import raptor.action.chat.TellsMissedWhileIWasAwayAction;
 import raptor.action.chat.ToggleScrollLock;
 import raptor.chat.ChatEvent;
+import raptor.chat.ChatType;
 import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.connector.Connector;
 import raptor.connector.fics.FicsConnector;
 import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
+import raptor.service.UserTagService;
+import raptor.swt.SWTUtils;
 import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.GameChatController;
 import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chat.controller.ToolBarItemKey;
+import raptor.util.BrowserUtils;
 import raptor.util.RaptorRunnable;
 
 public class ChatUtils {
@@ -336,6 +347,230 @@ public class ChatUtils {
 			}
 		}
 		return word;
+	}
+
+	public static void addPersonMenuItems(final Menu menu,
+			final Connector connector, final String personsName) {
+		if (connector.isLikelyPerson(personsName)) {
+			if (menu.getItemCount() > 0) {
+				new MenuItem(menu, SWT.SEPARATOR);
+			}
+			final String person = connector.parsePerson(personsName);
+			MenuItem item = new MenuItem(menu, SWT.PUSH);
+			item.setText("Add person tab: " + person);
+			item.addListener(SWT.Selection, new Listener() {
+				public void handleEvent(Event e) {
+					if (!Raptor.getInstance().getWindow()
+							.containsPersonalTellItem(connector, person)) {
+						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
+								new PersonController(connector, person));
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem, false);
+						ChatUtils
+								.appendPreviousChatsToController(windowItem.console);
+					}
+				}
+			});
+
+			if (connector instanceof FicsConnector) {
+				MenuItem gamebotItem = new MenuItem(menu, SWT.PUSH);
+				gamebotItem.setText("Add gamebot tab: " + person);
+				gamebotItem.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						SWTUtils.openGamesBotWindowItem(
+								(FicsConnector) connector, person);
+					}
+				});
+			}
+
+			// Add quick items for the connector.
+			final String[][] connectorPersonQuickItems = connector
+					.getPersonQuickActions(person);
+			if (connectorPersonQuickItems != null) {
+				for (int i = 0; i < connectorPersonQuickItems.length; i++) {
+					if (connectorPersonQuickItems[i][0].equals("separator")) {
+						new MenuItem(menu, SWT.SEPARATOR);
+					} else {
+						item = new MenuItem(menu, SWT.PUSH);
+						item.setText(connectorPersonQuickItems[i][0]);
+						final int index = i;
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								connector
+										.sendMessage(connectorPersonQuickItems[index][1]);
+							}
+						});
+					}
+				}
+			}
+
+			// Add the sub-menu of options for the connector.
+			final String[][] connectorPersonItems = connector
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				MenuItem personCommands = new MenuItem(menu, SWT.CASCADE);
+				personCommands.setText("Other " + connector.getShortName()
+						+ " commands:");
+				Menu personCommandsMenu = new Menu(menu);
+				personCommands.setMenu(personCommandsMenu);
+
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					if (connectorPersonItems[i][0].equals("separator")) {
+						new MenuItem(personCommandsMenu, SWT.SEPARATOR);
+					} else {
+						item = new MenuItem(personCommandsMenu, SWT.PUSH);
+						item.setText(connectorPersonItems[i][0]);
+						final int index = i;
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								connector
+										.sendMessage(connectorPersonItems[index][1]);
+							}
+						});
+					}
+				}
+			}
+
+			if (!connector.isOnExtendedCensor(person)) {
+
+				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
+				extCensor.setText("+extcensor " + person);
+				extCensor.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						connector.addExtendedCensor(person);
+						connector.publishEvent(new ChatEvent(null,
+								ChatType.INTERNAL, "Added " + person
+										+ " to extended censor."));
+					}
+				});
+			} else {
+				MenuItem extCensor = new MenuItem(menu, SWT.PUSH);
+				extCensor.setText("-extcensor " + person);
+				extCensor.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						boolean result = connector.removeExtendedCensor(person);
+						connector.publishEvent(new ChatEvent(null,
+								ChatType.INTERNAL, result ? "Removed " + person
+										+ " to extended censor." : " Person "
+										+ person
+										+ " is not on extended censor."));
+					}
+				});
+			}
+
+			String[] tags = UserTagService.getInstance().getTags();
+			Arrays.sort(tags);
+			if (tags.length > 0) {
+				MenuItem addTagsItem = new MenuItem(menu, SWT.CASCADE);
+				addTagsItem.setText("Add tag to '" + person + "'");
+				Menu addTags = new Menu(menu);
+				addTagsItem.setMenu(addTags);
+
+				for (final String tag : tags) {
+					MenuItem tagMenuItem = new MenuItem(addTags, SWT.PUSH);
+					tagMenuItem.setText(tag);
+					tagMenuItem.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							UserTagService.getInstance().addUser(tag, person);
+							connector.publishEvent(new ChatEvent(null,
+									ChatType.INTERNAL, "Added " + tag
+											+ " tag to " + person));
+						}
+					});
+				}
+			}
+
+			tags = UserTagService.getInstance().getTags(person);
+			Arrays.sort(tags);
+			if (tags.length > 0) {
+				MenuItem addTagsItem = new MenuItem(menu, SWT.CASCADE);
+				addTagsItem.setText("Remove tags from '" + person + "'");
+				Menu addTags = new Menu(menu);
+				addTagsItem.setMenu(addTags);
+
+				for (final String tag : tags) {
+					MenuItem tagMenuItem = new MenuItem(addTags, SWT.PUSH);
+					tagMenuItem.setText(tag);
+					tagMenuItem.addListener(SWT.Selection, new Listener() {
+						public void handleEvent(Event e) {
+							UserTagService.getInstance().clearTag(tag, person);
+							connector.publishEvent(new ChatEvent(null,
+									ChatType.INTERNAL, "Removed " + tag
+											+ " tag from " + person));
+						}
+					});
+				}
+			}
+
+			if (connector instanceof FicsConnector) {
+				MenuItem websiteLookupItem = new MenuItem(menu, SWT.CASCADE);
+				websiteLookupItem.setText("Website lookups: " + person);
+				Menu websiteMenu = new Menu(menu);
+				websiteLookupItem.setMenu(websiteMenu);
+
+				MenuItem ficsGamesHistory = new MenuItem(websiteMenu, SWT.PUSH);
+				ficsGamesHistory.setText("http://www.ficsgames.com history: "
+						+ person);
+				ficsGamesHistory.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils
+								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
+										+ person + "&showhistory=showhistory");
+					}
+				});
+
+				MenuItem ficsGamesStats = new MenuItem(websiteMenu, SWT.PUSH);
+				ficsGamesStats.setText("http://www.ficsgames.com statistics: "
+						+ person);
+				ficsGamesStats.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils
+								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
+										+ person + "&showstats=showstats");
+					}
+				});
+
+				MenuItem watchBotStats = new MenuItem(websiteMenu, SWT.PUSH);
+				watchBotStats.setText("WatchBot history: " + person);
+				watchBotStats.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils.openHtml(BrowserUtils
+								.getWatchBotJavascript(person));
+					}
+				});
+			}
+		}
+	}
+
+	public static boolean processHotkeyActions(
+			ChatConsoleController controller, Event event) {
+		if (ActionUtils.isValidModifier(event.stateMask)) {
+			RaptorAction action = ActionScriptService.getInstance().getAction(
+					event.stateMask, event.keyCode);
+			if (action != null) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Executing action from keybinding: "
+							+ action.getName());
+				}
+				action.setChatConsoleControllerSource(controller);
+				action.run();
+				return true;
+			}
+		}
+		if (ActionUtils.isValidKeyCodeWithoutModifier(event.keyCode)) {
+			RaptorAction action = ActionScriptService.getInstance().getAction(
+					event.stateMask, event.keyCode);
+			if (action != null) {
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Executing action from keybinding: "
+							+ action.getName());
+				}
+				action.setChatConsoleControllerSource(controller);
+				action.run();
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected static ToolItem createToolItem(final RaptorAction action,
