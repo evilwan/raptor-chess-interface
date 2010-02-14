@@ -34,6 +34,7 @@ public interface PreferenceKeys {
 	public static final String CHANNEL_REGEX_TAB_INFO = "channel-reg-ex-tab-infov2.0";
 	public static final String GAME_COMMANDS = "games-commands";
 	public static final String PERSON_COMMANDS = "person-commands";
+	public static final String PERSON_QUICK_COMMANDS = "person-quick-commands";
 	public static final String CHANNEL_COMMANDS = "channel-commands";
 	public static final String KEEP_ALIVE_COMMAND = "keep-alive-command";
 	public static final String LEFT_MOUSE_BUTTON_ACTION = "left-mouse-button-action";
@@ -269,6 +270,7 @@ public interface PreferenceKeys {
 	public static final String FICS_GAME_COMMANDS = "fics-games-commands";
 	public static final String FICS_CHANNEL_COMMANDS = "fics-channel-commands";
 	public static final String FICS_PERSON_COMMANDS = "fics-person-commands";
+	public static final String FICS_PERSON_QUICK_COMMANDS = "fics-person-quick-commands";
 	public static final String FICS_NO_WRAP_ENABLED = "fics-no-wrap-enabled";
 	public static final String FICS_KEEP_ALIVE_COMMAND = "fics-keep-alive-command";
 	public static final String FICS_REGULAR_EXPRESSIONS_TO_BLOCK = "fics-"
@@ -317,6 +319,7 @@ public interface PreferenceKeys {
 	public static final String BICS_GAME_COMMANDS = "bics-games-commands";
 	public static final String BICS_CHANNEL_COMMANDS = "bics-channel-commands";
 	public static final String BICS_PERSON_COMMANDS = "bics-person-commands";
+	public static final String BICS_PERSON_QUICK_COMMANDS = "bics-person-quick-commands";
 	public static final String BICS_KEEP_ALIVE_COMMAND = "bics-keep-alive-command";
 	public static final String BICS_REGULAR_EXPRESSIONS_TO_BLOCK = "bics-"
 			+ REGULAR_EXPRESSIONS_TO_BLOCK;

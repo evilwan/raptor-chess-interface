@@ -28,7 +28,7 @@ public class ConnectorMessageBlockPage extends FieldEditorPreferencePage {
 
 	public ConnectorMessageBlockPage(String connectorShortName) {
 		super(GRID);
-		setTitle(connectorShortName + " Message Blocks");
+		setTitle("Message Filters");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 		this.connectorShortName = connectorShortName;
 	}

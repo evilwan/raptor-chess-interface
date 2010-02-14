@@ -36,6 +36,9 @@ import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.chess.Game;
 import raptor.connector.bics.pref.BicsPage;
+import raptor.connector.bics.pref.BicsRightClickChannelMenu;
+import raptor.connector.bics.pref.BicsRightClickGamesMenu;
+import raptor.connector.bics.pref.BicsRightClickPersonMenu;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.IcsParser;
@@ -206,8 +209,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] {
-				new PreferenceNode("bics",
-						new ConnectorMessageBlockPage("bics")),
 				new PreferenceNode(
 						"bicsMenuActions",
 						new ActionContainerPage(
@@ -215,6 +216,11 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 								"\tOn this page you can configure the actions shown in the Bics "
 										+ "menu. You can add new actions on the Action Scripts Page.",
 								RaptorActionContainer.BicsMenu)),
+				new PreferenceNode("bics",
+						new ConnectorMessageBlockPage("bics")),
+				new PreferenceNode("bics", new BicsRightClickChannelMenu()),
+				new PreferenceNode("bics", new BicsRightClickGamesMenu()),
+				new PreferenceNode("bics", new BicsRightClickPersonMenu()),
 				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics")),
 				new PreferenceNode("bics", new ConnectorQuadrantsPage("bics2")) };
 

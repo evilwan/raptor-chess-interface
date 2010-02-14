@@ -629,8 +629,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new RGB(0, 0, 255));
 		PreferenceConverter.setDefault(this, SEEK_GRAPH_MANY_COLOR, new RGB(
 				255, 255, 102));
-		PreferenceConverter.setDefault(this, SEEK_GRAPH_RATED_COLOR, new RGB(
-				0, 255, 0));
+		PreferenceConverter.setDefault(this, SEEK_GRAPH_RATED_COLOR, new RGB(0,
+				255, 0));
 		PreferenceConverter.setDefault(this, SEEK_GRAPH_UNRATED_COLOR, new RGB(
 				255, 0, 0));
 
@@ -836,9 +836,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_NO_WRAP_ENABLED, true);
 		setDefault(FICS_CHANNEL_COMMANDS,
 				"+channel $channel,-channel $channel,in $channel");
+		setDefault(FICS_PERSON_QUICK_COMMANDS,
+				"finger $person,follow $person,partner $person");
 		setDefault(
 				FICS_PERSON_COMMANDS,
-				"finger $person,follow $person,history $person,joural $person,partner $person,"
+				"history $person,joural $person"
 						+ "observe $person,oldpstat $userName $person,pstat $userName $person,"
 						+ "stored $person,variables $person,separator,"
 						+ "+censor $person,-censor $person,+gnotify $person,-gnotify $person,+noplay $person,-noplay $person,+notify $person,-notify $person,separator,"
@@ -904,9 +906,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"set busy is away from the keyboard.");
 		setDefault(BICS_CHANNEL_COMMANDS,
 				"+channel $channel,-channel $channel,in $channel");
+		setDefault(BICS_PERSON_QUICK_COMMANDS,
+				"finger $person,follow $person,partner $person");
 		setDefault(
 				BICS_PERSON_COMMANDS,
-				"finger $person,follow $person,history $person,joural $person,partner $person,"
+				"history $person,joural $person,"
 						+ "observe $person,oldpstat $userName $person,pstat $userName $person,"
 						+ "stored $person,variables $person,separator,"
 						+ "+censor $person,-censor $person,+gnotify $person,-gnotify $person,+noplay $person,-noplay $person,+notify $person,-notify $person,separator,"

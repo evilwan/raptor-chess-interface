@@ -33,7 +33,7 @@ public class ConnectorQuadrantsPage extends FieldEditorPreferencePage {
 
 	public ConnectorQuadrantsPage(String connectorShortName) {
 		super(GRID);
-		setTitle(connectorShortName + " Quadrants");
+		setTitle(WordUtils.capitalize(connectorShortName) + " Quadrants");
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 		this.connectorShortName = connectorShortName;
 	}

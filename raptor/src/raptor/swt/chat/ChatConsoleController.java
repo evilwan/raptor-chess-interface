@@ -1321,13 +1321,61 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			if (connector instanceof FicsConnector) {
 				MenuItem gamebotItem = new MenuItem(menu, SWT.PUSH);
-				gamebotItem.setText("gamebot history: " + person);
+				gamebotItem.setText("Add gamebot tab: " + person);
 				gamebotItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						SWTUtils.openGamesBotWindowItem(
 								(FicsConnector) connector, person);
 					}
 				});
+			}
+
+			// Add quick items for the connector.
+			final String[][] connectorPersonQuickItems = connector
+					.getPersonQuickActions(person);
+			if (connectorPersonQuickItems != null) {
+				for (int i = 0; i < connectorPersonQuickItems.length; i++) {
+					if (connectorPersonQuickItems[i][0].equals("separator")) {
+						new MenuItem(menu, SWT.SEPARATOR);
+					} else {
+						item = new MenuItem(menu, SWT.PUSH);
+						item.setText(connectorPersonQuickItems[i][0]);
+						final int index = i;
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								connector
+										.sendMessage(connectorPersonQuickItems[index][1]);
+							}
+						});
+					}
+				}
+			}
+
+			// Add the sub-menu of options for the connector.
+			final String[][] connectorPersonItems = connector
+					.getPersonActions(person);
+			if (connectorPersonItems != null) {
+				MenuItem personCommands = new MenuItem(menu, SWT.CASCADE);
+				personCommands.setText("Other " + getConnector().getShortName()
+						+ " commands:");
+				Menu personCommandsMenu = new Menu(menu);
+				personCommands.setMenu(personCommandsMenu);
+
+				for (int i = 0; i < connectorPersonItems.length; i++) {
+					if (connectorPersonItems[i][0].equals("separator")) {
+						new MenuItem(personCommandsMenu, SWT.SEPARATOR);
+					} else {
+						item = new MenuItem(personCommandsMenu, SWT.PUSH);
+						item.setText(connectorPersonItems[i][0]);
+						final int index = i;
+						item.addListener(SWT.Selection, new Listener() {
+							public void handleEvent(Event e) {
+								connector
+										.sendMessage(connectorPersonItems[index][1]);
+							}
+						});
+					}
+				}
 			}
 
 			if (!connector.isOnExtendedCensor(person)) {
@@ -1353,42 +1401,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 										+ " to extended censor." : " Person "
 										+ person
 										+ " is not on extended censor."));
-					}
-				});
-			}
-
-			if (connector instanceof FicsConnector) {
-				MenuItem websiteLookupItem = new MenuItem(menu, SWT.CASCADE);
-				websiteLookupItem.setText("Website lookups: " + person);
-				Menu websiteMenu = new Menu(menu);
-				websiteLookupItem.setMenu(websiteMenu);
-
-				MenuItem ficsGamesHistory = new MenuItem(websiteMenu, SWT.PUSH);
-				ficsGamesHistory.setText("ficsgames.com history: " + person);
-				ficsGamesHistory.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						BrowserUtils
-								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
-										+ person + "&showhistory=showhistory");
-					}
-				});
-
-				MenuItem ficsGamesStats = new MenuItem(websiteMenu, SWT.PUSH);
-				ficsGamesStats.setText("ficsgames.com statistics: " + person);
-				ficsGamesStats.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						BrowserUtils
-								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
-										+ person + "&showstats=showstats");
-					}
-				});
-
-				MenuItem watchBotStats = new MenuItem(websiteMenu, SWT.PUSH);
-				watchBotStats.setText("WatchBot history: " + person);
-				watchBotStats.addListener(SWT.Selection, new Listener() {
-					public void handleEvent(Event e) {
-						BrowserUtils.openHtml(BrowserUtils
-								.getWatchBotJavascript(person));
 					}
 				});
 			}
@@ -1437,30 +1449,42 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			}
 
-			final String[][] connectorPersonItems = connector
-					.getPersonActions(person);
-			if (connectorPersonItems != null) {
-				MenuItem personCommands = new MenuItem(menu, SWT.CASCADE);
-				personCommands.setText(getConnector().getShortName()
-						+ " commands: '" + person + "'");
-				Menu personCommandsMenu = new Menu(menu);
-				personCommands.setMenu(personCommandsMenu);
+			if (connector instanceof FicsConnector) {
+				MenuItem websiteLookupItem = new MenuItem(menu, SWT.CASCADE);
+				websiteLookupItem.setText("Website lookups: " + person);
+				Menu websiteMenu = new Menu(menu);
+				websiteLookupItem.setMenu(websiteMenu);
 
-				for (int i = 0; i < connectorPersonItems.length; i++) {
-					if (connectorPersonItems[i][0].equals("separator")) {
-						new MenuItem(personCommandsMenu, SWT.SEPARATOR);
-					} else {
-						item = new MenuItem(personCommandsMenu, SWT.PUSH);
-						item.setText(connectorPersonItems[i][0]);
-						final int index = i;
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								connector
-										.sendMessage(connectorPersonItems[index][1]);
-							}
-						});
+				MenuItem ficsGamesHistory = new MenuItem(websiteMenu, SWT.PUSH);
+				ficsGamesHistory.setText("http://www.ficsgames.com history: "
+						+ person);
+				ficsGamesHistory.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils
+								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
+										+ person + "&showhistory=showhistory");
 					}
-				}
+				});
+
+				MenuItem ficsGamesStats = new MenuItem(websiteMenu, SWT.PUSH);
+				ficsGamesStats.setText("http://www.ficsgames.com statistics: "
+						+ person);
+				ficsGamesStats.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils
+								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
+										+ person + "&showstats=showstats");
+					}
+				});
+
+				MenuItem watchBotStats = new MenuItem(websiteMenu, SWT.PUSH);
+				watchBotStats.setText("WatchBot history: " + person);
+				watchBotStats.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						BrowserUtils.openHtml(BrowserUtils
+								.getWatchBotJavascript(person));
+					}
+				});
 			}
 		}
 	}
@@ -2349,7 +2373,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
 		if (wasSelectedText) {
 			MenuItem copyItem = new MenuItem(menu, SWT.PUSH);
-			copyItem.setText("copy (remove line breaks)");
+			copyItem.setText("Copy (remove line breaks)");
 			copyItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					chatConsole.inputText.copy();
@@ -2357,7 +2381,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			});
 
 			MenuItem copyPreserveItem = new MenuItem(menu, SWT.PUSH);
-			copyPreserveItem.setText("copy (preserve line breaks)");
+			copyPreserveItem.setText("Copy (preserve line breaks)");
 			copyPreserveItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					TextTransfer plainTextTransfer = TextTransfer.getInstance();
@@ -2434,7 +2458,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 		new MenuItem(menu, SWT.SEPARATOR);
 		MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
-		showWordsThatStartWithAction.setText("show words that start with '"
+		showWordsThatStartWithAction.setText("Show words that start with '"
 				+ word + "'");
 		showWordsThatStartWithAction.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
@@ -2465,7 +2489,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				&& word != null && !isSpelledCorrectly(null, word)) {
 
 			MenuItem addWord = new MenuItem(menu, SWT.PUSH);
-			addWord.setText("add " + word + " to dictionary");
+			addWord.setText("Add " + word + " to dictionary");
 			addWord.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					DictionaryService.getInstance().addWord(finalWord);

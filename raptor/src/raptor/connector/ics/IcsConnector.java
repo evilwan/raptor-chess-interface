@@ -607,6 +607,25 @@ public abstract class IcsConnector implements Connector {
 	public String[] getPeopleOnExtendedCensor() {
 		return extendedCensorList.toArray(new String[0]);
 	}
+	
+	public String[][] getPersonQuickActions(String person) {
+		String matchActions = Raptor.getInstance().getPreferences().getString(
+				getContext().getPreferencePrefix()
+						+ PreferenceKeys.PERSON_QUICK_COMMANDS);
+		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
+				matchActions, ',');
+
+		String[][] result = new String[matchActionsArray.length][2];
+
+		for (int i = 0; i < matchActionsArray.length; i++) {
+			String action = matchActionsArray[i];
+			action = action.replace("$person", person);
+			action = action.replace("$userName", userName);
+			result[i][0] = action;
+			result[i][1] = action;
+		}
+		return result;
+	}
 
 	public String[][] getPersonActions(String person) {
 		String matchActions = Raptor.getInstance().getPreferences().getString(

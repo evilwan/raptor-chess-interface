@@ -13,7 +13,6 @@
  */
 package raptor.connector.bics.pref;
 
-import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
@@ -21,8 +20,6 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.TextFieldEditor;
-import raptor.pref.fields.LabelFieldEditor;
-import raptor.pref.fields.ListFieldEditor;
 
 public class BicsPage extends FieldEditorPreferencePage {
 	public BicsPage() {
@@ -55,24 +52,5 @@ public class BicsPage extends FieldEditorPreferencePage {
 
 		addField(new StringFieldEditor(PreferenceKeys.BICS_KEEP_ALIVE_COMMAND,
 				"Keep-Alive command", getFieldEditorParent()));
-
-		addField(new LabelFieldEditor(
-				"none",
-				WordUtils
-						.wrap(
-								"You can use $person for the person right clicked on, and $userName for the logged in user name in the scripts below.",
-								70)
-						+ "\n ", getFieldEditorParent()));
-
-		addField(new ListFieldEditor(PreferenceKeys.BICS_PERSON_COMMANDS,
-				"Right Click Person Commands:", getFieldEditorParent(), ',', 75));
-
-		addField(new ListFieldEditor(PreferenceKeys.BICS_GAME_COMMANDS,
-				"Right Click Game Commands:", getFieldEditorParent(), ',', 75));
-
-		addField(new ListFieldEditor(PreferenceKeys.BICS_CHANNEL_COMMANDS,
-				"Right Click Channel Commands:", getFieldEditorParent(), ',',
-				75));
-
 	}
 }

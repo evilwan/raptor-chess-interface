@@ -42,6 +42,9 @@ import raptor.chat.ChatType;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.connector.fics.pref.FicsPage;
+import raptor.connector.fics.pref.FicsRightClickChannelMenu;
+import raptor.connector.fics.pref.FicsRightClickGamesMenu;
+import raptor.connector.fics.pref.FicsRightClickPersonMenu;
 import raptor.connector.ics.IcsConnector;
 import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.IcsParser;
@@ -277,6 +280,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 								RaptorActionContainer.FicsMenu)),
 				new PreferenceNode("fics",
 						new ConnectorMessageBlockPage("fics")),
+				new PreferenceNode("fics", new FicsRightClickChannelMenu()),
+				new PreferenceNode("fics", new FicsRightClickGamesMenu()),
+				new PreferenceNode("fics", new FicsRightClickPersonMenu()),
+
 				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics")),
 				new PreferenceNode("fics", new ConnectorQuadrantsPage("fics2")), };
 
