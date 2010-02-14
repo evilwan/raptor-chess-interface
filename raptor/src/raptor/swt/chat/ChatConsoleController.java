@@ -544,12 +544,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			isActive = true;
 			hasUnseenText = false;
 			fireItemChanged();
-			chatConsole.getDisplay().timerExec(100, new Runnable() {
-				public void run() {
-					onForceAutoScroll();
-					chatConsole.outputText.setFocus();
-				}
-			});
 			ThreadService.getInstance().scheduleOneShot(SPELL_CHECK_DELAY,
 					spellCheckRunnable);
 		} else {
@@ -557,6 +551,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				onForceAutoScroll();
 			}
 		}
+
+		chatConsole.getDisplay().timerExec(100, new Runnable() {
+			public void run() {
+				onForceAutoScroll();
+				chatConsole.outputText.setFocus();
+			}
+		});
 	}
 
 	public void onAppendChatEventToInputText(ChatEvent event) {
