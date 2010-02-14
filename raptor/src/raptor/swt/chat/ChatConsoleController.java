@@ -101,6 +101,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	private static final Log LOG = LogFactory
 			.getLog(ChatConsoleController.class);
 	public static final int TEXT_CHUNK_SIZE = 1000;
+	public static int[] DONT_FORWARD_KEYSTROKES = { SWT.PAGE_UP, SWT.PAGE_DOWN,
+			SWT.HOME, SWT.END };
+	public static int[] DONT_FORWARD_KEYMASKS = { SWT.COMMAND, SWT.CONTROL };
 
 	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
 	protected ChatConsole chatConsole;
@@ -803,34 +806,62 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void processInputTextKeystroke(Event event, boolean isKeyUp) {
-		if (isKeyUp
-				&& (event.keyCode == SWT.PAGE_DOWN || event.keyCode == SWT.PAGE_UP)) {
-			smartScroll();
+		if (isKeyUp) {
+			// Adjust scroll lock based on input text adjustments.
+			boolean isSmartScrolling = false;
+
+			for (int i = 0; i < DONT_FORWARD_KEYSTROKES.length; i++) {
+				if (event.keyCode == DONT_FORWARD_KEYSTROKES[i]) {
+					isSmartScrolling = true;
+					break;
+				}
+			}
+
+			if (isSmartScrolling) {
+				smartScroll();
+			}
 		} else if (!isKeyUp) {
-			getChatConsole().getOutputText().setFocus();
 
-			// Forward to output text
-			if (!processOutputTextKeystroke(event)
-					&& (event.stateMask == 0 || event.stateMask == SWT.SHIFT)
-					|| event.stateMask != 0
-					&& (event.character == 'o' || event.character == 'k'
-							|| event.character == 'O' || event.character == 'K')) {
-				// The o and k are to fix some crazy windows issue.
+			boolean dontForwardKeystroke = false;
 
-				if (event.character == '\b') {
-					if (chatConsole.outputText.getCharCount() > 0) {
-						chatConsole.outputText.setText(chatConsole.outputText
-								.getText().substring(
-										0,
-										chatConsole.outputText.getText()
-												.length() - 1));
-						chatConsole.outputText
-								.setSelection(chatConsole.outputText.getText()
-										.length());
+			for (int i = 0; i < DONT_FORWARD_KEYSTROKES.length; i++) {
+				if (event.keyCode == DONT_FORWARD_KEYSTROKES[i]) {
+					dontForwardKeystroke = true;
+					break;
+				}
+			}
+
+			if (!dontForwardKeystroke) {
+				for (int i = 0; i < DONT_FORWARD_KEYMASKS.length; i++) {
+					if ((event.stateMask & DONT_FORWARD_KEYMASKS[i]) != 0) {
+						dontForwardKeystroke = true;
+						break;
 					}
-				} else {
-					String textToInsert = "" + event.character;
-					chatConsole.getOutputText().insert(textToInsert);
+				}
+
+				if (!dontForwardKeystroke) {
+					getChatConsole().getOutputText().setFocus();
+					if (event.character == '\b') {
+						if (chatConsole.outputText.getCharCount() > 0) {
+							chatConsole.outputText
+									.setText(chatConsole.outputText
+											.getText()
+											.substring(
+													0,
+													chatConsole.outputText
+															.getText().length() - 1));
+							chatConsole.outputText
+									.setSelection(chatConsole.outputText
+											.getText().length());
+						}
+					} else {
+						String textToInsert = "" + event.character;
+						chatConsole.getOutputText().insert(textToInsert);
+						chatConsole.getOutputText()
+								.setCaretOffset(
+										chatConsole.getOutputText()
+												.getCaretOffset() + 1);
+					}
 				}
 			}
 		}
