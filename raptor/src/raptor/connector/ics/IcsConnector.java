@@ -607,8 +607,12 @@ public abstract class IcsConnector implements Connector {
 	public String[] getPeopleOnExtendedCensor() {
 		return extendedCensorList.toArray(new String[0]);
 	}
-	
+
 	public String[][] getPersonQuickActions(String person) {
+		if (StringUtils.isBlank(person)) {
+			return new String[0][0];
+		}
+
 		String matchActions = Raptor.getInstance().getPreferences().getString(
 				getContext().getPreferencePrefix()
 						+ PreferenceKeys.PERSON_QUICK_COMMANDS);
@@ -628,6 +632,10 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[][] getPersonActions(String person) {
+		if (StringUtils.isBlank(person)) {
+			return new String[0][0];
+		}
+
 		String matchActions = Raptor.getInstance().getPreferences().getString(
 				getContext().getPreferencePrefix()
 						+ PreferenceKeys.PERSON_COMMANDS);
