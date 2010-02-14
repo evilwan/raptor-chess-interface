@@ -1561,13 +1561,6 @@ public class RaptorWindow extends ApplicationWindow {
 		});
 
 		fileMenu.add(new Separator());
-		fileMenu.add(new Action("Preferences") {
-			@Override
-			public void run() {
-				PreferenceUtils.launchPreferenceDialog();
-			}
-		});
-		fileMenu.add(new Separator());
 		fileMenu.add(new Action("Install chess set") {
 			@Override
 			public void run() {
@@ -1583,6 +1576,14 @@ public class RaptorWindow extends ApplicationWindow {
 							getShell(), selected);
 					dialog.open();
 				}
+			}
+		});
+
+		fileMenu.add(new Separator());
+		fileMenu.add(new Action("Preferences") {
+			@Override
+			public void run() {
+				PreferenceUtils.launchPreferenceDialog();
 			}
 		});
 
@@ -1692,6 +1693,7 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
+		themesMenu.add(new Separator());
 		themesMenu.add(themesSubMenu);
 	}
 
