@@ -1,1 +1,1 @@
-Error logs will be placed here.
+This directory contains logs of various types.

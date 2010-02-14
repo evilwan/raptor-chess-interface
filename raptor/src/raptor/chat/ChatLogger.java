@@ -224,23 +224,24 @@ public class ChatLogger {
 				if (Raptor.getInstance().getPreferences().getBoolean(
 						PreferenceKeys.APP_IS_LOGGING_CONSOLE)
 						&& !vetoLogging(event.getSource())) {
-					appendToFile(Raptor.USER_RAPTOR_HOME_PATH + "/logs/"
-							+ getConnectorType() + "-console.log", event);
+					appendToFile(Raptor.USER_RAPTOR_HOME_PATH
+							+ "/logs/console/" + getConnectorType()
+							+ "-console.txt", event);
 				}
 				if (Raptor.getInstance().getPreferences().getBoolean(
 						PreferenceKeys.APP_IS_LOGGING_CHANNEL_TELLS)
 						&& event.getType() == ChatType.CHANNEL_TELL) {
-					appendToFile(Raptor.USER_RAPTOR_HOME_PATH + "/logs/"
-							+ getConnectorType() + "-" + event.getChannel()
-							+ ".log", event);
+					appendToFile(Raptor.USER_RAPTOR_HOME_PATH
+							+ "/logs/console/" + getConnectorType() + "-"
+							+ event.getChannel() + ".txt", event);
 				}
 				if (Raptor.getInstance().getPreferences().getBoolean(
 						PreferenceKeys.APP_IS_LOGGING_PERSON_TELLS)
 						&& event.getType() == ChatType.TELL
 						&& !vetoLogging(event.getSource())) {
-					appendToFile(Raptor.USER_RAPTOR_HOME_PATH + "/logs/"
-							+ getConnectorType() + "-"
-							+ event.getSource().toLowerCase() + ".log", event);
+					appendToFile(Raptor.USER_RAPTOR_HOME_PATH
+							+ "/logs/console/" + getConnectorType() + "-"
+							+ event.getSource().toLowerCase() + ".txt", event);
 				}
 				if (Raptor.getInstance().getPreferences().getBoolean(
 						PreferenceKeys.APP_IS_LOGGING_PERSON_TELLS)
@@ -260,7 +261,7 @@ public class ChatLogger {
 							} catch (NumberFormatException nfe) {
 								appendToFile(Raptor.USER_RAPTOR_HOME_PATH
 										+ "/logs/" + getConnectorType() + "-"
-										+ secondWord.toLowerCase() + ".log",
+										+ secondWord.toLowerCase() + ".txt",
 										event);
 							}
 						}

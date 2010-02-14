@@ -75,19 +75,19 @@ public class GeneralPage extends FieldEditorPreferencePage {
 
 		addField(new BooleanFieldEditor(PreferenceKeys.APP_IS_LOGGING_CONSOLE,
 				"Log console messages to " + Raptor.USER_RAPTOR_HOME_PATH
-						+ "/logs/${ConnectorName}-Console.log",
+						+ "/logs/console/${ConnectorName}-Console.txt",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LOGGING_PERSON_TELLS,
 				"Log person tells to " + Raptor.USER_RAPTOR_HOME_PATH
-						+ "/logs/${ConnectorName}-${PersonName}.log",
+						+ "/logs/console/${ConnectorName}-${PersonName}.txt",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LOGGING_CHANNEL_TELLS,
 				"Log person tells to " + Raptor.USER_RAPTOR_HOME_PATH
-						+ "/logs/${ConnectorName}-${Channel}.log",
+						+ "/logs/console/${ConnectorName}-${Channel}.txt",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(

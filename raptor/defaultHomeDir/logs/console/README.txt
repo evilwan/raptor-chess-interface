@@ -1,0 +1,1 @@
+If you have console logging turned on in Preferences -> General, messages will be logged to this directory.

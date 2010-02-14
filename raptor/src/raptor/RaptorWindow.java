@@ -1482,16 +1482,7 @@ public class RaptorWindow extends ApplicationWindow {
 		leftCoolbar.setVisible(false);
 	}
 
-	/**
-	 * Creates the menu items.
-	 */
-	@Override
-	protected MenuManager createMenuManager() {
-		MenuManager menuBar = new MenuManager("Main");
-		MenuManager fileMenu = new MenuManager("File");
-		MenuManager windowMenu = new MenuManager("&Window");
-		MenuManager helpMenu = new MenuManager("&Help");
-
+	protected void buildFileMenu(MenuManager fileMenu) {
 		fileMenu.add(new Action("Open PGN File") {
 			@Override
 			public void run() {
@@ -1542,6 +1533,34 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 		fileMenu.add(new Separator());
+		fileMenu.add(new Action("Show console logs") {
+			@Override
+			public void run() {
+				if (OSUtils.isLikelyWindows()) {
+					BrowserUtils.openExternalUrl("file://"
+							+ Raptor.USER_RAPTOR_HOME_PATH
+							+ "\\logs\\console\\");
+				} else {
+					BrowserUtils.openExternalUrl("file://"
+							+ Raptor.USER_RAPTOR_HOME_PATH + "/logs/console/");
+				}
+			}
+		});
+		fileMenu.add(new Action("Show error log") {
+			@Override
+			public void run() {
+				String html = FileUtils
+						.fileAsString(Raptor.USER_RAPTOR_HOME_PATH
+								+ "/logs/error.log");
+				if (html != null) {
+					html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
+							+ html + "</pre>\n</body>\n</html>\n";
+					BrowserUtils.openHtml(html);
+				}
+			}
+		});
+
+		fileMenu.add(new Separator());
 		fileMenu.add(new Action("Preferences") {
 			@Override
 			public void run() {
@@ -1577,17 +1596,9 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			});
 		}
-		menuBar.add(fileMenu);
+	}
 
-		Connector[] connectors = ConnectorService.getInstance().getConnectors();
-
-		for (Connector connector : connectors) {
-			MenuManager manager = connector.getMenuManager();
-			if (manager != null) {
-				menuBar.add(manager);
-			}
-		}
-
+	protected void buildWindowMenu(MenuManager windowMenu) {
 		final MenuManager layoutsMenu = new MenuManager("&Layouts");
 		layoutsMenu.add(new Action("&Save Current As Layout") {
 			@Override
@@ -1682,9 +1693,9 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 		themesMenu.add(themesSubMenu);
+	}
 
-		menuBar.add(windowMenu);
-
+	public void buildHelpMenu(MenuManager helpMenu) {
 		helpMenu.add(new Action(getPreferences().getString(
 				PreferenceKeys.APP_NAME)) {
 			@Override
@@ -1830,21 +1841,35 @@ public class RaptorWindow extends ApplicationWindow {
 						.openUrl("http://code.google.com/p/raptor-chess-interface/issues/entry");
 			}
 		});
-		helpMenu.add(new Action("&Show Error Log") {
-			@Override
-			public void run() {
-				String html = FileUtils
-						.fileAsString(Raptor.USER_RAPTOR_HOME_PATH
-								+ "/logs/error.log");
-				if (html != null) {
-					html = "<html>\n<head>\n<title></title>\n</head>\n<body>\n<h1>RAPTOR ERROR LOG</h1>\n<pre>\n"
-							+ html + "</pre>\n</body>\n</html>\n";
-					BrowserUtils.openHtml(html);
-				}
-			}
-		});
+	}
 
+	/**
+	 * Creates the menu items.
+	 */
+	@Override
+	protected MenuManager createMenuManager() {
+		MenuManager menuBar = new MenuManager("Main");
+		MenuManager fileMenu = new MenuManager("File");
+		MenuManager windowMenu = new MenuManager("&Window");
+		MenuManager helpMenu = new MenuManager("&Help");
+
+		buildFileMenu(fileMenu);
+		menuBar.add(fileMenu);
+
+		Connector[] connectors = ConnectorService.getInstance().getConnectors();
+		for (Connector connector : connectors) {
+			MenuManager manager = connector.getMenuManager();
+			if (manager != null) {
+				menuBar.add(manager);
+			}
+		}
+
+		buildWindowMenu(windowMenu);
+		menuBar.add(windowMenu);
+
+		buildHelpMenu(helpMenu);
 		menuBar.add(helpMenu);
+
 		return menuBar;
 	}
 
