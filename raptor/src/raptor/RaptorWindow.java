@@ -1561,6 +1561,13 @@ public class RaptorWindow extends ApplicationWindow {
 		});
 
 		fileMenu.add(new Separator());
+		fileMenu.add(new Action("Download chess sets") {
+			@Override
+			public void run() {
+				BrowserUtils
+				.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/AdditionalChessSets");
+			}
+		});
 		fileMenu.add(new Action("Install chess set") {
 			@Override
 			public void run() {
