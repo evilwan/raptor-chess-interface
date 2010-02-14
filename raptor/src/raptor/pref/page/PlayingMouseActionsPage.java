@@ -37,7 +37,10 @@ public class PlayingMouseActionsPage extends FieldEditorPreferencePage {
 					PlayingMouseAction.RandomCapture.toString() },
 			{ "Random Move Involving Recapture",
 					PlayingMouseAction.RandomRecapture.toString() },
-			{ "Smart Move", PlayingMouseAction.SmartMove.toString() } };
+			{ "Smart Move (Select random move if ambiguous)",
+					PlayingMouseAction.SmartMove.toString() },
+			{ "Smart Move (Only move if no ambiguity)",
+					PlayingMouseAction.SmartMoveNoAmbiguity.toString() } };
 
 	public PlayingMouseActionsPage() {
 		// Use the "flat" layout

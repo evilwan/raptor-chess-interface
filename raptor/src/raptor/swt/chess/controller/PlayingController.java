@@ -55,6 +55,7 @@ import raptor.chess.Result;
 import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.PgnUtils;
+import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.PlayingStatisticsService;
@@ -841,7 +842,10 @@ public class PlayingController extends ChessBoardController {
 			onRandomCapture();
 			break;
 		case SmartMove:
-			onSmartMove(square);
+			onSmartMove(square, true);
+			break;
+		case SmartMoveNoAmbiguity:
+			onSmartMove(square, false);
 			break;
 		case RandomMove:
 			onRandomMove();
@@ -1522,7 +1526,7 @@ public class PlayingController extends ChessBoardController {
 		}
 	}
 
-	protected void onSmartMove(final int square) {
+	protected void onSmartMove(final int square, boolean allowAmbiguity) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("On onSmartMove " + getGame().getId() + " " + square);
 		}
@@ -1537,9 +1541,37 @@ public class PlayingController extends ChessBoardController {
 					}
 				}
 
-				if (foundMoves.size() > 0) {
-					Move move = foundMoves.get(random
-							.nextInt(foundMoves.size()));
+				if (foundMoves.size() > 1) {
+					if (allowAmbiguity) {
+						Move move = foundMoves.get(random.nextInt(foundMoves
+								.size()));
+
+						if (game.move(move)) {
+							game.rollback();
+							final Move finalMove = move;
+							ThreadService.getInstance().run(new Runnable() {
+								public void run() {
+									connector.makeMove(game, finalMove);
+								}
+							});
+						} else {
+							throw new IllegalStateException(
+									"Game rejected move in random move. This is a bug.");
+						}
+
+						removeAllMoveDecorations();
+						refreshForMove(move);
+					} else {
+						getConnector().publishEvent(
+								new ChatEvent(null, ChatType.INTERNAL,
+										"Ambiguous smart move on square "
+												+ GameUtils.getSan(square)
+												+ "."));
+						onPlayIllegalMoveSound();
+					}
+
+				} else if (foundMoves.size() == 1) {
+					Move move = foundMoves.get(0);
 
 					if (game.move(move)) {
 						game.rollback();
@@ -1553,7 +1585,6 @@ public class PlayingController extends ChessBoardController {
 						throw new IllegalStateException(
 								"Game rejected move in random move. This is a bug.");
 					}
-
 					removeAllMoveDecorations();
 					refreshForMove(move);
 				} else {
@@ -1569,5 +1600,4 @@ public class PlayingController extends ChessBoardController {
 			getConnector().onError("PlayingController.onSmartMove", t);
 		}
 	}
-
 }
