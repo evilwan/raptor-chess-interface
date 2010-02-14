@@ -474,27 +474,17 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		miniBoard.setLayout(SWTUtils.createMarginlessGridLayout(3, true));
 
-		boolean isLight = true;
-		for (int i = 2; i >= 0; i--) {
-			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j] = new ChessBoardPageSquare(miniBoard, j + i * 8 ,
-						isLight);
-				squares[i][j].setLayoutData(new GridData(50, 50));
-				isLight = !isLight;
-			}
-		}
+		squares[0][0] = createSquare(16, false, GameConstants.BR);
+		squares[0][1] = createSquare(17, true, GameConstants.BN);
+		squares[0][2] = createSquare(18, false, GameConstants.BB);
 
-		squares[0][0].setPiece(GameConstants.BR);
-		squares[0][1].setPiece(GameConstants.BN);
-		squares[0][2].setPiece(GameConstants.BB);
+		squares[1][0] = createSquare(8, true, GameConstants.BP);
+		squares[1][1] = createSquare(9, false, GameConstants.EMPTY);
+		squares[1][2] = createSquare(10, true, GameConstants.WP);
 
-		squares[1][0].setPiece(GameConstants.BP);
-		squares[1][1].setPiece(GameConstants.EMPTY);
-		squares[1][2].setPiece(GameConstants.WP);
-
-		squares[2][0].setPiece(GameConstants.WQ);
-		squares[2][1].setPiece(GameConstants.WR);
-		squares[2][2].setPiece(GameConstants.WK);
+		squares[2][0] = createSquare(0, false, GameConstants.WQ);
+		squares[2][1] = createSquare(1, true, GameConstants.WR);
+		squares[2][2] = createSquare(2, false, GameConstants.WK);
 
 		Label boardStrut = new Label(boards, SWT.NONE);
 		boardStrut.setText("          ");
@@ -518,7 +508,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		dropSquares[0].setPiece(GameConstants.WN);
 		dropSquares[0].setText("" + 2);
 		dropSquares[1].setPiece(GameConstants.BN);
-		dropSquares[0].setText("" + 2);
+		dropSquares[1].setText("" + 2);
 
 		chessSetInfoComposite = new Composite(boards, SWT.NONE);
 		chessSetInfoComposite.setLayoutData(new GridData(SWT.FILL, SWT.TOP,
@@ -588,6 +578,15 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		updateSetFields(Raptor.getInstance().getPreferences().getString(
 				PreferenceKeys.BOARD_CHESS_SET_NAME));
+	}
+
+	protected ChessBoardPageSquare createSquare(int id, boolean isLight,
+			int piece) {
+		ChessBoardPageSquare result = new ChessBoardPageSquare(miniBoard, id,
+				isLight);
+		result.setPiece(piece);
+		result.setLayoutData(new GridData(50, 50));
+		return result;
 	}
 
 	protected void updateSetFields(String setName) {

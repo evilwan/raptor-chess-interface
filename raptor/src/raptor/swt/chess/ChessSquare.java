@@ -379,15 +379,6 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	/**
-	 * Sets the vaue of this squares background. True if light, false if dark.
-	 * 
-	 * @param isLight
-	 */
-	public void setLight(boolean isLight) {
-		this.isLight = isLight;
-	}
-
-	/**
 	 * Sets the colored chess piece. This method does not redraw after the piece
 	 * is set. It is up to the caller to invoke that.
 	 * 

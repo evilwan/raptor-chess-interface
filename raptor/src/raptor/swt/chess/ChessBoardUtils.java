@@ -411,8 +411,8 @@ public class ChessBoardUtils implements BoardConstants {
 			height = 10;
 		}
 
-		String key = name + "_" + effect + "_" + squareId + "_" + width + "x"
-				+ height;
+		String key = name + "_" + effect + "_" + isLight + "_" + squareId + "_"
+				+ width + "x" + height;
 
 		Image result = Raptor.getInstance().getImageRegistry().get(key);
 
