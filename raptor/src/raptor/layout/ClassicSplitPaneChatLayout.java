@@ -19,7 +19,7 @@ import raptor.util.RaptorStringUtils;
 
 public class ClassicSplitPaneChatLayout extends AbstractLayout {
 	public ClassicSplitPaneChatLayout() {
-		super(null, "Classic (Split pane consoles)");
+		super(null, "Console on bottom (Split pane consoles)");
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,
 				Quadrant.IX.toString());
