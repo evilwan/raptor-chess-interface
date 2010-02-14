@@ -79,8 +79,7 @@ public interface PreferenceKeys {
 	public static final String APP_WINDOW_BOUNDS = "app-window-bounds";
 	public static final String APP_ZOOM_FACTOR = "app-zoom-factor";
 	public static final String APP_PGN_FILE = "app-pgn-file";
-	
-	
+
 	public static final String APP_IS_LOGGING_CONSOLE = "app-is-logging-console";
 	public static final String APP_IS_LOGGING_PERSON_TELLS = "app-is-logging-person-tells";
 	public static final String APP_IS_LOGGING_CHANNEL_TELLS = "app-is-logging-channel-tells";
@@ -111,6 +110,7 @@ public interface PreferenceKeys {
 	public static final String GAMES_TABLE_SHOW_NONSTANDARD = "games-table-show-nonstandard";
 	public static final String GAMES_TABLE_SHOW_PRIVATE = "games-table-show-private";
 
+	public static final String SEEK_OUTPUT_TYPE = "seek-output-type";
 	public static final String SEEK_TABLE_RATINGS_INDEX = "seek-table-ratings-index";
 	public static final String SEEK_TABLE_SELECTED_TAB = "seek-table-selected-tab-index";
 	public static final String SEEK_TABLE_MAX_RATINGS_INDEX = "seek-table-max-ratings-index";
@@ -126,6 +126,11 @@ public interface PreferenceKeys {
 	public static final String SEEK_TABLE_SHOW_SUICIDE = "seek-table-show-suicide";
 	public static final String SEEK_TABLE_SHOW_LOSERS = "seek-table-show-losers";
 	public static final String SEEK_TABLE_SHOW_UNTIMED = "seek-table-show-untimed";
+
+	public static final String SEEK_GRAPH_COMPUTER_COLOR = "seek-graph-computer-color";
+	public static final String SEEK_GRAPH_MANY_COLOR = "seek-graph-many-color";
+	public static final String SEEK_GRAPH_RATED_COLOR = "seek-graph-rated-color";
+	public static final String SEEK_GRAPH_UNRATED_COLOR = "seek-graph-unrated-color";
 
 	public static final String BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD = "bughouse-playing-open-partner-board";
 	public static final String BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD = "bughouse-observing-open-partner-board";

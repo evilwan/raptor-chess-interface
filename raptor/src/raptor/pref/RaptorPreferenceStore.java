@@ -42,6 +42,7 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.service.SeekService.SeekType;
 import raptor.swt.BugPartners;
 import raptor.swt.GamesWindowItem;
 import raptor.swt.SWTUtils;
@@ -604,6 +605,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUG_ARENA_TEAMS_IS_RATED, true);
 		setDefault(BUG_ARENA_SELECTED_TAB, 0);
 
+		setDefault(SEEK_OUTPUT_TYPE, SeekType.FormulaFiltered.toString());
+
 		// SeekTable
 		setDefault(SEEK_TABLE_RATINGS_INDEX, 0);
 		setDefault(SEEK_TABLE_MAX_RATINGS_INDEX, SeekTableWindowItem
@@ -621,6 +624,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(SEEK_TABLE_SHOW_LOSERS, true);
 		setDefault(SEEK_TABLE_SHOW_UNTIMED, true);
 		setDefault(SEEK_TABLE_SELECTED_TAB, 2);
+
+		PreferenceConverter.setDefault(this, SEEK_GRAPH_COMPUTER_COLOR,
+				new RGB(0, 0, 255));
+		PreferenceConverter.setDefault(this, SEEK_GRAPH_MANY_COLOR, new RGB(
+				255, 255, 102));
+		PreferenceConverter.setDefault(this, SEEK_GRAPH_RATED_COLOR, new RGB(
+				0, 255, 0));
+		PreferenceConverter.setDefault(this, SEEK_GRAPH_UNRATED_COLOR, new RGB(
+				255, 0, 0));
 
 		// Games table
 		setDefault(GAMES_TABLE_SELECTED_TAB, 1);

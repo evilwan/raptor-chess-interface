@@ -50,6 +50,7 @@ import raptor.pref.page.RaptorWindowPage;
 import raptor.pref.page.RaptorWindowQuadrantsPage;
 import raptor.pref.page.RegularExpressionScripts;
 import raptor.pref.page.ScriptsPage;
+import raptor.pref.page.SeekPage;
 import raptor.pref.page.SoundPage;
 import raptor.pref.page.SpeechPage;
 import raptor.service.ConnectorService;
@@ -245,7 +246,7 @@ public class PreferenceUtils {
 				new RegularExpressionScripts()));
 		mgr.addTo("scripts", new PreferenceNode("rightClickScripts",
 				new ChatConsoleRightClickScripts()));
-
+		mgr.addToRoot(new PreferenceNode("seeks", new SeekPage()));
 		mgr.addToRoot(new PreferenceNode("sound", new SoundPage()));
 		mgr.addToRoot(new PreferenceNode("speech", new SpeechPage()));
 

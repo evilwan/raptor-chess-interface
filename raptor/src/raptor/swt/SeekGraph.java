@@ -18,7 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.SWT;
@@ -45,6 +44,7 @@ import org.eclipse.swt.widgets.ToolTip;
 
 import raptor.Raptor;
 import raptor.chat.Seek;
+import raptor.pref.PreferenceKeys;
 import raptor.service.SeekService;
 
 /**
@@ -123,13 +123,6 @@ public class SeekGraph extends Canvas {
 
 	private int inset;
 
-	private Color manyColor;
-
-	private Color ratedColor;
-
-	private Color unratedColor;
-
-	private Color computerColor;
 	private Image legendImage;
 
 	private boolean isDrawingLegend;
@@ -172,11 +165,6 @@ public class SeekGraph extends Canvas {
 		seeks = new HashMap<Point, List<Seek>>();
 		screen = new HashMap<Point, Point>();
 		inset = 20;
-
-		computerColor = Display.getCurrent().getSystemColor(SWT.COLOR_GRAY);
-		manyColor = Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW);
-		ratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
-		unratedColor = Display.getCurrent().getSystemColor(SWT.COLOR_GREEN);
 
 		tooltip = new ToolTip(parent.getShell(), SWT.BALLOON);
 
@@ -255,10 +243,6 @@ public class SeekGraph extends Canvas {
 		});
 	}
 
-	public void setComputerColor(Color c) {
-		computerColor = c;
-	}
-
 	public void setDrawingLegend(boolean value) {
 		isDrawingLegend = value;
 	}
@@ -274,18 +258,6 @@ public class SeekGraph extends Canvas {
 
 	public void setHStart(int start) {
 		hstart = start;
-	}
-
-	public void setManyColor(Color c) {
-		manyColor = c;
-	}
-
-	public void setRatedColor(Color c) {
-		ratedColor = c;
-	}
-
-	public void setUnratedColor(Color c) {
-		unratedColor = c;
 	}
 
 	public void setVScale(int[][] scale) {
@@ -503,13 +475,33 @@ public class SeekGraph extends Canvas {
 		}
 	}
 
+	protected Color getComputerColor() {
+		return Raptor.getInstance().getPreferences().getColor(
+				PreferenceKeys.SEEK_GRAPH_COMPUTER_COLOR);
+	}
+
+	protected Color getManyColor() {
+		return Raptor.getInstance().getPreferences().getColor(
+				PreferenceKeys.SEEK_GRAPH_MANY_COLOR);
+	}
+
+	protected Color getRatedColor() {
+		return Raptor.getInstance().getPreferences().getColor(
+				PreferenceKeys.SEEK_GRAPH_RATED_COLOR);
+	}
+
+	protected Color getUnratedColor() {
+		return Raptor.getInstance().getPreferences().getColor(
+				PreferenceKeys.SEEK_GRAPH_UNRATED_COLOR);
+	}
+
 	private void drawLegend(GC gc, int height, int width) {
 
 		if (legendImage == null) {
-			Image computer = createSingleLegend("Computer", computerColor);
-			Image rated = createSingleLegend("Rated", ratedColor);
-			Image unrated = createSingleLegend("Unrated", unratedColor);
-			Image many = createSingleLegend("Many", manyColor);
+			Image computer = createSingleLegend("Computer", getComputerColor());
+			Image rated = createSingleLegend("Rated", getRatedColor());
+			Image unrated = createSingleLegend("Unrated", getUnratedColor());
+			Image many = createSingleLegend("Many", getManyColor());
 
 			legendImage = new Image(null, computer.getBounds().width
 					+ rated.getBounds().width + unrated.getBounds().width
@@ -582,17 +574,17 @@ public class SeekGraph extends Canvas {
 	}
 
 	private void paintSeeks(GC gc, Point p, List<Seek> here) {
-		Color color = unratedColor;
+		Color color = getUnratedColor();
 
 		if (here.size() == 1) {
 			Seek s = here.get(0);
 			if (s.isComputer()) {
-				color = computerColor;
+				color = getComputerColor();
 			} else if (s.isRated()) {
-				color = ratedColor;
+				color = getRatedColor();
 			}
 		} else {
-			color = manyColor;
+			color = getManyColor();
 		}
 
 		gc.setBackground(color);

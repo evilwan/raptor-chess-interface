@@ -24,6 +24,10 @@ public class SeekService {
 		public void seeksChanged(Seek[] newSeeks);
 	}
 
+	public static enum SeekType {
+		FormulaFiltered, AllSeeks
+	};
+
 	private Seek[] seeks = new Seek[0];
 	private Connector connector;
 	private List<SeekServiceListener> listeners = new ArrayList<SeekServiceListener>(

@@ -74,6 +74,7 @@ import raptor.service.GameService.GameServiceListener;
 import raptor.service.GameService.Offer;
 import raptor.service.GameService.Offer.OfferType;
 import raptor.service.ScriptService.ScriptServiceListener;
+import raptor.service.SeekService.SeekType;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.BugWhoWindowItem;
 import raptor.swt.GamesWindowItem;
@@ -198,8 +199,9 @@ public abstract class IcsConnector implements Connector {
 						command = "date";
 					}
 					sendMessage(command, true);
-					publishEvent(new ChatEvent("", ChatType.INTERNAL, "The messsage: \""
-							+ command + "\" was just sent as a keep alive."));
+					publishEvent(new ChatEvent("", ChatType.INTERNAL,
+							"The messsage: \"" + command
+									+ "\" was just sent as a keep alive."));
 				}
 				ThreadService.getInstance()
 						.scheduleOneShot(1000 * 60 * 5, this);
@@ -1118,7 +1120,17 @@ public abstract class IcsConnector implements Connector {
 
 	public void sendGetSeeksMessage() {
 		if (isLoggedIn && isConnected()) {
-			sendMessage("$$sought all", true, ChatType.SEEKS);
+			SeekType seekType = SeekType.valueOf(getPreferences().getString(
+					PreferenceKeys.SEEK_OUTPUT_TYPE));
+
+			switch (seekType) {
+			case AllSeeks:
+				sendMessage("$$sought all", true, ChatType.SEEKS);
+				break;
+			case FormulaFiltered:
+				sendMessage("$$sought", true, ChatType.SEEKS);
+				break;
+			}
 		}
 	}
 
