@@ -70,7 +70,7 @@ public class ChessEnginesPage extends PreferencePage {
 				.setText(WordUtils
 						.wrap(
 								"\tOn this page you can configure UCI Chess Engines. Start out by selecting the engine "
-										+ "process and giving it a user name. When you are finished click the apply button.",
+										+ "process and giving it a nickname. When you are finished click the apply button.",
 								70));
 		Label enginesLabel = new Label(parent, SWT.LEFT);
 		enginesLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
