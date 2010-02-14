@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="MacCocoa64" />
 
-	<property name="version" value="v98" />
+	<property name="version" value="v98RC1" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -108,7 +108,7 @@
 		<property name="swtEnv" value="Windows32" />
 
 		<antcall target="install" />
-		
+
 		<copy todir="${install.dir}">
 			<fileset dir="projectFiles/Windows">
 				<include name="**/*" />
@@ -129,7 +129,7 @@
 		<property name="swtEnv" value="Windows64" />
 
 		<antcall target="install" />
-		
+
 		<copy todir="${install.dir}">
 			<fileset dir="projectFiles/Windows">
 				<include name="**/*" />
