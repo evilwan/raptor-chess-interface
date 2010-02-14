@@ -261,9 +261,8 @@
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
 		</move>
 
-		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
-
-		<delete dir="${install.dir}/Raptor_${version}/Raptor_${version}/Raptor_${version}" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
 
 
 		<exec executable="hdiutil">
@@ -316,7 +315,8 @@
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
 		</move>
 
-		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
 
 		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
@@ -375,7 +375,8 @@
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
 		</move>
 
-		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" includes="**/*" perm="755" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
 
 		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
