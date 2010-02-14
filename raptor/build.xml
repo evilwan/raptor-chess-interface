@@ -263,7 +263,15 @@
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
-
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Chrisdesign" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Eyes" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Fantasy" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Portable" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Spacial" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Wiki" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/sounds" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/square" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir" includes="**/*" perm="777" />
 
 		<exec executable="hdiutil">
 			<arg value="create" />
@@ -317,6 +325,16 @@
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Chrisdesign" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Eyes" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Fantasy" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Portable" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Spacial" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Wiki" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/sounds" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/square" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir" includes="**/*" perm="777" />
+
 
 		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
@@ -377,6 +395,16 @@
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Chrisdesign" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Eyes" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Fantasy" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Portable" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Spacial" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Wiki" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/sounds" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/square" includes="**/*" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/defaultHomeDir" includes="**/*" perm="777" />
+
 
 		<mkdir dir="${install.dir}/Raptor_${version}/Raptor_${version}" />
 		<move toDir="${install.dir}/Raptor_${version}/Raptor_${version}">
