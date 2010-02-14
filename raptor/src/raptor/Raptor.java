@@ -582,17 +582,17 @@ public class Raptor implements PreferenceKeys {
 
 		// Make sure all of the Singleton services get loaded.
 		ThreadService.getInstance();
-		DictionaryService.getInstance();
-		MemoService.getInstance();
-		ThemeService.getInstance();
-		UserTagService.getInstance();
+		//DictionaryService.getInstance();
+		//MemoService.getInstance();
+		//ThemeService.getInstance();
+		//UserTagService.getInstance();
 		EcoService.getInstance();
 		ConnectorService.getInstance();
-		SoundService.getInstance();
+		//SoundService.getInstance();
 		ScriptService.getInstance();
 		ActionScriptService.getInstance();
 		UCIEngineService.getInstance();
-		AliasService.getInstance();
+		//AliasService.getInstance();
 	}
 
 	/**
