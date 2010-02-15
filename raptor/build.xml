@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="MacCocoa64" />
 
-	<property name="version" value="v98RC1" />
+	<property name="version" value="v98RC1a" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -51,6 +51,13 @@
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" target="1.5" classpathref="class.path" debug="false" deprecation="true" optimize="true">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*" />
+				<exclude name=".svn" />
+				<exclude name="*.class" />
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="javadoc" description="Generates java docs">
@@ -261,7 +268,8 @@
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
 		</move>
 
-		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="777" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/raptor" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Chrisdesign" includes="**/*" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Eyes" includes="**/*" perm="777" />
@@ -324,6 +332,7 @@
 		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/raptor" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Chrisdesign" includes="**/*" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Eyes" includes="**/*" perm="777" />
@@ -394,6 +403,7 @@
 		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
+		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/raptor" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Chrisdesign" includes="**/*" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/resources/set/Eyes" includes="**/*" perm="777" />
