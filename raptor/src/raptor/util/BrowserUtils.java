@@ -66,7 +66,7 @@ public class BrowserUtils {
 				String prefBrowser = Raptor.getInstance().getPreferences()
 						.getString(PreferenceKeys.APP_LINUX_UNIX_BROWSER_NAME);
 
-				if (prefBrowser == null) {
+				if (StringUtils.isBlank(prefBrowser)) {
 					String[] browsers = { "firefox", "opera", "konqueror",
 							"epiphany", "mozilla", "netscape" };
 					String browser = null;
@@ -84,13 +84,7 @@ public class BrowserUtils {
 						new ProcessBuilder(browser, url).start();
 					}
 				} else {
-					String browser = null;
-					if (browser == null) {
-						throw new Exception("Could not find web browser");
-					} else {
-						new ProcessBuilder(browser, url).start();
-
-					}
+					new ProcessBuilder(prefBrowser, url).start();
 				}
 			}
 		} catch (Exception e) {
