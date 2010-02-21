@@ -17,7 +17,7 @@ A00k Van Kruijs rnbqkbnr/pppppppp/8/8/8/4P3/PPPP1PPP/RNBQKBNR b KQkq - 0 1
 A00l Van Geet (Dunst) Opening rnbqkbnr/pppppppp/8/8/8/2N5/PPPPPPPP/R1BQKBNR b KQkq - 1 1
 A00l Van Geet: 1...Nf6 rnbqkb1r/pppppppp/5n2/8/8/2N5/PPPPPPPP/R1BQKBNR w KQkq - 2 2
 A00l Van Geet: 1...Nf6 2.Nf3 rnbqkb1r/pppppppp/5n2/8/8/2N2N2/PPPPPPPP/R1BQKB1R b KQkq - 3 2
-A00l Van Geet: TŸbingen Gambit rnbqkb1r/pppppppp/5n2/8/6P1/2N5/PPPPPP1P/R1BQKBNR b KQkq g3 0 2
+A00l Van Geet: Tübingen Gambit rnbqkb1r/pppppppp/5n2/8/6P1/2N5/PPPPPP1P/R1BQKBNR b KQkq g3 0 2
 A00l Van Geet: 1...e5 rnbqkbnr/pppp1ppp/8/4p3/8/2N5/PPPPPPPP/R1BQKBNR w KQkq e6 0 2
 A00l Van Geet: 1...e5 2.Nf3 rnbqkbnr/pppp1ppp/8/4p3/8/2N2N2/PPPPPPPP/R1BQKB1R b KQkq - 1 2
 A00l Van Geet: Sicilian Variation rnbqkbnr/pp1ppppp/8/2p5/8/2N5/PPPPPPPP/R1BQKBNR w KQkq c6 0 2
@@ -48,7 +48,7 @@ A00p Polish: 1...Nf6 rnbqkb1r/pppppppp/5n2/8/1P6/8/P1PPPPPP/RNBQKBNR w KQkq - 1 
 A00p Polish: 1...Nf6 2.Bb2 rnbqkb1r/pppppppp/5n2/8/1P6/8/PBPPPPPP/RN1QKBNR b KQkq - 2 2
 A00p Polish: 1...Nf6 2.Bb2 e6 rnbqkb1r/pppp1ppp/4pn2/8/1P6/8/PBPPPPPP/RN1QKBNR w KQkq - 0 3
 A00p Polish: 1...c6 rnbqkbnr/pp1ppppp/2p5/8/1P6/8/P1PPPPPP/RNBQKBNR w KQkq - 0 2
-A00p Polish: SchŸhler Gambit rnbqkbnr/1p1ppppp/2p5/pP6/8/8/PBPPPPPP/RN1QKBNR b KQkq - 0 3
+A00p Polish: Schühler Gambit rnbqkbnr/1p1ppppp/2p5/pP6/8/8/PBPPPPPP/RN1QKBNR b KQkq - 0 3
 A00q Polish: 1...d5 rnbqkbnr/ppp1pppp/8/3p4/1P6/8/P1PPPPPP/RNBQKBNR w KQkq d6 0 2
 A00q Polish: 1...d5 2.Bb2 rnbqkbnr/ppp1pppp/8/3p4/1P6/8/PBPPPPPP/RN1QKBNR b KQkq - 1 2
 A00q Polish: 1...d5 2.Bb2 Bf5 rn1qkbnr/ppp1pppp/8/3p1b2/1P6/8/PBPPPPPP/RN1QKBNR w KQkq - 2 3
@@ -165,7 +165,7 @@ A03 Bird: Lasker, 3...c5 rnbqkb1r/pp2pppp/5n2/2pp4/5P2/4PN2/PPPP2PP/RNBQKB1R w K
 A03 Bird: Lasker, 3...c5 4.b3 rnbqkb1r/pp2pppp/5n2/2pp4/5P2/1P2PN2/P1PP2PP/RNBQKB1R b KQkq - 0 4
 A03 Bird: Lasker, 3...g6 rnbqkb1r/ppp1pp1p/5np1/3p4/5P2/4PN2/PPPP2PP/RNBQKB1R w KQkq - 0 4
 A04 Reti rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R b KQkq - 1 1
-A04 Reti: Herrstršm Gambit rnbqkbnr/pppppp1p/8/6p1/8/5N2/PPPPPPPP/RNBQKB1R w KQkq g6 0 2
+A04 Reti: Herrström Gambit rnbqkbnr/pppppp1p/8/6p1/8/5N2/PPPPPPPP/RNBQKB1R w KQkq g6 0 2
 A04 Reti: 1...b6 rnbqkbnr/p1pppppp/1p6/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 0 2
 A04 Reti: 1...b5 rnbqkbnr/p1pppppp/8/1p6/8/5N2/PPPPPPPP/RNBQKB1R w KQkq b6 0 2
 A04 Reti: 1...Nc6 r1bqkbnr/pppppppp/2n5/8/8/5N2/PPPPPPPP/RNBQKB1R w KQkq - 2 2
@@ -264,7 +264,7 @@ A07 Reti: KIA rn1qkbnr/ppp1pppp/8/3p4/6b1/5NP1/PPPPPP1P/RNBQKB1R w KQkq - 1 3
 A07 Reti: KIA, Keres Variation r2qkbnr/pppnpppp/8/3p4/6b1/5NP1/PPPPPPBP/RNBQK2R w KQkq - 3 4
 A07 Reti: KIA rnbqkb1r/ppp1pppp/5n2/3p4/8/5NP1/PPPPPP1P/RNBQKB1R w KQkq - 1 3
 A07 Reti: KIA rnbqkb1r/ppp1pppp/5n2/3p4/8/5NP1/PPPPPPBP/RNBQK2R b KQkq - 2 3
-A07 Reti: KIA, Neo-GrŸnfeld rnbqkb1r/ppp1pp1p/5np1/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 0 4
+A07 Reti: KIA, Neo-Grünfeld rnbqkb1r/ppp1pp1p/5np1/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 0 4
 A07 Reti: KIA rn1qkb1r/ppp1pppp/5n2/3p1b2/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 3 4
 A07 Reti: KIA rnbqkb1r/ppp2ppp/4pn2/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 0 4
 A07 Reti: KIA rnbqkb1r/pp2pppp/2p2n2/3p4/8/5NP1/PPPPPPBP/RNBQK2R w KQkq - 0 4
@@ -326,7 +326,7 @@ A10 English: 1...g5 2.d4 rnbqkbnr/pppppp1p/8/6p1/2PP4/8/PP2PPPP/RNBQKBNR b KQkq 
 A10 English: Myers Gambit rnbqk1nr/ppppppbp/8/6p1/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 1 3
 A10 English: 1...Nc6 r1bqkbnr/pppppppp/2n5/8/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 1 2
 A10 English: 1...Nc6 2.Nc3 r1bqkbnr/pppppppp/2n5/8/2P5/2N5/PP1PPPPP/R1BQKBNR b KQkq - 2 2
-A10 English: JŠnisch Gambit rnbqkbnr/p1pppppp/8/1p6/2P5/8/PP1PPPPP/RNBQKBNR w KQkq b6 0 2
+A10 English: Jänisch Gambit rnbqkbnr/p1pppppp/8/1p6/2P5/8/PP1PPPPP/RNBQKBNR w KQkq b6 0 2
 A10 English: Vector rnbqkbnr/ppp1pppp/8/3p4/2P5/8/PP1PPPPP/RNBQKBNR w KQkq d6 0 2
 A10 English: 1...b6 rnbqkbnr/p1pppppp/1p6/8/2P5/8/PP1PPPPP/RNBQKBNR w KQkq - 0 2
 A10 English: 1...b6 2.Nf3 rnbqkbnr/p1pppppp/1p6/8/2P5/5N2/PP1PPPPP/RNBQKB1R b KQkq - 1 2
@@ -477,25 +477,25 @@ A16 English: Anglo-Indian, 2.Nc3 g6 3.g3 rnbq1rk1/ppppppbp/5np1/8/2P5/2N3P1/PP1P
 A16 English: Anglo-Indian, 2.Nc3 g6 3.g3 rnbq1rk1/ppppppbp/5np1/8/2P1P3/2N3P1/PP1P1PBP/R1BQK1NR b KQ e3 0 5
 A16 English: Anglo-Indian, 2.Nc3 g6 3.g3 rnbq1rk1/ppppppbp/5np1/8/2P5/2N2NP1/PP1PPPBP/R1BQK2R b KQ - 5 5
 A16 English: Anglo-Indian, 2.Nc3 g6 3.g3 rnbq1rk1/ppp1ppbp/3p1np1/8/2P5/2N2NP1/PP1PPPBP/R1BQ1RK1 b - - 2 6
-A16 English: Anglo-GrŸnfeld rnbqkb1r/ppp1pppp/5n2/3p4/2P5/2N5/PP1PPPPP/R1BQKBNR w KQkq d6 0 3
-A16 English: Anglo-GrŸnfeld rnbqkb1r/ppp1pppp/5n2/3p4/2P5/2N2N2/PP1PPPPP/R1BQKB1R b KQkq - 1 3
-A16 English: Anglo-GrŸnfeld rnbqkb1r/ppp1pp1p/5np1/3p4/2P5/2N2N2/PP1PPPPP/R1BQKB1R w KQkq - 0 4
-A16 English: Anglo-GrŸnfeld rnbqkb1r/ppp1pp1p/5np1/3p4/Q1P5/2N2N2/PP1PPPPP/R1B1KB1R b KQkq - 1 4
-A16 English: Anglo-GrŸnfeld rnbqkb1r/ppp1pp1p/5np1/3p4/2P5/2N2NP1/PP1PPP1P/R1BQKB1R b KQkq - 0 4
-A16 English: Anglo-GrŸnfeld, 3.cxd5 rnbqkb1r/ppp1pppp/5n2/3P4/8/2N5/PP1PPPPP/R1BQKBNR b KQkq - 0 3
-A16 English: Anglo-GrŸnfeld, Smyslov Variation rnbqkb1r/ppp1pp1p/6p1/8/8/2n3P1/PP1PPPBP/R1BQK1NR w KQkq - 0 6
-A16 English: Anglo-GrŸnfeld, Smyslov Variation rnbqkb1r/ppp1pp1p/6p1/8/8/2P3P1/P2PPPBP/R1BQK1NR b KQkq - 0 6
-A16 English: Anglo-GrŸnfeld, Smyslov Variation rnbqk2r/ppp1ppbp/6p1/8/8/2P3P1/P2PPPBP/R1BQK1NR w KQkq - 1 7
-A16 English: Anglo-GrŸnfeld, Smyslov, 7.Rb1 rnbqk2r/ppp1ppbp/6p1/8/8/2P3P1/P2PPPBP/1RBQK1NR b Kkq - 2 7
-A16 English: Anglo-GrŸnfeld, Czech Variation rnbqkb1r/ppp1pp1p/1n4p1/8/8/2N3P1/PP1PPPBP/R1BQK1NR w KQkq - 2 6
-A16 English: Anglo-GrŸnfeld, 4.Nf3 rnbqkb1r/ppp1pppp/8/3n4/8/2N2N2/PP1PPPPP/R1BQKB1R b KQkq - 1 4
-A16 English: Anglo-GrŸnfeld, 4.Nf3 g6 rnbqkb1r/ppp1pp1p/6p1/3n4/8/2N2N2/PP1PPPPP/R1BQKB1R w KQkq - 0 5
-A16 English: Anglo-GrŸnfeld, 4.Nf3 g6 5.g3 rnbqkb1r/ppp1pp1p/6p1/3n4/8/2N2NP1/PP1PPP1P/R1BQKB1R b KQkq - 0 5
-A16 English: Anglo-GrŸnfeld, 4.Nf3 g6 5.g3 rnbqk2r/ppp1ppbp/6p1/3n4/8/2N2NP1/PP1PPP1P/R1BQKB1R w KQkq - 1 6
-A16 English: Anglo-GrŸnfeld, Korchnoi Variation rnbqk2r/ppp2pbp/6p1/3np3/8/2N2NP1/PP1PPPBP/R1BQK2R w KQkq e6 0 7
-A16 English: Anglo-GrŸnfeld, Andersson-Bššk Variation rnbqkb1r/ppp1pp1p/6p1/3n4/4P3/2N2N2/PP1P1PPP/R1BQKB1R b KQkq e3 0 5
-A16 English: Anglo-GrŸnfeld, Andersson-Bššk, Queenswap rnb1kb1r/ppp1pp1p/6p1/8/4P3/2P2N2/PP3PPP/R1BK1B1R b kq - 0 7
-A16 English: Anglo-GrŸnfeld, 4.Nf3 g6 5.Qa4+ rnbqkb1r/ppp1pp1p/6p1/3n4/Q7/2N2N2/PP1PPPPP/R1B1KB1R b KQkq - 1 5
+A16 English: Anglo-Grünfeld rnbqkb1r/ppp1pppp/5n2/3p4/2P5/2N5/PP1PPPPP/R1BQKBNR w KQkq d6 0 3
+A16 English: Anglo-Grünfeld rnbqkb1r/ppp1pppp/5n2/3p4/2P5/2N2N2/PP1PPPPP/R1BQKB1R b KQkq - 1 3
+A16 English: Anglo-Grünfeld rnbqkb1r/ppp1pp1p/5np1/3p4/2P5/2N2N2/PP1PPPPP/R1BQKB1R w KQkq - 0 4
+A16 English: Anglo-Grünfeld rnbqkb1r/ppp1pp1p/5np1/3p4/Q1P5/2N2N2/PP1PPPPP/R1B1KB1R b KQkq - 1 4
+A16 English: Anglo-Grünfeld rnbqkb1r/ppp1pp1p/5np1/3p4/2P5/2N2NP1/PP1PPP1P/R1BQKB1R b KQkq - 0 4
+A16 English: Anglo-Grünfeld, 3.cxd5 rnbqkb1r/ppp1pppp/5n2/3P4/8/2N5/PP1PPPPP/R1BQKBNR b KQkq - 0 3
+A16 English: Anglo-Grünfeld, Smyslov Variation rnbqkb1r/ppp1pp1p/6p1/8/8/2n3P1/PP1PPPBP/R1BQK1NR w KQkq - 0 6
+A16 English: Anglo-Grünfeld, Smyslov Variation rnbqkb1r/ppp1pp1p/6p1/8/8/2P3P1/P2PPPBP/R1BQK1NR b KQkq - 0 6
+A16 English: Anglo-Grünfeld, Smyslov Variation rnbqk2r/ppp1ppbp/6p1/8/8/2P3P1/P2PPPBP/R1BQK1NR w KQkq - 1 7
+A16 English: Anglo-Grünfeld, Smyslov, 7.Rb1 rnbqk2r/ppp1ppbp/6p1/8/8/2P3P1/P2PPPBP/1RBQK1NR b Kkq - 2 7
+A16 English: Anglo-Grünfeld, Czech Variation rnbqkb1r/ppp1pp1p/1n4p1/8/8/2N3P1/PP1PPPBP/R1BQK1NR w KQkq - 2 6
+A16 English: Anglo-Grünfeld, 4.Nf3 rnbqkb1r/ppp1pppp/8/3n4/8/2N2N2/PP1PPPPP/R1BQKB1R b KQkq - 1 4
+A16 English: Anglo-Grünfeld, 4.Nf3 g6 rnbqkb1r/ppp1pp1p/6p1/3n4/8/2N2N2/PP1PPPPP/R1BQKB1R w KQkq - 0 5
+A16 English: Anglo-Grünfeld, 4.Nf3 g6 5.g3 rnbqkb1r/ppp1pp1p/6p1/3n4/8/2N2NP1/PP1PPP1P/R1BQKB1R b KQkq - 0 5
+A16 English: Anglo-Grünfeld, 4.Nf3 g6 5.g3 rnbqk2r/ppp1ppbp/6p1/3n4/8/2N2NP1/PP1PPP1P/R1BQKB1R w KQkq - 1 6
+A16 English: Anglo-Grünfeld, Korchnoi Variation rnbqk2r/ppp2pbp/6p1/3np3/8/2N2NP1/PP1PPPBP/R1BQK2R w KQkq e6 0 7
+A16 English: Anglo-Grünfeld, Andersson-Böök Variation rnbqkb1r/ppp1pp1p/6p1/3n4/4P3/2N2N2/PP1P1PPP/R1BQKB1R b KQkq e3 0 5
+A16 English: Anglo-Grünfeld, Andersson-Böök, Queenswap rnb1kb1r/ppp1pp1p/6p1/8/4P3/2P2N2/PP3PPP/R1BK1B1R b kq - 0 7
+A16 English: Anglo-Grünfeld, 4.Nf3 g6 5.Qa4+ rnbqkb1r/ppp1pp1p/6p1/3n4/Q7/2N2N2/PP1PPPPP/R1B1KB1R b KQkq - 1 5
 A17 English: Anglo-Indian, 2.Nc3 e6 rnbqkb1r/pppp1ppp/4pn2/8/2P5/2N5/PP1PPPPP/R1BQKBNR w KQkq - 0 3
 A17 English: Anglo-Indian, 2.Nc3 e6 3.g3 rnbqkb1r/pppp1ppp/4pn2/8/2P5/2N3P1/PP1PPP1P/R1BQKBNR b KQkq - 0 3
 A17 English: Anglo-Indian, 2.Nc3 e6 3.Nf3 rnbqkb1r/pppp1ppp/4pn2/8/2P5/2N2N2/PP1PPPPP/R1BQKB1R b KQkq - 1 3
@@ -647,8 +647,8 @@ A25 English: Closed r1bqk2r/pppp1ppp/2n2n2/2b1p3/2P5/2N1P1P1/PP1P1PBP/R1BQK1NR b
 A25 English: Closed r1bqk2r/pppp1ppp/2n2n2/4p3/1bP5/2N3P1/PP1PPPBP/R1BQK1NR w KQkq - 3 5
 A25 English: Closed r1bqk2r/pppp1ppp/2n2n2/3Np3/1bP5/6P1/PP1PPPBP/R1BQK1NR b KQkq - 4 5
 A25 English: Closed r1bqkbnr/ppp2ppp/2np4/4p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR b KQkq - 1 4
-A25 English: Closed, Tršger Defence r2qkbnr/ppp2ppp/2npb3/4p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR w KQkq - 2 5
-A25 English: Closed, Tršger, 5.d3 r2qkbnr/ppp2ppp/2npb3/4p3/2P5/2NP2P1/PP2PPBP/R1BQK1NR b KQkq - 0 5
+A25 English: Closed, Tröger Defence r2qkbnr/ppp2ppp/2npb3/4p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR w KQkq - 2 5
+A25 English: Closed, Tröger, 5.d3 r2qkbnr/ppp2ppp/2npb3/4p3/2P5/2NP2P1/PP2PPBP/R1BQK1NR b KQkq - 0 5
 A25 English: Closed r1bqkbnr/pppp1p1p/2n3p1/4p3/2P5/2N3P1/PP1PPP1P/R1BQKBNR w KQkq - 0 4
 A25 English: Closed r1bqkbnr/pppp1p1p/2n3p1/4p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR b KQkq - 1 4
 A25 English: Closed r1bqk1nr/pppp1pbp/2n3p1/4p3/2P5/2N3P1/PP1PPPBP/R1BQK1NR w KQkq - 2 5
@@ -1291,7 +1291,7 @@ A45y Trompowsky: 2...Ne4 3.Bf4 c5 4.f3 Qa5+ rnb1kb1r/pp1ppppp/8/q1p5/3PnB2/5P2/P
 A45y Trompowsky: 2...Ne4 3.Bf4 c5 4.f3 Qa5+ 5.c3 Nf6 6.d5 rnb1kb1r/pp1ppppp/5n2/q1pP4/5B2/2P2P2/PP2P1PP/RN1QKBNR b KQkq - 0 6
 A45z Trompowsky: 2...Ne4 3.Bf4 c5 4.f3 Qa5+ 5.c3 Nf6 6.Nd2 rnb1kb1r/pp1ppppp/5n2/q1p5/3P1B2/2P2P2/PP1NP1PP/R2QKBNR b KQkq - 2 6
 A46a Indian: 2.Nf3 rnbqkb1r/pppppppp/5n2/8/3P4/5N2/PPP1PPPP/RNBQKB1R b KQkq - 2 2
-A46a Indian: Dšry Defence rnbqkb1r/pppppppp/8/8/3Pn3/5N2/PPP1PPPP/RNBQKB1R w KQkq - 3 3
+A46a Indian: Döry Defence rnbqkb1r/pppppppp/8/8/3Pn3/5N2/PPP1PPPP/RNBQKB1R w KQkq - 3 3
 A46b Indian: 2.Nf3 b5 rnbqkb1r/p1pppppp/5n2/1p6/3P4/5N2/PPP1PPPP/RNBQKB1R w KQkq b6 0 3
 A46b Indian: 2.Nf3 b5 3.g3 rnbqkb1r/p1pppppp/5n2/1p6/3P4/5NP1/PPP1PP1P/RNBQKB1R b KQkq - 0 3
 A46c Neo-Benoni rnbqkb1r/pp1ppppp/5n2/2p5/3P4/5N2/PPP1PPPP/RNBQKB1R w KQkq c6 0 3
@@ -1732,26 +1732,26 @@ A65g Benoni: 6.e4 g6 7.Bd3 Bg7 8.Nge2 O-O 9.O-O rnbq1rk1/pp3pbp/3p1np1/2pP4/4P3/
 A65h Benoni: 6.e4 g6 7.Bd3 Bg7 8.Nge2 O-O 9.O-O b6 rnbq1rk1/p4pbp/1p1p1np1/2pP4/4P3/2NB4/PP2NPPP/R1BQ1RK1 w - - 0 10
 A65i Benoni: 6.e4 g6 7.Bd3 Bg7 8.Nge2 O-O 9.O-O Na6 r1bq1rk1/pp3pbp/n2p1np1/2pP4/4P3/2NB4/PP2NPPP/R1BQ1RK1 w - - 8 10
 A65j Benoni: 6.e4 g6 7.Bd3 Bg7 8.Nge2 O-O 9.O-O a6 rnbq1rk1/1p3pbp/p2p1np1/2pP4/4P3/2NB4/PP2NPPP/R1BQ1RK1 w - - 0 10
-A65k Benoni: SŠmisch (6.e4 g6 7.f3) rnbqkb1r/pp3p1p/3p1np1/2pP4/4P3/2N2P2/PP4PP/R1BQKBNR b KQkq - 0 7
-A65k Benoni: SŠmisch, 7...Bg7 rnbqk2r/pp3pbp/3p1np1/2pP4/4P3/2N2P2/PP4PP/R1BQKBNR w KQkq - 1 8
-A65l Benoni: SŠmisch, 8.Nge2 rnbqk2r/pp3pbp/3p1np1/2pP4/4P3/2N2P2/PP2N1PP/R1BQKB1R b KQkq - 2 8
-A65m Benoni: SŠmisch, 8.Be3 rnbqk2r/pp3pbp/3p1np1/2pP4/4P3/2N1BP2/PP4PP/R2QKBNR b KQkq - 2 8
-A65n Benoni: SŠmisch, 8.Bg5 rnbqk2r/pp3pbp/3p1np1/2pP2B1/4P3/2N2P2/PP4PP/R2QKBNR b KQkq - 2 8
-A65n Benoni: SŠmisch, 8.Bg5 O-O rnbq1rk1/pp3pbp/3p1np1/2pP2B1/4P3/2N2P2/PP4PP/R2QKBNR w KQ - 4 9
-A65o Benoni: SŠmisch, 8.Bg5 O-O 9.Nge2 rnbq1rk1/pp3pbp/3p1np1/2pP2B1/4P3/2N2P2/PP2N1PP/R2QKB1R b KQ - 5 9
-A65p Benoni: SŠmisch, 8.Bg5 O-O 9.Qd2 rnbq1rk1/pp3pbp/3p1np1/2pP2B1/4P3/2N2P2/PP1Q2PP/R3KBNR b KQ - 5 9
-A65q Benoni: SŠmisch, 8.Bg5 O-O 9.Qd2 a6 rnbq1rk1/1p3pbp/p2p1np1/2pP2B1/4P3/2N2P2/PP1Q2PP/R3KBNR w KQ - 0 10
-A65r Benoni: SŠmisch, 8.Bg5 h6 rnbqk2r/pp3pb1/3p1npp/2pP2B1/4P3/2N2P2/PP4PP/R2QKBNR w KQkq - 0 9
-A65r Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O rnbq1rk1/pp3pb1/3p1npp/2pP4/4P3/2N1BP2/PP4PP/R2QKBNR w KQ - 3 10
-A65s Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Nge2 rnbq1rk1/pp3pb1/3p1npp/2pP4/4P3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 4 10
-A65t Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 rnbq1rk1/pp3pb1/3p1npp/2pP4/4P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 4 10
-A65u Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 Re8 rnbqr1k1/pp3pb1/3p1npp/2pP4/4P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 5 11
-A65v Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 rnbq1rk1/1p3pb1/p2p1npp/2pP4/4P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 11
-A65v Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 rnbq1rk1/1p3pb1/p2p1npp/2pP4/P3P3/2N1BP2/1P1Q2PP/R3KBNR b KQ a3 0 11
-A65w Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 h5 rnbq1rk1/1p3pb1/p2p1np1/2pP3p/P3P3/2N1BP2/1P1Q2PP/R3KBNR w KQ - 0 12
-A65x Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 Nbd7 r1bq1rk1/1p1n1pb1/p2p1npp/2pP4/P3P3/2N1BP2/1P1Q2PP/R3KBNR w KQ - 1 12
-A65y Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 Re8 rnbqr1k1/1p3pb1/p2p1npp/2pP4/P3P3/2N1BP2/1P1Q2PP/R3KBNR w KQ - 1 12
-A65y Benoni: SŠmisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 Re8 12.Nge2 Nbd7 r1bqr1k1/1p1n1pb1/p2p1npp/2pP4/P3P3/2N1BP2/1P1QN1PP/R3KB1R w KQ - 3 13
+A65k Benoni: Sämisch (6.e4 g6 7.f3) rnbqkb1r/pp3p1p/3p1np1/2pP4/4P3/2N2P2/PP4PP/R1BQKBNR b KQkq - 0 7
+A65k Benoni: Sämisch, 7...Bg7 rnbqk2r/pp3pbp/3p1np1/2pP4/4P3/2N2P2/PP4PP/R1BQKBNR w KQkq - 1 8
+A65l Benoni: Sämisch, 8.Nge2 rnbqk2r/pp3pbp/3p1np1/2pP4/4P3/2N2P2/PP2N1PP/R1BQKB1R b KQkq - 2 8
+A65m Benoni: Sämisch, 8.Be3 rnbqk2r/pp3pbp/3p1np1/2pP4/4P3/2N1BP2/PP4PP/R2QKBNR b KQkq - 2 8
+A65n Benoni: Sämisch, 8.Bg5 rnbqk2r/pp3pbp/3p1np1/2pP2B1/4P3/2N2P2/PP4PP/R2QKBNR b KQkq - 2 8
+A65n Benoni: Sämisch, 8.Bg5 O-O rnbq1rk1/pp3pbp/3p1np1/2pP2B1/4P3/2N2P2/PP4PP/R2QKBNR w KQ - 4 9
+A65o Benoni: Sämisch, 8.Bg5 O-O 9.Nge2 rnbq1rk1/pp3pbp/3p1np1/2pP2B1/4P3/2N2P2/PP2N1PP/R2QKB1R b KQ - 5 9
+A65p Benoni: Sämisch, 8.Bg5 O-O 9.Qd2 rnbq1rk1/pp3pbp/3p1np1/2pP2B1/4P3/2N2P2/PP1Q2PP/R3KBNR b KQ - 5 9
+A65q Benoni: Sämisch, 8.Bg5 O-O 9.Qd2 a6 rnbq1rk1/1p3pbp/p2p1np1/2pP2B1/4P3/2N2P2/PP1Q2PP/R3KBNR w KQ - 0 10
+A65r Benoni: Sämisch, 8.Bg5 h6 rnbqk2r/pp3pb1/3p1npp/2pP2B1/4P3/2N2P2/PP4PP/R2QKBNR w KQkq - 0 9
+A65r Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O rnbq1rk1/pp3pb1/3p1npp/2pP4/4P3/2N1BP2/PP4PP/R2QKBNR w KQ - 3 10
+A65s Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Nge2 rnbq1rk1/pp3pb1/3p1npp/2pP4/4P3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 4 10
+A65t Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 rnbq1rk1/pp3pb1/3p1npp/2pP4/4P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 4 10
+A65u Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 Re8 rnbqr1k1/pp3pb1/3p1npp/2pP4/4P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 5 11
+A65v Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 rnbq1rk1/1p3pb1/p2p1npp/2pP4/4P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 11
+A65v Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 rnbq1rk1/1p3pb1/p2p1npp/2pP4/P3P3/2N1BP2/1P1Q2PP/R3KBNR b KQ a3 0 11
+A65w Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 h5 rnbq1rk1/1p3pb1/p2p1np1/2pP3p/P3P3/2N1BP2/1P1Q2PP/R3KBNR w KQ - 0 12
+A65x Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 Nbd7 r1bq1rk1/1p1n1pb1/p2p1npp/2pP4/P3P3/2N1BP2/1P1Q2PP/R3KBNR w KQ - 1 12
+A65y Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 Re8 rnbqr1k1/1p3pb1/p2p1npp/2pP4/P3P3/2N1BP2/1P1Q2PP/R3KBNR w KQ - 1 12
+A65y Benoni: Sämisch, 8.Bg5 h6 9.Be3 O-O 10.Qd2 a6 11.a4 Re8 12.Nge2 Nbd7 r1bqr1k1/1p1n1pb1/p2p1npp/2pP4/P3P3/2N1BP2/1P1QN1PP/R3KB1R w KQ - 3 13
 A66 Benoni: Four Pawns Attack rnbqkb1r/pp3p1p/3p1np1/2pP4/4PP2/2N5/PP4PP/R1BQKBNR b KQkq f3 0 7
 A66 Benoni: Four Pawns Attack rnbqk2r/pp3pbp/3p1np1/2pP4/4PP2/2N5/PP4PP/R1BQKBNR w KQkq - 1 8
 A66 Benoni: Four Pawns, Mikenas Attack rnbqk2r/pp3pbp/3p1np1/2pPP3/5P2/2N5/PP4PP/R1BQKBNR b KQkq - 0 8
@@ -2271,7 +2271,7 @@ B01a Scandinavian (Centre Counter) rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKB
 B01a Scandinavian: 2.d3 rnbqkbnr/ppp1pppp/8/3p4/4P3/3P4/PPP2PPP/RNBQKBNR b KQkq - 0 2
 B01a Scandinavian: 2.e5 rnbqkbnr/ppp1pppp/8/3pP3/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2
 B01a Scandinavian: 2.exd5 rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2
-B01a Scandinavian: Bšhnke Gambit rnbqkbnr/ppp2ppp/8/3Pp3/8/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 3
+B01a Scandinavian: Böhnke Gambit rnbqkbnr/ppp2ppp/8/3Pp3/8/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 3
 B01b Scandinavian: 2...Qxd5 rnb1kbnr/ppp1pppp/8/3q4/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 3
 B01b Scandinavian: 2...Qxd5 3.Nf3 rnb1kbnr/ppp1pppp/8/3q4/8/5N2/PPPP1PPP/RNBQKB1R b KQkq - 1 3
 B01b Scandinavian: 2...Qxd5 3.Nf3 Nf6 rnb1kb1r/ppp1pppp/5n2/3q4/8/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 4
@@ -2308,7 +2308,7 @@ B01j Scandinavian: 2...Qxd5, 5.Nf3 rnb1kb1r/ppp1pppp/5n2/q7/3P4/2N2N2/PPP2PPP/R1
 B01j Scandinavian: 2...Qxd5, 5.Nf3 Bg4 rn2kb1r/ppp1pppp/5n2/q7/3P2b1/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 3 6
 B01k Scandinavian: Lasker Variation rn2kb1r/ppp1pppp/5n2/q7/3P2b1/2N2N1P/PPP2PP1/R1BQKB1R b KQkq - 0 6
 B01l Scandinavian: 2...Qxd5, 5.Nf3 Bf5 rn2kb1r/ppp1pppp/5n2/q4b2/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 3 6
-B01l Scandinavian: GrŸnfeld Variation rn2kb1r/pp2pppp/2p2n2/q3Nb2/3P2P1/2N5/PPP2P1P/R1BQKB1R b KQkq g3 0 7
+B01l Scandinavian: Grünfeld Variation rn2kb1r/pp2pppp/2p2n2/q3Nb2/3P2P1/2N5/PPP2P1P/R1BQKB1R b KQkq g3 0 7
 B01l Scandinavian: 2...Qxd5, 5.Nf3 Bf5 6.Bc4 rn2kb1r/ppp1pppp/5n2/q4b2/2BP4/2N2N2/PPP2PPP/R1BQK2R b KQkq - 4 6
 B01m Scandinavian: 2...Qxd5, Main Line rnb1kb1r/pp2pppp/2p2n2/q7/3P4/2N2N2/PPP2PPP/R1BQKB1R w KQkq - 0 6
 B01n Scandinavian: 2...Qxd5, Main Line, 6.Bc4 rnb1kb1r/pp2pppp/2p2n2/q7/2BP4/2N2N2/PPP2PPP/R1BQK2R b KQkq - 1 6
@@ -2400,15 +2400,15 @@ B02i Alekhine: Scandinavian, Exchange, 4.Bc4 rnbqkb1r/ppp1pppp/8/3n4/2B5/2N5/PPP
 B02j Alekhine: Scandinavian, Exchange, 4.Bc4 e6 rnbqkb1r/ppp2ppp/4p3/3n4/2B5/2N5/PPPP1PPP/R1BQK1NR w KQkq - 0 5
 B02k Alekhine: Scandinavian, Exchange, 4.Bc4 Nb6 rnbqkb1r/ppp1pppp/1n6/8/2B5/2N5/PPPP1PPP/R1BQK1NR w KQkq - 2 5
 B02l Alekhine: 2.e5 rnbqkb1r/pppppppp/5n2/4P3/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2
-B02l Alekhine: Mokele Mbembe (BŸcker) Variation rnbqkb1r/pppppppp/8/4P3/4n3/8/PPPP1PPP/RNBQKBNR w KQkq - 1 3
+B02l Alekhine: Mokele Mbembe (Bücker) Variation rnbqkb1r/pppppppp/8/4P3/4n3/8/PPPP1PPP/RNBQKBNR w KQkq - 1 3
 B02l Alekhine: Brooklyn Defence (Retreat Variation) rnbqkbnr/pppppppp/8/4P3/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 3
 B02m Alekhine: 2.e5 Nd5 rnbqkb1r/pppppppp/8/3nP3/8/8/PPPP1PPP/RNBQKBNR w KQkq - 1 3
 B02m Alekhine: Welling Variation rnbqkb1r/pppppppp/8/3nP3/8/1P6/P1PP1PPP/RNBQKBNR b KQkq - 0 3
 B02n Alekhine: 3.Bc4 rnbqkb1r/pppppppp/8/3nP3/2B5/8/PPPP1PPP/RNBQK1NR b KQkq - 2 3
 B02n Alekhine: Kmoch Variation rnbqkb1r/pp1ppppp/1n6/2p1P3/8/1B1P4/PPP2PPP/RNBQK1NR b KQkq - 0 5
-B02o Alekhine: SŠmisch Attack rnbqkb1r/pppppppp/8/3nP3/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 2 3
-B02p Alekhine: SŠmisch Attack, 3...Nxc3 rnbqkb1r/pppppppp/8/4P3/8/2n5/PPPP1PPP/R1BQKBNR w KQkq - 0 4
-B02q Alekhine: SŠmisch Attack, 3...Nxc3 4.dxc3 rnbqkb1r/pppppppp/8/4P3/8/2P5/PPP2PPP/R1BQKBNR b KQkq - 0 4
+B02o Alekhine: Sämisch Attack rnbqkb1r/pppppppp/8/3nP3/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 2 3
+B02p Alekhine: Sämisch Attack, 3...Nxc3 rnbqkb1r/pppppppp/8/4P3/8/2n5/PPPP1PPP/R1BQKBNR w KQkq - 0 4
+B02q Alekhine: Sämisch Attack, 3...Nxc3 4.dxc3 rnbqkb1r/pppppppp/8/4P3/8/2P5/PPP2PPP/R1BQKBNR b KQkq - 0 4
 B02r Alekhine: Chase Variation rnbqkb1r/pppppppp/8/3nP3/2P5/8/PP1P1PPP/RNBQKBNR b KQkq c3 0 3
 B02r Alekhine: Chase Variation rnbqkb1r/pppppppp/1n6/4P3/2P5/8/PP1P1PPP/RNBQKBNR w KQkq - 1 4
 B02r Alekhine: Chase, Steiner Variation rnbqkb1r/pppppppp/1n6/4P3/2P5/1P6/P2P1PPP/RNBQKBNR b KQkq - 0 4
@@ -4850,18 +4850,18 @@ C15f French: Winawer, Kondratiyev Variation rnb1k1nr/pp3ppp/4p3/2pq4/1b1P4/2NB4/
 C15g French: Winawer, 4.Bd3 dxe4 rnbqk1nr/ppp2ppp/4p3/8/1b1Pp3/2NB4/PPP2PPP/R1BQK1NR w KQkq - 0 5
 C15g French: Winawer, 4.Bd3 dxe4 5.Bxe4 rnbqk1nr/ppp2ppp/4p3/8/1b1PB3/2N5/PPP2PPP/R1BQK1NR b KQkq - 0 5
 C15g French: Winawer, 4.Bd3 dxe4 5.Bxe4 Nf6 rnbqk2r/ppp2ppp/4pn2/8/1b1PB3/2N5/PPP2PPP/R1BQK1NR w KQkq - 1 6
-C15h French: Winawer, MŸller-Zhuravlev Gambit rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPPB1PPP/R2QKBNR b KQkq - 3 4
-C15h French: Winawer, MŸller-Zhuravlev Gambit rnbqk1nr/ppp2ppp/4p3/8/1b1Pp3/2N5/PPPB1PPP/R2QKBNR w KQkq - 0 5
-C15i French: Winawer, MŸller-Zhuravlev Gambit, 5.Qg4 rnbqk1nr/ppp2ppp/4p3/8/1b1Pp1Q1/2N5/PPPB1PPP/R3KBNR b KQkq - 1 5
-C15i French: Winawer, MŸller-Zhuravlev Gambit, Kunin Variation rnb1k1nr/ppp2ppp/4p3/8/1b1qp1Q1/2N5/PPPB1PPP/R3KBNR w KQkq - 0 6
-C15j French: Winawer, MŸller-Zhuravlev Gambit, 5.Qg4 Nf6 rnbqk2r/ppp2ppp/4pn2/8/1b1Pp1Q1/2N5/PPPB1PPP/R3KBNR w KQkq - 2 6
+C15h French: Winawer, Müller-Zhuravlev Gambit rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPPB1PPP/R2QKBNR b KQkq - 3 4
+C15h French: Winawer, Müller-Zhuravlev Gambit rnbqk1nr/ppp2ppp/4p3/8/1b1Pp3/2N5/PPPB1PPP/R2QKBNR w KQkq - 0 5
+C15i French: Winawer, Müller-Zhuravlev Gambit, 5.Qg4 rnbqk1nr/ppp2ppp/4p3/8/1b1Pp1Q1/2N5/PPPB1PPP/R3KBNR b KQkq - 1 5
+C15i French: Winawer, Müller-Zhuravlev Gambit, Kunin Variation rnb1k1nr/ppp2ppp/4p3/8/1b1qp1Q1/2N5/PPPB1PPP/R3KBNR w KQkq - 0 6
+C15j French: Winawer, Müller-Zhuravlev Gambit, 5.Qg4 Nf6 rnbqk2r/ppp2ppp/4pn2/8/1b1Pp1Q1/2N5/PPPB1PPP/R3KBNR w KQkq - 2 6
 C15k French: Winawer, 4.a3 rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/P1N5/1PP2PPP/R1BQKBNR b KQkq - 0 4
 C15k French: Winawer, 4.a3 Bxc3+ rnbqk1nr/ppp2ppp/4p3/3p4/3PP3/P1b5/1PP2PPP/R1BQKBNR w KQkq - 0 5
 C15k French: Winawer, 4.a3 Bxc3+ rnbqk1nr/ppp2ppp/4p3/3p4/3PP3/P1P5/2P2PPP/R1BQKBNR b KQkq - 0 5
 C15k French: Winawer, 4.a3 Bxc3+ 5.bxc3 dxe4 rnbqk1nr/ppp2ppp/4p3/8/3Pp3/P1P5/2P2PPP/R1BQKBNR w KQkq - 0 6
 C15l French: Winawer, Winkelmann-Reimer Gambit (WRG) rnbqk1nr/ppp2ppp/4p3/8/3Pp3/P1P2P2/2P3PP/R1BQKBNR b KQkq - 0 6
 C15l French: Winawer, Winkelmann-Reimer Gambit Accepted rnbqk1nr/ppp2ppp/4p3/8/3P4/P1P2p2/2P3PP/R1BQKBNR w KQkq - 0 7
-C15l French: Winawer, Winkelmann-Reimer, HŸbner Defence rnbqk1nr/ppp2ppp/8/4p3/3Pp3/P1P2P2/2P3PP/R1BQKBNR w KQkq - 0 7
+C15l French: Winawer, Winkelmann-Reimer, Hübner Defence rnbqk1nr/ppp2ppp/8/4p3/3Pp3/P1P2P2/2P3PP/R1BQKBNR w KQkq - 0 7
 C15l French: Winawer, Winkelmann-Reimer, 6...c5 rnbqk1nr/pp3ppp/4p3/2p5/3Pp3/P1P2P2/2P3PP/R1BQKBNR w KQkq c6 0 7
 C15m French: Winawer, 4.a3 Bxc3+ 5.bxc3 dxe4 6.Qg4 rnbqk1nr/ppp2ppp/4p3/8/3Pp1Q1/P1P5/2P2PPP/R1B1KBNR b KQkq - 1 6
 C15n French: Winawer, Alekhine Gambit rnbqk1nr/ppp2ppp/4p3/3p4/1b1PP3/2N5/PPP1NPPP/R1BQKB1R b KQkq - 3 4
@@ -4989,7 +4989,7 @@ C21 Centre Game: Kieseritsky Variation rnbqkbnr/p2p1ppp/8/1pp5/2BpP3/5N2/PPP2PPP
 C21 Centre Game: Halasz Gambit rnbqkbnr/pppp1ppp/8/8/3pPP2/8/PPP3PP/RNBQKBNR b KQkq f3 0 3
 C21 Danish Gambit rnbqkbnr/pppp1ppp/8/8/3pP3/2P5/PP3PPP/RNBQKBNR b KQkq - 0 3
 C21 Danish Gambit: Svenonius Defence rnbqkb1r/ppppnppp/8/8/3pP3/2P5/PP3PPP/RNBQKBNR w KQkq - 1 4
-C21 Danish Gambit: Sšrensen Defence rnbqkbnr/ppp2ppp/8/3p4/3pP3/2P5/PP3PPP/RNBQKBNR w KQkq d6 0 4
+C21 Danish Gambit: Sörensen Defence rnbqkbnr/ppp2ppp/8/3p4/3pP3/2P5/PP3PPP/RNBQKBNR w KQkq d6 0 4
 C21 Danish Gambit: Accepted rnbqkbnr/pppp1ppp/8/8/4P3/2p5/PP3PPP/RNBQKBNR w KQkq - 0 4
 C21 Danish Gambit: Accepted, 4.Bc4 rnbqkbnr/pppp1ppp/8/8/2B1P3/2p5/PP3PPP/RNBQK1NR b KQkq - 1 4
 C21 Danish Gambit: Accepted, 4.Bc4 cxb2 5.Bxb2 rnbqkbnr/pppp1ppp/8/8/2B1P3/8/PB3PPP/RN1QK1NR b KQkq - 0 5
@@ -5009,7 +5009,7 @@ C23 Bishop's Opening: Anderssen Gambit rnbqkbnr/p1pp1ppp/8/1p2p3/2B1P3/8/PPPP1PP
 C23 Bishop's Opening: Philidor Counterattack rnbqkbnr/pp1p1ppp/2p5/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 3
 C23 Bishop's Opening: Lisitsin Variation r2qkbnr/pp3ppp/8/3pn3/8/8/PPP1NPPP/RNBQK2R b KQkq - 1 8
 C23 Bishop's Opening: Calabrese Countergambit rnbqkbnr/pppp2pp/8/4pp2/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq f6 0 3
-C23 Bishop's Opening: Calabrese Countergambit, JŠnisch Variation rnbqkbnr/pppp2pp/8/4pp2/2B1P3/3P4/PPP2PPP/RNBQK1NR b KQkq - 0 3
+C23 Bishop's Opening: Calabrese Countergambit, Jänisch Variation rnbqkbnr/pppp2pp/8/4pp2/2B1P3/3P4/PPP2PPP/RNBQK1NR b KQkq - 0 3
 C23 Bishop's Opening: Classical Variation rnbqk1nr/pppp1ppp/8/2b1p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 2 3
 C23 Bishop's Opening: 2...Bc5 3.Qe2 rnbqk1nr/pppp1ppp/8/2b1p3/2B1P3/8/PPPPQPPP/RNB1K1NR b KQkq - 3 3
 C23 Bishop's Opening: Lopez Gambit r1bqk2r/pppp1ppp/2n2n2/2b1p3/2B1PP2/2P5/PP1PQ1PP/RNB1K1NR b KQkq f3 0 5
@@ -5020,7 +5020,7 @@ C23 Bishop's Opening: MacDonnell, Four Pawns Gambit rnbqk1nr/pppp1ppp/8/8/2BPP2b
 C23 Bishop's Opening: Philidor Variation rnbqk1nr/pppp1ppp/8/2b1p3/2B1P3/2P5/PP1P1PPP/RNBQK1NR b KQkq - 0 3
 C23 Bishop's Opening: del Rio Variation rnb1k1nr/pppp1ppp/8/2b1p1q1/2B1P3/2P5/PP1P1PPP/RNBQK1NR w KQkq - 1 4
 C23 Bishop's Opening: Lewis Countergambit rnbqk1nr/ppp2ppp/8/2bpp3/2B1P3/2P5/PP1P1PPP/RNBQK1NR w KQkq d6 0 4
-C23 Bishop's Opening: Lewis Countergambit, JŠnisch rnbqk2r/ppp2ppp/5n2/2bBp3/4P3/2P2Q2/PP1P1PPP/RNB1K1NR b KQkq - 2 5
+C23 Bishop's Opening: Lewis Countergambit, Jänisch rnbqk2r/ppp2ppp/5n2/2bBp3/4P3/2P2Q2/PP1P1PPP/RNB1K1NR b KQkq - 2 5
 C23 Bishop's Opening: 2...Bc5 3.c3 Nf6 rnbqk2r/pppp1ppp/5n2/2b1p3/2B1P3/2P5/PP1P1PPP/RNBQK1NR w KQkq - 1 4
 C23 Bishop's Opening: Pratt Variation rnbq1rk1/ppp2ppp/5P2/2b4Q/2pp4/2P5/PP3PPP/RNB1K1NR w KQ - 3 8
 C24 Bishop's Opening: Berlin Defence rnbqkb1r/pppp1ppp/5n2/4p3/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 2 3
@@ -5166,7 +5166,7 @@ C30c King's Gambit: 2...d6 3.Nf3 Nc6 r1bqkbnr/ppp2ppp/2np4/4p3/4PP2/5N2/PPPP2PP/
 C30d King's Gambit: Wade Variation rnbqkb1r/pppp1ppp/5n2/4p3/4PP2/8/PPPP2PP/RNBQKBNR w KQkq - 1 3
 C30e King's Gambit: Norwald Variation rnb1kbnr/pppp1ppp/5q2/4p3/4PP2/8/PPPP2PP/RNBQKBNR w KQkq - 1 3
 C30e King's Gambit: Norwald Variation, Schubert line rnb1kbnr/pppp1ppp/8/4p3/3PPq2/2N5/PPP3PP/R1BQKBNR b KQkq d3 0 4
-C30e King's Gambit: Norwald Variation, BŸcker Gambit rnb1k1nr/pppp1ppp/8/4p3/1bB1Pq2/2N2N2/PPPP2PP/R1BQK2R b KQkq - 3 5
+C30e King's Gambit: Norwald Variation, Bücker Gambit rnb1k1nr/pppp1ppp/8/4p3/1bB1Pq2/2N2N2/PPPP2PP/R1BQK2R b KQkq - 3 5
 C30f King's Gambit: Keene Defence rnb1kbnr/pppp1ppp/8/4p3/4PP1q/8/PPPP2PP/RNBQKBNR w KQkq - 1 3
 C30f King's Gambit: Keene Defence, 3.g3 Qe7 rnb1kbnr/ppppqppp/8/4p3/4PP2/6P1/PPPP3P/RNBQKBNR w KQkq - 1 4
 C30g King's Gambit: 2...Nc6 r1bqkbnr/pppp1ppp/2n5/4p3/4PP2/8/PPPP2PP/RNBQKBNR w KQkq - 1 3
@@ -5263,7 +5263,7 @@ C33 KGA: Bishop's Gambit, Morphy Variation rnbqkb1r/ppp2ppp/5n2/3B4/4Pp2/8/PPPP2
 C33 KGA: Bishop's Gambit, Cozio Defence rnbqkb1r/pppp1ppp/5n2/8/2B1Pp2/8/PPPP2PP/RNBQK1NR w KQkq - 2 4
 C33 KGA: Bishop's Gambit, Bogoljubow Variation rnbqkb1r/pppp1ppp/5n2/8/2B1Pp2/2N5/PPPP2PP/R1BQK1NR b KQkq - 3 4
 C33 KGA: Bishop's Gambit, Paulsen Attack rnbqk2r/pppp1ppp/5n2/4P3/1bB2p2/2N5/PPPP2PP/R1BQK1NR b KQkq - 0 5
-C33 KGA: Bishop's Gambit, JŠnisch Variation rnbqkb1r/pp1p1ppp/2p2n2/8/2B1Pp2/2N5/PPPP2PP/R1BQK1NR w KQkq - 0 5
+C33 KGA: Bishop's Gambit, Jänisch Variation rnbqkb1r/pp1p1ppp/2p2n2/8/2B1Pp2/2N5/PPPP2PP/R1BQK1NR w KQkq - 0 5
 C34 KGA: King's Knight Gambit rnbqkbnr/pppp1ppp/8/8/4Pp2/5N2/PPPP2PP/RNBQKB1R b KQkq - 1 3
 C34 KGA: Bonsch-Osmolovsky Variation rnbqkb1r/ppppnppp/8/8/4Pp2/5N2/PPPP2PP/RNBQKB1R w KQkq - 2 4
 C34 KGA: Gianutio Countergambit rnbqkbnr/pppp2pp/8/5p2/4Pp2/5N2/PPPP2PP/RNBQKB1R w KQkq f6 0 4
@@ -5291,7 +5291,7 @@ C36 KGA: Scandinavian, Botvinnik Variation rnbqkb1r/p4ppp/2p5/3n4/2B2p2/5N2/PPPP
 C37 KGA: 3.Nf3 g5 rnbqkbnr/pppp1p1p/8/6p1/4Pp2/5N2/PPPP2PP/RNBQKB1R w KQkq g6 0 4
 C37 KGA: Quaade Gambit rnbqkbnr/pppp1p1p/8/6p1/4Pp2/2N2N2/PPPP2PP/R1BQKB1R b KQkq - 1 4
 C37 KGA: Rosentreter Gambit rnbqkbnr/pppp1p1p/8/6p1/3PPp2/5N2/PPP3PP/RNBQKB1R b KQkq d3 0 4
-C37 KGA: Sšrensen Gambit rnbqkbnr/pppp1p1p/8/4N3/3PPpp1/8/PPP3PP/RNBQKB1R b KQkq - 1 5
+C37 KGA: Sörensen Gambit rnbqkbnr/pppp1p1p/8/4N3/3PPpp1/8/PPP3PP/RNBQKB1R b KQkq - 1 5
 C37 KGA: 3.Nf3 g5 4.Bc4 rnbqkbnr/pppp1p1p/8/6p1/2B1Pp2/5N2/PPPP2PP/RNBQK2R b KQkq - 1 4
 C37 KGA: Blachly Gambit r1bqkbnr/pppp1p1p/2n5/6p1/2B1Pp2/5N2/PPPP2PP/RNBQK2R w KQkq - 2 5
 C37 KGA: 3.Nf3 g5 4.Bc4 g4 rnbqkbnr/pppp1p1p/8/8/2B1Ppp1/5N2/PPPP2PP/RNBQK2R w KQkq - 0 5
@@ -5330,7 +5330,7 @@ C39 KGA: Kieseritsky rnbqkbnr/pppp1p1p/8/4N3/4PppP/8/PPPP2P1/RNBQKB1R b KQkq - 1
 C39 KGA: Kieseritsky, Green Variation rnbqkbnr/ppp2p1p/3p4/4N3/4PppP/8/PPPP2P1/RNBQKB1R w KQkq - 0 6
 C39 KGA: Kieseritsky, Paulsen Defence rnbqk1nr/pppp1pbp/8/4N3/4PppP/8/PPPP2P1/RNBQKB1R w KQkq - 2 6
 C39 KGA: Kieseritsky, Long Whip Defence rnbqkbnr/pppp1p2/8/4N2p/4PppP/8/PPPP2P1/RNBQKB1R w KQkq h6 0 6
-C39 KGA: Kieseritsky, Long Whip Defence, JŠnisch Variation rnbqk1n1/pppp1p1r/7b/4N2p/2BPPppP/2N5/PPP3P1/R1BQK2R b KQq - 2 8
+C39 KGA: Kieseritsky, Long Whip Defence, Jänisch Variation rnbqk1n1/pppp1p1r/7b/4N2p/2BPPppP/2N5/PPP3P1/R1BQK2R b KQq - 2 8
 C39 KGA: Kieseritsky, Brentano (Campbell) Defence rnbqkbnr/ppp2p1p/8/3pN3/4PppP/8/PPPP2P1/RNBQKB1R w KQkq d6 0 6
 C39 KGA: Kieseritsky, Brentano Defence, Kaplanek Variation rnb1k2r/ppp2p1p/5n2/3qN3/1b1P1ppP/2N5/PPP2KP1/R1BQ1B1R b kq - 3 9
 C39 KGA: Kieseritsky, Brentano Defence rnbqkb1r/ppp2p1p/5n2/3pN3/3PPBpP/8/PPP3P1/RN1QKB1R b KQkq - 0 7
@@ -5386,7 +5386,7 @@ C41a Philidor Defence rnbqkbnr/ppp2ppp/3p4/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq 
 C41b Philidor: 3.Bc4 rnbqkbnr/ppp2ppp/3p4/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3
 C41b Philidor: Steinitz Variation rnbqk1nr/ppp1bppp/3p4/4p3/2B1P3/2P2N2/PP1P1PPP/RNBQK2R b KQkq - 0 4
 C41b Philidor: Lopez Countergambit rnbqkbnr/ppp3pp/3p4/4pp2/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq f6 0 4
-C41b Philidor: Lopez Countergambit, JŠnisch Variation rnbqkb1r/ppp3pN/3p3n/5p2/2BpP3/8/PPP2PPP/RNBQK2R b KQkq - 0 6
+C41b Philidor: Lopez Countergambit, Jänisch Variation rnbqkb1r/ppp3pN/3p3n/5p2/2BpP3/8/PPP2PPP/RNBQK2R b KQkq - 0 6
 C41c Philidor: 3.d4 rnbqkbnr/ppp2ppp/3p4/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3
 C41d Philidor: Philidor Countergambit rnbqkbnr/ppp3pp/3p4/4pp2/3PP3/5N2/PPP2PPP/RNBQKB1R w KQkq f6 0 4
 C41d Philidor: Philidor Countergambit, Zukertort Variation rnbqkbnr/ppp3pp/3p4/4pp2/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 1 4
@@ -5477,8 +5477,8 @@ C42r Russian Game: Classical, Marshall, 8.c4 c6 rnbq1rk1/pp3ppp/2pb4/3p4/2PPn3/3
 C42s Russian Game: Classical, 6.Bd3 Be7 rnbqk2r/ppp1bppp/8/3p4/3Pn3/3B1N2/PPP2PPP/RNBQK2R w KQkq - 2 7
 C42s Russian Game: Classical, Mason Variation rnbq1rk1/ppp1bppp/8/3p4/3Pn3/3B1N2/PPP2PPP/RNBQ1RK1 w - - 6 8
 C42s Russian Game: Classical, 6.Bd3 Be7 7.O-O Nc6 r1bqk2r/ppp1bppp/2n5/3p4/3Pn3/3B1N2/PPP2PPP/RNBQ1RK1 w kq - 5 8
-C42t Russian Game: Classical, JŠnisch Variation r1bqk2r/ppp1bppp/2n5/3p4/2PPn3/3B1N2/PP3PPP/RNBQ1RK1 b kq c3 0 8
-C42u Russian Game: Classical, JŠnisch, Main Line r1bq1rk1/ppp1bppp/8/3p4/1nPPn3/5N2/PP2BPPP/RNBQ1RK1 w - - 4 10
+C42t Russian Game: Classical, Jänisch Variation r1bqk2r/ppp1bppp/2n5/3p4/2PPn3/3B1N2/PP3PPP/RNBQ1RK1 b kq c3 0 8
+C42u Russian Game: Classical, Jänisch, Main Line r1bq1rk1/ppp1bppp/8/3p4/1nPPn3/5N2/PP2BPPP/RNBQ1RK1 w - - 4 10
 C42v Russian Game: Classical, Chigorin Variation r1bqk2r/ppp1bppp/2n5/3p4/3Pn3/3B1N2/PPP2PPP/RNBQR1K1 b kq - 6 8
 C42v Russian Game: Classical, Chigorin, 8...Bf5 r2qk2r/ppp1bppp/2n5/3p1b2/3Pn3/3B1N2/PPP2PPP/RNBQR1K1 w kq - 7 9
 C42w Russian Game: Classical, Chigorin, 8...Bg4 r2qk2r/ppp1bppp/2n5/3p4/3Pn1b1/3B1N2/PPP2PPP/RNBQR1K1 w kq - 7 9
@@ -5776,7 +5776,7 @@ C51 Evans Gambit: Anderssen Variation r1bqk1nr/ppp2ppp/1bnp4/3P4/2B1P3/5N2/P4PPP
 C51 Evans Gambit: Ulvestad Variation r1bqk1nr/ppp2ppp/1b1p4/n2P4/2B1P3/5N2/PB3PPP/RN1Q1RK1 b kq - 2 10
 C51 Evans Gambit: Paulsen Variation r1bqk2r/ppp1nppp/1b1p4/n2P4/2B1P3/5N2/PB3PPP/RN1Q1RK1 w kq - 3 11
 C51 Evans Gambit: Morphy Attack r1bqk1nr/ppp2ppp/1bnp4/8/2BPP3/2N2N2/P4PPP/R1BQ1RK1 b kq - 2 9
-C51 Evans Gambit: Gšring Attack r1bqk1nr/ppp2ppp/1b1p4/n5B1/2BPP3/2N2N2/P4PPP/R2Q1RK1 b kq - 4 10
+C51 Evans Gambit: Göring Attack r1bqk1nr/ppp2ppp/1b1p4/n5B1/2BPP3/2N2N2/P4PPP/R2Q1RK1 b kq - 4 10
 C51 Evans Gambit: Steinitz Variation r1bqk1nr/ppp3pp/1b1p1p2/n7/2BPP3/2N1BN2/P4PPP/R2Q1RK1 b kq - 1 11
 C51 Evans Gambit: Normal Variation r2qk1nr/ppp2ppp/1bnp4/8/2BPP1b1/2N2N2/P4PPP/R1BQ1RK1 w kq - 3 10
 C51 Evans Gambit: Fraser Attack r2qk1nr/ppp2ppp/1bnp4/8/Q1BPP1b1/2N2N2/P4PPP/R1B2RK1 b kq - 4 10
@@ -5838,9 +5838,9 @@ C54n Giuoco Piano: Bernstein Variation r1bqk2r/ppp2ppp/2n5/3p4/2BP4/1Qb2N2/P4PPP
 C54n Giuoco Piano: Aitken Variation r1bqk2r/pppp1ppp/2n5/8/2BP4/B1b2N2/P4PPP/R2Q1RK1 b kq - 1 10
 C54o Giuoco Piano: Greco Attack r1bqk2r/pppp1ppp/2n5/8/2BPn3/2b2N2/PP3PPP/R1BQ1RK1 w kq - 0 9
 C54o Giuoco Piano: Steinitz Variation r1bqk2r/ppp2ppp/2n5/3p4/2BPn3/B1P2N2/P4PPP/R2Q1RK1 b kq - 1 10
-C54o Giuoco Piano: Mšller (Therkatz) Attack r1bqk2r/pppp1ppp/2n5/3P4/2B1n3/2b2N2/PP3PPP/R1BQ1RK1 b kq - 0 9
-C54o Giuoco Piano: Mšller-Herzog Variation r1bq1rk1/ppp1nppN/3p4/3P4/2B1R3/8/PP3PPP/R2Q2K1 b - - 0 14
-C54o Giuoco Piano: Mšller, Bayonet Attack r1bqk2r/ppp1nppp/3p1b2/3P4/2B1R1P1/5N2/PP3P1P/R1BQ2K1 b kq g3 0 12
+C54o Giuoco Piano: Möller (Therkatz) Attack r1bqk2r/pppp1ppp/2n5/3P4/2B1n3/2b2N2/PP3PPP/R1BQ1RK1 b kq - 0 9
+C54o Giuoco Piano: Möller-Herzog Variation r1bq1rk1/ppp1nppN/3p4/3P4/2B1R3/8/PP3PPP/R2Q2K1 b - - 0 14
+C54o Giuoco Piano: Möller, Bayonet Attack r1bqk2r/ppp1nppp/3p1b2/3P4/2B1R1P1/5N2/PP3P1P/R1BQ2K1 b kq g3 0 12
 C55a Two Knights Defence r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4
 C55b Two Knights: Deutz Gambit r1bqk2r/pppp1ppp/2n2n2/2b1p3/2BPP3/5N2/PPP2PPP/RNBQ1RK1 b kq d3 0 5
 C55b Two Knights: 4.O-O Gambit, Rosentreter Variation r1bqk2r/pppp1p2/5n1p/4p1p1/2BnPP1B/8/PPP3PP/RN1Q1RK1 b kq f3 0 9
@@ -5946,7 +5946,7 @@ C59c Two Knights: Morphy, Main Line 9.Nf3 r1bqkb1r/p4pp1/2p2n1p/n3p3/8/5N2/PPPPB
 C59c Two Knights: Morphy, Main Line 9.Nf3 e4 r1bqkb1r/p4pp1/2p2n1p/n7/4p3/5N2/PPPPBPPP/RNBQK2R w KQkq - 0 10
 C59c Two Knights: Morphy, Main Line 9.Nf3 e4 10.Ne5 r1bqkb1r/p4pp1/2p2n1p/n3N3/4p3/8/PPPPBPPP/RNBQK2R b KQkq - 1 10
 C59d Two Knights: Morphy, Steiner Variation r1bqk2r/p4pp1/2p2n1p/n1b1N3/4p3/8/PPPPBPPP/RNBQK2R w KQkq - 2 11
-C59e Two Knights: Morphy, Gšring Variation r1b1kb1r/p1q2pp1/2p2n1p/n3N3/4p3/8/PPPPBPPP/RNBQK2R w KQkq - 2 11
+C59e Two Knights: Morphy, Göring Variation r1b1kb1r/p1q2pp1/2p2n1p/n3N3/4p3/8/PPPPBPPP/RNBQK2R w KQkq - 2 11
 C59f Two Knights: Morphy, Geller Variation r1b1kb1r/p4pp1/2p2n1p/n3N3/3qp3/8/PPPPBPPP/RNBQK2R w KQkq - 2 11
 C59g Two Knights: Main Line 10...Bd6 r1bqk2r/p4pp1/2pb1n1p/n3N3/4p3/8/PPPPBPPP/RNBQK2R w KQkq - 2 11
 C59h Two Knights: Main Line, 11.f4 r1bqk2r/p4pp1/2pb1n1p/n3N3/4pP2/8/PPPPB1PP/RNBQK2R b KQkq f3 0 11
@@ -5960,7 +5960,7 @@ C59l Two Knights: Main Line, 11.d4, Honfi Variation r1b1k2r/p1q2pp1/2pb1n1p/n7/8
 C60a Spanish (Ruy Lopez) r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3
 C60a Spanish: Spanish Countergambit r1bqkbnr/ppp2ppp/2n5/1B1pp3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq d6 0 4
 C60b Spanish: 3...a5 r1bqkbnr/1ppp1ppp/2n5/pB2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq a6 0 4
-C60c Spanish: NŸrnberg Variation r1bqkbnr/pppp2pp/2n2p2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4
+C60c Spanish: Nürnberg Variation r1bqkbnr/pppp2pp/2n2p2/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 0 4
 C60d Spanish: Pollock Defence r1bqkbnr/pppp1ppp/8/nB2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4
 C60e Spanish: Lucena Defence r1bqk1nr/ppppbppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4
 C60f Spanish: Vinogradov Variation r1b1kbnr/ppppqppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4
@@ -6006,7 +6006,7 @@ C62 Spanish: Old Steinitz, 4.d4 Bd7 r2qkbnr/pppb1ppp/2np4/1B2p3/3PP3/5N2/PPP2PPP
 C62 Spanish: Old Steinitz, 4.d4 Bd7 5.Nc3 r2qkbnr/pppb1ppp/2np4/1B2p3/3PP3/2N2N2/PPP2PPP/R1BQK2R b KQkq - 2 5
 C62 Spanish: Old Steinitz, Nimzowitsch Attack r2qkb1r/pppb1ppp/2Bp1n2/4p3/3PP3/2N2N2/PPP2PPP/R1BQK2R b KQkq - 0 6
 C62 Spanish: Old Steinitz, Semi-Duras Variation r2qkbnr/pppb1ppp/2np4/1B2p3/2PPP3/5N2/PP3PPP/RNBQK2R b KQkq c3 0 5
-C63a Spanish: Schliemann (JŠnisch) r1bqkbnr/pppp2pp/2n5/1B2pp2/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq f6 0 4
+C63a Spanish: Schliemann (Jänisch) r1bqkbnr/pppp2pp/2n5/1B2pp2/4P3/5N2/PPPP1PPP/RNBQK2R w KQkq f6 0 4
 C63a Spanish: Schliemann, 4.Qe2 r1bqkbnr/pppp2pp/2n5/1B2pp2/4P3/5N2/PPPPQPPP/RNB1K2R b KQkq - 1 4
 C63b Spanish: Schliemann, 4.exf5 r1bqkbnr/pppp2pp/2n5/1B2pP2/8/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 4
 C63c Spanish: Schliemann, 4.d4 r1bqkbnr/pppp2pp/2n5/1B2pp2/3PP3/5N2/PPP2PPP/RNBQK2R b KQkq d3 0 4
@@ -6229,11 +6229,11 @@ C77r Spanish: Wormald Attack, 5...b5 r1bqkb1r/2pp1ppp/p1n2n2/1p2p3/B3P3/5N2/PPPP
 C77s Spanish: Wormald Attack, 5...b5 6.Bb3 Bc5 r1bqk2r/2pp1ppp/p1n2n2/1pb1p3/4P3/1B3N2/PPPPQPPP/RNB1K2R w KQkq - 2 7
 C77t Spanish: Wormald Attack, 5...b5 6.Bb3 Bc5 7.c3 r1bqk2r/2pp1ppp/p1n2n2/1pb1p3/4P3/1BP2N2/PP1PQPPP/RNB1K2R b KQkq - 0 7
 C77u Spanish: Wormald Attack, 5...b5 6.Bb3 Be7 r1bqk2r/2ppbppp/p1n2n2/1p2p3/4P3/1B3N2/PPPPQPPP/RNB1K2R w KQkq - 2 7
-C77u Spanish: Wormald Attack, GrŸnfeld Variation r2qk2r/2p1bppp/p1np1n2/1p2p3/3PP1b1/1BP2N2/PP2QPPP/RNB1K2R w KQkq - 1 9
+C77u Spanish: Wormald Attack, Grünfeld Variation r2qk2r/2p1bppp/p1np1n2/1p2p3/3PP1b1/1BP2N2/PP2QPPP/RNB1K2R w KQkq - 1 9
 C78a Spanish: 5.O-O r1bqkb1r/1ppp1ppp/p1n2n2/4p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 4 5
-C78b Spanish: Mšller Defence r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 5 6
-C78c Spanish: Mšller Defence, 6.Nxe5 r1bqk2r/1ppp1ppp/p1n2n2/2b1N3/B3P3/8/PPPP1PPP/RNBQ1RK1 b kq - 0 6
-C78d Spanish: Mšller Defence, 6.c3 r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/B3P3/2P2N2/PP1P1PPP/RNBQ1RK1 b kq - 0 6
+C78b Spanish: Möller Defence r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 w kq - 5 6
+C78c Spanish: Möller Defence, 6.Nxe5 r1bqk2r/1ppp1ppp/p1n2n2/2b1N3/B3P3/8/PPPP1PPP/RNBQ1RK1 b kq - 0 6
+C78d Spanish: Möller Defence, 6.c3 r1bqk2r/1ppp1ppp/p1n2n2/2b1p3/B3P3/2P2N2/PP1P1PPP/RNBQ1RK1 b kq - 0 6
 C78e Spanish: 5.O-O b5 r1bqkb1r/2pp1ppp/p1n2n2/1p2p3/B3P3/5N2/PPPP1PPP/RNBQ1RK1 w kq b6 0 6
 C78e Spanish: 5.O-O b5 6.Bb3 r1bqkb1r/2pp1ppp/p1n2n2/1p2p3/4P3/1B3N2/PPPP1PPP/RNBQ1RK1 b kq - 1 6
 C78f Spanish: 5.O-O b5 6.Bb3 d6 r1bqkb1r/2p2ppp/p1np1n2/1p2p3/4P3/1B3N2/PPPP1PPP/RNBQ1RK1 w kq - 0 7
@@ -7053,7 +7053,7 @@ D14q Slav: Exchange, 8.Bb5 Nd7 9.Qa4 r2qkb1r/pp1n1ppp/2n1p3/1B1p1b2/Q2P1B2/2N1PN
 D15a Slav: 4.Nc3 rnbqkb1r/pp2pppp/2p2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 3 4
 D15b Slav: 4.Nc3 Bf5 rn1qkb1r/pp2pppp/2p2n2/3p1b2/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 4 5
 D15b Slav: 4.Nc3 Bf5 5.Qb3 rn1qkb1r/pp2pppp/2p2n2/3p1b2/2PP4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq - 5 5
-D15c Slav: SŸchting Variation rnb1kb1r/pp2pppp/1qp2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 4 5
+D15c Slav: Süchting Variation rnb1kb1r/pp2pppp/1qp2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 4 5
 D15d Slav: Chameleon Variation rnbqkb1r/1p2pppp/p1p2n2/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 5
 D15e Slav: Chameleon, 5.Bg5 rnbqkb1r/1p2pppp/p1p2n2/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b KQkq - 1 5
 D15f Slav: Chameleon, 5.Ne5 rnbqkb1r/1p2pppp/p1p2n2/3pN3/2PP4/2N5/PP2PPPP/R1BQKB1R b KQkq - 1 5
@@ -7110,7 +7110,7 @@ D17i Slav: Central, Carlsbad Variation r3kb1r/ppqn1ppp/2p2n2/4pb2/P1NP4/2N3P1/1P
 D17j Slav: Central, Carlsbad, Main Line r3kb1r/ppqn2pp/2p2p2/4nb2/P1N2B2/2N3P1/1P2PPBP/R2QK2R w KQkq - 0 12
 D17k Slav: Central, 6.Ne5 e6 rn1qkb1r/pp3ppp/2p1pn2/4Nb2/P1pP4/2N5/1P2PPPP/R1BQKB1R w KQkq - 0 7
 D17k Slav: Central, 6.Ne5 e6 7.f3 rn1qkb1r/pp3ppp/2p1pn2/4Nb2/P1pP4/2N2P2/1P2P1PP/R1BQKB1R b KQkq - 0 7
-D17l Slav: Central, HŸbner (7...c5) rn1qkb1r/pp3ppp/4pn2/2p1Nb2/P1pP4/2N2P2/1P2P1PP/R1BQKB1R w KQkq - 0 8
+D17l Slav: Central, Hübner (7...c5) rn1qkb1r/pp3ppp/4pn2/2p1Nb2/P1pP4/2N2P2/1P2P1PP/R1BQKB1R w KQkq - 0 8
 D17m Slav: Central, 7.f3 Bb4 rn1qk2r/pp3ppp/2p1pn2/4Nb2/PbpP4/2N2P2/1P2P1PP/R1BQKB1R w KQkq - 1 8
 D17m Slav: Central, 7.f3 Bb4 8.Bg5 rn1qk2r/pp3ppp/2p1pn2/4NbB1/PbpP4/2N2P2/1P2P1PP/R2QKB1R b KQkq - 2 8
 D17n Slav: Central, 7.f3 Bb4 8.Nxc4 rn1qk2r/pp3ppp/2p1pn2/5b2/PbNP4/2N2P2/1P2P1PP/R1BQKB1R b KQkq - 0 8
@@ -7151,7 +7151,7 @@ D19e Slav: Dutch, 8...O-O 9.Qe2 Bg6 10.Ne5 rn1q1rk1/pp3ppp/2p1pnb1/4N3/PbBP4/2N1
 D19e Slav: Dutch, 8...O-O 9.Qe2 Bg6 10.Ne5 Nbd7, 12.Rd1 r2q1rk1/pp1n1ppp/2p1pnb1/4N3/PbBP4/2N1P3/1P2QPPP/R1B2RK1 w - - 9 11
 D19f Slav: Dutch, 8...O-O 9.Qe2 Bg6 10.Ne5 Nbd7, 12.Rd1 r2q1rk1/pp1n1pp1/2p1pnp1/8/PbBP4/2N1P3/1P2QPPP/R1BR2K1 b - - 1 12
 D19g Slav: Dutch, 8...O-O 9.Qe2 Ne4 rn1q1rk1/pp3ppp/2p1p3/5b2/PbBPn3/2N1PN2/1P2QPPP/R1B2RK1 w - - 7 10
-D19g Slav: Dutch, SŠmisch Variation rn1q1rk1/pp3ppp/2p1p3/5b2/PbBPn1P1/2N1PN2/1P2QP1P/R1B2RK1 b - g3 0 10
+D19g Slav: Dutch, Sämisch Variation rn1q1rk1/pp3ppp/2p1p3/5b2/PbBPn1P1/2N1PN2/1P2QP1P/R1B2RK1 b - g3 0 10
 D19h Slav: Dutch, 8...O-O 9.Qe2 Nbd7 r2q1rk1/pp1n1ppp/2p1pn2/5b2/PbBP4/2N1PN2/1P2QPPP/R1B2RK1 w - - 7 10
 D19i Slav: Dutch, 8...O-O 9.Qe2 Nbd7 10.e4 r2q1rk1/pp1n1ppp/2p1pn2/5b2/PbBPP3/2N2N2/1P2QPPP/R1B2RK1 b - - 0 10
 D19i Slav: Dutch, 8...O-O 9.Qe2 Nbd7 10.e4 Bg4 r2q1rk1/pp1n1ppp/2p1pn2/8/PbBPP1b1/2N2N2/1P2QPPP/R1B2RK1 w - - 1 11
@@ -7592,7 +7592,7 @@ D35a QGD: Catalan without Nf3 rnbqkb1r/ppp2ppp/4pn2/3p4/2PP4/2N3P1/PP2PP1P/R1BQK
 D35b QGD: Exchange rnbqkb1r/ppp2ppp/4pn2/3P4/3P4/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4
 D35b QGD: Exchange, 4...Nxd5 rnbqkb1r/ppp2ppp/4p3/3n4/3P4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5
 D35b QGD: Exchange rnbqkb1r/ppp2ppp/5n2/3p4/3P4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5
-D35c QGD: Exchange, SŠmisch Variation rnbqkb1r/ppp2ppp/5n2/3p4/3P1B2/2N5/PP2PPPP/R2QKBNR b KQkq - 1 5
+D35c QGD: Exchange, Sämisch Variation rnbqkb1r/ppp2ppp/5n2/3p4/3P1B2/2N5/PP2PPPP/R2QKBNR b KQkq - 1 5
 D35d QGD: Exchange, 5.Nf3 rnbqkb1r/ppp2ppp/5n2/3p4/3P4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 1 5
 D35d QGD: Exchange, 5.Nf3 c6 rnbqkb1r/pp3ppp/2p2n2/3p4/3P4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 6
 D35d QGD: Exchange, 5.Nf3 c6 6.e3 rnbqkb1r/pp3ppp/2p2n2/3p4/3P4/2N1PN2/PP3PPP/R1BQKB1R b KQkq - 0 6
@@ -8222,9 +8222,9 @@ D64 QGD: Orthodox, Rubinstein Attack, 8...Re8 9.a3 r1bqr1k1/pp1nbppp/2p1pn2/3p2B
 D64 QGD: Orthodox, Rubinstein Attack, 8...Re8 9.a3 a6 r1bqr1k1/1p1nbppp/p1p1pn2/3p2B1/2PP4/P1N1PN2/1PQ2PPP/2R1KB1R w K - 0 10
 D64 QGD: Orthodox, Rubinstein Attack, 8...h6 r1bq1rk1/pp1nbpp1/2p1pn1p/3p2B1/2PP4/2N1PN2/PPQ2PPP/2R1KB1R w K - 0 9
 D64 QGD: Orthodox, Rubinstein Attack, Carlsbad Variation r1bq1rk1/1p1nbppp/p1p1pn2/3p2B1/2PP4/2N1PN2/PPQ2PPP/2R1KB1R w K - 0 9
-D64 QGD: Orthodox, Rubinstein Attack, GrŸnfeld Variation r1bq1rk1/1p1nbppp/p1p1pn2/3p2B1/2PP4/P1N1PN2/1PQ2PPP/2R1KB1R b K - 0 9
-D64 QGD: Orthodox, Rubinstein Attack, GrŸnfeld Variation, 9...h6 r1bq1rk1/1p1nbpp1/p1p1pn1p/3p2B1/2PP4/P1N1PN2/1PQ2PPP/2R1KB1R w K - 0 10
-D64 QGD: Orthodox, Rubinstein Attack, GrŸnfeld Variation, 9...h6 10.Bh4 r1bq1rk1/1p1nbpp1/p1p1pn1p/3p4/2PP3B/P1N1PN2/1PQ2PPP/2R1KB1R b K - 1 10
+D64 QGD: Orthodox, Rubinstein Attack, Grünfeld Variation r1bq1rk1/1p1nbppp/p1p1pn2/3p2B1/2PP4/P1N1PN2/1PQ2PPP/2R1KB1R b K - 0 9
+D64 QGD: Orthodox, Rubinstein Attack, Grünfeld Variation, 9...h6 r1bq1rk1/1p1nbpp1/p1p1pn1p/3p2B1/2PP4/P1N1PN2/1PQ2PPP/2R1KB1R w K - 0 10
+D64 QGD: Orthodox, Rubinstein Attack, Grünfeld Variation, 9...h6 10.Bh4 r1bq1rk1/1p1nbpp1/p1p1pn1p/3p4/2PP3B/P1N1PN2/1PQ2PPP/2R1KB1R b K - 1 10
 D65 QGD: Orthodox, Rubinstein Attack, 9.cxd5 r1bq1rk1/1p1nbppp/p1p1pn2/3P2B1/3P4/2N1PN2/PPQ2PPP/2R1KB1R b K - 0 9
 D65 QGD: Orthodox, Rubinstein Attack, 9.cxd5 Nxd5 r1bq1rk1/1p1nbppp/p1p1p3/3n2B1/3P4/2N1PN2/PPQ2PPP/2R1KB1R w K - 0 10
 D65 QGD: Orthodox, Rubinstein Attack, 9.cxd5 exd5 r1bq1rk1/1p1nbppp/p1p2n2/3p2B1/3P4/2N1PN2/PPQ2PPP/2R1KB1R w K - 0 10
@@ -8271,409 +8271,409 @@ D69 QGD: Orthodox, Classical, 13.dxe5: 15.f4 Qe4 r1b2rk1/pp3ppp/2p5/8/2B1qP2/2R1
 D69 QGD: Orthodox, Classical, 13.dxe5: 15.f4 Qf6 r1b2rk1/pp3ppp/2p2q2/8/2B2P2/2R1P3/PP4PP/3Q1RK1 w - - 1 16
 D69 QGD: Orthodox, Classical, 13.dxe5: 15.f4 Qf6 16.f5 r1b2rk1/pp3ppp/2p2q2/5P2/2B5/2R1P3/PP4PP/3Q1RK1 b - - 0 16
 D69 QGD: Orthodox, Classical, 13.dxe5: 15.f4 Qf6 16.e4 r1b2rk1/pp3ppp/2p2q2/8/2B1PP2/2R5/PP4PP/3Q1RK1 b - - 0 16
-D70 Neo-GrŸnfeld: 3.Nf3 d5 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R w KQkq d6 0 4
-D70 Neo-GrŸnfeld: Alekhine's Anti-GrŸnfeld rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/5P2/PP2P1PP/RNBQKBNR w KQkq d6 0 4
-D70 Neo-GrŸnfeld: Alekhine's, 5.e4 Nb6 rnbqkb1r/ppp1pp1p/1n4p1/8/3PP3/5P2/PP4PP/RNBQKBNR w KQkq - 1 6
-D70 Neo-GrŸnfeld: Alekhine's, 7.Be3 O-O rnbq1rk1/ppp1ppbp/1n4p1/8/3PP3/2N1BP2/PP4PP/R2QKBNR w KQ - 6 8
-D70 Neo-GrŸnfeld: 3.g3 d5 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/6P1/PP2PP1P/RNBQKBNR w KQkq d6 0 4
-D70 Neo-GrŸnfeld: 4.cxd5 rnbqkb1r/ppp1pp1p/5np1/3P4/3P4/6P1/PP2PP1P/RNBQKBNR b KQkq - 0 4
-D70 Neo-GrŸnfeld: 4.Bg2 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR b KQkq - 1 4
-D70 Neo-GrŸnfeld: 4.Bg2 c6 rnbqkb1r/pp2pp1p/2p2np1/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR w KQkq - 0 5
-D70 Neo-GrŸnfeld: 4.Bg2 Bg7 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR w KQkq - 2 5
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 rnbqk2r/ppp1ppbp/6p1/3n4/3P4/6P1/PP2PPBP/RNBQK1NR w KQkq - 0 6
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.Nc3 rnbqk2r/ppp1ppbp/6p1/3n4/3P4/2N3P1/PP2PPBP/R1BQK1NR b KQkq - 1 6
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.Nc3 Nxc3 rnbqk2r/ppp1ppbp/6p1/8/3P4/2n3P1/PP2PPBP/R1BQK1NR w KQkq - 0 7
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.Nc3 Nxc3 7.bxc3 c5 rnbqk2r/pp2ppbp/6p1/2p5/3P4/2P3P1/P3PPBP/R1BQK1NR w KQkq c6 0 8
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.Nc3 Nb6 rnbqk2r/ppp1ppbp/1n4p1/8/3P4/2N3P1/PP2PPBP/R1BQK1NR w KQkq - 2 7
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 rnbqk2r/ppp1ppbp/6p1/3n4/3PP3/6P1/PP3PBP/RNBQK1NR b KQkq e3 0 6
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb6 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/6P1/PP3PBP/RNBQK1NR w KQkq - 1 7
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb4 rnbqk2r/ppp1ppbp/6p1/8/1n1PP3/6P1/PP3PBP/RNBQK1NR w KQkq - 1 7
-D71 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb4 7.d5 rnbqk2r/ppp1ppbp/6p1/3P4/1n2P3/6P1/PP3PBP/RNBQK1NR b KQkq - 0 7
-D72 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/6P1/PP2NPBP/RNBQK2R b KQkq - 2 7
-D72 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 Nc6 r1bqk2r/ppp1ppbp/1nn3p1/8/3PP3/6P1/PP2NPBP/RNBQK2R w KQkq - 3 8
-D72 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 e5 rnbqk2r/ppp2pbp/1n4p1/4p3/3PP3/6P1/PP2NPBP/RNBQK2R w KQkq e6 0 8
-D72 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 c5 rnbqk2r/pp2ppbp/1n4p1/2p5/3PP3/6P1/PP2NPBP/RNBQK2R w KQkq c6 0 8
-D72 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 O-O rnbq1rk1/ppp1ppbp/1n4p1/8/3PP3/6P1/PP2NPBP/RNBQK2R w KQ - 4 8
-D72 Neo-GrŸnfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 O-O 8.O-O rnbq1rk1/ppp1ppbp/1n4p1/8/3PP3/6P1/PP2NPBP/RNBQ1RK1 b - - 6 8
-D73 Neo-GrŸnfeld, 5.Nf3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R b KQkq - 3 5
-D73 Neo-GrŸnfeld, 5.Nf3 c6 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R w KQkq - 0 6
-D73 Neo-GrŸnfeld, 5.Nf3 c6 6.cxd5 rnbqk2r/pp2ppbp/2p2np1/3P4/3P4/5NP1/PP2PPBP/RNBQK2R b KQkq - 0 6
-D73 Neo-GrŸnfeld, 5.Nf3 c6 6.cxd5 cxd5 rnbqk2r/pp2ppbp/5np1/3p4/3P4/5NP1/PP2PPBP/RNBQK2R w KQkq - 0 7
-D73 Neo-GrŸnfeld, 5.Nf3 c6 6.cxd5 cxd5 7.Nc3 rnbqk2r/pp2ppbp/5np1/3p4/3P4/2N2NP1/PP2PPBP/R1BQK2R b KQkq - 1 7
-D73 Neo-GrŸnfeld, 5.Nf3 c5 rnbqk2r/pp2ppbp/5np1/2pp4/2PP4/5NP1/PP2PPBP/RNBQK2R w KQkq c6 0 6
-D73 Neo-GrŸnfeld, 5.Nf3 dxc4 rnbqk2r/ppp1ppbp/5np1/8/2pP4/5NP1/PP2PPBP/RNBQK2R w KQkq - 0 6
-D73 Neo-GrŸnfeld, 5.Nf3 dxc4 6.Na3 rnbqk2r/ppp1ppbp/5np1/8/2pP4/N4NP1/PP2PPBP/R1BQK2R b KQkq - 1 6
-D73 Neo-GrŸnfeld, 5.Nf3 O-O rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R w KQ - 5 6
-D73 Neo-GrŸnfeld, 6.Qb3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/1Q3NP1/PP2PPBP/RNB1K2R b KQ - 6 6
-D73 Neo-GrŸnfeld, 6.Nc3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N2NP1/PP2PPBP/R1BQK2R b KQ - 6 6
-D73 Neo-GrŸnfeld, 6.cxd5 rnbq1rk1/ppp1ppbp/5np1/3P4/3P4/5NP1/PP2PPBP/RNBQK2R b KQ - 0 6
-D73 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.e4 rnbq1rk1/ppp1ppbp/6p1/3n4/3PP3/5NP1/PP3PBP/RNBQK2R b KQ e3 0 7
-D74 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 b - - 2 7
-D74 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Na6 r1bq1rk1/ppp1ppbp/n5p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 3 8
-D74 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nc6 r1bq1rk1/ppp1ppbp/2n3p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 3 8
-D74 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c6 rnbq1rk1/pp2ppbp/2p3p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 8
-D74 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 rnbq1rk1/pp2ppbp/6p1/2pn4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - c6 0 8
-D74 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 8.e4 rnbq1rk1/pp2ppbp/6p1/2pn4/3PP3/5NP1/PP3PBP/RNBQ1RK1 b - e3 0 8
-D74 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 8.e4 Nf6 rnbq1rk1/pp2ppbp/5np1/2p5/3PP3/5NP1/PP3PBP/RNBQ1RK1 w - - 1 9
-D74 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 8.e4 Nf6 9.e5 Nd5 rnbq1rk1/pp2ppbp/6p1/2pnP3/3P4/5NP1/PP3PBP/RNBQ1RK1 w - - 1 10
-D75 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 8.Nc3 rnbq1rk1/pp2ppbp/6p1/2pn4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 1 8
-D75 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 8.Nc3 Nxc3 rnbq1rk1/pp2ppbp/6p1/2p5/3P4/2n2NP1/PP2PPBP/R1BQ1RK1 w - - 0 9
-D75 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 8.Nc3 Nxc3 9.bxc3 cxd4 rnbq1rk1/pp2ppbp/6p1/8/3p4/2P2NP1/P3PPBP/R1BQ1RK1 w - - 0 10
-D75 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 8.dxc5 rnbq1rk1/pp2ppbp/6p1/2Pn4/8/5NP1/PP2PPBP/RNBQ1RK1 b - - 0 8
-D75 Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O c5 8.dxc5 Na6 r1bq1rk1/pp2ppbp/n5p1/2Pn4/8/5NP1/PP2PPBP/RNBQ1RK1 w - - 1 9
-D76a Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 rnbq1rk1/ppp1ppbp/1n4p1/8/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 3 8
-D76b Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 rnbq1rk1/ppp1ppbp/1n4p1/8/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 4 8
-D76c Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 r1bq1rk1/ppp1ppbp/1nn3p1/8/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 5 9
-D76d Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 r1bq1rk1/ppp1ppbp/1nn3p1/8/3P4/2N1PNP1/PP3PBP/R1BQ1RK1 b - - 0 9
-D76e Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 e5 r1bq1rk1/ppp2pbp/1nn3p1/4p3/3P4/2N1PNP1/PP3PBP/R1BQ1RK1 w - e6 0 10
-D76e Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 e5 10.d5 r1bq1rk1/ppp2pbp/1nn3p1/3Pp3/8/2N1PNP1/PP3PBP/R1BQ1RK1 b - - 0 10
-D76f Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 e5 10.d5 Na5 r1bq1rk1/ppp2pbp/1n4p1/n2Pp3/8/2N1PNP1/PP3PBP/R1BQ1RK1 w - - 1 11
-D76g Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 Re8 r1bqr1k1/ppp1ppbp/1nn3p1/8/3P4/2N1PNP1/PP3PBP/R1BQ1RK1 w - - 1 10
-D76h Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 Re8 10.d5 r1bqr1k1/ppp1ppbp/1nn3p1/3P4/8/2N1PNP1/PP3PBP/R1BQ1RK1 b - - 0 10
-D76i Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 r1bq1rk1/ppp1ppbp/1nn3p1/3P4/8/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 0 9
-D76j Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 Na5 r1bq1rk1/ppp1ppbp/1n4p1/n2P4/8/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 1 10
-D76k Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 Na5 10.e4 r1bq1rk1/ppp1ppbp/1n4p1/n2P4/4P3/2N2NP1/PP3PBP/R1BQ1RK1 b - e3 0 10
-D76k Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 Na5 10.e4 c6 r1bq1rk1/pp2ppbp/1np3p1/n2P4/4P3/2N2NP1/PP3PBP/R1BQ1RK1 w - - 0 11
-D76l Neo-GrŸnfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 Na5 10.e4 c6 11.Bg5 r1bq1rk1/pp2ppbp/1np3p1/n2P2B1/4P3/2N2NP1/PP3PBP/R2Q1RK1 b - - 1 11
-D77a Neo-GrŸnfeld, 6.O-O rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 b - - 7 6
-D77b Neo-GrŸnfeld, 6.O-O e6 rnbq1rk1/ppp2pbp/4pnp1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7
-D77c Neo-GrŸnfeld, 6.O-O c5 rnbq1rk1/pp2ppbp/5np1/2pp4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - c6 0 7
-D77c Neo-GrŸnfeld, 6.O-O c5 7.dxc5 dxc4 rnbq1rk1/pp2ppbp/5np1/2P5/2p5/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 8
-D77d Neo-GrŸnfeld, 6.O-O Nc6 r1bq1rk1/ppp1ppbp/2n2np1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 8 7
-D77e Neo-GrŸnfeld, 6.O-O dxc4 rnbq1rk1/ppp1ppbp/5np1/8/2pP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7
-D77f Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 rnbq1rk1/ppp1ppbp/5np1/8/2pP4/N4NP1/PP2PPBP/R1BQ1RK1 b - - 1 7
-D77g Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 Na6 r1bq1rk1/ppp1ppbp/n4np1/8/2pP4/N4NP1/PP2PPBP/R1BQ1RK1 w - - 2 8
-D77h Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 c3 rnbq1rk1/ppp1ppbp/5np1/8/3P4/N1p2NP1/PP2PPBP/R1BQ1RK1 w - - 0 8
-D77h Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 c3 8.bxc3 c5 rnbq1rk1/pp2ppbp/5np1/2p5/3P4/N1P2NP1/P3PPBP/R1BQ1RK1 w - c6 0 9
-D77i Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 c3 8.bxc3 c5 9.e3 rnbq1rk1/pp2ppbp/5np1/2p5/3P4/N1P1PNP1/P4PBP/R1BQ1RK1 b - - 0 9
-D77j Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 Nc6 r1bq1rk1/ppp1ppbp/2n2np1/8/2pP4/N4NP1/PP2PPBP/R1BQ1RK1 w - - 2 8
-D77j Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 Nc6 8.Nxc4 r1bq1rk1/ppp1ppbp/2n2np1/8/2NP4/5NP1/PP2PPBP/R1BQ1RK1 b - - 0 8
-D77j Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 Nc6 8.Nxc4 Be6 r2q1rk1/ppp1ppbp/2n1bnp1/8/2NP4/5NP1/PP2PPBP/R1BQ1RK1 w - - 1 9
-D77k Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 Nc6 8.Nxc4 Be6 9.b3 r2q1rk1/ppp1ppbp/2n1bnp1/8/2NP4/1P3NP1/P3PPBP/R1BQ1RK1 b - - 0 9
-D77l Neo-GrŸnfeld, 6.O-O dxc4 7.Na3 Nc6 8.Nxc4 Be6 9.b3 Bd5 r2q1rk1/ppp1ppbp/2n2np1/3b4/2NP4/1P3NP1/P3PPBP/R1BQ1RK1 w - - 1 10
-D78a Neo-GrŸnfeld, 6.O-O c6 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7
-D78b Neo-GrŸnfeld, 6.O-O c6 7.Na3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/N4NP1/PP2PPBP/R1BQ1RK1 b - - 1 7
-D78c Neo-GrŸnfeld, 6.O-O c6 7.Ne5 rnbq1rk1/pp2ppbp/2p2np1/3pN3/2PP4/6P1/PP2PPBP/RNBQ1RK1 b - - 1 7
-D78d Neo-GrŸnfeld, 6.O-O c6 7.Qa4 rnbq1rk1/pp2ppbp/2p2np1/3p4/Q1PP4/5NP1/PP2PPBP/RNB2RK1 b - - 1 7
-D78e Neo-GrŸnfeld, 6.O-O c6 7.Nc3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 1 7
-D78f Neo-GrŸnfeld, 6.O-O c6 7.Nc3 dxc4 rnbq1rk1/pp2ppbp/2p2np1/8/2pP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 0 8
-D78g Neo-GrŸnfeld, 6.O-O c6 7.Qb3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/1Q3NP1/PP2PPBP/RNB2RK1 b - - 1 7
-D78h Neo-GrŸnfeld, 6.O-O c6 7.Qb3 Qb6 rnb2rk1/pp2ppbp/1qp2np1/3p4/2PP4/1Q3NP1/PP2PPBP/RNB2RK1 w - - 2 8
-D78i Neo-GrŸnfeld, 6.O-O c6 7.Qb3 dxc4 rnbq1rk1/pp2ppbp/2p2np1/8/2pP4/1Q3NP1/PP2PPBP/RNB2RK1 w - - 0 8
-D78j Neo-GrŸnfeld, 6.O-O c6 7.Qb3 dxc4 rnbq1rk1/pp2ppbp/2p2np1/8/2QP4/5NP1/PP2PPBP/RNB2RK1 b - - 0 8
-D78k Neo-GrŸnfeld, 6.O-O c6 7.Nbd2 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/5NP1/PP1NPPBP/R1BQ1RK1 b - - 1 7
-D78l Neo-GrŸnfeld, 6.O-O c6 7.Nbd2 Nbd7 r1bq1rk1/pp1nppbp/2p2np1/3p4/2PP4/5NP1/PP1NPPBP/R1BQ1RK1 w - - 2 8
-D78m Neo-GrŸnfeld, 6.O-O c6 7.Nbd2 Ne4 rnbq1rk1/pp2ppbp/2p3p1/3p4/2PPn3/5NP1/PP1NPPBP/R1BQ1RK1 w - - 2 8
-D78n Neo-GrŸnfeld, 6.O-O c6 7.Nbd2 Bf5 rn1q1rk1/pp2ppbp/2p2np1/3p1b2/2PP4/5NP1/PP1NPPBP/R1BQ1RK1 w - - 2 8
-D78o Neo-GrŸnfeld, 6.O-O c6 7.b3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/1P3NP1/P3PPBP/RNBQ1RK1 b - - 0 7
-D78p Neo-GrŸnfeld, 6.O-O c6 7.b3 Bf5 rn1q1rk1/pp2ppbp/2p2np1/3p1b2/2PP4/1P3NP1/P3PPBP/RNBQ1RK1 w - - 1 8
-D78q Neo-GrŸnfeld, 6.O-O c6 7.b3 Ne4 rnbq1rk1/pp2ppbp/2p3p1/3p4/2PPn3/1P3NP1/P3PPBP/RNBQ1RK1 w - - 1 8
-D79a Neo-GrŸnfeld, 6.O-O c6 7.cxd5 rnbq1rk1/pp2ppbp/2p2np1/3P4/3P4/5NP1/PP2PPBP/RNBQ1RK1 b - - 0 7
-D79a Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 rnbq1rk1/pp2ppbp/5np1/3p4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 8
-D79b Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 rnbq1rk1/pp2ppbp/5np1/3p4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 1 8
-D79c Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 e6 rnbq1rk1/pp3pbp/4pnp1/3p4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 0 9
-D79d Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Ne4 rnbq1rk1/pp2ppbp/6p1/3p4/3Pn3/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 2 9
-D79d Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Ne4 9.Ne5 rnbq1rk1/pp2ppbp/6p1/3pN3/3Pn3/2N3P1/PP2PPBP/R1BQ1RK1 b - - 3 9
-D79e Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Ne4 9.Nxe4 rnbq1rk1/pp2ppbp/6p1/3p4/3PN3/5NP1/PP2PPBP/R1BQ1RK1 b - - 0 9
-D79f Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Nc6 r1bq1rk1/pp2ppbp/2n2np1/3p4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 2 9
-D79g Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Nc6 9.Ne5 r1bq1rk1/pp2ppbp/2n2np1/3pN3/3P4/2N3P1/PP2PPBP/R1BQ1RK1 b - - 3 9
-D79h Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Nc6 9.Ne5 e6 r1bq1rk1/pp3pbp/2n1pnp1/3pN3/3P4/2N3P1/PP2PPBP/R1BQ1RK1 w - - 0 10
-D79i Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Ne5 rnbq1rk1/pp2ppbp/5np1/3pN3/3P4/6P1/PP2PPBP/RNBQ1RK1 b - - 1 8
-D79i Neo-GrŸnfeld, 6.O-O c6 7.cxd5 cxd5 8.Ne5 e6 rnbq1rk1/pp3pbp/4pnp1/3pN3/3P4/6P1/PP2PPBP/RNBQ1RK1 w - - 0 9
-D79j Neo-GrŸnfeld, Main Line rnbq1rk1/pp3pbp/4pnp1/3pN3/3P4/2N3P1/PP2PPBP/R1BQ1RK1 b - - 1 9
-D79k Neo-GrŸnfeld, Main Line, 10.f4 rnbq1rk1/pp1n1pbp/4p1p1/3pN3/3P1P2/2N3P1/PP2P1BP/R1BQ1RK1 b - f3 0 10
-D79l Neo-GrŸnfeld, Main Line, 10.f4 Nc6 r1bq1rk1/pp1n1pbp/2n1p1p1/3pN3/3P1P2/2N3P1/PP2P1BP/R1BQ1RK1 w - - 1 11
-D79m Neo-GrŸnfeld, Main Line, 10.f4 Nc6 11.Be3 r1bq1rk1/pp1n1pbp/2n1p1p1/3pN3/3P1P2/2N1B1P1/PP2P1BP/R2Q1RK1 b - - 2 11
-D79m Neo-GrŸnfeld, Main Line, 10.f4 Nc6 11.Be3 f6 r1bq1rk1/pp1n2bp/2n1ppp1/3pN3/3P1P2/2N1B1P1/PP2P1BP/R2Q1RK1 w - - 0 12
-D79n Neo-GrŸnfeld, Main Line, 10.f4 Nc6 11.Be3 Nb6 r1bq1rk1/pp3pbp/1nn1p1p1/3pN3/3P1P2/2N1B1P1/PP2P1BP/R2Q1RK1 w - - 3 12
-D79n Neo-GrŸnfeld, Main Line, 10.f4 Nc6 11.Be3 Nb6 12.Bf2 r1bq1rk1/pp3pbp/1nn1p1p1/3pN3/3P1P2/2N3P1/PP2PBBP/R2Q1RK1 b - - 4 12
-D80 GrŸnfeld Defence rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq d6 0 4
-D80 GrŸnfeld: Spike/Gibbon Gambit rnbqkb1r/ppp1pp1p/5np1/3p4/2PP2P1/2N5/PP2PP1P/R1BQKBNR b KQkq g3 0 4
-D80 GrŸnfeld: 4.h4 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP3P/2N5/PP2PPP1/R1BQKBNR b KQkq h3 0 4
-D80 GrŸnfeld: 4.g3 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N3P1/PP2PP1P/R1BQKBNR b KQkq - 0 4
-D80 GrŸnfeld: 4.f3 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N2P2/PP2P1PP/R1BQKBNR b KQkq - 0 4
-D80 GrŸnfeld: 4.e3 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4
-D80 GrŸnfeld: 4.e3 Bg7 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N1P3/PP3PPP/R1BQKBNR w KQkq - 1 5
-D80 GrŸnfeld: 4.e3 Bg7 5.Qb3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/1QN1P3/PP3PPP/R1B1KBNR b KQkq - 2 5
-D80 GrŸnfeld: Stockholm Variation rnbqkb1r/ppp1pp1p/5np1/3p2B1/2PP4/2N5/PP2PPPP/R2QKBNR b KQkq - 1 4
-D80 GrŸnfeld: Stockholm, 4...Ne4 rnbqkb1r/ppp1pp1p/6p1/3p2B1/2PPn3/2N5/PP2PPPP/R2QKBNR w KQkq - 2 5
-D80 GrŸnfeld: Stockholm, 4...Ne4 5.Nxe4 rnbqkb1r/ppp1pp1p/6p1/3p2B1/2PPN3/8/PP2PPPP/R2QKBNR b KQkq - 0 5
-D80 GrŸnfeld: Stockholm, Lundin Variation rnbqkb1r/pp2pp1p/6p1/2p3B1/2PPp3/8/PP1QPPPP/R3KBNR w KQkq c6 0 7
-D80 GrŸnfeld: Stockholm, 4...Ne4 5.Bf4 rnbqkb1r/ppp1pp1p/6p1/3p4/2PPnB2/2N5/PP2PPPP/R2QKBNR b KQkq - 3 5
-D80 GrŸnfeld: Stockholm, Taimanov Variation rnbqkb1r/ppp1pp1p/6p1/3p4/2PPn2B/2N5/PP2PPPP/R2QKBNR b KQkq - 3 5
-D80 GrŸnfeld: Stockholm, Taimanov, 5...Nxc3 rnbqkb1r/ppp1pp1p/6p1/3p4/2PP3B/2n5/PP2PPPP/R2QKBNR w KQkq - 0 6
-D80 GrŸnfeld: Stockholm, Taimanov, 5...Nxc3 6.bxc3 Bg7 rnbqk2r/ppp1ppbp/6p1/3p4/2PP3B/2P5/P3PPPP/R2QKBNR w KQkq - 1 7
-D81 GrŸnfeld: Early Russian Variation rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/1QN5/PP2PPPP/R1B1KBNR b KQkq - 1 4
-D81 GrŸnfeld: Early Russian Variation rnbqkb1r/ppp1pp1p/5np1/8/2QP4/2N5/PP2PPPP/R1B1KBNR b KQkq - 0 5
-D81 GrŸnfeld: Early Russian, 5...Be6 rn1qkb1r/ppp1pp1p/4bnp1/8/2QP4/2N5/PP2PPPP/R1B1KBNR w KQkq - 1 6
-D81 GrŸnfeld: Early Russian, 5...Be6 6.Qb5+ rn1qkb1r/ppp1pp1p/4bnp1/1Q6/3P4/2N5/PP2PPPP/R1B1KBNR b KQkq - 2 6
-D81 GrŸnfeld: Early Russian, Adorjan Gambit rn1qkb1r/pppbpp1p/5np1/1Q6/3P4/2N5/PP2PPPP/R1B1KBNR w KQkq - 3 7
-D81 GrŸnfeld: Early Russian, 5...Bg7 rnbqk2r/ppp1ppbp/5np1/8/2QP4/2N5/PP2PPPP/R1B1KBNR w KQkq - 1 6
-D81 GrŸnfeld: Early Russian, 5...Bg7 6.e4 rnbqk2r/ppp1ppbp/5np1/8/2QPP3/2N5/PP3PPP/R1B1KBNR b KQkq e3 0 6
-D81 GrŸnfeld: Early Russian, 5...Bg7 6.e4 O-O rnbq1rk1/ppp1ppbp/5np1/8/2QPP3/2N5/PP3PPP/R1B1KBNR w KQ - 2 7
-D82 GrŸnfeld: 4.Bf4 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP1B2/2N5/PP2PPPP/R2QKBNR b KQkq - 1 4
-D82 GrŸnfeld: 4.Bf4 Bg7 rnbqk2r/ppp1ppbp/5np1/3p4/2PP1B2/2N5/PP2PPPP/R2QKBNR w KQkq - 2 5
-D82 GrŸnfeld: 4.Bf4 Bg7 5.e3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP1B2/2N1P3/PP3PPP/R2QKBNR b KQkq - 0 5
-D82 GrŸnfeld: 4.Bf4 Bg7 5.e3 c5 rnbqk2r/pp2ppbp/5np1/2pp4/2PP1B2/2N1P3/PP3PPP/R2QKBNR w KQkq c6 0 6
-D82 GrŸnfeld: 4.Bf4 Bg7 5.e3 c5 6.dxc5 Qa5 rnb1k2r/pp2ppbp/5np1/q1Pp4/2P2B2/2N1P3/PP3PPP/R2QKBNR w KQkq - 1 7
-D82 GrŸnfeld: 4.Bf4 Bg7 5.e3 c5 6.dxc5 Qa5 7.Qa4+ rnb1k2r/pp2ppbp/5np1/q1Pp4/Q1P2B2/2N1P3/PP3PPP/R3KBNR b KQkq - 2 7
-D82 GrŸnfeld: 4.Bf4 Bg7 5.e3 c5 6.dxc5 Qa5 7.Rc1 rnb1k2r/pp2ppbp/5np1/q1Pp4/2P2B2/2N1P3/PP3PPP/2RQKBNR b Kkq - 2 7
-D83 GrŸnfeld: GrŸnfeld Gambit rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1P3/PP3PPP/R2QKBNR w KQ - 2 6
-D83 GrŸnfeld: GrŸnfeld Gambit, 6.Qb3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/1QN1P3/PP3PPP/R3KBNR b KQ - 3 6
-D83 GrŸnfeld: GrŸnfeld Gambit, Capablanca Variation rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1P3/PP3PPP/2RQKBNR b K - 3 6
-D83 GrŸnfeld: GrŸnfeld Gambit, Capablanca Variation rnbq1rk1/pp2ppbp/5np1/2pp4/2PP1B2/2N1P3/PP3PPP/2RQKBNR w K c6 0 7
-D83 GrŸnfeld: GrŸnfeld Gambit, Botvinnik Variation rn1q1rk1/pp2ppbp/4bnp1/2Pp4/2P2B2/2N1P3/PP3PPP/2RQKBNR w K - 1 8
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted rnbq1rk1/ppp1ppbp/5np1/3P4/3P1B2/2N1P3/PP3PPP/R2QKBNR b KQ - 0 6
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted rnb2rk1/ppB1ppbp/6p1/3q4/3P4/4P3/PP3PPP/R2QKBNR b KQ - 0 8
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted, 8...b6 rnb2rk1/p1B1ppbp/1p4p1/3q4/3P4/4P3/PP3PPP/R2QKBNR w KQ - 0 9
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted, 8...Bf5 rn3rk1/ppB1ppbp/6p1/3q1b2/3P4/4P3/PP3PPP/R2QKBNR w KQ - 1 9
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted, 8...Na6 r1b2rk1/ppB1ppbp/n5p1/3q4/3P4/4P3/PP3PPP/R2QKBNR w KQ - 1 9
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted, 8...Na6 9.Bxa6 Qxg2 r1b2rk1/ppB1ppbp/B5p1/8/3P4/4P3/PP3PqP/R2QK1NR w KQ - 0 10
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted, 8...Nc6 r1b2rk1/ppB1ppbp/2n3p1/3q4/3P4/4P3/PP3PPP/R2QKBNR w KQ - 1 9
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted, 8...Nc6 9.Ne2 r1b2rk1/ppB1ppbp/2n3p1/3q4/3P4/4P3/PP2NPPP/R2QKB1R b KQ - 2 9
-D84 GrŸnfeld: GrŸnfeld Gambit Accepted, 8...Nc6 9.Ne2 Bg4 r4rk1/ppB1ppbp/2n3p1/3q4/3P2b1/4P3/PP2NPPP/R2QKB1R w KQ - 3 10
-D85a GrŸnfeld: Exchange Variation rnbqkb1r/ppp1pp1p/5np1/3P4/3P4/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4
-D85a GrŸnfeld: Exchange Variation rnbqkb1r/ppp1pp1p/6p1/3n4/3P4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5
-D85a GrŸnfeld: Exchange, 5.g3 rnbqkb1r/ppp1pp1p/6p1/3n4/3P4/2N3P1/PP2PP1P/R1BQKBNR b KQkq - 0 5
-D85a GrŸnfeld: Exchange, 5.Na4 rnbqkb1r/ppp1pp1p/6p1/3n4/N2P4/8/PP2PPPP/R1BQKBNR b KQkq - 1 5
-D85b GrŸnfeld: Exchange, 5.Bd2 rnbqkb1r/ppp1pp1p/6p1/3n4/3P4/2N5/PP1BPPPP/R2QKBNR b KQkq - 1 5
-D85c GrŸnfeld: Exchange, 5.Bd2 Bg7 6.e4 Nb6 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/2N5/PP1B1PPP/R2QKBNR w KQkq - 1 7
-D85c GrŸnfeld: Exchange, 5.Bd2 Bg7 6.e4 Nb6 7.Be3 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/2N1B3/PP3PPP/R2QKBNR b KQkq - 2 7
-D85d GrŸnfeld: Exchange, 5.e4 rnbqkb1r/ppp1pp1p/6p1/3n4/3PP3/2N5/PP3PPP/R1BQKBNR b KQkq e3 0 5
-D85d GrŸnfeld: Exchange, 5.e4 Nb6 rnbqkb1r/ppp1pp1p/1n4p1/8/3PP3/2N5/PP3PPP/R1BQKBNR w KQkq - 1 6
-D85d GrŸnfeld: Exchange, 5.e4 Nxc3 rnbqkb1r/ppp1pp1p/6p1/8/3PP3/2n5/PP3PPP/R1BQKBNR w KQkq - 0 6
-D85d GrŸnfeld: Exchange, 5.e4 Nxc3 6.bxc3 c5 rnbqkb1r/pp2pp1p/6p1/2p5/3PP3/2P5/P4PPP/R1BQKBNR w KQkq c6 0 7
-D85d GrŸnfeld: Exchange, 5.e4 Nxc3 6.bxc3 Bg7 rnbqk2r/ppp1ppbp/6p1/8/3PP3/2P5/P4PPP/R1BQKBNR w KQkq - 1 7
-D85d GrŸnfeld: Exchange, 7.Ba3 rnbqk2r/ppp1ppbp/6p1/8/3PP3/B1P5/P4PPP/R2QKBNR b KQkq - 2 7
-D85e GrŸnfeld: Exchange, 7.Bb5+ rnbqk2r/ppp1ppbp/6p1/1B6/3PP3/2P5/P4PPP/R1BQK1NR b KQkq - 2 7
-D85e GrŸnfeld: Exchange, 7.Bb5+ c6 rnbqk2r/pp2ppbp/2p3p1/1B6/3PP3/2P5/P4PPP/R1BQK1NR w KQkq - 0 8
-D85e GrŸnfeld: Exchange, 7.Bb5+ c6 8.Ba4 rnbqk2r/pp2ppbp/2p3p1/8/B2PP3/2P5/P4PPP/R1BQK1NR b KQkq - 1 8
-D85f GrŸnfeld: Exchange, 7.Bb5+ c6 8.Ba4 O-O rnbq1rk1/pp2ppbp/2p3p1/8/B2PP3/2P5/P4PPP/R1BQK1NR w KQ - 3 9
-D85g GrŸnfeld: Exchange, 7.Be3 rnbqk2r/ppp1ppbp/6p1/8/3PP3/2P1B3/P4PPP/R2QKBNR b KQkq - 2 7
-D85g GrŸnfeld: Exchange, 7.Be3 c5 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P1B3/P4PPP/R2QKBNR w KQkq c6 0 8
-D85g GrŸnfeld: Exchange, 7.Be3 c5 8.Qd2 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P1B3/P2Q1PPP/R3KBNR b KQkq - 1 8
-D85g GrŸnfeld: Exchange, 7.Be3 c5 8.Qd2 O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P1B3/P2Q1PPP/R3KBNR w KQ - 3 9
-D85g GrŸnfeld: Exchange, 7.Be3 c5 8.Qd2 O-O 9.Rc1 rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P1B3/P2Q1PPP/2R1KBNR b K - 4 9
-D85h GrŸnfeld: Exchange, 7.Be3 c5 8.Qd2 Qa5 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1B3/P2Q1PPP/R3KBNR w KQkq - 2 9
-D85h GrŸnfeld: Exchange, 7.Be3 c5 8.Qd2 Qa5 9.Rc1 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1B3/P2Q1PPP/2R1KBNR b Kkq - 3 9
-D85h GrŸnfeld: Exchange, 7.Be3 c5 8.Qd2 Qa5 9.Rb1 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1B3/P2Q1PPP/1R2KBNR b Kkq - 3 9
-D85h GrŸnfeld: Exchange, 7.Be3 c5 8.Qd2 Qa5 9.Rb1 b6 rnb1k2r/p3ppbp/1p4p1/q1p5/3PP3/2P1B3/P2Q1PPP/1R2KBNR w Kkq - 0 10
-D85i GrŸnfeld: Modern Exchange rnbqk2r/ppp1ppbp/6p1/8/3PP3/2P2N2/P4PPP/R1BQKB1R b KQkq - 2 7
-D85i GrŸnfeld: Modern Exchange, 7...O-O rnbq1rk1/ppp1ppbp/6p1/8/3PP3/2P2N2/P4PPP/R1BQKB1R w KQ - 4 8
-D85j GrŸnfeld: Modern Exchange, 7...c5 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P2N2/P4PPP/R1BQKB1R w KQkq c6 0 8
-D85k GrŸnfeld: Modern Exchange, 8.Bb5+ rnbqk2r/pp2ppbp/6p1/1Bp5/3PP3/2P2N2/P4PPP/R1BQK2R b KQkq - 1 8
-D85l GrŸnfeld: Modern Exchange, 8.Be2 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/R1BQK2R b KQkq - 1 8
-D85l GrŸnfeld: Modern Exchange, 8.Be2 O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/R1BQK2R w KQ - 3 9
-D85l GrŸnfeld: Modern Exchange, 8.Be2 O-O 9.O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/R1BQ1RK1 b - - 5 9
-D85l GrŸnfeld: Modern Exchange, 8.Be2 O-O 9.O-O b6 rnbq1rk1/p3ppbp/1p4p1/2p5/3PP3/2P2N2/P3BPPP/R1BQ1RK1 w - - 0 10
-D85l GrŸnfeld: Modern Exchange, 8.Be2 O-O 9.O-O Nc6 r1bq1rk1/pp2ppbp/2n3p1/2p5/3PP3/2P2N2/P3BPPP/R1BQ1RK1 w - - 6 10
-D85m GrŸnfeld: Modern Exchange, 8.Rb1 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P2N2/P4PPP/1RBQKB1R b Kkq - 1 8
-D85m GrŸnfeld: Modern Exchange, 8.Rb1 O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P2N2/P4PPP/1RBQKB1R w K - 3 9
-D85m GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/1RBQK2R b K - 4 9
-D85m GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 Qa5 rnb2rk1/pp2ppbp/6p1/q1p5/3PP3/2P2N2/P3BPPP/1RBQK2R w K - 5 10
-D85n GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 b6 rnbq1rk1/p3ppbp/1p4p1/2p5/3PP3/2P2N2/P3BPPP/1RBQK2R w K - 0 10
-D85o GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 Nc6 r1bq1rk1/pp2ppbp/2n3p1/2p5/3PP3/2P2N2/P3BPPP/1RBQK2R w K - 5 10
-D85p GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 Nc6, Main Line r1bq1rk1/pp2pp1p/6p1/2pPb3/4P3/2P5/P2QBPPP/1RB1K2R b K - 1 12
-D85p GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 Nc6, Main Line, 12...e6 r1bq1rk1/pp3p1p/4p1p1/2pPb3/4P3/2P5/P2QBPPP/1RB1K2R w K - 0 13
-D85q GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd rnbq1rk1/pp2ppbp/6p1/8/3pP3/2P2N2/P3BPPP/1RBQK2R w K - 0 10
-D85q GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd 10.cd rnbq1rk1/pp2ppbp/6p1/8/3PP3/5N2/P3BPPP/1RBQK2R b K - 0 10
-D85q GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd 10.cd Qa5+ rnb2rk1/pp2ppbp/6p1/q7/3PP3/5N2/P3BPPP/1RBQK2R w K - 1 11
-D85q GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd 10.cd Qa5+ 11.Qd2 rnb2rk1/pp2ppbp/6p1/q7/3PP3/5N2/P2QBPPP/1RB1K2R b K - 2 11
-D85r GrŸnfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd 10.cd Qa5+ 11.Bd2 rnb2rk1/pp2ppbp/6p1/q7/3PP3/5N2/P2BBPPP/1R1QK2R b K - 2 11
-D85s GrŸnfeld: Modern Exchange, 8.Rb1, 10...Qa5+ 11.Bd2 Qxa2 12.O-O Bg4 rn3rk1/pp2ppbp/6p1/8/3PP1b1/5N2/q2BBPPP/1R1Q1RK1 w - - 3 13
-D85s GrŸnfeld: Modern Exchange, 8.Rb1, 10...Qa5+ 11.Bd2 Qxa2 12.O-O Bg4 13.Bg5 rn3rk1/pp2ppbp/6p1/6B1/3PP1b1/5N2/q3BPPP/1R1Q1RK1 b - - 4 13
-D85t GrŸnfeld: Modern Exchange, 8.Be3 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P1BN2/P4PPP/R2QKB1R b KQkq - 1 8
-D85t GrŸnfeld: Modern Exchange, 8.Be3 Bg4 rn1qk2r/pp2ppbp/6p1/2p5/3PP1b1/2P1BN2/P4PPP/R2QKB1R w KQkq - 2 9
-D85t GrŸnfeld: Modern Exchange, 8.Be3 Nc6 r1bqk2r/pp2ppbp/2n3p1/2p5/3PP3/2P1BN2/P4PPP/R2QKB1R w KQkq - 2 9
-D85u GrŸnfeld: Modern Exchange, 8.Be3 Qa5 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1BN2/P4PPP/R2QKB1R w KQkq - 2 9
-D85u GrŸnfeld: Modern Exchange, 8.Be3 Qa5 9.Qd2 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1BN2/P2Q1PPP/R3KB1R b KQkq - 3 9
-D85v GrŸnfeld: Modern Exchange, 8.Be3 Qa5 9.Qd2 Nc6 10.Rc1 r1b1k2r/pp2ppbp/2n3p1/q1p5/3PP3/2P1BN2/P2Q1PPP/2R1KB1R b Kkq - 5 10
-D85w GrŸnfeld: Modern Exchange, 8.Be3 O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P1BN2/P4PPP/R2QKB1R w KQ - 3 9
-D85x GrŸnfeld: Modern Exchange, 8.Be3 O-O 9.Rc1 Qa5 rnb2rk1/pp2ppbp/6p1/q1p5/3PP3/2P1BN2/P4PPP/2RQKB1R w K - 5 10
-D85x GrŸnfeld: Modern Exchange, 8.Be3 O-O 9.Rc1 Qa5 10.Qd2 rnb2rk1/pp2ppbp/6p1/q1p5/3PP3/2P1BN2/P2Q1PPP/2R1KB1R b K - 6 10
-D85x GrŸnfeld: Modern Exchange, 8.Be3 O-O 9.Rc1 Qa5 Queenswap, 12.Kxd2 rnb2rk1/pp2ppbp/6p1/8/3PP3/4BN2/P2K1PPP/2R2B1R b - - 0 12
-D85y GrŸnfeld: Modern Exchange, 8.Be3 O-O 9.Rc1 Qa5 Queenswap, 12.Nxd2 rnb2rk1/pp2ppbp/6p1/8/3PP3/4B3/P2N1PPP/2R1KB1R b K - 0 12
-D86 GrŸnfeld: Classical Exchange rnbqk2r/ppp1ppbp/6p1/8/2BPP3/2P5/P4PPP/R1BQK1NR b KQkq - 2 7
-D86 GrŸnfeld: Classical Exchange, 7...b6 rnbqk2r/p1p1ppbp/1p4p1/8/2BPP3/2P5/P4PPP/R1BQK1NR w KQkq - 0 8
-D86 GrŸnfeld: Classical Exchange, 7...c5 rnbqk2r/pp2ppbp/6p1/2p5/2BPP3/2P5/P4PPP/R1BQK1NR w KQkq c6 0 8
-D86 GrŸnfeld: Classical Exchange, 7...O-O rnbq1rk1/ppp1ppbp/6p1/8/2BPP3/2P5/P4PPP/R1BQK1NR w KQ - 4 8
-D86 GrŸnfeld: Classical Exchange, 8.Ne2 rnbq1rk1/ppp1ppbp/6p1/8/2BPP3/2P5/P3NPPP/R1BQK2R b KQ - 5 8
-D86 GrŸnfeld: Classical Exchange, Larsen Variation rnb2rk1/p1pqppbp/1p4p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - - 0 10
-D86 GrŸnfeld: Classical Exchange, Simagin rnbq1rk1/p1p1ppbp/1p4p1/8/2BPP3/2P5/P3NPPP/R1BQK2R w KQ - 0 9
-D86 GrŸnfeld: Classical Exchange, Simagin, 9.h4 rnbq1rk1/p1p1ppbp/1p4p1/8/2BPP2P/2P5/P3NPP1/R1BQK2R b KQ h3 0 9
-D86 GrŸnfeld: Classical Exchange, Simagin, 9.O-O rnbq1rk1/p1p1ppbp/1p4p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 b - - 2 9
-D86 GrŸnfeld: Classical Exchange, Simagin Improved r1bq1rk1/ppp1ppbp/2n3p1/8/2BPP3/2P5/P3NPPP/R1BQK2R w KQ - 6 9
-D86 GrŸnfeld: Classical Exchange, Simagin Improved, 9.Be3 r1bq1rk1/ppp1ppbp/2n3p1/8/2BPP3/2P1B3/P3NPPP/R2QK2R b KQ - 7 9
-D86 GrŸnfeld: Classical Exchange, Simagin Improved, 9.O-O r1bq1rk1/ppp1ppbp/2n3p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 b - - 8 9
-D86 GrŸnfeld: Classical Exchange, Simagin Improved, 9.O-O e5 r1bq1rk1/ppp2pbp/2n3p1/4p3/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - e6 0 10
-D86 GrŸnfeld: Classical Exchange, Simagin Improved, 9.O-O b6 r1bq1rk1/p1p1ppbp/1pn3p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - - 0 10
-D87a GrŸnfeld: Classical Exchange, 8...c5 rnbq1rk1/pp2ppbp/6p1/2p5/2BPP3/2P5/P3NPPP/R1BQK2R w KQ c6 0 9
-D87b GrŸnfeld: Classical Exchange, 8...c5 9.Be3 rnbq1rk1/pp2ppbp/6p1/2p5/2BPP3/2P1B3/P3NPPP/R2QK2R b KQ - 1 9
-D87c GrŸnfeld: Classical Exchange, 8...c5 9.Be3 Qa5 rnb2rk1/pp2ppbp/6p1/q1p5/2BPP3/2P1B3/P3NPPP/R2QK2R w KQ - 2 10
-D87c GrŸnfeld: Classical Exchange, 8...c5 9.Be3 Qa5 r1b2rk1/pp1nppbp/6p1/q1p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
-D87d GrŸnfeld: Classical Exchange, 8...c5 9.Be3 Nc6 r1bq1rk1/pp2ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/R2QK2R w KQ - 2 10
-D87e GrŸnfeld: Classical Exchange, 9.O-O rnbq1rk1/pp2ppbp/6p1/2p5/2BPP3/2P5/P3NPPP/R1BQ1RK1 b - - 2 9
-D87f GrŸnfeld: Classical Exchange, 9.O-O Nc6 r1bq1rk1/pp2ppbp/2n3p1/2p5/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - - 3 10
-D87g GrŸnfeld: Classical Exchange, 9.O-O Nc6 10.Be3 r1bq1rk1/pp2ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 b - - 4 10
-D87h GrŸnfeld: Classical Exchange, 10.Be3 Qa5 r1b2rk1/pp2ppbp/2n3p1/q1p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
-D87i GrŸnfeld: Classical Exchange, 10.Be3 Na5 r1bq1rk1/pp2ppbp/6p1/n1p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
-D87j GrŸnfeld: Classical Exchange, 10.Be3 Qc7 r1b2rk1/ppq1ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
-D87k GrŸnfeld: Classical Exchange, 10.Be3 Qc7 11.Rc1 Rd8 r1br2k1/ppq1ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/2RQ1RK1 w - - 7 12
-D87l GrŸnfeld: Classical Exchange, 10.Be3 Qc7 11.Rc1 Rd8 12.Qd2 r1br2k1/ppq1ppbp/2n3p1/2p5/2BPP3/2P1B3/P2QNPPP/2R2RK1 b - - 8 12
-D87m GrŸnfeld: Classical Exchange, 10.Be3 Qc7 11.Rc1 Rd8 12.Bf4 r1br2k1/ppq1ppbp/2n3p1/2p5/2BPPB2/2P5/P3NPPP/2RQ1RK1 b - - 8 12
-D87n GrŸnfeld: Classical Exchange, 10.Be3 Bg4 r2q1rk1/pp2ppbp/2n3p1/2p5/2BPP1b1/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
-D87o GrŸnfeld: Classical Exchange, 10.Be3 Bg4 11.f3 Na5 12.Bd5 r2q1rk1/pp2ppbp/6p1/n1pB4/3PP1b1/2P1BP2/P3N1PP/R2Q1RK1 b - - 2 12
-D87p GrŸnfeld: Classical Exchange, Seville Variation r2q1rk1/pp2pBbp/6p1/n1p5/3PP1b1/2P1BP2/P3N1PP/R2Q1RK1 b - - 0 12
-D88 GrŸnfeld: Classical Exchange, Main Line r1bq1rk1/pp2ppbp/2n3p1/8/2BpP3/2P1B3/P3NPPP/R2Q1RK1 w - - 0 11
-D88 GrŸnfeld: Classical Exchange, Main Line, 11.cxd4 r1bq1rk1/pp2ppbp/2n3p1/8/2BPP3/4B3/P3NPPP/R2Q1RK1 b - - 0 11
-D88 GrŸnfeld: Classical Exchange, Main Line, 11.cxd4 Na5 r1bq1rk1/pp2ppbp/6p1/n7/2BPP3/4B3/P3NPPP/R2Q1RK1 w - - 1 12
-D88 GrŸnfeld: Classical Exchange, Main Line, 11.cxd4 Na5 12.Bd3 r1bq1rk1/pp2ppbp/6p1/n7/3PP3/3BB3/P3NPPP/R2Q1RK1 b - - 2 12
-D88 GrŸnfeld: Classical Exchange, Main Line, 11.cxd4 Bg4 r2q1rk1/pp2ppbp/2n3p1/8/2BPP1b1/4B3/P3NPPP/R2Q1RK1 w - - 1 12
-D88 GrŸnfeld: Classical Exchange, Main Line, 11.cxd4 Bg4 12.f3 r2q1rk1/pp2ppbp/2n3p1/8/2BPP1b1/4BP2/P3N1PP/R2Q1RK1 b - - 0 12
-D88 GrŸnfeld: Classical Exchange, Main Line, 11.cxd4 Bg4 12.f3 Na5 r2q1rk1/pp2ppbp/6p1/n7/2BPP1b1/4BP2/P3N1PP/R2Q1RK1 w - - 1 13
-D88 GrŸnfeld: Classical Exchange, Main Line, Neo-Seville r2q1rk1/pp2pBbp/6p1/n7/3PP1b1/4BP2/P3N1PP/R2Q1RK1 b - - 0 13
-D88 GrŸnfeld: Classical Exchange, Main Line, 11.cxd4 Bg4 12.f3 Na5 13.Bd5 r2q1rk1/pp2ppbp/6p1/n2B4/3PP1b1/4BP2/P3N1PP/R2Q1RK1 b - - 2 13
-D89a GrŸnfeld: Classical Exchange, Main Line, 13.Bd3 r2q1rk1/pp2ppbp/6p1/n7/3PP1b1/3BBP2/P3N1PP/R2Q1RK1 b - - 2 13
-D89b GrŸnfeld: Classical Exchange, Main Line, 13.Bd3 Be6 r2q1rk1/pp2ppbp/4b1p1/n7/3PP3/3BBP2/P3N1PP/R2Q1RK1 w - - 3 14
-D89c GrŸnfeld: Classical Exchange, Main Line, 13.Bd3 Be6 14.Rc1 r2q1rk1/pp2ppbp/4b1p1/n7/3PP3/3BBP2/P3N1PP/2RQ1RK1 b - - 4 14
-D89d GrŸnfeld: Classical Exchange, 14.Rc1 Bxa2 15.Qa4 Be6 16.d5 Be7 17.Qb4 r2q1rk1/pp1bppbp/6p1/n2P4/1Q2P3/3BBP2/4N1PP/2R2RK1 b - - 2 17
-D89e GrŸnfeld: Classical Exchange, 14.Rc1 Bxa2 15.Qa4 with 17.Qb4 b6 r2q1rk1/p2bppbp/1p4p1/n2P4/1Q2P3/3BBP2/4N1PP/2R2RK1 w - - 0 18
-D89f GrŸnfeld: Classical Exchange, 14.Rc1 Bxa2 15.Qa4 with 17.Qb4 e6 r2q1rk1/pp1b1pbp/4p1p1/n2P4/1Q2P3/3BBP2/4N1PP/2R2RK1 w - - 0 18
-D89g GrŸnfeld: Classical Exchange, Main Line, Sokolsky Variation r2q1rk1/pp2ppbp/4b1p1/n2P4/4P3/3BBP2/P3N1PP/R2Q1RK1 b - - 0 14
-D89h GrŸnfeld: Classical Exchange, Main Line, Sokolsky, 16.Rb1 r2q1rk1/pp2p2p/4bpp1/n2P4/4P3/3BBP2/P3N1PP/QR4K1 b - - 1 16
-D89i GrŸnfeld: Classical Exchange, Main Line, Sokolsky, 16.Bh6 r2q1rk1/pp2p2p/4bppB/n2P4/4P3/3B1P2/P3N1PP/Q4RK1 b - - 1 16
-D90 GrŸnfeld: Three Knights Variation rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 1 4
-D90 GrŸnfeld: Schlechter Variation rnbqkb1r/pp2pp1p/2p2np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 5
-D90 GrŸnfeld: Schlechter, 5.Qb3 rnbqkb1r/pp2pp1p/2p2np1/3p4/2PP4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq - 1 5
-D90 GrŸnfeld: Schlechter, Exchange rnbqkb1r/pp2pp1p/2p2np1/3P4/3P4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 0 5
-D90 GrŸnfeld: Schlechter, Exchange rnbqkb1r/pp2pp1p/5np1/3p4/3P4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 6
-D90 GrŸnfeld: Three Knights Variation rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 2 5
-D90 GrŸnfeld: Three Knights, 5.g3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N2NP1/PP2PP1P/R1BQKB1R b KQkq - 0 5
-D90 GrŸnfeld: Flohr Variation rnbqk2r/ppp1ppbp/5np1/3p4/Q1PP4/2N2N2/PP2PPPP/R1B1KB1R b KQkq - 3 5
-D90 GrŸnfeld: Three Knights Exchange rnbqk2r/ppp1ppbp/5np1/3P4/3P4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 0 5
-D90 GrŸnfeld: Three Knights Exchange rnbqk2r/ppp1ppbp/6p1/3n4/3P4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 6
-D90 GrŸnfeld: Three Knights Exchange, Romanishin Variation rnbqk2r/ppp1ppbp/6p1/3n4/3P4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq - 1 6
-D90 GrŸnfeld: Three Knights Exchange, 6.Bd2 rnbqk2r/ppp1ppbp/6p1/3n4/3P4/2N2N2/PP1BPPPP/R2QKB1R b KQkq - 1 6
-D90 GrŸnfeld: Three Knights Exchange, 6.Bd2 O-O rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/2N2N2/PP1BPPPP/R2QKB1R w KQ - 3 7
-D90 GrŸnfeld: Three Knights Exchange, 6.Bd2 O-O 7.Rc1 rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/2N2N2/PP1BPPPP/2RQKB1R b K - 4 7
-D91a GrŸnfeld: 5.Bg5 rnbqk2r/ppp1ppbp/5np1/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b KQkq - 3 5
-D91a GrŸnfeld: 5.Bg5 c6 rnbqk2r/pp2ppbp/2p2np1/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 6
-D91b GrŸnfeld: 5.Bg5 dxc4 rnbqk2r/ppp1ppbp/5np1/6B1/2pP4/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 6
-D91c GrŸnfeld: 5.Bg5 dxc4 6.e4 rnbqk2r/ppp1ppbp/5np1/6B1/2pPP3/2N2N2/PP3PPP/R2QKB1R b KQkq e3 0 6
-D91d GrŸnfeld: 5.Bg5 Ne4 rnbqk2r/ppp1ppbp/6p1/3p2B1/2PPn3/2N2N2/PP2PPPP/R2QKB1R w KQkq - 4 6
-D91d GrŸnfeld: 5.Bg5 Ne4 6.Bf4 rnbqk2r/ppp1ppbp/6p1/3p4/2PPnB2/2N2N2/PP2PPPP/R2QKB1R b KQkq - 5 6
-D91e GrŸnfeld: 5.Bg5 Ne4 6.Bh4 rnbqk2r/ppp1ppbp/6p1/3p4/2PPn2B/2N2N2/PP2PPPP/R2QKB1R b KQkq - 5 6
-D91f GrŸnfeld: 5.Bg5 Ne4 6.Bh4 Nxc3 rnbqk2r/ppp1ppbp/6p1/3p4/2PP3B/2n2N2/PP2PPPP/R2QKB1R w KQkq - 0 7
-D91g GrŸnfeld: 5.Bg5 Ne4 6.Bh4 Nxc3 7.bxc3 dxc4 rnbqk2r/ppp1ppbp/6p1/8/2pP3B/2P2N2/P3PPPP/R2QKB1R w KQkq - 0 8
-D91h GrŸnfeld: 5.Bg5 Ne4 6.cxd5 rnbqk2r/ppp1ppbp/6p1/3P2B1/3Pn3/2N2N2/PP2PPPP/R2QKB1R b KQkq - 0 6
-D91i GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 rnbqk2r/ppp1ppbp/6p1/3P2n1/3P4/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 7
-D91j GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 c6 rnbqk2r/pp2ppbp/2p3p1/3P2N1/3P4/2N5/PP2PPPP/R2QKB1R w KQkq - 0 8
-D91k GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 rnbqk2r/ppp2pbp/4p1p1/3P2N1/3P4/2N5/PP2PPPP/R2QKB1R w KQkq - 0 8
-D91l GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Qd2 rnbqk2r/ppp2pbp/4p1p1/3P2N1/3P4/2N5/PP1QPPPP/R3KB1R b KQkq - 1 8
-D91m GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Qd2 exd5 rnbqk2r/ppp2pbp/6p1/3p2N1/3P4/2N5/PP1QPPPP/R3KB1R w KQkq - 0 9
-D91n GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Qd2 exd5: 11.h4 h6 rnbq1k1r/ppp2p2/5bpp/3p2N1/3P1Q1P/2N5/PP2PPP1/R3KB1R w KQ - 0 12
-D91o GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 rnbqk2r/ppp2pbp/4p1p1/3P4/3P4/2N2N2/PP2PPPP/R2QKB1R b KQkq - 1 8
-D91p GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 rnbqk2r/ppp2pbp/6p1/3p4/3P4/2N1PN2/PP3PPP/R2QKB1R b KQkq - 0 9
-D91q GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O rnbq1rk1/ppp2pbp/6p1/3p4/3P4/2N1PN2/PP3PPP/R2QKB1R w KQ - 2 10
-D91r GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.Bd3 rnbq1rk1/ppp2pbp/6p1/3p4/3P4/2NBPN2/PP3PPP/R2QK2R b KQ - 3 10
-D91r GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.Bd3 rnbq1rk1/pp3pbp/2p3p1/3p4/3P4/2NBPN2/PP3PPP/R2QK2R w KQ - 0 11
-D91s GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.Be2 rnbq1rk1/ppp2pbp/6p1/3p4/3P4/2N1PN2/PP2BPPP/R2QK2R b KQ - 3 10
-D91s GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.Be2 rnbq1rk1/pp3pbp/2p3p1/3p4/3P4/2N1PN2/PP2BPPP/R2QK2R w KQ - 0 11
-D91t GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.b4 rnbq1rk1/ppp2pbp/6p1/3p4/1P1P4/2N1PN2/P4PPP/R2QKB1R b KQ b3 0 10
-D91t GrŸnfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.b4 c6 rnbq1rk1/pp3pbp/2p3p1/3p4/1P1P4/2N1PN2/P4PPP/R2QKB1R w KQ - 0 11
-D92 GrŸnfeld: 5.Bf4 rnbqk2r/ppp1ppbp/5np1/3p4/2PP1B2/2N2N2/PP2PPPP/R2QKB1R b KQkq - 3 5
-D92 GrŸnfeld: 5.Bf4 c6 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP1B2/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 6
-D92 GrŸnfeld: 5.Bf4 O-O rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N2N2/PP2PPPP/R2QKB1R w KQ - 5 6
-D92 GrŸnfeld: 5.Bf4 O-O 6.Rc1 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N2N2/PP2PPPP/2RQKB1R b K - 6 6
-D92 GrŸnfeld: 5.Bf4 O-O 6.Rc1 dxc4 rnbq1rk1/ppp1ppbp/5np1/8/2pP1B2/2N2N2/PP2PPPP/2RQKB1R w K - 0 7
-D92 GrŸnfeld: 5.Bf4 O-O 6.Rc1 c5 rnbq1rk1/pp2ppbp/5np1/2pp4/2PP1B2/2N2N2/PP2PPPP/2RQKB1R w K c6 0 7
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1PN2/PP3PPP/R2QKB1R b KQ - 0 6
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 c5 rnbq1rk1/pp2ppbp/5np1/2pp4/2PP1B2/2N1PN2/PP3PPP/R2QKB1R w KQ c6 0 7
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 c5 7.dxc5 rnbq1rk1/pp2ppbp/5np1/2Pp4/2P2B2/2N1PN2/PP3PPP/R2QKB1R b KQ - 0 7
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 c5 7.dxc5 Qa5 rnb2rk1/pp2ppbp/5np1/q1Pp4/2P2B2/2N1PN2/PP3PPP/R2QKB1R w KQ - 1 8
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 c5 7.dxc5 Qa5 8.Rc1 rnb2rk1/pp2ppbp/5np1/q1Pp4/2P2B2/2N1PN2/PP3PPP/2RQKB1R b K - 2 8
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 c5 7.dxc5 Qa5 8.Rc1 dxc4 9.Bxc4 rnb2rk1/pp2ppbp/5np1/q1P5/2B2B2/2N1PN2/PP3PPP/2RQK2R b K - 0 9
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 c6 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP1B2/2N1PN2/PP3PPP/R2QKB1R w KQ - 0 7
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 c6 7.Qb3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP1B2/1QN1PN2/PP3PPP/R3KB1R b KQ - 1 7
-D93 GrŸnfeld: 5.Bf4 O-O 6.e3 c6 7.Rc1 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP1B2/2N1PN2/PP3PPP/2RQKB1R b K - 1 7
-D94 GrŸnfeld: 5.e3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R b KQkq - 0 5
-D94 GrŸnfeld: Slav/Schlecter rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQkq - 0 6
-D94 GrŸnfeld: Slav/Schlecter, 6.Bd3 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/2NBPN2/PP3PPP/R1BQK2R b KQkq - 1 6
-D94 GrŸnfeld: Slav/Schlecter, 6.Be2 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/2N1PN2/PP2BPPP/R1BQK2R b KQkq - 1 6
-D94 GrŸnfeld: Slav/Schlecter, 6.Be2 O-O rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/2N1PN2/PP2BPPP/R1BQK2R w KQ - 3 7
-D94 GrŸnfeld: Slav/Schlecter, 6.Be2 O-O 7.O-O rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/2N1PN2/PP2BPPP/R1BQ1RK1 b - - 5 7
-D94 GrŸnfeld: 5.e3 O-O rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 2 6
-D94 GrŸnfeld: Makogonov Variation rnbq1rk1/ppp1ppbp/5np1/3p4/1PPP4/2N1PN2/P4PPP/R1BQKB1R b KQ b3 0 6
-D94 GrŸnfeld: Opovcensky Variation rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP1B1PPP/R2QKB1R b KQ - 3 6
-D94 GrŸnfeld: 5.e3 O-O 6.Be2 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP2BPPP/R1BQK2R b KQ - 3 6
-D94 GrŸnfeld: 5.e3 O-O 6.Be2 c5 rnbq1rk1/pp2ppbp/5np1/2pp4/2PP4/2N1PN2/PP2BPPP/R1BQK2R w KQ c6 0 7
-D94 GrŸnfeld: 5.e3 O-O 6.Bd3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2NBPN2/PP3PPP/R1BQK2R b KQ - 3 6
-D94 GrŸnfeld: 5.e3 O-O 6.Bd3 c6 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/2NBPN2/PP3PPP/R1BQK2R w KQ - 0 7
-D94 GrŸnfeld: Smyslov Defence rn1q1rk1/pp2ppbp/2p2np1/3p4/2PP2b1/2NBPN2/PP3PPP/R1BQ1RK1 w - - 3 8
-D94 GrŸnfeld: Flohr Defence rn1q1rk1/pp2ppbp/2p2np1/3p1b2/2PP4/2NBPN2/PP3PPP/R1BQ1RK1 w - - 3 8
-D94 GrŸnfeld: 5.e3 O-O 6.cxd5 rnbq1rk1/ppp1ppbp/5np1/3P4/3P4/2N1PN2/PP3PPP/R1BQKB1R b KQ - 0 6
-D94 GrŸnfeld: 5.e3 O-O 6.cxd5 rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 0 7
-D94 GrŸnfeld: 5.e3 O-O 6.cxd5 Nxd5 7.Bc4 rnbq1rk1/ppp1ppbp/6p1/3n4/2BP4/2N1PN2/PP3PPP/R1BQK2R b KQ - 1 7
-D95a GrŸnfeld: 5.e3 O-O 6.Qb3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R b KQ - 3 6
-D95b GrŸnfeld: 5.e3 O-O 6.Qb3 b6 rnbq1rk1/p1p1ppbp/1p3np1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ - 0 7
-D95c GrŸnfeld: 5.e3 O-O 6.Qb3 c6 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ - 0 7
-D95d GrŸnfeld: 5.e3 O-O 6.Qb3 c6 7.Bd2 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/1QN1PN2/PP1B1PPP/R3KB1R b KQ - 1 7
-D95e GrŸnfeld: 5.e3 O-O 6.Qb3 c6 7.Bd2 e6 rnbq1rk1/pp3pbp/2p1pnp1/3p4/2PP4/1QN1PN2/PP1B1PPP/R3KB1R w KQ - 0 8
-D95f GrŸnfeld: 5.e3 O-O 6.Qb3 c6 7.Bd2 e6 8.Bd3 rnbq1rk1/pp3pbp/2p1pnp1/3p4/2PP4/1QNBPN2/PP1B1PPP/R3K2R b KQ - 1 8
-D95g GrŸnfeld: Botvinnik Variation rnbq1rk1/ppp2pbp/4pnp1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ - 0 7
-D95h GrŸnfeld: Botvinnik, 7.Bd2 rnbq1rk1/ppp2pbp/4pnp1/3p4/2PP4/1QN1PN2/PP1B1PPP/R3KB1R b KQ - 1 7
-D95i GrŸnfeld: 5.e3 O-O 6.Qb3 dxc4 rnbq1rk1/ppp1ppbp/5np1/8/2pP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ - 0 7
-D95i GrŸnfeld: 5.e3 O-O 6.Qb3 dxc4 7.Bxc4 rnbq1rk1/ppp1ppbp/5np1/8/2BP4/1QN1PN2/PP3PPP/R1B1K2R b KQ - 0 7
-D95i GrŸnfeld: Pachman Variation r1bq1rk1/pppnppbp/5np1/6N1/2BP4/1QN1P3/PP3PPP/R1B1K2R b KQ - 2 8
-D95j GrŸnfeld: 5.e3 O-O 6.Qb3 dxc4 7.Bxc4 Nc6 r1bq1rk1/ppp1ppbp/2n2np1/8/2BP4/1QN1PN2/PP3PPP/R1B1K2R w KQ - 1 8
-D96 GrŸnfeld: Russian Variation rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq - 3 5
-D96 GrŸnfeld: Russian, 5...c6 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/1QN2N2/PP2PPPP/R1B1KB1R w KQkq - 0 6
-D96 GrŸnfeld: Russian, 5...c6 6.Bf4 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP1B2/1QN2N2/PP2PPPP/R3KB1R b KQkq - 1 6
-D96 GrŸnfeld: Russian, 5...c6 6.cxd5 cxd5 rnbqk2r/pp2ppbp/5np1/3p4/3P4/1QN2N2/PP2PPPP/R1B1KB1R w KQkq - 0 7
-D96 GrŸnfeld: Russian, 5...c6 6.cxd5 Nxd5 rnbqk2r/pp2ppbp/2p3p1/3n4/3P4/1QN2N2/PP2PPPP/R1B1KB1R w KQkq - 0 7
-D96 GrŸnfeld: Russian, 5...dxc4 rnbqk2r/ppp1ppbp/5np1/8/2pP4/1QN2N2/PP2PPPP/R1B1KB1R w KQkq - 0 6
-D96 GrŸnfeld: Russian, 5...dxc4 rnbqk2r/ppp1ppbp/5np1/8/2QP4/2N2N2/PP2PPPP/R1B1KB1R b KQkq - 0 6
-D96 GrŸnfeld: Russian, 6...O-O rnbqk2r/1pp1ppbp/p4np1/8/2QP4/2N2N2/PP2PPPP/R1B1KB1R w KQkq - 0 7
-D96 GrŸnfeld: Russian, 6...a6 rnbq1rk1/ppp1ppbp/5np1/8/2QP4/2N2N2/PP2PPPP/R1B1KB1R w KQ - 2 7
-D96 GrŸnfeld: Russian, 7.Bf4 rnbq1rk1/ppp1ppbp/5np1/8/2QP1B2/2N2N2/PP2PPPP/R3KB1R b KQ - 3 7
-D96 GrŸnfeld: Russian, 7.Bf4 c6 rnbq1rk1/pp2ppbp/2p2np1/8/2QP1B2/2N2N2/PP2PPPP/R3KB1R w KQ - 0 8
-D97a GrŸnfeld: Russian, 7.e4 rnbq1rk1/ppp1ppbp/5np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R b KQ e3 0 7
-D97a GrŸnfeld: Russian, 7.e4 Nfd7 rnbq1rk1/pppnppbp/6p1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 1 8
-D97b GrŸnfeld: Russian, Levenfish Variation rnbq1rk1/p1p1ppbp/1p3np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 0 8
-D97c GrŸnfeld: Russian, Szabo Variation rnbq1rk1/pp2ppbp/2p2np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 0 8
-D97c GrŸnfeld: Russian, Szabo, 8.Be2 rnbq1rk1/pp2ppbp/2p2np1/8/2QPP3/2N2N2/PP2BPPP/R1B1K2R b KQ - 1 8
-D97d GrŸnfeld: Russian, Alekhine (Hungarian) Variation rnbq1rk1/1pp1ppbp/p4np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 0 8
-D97e GrŸnfeld: Russian, Alekhine, 8.Be2 rnbq1rk1/1pp1ppbp/p4np1/8/2QPP3/2N2N2/PP2BPPP/R1B1K2R b KQ - 1 8
-D97f GrŸnfeld: Russian, Alekhine, 8.Be2 b5 9.Qb3 rnbq1rk1/2p1ppbp/p4np1/1p6/3PP3/1QN2N2/PP2BPPP/R1B1K2R b KQ - 1 9
-D97g GrŸnfeld: Russian, Alekhine, 8.Qb3 rnbq1rk1/1pp1ppbp/p4np1/8/3PP3/1QN2N2/PP3PPP/R1B1KB1R b KQ - 1 8
-D97h GrŸnfeld: Russian, Alekhine, 8.e5 rnbq1rk1/1pp1ppbp/p4np1/4P3/2QP4/2N2N2/PP3PPP/R1B1KB1R b KQ - 0 8
-D97i GrŸnfeld: Russian, Alekhine, 8.e5 b5 9.Qb3 rnbq1rk1/2p1ppbp/p4np1/1p2P3/3P4/1QN2N2/PP3PPP/R1B1KB1R b KQ - 1 9
-D97j GrŸnfeld: Russian, Alekhine, 8.e5 b5 9.Qb3 Nfd7 rnbq1rk1/2pnppbp/p5p1/1p2P3/3P4/1QN2N2/PP3PPP/R1B1KB1R w KQ - 2 10
-D97k GrŸnfeld: Russian, Alekhine, 8.e5 b5 9.Qb3 Nfd7 10.Be3 rnbq1rk1/2pnppbp/p5p1/1p2P3/3P4/1QN1BN2/PP3PPP/R3KB1R b KQ - 3 10
-D97l GrŸnfeld: Russian, Simagin Variation r1bq1rk1/ppp1ppbp/2n2np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 1 8
-D97l GrŸnfeld: Russian, Simagin, 8.Be2 r1bq1rk1/ppp1ppbp/2n2np1/8/2QPP3/2N2N2/PP2BPPP/R1B1K2R b KQ - 2 8
-D97m GrŸnfeld: Russian, Prins Variation r1bq1rk1/ppp1ppbp/n4np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 1 8
-D97n GrŸnfeld: Russian, Prins, 8.Bf4 r1bq1rk1/ppp1ppbp/n4np1/8/2QPPB2/2N2N2/PP3PPP/R3KB1R b KQ - 2 8
-D97o GrŸnfeld: Russian, Prins, 8.Be2 r1bq1rk1/ppp1ppbp/n4np1/8/2QPP3/2N2N2/PP2BPPP/R1B1K2R b KQ - 2 8
-D97p GrŸnfeld: Russian, Prins, 8.Be2, Main Line r2q1rk1/pp3pbp/n4np1/2pP1b2/2Q5/2N2N2/PP2BPPP/R1B2RK1 w - - 1 12
-D98a GrŸnfeld: Russian, Smyslov Variation rn1q1rk1/ppp1ppbp/5np1/8/2QPP1b1/2N2N2/PP3PPP/R1B1KB1R w KQ - 1 8
-D98b GrŸnfeld: Russian, Smyslov, 8.Be2 rn1q1rk1/ppp1ppbp/5np1/8/2QPP1b1/2N2N2/PP2BPPP/R1B1K2R b KQ - 2 8
-D98c GrŸnfeld: Russian, Smyslov, 8.Be2 Nc6 r2q1rk1/ppp1ppbp/2n2np1/8/2QPP1b1/2N2N2/PP2BPPP/R1B1K2R w KQ - 3 9
-D98d GrŸnfeld: Russian, Smyslov, 8.Be2 Nc6 9.d5 r2q1rk1/ppp1ppbp/2n2np1/3P4/2Q1P1b1/2N2N2/PP2BPPP/R1B1K2R b KQ - 0 9
-D98e GrŸnfeld: Russian, Smyslov, 8.Be3 rn1q1rk1/ppp1ppbp/5np1/8/2QPP1b1/2N1BN2/PP3PPP/R3KB1R b KQ - 2 8
-D98f GrŸnfeld: Russian, Smyslov, 8.Be3 Nfd7 rn1q1rk1/pppnppbp/6p1/8/2QPP1b1/2N1BN2/PP3PPP/R3KB1R w KQ - 3 9
-D98g GrŸnfeld: Russian, Smyslov, 8.Be3 Nfd7 9.Be2 rn1q1rk1/pppnppbp/6p1/8/2QPP1b1/2N1BN2/PP2BPPP/R3K2R b KQ - 4 9
-D98h GrŸnfeld: Russian, Smyslov, Keres Variation r2q1rk1/ppp1ppbp/1nn3p1/8/3PP1b1/2NQBN2/PP2BPPP/2KR3R b - - 9 11
-D98i GrŸnfeld: Russian, Smyslov, 8.Be3 Nfd7 9.O-O-O rn1q1rk1/pppnppbp/6p1/8/2QPP1b1/2N1BN2/PP3PPP/2KR1B1R b - - 5 9
-D98j GrŸnfeld: Russian, Smyslov, 8.Be3 Nfd7 9.Rd1 rn1q1rk1/pppnppbp/6p1/8/2QPP1b1/2N1BN2/PP3PPP/3RKB1R b K - 4 9
-D98k GrŸnfeld: Russian, Smyslov, 8.Be3 Nfd7 9.Rd1 Nc6 r2q1rk1/pppnppbp/2n3p1/8/2QPP1b1/2N1BN2/PP3PPP/3RKB1R w K - 5 10
-D99a GrŸnfeld: Russian, Smyslov, Main Line rn1q1rk1/pppnppbp/6p1/8/3PP1b1/1QN1BN2/PP3PPP/R3KB1R b KQ - 4 9
-D99b GrŸnfeld: Russian, Smyslov, Yugoslav rn1q1rk1/pp1nppbp/6p1/2p5/3PP1b1/1QN1BN2/PP3PPP/R3KB1R w KQ c6 0 10
-D99c GrŸnfeld: Russian, Smyslov, Main Line, 9...Nb6 rn1q1rk1/ppp1ppbp/1n4p1/8/3PP1b1/1QN1BN2/PP3PPP/R3KB1R w KQ - 5 10
-D99d GrŸnfeld: Russian, Smyslov, Main Line, 9...Nb6 10.Rd1 rn1q1rk1/ppp1ppbp/1n4p1/8/3PP1b1/1QN1BN2/PP3PPP/3RKB1R b K - 6 10
-D99e GrŸnfeld: Russian, Smyslov, Main Line, 9...Nb6 10.Rd1 e6 rn1q1rk1/ppp2pbp/1n2p1p1/8/3PP1b1/1QN1BN2/PP3PPP/3RKB1R w K - 0 11
-D99f GrŸnfeld: Russian, Smyslov, Main Line, 9...Nb6 10.Rd1 Nc6 r2q1rk1/ppp1ppbp/1nn3p1/8/3PP1b1/1QN1BN2/PP3PPP/3RKB1R w K - 7 11
-D99g GrŸnfeld: Russian, Smyslov, Main Line, 9...Nb6 10.Rd1 Nc6 11.d5 Ne5 r2q1rk1/ppp1ppbp/1n4p1/3Pn3/4P1b1/1QN1BN2/PP3PPP/3RKB1R w K - 1 12
+D70 Neo-Grünfeld: 3.Nf3 d5 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/5N2/PP2PPPP/RNBQKB1R w KQkq d6 0 4
+D70 Neo-Grünfeld: Alekhine's Anti-Grünfeld rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/5P2/PP2P1PP/RNBQKBNR w KQkq d6 0 4
+D70 Neo-Grünfeld: Alekhine's, 5.e4 Nb6 rnbqkb1r/ppp1pp1p/1n4p1/8/3PP3/5P2/PP4PP/RNBQKBNR w KQkq - 1 6
+D70 Neo-Grünfeld: Alekhine's, 7.Be3 O-O rnbq1rk1/ppp1ppbp/1n4p1/8/3PP3/2N1BP2/PP4PP/R2QKBNR w KQ - 6 8
+D70 Neo-Grünfeld: 3.g3 d5 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/6P1/PP2PP1P/RNBQKBNR w KQkq d6 0 4
+D70 Neo-Grünfeld: 4.cxd5 rnbqkb1r/ppp1pp1p/5np1/3P4/3P4/6P1/PP2PP1P/RNBQKBNR b KQkq - 0 4
+D70 Neo-Grünfeld: 4.Bg2 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR b KQkq - 1 4
+D70 Neo-Grünfeld: 4.Bg2 c6 rnbqkb1r/pp2pp1p/2p2np1/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR w KQkq - 0 5
+D70 Neo-Grünfeld: 4.Bg2 Bg7 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/6P1/PP2PPBP/RNBQK1NR w KQkq - 2 5
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 rnbqk2r/ppp1ppbp/6p1/3n4/3P4/6P1/PP2PPBP/RNBQK1NR w KQkq - 0 6
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 6.Nc3 rnbqk2r/ppp1ppbp/6p1/3n4/3P4/2N3P1/PP2PPBP/R1BQK1NR b KQkq - 1 6
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 6.Nc3 Nxc3 rnbqk2r/ppp1ppbp/6p1/8/3P4/2n3P1/PP2PPBP/R1BQK1NR w KQkq - 0 7
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 6.Nc3 Nxc3 7.bxc3 c5 rnbqk2r/pp2ppbp/6p1/2p5/3P4/2P3P1/P3PPBP/R1BQK1NR w KQkq c6 0 8
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 6.Nc3 Nb6 rnbqk2r/ppp1ppbp/1n4p1/8/3P4/2N3P1/PP2PPBP/R1BQK1NR w KQkq - 2 7
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 rnbqk2r/ppp1ppbp/6p1/3n4/3PP3/6P1/PP3PBP/RNBQK1NR b KQkq e3 0 6
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb6 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/6P1/PP3PBP/RNBQK1NR w KQkq - 1 7
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb4 rnbqk2r/ppp1ppbp/6p1/8/1n1PP3/6P1/PP3PBP/RNBQK1NR w KQkq - 1 7
+D71 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb4 7.d5 rnbqk2r/ppp1ppbp/6p1/3P4/1n2P3/6P1/PP3PBP/RNBQK1NR b KQkq - 0 7
+D72 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/6P1/PP2NPBP/RNBQK2R b KQkq - 2 7
+D72 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 Nc6 r1bqk2r/ppp1ppbp/1nn3p1/8/3PP3/6P1/PP2NPBP/RNBQK2R w KQkq - 3 8
+D72 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 e5 rnbqk2r/ppp2pbp/1n4p1/4p3/3PP3/6P1/PP2NPBP/RNBQK2R w KQkq e6 0 8
+D72 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 c5 rnbqk2r/pp2ppbp/1n4p1/2p5/3PP3/6P1/PP2NPBP/RNBQK2R w KQkq c6 0 8
+D72 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 O-O rnbq1rk1/ppp1ppbp/1n4p1/8/3PP3/6P1/PP2NPBP/RNBQK2R w KQ - 4 8
+D72 Neo-Grünfeld, 5.cxd5 Nxd5 6.e4 Nb6 7.Ne2 O-O 8.O-O rnbq1rk1/ppp1ppbp/1n4p1/8/3PP3/6P1/PP2NPBP/RNBQ1RK1 b - - 6 8
+D73 Neo-Grünfeld, 5.Nf3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R b KQkq - 3 5
+D73 Neo-Grünfeld, 5.Nf3 c6 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R w KQkq - 0 6
+D73 Neo-Grünfeld, 5.Nf3 c6 6.cxd5 rnbqk2r/pp2ppbp/2p2np1/3P4/3P4/5NP1/PP2PPBP/RNBQK2R b KQkq - 0 6
+D73 Neo-Grünfeld, 5.Nf3 c6 6.cxd5 cxd5 rnbqk2r/pp2ppbp/5np1/3p4/3P4/5NP1/PP2PPBP/RNBQK2R w KQkq - 0 7
+D73 Neo-Grünfeld, 5.Nf3 c6 6.cxd5 cxd5 7.Nc3 rnbqk2r/pp2ppbp/5np1/3p4/3P4/2N2NP1/PP2PPBP/R1BQK2R b KQkq - 1 7
+D73 Neo-Grünfeld, 5.Nf3 c5 rnbqk2r/pp2ppbp/5np1/2pp4/2PP4/5NP1/PP2PPBP/RNBQK2R w KQkq c6 0 6
+D73 Neo-Grünfeld, 5.Nf3 dxc4 rnbqk2r/ppp1ppbp/5np1/8/2pP4/5NP1/PP2PPBP/RNBQK2R w KQkq - 0 6
+D73 Neo-Grünfeld, 5.Nf3 dxc4 6.Na3 rnbqk2r/ppp1ppbp/5np1/8/2pP4/N4NP1/PP2PPBP/R1BQK2R b KQkq - 1 6
+D73 Neo-Grünfeld, 5.Nf3 O-O rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/5NP1/PP2PPBP/RNBQK2R w KQ - 5 6
+D73 Neo-Grünfeld, 6.Qb3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/1Q3NP1/PP2PPBP/RNB1K2R b KQ - 6 6
+D73 Neo-Grünfeld, 6.Nc3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N2NP1/PP2PPBP/R1BQK2R b KQ - 6 6
+D73 Neo-Grünfeld, 6.cxd5 rnbq1rk1/ppp1ppbp/5np1/3P4/3P4/5NP1/PP2PPBP/RNBQK2R b KQ - 0 6
+D73 Neo-Grünfeld, 6.cxd5 Nxd5 7.e4 rnbq1rk1/ppp1ppbp/6p1/3n4/3PP3/5NP1/PP3PBP/RNBQK2R b KQ e3 0 7
+D74 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 b - - 2 7
+D74 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Na6 r1bq1rk1/ppp1ppbp/n5p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 3 8
+D74 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nc6 r1bq1rk1/ppp1ppbp/2n3p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 3 8
+D74 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c6 rnbq1rk1/pp2ppbp/2p3p1/3n4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 8
+D74 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 rnbq1rk1/pp2ppbp/6p1/2pn4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - c6 0 8
+D74 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 8.e4 rnbq1rk1/pp2ppbp/6p1/2pn4/3PP3/5NP1/PP3PBP/RNBQ1RK1 b - e3 0 8
+D74 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 8.e4 Nf6 rnbq1rk1/pp2ppbp/5np1/2p5/3PP3/5NP1/PP3PBP/RNBQ1RK1 w - - 1 9
+D74 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 8.e4 Nf6 9.e5 Nd5 rnbq1rk1/pp2ppbp/6p1/2pnP3/3P4/5NP1/PP3PBP/RNBQ1RK1 w - - 1 10
+D75 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 8.Nc3 rnbq1rk1/pp2ppbp/6p1/2pn4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 1 8
+D75 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 8.Nc3 Nxc3 rnbq1rk1/pp2ppbp/6p1/2p5/3P4/2n2NP1/PP2PPBP/R1BQ1RK1 w - - 0 9
+D75 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 8.Nc3 Nxc3 9.bxc3 cxd4 rnbq1rk1/pp2ppbp/6p1/8/3p4/2P2NP1/P3PPBP/R1BQ1RK1 w - - 0 10
+D75 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 8.dxc5 rnbq1rk1/pp2ppbp/6p1/2Pn4/8/5NP1/PP2PPBP/RNBQ1RK1 b - - 0 8
+D75 Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O c5 8.dxc5 Na6 r1bq1rk1/pp2ppbp/n5p1/2Pn4/8/5NP1/PP2PPBP/RNBQ1RK1 w - - 1 9
+D76a Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 rnbq1rk1/ppp1ppbp/1n4p1/8/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 3 8
+D76b Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 rnbq1rk1/ppp1ppbp/1n4p1/8/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 4 8
+D76c Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 r1bq1rk1/ppp1ppbp/1nn3p1/8/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 5 9
+D76d Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 r1bq1rk1/ppp1ppbp/1nn3p1/8/3P4/2N1PNP1/PP3PBP/R1BQ1RK1 b - - 0 9
+D76e Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 e5 r1bq1rk1/ppp2pbp/1nn3p1/4p3/3P4/2N1PNP1/PP3PBP/R1BQ1RK1 w - e6 0 10
+D76e Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 e5 10.d5 r1bq1rk1/ppp2pbp/1nn3p1/3Pp3/8/2N1PNP1/PP3PBP/R1BQ1RK1 b - - 0 10
+D76f Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 e5 10.d5 Na5 r1bq1rk1/ppp2pbp/1n4p1/n2Pp3/8/2N1PNP1/PP3PBP/R1BQ1RK1 w - - 1 11
+D76g Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 Re8 r1bqr1k1/ppp1ppbp/1nn3p1/8/3P4/2N1PNP1/PP3PBP/R1BQ1RK1 w - - 1 10
+D76h Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.e3 Re8 10.d5 r1bqr1k1/ppp1ppbp/1nn3p1/3P4/8/2N1PNP1/PP3PBP/R1BQ1RK1 b - - 0 10
+D76i Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 r1bq1rk1/ppp1ppbp/1nn3p1/3P4/8/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 0 9
+D76j Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 Na5 r1bq1rk1/ppp1ppbp/1n4p1/n2P4/8/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 1 10
+D76k Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 Na5 10.e4 r1bq1rk1/ppp1ppbp/1n4p1/n2P4/4P3/2N2NP1/PP3PBP/R1BQ1RK1 b - e3 0 10
+D76k Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 Na5 10.e4 c6 r1bq1rk1/pp2ppbp/1np3p1/n2P4/4P3/2N2NP1/PP3PBP/R1BQ1RK1 w - - 0 11
+D76l Neo-Grünfeld, 6.cxd5 Nxd5 7.O-O Nb6 8.Nc3 Nc6 9.d5 Na5 10.e4 c6 11.Bg5 r1bq1rk1/pp2ppbp/1np3p1/n2P2B1/4P3/2N2NP1/PP3PBP/R2Q1RK1 b - - 1 11
+D77a Neo-Grünfeld, 6.O-O rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 b - - 7 6
+D77b Neo-Grünfeld, 6.O-O e6 rnbq1rk1/ppp2pbp/4pnp1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7
+D77c Neo-Grünfeld, 6.O-O c5 rnbq1rk1/pp2ppbp/5np1/2pp4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - c6 0 7
+D77c Neo-Grünfeld, 6.O-O c5 7.dxc5 dxc4 rnbq1rk1/pp2ppbp/5np1/2P5/2p5/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 8
+D77d Neo-Grünfeld, 6.O-O Nc6 r1bq1rk1/ppp1ppbp/2n2np1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 8 7
+D77e Neo-Grünfeld, 6.O-O dxc4 rnbq1rk1/ppp1ppbp/5np1/8/2pP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7
+D77f Neo-Grünfeld, 6.O-O dxc4 7.Na3 rnbq1rk1/ppp1ppbp/5np1/8/2pP4/N4NP1/PP2PPBP/R1BQ1RK1 b - - 1 7
+D77g Neo-Grünfeld, 6.O-O dxc4 7.Na3 Na6 r1bq1rk1/ppp1ppbp/n4np1/8/2pP4/N4NP1/PP2PPBP/R1BQ1RK1 w - - 2 8
+D77h Neo-Grünfeld, 6.O-O dxc4 7.Na3 c3 rnbq1rk1/ppp1ppbp/5np1/8/3P4/N1p2NP1/PP2PPBP/R1BQ1RK1 w - - 0 8
+D77h Neo-Grünfeld, 6.O-O dxc4 7.Na3 c3 8.bxc3 c5 rnbq1rk1/pp2ppbp/5np1/2p5/3P4/N1P2NP1/P3PPBP/R1BQ1RK1 w - c6 0 9
+D77i Neo-Grünfeld, 6.O-O dxc4 7.Na3 c3 8.bxc3 c5 9.e3 rnbq1rk1/pp2ppbp/5np1/2p5/3P4/N1P1PNP1/P4PBP/R1BQ1RK1 b - - 0 9
+D77j Neo-Grünfeld, 6.O-O dxc4 7.Na3 Nc6 r1bq1rk1/ppp1ppbp/2n2np1/8/2pP4/N4NP1/PP2PPBP/R1BQ1RK1 w - - 2 8
+D77j Neo-Grünfeld, 6.O-O dxc4 7.Na3 Nc6 8.Nxc4 r1bq1rk1/ppp1ppbp/2n2np1/8/2NP4/5NP1/PP2PPBP/R1BQ1RK1 b - - 0 8
+D77j Neo-Grünfeld, 6.O-O dxc4 7.Na3 Nc6 8.Nxc4 Be6 r2q1rk1/ppp1ppbp/2n1bnp1/8/2NP4/5NP1/PP2PPBP/R1BQ1RK1 w - - 1 9
+D77k Neo-Grünfeld, 6.O-O dxc4 7.Na3 Nc6 8.Nxc4 Be6 9.b3 r2q1rk1/ppp1ppbp/2n1bnp1/8/2NP4/1P3NP1/P3PPBP/R1BQ1RK1 b - - 0 9
+D77l Neo-Grünfeld, 6.O-O dxc4 7.Na3 Nc6 8.Nxc4 Be6 9.b3 Bd5 r2q1rk1/ppp1ppbp/2n2np1/3b4/2NP4/1P3NP1/P3PPBP/R1BQ1RK1 w - - 1 10
+D78a Neo-Grünfeld, 6.O-O c6 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 7
+D78b Neo-Grünfeld, 6.O-O c6 7.Na3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/N4NP1/PP2PPBP/R1BQ1RK1 b - - 1 7
+D78c Neo-Grünfeld, 6.O-O c6 7.Ne5 rnbq1rk1/pp2ppbp/2p2np1/3pN3/2PP4/6P1/PP2PPBP/RNBQ1RK1 b - - 1 7
+D78d Neo-Grünfeld, 6.O-O c6 7.Qa4 rnbq1rk1/pp2ppbp/2p2np1/3p4/Q1PP4/5NP1/PP2PPBP/RNB2RK1 b - - 1 7
+D78e Neo-Grünfeld, 6.O-O c6 7.Nc3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 1 7
+D78f Neo-Grünfeld, 6.O-O c6 7.Nc3 dxc4 rnbq1rk1/pp2ppbp/2p2np1/8/2pP4/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 0 8
+D78g Neo-Grünfeld, 6.O-O c6 7.Qb3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/1Q3NP1/PP2PPBP/RNB2RK1 b - - 1 7
+D78h Neo-Grünfeld, 6.O-O c6 7.Qb3 Qb6 rnb2rk1/pp2ppbp/1qp2np1/3p4/2PP4/1Q3NP1/PP2PPBP/RNB2RK1 w - - 2 8
+D78i Neo-Grünfeld, 6.O-O c6 7.Qb3 dxc4 rnbq1rk1/pp2ppbp/2p2np1/8/2pP4/1Q3NP1/PP2PPBP/RNB2RK1 w - - 0 8
+D78j Neo-Grünfeld, 6.O-O c6 7.Qb3 dxc4 rnbq1rk1/pp2ppbp/2p2np1/8/2QP4/5NP1/PP2PPBP/RNB2RK1 b - - 0 8
+D78k Neo-Grünfeld, 6.O-O c6 7.Nbd2 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/5NP1/PP1NPPBP/R1BQ1RK1 b - - 1 7
+D78l Neo-Grünfeld, 6.O-O c6 7.Nbd2 Nbd7 r1bq1rk1/pp1nppbp/2p2np1/3p4/2PP4/5NP1/PP1NPPBP/R1BQ1RK1 w - - 2 8
+D78m Neo-Grünfeld, 6.O-O c6 7.Nbd2 Ne4 rnbq1rk1/pp2ppbp/2p3p1/3p4/2PPn3/5NP1/PP1NPPBP/R1BQ1RK1 w - - 2 8
+D78n Neo-Grünfeld, 6.O-O c6 7.Nbd2 Bf5 rn1q1rk1/pp2ppbp/2p2np1/3p1b2/2PP4/5NP1/PP1NPPBP/R1BQ1RK1 w - - 2 8
+D78o Neo-Grünfeld, 6.O-O c6 7.b3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/1P3NP1/P3PPBP/RNBQ1RK1 b - - 0 7
+D78p Neo-Grünfeld, 6.O-O c6 7.b3 Bf5 rn1q1rk1/pp2ppbp/2p2np1/3p1b2/2PP4/1P3NP1/P3PPBP/RNBQ1RK1 w - - 1 8
+D78q Neo-Grünfeld, 6.O-O c6 7.b3 Ne4 rnbq1rk1/pp2ppbp/2p3p1/3p4/2PPn3/1P3NP1/P3PPBP/RNBQ1RK1 w - - 1 8
+D79a Neo-Grünfeld, 6.O-O c6 7.cxd5 rnbq1rk1/pp2ppbp/2p2np1/3P4/3P4/5NP1/PP2PPBP/RNBQ1RK1 b - - 0 7
+D79a Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 rnbq1rk1/pp2ppbp/5np1/3p4/3P4/5NP1/PP2PPBP/RNBQ1RK1 w - - 0 8
+D79b Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 rnbq1rk1/pp2ppbp/5np1/3p4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 b - - 1 8
+D79c Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 e6 rnbq1rk1/pp3pbp/4pnp1/3p4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 0 9
+D79d Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Ne4 rnbq1rk1/pp2ppbp/6p1/3p4/3Pn3/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 2 9
+D79d Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Ne4 9.Ne5 rnbq1rk1/pp2ppbp/6p1/3pN3/3Pn3/2N3P1/PP2PPBP/R1BQ1RK1 b - - 3 9
+D79e Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Ne4 9.Nxe4 rnbq1rk1/pp2ppbp/6p1/3p4/3PN3/5NP1/PP2PPBP/R1BQ1RK1 b - - 0 9
+D79f Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Nc6 r1bq1rk1/pp2ppbp/2n2np1/3p4/3P4/2N2NP1/PP2PPBP/R1BQ1RK1 w - - 2 9
+D79g Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Nc6 9.Ne5 r1bq1rk1/pp2ppbp/2n2np1/3pN3/3P4/2N3P1/PP2PPBP/R1BQ1RK1 b - - 3 9
+D79h Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Nc3 Nc6 9.Ne5 e6 r1bq1rk1/pp3pbp/2n1pnp1/3pN3/3P4/2N3P1/PP2PPBP/R1BQ1RK1 w - - 0 10
+D79i Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Ne5 rnbq1rk1/pp2ppbp/5np1/3pN3/3P4/6P1/PP2PPBP/RNBQ1RK1 b - - 1 8
+D79i Neo-Grünfeld, 6.O-O c6 7.cxd5 cxd5 8.Ne5 e6 rnbq1rk1/pp3pbp/4pnp1/3pN3/3P4/6P1/PP2PPBP/RNBQ1RK1 w - - 0 9
+D79j Neo-Grünfeld, Main Line rnbq1rk1/pp3pbp/4pnp1/3pN3/3P4/2N3P1/PP2PPBP/R1BQ1RK1 b - - 1 9
+D79k Neo-Grünfeld, Main Line, 10.f4 rnbq1rk1/pp1n1pbp/4p1p1/3pN3/3P1P2/2N3P1/PP2P1BP/R1BQ1RK1 b - f3 0 10
+D79l Neo-Grünfeld, Main Line, 10.f4 Nc6 r1bq1rk1/pp1n1pbp/2n1p1p1/3pN3/3P1P2/2N3P1/PP2P1BP/R1BQ1RK1 w - - 1 11
+D79m Neo-Grünfeld, Main Line, 10.f4 Nc6 11.Be3 r1bq1rk1/pp1n1pbp/2n1p1p1/3pN3/3P1P2/2N1B1P1/PP2P1BP/R2Q1RK1 b - - 2 11
+D79m Neo-Grünfeld, Main Line, 10.f4 Nc6 11.Be3 f6 r1bq1rk1/pp1n2bp/2n1ppp1/3pN3/3P1P2/2N1B1P1/PP2P1BP/R2Q1RK1 w - - 0 12
+D79n Neo-Grünfeld, Main Line, 10.f4 Nc6 11.Be3 Nb6 r1bq1rk1/pp3pbp/1nn1p1p1/3pN3/3P1P2/2N1B1P1/PP2P1BP/R2Q1RK1 w - - 3 12
+D79n Neo-Grünfeld, Main Line, 10.f4 Nc6 11.Be3 Nb6 12.Bf2 r1bq1rk1/pp3pbp/1nn1p1p1/3pN3/3P1P2/2N3P1/PP2PBBP/R2Q1RK1 b - - 4 12
+D80 Grünfeld Defence rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N5/PP2PPPP/R1BQKBNR w KQkq d6 0 4
+D80 Grünfeld: Spike/Gibbon Gambit rnbqkb1r/ppp1pp1p/5np1/3p4/2PP2P1/2N5/PP2PP1P/R1BQKBNR b KQkq g3 0 4
+D80 Grünfeld: 4.h4 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP3P/2N5/PP2PPP1/R1BQKBNR b KQkq h3 0 4
+D80 Grünfeld: 4.g3 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N3P1/PP2PP1P/R1BQKBNR b KQkq - 0 4
+D80 Grünfeld: 4.f3 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N2P2/PP2P1PP/R1BQKBNR b KQkq - 0 4
+D80 Grünfeld: 4.e3 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4
+D80 Grünfeld: 4.e3 Bg7 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N1P3/PP3PPP/R1BQKBNR w KQkq - 1 5
+D80 Grünfeld: 4.e3 Bg7 5.Qb3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/1QN1P3/PP3PPP/R1B1KBNR b KQkq - 2 5
+D80 Grünfeld: Stockholm Variation rnbqkb1r/ppp1pp1p/5np1/3p2B1/2PP4/2N5/PP2PPPP/R2QKBNR b KQkq - 1 4
+D80 Grünfeld: Stockholm, 4...Ne4 rnbqkb1r/ppp1pp1p/6p1/3p2B1/2PPn3/2N5/PP2PPPP/R2QKBNR w KQkq - 2 5
+D80 Grünfeld: Stockholm, 4...Ne4 5.Nxe4 rnbqkb1r/ppp1pp1p/6p1/3p2B1/2PPN3/8/PP2PPPP/R2QKBNR b KQkq - 0 5
+D80 Grünfeld: Stockholm, Lundin Variation rnbqkb1r/pp2pp1p/6p1/2p3B1/2PPp3/8/PP1QPPPP/R3KBNR w KQkq c6 0 7
+D80 Grünfeld: Stockholm, 4...Ne4 5.Bf4 rnbqkb1r/ppp1pp1p/6p1/3p4/2PPnB2/2N5/PP2PPPP/R2QKBNR b KQkq - 3 5
+D80 Grünfeld: Stockholm, Taimanov Variation rnbqkb1r/ppp1pp1p/6p1/3p4/2PPn2B/2N5/PP2PPPP/R2QKBNR b KQkq - 3 5
+D80 Grünfeld: Stockholm, Taimanov, 5...Nxc3 rnbqkb1r/ppp1pp1p/6p1/3p4/2PP3B/2n5/PP2PPPP/R2QKBNR w KQkq - 0 6
+D80 Grünfeld: Stockholm, Taimanov, 5...Nxc3 6.bxc3 Bg7 rnbqk2r/ppp1ppbp/6p1/3p4/2PP3B/2P5/P3PPPP/R2QKBNR w KQkq - 1 7
+D81 Grünfeld: Early Russian Variation rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/1QN5/PP2PPPP/R1B1KBNR b KQkq - 1 4
+D81 Grünfeld: Early Russian Variation rnbqkb1r/ppp1pp1p/5np1/8/2QP4/2N5/PP2PPPP/R1B1KBNR b KQkq - 0 5
+D81 Grünfeld: Early Russian, 5...Be6 rn1qkb1r/ppp1pp1p/4bnp1/8/2QP4/2N5/PP2PPPP/R1B1KBNR w KQkq - 1 6
+D81 Grünfeld: Early Russian, 5...Be6 6.Qb5+ rn1qkb1r/ppp1pp1p/4bnp1/1Q6/3P4/2N5/PP2PPPP/R1B1KBNR b KQkq - 2 6
+D81 Grünfeld: Early Russian, Adorjan Gambit rn1qkb1r/pppbpp1p/5np1/1Q6/3P4/2N5/PP2PPPP/R1B1KBNR w KQkq - 3 7
+D81 Grünfeld: Early Russian, 5...Bg7 rnbqk2r/ppp1ppbp/5np1/8/2QP4/2N5/PP2PPPP/R1B1KBNR w KQkq - 1 6
+D81 Grünfeld: Early Russian, 5...Bg7 6.e4 rnbqk2r/ppp1ppbp/5np1/8/2QPP3/2N5/PP3PPP/R1B1KBNR b KQkq e3 0 6
+D81 Grünfeld: Early Russian, 5...Bg7 6.e4 O-O rnbq1rk1/ppp1ppbp/5np1/8/2QPP3/2N5/PP3PPP/R1B1KBNR w KQ - 2 7
+D82 Grünfeld: 4.Bf4 rnbqkb1r/ppp1pp1p/5np1/3p4/2PP1B2/2N5/PP2PPPP/R2QKBNR b KQkq - 1 4
+D82 Grünfeld: 4.Bf4 Bg7 rnbqk2r/ppp1ppbp/5np1/3p4/2PP1B2/2N5/PP2PPPP/R2QKBNR w KQkq - 2 5
+D82 Grünfeld: 4.Bf4 Bg7 5.e3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP1B2/2N1P3/PP3PPP/R2QKBNR b KQkq - 0 5
+D82 Grünfeld: 4.Bf4 Bg7 5.e3 c5 rnbqk2r/pp2ppbp/5np1/2pp4/2PP1B2/2N1P3/PP3PPP/R2QKBNR w KQkq c6 0 6
+D82 Grünfeld: 4.Bf4 Bg7 5.e3 c5 6.dxc5 Qa5 rnb1k2r/pp2ppbp/5np1/q1Pp4/2P2B2/2N1P3/PP3PPP/R2QKBNR w KQkq - 1 7
+D82 Grünfeld: 4.Bf4 Bg7 5.e3 c5 6.dxc5 Qa5 7.Qa4+ rnb1k2r/pp2ppbp/5np1/q1Pp4/Q1P2B2/2N1P3/PP3PPP/R3KBNR b KQkq - 2 7
+D82 Grünfeld: 4.Bf4 Bg7 5.e3 c5 6.dxc5 Qa5 7.Rc1 rnb1k2r/pp2ppbp/5np1/q1Pp4/2P2B2/2N1P3/PP3PPP/2RQKBNR b Kkq - 2 7
+D83 Grünfeld: Grünfeld Gambit rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1P3/PP3PPP/R2QKBNR w KQ - 2 6
+D83 Grünfeld: Grünfeld Gambit, 6.Qb3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/1QN1P3/PP3PPP/R3KBNR b KQ - 3 6
+D83 Grünfeld: Grünfeld Gambit, Capablanca Variation rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1P3/PP3PPP/2RQKBNR b K - 3 6
+D83 Grünfeld: Grünfeld Gambit, Capablanca Variation rnbq1rk1/pp2ppbp/5np1/2pp4/2PP1B2/2N1P3/PP3PPP/2RQKBNR w K c6 0 7
+D83 Grünfeld: Grünfeld Gambit, Botvinnik Variation rn1q1rk1/pp2ppbp/4bnp1/2Pp4/2P2B2/2N1P3/PP3PPP/2RQKBNR w K - 1 8
+D84 Grünfeld: Grünfeld Gambit Accepted rnbq1rk1/ppp1ppbp/5np1/3P4/3P1B2/2N1P3/PP3PPP/R2QKBNR b KQ - 0 6
+D84 Grünfeld: Grünfeld Gambit Accepted rnb2rk1/ppB1ppbp/6p1/3q4/3P4/4P3/PP3PPP/R2QKBNR b KQ - 0 8
+D84 Grünfeld: Grünfeld Gambit Accepted, 8...b6 rnb2rk1/p1B1ppbp/1p4p1/3q4/3P4/4P3/PP3PPP/R2QKBNR w KQ - 0 9
+D84 Grünfeld: Grünfeld Gambit Accepted, 8...Bf5 rn3rk1/ppB1ppbp/6p1/3q1b2/3P4/4P3/PP3PPP/R2QKBNR w KQ - 1 9
+D84 Grünfeld: Grünfeld Gambit Accepted, 8...Na6 r1b2rk1/ppB1ppbp/n5p1/3q4/3P4/4P3/PP3PPP/R2QKBNR w KQ - 1 9
+D84 Grünfeld: Grünfeld Gambit Accepted, 8...Na6 9.Bxa6 Qxg2 r1b2rk1/ppB1ppbp/B5p1/8/3P4/4P3/PP3PqP/R2QK1NR w KQ - 0 10
+D84 Grünfeld: Grünfeld Gambit Accepted, 8...Nc6 r1b2rk1/ppB1ppbp/2n3p1/3q4/3P4/4P3/PP3PPP/R2QKBNR w KQ - 1 9
+D84 Grünfeld: Grünfeld Gambit Accepted, 8...Nc6 9.Ne2 r1b2rk1/ppB1ppbp/2n3p1/3q4/3P4/4P3/PP2NPPP/R2QKB1R b KQ - 2 9
+D84 Grünfeld: Grünfeld Gambit Accepted, 8...Nc6 9.Ne2 Bg4 r4rk1/ppB1ppbp/2n3p1/3q4/3P2b1/4P3/PP2NPPP/R2QKB1R w KQ - 3 10
+D85a Grünfeld: Exchange Variation rnbqkb1r/ppp1pp1p/5np1/3P4/3P4/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 4
+D85a Grünfeld: Exchange Variation rnbqkb1r/ppp1pp1p/6p1/3n4/3P4/2N5/PP2PPPP/R1BQKBNR w KQkq - 0 5
+D85a Grünfeld: Exchange, 5.g3 rnbqkb1r/ppp1pp1p/6p1/3n4/3P4/2N3P1/PP2PP1P/R1BQKBNR b KQkq - 0 5
+D85a Grünfeld: Exchange, 5.Na4 rnbqkb1r/ppp1pp1p/6p1/3n4/N2P4/8/PP2PPPP/R1BQKBNR b KQkq - 1 5
+D85b Grünfeld: Exchange, 5.Bd2 rnbqkb1r/ppp1pp1p/6p1/3n4/3P4/2N5/PP1BPPPP/R2QKBNR b KQkq - 1 5
+D85c Grünfeld: Exchange, 5.Bd2 Bg7 6.e4 Nb6 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/2N5/PP1B1PPP/R2QKBNR w KQkq - 1 7
+D85c Grünfeld: Exchange, 5.Bd2 Bg7 6.e4 Nb6 7.Be3 rnbqk2r/ppp1ppbp/1n4p1/8/3PP3/2N1B3/PP3PPP/R2QKBNR b KQkq - 2 7
+D85d Grünfeld: Exchange, 5.e4 rnbqkb1r/ppp1pp1p/6p1/3n4/3PP3/2N5/PP3PPP/R1BQKBNR b KQkq e3 0 5
+D85d Grünfeld: Exchange, 5.e4 Nb6 rnbqkb1r/ppp1pp1p/1n4p1/8/3PP3/2N5/PP3PPP/R1BQKBNR w KQkq - 1 6
+D85d Grünfeld: Exchange, 5.e4 Nxc3 rnbqkb1r/ppp1pp1p/6p1/8/3PP3/2n5/PP3PPP/R1BQKBNR w KQkq - 0 6
+D85d Grünfeld: Exchange, 5.e4 Nxc3 6.bxc3 c5 rnbqkb1r/pp2pp1p/6p1/2p5/3PP3/2P5/P4PPP/R1BQKBNR w KQkq c6 0 7
+D85d Grünfeld: Exchange, 5.e4 Nxc3 6.bxc3 Bg7 rnbqk2r/ppp1ppbp/6p1/8/3PP3/2P5/P4PPP/R1BQKBNR w KQkq - 1 7
+D85d Grünfeld: Exchange, 7.Ba3 rnbqk2r/ppp1ppbp/6p1/8/3PP3/B1P5/P4PPP/R2QKBNR b KQkq - 2 7
+D85e Grünfeld: Exchange, 7.Bb5+ rnbqk2r/ppp1ppbp/6p1/1B6/3PP3/2P5/P4PPP/R1BQK1NR b KQkq - 2 7
+D85e Grünfeld: Exchange, 7.Bb5+ c6 rnbqk2r/pp2ppbp/2p3p1/1B6/3PP3/2P5/P4PPP/R1BQK1NR w KQkq - 0 8
+D85e Grünfeld: Exchange, 7.Bb5+ c6 8.Ba4 rnbqk2r/pp2ppbp/2p3p1/8/B2PP3/2P5/P4PPP/R1BQK1NR b KQkq - 1 8
+D85f Grünfeld: Exchange, 7.Bb5+ c6 8.Ba4 O-O rnbq1rk1/pp2ppbp/2p3p1/8/B2PP3/2P5/P4PPP/R1BQK1NR w KQ - 3 9
+D85g Grünfeld: Exchange, 7.Be3 rnbqk2r/ppp1ppbp/6p1/8/3PP3/2P1B3/P4PPP/R2QKBNR b KQkq - 2 7
+D85g Grünfeld: Exchange, 7.Be3 c5 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P1B3/P4PPP/R2QKBNR w KQkq c6 0 8
+D85g Grünfeld: Exchange, 7.Be3 c5 8.Qd2 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P1B3/P2Q1PPP/R3KBNR b KQkq - 1 8
+D85g Grünfeld: Exchange, 7.Be3 c5 8.Qd2 O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P1B3/P2Q1PPP/R3KBNR w KQ - 3 9
+D85g Grünfeld: Exchange, 7.Be3 c5 8.Qd2 O-O 9.Rc1 rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P1B3/P2Q1PPP/2R1KBNR b K - 4 9
+D85h Grünfeld: Exchange, 7.Be3 c5 8.Qd2 Qa5 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1B3/P2Q1PPP/R3KBNR w KQkq - 2 9
+D85h Grünfeld: Exchange, 7.Be3 c5 8.Qd2 Qa5 9.Rc1 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1B3/P2Q1PPP/2R1KBNR b Kkq - 3 9
+D85h Grünfeld: Exchange, 7.Be3 c5 8.Qd2 Qa5 9.Rb1 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1B3/P2Q1PPP/1R2KBNR b Kkq - 3 9
+D85h Grünfeld: Exchange, 7.Be3 c5 8.Qd2 Qa5 9.Rb1 b6 rnb1k2r/p3ppbp/1p4p1/q1p5/3PP3/2P1B3/P2Q1PPP/1R2KBNR w Kkq - 0 10
+D85i Grünfeld: Modern Exchange rnbqk2r/ppp1ppbp/6p1/8/3PP3/2P2N2/P4PPP/R1BQKB1R b KQkq - 2 7
+D85i Grünfeld: Modern Exchange, 7...O-O rnbq1rk1/ppp1ppbp/6p1/8/3PP3/2P2N2/P4PPP/R1BQKB1R w KQ - 4 8
+D85j Grünfeld: Modern Exchange, 7...c5 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P2N2/P4PPP/R1BQKB1R w KQkq c6 0 8
+D85k Grünfeld: Modern Exchange, 8.Bb5+ rnbqk2r/pp2ppbp/6p1/1Bp5/3PP3/2P2N2/P4PPP/R1BQK2R b KQkq - 1 8
+D85l Grünfeld: Modern Exchange, 8.Be2 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/R1BQK2R b KQkq - 1 8
+D85l Grünfeld: Modern Exchange, 8.Be2 O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/R1BQK2R w KQ - 3 9
+D85l Grünfeld: Modern Exchange, 8.Be2 O-O 9.O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/R1BQ1RK1 b - - 5 9
+D85l Grünfeld: Modern Exchange, 8.Be2 O-O 9.O-O b6 rnbq1rk1/p3ppbp/1p4p1/2p5/3PP3/2P2N2/P3BPPP/R1BQ1RK1 w - - 0 10
+D85l Grünfeld: Modern Exchange, 8.Be2 O-O 9.O-O Nc6 r1bq1rk1/pp2ppbp/2n3p1/2p5/3PP3/2P2N2/P3BPPP/R1BQ1RK1 w - - 6 10
+D85m Grünfeld: Modern Exchange, 8.Rb1 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P2N2/P4PPP/1RBQKB1R b Kkq - 1 8
+D85m Grünfeld: Modern Exchange, 8.Rb1 O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P2N2/P4PPP/1RBQKB1R w K - 3 9
+D85m Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P2N2/P3BPPP/1RBQK2R b K - 4 9
+D85m Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 Qa5 rnb2rk1/pp2ppbp/6p1/q1p5/3PP3/2P2N2/P3BPPP/1RBQK2R w K - 5 10
+D85n Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 b6 rnbq1rk1/p3ppbp/1p4p1/2p5/3PP3/2P2N2/P3BPPP/1RBQK2R w K - 0 10
+D85o Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 Nc6 r1bq1rk1/pp2ppbp/2n3p1/2p5/3PP3/2P2N2/P3BPPP/1RBQK2R w K - 5 10
+D85p Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 Nc6, Main Line r1bq1rk1/pp2pp1p/6p1/2pPb3/4P3/2P5/P2QBPPP/1RB1K2R b K - 1 12
+D85p Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 Nc6, Main Line, 12...e6 r1bq1rk1/pp3p1p/4p1p1/2pPb3/4P3/2P5/P2QBPPP/1RB1K2R w K - 0 13
+D85q Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd rnbq1rk1/pp2ppbp/6p1/8/3pP3/2P2N2/P3BPPP/1RBQK2R w K - 0 10
+D85q Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd 10.cd rnbq1rk1/pp2ppbp/6p1/8/3PP3/5N2/P3BPPP/1RBQK2R b K - 0 10
+D85q Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd 10.cd Qa5+ rnb2rk1/pp2ppbp/6p1/q7/3PP3/5N2/P3BPPP/1RBQK2R w K - 1 11
+D85q Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd 10.cd Qa5+ 11.Qd2 rnb2rk1/pp2ppbp/6p1/q7/3PP3/5N2/P2QBPPP/1RB1K2R b K - 2 11
+D85r Grünfeld: Modern Exchange, 8.Rb1 O-O 9.Be2 cd 10.cd Qa5+ 11.Bd2 rnb2rk1/pp2ppbp/6p1/q7/3PP3/5N2/P2BBPPP/1R1QK2R b K - 2 11
+D85s Grünfeld: Modern Exchange, 8.Rb1, 10...Qa5+ 11.Bd2 Qxa2 12.O-O Bg4 rn3rk1/pp2ppbp/6p1/8/3PP1b1/5N2/q2BBPPP/1R1Q1RK1 w - - 3 13
+D85s Grünfeld: Modern Exchange, 8.Rb1, 10...Qa5+ 11.Bd2 Qxa2 12.O-O Bg4 13.Bg5 rn3rk1/pp2ppbp/6p1/6B1/3PP1b1/5N2/q3BPPP/1R1Q1RK1 b - - 4 13
+D85t Grünfeld: Modern Exchange, 8.Be3 rnbqk2r/pp2ppbp/6p1/2p5/3PP3/2P1BN2/P4PPP/R2QKB1R b KQkq - 1 8
+D85t Grünfeld: Modern Exchange, 8.Be3 Bg4 rn1qk2r/pp2ppbp/6p1/2p5/3PP1b1/2P1BN2/P4PPP/R2QKB1R w KQkq - 2 9
+D85t Grünfeld: Modern Exchange, 8.Be3 Nc6 r1bqk2r/pp2ppbp/2n3p1/2p5/3PP3/2P1BN2/P4PPP/R2QKB1R w KQkq - 2 9
+D85u Grünfeld: Modern Exchange, 8.Be3 Qa5 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1BN2/P4PPP/R2QKB1R w KQkq - 2 9
+D85u Grünfeld: Modern Exchange, 8.Be3 Qa5 9.Qd2 rnb1k2r/pp2ppbp/6p1/q1p5/3PP3/2P1BN2/P2Q1PPP/R3KB1R b KQkq - 3 9
+D85v Grünfeld: Modern Exchange, 8.Be3 Qa5 9.Qd2 Nc6 10.Rc1 r1b1k2r/pp2ppbp/2n3p1/q1p5/3PP3/2P1BN2/P2Q1PPP/2R1KB1R b Kkq - 5 10
+D85w Grünfeld: Modern Exchange, 8.Be3 O-O rnbq1rk1/pp2ppbp/6p1/2p5/3PP3/2P1BN2/P4PPP/R2QKB1R w KQ - 3 9
+D85x Grünfeld: Modern Exchange, 8.Be3 O-O 9.Rc1 Qa5 rnb2rk1/pp2ppbp/6p1/q1p5/3PP3/2P1BN2/P4PPP/2RQKB1R w K - 5 10
+D85x Grünfeld: Modern Exchange, 8.Be3 O-O 9.Rc1 Qa5 10.Qd2 rnb2rk1/pp2ppbp/6p1/q1p5/3PP3/2P1BN2/P2Q1PPP/2R1KB1R b K - 6 10
+D85x Grünfeld: Modern Exchange, 8.Be3 O-O 9.Rc1 Qa5 Queenswap, 12.Kxd2 rnb2rk1/pp2ppbp/6p1/8/3PP3/4BN2/P2K1PPP/2R2B1R b - - 0 12
+D85y Grünfeld: Modern Exchange, 8.Be3 O-O 9.Rc1 Qa5 Queenswap, 12.Nxd2 rnb2rk1/pp2ppbp/6p1/8/3PP3/4B3/P2N1PPP/2R1KB1R b K - 0 12
+D86 Grünfeld: Classical Exchange rnbqk2r/ppp1ppbp/6p1/8/2BPP3/2P5/P4PPP/R1BQK1NR b KQkq - 2 7
+D86 Grünfeld: Classical Exchange, 7...b6 rnbqk2r/p1p1ppbp/1p4p1/8/2BPP3/2P5/P4PPP/R1BQK1NR w KQkq - 0 8
+D86 Grünfeld: Classical Exchange, 7...c5 rnbqk2r/pp2ppbp/6p1/2p5/2BPP3/2P5/P4PPP/R1BQK1NR w KQkq c6 0 8
+D86 Grünfeld: Classical Exchange, 7...O-O rnbq1rk1/ppp1ppbp/6p1/8/2BPP3/2P5/P4PPP/R1BQK1NR w KQ - 4 8
+D86 Grünfeld: Classical Exchange, 8.Ne2 rnbq1rk1/ppp1ppbp/6p1/8/2BPP3/2P5/P3NPPP/R1BQK2R b KQ - 5 8
+D86 Grünfeld: Classical Exchange, Larsen Variation rnb2rk1/p1pqppbp/1p4p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - - 0 10
+D86 Grünfeld: Classical Exchange, Simagin rnbq1rk1/p1p1ppbp/1p4p1/8/2BPP3/2P5/P3NPPP/R1BQK2R w KQ - 0 9
+D86 Grünfeld: Classical Exchange, Simagin, 9.h4 rnbq1rk1/p1p1ppbp/1p4p1/8/2BPP2P/2P5/P3NPP1/R1BQK2R b KQ h3 0 9
+D86 Grünfeld: Classical Exchange, Simagin, 9.O-O rnbq1rk1/p1p1ppbp/1p4p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 b - - 2 9
+D86 Grünfeld: Classical Exchange, Simagin Improved r1bq1rk1/ppp1ppbp/2n3p1/8/2BPP3/2P5/P3NPPP/R1BQK2R w KQ - 6 9
+D86 Grünfeld: Classical Exchange, Simagin Improved, 9.Be3 r1bq1rk1/ppp1ppbp/2n3p1/8/2BPP3/2P1B3/P3NPPP/R2QK2R b KQ - 7 9
+D86 Grünfeld: Classical Exchange, Simagin Improved, 9.O-O r1bq1rk1/ppp1ppbp/2n3p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 b - - 8 9
+D86 Grünfeld: Classical Exchange, Simagin Improved, 9.O-O e5 r1bq1rk1/ppp2pbp/2n3p1/4p3/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - e6 0 10
+D86 Grünfeld: Classical Exchange, Simagin Improved, 9.O-O b6 r1bq1rk1/p1p1ppbp/1pn3p1/8/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - - 0 10
+D87a Grünfeld: Classical Exchange, 8...c5 rnbq1rk1/pp2ppbp/6p1/2p5/2BPP3/2P5/P3NPPP/R1BQK2R w KQ c6 0 9
+D87b Grünfeld: Classical Exchange, 8...c5 9.Be3 rnbq1rk1/pp2ppbp/6p1/2p5/2BPP3/2P1B3/P3NPPP/R2QK2R b KQ - 1 9
+D87c Grünfeld: Classical Exchange, 8...c5 9.Be3 Qa5 rnb2rk1/pp2ppbp/6p1/q1p5/2BPP3/2P1B3/P3NPPP/R2QK2R w KQ - 2 10
+D87c Grünfeld: Classical Exchange, 8...c5 9.Be3 Qa5 r1b2rk1/pp1nppbp/6p1/q1p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
+D87d Grünfeld: Classical Exchange, 8...c5 9.Be3 Nc6 r1bq1rk1/pp2ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/R2QK2R w KQ - 2 10
+D87e Grünfeld: Classical Exchange, 9.O-O rnbq1rk1/pp2ppbp/6p1/2p5/2BPP3/2P5/P3NPPP/R1BQ1RK1 b - - 2 9
+D87f Grünfeld: Classical Exchange, 9.O-O Nc6 r1bq1rk1/pp2ppbp/2n3p1/2p5/2BPP3/2P5/P3NPPP/R1BQ1RK1 w - - 3 10
+D87g Grünfeld: Classical Exchange, 9.O-O Nc6 10.Be3 r1bq1rk1/pp2ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 b - - 4 10
+D87h Grünfeld: Classical Exchange, 10.Be3 Qa5 r1b2rk1/pp2ppbp/2n3p1/q1p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
+D87i Grünfeld: Classical Exchange, 10.Be3 Na5 r1bq1rk1/pp2ppbp/6p1/n1p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
+D87j Grünfeld: Classical Exchange, 10.Be3 Qc7 r1b2rk1/ppq1ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
+D87k Grünfeld: Classical Exchange, 10.Be3 Qc7 11.Rc1 Rd8 r1br2k1/ppq1ppbp/2n3p1/2p5/2BPP3/2P1B3/P3NPPP/2RQ1RK1 w - - 7 12
+D87l Grünfeld: Classical Exchange, 10.Be3 Qc7 11.Rc1 Rd8 12.Qd2 r1br2k1/ppq1ppbp/2n3p1/2p5/2BPP3/2P1B3/P2QNPPP/2R2RK1 b - - 8 12
+D87m Grünfeld: Classical Exchange, 10.Be3 Qc7 11.Rc1 Rd8 12.Bf4 r1br2k1/ppq1ppbp/2n3p1/2p5/2BPPB2/2P5/P3NPPP/2RQ1RK1 b - - 8 12
+D87n Grünfeld: Classical Exchange, 10.Be3 Bg4 r2q1rk1/pp2ppbp/2n3p1/2p5/2BPP1b1/2P1B3/P3NPPP/R2Q1RK1 w - - 5 11
+D87o Grünfeld: Classical Exchange, 10.Be3 Bg4 11.f3 Na5 12.Bd5 r2q1rk1/pp2ppbp/6p1/n1pB4/3PP1b1/2P1BP2/P3N1PP/R2Q1RK1 b - - 2 12
+D87p Grünfeld: Classical Exchange, Seville Variation r2q1rk1/pp2pBbp/6p1/n1p5/3PP1b1/2P1BP2/P3N1PP/R2Q1RK1 b - - 0 12
+D88 Grünfeld: Classical Exchange, Main Line r1bq1rk1/pp2ppbp/2n3p1/8/2BpP3/2P1B3/P3NPPP/R2Q1RK1 w - - 0 11
+D88 Grünfeld: Classical Exchange, Main Line, 11.cxd4 r1bq1rk1/pp2ppbp/2n3p1/8/2BPP3/4B3/P3NPPP/R2Q1RK1 b - - 0 11
+D88 Grünfeld: Classical Exchange, Main Line, 11.cxd4 Na5 r1bq1rk1/pp2ppbp/6p1/n7/2BPP3/4B3/P3NPPP/R2Q1RK1 w - - 1 12
+D88 Grünfeld: Classical Exchange, Main Line, 11.cxd4 Na5 12.Bd3 r1bq1rk1/pp2ppbp/6p1/n7/3PP3/3BB3/P3NPPP/R2Q1RK1 b - - 2 12
+D88 Grünfeld: Classical Exchange, Main Line, 11.cxd4 Bg4 r2q1rk1/pp2ppbp/2n3p1/8/2BPP1b1/4B3/P3NPPP/R2Q1RK1 w - - 1 12
+D88 Grünfeld: Classical Exchange, Main Line, 11.cxd4 Bg4 12.f3 r2q1rk1/pp2ppbp/2n3p1/8/2BPP1b1/4BP2/P3N1PP/R2Q1RK1 b - - 0 12
+D88 Grünfeld: Classical Exchange, Main Line, 11.cxd4 Bg4 12.f3 Na5 r2q1rk1/pp2ppbp/6p1/n7/2BPP1b1/4BP2/P3N1PP/R2Q1RK1 w - - 1 13
+D88 Grünfeld: Classical Exchange, Main Line, Neo-Seville r2q1rk1/pp2pBbp/6p1/n7/3PP1b1/4BP2/P3N1PP/R2Q1RK1 b - - 0 13
+D88 Grünfeld: Classical Exchange, Main Line, 11.cxd4 Bg4 12.f3 Na5 13.Bd5 r2q1rk1/pp2ppbp/6p1/n2B4/3PP1b1/4BP2/P3N1PP/R2Q1RK1 b - - 2 13
+D89a Grünfeld: Classical Exchange, Main Line, 13.Bd3 r2q1rk1/pp2ppbp/6p1/n7/3PP1b1/3BBP2/P3N1PP/R2Q1RK1 b - - 2 13
+D89b Grünfeld: Classical Exchange, Main Line, 13.Bd3 Be6 r2q1rk1/pp2ppbp/4b1p1/n7/3PP3/3BBP2/P3N1PP/R2Q1RK1 w - - 3 14
+D89c Grünfeld: Classical Exchange, Main Line, 13.Bd3 Be6 14.Rc1 r2q1rk1/pp2ppbp/4b1p1/n7/3PP3/3BBP2/P3N1PP/2RQ1RK1 b - - 4 14
+D89d Grünfeld: Classical Exchange, 14.Rc1 Bxa2 15.Qa4 Be6 16.d5 Be7 17.Qb4 r2q1rk1/pp1bppbp/6p1/n2P4/1Q2P3/3BBP2/4N1PP/2R2RK1 b - - 2 17
+D89e Grünfeld: Classical Exchange, 14.Rc1 Bxa2 15.Qa4 with 17.Qb4 b6 r2q1rk1/p2bppbp/1p4p1/n2P4/1Q2P3/3BBP2/4N1PP/2R2RK1 w - - 0 18
+D89f Grünfeld: Classical Exchange, 14.Rc1 Bxa2 15.Qa4 with 17.Qb4 e6 r2q1rk1/pp1b1pbp/4p1p1/n2P4/1Q2P3/3BBP2/4N1PP/2R2RK1 w - - 0 18
+D89g Grünfeld: Classical Exchange, Main Line, Sokolsky Variation r2q1rk1/pp2ppbp/4b1p1/n2P4/4P3/3BBP2/P3N1PP/R2Q1RK1 b - - 0 14
+D89h Grünfeld: Classical Exchange, Main Line, Sokolsky, 16.Rb1 r2q1rk1/pp2p2p/4bpp1/n2P4/4P3/3BBP2/P3N1PP/QR4K1 b - - 1 16
+D89i Grünfeld: Classical Exchange, Main Line, Sokolsky, 16.Bh6 r2q1rk1/pp2p2p/4bppB/n2P4/4P3/3B1P2/P3N1PP/Q4RK1 b - - 1 16
+D90 Grünfeld: Three Knights Variation rnbqkb1r/ppp1pp1p/5np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 1 4
+D90 Grünfeld: Schlechter Variation rnbqkb1r/pp2pp1p/2p2np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 5
+D90 Grünfeld: Schlechter, 5.Qb3 rnbqkb1r/pp2pp1p/2p2np1/3p4/2PP4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq - 1 5
+D90 Grünfeld: Schlechter, Exchange rnbqkb1r/pp2pp1p/2p2np1/3P4/3P4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 0 5
+D90 Grünfeld: Schlechter, Exchange rnbqkb1r/pp2pp1p/5np1/3p4/3P4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 6
+D90 Grünfeld: Three Knights Variation rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 2 5
+D90 Grünfeld: Three Knights, 5.g3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N2NP1/PP2PP1P/R1BQKB1R b KQkq - 0 5
+D90 Grünfeld: Flohr Variation rnbqk2r/ppp1ppbp/5np1/3p4/Q1PP4/2N2N2/PP2PPPP/R1B1KB1R b KQkq - 3 5
+D90 Grünfeld: Three Knights Exchange rnbqk2r/ppp1ppbp/5np1/3P4/3P4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 0 5
+D90 Grünfeld: Three Knights Exchange rnbqk2r/ppp1ppbp/6p1/3n4/3P4/2N2N2/PP2PPPP/R1BQKB1R w KQkq - 0 6
+D90 Grünfeld: Three Knights Exchange, Romanishin Variation rnbqk2r/ppp1ppbp/6p1/3n4/3P4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq - 1 6
+D90 Grünfeld: Three Knights Exchange, 6.Bd2 rnbqk2r/ppp1ppbp/6p1/3n4/3P4/2N2N2/PP1BPPPP/R2QKB1R b KQkq - 1 6
+D90 Grünfeld: Three Knights Exchange, 6.Bd2 O-O rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/2N2N2/PP1BPPPP/R2QKB1R w KQ - 3 7
+D90 Grünfeld: Three Knights Exchange, 6.Bd2 O-O 7.Rc1 rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/2N2N2/PP1BPPPP/2RQKB1R b K - 4 7
+D91a Grünfeld: 5.Bg5 rnbqk2r/ppp1ppbp/5np1/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R b KQkq - 3 5
+D91a Grünfeld: 5.Bg5 c6 rnbqk2r/pp2ppbp/2p2np1/3p2B1/2PP4/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 6
+D91b Grünfeld: 5.Bg5 dxc4 rnbqk2r/ppp1ppbp/5np1/6B1/2pP4/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 6
+D91c Grünfeld: 5.Bg5 dxc4 6.e4 rnbqk2r/ppp1ppbp/5np1/6B1/2pPP3/2N2N2/PP3PPP/R2QKB1R b KQkq e3 0 6
+D91d Grünfeld: 5.Bg5 Ne4 rnbqk2r/ppp1ppbp/6p1/3p2B1/2PPn3/2N2N2/PP2PPPP/R2QKB1R w KQkq - 4 6
+D91d Grünfeld: 5.Bg5 Ne4 6.Bf4 rnbqk2r/ppp1ppbp/6p1/3p4/2PPnB2/2N2N2/PP2PPPP/R2QKB1R b KQkq - 5 6
+D91e Grünfeld: 5.Bg5 Ne4 6.Bh4 rnbqk2r/ppp1ppbp/6p1/3p4/2PPn2B/2N2N2/PP2PPPP/R2QKB1R b KQkq - 5 6
+D91f Grünfeld: 5.Bg5 Ne4 6.Bh4 Nxc3 rnbqk2r/ppp1ppbp/6p1/3p4/2PP3B/2n2N2/PP2PPPP/R2QKB1R w KQkq - 0 7
+D91g Grünfeld: 5.Bg5 Ne4 6.Bh4 Nxc3 7.bxc3 dxc4 rnbqk2r/ppp1ppbp/6p1/8/2pP3B/2P2N2/P3PPPP/R2QKB1R w KQkq - 0 8
+D91h Grünfeld: 5.Bg5 Ne4 6.cxd5 rnbqk2r/ppp1ppbp/6p1/3P2B1/3Pn3/2N2N2/PP2PPPP/R2QKB1R b KQkq - 0 6
+D91i Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 rnbqk2r/ppp1ppbp/6p1/3P2n1/3P4/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 7
+D91j Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 c6 rnbqk2r/pp2ppbp/2p3p1/3P2N1/3P4/2N5/PP2PPPP/R2QKB1R w KQkq - 0 8
+D91k Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 rnbqk2r/ppp2pbp/4p1p1/3P2N1/3P4/2N5/PP2PPPP/R2QKB1R w KQkq - 0 8
+D91l Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Qd2 rnbqk2r/ppp2pbp/4p1p1/3P2N1/3P4/2N5/PP1QPPPP/R3KB1R b KQkq - 1 8
+D91m Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Qd2 exd5 rnbqk2r/ppp2pbp/6p1/3p2N1/3P4/2N5/PP1QPPPP/R3KB1R w KQkq - 0 9
+D91n Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Qd2 exd5: 11.h4 h6 rnbq1k1r/ppp2p2/5bpp/3p2N1/3P1Q1P/2N5/PP2PPP1/R3KB1R w KQ - 0 12
+D91o Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 rnbqk2r/ppp2pbp/4p1p1/3P4/3P4/2N2N2/PP2PPPP/R2QKB1R b KQkq - 1 8
+D91p Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 rnbqk2r/ppp2pbp/6p1/3p4/3P4/2N1PN2/PP3PPP/R2QKB1R b KQkq - 0 9
+D91q Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O rnbq1rk1/ppp2pbp/6p1/3p4/3P4/2N1PN2/PP3PPP/R2QKB1R w KQ - 2 10
+D91r Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.Bd3 rnbq1rk1/ppp2pbp/6p1/3p4/3P4/2NBPN2/PP3PPP/R2QK2R b KQ - 3 10
+D91r Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.Bd3 rnbq1rk1/pp3pbp/2p3p1/3p4/3P4/2NBPN2/PP3PPP/R2QK2R w KQ - 0 11
+D91s Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.Be2 rnbq1rk1/ppp2pbp/6p1/3p4/3P4/2N1PN2/PP2BPPP/R2QK2R b KQ - 3 10
+D91s Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.Be2 rnbq1rk1/pp3pbp/2p3p1/3p4/3P4/2N1PN2/PP2BPPP/R2QK2R w KQ - 0 11
+D91t Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.b4 rnbq1rk1/ppp2pbp/6p1/3p4/1P1P4/2N1PN2/P4PPP/R2QKB1R b KQ b3 0 10
+D91t Grünfeld: 5.Bg5 Ne4 6.cxd5 Nxg5 7.Nxg5 e6 8.Nf3 exd5 9.e3 O-O 10.b4 c6 rnbq1rk1/pp3pbp/2p3p1/3p4/1P1P4/2N1PN2/P4PPP/R2QKB1R w KQ - 0 11
+D92 Grünfeld: 5.Bf4 rnbqk2r/ppp1ppbp/5np1/3p4/2PP1B2/2N2N2/PP2PPPP/R2QKB1R b KQkq - 3 5
+D92 Grünfeld: 5.Bf4 c6 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP1B2/2N2N2/PP2PPPP/R2QKB1R w KQkq - 0 6
+D92 Grünfeld: 5.Bf4 O-O rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N2N2/PP2PPPP/R2QKB1R w KQ - 5 6
+D92 Grünfeld: 5.Bf4 O-O 6.Rc1 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N2N2/PP2PPPP/2RQKB1R b K - 6 6
+D92 Grünfeld: 5.Bf4 O-O 6.Rc1 dxc4 rnbq1rk1/ppp1ppbp/5np1/8/2pP1B2/2N2N2/PP2PPPP/2RQKB1R w K - 0 7
+D92 Grünfeld: 5.Bf4 O-O 6.Rc1 c5 rnbq1rk1/pp2ppbp/5np1/2pp4/2PP1B2/2N2N2/PP2PPPP/2RQKB1R w K c6 0 7
+D93 Grünfeld: 5.Bf4 O-O 6.e3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP1B2/2N1PN2/PP3PPP/R2QKB1R b KQ - 0 6
+D93 Grünfeld: 5.Bf4 O-O 6.e3 c5 rnbq1rk1/pp2ppbp/5np1/2pp4/2PP1B2/2N1PN2/PP3PPP/R2QKB1R w KQ c6 0 7
+D93 Grünfeld: 5.Bf4 O-O 6.e3 c5 7.dxc5 rnbq1rk1/pp2ppbp/5np1/2Pp4/2P2B2/2N1PN2/PP3PPP/R2QKB1R b KQ - 0 7
+D93 Grünfeld: 5.Bf4 O-O 6.e3 c5 7.dxc5 Qa5 rnb2rk1/pp2ppbp/5np1/q1Pp4/2P2B2/2N1PN2/PP3PPP/R2QKB1R w KQ - 1 8
+D93 Grünfeld: 5.Bf4 O-O 6.e3 c5 7.dxc5 Qa5 8.Rc1 rnb2rk1/pp2ppbp/5np1/q1Pp4/2P2B2/2N1PN2/PP3PPP/2RQKB1R b K - 2 8
+D93 Grünfeld: 5.Bf4 O-O 6.e3 c5 7.dxc5 Qa5 8.Rc1 dxc4 9.Bxc4 rnb2rk1/pp2ppbp/5np1/q1P5/2B2B2/2N1PN2/PP3PPP/2RQK2R b K - 0 9
+D93 Grünfeld: 5.Bf4 O-O 6.e3 c6 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP1B2/2N1PN2/PP3PPP/R2QKB1R w KQ - 0 7
+D93 Grünfeld: 5.Bf4 O-O 6.e3 c6 7.Qb3 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP1B2/1QN1PN2/PP3PPP/R3KB1R b KQ - 1 7
+D93 Grünfeld: 5.Bf4 O-O 6.e3 c6 7.Rc1 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP1B2/2N1PN2/PP3PPP/2RQKB1R b K - 1 7
+D94 Grünfeld: 5.e3 rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R b KQkq - 0 5
+D94 Grünfeld: Slav/Schlecter rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQkq - 0 6
+D94 Grünfeld: Slav/Schlecter, 6.Bd3 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/2NBPN2/PP3PPP/R1BQK2R b KQkq - 1 6
+D94 Grünfeld: Slav/Schlecter, 6.Be2 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/2N1PN2/PP2BPPP/R1BQK2R b KQkq - 1 6
+D94 Grünfeld: Slav/Schlecter, 6.Be2 O-O rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/2N1PN2/PP2BPPP/R1BQK2R w KQ - 3 7
+D94 Grünfeld: Slav/Schlecter, 6.Be2 O-O 7.O-O rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/2N1PN2/PP2BPPP/R1BQ1RK1 b - - 5 7
+D94 Grünfeld: 5.e3 O-O rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 2 6
+D94 Grünfeld: Makogonov Variation rnbq1rk1/ppp1ppbp/5np1/3p4/1PPP4/2N1PN2/P4PPP/R1BQKB1R b KQ b3 0 6
+D94 Grünfeld: Opovcensky Variation rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP1B1PPP/R2QKB1R b KQ - 3 6
+D94 Grünfeld: 5.e3 O-O 6.Be2 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2N1PN2/PP2BPPP/R1BQK2R b KQ - 3 6
+D94 Grünfeld: 5.e3 O-O 6.Be2 c5 rnbq1rk1/pp2ppbp/5np1/2pp4/2PP4/2N1PN2/PP2BPPP/R1BQK2R w KQ c6 0 7
+D94 Grünfeld: 5.e3 O-O 6.Bd3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/2NBPN2/PP3PPP/R1BQK2R b KQ - 3 6
+D94 Grünfeld: 5.e3 O-O 6.Bd3 c6 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/2NBPN2/PP3PPP/R1BQK2R w KQ - 0 7
+D94 Grünfeld: Smyslov Defence rn1q1rk1/pp2ppbp/2p2np1/3p4/2PP2b1/2NBPN2/PP3PPP/R1BQ1RK1 w - - 3 8
+D94 Grünfeld: Flohr Defence rn1q1rk1/pp2ppbp/2p2np1/3p1b2/2PP4/2NBPN2/PP3PPP/R1BQ1RK1 w - - 3 8
+D94 Grünfeld: 5.e3 O-O 6.cxd5 rnbq1rk1/ppp1ppbp/5np1/3P4/3P4/2N1PN2/PP3PPP/R1BQKB1R b KQ - 0 6
+D94 Grünfeld: 5.e3 O-O 6.cxd5 rnbq1rk1/ppp1ppbp/6p1/3n4/3P4/2N1PN2/PP3PPP/R1BQKB1R w KQ - 0 7
+D94 Grünfeld: 5.e3 O-O 6.cxd5 Nxd5 7.Bc4 rnbq1rk1/ppp1ppbp/6p1/3n4/2BP4/2N1PN2/PP3PPP/R1BQK2R b KQ - 1 7
+D95a Grünfeld: 5.e3 O-O 6.Qb3 rnbq1rk1/ppp1ppbp/5np1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R b KQ - 3 6
+D95b Grünfeld: 5.e3 O-O 6.Qb3 b6 rnbq1rk1/p1p1ppbp/1p3np1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ - 0 7
+D95c Grünfeld: 5.e3 O-O 6.Qb3 c6 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ - 0 7
+D95d Grünfeld: 5.e3 O-O 6.Qb3 c6 7.Bd2 rnbq1rk1/pp2ppbp/2p2np1/3p4/2PP4/1QN1PN2/PP1B1PPP/R3KB1R b KQ - 1 7
+D95e Grünfeld: 5.e3 O-O 6.Qb3 c6 7.Bd2 e6 rnbq1rk1/pp3pbp/2p1pnp1/3p4/2PP4/1QN1PN2/PP1B1PPP/R3KB1R w KQ - 0 8
+D95f Grünfeld: 5.e3 O-O 6.Qb3 c6 7.Bd2 e6 8.Bd3 rnbq1rk1/pp3pbp/2p1pnp1/3p4/2PP4/1QNBPN2/PP1B1PPP/R3K2R b KQ - 1 8
+D95g Grünfeld: Botvinnik Variation rnbq1rk1/ppp2pbp/4pnp1/3p4/2PP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ - 0 7
+D95h Grünfeld: Botvinnik, 7.Bd2 rnbq1rk1/ppp2pbp/4pnp1/3p4/2PP4/1QN1PN2/PP1B1PPP/R3KB1R b KQ - 1 7
+D95i Grünfeld: 5.e3 O-O 6.Qb3 dxc4 rnbq1rk1/ppp1ppbp/5np1/8/2pP4/1QN1PN2/PP3PPP/R1B1KB1R w KQ - 0 7
+D95i Grünfeld: 5.e3 O-O 6.Qb3 dxc4 7.Bxc4 rnbq1rk1/ppp1ppbp/5np1/8/2BP4/1QN1PN2/PP3PPP/R1B1K2R b KQ - 0 7
+D95i Grünfeld: Pachman Variation r1bq1rk1/pppnppbp/5np1/6N1/2BP4/1QN1P3/PP3PPP/R1B1K2R b KQ - 2 8
+D95j Grünfeld: 5.e3 O-O 6.Qb3 dxc4 7.Bxc4 Nc6 r1bq1rk1/ppp1ppbp/2n2np1/8/2BP4/1QN1PN2/PP3PPP/R1B1K2R w KQ - 1 8
+D96 Grünfeld: Russian Variation rnbqk2r/ppp1ppbp/5np1/3p4/2PP4/1QN2N2/PP2PPPP/R1B1KB1R b KQkq - 3 5
+D96 Grünfeld: Russian, 5...c6 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP4/1QN2N2/PP2PPPP/R1B1KB1R w KQkq - 0 6
+D96 Grünfeld: Russian, 5...c6 6.Bf4 rnbqk2r/pp2ppbp/2p2np1/3p4/2PP1B2/1QN2N2/PP2PPPP/R3KB1R b KQkq - 1 6
+D96 Grünfeld: Russian, 5...c6 6.cxd5 cxd5 rnbqk2r/pp2ppbp/5np1/3p4/3P4/1QN2N2/PP2PPPP/R1B1KB1R w KQkq - 0 7
+D96 Grünfeld: Russian, 5...c6 6.cxd5 Nxd5 rnbqk2r/pp2ppbp/2p3p1/3n4/3P4/1QN2N2/PP2PPPP/R1B1KB1R w KQkq - 0 7
+D96 Grünfeld: Russian, 5...dxc4 rnbqk2r/ppp1ppbp/5np1/8/2pP4/1QN2N2/PP2PPPP/R1B1KB1R w KQkq - 0 6
+D96 Grünfeld: Russian, 5...dxc4 rnbqk2r/ppp1ppbp/5np1/8/2QP4/2N2N2/PP2PPPP/R1B1KB1R b KQkq - 0 6
+D96 Grünfeld: Russian, 6...O-O rnbqk2r/1pp1ppbp/p4np1/8/2QP4/2N2N2/PP2PPPP/R1B1KB1R w KQkq - 0 7
+D96 Grünfeld: Russian, 6...a6 rnbq1rk1/ppp1ppbp/5np1/8/2QP4/2N2N2/PP2PPPP/R1B1KB1R w KQ - 2 7
+D96 Grünfeld: Russian, 7.Bf4 rnbq1rk1/ppp1ppbp/5np1/8/2QP1B2/2N2N2/PP2PPPP/R3KB1R b KQ - 3 7
+D96 Grünfeld: Russian, 7.Bf4 c6 rnbq1rk1/pp2ppbp/2p2np1/8/2QP1B2/2N2N2/PP2PPPP/R3KB1R w KQ - 0 8
+D97a Grünfeld: Russian, 7.e4 rnbq1rk1/ppp1ppbp/5np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R b KQ e3 0 7
+D97a Grünfeld: Russian, 7.e4 Nfd7 rnbq1rk1/pppnppbp/6p1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 1 8
+D97b Grünfeld: Russian, Levenfish Variation rnbq1rk1/p1p1ppbp/1p3np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 0 8
+D97c Grünfeld: Russian, Szabo Variation rnbq1rk1/pp2ppbp/2p2np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 0 8
+D97c Grünfeld: Russian, Szabo, 8.Be2 rnbq1rk1/pp2ppbp/2p2np1/8/2QPP3/2N2N2/PP2BPPP/R1B1K2R b KQ - 1 8
+D97d Grünfeld: Russian, Alekhine (Hungarian) Variation rnbq1rk1/1pp1ppbp/p4np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 0 8
+D97e Grünfeld: Russian, Alekhine, 8.Be2 rnbq1rk1/1pp1ppbp/p4np1/8/2QPP3/2N2N2/PP2BPPP/R1B1K2R b KQ - 1 8
+D97f Grünfeld: Russian, Alekhine, 8.Be2 b5 9.Qb3 rnbq1rk1/2p1ppbp/p4np1/1p6/3PP3/1QN2N2/PP2BPPP/R1B1K2R b KQ - 1 9
+D97g Grünfeld: Russian, Alekhine, 8.Qb3 rnbq1rk1/1pp1ppbp/p4np1/8/3PP3/1QN2N2/PP3PPP/R1B1KB1R b KQ - 1 8
+D97h Grünfeld: Russian, Alekhine, 8.e5 rnbq1rk1/1pp1ppbp/p4np1/4P3/2QP4/2N2N2/PP3PPP/R1B1KB1R b KQ - 0 8
+D97i Grünfeld: Russian, Alekhine, 8.e5 b5 9.Qb3 rnbq1rk1/2p1ppbp/p4np1/1p2P3/3P4/1QN2N2/PP3PPP/R1B1KB1R b KQ - 1 9
+D97j Grünfeld: Russian, Alekhine, 8.e5 b5 9.Qb3 Nfd7 rnbq1rk1/2pnppbp/p5p1/1p2P3/3P4/1QN2N2/PP3PPP/R1B1KB1R w KQ - 2 10
+D97k Grünfeld: Russian, Alekhine, 8.e5 b5 9.Qb3 Nfd7 10.Be3 rnbq1rk1/2pnppbp/p5p1/1p2P3/3P4/1QN1BN2/PP3PPP/R3KB1R b KQ - 3 10
+D97l Grünfeld: Russian, Simagin Variation r1bq1rk1/ppp1ppbp/2n2np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 1 8
+D97l Grünfeld: Russian, Simagin, 8.Be2 r1bq1rk1/ppp1ppbp/2n2np1/8/2QPP3/2N2N2/PP2BPPP/R1B1K2R b KQ - 2 8
+D97m Grünfeld: Russian, Prins Variation r1bq1rk1/ppp1ppbp/n4np1/8/2QPP3/2N2N2/PP3PPP/R1B1KB1R w KQ - 1 8
+D97n Grünfeld: Russian, Prins, 8.Bf4 r1bq1rk1/ppp1ppbp/n4np1/8/2QPPB2/2N2N2/PP3PPP/R3KB1R b KQ - 2 8
+D97o Grünfeld: Russian, Prins, 8.Be2 r1bq1rk1/ppp1ppbp/n4np1/8/2QPP3/2N2N2/PP2BPPP/R1B1K2R b KQ - 2 8
+D97p Grünfeld: Russian, Prins, 8.Be2, Main Line r2q1rk1/pp3pbp/n4np1/2pP1b2/2Q5/2N2N2/PP2BPPP/R1B2RK1 w - - 1 12
+D98a Grünfeld: Russian, Smyslov Variation rn1q1rk1/ppp1ppbp/5np1/8/2QPP1b1/2N2N2/PP3PPP/R1B1KB1R w KQ - 1 8
+D98b Grünfeld: Russian, Smyslov, 8.Be2 rn1q1rk1/ppp1ppbp/5np1/8/2QPP1b1/2N2N2/PP2BPPP/R1B1K2R b KQ - 2 8
+D98c Grünfeld: Russian, Smyslov, 8.Be2 Nc6 r2q1rk1/ppp1ppbp/2n2np1/8/2QPP1b1/2N2N2/PP2BPPP/R1B1K2R w KQ - 3 9
+D98d Grünfeld: Russian, Smyslov, 8.Be2 Nc6 9.d5 r2q1rk1/ppp1ppbp/2n2np1/3P4/2Q1P1b1/2N2N2/PP2BPPP/R1B1K2R b KQ - 0 9
+D98e Grünfeld: Russian, Smyslov, 8.Be3 rn1q1rk1/ppp1ppbp/5np1/8/2QPP1b1/2N1BN2/PP3PPP/R3KB1R b KQ - 2 8
+D98f Grünfeld: Russian, Smyslov, 8.Be3 Nfd7 rn1q1rk1/pppnppbp/6p1/8/2QPP1b1/2N1BN2/PP3PPP/R3KB1R w KQ - 3 9
+D98g Grünfeld: Russian, Smyslov, 8.Be3 Nfd7 9.Be2 rn1q1rk1/pppnppbp/6p1/8/2QPP1b1/2N1BN2/PP2BPPP/R3K2R b KQ - 4 9
+D98h Grünfeld: Russian, Smyslov, Keres Variation r2q1rk1/ppp1ppbp/1nn3p1/8/3PP1b1/2NQBN2/PP2BPPP/2KR3R b - - 9 11
+D98i Grünfeld: Russian, Smyslov, 8.Be3 Nfd7 9.O-O-O rn1q1rk1/pppnppbp/6p1/8/2QPP1b1/2N1BN2/PP3PPP/2KR1B1R b - - 5 9
+D98j Grünfeld: Russian, Smyslov, 8.Be3 Nfd7 9.Rd1 rn1q1rk1/pppnppbp/6p1/8/2QPP1b1/2N1BN2/PP3PPP/3RKB1R b K - 4 9
+D98k Grünfeld: Russian, Smyslov, 8.Be3 Nfd7 9.Rd1 Nc6 r2q1rk1/pppnppbp/2n3p1/8/2QPP1b1/2N1BN2/PP3PPP/3RKB1R w K - 5 10
+D99a Grünfeld: Russian, Smyslov, Main Line rn1q1rk1/pppnppbp/6p1/8/3PP1b1/1QN1BN2/PP3PPP/R3KB1R b KQ - 4 9
+D99b Grünfeld: Russian, Smyslov, Yugoslav rn1q1rk1/pp1nppbp/6p1/2p5/3PP1b1/1QN1BN2/PP3PPP/R3KB1R w KQ c6 0 10
+D99c Grünfeld: Russian, Smyslov, Main Line, 9...Nb6 rn1q1rk1/ppp1ppbp/1n4p1/8/3PP1b1/1QN1BN2/PP3PPP/R3KB1R w KQ - 5 10
+D99d Grünfeld: Russian, Smyslov, Main Line, 9...Nb6 10.Rd1 rn1q1rk1/ppp1ppbp/1n4p1/8/3PP1b1/1QN1BN2/PP3PPP/3RKB1R b K - 6 10
+D99e Grünfeld: Russian, Smyslov, Main Line, 9...Nb6 10.Rd1 e6 rn1q1rk1/ppp2pbp/1n2p1p1/8/3PP1b1/1QN1BN2/PP3PPP/3RKB1R w K - 0 11
+D99f Grünfeld: Russian, Smyslov, Main Line, 9...Nb6 10.Rd1 Nc6 r2q1rk1/ppp1ppbp/1nn3p1/8/3PP1b1/1QN1BN2/PP3PPP/3RKB1R w K - 7 11
+D99g Grünfeld: Russian, Smyslov, Main Line, 9...Nb6 10.Rd1 Nc6 11.d5 Ne5 r2q1rk1/ppp1ppbp/1n4p1/3Pn3/4P1b1/1QN1BN2/PP3PPP/3RKB1R w K - 1 12
 E00a Queen's Pawn: Neo-Indian rnbqkb1r/pppp1ppp/4pn2/8/2PP4/8/PP2PPPP/RNBQKBNR w KQkq - 0 3
 E00a Queen's Pawn: Neo-Indian, Devin Gambit rnbqkb1r/pppp1ppp/4pn2/8/2PP2P1/8/PP2PP1P/RNBQKBNR b KQkq g3 0 3
 E00b Queen's Pawn: Anti-Nimzo-Indian rnbqkb1r/pppp1ppp/4pn2/8/2PP4/P7/1P2PPPP/RNBQKBNR b KQkq - 0 3
@@ -8864,7 +8864,7 @@ E09o Catalan: Closed, Main Line, 9.e4 Bb7 10.b3 Rc8 11.Bb2 2rq1rk1/pb1nbppp/1pp1
 E09p Catalan: Closed, Main Line, 9.e4 Bb7 10.b3 Rc8 11.Bb2 Qc7 2r2rk1/pbqnbppp/1pp1pn2/3p4/2PPP3/1P3NP1/PBQN1PBP/R4RK1 w - - 3 12
 E09q Catalan: Closed, Main Line, 9.e4 Bb7 10.b3 Rc8 11.Bb2 c5 2rq1rk1/pb1nbppp/1p2pn2/2pp4/2PPP3/1P3NP1/PBQN1PBP/R4RK1 w - - 0 12
 E10a Neo-Indian: 3.Nf3 rnbqkb1r/pppp1ppp/4pn2/8/2PP4/5N2/PP2PPPP/RNBQKB1R b KQkq - 1 3
-E10b Neo-Indian: Dšry Defence rnbqkb1r/pppp1ppp/4p3/8/2PPn3/5N2/PP2PPPP/RNBQKB1R w KQkq - 2 4
+E10b Neo-Indian: Döry Defence rnbqkb1r/pppp1ppp/4p3/8/2PPn3/5N2/PP2PPPP/RNBQKB1R w KQkq - 2 4
 E10c Neo-Indian: 3.Nf3 Be7 rnbqk2r/ppppbppp/4pn2/8/2PP4/5N2/PP2PPPP/RNBQKB1R w KQkq - 2 4
 E10d Neo-Indian: 3.Nf3 a6 rnbqkb1r/1ppp1ppp/p3pn2/8/2PP4/5N2/PP2PPPP/RNBQKB1R w KQkq - 0 4
 E10e Neo-Indian: 3.Nf3 a6 4.Nc3 rnbqkb1r/1ppp1ppp/p3pn2/8/2PP4/2N2N2/PP2PPPP/R1BQKB1R b KQkq - 1 4
@@ -8894,7 +8894,7 @@ E11e Bogo-Indian: 4.Nbd2 O-O rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/5N2/PP1NPPPP/R1BQKB1
 E11f Bogo-Indian: 4.Nbd2 O-O 5.a3 rnbq1rk1/pppp1ppp/4pn2/8/1bPP4/P4N2/1P1NPPPP/R1BQKB1R b KQ - 0 5
 E11f Bogo-Indian: 4.Nbd2 O-O 5.a3 Bxd2+ rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P4N2/1P1bPPPP/R1BQKB1R w KQ - 0 6
 E11f Bogo-Indian: 4.Nbd2 O-O 5.a3 Be7 rnbq1rk1/ppppbppp/4pn2/8/2PP4/P4N2/1P1NPPPP/R1BQKB1R w KQ - 1 6
-E11f Bogo-Indian: GrŸnfeld Variation rnbq1rk1/ppp1bppp/4pn2/3p4/2PPP3/P4N2/1P1N1PPP/R1BQKB1R w KQ d6 0 7
+E11f Bogo-Indian: Grünfeld Variation rnbq1rk1/ppp1bppp/4pn2/3p4/2PPP3/P4N2/1P1N1PPP/R1BQKB1R w KQ d6 0 7
 E11g Bogo-Indian: 4.Bd2 rnbqk2r/pppp1ppp/4pn2/8/1bPP4/5N2/PP1BPPPP/RN1QKB1R b KQkq - 3 4
 E11g Bogo-Indian: 4.Bd2 Be7 rnbqk2r/ppppbppp/4pn2/8/2PP4/5N2/PP1BPPPP/RN1QKB1R w KQkq - 4 5
 E11g Bogo-Indian: 4.Bd2 Be7 5.g3 rnbqk2r/ppppbppp/4pn2/8/2PP4/5NP1/PP1BPP1P/RN1QKB1R b KQkq - 0 5
@@ -9266,49 +9266,49 @@ E23 Nimzo-Indian: Spielmann, 4...c5 5.dxc5 Nc6 6.Nf3 Ne4 r1bqk2r/pp1p1ppp/2n1p3/
 E23 Nimzo-Indian: Spielmann, San Remo Variation r1bqk2r/pp1p1ppp/2n1p3/2n5/1bP5/1QN2N2/PP1BPPPP/R3KB1R w KQkq - 0 8
 E23 Nimzo-Indian: Spielmann, Stahlberg Variation r1bqk2r/pp1p2pp/2n1p3/2n2p2/1bP5/2N2NP1/PPQBPP1P/R3KB1R b KQkq - 0 9
 E23 Nimzo-Indian: Spielmann, Carlsbad Variation r1bqk2r/pp1p1ppp/2n1p3/2P5/1bP5/1QN2N2/PP1nPPPP/R3KB1R w KQkq - 0 8
-E24 Nimzo-Indian: SŠmisch rnbqk2r/pppp1ppp/4pn2/8/1bPP4/P1N5/1P2PPPP/R1BQKBNR b KQkq - 0 4
-E24 Nimzo-Indian: SŠmisch rnbqk2r/pppp1ppp/4pn2/8/2PP4/P1P5/4PPPP/R1BQKBNR b KQkq - 0 5
-E24 Nimzo-Indian: SŠmisch, 5...b6 rnbqk2r/p1pp1ppp/1p2pn2/8/2PP4/P1P5/4PPPP/R1BQKBNR w KQkq - 0 6
-E24 Nimzo-Indian: SŠmisch, 5...b6 6.f3 rnbqk2r/p1pp1ppp/1p2pn2/8/2PP4/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 6
-E24 Nimzo-Indian: SŠmisch, 5...d5 rnbqk2r/ppp2ppp/4pn2/3p4/2PP4/P1P5/4PPPP/R1BQKBNR w KQkq d6 0 6
-E24 Nimzo-Indian: SŠmisch, 5...d5 6.f3 rnbqk2r/ppp2ppp/4pn2/3p4/2PP4/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 6
-E24 Nimzo-Indian: SŠmisch, 5...c5 rnbqk2r/pp1p1ppp/4pn2/2p5/2PP4/P1P5/4PPPP/R1BQKBNR w KQkq c6 0 6
-E24 Nimzo-Indian: SŠmisch, 5...c5 6.f3 rnbqk2r/pp1p1ppp/4pn2/2p5/2PP4/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 6
-E24 Nimzo-Indian: SŠmisch, 5...c5 6.f3 d5 rnbqk2r/pp3ppp/4pn2/2pp4/2PP4/P1P2P2/4P1PP/R1BQKBNR w KQkq d6 0 7
-E24 Nimzo-Indian: SŠmisch, Botvinnik Variation rnbq1rk1/pp3ppp/4p3/2pn4/3P4/P1P1PP2/6PP/R1BQKBNR w KQ - 0 9
-E25 Nimzo-Indian: SŠmisch, 5...c5 6.f3 d5 7.cxd5 rnbqk2r/pp3ppp/4pn2/2pP4/3P4/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 7
-E25 Nimzo-Indian: SŠmisch, 5...c5 6.f3 d5 7.cxd5 Nxd5 rnbqk2r/pp3ppp/4p3/2pn4/3P4/P1P2P2/4P1PP/R1BQKBNR w KQkq - 0 8
-E25 Nimzo-Indian: SŠmisch, 5...c5 6.f3 d5 7.cxd5 Nxd5 8.Qd3 rnbqk2r/pp3ppp/4p3/2pn4/3P4/P1PQ1P2/4P1PP/R1B1KBNR b KQkq - 1 8
-E25 Nimzo-Indian: SŠmisch, Keres Variation rnbqk2r/pp3ppp/4p3/2Pn4/8/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 8
-E25 Nimzo-Indian: SŠmisch, Keres, Romanovsky Variation rnbqk2r/pp4pp/4p3/2Pn1p2/8/P1P2P2/4P1PP/R1BQKBNR w KQkq f6 0 9
-E25 Nimzo-Indian: SŠmisch, Keres, Romanovsky, 9.e4 rnbqk2r/pp4pp/4p3/2Pn1p2/4P3/P1P2P2/6PP/R1BQKBNR b KQkq e3 0 9
-E25 Nimzo-Indian: SŠmisch, Keres, Romanovsky, 9.Nh3 rnbqk2r/pp4pp/4p3/2Pn1p2/8/P1P2P1N/4P1PP/R1BQKB1R b KQkq - 1 9
-E26 Nimzo-Indian: SŠmisch, 5...c5 6.e3 rnbqk2r/pp1p1ppp/4pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR b KQkq - 0 6
-E26 Nimzo-Indian: SŠmisch, 5...c5 6.e3 Qa5 rnb1k2r/pp1p1ppp/4pn2/q1p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq - 1 7
-E26 Nimzo-Indian: SŠmisch, 5...c5 6.e3 d6 rnbqk2r/pp3ppp/3ppn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq - 0 7
-E26 Nimzo-Indian: SŠmisch, O'Kelly Variation rnbqk2r/p2p1ppp/1p2pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq - 0 7
-E26 Nimzo-Indian: SŠmisch, 5...c5 6.e3 Nc6 r1bqk2r/pp1p1ppp/2n1pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq - 1 7
-E26 Nimzo-Indian: SŠmisch, 5...c5 6.e3 Nc6 7.Bd3 r1bqk2r/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR b KQkq - 2 7
-E27 Nimzo-Indian: SŠmisch, 5...O-O rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P1P5/4PPPP/R1BQKBNR w KQ - 2 6
-E27 Nimzo-Indian: SŠmisch, 5...O-O 6.f3 rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P1P2P2/4P1PP/R1BQKBNR b KQ - 0 6
-E27 Nimzo-Indian: SŠmisch, 5...O-O 6.f3 d5 rnbq1rk1/ppp2ppp/4pn2/3p4/2PP4/P1P2P2/4P1PP/R1BQKBNR w KQ d6 0 7
-E27 Nimzo-Indian: SŠmisch, 5...O-O 6.f3 d5 7.e3 rnbq1rk1/ppp2ppp/4pn2/3p4/2PP4/P1P1PP2/6PP/R1BQKBNR b KQ - 0 7
-E27 Nimzo-Indian: SŠmisch, 5...O-O 6.f3 d5 7.cxd5 rnbq1rk1/ppp2ppp/4pn2/3P4/3P4/P1P2P2/4P1PP/R1BQKBNR b KQ - 0 7
-E28 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P1P1P3/5PPP/R1BQKBNR b KQ - 0 6
-E28 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 rnbq1rk1/p1pp1ppp/1p2pn2/8/2PP4/P1P1P3/5PPP/R1BQKBNR w KQ - 0 7
-E28 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 rnbq1rk1/pp1p1ppp/4pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQ c6 0 7
-E28 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Ne2 rnbq1rk1/pp1p1ppp/4pn2/2p5/2PP4/P1P1P3/4NPPP/R1BQKB1R b KQ - 1 7
-E28 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 rnbq1rk1/pp1p1ppp/4pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR b KQ - 1 7
-E28 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 b6 rnbq1rk1/p2p1ppp/1p2pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR w KQ - 0 8
-E29 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 r1bq1rk1/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR w KQ - 2 8
-E29 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Nf3 r1bq1rk1/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBPN2/5PPP/R1BQK2R b KQ - 3 8
-E29 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 r1bq1rk1/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBP3/4NPPP/R1BQK2R b KQ - 3 8
-E29 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 e5 r1bq1rk1/pp1p1ppp/2n2n2/2p1p3/2PP4/P1PBP3/4NPPP/R1BQK2R w KQ - 0 9
-E29 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 d6 r1bq1rk1/pp3ppp/2nppn2/2p5/2PP4/P1PBP3/4NPPP/R1BQK2R w KQ - 0 9
-E29 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 b6 r1bq1rk1/p2p1ppp/1pn1pn2/2p5/2PP4/P1PBP3/4NPPP/R1BQK2R w KQ - 0 9
-E29 Nimzo-Indian: SŠmisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 b6 9.e4 r1bq1rk1/p2p1ppp/1pn1pn2/2p5/2PPP3/P1PB4/4NPPP/R1BQK2R b KQ - 0 9
-E29 Nimzo-Indian: SŠmisch, Capablanca Variation r1bqnrk1/p2p1ppp/1pn1p3/2p5/2PPP3/P1PB4/4NPPP/R1BQK2R w KQ - 1 10
-E29 Nimzo-Indian: SŠmisch, Capablanca, 10.O-O r1bqnrk1/p2p1ppp/1pn1p3/2p5/2PPP3/P1PB4/4NPPP/R1BQ1RK1 b - - 3 10
+E24 Nimzo-Indian: Sämisch rnbqk2r/pppp1ppp/4pn2/8/1bPP4/P1N5/1P2PPPP/R1BQKBNR b KQkq - 0 4
+E24 Nimzo-Indian: Sämisch rnbqk2r/pppp1ppp/4pn2/8/2PP4/P1P5/4PPPP/R1BQKBNR b KQkq - 0 5
+E24 Nimzo-Indian: Sämisch, 5...b6 rnbqk2r/p1pp1ppp/1p2pn2/8/2PP4/P1P5/4PPPP/R1BQKBNR w KQkq - 0 6
+E24 Nimzo-Indian: Sämisch, 5...b6 6.f3 rnbqk2r/p1pp1ppp/1p2pn2/8/2PP4/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 6
+E24 Nimzo-Indian: Sämisch, 5...d5 rnbqk2r/ppp2ppp/4pn2/3p4/2PP4/P1P5/4PPPP/R1BQKBNR w KQkq d6 0 6
+E24 Nimzo-Indian: Sämisch, 5...d5 6.f3 rnbqk2r/ppp2ppp/4pn2/3p4/2PP4/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 6
+E24 Nimzo-Indian: Sämisch, 5...c5 rnbqk2r/pp1p1ppp/4pn2/2p5/2PP4/P1P5/4PPPP/R1BQKBNR w KQkq c6 0 6
+E24 Nimzo-Indian: Sämisch, 5...c5 6.f3 rnbqk2r/pp1p1ppp/4pn2/2p5/2PP4/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 6
+E24 Nimzo-Indian: Sämisch, 5...c5 6.f3 d5 rnbqk2r/pp3ppp/4pn2/2pp4/2PP4/P1P2P2/4P1PP/R1BQKBNR w KQkq d6 0 7
+E24 Nimzo-Indian: Sämisch, Botvinnik Variation rnbq1rk1/pp3ppp/4p3/2pn4/3P4/P1P1PP2/6PP/R1BQKBNR w KQ - 0 9
+E25 Nimzo-Indian: Sämisch, 5...c5 6.f3 d5 7.cxd5 rnbqk2r/pp3ppp/4pn2/2pP4/3P4/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 7
+E25 Nimzo-Indian: Sämisch, 5...c5 6.f3 d5 7.cxd5 Nxd5 rnbqk2r/pp3ppp/4p3/2pn4/3P4/P1P2P2/4P1PP/R1BQKBNR w KQkq - 0 8
+E25 Nimzo-Indian: Sämisch, 5...c5 6.f3 d5 7.cxd5 Nxd5 8.Qd3 rnbqk2r/pp3ppp/4p3/2pn4/3P4/P1PQ1P2/4P1PP/R1B1KBNR b KQkq - 1 8
+E25 Nimzo-Indian: Sämisch, Keres Variation rnbqk2r/pp3ppp/4p3/2Pn4/8/P1P2P2/4P1PP/R1BQKBNR b KQkq - 0 8
+E25 Nimzo-Indian: Sämisch, Keres, Romanovsky Variation rnbqk2r/pp4pp/4p3/2Pn1p2/8/P1P2P2/4P1PP/R1BQKBNR w KQkq f6 0 9
+E25 Nimzo-Indian: Sämisch, Keres, Romanovsky, 9.e4 rnbqk2r/pp4pp/4p3/2Pn1p2/4P3/P1P2P2/6PP/R1BQKBNR b KQkq e3 0 9
+E25 Nimzo-Indian: Sämisch, Keres, Romanovsky, 9.Nh3 rnbqk2r/pp4pp/4p3/2Pn1p2/8/P1P2P1N/4P1PP/R1BQKB1R b KQkq - 1 9
+E26 Nimzo-Indian: Sämisch, 5...c5 6.e3 rnbqk2r/pp1p1ppp/4pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR b KQkq - 0 6
+E26 Nimzo-Indian: Sämisch, 5...c5 6.e3 Qa5 rnb1k2r/pp1p1ppp/4pn2/q1p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq - 1 7
+E26 Nimzo-Indian: Sämisch, 5...c5 6.e3 d6 rnbqk2r/pp3ppp/3ppn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq - 0 7
+E26 Nimzo-Indian: Sämisch, O'Kelly Variation rnbqk2r/p2p1ppp/1p2pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq - 0 7
+E26 Nimzo-Indian: Sämisch, 5...c5 6.e3 Nc6 r1bqk2r/pp1p1ppp/2n1pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQkq - 1 7
+E26 Nimzo-Indian: Sämisch, 5...c5 6.e3 Nc6 7.Bd3 r1bqk2r/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR b KQkq - 2 7
+E27 Nimzo-Indian: Sämisch, 5...O-O rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P1P5/4PPPP/R1BQKBNR w KQ - 2 6
+E27 Nimzo-Indian: Sämisch, 5...O-O 6.f3 rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P1P2P2/4P1PP/R1BQKBNR b KQ - 0 6
+E27 Nimzo-Indian: Sämisch, 5...O-O 6.f3 d5 rnbq1rk1/ppp2ppp/4pn2/3p4/2PP4/P1P2P2/4P1PP/R1BQKBNR w KQ d6 0 7
+E27 Nimzo-Indian: Sämisch, 5...O-O 6.f3 d5 7.e3 rnbq1rk1/ppp2ppp/4pn2/3p4/2PP4/P1P1PP2/6PP/R1BQKBNR b KQ - 0 7
+E27 Nimzo-Indian: Sämisch, 5...O-O 6.f3 d5 7.cxd5 rnbq1rk1/ppp2ppp/4pn2/3P4/3P4/P1P2P2/4P1PP/R1BQKBNR b KQ - 0 7
+E28 Nimzo-Indian: Sämisch, 5...O-O 6.e3 rnbq1rk1/pppp1ppp/4pn2/8/2PP4/P1P1P3/5PPP/R1BQKBNR b KQ - 0 6
+E28 Nimzo-Indian: Sämisch, 5...O-O 6.e3 rnbq1rk1/p1pp1ppp/1p2pn2/8/2PP4/P1P1P3/5PPP/R1BQKBNR w KQ - 0 7
+E28 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 rnbq1rk1/pp1p1ppp/4pn2/2p5/2PP4/P1P1P3/5PPP/R1BQKBNR w KQ c6 0 7
+E28 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Ne2 rnbq1rk1/pp1p1ppp/4pn2/2p5/2PP4/P1P1P3/4NPPP/R1BQKB1R b KQ - 1 7
+E28 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 rnbq1rk1/pp1p1ppp/4pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR b KQ - 1 7
+E28 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 b6 rnbq1rk1/p2p1ppp/1p2pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR w KQ - 0 8
+E29 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 r1bq1rk1/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBP3/5PPP/R1BQK1NR w KQ - 2 8
+E29 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Nf3 r1bq1rk1/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBPN2/5PPP/R1BQK2R b KQ - 3 8
+E29 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 r1bq1rk1/pp1p1ppp/2n1pn2/2p5/2PP4/P1PBP3/4NPPP/R1BQK2R b KQ - 3 8
+E29 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 e5 r1bq1rk1/pp1p1ppp/2n2n2/2p1p3/2PP4/P1PBP3/4NPPP/R1BQK2R w KQ - 0 9
+E29 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 d6 r1bq1rk1/pp3ppp/2nppn2/2p5/2PP4/P1PBP3/4NPPP/R1BQK2R w KQ - 0 9
+E29 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 b6 r1bq1rk1/p2p1ppp/1pn1pn2/2p5/2PP4/P1PBP3/4NPPP/R1BQK2R w KQ - 0 9
+E29 Nimzo-Indian: Sämisch, 5...O-O 6.e3 c5 7.Bd3 Nc6 8.Ne2 b6 9.e4 r1bq1rk1/p2p1ppp/1pn1pn2/2p5/2PPP3/P1PB4/4NPPP/R1BQK2R b KQ - 0 9
+E29 Nimzo-Indian: Sämisch, Capablanca Variation r1bqnrk1/p2p1ppp/1pn1p3/2p5/2PPP3/P1PB4/4NPPP/R1BQK2R w KQ - 1 10
+E29 Nimzo-Indian: Sämisch, Capablanca, 10.O-O r1bqnrk1/p2p1ppp/1pn1p3/2p5/2PPP3/P1PB4/4NPPP/R1BQ1RK1 b - - 3 10
 E30 Nimzo-Indian: Leningrad rnbqk2r/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR b KQkq - 3 4
 E30 Nimzo-Indian: Leningrad, 4...O-O rnbq1rk1/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR w KQ - 5 5
 E30 Nimzo-Indian: Leningrad, 4...c5 rnbqk2r/pp1p1ppp/4pn2/2p3B1/1bPP4/2N5/PP2PPPP/R2QKBNR w KQkq c6 0 5
@@ -9446,12 +9446,12 @@ E41 Nimzo-Indian: 4.e3 c5 5.Bd3 rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2NBP3/PP3PPP/R1B
 E41 Nimzo-Indian: 4.e3 c5 5.Bd3 Nc6 r1bqk2r/pp1p1ppp/2n1pn2/2p5/1bPP4/2NBP3/PP3PPP/R1BQK1NR w KQkq - 2 6
 E41 Nimzo-Indian: 4.e3 c5 5.Bd3 Nc6 6.Ne2 r1bqk2r/pp1p1ppp/2n1pn2/2p5/1bPP4/2NBP3/PP2NPPP/R1BQK2R b KQkq - 3 6
 E41 Nimzo-Indian: 4.e3 c5 5.Bd3 Nc6 6.Nf3 r1bqk2r/pp1p1ppp/2n1pn2/2p5/1bPP4/2NBPN2/PP3PPP/R1BQK2R b KQkq - 3 6
-E41 Nimzo-Indian: 4.e3 c5, HŸbner Variation r1bqk2r/pp3ppp/2nppn2/2p5/2PP4/2PBPN2/P4PPP/R1BQK2R w KQkq - 0 8
-E41 Nimzo-Indian: HŸbner, 8.e4 r1bqk2r/pp3ppp/2nppn2/2p5/2PPP3/2PB1N2/P4PPP/R1BQK2R b KQkq - 0 8
-E41 Nimzo-Indian: HŸbner, 8.e4 e5 9.d5 Ne7 r1bqk2r/pp2nppp/3p1n2/2pPp3/2P1P3/2PB1N2/P4PPP/R1BQK2R w KQkq - 1 10
-E41 Nimzo-Indian: HŸbner, 8.O-O r1bqk2r/pp3ppp/2nppn2/2p5/2PP4/2PBPN2/P4PPP/R1BQ1RK1 b kq - 2 8
-E41 Nimzo-Indian: HŸbner, 8.O-O e5 r1bqk2r/pp3ppp/2np1n2/2p1p3/2PP4/2PBPN2/P4PPP/R1BQ1RK1 w kq - 0 9
-E41 Nimzo-Indian: HŸbner, 8.O-O e5 9.Nd2 r1bqk2r/pp3ppp/2np1n2/2p1p3/2PP4/2PBP3/P2N1PPP/R1BQ1RK1 b kq - 1 9
+E41 Nimzo-Indian: 4.e3 c5, Hübner Variation r1bqk2r/pp3ppp/2nppn2/2p5/2PP4/2PBPN2/P4PPP/R1BQK2R w KQkq - 0 8
+E41 Nimzo-Indian: Hübner, 8.e4 r1bqk2r/pp3ppp/2nppn2/2p5/2PPP3/2PB1N2/P4PPP/R1BQK2R b KQkq - 0 8
+E41 Nimzo-Indian: Hübner, 8.e4 e5 9.d5 Ne7 r1bqk2r/pp2nppp/3p1n2/2pPp3/2P1P3/2PB1N2/P4PPP/R1BQK2R w KQkq - 1 10
+E41 Nimzo-Indian: Hübner, 8.O-O r1bqk2r/pp3ppp/2nppn2/2p5/2PP4/2PBPN2/P4PPP/R1BQ1RK1 b kq - 2 8
+E41 Nimzo-Indian: Hübner, 8.O-O e5 r1bqk2r/pp3ppp/2np1n2/2p1p3/2PP4/2PBPN2/P4PPP/R1BQ1RK1 w kq - 0 9
+E41 Nimzo-Indian: Hübner, 8.O-O e5 9.Nd2 r1bqk2r/pp3ppp/2np1n2/2p1p3/2PP4/2PBP3/P2N1PPP/R1BQ1RK1 b kq - 1 9
 E42 Nimzo-Indian: 4.e3 c5 5.Ne2 rnbqk2r/pp1p1ppp/4pn2/2p5/1bPP4/2N1P3/PP2NPPP/R1BQKB1R b KQkq - 1 5
 E42 Nimzo-Indian: 4.e3 c5 5.Ne2 d5 rnbqk2r/pp3ppp/4pn2/2pp4/1bPP4/2N1P3/PP2NPPP/R1BQKB1R w KQkq d6 0 6
 E42 Nimzo-Indian: 4.e3 c5 5.Ne2 cxd4 6.exd4 rnbqk2r/pp1p1ppp/4pn2/8/1bPP4/2N5/PP2NPPP/R1BQKB1R b KQkq - 0 6
@@ -9970,147 +9970,147 @@ E79d King's Indian: Four Pawns Attack, Main Line, 9...Bg4 r2q1rk1/pp2ppbp/2np1np
 E79e King's Indian: Four Pawns Attack, Main Line, 9...Bd7 r2q1rk1/pp1bppbp/2np1np1/8/2PNPP2/2N1B3/PP2B1PP/R2QK2R w KQ - 3 10
 E79e King's Indian: Four Pawns Attack, Main Line, 9...Bd7 10.Qd2 r2q1rk1/pp1bppbp/2np1np1/8/2PNPP2/2N1B3/PP1QB1PP/R3K2R b KQ - 4 10
 E79f King's Indian: Four Pawns Attack, Main Line, 9...Bd7 10.O-O r2q1rk1/pp1bppbp/2np1np1/8/2PNPP2/2N1B3/PP2B1PP/R2Q1RK1 b - - 5 10
-E80a King's Indian: SŠmisch Variation rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR b KQkq - 0 5
-E80b King's Indian: SŠmisch, 5...Na6 r1bqk2r/ppp1ppbp/n2p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 1 6
-E80c King's Indian: SŠmisch, 5...Nc6 r1bqk2r/ppp1ppbp/2np1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 1 6
-E80d King's Indian: SŠmisch, 5...Nbd7 r1bqk2r/pppnppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 1 6
-E80e King's Indian: SŠmisch, 5...e5 rnbqk2r/ppp2pbp/3p1np1/4p3/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq e6 0 6
-E80f King's Indian: SŠmisch, 5...e5 6.Nge2 rnbqk2r/ppp2pbp/3p1np1/4p3/2PPP3/2N2P2/PP2N1PP/R1BQKB1R b KQkq - 1 6
-E80g King's Indian: SŠmisch, 5...e5 6.d5 rnbqk2r/ppp2pbp/3p1np1/3Pp3/2P1P3/2N2P2/PP4PP/R1BQKBNR b KQkq - 0 6
-E80h King's Indian: SŠmisch, 5...c5 rnbqk2r/pp2ppbp/3p1np1/2p5/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq c6 0 6
-E80i King's Indian: SŠmisch, 5...c5 Queenswap rnbk3r/pp2ppbp/5np1/2p5/2P1P3/2N2P2/PP4PP/R1B1KBNR w KQ - 0 8
-E80j King's Indian: SŠmisch, 5...a6 rnbqk2r/1pp1ppbp/p2p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 0 6
-E80k King's Indian: SŠmisch, 5...a6 6.Be3 rnbqk2r/1pp1ppbp/p2p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR b KQkq - 1 6
-E80l King's Indian: SŠmisch, 5...c6 rnbqk2r/pp2ppbp/2pp1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 0 6
-E80m King's Indian: SŠmisch, 5...c6 6.Be3 rnbqk2r/pp2ppbp/2pp1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR b KQkq - 1 6
-E80n King's Indian: SŠmisch, 5...c6 6.Be3 a6 rnbqk2r/1p2ppbp/p1pp1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQkq - 0 7
-E80o King's Indian: SŠmisch, 5...c6 6.Be3 a6 7.a4 rnbqk2r/1p2ppbp/p1pp1np1/8/P1PPP3/2N1BP2/1P4PP/R2QKBNR b KQkq a3 0 7
-E80p King's Indian: SŠmisch, 5...c6 6.Be3 a6 7.Bd3 rnbqk2r/1p2ppbp/p1pp1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR b KQkq - 1 7
-E81a King's Indian: SŠmisch, 5...O-O rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQ - 2 6
-E81b King's Indian: SŠmisch, 5...O-O 6.Nge2 rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP2N1PP/R1BQKB1R b KQ - 3 6
-E81c King's Indian: SŠmisch, 5...O-O 6.Nge2 e5 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N2P2/PP2N1PP/R1BQKB1R w KQ e6 0 7
-E81d King's Indian: SŠmisch, 5...O-O 6.Nge2 c5 rnbq1rk1/pp2ppbp/3p1np1/2p5/2PPP3/2N2P2/PP2N1PP/R1BQKB1R w KQ c6 0 7
-E81d King's Indian: SŠmisch, 5...O-O 6.Nge2 c5 7.d5 rnbq1rk1/pp2ppbp/3p1np1/2pP4/2P1P3/2N2P2/PP2N1PP/R1BQKB1R b KQ - 0 7
-E81e King's Indian: SŠmisch, 5...O-O 6.Bg5 rnbq1rk1/ppp1ppbp/3p1np1/6B1/2PPP3/2N2P2/PP4PP/R2QKBNR b KQ - 3 6
-E81f King's Indian: SŠmisch, 5...O-O 6.Bg5 Nc6 r1bq1rk1/ppp1ppbp/2np1np1/6B1/2PPP3/2N2P2/PP4PP/R2QKBNR w KQ - 4 7
-E81g King's Indian: SŠmisch, 5...O-O 6.Bg5 a6 rnbq1rk1/1pp1ppbp/p2p1np1/6B1/2PPP3/2N2P2/PP4PP/R2QKBNR w KQ - 0 7
-E81h King's Indian: SŠmisch, 5...O-O 6.Bg5 c5 rnbq1rk1/pp2ppbp/3p1np1/2p3B1/2PPP3/2N2P2/PP4PP/R2QKBNR w KQ c6 0 7
-E81h King's Indian: SŠmisch, 5...O-O 6.Bg5 c5 7.d5 rnbq1rk1/pp2ppbp/3p1np1/2pP2B1/2P1P3/2N2P2/PP4PP/R2QKBNR b KQ - 0 7
-E81h King's Indian: SŠmisch, 5...O-O 6.Bg5 c5 7.d5 a6 rnbq1rk1/1p2ppbp/p2p1np1/2pP2B1/2P1P3/2N2P2/PP4PP/R2QKBNR w KQ - 0 8
-E81h King's Indian: SŠmisch, 5...O-O 6.Bg5 c5 7.d5 h6 rnbq1rk1/pp2ppb1/3p1npp/2pP2B1/2P1P3/2N2P2/PP4PP/R2QKBNR w KQ - 0 8
-E81i King's Indian: SŠmisch, 5...O-O 6.Bg5 c5 7.d5 e6 rnbq1rk1/pp3pbp/3ppnp1/2pP2B1/2P1P3/2N2P2/PP4PP/R2QKBNR w KQ - 0 8
-E81i King's Indian: SŠmisch, 5...O-O 6.Bg5 c5 7.d5 e6 8.Qd2 rnbq1rk1/pp3pbp/3ppnp1/2pP2B1/2P1P3/2N2P2/PP1Q2PP/R3KBNR b KQ - 1 8
-E81j King's Indian: SŠmisch, 5...O-O 6.Be3 rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR b KQ - 3 6
-E81k King's Indian: SŠmisch, 5...O-O 6.Be3 a6 rnbq1rk1/1pp1ppbp/p2p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 0 7
-E81k King's Indian: SŠmisch, 5...O-O 6.Be3 a6 7.Qd2 rnbq1rk1/1pp1ppbp/p2p1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 1 7
-E81l King's Indian: SŠmisch, 5...O-O 6.Be3 c6 rnbq1rk1/pp2ppbp/2pp1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 0 7
-E81l King's Indian: SŠmisch, Byrne Variation rnbq1rk1/1p2ppbp/p1pp1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ - 0 8
-E81m King's Indian: SŠmisch, 5...O-O 6.Be3 c5 rnbq1rk1/pp2ppbp/3p1np1/2p5/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ c6 0 7
-E81m King's Indian: SŠmisch, 5...O-O 6.Be3 c5 7.d5 rnbq1rk1/pp2ppbp/3p1np1/2pP4/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7
-E81n King's Indian: SŠmisch, 5...O-O 6.Be3 c5 7.dxc5 rnbq1rk1/pp2ppbp/3p1np1/2P5/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7
-E81n King's Indian: SŠmisch, 5...O-O 6.Be3 c5 Queenswap rnbQ1rk1/pp2ppbp/5np1/2p5/2P1P3/2N1BP2/PP4PP/R3KBNR b KQ - 0 8
-E81o King's Indian: SŠmisch, 5...O-O 6.Be3 c5 7.Nge2 rnbq1rk1/pp2ppbp/3p1np1/2p5/2PPP3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 1 7
-E81o King's Indian: SŠmisch, 5...O-O 6.Be3 c5 7.Nge2 Nc6 r1bq1rk1/pp2ppbp/2np1np1/2p5/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 2 8
-E81p King's Indian: SŠmisch, 5...O-O 6.Be3 c5 7.Nge2 Nc6 8.d5 r1bq1rk1/pp2ppbp/2np1np1/2pP4/2P1P3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 0 8
-E81q King's Indian: SŠmisch, 5...O-O 6.Be3 Nbd7 r1bq1rk1/pppnppbp/3p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 4 7
-E81r King's Indian: SŠmisch, 5...O-O 6.Be3 Nbd7 7.Qd2 r1bq1rk1/pppnppbp/3p1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 5 7
-E81s King's Indian: SŠmisch, 5...O-O 6.Be3 Nbd7 7.Qd2 c5 r1bq1rk1/pp1nppbp/3p1np1/2p5/2PPP3/2N1BP2/PP1Q2PP/R3KBNR w KQ c6 0 8
-E81s King's Indian: SŠmisch, 5...O-O 6.Be3 Nbd7 7.Qd2 c5 8.d5 r1bq1rk1/pp1nppbp/3p1np1/2pP4/2P1P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 0 8
-E81t King's Indian: SŠmisch, 5...O-O 6.Be3 Nbd7 7.Qd2 c5 8.Nge2 r1bq1rk1/pp1nppbp/3p1np1/2p5/2PPP3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 1 8
-E81t King's Indian: SŠmisch, 5...O-O 6.Be3 Nbd7 7.Qd2 c5 8.Nge2 a6 r1bq1rk1/1p1nppbp/p2p1np1/2p5/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 0 9
-E82a King's Indian: SŠmisch, Fianchetto rnbq1rk1/p1p1ppbp/1p1p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 0 7
-E82b King's Indian: SŠmisch, Fianchetto, 7.Qd2 rnbq1rk1/p1p1ppbp/1p1p1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 1 7
-E82c King's Indian: SŠmisch, Fianchetto, 7.Qd2 c5 8.d5 rnbq1rk1/p3ppbp/1p1p1np1/2pP4/2P1P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 0 8
-E82d King's Indian: SŠmisch, Fianchetto, Bronstein Variation rnbq1rk1/p1p1ppbp/1p1p1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR b KQ - 1 7
-E82e King's Indian: SŠmisch, Fianchetto, 7.Bd3 Nfd7 rnbq1rk1/p1pnppbp/1p1p2p1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ - 2 8
-E82f King's Indian: SŠmisch, Fianchetto, 7.Bd3 Bb7 rn1q1rk1/pbp1ppbp/1p1p1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ - 2 8
-E82g King's Indian: SŠmisch, Fianchetto, 7.Bd3 Bb7 8.Nge2 rn1q1rk1/pbp1ppbp/1p1p1np1/8/2PPP3/2NBBP2/PP2N1PP/R2QK2R b KQ - 3 8
-E82g King's Indian: SŠmisch, Fianchetto, 7.Bd3 Bb7 8.Nge2 c5 rn1q1rk1/pb2ppbp/1p1p1np1/2p5/2PPP3/2NBBP2/PP2N1PP/R2QK2R w KQ c6 0 9
-E82g King's Indian: SŠmisch, Fianchetto, 7.Bd3 Bb7 8.Nge2 c5 9.d5 e6 rn1q1rk1/pb3pbp/1p1ppnp1/2pP4/2P1P3/2NBBP2/PP2N1PP/R2QK2R w KQ - 0 10
-E82h King's Indian: SŠmisch, Fianchetto, 7.Bd3 a6 rnbq1rk1/2p1ppbp/pp1p1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ - 0 8
-E82i King's Indian: SŠmisch, Fianchetto, 7.Bd3 a6 8.Nge2 rnbq1rk1/2p1ppbp/pp1p1np1/8/2PPP3/2NBBP2/PP2N1PP/R2QK2R b KQ - 1 8
-E82i King's Indian: SŠmisch, Fianchetto, 7.Bd3 a6 8.Nge2 c5 rnbq1rk1/4ppbp/pp1p1np1/2p5/2PPP3/2NBBP2/PP2N1PP/R2QK2R w KQ c6 0 9
-E82j King's Indian: SŠmisch, Fianchetto, 7.Bd3 a6 8.Nge2 c5 9.d5 rnbq1rk1/4ppbp/pp1p1np1/2pP4/2P1P3/2NBBP2/PP2N1PP/R2QK2R b KQ - 0 9
-E82k King's Indian: SŠmisch, Fianchetto, 7.Bd3 a6 8.Nge2 c5 9.e5 rnbq1rk1/4ppbp/pp1p1np1/2p1P3/2PP4/2NBBP2/PP2N1PP/R2QK2R b KQ - 0 9
-E83a King's Indian: SŠmisch, 6...Nc6 r1bq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 4 7
-E83b King's Indian: SŠmisch, 6...Nc6 7.Qd2 r1bq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 5 7
-E83c King's Indian: SŠmisch, 6...Nc6 7.Qd2 a6 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 8
-E83c King's Indian: SŠmisch, 6...Nc6 7.Qd2 a6 8.O-O-O r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1Q2PP/2KR1BNR b - - 2 8
-E83d King's Indian: SŠmisch, 6...Nc6 7.Nge2 r1bq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 5 7
-E83e King's Indian: SŠmisch, Ruban Variation 1rbq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 6 8
-E83e King's Indian: SŠmisch, Ruban, 8.Qd2 Re8 1rbqr1k1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 8 9
-E83f King's Indian: SŠmisch, Panno r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 8
-E83g King's Indian: SŠmisch, Panno, 8.a3 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/P1N1BP2/1P2N1PP/R2QKB1R b KQ - 0 8
-E83h King's Indian: SŠmisch, Panno, 8.Nc1 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP4PP/R1NQKB1R b KQ - 1 8
-E83i King's Indian: SŠmisch, Panno, 8.Qd2 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 1 8
-E83j King's Indian: SŠmisch, Panno, 8.Qd2 Re8 r1bqr1k1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 2 9
-E84a King's Indian: SŠmisch, Panno Main Line 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 2 9
-E84b King's Indian: SŠmisch, Panno Main Line, 9.a3 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/P1N1BP2/1P1QN1PP/R3KB1R b KQ - 0 9
-E84c King's Indian: SŠmisch, Panno Main Line, 9.O-O-O 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/2KR1B1R b - - 4 9
-E84d King's Indian: SŠmisch, Panno Main Line, 9.g4 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP1P1/2N1BP2/PP1QN2P/R3KB1R b KQ g3 0 9
-E84e King's Indian: SŠmisch, Panno Main Line, 9.Rb1 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/1R2KB1R b K - 3 9
-E84f King's Indian: SŠmisch, Panno Main Line, 9.Bh6 1rbq1rk1/1pp1ppbp/p1np1npB/8/2PPP3/2N2P2/PP1QN1PP/R3KB1R b KQ - 3 9
-E84g King's Indian: SŠmisch, Panno Main Line, 9.Nc1 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1Q2PP/R1N1KB1R b KQ - 3 9
-E84g King's Indian: SŠmisch, Panno Main Line, 9.Nc1 e5 1rbq1rk1/1pp2pbp/p1np1np1/4p3/2PPP3/2N1BP2/PP1Q2PP/R1N1KB1R w KQ e6 0 10
-E84h King's Indian: SŠmisch, Panno Main Line, 9.Nc1 e5 10.Nb3 1rbq1rk1/1pp2pbp/p1np1np1/4p3/2PPP3/1NN1BP2/PP1Q2PP/R3KB1R b KQ - 1 10
-E84i King's Indian: SŠmisch, Panno Main Line, 9.Nc1 e5 10.d5 1rbq1rk1/1pp2pbp/p1np1np1/3Pp3/2P1P3/2N1BP2/PP1Q2PP/R1N1KB1R b KQ - 0 10
-E84j King's Indian: SŠmisch, Panno Main Line, 9.Nc1 e5 10.d5 Nd4 11.Nb3 1rbq1rk1/1pp2pbp/p2p1np1/3Pp3/2PnP3/1NN1BP2/PP1Q2PP/R3KB1R b KQ - 2 11
-E84k King's Indian: SŠmisch, Panno Main Line, 9.h4 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP2P/2N1BP2/PP1QN1P1/R3KB1R b KQ h3 0 9
-E84l King's Indian: SŠmisch, Panno Main Line, 9.h4 b5 1rbq1rk1/2p1ppbp/p1np1np1/1p6/2PPP2P/2N1BP2/PP1QN1P1/R3KB1R w KQ b6 0 10
-E84m King's Indian: SŠmisch, Panno Main Line, 9.h4 h5 1rbq1rk1/1pp1ppb1/p1np1np1/7p/2PPP2P/2N1BP2/PP1QN1P1/R3KB1R w KQ h6 0 10
-E84n King's Indian: SŠmisch, Panno Main Line, 9.h4 h5 10.O-O-O 1rbq1rk1/1pp1ppb1/p1np1np1/7p/2PPP2P/2N1BP2/PP1QN1P1/2KR1B1R b - - 2 10
-E84o King's Indian: SŠmisch, Panno Main Line, 9.h4 h5 10.O-O-O b5 11.Bh6 1rbq1rk1/2p1ppb1/p1np1npB/1p5p/2PPP2P/2N2P2/PP1QN1P1/2KR1B1R b - - 1 11
-E85a King's Indian: SŠmisch, Orthodox Variation rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ e6 0 7
-E85b King's Indian: SŠmisch, Orthodox, 7.dxe5 rnbq1rk1/ppp2pbp/3p1np1/4P3/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7
-E85c King's Indian: SŠmisch, Orthodox, Queenswap rnbQ1rk1/ppp2pbp/5np1/4p3/2P1P3/2N1BP2/PP4PP/R3KBNR b KQ - 0 8
-E85d King's Indian: SŠmisch, Orthodox, 7.Nge2 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 1 7
-E85e King's Indian: SŠmisch, Orthodox, 7.Nge2 exd4 rnbq1rk1/ppp2pbp/3p1np1/8/2PpP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 8
-E85f King's Indian: SŠmisch, Orthodox, 7.Nge2 Nbd7 r1bq1rk1/pppn1pbp/3p1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 2 8
-E85g King's Indian: SŠmisch, Orthodox, 7.Nge2 Nc6 r1bq1rk1/ppp2pbp/2np1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 2 8
-E85h King's Indian: SŠmisch, Orthodox, 7.Nge2 Nc6 8.d5 r1bq1rk1/ppp2pbp/2np1np1/3Pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 0 8
-E85i King's Indian: SŠmisch, Orthodox, 7.Nge2 Nc6 8.d5 Ne7 r1bq1rk1/ppp1npbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 1 9
-E85j King's Indian: SŠmisch, Orthodox, 7.Nge2 Nc6 8.d5 Ne7 9.Qd2 r1bq1rk1/ppp1npbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 2 9
-E86a King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 rnbq1rk1/pp3pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 8
-E86b King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 8.d5 rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 0 8
-E86c King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 8.Qb3 rnbq1rk1/pp3pbp/2pp1np1/4p3/2PPP3/1QN1BP2/PP2N1PP/R3KB1R b KQ - 1 8
-E86d King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 8.Qd2 rnbq1rk1/pp3pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 1 8
-E86e King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 r1bq1rk1/pp1n1pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 2 9
-E86f King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 9.d5 r1bq1rk1/pp1n1pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 0 9
-E86g King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 9.O-O-O r1bq1rk1/pp1n1pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/2KR1B1R b - - 4 9
-E86h King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 9.O-O-O a6 r1bq1rk1/1p1n1pbp/p1pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/2KR1B1R w - - 0 10
-E86i King's Indian: SŠmisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 9.O-O-O a6 10.Kb1 r1bq1rk1/1p1n1pbp/p1pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/1K1R1B1R b - - 1 10
-E87a King's Indian: SŠmisch, Orthodox, 7.d5 rnbq1rk1/ppp2pbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7
-E87b King's Indian: SŠmisch, Orthodox, 7.d5 a5 rnbq1rk1/1pp2pbp/3p1np1/p2Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ a6 0 8
-E87c King's Indian: SŠmisch, Orthodox, 7.d5 c5 rnbq1rk1/pp3pbp/3p1np1/2pPp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ c6 0 8
-E87d King's Indian: SŠmisch, Orthodox, 7.d5 Nbd7 r1bq1rk1/pppn1pbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ - 1 8
-E87e King's Indian: SŠmisch, Orthodox, 7.d5 Nh5 rnbq1rk1/ppp2pbp/3p2p1/3Pp2n/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ - 1 8
-E87f King's Indian: SŠmisch, Orthodox, 7.d5 Nh5 8.Qd2 rnbq1rk1/ppp2pbp/3p2p1/3Pp2n/2P1P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 2 8
-E87g King's Indian: SŠmisch, Orthodox, Bronstein Variation rnb2rk1/ppp2pbp/3p2p1/3Pp2n/2P1P2q/2N1BP2/PP1Q2PP/R3KBNR w KQ - 3 9
-E87h King's Indian: SŠmisch, Orthodox, Bronstein, 9.g3 rnb2rk1/ppp2pbp/3p2p1/3Pp2n/2P1P2q/2N1BPP1/PP1Q3P/R3KBNR b KQ - 0 9
-E87i King's Indian: SŠmisch, Orthodox, Bronstein, 9.Bf2 rnb2rk1/ppp2pbp/3p2p1/3Pp2n/2P1P2q/2N2P2/PP1Q1BPP/R3KBNR b KQ - 4 9
-E87j King's Indian: SŠmisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 rnbq1rk1/ppp3bp/3p2p1/3Ppp1n/2P1P3/2N1BP2/PP1Q2PP/R3KBNR w KQ f6 0 9
-E87k King's Indian: SŠmisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 9.O-O-O rnbq1rk1/ppp3bp/3p2p1/3Ppp1n/2P1P3/2N1BP2/PP1Q2PP/2KR1BNR b - - 2 9
-E87l King's Indian: SŠmisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 9.O-O-O f4 rnbq1rk1/ppp3bp/3p2p1/3Pp2n/2P1Pp2/2N1BP2/PP1Q2PP/2KR1BNR w - - 0 10
-E87m King's Indian: SŠmisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 9.O-O-O Nd7 r1bq1rk1/pppn2bp/3p2p1/3Ppp1n/2P1P3/2N1BP2/PP1Q2PP/2KR1BNR w - - 3 10
-E87n King's Indian: SŠmisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 9.O-O-O Nd7 10.Bd3 r1bq1rk1/pppn2bp/3p2p1/3Ppp1n/2P1P3/2NBBP2/PP1Q2PP/2KR2NR b - - 4 10
-E88a King's Indian: SŠmisch, Orthodox, 7.d5 c6 rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ - 0 8
-E88b King's Indian: SŠmisch, Orthodox, 7.d5 c6 8.Qd2 rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 1 8
-E88c King's Indian: SŠmisch, Orthodox, 7.d5 c6 8.Qd2 cxd5 rnbq1rk1/pp3pbp/3p1np1/3pp3/2P1P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 9
-E88d King's Indian: SŠmisch, Orthodox, 7.d5 c6 8.Qd2 cxd5 9.cxd5 a6 rnbq1rk1/1p3pbp/p2p1np1/3Pp3/4P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 10
-E88e King's Indian: SŠmisch, Orthodox, 7.d5 c6 8.Qd2 cxd5 9.cxd5 a6 10.Bd3 rnbq1rk1/1p3pbp/p2p1np1/3Pp3/4P3/2NBBP2/PP1Q2PP/R3K1NR b KQ - 1 10
-E88f King's Indian: SŠmisch, Orthodox, Polugayevsky rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2NBBP2/PP4PP/R2QK1NR b KQ - 1 8
-E88g King's Indian: SŠmisch, Orthodox, Polugayevsky, 8...b5 rnbq1rk1/p4pbp/2pp1np1/1p1Pp3/2P1P3/2NBBP2/PP4PP/R2QK1NR w KQ b6 0 9
-E88h King's Indian: SŠmisch, Orthodox, Polugayevsky, 8...cxd5 rnbq1rk1/pp3pbp/3p1np1/3pp3/2P1P3/2NBBP2/PP4PP/R2QK1NR w KQ - 0 9
-E88i King's Indian: SŠmisch, Orthodox, Polugayevsky, 8...cxd5 9.cxd5 Nh5 rnbq1rk1/pp3pbp/3p2p1/3Pp2n/4P3/2NBBP2/PP4PP/R2QK1NR w KQ - 1 10
-E89a King's Indian: SŠmisch, Orthodox Main Line rnbq1rk1/pp3pbp/3p1np1/3pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 9
-E89b King's Indian: SŠmisch, Orthodox Main Line, 9...a6 rnbq1rk1/1p3pbp/p2p1np1/3Pp3/4P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 10
-E89c King's Indian: SŠmisch, Orthodox Main Line, 9...Bd7 rn1q1rk1/pp1b1pbp/3p1np1/3Pp3/4P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 1 10
-E89d King's Indian: SŠmisch, Orthodox Main Line, 9...Nbd7 r1bq1rk1/pp1n1pbp/3p1np1/3Pp3/4P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 1 10
-E89e King's Indian: SŠmisch, Orthodox Main Line, 10.Qd2 r1bq1rk1/pp1n1pbp/3p1np1/3Pp3/4P3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 2 10
-E89f King's Indian: SŠmisch, Orthodox Main Line, 10.Qd2 a6 r1bq1rk1/1p1n1pbp/p2p1np1/3Pp3/4P3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 0 11
-E89g King's Indian: SŠmisch, Orthodox Main Line, 10.Qd2 a6 11.g4 r1bq1rk1/1p1n1pbp/p2p1np1/3Pp3/4P1P1/2N1BP2/PP1QN2P/R3KB1R b KQ g3 0 11
-E89h King's Indian: SŠmisch, Orthodox Main Line, 10.Qd2 a6 11.g4 h5 r1bq1rk1/1p1n1pb1/p2p1np1/3Pp2p/4P1P1/2N1BP2/PP1QN2P/R3KB1R w KQ h6 0 12
-E89i King's Indian: SŠmisch, Orthodox Main Line, 10.Qd2 a6 11.g4 h5 12.h3 r1bq1rk1/1p1n1pb1/p2p1np1/3Pp2p/4P1P1/2N1BP1P/PP1QN3/R3KB1R b KQ - 0 12
+E80a King's Indian: Sämisch Variation rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR b KQkq - 0 5
+E80b King's Indian: Sämisch, 5...Na6 r1bqk2r/ppp1ppbp/n2p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 1 6
+E80c King's Indian: Sämisch, 5...Nc6 r1bqk2r/ppp1ppbp/2np1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 1 6
+E80d King's Indian: Sämisch, 5...Nbd7 r1bqk2r/pppnppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 1 6
+E80e King's Indian: Sämisch, 5...e5 rnbqk2r/ppp2pbp/3p1np1/4p3/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq e6 0 6
+E80f King's Indian: Sämisch, 5...e5 6.Nge2 rnbqk2r/ppp2pbp/3p1np1/4p3/2PPP3/2N2P2/PP2N1PP/R1BQKB1R b KQkq - 1 6
+E80g King's Indian: Sämisch, 5...e5 6.d5 rnbqk2r/ppp2pbp/3p1np1/3Pp3/2P1P3/2N2P2/PP4PP/R1BQKBNR b KQkq - 0 6
+E80h King's Indian: Sämisch, 5...c5 rnbqk2r/pp2ppbp/3p1np1/2p5/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq c6 0 6
+E80i King's Indian: Sämisch, 5...c5 Queenswap rnbk3r/pp2ppbp/5np1/2p5/2P1P3/2N2P2/PP4PP/R1B1KBNR w KQ - 0 8
+E80j King's Indian: Sämisch, 5...a6 rnbqk2r/1pp1ppbp/p2p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 0 6
+E80k King's Indian: Sämisch, 5...a6 6.Be3 rnbqk2r/1pp1ppbp/p2p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR b KQkq - 1 6
+E80l King's Indian: Sämisch, 5...c6 rnbqk2r/pp2ppbp/2pp1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQkq - 0 6
+E80m King's Indian: Sämisch, 5...c6 6.Be3 rnbqk2r/pp2ppbp/2pp1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR b KQkq - 1 6
+E80n King's Indian: Sämisch, 5...c6 6.Be3 a6 rnbqk2r/1p2ppbp/p1pp1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQkq - 0 7
+E80o King's Indian: Sämisch, 5...c6 6.Be3 a6 7.a4 rnbqk2r/1p2ppbp/p1pp1np1/8/P1PPP3/2N1BP2/1P4PP/R2QKBNR b KQkq a3 0 7
+E80p King's Indian: Sämisch, 5...c6 6.Be3 a6 7.Bd3 rnbqk2r/1p2ppbp/p1pp1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR b KQkq - 1 7
+E81a King's Indian: Sämisch, 5...O-O rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP4PP/R1BQKBNR w KQ - 2 6
+E81b King's Indian: Sämisch, 5...O-O 6.Nge2 rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N2P2/PP2N1PP/R1BQKB1R b KQ - 3 6
+E81c King's Indian: Sämisch, 5...O-O 6.Nge2 e5 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N2P2/PP2N1PP/R1BQKB1R w KQ e6 0 7
+E81d King's Indian: Sämisch, 5...O-O 6.Nge2 c5 rnbq1rk1/pp2ppbp/3p1np1/2p5/2PPP3/2N2P2/PP2N1PP/R1BQKB1R w KQ c6 0 7
+E81d King's Indian: Sämisch, 5...O-O 6.Nge2 c5 7.d5 rnbq1rk1/pp2ppbp/3p1np1/2pP4/2P1P3/2N2P2/PP2N1PP/R1BQKB1R b KQ - 0 7
+E81e King's Indian: Sämisch, 5...O-O 6.Bg5 rnbq1rk1/ppp1ppbp/3p1np1/6B1/2PPP3/2N2P2/PP4PP/R2QKBNR b KQ - 3 6
+E81f King's Indian: Sämisch, 5...O-O 6.Bg5 Nc6 r1bq1rk1/ppp1ppbp/2np1np1/6B1/2PPP3/2N2P2/PP4PP/R2QKBNR w KQ - 4 7
+E81g King's Indian: Sämisch, 5...O-O 6.Bg5 a6 rnbq1rk1/1pp1ppbp/p2p1np1/6B1/2PPP3/2N2P2/PP4PP/R2QKBNR w KQ - 0 7
+E81h King's Indian: Sämisch, 5...O-O 6.Bg5 c5 rnbq1rk1/pp2ppbp/3p1np1/2p3B1/2PPP3/2N2P2/PP4PP/R2QKBNR w KQ c6 0 7
+E81h King's Indian: Sämisch, 5...O-O 6.Bg5 c5 7.d5 rnbq1rk1/pp2ppbp/3p1np1/2pP2B1/2P1P3/2N2P2/PP4PP/R2QKBNR b KQ - 0 7
+E81h King's Indian: Sämisch, 5...O-O 6.Bg5 c5 7.d5 a6 rnbq1rk1/1p2ppbp/p2p1np1/2pP2B1/2P1P3/2N2P2/PP4PP/R2QKBNR w KQ - 0 8
+E81h King's Indian: Sämisch, 5...O-O 6.Bg5 c5 7.d5 h6 rnbq1rk1/pp2ppb1/3p1npp/2pP2B1/2P1P3/2N2P2/PP4PP/R2QKBNR w KQ - 0 8
+E81i King's Indian: Sämisch, 5...O-O 6.Bg5 c5 7.d5 e6 rnbq1rk1/pp3pbp/3ppnp1/2pP2B1/2P1P3/2N2P2/PP4PP/R2QKBNR w KQ - 0 8
+E81i King's Indian: Sämisch, 5...O-O 6.Bg5 c5 7.d5 e6 8.Qd2 rnbq1rk1/pp3pbp/3ppnp1/2pP2B1/2P1P3/2N2P2/PP1Q2PP/R3KBNR b KQ - 1 8
+E81j King's Indian: Sämisch, 5...O-O 6.Be3 rnbq1rk1/ppp1ppbp/3p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR b KQ - 3 6
+E81k King's Indian: Sämisch, 5...O-O 6.Be3 a6 rnbq1rk1/1pp1ppbp/p2p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 0 7
+E81k King's Indian: Sämisch, 5...O-O 6.Be3 a6 7.Qd2 rnbq1rk1/1pp1ppbp/p2p1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 1 7
+E81l King's Indian: Sämisch, 5...O-O 6.Be3 c6 rnbq1rk1/pp2ppbp/2pp1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 0 7
+E81l King's Indian: Sämisch, Byrne Variation rnbq1rk1/1p2ppbp/p1pp1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ - 0 8
+E81m King's Indian: Sämisch, 5...O-O 6.Be3 c5 rnbq1rk1/pp2ppbp/3p1np1/2p5/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ c6 0 7
+E81m King's Indian: Sämisch, 5...O-O 6.Be3 c5 7.d5 rnbq1rk1/pp2ppbp/3p1np1/2pP4/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7
+E81n King's Indian: Sämisch, 5...O-O 6.Be3 c5 7.dxc5 rnbq1rk1/pp2ppbp/3p1np1/2P5/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7
+E81n King's Indian: Sämisch, 5...O-O 6.Be3 c5 Queenswap rnbQ1rk1/pp2ppbp/5np1/2p5/2P1P3/2N1BP2/PP4PP/R3KBNR b KQ - 0 8
+E81o King's Indian: Sämisch, 5...O-O 6.Be3 c5 7.Nge2 rnbq1rk1/pp2ppbp/3p1np1/2p5/2PPP3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 1 7
+E81o King's Indian: Sämisch, 5...O-O 6.Be3 c5 7.Nge2 Nc6 r1bq1rk1/pp2ppbp/2np1np1/2p5/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 2 8
+E81p King's Indian: Sämisch, 5...O-O 6.Be3 c5 7.Nge2 Nc6 8.d5 r1bq1rk1/pp2ppbp/2np1np1/2pP4/2P1P3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 0 8
+E81q King's Indian: Sämisch, 5...O-O 6.Be3 Nbd7 r1bq1rk1/pppnppbp/3p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 4 7
+E81r King's Indian: Sämisch, 5...O-O 6.Be3 Nbd7 7.Qd2 r1bq1rk1/pppnppbp/3p1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 5 7
+E81s King's Indian: Sämisch, 5...O-O 6.Be3 Nbd7 7.Qd2 c5 r1bq1rk1/pp1nppbp/3p1np1/2p5/2PPP3/2N1BP2/PP1Q2PP/R3KBNR w KQ c6 0 8
+E81s King's Indian: Sämisch, 5...O-O 6.Be3 Nbd7 7.Qd2 c5 8.d5 r1bq1rk1/pp1nppbp/3p1np1/2pP4/2P1P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 0 8
+E81t King's Indian: Sämisch, 5...O-O 6.Be3 Nbd7 7.Qd2 c5 8.Nge2 r1bq1rk1/pp1nppbp/3p1np1/2p5/2PPP3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 1 8
+E81t King's Indian: Sämisch, 5...O-O 6.Be3 Nbd7 7.Qd2 c5 8.Nge2 a6 r1bq1rk1/1p1nppbp/p2p1np1/2p5/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 0 9
+E82a King's Indian: Sämisch, Fianchetto rnbq1rk1/p1p1ppbp/1p1p1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 0 7
+E82b King's Indian: Sämisch, Fianchetto, 7.Qd2 rnbq1rk1/p1p1ppbp/1p1p1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 1 7
+E82c King's Indian: Sämisch, Fianchetto, 7.Qd2 c5 8.d5 rnbq1rk1/p3ppbp/1p1p1np1/2pP4/2P1P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 0 8
+E82d King's Indian: Sämisch, Fianchetto, Bronstein Variation rnbq1rk1/p1p1ppbp/1p1p1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR b KQ - 1 7
+E82e King's Indian: Sämisch, Fianchetto, 7.Bd3 Nfd7 rnbq1rk1/p1pnppbp/1p1p2p1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ - 2 8
+E82f King's Indian: Sämisch, Fianchetto, 7.Bd3 Bb7 rn1q1rk1/pbp1ppbp/1p1p1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ - 2 8
+E82g King's Indian: Sämisch, Fianchetto, 7.Bd3 Bb7 8.Nge2 rn1q1rk1/pbp1ppbp/1p1p1np1/8/2PPP3/2NBBP2/PP2N1PP/R2QK2R b KQ - 3 8
+E82g King's Indian: Sämisch, Fianchetto, 7.Bd3 Bb7 8.Nge2 c5 rn1q1rk1/pb2ppbp/1p1p1np1/2p5/2PPP3/2NBBP2/PP2N1PP/R2QK2R w KQ c6 0 9
+E82g King's Indian: Sämisch, Fianchetto, 7.Bd3 Bb7 8.Nge2 c5 9.d5 e6 rn1q1rk1/pb3pbp/1p1ppnp1/2pP4/2P1P3/2NBBP2/PP2N1PP/R2QK2R w KQ - 0 10
+E82h King's Indian: Sämisch, Fianchetto, 7.Bd3 a6 rnbq1rk1/2p1ppbp/pp1p1np1/8/2PPP3/2NBBP2/PP4PP/R2QK1NR w KQ - 0 8
+E82i King's Indian: Sämisch, Fianchetto, 7.Bd3 a6 8.Nge2 rnbq1rk1/2p1ppbp/pp1p1np1/8/2PPP3/2NBBP2/PP2N1PP/R2QK2R b KQ - 1 8
+E82i King's Indian: Sämisch, Fianchetto, 7.Bd3 a6 8.Nge2 c5 rnbq1rk1/4ppbp/pp1p1np1/2p5/2PPP3/2NBBP2/PP2N1PP/R2QK2R w KQ c6 0 9
+E82j King's Indian: Sämisch, Fianchetto, 7.Bd3 a6 8.Nge2 c5 9.d5 rnbq1rk1/4ppbp/pp1p1np1/2pP4/2P1P3/2NBBP2/PP2N1PP/R2QK2R b KQ - 0 9
+E82k King's Indian: Sämisch, Fianchetto, 7.Bd3 a6 8.Nge2 c5 9.e5 rnbq1rk1/4ppbp/pp1p1np1/2p1P3/2PP4/2NBBP2/PP2N1PP/R2QK2R b KQ - 0 9
+E83a King's Indian: Sämisch, 6...Nc6 r1bq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ - 4 7
+E83b King's Indian: Sämisch, 6...Nc6 7.Qd2 r1bq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 5 7
+E83c King's Indian: Sämisch, 6...Nc6 7.Qd2 a6 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 8
+E83c King's Indian: Sämisch, 6...Nc6 7.Qd2 a6 8.O-O-O r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1Q2PP/2KR1BNR b - - 2 8
+E83d King's Indian: Sämisch, 6...Nc6 7.Nge2 r1bq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 5 7
+E83e King's Indian: Sämisch, Ruban Variation 1rbq1rk1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 6 8
+E83e King's Indian: Sämisch, Ruban, 8.Qd2 Re8 1rbqr1k1/ppp1ppbp/2np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 8 9
+E83f King's Indian: Sämisch, Panno r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 8
+E83g King's Indian: Sämisch, Panno, 8.a3 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/P1N1BP2/1P2N1PP/R2QKB1R b KQ - 0 8
+E83h King's Indian: Sämisch, Panno, 8.Nc1 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP4PP/R1NQKB1R b KQ - 1 8
+E83i King's Indian: Sämisch, Panno, 8.Qd2 r1bq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 1 8
+E83j King's Indian: Sämisch, Panno, 8.Qd2 Re8 r1bqr1k1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 2 9
+E84a King's Indian: Sämisch, Panno Main Line 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 2 9
+E84b King's Indian: Sämisch, Panno Main Line, 9.a3 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/P1N1BP2/1P1QN1PP/R3KB1R b KQ - 0 9
+E84c King's Indian: Sämisch, Panno Main Line, 9.O-O-O 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/2KR1B1R b - - 4 9
+E84d King's Indian: Sämisch, Panno Main Line, 9.g4 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP1P1/2N1BP2/PP1QN2P/R3KB1R b KQ g3 0 9
+E84e King's Indian: Sämisch, Panno Main Line, 9.Rb1 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1QN1PP/1R2KB1R b K - 3 9
+E84f King's Indian: Sämisch, Panno Main Line, 9.Bh6 1rbq1rk1/1pp1ppbp/p1np1npB/8/2PPP3/2N2P2/PP1QN1PP/R3KB1R b KQ - 3 9
+E84g King's Indian: Sämisch, Panno Main Line, 9.Nc1 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP3/2N1BP2/PP1Q2PP/R1N1KB1R b KQ - 3 9
+E84g King's Indian: Sämisch, Panno Main Line, 9.Nc1 e5 1rbq1rk1/1pp2pbp/p1np1np1/4p3/2PPP3/2N1BP2/PP1Q2PP/R1N1KB1R w KQ e6 0 10
+E84h King's Indian: Sämisch, Panno Main Line, 9.Nc1 e5 10.Nb3 1rbq1rk1/1pp2pbp/p1np1np1/4p3/2PPP3/1NN1BP2/PP1Q2PP/R3KB1R b KQ - 1 10
+E84i King's Indian: Sämisch, Panno Main Line, 9.Nc1 e5 10.d5 1rbq1rk1/1pp2pbp/p1np1np1/3Pp3/2P1P3/2N1BP2/PP1Q2PP/R1N1KB1R b KQ - 0 10
+E84j King's Indian: Sämisch, Panno Main Line, 9.Nc1 e5 10.d5 Nd4 11.Nb3 1rbq1rk1/1pp2pbp/p2p1np1/3Pp3/2PnP3/1NN1BP2/PP1Q2PP/R3KB1R b KQ - 2 11
+E84k King's Indian: Sämisch, Panno Main Line, 9.h4 1rbq1rk1/1pp1ppbp/p1np1np1/8/2PPP2P/2N1BP2/PP1QN1P1/R3KB1R b KQ h3 0 9
+E84l King's Indian: Sämisch, Panno Main Line, 9.h4 b5 1rbq1rk1/2p1ppbp/p1np1np1/1p6/2PPP2P/2N1BP2/PP1QN1P1/R3KB1R w KQ b6 0 10
+E84m King's Indian: Sämisch, Panno Main Line, 9.h4 h5 1rbq1rk1/1pp1ppb1/p1np1np1/7p/2PPP2P/2N1BP2/PP1QN1P1/R3KB1R w KQ h6 0 10
+E84n King's Indian: Sämisch, Panno Main Line, 9.h4 h5 10.O-O-O 1rbq1rk1/1pp1ppb1/p1np1np1/7p/2PPP2P/2N1BP2/PP1QN1P1/2KR1B1R b - - 2 10
+E84o King's Indian: Sämisch, Panno Main Line, 9.h4 h5 10.O-O-O b5 11.Bh6 1rbq1rk1/2p1ppb1/p1np1npB/1p5p/2PPP2P/2N2P2/PP1QN1P1/2KR1B1R b - - 1 11
+E85a King's Indian: Sämisch, Orthodox Variation rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N1BP2/PP4PP/R2QKBNR w KQ e6 0 7
+E85b King's Indian: Sämisch, Orthodox, 7.dxe5 rnbq1rk1/ppp2pbp/3p1np1/4P3/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7
+E85c King's Indian: Sämisch, Orthodox, Queenswap rnbQ1rk1/ppp2pbp/5np1/4p3/2P1P3/2N1BP2/PP4PP/R3KBNR b KQ - 0 8
+E85d King's Indian: Sämisch, Orthodox, 7.Nge2 rnbq1rk1/ppp2pbp/3p1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 1 7
+E85e King's Indian: Sämisch, Orthodox, 7.Nge2 exd4 rnbq1rk1/ppp2pbp/3p1np1/8/2PpP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 8
+E85f King's Indian: Sämisch, Orthodox, 7.Nge2 Nbd7 r1bq1rk1/pppn1pbp/3p1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 2 8
+E85g King's Indian: Sämisch, Orthodox, 7.Nge2 Nc6 r1bq1rk1/ppp2pbp/2np1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 2 8
+E85h King's Indian: Sämisch, Orthodox, 7.Nge2 Nc6 8.d5 r1bq1rk1/ppp2pbp/2np1np1/3Pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 0 8
+E85i King's Indian: Sämisch, Orthodox, 7.Nge2 Nc6 8.d5 Ne7 r1bq1rk1/ppp1npbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 1 9
+E85j King's Indian: Sämisch, Orthodox, 7.Nge2 Nc6 8.d5 Ne7 9.Qd2 r1bq1rk1/ppp1npbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 2 9
+E86a King's Indian: Sämisch, Orthodox, 7.Nge2 c6 rnbq1rk1/pp3pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 8
+E86b King's Indian: Sämisch, Orthodox, 7.Nge2 c6 8.d5 rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R b KQ - 0 8
+E86c King's Indian: Sämisch, Orthodox, 7.Nge2 c6 8.Qb3 rnbq1rk1/pp3pbp/2pp1np1/4p3/2PPP3/1QN1BP2/PP2N1PP/R3KB1R b KQ - 1 8
+E86d King's Indian: Sämisch, Orthodox, 7.Nge2 c6 8.Qd2 rnbq1rk1/pp3pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 1 8
+E86e King's Indian: Sämisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 r1bq1rk1/pp1n1pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 2 9
+E86f King's Indian: Sämisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 9.d5 r1bq1rk1/pp1n1pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 0 9
+E86g King's Indian: Sämisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 9.O-O-O r1bq1rk1/pp1n1pbp/2pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/2KR1B1R b - - 4 9
+E86h King's Indian: Sämisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 9.O-O-O a6 r1bq1rk1/1p1n1pbp/p1pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/2KR1B1R w - - 0 10
+E86i King's Indian: Sämisch, Orthodox, 7.Nge2 c6 8.Qd2 Nbd7 9.O-O-O a6 10.Kb1 r1bq1rk1/1p1n1pbp/p1pp1np1/4p3/2PPP3/2N1BP2/PP1QN1PP/1K1R1B1R b - - 1 10
+E87a King's Indian: Sämisch, Orthodox, 7.d5 rnbq1rk1/ppp2pbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR b KQ - 0 7
+E87b King's Indian: Sämisch, Orthodox, 7.d5 a5 rnbq1rk1/1pp2pbp/3p1np1/p2Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ a6 0 8
+E87c King's Indian: Sämisch, Orthodox, 7.d5 c5 rnbq1rk1/pp3pbp/3p1np1/2pPp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ c6 0 8
+E87d King's Indian: Sämisch, Orthodox, 7.d5 Nbd7 r1bq1rk1/pppn1pbp/3p1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ - 1 8
+E87e King's Indian: Sämisch, Orthodox, 7.d5 Nh5 rnbq1rk1/ppp2pbp/3p2p1/3Pp2n/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ - 1 8
+E87f King's Indian: Sämisch, Orthodox, 7.d5 Nh5 8.Qd2 rnbq1rk1/ppp2pbp/3p2p1/3Pp2n/2P1P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 2 8
+E87g King's Indian: Sämisch, Orthodox, Bronstein Variation rnb2rk1/ppp2pbp/3p2p1/3Pp2n/2P1P2q/2N1BP2/PP1Q2PP/R3KBNR w KQ - 3 9
+E87h King's Indian: Sämisch, Orthodox, Bronstein, 9.g3 rnb2rk1/ppp2pbp/3p2p1/3Pp2n/2P1P2q/2N1BPP1/PP1Q3P/R3KBNR b KQ - 0 9
+E87i King's Indian: Sämisch, Orthodox, Bronstein, 9.Bf2 rnb2rk1/ppp2pbp/3p2p1/3Pp2n/2P1P2q/2N2P2/PP1Q1BPP/R3KBNR b KQ - 4 9
+E87j King's Indian: Sämisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 rnbq1rk1/ppp3bp/3p2p1/3Ppp1n/2P1P3/2N1BP2/PP1Q2PP/R3KBNR w KQ f6 0 9
+E87k King's Indian: Sämisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 9.O-O-O rnbq1rk1/ppp3bp/3p2p1/3Ppp1n/2P1P3/2N1BP2/PP1Q2PP/2KR1BNR b - - 2 9
+E87l King's Indian: Sämisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 9.O-O-O f4 rnbq1rk1/ppp3bp/3p2p1/3Pp2n/2P1Pp2/2N1BP2/PP1Q2PP/2KR1BNR w - - 0 10
+E87m King's Indian: Sämisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 9.O-O-O Nd7 r1bq1rk1/pppn2bp/3p2p1/3Ppp1n/2P1P3/2N1BP2/PP1Q2PP/2KR1BNR w - - 3 10
+E87n King's Indian: Sämisch, Orthodox, 7.d5 Nh5 8.Qd2 f5 9.O-O-O Nd7 10.Bd3 r1bq1rk1/pppn2bp/3p2p1/3Ppp1n/2P1P3/2NBBP2/PP1Q2PP/2KR2NR b - - 4 10
+E88a King's Indian: Sämisch, Orthodox, 7.d5 c6 rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP4PP/R2QKBNR w KQ - 0 8
+E88b King's Indian: Sämisch, Orthodox, 7.d5 c6 8.Qd2 rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2N1BP2/PP1Q2PP/R3KBNR b KQ - 1 8
+E88c King's Indian: Sämisch, Orthodox, 7.d5 c6 8.Qd2 cxd5 rnbq1rk1/pp3pbp/3p1np1/3pp3/2P1P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 9
+E88d King's Indian: Sämisch, Orthodox, 7.d5 c6 8.Qd2 cxd5 9.cxd5 a6 rnbq1rk1/1p3pbp/p2p1np1/3Pp3/4P3/2N1BP2/PP1Q2PP/R3KBNR w KQ - 0 10
+E88e King's Indian: Sämisch, Orthodox, 7.d5 c6 8.Qd2 cxd5 9.cxd5 a6 10.Bd3 rnbq1rk1/1p3pbp/p2p1np1/3Pp3/4P3/2NBBP2/PP1Q2PP/R3K1NR b KQ - 1 10
+E88f King's Indian: Sämisch, Orthodox, Polugayevsky rnbq1rk1/pp3pbp/2pp1np1/3Pp3/2P1P3/2NBBP2/PP4PP/R2QK1NR b KQ - 1 8
+E88g King's Indian: Sämisch, Orthodox, Polugayevsky, 8...b5 rnbq1rk1/p4pbp/2pp1np1/1p1Pp3/2P1P3/2NBBP2/PP4PP/R2QK1NR w KQ b6 0 9
+E88h King's Indian: Sämisch, Orthodox, Polugayevsky, 8...cxd5 rnbq1rk1/pp3pbp/3p1np1/3pp3/2P1P3/2NBBP2/PP4PP/R2QK1NR w KQ - 0 9
+E88i King's Indian: Sämisch, Orthodox, Polugayevsky, 8...cxd5 9.cxd5 Nh5 rnbq1rk1/pp3pbp/3p2p1/3Pp2n/4P3/2NBBP2/PP4PP/R2QK1NR w KQ - 1 10
+E89a King's Indian: Sämisch, Orthodox Main Line rnbq1rk1/pp3pbp/3p1np1/3pp3/2P1P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 9
+E89b King's Indian: Sämisch, Orthodox Main Line, 9...a6 rnbq1rk1/1p3pbp/p2p1np1/3Pp3/4P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 0 10
+E89c King's Indian: Sämisch, Orthodox Main Line, 9...Bd7 rn1q1rk1/pp1b1pbp/3p1np1/3Pp3/4P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 1 10
+E89d King's Indian: Sämisch, Orthodox Main Line, 9...Nbd7 r1bq1rk1/pp1n1pbp/3p1np1/3Pp3/4P3/2N1BP2/PP2N1PP/R2QKB1R w KQ - 1 10
+E89e King's Indian: Sämisch, Orthodox Main Line, 10.Qd2 r1bq1rk1/pp1n1pbp/3p1np1/3Pp3/4P3/2N1BP2/PP1QN1PP/R3KB1R b KQ - 2 10
+E89f King's Indian: Sämisch, Orthodox Main Line, 10.Qd2 a6 r1bq1rk1/1p1n1pbp/p2p1np1/3Pp3/4P3/2N1BP2/PP1QN1PP/R3KB1R w KQ - 0 11
+E89g King's Indian: Sämisch, Orthodox Main Line, 10.Qd2 a6 11.g4 r1bq1rk1/1p1n1pbp/p2p1np1/3Pp3/4P1P1/2N1BP2/PP1QN2P/R3KB1R b KQ g3 0 11
+E89h King's Indian: Sämisch, Orthodox Main Line, 10.Qd2 a6 11.g4 h5 r1bq1rk1/1p1n1pb1/p2p1np1/3Pp2p/4P1P1/2N1BP2/PP1QN2P/R3KB1R w KQ h6 0 12
+E89i King's Indian: Sämisch, Orthodox Main Line, 10.Qd2 a6 11.g4 h5 12.h3 r1bq1rk1/1p1n1pb1/p2p1np1/3Pp2p/4P1P1/2N1BP1P/PP1QN3/R3KB1R b KQ - 0 12
 E90a King's Indian: 5.Nf3 rnbqk2r/ppp1ppbp/3p1np1/8/2PPP3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 1 5
 E90a King's Indian: 5.Nf3 Nbd7 r1bqk2r/pppnppbp/3p1np1/8/2PPP3/2N2N2/PP3PPP/R1BQKB1R w KQkq - 2 6
 E90a King's Indian: 5.Nf3 Nbd7 6.Be2 r1bqk2r/pppnppbp/3p1np1/8/2PPP3/2N2N2/PP2BPPP/R1BQK2R b KQkq - 3 6
