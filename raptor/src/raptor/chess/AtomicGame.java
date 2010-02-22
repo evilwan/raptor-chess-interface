@@ -73,8 +73,7 @@ public class AtomicGame extends ClassicGame {
 							.getAtomicExplosionInfo()) {
 						if (info.piece == KING) {
 							kingExplosionCount++;
-							if (info.color == GameUtils
-									.getOppositeColor(getColorToMove())) {
+							if (info.color == getColorToMove()) {
 								wasOppositeKingExploded = true;
 							}
 						}
