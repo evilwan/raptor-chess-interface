@@ -67,6 +67,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	protected Color moveSelectionColor;
 	private int selectedHalfmove;
 	protected long lastWheel;
+	private String lastMoveSan;
 
 	/**
 	 * {@inheritDoc}
@@ -227,15 +228,17 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				textPanel.replaceTextRange(movesTextStart, textPanel
 						.getCharCount(), "");
 			} else {
-				if (moveListSize == moveNodes.size())
-					return;
-				else if (moveListSize <= moveNodes.size()) { // move list
-					// shrinked
-					textPanel.replaceTextRange(movesTextStart, textPanel
-							.getCharCount()
-							- movesTextStart, "");
-					moveNodes.clear();
-					moveNodesLengths.clear();
+				if (moveListSize == moveNodes.size()) {
+					if (!lastMoveSan.equals(game
+							.getMoveList().get(moveListSize-1).toString())) {
+						prepareForRepaint();
+					}
+					else
+						return;					
+				}					
+				else if (moveListSize <= moveNodes.size()) { 
+					// move list shrinked
+					prepareForRepaint();
 				}
 
 				StringBuffer buff = new StringBuffer();
@@ -267,7 +270,8 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				}
 				textPanel.append(buff.toString());
 				select(moveListSize + 1);
-
+				lastMoveSan = game.getMoveList().get(moveListSize - 1)
+						.toString();
 			}
 			
 			if (LOG.isDebugEnabled()) {
@@ -276,6 +280,14 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			}
 		}
 		
+	}
+
+	private void prepareForRepaint() {
+		textPanel.replaceTextRange(movesTextStart, textPanel
+				.getCharCount()
+				- movesTextStart, "");
+		moveNodes.clear();
+		moveNodesLengths.clear();		
 	}
 
 	protected void appendMove(int moveListSize) {
