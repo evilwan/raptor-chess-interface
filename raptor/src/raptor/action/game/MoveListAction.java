@@ -23,8 +23,7 @@ import raptor.swt.chess.controller.ToolBarItemKey;
 public class MoveListAction extends AbstractRaptorAction {
 	public MoveListAction() {
 		setName("Toggle Showing Move List");
-		setDescription("If the move list is being displayed, it is hidden. "
-				+ "If the move list is not being displayed, it is shown.");
+		setDescription("Shows the move list.");
 		setIcon("moveList");
 		setCategory(Category.GameCommands);
 	}

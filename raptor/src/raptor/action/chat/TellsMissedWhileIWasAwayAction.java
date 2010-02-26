@@ -21,7 +21,7 @@ public class TellsMissedWhileIWasAwayAction extends AbstractRaptorAction {
 		setName("Show Tells Missed While Away");
 		setIcon("chat");
 		setDescription("Shows all of the tells you missed while you were away. "
-				+ "This list is reset each time you send a message.");
+				+ "This list is reset each time you enter a command.");
 		setCategory(Category.ConsoleCommands);
 	}
 
