@@ -46,10 +46,12 @@ import raptor.chat.ChatType;
 import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.connector.Connector;
 import raptor.connector.fics.FicsConnector;
+import raptor.connector.ics.IcsConnector;
 import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.service.UserTagService;
 import raptor.swt.SWTUtils;
+import raptor.swt.UserInfoDialog;
 import raptor.swt.chat.controller.BughousePartnerController;
 import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.GameChatController;
@@ -394,12 +396,35 @@ public class ChatUtils {
 						item = new MenuItem(menu, SWT.PUSH);
 						item.setText(connectorPersonQuickItems[i][0]);
 						final int index = i;
-						item.addListener(SWT.Selection, new Listener() {
-							public void handleEvent(Event e) {
-								connector
-										.sendMessage(connectorPersonQuickItems[index][1]);
-							}
-						});
+						
+						if (item.getText().startsWith("Full userinfo")) {
+							item.addListener(SWT.Selection, new Listener() {
+								public void handleEvent(Event e) {
+									UserInfoDialog dialog = new UserInfoDialog();
+									((IcsConnector) connector).getContext()
+											.getParser().setParseFullUserInfo(dialog);
+									connector
+											.sendMessage(
+													"finger "
+															+ connectorPersonQuickItems[index][1],
+													true);
+									connector
+											.sendMessage(
+													"var "
+															+ connectorPersonQuickItems[index][1],
+													true);
+									dialog.open();
+								}
+							});
+						}
+						else {
+							item.addListener(SWT.Selection, new Listener() {
+								public void handleEvent(Event e) {
+									connector
+											.sendMessage(connectorPersonQuickItems[index][1]);
+								}
+							});							
+						}
 					}
 				}
 			}

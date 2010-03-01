@@ -62,6 +62,7 @@ import raptor.connector.ics.chat.QTellParser;
 import raptor.connector.ics.chat.ShoutEventParser;
 import raptor.connector.ics.chat.TellEventParser;
 import raptor.connector.ics.chat.ToldEventParser;
+import raptor.connector.ics.chat.VariablesEventParser;
 import raptor.connector.ics.chat.WhisperEventParser;
 import raptor.connector.ics.game.message.B1Message;
 import raptor.connector.ics.game.message.G1Message;
@@ -77,6 +78,7 @@ import raptor.service.GameService;
 import raptor.service.GameService.GameInfo;
 import raptor.service.GameService.Offer;
 import raptor.service.GameService.Offer.OfferType;
+import raptor.swt.UserInfoDialog;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -103,6 +105,8 @@ public class IcsParser implements GameConstants {
 	protected BugWhoGParser bugWhoGParser;
 	protected BugWhoPParser bugWhoPParser;
 	protected BugWhoUParser bugWhoUParser;
+	
+	protected UserInfoDialog fullUserInfoDialog;
 
 	protected GameInfoParser gameInfoParser;
 
@@ -144,6 +148,8 @@ public class IcsParser implements GameConstants {
 	 * resort to this to link the bug games together.
 	 */
 	protected List<String> bugGamesWithoutBoard2 = new ArrayList<String>(10);
+	
+	private ChatEvent finger, var;
 
 	public IcsParser(boolean isBicsParser) {
 		this.isBicsParser = isBicsParser;
@@ -188,6 +194,7 @@ public class IcsParser implements GameConstants {
 		nonGameEventParsers.add(new FingerEventParser());
 		nonGameEventParsers.add(new BugWhoAllEventParser());
 		nonGameEventParsers.add(new NotificationEventParser());
+		nonGameEventParsers.add(new VariablesEventParser());
 
 	}
 
@@ -253,6 +260,35 @@ public class IcsParser implements GameConstants {
 			}
 		}
 
+		if (fullUserInfoDialog != null) {
+			for (ChatEvent event : events) {
+				if (event.getType() == ChatType.FINGER) {
+					LOG.debug("Received finger for usinfo: "
+							+ event.getMessage());
+					finger = event;
+				} else if (event.getType() == ChatType.VARIABLES) {
+					LOG.debug("Received var for usinfo: "
+							+ event.getMessage());
+					var = event;
+				}
+			}
+			
+			if (finger != null && events.contains(finger))
+				events.remove(finger);
+			
+			if (var != null && events.contains(var)) 
+				events.remove(var);	
+			
+			if (finger != null && var != null) {
+				UserInfoParser pars = new UserInfoParser(finger.getMessage(), var.getMessage());
+				LOG.debug("Parser output: " + pars.getOnFor() + " "
+						+ pars.getInterface());
+				fullUserInfoDialog.updateData(pars.getOnFor(), pars
+						.getInterface(), "", finger.getMessage());
+				setParseFullUserInfo(null);
+			}
+		}
+		
 		return events.toArray(new ChatEvent[0]);
 	}
 
@@ -1282,6 +1318,14 @@ public class IcsParser implements GameConstants {
 			for (int i = 1; i < message.blackHoldings.length; i++) {
 				game.setDropCount(BLACK, i, message.blackHoldings[i]);
 			}
+		}
+	}
+
+	public synchronized void setParseFullUserInfo(UserInfoDialog b) {
+		fullUserInfoDialog = b;
+		if (b == null) {
+			finger = null;
+			var = null;
 		}
 	}
 

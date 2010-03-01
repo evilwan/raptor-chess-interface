@@ -170,5 +170,11 @@ public enum ChatType {
 	 * 
 	 * @since .96
 	 */
-	NOTIFICATION_DEPARTURE
+	NOTIFICATION_DEPARTURE,
+	/**
+	 * A message that displays a user variables (fics variables command)
+	 * 
+	 * @since .98
+	 */
+	VARIABLES
 }

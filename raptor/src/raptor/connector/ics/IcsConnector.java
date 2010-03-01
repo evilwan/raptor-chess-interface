@@ -104,7 +104,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
-	public static final String LOGIN_CHARACTERS_TO_FILTER = "ÿûÿüØž";
+	public static final String LOGIN_CHARACTERS_TO_FILTER = "ï¿½ï¿½ï¿½ï¿½Øž";
 
 	protected BughouseService bughouseService;
 
@@ -619,7 +619,7 @@ public abstract class IcsConnector implements Connector {
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
 
-		String[][] result = new String[matchActionsArray.length][2];
+		String[][] result = new String[matchActionsArray.length+1][2];
 
 		for (int i = 0; i < matchActionsArray.length; i++) {
 			String action = matchActionsArray[i];
@@ -628,6 +628,10 @@ public abstract class IcsConnector implements Connector {
 			result[i][0] = action;
 			result[i][1] = action;
 		}
+		
+		result[matchActionsArray.length][0] = "Full userinfo of " + person;
+		result[matchActionsArray.length][1] = person;
+		
 		return result;
 	}
 
@@ -1952,7 +1956,7 @@ public abstract class IcsConnector implements Connector {
 									.indexOf(context.getLoginErrorMessage());
 							if (errorMessageIndex != -1) {
 								String event = drainInboundMessageBuffer();
-								event = StringUtils.replaceChars(event, "ÿûÿü",
+								event = StringUtils.replaceChars(event, "ï¿½ï¿½ï¿½ï¿½",
 										"");
 								parseMessage(event);
 							}
