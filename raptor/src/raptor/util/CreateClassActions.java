@@ -37,7 +37,7 @@ public class CreateClassActions {
 	@SuppressWarnings("unchecked")
 	public static Class[] getClasses(String packageName) {
 		List<Class> result = new ArrayList<Class>(50);
-		String name = new String(packageName);
+		String name = packageName;
 		if (!name.startsWith("/")) {
 			name = "/" + name;
 		}

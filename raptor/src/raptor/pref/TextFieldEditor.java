@@ -432,7 +432,7 @@ public class TextFieldEditor extends FieldEditor {
 		}
 
 		if (textField == null) {
-			result = false;
+			return false;
 		}
 
 		String txt = textField.getText();

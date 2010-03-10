@@ -56,8 +56,8 @@ public class TimesealPipe {
 		_fldbyte = 0;
 		closedFlag = false;
 		closedFlag2 = false;
-		writeLock = new String("Write Lock for PipedStreams");
-		readLock = new String("Read Lock for PipedStream");
+		writeLock = "Write Lock for PipedStreams";
+		readLock = "Read Lock for PipedStream";
 		timesealInputStream = new TimesealInputStream(this);
 		timesealOutputStream = new TimesealOutputStream(this);
 		buffer = new byte[i];

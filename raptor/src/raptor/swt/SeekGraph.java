@@ -601,7 +601,7 @@ public class SeekGraph extends Canvas {
 				String rating = seek.getRatingAsInt() == -1 ? " (Guest) "
 						: " (" + seek.getRating() + ") ";
 				String rated = seek.isRated() ? "r" : "ur";
-				String text = new String(seek.getAd()
+				String text = seek.getAd()
 						+ ": "
 						+ seek.getName()
 						+ rating
@@ -612,7 +612,7 @@ public class SeekGraph extends Canvas {
 						+ rated
 						+ " "
 						+ (seek.getType() != null ? seek.getType().toString()
-								: ""));
+								: "");
 				all.append(text + "\n");
 			}
 			tooltip.setText(all.substring(0, all.length() - 1));

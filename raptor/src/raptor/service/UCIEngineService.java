@@ -188,7 +188,7 @@ public class UCIEngineService {
 		}
 
 		// Set the configured values.
-		for (Object key : properties.keySet()) {
+		for (Object key : properties.entrySet()) {
 			String keyString = (String) key;
 			if (!keyString.equals("isUCI") && !keyString.equals("processPath")
 					&& !keyString.equals("isDefault")

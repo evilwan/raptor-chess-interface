@@ -35,7 +35,15 @@ public class ParameterScript implements Comparable<ParameterScript> {
 
 	@Override
 	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof ParameterScript))
+			return false;
+		
 		return name.equalsIgnoreCase(((ParameterScript) obj).getName());
+	}
+	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
 	}
 
 	/**

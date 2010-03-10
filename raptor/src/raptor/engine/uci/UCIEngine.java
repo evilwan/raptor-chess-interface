@@ -562,10 +562,10 @@ public class UCIEngine {
 		if (moves == null || moves.length == 0) {
 			send("position fen " + fen);
 		} else {
-			String movesString = "";
+			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-				movesString += (movesString.equals("") ? "" : " ")
-						+ move.getValue();
+				movesString.append((movesString.equals("") ? "" : " ")
+						+ move.getValue());
 			}
 			send("position fen " + fen + " " + movesString);
 		}
@@ -606,10 +606,10 @@ public class UCIEngine {
 		if (moves == null || moves.length == 0) {
 			send("position startpos");
 		} else {
-			String movesString = "";
+			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-				movesString += (movesString.equals("") ? "" : " ")
-						+ move.getValue();
+				movesString.append((movesString.equals("") ? "" : " ")
+						+ move.getValue());
 			}
 			send("position startpos " + movesString);
 		}

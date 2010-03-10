@@ -55,8 +55,17 @@ public class RegularExpressionScript implements
 
 	@Override
 	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof RegularExpressionScript))
+			return false;
+		
 		return name.equalsIgnoreCase(((RegularExpressionScript) obj).getName());
 	}
+	
+	@Override
+	public int hashCode() {
+		return name.hashCode();
+	}
+
 
 	/**
 	 * Executes the script with the specified context.

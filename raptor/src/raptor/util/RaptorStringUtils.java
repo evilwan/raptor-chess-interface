@@ -334,13 +334,14 @@ public class RaptorStringUtils {
 	 * Returns a comma delimited array of strings.
 	 */
 	public static String toString(String[] values) {
-		String valuesString = "";
+		String valuesString = null; 
+		StringBuffer valuesBuffer = new StringBuffer();
 		for (String value : values) {
-			valuesString += value + ",";
+			valuesBuffer.append(value + ",");
 		}
-		if (StringUtils.isNotBlank(valuesString)) {
-			valuesString = valuesString.substring(0, valuesString.length() - 1);
+		if (StringUtils.isNotBlank(valuesBuffer.toString())) {
+			valuesString = valuesBuffer.substring(0, valuesBuffer.length() - 1);
 		}
-		return valuesString;
+		return valuesString == null ? valuesBuffer.toString() : valuesString;
 	}
 }
