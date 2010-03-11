@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -188,8 +189,8 @@ public class UCIEngineService {
 		}
 
 		// Set the configured values.
-		for (Object key : properties.entrySet()) {
-			String keyString = (String) key;
+		for (Entry<Object, Object> key : properties.entrySet()) {
+			String keyString = (String) key.getKey();
 			if (!keyString.equals("isUCI") && !keyString.equals("processPath")
 					&& !keyString.equals("isDefault")
 					&& !keyString.equals("goAnalysisParams")
