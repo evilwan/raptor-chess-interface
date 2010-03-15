@@ -399,7 +399,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor .98 RC1a");
+		setDefault(APP_NAME, "Raptor .98 RC2");
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS, !OSUtils
 				.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);
@@ -715,7 +715,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS, true);
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES, false);
 		setDefault(CHAT_UNDERLINE_COMMANDS, true);
-		setDefault(CHAT_COMMAND_LINE_SPELL_CHECK, true);
+		setDefault(CHAT_COMMAND_LINE_SPELL_CHECK, false);
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
