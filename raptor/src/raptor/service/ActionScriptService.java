@@ -223,7 +223,8 @@ public class ActionScriptService {
 				+ "/scripts/action");
 		File[] userFiles = userActions.listFiles(new FilenameFilter() {
 			public boolean accept(File arg0, String arg1) {
-				return arg1.endsWith(".properties");
+				return arg1.endsWith(".properties")
+						&& !arg1.endsWith("minute.properties"); // mistakenly duplicated files
 			}
 		});
 
@@ -233,7 +234,14 @@ public class ActionScriptService {
 				try {
 					Properties properties = new Properties();
 					properties.load(fileIn = new FileInputStream(file));
-					RaptorAction action = RaptorActionFactory.load(properties);
+					RaptorAction action = RaptorActionFactory.load(properties);	
+					
+					// automatic error fixing code
+					if (!file.getName().equals(action.getName()+".properties")) {
+						saveAction(action);
+						file.delete();
+					}
+					
 					nameToActionMap.put(action.getName(), action);
 					action.setSystemAction(false);
 					count++;
