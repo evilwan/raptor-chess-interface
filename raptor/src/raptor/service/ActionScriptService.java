@@ -219,36 +219,6 @@ public class ActionScriptService {
 		int count = 0;
 		long startTime = System.currentTimeMillis();
 
-		File systemScripts = new File(Raptor.RESOURCES_DIR + "scripts/action");
-		File[] files = systemScripts.listFiles(new FilenameFilter() {
-
-			public boolean accept(File arg0, String arg1) {
-				return arg1.endsWith(".properties");
-			}
-		});
-
-		if (files != null) {
-			for (File file : files) {
-				FileInputStream fileIn = null;
-				try {
-					Properties properties = new Properties();
-					properties.load(fileIn = new FileInputStream(file));
-					RaptorAction action = RaptorActionFactory.load(properties);
-					nameToActionMap.put(action.getName(), action);
-					action.setSystemAction(true);
-					count++;
-				} catch (IOException ioe) {
-					Raptor.getInstance().onError(
-							"Error loading action " + file.getName() + ",ioe");
-				} finally {
-					try {
-						fileIn.close();
-					} catch (Throwable t) {
-					}
-				}
-			}
-		}
-
 		File userActions = new File(Raptor.USER_RAPTOR_HOME_PATH
 				+ "/scripts/action");
 		File[] userFiles = userActions.listFiles(new FilenameFilter() {
