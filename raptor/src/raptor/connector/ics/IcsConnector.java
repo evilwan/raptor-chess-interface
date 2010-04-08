@@ -1031,9 +1031,9 @@ public abstract class IcsConnector implements Connector {
 						&& channelToSpeakTellsFrom.contains(event.getChannel())) {
 					event.setHasSoundBeenHandled(speak(IcsUtils
 							.stripTitles(event.getSource())
-							+ " "
-							+ event.getChannel()
-							+ " "
+						//	+ " "
+						//	+ event.getChannel()
+						//	+ " "
 							+ getTextAfterColon(event.getMessage())));
 				}
 			}
