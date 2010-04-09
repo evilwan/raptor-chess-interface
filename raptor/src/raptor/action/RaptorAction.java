@@ -122,13 +122,17 @@ public interface RaptorAction {
 		 */
 		MainChatConsole,
 		/**
+		 * Used for GameChatController ChatConsoleWindowItem tool bars.
+		 */
+		GameChatConsole,
+		/**
 		 * Used for populating the actions in the FICS Menu.
 		 */
 		FicsMenu,
 		/**
 		 * Used for populating the actions in the BICS Menu.
 		 */
-		BicsMenu
+		BicsMenu		
 	}
 
 	public static Comparator<RaptorAction> NAME_COMPARATOR_ASCENDING = new Comparator<RaptorAction>() {

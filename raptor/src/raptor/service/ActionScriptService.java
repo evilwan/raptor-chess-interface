@@ -15,6 +15,7 @@ package raptor.service;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -38,6 +39,7 @@ import raptor.action.RaptorAction.CategoryNameComparator;
 import raptor.action.RaptorAction.ContainerOrderComparator;
 import raptor.action.RaptorAction.NameComparator;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.pref.PreferenceKeys;
 
 /**
  * This service manages only ActionScripts.
@@ -121,7 +123,13 @@ public class ActionScriptService {
 	 * Returns all actions in the specified container.
 	 */
 	public RaptorAction[] getActions(RaptorActionContainer container) {
-		ArrayList<RaptorAction> actions = new ArrayList<RaptorAction>(20);
+		ArrayList<RaptorAction> actions = new ArrayList<RaptorAction>(20);		
+		
+		if (container == RaptorAction.RaptorActionContainer.GameChatConsole) {			
+			actions.add(nameToActionMap.get("Speak Whispers and Kibs"));
+			return actions.toArray(new RaptorAction[0]);
+		}
+		
 		for (RaptorAction action : nameToActionMap.values()) {
 			if (action.isIn(container)) {
 				actions.add(action);
@@ -256,6 +264,24 @@ public class ActionScriptService {
 				}
 
 			}
+		}
+
+		if (Raptor.getInstance().getPreferences().getString(
+				PreferenceKeys.APP_NAME).equals("Raptor .98 RC2")) {
+			File whiSpeakAction = new File(
+					"resources/scripts/action/Speak Whispers and Kibs.properties");
+			Properties properties = new Properties();
+			try {
+				properties.load(new FileInputStream(whiSpeakAction));
+				RaptorAction action = RaptorActionFactory.load(properties);	
+				nameToActionMap.put(action.getName(), action);
+				action.setSystemAction(false);
+			} catch (FileNotFoundException e) {
+				Raptor.getInstance().onError(e.getMessage());
+			} catch (IOException e) {
+				Raptor.getInstance().onError(e.getMessage());
+			}
+
 		}
 
 		if (LOG.isInfoEnabled()) {

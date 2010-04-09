@@ -568,6 +568,11 @@ public interface Connector {
 	 * Sets whether or not all person tells are being spoken.
 	 */
 	public void setSpeakingAllPersonTells(boolean isSpeakingAllPersonTells);
+	
+	/**
+	 * Toggles speaking whispers and kibitzes for the specified channel.
+	 */
+	public void setSpeakingWhisperTells(String gameId, boolean toolItemSelected);
 
 	/**
 	 * Toggles speaking channel tells for the specified channel.

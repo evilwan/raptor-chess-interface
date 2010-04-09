@@ -122,6 +122,7 @@ public abstract class IcsConnector implements Connector {
 	protected Map<String, Object> scriptHash = new HashMap<String, Object>();
 	protected Set<String> peopleToSpeakTellsFrom = new HashSet<String>();
 	protected Set<String> channelToSpeakTellsFrom = new HashSet<String>();
+	protected Set<String> gamesToSpeakTellsFrom = new HashSet<String>();
 	protected SeekService seekService;
 	protected boolean isSpeakingAllPersonTells = false;
 	protected List<String> autoCompleteList = new ArrayList<String>(1000);
@@ -1046,6 +1047,16 @@ public abstract class IcsConnector implements Connector {
 							+ " " + getTextAfterColon(event.getMessage())));
 				}
 			}
+			
+			if (event.getType() == ChatType.WHISPER
+					|| event.getType() == ChatType.KIBITZ) {
+				if (!event.getSource().equals(getUserName())
+						&& gamesToSpeakTellsFrom.contains(event.getGameId())) {
+					event.setHasSoundBeenHandled(speak(IcsUtils
+							.stripTitles(event.getSource())
+							+ getTextAfterColon(event.getMessage())));
+				}
+			}
 
 			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
 			if (ignoreIndex != -1) {
@@ -1286,6 +1297,17 @@ public abstract class IcsConnector implements Connector {
 		}
 	}
 
+	public void setSpeakingWhisperTells(String gameId,
+			boolean isSpeakingWhisperTells) {
+		if (isSpeakingWhisperTells) {
+			if (!gamesToSpeakTellsFrom.contains(gameId)) {
+				gamesToSpeakTellsFrom.add(gameId);
+			}
+		} else {
+			gamesToSpeakTellsFrom.remove(gameId);
+		}
+	}
+	
 	public void setSpeakingPersonTells(String person,
 			boolean isSpeakingPersonTells) {
 		if (isSpeakingPersonTells) {

@@ -76,7 +76,7 @@ public class GameChatController extends ChatConsoleController {
 		if (toolbar == null) {
 			toolbar = SWTUtils.createToolbar(parent);
 			ChatUtils.addActionsToToolbar(this,
-					RaptorActionContainer.ChannelChatConsole, toolbar);
+					RaptorActionContainer.GameChatConsole, toolbar);
 			adjustAwayButtonEnabled();
 		} else {
 			toolbar.setParent(parent);

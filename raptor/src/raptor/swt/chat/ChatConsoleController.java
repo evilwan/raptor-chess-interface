@@ -194,7 +194,6 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected MouseWheelListener chessBoardMouseWheelListener = new MouseWheelListener() {
 		long lastWheel = System.currentTimeMillis();
 
-		@Override
 		public void mouseScrolled(MouseEvent e) {
 			Control cursorControl = Raptor.getInstance().getDisplay()
 					.getCursorControl();

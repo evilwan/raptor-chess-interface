@@ -284,7 +284,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		return RaptorStringUtils.stringArrayFromString(getDefaultString(key));
 	}
 
-	public String getDefauultMonospacedFont() {
+	public String getDefaultMonospacedFont() {
 		FontData[] fonts = Raptor.getInstance().getDisplay().getFontList(null,
 				true);
 		String[] preferredFontNames = null;
@@ -391,7 +391,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	public void loadDefaults() {
 		defaultFontName = Raptor.getInstance().getFontRegistry().defaultFont()
 				.getFontData()[0].getName();
-		defaultMonospacedFontName = getDefauultMonospacedFont();
+		defaultMonospacedFontName = getDefaultMonospacedFont();
 
 		setDefaultMonitorBasedSizes();
 
@@ -1119,7 +1119,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			defaultSmallFontSize = 10;
 			defaultTinyFontSize = 8;
 		}
-		getDefauultMonospacedFont();
+		getDefaultMonospacedFont();
 
 		setDefault(PreferenceKeys.APP_ICON_SIZE, iconSize);
 		setDefault(PreferenceKeys.APP_TOOLBAR_PIECE_SIZE, toolbarPieceSize);

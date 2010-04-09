@@ -39,6 +39,7 @@ import raptor.action.chat.PendingOffersAction;
 import raptor.action.chat.PrependAction;
 import raptor.action.chat.SpeakChannelTellsAction;
 import raptor.action.chat.SpeakPersonTellsAction;
+import raptor.action.chat.SpeakWhispersAction;
 import raptor.action.chat.TellsMissedWhileIWasAwayAction;
 import raptor.action.chat.ToggleScrollLock;
 import raptor.chat.ChatEvent;
@@ -622,6 +623,10 @@ public class ChatUtils {
 			controller.addToolItem(ToolBarItemKey.AWAY_BUTTON, result);
 			result.setEnabled(false);
 		} else if (action instanceof SpeakChannelTellsAction) {
+			result = new ToolItem(toolbar, SWT.CHECK);
+			controller.addToolItem(ToolBarItemKey.SPEAK_TELLS, result);
+			result.setSelection(false);
+		} else if (action instanceof SpeakWhispersAction) {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			controller.addToolItem(ToolBarItemKey.SPEAK_TELLS, result);
 			result.setSelection(false);
