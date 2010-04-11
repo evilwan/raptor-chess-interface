@@ -35,6 +35,12 @@ public class GameChatController extends ChatConsoleController {
 		this.gameId = gameId;
 	}
 
+	@Override
+	public void dispose() {
+		connector.setSpeakingWhisperTells(gameId, false);
+		super.dispose();
+	}
+	
 	public String getGameId() {
 		return gameId;
 	}

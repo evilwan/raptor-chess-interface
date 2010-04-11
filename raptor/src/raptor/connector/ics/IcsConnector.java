@@ -450,6 +450,7 @@ public abstract class IcsConnector implements Connector {
 					simulBugPartnerName = null;
 					peopleToSpeakTellsFrom.clear();
 					channelToSpeakTellsFrom.clear();
+					gamesToSpeakTellsFrom.clear();
 					isSpeakingAllPersonTells = false;
 					messageCallbackEntries.clear();
 					extendedCensorList.clear();
