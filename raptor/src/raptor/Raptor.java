@@ -586,11 +586,11 @@ public class Raptor implements PreferenceKeys {
 		//MemoService.getInstance();
 		//ThemeService.getInstance();
 		//UserTagService.getInstance();
-		EcoService.getInstance();
+		//EcoService.getInstance();
 		ConnectorService.getInstance();
 		//SoundService.getInstance();
-		ScriptService.getInstance();
-		ActionScriptService.getInstance();
+		//ScriptService.getInstance();
+		//ActionScriptService.getInstance();
 		UCIEngineService.getInstance();
 		//AliasService.getInstance();
 	}
