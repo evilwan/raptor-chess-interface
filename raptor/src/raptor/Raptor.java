@@ -162,7 +162,7 @@ public class Raptor implements PreferenceKeys {
 
 						// Initialize this after a half second. It requires a
 						// RaptorWindow.
-						ChessBoardCacheService.getInstance();
+						//ChessBoardCacheService.getInstance();
 
 						// Initialize the UCIEngineService after a half second.
 						// Requires a raptor window in case there is an error.

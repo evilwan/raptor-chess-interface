@@ -840,7 +840,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"finger $person,follow $person,partner $person");
 		setDefault(
 				FICS_PERSON_COMMANDS,
-				"history $person,joural $person,"
+				"history $person,journal $person,"
 						+ "observe $person,oldpstat $userName $person,pstat $userName $person,"
 						+ "stored $person,variables $person,separator,"
 						+ "+censor $person,-censor $person,+gnotify $person,-gnotify $person,+noplay $person,-noplay $person,+notify $person,-notify $person,separator,"
@@ -910,7 +910,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				"finger $person,follow $person,partner $person");
 		setDefault(
 				BICS_PERSON_COMMANDS,
-				"history $person,joural $person,"
+				"history $person,journal $person,"
 						+ "observe $person,oldpstat $userName $person,pstat $userName $person,"
 						+ "stored $person,variables $person,separator,"
 						+ "+censor $person,-censor $person,+gnotify $person,-gnotify $person,+noplay $person,-noplay $person,+notify $person,-notify $person,separator,"
