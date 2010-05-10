@@ -37,6 +37,7 @@ import raptor.chess.GameConstants;
 import raptor.chess.Result;
 import raptor.chess.SetupGame;
 import raptor.chess.Variant;
+import raptor.chess.WildGame;
 import raptor.chess.pgn.PgnHeader;
 import raptor.connector.Connector;
 import raptor.connector.ics.bughouse.BugWhoGParser;
@@ -915,6 +916,8 @@ public class IcsParser implements GameConstants {
 			((FischerRandomCrazyhouseGame) game).initialPositionIsSet();
 		} else if (game instanceof FischerRandomBughouseGame) {
 			((FischerRandomBughouseGame) game).initialPositionIsSet();
+		} else if (game instanceof WildGame) {
+			((WildGame) game).initialPositionIsSet();
 		}
 
 		if (game.getVariant() == Variant.wild

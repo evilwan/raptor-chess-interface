@@ -37,6 +37,7 @@ import raptor.chess.Move;
 import raptor.chess.SetupGame;
 import raptor.chess.SuicideGame;
 import raptor.chess.Variant;
+import raptor.chess.WildGame;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.PgnUtils;
 import raptor.chess.pgn.TimeTakenForMove;
@@ -456,8 +457,7 @@ public class IcsUtils implements GameConstants {
 			result.setHeader(PgnHeader.Variant, variant.name());
 			break;
 		case wild:
-			result = new ClassicGame();
-			result.setHeader(PgnHeader.Variant, Variant.wild.name());
+			result = new WildGame();
 			break;
 		case suicide:
 			result = new SuicideGame();
@@ -513,8 +513,7 @@ public class IcsUtils implements GameConstants {
 			result.setHeader(PgnHeader.Variant, variant.name());
 			break;
 		case wild:
-			result = new ClassicGame();
-			result.setHeader(PgnHeader.Variant, Variant.wild.name());
+			result = new WildGame();
 			break;
 		case suicide:
 			result = new SuicideGame();

@@ -51,8 +51,7 @@ public class GameFactory implements GameConstants {
 			case lightning:
 			case standard:
 			case wild:
-				result = new ClassicGame();
-				result.setHeader(PgnHeader.Variant, variant.name());
+				result = new WildGame();
 				break;
 			case losers:
 				result = new LosersGame();

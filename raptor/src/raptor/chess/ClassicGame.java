@@ -217,10 +217,13 @@ public class ClassicGame implements Game {
 
 		updateZobristHash();
 		incrementRepCount();
-
-		updateEcoHeaders(move);
+		
 		move.setFullMoveCount((getHalfMoveCount() - 1) / 2 + 1);
 		move.setHalfMoveCount(getHalfMoveCount());
+		
+		if (move.getFullMoveCount() < 19) {
+			updateEcoHeaders(move);
+		}
 	}
 
 	/**
