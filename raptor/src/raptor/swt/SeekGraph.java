@@ -95,8 +95,8 @@ public class SeekGraph extends Canvas {
 				String[] names = new String[] { "Hi", "Bye", "My", "Try" };
 				int gameNumber = random.nextInt(1000);
 
-				System.out.println("Adding seek ( " + rating + ", " + mins
-						+ ", " + incr + " )");
+				//System.out.println("Adding seek ( " + rating + ", " + mins
+				//		+ ", " + incr + " )");
 				graph.addSeek(gameNumber, rating, names[random
 						.nextInt(names.length)], mins, incr, random
 						.nextBoolean());

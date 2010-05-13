@@ -73,8 +73,7 @@ public enum Variant {
 
 	/**
 	 * Returns the ics match type to use for a specified variant given a game.
-	 * Currently wild is not supported. wild 5 bug on bics will also match to
-	 * bughouse.
+	 * wild 5 bug on bics will also match to bughouse.
 	 * 
 	 * If null is returned its not supported.
 	 */
@@ -97,7 +96,7 @@ public enum Variant {
 		case suicide:
 			return "suicide";
 		case wild:
-			return null;
+			return "wild";
 		case fischerRandom:
 			return "wild fr";
 		default:
@@ -111,7 +110,7 @@ public enum Variant {
 	}
 
 	public static boolean isClassic(Variant variant) {
-		return variant == Variant.wild || variant == Variant.classic
+		return variant == Variant.classic
 				|| variant == Variant.blitz || variant == Variant.standard
 				|| variant == Variant.lightning;
 	}

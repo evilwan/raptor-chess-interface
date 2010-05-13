@@ -359,7 +359,7 @@ public class IcsUtils implements GameConstants {
 
 	public static Game createGame(G1Message g1, Style12Message style12,
 			boolean isBics) {
-		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);
+		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);		
 		Game result = createGameFromVariant(variant, style12, isBics);
 		result.setId(g1.gameId);
 		result.addState(Game.UPDATING_SAN_STATE);
@@ -503,7 +503,7 @@ public class IcsUtils implements GameConstants {
 					|| message.position[0][6] != KNIGHT
 					|| message.position[0][7] != ROOK;
 		}
-
+        
 		switch (variant) {
 		case classic:
 		case blitz:
@@ -869,7 +869,7 @@ public class IcsUtils implements GameConstants {
 	public static void updateGamesMoves(Game game, MovesMessage message) {
 		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
 				- game.getMoveList().getSize();
-
+		
 		if (message.moves.length > 0 && halfMoveCountGameStartedOn != 0) {
 			Game gameClone = null;
 			if (message.style12 == null) {
@@ -886,7 +886,11 @@ public class IcsUtils implements GameConstants {
 				} else if (gameClone.getVariant() == Variant.fischerRandomCrazyhouse) {
 					((FischerRandomCrazyhouseGame) gameClone)
 							.initialPositionIsSet();
+				} else if (gameClone.getVariant() == Variant.wild) {
+					((WildGame) gameClone)
+							.initialPositionIsSet();
 				}
+
 				updateNonPositionFields(gameClone, message.style12);
 				game.setHeader(PgnHeader.FEN, gameClone.toFen());
 			}

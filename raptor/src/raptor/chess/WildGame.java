@@ -15,6 +15,23 @@ public class WildGame extends ClassicGame {
 
 	public WildGame() {
 		setHeader(PgnHeader.Variant, Variant.wild.name());
+		addState(Game.FISCHER_RANDOM_STATE);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public WildGame deepCopy(boolean ignoreHashes) {
+		WildGame result = new WildGame();
+		result.whiteLongRookFile = whiteLongRookFile;
+		result.whiteShortRookFile = whiteShortRookFile;
+		result.blackLongRookFile = blackLongRookFile;
+		result.blackShortRookFile = blackShortRookFile;
+		result.blackKingFile = blackKingFile;
+		result.whiteKingFile = whiteKingFile;
+		overwrite(result, ignoreHashes);
+		return result;
 	}
 	
 	public void initialPositionIsSet() {
