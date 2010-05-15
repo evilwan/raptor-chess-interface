@@ -336,7 +336,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[] breakUpMessage(StringBuilder message) {
-		if (message.length() <= 330) {
+		if (message.length() <= 800) {
 			return new String[] { message + "\n" };
 		} else {
 			int firstSpace = message.indexOf(" ");
@@ -346,14 +346,14 @@ public abstract class IcsConnector implements Connector {
 				if (secondSpace != -1) {
 					String beginingText = message.substring(0, secondSpace + 1);
 					String wrappedText = WordUtils.wrap(message.toString(),
-							330, "\n", true);
+							800, "\n", true);
 					String[] wrapped = wrappedText.split("\n");
 					result.add(wrapped[0] + "\n");
 					for (int i = 1; i < wrapped.length; i++) {
 						result.add(beginingText + wrapped[i] + "\n");
 					}
 				} else {
-					result.add(message.substring(0, 330) + "\n");
+					result.add(message.substring(0, 800) + "\n");
 					publishEvent(new ChatEvent(
 							null,
 							ChatType.INTERNAL,
@@ -362,7 +362,7 @@ public abstract class IcsConnector implements Connector {
 									+ result.get(0)));
 				}
 			} else {
-				result.add(message.substring(0, 330) + "\n");
+				result.add(message.substring(0, 800) + "\n");
 				publishEvent(new ChatEvent(
 						null,
 						ChatType.INTERNAL,
