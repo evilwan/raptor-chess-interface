@@ -20,8 +20,10 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
+import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.util.GameUtils;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.RaptorTable;
 import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.swt.chess.ChessBoardController;
@@ -43,7 +45,9 @@ public class TableMoveList implements ChessBoardMoveList {
 		public void handleEvent(Event event) {
 			switch (event.type) {
 			case SWT.MouseWheel:
-				if (System.currentTimeMillis() - lastWheel > 100) {
+				if (System.currentTimeMillis() - lastWheel > 100
+						&& Raptor.getInstance().getPreferences().getBoolean(
+								PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL)) {
 					getChessBoardController().userMouseWheeled(event.count);
 					lastWheel = System.currentTimeMillis();
 				}

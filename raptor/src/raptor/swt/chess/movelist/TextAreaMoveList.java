@@ -30,11 +30,13 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
+import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.pgn.Comment;
 import raptor.chess.pgn.Nag;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
+import raptor.pref.PreferenceKeys;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardMoveList;
 
@@ -117,7 +119,9 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		});
 		textPanel.addMouseWheelListener(new MouseWheelListener() {
 			public void mouseScrolled(MouseEvent e) {
-				if (System.currentTimeMillis() - lastWheel > 100) {
+				if (System.currentTimeMillis() - lastWheel > 100
+						&& Raptor.getInstance().getPreferences().getBoolean(
+								PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL)) {
 					getChessBoardController().userMouseWheeled(e.count);
 					lastWheel = System.currentTimeMillis();
 				}

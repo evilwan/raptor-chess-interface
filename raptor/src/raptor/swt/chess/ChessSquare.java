@@ -143,7 +143,9 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		public void handleEvent(Event event) {
 			switch (event.type) {
 			case SWT.MouseWheel:
-				if (System.currentTimeMillis() - lastWheel > 100) {
+				if (System.currentTimeMillis() - lastWheel > 100
+						&& Raptor.getInstance().getPreferences().getBoolean(
+								PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL)) {
 					board.getController().userMouseWheeled(event.count);
 					lastWheel = System.currentTimeMillis();
 				}

@@ -506,6 +506,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_IS_USING_SOLID_BACKGROUND_COLORS, false);
 		setDefault(BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT,
 				SquareBackgroundImageEffect.RandomCrop.toString());
+		setDefault(BOARD_TRAVERSE_WITH_MOUSE_WHEEL, true);		
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
