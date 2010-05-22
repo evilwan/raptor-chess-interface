@@ -58,7 +58,7 @@ import raptor.script.ParameterScriptContext;
 import raptor.script.RaptorChatScriptContext;
 import raptor.script.RaptorParameterScriptContext;
 import raptor.script.RaptorScriptContext;
-import raptor.script.RegularExpressionScript;
+import raptor.script.ChatEventScript;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptContext;
 import raptor.service.BughouseService;
@@ -220,7 +220,7 @@ public abstract class IcsConnector implements Connector {
 	protected List<String> extendedCensorList = new ArrayList<String>(300);
 	protected String[] bughouseSounds = SoundService.getInstance()
 			.getBughouseSoundKeys();
-	protected RegularExpressionScript[] regularExpressionScripts = null;
+	protected ChatEventScript[] chatEventScripts = null;
 
 	protected List<MessageCallbackEntry> messageCallbackEntries = new ArrayList<MessageCallbackEntry>(
 			20);
@@ -228,7 +228,7 @@ public abstract class IcsConnector implements Connector {
 		public void onParameterScriptsChanged() {
 		}
 
-		public void onRegularExpressionScriptsChanged() {
+		public void onChatEventScriptsChanged() {
 			if (isConnected()) {
 				refreshChatScripts();
 			}
@@ -1003,7 +1003,7 @@ public abstract class IcsConnector implements Connector {
 			event.setMessage(substituteTitles(event.getMessage(), event
 					.getType()));
 			handleOpeningTabs(event);
-			processRegularExpressionScripts(event);
+			processChatEventScripts(event);
 
 			if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
 				isSimulBugConnector = false;
@@ -2137,26 +2137,18 @@ public abstract class IcsConnector implements Connector {
 	 * Processes the scripts for the specified chat event. Script processing is
 	 * kicked off on a different thread.
 	 */
-	protected void processRegularExpressionScripts(final ChatEvent event) {
-		if (event.getType() != ChatType.INTERNAL
-				&& event.getType() != ChatType.OUTBOUND
-				&& event.getType() != ChatType.MOVES
-				&& event.getType() != ChatType.BUGWHO_AVAILABLE_TEAMS
-				&& event.getType() != ChatType.BUGWHO_GAMES
-				&& event.getType() != ChatType.BUGWHO_UNPARTNERED_BUGGERS
-				&& event.getType() != ChatType.SEEKS) {
-			if (regularExpressionScripts != null) {
-				ThreadService.getInstance().run(new Runnable() {
-					public void run() {
-						for (RegularExpressionScript script : regularExpressionScripts) {
-							if (script.isActive()
-									&& script.matches(event.getMessage())) {
-								script.execute(getChatScriptContext(event));
-							}
+	protected void processChatEventScripts(final ChatEvent event) {
+		if (chatEventScripts != null) {
+			ThreadService.getInstance().run(new Runnable() {
+				public void run() {
+					for (ChatEventScript script : chatEventScripts) {
+						if (script.isActive()
+								&& script.getChatType() == event.getType()) {
+							script.execute(getChatScriptContext(event));
 						}
 					}
-				});
-			}
+				}
+			});
 		}
 	}
 
@@ -2298,8 +2290,8 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	protected void refreshChatScripts() {
-		regularExpressionScripts = ScriptService.getInstance()
-				.getRegularExpressionScripts(getScriptConnectorType());
+		chatEventScripts = ScriptService.getInstance()
+				.getChatEventScripts(getScriptConnectorType());
 	}
 
 	/**

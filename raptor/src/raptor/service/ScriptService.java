@@ -30,12 +30,12 @@ import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.script.ParameterScript;
-import raptor.script.RegularExpressionScript;
+import raptor.script.ChatEventScript;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptUtils;
 
 /**
- * This service manages RegularExpressionScripts and ParamterScripts. Scripts
+ * This service manages ChatEventScripts and ParamterScripts. Scripts
  * are either system scripts or user scripts.
  * <p>
  * System scripts are loaded from the installed Raptor/resources/scripts folder.
@@ -52,7 +52,7 @@ public class ScriptService {
 	public static interface ScriptServiceListener {
 		public void onParameterScriptsChanged();
 
-		public void onRegularExpressionScriptsChanged();
+		public void onChatEventScriptsChanged();
 	}
 
 	private static final Log LOG = LogFactory.getLog(ScriptService.class);
@@ -63,7 +63,7 @@ public class ScriptService {
 		return singletonInstance;
 	}
 
-	public Map<String, RegularExpressionScript> nameToRegularExpressionScript = new HashMap<String, RegularExpressionScript>();
+	public Map<String, ChatEventScript> nameToChatEventScript = new HashMap<String, ChatEventScript>();
 
 	public Map<String, ParameterScript> nameToParameterScript = new HashMap<String, ParameterScript>();
 
@@ -93,17 +93,17 @@ public class ScriptService {
 	 * Deletes the specified script. System scripts , or the scripts in
 	 * resources/script are never touched.
 	 */
-	public boolean deleteRegularExpressionScript(String scriptName) {
-		nameToRegularExpressionScript.remove(scriptName.toUpperCase());
-		fireRegularExpressionScriptsChanged();
+	public boolean deleteChatEventScript(String scriptName) {
+		nameToChatEventScript.remove(scriptName.toUpperCase());
+		fireChatEventScriptsChanged();
 		return new File(Raptor.USER_RAPTOR_HOME_PATH
-				+ "/scripts/regularExpression/" + scriptName + ".properties")
+				+ "/scripts/chatEvent/" + scriptName + ".properties")
 				.delete();
 	}
 
 	public void dispose() {
 		listeners.clear();
-		nameToRegularExpressionScript.clear();
+		nameToChatEventScript.clear();
 		nameToParameterScript.clear();
 	}
 
@@ -138,44 +138,44 @@ public class ScriptService {
 		return result.toArray(new ParameterScript[0]);
 	}
 
-	public RegularExpressionScript getRegularExpressionScript(String name) {
-		return nameToRegularExpressionScript.get(name.toUpperCase());
+	public ChatEventScript getChatEventScript(String name) {
+		return nameToChatEventScript.get(name.toUpperCase());
 	}
 
 	/**
-	 * Returns all regular expression scripts sorted by name.
+	 * Returns all chat event scripts sorted by name.
 	 */
-	public RegularExpressionScript[] getRegularExpressionScripts() {
-		ArrayList<RegularExpressionScript> result = new ArrayList<RegularExpressionScript>(
-				nameToRegularExpressionScript.values());
+	public ChatEventScript[] getChatEventScripts() {
+		ArrayList<ChatEventScript> result = new ArrayList<ChatEventScript>(
+				nameToChatEventScript.values());
 		Collections.sort(result);
-		return result.toArray(new RegularExpressionScript[0]);
+		return result.toArray(new ChatEventScript[0]);
 	}
 
 	/**
-	 * Returns all regular expression scripts sorted by name.
+	 * Returns all chat event scripts sorted by name.
 	 */
-	public RegularExpressionScript[] getRegularExpressionScripts(
+	public ChatEventScript[] getChatEventScripts(
 			ScriptConnectorType connectorType) {
-		ArrayList<RegularExpressionScript> result = new ArrayList<RegularExpressionScript>();
-		for (RegularExpressionScript script : nameToRegularExpressionScript
+		ArrayList<ChatEventScript> result = new ArrayList<ChatEventScript>();
+		for (ChatEventScript script : nameToChatEventScript
 				.values()) {
 			if (script.getConnectorType() == connectorType) {
 				result.add(script);
 			}
 		}
 		Collections.sort(result);
-		return result.toArray(new RegularExpressionScript[0]);
+		return result.toArray(new ChatEventScript[0]);
 	}
 
 	/**
 	 * Reloads all of the scripts.
 	 */
 	public void reload() {
-		nameToRegularExpressionScript.clear();
+		nameToChatEventScript.clear();
 		nameToParameterScript.clear();
 		loadParameterScripts();
-		loadRegularExpressionScripts();
+		loadChatEventScripts();
 	}
 
 	public void removeScriptServiceListener(ScriptServiceListener listener) {
@@ -213,9 +213,16 @@ public class ScriptService {
 	 * directory. System scripts , or the scripts in resources/script are never
 	 * touched.
 	 */
-	public void save(RegularExpressionScript script) {
+	public void save(ChatEventScript script) {
+        File userScripts = new File(Raptor.USER_RAPTOR_HOME_PATH
+				+ "/scripts/chatEvent");
+		
+		if (!userScripts.exists()) 
+				userScripts.mkdir();
+		
+		
 		String fileName = Raptor.USER_RAPTOR_HOME_PATH
-				+ "/scripts/regularExpression/" + script.getName()
+				+ "/scripts/chatEvent/" + script.getName()
 				+ ".properties";
 		FileOutputStream fileOut = null;
 
@@ -226,16 +233,16 @@ public class ScriptService {
 			fileOut.flush();
 		} catch (IOException ioe) {
 			Raptor.getInstance().onError(
-					"Error saving regular expression script", ioe);
+					"Error saving chat event script", ioe);
 		} finally {
 			try {
 				fileOut.close();
 			} catch (Throwable t) {
 			}
 		}
-		nameToRegularExpressionScript.put(script.getName().toUpperCase(),
+		nameToChatEventScript.put(script.getName().toUpperCase(),
 				script);
-		fireRegularExpressionScriptsChanged();
+		fireChatEventScriptsChanged();
 	}
 
 	protected void fireParameterScriptsChanged() {
@@ -246,10 +253,10 @@ public class ScriptService {
 		}
 	}
 
-	protected void fireRegularExpressionScriptsChanged() {
+	protected void fireChatEventScriptsChanged() {
 		synchronized (listeners) {
 			for (ScriptServiceListener listener : listeners) {
-				listener.onRegularExpressionScriptsChanged();
+				listener.onChatEventScriptsChanged();
 			}
 		}
 	}
@@ -300,7 +307,7 @@ public class ScriptService {
 		});
 
 		if (userFiles != null) {
-			for (File file : userFiles) {
+			for (File file : userFiles) {				
 				FileInputStream fileIn = null;
 				try {
 					Properties properties = new Properties();
@@ -330,11 +337,15 @@ public class ScriptService {
 		}
 	}
 
-	protected void loadRegularExpressionScripts() {
+	protected void loadChatEventScripts() {
 		int count = 0;
 		long startTime = System.currentTimeMillis();
 
-		File systemScripts = new File("resources/scripts/regularExpression");
+		File systemScripts = new File("resources/scripts/chatEvent");
+		
+		if (!systemScripts.exists()) 
+			systemScripts.mkdir();
+		
 		File[] files = systemScripts.listFiles(new FilenameFilter() {
 
 			public boolean accept(File arg0, String arg1) {
@@ -348,15 +359,15 @@ public class ScriptService {
 				try {
 					Properties properties = new Properties();
 					properties.load(fileIn = new FileInputStream(file));
-					RegularExpressionScript script = ScriptUtils
-							.unserializeRegularExpressionScript(properties);
-					nameToRegularExpressionScript.put(script.getName()
+					ChatEventScript script = ScriptUtils
+							.unserializeChatEventScript(properties);
+					nameToChatEventScript.put(script.getName()
 							.toUpperCase(), script);
 					script.setSystemScript(true);
 					count++;
 				} catch (IOException ioe) {
 					Raptor.getInstance().onError(
-							"Error loading system regular expression script "
+							"Error loading system chat event script "
 									+ file.getName() + ",ioe");
 				} finally {
 					try {
@@ -368,7 +379,7 @@ public class ScriptService {
 		}
 
 		File userScripts = new File(Raptor.USER_RAPTOR_HOME_PATH
-				+ "/scripts/regularExpression");
+				+ "/scripts/chatEvent");
 		File[] userFiles = userScripts.listFiles(new FilenameFilter() {
 			public boolean accept(File arg0, String arg1) {
 				return arg1.endsWith(".properties");
@@ -381,15 +392,15 @@ public class ScriptService {
 				try {
 					Properties properties = new Properties();
 					properties.load(fileIn = new FileInputStream(file));
-					RegularExpressionScript script = ScriptUtils
-							.unserializeRegularExpressionScript(properties);
-					nameToRegularExpressionScript.put(script.getName()
+					ChatEventScript script = ScriptUtils
+							.unserializeChatEventScript(properties);
+					nameToChatEventScript.put(script.getName()
 							.toUpperCase(), script);
 					script.setSystemScript(false);
 					count++;
 				} catch (IOException ioe) {
 					Raptor.getInstance().onError(
-							"Error loading user regular expression script "
+							"Error loading user chat event script "
 									+ file.getName() + ",ioe");
 				} finally {
 					try {
@@ -401,7 +412,7 @@ public class ScriptService {
 		}
 
 		if (LOG.isInfoEnabled()) {
-			LOG.info("Loaded " + count + " regular expression scripts in "
+			LOG.info("Loaded " + count + " chat event scripts in "
 					+ (System.currentTimeMillis() - startTime) + "ms");
 		}
 	}

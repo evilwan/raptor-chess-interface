@@ -246,8 +246,7 @@ public class ActionScriptService {
 					
 					// automatic error fixing code
 					if (!file.getName().equals(action.getName()+".properties")) {
-						saveAction(action);
-						file.delete();
+						file.renameTo(new File(action.getName()+".properties"));				
 					}
 					
 					nameToActionMap.put(action.getName(), action);
@@ -265,23 +264,19 @@ public class ActionScriptService {
 
 			}
 		}
-
-		if (Raptor.getInstance().getPreferences().getString(
-				PreferenceKeys.APP_NAME).equals("Raptor .98 RC2")) {
-			File whiSpeakAction = new File(
-					"resources/scripts/action/Speak Whispers and Kibs.properties");
-			Properties properties = new Properties();
-			try {
-				properties.load(new FileInputStream(whiSpeakAction));
-				RaptorAction action = RaptorActionFactory.load(properties);	
-				nameToActionMap.put(action.getName(), action);
-				action.setSystemAction(false);
-			} catch (FileNotFoundException e) {
-				Raptor.getInstance().onError(e.getMessage());
-			} catch (IOException e) {
-				Raptor.getInstance().onError(e.getMessage());
-			}
-
+		
+		File whiSpeakAction = new File(
+				"resources/scripts/action/Speak Whispers and Kibs.properties");
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileInputStream(whiSpeakAction));
+			RaptorAction action = RaptorActionFactory.load(properties);
+			nameToActionMap.put(action.getName(), action);
+			action.setSystemAction(false);
+		} catch (FileNotFoundException e) {
+			Raptor.getInstance().onError(e.getMessage());
+		} catch (IOException e) {
+			Raptor.getInstance().onError(e.getMessage());
 		}
 
 		if (LOG.isInfoEnabled()) {

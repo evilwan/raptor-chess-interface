@@ -48,7 +48,7 @@ import raptor.pref.page.ObservingMouseActionsPage;
 import raptor.pref.page.PlayingMouseActionsPage;
 import raptor.pref.page.RaptorWindowPage;
 import raptor.pref.page.RaptorWindowQuadrantsPage;
-import raptor.pref.page.RegularExpressionScripts;
+import raptor.pref.page.ChatEventScripts;
 import raptor.pref.page.ScriptsPage;
 import raptor.pref.page.SeekPage;
 import raptor.pref.page.SoundPage;
@@ -232,9 +232,9 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"regex",
 								new ActionContainerPage(
-										"Regular Expression",
+										"Chat Event Scripts",
 										"\tOn this page you can configure the toolbar for the "
-												+ "regular expression console. You can add new actions on the Action Scripts Page.",
+												+ "chat event console. You can add new actions on the Action Scripts Page.",
 										RaptorActionContainer.RegExChatConsole)));
 		mgr.addToRoot(new PreferenceNode("engines", new ChessEnginesPage()));
 		mgr.addToRoot(new PreferenceNode("scripts", new ScriptsPage()));
@@ -243,7 +243,7 @@ public class PreferenceUtils {
 		mgr.addTo("scripts", new PreferenceNode("actionScriptKeys",
 				new ActionKeyBindingsPage()));
 		mgr.addTo("scripts", new PreferenceNode("regex",
-				new RegularExpressionScripts()));
+				new ChatEventScripts()));
 		mgr.addTo("scripts", new PreferenceNode("rightClickScripts",
 				new ChatConsoleRightClickScripts()));
 		mgr.addToRoot(new PreferenceNode("seeks", new SeekPage()));

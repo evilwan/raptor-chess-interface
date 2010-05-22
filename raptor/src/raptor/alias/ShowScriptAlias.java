@@ -15,11 +15,12 @@ package raptor.alias;
 
 import org.apache.commons.lang.StringUtils;
 
-import raptor.script.RegularExpressionScript;
+import raptor.script.ChatEventScript;
 import raptor.service.ScriptService;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.util.RaptorStringTokenizer;
 
+@Deprecated
 public class ShowScriptAlias extends RaptorAlias {
 	public ShowScriptAlias() {
 		super(
@@ -42,8 +43,8 @@ public class ShowScriptAlias extends RaptorAlias {
 				return new RaptorAliasResult(null, "name is required.\n"
 						+ getUsage());
 			} else {
-				RegularExpressionScript script = ScriptService.getInstance()
-						.getRegularExpressionScript(scriptName);
+				ChatEventScript script = ScriptService.getInstance()
+						.getChatEventScript(scriptName);
 
 				if (script == null) {
 					return new RaptorAliasResult(null, "Script " + scriptName
@@ -53,7 +54,7 @@ public class ShowScriptAlias extends RaptorAlias {
 							+ "\n" + "    Description: "
 							+ script.getDescription() + "\n    Active: "
 							+ script.isActive() + "\n    Regular Expressoin:"
-							+ script.getRegularExpression() + "\n    Script:\n"
+							//+ script.getRegularExpression() + "\n    Script:\n"
 							+ script.getScript());
 				}
 			}

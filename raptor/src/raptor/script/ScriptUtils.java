@@ -15,6 +15,7 @@ package raptor.script;
 
 import java.util.Properties;
 
+import raptor.chat.ChatType;
 import raptor.script.ParameterScript.Type;
 
 public class ScriptUtils {
@@ -29,13 +30,13 @@ public class ScriptUtils {
 		return properties;
 	}
 
-	public static Properties serialize(RegularExpressionScript script) {
+	public static Properties serialize(ChatEventScript script) {
 		Properties properties = new Properties();
 		properties.put("name", script.getName());
 		properties.put("isActive", "" + script.isActive());
 		properties.put("description", script.getDescription());
 		properties.put("script", script.getScript());
-		properties.put("regularExpression", script.getRegularExpression());
+		properties.put("chatType", script.getChatType().name());
 		properties.put("connectorType", script.getConnectorType().name());
 		return properties;
 	}
@@ -53,16 +54,16 @@ public class ScriptUtils {
 		return result;
 	}
 
-	public static RegularExpressionScript unserializeRegularExpressionScript(
+	public static ChatEventScript unserializeChatEventScript(
 			Properties properties) {
-		RegularExpressionScript result = new RegularExpressionScript();
+		ChatEventScript result = new ChatEventScript();
 		result.setName(properties.getProperty("name"));
 		result.setActive(properties.getProperty("isActive").equals("true"));
 		result.setDescription(properties.getProperty("description"));
 		result.setScript(properties.getProperty("script"));
 		result
-				.setRegularExpression(properties
-						.getProperty("regularExpression"));
+				.setChatType(ChatType.valueOf(properties
+						.getProperty("chatType")));
 		result.setConnectorType(ScriptConnectorType.valueOf((String) properties
 				.get("connectorType")));
 		return result;

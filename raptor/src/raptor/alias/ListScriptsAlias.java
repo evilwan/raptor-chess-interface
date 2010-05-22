@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
-import raptor.script.RegularExpressionScript;
+import raptor.script.ChatEventScript;
 import raptor.service.ScriptService;
 import raptor.swt.chat.ChatConsoleController;
 
@@ -34,15 +34,15 @@ public class ListScriptsAlias extends RaptorAlias {
 	public RaptorAliasResult apply(final ChatConsoleController controller,
 			String command) {
 		if (StringUtils.startsWithIgnoreCase(command, "=script")) {
-			RegularExpressionScript[] scripts = ScriptService.getInstance()
-					.getRegularExpressionScripts();
+			ChatEventScript[] scripts = ScriptService.getInstance()
+					.getChatEventScripts();
 			StringBuilder text = new StringBuilder(2000);
 
-			List<RegularExpressionScript> activeScripts = new ArrayList<RegularExpressionScript>(
+			List<ChatEventScript> activeScripts = new ArrayList<ChatEventScript>(
 					10);
-			List<RegularExpressionScript> inactiveScripts = new ArrayList<RegularExpressionScript>(
+			List<ChatEventScript> inactiveScripts = new ArrayList<ChatEventScript>(
 					10);
-			for (RegularExpressionScript script : scripts) {
+			for (ChatEventScript script : scripts) {
 				if (script.isActive()) {
 					activeScripts.add(script);
 				} else {
@@ -53,12 +53,12 @@ public class ListScriptsAlias extends RaptorAlias {
 			Collections.sort(inactiveScripts);
 
 			text.append("Active Scripts:\n");
-			for (RegularExpressionScript script : activeScripts) {
+			for (ChatEventScript script : activeScripts) {
 				text.append("    " + script.getName() + "\n");
 			}
 			text.append("\n\n");
 			text.append("Inactive Scripts:\n");
-			for (RegularExpressionScript script : inactiveScripts) {
+			for (ChatEventScript script : inactiveScripts) {
 				text.append("    " + script.getName() + "\n");
 			}
 			return new RaptorAliasResult("", text.toString());

@@ -15,7 +15,7 @@ package raptor.alias;
 
 import org.apache.commons.lang.StringUtils;
 
-import raptor.script.RegularExpressionScript;
+import raptor.script.ChatEventScript;
 import raptor.service.ScriptService;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.util.RaptorStringTokenizer;
@@ -35,8 +35,8 @@ public class ActivateScriptAlias extends RaptorAlias {
 					true);
 			tok.nextToken();
 			String scriptName = tok.getWhatsLeft();
-			RegularExpressionScript script = ScriptService.getInstance()
-					.getRegularExpressionScript(scriptName);
+			ChatEventScript script = ScriptService.getInstance()
+					.getChatEventScript(scriptName);
 			if (script == null) {
 				return new RaptorAliasResult(
 						"",
