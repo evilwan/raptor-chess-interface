@@ -17,6 +17,7 @@ package raptor.chat;
  * An enum that defines the different ChatTypes.
  */
 public enum ChatType {
+	ALL,
 	/**
 	 * Message sent when someone challenges you to a match.
 	 */

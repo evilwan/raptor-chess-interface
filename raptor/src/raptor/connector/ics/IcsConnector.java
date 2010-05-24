@@ -2143,7 +2143,8 @@ public abstract class IcsConnector implements Connector {
 				public void run() {
 					for (ChatEventScript script : chatEventScripts) {
 						if (script.isActive()
-								&& script.getChatType() == event.getType()) {
+								&& script.getChatType() == event.getType() 
+								|| script.getChatType() == ChatType.ALL) {
 							script.execute(getChatScriptContext(event));
 						}
 					}
