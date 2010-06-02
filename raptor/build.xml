@@ -51,13 +51,6 @@
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" target="1.5" classpathref="class.path" debug="false" deprecation="true" optimize="true">
 			<compilerarg value="-Xlint:unchecked" />
 		</javac>
-		<copy todir="${classes.dir}">
-			<fileset dir="${src.dir}">
-				<include name="**/*" />
-				<exclude name=".svn" />
-				<exclude name="*.class" />
-			</fileset>
-		</copy>
 	</target>
 
 	<target name="javadoc" description="Generates java docs">
