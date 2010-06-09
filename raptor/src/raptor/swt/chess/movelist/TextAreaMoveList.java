@@ -273,7 +273,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 					buff.append(" ");
 				}
 				textPanel.append(buff.toString());
-				select(moveListSize + 1);
+				select(game.getHalfMoveCount());
 				lastMoveSan = game.getMoveList().get(moveListSize - 1)
 						.toString();
 			}
