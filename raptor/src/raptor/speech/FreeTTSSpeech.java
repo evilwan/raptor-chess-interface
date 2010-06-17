@@ -19,8 +19,8 @@ package raptor.speech;
 //import javax.speech.synthesis.SynthesizerModeDesc;
 //import javax.speech.synthesis.Voice;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 
 /**
  * I decided not to use FreeTTS speech in Raptor like I did in decaf. It is way
@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class FreeTTSSpeech implements Speech {
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(FreeTTSSpeech.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(FreeTTSSpeech.class);
 	@SuppressWarnings("unused")
 	private static final String VOICE_NAME = "kevin16";
 

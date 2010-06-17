@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -62,8 +62,7 @@ import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
 public class SimpleAnalysisWidget implements EngineAnalysisWidget {
-	private static final Log LOG = LogFactory
-			.getLog(SimpleAnalysisWidget.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(SimpleAnalysisWidget.class);
 
 	protected ChessBoardController controller;
 	protected Composite composite, topLine, labelComposite;

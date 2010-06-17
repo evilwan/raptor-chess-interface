@@ -19,8 +19,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
@@ -52,10 +50,11 @@ import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.SWTUtils;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
- * The connector used to connect to www.freechess.org.
+ * The connector used to connect to bics type server.
  */
 public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	public static class BicsConnectorContext extends IcsConnectorContext {
@@ -119,7 +118,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		}
 	}
 
-	private static final Log LOG = LogFactory.getLog(BicsConnector.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(BicsConnector.class);
 
 	/**
 	 * Raptor allows connecting to bics twice with different profiles. Override

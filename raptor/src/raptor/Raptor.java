@@ -17,9 +17,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ColorRegistry;
 import org.eclipse.jface.resource.FontRegistry;
@@ -54,6 +51,7 @@ import raptor.swt.RaptorCursorRegistry;
 import raptor.swt.RaptorImageRegistry;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 
 /**
@@ -81,11 +79,7 @@ public class Raptor implements PreferenceKeys {
 	private static Display display;
 
 	static {
-		// Forces log4j to check for changes to its properties file and reload
-		// them every 5 seconds.
-		// This must always be called before any other code or it will not work.
-		PropertyConfigurator.configureAndWatch("resources/log4j.properties",
-				5000);
+		RaptorLogger.initializeLogger();
 	}
 
 	public static void createInstance() {
@@ -202,7 +196,7 @@ public class Raptor implements PreferenceKeys {
 	/**
 	 * Don't make this static.
 	 */
-	private final Log LOG = LogFactory.getLog(Raptor.class);
+	private final RaptorLogger LOG = RaptorLogger.getLog(Raptor.class);
 
 	protected RaptorImageRegistry imageRegistry = new RaptorImageRegistry(
 			Display.getCurrent());

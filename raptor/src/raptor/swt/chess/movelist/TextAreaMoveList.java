@@ -16,8 +16,8 @@ package raptor.swt.chess.movelist;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -47,7 +47,7 @@ import raptor.swt.chess.ChessBoardMoveList;
  * TODO support customization
  */
 public class TextAreaMoveList implements ChessBoardMoveList {
-	private static final Log LOG = LogFactory.getLog(TextAreaMoveList.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(TextAreaMoveList.class);
 	
 	protected ChessBoardController controller;
 	protected StyledText textPanel;

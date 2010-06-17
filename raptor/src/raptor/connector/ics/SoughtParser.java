@@ -17,11 +17,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.chat.Seek;
 import raptor.chat.Seek.GameType;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -29,7 +28,7 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class SoughtParser {
 
-	private static final Log LOG = LogFactory.getLog(SoughtParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(SoughtParser.class);
 	private static final String AD_DISPLAYED = "ad displayed.";
 	private static final String ADS_DISPLAYED = "ads displayed.";
 

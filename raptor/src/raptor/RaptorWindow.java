@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -89,6 +87,7 @@ import raptor.swt.chess.controller.InactiveController;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
 import raptor.util.OSUtils;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 import raptor.util.RegExUtils;
 
@@ -635,7 +634,7 @@ public class RaptorWindow extends ApplicationWindow {
 	protected boolean isExitDrag = false;
 	protected boolean isInDrag = false;
 	protected CoolBar leftCoolbar;
-	Log LOG = LogFactory.getLog(RaptorWindow.class);
+	RaptorLogger LOG = RaptorLogger.getLog(RaptorWindow.class);
 	protected Map<String, Label> pingLabelsMap = new HashMap<String, Label>();
 
 	protected RaptorWindowSashForm quad9quad12345678;

@@ -15,11 +15,11 @@ package raptor.util;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 
 public class RegExUtils {
-	private static final Log LOG = LogFactory.getLog(RegExUtils.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(RegExUtils.class);
 
 	public static Pattern getPattern(String regularExpression) {
 		try {

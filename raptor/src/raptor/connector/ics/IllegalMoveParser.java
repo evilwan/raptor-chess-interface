@@ -13,17 +13,15 @@
  */
 package raptor.connector.ics;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.connector.ics.game.message.IllegalMoveMessage;
+import raptor.util.RaptorLogger;
 
 public class IllegalMoveParser {
 
 	public static final String ILLEGAL_MOVE_START = "Illegal move (";
 
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(IllegalMoveParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(IllegalMoveParser.class);
 
 	public IllegalMoveMessage parse(String message) {
 		IllegalMoveMessage result = null;

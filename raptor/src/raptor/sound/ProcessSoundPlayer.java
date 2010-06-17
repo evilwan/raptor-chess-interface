@@ -13,8 +13,8 @@
  */
 package raptor.sound;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -25,7 +25,7 @@ import raptor.pref.PreferenceKeys;
  */
 public class ProcessSoundPlayer implements SoundPlayer {
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(ProcessSoundPlayer.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ProcessSoundPlayer.class);
 
 	public void dispose() {
 	}

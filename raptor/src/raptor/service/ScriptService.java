@@ -25,14 +25,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
 import raptor.script.ParameterScript;
 import raptor.script.ChatEventScript;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptUtils;
+import raptor.util.RaptorLogger;
 
 /**
  * This service manages ChatEventScripts and ParamterScripts. Scripts
@@ -55,7 +53,7 @@ public class ScriptService {
 		public void onChatEventScriptsChanged();
 	}
 
-	private static final Log LOG = LogFactory.getLog(ScriptService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ScriptService.class);
 
 	private static final ScriptService singletonInstance = new ScriptService();
 

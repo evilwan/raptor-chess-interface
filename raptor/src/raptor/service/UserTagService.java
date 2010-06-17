@@ -28,15 +28,14 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 public class UserTagService {
-	private static final Log LOG = LogFactory.getLog(UserTagService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(UserTagService.class);
 	private static final String TAG_FILE = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/tags.txt";
 	private static final UserTagService singletonInstance = new UserTagService();

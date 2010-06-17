@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.dnd.DND;
@@ -91,8 +91,7 @@ import raptor.util.RaptorStringUtils;
 public abstract class ChatConsoleController implements PreferenceKeys {
 	public static final double CLEAN_PERCENTAGE = .33;
 	public static final long SPELL_CHECK_DELAY = 1000;
-	private static final Log LOG = LogFactory
-			.getLog(ChatConsoleController.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ChatConsoleController.class);
 	public static final int TEXT_CHUNK_SIZE = 1000;
 	public static int[] DONT_FORWARD_KEYSTROKES = { SWT.PAGE_UP, SWT.PAGE_DOWN,
 			SWT.HOME, SWT.END };

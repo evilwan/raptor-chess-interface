@@ -23,8 +23,8 @@ import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -84,7 +84,7 @@ public class ChessBoardUtils implements BoardConstants {
 	public static final String CHESS_SET_DIR = Raptor.RESOURCES_DIR + "set/";
 	public static final int DARK_IMAGE_INDEX = 1;
 	public static final int LIGHT_IMAGE_INDEX = 0;
-	private static final Log LOG = LogFactory.getLog(ChessBoardUtils.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ChessBoardUtils.class);
 	public static final String PIECE_IMAGE_SUFFIX = ".png";
 	public static final String SQUARE_BACKGROUND_DIR = Raptor.RESOURCES_DIR
 			+ "square/";

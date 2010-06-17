@@ -13,11 +13,9 @@
  */
 package raptor.connector.ics;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.chess.GameConstants;
 import raptor.connector.ics.game.message.Style12Message;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -102,7 +100,7 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class Style12Parser implements GameConstants {
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(Style12Parser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(Style12Parser.class);
 	public static final String STYLE_12 = "<12>";
 
 	/**

@@ -19,8 +19,8 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -61,7 +61,7 @@ import raptor.util.RaptorStringUtils;
  */
 public class InactiveController extends ChessBoardController implements
 		BoardConstants, GameConstants {
-	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ChessBoardController.class);
 	protected GameCursor cursor;
 	protected Random random = new SecureRandom();
 	protected String title;

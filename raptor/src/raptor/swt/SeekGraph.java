@@ -18,8 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
@@ -52,7 +52,7 @@ import raptor.service.SeekService;
  */
 public class SeekGraph extends Canvas {
 
-	private static final Log logger = LogFactory.getLog(SeekGraph.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(SeekGraph.class);
 
 	private static final int SEEK_SIZE = 10;
 
@@ -236,8 +236,8 @@ public class SeekGraph extends Canvas {
 				redraw();
 				long after = System.nanoTime();
 
-				if (logger.isDebugEnabled()) {
-					logger.debug("Time to reload: " + (after - before));
+				if (LOG.isDebugEnabled()) {
+					LOG.debug("Time to reload: " + (after - before));
 				}
 			}
 		});
@@ -299,16 +299,16 @@ public class SeekGraph extends Canvas {
 	protected void paintComponent(PaintEvent event) {
 
 		Rectangle clientArea = getClientArea();
-		if (logger.isDebugEnabled()) {
-			logger.debug("ClientArea: " + clientArea);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("ClientArea: " + clientArea);
 		}
 
 		int width = clientArea.width;
 		int height = clientArea.height;
 
 		Rectangle clip = event.gc.getClipping();
-		if (logger.isDebugEnabled()) {
-			logger.debug("Clip: " + clip);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Clip: " + clip);
 		}
 
 		// fix resize problem
@@ -524,8 +524,8 @@ public class SeekGraph extends Canvas {
 		// int y = inset / 4;
 		int y = 0;
 		int x = width - legendImage.getBounds().width - inset;
-		if (logger.isDebugEnabled()) {
-			logger.debug("Drawing legend at: " + x + ", " + y);
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Drawing legend at: " + x + ", " + y);
 		}
 		gc.drawImage(legendImage, x, y);
 	}

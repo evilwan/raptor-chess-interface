@@ -19,14 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.Game;
 import raptor.chess.GameFactory;
 import raptor.chess.Move;
 import raptor.chess.Result;
 import raptor.chess.Variant;
+import raptor.util.RaptorLogger;
 
 /**
  * A Lenient PGN Parser Listener which creates Games from the PGN being handled.
@@ -41,8 +40,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 		Nag nag;
 	}
 
-	private static final Log LOG = LogFactory
-			.getLog(LenientPgnParserListener.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(LenientPgnParserListener.class);
 
 	protected SublineNode currentAnalysisLine;
 

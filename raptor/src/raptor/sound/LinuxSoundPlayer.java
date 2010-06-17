@@ -23,10 +23,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
+import raptor.util.RaptorLogger;
 
 /**
  * The Linux Audio Sound player. Uses SourceDataLine to play sounds. For some
@@ -34,7 +32,7 @@ import raptor.Raptor;
  */
 public class LinuxSoundPlayer implements SoundPlayer {
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(LinuxSoundPlayer.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(LinuxSoundPlayer.class);
 
 	protected Map<String, Boolean> soundsPlaying = new HashMap<String, Boolean>();
 

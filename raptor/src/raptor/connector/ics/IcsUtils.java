@@ -16,8 +16,6 @@ package raptor.connector.ics;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
@@ -55,6 +53,7 @@ import raptor.swt.chess.controller.InactiveController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.PlayingController;
 import raptor.swt.chess.controller.SetupController;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 public class IcsUtils implements GameConstants {
@@ -75,7 +74,7 @@ public class IcsUtils implements GameConstants {
 
 	public static final String LIGHTNING_IDENTIFIER = "lightning";
 
-	private static final Log LOG = LogFactory.getLog(IcsUtils.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(IcsUtils.class);
 
 	public static final String LOSERS_IDENTIFIER = "losers";
 

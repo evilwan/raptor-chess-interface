@@ -22,8 +22,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.preference.PreferenceStore;
 import org.eclipse.jface.resource.StringConverter;
@@ -52,6 +50,7 @@ import raptor.swt.chess.controller.InactiveMouseAction;
 import raptor.swt.chess.controller.ObservingMouseAction;
 import raptor.swt.chess.controller.PlayingMouseAction;
 import raptor.util.OSUtils;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -60,8 +59,7 @@ import raptor.util.RaptorStringUtils;
  */
 public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
-	private static final Log LOG = LogFactory
-			.getLog(RaptorPreferenceStore.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(RaptorPreferenceStore.class);
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 	public static final File RAPTOR_PROPERTIES = new File(
 			Raptor.USER_RAPTOR_DIR, "raptor.properties");
@@ -399,7 +397,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor .98 RC2");
+		setDefault(APP_NAME, "Raptor .98 RC3");
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS, !OSUtils
 				.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);

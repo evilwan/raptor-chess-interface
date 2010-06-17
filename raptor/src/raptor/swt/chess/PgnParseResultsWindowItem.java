@@ -19,8 +19,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionEvent;
@@ -61,8 +61,7 @@ import raptor.util.IntegerComparator;
  * 
  */
 public class PgnParseResultsWindowItem implements RaptorWindowItem {
-	private static final Log LOG = LogFactory
-			.getLog(PgnParseResultsWindowItem.class);;
+	private static final RaptorLogger LOG = RaptorLogger.getLog(PgnParseResultsWindowItem.class);;
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,

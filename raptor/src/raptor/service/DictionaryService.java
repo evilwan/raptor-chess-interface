@@ -26,15 +26,14 @@ import java.util.TreeSet;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RegExUtils;
 
 public class DictionaryService {
-	private static final Log LOG = LogFactory.getLog(DictionaryService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(DictionaryService.class);
 	private static final String DICTIONARY_PATH = Raptor.RESOURCES_DIR
 			+ "words.txt";
 	private static final String FICS_DICTIONARY_PATH = Raptor.RESOURCES_DIR

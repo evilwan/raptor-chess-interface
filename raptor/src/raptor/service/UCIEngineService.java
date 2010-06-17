@@ -24,17 +24,16 @@ import java.util.Properties;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.engine.uci.UCIEngine;
 import raptor.engine.uci.UCIOption;
 import raptor.engine.uci.options.UCIButton;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringUtils;
 
 public class UCIEngineService {
-	private static final Log LOG = LogFactory.getLog(UCIEngineService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(UCIEngineService.class);
 
 	public static final UCIEngineService singletonInstance = new UCIEngineService();
 

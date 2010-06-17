@@ -13,12 +13,10 @@
  */
 package raptor.chess;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.chess.util.ZobristUtils;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -26,7 +24,7 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class GameFactory implements GameConstants {
 
-	public static final Log LOG = LogFactory.getLog(GameFactory.class);
+	public static final RaptorLogger LOG = RaptorLogger.getLog(GameFactory.class);
 
 	/**
 	 * Creates a game from fen of the specified type.

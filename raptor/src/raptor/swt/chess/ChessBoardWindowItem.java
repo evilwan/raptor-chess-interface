@@ -13,8 +13,8 @@
  */
 package raptor.swt.chess;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -37,7 +37,7 @@ import raptor.swt.chess.controller.InactiveController;
  * BoardUtils.openGame(ChessBoardController).
  */
 public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
-	static final Log LOG = LogFactory.getLog(ChessBoardWindowItem.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ChessBoardWindowItem.class);
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,

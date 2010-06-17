@@ -14,8 +14,8 @@
 package raptor.swt.chat;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -45,7 +45,7 @@ import raptor.swt.RaptorStyledText;
  */
 public class ChatConsole extends Composite implements PreferenceKeys {
 
-	static final Log LOG = LogFactory.getLog(ChatConsole.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ChatConsole.class);
 
 	protected Composite buttonComposite;
 	protected ChatConsoleController controller;
@@ -115,7 +115,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		outputText = new StyledText(southControlsComposite, SWT.SINGLE
 				| SWT.BORDER);
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
+                
 		// Removes \n\r when text is pasted.
 		outputText.addListener(SWT.Verify, new Listener() {
 			public void handleEvent(Event e) {

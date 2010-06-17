@@ -13,8 +13,8 @@
  */
 package raptor.swt.chess.layout;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -41,8 +41,7 @@ public class RightOrientedFixedLayout extends ChessBoardLayout {
 
 	public static final int EAST = 1;
 
-	private static final Log LOG = LogFactory
-			.getLog(RightOrientedFixedLayout.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(RightOrientedFixedLayout.class);
 
 	public static final int NORTH = 0;
 	public static final int SOUTH = 1;

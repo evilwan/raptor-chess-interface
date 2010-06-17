@@ -13,17 +13,15 @@
  */
 package raptor.chess;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.chess.pgn.PgnHeader;
+import raptor.util.RaptorLogger;
 
 /**
  * Follows FICS suicide chess rules.
  */
 public class LosersGame extends ClassicGame {
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(LosersGame.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(LosersGame.class);
 
 	public LosersGame() {
 		setHeader(PgnHeader.Variant, Variant.losers.name());

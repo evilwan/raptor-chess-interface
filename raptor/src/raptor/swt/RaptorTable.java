@@ -19,8 +19,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TableCursor;
 import org.eclipse.swt.events.ControlAdapter;
@@ -156,7 +156,7 @@ public class RaptorTable extends Composite {
 		}
 	}
 
-	private static final Log LOG = LogFactory.getLog(RaptorTable.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(RaptorTable.class);
 
 	protected static final Comparator<String> STRING_COMPARATOR = new Comparator<String>() {
 		public int compare(String arg0, String arg1) {

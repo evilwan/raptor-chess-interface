@@ -13,8 +13,8 @@
  */
 package raptor.swt.chess.layout;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -30,8 +30,7 @@ import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardLayout;
 
 public class TopBottomOrientedLayout extends ChessBoardLayout {
-	private static final Log LOG = LogFactory
-			.getLog(TopBottomOrientedLayout.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(TopBottomOrientedLayout.class);
 
 	public static final int[] BOARD_WIDTH_MARGIN_PERCENTAGES = { 2, 1 };
 

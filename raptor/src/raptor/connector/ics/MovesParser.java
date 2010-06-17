@@ -16,11 +16,9 @@ package raptor.connector.ics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.connector.ics.game.message.MovesMessage;
 import raptor.connector.ics.game.message.Style12Message;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /***
@@ -150,7 +148,7 @@ public class MovesParser {
 
 	private static final String EVENT_START_2 = "fics% \nMovelist for game ";
 
-	private static final Log LOG = LogFactory.getLog(MovesParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(MovesParser.class);
 
 	private Style12Parser style12Parser = new Style12Parser();
 

@@ -25,8 +25,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
 
 /**
  * This code was reverse engineered from the JIN project. JIN is a GPLed
@@ -122,7 +121,7 @@ public class TimesealingSocket extends Socket implements Runnable {
 		}
 	}
 
-	private static final Log LOG = LogFactory.getLog(TimesealingSocket.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(TimesealingSocket.class);
 
 	private CryptOutputStream cryptedOutputStream;
 

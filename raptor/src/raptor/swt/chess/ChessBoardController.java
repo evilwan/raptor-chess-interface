@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -54,7 +54,7 @@ import raptor.swt.chess.controller.ToolBarItemKey;
  */
 public abstract class ChessBoardController implements BoardConstants,
 		GameConstants {
-	static final Log LOG = LogFactory.getLog(ChessBoardController.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ChessBoardController.class);
 
 	protected ClockLabelUpdater blackClockUpdater;
 	protected ChessBoard board;

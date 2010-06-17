@@ -20,13 +20,13 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 
 import raptor.Raptor;
 
 public class FileUtils {
-	private static final Log LOG = LogFactory.getLog(FileUtils.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(FileUtils.class);
 
 	/**
 	 * This code was obtained from:

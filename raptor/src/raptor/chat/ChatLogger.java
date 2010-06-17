@@ -21,15 +21,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
 import raptor.connector.Connector;
 import raptor.connector.bics.BicsConnector;
 import raptor.connector.fics.FicsConnector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringTokenizer;
 
@@ -54,7 +52,7 @@ public class ChatLogger {
 	private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm");
 
-	private static final Log LOG = LogFactory.getLog(ChatLogger.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ChatLogger.class);
 
 	protected String pathToFile;
 	protected Connector connector;

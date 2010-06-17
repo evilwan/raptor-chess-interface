@@ -14,8 +14,8 @@
 package raptor.swt.chess;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -53,7 +53,7 @@ import raptor.swt.chess.analysis.SimpleAnalysisWidget;
  */
 public class ChessBoard implements BoardConstants {
 
-	static final Log LOG = LogFactory.getLog(ChessBoard.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ChessBoard.class);
 
 	protected RaptorLabel blackClockLabel;
 	protected RaptorLabel blackLagLabel;

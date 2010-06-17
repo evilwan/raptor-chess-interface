@@ -14,8 +14,6 @@
 package raptor.connector.ics.dialog;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -38,13 +36,14 @@ import org.eclipse.swt.widgets.Text;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.util.RaptorLogger;
 
 /**
  * The ics login dialog.
  */
 public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
-	private static final Log LOG = LogFactory.getLog(IcsLoginDialog.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(IcsLoginDialog.class);
 	protected Button autoLoginCheckBox;
 	protected Button guestLoginCheckBox;
 	protected Text handleField;

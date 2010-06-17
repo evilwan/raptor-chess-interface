@@ -16,8 +16,6 @@ package raptor.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
@@ -29,6 +27,7 @@ import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.controller.InactiveController;
+import raptor.util.RaptorLogger;
 
 /**
  * A service used to cache chess board objects so they can be reused. This
@@ -36,7 +35,7 @@ import raptor.swt.chess.controller.InactiveController;
  * around.
  */
 public class ChessBoardCacheService {
-	static final Log LOG = LogFactory.getLog(ChessBoardCacheService.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ChessBoardCacheService.class);
 
 	protected static final int CHESS_BOARD_CACHE_SIZE = 4;
 

@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
 import raptor.action.RaptorAction;
 import raptor.action.RaptorActionFactory;
@@ -39,7 +36,7 @@ import raptor.action.RaptorAction.CategoryNameComparator;
 import raptor.action.RaptorAction.ContainerOrderComparator;
 import raptor.action.RaptorAction.NameComparator;
 import raptor.action.RaptorAction.RaptorActionContainer;
-import raptor.pref.PreferenceKeys;
+import raptor.util.RaptorLogger;
 
 /**
  * This service manages only ActionScripts.
@@ -49,7 +46,7 @@ public class ActionScriptService {
 		public void onActionsChanged();
 	}
 
-	private static final Log LOG = LogFactory.getLog(ActionScriptService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ActionScriptService.class);
 
 	private static final ActionScriptService singletonInstance = new ActionScriptService();
 

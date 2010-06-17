@@ -15,8 +15,6 @@ package raptor.alias;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.Game;
 import raptor.chess.GameFactory;
@@ -24,11 +22,12 @@ import raptor.chess.Variant;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.controller.InactiveController;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
 public class OpenBoardAlias extends RaptorAlias {
-	private static final Log LOG = LogFactory.getLog(OpenBoardAlias.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(OpenBoardAlias.class);
 
 	public OpenBoardAlias() {
 		super(

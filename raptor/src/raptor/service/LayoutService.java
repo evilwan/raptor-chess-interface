@@ -23,9 +23,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
 import raptor.layout.BughouseButtonsFarLeftLayout;
 import raptor.layout.BughouseButtonsLeftLayout;
@@ -39,12 +36,13 @@ import raptor.layout.ClassicLayout;
 import raptor.layout.ClassicSplitPaneChatLayout;
 import raptor.layout.CustomLayout;
 import raptor.layout.Layout;
+import raptor.util.RaptorLogger;
 
 /**
  * A service used to manage layouts.
  */
 public class LayoutService {
-	private static final Log LOG = LogFactory.getLog(LayoutService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(LayoutService.class);
 
 	public static final String USER_LAYOUT_DIR = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/layouts";

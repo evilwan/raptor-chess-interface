@@ -16,8 +16,8 @@ package raptor.swt.chat;
 import java.util.Arrays;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -64,7 +64,7 @@ import raptor.util.RaptorRunnable;
 
 public class ChatUtils {
 	public static final String FORWARD_CHAR = " `1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./?><MNBVCXZ\":LKJHGFDSA|}{POIUYTREWQ+_)(*&^%$#@!~";
-	private static final Log LOG = LogFactory.getLog(ChatUtils.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ChatUtils.class);
 	public static final String whiteSpaceChars = " \r\n\t";
 
 	public static boolean isWhiteSpaceChar(char c) {

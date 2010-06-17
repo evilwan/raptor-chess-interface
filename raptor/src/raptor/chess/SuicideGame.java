@@ -19,20 +19,18 @@ import static raptor.chess.util.GameUtils.kingMove;
 import static raptor.chess.util.GameUtils.pawnCapture;
 import static raptor.chess.util.GameUtils.pawnSinglePush;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.chess.util.SanUtils;
 import raptor.chess.util.SanUtils.SanValidations;
+import raptor.util.RaptorLogger;
 
 /**
  * Follows FICS suicide chess rules.
  */
 public class SuicideGame extends ClassicGame {
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(SuicideGame.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(SuicideGame.class);
 
 	public SuicideGame() {
 		setHeader(PgnHeader.Variant, Variant.suicide.name());

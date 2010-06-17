@@ -13,8 +13,8 @@
  */
 package raptor.swt.chess;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -47,7 +47,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	public static final String DRAG_INITIATOR = "DRAG_INITIATOR";
 	public static final String DROP_HANDLED = "DROP_HANNDLED";
 	public static final String LAST_DROP_TIME = "LAST_DROP_TIME";
-	static final Log LOG = LogFactory.getLog(ChessSquare.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ChessSquare.class);
 
 	protected ChessBoard board;
 	/**

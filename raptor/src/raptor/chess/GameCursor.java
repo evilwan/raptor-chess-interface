@@ -13,10 +13,8 @@
  */
 package raptor.chess;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.chess.pgn.PgnHeader;
+import raptor.util.RaptorLogger;
 
 /**
  * <p>
@@ -65,7 +63,7 @@ public class GameCursor implements Game {
 		MakeMovesOnMasterSetCursorToLast
 	}
 
-	static final Log LOG = LogFactory.getLog(GameCursor.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(GameCursor.class);
 
 	protected Game cursor;
 	protected int cursorPosition;

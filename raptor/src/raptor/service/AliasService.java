@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
 import raptor.alias.AbbreviatedChannelTellAlias;
 import raptor.alias.AbbreviatedPersonTellAlias;
@@ -68,9 +65,10 @@ import raptor.alias.TellAllInChannelAlias;
 import raptor.alias.TellLastPersonWhoToldYouAlias;
 import raptor.alias.TimedCommandAlias;
 import raptor.swt.chat.ChatConsoleController;
+import raptor.util.RaptorLogger;
 
 public class AliasService {
-	private static final Log LOG = LogFactory.getLog(AliasService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(AliasService.class);
 	@SuppressWarnings("unchecked")
 	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,

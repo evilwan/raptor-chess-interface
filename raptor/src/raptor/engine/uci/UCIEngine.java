@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.Move;
 import raptor.engine.uci.info.BestLineFoundInfo;
@@ -44,6 +42,7 @@ import raptor.engine.uci.options.UCICombo;
 import raptor.engine.uci.options.UCISpinner;
 import raptor.engine.uci.options.UCIString;
 import raptor.service.ThreadService;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -54,7 +53,7 @@ import raptor.util.RaptorStringTokenizer;
  * http://www.docstoc.com/docs/15900289/UCI-_=-Universal-Chess-Interface_
  */
 public class UCIEngine {
-	private static final Log LOG = LogFactory.getLog(UCIEngine.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(UCIEngine.class);
 	protected static final String[] SUPPORTED_INFO_TYPES = { "depth",
 			"seldepth", "time", "nodes", "pv", "multipv", "score", "currmove",
 			"currentmovenumber", "hashfull", "nps", "tbhits", "cpuload",

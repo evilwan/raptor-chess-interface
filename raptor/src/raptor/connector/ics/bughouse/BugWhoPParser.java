@@ -16,13 +16,12 @@ package raptor.connector.ics.bughouse;
 import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.chat.Bugger;
 import raptor.chat.Partnership;
 import raptor.chat.Bugger.BuggerStatus;
 import raptor.connector.ics.IcsUtils;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /*
@@ -36,7 +35,7 @@ import raptor.util.RaptorStringTokenizer;
  * This code was adapted from some code johnthegreat for Raptor.
  */
 public class BugWhoPParser {
-	private static final Log LOG = LogFactory.getLog(BugWhoUParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(BugWhoUParser.class);
 
 	public static final String ID = "Partnerships not playing bughouse\n";
 	public static final String ID2 = "\nPartnerships not playing bughouse\n";

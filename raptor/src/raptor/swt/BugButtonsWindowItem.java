@@ -13,8 +13,8 @@
  */
 package raptor.swt;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -36,7 +36,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.ActionScriptService;
 
 public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
-	static final Log LOG = LogFactory.getLog(BugButtonsWindowItem.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(BugButtonsWindowItem.class);
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,

@@ -13,14 +13,12 @@
  */
 package raptor.chess.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringUtils;
 
 //KoggeStone
@@ -40,7 +38,7 @@ public class GameUtils implements GameConstants {
 	private static long[] KING_ATTACKS = new long[64];
 	private static long[] KNIGHT_ATTACKS = new long[64];
 
-	public static final Log LOG = LogFactory.getLog(GameUtils.class);
+	public static final RaptorLogger LOG = RaptorLogger.getLog(GameUtils.class);
 
 	private static int[] OPPOSITE_COLOR = { BLACK, WHITE };
 

@@ -17,8 +17,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -96,7 +96,7 @@ public class PgnProcessingDialog extends Dialog {
 
 	public static final int MAX_BYTES_IN_FILE = 1048576 * 15;
 
-	private static final Log LOG = LogFactory.getLog(PgnProcessingDialog.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(PgnProcessingDialog.class);
 
 	private Button cancelButton;
 	private Composite cancelComposite;

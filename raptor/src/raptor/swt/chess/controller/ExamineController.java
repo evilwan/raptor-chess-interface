@@ -13,8 +13,8 @@
  */
 package raptor.swt.chess.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -43,7 +43,7 @@ import raptor.util.RaptorRunnable;
  * the process
  */
 public class ExamineController extends ChessBoardController {
-	static final Log LOG = LogFactory.getLog(ExamineController.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ExamineController.class);
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
 		@Override

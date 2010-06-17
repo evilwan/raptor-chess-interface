@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.chat.Bugger;
@@ -80,13 +78,14 @@ import raptor.service.GameService.GameInfo;
 import raptor.service.GameService.Offer;
 import raptor.service.GameService.Offer.OfferType;
 import raptor.swt.UserInfoDialog;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
  * An implementation of IcsParser that is both BICS and FICS friendly.
  */
 public class IcsParser implements GameConstants {
-	private static final Log LOG = LogFactory.getLog(IcsParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(IcsParser.class);
 	public static final int MAX_GAME_MESSAGE = 1000;
 
 	protected B1Parser b1Parser;

@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
@@ -65,6 +63,7 @@ import raptor.swt.chat.ChatConsoleWindowItem;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.controller.PlayingMouseAction;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -72,7 +71,7 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		GameConstants {
-	private static final Log LOG = LogFactory.getLog(FicsConnector.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(FicsConnector.class);
 	protected static final String[][] PROBLEM_ACTIONS = {
 			{ "Tactics", "tell puzzlebot gettactics" },
 			{ "Mate", "tell puzzlebot getmate" },

@@ -24,8 +24,8 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -61,8 +61,7 @@ public class ChessSetInstallDialog extends Dialog {
 		Arrays.sort(VALID_FILES);
 	}
 
-	private static final Log LOG = LogFactory
-			.getLog(ChessSetInstallDialog.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ChessSetInstallDialog.class);
 
 	private Button cancelButton;
 	private Composite cancelComposite;

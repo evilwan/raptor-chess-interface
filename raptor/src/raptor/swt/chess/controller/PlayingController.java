@@ -31,8 +31,8 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -98,7 +98,7 @@ public class PlayingController extends ChessBoardController {
 		boolean isPremoveDrop = false;
 	}
 
-	static final Log LOG = LogFactory.getLog(PlayingController.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(PlayingController.class);
 
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;

@@ -13,8 +13,8 @@
  */
 package raptor.swt.chess.movelist;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
@@ -34,7 +34,7 @@ import raptor.swt.chess.ChessBoardMoveList;
  * by mouse and by keystrokes.
  */
 public class TableMoveList implements ChessBoardMoveList {
-	private static final Log LOG = LogFactory.getLog(TableMoveList.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(TableMoveList.class);
 
 	protected ChessBoardController controller;
 	protected boolean ignoreSelection;

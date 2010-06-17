@@ -16,8 +16,8 @@ package raptor.script;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
@@ -38,8 +38,7 @@ public class ChatEventScript implements
 	}
 
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory
-			.getLog(ChatEventScript.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ChatEventScript.class);
 
 	protected ChatType chatType;
 	protected String name = "";

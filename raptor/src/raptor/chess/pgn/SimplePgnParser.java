@@ -13,10 +13,8 @@
  */
 package raptor.chess.pgn;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.chess.Result;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
@@ -26,7 +24,7 @@ import raptor.util.RaptorStringUtils;
  */
 public class SimplePgnParser extends AbstractPgnParser {
 	@SuppressWarnings("unused")
-	private static final Log LOG = LogFactory.getLog(SimplePgnParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(SimplePgnParser.class);
 
 	/**
 	 * OLD SLOW REGEX private static final String STARTS_WITH_MOVE_NUMBER_REGEX

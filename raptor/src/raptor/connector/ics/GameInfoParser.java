@@ -16,15 +16,13 @@ package raptor.connector.ics;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.service.GameService.GameInfo;
 import raptor.service.GameService.GameInfo.GameInfoCategory;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 public class GameInfoParser {
-	private static final Log LOG = LogFactory.getLog(GameInfoParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(GameInfoParser.class);
 	private static final String END_MESSAGE = "games displayed.";
 
 	public GameInfoParser() {

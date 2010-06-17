@@ -14,8 +14,8 @@
 package raptor.swt;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.CloseWindowListener;
@@ -45,7 +45,7 @@ import raptor.pref.PreferenceKeys;
  * want a new browser window opened.
  */
 public class BrowserWindowItem implements RaptorWindowItem {
-	private static final Log LOG = LogFactory.getLog(BrowserWindowItem.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(BrowserWindowItem.class);
 
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,

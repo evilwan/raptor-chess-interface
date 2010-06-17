@@ -16,8 +16,8 @@ package raptor.swt.chess;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -773,7 +773,7 @@ public class ArrowDecorator {
 		}
 	}
 
-	static final Log LOG = LogFactory.getLog(ArrowDecorator.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(ArrowDecorator.class);
 
 	protected ChessBoard board;
 

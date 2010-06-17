@@ -16,9 +16,7 @@ package raptor.connector.ics;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -44,7 +42,7 @@ public class TakebackParser {
 	public static final String YOU_ACCEPTED_TAKE_BACK = "You accept the takeback request from";
 
 	public static final String IDENTIFIER = "Game";
-	private static final Log LOG = LogFactory.getLog(TakebackParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(TakebackParser.class);
 
 	public static final String REQUEST_TAKE_BACK = "would like to take back";
 

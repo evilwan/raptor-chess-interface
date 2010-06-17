@@ -22,14 +22,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.chess.EcoInfo;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Variant;
 import raptor.chess.util.GameUtils;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -41,7 +40,7 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class EcoService {
 
-	private static final Log LOG = LogFactory.getLog(EcoService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(EcoService.class);
 
 	private static final EcoService singletonInstance = new EcoService();
 

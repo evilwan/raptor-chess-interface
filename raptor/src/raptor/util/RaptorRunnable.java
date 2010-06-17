@@ -13,8 +13,8 @@
  */
 package raptor.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 
 import raptor.Raptor;
 import raptor.connector.Connector;
@@ -24,7 +24,7 @@ import raptor.connector.Connector;
  * Runnable to use it.
  */
 public abstract class RaptorRunnable implements Runnable {
-	protected static final Log LOG = LogFactory.getLog(RaptorRunnable.class);
+	protected static final RaptorLogger LOG = RaptorLogger.getLog(RaptorRunnable.class);
 
 	protected Connector connector;
 

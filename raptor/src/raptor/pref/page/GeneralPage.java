@@ -14,7 +14,6 @@
 package raptor.pref.page;
 
 import org.apache.commons.lang.WordUtils;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -28,6 +27,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
 import raptor.util.FileUtils;
+import raptor.util.RaptorLogger;
 
 public class GeneralPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
@@ -142,7 +142,7 @@ public class GeneralPage extends FieldEditorPreferencePage {
 												+ "have to be restarted. "
 												+ "Do you wish to continue?")) {
 							Raptor.getInstance().shutdownWithoutExit(true);
-							LogFactory.releaseAll();
+							RaptorLogger.releaseAll();
 							FileUtils.deleteDir(Raptor.USER_RAPTOR_DIR);
 							System.exit(0);
 						}

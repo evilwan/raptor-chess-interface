@@ -15,9 +15,7 @@ package raptor.chess.pgn;
 
 import java.math.BigDecimal;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
@@ -26,7 +24,7 @@ import raptor.util.RaptorStringUtils;
  */
 public class TimeTakenForMove implements MoveAnnotation {
 	private static final long serialVersionUID = 3398826247420411970L;
-	private static final Log LOG = LogFactory.getLog(TimeTakenForMove.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(TimeTakenForMove.class);
 	public String text;
 
 	public TimeTakenForMove(long time) {

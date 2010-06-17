@@ -18,21 +18,19 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
 import raptor.sound.SoundPlayer;
 import raptor.sound.SoundUtils;
 import raptor.speech.Speech;
 import raptor.speech.SpeechUtils;
+import raptor.util.RaptorLogger;
 
 /**
  * A Singleton service that plays sounds.
  */
 public class SoundService {
-	private static final Log LOG = LogFactory.getLog(SoundService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(SoundService.class);
 	private static final SoundService instance = new SoundService();
 
 	/**

@@ -25,10 +25,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
+import raptor.util.RaptorLogger;
 
 /**
  * Creating your own threads should really be avoided in Raptor. Instead please
@@ -57,7 +55,7 @@ public class ThreadService {
 	}
 
 	private static final ThreadService instance = new ThreadService();
-	private static final Log LOG = LogFactory.getLog(ThreadService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ThreadService.class);
 
 	public static final String THREAD_DUMP_FILE_PATH = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/threaddump_" + System.currentTimeMillis() + ".txt";

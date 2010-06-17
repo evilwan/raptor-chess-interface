@@ -32,8 +32,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
@@ -86,6 +84,7 @@ import raptor.swt.chat.controller.ChannelController;
 import raptor.swt.chat.controller.MainController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardUtils;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 import raptor.util.RegExUtils;
@@ -103,7 +102,7 @@ public abstract class IcsConnector implements Connector {
 		protected MessageCallback callback;
 	}
 
-	private static final Log LOG = LogFactory.getLog(IcsConnector.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(IcsConnector.class);
 	public static final String LOGIN_CHARACTERS_TO_FILTER = "����؞";
 
 	protected BughouseService bughouseService;

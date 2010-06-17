@@ -23,17 +23,14 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import raptor.Raptor;
+import raptor.util.RaptorLogger;
 
 /**
  * Uses Clips to play sounds. Ignores the encoding.
  */
 public class JavaxSampledSoundPlayer implements SoundPlayer {
-	private static final Log LOG = LogFactory
-			.getLog(JavaxSampledSoundPlayer.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(JavaxSampledSoundPlayer.class);
 
 	protected Map<String, Boolean> soundsPlaying = new HashMap<String, Boolean>();
 

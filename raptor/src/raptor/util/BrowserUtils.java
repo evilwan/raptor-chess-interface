@@ -16,8 +16,8 @@ package raptor.util;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import raptor.util.RaptorLogger;
+ 
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -27,7 +27,7 @@ import raptor.swt.BrowserWindowItem;
  * Utilities for dealing with browsers.
  */
 public class BrowserUtils {
-	private static final Log LOG = LogFactory.getLog(BrowserUtils.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(BrowserUtils.class);
 
 	public static String getWatchBotJavascript(String player) {
 		return "<html><body>"

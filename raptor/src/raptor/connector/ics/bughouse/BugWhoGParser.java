@@ -17,12 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.chat.BugGame;
 import raptor.chat.Bugger;
 import raptor.chat.Bugger.BuggerStatus;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -46,7 +45,7 @@ public class BugWhoGParser {
 	 * 2 partnerships displayed.
 	 */
 
-	private static final Log LOG = LogFactory.getLog(BugWhoUParser.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(BugWhoUParser.class);
 
 	public static final String ID = "Bughouse games in progress\n";
 	public static final String ID2 = "\nBughouse games in progress\n";

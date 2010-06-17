@@ -13,15 +13,14 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
 import raptor.pref.PreferenceKeys;
+import raptor.util.RaptorLogger;
 
 public class ThemeService {
-	private static final Log LOG = LogFactory.getLog(ThemeService.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ThemeService.class);
 	private static final String THEME_SYSTEM_DIR = Raptor.RESOURCES_DIR
 			+ "themes";
 	private static final String THEME_USER_DIR = Raptor.USER_RAPTOR_HOME_PATH

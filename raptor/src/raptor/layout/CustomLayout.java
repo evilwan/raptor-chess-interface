@@ -18,20 +18,19 @@ import java.util.Enumeration;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
 import raptor.RaptorWindowItem;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.util.RaptorLogger;
 
 /**
  * A layout which can be loaded/stored to a properties file.
  */
 public class CustomLayout extends AbstractLayout {
-	private static final Log LOG = LogFactory.getLog(CustomLayout.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(CustomLayout.class);
 
 	public static final String LAYOUT_NAME = "layout-name";
 

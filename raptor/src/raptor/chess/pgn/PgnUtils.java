@@ -26,8 +26,6 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import raptor.Raptor;
 import raptor.chess.Game;
@@ -35,6 +33,7 @@ import raptor.chess.GameCursor;
 import raptor.chess.Move;
 import raptor.chess.Variant;
 import raptor.pref.PreferenceKeys;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringUtils;
 
 /**
@@ -48,7 +47,7 @@ public class PgnUtils {
 
 	public static String DEFAULT_PGN_HEADER = "?";
 	public static String DEFAULT_PGN_RESULT_HEADER = "*";
-	private static final Log LOG = LogFactory.getLog(PgnUtils.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(PgnUtils.class);
 
 	public static final String PGN_MIME_TYPE = "application/x-chess-pgn";
 	private static final Object PGN_APPEND_SYNCH = new Object();
