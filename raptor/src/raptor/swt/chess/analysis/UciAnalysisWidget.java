@@ -61,8 +61,8 @@ import raptor.swt.chess.EngineAnalysisWidget;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
-public class SimpleAnalysisWidget implements EngineAnalysisWidget {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(SimpleAnalysisWidget.class);
+public class UciAnalysisWidget implements EngineAnalysisWidget {
+	private static final RaptorLogger LOG = RaptorLogger.getLog(UciAnalysisWidget.class);
 
 	protected ChessBoardController controller;
 	protected Composite composite, topLine, labelComposite;
@@ -554,7 +554,7 @@ public class SimpleAnalysisWidget implements EngineAnalysisWidget {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
 					if (LOG.isDebugEnabled()) {
-						LOG.debug("In SimpleAnalysisWidget.start("
+						LOG.debug("In UciAnalysisWidget.start("
 								+ currentEngine.getUserName() + ")");
 					}
 					try {

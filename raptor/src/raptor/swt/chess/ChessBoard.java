@@ -39,7 +39,7 @@ import raptor.swt.RaptorLabel;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chess.ChessBoardLayout.Field;
-import raptor.swt.chess.analysis.SimpleAnalysisWidget;
+import raptor.swt.chess.analysis.UciAnalysisWidget;
 
 /**
  * A GUI representation of a chess board, and all controls associated with it
@@ -685,7 +685,7 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	protected void createEngineAnalysisWidget() {
-		engineAnalysisWidget = new SimpleAnalysisWidget();
+		engineAnalysisWidget = new UciAnalysisWidget();
 		engineAnalysisWidget.setController(controller);
 	}
 
