@@ -58,12 +58,12 @@ public class ChessBoardCacheService {
 			CHESS_BOARD_CACHE_SIZE);
 
 	private ChessBoardCacheService() {
-		init();
+		//init();
 	}
 
 	public void dispose() {
-		composite.dispose();
-		chessBoardCache.clear();
+		//composite.dispose();
+		//chessBoardCache.clear();
 	}
 
 	/**
@@ -72,7 +72,8 @@ public class ChessBoardCacheService {
 	 * it is not null.
 	 */
 	public ChessBoard getChessBoard() {
-		if (chessBoardCache.isEmpty()) {
+		return null;
+		/*if (chessBoardCache.isEmpty()) {
 			return null;
 		} else {
 			if (LOG.isInfoEnabled()) {
@@ -82,14 +83,14 @@ public class ChessBoardCacheService {
 					.remove(chessBoardCache.size() - 1);
 			board.getControl().setLayoutDeferred(false);
 			return board;
-		}
+		}*/
 	}
 
 	/**
 	 * Recycles the chess board. Disposes of it if the cache is already full.
 	 */
 	public void recycle(final ChessBoard board) {
-		long startTime = System.currentTimeMillis();
+		/*long startTime = System.currentTimeMillis();
 		if (chessBoardCache.size() < CHESS_BOARD_CACHE_SIZE) {
 			if (board.getControl().getParent() != composite) {
 				// Always dispose the controller so it can clean
@@ -133,7 +134,7 @@ public class ChessBoardCacheService {
 		if (LOG.isInfoEnabled()) {
 			LOG.info("Recycled a chess board in "
 					+ (System.currentTimeMillis() - startTime));
-		}
+		}*/
 	}
 
 	protected void init() {

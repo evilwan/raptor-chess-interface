@@ -15,7 +15,6 @@ package raptor.action.game;
 
 import raptor.Raptor;
 import raptor.action.AbstractRaptorAction;
-import raptor.chess.Variant;
 import raptor.swt.chess.controller.ExamineController;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.swt.chess.controller.ObserveController;
@@ -35,10 +34,8 @@ public class ToggleEngineAnalysisAction extends AbstractRaptorAction {
 					|| getChessBoardControllerSource() instanceof ExamineController
 					|| getChessBoardControllerSource() instanceof ObserveController) {
 
-				if (Variant.isClassic(getChessBoardControllerSource().getGame()
-						.getVariant())) {
-					getChessBoardControllerSource().onEngineAnalysis();
-				}
+				getChessBoardControllerSource().onEngineAnalysis();
+
 				wasHandled = true;
 			}
 		}

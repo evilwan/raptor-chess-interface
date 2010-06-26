@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Menu;
 
 import raptor.Raptor;
 import raptor.chess.GameConstants;
+import raptor.chess.Variant;
 import raptor.chess.util.GameUtils;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
@@ -40,6 +41,7 @@ import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chess.ChessBoardLayout.Field;
 import raptor.swt.chess.analysis.UciAnalysisWidget;
+import raptor.swt.chess.analysis.XboardAnalysisWidget;
 
 /**
  * A GUI representation of a chess board, and all controls associated with it
@@ -467,6 +469,7 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	public synchronized void showEngineAnalysisWidget() {
+		System.out.println(engineAnalysisWidget);
 		engineAnalysisWidget.getControl().setVisible(true);
 		analysisSash.setMaximizedControl(null);
 		engineAnalysisWidget.onShow();
@@ -685,8 +688,13 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	protected void createEngineAnalysisWidget() {
-		engineAnalysisWidget = new UciAnalysisWidget();
-		engineAnalysisWidget.setController(controller);
+		if (!Variant.isClassic(controller.getGame().getVariant())) {
+			engineAnalysisWidget = new XboardAnalysisWidget();
+			engineAnalysisWidget.setController(controller);
+		} else {
+			engineAnalysisWidget = new UciAnalysisWidget();
+			engineAnalysisWidget.setController(controller);
+		}
 	}
 
 	protected void createPieceJailControls() {

@@ -151,6 +151,10 @@ public class UCIEngineService {
 				try {
 					Properties properties = new Properties();
 					properties.load(fileIn = new FileInputStream(file));
+					
+					if (properties.getProperty("isUCI").equals("false"))
+						continue;
+					
 					UCIEngine engine = uciEngineFromProperties(properties);
 					userNameToEngine.put(engine.getUserName(), engine);
 					count++;

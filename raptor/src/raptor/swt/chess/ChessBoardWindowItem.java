@@ -124,6 +124,9 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public Control getControl() {
+		if (board == null)
+			return null;
+		
 		return board.getControl();
 	}
 

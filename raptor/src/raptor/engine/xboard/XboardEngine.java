@@ -20,6 +20,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import raptor.chess.Variant;
 import raptor.service.ThreadService;
 import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
@@ -34,12 +35,15 @@ public class XboardEngine {
 	protected Process process;
 	protected String processPath;
 	protected String engineName;
+	protected boolean isDefault;
 
 	protected boolean supportsSetboard;
-	private Runnable goRunnable;
+	private Runnable readerRunnable;
 	protected Object stopSynch = new Object();
 	protected boolean cancelGo;
 	private boolean isUsingThreadService = true;
+	protected List<Variant> supportedVariants = new ArrayList<Variant>();
+	private boolean processingGo;
 
 	/**
 	 * Connects to the engine using specified processPath. Also sets the engine
@@ -47,7 +51,6 @@ public class XboardEngine {
 	 * 
 	 * @return true if connection was successful, false otherwise
 	 */
-	@SuppressWarnings("unchecked")
 	public boolean connect() {
 	/*	Future connectionTimeoutFuture = ThreadService.getInstance()
 				.scheduleOneShot(CONNECTION_TIMEOUT, new Runnable() {
@@ -58,11 +61,13 @@ public class XboardEngine {
 
 		try {
 			long startTime = System.currentTimeMillis();
-
-			process = new ProcessBuilder(processPath).start();
+			
+			// a bit dirty, but that the way it is
+			process = new ProcessBuilder(processPath).directory(
+					new File(new File(processPath).getParent())).start();
 			in = new BufferedReader(new InputStreamReader(process
 					.getInputStream()), 10000);
-			out = new PrintWriter(process.getOutputStream());			
+			out = new PrintWriter(process.getOutputStream());	
 
 			send("xboard");
 			send("protover 2");
@@ -106,6 +111,33 @@ public class XboardEngine {
 	}
 
 	public void analyze(final XboardInfoListener listener) {
+		
+		if (readerRunnable == null) {
+			readerRunnable = new Runnable() {
+				public void run() {
+					try {
+						String line = in.readLine();
+						while (line != null) {							
+							if (line.length() > 1
+									&& Character.isDigit(line.trim().charAt(0))) {
+								parseInfoLine(line, listener);
+							}
+
+							line = in.readLine();
+						}
+						readerRunnable = null;
+					}  
+					catch (Throwable t) {
+						LOG.error("Error occured executng go ", t);
+					}
+				}
+			};
+			if (isUsingThreadService) {
+				ThreadService.getInstance().run(readerRunnable);
+			} else {
+				new Thread(readerRunnable).start();
+			}
+		}
 
 		if (!isProcessingGo()) {
 			if (LOG.isDebugEnabled()) {
@@ -113,29 +145,7 @@ public class XboardEngine {
 			}
 
 			send("analyze");
-
-			goRunnable = new Runnable() {
-				public void run() {
-					try {
-						String line = in.readLine();
-						while (line != null) {							
-							if (Character.isDigit(line.trim().charAt(0))) {
-								parseInfoLine(line, listener);
-							}
-
-							line = in.readLine();
-						}
-						goRunnable = null;
-					} catch (Throwable t) {
-						LOG.error("Error occured executng go ", t);
-					}
-				}
-			};
-			if (isUsingThreadService) {
-				ThreadService.getInstance().run(goRunnable);
-			} else {
-				new Thread(goRunnable).start();
-			}
+			processingGo = true;
 		}
 	}
 	
@@ -192,20 +202,13 @@ public class XboardEngine {
 		synchronized (stopSynch) {
 			if (isProcessingGo()) {
 				send("exit");
-				long totalSleepTime = 0;
-				while (goRunnable != null && totalSleepTime < 2500) {
-					try {
-						Thread.sleep(500);
-						totalSleepTime += 500;
-					} catch (InterruptedException ie) {
-					}
-				}
+				processingGo = false;
 			}
 		}
 	}
 
-	private boolean isProcessingGo() {
-		return goRunnable != null;
+	public boolean isProcessingGo() {
+		return processingGo;
 	}
 
 	/**
@@ -216,8 +219,10 @@ public class XboardEngine {
 		str = str.substring(str.indexOf("feature"));
 		StringBuffer word = new StringBuffer();
 		boolean insideQuotes = false;
+		int i = 0;
 		for (char c: str.toCharArray()) {
-			if (c == ' ' && !insideQuotes) {
+			word.append(c);
+			if ((c == ' ' && !insideQuotes) || str.length()-1 == ++i) {
 				if (LOG.isDebugEnabled())
 					LOG.debug("Proccessing feature string word: " + word);
 				
@@ -231,20 +236,41 @@ public class XboardEngine {
 				else if (w.startsWith("myname")) {
 					engineName = w.substring(8, w.length()-1);
 				}
+				else if (w.startsWith("variants")) {
+					convertStringToVariantsList(w);
+					
+					if (LOG.isDebugEnabled())
+						LOG.debug("Supported variants: " + supportedVariants.toString());
+				}
 				
 				word.setLength(0);
 				continue;
 			}
-			else if (c == '"')
+			if (c == '"')
 				insideQuotes = !insideQuotes;
-			
-			word.append(c);
 		}
 		
 		return true;
 	}
+	
+	public void setSupportedVariants(String variants) {
+		convertStringToVariantsList(variants);
+	}
 
-	private void send(String command) {
+	private void convertStringToVariantsList(String w) {
+		if (w.contains("fischerandom"))
+			supportedVariants.add(Variant.fischerRandom);
+		if (w.contains("crazyhouse"))
+			supportedVariants.add(Variant.crazyhouse);
+		if (w.contains("losers"))
+			supportedVariants.add(Variant.losers);
+		if (w.contains("suicide"))
+			supportedVariants.add(Variant.suicide);
+		if (w.contains("atomic"))
+			supportedVariants.add(Variant.atomic);
+	}
+
+	public void send(String command) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Sending command: " + command);
 		}
@@ -258,9 +284,79 @@ public class XboardEngine {
 		}
 	}
 
+	/**
+	 * Disconnects from the engine
+	 */
 	protected void disconnect() {
-		// TODO Auto-generated method stub
+		try {
+			if (isConnected()) {
+				process.destroy();
 
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Throwable t) {
+					} finally {
+						in = null;
+					}
+				}
+				if (out != null) {
+					try {
+						out.close();
+					} catch (Throwable t) {
+					} finally {
+						out = null;
+					}
+				}
+			}
+		} catch (Throwable t) {
+			LOG.error("Error disconnecting from XboardEngine " + this, t);
+		} finally {
+			resetConnectionState();
+		}
+	}
+	
+	/**
+	 * Returns true if there is a connection to the XboardEngine, false otherwise.
+	 */
+	public boolean isConnected() {
+		if (process != null) {
+			try {
+				process.exitValue();
+				return false;
+			} catch (IllegalThreadStateException itse) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	protected void resetConnectionState() {
+		in = null;
+		out = null;
+		process = null;
+		engineName = null;
+		readerRunnable = null;
+	}
+	
+	/**
+	 * Quits the program as soon as possible
+	 */
+	public void quit() {
+		if (!isConnected()) {
+			return;
+		}
+
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("Entering quit()");
+		}
+
+		send("quit");
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException ie) {
+		}
+		disconnect();
 	}
 
 	public String getProcessPath() {
@@ -281,5 +377,36 @@ public class XboardEngine {
 
 	public void setUsingThreadService(boolean isUsingThreadService) {
 		this.isUsingThreadService = isUsingThreadService;
+	}
+
+	public XboardEngine getDeepCopy() {
+		XboardEngine engine = new XboardEngine();
+		engine.setProcessPath(processPath);
+		engine.setEngineName(engineName);
+		return engine;
+	}
+
+	public void newGame(Variant var) {
+		if (isProcessingGo()) {
+			stop();
+		}
+		send("new");
+		send("variant " + var.name());
+	}
+
+	public boolean isDefault() {
+		return isDefault;
+	}
+
+	public void setDefault(boolean isDefault) {
+		this.isDefault = isDefault;
+	}
+
+	public boolean doesSupportVariant(Variant variant) {
+		return supportedVariants.contains(variant);
+	}
+
+	public String supportedVariantsInString() {
+		return supportedVariants.toString();
 	}
 }

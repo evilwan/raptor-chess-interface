@@ -53,6 +53,8 @@ import raptor.pref.page.ScriptsPage;
 import raptor.pref.page.SeekPage;
 import raptor.pref.page.SoundPage;
 import raptor.pref.page.SpeechPage;
+import raptor.pref.page.UciEnginesPage;
+import raptor.pref.page.XboardEnginesPage;
 import raptor.service.ConnectorService;
 
 /**
@@ -237,6 +239,10 @@ public class PreferenceUtils {
 												+ "chat event console. You can add new actions on the Action Scripts Page.",
 										RaptorActionContainer.RegExChatConsole)));
 		mgr.addToRoot(new PreferenceNode("engines", new ChessEnginesPage()));
+		mgr.addTo("engines", new PreferenceNode("uciEngines",
+				new UciEnginesPage()));
+		mgr.addTo("engines", new PreferenceNode("xboardEngines",
+				new XboardEnginesPage()));
 		mgr.addToRoot(new PreferenceNode("scripts", new ScriptsPage()));
 		mgr.addTo("scripts", new PreferenceNode("actionScripts",
 				new ActionScriptsPage()));
