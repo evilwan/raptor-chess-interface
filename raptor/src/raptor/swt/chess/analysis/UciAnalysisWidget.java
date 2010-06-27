@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Label;
 import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.Move;
+import raptor.chess.Variant;
 import raptor.chess.util.GameUtils;
 import raptor.engine.uci.UCIBestMove;
 import raptor.engine.uci.UCIEngine;
@@ -50,6 +51,7 @@ import raptor.engine.uci.info.NodesPerSecondInfo;
 import raptor.engine.uci.info.NodesSearchedInfo;
 import raptor.engine.uci.info.ScoreInfo;
 import raptor.engine.uci.info.TimeInfo;
+import raptor.engine.uci.options.UCICheck;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
@@ -569,6 +571,21 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 									}
 								});
 						currentEngine.stop();
+
+						if (controller.getGame().getVariant() == Variant.fischerRandom
+								&& currentEngine.getOption("UCI_Chess960")
+										.getValue().equals("false")) {
+							UCICheck opt = (UCICheck) currentEngine
+									.getOption("UCI_Chess960");
+							opt.setValue("true");
+						} else if (controller.getGame().getVariant() != Variant.fischerRandom
+								&& currentEngine.getOption("UCI_Chess960")
+										.getValue().equals("true")) {
+							UCICheck opt = (UCICheck) currentEngine
+									.getOption("UCI_Chess960");
+							opt.setValue("false");
+						}
+
 						currentEngine.newGame();
 						currentEngine.setPosition(controller.getGame().toFen(),
 								null);
@@ -596,22 +613,30 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 	protected void updateEnginesCombo() {
 		ignoreEngineSelection = true;
 		engineCombo.removeAll();
-		UCIEngine[] engines = UCIEngineService.getInstance().getUCIEngines();
-		for (UCIEngine engine : engines) {
-			engineCombo.add(engine.getUserName());
+		
+		UCIEngine[] engines;
+		UCIEngine defaultEngine;
+		if (controller.getGame().getVariant() == Variant.fischerRandom) {
+			engines = UCIEngineService.getInstance().getFrUCIEngines();
+			defaultEngine = engines[0];
 		}
-
-		UCIEngine defaultEngine = UCIEngineService.getInstance()
-				.getDefaultEngine();
-		if (defaultEngine != null) {
-			for (int i = 0; i < engineCombo.getItemCount(); i++) {
-				if (engineCombo.getItem(i).equals(defaultEngine.getUserName())) {
-					currentEngine = engines[i].getDeepCopy();
-					engineCombo.select(i);
-					break;
-				}
+		else {
+			engines = UCIEngineService.getInstance().getUCIEngines();
+			defaultEngine = UCIEngineService.getInstance()
+			.getDefaultEngine();
+		}
+		
+		for (UCIEngine engine : engines) 			
+				engineCombo.add(engine.getUserName());	
+		
+		for (int i = 0; i < engineCombo.getItemCount(); i++) {
+			if (engineCombo.getItem(i).equals(defaultEngine.getUserName())) {
+				currentEngine = engines[i];
+				engineCombo.select(i);
+				break;
 			}
 		}
+		
 		ignoreEngineSelection = false;
 		topLine.pack(true);
 		topLine.layout(true, true);

@@ -68,8 +68,10 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 							if (StringUtils.isEmpty(score))
 								return;
 							
-							if (!currentEngine.isProcessingGo())
+							if (!currentEngine.isProcessingGo()) {
 								currentEngine.send("stop");
+								currentEngine.quit();
+							}
 
 							String[][] data = new String[1][5];
 

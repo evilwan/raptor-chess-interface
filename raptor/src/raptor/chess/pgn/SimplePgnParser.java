@@ -14,7 +14,6 @@
 package raptor.chess.pgn;
 
 import raptor.chess.Result;
-import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
@@ -23,8 +22,6 @@ import raptor.util.RaptorStringUtils;
  * 
  */
 public class SimplePgnParser extends AbstractPgnParser {
-	@SuppressWarnings("unused")
-	private static final RaptorLogger LOG = RaptorLogger.getLog(SimplePgnParser.class);
 
 	/**
 	 * OLD SLOW REGEX private static final String STARTS_WITH_MOVE_NUMBER_REGEX
@@ -238,8 +235,7 @@ public class SimplePgnParser extends AbstractPgnParser {
 							}
 						}
 					}
-				} else {
-					System.err.println(nextWord);
+				} else {					
 					String[] moveNumberSplit = splitOutGameMoveNumber(nextWord);
 					if (moveNumberSplit != null) {
 						int moveNumber = Integer.parseInt(moveNumberSplit[0]);

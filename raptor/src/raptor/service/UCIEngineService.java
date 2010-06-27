@@ -18,7 +18,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
@@ -177,6 +179,10 @@ public class UCIEngineService {
 	protected UCIEngine uciEngineFromProperties(Properties properties) {
 		UCIEngine engine = new UCIEngine();
 		engine.setDefault(properties.getProperty("isDefault").equals("true"));
+		
+		String fr = properties.getProperty("chess960");
+		engine.setSupportsFischerRandom(fr != null && fr.equals("true"));
+		
 		engine.setMultiplyBlackScoreByMinus1(properties
 				.contains("multiplyBlackScoreByMinus1") ? properties
 				.getProperty("multiplyBlackScoreByMinus1").equals("true")
@@ -216,6 +222,7 @@ public class UCIEngineService {
 		}
 
 		properties.put("isUCI", "" + true);
+		properties.put("chess960", "" + engine.supportsFischerRandom());
 		properties.put("isDefault", "" + engine.isDefault());
 		properties.put("processPath", engine.getProcessPath());
 		properties.put("userName", engine.getUserName());
@@ -239,5 +246,22 @@ public class UCIEngineService {
 			}
 		}
 		return properties;
+	}
+
+	public boolean containsFischerRandomEngines() {		
+		for (UCIEngine eng: getUCIEngines()) {	
+			if (eng.supportsFischerRandom())
+				return true;
+		}
+		return false;
+	}
+
+	public UCIEngine[] getFrUCIEngines() {
+		List<UCIEngine> engines = new ArrayList<UCIEngine>();
+		for (UCIEngine eng: getUCIEngines()) {	
+			if (eng.supportsFischerRandom())
+				engines.add(eng);
+		}
+		return engines.toArray(new UCIEngine[0]);
 	}
 }

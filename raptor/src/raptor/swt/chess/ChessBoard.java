@@ -687,8 +687,9 @@ public class ChessBoard implements BoardConstants {
 		}
 	}
 
-	protected void createEngineAnalysisWidget() {
-		if (!Variant.isClassic(controller.getGame().getVariant())) {
+	protected void createEngineAnalysisWidget() {		
+		if (!Variant.isClassic(controller.getGame().getVariant())
+				&& controller.getGame().getVariant() != Variant.fischerRandom) {
 			engineAnalysisWidget = new XboardAnalysisWidget();
 			engineAnalysisWidget.setController(controller);
 		} else {

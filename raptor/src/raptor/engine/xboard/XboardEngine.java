@@ -258,8 +258,6 @@ public class XboardEngine {
 	}
 
 	private void convertStringToVariantsList(String w) {
-		if (w.contains("fischerandom"))
-			supportedVariants.add(Variant.fischerRandom);
 		if (w.contains("crazyhouse"))
 			supportedVariants.add(Variant.crazyhouse);
 		if (w.contains("losers"))

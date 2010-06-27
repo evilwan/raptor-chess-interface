@@ -31,6 +31,7 @@ public class UciEnginesPage extends PreferencePage {
 	protected Text processLocationText;
 	protected Label engineName;
 	protected Label engineAuthor;
+	protected Label frSupport;
 	protected Button propertiesButton;
 	protected Button pickFileButton;
 	protected Button defaultButton;
@@ -158,6 +159,15 @@ public class UciEnginesPage extends PreferencePage {
 		engineAuthor = new Label(parent, SWT.LEFT);
 		engineAuthor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1));
+		
+		Label frHeaderLabel = new Label(parent, SWT.LEFT);
+		frHeaderLabel.setLayoutData(new GridData(SWT.LEFT,
+				SWT.CENTER, false, false, 1, 1));
+		frHeaderLabel.setText("Chess960:");
+
+		frSupport = new Label(parent, SWT.LEFT);
+		frSupport.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+				false, 1, 1));
 
 		propertiesButton = new Button(parent, SWT.LEFT);
 		propertiesButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
@@ -196,6 +206,14 @@ public class UciEnginesPage extends PreferencePage {
 			}
 		}
 		currentEngine = engine;
+		
+		for (String opt : currentEngine.getOptionNames()) {
+			if (opt.equals("UCI_Chess960"))
+				currentEngine.setSupportsFischerRandom(true);
+		}
+		
+		frSupport.setText(StringUtils.defaultString(currentEngine
+				.supportsFischerRandom() ? "yes" : "no", ""));
 		engineName.setText(StringUtils.defaultString(currentEngine
 				.getEngineName(), ""));
 		engineAuthor.setText(StringUtils.defaultString(currentEngine

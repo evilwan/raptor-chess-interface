@@ -740,12 +740,14 @@ public class ChessBoardUtils implements BoardConstants {
 			if (controller instanceof InactiveController
 					|| controller instanceof ExamineController
 					|| controller instanceof ObserveController) {
-
+				
 				if ((Variant.isClassic(controller.getGame().getVariant()) && UCIEngineService
 						.getInstance().getDefaultEngine() != null)
 						|| XboardEngineService.getInstance()
 								.hasEnginesSupportingVariant(
-										controller.getGame().getVariant())) {
+										controller.getGame().getVariant())
+						|| UCIEngineService.getInstance()
+								.containsFischerRandomEngines()) {
 					result = new ToolItem(toolbar, SWT.CHECK);
 					controller.addToolItem(
 							ToolBarItemKey.TOGGLE_ANALYSIS_ENGINE, result);
@@ -754,7 +756,7 @@ public class ChessBoardUtils implements BoardConstants {
 							&& controller.getBoard().isShowingEngineAnaylsis()) {
 						result.setSelection(true);
 					}
-				}			
+				}
 			}
 
 			if (result == null) {

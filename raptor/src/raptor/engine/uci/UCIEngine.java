@@ -14,6 +14,7 @@
 package raptor.engine.uci;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ public class UCIEngine {
 	protected boolean isDefault;
 	protected Object stopSynch = new Object();
 	protected String goAnalysisParameters = "infinite";
+	private boolean supportsFischerRandom;
 
 	/**
 	 * Connects to the engine. After this method is invoked the engine name,
@@ -104,7 +106,8 @@ public class UCIEngine {
 			long startTime = System.currentTimeMillis();
 
 			if (parameters == null || parameters.length == 0) {
-				process = new ProcessBuilder(processPath).start();
+				process = new ProcessBuilder(processPath).directory(
+						new File(new File(processPath).getParent())).start();
 			} else {
 				String[] args = new String[parameters.length + 1];
 				args[0] = processPath;
@@ -141,8 +144,9 @@ public class UCIEngine {
 
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("engineName=" + engineName + " engineAuthor="
-						+ engineAuthor + "Options:\n" + nameToOptions.values()
-						+ " initialized in "
+						+ engineAuthor + "UCI_Chess960="
+						+ supportsFischerRandom + " Options:\n"
+						+ nameToOptions.values() + " initialized in "
 						+ (System.currentTimeMillis() - startTime));
 			}
 
@@ -1139,5 +1143,13 @@ public class UCIEngine {
 						+ overrideOption);
 			}
 		}
+	}
+
+	public boolean supportsFischerRandom() {		
+		return supportsFischerRandom;
+	}
+
+	public void setSupportsFischerRandom(boolean supportsFischerRandom) {
+		this.supportsFischerRandom = supportsFischerRandom;
 	}
 }
