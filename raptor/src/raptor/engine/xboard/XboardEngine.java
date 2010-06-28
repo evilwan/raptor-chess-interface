@@ -44,6 +44,7 @@ public class XboardEngine {
 	private boolean isUsingThreadService = true;
 	protected List<Variant> supportedVariants = new ArrayList<Variant>();
 	private boolean processingGo;
+	private boolean colorCommand;
 
 	/**
 	 * Connects to the engine using specified processPath. Also sets the engine
@@ -52,13 +53,6 @@ public class XboardEngine {
 	 * @return true if connection was successful, false otherwise
 	 */
 	public boolean connect() {
-	/*	Future connectionTimeoutFuture = ThreadService.getInstance()
-				.scheduleOneShot(CONNECTION_TIMEOUT, new Runnable() {
-					public void run() {
-						disconnect();
-					}
-				});*/
-
 		try {
 			long startTime = System.currentTimeMillis();
 			
@@ -182,16 +176,20 @@ public class XboardEngine {
 		listener.engineSentInfo(ply, score, time, nodes, pv.toString());
 	}
 	
-	public void setPosition(String fen) {
+	public void setPosition(String fen, boolean isWhite) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Entering setPosition(" + fen + ",...)");
 		}
 
 		if (isProcessingGo()) {
 			stop();
-		}
+		}		
 		
+		send("force");
 		send("setboard " + fen);
+		
+		if (colorCommand)
+			send(isWhite ? "white" : "black");
 	}
 
 	public void stop() {
@@ -226,7 +224,7 @@ public class XboardEngine {
 				if (LOG.isDebugEnabled())
 					LOG.debug("Proccessing feature string word: " + word);
 				
-				String w = word.toString();
+				String w = word.toString().trim();
 				if (w.startsWith("setboard"))
 					supportsSetboard = w.endsWith("1");
 				else if (w.startsWith("analyze")) {
@@ -236,11 +234,15 @@ public class XboardEngine {
 				else if (w.startsWith("myname")) {
 					engineName = w.substring(8, w.length()-1);
 				}
+				else if (w.contains("colors=1")) {					
+					colorCommand = true;
+				}
 				else if (w.startsWith("variants")) {
 					convertStringToVariantsList(w);
-					
+
 					if (LOG.isDebugEnabled())
-						LOG.debug("Supported variants: " + supportedVariants.toString());
+						LOG.debug("Supported variants: "
+								+ supportedVariants.toString());
 				}
 				
 				word.setLength(0);
@@ -272,6 +274,10 @@ public class XboardEngine {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Sending command: " + command);
 		}
+		
+		if (!isConnected())
+			return;
+		
 		try {
 			out.print(command + "\n");
 			out.flush();

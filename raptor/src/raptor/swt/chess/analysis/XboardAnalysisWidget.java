@@ -287,7 +287,8 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 							});*/
 					currentEngine.stop();
 					currentEngine.newGame(controller.getGame().getVariant());
-					currentEngine.setPosition(controller.getGame().toFen());
+					currentEngine.setPosition(controller.getGame().toFen(),
+							controller.getGame().isWhitesMove());
 					currentEngine.analyze(listener);
 					Raptor.getInstance().getDisplay().asyncExec(
 							new RaptorRunnable() {
