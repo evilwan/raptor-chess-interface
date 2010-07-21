@@ -135,6 +135,7 @@ public class ChessBoardCacheService {
 			LOG.info("Recycled a chess board in "
 					+ (System.currentTimeMillis() - startTime));
 		}*/
+		board.getControl().dispose();
 	}
 
 	protected void init() {
