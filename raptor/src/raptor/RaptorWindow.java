@@ -84,6 +84,7 @@ import raptor.swt.chat.controller.PersonController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardWindowItem;
 import raptor.swt.chess.controller.InactiveController;
+import raptor.swt.chess.controller.PlayingController;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
 import raptor.util.OSUtils;
@@ -2033,6 +2034,18 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected void handleShellCloseEvent() {
+		
+		for (RaptorConnectorWindowItem item : getWindowItems(ConnectorService
+				.getInstance().getConnector("fics"))) {
+			if (item instanceof ChessBoardWindowItem)
+				if (((ChessBoardWindowItem) item).getController() 
+						instanceof PlayingController) {
+					if (!Raptor.getInstance().confirm(
+							"Do you really want to exit?"))
+						return;
+				}
+		}
+
 		storeWindowPreferences();
 		Raptor.getInstance().shutdown();
 	}
@@ -2318,7 +2331,7 @@ public class RaptorWindow extends ApplicationWindow {
 						}
 					}
 
-					final MenuItem imageMenuItem = new MenuItem(menu, SWT.PUSH);
+					final MenuItem imageMenuItem = new MenuItem(menu, SWT.NONE);
 					imageMenuItem.setImage(Raptor.getInstance().getImage(
 							Raptor.RESOURCES_DIR + "images/quadrantsSmall"
 									+ folder.quad.toString() + ".png"));
