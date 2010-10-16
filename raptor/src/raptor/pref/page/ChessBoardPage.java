@@ -341,7 +341,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	ChessBoardPageComboFieldEditor pieceJailPercentageCombo;
 	ChessBoardPageComboFieldEditor backgroundEffectCombo;
 
-	ChessBoardPageBooleanFieldEditor isUsingSolidColorsEditor, isTraversingWithMouseWheelEditor;	
+	ChessBoardPageBooleanFieldEditor isUsingSolidColorsEditor;	
 	ChessBoardPageColorFieldEditor lightSquareSolidColor;
 	ChessBoardPageColorFieldEditor darkSquareSolidColor;
 	ChessBoardPageSquare[][] squares = null;
@@ -402,11 +402,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_CHESS_SET_NAME, "Chess Set:",
 				setNameValues, getFieldEditorParent());
 		addField(setFieldEditor);
-		
-		isTraversingWithMouseWheelEditor = new ChessBoardPageBooleanFieldEditor(
-				PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL,
-				"Traverse moves with mouse wheel", getFieldEditorParent());
-		addField(isTraversingWithMouseWheelEditor);
 
 		isUsingSolidColorsEditor = new ChessBoardPageBooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_USING_SOLID_BACKGROUND_COLORS,

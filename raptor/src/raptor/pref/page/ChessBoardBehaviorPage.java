@@ -19,6 +19,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.page.ChessBoardPage.ChessBoardPageBooleanFieldEditor;
 import raptor.swt.chess.UserMoveInputMode;
 
 public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
@@ -66,6 +67,10 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				"Show seconds on clock:", SHOW_SECONDS_OPTIONS,
 				getFieldEditorParent()));
 
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL,
+				"Traverse moves with mouse wheel", getFieldEditorParent()));
+		
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING,
 				"Allow mouse wheel move list navigation when playing a game.",
