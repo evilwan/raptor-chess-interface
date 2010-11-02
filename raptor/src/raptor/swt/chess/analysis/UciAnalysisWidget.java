@@ -618,7 +618,11 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 		UCIEngine defaultEngine;
 		if (controller.getGame().getVariant() == Variant.fischerRandom) {
 			engines = UCIEngineService.getInstance().getFrUCIEngines();
-			defaultEngine = engines[0];
+			
+			if (engines.length > 0)
+				defaultEngine = engines[0];
+                        else 
+                                defaultEngine = null;
 		}
 		else {
 			engines = UCIEngineService.getInstance().getUCIEngines();
@@ -630,7 +634,7 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 				engineCombo.add(engine.getUserName());	
 		
 		for (int i = 0; i < engineCombo.getItemCount(); i++) {
-			if (engineCombo.getItem(i).equals(defaultEngine.getUserName())) {
+			if (defaultEngine != null && engineCombo.getItem(i).equals(defaultEngine.getUserName())) {
 				currentEngine = engines[i];
 				engineCombo.select(i);
 				break;
