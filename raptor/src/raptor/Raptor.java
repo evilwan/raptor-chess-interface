@@ -15,6 +15,8 @@ package raptor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -216,6 +218,12 @@ public class Raptor implements PreferenceKeys {
 	protected Clipboard clipboard;
 
 	protected boolean isShutdown = false;
+	
+	/**
+	 * The list contains hash codes of already displayed to user 
+	 * errors to avoid duplication and be less annoying.
+	 */
+	private List<Integer> errorsDisplayed = new ArrayList<Integer>();
 
 	public Raptor() {
 		clipboard = new Clipboard(getDisplay());
@@ -366,6 +374,11 @@ public class Raptor implements PreferenceKeys {
 	public void onError(final String error, final Throwable throwable) {
 		LOG.error(error, throwable);
 		if (!isDisposed()) {
+			if (errorsDisplayed.contains(error.hashCode()))
+				return;
+			
+			errorsDisplayed.add(error.hashCode());			
+						
 			getInstance().getWindow().getShell().getDisplay().asyncExec(
 					new Runnable() {
 						public void run() {

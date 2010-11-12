@@ -397,7 +397,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor .98 RC4");
+		setDefault(APP_NAME, "Raptor .98 RC4f2");
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS, !OSUtils
 				.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);

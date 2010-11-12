@@ -107,7 +107,7 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 		return true;
 	}
 
-	public void dispose() {
+	public void dispose() {		
 		if (board != null) {
 			ChessBoardCacheService.getInstance().recycle(board);
 			controller = null;
