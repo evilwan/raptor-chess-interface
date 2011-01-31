@@ -224,12 +224,44 @@ public class ActionScriptService {
 		int count = 0;
 		long startTime = System.currentTimeMillis();
 
+		File systemScripts = new File(Raptor.RESOURCES_DIR + "scripts/action");
+                File[] files = systemScripts.listFiles(new FilenameFilter() {
+
+                        public boolean accept(File arg0, String arg1) {
+                                return arg1.endsWith(".properties");
+                        }
+                });
+
+                if (files != null) {
+                        for (File file : files) {
+                                FileInputStream fileIn = null;
+                                try {
+                                        Properties properties = new Properties();
+                                        properties.load(fileIn = new FileInputStream(file));
+                                        RaptorAction action = RaptorActionFactory.load(properties);
+                                        nameToActionMap.put(action.getName(), action);
+                                        action.setSystemAction(true);
+                                        count++;
+                                } catch (IOException ioe) {
+                                        Raptor.getInstance().onError(
+                                                        "Error loading action " + file.getName() + ",ioe");
+                                } finally {
+                                        try {
+                                                fileIn.close();
+                                        } catch (Throwable t) {
+                                        }
+                                }
+                        }
+                }
+
+
+
 		File userActions = new File(Raptor.USER_RAPTOR_HOME_PATH
 				+ "/scripts/action");
 		File[] userFiles = userActions.listFiles(new FilenameFilter() {
 			public boolean accept(File arg0, String arg1) {
 				return arg1.endsWith(".properties")
-						&& !arg1.endsWith("minute.properties"); // mistakenly duplicated files
+						&& !arg1.endsWith(" minute.properties"); // mistakenly duplicated files
 			}
 		});
 
@@ -240,7 +272,7 @@ public class ActionScriptService {
 					Properties properties = new Properties();
 					properties.load(fileIn = new FileInputStream(file));
 					RaptorAction action = RaptorActionFactory.load(properties);	
-					
+						
 					// automatic error fixing code
 					if (!file.getName().equals(action.getName()+".properties")) {
 						file.renameTo(new File(action.getName()+".properties"));				
@@ -260,20 +292,6 @@ public class ActionScriptService {
 				}
 
 			}
-		}
-		
-		File whiSpeakAction = new File(
-				"resources/scripts/action/Speak Whispers and Kibs.properties");
-		Properties properties = new Properties();
-		try {
-			properties.load(new FileInputStream(whiSpeakAction));
-			RaptorAction action = RaptorActionFactory.load(properties);
-			nameToActionMap.put(action.getName(), action);
-			action.setSystemAction(false);
-		} catch (FileNotFoundException e) {
-			Raptor.getInstance().onError(e.getMessage());
-		} catch (IOException e) {
-			Raptor.getInstance().onError(e.getMessage());
 		}
 
 		if (LOG.isInfoEnabled()) {
