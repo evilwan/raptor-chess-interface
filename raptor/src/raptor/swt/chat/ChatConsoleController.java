@@ -265,9 +265,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void onSpellCheck() {
+		if (!getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK))
+				return;
+		
 		String outputText = chatConsole.getOutputText().getText();
-		if (!getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)
-				|| outputText == null
+		if (outputText == null
 				|| outputText.length() == 0
 				|| (lastSpellCheckLine != null && lastSpellCheckLine
 						.equals(outputText))) {
