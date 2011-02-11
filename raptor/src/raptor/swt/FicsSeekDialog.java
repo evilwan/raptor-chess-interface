@@ -28,50 +28,90 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import raptor.Raptor;
-import raptor.international.MessageUtil;
-import raptor.international.Messages;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
-public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
+public class FicsSeekDialog extends Dialog implements PreferenceKeys {
+	public static final String OK = "ok";
+	public static final String CANCEL = "cancel";
+	public static final String ANY = "any";
+	public static final String RATING_BETWEEN = "ratingBetween";
+	public static final String X_MINUTES = "xMinutes";
+	public static final String X_SECONDS = "xSeconds";
+	public static final String NONE_SPECIFIED = "noneSpecified";
+	public static final String WHITE = "white";
+	public static final String BLACK = "black";
+	public static final String RATED = "rated";
+	public static final String MATCHES_FORMULA = "matchesFormula";
+	public static final String MANUAL = "manual";
+	public static final String UNTIMED = "untimed";
+	public static final String CHESS = "chess";
+	public static final String ATOMIC = "atomic";
+	public static final String CRAZYHOUSE = "crazyhouse";
+	public static final String FISCHER_RANDOM = "fischerRandom";
+	public static final String LOSERS = "losers";
+	public static final String PAWNS_ONLY = "pawnsOnly";
+	public static final String ODDS_PAWN = "pawnsOnly";
+	public static final String ODDS_ROOK = "oddsRook";
+	public static final String ODDS_KNIGHT = "oddsKnight";
+	public static final String ODDS_QUEEN = "oddsQueen";
+	public static final String SUICIDE = "suicide";
+	public static final String WILD_0 = "wild0";
+	public static final String WILD_1 = "wild1";
+	public static final String WILD_2 = "wild2";
+	public static final String WILD_3 = "wild3";
+	public static final String WILD_4 = "wild4";
+	public static final String WILD_5 = "wild5";
+	public static final String WILD_8 = "wild8";
+	public static final String WILD_8a = "wild8a";
+
+	public static final String FicsSeekDialog_Title = "FicsSeekDialog.title";
+	public static final String FicsSeekDialog_GameType = "FicsSeekDialog.gameType";
+	public static final String FicsSeekDialog_Minutes = "FicsSeekDialog.minutes";
+	public static final String FicsSeekDialog_Inc = "FicsSeekDialog.inc";
+	public static final String FicsSeekDialog_Rating = "FicsSeekDialog.rating";
+	public static final String FicsSeekDialog_Color = "FicsSeekDialog.color";
+	
 	protected String result = null;
+	protected static L10n local = L10n.getInstance();
 	protected static final String[][] GAME_TYPE = {
-			{ MessageUtil.getMessage(CHESS), "" },
-			{ MessageUtil.getMessage(ATOMIC), "atomic" },
-			{ MessageUtil.getMessage(CRAZYHOUSE), "zh" },
-			{ MessageUtil.getMessage(FISCHER_RANDOM), "wild fr" },
-			{ MessageUtil.getMessage(LOSERS), "losers" },
-			{ MessageUtil.getMessage(PAWNS_ONLY), "pawns pawns-only" },
-			{ MessageUtil.getMessage(ODDS_PAWN), "odds pawn" },
-			{ MessageUtil.getMessage(ODDS_KNIGHT), "odds knight" },
-			{ MessageUtil.getMessage(ODDS_ROOK), "odds rook" },
-			{ MessageUtil.getMessage(ODDS_QUEEN), "odds queen" },
-			{ MessageUtil.getMessage(SUICIDE), "suicide" },
-			{ MessageUtil.getMessage(WILD_0), "wild 0" },
-			{ MessageUtil.getMessage(WILD_1), "wild 1" },
-			{ MessageUtil.getMessage(WILD_2), "wild 2" },
-			{ MessageUtil.getMessage(WILD_3), "wild 3" },
-			{ MessageUtil.getMessage(WILD_4), "wild 4" },
-			{ MessageUtil.getMessage(WILD_5),
+			{ local.getString(CHESS), "" },
+			{ local.getString(ATOMIC), "atomic" },
+			{ local.getString(CRAZYHOUSE), "zh" },
+			{ local.getString(FISCHER_RANDOM), "wild fr" },
+			{ local.getString(LOSERS), "losers" },
+			{ local.getString(PAWNS_ONLY), "pawns pawns-only" },
+			{ local.getString(ODDS_PAWN), "odds pawn" },
+			{ local.getString(ODDS_KNIGHT), "odds knight" },
+			{ local.getString(ODDS_ROOK), "odds rook" },
+			{ local.getString(ODDS_QUEEN), "odds queen" },
+			{ local.getString(SUICIDE), "suicide" },
+			{ local.getString(WILD_0), "wild 0" },
+			{ local.getString(WILD_1), "wild 1" },
+			{ local.getString(WILD_2), "wild 2" },
+			{ local.getString(WILD_3), "wild 3" },
+			{ local.getString(WILD_4), "wild 4" },
+			{ local.getString(WILD_5),
 					"wild 5" },
-			{ MessageUtil.getMessage(WILD_8), "wild 8" },
-			{ MessageUtil.getMessage(WILD_8a), "wild 8a" }, };
+			{ local.getString(WILD_8), "wild 8" },
+			{ local.getString(WILD_8a), "wild 8a" }, };
 
-	protected static final String[][] MINUTES = { { MessageUtil.getMessage(UNTIMED), "0" },
-			{ MessageUtil.getMessage(X_MINUTES,0), "0" }, { MessageUtil.getMessage(X_MINUTES,1), "1" }, { MessageUtil.getMessage(X_MINUTES,2), "2" },
-			{ MessageUtil.getMessage(X_MINUTES,3), "3" }, { MessageUtil.getMessage(X_MINUTES,4), "4" }, { MessageUtil.getMessage(X_MINUTES,5), "5" },
-			{ MessageUtil.getMessage(X_MINUTES,10), "10" }, { MessageUtil.getMessage(X_MINUTES,15), "15" },
-			{ MessageUtil.getMessage(X_MINUTES,30), "30" }, { MessageUtil.getMessage(X_MINUTES,45), "45" },
-			{ MessageUtil.getMessage(X_MINUTES,60), "60" }, { MessageUtil.getMessage(X_MINUTES,90), "90" },
-			{ MessageUtil.getMessage(X_MINUTES,120), "120" } };
+	protected static final String[][] MINUTES = { { local.getString(UNTIMED), "0" },
+			{ local.getString(X_MINUTES,0), "0" }, { local.getString(X_MINUTES,1), "1" }, { local.getString(X_MINUTES,2), "2" },
+			{ local.getString(X_MINUTES,3), "3" }, { local.getString(X_MINUTES,4), "4" }, { local.getString(X_MINUTES,5), "5" },
+			{ local.getString(X_MINUTES,10), "10" }, { local.getString(X_MINUTES,15), "15" },
+			{ local.getString(X_MINUTES,30), "30" }, { local.getString(X_MINUTES,45), "45" },
+			{ local.getString(X_MINUTES,60), "60" }, { local.getString(X_MINUTES,90), "90" },
+			{ local.getString(X_MINUTES,120), "120" } };
 
-	protected static final String[][] INC = { { MessageUtil.getMessage(X_SECONDS,0), "0" },
-			{ MessageUtil.getMessage(X_SECONDS,1), "1" }, { MessageUtil.getMessage(X_SECONDS,2), "2" }, { MessageUtil.getMessage(X_SECONDS,3), "3" },
-			{ MessageUtil.getMessage(X_SECONDS,4), "4" }, { MessageUtil.getMessage(X_SECONDS,5), "5" }, { MessageUtil.getMessage(X_SECONDS,10), "10" },
-			{ MessageUtil.getMessage(X_SECONDS,12), "12" }, { MessageUtil.getMessage(X_SECONDS,15), "15" },
-			{ MessageUtil.getMessage(X_SECONDS,30), "30" }, { MessageUtil.getMessage(X_SECONDS,45), "45" },
-			{ MessageUtil.getMessage(X_SECONDS,60), "60" }, { MessageUtil.getMessage(X_SECONDS,90), "90" } };
+	protected static final String[][] INC = { { local.getString(X_SECONDS,0), "0" },
+			{ local.getString(X_SECONDS,1), "1" }, { local.getString(X_SECONDS,2), "2" }, { local.getString(X_SECONDS,3), "3" },
+			{ local.getString(X_SECONDS,4), "4" }, { local.getString(X_SECONDS,5), "5" }, { local.getString(X_SECONDS,10), "10" },
+			{ local.getString(X_SECONDS,12), "12" }, { local.getString(X_SECONDS,15), "15" },
+			{ local.getString(X_SECONDS,30), "30" }, { local.getString(X_SECONDS,45), "45" },
+			{ local.getString(X_SECONDS,60), "60" }, { local.getString(X_SECONDS,90), "90" } };
 
-	protected static final String[][] FROM_RANGE = { { MessageUtil.getMessage(ANY), "Any" },
+	protected static final String[][] FROM_RANGE = { { local.getString(ANY), "Any" },
 			{ "0000", "0" }, { "500", "500" }, { "600", "600" },
 			{ "700", "700" }, { "800", "800" }, { "900", "900" },
 			{ "1000", "1000" }, { "1100", "1100" }, { "1200", "1200" },
@@ -82,7 +122,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 			{ "2600", "2600" }, { "2700", "2700" }, { "2800", "2800" },
 			{ "2900", "2900" } };
 
-	protected static final String[][] TO_RANGE = { { MessageUtil.getMessage(ANY), "Any" },
+	protected static final String[][] TO_RANGE = { { local.getString(ANY), "Any" },
 			{ "600", "600" }, { "700", "700" }, { "800", "800" },
 			{ "900", "900" }, { "1000", "1000" }, { "1100", "1100" },
 			{ "1200", "1200" }, { "1300", "1300" }, { "1400", "1400" },
@@ -93,14 +133,14 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 			{ "2800", "2800" }, { "2900", "2900" }, { "3000", "3000" },
 			{ "4000", "4000" }, { "9999", "9999" } };
 
-	protected static final String[][] COLOR = { { MessageUtil.getMessage(NONE_SPECIFIED), "" },
-			{ MessageUtil.getMessage(WHITE), "w" }, { MessageUtil.getMessage(BLACK), "b" } };
+	protected static final String[][] COLOR = { { local.getString(NONE_SPECIFIED), "" },
+			{ local.getString(WHITE), "w" }, { local.getString(BLACK), "b" } };
 
 	protected Shell shell;
 
 	public FicsSeekDialog(Shell parent) {
 		super(parent, SWT.DIALOG_TRIM | SWT.RESIZE);
-		setText(MessageUtil.getMessage(FicsSeekDialog_Title));
+		setText(local.getString(FicsSeekDialog_Title));
 	}
 
 	/**
@@ -134,7 +174,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 		composite.setLayout(new GridLayout(4, false));
 
 		Label gameTypeLabel = new Label(composite, SWT.NONE);
-		gameTypeLabel.setText(MessageUtil.getMessage(FicsSeekDialog_GameType));
+		gameTypeLabel.setText(local.getString(FicsSeekDialog_GameType));
 		gameTypeLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
 
@@ -152,7 +192,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 				false, 4, 1));
 
 		Label minutesLabel = new Label(timeComposite, SWT.NONE);
-		minutesLabel.setText(MessageUtil.getMessage(FicsSeekDialog_Minutes));
+		minutesLabel.setText(local.getString(FicsSeekDialog_Minutes));
 
 		final Combo minutesCombo = new Combo(timeComposite, SWT.BORDER
 				| SWT.READ_ONLY);
@@ -160,7 +200,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 		setValue(minutesCombo, MINUTES, FICS_SEEK_MINUTES);
 
 		Label secondsLabel = new Label(timeComposite, SWT.NONE);
-		secondsLabel.setText(MessageUtil.getMessage(FicsSeekDialog_Inc));
+		secondsLabel.setText(local.getString(FicsSeekDialog_Inc));
 
 		final Combo secondsCombo = new Combo(timeComposite, SWT.BORDER
 				| SWT.READ_ONLY);
@@ -179,7 +219,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 		setValue(ratingGreaterThanCombo, FROM_RANGE, FICS_SEEK_MIN_RATING);
 
 		Label ratingRangeLabel = new Label(ratingRangeComposite, SWT.NONE);
-		ratingRangeLabel.setText(MessageUtil.getMessage(FicsSeekDialog_Rating));
+		ratingRangeLabel.setText(local.getString(FicsSeekDialog_Rating));
 
 		final Combo ratingLessThanCombo = new Combo(ratingRangeComposite,
 				SWT.BORDER | SWT.READ_ONLY);
@@ -193,7 +233,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 				false, 4, 1));
 
 		Label colorLabel = new Label(colorComposite, SWT.NONE);
-		colorLabel.setText(MessageUtil.getMessage(FicsSeekDialog_Color));
+		colorLabel.setText(local.getString(FicsSeekDialog_Color));
 
 		final Combo colorCombo = new Combo(colorComposite, SWT.BORDER
 				| SWT.READ_ONLY);
@@ -201,21 +241,21 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 		setValue(colorCombo, COLOR, FICS_SEEK_COLOR);
 
 		final Button ratedButton = new Button(composite, SWT.CHECK);
-		ratedButton.setText(MessageUtil.getMessage(RATED));
+		ratedButton.setText(local.getString(RATED));
 		ratedButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 4, 1));
 		ratedButton.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(FICS_SEEK_RATED));
 
 		final Button formulaButton = new Button(composite, SWT.CHECK);
-		formulaButton.setText(MessageUtil.getMessage(MATCHES_FORMULA));
+		formulaButton.setText(local.getString(MATCHES_FORMULA));
 		formulaButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 4, 1));
 		formulaButton.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(FICS_SEEK_FORMULA));
 
 		final Button manualButton = new Button(composite, SWT.CHECK);
-		manualButton.setText(MessageUtil.getMessage(MANUAL));
+		manualButton.setText(local.getString(MANUAL));
 		manualButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 4, 1));
 		manualButton.setSelection(Raptor.getInstance().getPreferences()
@@ -227,7 +267,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 				true, false, 4, 1));
 
 		Button okButton = new Button(actionButtonComposite, SWT.PUSH);
-		okButton.setText(MessageUtil.getMessage(OK));
+		okButton.setText(local.getString(OK));
 		okButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -288,7 +328,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys,Messages {
 		});
 
 		Button cancel = new Button(actionButtonComposite, SWT.PUSH);
-		cancel.setText(MessageUtil.getMessage(CANCEL));
+		cancel.setText(local.getString(CANCEL));
 		cancel.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}

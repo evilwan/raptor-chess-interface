@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="MacCocoa64" />
 
-	<property name="version" value="v98RC4f2" />
+	<property name="version" value="v98RC4f3" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -95,6 +95,12 @@
 			<fileset dir=".">
 				<include name="bsd-new-license.txt" />
 				<include name="bsd-new-license.html" />
+			</fileset>
+		</copy>
+
+		<copy todir="${classes.dir}/raptor/international" overwrite="true">
+			<fileset dir="${src.dir}/raptor/international">
+				<include name="*.properties" />
 			</fileset>
 		</copy>
 

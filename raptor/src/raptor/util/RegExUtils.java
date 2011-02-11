@@ -15,6 +15,7 @@ package raptor.util;
 
 import java.util.regex.Pattern;
 
+import raptor.international.L10n;
 import raptor.util.RaptorLogger;
  
 
@@ -34,7 +35,7 @@ public class RegExUtils {
 	}
 
 	public static String getRegularExpressionHelpHtml() {
-		StringBuilder builder = new StringBuilder(5000);
+		/*StringBuilder builder = new StringBuilder(5000);
 		builder.append("<html>\n<body>\n");
 		builder.append("<h1>Raptor Regular Expressions</h1>\n");
 		builder
@@ -55,7 +56,8 @@ public class RegExUtils {
 						+ " <p>For futher information on regular expressions in java check out: <br/>"
 						+ "<a href=\"http://java.sun.com/j2se/1.5.0/docs/api/java/util/regex/Pattern.html\">java.util.regex.Pattern</a></p>");
 		builder.append("</body></html>");
-		return builder.toString();
+		return builder.toString();*/
+		return L10n.getInstance().getString("regexHelp");
 	}
 
 	public static boolean matches(Pattern pattern, String stringToTest) {
