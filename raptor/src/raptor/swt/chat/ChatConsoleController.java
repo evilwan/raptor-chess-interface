@@ -216,8 +216,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected Runnable spellCheckRunnable = new Runnable() {
 		public void run() {
-			if (!isDisposed && chatConsole != null && !chatConsole.isDisposed()
-					&& isActive) {
+			if (!isDisposed
+					&& chatConsole != null
+					&& !chatConsole.isDisposed()
+					&& isActive
+					&& (getPreferences()
+							.getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK))) {
 				Raptor.getInstance().getDisplay().asyncExec(
 						new RaptorRunnable() {
 							@Override
@@ -257,7 +261,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				&& getConnector().isLikelyCommandPrecedingPersonName(
 						previousWord)) {
 			return true;
-		} else {
+		} else if (!getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK))
+			return true;
+		else {
 			return getConnector().isLikelyCommandPrecedingPersonName(word)
 					|| getConnector().isInAutoComplete(word)
 					|| DictionaryService.getInstance().isValidWord(word);
@@ -2241,36 +2247,41 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				chatConsole.outputText.paste();
 			}
 		});
+		
+		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
+			new MenuItem(menu, SWT.SEPARATOR);
+			MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
+			showWordsThatStartWithAction.setText("Show words that start with '"
+					+ word + "'");
+			showWordsThatStartWithAction.addListener(SWT.Selection,
+					new Listener() {
+						public void handleEvent(Event e) {
+							String[] words = DictionaryService.getInstance()
+									.getWordsThatStartWith(finalWord);
+							StringBuilder output = new StringBuilder(2000);
 
-		new MenuItem(menu, SWT.SEPARATOR);
-		MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
-		showWordsThatStartWithAction.setText("Show words that start with '"
-				+ word + "'");
-		showWordsThatStartWithAction.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event e) {
-				String[] words = DictionaryService.getInstance()
-						.getWordsThatStartWith(finalWord);
-				StringBuilder output = new StringBuilder(2000);
-
-				if (words == null || words.length == 0) {
-					output.append("No words found.");
-				} else {
-					output.append("Words starting with " + finalWord + ":\n");
-					int count = 0;
-					for (int i = 0; i < words.length; i++) {
-						output.append(StringUtils.rightPad(words[i], 20));
-						count++;
-						if (count == 3) {
-							output.append("\n");
-							count = 0;
+							if (words == null || words.length == 0) {
+								output.append("No words found.");
+							} else {
+								output.append("Words starting with "
+										+ finalWord + ":\n");
+								int count = 0;
+								for (int i = 0; i < words.length; i++) {
+									output.append(StringUtils.rightPad(
+											words[i], 20));
+									count++;
+									if (count == 3) {
+										output.append("\n");
+										count = 0;
+									}
+								}
+							}
+							onAppendChatEventToInputText(new ChatEvent(null,
+									ChatType.INTERNAL, output.toString()));
 						}
-					}
-				}
-				onAppendChatEventToInputText(new ChatEvent(null,
-						ChatType.INTERNAL, output.toString()));
-			}
-		});
-
+					});
+		}
+		
 		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)
 				&& word != null && !isSpelledCorrectly(null, word)) {
 
