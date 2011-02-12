@@ -19,6 +19,7 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Image;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 public abstract class AbstractLayout implements Layout {
@@ -40,17 +41,23 @@ public abstract class AbstractLayout implements Layout {
 	}
 
 	protected void addAdjusmentsToClearConnectorLayoutInfo() {
-		preferenceAdjustments.put("fics-Primary-"
+		preferenceAdjustments.put("fics-"
+				+ L10n.getInstance().getString("prim") + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
-		preferenceAdjustments.put("fics-Secondary-"
+		preferenceAdjustments.put("fics-"
+				+ L10n.getInstance().getString("second") + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
-		preferenceAdjustments.put("fics-Tertiary-"
+		preferenceAdjustments.put("fics-"
+				+ L10n.getInstance().getString("tert") + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
-		preferenceAdjustments.put("bics-Primary-"
+		preferenceAdjustments.put("bics-"
+				+ L10n.getInstance().getString("prim") + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
-		preferenceAdjustments.put("bics-Secondary-"
+		preferenceAdjustments.put("bics-"
+				+ L10n.getInstance().getString("second") + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
-		preferenceAdjustments.put("bics-Tertiary-"
+		preferenceAdjustments.put("bics-"
+				+ L10n.getInstance().getString("tert") + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
 	}
 

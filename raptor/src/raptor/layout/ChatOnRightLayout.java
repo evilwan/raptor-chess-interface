@@ -14,12 +14,13 @@
 package raptor.layout;
 
 import raptor.Quadrant;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorStringUtils;
 
 public class ChatOnRightLayout  extends AbstractLayout {
 	public ChatOnRightLayout() {
-		super(null, "Console on right");
+		super(null, L10n.getInstance().getString("consRight"));
 
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,

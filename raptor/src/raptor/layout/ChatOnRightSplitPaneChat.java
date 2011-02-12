@@ -14,12 +14,13 @@
 package raptor.layout;
 
 import raptor.Quadrant;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorStringUtils;
 
 public class ChatOnRightSplitPaneChat extends AbstractLayout {
 	public ChatOnRightSplitPaneChat() {
-		super(null, "Console on right (Split pane consoles)");
+		super(null, L10n.getInstance().getString("splitConsRight"));
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,
 				Quadrant.I.toString());

@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
+import raptor.international.L10n;
 import raptor.swt.InputDialog;
 
 /**
@@ -219,7 +220,7 @@ public abstract class ListEditor extends FieldEditor {
 	 * text the user entered is returned.
 	 */
 	public String promptForText(final String question) {
-		InputDialog dialog = new InputDialog(getShell(), "Enter Text", question,true);
+		InputDialog dialog = new InputDialog(getShell(), L10n.getInstance().getString("entText"), question,true);
 		return dialog.open();
 	}
 
@@ -230,7 +231,7 @@ public abstract class ListEditor extends FieldEditor {
 	 * @answer the initial text to place in the users answer.
 	 */
 	public String promptForText(final String question, String answer) {
-		InputDialog dialog = new InputDialog(getShell(), "Enter Text", question,true);
+		InputDialog dialog = new InputDialog(getShell(), L10n.getInstance().getString("entText"), question,true);
 		if (answer != null) {
 			dialog.setInput(answer);
 		}

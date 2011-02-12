@@ -14,12 +14,13 @@
 package raptor.layout;
 
 import raptor.Quadrant;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorStringUtils;
 
 public class ClassicLayout extends AbstractLayout {
 	public ClassicLayout() {
-		super(null, "Console on bottom");
+		super(null, L10n.getInstance().getString("consBottom"));
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,
 				Quadrant.IX.toString());

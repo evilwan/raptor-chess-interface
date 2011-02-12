@@ -14,13 +14,14 @@
 package raptor.layout;
 
 import raptor.Quadrant;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.chess.layout.TopBottomOrientedLayout;
 import raptor.util.RaptorStringUtils;
 
 public class BughouseButtonsRightLayout extends AbstractLayout {
 	public BughouseButtonsRightLayout() {
-		super(null, "Buttons on right of boards");
+		super(null, L10n.getInstance().getString("bugRight"));
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,
 				Quadrant.IV.toString());

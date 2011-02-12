@@ -14,12 +14,13 @@
 package raptor.layout;
 
 import raptor.Quadrant;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorStringUtils;
 
 public class ClassicSplitPaneChatLayout extends AbstractLayout {
 	public ClassicSplitPaneChatLayout() {
-		super(null, "Console on bottom (Split pane consoles)");
+		super(null, L10n.getInstance().getString("splitConsBottom"));
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,
 				Quadrant.IX.toString());
