@@ -60,6 +60,7 @@ public interface PreferenceKeys {
 	public static final String APP_PING_COLOR = "app-lag-color";
 	public static final String APP_PING_FONT = "app-lag-font";
 	public static final String APP_SASH_WIDTH = "app-sash-width";
+	public static final String APP_SHOW_STATUS_BAR = "app-show-status-bar";
 	public static final String APP_SOUND_ENABLED = "sound-enabled";
 	public static final String APP_STATUS_BAR_COLOR = "app-starus-bar-color";
 	public static final String APP_STATUS_BAR_FONT = "app-status-bar-font";

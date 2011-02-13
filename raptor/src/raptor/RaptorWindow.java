@@ -284,10 +284,8 @@ public class RaptorWindow extends ApplicationWindow {
 				Control currentSelectionToolbar = null;
 				if (currentSelection != null) {
 					if (LOG.isDebugEnabled()) {
-						LOG
-								.debug("In updateToolbar selected RaptorWindowItem="
-										+ currentSelection.raptorItem
-										+ " quad=" + quad);
+						LOG.debug("In updateToolbar selected RaptorWindowItem="
+								+ currentSelection.raptorItem + " quad=" + quad);
 					}
 
 					currentSelectionToolbar = currentSelection.raptorItem
@@ -384,10 +382,8 @@ public class RaptorWindow extends ApplicationWindow {
 
 		public void onMoveTo(RaptorTabFolder newParent, int index) {
 			if (!raptorItem.getControl().isReparentable()) {
-				Raptor
-						.getInstance()
-						.alert(
-								"You can only move between quadrants if reparenting is supported in your SWT environment.");
+				Raptor.getInstance()
+						.alert("You can only move between quadrants if reparenting is supported in your SWT environment.");
 			} else {
 				// This code is quite tricky and must happen in an exact order
 				// or subtle issues occur with tool bars.
@@ -467,8 +463,7 @@ public class RaptorWindow extends ApplicationWindow {
 							public void execute() {
 
 								if (LOG.isDebugEnabled()) {
-									LOG
-											.debug("Item changed, updating text,title,showClose");
+									LOG.debug("Item changed, updating text,title,showClose");
 								}
 								try {
 									setText(item.getTitle());
@@ -479,10 +474,9 @@ public class RaptorWindow extends ApplicationWindow {
 									}
 								} catch (SWTException swt) {
 									if (LOG.isDebugEnabled()) {
-										LOG
-												.debug(
-														"Error handling item state changed:",
-														swt);
+										LOG.debug(
+												"Error handling item state changed:",
+												swt);
 									}
 									// Just eat it. It is probably a
 									// widget is
@@ -772,8 +766,8 @@ public class RaptorWindow extends ApplicationWindow {
 							&& item.getController() instanceof ChannelController) {
 						ChannelController controller = (ChannelController) item
 								.getController();
-						if (StringUtils.equalsIgnoreCase(controller
-								.getChannel(), channel)) {
+						if (StringUtils.equalsIgnoreCase(
+								controller.getChannel(), channel)) {
 							result = true;
 							break;
 						}
@@ -890,7 +884,8 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Returns true if atleast one window item of the specified type is being
 	 * managed.
 	 */
-	public boolean containsWindowItems(@SuppressWarnings("rawtypes") Class windowItemClass) {
+	public boolean containsWindowItems(
+			@SuppressWarnings("rawtypes") Class windowItemClass) {
 		boolean result = false;
 		synchronized (itemsManaged) {
 			for (RaptorTabItem currentTabItem : itemsManaged) {
@@ -1052,8 +1047,8 @@ public class RaptorWindow extends ApplicationWindow {
 					ChessBoardWindowItem item = (ChessBoardWindowItem) folder
 							.getRaptorTabItemAt(i).raptorItem;
 					if (!(item.getController() instanceof InactiveController)
-							&& item.getController().getGame().getId().equals(
-									gameId)) {
+							&& item.getController().getGame().getId()
+									.equals(gameId)) {
 						result = item;
 						break;
 					}
@@ -1125,7 +1120,8 @@ public class RaptorWindow extends ApplicationWindow {
 	 *            The window item class.
 	 * @return The result.
 	 */
-	public RaptorWindowItem[] getSelectedWindowItems(@SuppressWarnings("rawtypes") Class windowItemClass) {
+	public RaptorWindowItem[] getSelectedWindowItems(
+			@SuppressWarnings("rawtypes") Class windowItemClass) {
 		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
 		synchronized (itemsManaged) {
 			for (RaptorTabItem currentTabItem : itemsManaged) {
@@ -1172,7 +1168,8 @@ public class RaptorWindow extends ApplicationWindow {
 	 *            The window item class.
 	 * @return The result.
 	 */
-	public RaptorWindowItem[] getWindowItems(@SuppressWarnings("rawtypes") Class windowItemClass) {
+	public RaptorWindowItem[] getWindowItems(
+			@SuppressWarnings("rawtypes") Class windowItemClass) {
 		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
 
 		synchronized (itemsManaged) {
@@ -1202,8 +1199,7 @@ public class RaptorWindow extends ApplicationWindow {
 				if (currentTabItem.raptorItem instanceof RaptorConnectorWindowItem) {
 					RaptorConnectorWindowItem connectorItem = (RaptorConnectorWindowItem) currentTabItem.raptorItem;
 					if (connectorItem.getConnector() == connector) {
-						result
-								.add((RaptorConnectorWindowItem) currentTabItem.raptorItem);
+						result.add((RaptorConnectorWindowItem) currentTabItem.raptorItem);
 					}
 				}
 			}
@@ -1254,7 +1250,8 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	public void setPingTime(final Connector connectorToSet, final long pingTime) {
 		if (Raptor.getInstance().isShutdown()
-				|| Raptor.getInstance().isDisposed()) {
+				|| Raptor.getInstance().isDisposed() || zoomCombo == null
+				|| statusBar == null) {
 			return;
 		}
 
@@ -1282,8 +1279,8 @@ public class RaptorWindow extends ApplicationWindow {
 						label.setFont(Raptor.getInstance().getPreferences()
 								.getFont(PreferenceKeys.APP_PING_FONT, false));
 						label.setForeground(Raptor.getInstance()
-								.getPreferences().getColor(
-										PreferenceKeys.APP_PING_COLOR));
+								.getPreferences()
+								.getColor(PreferenceKeys.APP_PING_COLOR));
 						label.setToolTipText("An estimate of ping time.");
 						createZoomCombo();
 						statusBar.layout(true, true);
@@ -1321,8 +1318,7 @@ public class RaptorWindow extends ApplicationWindow {
 		getShell().getDisplay().syncExec(new RaptorRunnable() {
 			@Override
 			public void execute() {
-				statusLabel
-						.setText(StringUtils.defaultString(newStatusMessage));
+				statusLabel.setText(StringUtils.defaultString(newStatusMessage));
 			}
 		});
 	}
@@ -1427,8 +1423,8 @@ public class RaptorWindow extends ApplicationWindow {
 	@Override
 	protected Control createContents(Composite parent) {
 		getShell().setText(
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.APP_NAME));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.APP_NAME));
 		getShell().setImage(
 				Raptor.getInstance().getImage(
 						Raptor.RESOURCES_DIR + "images/raptorIcon.gif"));
@@ -1562,7 +1558,7 @@ public class RaptorWindow extends ApplicationWindow {
 			@Override
 			public void run() {
 				BrowserUtils
-				.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/AdditionalChessSets");
+						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/AdditionalChessSets");
 			}
 		});
 		fileMenu.add(new Action("Install chess set") {
@@ -1777,8 +1773,7 @@ public class RaptorWindow extends ApplicationWindow {
 		raptorHelp.add(new Action("&Regular Expressions") {
 			@Override
 			public void run() {
-				BrowserUtils
-						.openHtml(RegExUtils.getRegularExpressionHelpHtml());
+				BrowserUtils.openHtml(RegExUtils.getRegularExpressionHelpHtml());
 			}
 		});
 		raptorHelp.add(new Action("&Scripting") {
@@ -1939,22 +1934,25 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Creates the status bar controls.
 	 */
 	protected void createStatusBarControls() {
-		statusBar = new Composite(windowComposite, SWT.NONE);
-		statusBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-				2, 1));
-		GridLayout statusBarLayout = SWTUtils.createMarginlessGridLayout(20,
-				false);
-		statusBar.setLayout(statusBarLayout);
+		if (Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.APP_SHOW_STATUS_BAR)) {
+			statusBar = new Composite(windowComposite, SWT.NONE);
+			statusBar.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+					false, 2, 1));
+			GridLayout statusBarLayout = SWTUtils.createMarginlessGridLayout(
+					20, false);
+			statusBar.setLayout(statusBarLayout);
 
-		statusLabel = new Label(statusBar, SWT.NONE);
-		statusLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
-				false));
-		statusLabel.setFont(Raptor.getInstance().getPreferences().getFont(
-				PreferenceKeys.APP_STATUS_BAR_FONT, false));
-		statusLabel.setForeground(Raptor.getInstance().getPreferences()
-				.getColor(PreferenceKeys.APP_STATUS_BAR_COLOR));
+			statusLabel = new Label(statusBar, SWT.NONE);
+			statusLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
+					false));
+			statusLabel.setFont(Raptor.getInstance().getPreferences()
+					.getFont(PreferenceKeys.APP_STATUS_BAR_FONT, false));
+			statusLabel.setForeground(Raptor.getInstance().getPreferences()
+					.getColor(PreferenceKeys.APP_STATUS_BAR_COLOR));
 
-		createZoomCombo();
+			createZoomCombo();
+		}
 	}
 
 	protected void createZoomCombo() {
@@ -1997,14 +1995,14 @@ public class RaptorWindow extends ApplicationWindow {
 				if (StringUtils.isNotBlank(selection)) {
 					selection = selection.substring(0, selection.length() - 1);
 					double resize = Integer.parseInt(selection) / 100.0;
-					Raptor.getInstance().getPreferences().setValue(
-							PreferenceKeys.APP_ZOOM_FACTOR, resize);
+					Raptor.getInstance().getPreferences()
+							.setValue(PreferenceKeys.APP_ZOOM_FACTOR, resize);
 				}
 
 			}
 		});
-		zoomCombo.setFont(Raptor.getInstance().getPreferences().getFont(
-				PreferenceKeys.APP_STATUS_BAR_FONT, false));
+		zoomCombo.setFont(Raptor.getInstance().getPreferences()
+				.getFont(PreferenceKeys.APP_STATUS_BAR_FONT, false));
 	}
 
 	protected RaptorTabFolder getFolderContainingCursor() {
@@ -2031,12 +2029,11 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected void handleShellCloseEvent() {
-		
+
 		for (RaptorConnectorWindowItem item : getWindowItems(ConnectorService
 				.getInstance().getConnector("fics"))) {
 			if (item instanceof ChessBoardWindowItem)
-				if (((ChessBoardWindowItem) item).getController() 
-						instanceof PlayingController) {
+				if (((ChessBoardWindowItem) item).getController() instanceof PlayingController) {
 					if (!Raptor.getInstance().confirm(
 							"Do you really want to exit?"))
 						return;
@@ -2389,15 +2386,12 @@ public class RaptorWindow extends ApplicationWindow {
 						if (canMove) {
 							dragStartItem.onMoveTo(dropFolder);
 						} else {
-							Raptor
-									.getInstance()
-									.alert(
-											"You can't move this item to quadrant "
-													+ dropFolder.quad
-													+ ". You can only move it to quadrants: "
-													+ Arrays
-															.toString(dragStartItem.raptorItem
-																	.getMoveToQuadrants()));
+							Raptor.getInstance()
+									.alert("You can't move this item to quadrant "
+											+ dropFolder.quad
+											+ ". You can only move it to quadrants: "
+											+ Arrays.toString(dragStartItem.raptorItem
+													.getMoveToQuadrants()));
 						}
 					} else if (dropFolder != null
 							&& dropFolder == dragStartItem.raptorParent) {

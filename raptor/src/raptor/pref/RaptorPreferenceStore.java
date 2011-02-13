@@ -430,6 +430,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_IS_LOGGING_CONSOLE, false);
 		setDefault(APP_IS_LOGGING_PERSON_TELLS, false);
 		setDefault(APP_IS_LOGGING_CHANNEL_TELLS, false);
+		setDefault(PreferenceKeys.APP_SHOW_STATUS_BAR,false);
 
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));

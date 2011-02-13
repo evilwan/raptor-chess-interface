@@ -13,6 +13,7 @@
  */
 package raptor.pref.page;
 
+import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -59,6 +60,11 @@ public class RaptorWindowPage extends FieldEditorPreferencePage {
 				PreferenceKeys.APP_STATUS_BAR_FONT, "Status Bar Font",
 				getFieldEditorParent());
 		addField(statusBarFont);
+		
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.APP_SHOW_STATUS_BAR,
+				"Show window status bar (Requires restart to take effect.)",
+				getFieldEditorParent()));
 
 	}
 }
