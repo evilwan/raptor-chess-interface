@@ -890,8 +890,7 @@ public class RaptorWindow extends ApplicationWindow {
 	 * Returns true if atleast one window item of the specified type is being
 	 * managed.
 	 */
-	@SuppressWarnings("unchecked")
-	public boolean containsWindowItems(Class windowItemClass) {
+	public boolean containsWindowItems(@SuppressWarnings("rawtypes") Class windowItemClass) {
 		boolean result = false;
 		synchronized (itemsManaged) {
 			for (RaptorTabItem currentTabItem : itemsManaged) {
@@ -1126,8 +1125,7 @@ public class RaptorWindow extends ApplicationWindow {
 	 *            The window item class.
 	 * @return The result.
 	 */
-	@SuppressWarnings("unchecked")
-	public RaptorWindowItem[] getSelectedWindowItems(Class windowItemClass) {
+	public RaptorWindowItem[] getSelectedWindowItems(@SuppressWarnings("rawtypes") Class windowItemClass) {
 		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
 		synchronized (itemsManaged) {
 			for (RaptorTabItem currentTabItem : itemsManaged) {
@@ -1174,8 +1172,7 @@ public class RaptorWindow extends ApplicationWindow {
 	 *            The window item class.
 	 * @return The result.
 	 */
-	@SuppressWarnings("unchecked")
-	public RaptorWindowItem[] getWindowItems(Class windowItemClass) {
+	public RaptorWindowItem[] getWindowItems(@SuppressWarnings("rawtypes") Class windowItemClass) {
 		List<RaptorWindowItem> result = new ArrayList<RaptorWindowItem>(10);
 
 		synchronized (itemsManaged) {

@@ -603,6 +603,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUG_ARENA_TEAMS_INDEX, 0);
 		setDefault(BUG_ARENA_TEAMS_IS_RATED, true);
 		setDefault(BUG_ARENA_SELECTED_TAB, 0);
+		setDefault(BUG_ARENA_HI_LOW_INDEX,0);
+		setDefault(BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP,true);
+		
 
 		setDefault(SEEK_OUTPUT_TYPE, SeekType.FormulaFiltered.toString());
 
@@ -714,7 +717,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS, true);
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES, false);
 		setDefault(CHAT_UNDERLINE_COMMANDS, true);
-		setDefault(CHAT_COMMAND_LINE_SPELL_CHECK, false);
+		setDefault(CHAT_COMMAND_LINE_SPELL_CHECK, true);
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,

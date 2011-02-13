@@ -16,12 +16,9 @@ package raptor.script;
 import java.util.Comparator;
 import java.util.regex.Pattern;
 
-import raptor.util.RaptorLogger;
- 
-
 import raptor.Raptor;
 import raptor.chat.ChatType;
-import raptor.util.RegExUtils;
+import raptor.util.RaptorLogger;
 import bsh.Interpreter;
 
 /**

@@ -15,7 +15,6 @@ package raptor.service;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -28,14 +27,14 @@ import java.util.Properties;
 
 import raptor.Raptor;
 import raptor.action.RaptorAction;
-import raptor.action.RaptorActionFactory;
-import raptor.action.ScriptedAction;
-import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.Category;
 import raptor.action.RaptorAction.CategoryNameComparator;
 import raptor.action.RaptorAction.ContainerOrderComparator;
 import raptor.action.RaptorAction.NameComparator;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.action.RaptorActionFactory;
+import raptor.action.ScriptedAction;
+import raptor.action.SeparatorAction;
 import raptor.util.RaptorLogger;
 
 /**

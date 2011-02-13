@@ -19,7 +19,6 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.page.ChessBoardPage.ChessBoardPageBooleanFieldEditor;
 import raptor.swt.chess.UserMoveInputMode;
 
 public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {

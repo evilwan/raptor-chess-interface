@@ -373,6 +373,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 										PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP)) {
 					SWTUtils.openBugButtonsWindowItem(this);
 				}
+				if (getPreferences()
+								.getBoolean(
+										PreferenceKeys.BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP)) {
+					SWTUtils.openBugWhoWindowItem(this);
+				}
+				
 			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
 				isSimulBugConnector = false;
 				simulBugPartnerName = null;

@@ -41,6 +41,11 @@ public class BughousePage extends FieldEditorPreferencePage {
 				PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD,
 				"Auto open partners board on games I play",
 				getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP,
+				"Auto open bug who tab when I have a partner.",
+				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND,

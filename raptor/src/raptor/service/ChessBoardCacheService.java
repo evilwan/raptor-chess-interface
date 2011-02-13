@@ -25,7 +25,6 @@ import raptor.chess.GameFactory;
 import raptor.chess.Variant;
 import raptor.swt.chess.ChessBoard;
 import raptor.swt.chess.ChessBoardController;
-import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.controller.InactiveController;
 import raptor.util.RaptorLogger;
 

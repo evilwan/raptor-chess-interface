@@ -93,7 +93,6 @@ public class ChessSetInstallDialog extends Dialog {
 		shell.layout();
 
 		ThreadService.getInstance().scheduleOneShot(250, new Runnable() {
-			@SuppressWarnings("unchecked")
 			public void run() {
 				try {
 					// start work
@@ -110,6 +109,7 @@ public class ChessSetInstallDialog extends Dialog {
 								}
 							});
 
+					@SuppressWarnings("rawtypes")
 					Enumeration entries = zipFile.entries();
 					boolean isValid = true;
 					String invalidEntryName = "";

@@ -67,9 +67,10 @@ import raptor.alias.TimedCommandAlias;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.util.RaptorLogger;
 
+@SuppressWarnings("deprecation")
 public class AliasService {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(AliasService.class);
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
 			AddExtendedCensorAlias.class, AddTabAlias.class,AddTagAlias.class,
@@ -98,11 +99,10 @@ public class AliasService {
 
 	List<RaptorAlias> aliases = new ArrayList<RaptorAlias>(20);
 
-	@SuppressWarnings("unchecked")
 	private AliasService() {
 		try {
 			long startTime = System.currentTimeMillis();
-			for (Class clazz : ALIASES) {
+			for (@SuppressWarnings("rawtypes") Class clazz : ALIASES) {
 				aliases.add((RaptorAlias) clazz.newInstance());
 			}
 			Collections.sort(aliases);

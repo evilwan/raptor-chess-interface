@@ -34,7 +34,7 @@ public class CreateClassActions {
 	 * @param packageName
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	public static Class[] getClasses(String packageName) {
 		List<Class> result = new ArrayList<Class>(50);
 		String name = packageName;
@@ -69,10 +69,10 @@ public class CreateClassActions {
 		return result.toArray(new Class[0]);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static void main(String args[]) throws Exception {
+		@SuppressWarnings("rawtypes")
 		Class[] classes = getClasses("raptor.action.chat");
-		for (Class clazz : classes) {
+		for (@SuppressWarnings("rawtypes") Class clazz : classes) {
 			RaptorAction action = (RaptorAction) clazz.newInstance();
 			Properties properties = RaptorActionFactory.save(action);
 
@@ -87,7 +87,7 @@ public class CreateClassActions {
 		}
 
 		classes = getClasses("raptor.action.game");
-		for (Class clazz : classes) {
+		for (@SuppressWarnings("rawtypes") Class clazz : classes) {
 			RaptorAction action = (RaptorAction) clazz.newInstance();
 			Properties properties = RaptorActionFactory.save(action);
 

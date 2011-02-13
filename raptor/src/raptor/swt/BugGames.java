@@ -120,7 +120,7 @@ public class BugGames extends Composite {
 		bugGamesTable.sort(2);
 
 		Composite buttonsComposite = new Composite(this, SWT.NONE);
-		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
+		buttonsComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true,
 				false));
 		buttonsComposite.setLayout(new RowLayout());
 

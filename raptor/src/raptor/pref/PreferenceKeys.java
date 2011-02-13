@@ -90,6 +90,7 @@ public interface PreferenceKeys {
 	public static final String BUG_ARENA_PARTNERS_INDEX = "bughouse-arena-partners-index";
 	public static final String BUG_ARENA_MAX_PARTNERS_INDEX = "bughouse-arena-max-partners-index";
 	public static final String BUG_ARENA_TEAMS_INDEX = "bughouse-arena-teams-index";
+	public static final String BUG_ARENA_HI_LOW_INDEX = "bughouse-arena-hi-low-index";
 	public static final String BUG_ARENA_TEAMS_IS_RATED = "bughosue-arena-teams-is-rated";
 	public static final String BUG_ARENA_SELECTED_TAB = "bughosue-arena-selectedTab";
 
@@ -268,6 +269,7 @@ public interface PreferenceKeys {
 	public static final String FICS_PROFILE = "fics-profile";
 	public static final String FICS_CLOSE_TABS_ON_DISCONNECT = "fics-close-tabs-on-disconnect";
 	public static final String FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP = "fics-show-bug-buttons-on-partnership";
+	public static final String BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP = "bughouse-show-bug-who-on-partnership";
 	public static final String FICS_GAME_COMMANDS = "fics-games-commands";
 	public static final String FICS_CHANNEL_COMMANDS = "fics-channel-commands";
 	public static final String FICS_PERSON_COMMANDS = "fics-person-commands";

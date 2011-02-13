@@ -55,6 +55,7 @@ public class BrowserUtils {
 		String osName = System.getProperty("os.name");
 		try {
 			if (osName.startsWith("Mac OS")) {
+				@SuppressWarnings("rawtypes")
 				Class fileMgr = Class.forName("com.apple.eio.FileManager");
 				Method openURL = fileMgr.getDeclaredMethod("openURL",
 						new Class[] { String.class });

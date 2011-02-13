@@ -69,11 +69,9 @@ public class BugPartners extends Composite {
 				ThreadService
 						.getInstance()
 						.scheduleOneShot(
-								Raptor
-										.getInstance()
+								Raptor.getInstance()
 										.getPreferences()
-										.getInt(
-												PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
+										.getInt(PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
 								this);
 			}
 		}
@@ -112,8 +110,8 @@ public class BugPartners extends Composite {
 		setLayout(new GridLayout(1, false));
 
 		Composite ratingFilterComposite = new Composite(this, SWT.NONE);
-		ratingFilterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false));
+		ratingFilterComposite.setLayoutData(new GridData(SWT.CENTER,
+				SWT.CENTER, true, false));
 		ratingFilterComposite.setLayout(new RowLayout());
 		minAvailablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
@@ -129,9 +127,12 @@ public class BugPartners extends Composite {
 					}
 
 					public void widgetSelected(SelectionEvent e) {
-						Raptor.getInstance().getPreferences().setValue(
-								PreferenceKeys.BUG_ARENA_PARTNERS_INDEX,
-								minAvailablePartnersFilter.getSelectionIndex());
+						Raptor.getInstance()
+								.getPreferences()
+								.setValue(
+										PreferenceKeys.BUG_ARENA_PARTNERS_INDEX,
+										minAvailablePartnersFilter
+												.getSelectionIndex());
 						Raptor.getInstance().getPreferences().save();
 						refreshTable();
 					}
@@ -152,9 +153,12 @@ public class BugPartners extends Composite {
 					}
 
 					public void widgetSelected(SelectionEvent e) {
-						Raptor.getInstance().getPreferences().setValue(
-								PreferenceKeys.BUG_ARENA_MAX_PARTNERS_INDEX,
-								maxAvailablePartnersFilter.getSelectionIndex());
+						Raptor.getInstance()
+								.getPreferences()
+								.setValue(
+										PreferenceKeys.BUG_ARENA_MAX_PARTNERS_INDEX,
+										maxAvailablePartnersFilter
+												.getSelectionIndex());
 						Raptor.getInstance().getPreferences().save();
 						refreshTable();
 					}
@@ -199,8 +203,8 @@ public class BugPartners extends Composite {
 		});
 
 		Composite buttonsComposite = new Composite(this, SWT.NONE);
-		buttonsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
-				false));
+		buttonsComposite.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER,
+				true, false));
 		buttonsComposite.setLayout(new RowLayout());
 
 		Button partnerSelected = new Button(buttonsComposite, SWT.PUSH);
@@ -240,7 +244,10 @@ public class BugPartners extends Composite {
 				synchronized (table.getTable()) {
 					TableItem[] items = table.getTable().getItems();
 					for (TableItem item : items) {
-						service.getConnector().onPartner(item.getText(1));
+						if (!service.getConnector().getUserName()
+								.equalsIgnoreCase(item.getText(2))) {
+							service.getConnector().onPartner(item.getText(1));
+						}
 					}
 				}
 			}
@@ -256,11 +263,9 @@ public class BugPartners extends Composite {
 			ThreadService
 					.getInstance()
 					.scheduleOneShot(
-							Raptor
-									.getInstance()
+							Raptor.getInstance()
 									.getPreferences()
-									.getInt(
-											PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
+									.getInt(PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
 							timer);
 		}
 

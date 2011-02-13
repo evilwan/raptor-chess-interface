@@ -27,12 +27,10 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Raptor;
 import raptor.chat.BugGame;
@@ -41,8 +39,8 @@ import raptor.chat.Partnership;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
-import raptor.service.ThreadService;
 import raptor.service.BughouseService.BughouseServiceListener;
+import raptor.service.ThreadService;
 import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.swt.chat.ChatUtils;
 import raptor.util.RaptorRunnable;
@@ -50,9 +48,11 @@ import raptor.util.RaptorRunnable;
 public class BugTeams extends Composite {
 	protected BughouseService service;
 	protected Combo availablePartnershipsFilter;
+	protected Combo matchHighLowBoth;
 	protected RaptorTable player1Table;
 	protected RaptorTable player2Table;
 	protected boolean isActive = false;
+	protected Button isRated;
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
@@ -61,11 +61,9 @@ public class BugTeams extends Composite {
 				ThreadService
 						.getInstance()
 						.scheduleOneShot(
-								Raptor
-										.getInstance()
+								Raptor.getInstance()
 										.getPreferences()
-										.getInt(
-												PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
+										.getInt(PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
 								this);
 			}
 		}
@@ -103,43 +101,7 @@ public class BugTeams extends Composite {
 	public void init() {
 		setLayout(new GridLayout(1, false));
 
-		Composite ratingFilterComposite = new Composite(this, SWT.NONE);
-		ratingFilterComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
-				true, false));
-		ratingFilterComposite.setLayout(new RowLayout());
-		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText("Team Rating >=");
-		availablePartnershipsFilter = new Combo(ratingFilterComposite,
-				SWT.DROP_DOWN | SWT.READ_ONLY);
-		availablePartnershipsFilter.add("0");
-		availablePartnershipsFilter.add("1000");
-		availablePartnershipsFilter.add("2000");
-		availablePartnershipsFilter.add("2500");
-		availablePartnershipsFilter.add("3000");
-		availablePartnershipsFilter.add("3200");
-		availablePartnershipsFilter.add("3400");
-		availablePartnershipsFilter.add("3600");
-		availablePartnershipsFilter.add("3800");
-		availablePartnershipsFilter.add("4000");
-		availablePartnershipsFilter.add("4200");
-		availablePartnershipsFilter.add("4400");
-		availablePartnershipsFilter.select(Raptor.getInstance()
-				.getPreferences().getInt(PreferenceKeys.BUG_ARENA_TEAMS_INDEX));
-		availablePartnershipsFilter
-				.addSelectionListener(new SelectionListener() {
-					public void widgetDefaultSelected(SelectionEvent e) {
-					}
-
-					public void widgetSelected(SelectionEvent e) {
-						Raptor.getInstance().getPreferences()
-								.setValue(
-										PreferenceKeys.BUG_ARENA_TEAMS_INDEX,
-										availablePartnershipsFilter
-												.getSelectionIndex());
-						Raptor.getInstance().getPreferences().save();
-						refreshTable();
-					}
-				});
+	
 
 		Composite tableComposite = new Composite(this, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
@@ -171,7 +133,7 @@ public class BugTeams extends Composite {
 
 		player2Table = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		player2Table.addColumn("Rating", SWT.LEFT, 20, false, null);
+		player2Table.addColumn("Elo", SWT.LEFT, 20, false, null);
 		player2Table.addColumn("Name", SWT.LEFT, 45, false, null);
 		player2Table.addColumn("Status", SWT.LEFT, 35, false, null);
 		player2Table.addRaptorTableListener(new RaptorTableAdapter() {
@@ -194,20 +156,84 @@ public class BugTeams extends Composite {
 			}
 
 		});
+		
 
-		final Button isRated = new Button(BugTeams.this, SWT.CHECK);
+
+		isRated = new Button(BugTeams.this, SWT.CHECK);
 		isRated.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, true, false));
 		isRated.setText("Match Rated");
-		isRated.setSelection(Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.BUG_ARENA_TEAMS_IS_RATED));
+		isRated.setSelection(Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.BUG_ARENA_TEAMS_IS_RATED));
 		isRated.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				Raptor.getInstance().getPreferences().setValue(
-						PreferenceKeys.BUG_ARENA_TEAMS_IS_RATED,
-						isRated.getSelection());
+				Raptor.getInstance()
+						.getPreferences()
+						.setValue(PreferenceKeys.BUG_ARENA_TEAMS_IS_RATED,
+								isRated.getSelection());
+			}
+		});
+		
+		Composite controlsComposite = new Composite(BugTeams.this, SWT.NONE);
+		controlsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
+				false));
+		controlsComposite.setLayout(new GridLayout(4, false));
+		
+		CLabel label = new CLabel(controlsComposite, SWT.LEFT);
+		label.setText("Team Rating >=");
+		availablePartnershipsFilter = new Combo(controlsComposite,
+				SWT.DROP_DOWN | SWT.READ_ONLY);
+		availablePartnershipsFilter.add("0");
+		availablePartnershipsFilter.add("1000");
+		availablePartnershipsFilter.add("2000");
+		availablePartnershipsFilter.add("2500");
+		availablePartnershipsFilter.add("3000");
+		availablePartnershipsFilter.add("3200");
+		availablePartnershipsFilter.add("3400");
+		availablePartnershipsFilter.add("3600");
+		availablePartnershipsFilter.add("3800");
+		availablePartnershipsFilter.add("4000");
+		availablePartnershipsFilter.add("4200");
+		availablePartnershipsFilter.add("4400");
+		availablePartnershipsFilter.select(Raptor.getInstance()
+				.getPreferences().getInt(PreferenceKeys.BUG_ARENA_TEAMS_INDEX));
+		availablePartnershipsFilter
+				.addSelectionListener(new SelectionListener() {
+					public void widgetDefaultSelected(SelectionEvent e) {
+					}
+
+					public void widgetSelected(SelectionEvent e) {
+						Raptor.getInstance()
+								.getPreferences()
+								.setValue(
+										PreferenceKeys.BUG_ARENA_TEAMS_INDEX,
+										availablePartnershipsFilter
+												.getSelectionIndex());
+						Raptor.getInstance().getPreferences().save();
+						refreshTable();
+					}
+				});
+
+		CLabel label2 = new CLabel(controlsComposite, SWT.LEFT);
+		label2.setText("Match: ");
+		matchHighLowBoth = new Combo(controlsComposite, SWT.DROP_DOWN
+				| SWT.READ_ONLY);
+		matchHighLowBoth.add("High vs High");
+		matchHighLowBoth.add("High vs Low");
+		matchHighLowBoth.add("Both High and Low");
+		matchHighLowBoth.select(Raptor.getInstance().getPreferences()
+				.getInt(PreferenceKeys.BUG_ARENA_HI_LOW_INDEX));
+		matchHighLowBoth.addSelectionListener(new SelectionListener() {
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				Raptor.getInstance()
+						.getPreferences()
+						.setValue(PreferenceKeys.BUG_ARENA_HI_LOW_INDEX,
+								matchHighLowBoth.getSelectionIndex());
 			}
 		});
 
@@ -233,10 +259,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						service.getConnector().matchBughouse(
-								player1Table.getTable().getItem(
-										selectedIndexes[i]).getText(1),
-								isRated.getSelection(), 1, 0);
+						match(true, i, 1, 0);
 						matchedSomeone = true;
 					}
 
@@ -244,10 +267,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						service.getConnector().matchBughouse(
-								player2Table.getTable().getItem(
-										selectedIndexes[i]).getText(1),
-								isRated.getSelection(), 1, 0);
+						match(false, i, 1, 0);
 						matchedSomeone = true;
 					}
 				}
@@ -273,10 +293,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						service.getConnector().matchBughouse(
-								player1Table.getTable().getItem(
-										selectedIndexes[i]).getText(1),
-								isRated.getSelection(), 2, 0);
+						match(true, i, 2, 0);
 						matchedSomeone = true;
 					}
 
@@ -284,10 +301,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						service.getConnector().matchBughouse(
-								player2Table.getTable().getItem(
-										selectedIndexes[i]).getText(1),
-								isRated.getSelection(), 2, 0);
+						match(false, i, 2, 0);
 						matchedSomeone = true;
 					}
 				}
@@ -313,10 +327,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						service.getConnector().matchBughouse(
-								player1Table.getTable().getItem(
-										selectedIndexes[i]).getText(1),
-								isRated.getSelection(), 3, 0);
+						match(true, i, 3, 0);
 						matchedSomeone = true;
 					}
 
@@ -324,10 +335,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						service.getConnector().matchBughouse(
-								player2Table.getTable().getItem(
-										selectedIndexes[i]).getText(1),
-								isRated.getSelection(), 3, 0);
+						match(false, i, 3, 0);
 						matchedSomeone = true;
 					}
 				}
@@ -350,19 +358,7 @@ public class BugTeams extends Composite {
 
 			public void widgetSelected(SelectionEvent e) {
 				synchronized (player1Table) {
-					TableItem[] table1Items = player1Table.getTable()
-							.getItems();
-					for (TableItem item : table1Items) {
-						service.getConnector().matchBughouse(item.getText(1),
-								isRated.getSelection(), 1, 0);
-					}
-
-					TableItem[] table2Items = player2Table.getTable()
-							.getItems();
-					for (TableItem item : table2Items) {
-						service.getConnector().matchBughouse(item.getText(1),
-								isRated.getSelection(), 1, 0);
-					}
+					matchAll(1, 0);
 				}
 			}
 		});
@@ -375,19 +371,8 @@ public class BugTeams extends Composite {
 
 			public void widgetSelected(SelectionEvent e) {
 				synchronized (player1Table) {
-					TableItem[] table1Items = player1Table.getTable()
-							.getItems();
-					for (TableItem item : table1Items) {
-						service.getConnector().matchBughouse(item.getText(1),
-								isRated.getSelection(), 2, 0);
-					}
+					matchAll(2, 0);
 
-					TableItem[] table2Items = player2Table.getTable()
-							.getItems();
-					for (TableItem item : table2Items) {
-						service.getConnector().matchBughouse(item.getText(1),
-								isRated.getSelection(), 2, 0);
-					}
 				}
 			}
 
@@ -400,25 +385,103 @@ public class BugTeams extends Composite {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
-				synchronized (player1Table) {
-					TableItem[] table1Items = player1Table.getTable()
-							.getItems();
-					for (TableItem item : table1Items) {
-						service.getConnector().matchBughouse(item.getText(1),
-								isRated.getSelection(), 3, 0);
-					}
-
-					TableItem[] table2Items = player2Table.getTable()
-							.getItems();
-					for (TableItem item : table2Items) {
-						service.getConnector().matchBughouse(item.getText(1),
-								isRated.getSelection(), 3, 0);
-					}
-				}
+				matchAll(3, 0);
 			}
 		});
 		service.refreshAvailablePartnerships();
 		refreshTable();
+	}
+
+	private void matchAll(int time, int inc) {
+		synchronized (player1Table) {
+			String matchHighLow = matchHighLowBoth.getText();
+			boolean isUserHigh = isUserHigh();
+			int items = player1Table.getTable().getItems().length;
+
+			for (int i = 0; i < items; i++) {
+				if ("High vs High".equals(matchHighLow)) {
+					if (isHigh(true, i) && isUserHigh) {
+						match(true, i, time, inc);
+					} else {
+						match(false, i, time, inc);
+
+					}
+				} else if ("High vs Low".equals(matchHighLow)) {
+					if (!isHigh(true, i) && isUserHigh) {
+						match(true, i, time, inc);
+					} else {
+						match(false, i, time, inc);
+
+					}
+				} else {
+					match(true, i, time, inc);
+					match(false, i, time, inc);
+				}
+			}
+		}
+	}
+
+	private boolean isUserHigh() {
+		int userRow = -1;
+		boolean result = false;
+
+		synchronized (player1Table) {
+			int items = player1Table.getTable().getItems().length;
+			for (int i = 0; userRow == -1 && i < items; i++) {
+				if (player1Table.getTable().getItems()[i].getText(1)
+						.equalsIgnoreCase(service.getConnector().getUserName())) {
+					userRow = i;
+					result = isHigh(true, i);
+				}
+			}
+
+			if (userRow == -1) {
+				for (int i = 0; userRow == -1 && i < items; i++) {
+					if (player2Table.getTable().getItems()[i].getText(1)
+							.equalsIgnoreCase(
+									service.getConnector().getUserName())) {
+						userRow = i;
+						result = isHigh(false, i);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	private boolean isHigh(boolean isTable1, int row) {
+		String player1Elo = player1Table.getRowText(row)[0];
+		String player2Elo = player2Table.getRowText(row)[0];
+
+		int player1EloInt = 0;
+		int player2EloInt = 0;
+
+		try {
+			player1EloInt = Integer.parseInt(player1Elo);
+		} catch (NumberFormatException e) {
+		}
+		try {
+			player2EloInt = Integer.parseInt(player2Elo);
+		} catch (NumberFormatException e2) {
+		}
+		
+		return isTable1 ? player1EloInt > player2EloInt
+				: player2EloInt > player1EloInt;
+	}
+
+	private void match(boolean isTable1, int row, int time, int inc) {
+		String player1Name = player1Table.getRowText(row)[1];
+		String player2Name = player2Table.getRowText(row)[1];
+
+		String userName = service.getConnector().getUserName();
+
+		if (!userName.equalsIgnoreCase(player1Name)
+				&& !userName.equalsIgnoreCase(player2Name)) {
+			service.getConnector().matchBughouse(
+					isTable1 ? player1Name : player2Name,
+					isRated.getSelection(), time, inc);
+		}
+
 	}
 
 	public void onActivate() {
@@ -428,11 +491,9 @@ public class BugTeams extends Composite {
 			ThreadService
 					.getInstance()
 					.scheduleOneShot(
-							Raptor
-									.getInstance()
+							Raptor.getInstance()
 									.getPreferences()
-									.getInt(
-											PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
+									.getInt(PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL) * 1000,
 							timer);
 		}
 

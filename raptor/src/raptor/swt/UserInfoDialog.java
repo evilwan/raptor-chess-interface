@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+
 import raptor.Raptor;
-import raptor.connector.ics.IcsConnector;
 
 public class UserInfoDialog extends Dialog {
 	
