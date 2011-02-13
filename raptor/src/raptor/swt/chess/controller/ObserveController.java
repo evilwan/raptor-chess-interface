@@ -405,7 +405,7 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public void userMouseWheeled(int count) {
-		if (count > 0) {
+		if (count < 0) {
 			onForward();
 		} else {
 			onBack();

@@ -545,7 +545,7 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void userMouseWheeled(int count) {
-		if (count > 0) {
+		if (count < 0) {
 			onForward();
 		} else {
 			onBack();
