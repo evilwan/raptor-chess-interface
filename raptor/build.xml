@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="MacCocoa64" />
 
-	<property name="version" value="v98RC4f3" />
+	<property name="version" value="v98RC5" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -151,22 +151,6 @@
 		</zip>
 	</target>
 
-	<target name="linuxPPCZip" depends="init" description="Builds the Raptor.zip for linux PPC.">
-		<delete dir="${install.dir}" />
-		<property name="swtEnv" value="LinuxPPC_GTK2" />
-
-		<antcall target="install" />
-
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
-
-		<zip destfile="${uploads.dir}/Raptor_${version}_LinuxPPC_GTK2.zip">
-			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
-				<include name="**/*" />
-				<exclude name="Thumbs.db" />
-				<exclude name=".svn" />
-			</zipfileset>
-		</zip>
-	</target>
 
 	<target name="Linux_x86Zip" depends="init" description="Builds the Raptor.zip for linux x86.">
 		<delete dir="${install.dir}" />
@@ -193,36 +177,6 @@
 		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Linux_x86_64_GTK2.zip">
-			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
-				<include name="**/*" />
-				<exclude name="Thumbs.db" />
-				<exclude name=".svn" />
-			</zipfileset>
-		</zip>
-	</target>
-
-	<target name="Solaris10_SPARC_GTK2Zip" depends="init" description="Builds the Raptor zip for Solaris10 SPARC.">
-		<delete dir="${install.dir}" />
-		<property name="swtEnv" value="Solaris10_SPARC_GTK2" />
-
-		<antcall target="install" />
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
-		<zip destfile="${uploads.dir}/Raptor_${version}_Solaris10_SPARC_GTK2.zip">
-			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
-				<include name="**/*" />
-				<exclude name="Thumbs.db" />
-				<exclude name=".svn" />
-			</zipfileset>
-		</zip>
-	</target>
-
-	<target name="Solaris10_x86_GTK2Zip" depends="init" description="Builds the Raptor zip for Solaris10 x86.">
-		<delete dir="${install.dir}" />
-		<property name="swtEnv" value="Solaris10_x86_GTK2" />
-
-		<antcall target="install" />
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
-		<zip destfile="${uploads.dir}/Raptor_${version}_Solaris10_x86_GTK2.zip">
 			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
 				<include name="**/*" />
 				<exclude name="Thumbs.db" />
@@ -453,20 +407,11 @@
 		<ant antfile="build.xml" target="windows64Zip">
 			<property name="swtEnv" value="Windows64" />
 		</ant>
-		<ant antfile="build.xml" target="linuxPPCZip">
-			<property name="swtEnv" value="LinuxPPC_GTK2" />
-		</ant>
 		<ant antfile="build.xml" target="Linux_x86Zip">
 			<property name="swtEnv" value="Linux_x86_GTK2" />
 		</ant>
 		<ant antfile="build.xml" target="Linux_x86_64Zip">
 			<property name="swtEnv" value="Linux_x86_64_GTK2" />
-		</ant>
-		<ant antfile="build.xml" target="Solaris10_SPARC_GTK2Zip">
-			<property name="swtEnv" value="Solaris10_SPARC_GTK2" />
-		</ant>
-		<ant antfile="build.xml" target="Solaris10_x86_GTK2Zip">
-			<property name="swtEnv" value="Solaris10_x86_GTK2" />
 		</ant>
 	</target>
 
