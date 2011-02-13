@@ -259,7 +259,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						match(true, i, 1, 0);
+						match(true, selectedIndexes[i], 1, 0);
 						matchedSomeone = true;
 					}
 
@@ -267,7 +267,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						match(false, i, 1, 0);
+						match(false, selectedIndexes[i], 1, 0);
 						matchedSomeone = true;
 					}
 				}
@@ -293,7 +293,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						match(true, i, 2, 0);
+						match(true, selectedIndexes[i], 2, 0);
 						matchedSomeone = true;
 					}
 
@@ -301,7 +301,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						match(false, i, 2, 0);
+						match(false, selectedIndexes[i], 2, 0);
 						matchedSomeone = true;
 					}
 				}
@@ -327,7 +327,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						match(true, i, 3, 0);
+						match(true, selectedIndexes[i], 3, 0);
 						matchedSomeone = true;
 					}
 
@@ -335,7 +335,7 @@ public class BugTeams extends Composite {
 							.getSelectionIndices();
 
 					for (int i = 0; i < selectedIndexes.length; i++) {
-						match(false, i, 3, 0);
+						match(false, selectedIndexes[i], 3, 0);
 						matchedSomeone = true;
 					}
 				}
