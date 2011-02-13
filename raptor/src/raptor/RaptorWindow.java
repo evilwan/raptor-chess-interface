@@ -1579,13 +1579,15 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 
-		fileMenu.add(new Separator());
-		fileMenu.add(new Action("Preferences") {
-			@Override
-			public void run() {
-				PreferenceUtils.launchPreferenceDialog();
-			}
-		});
+		if (!OSUtils.isLikelyOSXCocoa()) {
+			fileMenu.add(new Separator());
+			fileMenu.add(new Action("Preferences") {
+				@Override
+				public void run() {
+					PreferenceUtils.launchPreferenceDialog();
+				}
+			});
+		}
 
 		String osName = System.getProperty("os.name");
 		if (!osName.startsWith("Mac OS")) {
@@ -1698,22 +1700,26 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	public void buildHelpMenu(MenuManager helpMenu) {
-		helpMenu.add(new Action(getPreferences().getString(
-				PreferenceKeys.APP_NAME)) {
-			@Override
-			public void run() {
-				SoundService.getInstance().play(
-						Raptor.RESOURCES_DIR + "sounds/misc/raptorRoar.wav");
-			}
-		});
 
-		helpMenu.add(new Action("&Raptor Home Page") {
-			@Override
-			public void run() {
-				BrowserUtils
-						.openUrl("http://code.google.com/p/raptor-chess-interface/");
-			}
-		});
+		if (!OSUtils.isLikelyOSXCocoa()) {
+			helpMenu.add(new Action(getPreferences().getString(
+					PreferenceKeys.APP_NAME)) {
+				@Override
+				public void run() {
+					SoundService.getInstance()
+							.play(Raptor.RESOURCES_DIR
+									+ "sounds/misc/raptorRoar.wav");
+				}
+			});
+
+			helpMenu.add(new Action("&Raptor Home Page") {
+				@Override
+				public void run() {
+					BrowserUtils
+							.openUrl("http://code.google.com/p/raptor-chess-interface/");
+				}
+			});
+		}
 		helpMenu.add(new Action("&License") {
 			@Override
 			public void run() {
@@ -1870,6 +1876,33 @@ public class RaptorWindow extends ApplicationWindow {
 
 		buildHelpMenu(helpMenu);
 		menuBar.add(helpMenu);
+
+		if (OSUtils.isLikelyOSXCocoa()) {
+			try {
+				CocoaUIEnhancer enhancer = new CocoaUIEnhancer(getPreferences()
+						.getString(PreferenceKeys.APP_NAME));
+				enhancer.hookApplicationMenu(Raptor.getInstance().getDisplay(),
+						new Listener() {
+							public void handleEvent(Event event) {
+								Raptor.getInstance().shutdown();
+							}
+						}, new org.eclipse.jface.action.Action() {
+							@Override
+							public void run() {
+								BrowserUtils
+										.openUrl("http://code.google.com/p/raptor-chess-interface/");
+							}
+						}, new org.eclipse.jface.action.Action() {
+							@Override
+							public void run() {
+								PreferenceUtils.launchPreferenceDialog();
+							}
+						});
+			} catch (Throwable t) {
+				// Just eat it for now.
+			}
+
+		}
 
 		return menuBar;
 	}

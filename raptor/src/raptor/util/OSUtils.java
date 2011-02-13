@@ -16,6 +16,7 @@ package raptor.util;
 public class OSUtils {
 	protected static boolean isLikelyLinux = false;
 	protected static boolean isLikelyOSX = false;
+	protected static boolean isLikelyOSXCocoa = false;
 	protected static boolean isLikelyWindows = false;
 	protected static boolean isLikelyWindowsXP = false;
 	protected static boolean isLikelyWindows7 = false;
@@ -24,6 +25,12 @@ public class OSUtils {
 		String osName = System.getProperty("os.name");
 		if (osName.startsWith("Mac OS")) {
 			isLikelyOSX = true;
+			
+			if (System.getProperty("os.version").startsWith("10.6") ||
+					System.getProperty("os.version").startsWith("10.5"))
+			{
+				isLikelyOSXCocoa = true;
+			}
 		} else if (osName.startsWith("Windows")) {
 			isLikelyWindows = true;
 			isLikelyWindowsXP = osName.contains("XP");
@@ -31,6 +38,10 @@ public class OSUtils {
 		} else {
 			isLikelyLinux = true;
 		}
+	}
+	
+	public static boolean isLikelyOSXCocoa() {
+		return isLikelyOSXCocoa;
 	}
 
 	public static boolean isLikelyLinux() {

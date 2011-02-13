@@ -166,6 +166,11 @@ public class Raptor implements PreferenceKeys {
 						
 						//Remove the old imageCache user directory if its there. (version .98)
 						FileUtils.deleteDir(new File(USER_RAPTOR_HOME_PATH + "/imagecache"));
+						
+						
+						
+						
+					  
 					} catch (Throwable t) {
 						Raptor.getInstance().onError(
 								"Error initializing Raptor", t);
