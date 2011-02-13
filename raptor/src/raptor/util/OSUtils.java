@@ -26,8 +26,7 @@ public class OSUtils {
 		if (osName.startsWith("Mac OS")) {
 			isLikelyOSX = true;
 			
-			if (System.getProperty("os.version").startsWith("10.6") ||
-					System.getProperty("os.version").startsWith("10.5"))
+			if (!System.getProperty("os.version").startsWith("10.4"))
 			{
 				isLikelyOSXCocoa = true;
 			}
