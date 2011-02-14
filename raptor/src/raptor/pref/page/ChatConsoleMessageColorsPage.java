@@ -18,32 +18,35 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
+	protected static L10n local = L10n.getInstance();
+	
 	public ChatConsoleMessageColorsPage() {
 		super(GRID);
-		setTitle("Message Colors");
+		setTitle(local.getString("mesCols"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		ColorFieldEditor defaultMessages = new ColorFieldEditor(
-				PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR, "Default Color:",
+				PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR, local.getString("defCol"),
 				getFieldEditorParent());
 		addField(defaultMessages);
 
 		ColorFieldEditor abortRequest = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.ABORT_REQUEST + "-color", "Abort Request:",
+						+ ChatType.ABORT_REQUEST + "-color", local.getString("abReq"),
 				getFieldEditorParent());
 		addField(abortRequest);
 
 		ColorFieldEditor ptellMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.PARTNER_TELL + "-color",
-				"Bughouse Partner Tell:", getFieldEditorParent());
+						"Bughouse Partner Tell:", getFieldEditorParent());
 		addField(ptellMessages);
 
 		addField(new ColorFieldEditor(
@@ -65,23 +68,23 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 
 		ColorFieldEditor drawRequest = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.DRAW_REQUEST + "-color", "Draw Request:",
+						+ ChatType.DRAW_REQUEST + "-color", local.getString("drawReq"),
 				getFieldEditorParent());
 		addField(drawRequest);
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.FINGER + "-color", "Finger Notes:",
+						+ ChatType.FINGER + "-color", local.getString("fingNot"),
 				getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.GAMES + "-color", "Games:",
+						+ ChatType.GAMES + "-color", local.getString("games"),
 				getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.HISTORY + "-color", "History:",
+						+ ChatType.HISTORY + "-color", local.getString("history"),
 				getFieldEditorParent()));
 
 		ColorFieldEditor kibitzMessages = new ColorFieldEditor(
@@ -93,7 +96,7 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 		addField(new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.NOTIFICATION_ARRIVAL + "-color",
-				"Notification:", getFieldEditorParent()));
+						local.getString("notification"), getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
@@ -103,18 +106,18 @@ public class ChatConsoleMessageColorsPage extends FieldEditorPreferencePage {
 		ColorFieldEditor gameEndStatistics = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.PLAYING_STATISTICS + "-color",
-				"Raptor Game Statistics Color:", getFieldEditorParent());
+						local.getString("rapGameStat"), getFieldEditorParent());
 		addField(gameEndStatistics);
 
 		ColorFieldEditor internalMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
 						+ ChatType.INTERNAL + "-color",
-				"Raptor Message Color:", getFieldEditorParent());
+						local.getString("rapMessCol"), getFieldEditorParent());
 		addField(internalMessages);
 
 		ColorFieldEditor outboundMessages = new ColorFieldEditor(
 				PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.OUTBOUND + "-color", "Sent Messages:",
+						+ ChatType.OUTBOUND + "-color", local.getString("sentMess"),
 				getFieldEditorParent());
 		addField(outboundMessages);
 

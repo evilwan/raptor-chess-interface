@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
+import raptor.international.L10n;
 import raptor.script.ChatEventScript;
 import raptor.script.ScriptConnectorType;
 import raptor.service.ScriptService;
@@ -59,11 +60,13 @@ public class ChatEventScripts extends PreferencePage {
 
 	protected Button saveButton;
 	protected Button deleteButton;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ChatEventScripts() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Chat Event Scripts");
+		setTitle(local.getString("chatEvScr"));
 	}
 
 	@Override
@@ -84,16 +87,8 @@ public class ChatEventScripts extends PreferencePage {
 				false, 3, 1));
 		textLabel
 				.setText(WordUtils
-						.wrap(
-								"\tChat event scripts are executed when a message is "
-										+ "received from the server that matches a given "
-										+ "chat event. Events received are called ChatEvents.",
-								70)
-						+ "\n\t context.getChatEvent().getMessage() Returns the entire contents of the message.\n"
-						+ "\t context.getChatEvent().getSource() Returns the user sending the message if applicable.\n"
-						+ "\t context.getChatEvent().getChannel() Returns the channel of the message if applicable.\n"
-						+ "\t context.getChatEvent().getGameId() Returns the gameId of the message if applicable.\n"
-						+ "See Help->Raptor Help->Raptor Scripting for more details.");
+						.wrap(local.getString("chatEvScrDesc"), 70)
+						+local.getString("chatScrEnvDesc"));
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
@@ -104,7 +99,7 @@ public class ChatEventScripts extends PreferencePage {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		activeScriptsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true));
-		activeScriptsTable.addColumn("Active Script Name", SWT.LEFT, 100, true,
+		activeScriptsTable.addColumn(local.getString("actScrName"), SWT.LEFT, 100, true,
 				null);
 		activeScriptsTable.getTable().addSelectionListener(
 				new SelectionAdapter() {
@@ -179,7 +174,7 @@ public class ChatEventScripts extends PreferencePage {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		inactiveScriptsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				true, true));
-		inactiveScriptsTable.addColumn("Inactive Script Name", SWT.LEFT, 100,
+		inactiveScriptsTable.addColumn(local.getString("inacScrName"), SWT.LEFT, 100,
 				true, null);
 		inactiveScriptsTable.getTable().addSelectionListener(
 				new SelectionAdapter() {
@@ -198,14 +193,14 @@ public class ChatEventScripts extends PreferencePage {
 		nameComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 		Label nameLabel = new Label(nameComposite, SWT.NONE);
-		nameLabel.setText("Name:");
+		nameLabel.setText(local.getString("name"));
 		nameLabel
 				.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		nameText = new Text(nameComposite, SWT.BORDER);
 		nameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 
 		isActiveButton = new Button(nameComposite, SWT.CHECK);
-		isActiveButton.setText("Active");
+		isActiveButton.setText(local.getString("active"));
 		isActiveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 
@@ -214,7 +209,7 @@ public class ChatEventScripts extends PreferencePage {
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
 		Label descriptionLabel = new Label(descriptionComposite, SWT.NONE);
-		descriptionLabel.setText("Description:");
+		descriptionLabel.setText(local.getString("description"));
 		descriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false));
 		descriptionText = new Text(descriptionComposite, SWT.BORDER);
@@ -226,7 +221,7 @@ public class ChatEventScripts extends PreferencePage {
 		controlsComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
 		Label connectorTypeLabel = new Label(controlsComposite, SWT.NONE);
-		connectorTypeLabel.setText("Connector Type:");
+		connectorTypeLabel.setText(local.getString("conType"));
 		connectorTypeCombo = new Combo(controlsComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
 		for (ScriptConnectorType scriptConnectorType : ScriptConnectorType
@@ -241,7 +236,7 @@ public class ChatEventScripts extends PreferencePage {
 		regularExpressionComposite.setLayoutData(new GridData(SWT.FILL,
 				SWT.CENTER, true, false, 3, 1));
 		Label regExLabel = new Label(regularExpressionComposite, SWT.NONE);
-		regExLabel.setText("Triggering Chat event:");
+		regExLabel.setText(local.getString("trigCharEv"));
 		regExLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				false, false, 3, 1));
 		chatEventCombo = new Combo(regularExpressionComposite, SWT.DROP_DOWN
@@ -266,7 +261,7 @@ public class ChatEventScripts extends PreferencePage {
 		scriptComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 		Label scriptLabel = new Label(scriptComposite, SWT.NONE);
-		scriptLabel.setText("Script:");
+		scriptLabel.setText(local.getString("script"));
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
 		script = new CLabel(scriptComposite, SWT.LEFT);
@@ -274,12 +269,12 @@ public class ChatEventScripts extends PreferencePage {
 		script.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
 		scriptEditor = new Button(scriptComposite, SWT.PUSH);
-		scriptEditor.setText("Edit");
+		scriptEditor.setText(local.getString("edit"));
 		scriptEditor.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ScriptEditorDialog dialog = new ScriptEditorDialog(getShell(),
-						"Edit script: " + nameText.getText());
+						local.getString("edScr") + nameText.getText());
 				dialog.setInput(script.getText());
 				String result = dialog.open();
 				if (StringUtils.isNotBlank(result)) {
@@ -293,7 +288,7 @@ public class ChatEventScripts extends PreferencePage {
 				false, 2, 1));
 		buttonComposite.setLayout(new RowLayout());
 		saveButton = new Button(buttonComposite, SWT.PUSH);
-		saveButton.setText("Save");
+		saveButton.setText(local.getString("save"));
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -302,12 +297,12 @@ public class ChatEventScripts extends PreferencePage {
 		});
 
 		deleteButton = new Button(buttonComposite, SWT.PUSH);
-		deleteButton.setText("Delete");
+		deleteButton.setText(local.getString("delete"));
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isBlank(nameText.getText())) {
-					Raptor.getInstance().alert("Name is required.");
+					Raptor.getInstance().alert(local.getString("nameIsReq"));
 					return;
 				}
 				ScriptService.getInstance().deleteChatEventScript(
@@ -354,15 +349,15 @@ public class ChatEventScripts extends PreferencePage {
 
 	protected void onSave() {
 		if (StringUtils.isBlank(nameText.getText())) {
-			Raptor.getInstance().alert("Name is required.");
+			Raptor.getInstance().alert(local.getString("nameIsReq"));
 			return;
 		}
 		if (StringUtils.isBlank(descriptionText.getText())) {
-			Raptor.getInstance().alert("Description is required.");
+			Raptor.getInstance().alert(local.getString("descIsReq"));
 			return;
 		}
 		if (StringUtils.isBlank(script.getText())) {
-			Raptor.getInstance().alert("Script is required.");
+			Raptor.getInstance().alert(local.getString("scrIsReq"));
 			return;
 		}
 
