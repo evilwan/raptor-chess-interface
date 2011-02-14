@@ -16,15 +16,15 @@ package raptor.swt.chess;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import raptor.util.RaptorLogger;
- 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,8 +42,8 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
 import raptor.action.RaptorAction;
-import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.action.SeparatorAction;
 import raptor.action.game.AutoBishopAction;
 import raptor.action.game.AutoDrawAction;
 import raptor.action.game.AutoKingAction;
@@ -79,13 +79,15 @@ import raptor.swt.chess.controller.InactiveController;
 import raptor.swt.chess.controller.ObserveController;
 import raptor.swt.chess.controller.ToolBarItemKey;
 import raptor.util.ImageUtil;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 
 public class ChessBoardUtils implements BoardConstants {
 	public static final String CHESS_SET_DIR = Raptor.RESOURCES_DIR + "set/";
 	public static final int DARK_IMAGE_INDEX = 1;
 	public static final int LIGHT_IMAGE_INDEX = 0;
-	private static final RaptorLogger LOG = RaptorLogger.getLog(ChessBoardUtils.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(ChessBoardUtils.class);
 	public static final String PIECE_IMAGE_SUFFIX = ".png";
 	public static final String SQUARE_BACKGROUND_DIR = Raptor.RESOURCES_DIR
 			+ "square/";
@@ -93,6 +95,7 @@ public class ChessBoardUtils implements BoardConstants {
 
 	public static final Object PGN_PREPEND_SYNCH = new Object();
 	private static Random RANDOM = new SecureRandom();
+	private static HashMap<String, List<Integer>> chessSetSizes = new HashMap<String, List<Integer>>();
 
 	public static void addActionsToToolbar(
 			final ChessBoardController controller,
@@ -152,8 +155,8 @@ public class ChessBoardUtils implements BoardConstants {
 		int colorlessPiece = ChessBoardUtils
 				.pieceFromColoredPiece(coloredPiece);
 
-		return new Move(toSquare, colorlessPiece, ChessBoardUtils
-				.isWhitePiece(coloredPiece) ? WHITE : BLACK);
+		return new Move(toSquare, colorlessPiece,
+				ChessBoardUtils.isWhitePiece(coloredPiece) ? WHITE : BLACK);
 	}
 
 	public static Move createMove(Game game, int fromSquare, int toSquare) {
@@ -199,6 +202,28 @@ public class ChessBoardUtils implements BoardConstants {
 		}
 	}
 
+	public static List<Integer> getSetPieceSizes(String setName) {
+		List<Integer> sizes = chessSetSizes.get(setName);
+		if (sizes == null) {
+			sizes = new ArrayList<Integer>(100);
+
+			File file = new File(CHESS_SET_DIR + setName);
+			File[] files = file.listFiles();
+			for (File currentFile : files) {
+				if (currentFile.isDirectory()) {
+					try {
+						int size = Integer.parseInt(currentFile.getName());
+						sizes.add(size);
+					} catch (NumberFormatException nfe) {
+					}
+				}
+			}
+			Collections.sort(sizes);
+			chessSetSizes.put(setName, sizes);
+		}
+		return sizes;
+	}
+
 	/**
 	 * Returns the image with the specified of the specified name,type,width and
 	 * height. If the image is in the localImageRegistry it is returned.
@@ -221,6 +246,18 @@ public class ChessBoardUtils implements BoardConstants {
 			Image image = Raptor.getInstance().getImageRegistry().get(key);
 
 			if (image == null) {
+				List<Integer> supportedSizes = getSetPieceSizes(name);
+				if (!supportedSizes.contains(size)) {
+					int lastSize = supportedSizes.get(0);
+					for (int currentSize : supportedSizes) {
+						if (currentSize > size) {
+							size = lastSize;
+							break;
+						}
+						lastSize = currentSize;
+					}
+				}
+
 				Image result = new Image(Display.getCurrent(), CHESS_SET_DIR
 						+ name + "/" + size + "/" + getPieceName(type));
 				Raptor.getInstance().getImageRegistry().put(key, result);
@@ -235,8 +272,8 @@ public class ChessBoardUtils implements BoardConstants {
 	 * Returns the users current chess set name.
 	 */
 	public static String getChessSetName() {
-		return Raptor.getInstance().getPreferences().getString(
-				BOARD_CHESS_SET_NAME);
+		return Raptor.getInstance().getPreferences()
+				.getString(BOARD_CHESS_SET_NAME);
 	}
 
 	/**
@@ -394,8 +431,8 @@ public class ChessBoardUtils implements BoardConstants {
 	public static Image getSquareBackgroundImage(boolean isLight, int squareId,
 			int width, int height) {
 		SquareBackgroundImageEffect effect = SquareBackgroundImageEffect
-				.valueOf(Raptor.getInstance().getPreferences().getString(
-						BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT));
+				.valueOf(Raptor.getInstance().getPreferences()
+						.getString(BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT));
 
 		return getSquareBackgroundImage(getSquareBackgroundName(), effect,
 				isLight, squareId, width, height);
@@ -481,8 +518,8 @@ public class ChessBoardUtils implements BoardConstants {
 	 * Returns the users current square background name.
 	 */
 	public static String getSquareBackgroundName() {
-		return Raptor.getInstance().getPreferences().getString(
-				BOARD_SQUARE_BACKGROUND_NAME);
+		return Raptor.getInstance().getPreferences()
+				.getString(BOARD_SQUARE_BACKGROUND_NAME);
 	}
 
 	/**
@@ -636,16 +673,19 @@ public class ChessBoardUtils implements BoardConstants {
 	 */
 	public static void openBoard(final ChessBoardController controller,
 			final boolean isBughouseOtherBoard) {
-		Raptor.getInstance().getDisplay().asyncExec(
-				new RaptorRunnable(controller.getConnector()) {
+		Raptor.getInstance().getDisplay()
+				.asyncExec(new RaptorRunnable(controller.getConnector()) {
 					@Override
 					public void execute() {
 						Quadrant quadrant = getQuadrantForController(
 								controller, isBughouseOtherBoard);
 						ChessBoardWindowItem item = null;
 
-						if (Raptor.getInstance().getPreferences().getBoolean(
-								PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES)) {
+						if (Raptor
+								.getInstance()
+								.getPreferences()
+								.getBoolean(
+										PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES)) {
 							item = Raptor
 									.getInstance()
 									.getWindow()
@@ -653,7 +693,9 @@ public class ChessBoardUtils implements BoardConstants {
 							if (item == null
 									&& controller.getGame().getVariant() != Variant.bughouse
 									&& controller.getGame().getVariant() != Variant.fischerRandomBughouse) {
-								item = Raptor.getInstance().getWindow()
+								item = Raptor
+										.getInstance()
+										.getWindow()
 										.getChessBoardWindowItemToTakeOver(
 												quadrant);
 							}
@@ -740,7 +782,7 @@ public class ChessBoardUtils implements BoardConstants {
 			if (controller instanceof InactiveController
 					|| controller instanceof ExamineController
 					|| controller instanceof ObserveController) {
-				
+
 				if ((Variant.isClassic(controller.getGame().getVariant()) && UCIEngineService
 						.getInstance().getDefaultEngine() != null)
 						|| XboardEngineService.getInstance()
@@ -795,37 +837,37 @@ public class ChessBoardUtils implements BoardConstants {
 		} else if (action instanceof AutoQueenAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_QUEEN, result);
-			int pieceSize = Raptor.getInstance().getPreferences().getInt(
-					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			int pieceSize = Raptor.getInstance().getPreferences()
+					.getInt(PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WQ
 					: BQ, pieceSize));
 		} else if (action instanceof AutoKnightAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_KNIGHT, result);
-			int pieceSize = Raptor.getInstance().getPreferences().getInt(
-					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			int pieceSize = Raptor.getInstance().getPreferences()
+					.getInt(PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WN
 					: BN, pieceSize));
 		} else if (action instanceof AutoBishopAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_BISHOP, result);
-			int pieceSize = Raptor.getInstance().getPreferences().getInt(
-					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			int pieceSize = Raptor.getInstance().getPreferences()
+					.getInt(PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WB
 					: BB, pieceSize));
 		} else if (action instanceof AutoRookAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_ROOK, result);
-			int pieceSize = Raptor.getInstance().getPreferences().getInt(
-					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			int pieceSize = Raptor.getInstance().getPreferences()
+					.getInt(PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WR
 					: BR, pieceSize));
 		} else if (action instanceof AutoKingAction
 				&& controller.getGame().getVariant() == Variant.suicide) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_KING, result);
-			int pieceSize = Raptor.getInstance().getPreferences().getInt(
-					PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
+			int pieceSize = Raptor.getInstance().getPreferences()
+					.getInt(PreferenceKeys.APP_TOOLBAR_PIECE_SIZE);
 			result.setImage(getChessPieceImage("Portable", isUserWhite ? WK
 					: BK, pieceSize));
 		} else if (action instanceof AutoKingAction) {

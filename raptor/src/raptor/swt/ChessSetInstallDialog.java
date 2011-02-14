@@ -24,8 +24,6 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import raptor.util.RaptorLogger;
- 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -44,6 +42,7 @@ import org.eclipse.swt.widgets.Shell;
 import raptor.Raptor;
 import raptor.chess.pgn.PgnUtils;
 import raptor.service.ThreadService;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringTokenizer;
 
@@ -53,15 +52,17 @@ import raptor.util.RaptorStringTokenizer;
 public class ChessSetInstallDialog extends Dialog {
 
 	public static final String[] VALID_FILES = { "license.txt", "author.txt",
-			"wp.png", "wb.png", "wn.png", "wr.png", "wq.png", "wk.png",
-			"bp.png", "bb.png", "bn.png", "br.png", "bq.png", "bk.png",
-			"wp.svg", "wb.svg", "wn.svg", "wr.svg", "wq.svg", "wk.svg",
-			"bp.svg", "bb.svg", "bn.svg", "br.svg", "bq.svg", "bk.svg" };
+			"definition", "wp.png", "wb.png", "wn.png", "wr.png", "wq.png",
+			"wk.png", "bp.png", "bb.png", "bn.png", "br.png", "bq.png",
+			"bk.png", "wp.svg", "wb.svg", "wn.svg", "wr.svg", "wq.svg",
+			"wk.svg", "bp.svg", "bb.svg", "bn.svg", "br.svg", "bq.svg",
+			"bk.svg" };
 	static {
 		Arrays.sort(VALID_FILES);
 	}
 
-	private static final RaptorLogger LOG = RaptorLogger.getLog(ChessSetInstallDialog.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(ChessSetInstallDialog.class);
 
 	private Button cancelButton;
 	private Composite cancelComposite;
@@ -99,8 +100,8 @@ public class ChessSetInstallDialog extends Dialog {
 					ZipFile zipFile = new ZipFile(file);
 
 					int entryCounter = 0;
-					Raptor.getInstance().getDisplay().asyncExec(
-							new RaptorRunnable() {
+					Raptor.getInstance().getDisplay()
+							.asyncExec(new RaptorRunnable() {
 								@Override
 								public void execute() {
 									processMessageLabel
@@ -113,6 +114,21 @@ public class ChessSetInstallDialog extends Dialog {
 					Enumeration entries = zipFile.entries();
 					boolean isValid = true;
 					String invalidEntryName = "";
+					boolean isJinSet = false;
+
+					while (entries.hasMoreElements()) {
+						ZipEntry entry = (ZipEntry) entries.nextElement();
+						RaptorStringTokenizer tok = new RaptorStringTokenizer(
+								entry.getName(), "/\\");
+						try {
+							Integer.parseInt(tok.nextToken());
+							isJinSet = true;
+						} catch (NumberFormatException nfe) {
+						}
+					}
+
+					entries = zipFile.entries();
+
 					while (!isClosed && entries.hasMoreElements()) {
 						ZipEntry entry = (ZipEntry) entries.nextElement();
 
@@ -134,8 +150,8 @@ public class ChessSetInstallDialog extends Dialog {
 
 					if (!isValid) {
 						final String finalInvalidEntryName = invalidEntryName;
-						Raptor.getInstance().getDisplay().asyncExec(
-								new RaptorRunnable() {
+						Raptor.getInstance().getDisplay()
+								.asyncExec(new RaptorRunnable() {
 									@Override
 									public void execute() {
 										processMessageLabel
@@ -148,8 +164,8 @@ public class ChessSetInstallDialog extends Dialog {
 								});
 					} else {
 						final int finalEntryCounter = entryCounter;
-						Raptor.getInstance().getDisplay().asyncExec(
-								new RaptorRunnable() {
+						Raptor.getInstance().getDisplay()
+								.asyncExec(new RaptorRunnable() {
 									@Override
 									public void execute() {
 										progressBar
@@ -159,12 +175,12 @@ public class ChessSetInstallDialog extends Dialog {
 
 						entries = zipFile.entries();
 						while (!isClosed && entries.hasMoreElements()) {
-							unzipEntry(zipFile, (ZipEntry) entries
-									.nextElement());
+							unzipEntry(zipFile,
+									(ZipEntry) entries.nextElement(), isJinSet);
 						}
 
-						Raptor.getInstance().getDisplay().asyncExec(
-								new RaptorRunnable() {
+						Raptor.getInstance().getDisplay()
+								.asyncExec(new RaptorRunnable() {
 									@Override
 									public void execute() {
 										processMessageLabel
@@ -278,14 +294,27 @@ public class ChessSetInstallDialog extends Dialog {
 		out.close();
 	}
 
-	protected void unzipEntry(final ZipFile zipFile, final ZipEntry zipEntry)
-			throws IOException {
+	private String getJinSetName(ZipFile zipFile) {
+		String name = zipFile.getName();
+		RaptorStringTokenizer tok = new RaptorStringTokenizer(name, "./\\");
+		String lastToken = null;
+		while (tok.hasMoreTokens()) {
+			String currentToken = tok.nextToken();
+			if (tok.hasMoreTokens()) {
+				lastToken = currentToken;
+			}
+		}
+		return lastToken;
+	}
+
+	protected void unzipEntry(final ZipFile zipFile, final ZipEntry zipEntry,
+			boolean isJinSet) throws IOException {
 		if (isClosed) {
 			return;
 		} else {
 			if (zipEntry.isDirectory()) {
-				Raptor.getInstance().getDisplay().asyncExec(
-						new RaptorRunnable() {
+				Raptor.getInstance().getDisplay()
+						.asyncExec(new RaptorRunnable() {
 							@Override
 							public void execute() {
 								processMessageLabel
@@ -294,11 +323,18 @@ public class ChessSetInstallDialog extends Dialog {
 								progressBar.setSelection(++unzipCounter);
 							}
 						});
-				(new File(Raptor.RESOURCES_DIR + "/set/" + zipEntry.getName()))
-						.mkdirs();
+				if (isJinSet) {
+					(new File(Raptor.RESOURCES_DIR + "/set/"
+							+ getJinSetName(zipFile) + "/" + zipEntry.getName()))
+							.mkdirs();
+				} else {
+					(new File(Raptor.RESOURCES_DIR + "/set/"
+							+ zipEntry.getName())).mkdirs();
+				}
+
 			} else {
-				Raptor.getInstance().getDisplay().asyncExec(
-						new RaptorRunnable() {
+				Raptor.getInstance().getDisplay()
+						.asyncExec(new RaptorRunnable() {
 							@Override
 							public void execute() {
 								processMessageLabel.setText("Extracting file: "
@@ -306,11 +342,28 @@ public class ChessSetInstallDialog extends Dialog {
 								progressBar.setSelection(++unzipCounter);
 							}
 						});
-				(new File(zipEntry.getName())).mkdirs();
-				copyInputStream(zipFile.getInputStream(zipEntry),
-						new BufferedOutputStream(new FileOutputStream(
-								Raptor.RESOURCES_DIR + "/set/"
-										+ zipEntry.getName())));
+
+				if (isJinSet) {
+					(new File(getJinSetName(zipFile) + "/" + zipEntry.getName()))
+							.mkdirs();
+				} else {
+					(new File(zipEntry.getName())).mkdirs();
+				}
+
+				if (isJinSet) {
+					copyInputStream(zipFile.getInputStream(zipEntry),
+							new BufferedOutputStream(new FileOutputStream(
+									Raptor.RESOURCES_DIR + "/set/"
+											+ getJinSetName(zipFile) + "/"
+											+ zipEntry.getName())));
+				} else {
+					copyInputStream(
+							zipFile.getInputStream(zipEntry),
+							new BufferedOutputStream(new FileOutputStream(
+									Raptor.RESOURCES_DIR + "/set/"
+											+ zipEntry.getName())));
+				}
+
 			}
 		}
 	}
