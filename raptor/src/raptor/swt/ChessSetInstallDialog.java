@@ -343,12 +343,6 @@ public class ChessSetInstallDialog extends Dialog {
 							}
 						});
 
-				if (isJinSet) {
-					(new File(getJinSetName(zipFile) + "/" + zipEntry.getName()))
-							.mkdirs();
-				} else {
-					(new File(zipEntry.getName())).mkdirs();
-				}
 
 				if (isJinSet) {
 					copyInputStream(zipFile.getInputStream(zipEntry),
