@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import raptor.util.RaptorLogger;
- 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -64,7 +64,8 @@ import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
 public class UciAnalysisWidget implements EngineAnalysisWidget {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(UciAnalysisWidget.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(UciAnalysisWidget.class);
 
 	protected ChessBoardController controller;
 	protected Composite composite, topLine, labelComposite;
@@ -81,8 +82,8 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 		}
 
 		public void engineSentInfo(final UCIInfo[] infos) {
-			Raptor.getInstance().getDisplay().asyncExec(
-					new RaptorRunnable(controller.getConnector()) {
+			Raptor.getInstance().getDisplay()
+					.asyncExec(new RaptorRunnable(controller.getConnector()) {
 						@Override
 						public void execute() {
 							String score = null;
@@ -140,11 +141,10 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 								} else if (info instanceof NodesPerSecondInfo) {
 									NodesPerSecondInfo nodesPerSecondInfo = (NodesPerSecondInfo) info;
 									nps = "NPS(K): "
-											+ RaptorStringUtils
-													.formatAsNumber(""
-															+ nodesPerSecondInfo
-																	.getNodesPerSecond()
-															/ 1000);
+											+ RaptorStringUtils.formatAsNumber(""
+													+ nodesPerSecondInfo
+															.getNodesPerSecond()
+													/ 1000);
 								} else if (info instanceof TimeInfo) {
 									TimeInfo timeInfo = (TimeInfo) info;
 									time = new BigDecimal(timeInfo
@@ -169,52 +169,41 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 											Move gameMove = null;
 
 											if (move.isPromotion()) {
-												gameMove = gameClone
-														.makeMove(
-																move
-																		.getStartSquare(),
-																move
-																		.getEndSquare(),
-																move
-																		.getPromotedPiece());
+												gameMove = gameClone.makeMove(
+														move.getStartSquare(),
+														move.getEndSquare(),
+														move.getPromotedPiece());
 											} else {
 												gameMove = gameClone.makeMove(
 														move.getStartSquare(),
 														move.getEndSquare());
 											}
 
-											String san = GameUtils
-													.convertSanToUseUnicode(
-															gameMove.getSan(),
-															gameMove
-																	.isWhitesMove());
+											String san = GameUtils.convertSanToUseUnicode(
+													gameMove.getSan(),
+													gameMove.isWhitesMove());
 											String moveNumber = isFirstMove
 													&& !gameMove.isWhitesMove() ? gameMove
 													.getFullMoveCount()
-													+ ") ... "
-													: gameMove.isWhitesMove() ? gameMove
-															.getFullMoveCount()
-															+ ") "
-															: "";
-											line
-													.append((line.equals("") ? ""
-															: " ")
-															+ moveNumber
-															+ san
-															+ (gameClone
-																	.isInCheck() ? "+"
-																	: "")
-															+ (gameClone
-																	.isCheckmate() ? "#"
-																	: ""));
+													+ ") ... " : gameMove
+													.isWhitesMove() ? gameMove
+													.getFullMoveCount() + ") "
+													: "";
+											line.append((line.equals("") ? ""
+													: " ")
+													+ moveNumber
+													+ san
+													+ (gameClone.isInCheck() ? "+"
+															: "")
+													+ (gameClone.isCheckmate() ? "#"
+															: ""));
 											isFirstMove = false;
 										} catch (Throwable t) {
 											if (LOG.isInfoEnabled()) {
-												LOG
-														.info(
-																"Illegal line found skipping line (This can occur if the position was "
-																		+ "changing when the analysis line was being calculated).",
-																t);
+												LOG.info(
+														"Illegal line found skipping line (This can occur if the position was "
+																+ "changing when the analysis line was being calculated).",
+														t);
 											}
 											break;
 										}
@@ -231,89 +220,102 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 							final String finalCPU = cpu;
 							final String finalNPS = nps;
 
-							Raptor.getInstance().getDisplay().asyncExec(
-									new RaptorRunnable(controller
-											.getConnector()) {
-										@Override
-										public void execute() {
-											if (composite.isDisposed()) {
-												return;
-											}
-											if (!finalPVs.isEmpty()) {
-												String[][] data = new String[bestMoves
-														.getRowCount()
-														+ finalPVs.size()][5];
-
-												for (int i = 0; i < finalPVs
-														.size(); i++) {
-													data[0][0] = StringUtils
-															.defaultString(finalScore);
-													data[0][1] = StringUtils
-															.defaultString(finalDepth);
-													data[0][2] = StringUtils
-															.defaultString(finalTime);
-													data[0][3] = StringUtils
-															.defaultString(finalNodes);
-													data[0][4] = StringUtils
-															.defaultString(finalPVs
-																	.get(i));
-												}
-
-												for (int i = 0; i < bestMoves
-														.getRowCount(); i++) {
-													for (int j = 0; j < bestMoves
-															.getColumnCount(); j++) {
-														data[i
+							Raptor.getInstance()
+									.getDisplay()
+									.asyncExec(
+											new RaptorRunnable(controller
+													.getConnector()) {
+												@Override
+												public void execute() {
+													if (composite.isDisposed()) {
+														return;
+													}
+													if (!finalPVs.isEmpty()) {
+														String[][] data = new String[bestMoves
+																.getRowCount()
 																+ finalPVs
-																		.size()][j] = bestMoves
-																.getText(i, j);
+																		.size()][5];
+
+														for (int i = 0; i < finalPVs
+																.size(); i++) {
+															data[0][0] = StringUtils
+																	.defaultString(finalScore);
+															data[0][1] = StringUtils
+																	.defaultString(finalDepth);
+															data[0][2] = StringUtils
+																	.defaultString(finalTime);
+															data[0][3] = StringUtils
+																	.defaultString(finalNodes);
+															data[0][4] = StringUtils
+																	.defaultString(finalPVs
+																			.get(i));
+														}
+
+														for (int i = 0; i < bestMoves
+																.getRowCount(); i++) {
+															for (int j = 0; j < bestMoves
+																	.getColumnCount(); j++) {
+																data[i
+																		+ finalPVs
+																				.size()][j] = bestMoves
+																		.getText(
+																				i,
+																				j);
+															}
+														}
+
+														bestMoves
+																.refreshTable(data);
+													} else if (bestMoves
+															.getRowCount() > 0) {
+														if (StringUtils
+																.isNotBlank(finalScore)) {
+															bestMoves.setText(
+																	0, 0,
+																	finalScore);
+														}
+														if (StringUtils
+																.isNotBlank(finalDepth)) {
+															bestMoves.setText(
+																	0, 1,
+																	finalDepth);
+														}
+														if (StringUtils
+																.isNotBlank(finalTime)) {
+															bestMoves.setText(
+																	0, 2,
+																	finalTime);
+														}
+
+														if (StringUtils
+																.isNotBlank(finalNodes)) {
+															bestMoves.setText(
+																	0, 3,
+																	finalNodes);
+														}
+													}
+													if (finalCPU != null) {
+														cpuPercentageLabel
+																.setText(finalCPU);
+														topLine.layout(true,
+																true);
+													}
+													if (finalNPS != null) {
+														nodesPerSecondLabel
+																.setText(finalNPS);
+														topLine.layout(true,
+																true);
 													}
 												}
-
-												bestMoves.refreshTable(data);
-											} else if (bestMoves.getRowCount() > 0) {
-												if (StringUtils
-														.isNotBlank(finalScore)) {
-													bestMoves.setText(0, 0,
-															finalScore);
-												}
-												if (StringUtils
-														.isNotBlank(finalDepth)) {
-													bestMoves.setText(0, 1,
-															finalDepth);
-												}
-												if (StringUtils
-														.isNotBlank(finalTime)) {
-													bestMoves.setText(0, 2,
-															finalTime);
-												}
-
-												if (StringUtils
-														.isNotBlank(finalNodes)) {
-													bestMoves.setText(0, 3,
-															finalNodes);
-												}
-											}
-											if (finalCPU != null) {
-												cpuPercentageLabel
-														.setText(finalCPU);
-												topLine.layout(true, true);
-											}
-											if (finalNPS != null) {
-												nodesPerSecondLabel
-														.setText(finalNPS);
-												topLine.layout(true, true);
-											}
-										}
-									});
+											});
 						}
 					});
 		}
 	};
 
 	public void clear() {
-		Raptor.getInstance().getDisplay().asyncExec(
-				new RaptorRunnable(controller.getConnector()) {
+		Raptor.getInstance().getDisplay()
+				.asyncExec(new RaptorRunnable(controller.getConnector()) {
 					@Override
 					public void execute() {
 						bestMoves.clearTable();
@@ -481,8 +483,8 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 	}
 
 	public void quit() {
-		Raptor.getInstance().getDisplay().asyncExec(
-				new RaptorRunnable(controller.getConnector()) {
+		Raptor.getInstance().getDisplay()
+				.asyncExec(new RaptorRunnable(controller.getConnector()) {
 					@Override
 					public void execute() {
 						if (!composite.isDisposed()) {
@@ -516,8 +518,8 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 					if (currentEngine.isConnected()) {
 						currentEngine.stop();
 						currentEngine.isReady();
-						Raptor.getInstance().getDisplay().asyncExec(
-								new RaptorRunnable() {
+						Raptor.getInstance().getDisplay()
+								.asyncExec(new RaptorRunnable() {
 									@Override
 									public void execute() {
 										startStopButton.setText("Start");
@@ -530,10 +532,10 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 	}
 
 	public void updateFromPrefs() {
-		Color background = Raptor.getInstance().getPreferences().getColor(
-				PreferenceKeys.BOARD_BACKGROUND_COLOR);
-		Color foreground = Raptor.getInstance().getPreferences().getColor(
-				PreferenceKeys.BOARD_CONTROL_COLOR);
+		Color background = Raptor.getInstance().getPreferences()
+				.getColor(PreferenceKeys.BOARD_BACKGROUND_COLOR);
+		Color foreground = Raptor.getInstance().getPreferences()
+				.getColor(PreferenceKeys.BOARD_CONTROL_COLOR);
 		composite.setBackground(background);
 		topLine.setBackground(background);
 		labelComposite.setBackground(background);
@@ -563,24 +565,25 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 						if (!currentEngine.isConnected()) {
 							currentEngine.connect();
 						}
-						Raptor.getInstance().getDisplay().asyncExec(
-								new RaptorRunnable(controller.getConnector()) {
-									@Override
-									public void execute() {
-										clear();
-									}
-								});
+						Raptor.getInstance()
+								.getDisplay()
+								.asyncExec(
+										new RaptorRunnable(controller
+												.getConnector()) {
+											@Override
+											public void execute() {
+												clear();
+											}
+										});
 						currentEngine.stop();
 
 						if (controller.getGame().getVariant() == Variant.fischerRandom
-								&& currentEngine.getOption("UCI_Chess960")
-										.getValue().equals("false")) {
+								&& currentEngine.hasOption("UCI_Chess960")) {
 							UCICheck opt = (UCICheck) currentEngine
 									.getOption("UCI_Chess960");
 							opt.setValue("true");
 						} else if (controller.getGame().getVariant() != Variant.fischerRandom
-								&& currentEngine.getOption("UCI_Chess960")
-										.getValue().equals("true")) {
+								&& currentEngine.hasOption("UCI_Chess960")) {
 							UCICheck opt = (UCICheck) currentEngine
 									.getOption("UCI_Chess960");
 							opt.setValue("false");
@@ -590,10 +593,11 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 						currentEngine.setPosition(controller.getGame().toFen(),
 								null);
 						currentEngine.isReady();
-						currentEngine.go(currentEngine
-								.getGoAnalysisParameters(), listener);
-						Raptor.getInstance().getDisplay().asyncExec(
-								new RaptorRunnable() {
+						currentEngine.go(
+								currentEngine.getGoAnalysisParameters(),
+								listener);
+						Raptor.getInstance().getDisplay()
+								.asyncExec(new RaptorRunnable() {
 									@Override
 									public void execute() {
 										startStopButton.setText("Stop");
@@ -613,34 +617,34 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 	protected void updateEnginesCombo() {
 		ignoreEngineSelection = true;
 		engineCombo.removeAll();
-		
+
 		UCIEngine[] engines;
 		UCIEngine defaultEngine;
 		if (controller.getGame().getVariant() == Variant.fischerRandom) {
 			engines = UCIEngineService.getInstance().getFrUCIEngines();
-			
+
 			if (engines.length > 0)
 				defaultEngine = engines[0];
-                        else 
-                                defaultEngine = null;
-		}
-		else {
+			else
+				defaultEngine = null;
+		} else {
 			engines = UCIEngineService.getInstance().getUCIEngines();
-			defaultEngine = UCIEngineService.getInstance()
-			.getDefaultEngine();
+			defaultEngine = UCIEngineService.getInstance().getDefaultEngine();
 		}
-		
-		for (UCIEngine engine : engines) 			
-				engineCombo.add(engine.getUserName());	
-		
+
+		for (UCIEngine engine : engines)
+			engineCombo.add(engine.getUserName());
+
 		for (int i = 0; i < engineCombo.getItemCount(); i++) {
-			if (defaultEngine != null && engineCombo.getItem(i).equals(defaultEngine.getUserName())) {
+			if (defaultEngine != null
+					&& engineCombo.getItem(i).equals(
+							defaultEngine.getUserName())) {
 				currentEngine = engines[i];
 				engineCombo.select(i);
 				break;
 			}
 		}
-		
+
 		ignoreEngineSelection = false;
 		topLine.pack(true);
 		topLine.layout(true, true);
