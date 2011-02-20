@@ -190,8 +190,7 @@ public class ChessBoardUtils implements BoardConstants {
 	/**
 	 * Returns the image from the users image cache matching the type,width, and
 	 * height. If the image is in the localImageRegistry it is returned.
-	 * Otherwise the users image cache is checked, if its not there then it is
-	 * loaded form the svg file and cached in the users image cache.
+	 * Otherwise the image is loaded from the set and cached.
 	 */
 	public static Image getChessPieceImage(int type, int size) {
 		if (type == EMPTY) {
@@ -202,6 +201,12 @@ public class ChessBoardUtils implements BoardConstants {
 		}
 	}
 
+	/**
+	 * Returns a list sorted ascending, containing integers representing 
+	 * all of the piece sizes the set supports.
+	 * @param setName The name of the set.
+	 * @return A list of sizes supported in ascending order.
+	 */
 	public static List<Integer> getSetPieceSizes(String setName) {
 		List<Integer> sizes = chessSetSizes.get(setName);
 		if (sizes == null) {
@@ -227,8 +232,7 @@ public class ChessBoardUtils implements BoardConstants {
 	/**
 	 * Returns the image with the specified of the specified name,type,width and
 	 * height. If the image is in the localImageRegistry it is returned.
-	 * Otherwise the users image cache is checked, if its not there then it is
-	 * loaded form the svg file and cached in the users image cache.
+	 * Otherwise the closest size is loaded from the chess set and cached.
 	 */
 	public static Image getChessPieceImage(String name, int type, int size) {
 		if (type == EMPTY) {
