@@ -1220,7 +1220,7 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public void sendMessage(String message, boolean isHidingFromUser,
 			ChatType hideNextChatType) {
-		long start = System.currentTimeMillis();
+		// long start = System.currentTimeMillis();
 		if (isConnected()) {
 
 			if (vetoMessage(message)) {
@@ -1275,9 +1275,6 @@ public abstract class IcsConnector implements Connector {
 							+ getShortName()
 							+ ". There is currently no connection."));
 		}
-
-		System.err.println("Sent message in: "
-				+ (System.currentTimeMillis() - start));
 	}
 
 	/**
@@ -1799,21 +1796,14 @@ public abstract class IcsConnector implements Connector {
 	protected void messageLoop() {
 		try {
 			while (true) {
-				long start = 0;
 				byte[] buffer = new byte[40000];
 				if (isConnected()) {
 					int numRead = socket.getInputStream().read(buffer);
-					System.err.println(getContext().getShortName() + " Read "
-							+ numRead);
-					start = System.currentTimeMillis();
 					if (numRead > 0) {
 						if (LOG.isDebugEnabled()) {
 							LOG.debug(context.getShortName() + "Connector "
 									+ "Read " + numRead + " bytes.");
 						}
-						// inputBuffer.rewind();
-						// byte[] bytes = new byte[numRead];
-
 						String text = handleTimeseal(new String(buffer, 0,
 								numRead));
 
@@ -1842,7 +1832,6 @@ public abstract class IcsConnector implements Connector {
 						disconnect();
 						break;
 					}
-					// Thread.sleep(50);
 				} else {
 					if (LOG.isDebugEnabled()) {
 						LOG.debug(context.getShortName() + "Connector "
@@ -1851,9 +1840,6 @@ public abstract class IcsConnector implements Connector {
 					disconnect();
 					break;
 				}
-				System.err.println(getContext().getShortName()
-						+ "messageLoop iteration in "
-						+ (System.currentTimeMillis() - start));
 			}
 		} catch (Throwable t) {
 			if (t instanceof InterruptedException) {
