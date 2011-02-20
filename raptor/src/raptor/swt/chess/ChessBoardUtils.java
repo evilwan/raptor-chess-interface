@@ -559,7 +559,7 @@ public class ChessBoardUtils implements BoardConstants {
 	}
 
 	/**
-	 * Returns the path to the specified svg chess piece.
+	 * Returns the path to the specified chess piece.
 	 */
 	public static String getPieceName(int piece) {
 		return PIECE_TO_NAME[piece] + PIECE_IMAGE_SUFFIX;
