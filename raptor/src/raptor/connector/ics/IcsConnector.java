@@ -339,8 +339,10 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[] breakUpMessage(StringBuilder message) {
-		//There are two limits. Max communication size (400 on fics) for tells, etc, and Max message communication size (800 on fics) for sending messages.
-		//This algorithm handles breaking up text that is too long for each.
+		// There are two limits. Max communication size (400 on fics) for tells,
+		// etc, and Max message communication size (800 on fics) for sending
+		// messages.
+		// This algorithm handles breaking up text that is too long for each.
 
 		if (message.length() <= MAX_SEND_MESSAGE_LENGTH) {
 			return new String[] { message + "\n" };
@@ -1774,12 +1776,12 @@ public abstract class IcsConnector implements Connector {
 
 	/**
 	 * Handles sending the timeseal ack.
+	 * 
 	 * @param text
 	 * @return
 	 * @throws IOException
 	 */
 	protected String handleTimeseal(String text) throws IOException {
-		int textLength = text.length();
 		String result = text.replace("[G]\0", "");
 		if (result.length() != text.length()) {
 			synchronized (socket.getOutputStream()) {
@@ -1814,13 +1816,14 @@ public abstract class IcsConnector implements Connector {
 
 						String text = handleTimeseal(new String(buffer, 0,
 								numRead));
-						
+
 						if (StringUtils.isNotBlank(text)) {
 							inboundMessageBuffer.append(IcsUtils
 									.cleanupMessage(text));
 							try {
 								// Useful for debugging /r/n issues.
-								// String string = inboundMessageBuffer.toString();
+								// String string =
+								// inboundMessageBuffer.toString();
 								// string = string.replace("\r", "\\r");
 								// string = string.replace("\n", "\\n");
 								// System.err.println(string);
