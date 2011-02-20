@@ -397,7 +397,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor .98 RC5a");
+		setDefault(APP_NAME, "Raptor .98 RC6");
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS, !OSUtils
 				.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);
@@ -506,7 +506,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT,
 				SquareBackgroundImageEffect.RandomCrop.toString());
 		setDefault(BOARD_TRAVERSE_WITH_MOUSE_WHEEL, true);		
-		setDefault(BOARD_CACHING,true);
+		setDefault(BOARD_CACHING,false);
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
@@ -1004,7 +1004,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
 		// Timeseal 1 connect string
-		// setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
+		//setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
 		setDefault(TIMESEAL_INIT_STRING, "TIMESEAL2|raptorUser|OpenSeal|");
 
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
