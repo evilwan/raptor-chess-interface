@@ -154,5 +154,10 @@ public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
 				PreferenceKeys.BOARD_SPEAK_WHEN_OBSERVING,
 				"Speak moves when observing a game (*Requires speech setup).",
 				getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(
+				PreferenceKeys.BOARD_CACHING,
+				"Enable chess board caching.",
+				getFieldEditorParent()));
 	}
 }
