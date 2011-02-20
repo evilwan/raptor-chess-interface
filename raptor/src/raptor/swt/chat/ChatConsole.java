@@ -112,7 +112,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 		promptLabel = new Label(southControlsComposite, SWT.NONE);
 		promptLabel.setText(controller.getPrompt());
 
-		outputText = new StyledText(southControlsComposite, SWT.SINGLE
+		outputText = new StyledText(southControlsComposite, SWT.MULTI
 				| SWT.BORDER);
 		outputText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
                 
