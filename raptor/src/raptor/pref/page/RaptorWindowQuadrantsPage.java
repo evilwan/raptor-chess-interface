@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Label;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.fields.ListFieldEditor;
 import raptor.swt.BrowserWindowItem;
 import raptor.swt.chess.ChessBoardWindowItem;
 
@@ -52,15 +53,14 @@ public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 				false, 2, 1));
 		textLabel
 				.setText(WordUtils
-						.wrap(
-								"\tRaptor uses a quadrant system to layout content. "
-										+ "If a quadrant contains no items, the quadrant disappears and the "
-										+ "remaining quadrants consume the space."
-										+ "You may drag and drop items between quadrants by dragging "
-										+ "the tab and dropping anywhere in another quadrant."
-										+ "Double click on a tab to maximize a quadrant, and double "
-										+ "click again to restore it. Right clicking on a tab brings up a "
-										+ "list of options as well.", 70)
+						.wrap("\tRaptor uses a quadrant system to layout content. "
+								+ "If a quadrant contains no items, the quadrant disappears and the "
+								+ "remaining quadrants consume the space."
+								+ "You may drag and drop items between quadrants by dragging "
+								+ "the tab and dropping anywhere in another quadrant."
+								+ "Double click on a tab to maximize a quadrant, and double "
+								+ "click again to restore it. Right clicking on a tab brings up a "
+								+ "list of options as well.", 70)
 						+ "\n\t"
 						+ WordUtils.wrap(
 								"On this page you can customize the quadrant the following content "
@@ -83,5 +83,24 @@ public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(pgnResuoltsPageQuad);
+
+		label = new Label(getFieldEditorParent(), SWT.NONE);
+		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false,
+				2, 1));
+
+		addField(new ListFieldEditor(PreferenceKeys.APP_CHESS_BOARD_QUADRANTS,
+				"Chess board quadrants: (I,II,III,IV,V,VI,VII,VIII,IX)",
+				getFieldEditorParent(), ',', 300) {
+
+			@Override
+			public boolean isTextValid(String text) {
+				try {
+					return Quadrant.valueOf(text) != null;
+				} catch (Exception e) {
+					return false;
+				}
+			}
+
+		});
 	}
 }
