@@ -237,6 +237,15 @@ public abstract class ListEditor extends FieldEditor {
 		}
 		return dialog.open();
 	}
+	
+	/**
+	 * Returns true if the text is valid, false otherwise.
+	 * @param text The text to check.
+	 * @return True if valid, false otherwise.
+	 */
+	public boolean isTextValid(String text) {
+		return true;
+	}
 
 	/*
 	 * @see FieldEditor.setEnabled(boolean,Composite).
@@ -401,7 +410,7 @@ public abstract class ListEditor extends FieldEditor {
 	private void addPressed() {
 		setPresentsDefaultValue(false);
 		String value = promptForText("Enter new value:");
-		if (value != null) {
+		if (value != null && isTextValid(value)) {
 			int index = list.getSelectionIndex();
 			if (index >= 0) {
 				list.add(value, index + 1);
@@ -409,6 +418,9 @@ public abstract class ListEditor extends FieldEditor {
 				list.add(value, 0);
 			}
 			selectionChanged();
+		}
+		else {
+			showErrorMessage("Invalid: " + value);
 		}
 	}
 
@@ -462,9 +474,12 @@ public abstract class ListEditor extends FieldEditor {
 		setPresentsDefaultValue(false);
 		String value = list.getItem(list.getSelectionIndex());
 		value = promptForText("Enter new value:", value);
-		if (value != null) {
+		if (value != null && isTextValid(value)) {
 			list.setItem(list.getSelectionIndex(), value);
 			selectionChanged();
+		}
+		else {
+			showErrorMessage("Invalid: " + value);
 		}
 	}
 
