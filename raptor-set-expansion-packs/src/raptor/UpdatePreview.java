@@ -29,7 +29,7 @@ public class UpdatePreview {
 			}
 			for (int i = 1; i < PIECE_TO_NAME.length; i++) {
 
-				ImageData data = new ImageData(file.getAbsolutePath() + "/50/"
+				ImageData data = new ImageData(file.getAbsolutePath() + "/48/"
 						+ PIECE_TO_NAME[i] + ".png");
 				ImageLoader loader = new ImageLoader();
 				loader.data = new ImageData[] { data };
