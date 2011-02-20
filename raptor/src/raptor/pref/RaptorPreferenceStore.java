@@ -59,7 +59,8 @@ import raptor.util.RaptorStringUtils;
  */
 public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceKeys {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(RaptorPreferenceStore.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(RaptorPreferenceStore.class);
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 	public static final File RAPTOR_PROPERTIES = new File(
 			Raptor.USER_RAPTOR_DIR, "raptor.properties");
@@ -75,10 +76,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		public void propertyChange(PropertyChangeEvent event) {
 			String key = event.getProperty();
 			if (key.endsWith("color")) {
-				Raptor.getInstance().getColorRegistry().put(
-						key,
-						PreferenceConverter.getColor(
-								RaptorPreferenceStore.this, key));
+				Raptor.getInstance()
+						.getColorRegistry()
+						.put(key,
+								PreferenceConverter.getColor(
+										RaptorPreferenceStore.this, key));
 			} else if (key.endsWith("font")) {
 				// Adjust all the zoomed fonts, as well as the font being
 				// changed,
@@ -97,16 +99,19 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 				for (String fontKey : fontKeysToChange) {
 					if (fontKey.equals(key)) {
-						Raptor.getInstance().getFontRegistry().put(
-								key,
-								PreferenceConverter.getFontDataArray(
-										RaptorPreferenceStore.this, key));
+						Raptor.getInstance()
+								.getFontRegistry()
+								.put(key,
+										PreferenceConverter
+												.getFontDataArray(
+														RaptorPreferenceStore.this,
+														key));
 					} else {
 						double zoomFactor = Double.parseDouble(fontKey
 								.substring(key.length() + 1));
 
-						Raptor.getInstance().getFontRegistry().put(fontKey,
-								zoomFont(key, zoomFactor));
+						Raptor.getInstance().getFontRegistry()
+								.put(fontKey, zoomFont(key, zoomFactor));
 					}
 				}
 			}
@@ -283,8 +288,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	}
 
 	public String getDefaultMonospacedFont() {
-		FontData[] fonts = Raptor.getInstance().getDisplay().getFontList(null,
-				true);
+		FontData[] fonts = Raptor.getInstance().getDisplay()
+				.getFontList(null, true);
 		String[] preferredFontNames = null;
 
 		String osName = System.getProperty("os.name");
@@ -344,8 +349,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 					fontData = zoomFont(key, getDouble(APP_ZOOM_FACTOR));
 				}
 
-				Raptor.getInstance().getFontRegistry().put(adjustedKey,
-						fontData);
+				Raptor.getInstance().getFontRegistry()
+						.put(adjustedKey, fontData);
 			}
 			return Raptor.getInstance().getFontRegistry().get(adjustedKey);
 		} catch (Throwable t) {
@@ -398,8 +403,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// App settings.
 		setDefault(APP_NAME, "Raptor .98 RC6");
-		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS, !OSUtils
-				.isLikelyWindowsXP());
+		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
+				!OSUtils.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);
 		PreferenceConverter.setDefault(this, APP_PING_FONT,
 				new FontData[] { new FontData(defaultFontName,
@@ -421,16 +426,16 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_LAYOUT, "Layout1");
 		setDefault(APP_OPEN_LINKS_IN_EXTERNAL_BROWSER, false);
 		setDefault(APP_BROWSER_QUADRANT, Quadrant.II);
-		setDefault(APP_CHESS_BOARD_QUADRANTS, new String[] {
-				Quadrant.II.toString(), Quadrant.III.toString(),
-				Quadrant.IV.toString(), Quadrant.V.toString() });
+		setDefault(APP_CHESS_BOARD_QUADRANTS,
+				new String[] { Quadrant.II.toString(), Quadrant.III.toString(),
+						Quadrant.IV.toString(), Quadrant.V.toString() });
 		setDefault(APP_PGN_RESULTS_QUADRANT, Quadrant.III);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
 		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 5);
 		setDefault(APP_IS_LOGGING_CONSOLE, false);
 		setDefault(APP_IS_LOGGING_PERSON_TELLS, false);
 		setDefault(APP_IS_LOGGING_CHANNEL_TELLS, false);
-		setDefault(PreferenceKeys.APP_SHOW_STATUS_BAR,false);
+		setDefault(PreferenceKeys.APP_SHOW_STATUS_BAR, false);
 
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
@@ -452,15 +457,14 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				if (Runtime.getRuntime().exec(new String[] { "which", "play" })
 						.waitFor() == 0) {
 					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "aplay");
-				} else if (Runtime.getRuntime().exec(
-						new String[] { "which", "aplay" }).waitFor() == 0) {
+				} else if (Runtime.getRuntime()
+						.exec(new String[] { "which", "aplay" }).waitFor() == 0) {
 					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "play");
 				}
 			} catch (Throwable t) {
-				LOG
-						.warn(
-								"Error launching which to determine sound process in linux.",
-								t);
+				LOG.warn(
+						"Error launching which to determine sound process in linux.",
+						t);
 			}
 		}
 
@@ -505,8 +509,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_IS_USING_SOLID_BACKGROUND_COLORS, false);
 		setDefault(BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT,
 				SquareBackgroundImageEffect.RandomCrop.toString());
-		setDefault(BOARD_TRAVERSE_WITH_MOUSE_WHEEL, true);		
-		setDefault(BOARD_CACHING,false);
+		setDefault(BOARD_TRAVERSE_WITH_MOUSE_WHEEL, true);
 
 		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
 				0, 0));
@@ -605,16 +608,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BUG_ARENA_TEAMS_INDEX, 0);
 		setDefault(BUG_ARENA_TEAMS_IS_RATED, true);
 		setDefault(BUG_ARENA_SELECTED_TAB, 0);
-		setDefault(BUG_ARENA_HI_LOW_INDEX,0);
-		setDefault(BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP,true);
-		
+		setDefault(BUG_ARENA_HI_LOW_INDEX, 0);
+		setDefault(BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP, true);
 
 		setDefault(SEEK_OUTPUT_TYPE, SeekType.FormulaFiltered.toString());
 
 		// SeekTable
 		setDefault(SEEK_TABLE_RATINGS_INDEX, 0);
-		setDefault(SEEK_TABLE_MAX_RATINGS_INDEX, SeekTableWindowItem
-				.getRatings().length - 1);
+		setDefault(SEEK_TABLE_MAX_RATINGS_INDEX,
+				SeekTableWindowItem.getRatings().length - 1);
 		setDefault(SEEK_TABLE_RATED_INDEX, 0);
 		setDefault(SEEK_TABLE_SHOW_COMPUTERS, true);
 		setDefault(SEEK_TABLE_SHOW_LIGHTNING, true);
@@ -719,7 +721,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS, true);
 		setDefault(CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES, false);
 		setDefault(CHAT_UNDERLINE_COMMANDS, true);
-		
+
 		setDefault(CHAT_COMMAND_LINE_SPELL_CHECK, !OSUtils.isLikelyLinux());
 
 		PreferenceConverter.setDefault(this, CHAT_INPUT_FONT,
@@ -1004,7 +1006,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
 		// Timeseal 1 connect string
-		//setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
+		// setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
 		setDefault(TIMESEAL_INIT_STRING, "TIMESEAL2|raptorUser|OpenSeal|");
 
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);

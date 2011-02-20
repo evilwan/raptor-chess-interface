@@ -16,18 +16,7 @@ package raptor.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
-
-import raptor.Raptor;
-import raptor.chess.Game;
-import raptor.chess.GameFactory;
-import raptor.chess.Variant;
-import raptor.pref.PreferenceKeys;
 import raptor.swt.chess.ChessBoard;
-import raptor.swt.chess.ChessBoardController;
-import raptor.swt.chess.ChessBoardUtils;
-import raptor.swt.chess.controller.InactiveController;
 import raptor.util.RaptorLogger;
 
 /**
@@ -50,7 +39,7 @@ public class ChessBoardCacheService {
 	/**
 	 * An invisible composite Raptor uses to tie cached chess boards to.
 	 */
-	protected Composite composite;
+//	protected Composite composite;
 
 	/**
 	 * A cache of chess boards. Instead of disposing chess board a maximum of
@@ -64,8 +53,8 @@ public class ChessBoardCacheService {
 	}
 
 	public void dispose() {
-		composite.dispose();
-		chessBoardCache.clear();
+//		composite.dispose();
+//		chessBoardCache.clear();
 	}
 
 	/**
@@ -74,104 +63,104 @@ public class ChessBoardCacheService {
 	 * it is not null.
 	 */
 	public ChessBoard getChessBoard() {
-		if (Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.BOARD_CACHING)) {
-			if (chessBoardCache.isEmpty()) {
-				return null;
-			} else {
-				if (LOG.isInfoEnabled()) {
-					LOG.info("Returned a cached chess board.");
-				}
-				ChessBoard board = chessBoardCache.remove(chessBoardCache
-						.size() - 1);
-				board.getControl().setLayoutDeferred(false);
-				return board;
-			}
-		} else {
+//		if (Raptor.getInstance().getPreferences()
+//				.getBoolean(PreferenceKeys.BOARD_CACHING)) {
+//			if (chessBoardCache.isEmpty()) {
+//				return null;
+//			} else {
+//				if (LOG.isInfoEnabled()) {
+//					LOG.info("Returned a cached chess board.");
+//				}
+//				ChessBoard board = chessBoardCache.remove(chessBoardCache
+//						.size() - 1);
+//				board.getControl().setLayoutDeferred(false);
+//				return board;
+//			}
+//		} else {
 			return null;
-		}
+	//	}
 	}
 
 	/**
 	 * Recycles the chess board. Disposes of it if the cache is already full.
 	 */
 	public void recycle(final ChessBoard board) {
-		if (Raptor.getInstance().getPreferences()
-				.getBoolean(PreferenceKeys.BOARD_CACHING)) {
-			long startTime = System.currentTimeMillis();
-			if (chessBoardCache.size() < CHESS_BOARD_CACHE_SIZE) {
-				if (board.getControl().getParent() != composite) {
-					// Always dispose the controller so it can clean
-					// up anything
-					// being used on the board.
-					// It will also possibly send messages to a
-					// connector on
-					// dispose.
-					board.getController().dispose();
-
-					// Run this in 3 seconds to decrease the load on the SWT
-					// event
-					// thread.
-					Raptor.getInstance().getDisplay()
-							.timerExec(3000, new Runnable() {
-								public void run() {
-									if (board.getControl().isDisposed()) {
-										return;
-									}
-
-									board.getControl().setLayoutDeferred(true);
-									board.getControl().setParent(composite);
-									board.hideMoveList();
-									// This shuts down the engine if its
-									// visible.
-									board.hideEngineAnalysisWidget();
-									board.getArrowDecorator().removeAllArrows();
-									board.getSquareHighlighter()
-											.removeAllHighlights();
-									board.getResultDecorator().setDecoration(
-											null);
-									board.getMoveList().clear();
-									board.getWhiteLagLabel().setImage(null);
-									board.getBlackLagLabel().setImage(null);
-									ChessBoardUtils.clearCoolbar(board);
-									chessBoardCache.add(0, board);
-								}
-							});
-				}
-			} else {
-				// It is'nt being cached so kill it off.
-				board.getControl().dispose();
-			}
-			if (LOG.isInfoEnabled()) {
-				LOG.info("Recycled a chess board in "
-						+ (System.currentTimeMillis() - startTime));
-			}
-		} else {
+//		if (Raptor.getInstance().getPreferences()
+//				.getBoolean(PreferenceKeys.BOARD_CACHING)) {
+//			long startTime = System.currentTimeMillis();
+//			if (chessBoardCache.size() < CHESS_BOARD_CACHE_SIZE) {
+//				if (board.getControl().getParent() != composite) {
+//					// Always dispose the controller so it can clean
+//					// up anything
+//					// being used on the board.
+//					// It will also possibly send messages to a
+//					// connector on
+//					// dispose.
+//					board.getController().dispose();
+//
+//					// Run this in 3 seconds to decrease the load on the SWT
+//					// event
+//					// thread.
+//					Raptor.getInstance().getDisplay()
+//							.timerExec(3000, new Runnable() {
+//								public void run() {
+//									if (board.getControl().isDisposed()) {
+//										return;
+//									}
+//
+//									board.getControl().setLayoutDeferred(true);
+//									board.getControl().setParent(composite);
+//									board.hideMoveList();
+//									// This shuts down the engine if its
+//									// visible.
+//									board.hideEngineAnalysisWidget();
+//									board.getArrowDecorator().removeAllArrows();
+//									board.getSquareHighlighter()
+//											.removeAllHighlights();
+//									board.getResultDecorator().setDecoration(
+//											null);
+//									board.getMoveList().clear();
+//									board.getWhiteLagLabel().setImage(null);
+//									board.getBlackLagLabel().setImage(null);
+//									ChessBoardUtils.clearCoolbar(board);
+//									chessBoardCache.add(0, board);
+//								}
+//							});
+//				}
+//			} else {
+//				// It is'nt being cached so kill it off.
+//				board.getControl().dispose();
+//			}
+//			if (LOG.isInfoEnabled()) {
+//				LOG.info("Recycled a chess board in "
+//						+ (System.currentTimeMillis() - startTime));
+//			}
+//		} else {
 			board.getControl().dispose();
-		}
+		//}
 	}
 
 	protected void init() {
-		long startTime = System.currentTimeMillis();
-		composite = new Shell(Raptor.getInstance().getDisplay());
-		composite.setVisible(false);
-
-		for (int i = 0; i < CHESS_BOARD_CACHE_SIZE; i++) {
-			ChessBoard board = new ChessBoard();
-			Game emptyGame = GameFactory
-					.createStartingPosition(Variant.classic);
-			ChessBoardController controller = new InactiveController(emptyGame);
-			board.setController(controller);
-			controller.setBoard(board);
-			board.createControls(composite);
-			controller.init();
-			board.redrawSquares();
-			chessBoardCache.add(board);
-		}
-
-		if (LOG.isInfoEnabled()) {
-			LOG.info("Initialized ChessBoardCacheService in "
-					+ (System.currentTimeMillis() - startTime));
-		}
+//		long startTime = System.currentTimeMillis();
+//		composite = new Shell(Raptor.getInstance().getDisplay());
+//		composite.setVisible(false);
+//
+//		for (int i = 0; i < CHESS_BOARD_CACHE_SIZE; i++) {
+//			ChessBoard board = new ChessBoard();
+//			Game emptyGame = GameFactory
+//					.createStartingPosition(Variant.classic);
+//			ChessBoardController controller = new InactiveController(emptyGame);
+//			board.setController(controller);
+//			controller.setBoard(board);
+//			board.createControls(composite);
+//			controller.init();
+//			board.redrawSquares();
+//			chessBoardCache.add(board);
+//		}
+//
+//		if (LOG.isInfoEnabled()) {
+//			LOG.info("Initialized ChessBoardCacheService in "
+//					+ (System.currentTimeMillis() - startTime));
+//		}
 	}
 }
