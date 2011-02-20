@@ -17,7 +17,6 @@
 // Decompiler options: packimports(3) 
 package raptor.connector.ics.timeseal;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,19 +30,9 @@ import raptor.util.RaptorLogger;
  * This code was reverse engineered from the JIN project. JIN is a GPLed
  * project. Its URL can be found here: http://www.jinchess.com/
  * 
- * Variable names have been changed to be more readable.
- * 
- * It has also been modified to change the initial connect string. The original
- * version sent the operating system information stored in java system
- * properties.
- * 
- * This class isn't so bad but the TimesealPipe is horrendous. What it does
- * actually impacts the timeseal protocol and you can't just use the crypt
- * method in this class and do it yourself.
- * 
- * I would like to rewrite this using ChannelSocket in Raptor to speed it up.
+ * It has been altered for speed enhancements.
  */
-public class TimesealingSocket extends Socket implements Runnable {
+public class TimesealingSocket extends Socket {
 	private class CryptOutputStream extends OutputStream {
 
 		private byte buffer[];
@@ -63,9 +52,9 @@ public class TimesealingSocket extends Socket implements Runnable {
 		public void write(int i) throws IOException {
 			if (i == 10) {
 				synchronized (TimesealingSocket.this) {
-					int resultLength = crypt(byteArrayOutputStream
-							.toByteArray(), System.currentTimeMillis()
-							- initialTime);
+					int resultLength = crypt(
+							byteArrayOutputStream.toByteArray(),
+							System.currentTimeMillis() - initialTime);
 					outputStreamToDecorate.write(buffer, 0, resultLength);
 					outputStreamToDecorate.flush();
 					byteArrayOutputStream.reset();
@@ -121,7 +110,8 @@ public class TimesealingSocket extends Socket implements Runnable {
 		}
 	}
 
-	private static final RaptorLogger LOG = RaptorLogger.getLog(TimesealingSocket.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(TimesealingSocket.class);
 
 	private CryptOutputStream cryptedOutputStream;
 
@@ -131,20 +121,20 @@ public class TimesealingSocket extends Socket implements Runnable {
 
 	private volatile Thread thread;
 
-	private final TimesealPipe timesealPipe;
+	// private final TimesealPipe timesealPipe;
 
 	public TimesealingSocket(InetAddress inetaddress, int i,
 			String intialTimestampString) throws IOException {
 		super(inetaddress, i);
 		initialTimesealString = intialTimestampString;
-		timesealPipe = new TimesealPipe(10000);
+		// timesealPipe = new TimesealPipe(10000);
 		init();
 	}
 
 	public TimesealingSocket(String s, int i, String intialTimestampString)
 			throws IOException {
 		super(s, i);
-		timesealPipe = new TimesealPipe(10000);
+		// timesealPipe = new TimesealPipe(10000);
 		initialTimesealString = intialTimestampString;
 		init();
 	}
@@ -156,8 +146,9 @@ public class TimesealingSocket extends Socket implements Runnable {
 	}
 
 	@Override
-	public InputStream getInputStream() {
-		return timesealPipe.getTimesealInputStream();
+	public InputStream getInputStream() throws IOException {
+		return super.getInputStream();
+		// return timesealPipe.getTimesealInputStream();
 	}
 
 	@Override
@@ -165,84 +156,10 @@ public class TimesealingSocket extends Socket implements Runnable {
 		return cryptedOutputStream;
 	}
 
-	public void run() {
-		try {
-			BufferedInputStream bufferedinputstream = new BufferedInputStream(
-					super.getInputStream());
-			raptor.connector.ics.timeseal.TimesealOutputStream timesealOutputStream = timesealPipe
-					.getTimesealOutputStream();
-			//Timeseal 1
-			//String timesealRequest = "\n\r[G]\n\r";
-			//Timeseal 2
-			String timesealRequest = "[G]\0";
-			byte timesealRequestBytes[] = new byte[timesealRequest.length()];
-			int i = 0;
-			int j = 0;
-			while (thread != null) {
-				int k;
-				if (i != 0) {
-					k = timesealRequestBytes[0];
-					if (k < 0) {
-						k += 256;
-					}
-					for (int l = 0; l < i; l++) {
-						timesealRequestBytes[l] = timesealRequestBytes[l + 1];
-					}
-
-					i--;
-				} else {
-					k = bufferedinputstream.read();
-				}
-				if (timesealRequest.charAt(j) == k) {
-					if (++j == timesealRequest.length()) {
-						j = 0;
-						i = 0;
-						synchronized (this) {
-							getOutputStream().write("\0029\n".getBytes());
-						}
-					}
-				} else if (j != 0) {
-					timesealOutputStream
-							.write((byte) timesealRequest.charAt(0));
-					for (int i1 = 0; i1 < j - 1; i1++) {
-						timesealRequestBytes[i1] = (byte) timesealRequest
-								.charAt(i1 + 1);
-						i++;
-					}
-
-					timesealRequestBytes[i++] = (byte) k;
-					j = 0;
-				} else {
-					if (k < 0) {
-						timesealOutputStream.close();
-						return;
-					}
-					timesealOutputStream.write(k);
-				}
-			}
-		} catch (IOException _ex) {
-			try {
-				cryptedOutputStream.close();
-			} catch (IOException ioexception) {
-				LOG.debug("Failed to close PipedStream");
-				ioexception.printStackTrace();
-			}
-		} finally {
-			try {
-				raptor.connector.ics.timeseal.TimesealOutputStream timesealOutputStream = timesealPipe
-						.getTimesealOutputStream();
-				timesealOutputStream.close();
-			} catch (IOException _ex) {
-			}
-		}
-	}
-
 	private void init() throws IOException {
 		initialTime = System.currentTimeMillis();
 		cryptedOutputStream = new CryptOutputStream(super.getOutputStream());
 		writeInitialTimesealString();
-		thread = new Thread(this, "Timeseal thread");
-		thread.start();
 	}
 
 	private void writeInitialTimesealString() throws IOException {
