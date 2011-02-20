@@ -94,6 +94,111 @@
 				<exclude name=".svn" />
 			</zipfileset>
 		</zip>
+		<zip destfile="build/dist/ChessSet_Berlin.zip">
+			<zipfileset dir="sets/Berlin" prefix="Berlin" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Condal.zip">
+			<zipfileset dir="sets/Condal" prefix="Condal" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Harlequin.zip">
+			<zipfileset dir="sets/Harlequin" prefix="Harlequin" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Kingdom.zip">
+			<zipfileset dir="sets/Kingdom" prefix="Kingdom" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Leipzig.zip">
+			<zipfileset dir="sets/Leipzig" prefix="Leipzig" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Line.zip">
+			<zipfileset dir="sets/Line" prefix="Line" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Lucena.zip">
+			<zipfileset dir="sets/Lucena" prefix="Lucena" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Magnetic.zip">
+			<zipfileset dir="sets/Magnetic" prefix="Magnetic" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Mark.zip">
+			<zipfileset dir="sets/Mark" prefix="Mark" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Marroquin.zip">
+			<zipfileset dir="sets/Mark" prefix="Marroquin" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Maya.zip">
+			<zipfileset dir="sets/Maya" prefix="Maya" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Motif.zip">
+			<zipfileset dir="sets/Motif" prefix="Motif" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Smart.zip">
+			<zipfileset dir="sets/Smart" prefix="Smart" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Usual.zip">
+			<zipfileset dir="sets/Usual" prefix="Usual" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Utrecht.zip">
+			<zipfileset dir="sets/Utrecht" prefix="Utrecht" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
 	</target>
 
 	<target name="compile" depends="init" description="Compile the Java source code">
