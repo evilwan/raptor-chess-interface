@@ -189,6 +189,13 @@ public class UCIEngine {
 	public UCIOption getOption(String name) {
 		return nameToOptions.get(name);
 	}
+	
+	/**
+	 * Returns true if the engine has the specified option, false otherwise.
+	 */
+	public boolean hasOption(String name) {
+		return nameToOptions.get(name) != null;
+	}
 
 	/**
 	 * Returns an array of all supported option names.
