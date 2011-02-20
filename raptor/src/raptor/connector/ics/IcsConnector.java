@@ -15,9 +15,6 @@ package raptor.connector.ics;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -51,28 +48,28 @@ import raptor.connector.MessageCallback;
 import raptor.connector.ics.timeseal.TimesealingSocket;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
+import raptor.script.ChatEventScript;
 import raptor.script.ChatScriptContext;
 import raptor.script.ParameterScriptContext;
 import raptor.script.RaptorChatScriptContext;
 import raptor.script.RaptorParameterScriptContext;
 import raptor.script.RaptorScriptContext;
-import raptor.script.ChatEventScript;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ScriptContext;
 import raptor.service.BughouseService;
 import raptor.service.ChatService;
 import raptor.service.GameService;
-import raptor.service.ScriptService;
-import raptor.service.SeekService;
-import raptor.service.SoundService;
-import raptor.service.ThreadService;
-import raptor.service.UserTagService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.service.GameService.Offer;
 import raptor.service.GameService.Offer.OfferType;
+import raptor.service.ScriptService;
 import raptor.service.ScriptService.ScriptServiceListener;
+import raptor.service.SeekService;
 import raptor.service.SeekService.SeekType;
+import raptor.service.SoundService;
+import raptor.service.ThreadService;
+import raptor.service.UserTagService;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.BugWhoWindowItem;
 import raptor.swt.GamesWindowItem;
@@ -101,9 +98,12 @@ public abstract class IcsConnector implements Connector {
 		protected Pattern regularExpression;
 		protected MessageCallback callback;
 	}
-	
-	//max mmessage size is 400 on fics right now.
+
+	// max mmessage size is 400 on fics right now.
 	private static final int MAX_SEND_MESSAGE_LENGTH = 400;
+
+	// max mmessage size is 400 on fics right now.
+	private static final int MAX_MESSAGE_MESSAGE_LENGTH = 800;
 
 	private static final RaptorLogger LOG = RaptorLogger
 			.getLog(IcsConnector.class);
@@ -178,9 +178,9 @@ public abstract class IcsConnector implements Connector {
 	protected boolean hasSentPassword = false;
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
 	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
-	protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
+	// protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
 
-	protected ReadableByteChannel inputChannel;
+	// protected ReadableByteChannel inputChannel;
 
 	protected boolean isConnecting;
 
@@ -339,24 +339,42 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[] breakUpMessage(StringBuilder message) {
+		//There are two limits. Max communication size (400 on fics) for tells, etc, and Max message communication size (800 on fics) for sending messages.
+		//This algorithm handles breaking up text that is too long for each.
+
 		if (message.length() <= MAX_SEND_MESSAGE_LENGTH) {
 			return new String[] { message + "\n" };
 		} else {
 			int firstSpace = message.indexOf(" ");
+			int messageLimit = MAX_SEND_MESSAGE_LENGTH;
+
+			if (firstSpace != -1) {
+				String command = message.substring(0, firstSpace);
+				if (command.equalsIgnoreCase("message")
+						|| command.equalsIgnoreCase("mess")
+						|| command.equalsIgnoreCase("mes")) {
+					messageLimit = MAX_MESSAGE_MESSAGE_LENGTH;
+				}
+			}
+
+			if (message.length() <= messageLimit) {
+				return new String[] { message + "\n" };
+			}
+
 			List<String> result = new ArrayList<String>(5);
 			if (firstSpace != -1) {
 				int secondSpace = message.indexOf(" ", firstSpace + 1);
 				if (secondSpace != -1) {
 					String beginingText = message.substring(0, secondSpace + 1);
 					String wrappedText = WordUtils.wrap(message.toString(),
-							MAX_SEND_MESSAGE_LENGTH, "\n", true);
+							messageLimit, "\n", true);
 					String[] wrapped = wrappedText.split("\n");
 					result.add(wrapped[0] + "\n");
 					for (int i = 1; i < wrapped.length; i++) {
 						result.add(beginingText + wrapped[i] + "\n");
 					}
 				} else {
-					result.add(message.substring(0, MAX_SEND_MESSAGE_LENGTH) + "\n");
+					result.add(message.substring(0, messageLimit) + "\n");
 					publishEvent(new ChatEvent(
 							null,
 							ChatType.INTERNAL,
@@ -365,7 +383,7 @@ public abstract class IcsConnector implements Connector {
 									+ result.get(0)));
 				}
 			} else {
-				result.add(message.substring(0, MAX_SEND_MESSAGE_LENGTH) + "\n");
+				result.add(message.substring(0, messageLimit) + "\n");
 				publishEvent(new ChatEvent(
 						null,
 						ChatType.INTERNAL,
@@ -419,12 +437,7 @@ public abstract class IcsConnector implements Connector {
 				try {
 					ScriptService.getInstance().removeScriptServiceListener(
 							scriptServiceListener);
-					if (inputChannel != null) {
-						try {
-							inputChannel.close();
-						} catch (Throwable t) {
-						}
-					}
+
 					if (socket != null) {
 						try {
 							socket.close();
@@ -447,7 +460,7 @@ public abstract class IcsConnector implements Connector {
 				} catch (Throwable t) {
 				} finally {
 					socket = null;
-					inputChannel = null;
+					// inputChannel = null;
 					daemonThread = null;
 					isSimulBugConnector = false;
 					simulBugPartnerName = null;
@@ -499,20 +512,12 @@ public abstract class IcsConnector implements Connector {
 			gameService = null;
 		}
 
-		if (inputBuffer != null) {
-			inputBuffer.clear();
-			inputBuffer = null;
-		}
+		// if (inputBuffer != null) {
+		// inputBuffer.clear();
+		// inputBuffer = null;
+		// }
 		if (keepAlive != null) {
 			ThreadService.getInstance().getExecutor().remove(keepAlive);
-		}
-
-		if (inputChannel != null) {
-			try {
-				inputChannel.close();
-			} catch (Throwable t) {
-			}
-			inputChannel = null;
 		}
 
 		LOG.info("Disposed " + getShortName() + "Connector");
@@ -745,7 +750,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public boolean isConnected() {
-		return socket != null && inputChannel != null && daemonThread != null;
+		return socket != null && daemonThread != null;
 	}
 
 	public boolean isConnecting() {
@@ -1532,8 +1537,6 @@ public abstract class IcsConnector implements Connector {
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Connected"));
 
-					inputChannel = Channels.newChannel(socket.getInputStream());
-
 					SoundService.getInstance().playSound("alert");
 
 					daemonThread = new Thread(new Runnable() {
@@ -1770,37 +1773,64 @@ public abstract class IcsConnector implements Connector {
 	protected abstract void loadExtendedCensorList();
 
 	/**
+	 * Handles sending the timeseal ack.
+	 * @param text
+	 * @return
+	 * @throws IOException
+	 */
+	protected String handleTimeseal(String text) throws IOException {
+		int textLength = text.length();
+		String result = text.replace("[G]\0", "");
+		if (result.length() != text.length()) {
+			synchronized (socket.getOutputStream()) {
+				socket.getOutputStream().write("\0029\n".getBytes());
+				socket.getOutputStream().flush();
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * The messageLoop. Reads the inputChannel and then invokes publishInput
 	 * with the text read. Should really never be invoked.
 	 */
 	protected void messageLoop() {
 		try {
 			while (true) {
+				long start = 0;
+				byte[] buffer = new byte[40000];
 				if (isConnected()) {
-					int numRead = inputChannel.read(inputBuffer);
+					int numRead = socket.getInputStream().read(buffer);
+					System.err.println(getContext().getShortName() + " Read "
+							+ numRead);
+					start = System.currentTimeMillis();
 					if (numRead > 0) {
 						if (LOG.isDebugEnabled()) {
 							LOG.debug(context.getShortName() + "Connector "
 									+ "Read " + numRead + " bytes.");
 						}
-						inputBuffer.rewind();
-						byte[] bytes = new byte[numRead];
-						inputBuffer.get(bytes);
-						inboundMessageBuffer.append(IcsUtils
-								.cleanupMessage(new String(bytes)));
-						try {
-							// Useful for debugging /r/n issues.
-							// String string = inboundMessageBuffer.toString();
-							// string = string.replace("\r", "\\r");
-							// string = string.replace("\n", "\\n");
-							// System.err.println(string);
+						// inputBuffer.rewind();
+						// byte[] bytes = new byte[numRead];
 
-							onNewInput();
-						} catch (Throwable t) {
-							onError(context.getShortName() + "Connector "
-									+ "Error in DaemonRun.onNewInput", t);
+						String text = handleTimeseal(new String(buffer, 0,
+								numRead));
+						
+						if (StringUtils.isNotBlank(text)) {
+							inboundMessageBuffer.append(IcsUtils
+									.cleanupMessage(text));
+							try {
+								// Useful for debugging /r/n issues.
+								// String string = inboundMessageBuffer.toString();
+								// string = string.replace("\r", "\\r");
+								// string = string.replace("\n", "\\n");
+								// System.err.println(string);
+								onNewInput();
+							} catch (Throwable t) {
+								onError(context.getShortName() + "Connector "
+										+ "Error in DaemonRun.onNewInput", t);
+							}
+							// inputBuffer.clear();
 						}
-						inputBuffer.clear();
 					} else {
 						if (LOG.isDebugEnabled()) {
 							LOG.debug(context.getShortName() + "Connector "
@@ -1809,7 +1839,7 @@ public abstract class IcsConnector implements Connector {
 						disconnect();
 						break;
 					}
-					Thread.sleep(50);
+					// Thread.sleep(50);
 				} else {
 					if (LOG.isDebugEnabled()) {
 						LOG.debug(context.getShortName() + "Connector "
@@ -1818,6 +1848,9 @@ public abstract class IcsConnector implements Connector {
 					disconnect();
 					break;
 				}
+				System.err.println(getContext().getShortName()
+						+ "messageLoop iteration in "
+						+ (System.currentTimeMillis() - start));
 			}
 		} catch (Throwable t) {
 			if (t instanceof InterruptedException) {
