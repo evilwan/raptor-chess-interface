@@ -2137,7 +2137,7 @@ public abstract class IcsConnector implements Connector {
 	 * kicked off on a different thread.
 	 */
 	protected void processChatEventScripts(final ChatEvent event) {
-		if (chatEventScripts != null) {
+		if (chatEventScripts != null && chatEventScripts.length > 0) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
 					for (ChatEventScript script : chatEventScripts) {
