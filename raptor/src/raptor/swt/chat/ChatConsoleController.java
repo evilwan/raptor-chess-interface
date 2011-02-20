@@ -57,6 +57,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
+import raptor.alias.OpenBoardAlias;
 import raptor.alias.RaptorAliasResult;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -2247,6 +2248,19 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				chatConsole.outputText.paste();
 			}
 		});
+		
+		
+		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
+			new MenuItem(menu, SWT.SEPARATOR);
+			MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
+			showWordsThatStartWithAction.setText("Spelling suggestions for " + finalWord);
+			showWordsThatStartWithAction.addListener(SWT.Selection,
+					new Listener() {
+						public void handleEvent(Event e) {
+							BrowserUtils.openUrl("http://www.google.com/search?q=define:+" + finalWord);
+						}
+					});
+		}
 		
 		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
 			new MenuItem(menu, SWT.SEPARATOR);
