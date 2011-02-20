@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="MacCocoa64" />
 
-	<property name="version" value="v98RC5a" />
+	<property name="version" value="v98RC6" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
