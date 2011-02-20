@@ -101,8 +101,12 @@ public abstract class IcsConnector implements Connector {
 		protected Pattern regularExpression;
 		protected MessageCallback callback;
 	}
+	
+	//max mmessage size is 400 on fics right now.
+	private static final int MAX_SEND_MESSAGE_LENGTH = 400;
 
-	private static final RaptorLogger LOG = RaptorLogger.getLog(IcsConnector.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(IcsConnector.class);
 	public static final String LOGIN_CHARACTERS_TO_FILTER = "����؞";
 
 	protected BughouseService bughouseService;
@@ -335,7 +339,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[] breakUpMessage(StringBuilder message) {
-		if (message.length() <= 800) {
+		if (message.length() <= MAX_SEND_MESSAGE_LENGTH) {
 			return new String[] { message + "\n" };
 		} else {
 			int firstSpace = message.indexOf(" ");
@@ -345,14 +349,14 @@ public abstract class IcsConnector implements Connector {
 				if (secondSpace != -1) {
 					String beginingText = message.substring(0, secondSpace + 1);
 					String wrappedText = WordUtils.wrap(message.toString(),
-							800, "\n", true);
+							MAX_SEND_MESSAGE_LENGTH, "\n", true);
 					String[] wrapped = wrappedText.split("\n");
 					result.add(wrapped[0] + "\n");
 					for (int i = 1; i < wrapped.length; i++) {
 						result.add(beginingText + wrapped[i] + "\n");
 					}
 				} else {
-					result.add(message.substring(0, 800) + "\n");
+					result.add(message.substring(0, MAX_SEND_MESSAGE_LENGTH) + "\n");
 					publishEvent(new ChatEvent(
 							null,
 							ChatType.INTERNAL,
@@ -361,7 +365,7 @@ public abstract class IcsConnector implements Connector {
 									+ result.get(0)));
 				}
 			} else {
-				result.add(message.substring(0, 800) + "\n");
+				result.add(message.substring(0, MAX_SEND_MESSAGE_LENGTH) + "\n");
 				publishEvent(new ChatEvent(
 						null,
 						ChatType.INTERNAL,
@@ -398,8 +402,8 @@ public abstract class IcsConnector implements Connector {
 	 * Connects to ics using the settings in preferences.
 	 */
 	public void connect() {
-		connect(Raptor.getInstance().getPreferences().getString(
-				context.getPreferencePrefix() + "profile"));
+		connect(Raptor.getInstance().getPreferences()
+				.getString(context.getPreferencePrefix() + "profile"));
 	}
 
 	/**
@@ -437,8 +441,8 @@ public abstract class IcsConnector implements Connector {
 						}
 					}
 					if (keepAlive != null) {
-						ThreadService.getInstance().getExecutor().remove(
-								keepAlive);
+						ThreadService.getInstance().getExecutor()
+								.remove(keepAlive);
 					}
 				} catch (Throwable t) {
 				} finally {
@@ -519,7 +523,9 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[][] getChannelActions(String channel) {
-		String channelActions = Raptor.getInstance().getPreferences()
+		String channelActions = Raptor
+				.getInstance()
+				.getPreferences()
 				.getString(
 						getContext().getPreferencePrefix()
 								+ PreferenceKeys.CHANNEL_COMMANDS);
@@ -567,9 +573,12 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public String[][] getGameIdActions(String gameId) {
-		String matchActions = Raptor.getInstance().getPreferences().getString(
-				getContext().getPreferencePrefix()
-						+ PreferenceKeys.GAME_COMMANDS);
+		String matchActions = Raptor
+				.getInstance()
+				.getPreferences()
+				.getString(
+						getContext().getPreferencePrefix()
+								+ PreferenceKeys.GAME_COMMANDS);
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
 
@@ -614,13 +623,16 @@ public abstract class IcsConnector implements Connector {
 			return new String[0][0];
 		}
 
-		String matchActions = Raptor.getInstance().getPreferences().getString(
-				getContext().getPreferencePrefix()
-						+ PreferenceKeys.PERSON_QUICK_COMMANDS);
+		String matchActions = Raptor
+				.getInstance()
+				.getPreferences()
+				.getString(
+						getContext().getPreferencePrefix()
+								+ PreferenceKeys.PERSON_QUICK_COMMANDS);
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
 
-		String[][] result = new String[matchActionsArray.length+1][2];
+		String[][] result = new String[matchActionsArray.length + 1][2];
 
 		for (int i = 0; i < matchActionsArray.length; i++) {
 			String action = matchActionsArray[i];
@@ -629,10 +641,10 @@ public abstract class IcsConnector implements Connector {
 			result[i][0] = action;
 			result[i][1] = action;
 		}
-		
+
 		result[matchActionsArray.length][0] = "Full userinfo of " + person;
 		result[matchActionsArray.length][1] = person;
-		
+
 		return result;
 	}
 
@@ -641,9 +653,12 @@ public abstract class IcsConnector implements Connector {
 			return new String[0][0];
 		}
 
-		String matchActions = Raptor.getInstance().getPreferences().getString(
-				getContext().getPreferencePrefix()
-						+ PreferenceKeys.PERSON_COMMANDS);
+		String matchActions = Raptor
+				.getInstance()
+				.getPreferences()
+				.getString(
+						getContext().getPreferencePrefix()
+								+ PreferenceKeys.PERSON_COMMANDS);
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
 
@@ -821,8 +836,8 @@ public abstract class IcsConnector implements Connector {
 	 * Auto logs in if that is configured.
 	 */
 	public void onAutoConnect() {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				context.getPreferencePrefix() + "auto-connect")) {
+		if (Raptor.getInstance().getPreferences()
+				.getBoolean(context.getPreferencePrefix() + "auto-connect")) {
 			connect();
 		}
 	}
@@ -948,12 +963,10 @@ public abstract class IcsConnector implements Connector {
 					for (int i = 0; i < messageCallbackEntries.size(); i++) {
 						MessageCallbackEntry entry = messageCallbackEntries
 								.get(i);
-						if (RegExUtils.matches(entry.regularExpression, event
-								.getMessage())) {
+						if (RegExUtils.matches(entry.regularExpression,
+								event.getMessage())) {
 							if (LOG.isDebugEnabled()) {
-								LOG
-										.debug("Invoking callback "
-												+ entry.callback);
+								LOG.debug("Invoking callback " + entry.callback);
 							}
 							if (!entry.callback.matchReceived(event)) {
 								messageCallbackEntries.remove(i);
@@ -985,6 +998,7 @@ public abstract class IcsConnector implements Connector {
 	 * are published on separate threads via ThreadService.
 	 */
 	public void publishEvent(final ChatEvent event) {
+
 		if (chatService != null) { // Could have been disposed.
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Publishing event : " + event);
@@ -999,8 +1013,8 @@ public abstract class IcsConnector implements Connector {
 				return;
 			}
 
-			event.setMessage(substituteTitles(event.getMessage(), event
-					.getType()));
+			event.setMessage(substituteTitles(event.getMessage(),
+					event.getType()));
 			handleOpeningTabs(event);
 			processChatEventScripts(event);
 
@@ -1032,9 +1046,9 @@ public abstract class IcsConnector implements Connector {
 						&& channelToSpeakTellsFrom.contains(event.getChannel())) {
 					event.setHasSoundBeenHandled(speak(IcsUtils
 							.stripTitles(event.getSource())
-						//	+ " "
-						//	+ event.getChannel()
-						//	+ " "
+					// + " "
+					// + event.getChannel()
+					// + " "
 							+ getTextAfterColon(event.getMessage())));
 				}
 			}
@@ -1044,10 +1058,11 @@ public abstract class IcsConnector implements Connector {
 						|| peopleToSpeakTellsFrom.contains(event.getSource())) {
 					event.setHasSoundBeenHandled(speak(IcsUtils
 							.stripTitles(event.getSource())
-							+ " " + getTextAfterColon(event.getMessage())));
+							+ " "
+							+ getTextAfterColon(event.getMessage())));
 				}
 			}
-			
+
 			if (event.getType() == ChatType.WHISPER
 					|| event.getType() == ChatType.KIBITZ) {
 				if (!event.getSource().equals(getUserName())
@@ -1096,8 +1111,10 @@ public abstract class IcsConnector implements Connector {
 	 * Restores the saved states for this connector.
 	 */
 	public void restoreTabStates() {
-		String preference = StringUtils.defaultString(Raptor.getInstance()
-				.getPreferences().getString(
+		String preference = StringUtils.defaultString(Raptor
+				.getInstance()
+				.getPreferences()
+				.getString(
 						getContext().getShortName() + "-" + currentProfileName
 								+ "-" + PreferenceKeys.CHANNEL_REGEX_TAB_INFO));
 
@@ -1110,13 +1127,13 @@ public abstract class IcsConnector implements Connector {
 			String quadString = tok.nextToken();
 
 			if (type.equals("Channel")) {
-				if (!Raptor.getInstance().getWindow().containsChannelItem(this,
-						value)) {
+				if (!Raptor.getInstance().getWindow()
+						.containsChannelItem(this, value)) {
 					ChatUtils.openChannelTab(this, value, false);
 				}
 			} else if (type.equals("RegEx")) {
-				if (!Raptor.getInstance().getWindow().containsRegExItem(this,
-						value)) {
+				if (!Raptor.getInstance().getWindow()
+						.containsRegExItem(this, value)) {
 					ChatUtils.openRegularExpressionTab(this, value, false);
 				}
 			} else if (type.equals("SeekTableWindowItem")) {
@@ -1196,6 +1213,7 @@ public abstract class IcsConnector implements Connector {
 	 */
 	public void sendMessage(String message, boolean isHidingFromUser,
 			ChatType hideNextChatType) {
+		long start = System.currentTimeMillis();
 		if (isConnected()) {
 
 			if (vetoMessage(message)) {
@@ -1241,8 +1259,8 @@ public abstract class IcsConnector implements Connector {
 			}
 
 			if (!isHidingFromUser) {
-				publishEvent(new ChatEvent(null, ChatType.OUTBOUND, message
-						.trim()));
+				publishEvent(new ChatEvent(null, ChatType.OUTBOUND,
+						message.trim()));
 			}
 		} else {
 			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
@@ -1250,6 +1268,9 @@ public abstract class IcsConnector implements Connector {
 							+ getShortName()
 							+ ". There is currently no connection."));
 		}
+
+		System.err.println("Sent message in: "
+				+ (System.currentTimeMillis() - start));
 	}
 
 	/**
@@ -1307,7 +1328,7 @@ public abstract class IcsConnector implements Connector {
 			gamesToSpeakTellsFrom.remove(gameId);
 		}
 	}
-	
+
 	public void setSpeakingPersonTells(String person,
 			boolean isSpeakingPersonTells) {
 		if (isSpeakingPersonTells) {
@@ -1380,8 +1401,8 @@ public abstract class IcsConnector implements Connector {
 								+ "Channel`"
 								+ controller.getChannel()
 								+ "`"
-								+ Raptor.getInstance().getWindow().getQuadrant(
-										item).toString();
+								+ Raptor.getInstance().getWindow()
+										.getQuadrant(item).toString();
 					} else if (chatConsoleItem.getController() instanceof RegExController) {
 						RegExController controller = (RegExController) chatConsoleItem
 								.getController();
@@ -1389,8 +1410,8 @@ public abstract class IcsConnector implements Connector {
 								+ "RegEx`"
 								+ controller.getPattern()
 								+ "`"
-								+ Raptor.getInstance().getWindow().getQuadrant(
-										item).toString();
+								+ Raptor.getInstance().getWindow()
+										.getQuadrant(item).toString();
 					}
 				} else if (item instanceof SeekTableWindowItem) {
 					preference += (preference.equals("") ? "" : "`")
@@ -1406,10 +1427,13 @@ public abstract class IcsConnector implements Connector {
 							+ "GamesWindowItem` ` ";
 				}
 			}
-			Raptor.getInstance().getPreferences().setValue(
-					getContext().getShortName() + "-" + currentProfileName
-							+ "-" + PreferenceKeys.CHANNEL_REGEX_TAB_INFO,
-					preference);
+			Raptor.getInstance()
+					.getPreferences()
+					.setValue(
+							getContext().getShortName() + "-"
+									+ currentProfileName + "-"
+									+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO,
+							preference);
 			Raptor.getInstance().getPreferences().save();
 		}
 	}
@@ -1457,15 +1481,15 @@ public abstract class IcsConnector implements Connector {
 		if (mainConsoleWindowItem == null) {
 			// Add the main console tab to the raptor window.
 			createMainConsoleWindowItem();
-			Raptor.getInstance().getWindow().addRaptorWindowItem(
-					mainConsoleWindowItem, false);
-		} else if (!Raptor.getInstance().getWindow().isBeingManaged(
-				mainConsoleWindowItem)) {
+			Raptor.getInstance().getWindow()
+					.addRaptorWindowItem(mainConsoleWindowItem, false);
+		} else if (!Raptor.getInstance().getWindow()
+				.isBeingManaged(mainConsoleWindowItem)) {
 			// Add a new main console to the raptor window since the existing
 			// one is no longer being managed (it was already disposed).
 			createMainConsoleWindowItem();
-			Raptor.getInstance().getWindow().addRaptorWindowItem(
-					mainConsoleWindowItem, false);
+			Raptor.getInstance().getWindow()
+					.addRaptorWindowItem(mainConsoleWindowItem, false);
 		}
 		// If its being managed no need to do anything it should adjust itself
 		// as the state of the connector changes from the ConnectorListener it
@@ -1639,8 +1663,8 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	protected String getInitialTimesealString() {
-		return Raptor.getInstance().getPreferences().getString(
-				PreferenceKeys.TIMESEAL_INIT_STRING);
+		return Raptor.getInstance().getPreferences()
+				.getString(PreferenceKeys.TIMESEAL_INIT_STRING);
 	}
 
 	protected String getTextAfterColon(String message) {
@@ -1661,13 +1685,13 @@ public abstract class IcsConnector implements Connector {
 				if (getPreferences().getBoolean(
 						PreferenceKeys.CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS)
 						&& event.getType() == ChatType.TELL) {
-					ChatUtils.openPersonTab(IcsConnector.this, event
-							.getSource(), false);
+					ChatUtils.openPersonTab(IcsConnector.this,
+							event.getSource(), false);
 				} else if (getPreferences().getBoolean(
 						PreferenceKeys.CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS)
 						&& event.getType() == ChatType.CHANNEL_TELL) {
-					ChatUtils.openChannelTab(IcsConnector.this, event
-							.getChannel(), false);
+					ChatUtils.openChannelTab(IcsConnector.this,
+							event.getChannel(), false);
 				} else if (getPreferences().getBoolean(
 						PreferenceKeys.CHAT_OPEN_PARTNER_TAB_ON_PTELLS)
 						&& event.getType() == ChatType.PARTNER_TELL) {
@@ -1799,12 +1823,11 @@ public abstract class IcsConnector implements Connector {
 			if (t instanceof InterruptedException) {
 			}
 			if (t instanceof IOException) {
-				LOG
-						.debug(
-								context.getShortName()
-										+ "Connector "
-										+ "IOException occured in messageLoop (These are common when disconnecting and ignorable)",
-								t);
+				LOG.debug(
+						context.getShortName()
+								+ "Connector "
+								+ "IOException occured in messageLoop (These are common when disconnecting and ignorable)",
+						t);
 			} else {
 				onError(context.getShortName()
 						+ "Connector Error in DaemonRun Thwoable", t);
@@ -1894,8 +1917,8 @@ public abstract class IcsConnector implements Connector {
 				public void run() {
 					long currentTime = System.currentTimeMillis();
 					lastPingTime = currentTime - lastSendPingTime;
-					Raptor.getInstance().getWindow().setPingTime(
-							IcsConnector.this, lastPingTime);
+					Raptor.getInstance().getWindow()
+							.setPingTime(IcsConnector.this, lastPingTime);
 					lastSendPingTime = 0;
 				}
 			});
@@ -1978,8 +2001,8 @@ public abstract class IcsConnector implements Connector {
 									.indexOf(context.getLoginErrorMessage());
 							if (errorMessageIndex != -1) {
 								String event = drainInboundMessageBuffer();
-								event = StringUtils.replaceChars(event, "����",
-										"");
+								event = StringUtils.replaceChars(event,
+										"����", "");
 								parseMessage(event);
 							}
 						}
@@ -2005,21 +2028,25 @@ public abstract class IcsConnector implements Connector {
 	 * 
 	 * message will always use \n as the line delimiter.
 	 */
-	protected void parseMessage(String message) {
-		message = filterTrailingPrompts(message);
-		ChatEvent[] events = null;
-		try {
-			events = context.getParser().parse(message);
-		} catch (RuntimeException re) {
-			throw new RuntimeException("Error occured parsing message: "
-					+ message, re);
-		}
+	protected void parseMessage(final String message) {
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				String filteredMessage = filterTrailingPrompts(message);
+				ChatEvent[] events = null;
+				try {
+					events = context.getParser().parse(filteredMessage);
+				} catch (RuntimeException re) {
+					throw new RuntimeException(
+							"Error occured parsing message: " + message, re);
+				}
 
-		for (ChatEvent event : events) {
-			event.setMessage(IcsUtils
-					.maciejgFormatToUnicode(event.getMessage()));
-			publishEvent(event);
-		}
+				for (ChatEvent event : events) {
+					event.setMessage(IcsUtils.maciejgFormatToUnicode(event
+							.getMessage()));
+					publishEvent(event);
+				}
+			}
+		});
 	}
 
 	/**
@@ -2142,7 +2169,7 @@ public abstract class IcsConnector implements Connector {
 				public void run() {
 					for (ChatEventScript script : chatEventScripts) {
 						if (script.isActive()
-								&& script.getChatType() == event.getType() 
+								&& script.getChatType() == event.getType()
 								|| script.getChatType() == ChatType.ALL) {
 							script.execute(getChatScriptContext(event));
 						}
@@ -2290,8 +2317,8 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	protected void refreshChatScripts() {
-		chatEventScripts = ScriptService.getInstance()
-				.getChatEventScripts(getScriptConnectorType());
+		chatEventScripts = ScriptService.getInstance().getChatEventScripts(
+				getScriptConnectorType());
 	}
 
 	/**
