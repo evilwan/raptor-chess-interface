@@ -234,27 +234,34 @@ public class ChessBoardUtils implements BoardConstants {
 		if (type == EMPTY) {
 			return null;
 		} else {
-
 			if (size < 8) {
 				size = 8;
-			}
-			if (size > 100) {
-				size = 100;
 			}
 
 			String key = name + "_" + type + "_" + size + "x" + size;
 			Image image = Raptor.getInstance().getImageRegistry().get(key);
 
 			if (image == null) {
+				//This list is sorted ascending.
 				List<Integer> supportedSizes = getSetPieceSizes(name);
+				
 				if (!supportedSizes.contains(size)) {
+					//TO DO: make this more of a binary search for speed.
 					int lastSize = supportedSizes.get(0);
+					boolean foundMatch = false;
+					
 					for (int currentSize : supportedSizes) {
 						if (currentSize > size) {
 							size = lastSize;
+							foundMatch = true;
 							break;
 						}
 						lastSize = currentSize;
+					}
+					
+					if (!foundMatch) {
+						//This will be the largest size found.
+						size = lastSize;
 					}
 				}
 
