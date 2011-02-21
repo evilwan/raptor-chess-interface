@@ -63,7 +63,7 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR,
-				"Piece Jail/Drop Square Number Color:", getFieldEditorParent()));
+				"Piece Jail Number Color:", getFieldEditorParent()));
 
 	}
 }
