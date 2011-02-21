@@ -1816,18 +1816,11 @@ public abstract class IcsConnector implements Connector {
 							inboundMessageBuffer.append(IcsUtils
 									.cleanupMessage(text));
 							try {
-								// Useful for debugging /r/n issues.
-								// String string =
-								// inboundMessageBuffer.toString();
-								// string = string.replace("\r", "\\r");
-								// string = string.replace("\n", "\\n");
-								// System.err.println(string);
 								onNewInput();
 							} catch (Throwable t) {
 								onError(context.getShortName() + "Connector "
 										+ "Error in DaemonRun.onNewInput", t);
 							}
-							// inputBuffer.clear();
 						}
 					} else {
 						if (LOG.isDebugEnabled()) {
