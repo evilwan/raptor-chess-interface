@@ -299,7 +299,7 @@ public class SetupController extends ChessBoardController {
 		if (!ChessBoardUtils.isPieceJailSquare(square)) {
 			board.getSquare(square).setPiece(GameConstants.EMPTY);
 		}
-		board.redrawSquares();
+		board.redrawPiecesAndArtifacts(false);
 	}
 
 	@Override
@@ -399,7 +399,7 @@ public class SetupController extends ChessBoardController {
 						.isWhitesMove()));
 
 		if (isRedrawing) {
-			board.redrawSquares();
+			board.redrawPiecesAndArtifacts(false);
 		}
 	}
 

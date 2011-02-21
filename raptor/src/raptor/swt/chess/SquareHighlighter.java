@@ -42,11 +42,13 @@ public class SquareHighlighter {
 		public void clear(boolean isForcing) {
 			if (isForcing) {
 				highlights.clear();
+				square.setDirty(true);
 			} else {
 				for (int i = 0; i < highlights.size(); i++) {
 					if (!highlights.get(i).isFadeAway()) {
 						highlights.remove(i);
 						i--;
+						square.setDirty(true);
 					}
 				}
 			}
@@ -134,7 +136,7 @@ public class SquareHighlighter {
 			}
 		}
 
-		redrawSquares();
+		redrawSquares(false);
 		if (highlight.isFadeAway) {
 			Raptor.getInstance().getDisplay().timerExec(
 					Raptor.getInstance().getPreferences().getInt(
@@ -142,7 +144,7 @@ public class SquareHighlighter {
 					new Runnable() {
 						public void run() {
 							highlight.frame--;
-							redrawSquares();
+							redrawSquares(true);
 							if (highlight.frame != 0) {
 								Raptor
 										.getInstance()
@@ -234,7 +236,7 @@ public class SquareHighlighter {
 	/**
 	 * Redraws all squares that have arrow segments.
 	 */
-	protected void redrawSquares() {
+	protected void redrawSquares(boolean forceUpdate) {
 		if (decorators == null) {
 			return;
 		}
@@ -243,14 +245,24 @@ public class SquareHighlighter {
 		// modification errors.
 		for (int i = 0; i < decorators.length; i++) {
 			if (!decorators[i].highlights.isEmpty()) {
-				decorators[i].square.redraw();
+				if (forceUpdate) {
+				    decorators[i].square.redraw();
+				}
+				else {
+					decorators[i].square.setDirty(true);
+				}
 			}
 		}
 
 		for (int i = 0; i < dropSquareDecorators.length; i++) {
 			if (dropSquareDecorators[i] != null
 					&& !dropSquareDecorators[i].highlights.isEmpty()) {
-				dropSquareDecorators[i].square.redraw();
+				if (forceUpdate) {
+					dropSquareDecorators[i].square.redraw();
+				}
+				else {
+					dropSquareDecorators[i].square.setDirty(true);
+				}
 			}
 		}
 	}
@@ -261,6 +273,7 @@ public class SquareHighlighter {
 	protected void removeAllHighlights(boolean isForcing) {
 		for (HighlightDecorator decorator : decorators) {
 			decorator.clear(true);
+			decorator.square.setDirty(true);
 		}
 
 		for (HighlightDecorator decorator : dropSquareDecorators) {

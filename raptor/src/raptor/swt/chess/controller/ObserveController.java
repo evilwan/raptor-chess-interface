@@ -80,7 +80,7 @@ public class ObserveController extends ChessBoardController {
 								board.getResultDecorator()
 										.setDecorationFromResult(
 												getGame().getResult());
-								board.redrawSquares();
+								board.redrawPiecesAndArtifacts(true);
 
 								if (!handleSpeakResults(game)) {
 									onPlayGameEndSound();

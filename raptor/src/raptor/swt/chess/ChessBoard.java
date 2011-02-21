@@ -15,7 +15,7 @@ package raptor.swt.chess;
 
 import org.apache.commons.lang.StringUtils;
 import raptor.util.RaptorLogger;
- 
+
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -117,8 +117,8 @@ public class ChessBoard implements BoardConstants {
 					| SWT.NO_BACKGROUND);
 			componentComposite.setLayout(SWTUtils.createMarginlessGridLayout(1,
 					true));
-			if (Raptor.getInstance().getPreferences().getBoolean(
-					PreferenceKeys.BOARD_COOLBAR_ON_TOP)) {
+			if (Raptor.getInstance().getPreferences()
+					.getBoolean(PreferenceKeys.BOARD_COOLBAR_ON_TOP)) {
 				coolbar = new CoolBar(componentComposite, SWT.FLAT
 						| SWT.HORIZONTAL);
 				coolbar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
@@ -128,8 +128,8 @@ public class ChessBoard implements BoardConstants {
 			analysisSash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 					true));
 
-			if (!Raptor.getInstance().getPreferences().getBoolean(
-					PreferenceKeys.BOARD_COOLBAR_ON_TOP)) {
+			if (!Raptor.getInstance().getPreferences()
+					.getBoolean(PreferenceKeys.BOARD_COOLBAR_ON_TOP)) {
 				coolbar = new CoolBar(componentComposite, SWT.FLAT
 						| SWT.HORIZONTAL);
 				coolbar.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true,
@@ -149,7 +149,8 @@ public class ChessBoard implements BoardConstants {
 			boardMoveListSash.addDisposeListener(new DisposeListener() {
 				public void widgetDisposed(DisposeEvent e) {
 					if (propertyChangeListener != null) {
-						Raptor.getInstance().getPreferences()
+						Raptor.getInstance()
+								.getPreferences()
 								.removePropertyChangeListener(
 										propertyChangeListener);
 						propertyChangeListener = null;
@@ -214,8 +215,8 @@ public class ChessBoard implements BoardConstants {
 			gameDescriptionLabel = new RaptorLabel(boardComposite, SWT.NONE);
 			currentPremovesLabel = new RaptorLabel(boardComposite, SWT.NONE);
 
-			Raptor.getInstance().getPreferences().addPropertyChangeListener(
-					propertyChangeListener);
+			Raptor.getInstance().getPreferences()
+					.addPropertyChangeListener(propertyChangeListener);
 
 			// order is important here.
 			squareHighlighter = new SquareHighlighter(this);
@@ -424,18 +425,37 @@ public class ChessBoard implements BoardConstants {
 
 	/**
 	 * Forces redraws on all of the squares and all of the pieceJailSquares.
+	 * @param forceRedraw True if every square should be redrawn. False if only dirty squares should be redrawn.
 	 */
-	public void redrawSquares() {
-		for (int i = 0; i < 8; i++) {
+	public void redrawPiecesAndArtifacts(boolean forceRedraw) {
+		if (!forceRedraw) {
+			for (int i = 0; i < 8; i++) {
 
-			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j].redraw();
+				for (int j = 0; j < squares[i].length; j++) {
+					if (squares[i][j].isDirty) {
+						squares[i][j].redraw();
+					}
+				}
+
 			}
 
-		}
+			for (int i = 1; i < pieceJailSquares.length; i++) {
+				if (pieceJailSquares[i].isDirty) {
+					pieceJailSquares[i].redraw();
+				}
+			}
+		} else {
+			for (int i = 0; i < 8; i++) {
 
-		for (int i = 1; i < pieceJailSquares.length; i++) {
-			pieceJailSquares[i].redraw();
+				for (int j = 0; j < squares[i].length; j++) {
+					squares[i][j].redraw();
+				}
+
+			}
+
+			for (int i = 1; i < pieceJailSquares.length; i++) {
+				pieceJailSquares[i].redraw();
+			}
 		}
 	}
 
@@ -645,9 +665,9 @@ public class ChessBoard implements BoardConstants {
 			ChessBoardLayout oldLayout = chessBoardLayout;
 
 			try {
-				chessBoardLayout = (ChessBoardLayout) Class.forName(
-						layoutClassName).getConstructor(ChessBoard.class)
-						.newInstance(this);
+				chessBoardLayout = (ChessBoardLayout) Class
+						.forName(layoutClassName)
+						.getConstructor(ChessBoard.class).newInstance(this);
 
 				if (oldLayout != null) {
 					boardComposite.setLayout(null);
@@ -687,7 +707,7 @@ public class ChessBoard implements BoardConstants {
 		}
 	}
 
-	protected void createEngineAnalysisWidget() {		
+	protected void createEngineAnalysisWidget() {
 		if (!Variant.isClassic(controller.getGame().getVariant())
 				&& controller.getGame().getVariant() != Variant.fischerRandom) {
 			engineAnalysisWidget = new XboardAnalysisWidget();
@@ -731,8 +751,8 @@ public class ChessBoard implements BoardConstants {
 		for (int i = 0; i < 8; i++) {
 			isWhiteSquare = !isWhiteSquare;
 			for (int j = 0; j < squares[i].length; j++) {
-				squares[i][j] = new ChessSquare(boardComposite, this, GameUtils
-						.getSquare(i, j), isWhiteSquare);
+				squares[i][j] = new ChessSquare(boardComposite, this,
+						GameUtils.getSquare(i, j), isWhiteSquare);
 				isWhiteSquare = !isWhiteSquare;
 			}
 		}

@@ -155,7 +155,7 @@ public class PlayingController extends ChessBoardController {
 								board.getResultDecorator()
 										.setDecorationFromResult(
 												getGame().getResult());
-								board.redrawSquares();
+								board.redrawPiecesAndArtifacts(true);
 
 								if (!handleSpeakResults(game)) {
 									onPlayGameEndSound();
@@ -586,7 +586,7 @@ public class PlayingController extends ChessBoardController {
 		premoves.clear();
 		removeAllMoveDecorations();
 		adjustPremoveLabelHighlightsAndArrows();
-		board.redrawSquares();
+		board.redrawPiecesAndArtifacts(false);
 	}
 
 	@Override
@@ -661,7 +661,7 @@ public class PlayingController extends ChessBoardController {
 
 		if (!isDisposed() && board.getSquare(square).getPiece() != EMPTY) {
 			board.getSquare(square).setHidingPiece(true);
-			board.redrawSquares();
+			board.redrawPiecesAndArtifacts(false);
 		}
 	}
 

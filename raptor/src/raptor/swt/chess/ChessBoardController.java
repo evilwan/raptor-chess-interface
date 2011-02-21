@@ -502,7 +502,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		}
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
-		board.redrawSquares();
+		board.redrawPiecesAndArtifacts(true);
 		board.getControl().layout(true, true);
 		board.getControl().redraw();
 	}
@@ -585,7 +585,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		adjustPieceJailVisibility();
 		adjustBoard();
 		adjustPieceJail();
-		board.redrawSquares();
+		board.redrawPiecesAndArtifacts(false);
 
 		if (LOG.isDebugEnabled()) {
 			LOG
@@ -1017,7 +1017,6 @@ public abstract class ChessBoardController implements BoardConstants,
 					square.setPiece(DROPPABLE_PIECES[i]);
 				}
 				square.setText(ChessBoardUtils.pieceCountToString(count));
-				square.redraw();
 			}
 		} else {
 			// Non-Droppable piece games like classic chess flow through here.
@@ -1145,7 +1144,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	protected void refreshBoard() {
 		adjustBoard();
 		adjustPieceJail();
-		board.redrawSquares();
+		board.redrawPiecesAndArtifacts(false);
 	}
 
 	/**
@@ -1214,7 +1213,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			board.getSquare(move.getFrom()).setPiece(EMPTY);
 			board.getSquare(move.getTo()).setPiece(fromPiece);
 		}
-		board.redrawSquares();
+		board.redrawPiecesAndArtifacts(false);
 	}
 
 	/**
@@ -1222,7 +1221,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	protected void refreshPieceJail() {
 		adjustPieceJail();
-		board.redrawSquares();
+		board.redrawPiecesAndArtifacts(false);
 	}
 
 	protected void removeAllMoveDecorations() {
@@ -1255,6 +1254,5 @@ public abstract class ChessBoardController implements BoardConstants,
 			square.setPiece(coloredPiece);
 		}
 		square.setText(ChessBoardUtils.pieceCountToString(count));
-		square.redraw();
 	}
 }

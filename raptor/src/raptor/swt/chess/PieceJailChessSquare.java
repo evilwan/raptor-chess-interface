@@ -104,7 +104,10 @@ public class PieceJailChessSquare extends ChessSquare {
 	 * @param text
 	 */
 	public void setText(String text) {
-		this.text = text;
+		if (!StringUtils.equals(text, text)) {
+		    this.text = text;
+		    isDirty = true;
+		}
 	}
 
 	protected int getPieceJailLabelPercentage() {

@@ -764,6 +764,7 @@ public class ArrowDecorator {
 				for (ArrowSpec spec : specs) {
 					if (arrow == spec.arrow) {
 						specToRemove = spec;
+						
 					}
 				}
 				if (specToRemove != null) {
@@ -800,7 +801,7 @@ public class ArrowDecorator {
 		} else {
 			addDecoratorsForArrowStartGreaterThanEnd(arrow);
 		}
-		redrawSquares();
+		redrawSquares(false);
 		if (arrow.isFadeAway) {
 			Raptor.getInstance().getDisplay().timerExec(
 					Raptor.getInstance().getPreferences().getInt(
@@ -808,7 +809,7 @@ public class ArrowDecorator {
 					new Runnable() {
 						public void run() {
 							arrow.frame--;
-							redrawSquares();
+							redrawSquares(true);
 							if (arrow.frame != 0) {
 								Raptor
 										.getInstance()
@@ -1268,12 +1269,18 @@ public class ArrowDecorator {
 
 	/**
 	 * Redraws all squares that have arrow segments.
+	 * @param forceUpdate If true, the square is redrawn, else it is just set to dirty.
 	 */
-	protected void redrawSquares() {
+	protected void redrawSquares(boolean forceUpdate) {
 		// Use for loops here with int. If you dont you can get concurrent
 		// modification errors.
 		for (int i = 0; i < decorators.length; i++) {
-			decorators[i].square.redraw();
+			if (forceUpdate) {
+				decorators[i].square.redraw();
+			}
+			else {
+			    decorators[i].square.setDirty(true);
+			}
 			if (!decorators[i].specs.isEmpty()) {
 			}
 		}
@@ -1294,7 +1301,8 @@ public class ArrowDecorator {
 	protected void removeArrow(Arrow arrow, boolean isForced) {
 		for (SquareArrowDecorator decorator : decorators) {
 			decorator.remove(arrow, isForced);
+			decorator.square.setDirty(true);
 		}
-		board.redrawSquares();
+		board.redrawPiecesAndArtifacts(false);
 	}
 }

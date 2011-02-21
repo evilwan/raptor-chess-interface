@@ -14,7 +14,7 @@
 package raptor.swt.chess;
 
 import raptor.util.RaptorLogger;
- 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.ControlListener;
@@ -138,14 +138,18 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	protected boolean isHidingPiece;
 	protected boolean isLight;
 	protected long lastWheel;
+	protected boolean isDirty;
 
 	Listener mouseWheelListener = new Listener() {
 		public void handleEvent(Event event) {
 			switch (event.type) {
 			case SWT.MouseWheel:
 				if (System.currentTimeMillis() - lastWheel > 100
-						&& Raptor.getInstance().getPreferences().getBoolean(
-								PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL)) {
+						&& Raptor
+								.getInstance()
+								.getPreferences()
+								.getBoolean(
+										PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL)) {
 					board.getController().userMouseWheeled(event.count);
 					lastWheel = System.currentTimeMillis();
 				}
@@ -163,8 +167,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		}
 
 		public void mouseDown(MouseEvent e) {
-			board.controller.userPressedMouseButton(MouseButtonAction
-					.buttonFromEvent(e), id);
+			board.controller.userPressedMouseButton(
+					MouseButtonAction.buttonFromEvent(e), id);
 		}
 
 		public void mouseUp(MouseEvent e) {
@@ -377,7 +381,10 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 *            True if the piece should be hidden, false otherwise.
 	 */
 	public void setHidingPiece(boolean isHidingPiece) {
-		this.isHidingPiece = isHidingPiece;
+		if (this.isHidingPiece != isHidingPiece) {
+			this.isHidingPiece = isHidingPiece;
+			isDirty = true;
+		}
 	}
 
 	/**
@@ -397,6 +404,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 			}
 			this.piece = piece;
 			pieceImage = null;
+			isDirty = true;
 		}
 	}
 
@@ -440,8 +448,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * RaptorPreferenceStore setting.
 	 */
 	protected int getCoordinatesSizePercentage() {
-		return Raptor.getInstance().getPreferences().getInt(
-				BOARD_COORDINATES_SIZE_PERCENTAGE);
+		return Raptor.getInstance().getPreferences()
+				.getInt(BOARD_COORDINATES_SIZE_PERCENTAGE);
 	}
 
 	/**
@@ -492,8 +500,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	}
 
 	protected String getRankLabel() {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				BOARD_IS_SHOW_COORDINATES)
+		if (Raptor.getInstance().getPreferences()
+				.getBoolean(BOARD_IS_SHOW_COORDINATES)
 				&& !ChessBoardUtils.isPieceJailSquare(id)) {
 			if (board.isWhiteOnTop) {
 				if ((GameUtils.getBitboard(id) & GameConstants.HFILE) != 0) {
@@ -535,8 +543,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 	 * RaptorPreferenceStore setting.
 	 */
 	protected boolean isShowingCoordinates() {
-		return Raptor.getInstance().getPreferences().getBoolean(
-				BOARD_IS_SHOW_COORDINATES);
+		return Raptor.getInstance().getPreferences()
+				.getBoolean(BOARD_IS_SHOW_COORDINATES);
 	}
 
 	/**
@@ -546,8 +554,8 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		if (getPreferences().getBoolean(
 				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR)) {
 			getShell().setCursor(
-					Raptor.getInstance().getDisplay().getSystemCursor(
-							SWT.CURSOR_CROSS));
+					Raptor.getInstance().getDisplay()
+							.getSystemCursor(SWT.CURSOR_CROSS));
 		} else {
 			int imageSide = getImageSize();
 			getShell().setCursor(
@@ -565,5 +573,18 @@ public class ChessSquare extends Canvas implements BoardConstants {
 
 	public ChessBoard getChessBoard() {
 		return board;
+	}
+
+	public boolean isDirty() {
+		return isDirty;
+	}
+
+	public void setDirty(boolean isDirty) {
+		this.isDirty = isDirty;
+	}
+
+	public void redraw() {
+		isDirty = false;
+		super.redraw();
 	}
 }
