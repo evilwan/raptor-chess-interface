@@ -1248,6 +1248,7 @@ public abstract class IcsConnector implements Connector {
 					for (String current : messages) {
 						socket.getOutputStream().write(current.getBytes());
 						socket.getOutputStream().flush();
+						System.err.println("Sent " + message);
 					}
 					if (message.startsWith("$$")) {
 						// Don't update last send time on a $$ since idle time
@@ -1726,8 +1727,6 @@ public abstract class IcsConnector implements Connector {
 				|| StringUtils.startsWithIgnoreCase(message, "exam")
 				|| StringUtils.startsWithIgnoreCase(message, "exa")
 				|| StringUtils.startsWithIgnoreCase(message, "ex")
-				|| StringUtils.startsWithIgnoreCase(message, "bsetup")
-				|| StringUtils.startsWithIgnoreCase(message, "$$bsetup")
 				|| StringUtils.startsWithIgnoreCase(message, "play ")
 				|| StringUtils.startsWithIgnoreCase(message, "seek ")
 				|| StringUtils.startsWithIgnoreCase(message, "match ")
