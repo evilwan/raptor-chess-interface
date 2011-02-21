@@ -44,6 +44,7 @@ public interface PreferenceKeys {
 	public static final String MISC2_MOUSE_BUTTON_ACTION = "misc2-mouse-button-action";
 	public static final String LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION = "left-double-click-mouse-button-action";
 	public static final String REGULAR_EXPRESSIONS_TO_BLOCK = "regular-expressions-to-block";
+	public static final String REMOVE_BLANK_LINES = "remove-blank-lines";
 
 	// The following are not preferences but prefixes of preference names.
 	public static final String PLAYING_CONTROLLER = "board-playing-";
@@ -279,6 +280,7 @@ public interface PreferenceKeys {
 	public static final String FICS_KEEP_ALIVE_COMMAND = "fics-keep-alive-command";
 	public static final String FICS_REGULAR_EXPRESSIONS_TO_BLOCK = "fics-"
 			+ REGULAR_EXPRESSIONS_TO_BLOCK;
+	public static final String FICS_REMOVE_BLANK_LINES = "fics-" + REMOVE_BLANK_LINES;
 
 	public static final String FICS_SEEK_GAME_TYPE = "fics-seek-game-type";
 	public static final String FICS_SEEK_MINUTES = "fics-seek-minutes";
@@ -327,6 +329,8 @@ public interface PreferenceKeys {
 	public static final String BICS_KEEP_ALIVE_COMMAND = "bics-keep-alive-command";
 	public static final String BICS_REGULAR_EXPRESSIONS_TO_BLOCK = "bics-"
 			+ REGULAR_EXPRESSIONS_TO_BLOCK;
+	public static final String BICS_REMOVE_BLANK_LINES = "bics-" +REMOVE_BLANK_LINES;
+
 
 	public static final String BICS_PRIMARY_IS_ANON_GUEST = "bics-Primary-is-anon-guest";
 	public static final String BICS_PRIMARY_IS_NAMED_GUEST = "bics-Primary-is-named-guest";
