@@ -1609,6 +1609,12 @@ public abstract class IcsConnector implements Connector {
 			text = text.substring(context.getPrompt().length() + 1);
 		}
 
+		if (getPreferences().getBoolean(
+				context.getPreferencePrefix()
+						+ PreferenceKeys.REMOVE_BLANK_LINES)) {
+			text = text.replace("\n\n", "\n");
+		}
+
 		if (text.endsWith(context.getRawPrompt())) {
 			return text.substring(0, text.length()
 					- context.getRawPrompt().length());
@@ -1616,6 +1622,7 @@ public abstract class IcsConnector implements Connector {
 			return text.substring(0, text.length()
 					- (context.getPrompt().length() + 1));
 		}
+
 		return text;
 	}
 

@@ -60,6 +60,9 @@ public class FicsPage extends FieldEditorPreferencePage {
 
 		addField(new StringFieldEditor(PreferenceKeys.FICS_KEEP_ALIVE_COMMAND,
 				"Keep-Alive command", getFieldEditorParent()));
+		
+		addField(new StringFieldEditor(PreferenceKeys.FICS_REMOVE_BLANK_LINES,
+				"Remove blank lines", getFieldEditorParent()));
 
 	}
 }

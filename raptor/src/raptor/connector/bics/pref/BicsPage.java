@@ -52,5 +52,8 @@ public class BicsPage extends FieldEditorPreferencePage {
 
 		addField(new StringFieldEditor(PreferenceKeys.BICS_KEEP_ALIVE_COMMAND,
 				"Keep-Alive command", getFieldEditorParent()));
+		
+		addField(new StringFieldEditor(PreferenceKeys.BICS_REMOVE_BLANK_LINES,
+				"Remove blank lines", getFieldEditorParent()));
 	}
 }
