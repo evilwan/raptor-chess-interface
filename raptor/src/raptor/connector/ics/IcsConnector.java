@@ -1248,7 +1248,6 @@ public abstract class IcsConnector implements Connector {
 					for (String current : messages) {
 						socket.getOutputStream().write(current.getBytes());
 						socket.getOutputStream().flush();
-						System.err.println("Sent " + message);
 					}
 					if (message.startsWith("$$")) {
 						// Don't update last send time on a $$ since idle time
