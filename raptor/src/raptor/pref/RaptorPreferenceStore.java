@@ -900,6 +900,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_TERTIARY_SERVER_URL, "freechess.org");
 		setDefault(FICS_TERTIARY_PORT, 5000);
 		setDefault(FICS_TERTIARY_TIMESEAL_ENABLED, true);
+		setDefault(FICS_REMOVE_BLANK_LINES, false);
 
 		// Bics
 		setDefault(BICS_KEEP_ALIVE, false);
@@ -957,6 +958,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BICS_TERTIARY_SERVER_URL, "chess.sipay.ru");
 		setDefault(BICS_TERTIARY_PORT, 5000);
 		setDefault(BICS_TERTIARY_TIMESEAL_ENABLED, true);
+		setDefault(BICS_REMOVE_BLANK_LINES, false);
 
 		// Quadrant settings.
 		setDefault("fics-" + MAIN_TAB_QUADRANT, Quadrant.VI);
