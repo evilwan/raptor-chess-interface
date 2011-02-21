@@ -104,7 +104,7 @@ public class PieceJailChessSquare extends ChessSquare {
 	 * @param text
 	 */
 	public void setText(String text) {
-		if (!StringUtils.equals(text, text)) {
+		if (!StringUtils.equals(this.text, text)) {
 		    this.text = text;
 		    isDirty = true;
 		}
