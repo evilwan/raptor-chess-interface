@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
 import raptor.engine.uci.UCIEngine;
+import raptor.international.L10n;
 import raptor.service.UCIEngineService;
 import raptor.swt.UCIEnginePropertiesDialog;
 
@@ -39,11 +40,12 @@ public class UciEnginesPage extends PreferencePage {
 	protected UCIEngine currentEngine;
 	protected Composite parent;
 	protected boolean isBuildingEnginesCombo = false;
+	protected static L10n local = L10n.getInstance();
 
 	public UciEnginesPage() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("UCI Engines");
+		setTitle(local.getString("uciEngines"));
 	}
 
 	@Override
@@ -57,9 +59,7 @@ public class UciEnginesPage extends PreferencePage {
 				1));
 		label
 				.setText(WordUtils
-						.wrap(
-								"\tOn this page you can configure UCI Chess Engines. Start out by selecting the engine "
-										+ "process and giving it a nickname. When you are finished click the apply button.",
+						.wrap(local.getString("uciToolbsDesc"),
 								70));
 		Label enginesLabel = new Label(parent, SWT.LEFT);
 		enginesLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
@@ -85,7 +85,7 @@ public class UciEnginesPage extends PreferencePage {
 		Label processLabel = new Label(parent, SWT.LEFT);
 		processLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
-		processLabel.setText("Engine Location:");
+		processLabel.setText(local.getString("engLoc"));
 
 		Composite processComposite = new Composite(parent, SWT.NONE);
 		processComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -98,14 +98,14 @@ public class UciEnginesPage extends PreferencePage {
 				true, false, 1, 1));
 
 		pickFileButton = new Button(processComposite, SWT.PUSH);
-		pickFileButton.setText("Select Location");
+		pickFileButton.setText(local.getString("selLoc"));
 		pickFileButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
 		pickFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
-				fd.setText("Select the UCI chess engine location");
+				fd.setText(local.getString("selEngLoc"));
 				fd.setFilterPath("");
 				final String selected = fd.open();
 				if (!StringUtils.isBlank(selected)) {
@@ -113,7 +113,7 @@ public class UciEnginesPage extends PreferencePage {
 						processLocationText.setText(new File(selected)
 								.getCanonicalPath());
 					} catch (IOException ioe) {
-						Raptor.getInstance().onError("Error getting filename",
+						Raptor.getInstance().onError(local.getString("errGetFl"),
 								ioe);
 					}
 
@@ -129,14 +129,14 @@ public class UciEnginesPage extends PreferencePage {
 		});
 
 		defaultButton = new Button(parent, SWT.CHECK);
-		defaultButton.setText("Default Engine");
+		defaultButton.setText(local.getString("defEng"));
 		defaultButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 2, 1));
 
 		Label userNameLabel = new Label(parent, SWT.LEFT);
 		userNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
-		userNameLabel.setText("Nickname:");
+		userNameLabel.setText(local.getString("nickname"));
 
 		userNameText = new Text(parent, SWT.SINGLE | SWT.BORDER);
 		userNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -145,7 +145,7 @@ public class UciEnginesPage extends PreferencePage {
 		Label engineNameHeaderLabel = new Label(parent, SWT.LEFT);
 		engineNameHeaderLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false, 1, 1));
-		engineNameHeaderLabel.setText("Engine Name:");
+		engineNameHeaderLabel.setText(local.getString("engName"));
 
 		engineName = new Label(parent, SWT.LEFT);
 		engineName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -154,7 +154,7 @@ public class UciEnginesPage extends PreferencePage {
 		Label engineAuthorHeaderLabel = new Label(parent, SWT.LEFT);
 		engineAuthorHeaderLabel.setLayoutData(new GridData(SWT.LEFT,
 				SWT.CENTER, false, false, 1, 1));
-		engineAuthorHeaderLabel.setText("Engine Author:");
+		engineAuthorHeaderLabel.setText(local.getString("engAuth"));
 
 		engineAuthor = new Label(parent, SWT.LEFT);
 		engineAuthor.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -163,7 +163,7 @@ public class UciEnginesPage extends PreferencePage {
 		Label frHeaderLabel = new Label(parent, SWT.LEFT);
 		frHeaderLabel.setLayoutData(new GridData(SWT.LEFT,
 				SWT.CENTER, false, false, 1, 1));
-		frHeaderLabel.setText("Chess960:");
+		frHeaderLabel.setText(local.getString("chess960"));
 
 		frSupport = new Label(parent, SWT.LEFT);
 		frSupport.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -172,7 +172,7 @@ public class UciEnginesPage extends PreferencePage {
 		propertiesButton = new Button(parent, SWT.LEFT);
 		propertiesButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false, 1, 1));
-		propertiesButton.setText("Engine Properties");
+		propertiesButton.setText(local.getString("engProp"));
 		propertiesButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -183,7 +183,7 @@ public class UciEnginesPage extends PreferencePage {
 		deleteButton = new Button(parent, SWT.LEFT);
 		deleteButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
-		deleteButton.setText("Delete Engine");
+		deleteButton.setText(local.getString("delEng"));
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -200,8 +200,7 @@ public class UciEnginesPage extends PreferencePage {
 			if (!engine.connect()) {
 				Raptor
 						.getInstance()
-						.alert(
-								"Could not connect to the engine. Make sure it is a UCI chess engine.");
+						.alert(local.getString("engTlbAlert"));
 				return;
 			}
 		}
@@ -213,7 +212,7 @@ public class UciEnginesPage extends PreferencePage {
 		}
 		
 		frSupport.setText(StringUtils.defaultString(currentEngine
-				.supportsFischerRandom() ? "yes" : "no", ""));
+				.supportsFischerRandom() ? local.getString("yes"): local.getString("no"), ""));
 		engineName.setText(StringUtils.defaultString(currentEngine
 				.getEngineName(), ""));
 		engineAuthor.setText(StringUtils.defaultString(currentEngine
@@ -236,14 +235,13 @@ public class UciEnginesPage extends PreferencePage {
 
 	protected void onProperties() {
 		if (StringUtils.isBlank(processLocationText.getText())) {
-			Raptor.getInstance().alert("Engine location can not be empty.");
+			Raptor.getInstance().alert(local.getString("engLocEmpt"));
 		} else if (StringUtils.isBlank(userNameText.getText())) {
-			Raptor.getInstance().alert("Nickname location can not be empty.");
+			Raptor.getInstance().alert(local.getString("engLocEmpt"));
 		} else if (currentEngine == null) {
 			Raptor
 					.getInstance()
-					.alert(
-							"There is no current engine connected. Please select an engine process.");
+					.alert( local.getString("engTlbAlert2"));
 		} else {
 			if (currentEngine != null) {
 				currentEngine.quit();
@@ -261,13 +259,11 @@ public class UciEnginesPage extends PreferencePage {
 
 	protected void onSave() {
 		if (StringUtils.isBlank(processLocationText.getText())) {
-			Raptor.getInstance().alert("Engine location can not be empty.");
+			Raptor.getInstance().alert(local.getString("engLocEmpt"));
 		} else if (StringUtils.isBlank(userNameText.getText())) {
-			Raptor.getInstance().alert("Nickname location can not be empty.");
+			Raptor.getInstance().alert(local.getString("nickLocEmpt"));
 		} else if (currentEngine == null) {
-			Raptor.getInstance().alert(
-					"You need to test the engine by clicking the "
-							+ "connect button before applying.");
+			Raptor.getInstance().alert(local.getString("engTlbAlert3"));
 		} else {
 			if (currentEngine != null) {
 				currentEngine.quit();

@@ -16,6 +16,7 @@ package raptor.pref.page;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ScriptsPage extends FieldEditorPreferencePage {
@@ -23,7 +24,7 @@ public class ScriptsPage extends FieldEditorPreferencePage {
 
 	public ScriptsPage() {
 		super(FLAT);
-		setTitle("Scripts");
+		setTitle(L10n.getInstance().getString("scripts"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 

@@ -21,31 +21,34 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.chess.controller.PlayingMouseAction;
 
 public class PlayingMouseActionsPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
 
 	public static final String[][] OPTIONS = {
-			{ "None", PlayingMouseAction.None.toString() },
-			{ "Clear Premoves", PlayingMouseAction.ClearPremoves.toString() },
-			{ "Offer Draw", PlayingMouseAction.OfferDraw.toString() },
-			{ "Crazyhouse/Bughouse Popup Menu",
+			{ local.getString("none"), PlayingMouseAction.None.toString() },
+			{  local.getString("clrPrem"), PlayingMouseAction.ClearPremoves.toString() },
+			{  local.getString("offDraw"), PlayingMouseAction.OfferDraw.toString() },
+			{  local.getString("czPopMenu"),
 					PlayingMouseAction.PopupMenu.toString() },
-			{ "Random Move", PlayingMouseAction.RandomMove.toString() },
-			{ "Random Move Involving Capture",
+			{  local.getString("randMove"), PlayingMouseAction.RandomMove.toString() },
+			{  local.getString("randMoveInvCap"),
 					PlayingMouseAction.RandomCapture.toString() },
-			{ "Random Move Involving Recapture",
+			{  local.getString("randMoveInvRecap"),
 					PlayingMouseAction.RandomRecapture.toString() },
-			{ "Smart Move (Select random move if ambiguous)",
+			{  local.getString("smartMove1"),
 					PlayingMouseAction.SmartMove.toString() },
-			{ "Smart Move (Only move if no ambiguity)",
+			{  local.getString("smartMove2"),
 					PlayingMouseAction.SmartMoveNoAmbiguity.toString() } };
 
 	public PlayingMouseActionsPage() {
 		// Use the "flat" layout
 		super(GRID);
-		setTitle("Playing");
+		setTitle(local.getString("playing"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -53,22 +56,22 @@ public class PlayingMouseActionsPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		addField(new ComboFieldEditor(PreferenceKeys.PLAYING_CONTROLLER
 				+ PreferenceKeys.RIGHT_MOUSE_BUTTON_ACTION,
-				"Right Mouse Button Action:", OPTIONS, getFieldEditorParent()));
+				local.getString("rmouseButtAct"), OPTIONS, getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(PreferenceKeys.PLAYING_CONTROLLER
 				+ PreferenceKeys.MIDDLE_MOUSE_BUTTON_ACTION,
-				"Middle Mouse Button Action:", OPTIONS, getFieldEditorParent()));
+				local.getString("mmouseButtAct"), OPTIONS, getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(PreferenceKeys.PLAYING_CONTROLLER
 				+ PreferenceKeys.MISC1_MOUSE_BUTTON_ACTION,
-				"Misc1 Mouse Button Action:", OPTIONS, getFieldEditorParent()));
+				local.getString("misc1mouseButtAct"), OPTIONS, getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(PreferenceKeys.PLAYING_CONTROLLER
 				+ PreferenceKeys.MISC2_MOUSE_BUTTON_ACTION,
-				"Misc2 Mouse Button Action:", OPTIONS, getFieldEditorParent()));
+				local.getString("misc2mouseButtAct"), OPTIONS, getFieldEditorParent()));
 
 		final Label label = new Label(getFieldEditorParent(), SWT.LEFT);
-		label.setText("\n      Click here to determine mouse button.      \n ");
+		label.setText(local.getString("clkToDetMButton"));
 		label.setBackground(getShell().getDisplay().getSystemColor(
 				SWT.COLOR_BLUE));
 		label.setForeground(getShell().getDisplay().getSystemColor(
@@ -77,21 +80,21 @@ public class PlayingMouseActionsPage extends FieldEditorPreferencePage {
 
 			public void mouseDoubleClick(MouseEvent e) {
 				if (e.button == 1) {
-					label.setText("Left Double Click");
+					label.setText(local.getString("ldClick"));
 				}
 			}
 
 			public void mouseDown(MouseEvent e) {
 				if (e.button == 1) {
-					label.setText("Left Click");
+					label.setText(local.getString("lClick"));
 				} else if (e.button == 2) {
-					label.setText("Middle Click");
+					label.setText(local.getString("mClick"));
 				} else if (e.button == 3) {
-					label.setText("Right Click");
+					label.setText(local.getString("rClick"));
 				} else if (e.button == 4) {
-					label.setText("Misc1 Click");
+					label.setText(local.getString("misc1Click"));
 				} else if (e.button == 5) {
-					label.setText("Misc2 Click");
+					label.setText(local.getString("misc2Click"));
 				}
 			}
 

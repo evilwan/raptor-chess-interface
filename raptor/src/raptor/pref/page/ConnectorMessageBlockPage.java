@@ -20,15 +20,18 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Label;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.ListFieldEditor;
 
 public class ConnectorMessageBlockPage extends FieldEditorPreferencePage {
 	protected String connectorShortName;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ConnectorMessageBlockPage(String connectorShortName) {
 		super(GRID);
-		setTitle("Message Filters");
+		setTitle(local.getString("messFilt"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 		this.connectorShortName = connectorShortName;
 	}
@@ -40,12 +43,9 @@ public class ConnectorMessageBlockPage extends FieldEditorPreferencePage {
 				false, 2, 1));
 		textLabel
 				.setText(WordUtils
-						.wrap(
-								"\t On this page you can add regular expressions that match messages to supress. "
-										+ "This is mostly used to filter out some of the superfolous messages fics sends. "
-										+ "Currently the regular expressions used can not contain a comma. Changes to this list will take effect on the next reconnect.",
+						.wrap( local.getString("messBlockLbl"),
 								70)
-						+ "\n\t See Help->Raptor Help-> Regular Expressions for help with regular expressions.");
+						+ local.getString("regexPathDesc"));
 
 		Label label = new Label(getFieldEditorParent(), SWT.NONE);
 		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false,
@@ -53,7 +53,7 @@ public class ConnectorMessageBlockPage extends FieldEditorPreferencePage {
 
 		addField(new ListFieldEditor(connectorShortName + "-"
 				+ PreferenceKeys.REGULAR_EXPRESSIONS_TO_BLOCK,
-				"Regular Expressions Matching Messages To Supress:",
+				local.getString("regexMatchMess"),
 				getFieldEditorParent(), ',', 300));
 	}
 }

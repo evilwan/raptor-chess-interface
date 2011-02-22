@@ -20,50 +20,54 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FontFieldEditor;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 public class RaptorWindowPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
+	
 	public RaptorWindowPage() {
 		super(GRID);
-		setTitle("Window");
+		setTitle(local.getString("window"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override
 	protected void createFieldEditors() {
 
-		String[][] sliderWidthPreferences = { { "Tiny", "3" },
-				{ "Small", "5" }, { "Medium", "8" }, { "Large", "11" },
-				{ "Extra Wide", "15" } };
+		String[][] sliderWidthPreferences = { { local.getString("tiny"), "3" },
+				{ local.getString("small"), "5" }, { local.getString("medium"), "8" }, { local.getString("large"), "11" },
+				{ local.getString("extWide"), "15" } };
 		ComboFieldEditor setFieldEditor = new ComboFieldEditor(
-				PreferenceKeys.APP_SASH_WIDTH, "Divider Sash Width:",
+				PreferenceKeys.APP_SASH_WIDTH, local.getString("divSashWid"),
 				sliderWidthPreferences, getFieldEditorParent());
 		addField(setFieldEditor);
 
 		ColorFieldEditor pingTimeColor = new ColorFieldEditor(
-				PreferenceKeys.APP_PING_COLOR, "Ping Time Font Color",
+				PreferenceKeys.APP_PING_COLOR, local.getString("pingTFontCol"),
 				getFieldEditorParent());
 		addField(pingTimeColor);
 
 		addField(pingTimeColor);
 		FontFieldEditor pingTimeFont = new FontFieldEditor(
-				PreferenceKeys.APP_PING_FONT, "Ping Time Font",
+				PreferenceKeys.APP_PING_FONT, local.getString("pingTFont"),
 				getFieldEditorParent());
 		addField(pingTimeFont);
 
 		ColorFieldEditor statusBarFontColor = new ColorFieldEditor(
-				PreferenceKeys.APP_STATUS_BAR_COLOR, "Status Bar Font Color",
+				PreferenceKeys.APP_STATUS_BAR_COLOR, local.getString("statBarFontCol"),
 				getFieldEditorParent());
 		addField(statusBarFontColor);
 
 		FontFieldEditor statusBarFont = new FontFieldEditor(
-				PreferenceKeys.APP_STATUS_BAR_FONT, "Status Bar Font",
+				PreferenceKeys.APP_STATUS_BAR_FONT, local.getString("statBarFont"),
 				getFieldEditorParent());
 		addField(statusBarFont);
 		
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_SHOW_STATUS_BAR,
-				"Show window status bar (Requires restart to take effect.)",
+				local.getString("showWinStar"),
 				getFieldEditorParent()));
 
 	}

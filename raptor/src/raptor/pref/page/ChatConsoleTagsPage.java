@@ -16,20 +16,21 @@ package raptor.pref.page;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.ListFieldEditor;
 
 public class ChatConsoleTagsPage extends FieldEditorPreferencePage {
 	public ChatConsoleTagsPage() {
 		super(GRID);
-		setTitle("Tags");
+		setTitle(L10n.getInstance().getString("tags"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		ListFieldEditor tagsEditor = new ListFieldEditor(
-				PreferenceKeys.APP_USER_TAGS, "Tags:", getFieldEditorParent(),
+				PreferenceKeys.APP_USER_TAGS, L10n.getInstance().getString("tags")+":", getFieldEditorParent(),
 				',', 200);
 		addField(tagsEditor);
 	}

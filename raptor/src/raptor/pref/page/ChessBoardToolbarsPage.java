@@ -17,31 +17,34 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
 
 public class ChessBoardToolbarsPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ChessBoardToolbarsPage() {
 		super(FLAT);
-		setTitle("Toolbars");
+		setTitle(local.getString("toolbs"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		addField(new LabelFieldEditor("NONE",
-				"The changes below require a restart to work seamlessly.",
+				local.getString("changReqRes"),
 				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_COOLBAR_MODE,
-				"Show toolbar on the chess board as opposed to on the top right.",
+				local.getString("swToolbChesB"),
 				getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_COOLBAR_ON_TOP,
-				"Show toolbar on the top of the board, unchecked it will be on the bottom.",
+				local.getString("swToolbOnTop"),
 				getFieldEditorParent()));
 	}
 }
