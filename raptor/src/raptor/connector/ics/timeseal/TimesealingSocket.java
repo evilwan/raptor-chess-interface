@@ -39,7 +39,7 @@ public class TimesealingSocket extends Socket {
 
 		private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 
-		private final OutputStream outputStreamToDecorate;
+		private OutputStream outputStreamToDecorate;
 		private final byte timesealKey[] = "Timestamp (FICS) v1.0 - programmed by Henrik Gram."
 				.getBytes();
 
@@ -52,6 +52,9 @@ public class TimesealingSocket extends Socket {
 		public void write(int i) throws IOException {
 			if (i == 10) {
 				synchronized (TimesealingSocket.this) {
+					if (initialTime == -1) {
+						initialTime = System.currentTimeMillis();
+					}
 					int resultLength = crypt(
 							byteArrayOutputStream.toByteArray(),
 							System.currentTimeMillis() - initialTime);
@@ -115,45 +118,37 @@ public class TimesealingSocket extends Socket {
 
 	private CryptOutputStream cryptedOutputStream;
 
-	private volatile long initialTime;
+	private long initialTime = -1;
 
 	private String initialTimesealString = null;
 
-	private volatile Thread thread;
-
-	// private final TimesealPipe timesealPipe;
-
 	public TimesealingSocket(InetAddress inetaddress, int i,
-			String intialTimestampString) throws IOException {
+			String initialTimestampString) throws IOException {
 		super(inetaddress, i);
-		initialTimesealString = intialTimestampString;
-		// timesealPipe = new TimesealPipe(10000);
+		this.initialTimesealString = initialTimestampString;
 		init();
 	}
 
-	public TimesealingSocket(String s, int i, String intialTimestampString)
+	public TimesealingSocket(String s, int i, String initialTimestampString)
 			throws IOException {
 		super(s, i);
-		// timesealPipe = new TimesealPipe(10000);
-		initialTimesealString = intialTimestampString;
+		this.initialTimesealString = initialTimestampString;
 		init();
-	}
-
-	@Override
-	public void close() throws IOException {
-		super.close();
-		thread = null;
 	}
 
 	@Override
 	public InputStream getInputStream() throws IOException {
 		return super.getInputStream();
-		// return timesealPipe.getTimesealInputStream();
 	}
 
 	@Override
 	public CryptOutputStream getOutputStream() throws IOException {
 		return cryptedOutputStream;
+	}
+
+	public void sendAck() throws IOException {
+		getOutputStream().write("\0029\n".getBytes());
+		System.err.println("Sent ack");
 	}
 
 	private void init() throws IOException {

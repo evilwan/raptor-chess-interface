@@ -1246,8 +1246,11 @@ public abstract class IcsConnector implements Connector {
 				try {
 					String[] messages = breakUpMessage(builder);
 					for (String current : messages) {
+						if (!current.endsWith("\n")) {
+							current += "\n";
+							System.err.println("Appended newline");
+						}
 						socket.getOutputStream().write(current.getBytes());
-						socket.getOutputStream().flush();
 					}
 					if (message.startsWith("$$")) {
 						// Don't update last send time on a $$ since idle time
@@ -1448,16 +1451,18 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	protected void addToAutoComplete(String word) {
-		String lowerCaseWord = word.toLowerCase();
-		// if (StringUtils.containsOnly(word,
-		// "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+-=")) {
-		if (!autoCompleteList.contains(lowerCaseWord)) {
-			autoCompleteList.add(lowerCaseWord);
-			Collections.sort(autoCompleteList);
-		}
-		// } else {
-		// LOG.warn("Vetoed addToAutoComplete: " + word);
-		// }
+		final String lowerCaseWord = word.toLowerCase();
+
+		ThreadService.getInstance().run(new Runnable() {
+			public void run() {
+				synchronized (autoCompleteList) {
+					if (!autoCompleteList.contains(lowerCaseWord)) {
+						autoCompleteList.add(lowerCaseWord);
+						Collections.sort(autoCompleteList);
+					}
+				}
+			}
+		});
 	}
 
 	/**
@@ -1786,10 +1791,7 @@ public abstract class IcsConnector implements Connector {
 	protected String handleTimeseal(String text) throws IOException {
 		String result = text.replace("[G]\0", "");
 		if (result.length() != text.length()) {
-			synchronized (socket.getOutputStream()) {
-				socket.getOutputStream().write("\0029\n".getBytes());
-				socket.getOutputStream().flush();
-			}
+			((TimesealingSocket) socket).sendAck();
 		}
 		return result;
 	}
