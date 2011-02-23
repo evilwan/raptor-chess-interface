@@ -35,6 +35,7 @@ import raptor.action.RaptorAction;
 import raptor.action.ScriptedAction;
 import raptor.action.RaptorAction.Category;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.international.L10n;
 import raptor.service.ActionScriptService;
 import raptor.swt.RaptorTable;
 import raptor.swt.SWTUtils;
@@ -53,11 +54,13 @@ public class ActionScriptsPage extends PreferencePage {
 	protected Text descriptionText;
 	protected CLabel scriptText;
 	protected boolean wasLastSortAscending;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ActionScriptsPage() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Action Scripts");
+		setTitle(local.getString("actScr"));
 	}
 
 	@Override
@@ -70,29 +73,21 @@ public class ActionScriptsPage extends PreferencePage {
 				false, 3, 1));
 		textLabel
 				.setText(WordUtils
-						.wrap(
-								"\tAction Scripts have no parameters and can only access the "
-										+ "methods in the context. You can also bind actions to keystrokes "
-										+ "on the Action Key Bindings preference page. For more more details see:"
-										+ "for more details.", 70)
+						.wrap(local.getString("actScrPDesc1"), 70)
 						+ "\n"
-						+ "\t Help->Raptor Help->Scripting\n"
+						+ local.getString("actScrPDesc2")
 						+ WordUtils
-								.wrap(
-										"\tIf an icon is set to a value other than <None>, only the icon is displayed "
-												+ "for the action. If an icon is set to the value <None>, then the name is "
-												+ "displayed for the action. You may add additional icons to the "
-												+ "resources/icons directory.",
+								.wrap(local.getString("actScrPDesc3"),
 										70));
 
 		scriptedActionsTable = new RaptorTable(composite, SWT.BORDER
 				| SWT.V_SCROLL | SWT.H_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		scriptedActionsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				false, false, 3, 1));
-		scriptedActionsTable.addColumn("Script Name", SWT.LEFT, 30, true, null);
-		scriptedActionsTable.addColumn("Script Category", SWT.LEFT, 20, true,
+		scriptedActionsTable.addColumn(local.getString("scrName"), SWT.LEFT, 30, true, null);
+		scriptedActionsTable.addColumn(local.getString("scrCat"), SWT.LEFT, 20, true,
 				null);
-		scriptedActionsTable.addColumn("Description", SWT.LEFT, 50, true, null);
+		scriptedActionsTable.addColumn(local.getString("description"), SWT.LEFT, 50, true, null);
 
 		scriptedActionsTable.getTable().addSelectionListener(
 				new SelectionAdapter() {
@@ -111,7 +106,7 @@ public class ActionScriptsPage extends PreferencePage {
 		nameComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 		Label nameLabel = new Label(nameComposite, SWT.NONE);
-		nameLabel.setText("Name:");
+		nameLabel.setText(local.getString("name"));
 		nameLabel
 				.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		nameText = new Text(nameComposite, SWT.BORDER | SWT.SINGLE);
@@ -147,7 +142,7 @@ public class ActionScriptsPage extends PreferencePage {
 		icon.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
 		Label categoryLabel = new Label(iconComposite, SWT.NONE);
-		categoryLabel.setText("  Category:");
+		categoryLabel.setText("  "+local.getString("category"));
 		categoryLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 
@@ -164,7 +159,7 @@ public class ActionScriptsPage extends PreferencePage {
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
 		Label descriptionLabel = new Label(descriptionComposite, SWT.NONE);
-		descriptionLabel.setText("Description: ");
+		descriptionLabel.setText(local.getString("description"));
 		descriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false));
 		descriptionText = new Text(descriptionComposite, SWT.BORDER
@@ -173,7 +168,7 @@ public class ActionScriptsPage extends PreferencePage {
 				false));
 
 		Label scriptLabel = new Label(composite, SWT.NONE);
-		scriptLabel.setText("Script:");
+		scriptLabel.setText(local.getString("script"));
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
 		scriptText = new CLabel(composite, SWT.LEFT);
@@ -181,14 +176,14 @@ public class ActionScriptsPage extends PreferencePage {
 				1, 1));
 		scriptText.setText(" \n \n \n \n \n");
 		Button scriptEdit = new Button(composite, SWT.NONE);
-		scriptEdit.setText("Edit");
+		scriptEdit.setText(local.getString("edit"));
 		scriptEdit.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
 		scriptEdit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ScriptEditorDialog dialog = new ScriptEditorDialog(getShell(),
-						"Edit script: " + nameText.getText());
+						local.getString("edScr") + nameText.getText());
 				dialog.setInput(scriptText.getText());
 				String result = dialog.open();
 				if (StringUtils.isNotBlank(result)) {
@@ -202,7 +197,7 @@ public class ActionScriptsPage extends PreferencePage {
 				true, false, 3, 1));
 		buttonsComposite.setLayout(new RowLayout());
 		Button saveButton = new Button(buttonsComposite, SWT.PUSH);
-		saveButton.setText("Save");
+		saveButton.setText(local.getString("save"));
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -211,7 +206,7 @@ public class ActionScriptsPage extends PreferencePage {
 		});
 
 		Button deleteButton = new Button(buttonsComposite, SWT.PUSH);
-		deleteButton.setText("Delete");
+		deleteButton.setText(local.getString("delete"));
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -219,10 +214,10 @@ public class ActionScriptsPage extends PreferencePage {
 						.getAction(nameText.getText());
 				if (action != null && action.isSystemAction()) {
 					Raptor.getInstance().alert(
-							"You can not delete a System action.");
+							local.getString("actScrPAlert1"));
 				} else if (action == null) {
 					Raptor.getInstance().alert(
-							"Could not find an action named: "
+							local.getString("actScrPAlert2")
 									+ nameText.getText());
 				} else {
 					ActionScriptService.getInstance().deleteAction(
@@ -251,7 +246,7 @@ public class ActionScriptsPage extends PreferencePage {
 		if (currentAction instanceof ScriptedAction) {
 			scriptText.setText(((ScriptedAction) currentAction).getScript());
 		} else {
-			scriptText.setText("Not a script action");
+			scriptText.setText(local.getString("actScrPAlert3"));
 		}
 
 		if (currentAction.getIcon() == null) {
@@ -299,11 +294,11 @@ public class ActionScriptsPage extends PreferencePage {
 		}
 
 		if (StringUtils.isBlank(scriptedAction.getName())) {
-			Raptor.getInstance().alert("Name can not be empty.");
+			Raptor.getInstance().alert(local.getString("actScrPAlert4"));
 		} else if (StringUtils.isBlank(scriptedAction.getDescription())) {
-			Raptor.getInstance().alert("Description can not be empty.");
+			Raptor.getInstance().alert(local.getString("actScrPAlert5"));
 		} else if (StringUtils.isBlank(scriptedAction.getScript())) {
-			Raptor.getInstance().alert("Script can not be empty");
+			Raptor.getInstance().alert(local.getString("actScrPAlert6"));
 		} else {
 			ActionScriptService.getInstance().saveAction(scriptedAction);
 			refreshActions();

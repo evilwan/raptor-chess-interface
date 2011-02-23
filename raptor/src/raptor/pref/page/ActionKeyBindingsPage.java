@@ -34,6 +34,7 @@ import raptor.Raptor;
 import raptor.action.AbstractRaptorAction;
 import raptor.action.ActionUtils;
 import raptor.action.RaptorAction;
+import raptor.international.L10n;
 import raptor.service.ActionScriptService;
 import raptor.swt.RaptorTable;
 import raptor.swt.SWTUtils;
@@ -46,11 +47,13 @@ public class ActionKeyBindingsPage extends PreferencePage {
 	protected Text keyStrokeText;
 	protected int modifierKeyCode = 0;
 	protected boolean isModifierDown = false;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ActionKeyBindingsPage() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Action Key Bindings");
+		setTitle(local.getString("actKeyBind"));
 	}
 
 	@Override
@@ -71,19 +74,17 @@ public class ActionKeyBindingsPage extends PreferencePage {
 				false, 3, 1));
 		textLabel
 				.setText(WordUtils
-						.wrap(
-								"\tOn this page you can bind actions provided by "
-										+ "Raptor or created in the Action Scripts page to keystrokes.",
+						.wrap(local.getString("actKeyBindLbl"),
 								70));
 
 		actionsTable = new RaptorTable(composite, SWT.BORDER | SWT.V_SCROLL
 				| SWT.H_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		actionsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false,
 				false, 3, 1));
-		actionsTable.addColumn("Key Stroke", SWT.LEFT, 20, true, null);
-		actionsTable.addColumn("Action Name", SWT.LEFT, 20, true, null);
-		actionsTable.addColumn("Category", SWT.LEFT, 20, true, null);
-		actionsTable.addColumn("Description", SWT.LEFT, 40, true, null);
+		actionsTable.addColumn(local.getString("keyStroke"), SWT.LEFT, 20, true, null);
+		actionsTable.addColumn(local.getString("actName"), SWT.LEFT, 20, true, null);
+		actionsTable.addColumn(local.getString("category"), SWT.LEFT, 20, true, null);
+		actionsTable.addColumn(local.getString("description1"), SWT.LEFT, 40, true, null);
 
 		actionsTable.getTable().addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -100,7 +101,7 @@ public class ActionKeyBindingsPage extends PreferencePage {
 		nameComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 		Label nameLabel = new Label(nameComposite, SWT.NONE);
-		nameLabel.setText("Name:");
+		nameLabel.setText(local.getString("name"));
 		nameLabel
 				.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		nameText = new Label(nameComposite, SWT.BORDER | SWT.SINGLE);
@@ -111,7 +112,7 @@ public class ActionKeyBindingsPage extends PreferencePage {
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
 		Label descriptionLabel = new Label(descriptionComposite, SWT.NONE);
-		descriptionLabel.setText("Description: ");
+		descriptionLabel.setText(local.getString("description"));
 		descriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false));
 		descriptionText = new Label(descriptionComposite, SWT.BORDER
@@ -124,7 +125,7 @@ public class ActionKeyBindingsPage extends PreferencePage {
 		keyStrokeComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
 		Label keystrokeLabel = new Label(descriptionComposite, SWT.NONE);
-		keystrokeLabel.setText("Keystroke: ");
+		keystrokeLabel.setText(local.getString("keystroke"));
 		keystrokeLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 		keyStrokeText = new Text(descriptionComposite, SWT.BORDER | SWT.SINGLE);
@@ -170,7 +171,7 @@ public class ActionKeyBindingsPage extends PreferencePage {
 				true, false, 3, 1));
 		buttonsComposite.setLayout(new RowLayout());
 		Button saveButton = new Button(buttonsComposite, SWT.PUSH);
-		saveButton.setText("Save");
+		saveButton.setText(local.getString("save"));
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

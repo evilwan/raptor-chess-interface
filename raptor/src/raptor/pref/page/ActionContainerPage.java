@@ -36,6 +36,7 @@ import raptor.action.RaptorActionFactory;
 import raptor.action.ScriptedAction;
 import raptor.action.SeparatorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.international.L10n;
 import raptor.service.ActionScriptService;
 import raptor.swt.RaptorTable;
 import raptor.swt.ScriptEditorDialog;
@@ -54,6 +55,8 @@ public class ActionContainerPage extends PreferencePage {
 	protected CLabel scriptText;
 	protected String description;
 	protected String title;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ActionContainerPage(String title, String description,
 			RaptorActionContainer actionContainer) {
@@ -123,7 +126,7 @@ public class ActionContainerPage extends PreferencePage {
 		Label strut4 = new Label(addRemoveComposite, SWT.NONE);
 		strut4.setText(" ");
 		Button addButton = new Button(addRemoveComposite, SWT.PUSH);
-		addButton.setImage(Raptor.getInstance().getIcon("back"));
+		addButton.setImage(Raptor.getInstance().getIcon(local.getString("back")));
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -155,7 +158,7 @@ public class ActionContainerPage extends PreferencePage {
 		});
 
 		Button removeButton = new Button(addRemoveComposite, SWT.PUSH);
-		removeButton.setImage(Raptor.getInstance().getIcon("next"));
+		removeButton.setImage(Raptor.getInstance().getIcon(local.getString("next")));
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -177,9 +180,9 @@ public class ActionContainerPage extends PreferencePage {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		availableActionsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				true, true));
-		availableActionsTable.addColumn("All Actions Name", SWT.LEFT, 50, true,
+		availableActionsTable.addColumn(local.getString("allActName"), SWT.LEFT, 50, true,
 				null);
-		availableActionsTable.addColumn("All Actions Catagory", SWT.LEFT, 50,
+		availableActionsTable.addColumn(local.getString("allActCat"), SWT.LEFT, 50,
 				true, null);
 		availableActionsTable.getTable().addSelectionListener(
 				new SelectionAdapter() {
@@ -198,7 +201,7 @@ public class ActionContainerPage extends PreferencePage {
 				false, 2, 1));
 		buttonsComposite.setLayout(new RowLayout());
 		Button upButton = new Button(buttonsComposite, SWT.PUSH);
-		upButton.setImage(Raptor.getInstance().getIcon("up"));
+		upButton.setImage(Raptor.getInstance().getIcon(local.getString("up")));
 		upButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -230,7 +233,7 @@ public class ActionContainerPage extends PreferencePage {
 			}
 		});
 		Button downButton = new Button(buttonsComposite, SWT.PUSH);
-		downButton.setImage(Raptor.getInstance().getIcon("down"));
+		downButton.setImage(Raptor.getInstance().getIcon(local.getString("down")));
 		downButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -263,7 +266,7 @@ public class ActionContainerPage extends PreferencePage {
 			}
 		});
 		Button separatorButton = new Button(buttonsComposite, SWT.PUSH);
-		separatorButton.setText("Add Separator");
+		separatorButton.setText(local.getString("addSepar"));
 		separatorButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -281,7 +284,7 @@ public class ActionContainerPage extends PreferencePage {
 		nameComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 		Label nameLabel = new Label(nameComposite, SWT.NONE);
-		nameLabel.setText("Name: ");
+		nameLabel.setText(local.getString("name"));
 		nameLabel
 				.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		nameText = new Label(nameComposite, SWT.NONE);
@@ -294,7 +297,7 @@ public class ActionContainerPage extends PreferencePage {
 		Label iconLabel = new Label(iconComposite, SWT.NONE);
 		iconLabel
 				.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		iconLabel.setText("Icon: ");
+		iconLabel.setText(local.getString("icon"));
 		icon = new Label(iconComposite, SWT.NONE);
 		icon.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 
@@ -303,7 +306,7 @@ public class ActionContainerPage extends PreferencePage {
 		categoryComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
 		Label categoryLabel = new Label(categoryComposite, SWT.NONE);
-		categoryLabel.setText("Category");
+		categoryLabel.setText(local.getString("category"));
 		categoryLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 		categoryText = new Label(categoryComposite, SWT.NONE);
@@ -315,7 +318,7 @@ public class ActionContainerPage extends PreferencePage {
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
 		Label descriptionLabel = new Label(descriptionComposite, SWT.NONE);
-		descriptionLabel.setText("Description: ");
+		descriptionLabel.setText(local.getString("description"));
 		descriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false));
 		descriptionText = new Label(descriptionComposite, SWT.BORDER);
@@ -327,7 +330,7 @@ public class ActionContainerPage extends PreferencePage {
 		scriptComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 		Label scriptLabel = new Label(scriptComposite, SWT.NONE);
-		scriptLabel.setText("Script:");
+		scriptLabel.setText(local.getString("script"));
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 		scriptText = new CLabel(scriptComposite, SWT.NONE);
@@ -346,14 +349,14 @@ public class ActionContainerPage extends PreferencePage {
 			public void widgetSelected(SelectionEvent e) {
 				if (StringUtils.isEmpty(nameText.getText())) {
 					Raptor.getInstance().alert(
-							"You must first select a script in a table.");
+							local.getString("actContAlert1"));
 				} else {
 					RaptorAction action = ActionScriptService.getInstance()
 							.getAction(nameText.getText());
 					if (action instanceof ScriptedAction) {
 						ScriptedAction scriptedAction = (ScriptedAction) action;
 						ScriptEditorDialog dialog = new ScriptEditorDialog(
-								getShell(), "Edit script: "
+								getShell(), local.getString("edScr")
 										+ nameText.getText());
 						dialog.setInput(scriptedAction.getScript());
 						String result = dialog.open();
@@ -365,7 +368,7 @@ public class ActionContainerPage extends PreferencePage {
 						}
 					} else {
 						Raptor.getInstance().alert(
-								"This action is not a scripted action.");
+								local.getString("actContAlert2"));
 					}
 				}
 

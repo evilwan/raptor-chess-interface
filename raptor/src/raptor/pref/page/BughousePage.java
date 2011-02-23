@@ -18,15 +18,18 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FontFieldEditor;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class BughousePage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public BughousePage() {
 		super(GRID);
-		setTitle("Bughouse");
+		setTitle(local.getString("bughouse"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -34,37 +37,37 @@ public class BughousePage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD,
-				"Auto open partners board on games I observe",
+				local.getString("bugPageVar1"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD,
-				"Auto open partners board on games I play",
+				local.getString("bugPageVar2"),
 				getFieldEditorParent()));
 		
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP,
-				"Auto open bug who tab when I have a partner.",
+				local.getString("bugPageVar3"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_IS_PLAYING_PARTNERSHIP_OFFERED_SOUND,
-				"Play partnership offered sound on partnership offers.",
+				local.getString("bugPageVar4"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME,
-				"Show up time indicator", getFieldEditorParent()));
+				local.getString("bugPageVar5"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_SPEAK_COUNTDOWN_ON_PARTNER_BOARD,
-				"Speak countdown on partners board.", getFieldEditorParent()));
+				local.getString("bugPageVar6"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BUGHOUSE_SPEAK_PARTNER_TELLS,
-				"Speak partner tells.", getFieldEditorParent()));
+				local.getString("bugPageVar7"), getFieldEditorParent()));
 
 		addField(new FontFieldEditor(PreferenceKeys.BUG_BUTTONS_FONT,
-				"Button Font:", getFieldEditorParent()));
+				local.getString("bugPageVar8"), getFieldEditorParent()));
 	}
 }
