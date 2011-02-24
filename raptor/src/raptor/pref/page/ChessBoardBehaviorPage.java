@@ -18,141 +18,144 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.chess.UserMoveInputMode;
 
 public class ChessBoardBehaviorPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
 
 	public static final String[][] USER_MOVE_INPUT_MODE_ARRAY = {
-			{ "Drag And Drop", UserMoveInputMode.DragAndDrop.toString() },
-			{ "Click Click Move", UserMoveInputMode.ClickClickMove.toString() } };
+			{ local.getString("dragNDrop"), UserMoveInputMode.DragAndDrop.toString() },
+			{ local.getString("clClMove"), UserMoveInputMode.ClickClickMove.toString() } };
 
 	public static final String[][] SHOW_SECONDS_OPTIONS = {
-			{ "Always", "" + Integer.MAX_VALUE },
-			{ "When clock is <= 60 Minutes", "" + (60 * 60 * 1000 + 1) },
-			{ "When clock is <= 30 Minutes", "" + (30 * 60 * 1000 + 1) },
-			{ "When clock is <= 15 Minutes", "" + (15 * 60 * 1000 + 1) },
-			{ "When clock is <= 10 Minutes", "" + (10 * 60 * 1000 + 1) } };
+			{ local.getString("always"), "" + Integer.MAX_VALUE },
+			{ local.getString("chesBBehP1"), "" + (60 * 60 * 1000 + 1) },
+			{ local.getString("chesBBehP2"), "" + (30 * 60 * 1000 + 1) },
+			{ local.getString("chesBBehP3"), "" + (15 * 60 * 1000 + 1) },
+			{ local.getString("chesBBehP4"), "" + (10 * 60 * 1000 + 1) } };
 
 	public static final String[][] SHOW_TENTHS_OPTIONS = {
-			{ "Never", "" + Integer.MIN_VALUE },
-			{ "When clock is <= 10 Seconds", "" + (10 * 1000 + 1) },
-			{ "When clock is <= 1 Minute", "" + (60 * 1000 + 1) },
-			{ "When clock is <= 3 Minute", "" + (3 * 60 * 1000 + 1) },
-			{ "When clock is <= 5 Minute", "" + (5 * 60 * 1000 + 1) },
-			{ "When clock is <= 10 Minute", "" + (10 * 60 * 1000 + 1) },
-			{ "Always", "" + Integer.MAX_VALUE } };
+			{ local.getString("never"), "" + Integer.MIN_VALUE },
+			{ local.getString("chesBBehP5"), "" + (10 * 1000 + 1) },
+			{ local.getString("chesBBehP6"), "" + (60 * 1000 + 1) },
+			{ local.getString("chesBBehP7"), "" + (3 * 60 * 1000 + 1) },
+			{ local.getString("chesBBehP8"), "" + (5 * 60 * 1000 + 1) },
+			{ local.getString("chesBBehP9"), "" + (10 * 60 * 1000 + 1) },
+			{ local.getString("always"), "" + Integer.MAX_VALUE } };
 
 	public ChessBoardBehaviorPage() {
 		// Use the "flat" layout
 		super(GRID);
-		setTitle("Behavior");
+		setTitle(local.getString("behavior"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		addField(new ComboFieldEditor(
-				PreferenceKeys.BOARD_USER_MOVE_INPUT_MODE, "Move input mode:",
+				PreferenceKeys.BOARD_USER_MOVE_INPUT_MODE, local.getString("chesBBehP10"),
 				USER_MOVE_INPUT_MODE_ARRAY, getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(
 				PreferenceKeys.BOARD_CLOCK_SHOW_MILLIS_WHEN_LESS_THAN,
-				"Show tenths of seconds on clock:", SHOW_TENTHS_OPTIONS,
+				local.getString("chesBBehP11"), SHOW_TENTHS_OPTIONS,
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(
 				PreferenceKeys.BOARD_CLOCK_SHOW_SECONDS_WHEN_LESS_THAN,
-				"Show seconds on clock:", SHOW_SECONDS_OPTIONS,
+				local.getString("chesBBehP12"), SHOW_SECONDS_OPTIONS,
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL,
-				"Traverse moves with mouse wheel", getFieldEditorParent()));
+				local.getString("chesBBehP13"), getFieldEditorParent()));
 		
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_ALLOW_MOUSE_WHEEL_NAVIGATION_WHEEL_PLAYING,
-				"Allow mouse wheel move list navigation when playing a game.",
+				local.getString("chesBBehP14"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT,
-				"Announce check when I give check.", getFieldEditorParent()));
+				local.getString("chesBBehP15"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME,
-				"Announce check when opponent gives check.",
+				local.getString("chesBBehP16"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING,
-				"Ignore observed games if I am playing.",
+				local.getString("chesBBehP17"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES,
-				"Inactive games can be taken over by new games. (Improves performance)",
+				local.getString("chesBBehP18"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR,
-				"Invisible Move Enabled (Crosshairs cursor on drag and drops)",
+				local.getString("chesBBehP19"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_PLAY_ABORT_REQUEST_SOUND,
-				"Play abort requested sound.", getFieldEditorParent()));
+				local.getString("chesBBehP20"), getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_PLAY_CHALLENGE_SOUND,
-				"Play challenge sound.", getFieldEditorParent()));
+				local.getString("chesBBehP21"), getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_PLAY_DRAW_OFFER_SOUND,
-				"Play draw offered sound.", getFieldEditorParent()));
+				local.getString("chesBBehP22"), getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING,
-				"Play move Sound when observing", getFieldEditorParent()));
+				local.getString("chesBBehP23"), getFieldEditorParent()));
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS,
-				"Play 10 second countdown sounds", getFieldEditorParent()));
+				local.getString("chesBBehP24"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceKeys.BOARD_PREMOVE_ENABLED,
-				"Premove Enabled", getFieldEditorParent()));
+				local.getString("chesBBehP25"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED,
-				"Queueing Premove Enabled", getFieldEditorParent()));
+				local.getString("chesBBehP26"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_IS_SHOW_COORDINATES, "Show Coordinates",
+				PreferenceKeys.BOARD_IS_SHOW_COORDINATES, local.getString("chesBBehP27"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL, "Show Piece Jail",
+				PreferenceKeys.BOARD_IS_SHOWING_PIECE_JAIL, local.getString("chesBBehP28"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_SHOW_PLAYING_GAME_STATS_ON_GAME_END,
-				"Show statistics when a game I am playing ends.",
+				local.getString("chesBBehP29"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_SPEAK_RESULTS,
-				"Speak game results when observing and playing (*Requires speech setup).",
+				local.getString("chesBBehP30"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_SPEAK_MOVES_I_MAKE,
-				"Speak moves I make (*Requires speech setup).",
+				local.getString("chesBBehP31"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_SPEAK_MOVES_OPP_MAKES,
-				"Speak moves my opponent makes (*Requires speech setup).",
+				local.getString("chesBBehP32"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BOARD_SPEAK_WHEN_OBSERVING,
-				"Speak moves when observing a game (*Requires speech setup).",
+				local.getString("chesBBehP33"),
 				getFieldEditorParent()));
 	}
 }

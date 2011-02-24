@@ -16,6 +16,7 @@ package raptor.pref.page;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ChessEnginesPage extends FieldEditorPreferencePage {
@@ -23,7 +24,7 @@ public class ChessEnginesPage extends FieldEditorPreferencePage {
 
 	public ChessEnginesPage() {
 		super(FLAT);
-		setTitle("Chess Engines");
+		setTitle(L10n.getInstance().getString("chessEngines"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 

@@ -19,18 +19,20 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 public class ChessBoardArrowsPage extends FieldEditorPreferencePage {
+	protected static L10n local = L10n.getInstance();
 
 	public static final String[][] ARROW_ANIMATION_DELAY_OPTIONS = {
-			{ "100 milliseconds", "100" }, { "150 milliseconds", "150" },
-			{ "175 milliseconds", "175" }, { "200 milliseconds", "200" },
-			{ "250 milliseconds", "250" }, { "300 milliseconds", "300" },
-			{ "350 millseconds", "350" }, { "400 millseconds", "400" },
-			{ "500 millseconds", "500" }, { "600 millseconds", "600" },
-			{ "700 millseconds", "700" }, { "800 millseconds", "800" },
-			{ "900 millseconds", "900" }, { "1000 millseconds", "1000" }, };
+			{ local.getString("xMilliseconds",100), "100" }, { local.getString("xMilliseconds",150), "150" },
+			{ local.getString("xMilliseconds",175), "175" }, { local.getString("xMilliseconds",200), "200" },
+			{ local.getString("xMilliseconds",250), "250" }, { local.getString("xMilliseconds",300), "300" },
+			{ local.getString("xMilliseconds",350), "350" }, { local.getString("xMilliseconds",400), "400" },
+			{ local.getString("xMilliseconds",500), "500" }, { local.getString("xMilliseconds",600), "600" },
+			{ local.getString("xMilliseconds",700), "700" }, { local.getString("xMilliseconds",800), "800" },
+			{ local.getString("xMilliseconds",900), "900" }, { local.getString("xMilliseconds",1000), "1000" }, };
 
 	public static final String[][] ARROW_BORDER_PERCENTAGE_OPTIONS = {
 			{ "8%", "8" }, { "10%", "10" }, { "12%", "12" }, { "15%", "15" },
@@ -38,7 +40,7 @@ public class ChessBoardArrowsPage extends FieldEditorPreferencePage {
 
 	public ChessBoardArrowsPage() {
 		super(GRID);
-		setTitle("Arrows");
+		setTitle(local.getString("arrows"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -46,40 +48,40 @@ public class ChessBoardArrowsPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.ARROW_SHOW_ON_OBS_AND_OPP_MOVES,
-				"Show arrows on opponent and observed moves",
+				local.getString("chessBArP1"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceKeys.ARROW_SHOW_ON_MY_MOVES,
-				"Show arrows on my moves", getFieldEditorParent()));
+				local.getString("chessBArP2"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES,
-				"Show arrows on move list moves", getFieldEditorParent()));
+				local.getString("chessBArP3"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.ARROW_SHOW_ON_MY_PREMOVES,
-				"Show non fading arrows as my premoves are made",
+				local.getString("chessBArP4"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceKeys.ARROW_FADE_AWAY_MODE,
-				"Arrows fade away (excludes premove arrows)",
+				local.getString("chessBArP5"),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(PreferenceKeys.ARROW_ANIMATION_DELAY,
-				"Arrow animation delay:", ARROW_ANIMATION_DELAY_OPTIONS,
+				local.getString("chessBArP6"), ARROW_ANIMATION_DELAY_OPTIONS,
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(PreferenceKeys.ARROW_WIDTH_PERCENTAGE,
-				"Arrow percentage of square size:",
+				local.getString("chessBArP7"),
 				ARROW_BORDER_PERCENTAGE_OPTIONS, getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_MY_COLOR,
-				"My Arrow Color:", getFieldEditorParent()));
+				local.getString("chessBArP8"), getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_PREMOVE_COLOR,
-				"My Premove Arrow Color:", getFieldEditorParent()));
+				local.getString("chessBArP9"), getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_OBS_OPP_COLOR,
-				"Opponent Arrow Color:", getFieldEditorParent()));
+				local.getString("chessBArP10"), getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.ARROW_OBS_COLOR,
-				"Observe Arrow Color:", getFieldEditorParent()));
+				local.getString("chessBArP11"), getFieldEditorParent()));
 	}
 }
