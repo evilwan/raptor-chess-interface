@@ -18,15 +18,18 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ChatConsoleBehaviorPage() {
 		super(GRID);
-		setTitle("Behavior");
+		setTitle(local.getString("behavior"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -34,78 +37,77 @@ public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		StringFieldEditor timestampFormat = new StringFieldEditor(
 				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE_FORMAT,
-				"Message Timestamp Format (Java SimpleDateFormat):",
+				local.getString("chatConsBPVar1"),
 				getFieldEditorParent());
 		addField(timestampFormat);
 
 		BooleanFieldEditor addTimestamps = new BooleanFieldEditor(
 				PreferenceKeys.CHAT_TIMESTAMP_CONSOLE,
-				"Add Timestamps To Messages", getFieldEditorParent());
+				local.getString("chatConsBPVar2"), getFieldEditorParent());
 		addField(addTimestamps);
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_REMOVE_SUB_TAB_MESSAGES_FROM_MAIN_TAB,
-				"Filter messages handled by other tabs from the main console tab",
+				local.getString("chatConsBPVar3"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS,
-				"Open channel tabs on new channel tells.",
+				local.getString("chatConsBPVar4"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_OPEN_PARTNER_TAB_ON_PTELLS,
-				"Open partner tab on new partner tells.",
+				local.getString("chatConsBPVar5"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS,
-				"Open person tabs on new person tells.", getFieldEditorParent()));
+				local.getString("chatConsBPVar6"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PTELL,
-				"Play 'chat' sound on all partner tells.",
+				local.getString("chatConsBPVar7"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL,
-				"Play 'chat' sound on all person tells.",
+				local.getString("chatConsBPVar8"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_PLAY_NOTIFICATION_SOUND_ON_ARRIVALS,
-				"Play 'notificationArrived' sound on all notification arrivals.",
+				local.getString("chatConsBPVar9"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_PLAY_NOTIFICATION_SOUND_ON_DEPARTURES,
-				"Play 'notificationDeparted' sound on all notification departures.",
+				local.getString("chatConsBPVar10"),
 				getFieldEditorParent()));
 
 		BooleanFieldEditor smartScroll = new BooleanFieldEditor(
 				PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED,
-				"Smart Scroll (Toggles auto scroll based on the "
-						+ "vertical scrolllbar position)",
+				local.getString("chatConsBPVar11"),
 				getFieldEditorParent());
 		addField(smartScroll);
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_COMMAND_LINE_SPELL_CHECK,
-				"Spell Check Enabled (Command Line)", getFieldEditorParent()));
+				local.getString("chatConsBPVar12"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceKeys.CHAT_UNDERLINE_COMMANDS,
-				"Underline link commands (history,journal,bugwho,etc)",
+				local.getString("chatConsBPVar13"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_UNDERLINE_QUOTED_TEXT,
-				"Underline quoted text", getFieldEditorParent()));
+				local.getString("chatConsBPVar14"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.CHAT_UNDERLINE_SINGLE_QUOTES,
-				"Underline single quoted text", getFieldEditorParent()));
+				local.getString("chatConsBPVar15"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(PreferenceKeys.CHAT_UNDERLINE_URLS,
-				"Underline urls", getFieldEditorParent()));
+				local.getString("chatConsBPVar16"), getFieldEditorParent()));
 	}
 }

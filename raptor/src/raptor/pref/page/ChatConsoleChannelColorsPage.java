@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 
@@ -42,13 +43,15 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 	Composite parent;
 	RaptorPreferenceStore raptorPreferenceStore;
 	Button saveButton;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ChatConsoleChannelColorsPage() {
 		// Use the "flat" layout
 		super();
 		setPreferenceStore(raptorPreferenceStore = Raptor.getInstance()
 				.getPreferences());
-		setTitle("Channel Colors");
+		setTitle(local.getString("chanCol"));
 	}
 
 	public String getKey(String channel) {
@@ -85,20 +88,12 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 				1));
 		label
 				.setText(WordUtils
-						.wrap(
-								"\tTo set the channel color for an existing channel, select it from the Channels Combo Box. "
-										+ "Use the color selector to adjust the color and click the 'Save/Add Channel Color' button. "
-										+ "Ignore the buttons on the bottom right don't use those.",
-								70)
+						.wrap(local.getString("chatConColP1"), 70)
 						+ WordUtils
-								.wrap(
-										"\n\tTo add a new channel color "
-												+ "type in the channel number in the box provided set the color and click the 'Save/Add Channel Color'. "
-												+ "Ignore the buttons on the bottom right.",
-										70));
+								.wrap(local.getString("chatConColP2"),70));
 
 		Label channelNamesLabel = new Label(parent, SWT.NONE);
-		channelNamesLabel.setText("Channels:");
+		channelNamesLabel.setText(local.getString("channels"));
 		channelNamesLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false, 1, 1));
 
@@ -118,7 +113,7 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		});
 
 		Label channelNameLabel = new Label(parent, SWT.NONE);
-		channelNameLabel.setText("Channel Name:");
+		channelNameLabel.setText(local.getString("chanName"));
 		channelNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false, 1, 1));
 
@@ -133,7 +128,7 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		saveButton = new Button(parent, SWT.PUSH);
 		saveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 3, 1));
-		saveButton.setText("Save/Add Channel Color");
+		saveButton.setText(local.getString("svAddChCol"));
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -199,8 +194,8 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 		} catch (Throwable t) {
 			MessageDialog
 					.openInformation(Raptor.getInstance().getWindow()
-							.getShell(), "Alert",
-							"Channel name must be an integer greater than -1 and less than 256.");
+							.getShell(), local.getString("alert"),
+							local.getString("chatConColP3"));
 		}
 	}
 

@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.script.ParameterScript;
 import raptor.script.ScriptConnectorType;
 import raptor.script.ParameterScript.Type;
@@ -59,11 +60,13 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 
 	protected Button saveButton;
 	protected Button deleteButton;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public ChatConsoleRightClickScripts() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Right-Click Scripts");
+		setTitle(local.getString("rClkScr"));
 	}
 
 	@Override
@@ -76,11 +79,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				false, 3, 1));
 		textLabel
 				.setText(WordUtils
-						.wrap(
-								"\tRight-Click Scripts scripts have two parameter: 'selection', (String) the text selected when "
-										+ "the console was right clicked and 'chatEvent', (ChatEvent) the chatEvent that was right clicked. "
-										+ "See Help->Raptor Help->Scripting for more details.",
-								70));
+						.wrap(local.getString("rClkScrLbl1"), 70));
 
 		Composite tableComposite = new Composite(composite, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
@@ -91,7 +90,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		icsActiveScriptsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				true, true));
-		icsActiveScriptsTable.addColumn("Active Right-Click Scripts", SWT.LEFT,
+		icsActiveScriptsTable.addColumn(local.getString("rClkScrLbl2"), SWT.LEFT,
 				100, false, null);
 		icsActiveScriptsTable.getTable().addSelectionListener(
 				new SelectionAdapter() {
@@ -166,7 +165,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		icsInactiveScriptsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				true, true));
-		icsInactiveScriptsTable.addColumn("Inactive Right-Click Script Name",
+		icsInactiveScriptsTable.addColumn(local.getString("rClkScrLbl3"),
 				SWT.LEFT, 100, true, null);
 		icsInactiveScriptsTable.getTable().addSelectionListener(
 				new SelectionAdapter() {
@@ -184,7 +183,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				});
 
 		isActiveButton = new Button(composite, SWT.CHECK);
-		isActiveButton.setText("Active");
+		isActiveButton.setText(local.getString("active"));
 		isActiveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 3, 1));
 
@@ -193,7 +192,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		nameComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 3, 1));
 		Label nameLabel = new Label(nameComposite, SWT.NONE);
-		nameLabel.setText("Name: ");
+		nameLabel.setText(local.getString("name"));
 		nameLabel
 				.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		nameText = new Text(nameComposite, SWT.BORDER);
@@ -205,7 +204,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
 		Label descriptionLabel = new Label(descriptionComposite, SWT.NONE);
-		descriptionLabel.setText("Description: ");
+		descriptionLabel.setText(local.getString("description"));
 		descriptionLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false));
 		descriptionText = new Text(descriptionComposite, SWT.BORDER);
@@ -219,7 +218,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				true, false, 3, 1));
 
 		Label connectorTypeLabel = new Label(controlsComposite, SWT.NONE);
-		connectorTypeLabel.setText("Connector: ");
+		connectorTypeLabel.setText(local.getString("connector"));
 
 		connectorTypeCombo = new Combo(controlsComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
@@ -230,7 +229,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		connectorTypeCombo.select(0);
 
 		Label scriptLabel = new Label(composite, SWT.NONE);
-		scriptLabel.setText("Script:");
+		scriptLabel.setText(local.getString("script"));
 		scriptLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
 		scriptText = new CLabel(composite, SWT.LEFT);
@@ -238,14 +237,14 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				false, 1, 1));
 		scriptText.setText("\n \n \n \n \n \n");
 		Button scriptEdit = new Button(composite, SWT.PUSH);
-		scriptEdit.setText("Edit");
+		scriptEdit.setText(local.getString("edit"));
 		scriptEdit.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
 		scriptEdit.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ScriptEditorDialog dialog = new ScriptEditorDialog(getShell(),
-						"Edit script: " + nameText.getText());
+						local.getString("edScr") + nameText.getText());
 				dialog.setInput(scriptText.getText());
 				String result = dialog.open();
 				if (StringUtils.isNotBlank(result)) {
@@ -259,7 +258,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 				false, 3, 1));
 		buttonComposite.setLayout(new RowLayout());
 		saveButton = new Button(buttonComposite, SWT.PUSH);
-		saveButton.setText("Save");
+		saveButton.setText(local.getString("save"));
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -268,7 +267,7 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 		});
 
 		deleteButton = new Button(buttonComposite, SWT.PUSH);
-		deleteButton.setText("Delete");
+		deleteButton.setText(local.getString("delete"));
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -278,9 +277,9 @@ public class ChatConsoleRightClickScripts extends PreferencePage {
 					script.setActive(false);
 					MessageBox messageBox = new MessageBox(getShell(),
 							SWT.ICON_INFORMATION);
-					messageBox.setText("Alert");
+					messageBox.setText(local.getString("alert"));
 					messageBox
-							.setMessage("You can't delete a system script. The script was however made inactive.");
+							.setMessage(local.getString("rClkScrAl1"));
 					messageBox.open();
 				} else {
 					ScriptService.getInstance().deleteParameterScript(
