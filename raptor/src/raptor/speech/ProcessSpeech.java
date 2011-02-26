@@ -13,15 +13,21 @@
  */
 package raptor.speech;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import raptor.Raptor;
 import raptor.service.ThreadService;
 
 public class ProcessSpeech implements Speech {
+	
+	protected Queue<String> speakQueue;
 
 	protected String command;
 
 	public ProcessSpeech(String command) {
 		this.command = command;
+		speakQueue = new ConcurrentLinkedQueue<String>();
 	}
 
 	public void dispose() {
@@ -31,12 +37,13 @@ public class ProcessSpeech implements Speech {
 	}
 
 	public void speak(final String text) {
+		speakQueue.add(text);
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
 				synchronized (ProcessSpeech.this) {
 					try {
 						Process process = Runtime.getRuntime().exec(
-								new String[] { command, text });
+								new String[] { command, speakQueue.poll() });
 						process.waitFor();
 					} catch (Exception e) {
 						Raptor.getInstance().onError(
