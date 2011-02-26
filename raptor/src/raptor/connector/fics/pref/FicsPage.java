@@ -34,6 +34,9 @@ public class FicsPage extends FieldEditorPreferencePage {
 				PreferenceKeys.FICS_AUTO_CONNECT, "Auto Connect",
 				getFieldEditorParent());
 		addField(bfe);
+		
+		addField(new BooleanFieldEditor(PreferenceKeys.FICS_TIMESEAL_IS_TIMESEAL_2,
+				"Use Timeseal 2 (Enables pings through firewalls)", getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.FICS_CLOSE_TABS_ON_DISCONNECT,
