@@ -10,9 +10,9 @@
 	    IMPORTANT to run the application you will need to specify your environment here.
 	    This is the folder located in projectFiles/swt to use for your compile,run.
 	  -->
-	<property name="swtEnv" value="MacCocoa64" />
+	<property name="swtEnv" value="Linux_x86_GTK2" />
 
-	<property name="version" value="v98RC7" />
+	<property name="version" value="v98RC8" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
