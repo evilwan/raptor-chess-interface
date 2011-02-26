@@ -213,6 +213,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 						.scheduleOneShot(1000 * 60 * 5, this);
 			}
 		}
+
+		public String toString() {
+			return "IcsConnector.KeepAlive Runnable";
+		}
 	};
 
 	protected long lastPingTime;
@@ -253,15 +257,11 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		setBughouseService(new BughouseService(this));
 		prepopulateAutoCompleteList();
 	}
-	
-	
 
 	@Override
 	public void connectionClosed() {
-		disconnect();		
+		disconnect();
 	}
-
-
 
 	@Override
 	public MenuManager getMenuManager() {
@@ -269,15 +269,11 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		return null;
 	}
 
-
-
 	@Override
 	public PreferencePage getRootPreferencePage() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
 
 	@Override
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
@@ -285,15 +281,11 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		return null;
 	}
 
-
-
 	@Override
 	public boolean isLoggedInUserPlayingAGame() {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-
 
 	protected void setRegexPatternsToBlock() {
 		patternsToBlock.clear();
@@ -1006,6 +998,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					}
 				}
 			}
+
+			public String toString() {
+				return "IcsConnector.ProcessMessageCallbacks Runnable";
+			}
 		});
 	}
 
@@ -1471,16 +1467,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	protected void addToAutoComplete(String word) {
 		final String lowerCaseWord = word.toLowerCase();
 
-		ThreadService.getInstance().run(new Runnable() {
-			public void run() {
-				synchronized (autoCompleteList) {
-					if (!autoCompleteList.contains(lowerCaseWord)) {
-						autoCompleteList.add(lowerCaseWord);
-						Collections.sort(autoCompleteList);
-					}
-				}
-			}
-		});
+		if (!autoCompleteList.contains(lowerCaseWord)) {
+			autoCompleteList.add(lowerCaseWord);
+			Collections.sort(autoCompleteList);
+		}
 	}
 
 	/**
@@ -1566,6 +1556,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					return;
 				}
 			}
+
+			public String toString() {
+				return "IcsConnector.connection intiliazation runnable";
+			}
 		});
 		isConnecting = true;
 
@@ -1591,14 +1585,14 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 * string removed.
 	 */
 	protected String drainInboundMessageBuffer(StringBuilder builder) {
-		return drainInboundMessageBuffer(builder,builder.length());
+		return drainInboundMessageBuffer(builder, builder.length());
 	}
 
 	/**
 	 * Removes characters 0-index from inboundMessageBuffer and returns the
 	 * string removed.
 	 */
-	protected String drainInboundMessageBuffer(StringBuilder builder,int index) {
+	protected String drainInboundMessageBuffer(StringBuilder builder, int index) {
 		String result = builder.substring(0, index);
 		builder.delete(0, index);
 		return result;
@@ -1647,6 +1641,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					}
 				}
 			}
+
+			public String toString() {
+				return "IcsConnector.fireConnected runnable";
+			}
 		});
 	}
 
@@ -1662,6 +1660,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					}
 				}
 			}
+
+			public String toString() {
+				return "IcsConnector.fireConnecting runnable";
+			}
 		});
 	}
 
@@ -1676,6 +1678,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 						listener.onConnecting();
 					}
 				}
+			}
+
+			public String toString() {
+				return "IcsConnector.fireDisconnected runnable";
 			}
 		});
 	}
@@ -1715,6 +1721,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 						&& event.getType() == ChatType.PARTNER_TELL) {
 					ChatUtils.openPartnerTab(IcsConnector.this, false);
 				}
+			}
+
+			public String toString() {
+				return "IcsConnector.handleOpeningTabs runnable";
 			}
 		});
 	}
@@ -1868,6 +1878,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 							.setPingTime(IcsConnector.this, lastPingTime);
 					lastSendPingTime = 0;
 				}
+
+				public String toString() {
+					return "IcsConnector.messageArrived runnable";
+				}
 			});
 		}
 		if (isLoggedIn) {
@@ -1875,9 +1889,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			// If we are logged in. Then parse out all the text between the
 			// prompts.
 			int promptIndex = -1;
-			while ((promptIndex = buffer.indexOf(context
-					.getRawPrompt())) != -1) {
-				String message = drainInboundMessageBuffer(buffer,promptIndex
+			while ((promptIndex = buffer.indexOf(context.getRawPrompt())) != -1) {
+				String message = drainInboundMessageBuffer(buffer, promptIndex
 						+ context.getRawPrompt().length());
 				parseMessage(message);
 			}
@@ -1901,13 +1914,12 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				int nameStartIndex = buffer.indexOf(context
 						.getLoggedInMessage())
 						+ context.getLoggedInMessage().length();
-				int endIndex = buffer.indexOf("****",
-						nameStartIndex);
+				int endIndex = buffer.indexOf("****", nameStartIndex);
 
 				if (endIndex != -1) {
 
-					userName = IcsUtils.stripTitles(buffer
-							.substring(nameStartIndex, endIndex).trim());
+					userName = IcsUtils.stripTitles(buffer.substring(
+							nameStartIndex, endIndex).trim());
 					LOG.info(context.getShortName() + "Connector "
 							+ "login complete. userName=" + userName);
 					isLoggedIn = true;
@@ -1922,30 +1934,32 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					// until it arrives.
 				}
 			} else {
-				int loginIndex = buffer.indexOf(context
-						.getLoginPrompt());
+				int loginIndex = buffer.indexOf(context.getLoginPrompt());
 				if (loginIndex != -1) {
-					String event = drainInboundMessageBuffer(buffer,loginIndex
+					String event = drainInboundMessageBuffer(buffer, loginIndex
 							+ context.getLoginPrompt().length());
 					onLoginEvent(event, true);
 				} else {
 					int enterPromptIndex = buffer.indexOf(context
 							.getEnterPrompt());
 					if (enterPromptIndex != -1) {
-						String event = drainInboundMessageBuffer(buffer,enterPromptIndex
-								+ context.getEnterPrompt().length());
+						String event = drainInboundMessageBuffer(buffer,
+								enterPromptIndex
+										+ context.getEnterPrompt().length());
 						onLoginEvent(event, false);
 					} else {
-						int passwordPromptIndex = buffer
-								.indexOf(context.getPasswordPrompt());
+						int passwordPromptIndex = buffer.indexOf(context
+								.getPasswordPrompt());
 						if (passwordPromptIndex != -1) {
-							String event = drainInboundMessageBuffer(buffer,passwordPromptIndex
-									+ context.getPasswordPrompt().length());
+							String event = drainInboundMessageBuffer(buffer,
+									passwordPromptIndex
+											+ context.getPasswordPrompt()
+													.length());
 							onLoginEvent(event, false);
 
 						} else {
-							int errorMessageIndex = buffer
-									.indexOf(context.getLoginErrorMessage());
+							int errorMessageIndex = buffer.indexOf(context
+									.getLoginErrorMessage());
 							if (errorMessageIndex != -1) {
 								String event = drainInboundMessageBuffer(buffer);
 								event = StringUtils.replaceChars(event,
@@ -1992,6 +2006,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 							.getMessage()));
 					publishEvent(event);
 				}
+			}
+
+			public String toString() {
+				return "IcsConnector.parseMessage runnable";
 			}
 		});
 	}
@@ -2121,6 +2139,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 							script.execute(getChatScriptContext(event));
 						}
 					}
+				}
+
+				public String toString() {
+					return "IcsConnector.processChatEventScripts runnable";
 				}
 			});
 		}
@@ -2300,6 +2322,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				if (StringUtils.isNotBlank(event.getSource())) {
 					addToAutoComplete(event.getSource());
 				}
+			}
+
+			public String toString() {
+				return "IcsConnector.updateAutoComplete runnable";
 			}
 		});
 	}
