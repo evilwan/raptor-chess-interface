@@ -903,7 +903,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_REMOVE_BLANK_LINES, false);
 		
 		//Fics Timeseal
-		setDefault(FICS_TIMESEAL_IS_TIMESEAL_2,true);		
+//      Timeseal 2 forced for OSX, Timeseal 1 for other OSes.
+//      For some reason windows/linux have timeseal2 issues.	
+		setDefault(FICS_TIMESEAL_IS_TIMESEAL_2,OSUtils.isLikelyOSX());		
 
 		// Bics
 		setDefault(BICS_KEEP_ALIVE, false);

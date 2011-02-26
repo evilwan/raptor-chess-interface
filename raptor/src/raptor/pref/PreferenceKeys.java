@@ -282,7 +282,7 @@ public interface PreferenceKeys {
 			+ REGULAR_EXPRESSIONS_TO_BLOCK;
 	public static final String FICS_REMOVE_BLANK_LINES = "fics-"
 			+ REMOVE_BLANK_LINES;
-	public static final String FICS_TIMESEAL_IS_TIMESEAL_2 = "fics-timeseal-is-timeseal-2";
+	public static final String FICS_TIMESEAL_IS_TIMESEAL_2 = "fics-is-timeseal-2";
 
 	public static final String FICS_SEEK_GAME_TYPE = "fics-seek-game-type";
 	public static final String FICS_SEEK_MINUTES = "fics-seek-minutes";

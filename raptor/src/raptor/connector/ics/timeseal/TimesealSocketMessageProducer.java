@@ -225,7 +225,6 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 					close();
 					break;
 				}
-				Thread.sleep(30);
 			}
 			LOG.debug("TimesealSocketMessageProducer "
 					+ "Not connected disconnecting.");
