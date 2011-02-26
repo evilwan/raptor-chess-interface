@@ -235,13 +235,13 @@ public class ResultDecorator implements BoardConstants {
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				RESULTS_FADE_AWAY_MODE)) {
 			frame = 10;
+			redrawSquares(false);
 			Raptor.getInstance().getDisplay().timerExec(
 					Raptor.getInstance().getPreferences().getInt(
 							PreferenceKeys.RESULTS_ANIMATION_DELAY),
 					new Runnable() {
 						public void run() {
 							frame--;
-							redrawSquares();
 							if (frame != 0) {
 								Raptor
 										.getInstance()
@@ -257,7 +257,7 @@ public class ResultDecorator implements BoardConstants {
 								frame = -1;
 								decoration = null;
 							}
-							redrawSquares();
+							redrawSquares(true);
 						}
 					});
 		}
@@ -326,9 +326,14 @@ public class ResultDecorator implements BoardConstants {
 	/**
 	 * Redraws all squares that have arrow segments.
 	 */
-	protected void redrawSquares() {
+	protected void redrawSquares(boolean force) {
 		for (SquareDecorator decorator : decorators) {
+			if (force) {
 			decorator.square.redraw();
+			}
+			else {
+				decorator.square.setDirty(true);
+			}
 		}
 	}
 }
