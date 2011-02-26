@@ -1008,8 +1008,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
 
 		// Timeseal 1 connect string
-		// setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
-		setDefault(TIMESEAL_INIT_STRING, "TIMESEAL2|raptorUser|OpenSeal|");
+		//setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
+		// Timeseal 2 connect string.
+		setDefault(TIMESEAL_INIT_STRING, "TIMESEAL2|OpenSeal|OpenSeal|");
 
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}

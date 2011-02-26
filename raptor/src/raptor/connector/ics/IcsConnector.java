@@ -13,8 +13,6 @@
  */
 package raptor.connector.ics;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,6 +27,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.preference.PreferenceNode;
+import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
@@ -45,7 +46,9 @@ import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
 import raptor.connector.MessageCallback;
-import raptor.connector.ics.timeseal.TimesealingSocket;
+import raptor.connector.ics.timeseal.MessageListener;
+import raptor.connector.ics.timeseal.MessageProducer;
+import raptor.connector.ics.timeseal.TimesealSocketMessageProducer;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ChatEventScript;
@@ -91,7 +94,7 @@ import raptor.util.RegExUtils;
  * IcsConnectorContext because they are all different. You might also need to
  * override some methods in order to get it working.
  */
-public abstract class IcsConnector implements Connector {
+public abstract class IcsConnector implements Connector, MessageListener {
 	protected class MessageCallbackEntry {
 		protected boolean isOneShot;
 		protected int missCount;
@@ -120,7 +123,6 @@ public abstract class IcsConnector implements Connector {
 
 	protected String currentProfileName;
 
-	protected Thread daemonThread;
 	protected GameService gameService;
 	protected Map<String, Object> scriptHash = new HashMap<String, Object>();
 	protected Set<String> peopleToSpeakTellsFrom = new HashSet<String>();
@@ -130,12 +132,12 @@ public abstract class IcsConnector implements Connector {
 	protected boolean isSpeakingAllPersonTells = false;
 	protected List<String> autoCompleteList = new ArrayList<String>(1000);
 	protected List<Pattern> patternsToBlock = new ArrayList<Pattern>(20);
+	protected MessageProducer messageProducer;
 
 	/**
 	 * Adds the game windows to the RaptorAppWindow.
 	 */
 	protected GameServiceListener gameServiceListener = new GameServiceAdapter() {
-
 		@Override
 		public void gameCreated(Game game) {
 			if (game instanceof BughouseGame) {
@@ -177,7 +179,7 @@ public abstract class IcsConnector implements Connector {
 
 	protected boolean hasSentPassword = false;
 	protected List<ChatType> ignoringChatTypes = new ArrayList<ChatType>();
-	protected StringBuilder inboundMessageBuffer = new StringBuilder(25000);
+
 	// protected ByteBuffer inputBuffer = ByteBuffer.allocate(25000);
 
 	// protected ReadableByteChannel inputChannel;
@@ -217,7 +219,6 @@ public abstract class IcsConnector implements Connector {
 	protected long lastSendTime;
 	protected long lastSendPingTime;
 	protected ChatConsoleWindowItem mainConsoleWindowItem;
-	protected Socket socket;
 	protected String userName;
 	protected String userFollowing;
 	protected List<String> extendedCensorList = new ArrayList<String>(300);
@@ -252,6 +253,47 @@ public abstract class IcsConnector implements Connector {
 		setBughouseService(new BughouseService(this));
 		prepopulateAutoCompleteList();
 	}
+	
+	
+
+	@Override
+	public void connectionClosed() {
+		disconnect();		
+	}
+
+
+
+	@Override
+	public MenuManager getMenuManager() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public PreferencePage getRootPreferencePage() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public PreferenceNode[] getSecondaryPreferenceNodes() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public boolean isLoggedInUserPlayingAGame() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
 
 	protected void setRegexPatternsToBlock() {
 		patternsToBlock.clear();
@@ -440,18 +482,9 @@ public abstract class IcsConnector implements Connector {
 					ScriptService.getInstance().removeScriptServiceListener(
 							scriptServiceListener);
 
-					if (socket != null) {
+					if (messageProducer != null) {
 						try {
-							socket.close();
-						} catch (Throwable t) {
-						}
-					}
-
-					if (daemonThread != null) {
-						try {
-							if (daemonThread.isAlive()) {
-								daemonThread.interrupt();
-							}
+							messageProducer.close();
 						} catch (Throwable t) {
 						}
 					}
@@ -461,9 +494,7 @@ public abstract class IcsConnector implements Connector {
 					}
 				} catch (Throwable t) {
 				} finally {
-					socket = null;
-					// inputChannel = null;
-					daemonThread = null;
+					messageProducer = null;
 					isSimulBugConnector = false;
 					simulBugPartnerName = null;
 					peopleToSpeakTellsFrom.clear();
@@ -472,16 +503,6 @@ public abstract class IcsConnector implements Connector {
 					isSpeakingAllPersonTells = false;
 					messageCallbackEntries.clear();
 					extendedCensorList.clear();
-				}
-
-				try {
-					String messageLeftInBuffer = drainInboundMessageBuffer();
-					if (StringUtils.isNotBlank(messageLeftInBuffer)) {
-						parseMessage(messageLeftInBuffer);
-					}
-
-				} catch (Throwable t) {
-				} finally {
 				}
 			}
 
@@ -752,7 +773,7 @@ public abstract class IcsConnector implements Connector {
 	}
 
 	public boolean isConnected() {
-		return socket != null && daemonThread != null;
+		return messageProducer != null;
 	}
 
 	public boolean isConnecting() {
@@ -1241,31 +1262,28 @@ public abstract class IcsConnector implements Connector {
 				ignoringChatTypes.add(hideNextChatType);
 			}
 
-			// Only one thread at a time should write to the socket.
-			synchronized (socket) {
-				try {
-					String[] messages = breakUpMessage(builder);
-					for (String current : messages) {
-						if (!current.endsWith("\n")) {
-							current += "\n";
-							System.err.println("Appended newline");
-						}
-						socket.getOutputStream().write(current.getBytes());
+			try {
+				String[] messages = breakUpMessage(builder);
+				for (String current : messages) {
+					if (!current.endsWith("\n")) {
+						current += "\n";
+						System.err.println("Appended newline");
 					}
-					if (message.startsWith("$$")) {
-						// Don't update last send time on a $$ since idle time
-						// isn't effected on the server.
-						lastSendPingTime = System.currentTimeMillis();
-					} else {
-						lastSendTime = lastSendPingTime = System
-								.currentTimeMillis();
-					}
-
-				} catch (Throwable t) {
-					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-							"Error: " + t.getMessage()));
-					disconnect();
+					messageProducer.send(current);
 				}
+				if (message.startsWith("$$")) {
+					// Don't update last send time on a $$ since idle time
+					// isn't effected on the server.
+					lastSendPingTime = System.currentTimeMillis();
+				} else {
+					lastSendTime = lastSendPingTime = System
+							.currentTimeMillis();
+				}
+
+			} catch (Throwable t) {
+				publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Error: "
+						+ t.getMessage()));
+				disconnect();
 			}
 
 			if (!isHidingFromUser) {
@@ -1520,37 +1538,23 @@ public abstract class IcsConnector implements Connector {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
 				try {
-					if (getPreferences().getBoolean(
-							profilePrefix + "timeseal-enabled")) {
-						// TO DO: rewrite TimesealingSocket to use a
-						// SocketChannel.
-						socket = new TimesealingSocket(
-								getPreferences().getString(
-										profilePrefix + "server-url"),
-								getPreferences().getInt(profilePrefix + "port"),
-								getInitialTimesealString());
+					boolean isTimesealEnabled = getPreferences().getBoolean(
+							profilePrefix + "timeseal-enabled");
 
-						publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-								"Timeseal connection string "
-										+ getInitialTimesealString()));
-					} else {
-						socket = new Socket(getPreferences().getString(
-								profilePrefix + "server-url"), getPreferences()
-								.getInt(profilePrefix + "port"));
-					}
+					messageProducer = new TimesealSocketMessageProducer(
+							getPreferences().getString(
+									profilePrefix + "server-url"),
+							getPreferences().getInt(profilePrefix + "port"),
+							getInitialTimesealString(), isTimesealEnabled,
+							IcsConnector.this);
+
+					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
+							"Timeseal connection string "
+									+ getInitialTimesealString()));
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Connected"));
 
 					SoundService.getInstance().playSound("alert");
-
-					daemonThread = new Thread(new Runnable() {
-						public void run() {
-							messageLoop();
-						}
-					});
-					daemonThread.setName("FicsConnectorDaemon");
-					daemonThread.setPriority(Thread.MAX_PRIORITY);
-					daemonThread.start();
 
 					if (LOG.isInfoEnabled()) {
 						LOG.info(getShortName() + " Connection successful");
@@ -1586,17 +1590,17 @@ public abstract class IcsConnector implements Connector {
 	 * Removes all of the characters from inboundMessageBuffer and returns the
 	 * string removed.
 	 */
-	protected String drainInboundMessageBuffer() {
-		return drainInboundMessageBuffer(inboundMessageBuffer.length());
+	protected String drainInboundMessageBuffer(StringBuilder builder) {
+		return drainInboundMessageBuffer(builder,builder.length());
 	}
 
 	/**
 	 * Removes characters 0-index from inboundMessageBuffer and returns the
 	 * string removed.
 	 */
-	protected String drainInboundMessageBuffer(int index) {
-		String result = inboundMessageBuffer.substring(0, index);
-		inboundMessageBuffer.delete(0, index);
+	protected String drainInboundMessageBuffer(StringBuilder builder,int index) {
+		String result = builder.substring(0, index);
+		builder.delete(0, index);
 		return result;
 	}
 
@@ -1782,85 +1786,6 @@ public abstract class IcsConnector implements Connector {
 	protected abstract void loadExtendedCensorList();
 
 	/**
-	 * Handles sending the timeseal ack.
-	 * 
-	 * @param text
-	 * @return
-	 * @throws IOException
-	 */
-	protected String handleTimeseal(String text) throws IOException {
-		String result = text.replace("[G]\0", "");
-		if (result.length() != text.length()) {
-			((TimesealingSocket) socket).sendAck();
-		}
-		return result;
-	}
-
-	/**
-	 * The messageLoop. Reads the inputChannel and then invokes publishInput
-	 * with the text read. Should really never be invoked.
-	 */
-	protected void messageLoop() {
-		try {
-			while (true) {
-				byte[] buffer = new byte[40000];
-				if (isConnected()) {
-					int numRead = socket.getInputStream().read(buffer);
-					if (numRead > 0) {
-						if (LOG.isDebugEnabled()) {
-							LOG.debug(context.getShortName() + "Connector "
-									+ "Read " + numRead + " bytes.");
-						}
-						String text = handleTimeseal(new String(buffer, 0,
-								numRead));
-
-						if (StringUtils.isNotBlank(text)) {
-							inboundMessageBuffer.append(IcsUtils
-									.cleanupMessage(text));
-							try {
-								onNewInput();
-							} catch (Throwable t) {
-								onError(context.getShortName() + "Connector "
-										+ "Error in DaemonRun.onNewInput", t);
-							}
-						}
-					} else {
-						if (LOG.isDebugEnabled()) {
-							LOG.debug(context.getShortName() + "Connector "
-									+ "Read 0 bytes disconnecting.");
-						}
-						disconnect();
-						break;
-					}
-				} else {
-					if (LOG.isDebugEnabled()) {
-						LOG.debug(context.getShortName() + "Connector "
-								+ "Not connected disconnecting.");
-					}
-					disconnect();
-					break;
-				}
-			}
-		} catch (Throwable t) {
-			if (t instanceof InterruptedException) {
-			}
-			if (t instanceof IOException) {
-				LOG.debug(
-						context.getShortName()
-								+ "Connector "
-								+ "IOException occured in messageLoop (These are common when disconnecting and ignorable)",
-						t);
-			} else {
-				onError(context.getShortName()
-						+ "Connector Error in DaemonRun Thwoable", t);
-			}
-			disconnect();
-		} finally {
-			LOG.debug(context.getShortName() + "Connector Leaving readInput");
-		}
-	}
-
-	/**
 	 * Processes a login message. Handles sending the user name and password
 	 * information and the enter if prompted to hit enter if logging in as a
 	 * guest.
@@ -1932,7 +1857,7 @@ public abstract class IcsConnector implements Connector {
 	 * 
 	 * This method also handles login logic which is tricky.
 	 */
-	protected void onNewInput() {
+	public void messageArrived(StringBuilder buffer) {
 
 		if (lastSendPingTime != 0) {
 			ThreadService.getInstance().run(new Runnable() {
@@ -1950,9 +1875,9 @@ public abstract class IcsConnector implements Connector {
 			// If we are logged in. Then parse out all the text between the
 			// prompts.
 			int promptIndex = -1;
-			while ((promptIndex = inboundMessageBuffer.indexOf(context
+			while ((promptIndex = buffer.indexOf(context
 					.getRawPrompt())) != -1) {
-				String message = drainInboundMessageBuffer(promptIndex
+				String message = drainInboundMessageBuffer(buffer,promptIndex
 						+ context.getRawPrompt().length());
 				parseMessage(message);
 			}
@@ -1963,25 +1888,25 @@ public abstract class IcsConnector implements Connector {
 			// we are waiting on.
 			// There is a login prompt, a password prompt, an enter prompt,
 			// and also you have to handle invalid logins.
-			int loggedInMessageIndex = inboundMessageBuffer.indexOf(context
+			int loggedInMessageIndex = buffer.indexOf(context
 					.getLoggedInMessage());
 			if (loggedInMessageIndex != -1) {
-				for (int i = 0; i < inboundMessageBuffer.length(); i++) {
-					char character = inboundMessageBuffer.charAt(i);
+				for (int i = 0; i < buffer.length(); i++) {
+					char character = buffer.charAt(i);
 					if (LOGIN_CHARACTERS_TO_FILTER.indexOf(character) != -1) {
-						inboundMessageBuffer.deleteCharAt(i);
+						buffer.deleteCharAt(i);
 						i--;
 					}
 				}
-				int nameStartIndex = inboundMessageBuffer.indexOf(context
+				int nameStartIndex = buffer.indexOf(context
 						.getLoggedInMessage())
 						+ context.getLoggedInMessage().length();
-				int endIndex = inboundMessageBuffer.indexOf("****",
+				int endIndex = buffer.indexOf("****",
 						nameStartIndex);
 
 				if (endIndex != -1) {
 
-					userName = IcsUtils.stripTitles(inboundMessageBuffer
+					userName = IcsUtils.stripTitles(buffer
 							.substring(nameStartIndex, endIndex).trim());
 					LOG.info(context.getShortName() + "Connector "
 							+ "login complete. userName=" + userName);
@@ -1997,32 +1922,32 @@ public abstract class IcsConnector implements Connector {
 					// until it arrives.
 				}
 			} else {
-				int loginIndex = inboundMessageBuffer.indexOf(context
+				int loginIndex = buffer.indexOf(context
 						.getLoginPrompt());
 				if (loginIndex != -1) {
-					String event = drainInboundMessageBuffer(loginIndex
+					String event = drainInboundMessageBuffer(buffer,loginIndex
 							+ context.getLoginPrompt().length());
 					onLoginEvent(event, true);
 				} else {
-					int enterPromptIndex = inboundMessageBuffer.indexOf(context
+					int enterPromptIndex = buffer.indexOf(context
 							.getEnterPrompt());
 					if (enterPromptIndex != -1) {
-						String event = drainInboundMessageBuffer(enterPromptIndex
+						String event = drainInboundMessageBuffer(buffer,enterPromptIndex
 								+ context.getEnterPrompt().length());
 						onLoginEvent(event, false);
 					} else {
-						int passwordPromptIndex = inboundMessageBuffer
+						int passwordPromptIndex = buffer
 								.indexOf(context.getPasswordPrompt());
 						if (passwordPromptIndex != -1) {
-							String event = drainInboundMessageBuffer(passwordPromptIndex
+							String event = drainInboundMessageBuffer(buffer,passwordPromptIndex
 									+ context.getPasswordPrompt().length());
 							onLoginEvent(event, false);
 
 						} else {
-							int errorMessageIndex = inboundMessageBuffer
+							int errorMessageIndex = buffer
 									.indexOf(context.getLoginErrorMessage());
 							if (errorMessageIndex != -1) {
-								String event = drainInboundMessageBuffer();
+								String event = drainInboundMessageBuffer(buffer);
 								event = StringUtils.replaceChars(event,
 										"����", "");
 								parseMessage(event);
