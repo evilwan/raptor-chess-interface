@@ -253,7 +253,6 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 
 	private void sendAck() throws IOException {
 		getOutputStream().write("\0029\n".getBytes());
-		System.err.println("Sent ack");
 	}
 
 	private void init() throws IOException {
