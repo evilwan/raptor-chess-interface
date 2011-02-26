@@ -71,7 +71,8 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		GameConstants {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(FicsConnector.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(FicsConnector.class);
 	protected static final String[][] PROBLEM_ACTIONS = {
 			{ "Tactics", "tell puzzlebot gettactics" },
 			{ "Mate", "tell puzzlebot getmate" },
@@ -202,6 +203,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 	}
 
+	protected String getInitialTimesealString() {
+		if (getPreferences().getBoolean(FICS_TIMESEAL_IS_TIMESEAL_2)) {
+			return "TIMESEAL2|OpenSeal|OpenSeal|";
+		} else {
+			return "TIMESTAMP|iv|OpenSeal|";
+		}
+	}
+
 	public GameBotService getGameBotService() {
 		return gameBotService;
 	}
@@ -325,8 +334,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			if (gameBotResults != null) {
 				if (!gameBotResults.isIncomplete()) {
 					if (gameBotResults.isPlayerInDb()) {
-						gameBotService.fireGameBotPageArrived(gameBotResults
-								.getRows(), gameBotResults.hasNextPage);
+						gameBotService.fireGameBotPageArrived(
+								gameBotResults.getRows(),
+								gameBotResults.hasNextPage);
 					} else {
 						gameBotService
 								.fireGameBotPlayerNotInDb(gameBotResults.playerName);
@@ -339,8 +349,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				if (fics2 != null
 						&& isConnected()
 						&& fics2.isConnected()
-						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
-								event.getSource()).trim(), fics2.getUserName())) {
+						&& StringUtils.equalsIgnoreCase(
+								IcsUtils.stripTitles(event.getSource()).trim(),
+								fics2.getUserName())) {
 					// here we are in fics1 where a partnership was created.
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Created simul bughouse partnership with "
@@ -354,8 +365,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 						&& fics1 != null
 						&& fics1.isConnected()
 						&& isConnected()
-						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
-								event.getSource()).trim(), fics1.getUserName())) {
+						&& StringUtils.equalsIgnoreCase(
+								IcsUtils.stripTitles(event.getSource()).trim(),
+								fics1.getUserName())) {
 					// here we are in fics2 when a partnership was created.
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Created simul bughouse partnership with "
@@ -373,19 +385,17 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 										PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP)) {
 					SWTUtils.openBugButtonsWindowItem(this);
 				}
-				if (getPreferences()
-								.getBoolean(
-										PreferenceKeys.BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP)) {
+				if (getPreferences().getBoolean(
+						PreferenceKeys.BUGHOUSE_SHOW_BUGWHO_ON_PARTNERSHIP)) {
 					SWTUtils.openBugWhoWindowItem(this);
 				}
-				
+
 			} else if (event.getType() == ChatType.PARTNERSHIP_DESTROYED) {
 				isSimulBugConnector = false;
 				simulBugPartnerName = null;
 
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("Partnership destroyed. Resetting partnership information.");
+					LOG.debug("Partnership destroyed. Resetting partnership information.");
 				}
 
 				// clear out the fics2 or fics1 depending on what this is.
@@ -452,8 +462,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 					if (getPreferences().getBoolean(
 							context.getPreferencePrefix()
 									+ "show-bugbuttons-on-connect")) {
-						Raptor.getInstance().getWindow().addRaptorWindowItem(
-								new BugButtonsWindowItem(this));
+						Raptor.getInstance()
+								.getWindow()
+								.addRaptorWindowItem(
+										new BugButtonsWindowItem(this));
 					}
 				}
 			}
@@ -468,8 +480,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		connectAction = new Action("&Connect") {
 			@Override
 			public void run() {
-				IcsLoginDialog dialog = new IcsLoginDialog(context
-						.getPreferencePrefix(), "Fics Login");
+				IcsLoginDialog dialog = new IcsLoginDialog(
+						context.getPreferencePrefix(), "Fics Login");
 				dialog.open();
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "profile",
@@ -544,8 +556,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 							FicsConnector.this, regEx);
 					ChatConsoleWindowItem chatConsoleWindowItem = new ChatConsoleWindowItem(
 							controller);
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							chatConsoleWindowItem, false);
+					Raptor.getInstance().getWindow()
+							.addRaptorWindowItem(chatConsoleWindowItem, false);
 					ChatUtils
 							.appendPreviousChatsToController((ChatConsole) chatConsoleWindowItem
 									.getControl());
@@ -567,8 +579,9 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		fics2.connectAction = new Action("&Connect") {
 			@Override
 			public void run() {
-				IcsLoginDialog dialog = new IcsLoginDialog(context
-						.getPreferencePrefix(), "Fics Simultaneous Login");
+				IcsLoginDialog dialog = new IcsLoginDialog(
+						context.getPreferencePrefix(),
+						"Fics Simultaneous Login");
 				if (isConnected()) {
 					dialog.setShowingSimulBug(true);
 				}
@@ -651,8 +664,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 							fics2, regEx);
 					ChatConsoleWindowItem chatConsoleWindowItem = new ChatConsoleWindowItem(
 							controller);
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							chatConsoleWindowItem, false);
+					Raptor.getInstance().getWindow()
+							.addRaptorWindowItem(chatConsoleWindowItem, false);
 					ChatUtils
 							.appendPreviousChatsToController((ChatConsole) chatConsoleWindowItem
 									.getControl());

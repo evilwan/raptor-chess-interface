@@ -901,6 +901,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_TERTIARY_PORT, 5000);
 		setDefault(FICS_TERTIARY_TIMESEAL_ENABLED, true);
 		setDefault(FICS_REMOVE_BLANK_LINES, false);
+		
+		//Fics Timeseal
+		setDefault(FICS_TIMESEAL_IS_TIMESEAL_2,true);		
 
 		// Bics
 		setDefault(BICS_KEEP_ALIVE, false);
@@ -1006,12 +1009,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.IX);
 		setDefault("bics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
-
-		// Timeseal 1 connect string
-		//setDefault(TIMESEAL_INIT_STRING, "TIMESTAMP|iv|OpenSeal|");
-		// Timeseal 2 connect string.
-		setDefault(TIMESEAL_INIT_STRING, "TIMESEAL2|OpenSeal|OpenSeal|");
-
+	
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
 

@@ -121,7 +121,9 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 	@Override
 	public void close() {
 		try {
-			socket.close();
+			if (socket != null) {
+				socket.close();
+			}
 		} catch (IOException ioe) {
 		}
 
@@ -223,6 +225,7 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 					close();
 					break;
 				}
+				Thread.sleep(10);
 			}
 			LOG.debug("TimesealSocketMessageProducer "
 					+ "Not connected disconnecting.");

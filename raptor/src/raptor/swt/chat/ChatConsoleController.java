@@ -26,7 +26,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import raptor.util.RaptorLogger;
- 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.dnd.DND;
@@ -92,7 +92,8 @@ import raptor.util.RaptorStringUtils;
 public abstract class ChatConsoleController implements PreferenceKeys {
 	public static final double CLEAN_PERCENTAGE = .33;
 	public static final long SPELL_CHECK_DELAY = 1000;
-	private static final RaptorLogger LOG = RaptorLogger.getLog(ChatConsoleController.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(ChatConsoleController.class);
 	public static final int TEXT_CHUNK_SIZE = 1000;
 	public static int[] DONT_FORWARD_KEYSTROKES = { SWT.PAGE_UP, SWT.PAGE_DOWN,
 			SWT.HOME, SWT.END };
@@ -223,8 +224,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					&& isActive
 					&& (getPreferences()
 							.getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK))) {
-				Raptor.getInstance().getDisplay().asyncExec(
-						new RaptorRunnable() {
+				Raptor.getInstance().getDisplay()
+						.asyncExec(new RaptorRunnable() {
 							@Override
 							public void execute() {
 								onSpellCheck();
@@ -273,8 +274,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	public void onSpellCheck() {
 		if (!getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK))
-				return;
-		
+			return;
+
+		if (chatConsole.isDisposed()
+				|| chatConsole.getOutputText().isDisposed()) {
+			return;
+		}
+
 		String outputText = chatConsole.getOutputText().getText();
 		if (outputText == null
 				|| outputText.length() == 0
@@ -354,8 +360,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	public void addScrollBarListeners() {
-		chatConsole.getInputText().getVerticalBar().addSelectionListener(
-				verticalScrollbarListener);
+		chatConsole.getInputText().getVerticalBar()
+				.addSelectionListener(verticalScrollbarListener);
 	}
 
 	public void addToolItem(ToolBarItemKey key, ToolItem item) {
@@ -513,10 +519,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public boolean isIgnoringActions() {
 		boolean result = false;
 		if (isDisposed || chatConsole == null || chatConsole.isDisposed()) {
-			LOG
-					.debug(
-							"isBeingReparented invoked. The exception is thrown just to debug the stack trace.",
-							new Exception());
+			LOG.debug(
+					"isBeingReparented invoked. The exception is thrown just to debug the stack trace.",
+					new Exception());
 			result = true;
 		}
 		return result;
@@ -580,11 +585,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			String messageText = filterText(event.getMessage());
 			String date = "";
-			if (Raptor.getInstance().getPreferences().getBoolean(
-					CHAT_TIMESTAMP_CONSOLE)) {
+			if (Raptor.getInstance().getPreferences()
+					.getBoolean(CHAT_TIMESTAMP_CONSOLE)) {
 				SimpleDateFormat format = new SimpleDateFormat(Raptor
-						.getInstance().getPreferences().getString(
-								CHAT_TIMESTAMP_CONSOLE_FORMAT));
+						.getInstance().getPreferences()
+						.getString(CHAT_TIMESTAMP_CONSOLE_FORMAT));
 				date = format.format(new Date(event.getTime()));
 			} else {
 				messageText = RaptorStringUtils
@@ -717,8 +722,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								MessageBox box = new MessageBox(chatConsole
 										.getShell(), SWT.ICON_INFORMATION
 										| SWT.OK);
-								box
-										.setMessage("You must enter text in the input field to search on.");
+								box.setMessage("You must enter text in the input field to search on.");
 								box.setText("Alert");
 								box.open();
 							} else {
@@ -733,8 +737,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 											.getCharCount() - 1;
 								} else if (start - searchString.length() + 1 >= 0) {
 									String text = chatConsole.inputText
-											.getText(start
-													- searchString.length(),
+											.getText(
+													start
+															- searchString
+																	.length(),
 													start - 1);
 									if (text.equalsIgnoreCase(searchString)) {
 										start -= searchString.length();
@@ -757,12 +763,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 									if (index != -1) {
 										int textStart = start - charsBack
 												+ index;
-										chatConsole.inputText
-												.setSelection(
-														textStart,
-														textStart
-																+ searchString
-																		.length());
+										chatConsole.inputText.setSelection(
+												textStart, textStart
+														+ searchString.length());
 										foundText = true;
 										break;
 									}
@@ -773,9 +776,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 									MessageBox box = new MessageBox(chatConsole
 											.getShell(), SWT.ICON_INFORMATION
 											| SWT.OK);
-									box
-											.setMessage("Could not find any occurances of '"
-													+ searchString + "'.");
+									box.setMessage("Could not find any occurances of '"
+											+ searchString + "'.");
 									box.setText("Alert");
 									box.open();
 								}
@@ -936,8 +938,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			int endIndex = chatConsole.getOutputText().getCaretOffset();
 			int startIndex = endIndex - 1;
 			for (; startIndex >= 0; startIndex--) {
-				if (chatConsole.getOutputText().getContent().getTextRange(
-						startIndex, 1).equals(" ")) {
+				if (chatConsole.getOutputText().getContent()
+						.getTextRange(startIndex, 1).equals(" ")) {
 					startIndex++;
 					break;
 				}
@@ -947,8 +949,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 
 			String wordToAutoComplete = chatConsole.getOutputText()
-					.getContent().getTextRange(startIndex,
-							endIndex - startIndex).trim();
+					.getContent()
+					.getTextRange(startIndex, endIndex - startIndex).trim();
 			if (wordToAutoComplete.length() > 0) {
 
 				String[] autoComplete = getConnector().autoComplete(
@@ -1084,12 +1086,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			item.setText("Add channel tab: " + channel);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
-					if (!Raptor.getInstance().getWindow().containsChannelItem(
-							connector, channel)) {
+					if (!Raptor.getInstance().getWindow()
+							.containsChannelItem(connector, channel)) {
 						ChatConsoleWindowItem windowItem = new ChatConsoleWindowItem(
 								new ChannelController(connector, channel));
-						Raptor.getInstance().getWindow().addRaptorWindowItem(
-								windowItem, false);
+						Raptor.getInstance().getWindow()
+								.addRaptorWindowItem(windowItem, false);
 						ChatUtils
 								.appendPreviousChatsToController(windowItem.console);
 					}
@@ -1132,8 +1134,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					.getLine(chatConsole.inputText
 							.getLineAtOffset(caretPosition));
 
-			connector.getChatService().getChatLogger().parseFile(
-					new ChatEventParseListener() {
+			connector.getChatService().getChatLogger()
+					.parseFile(new ChatEventParseListener() {
 
 						public boolean onNewEventParsed(ChatEvent event) {
 							if (event.getMessage().contains(line)) {
@@ -1320,8 +1322,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			for (int[] linkRange : linkRanges) {
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						getPreferences().getColor(event), chatConsole.inputText
-								.getBackground());
+						getPreferences().getColor(event),
+						chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1369,8 +1371,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			if (endIndex != -1) {
 				StyleRange range = new StyleRange(textStartPosition
 						+ startIndex, (endIndex - startIndex) + 1,
-						getPreferences().getColor(event), chatConsole.inputText
-								.getBackground());
+						getPreferences().getColor(event),
+						chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1444,8 +1446,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			for (int[] linkRange : linkRanges) {
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						getPreferences().getColor(event), chatConsole.inputText
-								.getBackground());
+						getPreferences().getColor(event),
+						chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1495,8 +1497,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					if (spaceIndex != -1) {
 						String firstWord = line.substring(0, spaceIndex);
 						if (firstWord.endsWith(":")) {
-							firstWord = firstWord.substring(0, firstWord
-									.length() - 1);
+							firstWord = firstWord.substring(0,
+									firstWord.length() - 1);
 							if (NumberUtils.isDigits(firstWord)) {
 								linkRanges.add(new int[] {
 										lastNewlineIndex + 1, newLineIndex });
@@ -1516,8 +1518,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					if (spaceIndex != -1) {
 						String firstWord = line.substring(0, spaceIndex);
 						if (firstWord.endsWith(":")) {
-							firstWord = firstWord.substring(0, firstWord
-									.length() - 1);
+							firstWord = firstWord.substring(0,
+									firstWord.length() - 1);
 							if (NumberUtils.isDigits(firstWord)) {
 								linkRanges
 										.add(new int[] { lastNewlineIndex + 1,
@@ -1532,8 +1534,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			for (int[] linkRange : linkRanges) {
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						getPreferences().getColor(event), chatConsole.inputText
-								.getBackground());
+						getPreferences().getColor(event),
+						chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1575,11 +1577,11 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					if (spaceIndex != -1) {
 						String firstWord = line.substring(0, spaceIndex);
 						if (firstWord.endsWith(":")) {
-							firstWord = firstWord.substring(1, firstWord
-									.length() - 1);
+							firstWord = firstWord.substring(1,
+									firstWord.length() - 1);
 							if (NumberUtils.isDigits(firstWord)) {
-								firstWord = firstWord.substring(0, firstWord
-										.length() - 1);
+								firstWord = firstWord.substring(0,
+										firstWord.length() - 1);
 								if (NumberUtils.isDigits(firstWord)) {
 
 									int lastIndex = newLineIndex;
@@ -1601,15 +1603,15 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			// handle the last line.
 			if (lastNewlineIndex != 0) {
-				String line = message.substring(lastNewlineIndex + 1, message
-						.length());
+				String line = message.substring(lastNewlineIndex + 1,
+						message.length());
 				if (StringUtils.isNotBlank(line)) {
 					int spaceIndex = line.indexOf(' ');
 					if (spaceIndex != -1) {
 						String firstWord = line.substring(0, spaceIndex);
 						if (firstWord.endsWith(":")) {
-							firstWord = firstWord.substring(1, firstWord
-									.length() - 1);
+							firstWord = firstWord.substring(1,
+									firstWord.length() - 1);
 							if (NumberUtils.isDigits(firstWord)) {
 								int lastIndex = message.length() - 1;
 								while (Character.isWhitespace(message
@@ -1628,8 +1630,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			for (int[] linkRange : linkRanges) {
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						getPreferences().getColor(event), chatConsole.inputText
-								.getBackground());
+						getPreferences().getColor(event),
+						chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -1819,8 +1821,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			for (int[] linkRange : linkRanges) {
 				StyleRange range = new StyleRange(textStartPosition
 						+ linkRange[0], linkRange[1] - linkRange[0],
-						getPreferences().getColor(event), chatConsole.inputText
-								.getBackground());
+						getPreferences().getColor(event),
+						chatConsole.inputText.getBackground());
 				range.underline = true;
 				chatConsole.inputText.setStyleRange(range);
 			}
@@ -2181,8 +2183,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					Object[] data = new Object[] { chatConsole.inputText
 							.getSelectionText() };
 					Transfer[] types = new Transfer[] { plainTextTransfer };
-					Raptor.getInstance().getClipboard().setContents(data,
-							types, DND.CLIPBOARD);
+					Raptor.getInstance().getClipboard()
+							.setContents(data, types, DND.CLIPBOARD);
 				}
 			});
 		}
@@ -2248,20 +2250,22 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				chatConsole.outputText.paste();
 			}
 		});
-		
-		
+
 		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
 			new MenuItem(menu, SWT.SEPARATOR);
 			MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
-			showWordsThatStartWithAction.setText("Spelling suggestions for " + finalWord);
+			showWordsThatStartWithAction.setText("Spelling suggestions for "
+					+ finalWord);
 			showWordsThatStartWithAction.addListener(SWT.Selection,
 					new Listener() {
 						public void handleEvent(Event e) {
-							BrowserUtils.openUrl("http://www.google.com/search?q=define:+" + finalWord);
+							BrowserUtils
+									.openUrl("http://www.google.com/search?q=define:+"
+											+ finalWord);
 						}
 					});
 		}
-		
+
 		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
 			new MenuItem(menu, SWT.SEPARATOR);
 			MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
@@ -2295,7 +2299,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 						}
 					});
 		}
-		
+
 		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)
 				&& word != null && !isSpelledCorrectly(null, word)) {
 
@@ -2364,8 +2368,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	protected void reduceInputTextIfNeeded() {
 
 		int charCount = chatConsole.inputText.getCharCount();
-		if (charCount > Raptor.getInstance().getPreferences().getInt(
-				CHAT_MAX_CONSOLE_CHARS)) {
+		if (charCount > Raptor.getInstance().getPreferences()
+				.getInt(CHAT_MAX_CONSOLE_CHARS)) {
 			LOG.info("Cleaning chat console");
 			long startTime = System.currentTimeMillis();
 			int cleanTo = (int) (charCount * CLEAN_PERCENTAGE);

@@ -125,11 +125,6 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				"Polling Refresh Interval (Seek Tab,BugWho Tab, etc):",
 				POLLING_REFRESH, getFieldEditorParent()));
 
-		StringFieldEditor timesealInitString = new StringFieldEditor(
-				PreferenceKeys.TIMESEAL_INIT_STRING,
-				"Timeseal Init String (Advanced):", getFieldEditorParent());
-		addField(timesealInitString);
-
 		addField(new LabelButtonFieldEditor("NONE", "", getFieldEditorParent(),
 				"Reset Raptor To Defaults", new SelectionAdapter() {
 					@Override

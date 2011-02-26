@@ -1687,8 +1687,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	}
 
 	protected String getInitialTimesealString() {
-		return Raptor.getInstance().getPreferences()
-				.getString(PreferenceKeys.TIMESEAL_INIT_STRING);
+		return "TIMESTAMP|iv|OpenSeal|";
 	}
 
 	protected String getTextAfterColon(String message) {
