@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Label;
 import raptor.Raptor;
 import raptor.chess.GameConstants;
 import raptor.chess.util.GameUtils;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.FileDialog;
 import raptor.swt.SWTUtils;
@@ -47,6 +48,9 @@ import raptor.swt.chess.PieceJailChessSquare;
 import raptor.swt.chess.SquareBackgroundImageEffect;
 
 public class ChessBoardPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
+	
 	public class PieceJailSquarePageSquare extends PieceJailChessSquare {
 
 		public PieceJailSquarePageSquare(Composite parent, int id,
@@ -287,24 +291,24 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 	}
 
 	public static final String[][] LAYOUTS = {
-			{ "Right Oriented Layout (Fonts adjust to board size)",
+			{ local.getString("chessBP1"),
 					"raptor.swt.chess.layout.RightOrientedLayout" },
-			{ "Right Oriented Layout (Fonts do not adjust to board size)",
+			{ local.getString("chessBP2"),
 					"raptor.swt.chess.layout.RightOrientedFixedLayout" },
-			{ "Top/Bottom Oriented Layout",
+			{ local.getString("chessBP3"),
 					"raptor.swt.chess.layout.TopBottomOrientedLayout" } };
 
 	public static final String[][] MOVE_LISTS = {
-			{ "Table", "raptor.swt.chess.movelist.TableMoveList" },
-			{ "Text", "raptor.swt.chess.movelist.TextAreaMoveList" } };
+			{ local.getString("table"), "raptor.swt.chess.movelist.TableMoveList" },
+			{ local.getString("text"), "raptor.swt.chess.movelist.TextAreaMoveList" } };
 
 	public static final String[][] BACKGROUND_EFFECT_VALUES = {
-			{ "Crop", SquareBackgroundImageEffect.Crop.toString() },
-			{ "Random Crop", SquareBackgroundImageEffect.RandomCrop.toString() },
-			{ "Scale", SquareBackgroundImageEffect.Scale.toString() } };
+			{ local.getString("crop"), SquareBackgroundImageEffect.Crop.toString() },
+			{local.getString("randCrop"), SquareBackgroundImageEffect.RandomCrop.toString() },
+			{ local.getString("scale"), SquareBackgroundImageEffect.Scale.toString() } };
 
 	public static final String[][] PIECE_RESIZE_PERCENTAGE = {
-			{ "None", "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
+			{ local.getString("none"), "0.0" }, { "1%", "0.01" }, { "2%", "0.02" },
 			{ "4%", "0.04" }, { "6%", "0.06" }, { "7%", "0.07" },
 			{ "8%", "0.08" }, { "9%", "0.09" }, { "10%", "0.1" },
 			{ "11%", "0.09" }, { "12%", "0.12" }, { "14%", "0.14" },
@@ -357,7 +361,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		// Use the "grid" layout
 		super(GRID);
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Chess Board");
+		setTitle(local.getString("chessBoard"));
 	}
 
 	public void valuesChanged() {
@@ -399,23 +403,23 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		}
 
 		setFieldEditor = new ChessBoardPageComboFieldEditor(
-				PreferenceKeys.BOARD_CHESS_SET_NAME, "Chess Set:",
+				PreferenceKeys.BOARD_CHESS_SET_NAME, local.getString("chessBP4"),
 				setNameValues, getFieldEditorParent());
 		addField(setFieldEditor);
 
 		isUsingSolidColorsEditor = new ChessBoardPageBooleanFieldEditor(
 				PreferenceKeys.BOARD_IS_USING_SOLID_BACKGROUND_COLORS,
-				"Use solid background colors", getFieldEditorParent());
+				local.getString("chessBP5"), getFieldEditorParent());
 		addField(isUsingSolidColorsEditor);
 
 		lightSquareSolidColor = new ChessBoardPageColorFieldEditor(
 				PreferenceKeys.BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR,
-				"Light Square Background Color:", getFieldEditorParent());
+				local.getString("chessBP6"), getFieldEditorParent());
 		addField(lightSquareSolidColor);
 
 		darkSquareSolidColor = new ChessBoardPageColorFieldEditor(
 				PreferenceKeys.BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR,
-				"Dark Square Background Color:", getFieldEditorParent());
+				local.getString("chessBP7"), getFieldEditorParent());
 		addField(darkSquareSolidColor);
 
 		String[] backgrounds = ChessBoardUtils.getSquareBackgroundNames();
@@ -427,41 +431,41 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		backgroundFieldEditor = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_SQUARE_BACKGROUND_NAME,
-				"Square Background Images ", backgroundNameValues,
+				local.getString("chessBP8"), backgroundNameValues,
 				getFieldEditorParent());
 		addField(backgroundFieldEditor);
 
 		backgroundEffectCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT,
-				"Square Background Images Effect", BACKGROUND_EFFECT_VALUES,
+				local.getString("chessBP9"), BACKGROUND_EFFECT_VALUES,
 				getFieldEditorParent());
 		addField(backgroundEffectCombo);
 
 		ComboFieldEditor layoutsFieldEditor = new ComboFieldEditor(
-				PreferenceKeys.BOARD_LAYOUT, "Chess Board Control Layout:",
+				PreferenceKeys.BOARD_LAYOUT, local.getString("chessBP10"),
 				LAYOUTS, getFieldEditorParent());
 		addField(layoutsFieldEditor);
 
 		ComboFieldEditor moveListLayoutEditor = new ComboFieldEditor(
-				PreferenceKeys.BOARD_MOVE_LIST_CLASS, "Move List Type:",
+				PreferenceKeys.BOARD_MOVE_LIST_CLASS, local.getString("chessBP11"),
 				MOVE_LISTS, getFieldEditorParent());
 		addField(moveListLayoutEditor);
 
 		pieceResize = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_SIZE_ADJUSTMENT,
-				"Piece size reduction percentage:\n(Higher values decrease piece size.)",
+				local.getString("chessBP12"),
 				PIECE_RESIZE_PERCENTAGE, getFieldEditorParent());
 		addField(pieceResize);
 
 		coordinatesPercentageCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_COORDINATES_SIZE_PERCENTAGE,
-				"Coordinates size as a percentage of square size:",
+				local.getString("chessBP13"),
 				COORDINATES_SIZE_PERCENTAGE, getFieldEditorParent());
 		addField(coordinatesPercentageCombo);
 
 		pieceJailPercentageCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_PERCENTAGE,
-				"Piece jail label as a percentage of square size:",
+				local.getString("chessBP14"),
 				DROP_SQUARE_PERCENT, getFieldEditorParent());
 		addField(pieceJailPercentageCombo);
 
@@ -521,13 +525,13 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		licenseButton = new Button(chessSetInfoComposite, SWT.PUSH);
 		licenseButton.setLayoutData(new GridData(SWT.RIGHT, SWT.TOP, false,
 				false));
-		licenseButton.setText("Chess Set License");
+		licenseButton.setText(local.getString("chessBP15"));
 		licenseButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String set = setFieldEditor.getValue();
 				FileDialog fileDialog = new FileDialog(getShell(),
-						"License for Chess Set " + set,
+						local.getString("chessBP16") + set,
 						getLicenseForSet(setFieldEditor.getValue()));
 				fileDialog.open();
 			}
@@ -535,13 +539,13 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 
 		boardHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_SHADOW_ALPHA,
-				"Piece Shadow (0 is transparent, 255 is opaque):", ALPHAS,
+				local.getString("chessBP17"), ALPHAS,
 				getFieldEditorParent());
 		addField(boardHidingAlphaCombo);
 
 		pieceJailHidingAlphaCombo = new ChessBoardPageComboFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA,
-				"Piece Jail Shadow (0 is transparent, 255 is opaque):", ALPHAS,
+				local.getString("chessBP18"), ALPHAS,
 				getFieldEditorParent());
 		addField(pieceJailHidingAlphaCombo);
 
@@ -594,9 +598,9 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		String license = getLicenseForSet(setName);
 
 		if (StringUtils.isEmpty(author)) {
-			authorLabel.setText(setName + " Author: anonymous");
+			authorLabel.setText(setName + " "+local.getString("authorAn"));
 		} else {
-			authorLabel.setText(setName + " Author: " + author);
+			authorLabel.setText(setName + " "+local.getString("author")+" " + author);
 		}
 
 		if (StringUtils.isEmpty(license)) {

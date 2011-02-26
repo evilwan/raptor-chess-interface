@@ -17,57 +17,61 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.FontFieldEditor;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 public class ChessBoardFontsPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
+	
 	public ChessBoardFontsPage() {
 		super(GRID);
-		setTitle("Fonts");
+		setTitle(local.getString("fonts"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
 	@Override
 	protected void createFieldEditors() {
 		addField(new FontFieldEditor(PreferenceKeys.BOARD_CLOCK_FONT,
-				"Clock Font:", getFieldEditorParent()));
+				local.getString("chessBFontsP1"), getFieldEditorParent()));
 
 		FontFieldEditor coordinatesFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_COORDINATES_FONT, "Coordinates Font:",
+				PreferenceKeys.BOARD_COORDINATES_FONT, local.getString("chessBFontsP2"),
 				getFieldEditorParent());
 		addField(coordinatesFont);
 
 		FontFieldEditor gameDescriptionFont = new FontFieldEditor(
 				PreferenceKeys.BOARD_GAME_DESCRIPTION_FONT,
-				"Game Description Font:", getFieldEditorParent());
+				local.getString("chessBFontsP3"), getFieldEditorParent());
 		addField(gameDescriptionFont);
 
 		FontFieldEditor lagFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_LAG_FONT, "Lag Font:",
+				PreferenceKeys.BOARD_LAG_FONT, local.getString("chessBFontsP4"),
 				getFieldEditorParent());
 		addField(lagFont);
 
 		FontFieldEditor lastMoveFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_STATUS_FONT, "Last Move/Result Font:",
+				PreferenceKeys.BOARD_STATUS_FONT, local.getString("chessBFontsP5"),
 				getFieldEditorParent());
 		addField(lastMoveFont);
 
 		FontFieldEditor openingDescriptionFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_OPENING_DESC_FONT, "Opening Font:",
+				PreferenceKeys.BOARD_OPENING_DESC_FONT, local.getString("chessBFontsP6"),
 				getFieldEditorParent());
 		addField(openingDescriptionFont);
 
 		FontFieldEditor pieceJailFont = new FontFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_FONT,
-				"Piece Jail Number Font:", getFieldEditorParent());
+				local.getString("chessBFontsP7"), getFieldEditorParent());
 		addField(pieceJailFont);
 
 		FontFieldEditor playerNameFont = new FontFieldEditor(
 				PreferenceKeys.BOARD_PLAYER_NAME_FONT,
-				"Player Name and Rating Font:", getFieldEditorParent());
+				local.getString("chessBFontsP8"), getFieldEditorParent());
 		addField(playerNameFont);
 
 		FontFieldEditor premovesFont = new FontFieldEditor(
-				PreferenceKeys.BOARD_OPENING_DESC_FONT, "Premoves Font:",
+				PreferenceKeys.BOARD_OPENING_DESC_FONT, local.getString("chessBFontsP9"),
 				getFieldEditorParent());
 		addField(premovesFont);
 	}

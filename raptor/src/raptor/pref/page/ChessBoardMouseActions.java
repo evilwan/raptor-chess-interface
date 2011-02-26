@@ -16,6 +16,7 @@ package raptor.pref.page;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ChessBoardMouseActions extends FieldEditorPreferencePage {
@@ -23,7 +24,7 @@ public class ChessBoardMouseActions extends FieldEditorPreferencePage {
 
 	public ChessBoardMouseActions() {
 		super(FLAT);
-		setTitle("Mouse Actions");
+		setTitle(L10n.getInstance().getString("mouseAct"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 

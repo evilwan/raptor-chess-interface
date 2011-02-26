@@ -19,18 +19,21 @@ import org.eclipse.jface.preference.ComboFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
 
 	public static final String[][] HIGHLIGHT_ANIMATION_DELAY_OPTIONS = {
-		{ "100 milliseconds", "100" }, { "150 milliseconds", "150" },
-		{ "175 milliseconds", "175" }, { "200 milliseconds", "200" },
-		{ "250 milliseconds", "250" }, { "300 milliseconds", "300" },
-		{ "350 millseconds", "350" }, { "400 millseconds", "400" },
-		{ "500 millseconds", "500" }, { "600 millseconds", "600" },
-		{ "700 millseconds", "700" }, { "800 millseconds", "800" },
-		{ "900 millseconds", "900" }, { "1000 millseconds", "1000" }, };
+		{ local.getString("xMilliseconds",100), "100" }, { local.getString("xMilliseconds",150), "150" },
+		{ local.getString("xMilliseconds",175), "175" }, { local.getString("xMilliseconds",200), "200" },
+		{ local.getString("xMilliseconds",250), "250" }, { local.getString("xMilliseconds",300), "300" },
+		{ local.getString("xMilliseconds",350), "350" }, { local.getString("xMilliseconds",400), "400" },
+		{ local.getString("xMilliseconds",500), "500" }, { local.getString("xMilliseconds",600), "600" },
+		{ local.getString("xMilliseconds",700), "700" }, { local.getString("xMilliseconds",800), "800" },
+		{ local.getString("xMilliseconds",900), "900" }, { local.getString("xMilliseconds",1000), "1000" }, };
 
 	public static final String[][] HIGHLIGHT_BORDER_PERCENTAGE_OPTIONS = {
 			{ "2%", "2" }, { "3%", "3" }, { "5%", "4" }, { "8%", "8" },
@@ -38,7 +41,7 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 
 	public ChessBoardHighlightsPage() {
 		super(GRID);
-		setTitle("Highlights");
+		setTitle(local.getString("highlights"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -46,44 +49,44 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.HIGHLIGHT_SHOW_ON_OBS_AND_OPP_MOVES,
-				"Show highlights on observed and opponents moves",
+				local.getString("chessBHighP1"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES,
-				"Show highlights on move list moves", getFieldEditorParent()));
+				local.getString("chessBHighP2"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_PREMOVES,
-				"Show non-fading highlights as my premoves are made",
+				local.getString("chessBHighP3"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.HIGHLIGHT_SHOW_ON_MY_MOVES,
-				"Show highlights on my moves", getFieldEditorParent()));
+				local.getString("chessBHighP4"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.HIGHLIGHT_FADE_AWAY_MODE,
-				"Highlights fade away (excludes premoves)",
+				local.getString("chessBHighP5"),
 				getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(PreferenceKeys.HIGHLIGHT_ANIMATION_DELAY,
-				"Highlight animation delay:",
+				local.getString("chessBHighP6"),
 				HIGHLIGHT_ANIMATION_DELAY_OPTIONS, getFieldEditorParent()));
 
 		addField(new ComboFieldEditor(
 				PreferenceKeys.HIGHLIGHT_WIDTH_PERCENTAGE,
-				"Highlight border percentage of square size:",
+				local.getString("chessBHighP7"),
 				HIGHLIGHT_BORDER_PERCENTAGE_OPTIONS, getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_MY_COLOR,
-				"My highlight color:", getFieldEditorParent()));
+				local.getString("chessBHighP8"), getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_PREMOVE_COLOR,
-				"My premoves highlight color:", getFieldEditorParent()));
+				local.getString("chessBHighP9"), getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_OBS_OPP_COLOR,
-				"Opponent highlight color:", getFieldEditorParent()));
+				local.getString("chessBHighP10"), getFieldEditorParent()));
 		addField(new ColorFieldEditor(PreferenceKeys.HIGHLIGHT_OBS_COLOR,
-				"Observe highlight color:", getFieldEditorParent()));
+				local.getString("chessBHighP11"), getFieldEditorParent()));
 	}
 
 }

@@ -17,13 +17,17 @@ import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 public class ChessBoardColorsPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
+	
 	public ChessBoardColorsPage() {
 		// Use the "flat" layout
 		super(GRID);
-		setTitle("Colors");
+		setTitle(local.getString("colors"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -31,39 +35,39 @@ public class ChessBoardColorsPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 
 		addField(new ColorFieldEditor(PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR,
-				"Clock Ticking Color:", getFieldEditorParent()));
+				local.getString("chessBColP1"), getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR,
-				"Clock Stopped Color:", getFieldEditorParent()));
+				local.getString("chessBColP2"), getFieldEditorParent()));
 
 		ColorFieldEditor defaultMessages = new ColorFieldEditor(
-				PreferenceKeys.BOARD_BACKGROUND_COLOR, "Background Color:",
+				PreferenceKeys.BOARD_BACKGROUND_COLOR, local.getString("chessBColP3"),
 				getFieldEditorParent());
 		addField(defaultMessages);
 
 		ColorFieldEditor coordinatesColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_COORDINATES_COLOR, "Coordinates Color:",
+				PreferenceKeys.BOARD_COORDINATES_COLOR, local.getString("chessBColP4"),
 				getFieldEditorParent());
 		addField(coordinatesColor);
 
 		ColorFieldEditor lagLabelColor = new ColorFieldEditor(
-				PreferenceKeys.BOARD_CONTROL_COLOR, "Label Color:",
+				PreferenceKeys.BOARD_CONTROL_COLOR, local.getString("chessBColP5"),
 				getFieldEditorParent());
 		addField(lagLabelColor);
 
 		ColorFieldEditor lagOver20LabelColor = new ColorFieldEditor(
 				PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR,
-				"Lag Over 20 Seconds Color:", getFieldEditorParent());
+				local.getString("chessBColP6"), getFieldEditorParent());
 		addField(lagOver20LabelColor);
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
-				"Piece Jail Background Color:", getFieldEditorParent()));
+				local.getString("chessBColP7"), getFieldEditorParent()));
 
 		addField(new ColorFieldEditor(
 				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR,
-				"Piece Jail Number Color:", getFieldEditorParent()));
+				local.getString("chessBColP8"), getFieldEditorParent()));
 
 	}
 }
