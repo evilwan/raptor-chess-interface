@@ -86,7 +86,7 @@ public class GeneralPage extends FieldEditorPreferencePage {
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LOGGING_CHANNEL_TELLS,
-				"Log person tells to " + Raptor.USER_RAPTOR_HOME_PATH
+				"Log channel tells to " + Raptor.USER_RAPTOR_HOME_PATH
 						+ "/logs/console/${ConnectorName}-${Channel}.txt",
 				getFieldEditorParent()));
 
