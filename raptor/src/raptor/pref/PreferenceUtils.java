@@ -127,7 +127,7 @@ public class PreferenceUtils {
 								new ActionContainerPage(
 										"Examining",
 										"\tOn this page you can configure the toolbar "
-												+ "for the examine chess board,on fics this is shown when you are examining a game. "
+												+ "for the examine chess board, on fics this is shown when you are examining a game. "
 												+ "You can add new actions on the Action Scripts Page.",
 										RaptorActionContainer.ExaminingChessBoard)));
 		mgr
@@ -148,7 +148,7 @@ public class PreferenceUtils {
 								new ActionContainerPage(
 										"Observing",
 										"\tOn this page you can configure the toolbar "
-												+ "for the observing chess board,on fics this is shown when you are observing a "
+												+ "for the observing chess board, on fics this is shown when you are observing a "
 												+ "game. You can add new actions on the Action Scripts Page.",
 										RaptorActionContainer.ObservingChessBoard)));
 		mgr
@@ -159,7 +159,7 @@ public class PreferenceUtils {
 								new ActionContainerPage(
 										"Playing",
 										"\tOn this page you can configure the toolbar "
-												+ "for the playing chess board,on fics this is shown when you are playing a "
+												+ "for the playing chess board, on fics this is shown when you are playing a "
 												+ "game. You can add new actions on the Action Scripts Page.",
 										RaptorActionContainer.PlayingChessBoard)));
 		mgr
@@ -170,7 +170,7 @@ public class PreferenceUtils {
 								new ActionContainerPage(
 										"Setup",
 										"\tOn this page you can configure the toolbar for the setup "
-												+ "chess board,on fics this is shown during bsetup. You can add new actions on the "
+												+ "chess board, on fics this is shown during bsetup. You can add new actions on the "
 												+ "Action Scripts Page.",
 										RaptorActionContainer.SetupChessBoard)));
 		mgr.addTo("chessBoard", new PreferenceNode("results",
