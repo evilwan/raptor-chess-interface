@@ -42,7 +42,8 @@ import raptor.util.RaptorLogger;
  * A service used to manage layouts.
  */
 public class LayoutService {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(LayoutService.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(LayoutService.class);
 
 	public static final String USER_LAYOUT_DIR = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/layouts";
@@ -132,18 +133,31 @@ public class LayoutService {
 
 	}
 
-	public CustomLayout saveCurrentAsCustomLayout(String name) {
+	public void exportCurrentLayout(String layoutName, String directory) {
 		CustomLayout layout = CustomLayout.createFromCurrentSettings();
-		layout.setName(name);
+		layout.setName(layoutName);
+		saveLayout(layout, directory);
+
+	}
+
+	public Layout importLayout(String fileName) {
+		CustomLayout layout = CustomLayout.loadFromProperties(fileName);
+		saveLayout(layout,USER_LAYOUT_DIR);
+		customLayouts.add(layout);
+		Collections.sort(customLayouts, LAYOUT_NAME_COMPARATOR);
+		return layout;
+	}
+
+	public void saveLayout(CustomLayout layout, String directory) {
 		Properties properties = CustomLayout.saveAsProperties(layout);
 
 		FileOutputStream fileOut = null;
 		try {
-			fileOut = new FileOutputStream(USER_LAYOUT_DIR + "/"
-					+ layout.getName() + ".properties", false);
+			fileOut = new FileOutputStream(directory + "/" + layout.getName()
+					+ ".properties", false);
 			properties.store(fileOut, "Created in Raptor");
 		} catch (Throwable t) {
-			Raptor.getInstance().onError("Error saving layout: " + name, t);
+			Raptor.getInstance().onError("Error saving layout: " + layout.getName(), t);
 		} finally {
 			if (fileOut != null) {
 				try {
@@ -152,6 +166,12 @@ public class LayoutService {
 				}
 			}
 		}
+	}
+
+	public CustomLayout saveCurrentAsCustomLayout(String name) {
+		CustomLayout layout = CustomLayout.createFromCurrentSettings();
+		layout.setName(name);
+		saveLayout(layout, USER_LAYOUT_DIR);
 
 		for (int i = 0; i < customLayouts.size(); i++) {
 			if (customLayouts.get(i).getName().equalsIgnoreCase(name)) {

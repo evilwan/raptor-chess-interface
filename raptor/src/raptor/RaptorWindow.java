@@ -1604,7 +1604,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 	protected void buildWindowMenu(MenuManager windowMenu) {
 		final MenuManager layoutsMenu = new MenuManager("&Layouts");
-		layoutsMenu.add(new Action("&Save Current As Layout") {
+		layoutsMenu.add(new Action("&Save") {
 			@Override
 			public void run() {
 				String layoutName = Raptor.getInstance().promptForText(
@@ -1621,9 +1621,52 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
+		layoutsMenu.add(new Action("&Export") {
+			@Override
+			public void run() {
+				DirectoryDialog fd = new DirectoryDialog(getShell(), SWT.OPEN);
+				fd.setFilterPath("");
+
+				fd.setText("Select the name of the directory to export to");
+				final String directory = fd.open();
+				
+				if (!StringUtils.isBlank(directory)) {
+					final String layoutName = Raptor.getInstance().promptForText("Layout Name:");
+					if (StringUtils.isNotBlank(layoutName)) {
+						LayoutService.getInstance().exportCurrentLayout(layoutName,directory);
+						Raptor.getInstance().alert("Exported " + directory + "/" + layoutName + ".properties" );
+
+					}
+				}
+			}
+		});
+		layoutsMenu.add(new Action("&Import") {
+			@Override
+			public void run() {
+				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
+				fd.setFilterPath("");
+
+				fd.setText("Select the theme to import");
+				String[] filterExt = { "*.properties"};
+				fd.setFilterExtensions(filterExt);
+				final String selected = fd.open();
+				
+				if (!StringUtils.isBlank(selected)) {
+					final Layout layout = LayoutService.getInstance().importLayout(selected);
+					layoutsMenu.add(new Action(layout.getName()) {
+						@Override
+						public void run() {
+							layout.apply();
+						}
+					});
+					Raptor.getInstance().alert("Added layout " + layout.getName() );
+				}
+				
+			}
+		});
 		layoutsMenu.add(new Separator());
 
-		MenuManager bughouseLayoutsMenu = new MenuManager("&Bughouose Layouts");
+		MenuManager bughouseLayoutsMenu = new MenuManager("&Bughouse Layouts");
 		Layout[] bughouseLayouts = LayoutService.getInstance()
 				.getBughouoseSystemLayouts();
 		for (final Layout bugLayout : bughouseLayouts) {
@@ -1645,7 +1688,7 @@ public class RaptorWindow extends ApplicationWindow {
 			});
 		}
 
-		layoutsMenu.add(new Separator());
+		//layoutsMenu.add(new Separator());
 		Layout[] customLayouts = LayoutService.getInstance().getCustomLayouts();
 		for (final Layout layout : customLayouts) {
 			layoutsMenu.add(new Action(layout.getName(), null) {
