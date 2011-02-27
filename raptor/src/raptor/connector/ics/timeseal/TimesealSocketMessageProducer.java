@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 
 import org.apache.commons.lang.StringUtils;
@@ -127,28 +126,19 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 		} catch (IOException ioe) {
 		}
 
-		try {
-			if (inboundMessageBuffer != null
-					&& inboundMessageBuffer.length() > 0) {
-				listener.messageArrived(inboundMessageBuffer);
+		socket = null;
+		daemonThread = null;
+		cryptedOutputStream = null;
+		initialTimesealString = null;
+		if (listener != null) {
+			MessageListener tempListener = listener;
+			listener = null;
+			try {
+				tempListener.connectionClosed(inboundMessageBuffer);
+			} catch (Throwable t) {
 			}
-		} catch (Throwable t) {
-		} finally {
-		}
 
-		try {
-			daemonThread.isInterrupted();
-		} catch (Throwable t) {
-		} finally {
-			socket = null;
-			daemonThread = null;
-			cryptedOutputStream = null;
-			initialTimesealString = null;
-			if (listener != null) {
-				MessageListener tempListener = listener;
-				listener = null;
-				tempListener.connectionClosed();
-			}
+			inboundMessageBuffer = null;
 		}
 	}
 
@@ -229,8 +219,6 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 			LOG.debug("TimesealSocketMessageProducer "
 					+ "Not connected disconnecting.");
 		} catch (Throwable t) {
-			if (t instanceof InterruptedException) {
-			}
 			if (t instanceof IOException) {
 				LOG.debug(
 						"TimesealSocketMessageProducer "

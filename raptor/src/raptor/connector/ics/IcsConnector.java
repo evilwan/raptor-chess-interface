@@ -259,7 +259,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	}
 
 	@Override
-	public void connectionClosed() {
+	public void connectionClosed(StringBuilder buffer) {
+		parseMessage(drainInboundMessageBuffer(buffer));
 		disconnect();
 	}
 
@@ -1263,7 +1264,6 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				for (String current : messages) {
 					if (!current.endsWith("\n")) {
 						current += "\n";
-						System.err.println("Appended newline");
 					}
 					messageProducer.send(current);
 				}
@@ -1883,6 +1883,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				}
 			});
 		}
+
 		if (isLoggedIn) {
 
 			// If we are logged in. Then parse out all the text between the
