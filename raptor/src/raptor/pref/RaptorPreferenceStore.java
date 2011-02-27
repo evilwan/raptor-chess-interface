@@ -402,7 +402,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// App settings.
-		setDefault(APP_NAME, "Raptor .98 RC8");
+		setDefault(APP_NAME, "Raptor .98 RC9");
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
 				!OSUtils.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);
@@ -901,11 +901,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_TERTIARY_PORT, 5000);
 		setDefault(FICS_TERTIARY_TIMESEAL_ENABLED, true);
 		setDefault(FICS_REMOVE_BLANK_LINES, false);
-		
-		//Fics Timeseal
-//      Timeseal 2 forced for OSX, Timeseal 1 for other OSes.
-//      For some reason windows/linux have timeseal2 issues.	
-		setDefault(FICS_TIMESEAL_IS_TIMESEAL_2,OSUtils.isLikelyOSX());		
+
+		// Fics Timeseal
+		// Timeseal 2 forced for OSX, Timeseal 1 for other OSes.
+		// For some reason windows/linux have timeseal2 issues.
+		setDefault(FICS_TIMESEAL_IS_TIMESEAL_2, OSUtils.isLikelyOSX());
 
 		// Bics
 		setDefault(BICS_KEEP_ALIVE, false);
@@ -1011,7 +1011,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault("bics2-" + BUG_BUTTONS_QUADRANT, Quadrant.IX);
 		setDefault("bics2-" + GAME_CHAT_TAB_QUADRANT, Quadrant.VII);
 		setDefault("bics2-" + GAMES_TAB_QUADRANT, Quadrant.VIII);
-	
+
 		LOG.info("Loaded defaults " + PREFERENCE_PROPERTIES_FILE);
 	}
 
