@@ -1170,7 +1170,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					message = "http://" + message;
 				}
 
-				final String url = message;
+				final String url = message.replace("\"","");
 
 				MenuItem internalBrowserItem = new MenuItem(menu, SWT.PUSH);
 				internalBrowserItem.setText("Open in internal browser: '"

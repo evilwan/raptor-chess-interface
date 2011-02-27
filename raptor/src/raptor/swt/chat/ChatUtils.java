@@ -189,7 +189,7 @@ public class ChatUtils {
 	public static String getUrl(String text) {
 		if (text != null
 				&& (text.startsWith("http://") || text.startsWith("https://"))) {
-			return text;
+			return text.replace("\"","");
 		} else if (text != null
 				&& (text.endsWith(".com") || text.endsWith(".org")
 						|| text.endsWith(".gov") || text.endsWith(".edu") || text
@@ -197,15 +197,15 @@ public class ChatUtils {
 			if (text.endsWith(".") || text.endsWith(",")) {
 				text = text.substring(0, text.length() - 1);
 			}
-			return "http://" + text;
+			return "http://" + text.replace("\"","");
 		} else if (text != null) {
 			int httpIndex = text.indexOf("http://");
 			if (httpIndex != -1) {
-				return text.substring(httpIndex);
+				return text.substring(httpIndex).replace("\"","");
 			}
 			int httpsIndex = text.indexOf("https://");
 			if (httpsIndex != -1) {
-				return text.substring(httpsIndex);
+				return text.substring(httpsIndex).replace("\"","");
 			}
 		}
 		return null;
