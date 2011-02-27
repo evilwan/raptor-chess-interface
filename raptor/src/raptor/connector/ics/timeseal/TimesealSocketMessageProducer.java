@@ -2,7 +2,6 @@ package raptor.connector.ics.timeseal;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
@@ -151,14 +150,6 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 			socket = new Socket(address, port);
 			this.initialTimesealString = initialTimestampString;
 			init();
-		} catch (IOException ioe) {
-			throw new RuntimeException(ioe);
-		}
-	}
-
-	private InputStream getInputStream() {
-		try {
-			return socket.getInputStream();
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);
 		}
