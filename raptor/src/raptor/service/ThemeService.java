@@ -20,7 +20,8 @@ import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorLogger;
 
 public class ThemeService {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(ThemeService.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(ThemeService.class);
 	private static final String THEME_SYSTEM_DIR = Raptor.RESOURCES_DIR
 			+ "themes";
 	private static final String THEME_USER_DIR = Raptor.USER_RAPTOR_HOME_PATH
@@ -153,15 +154,28 @@ public class ThemeService {
 		return themes.toArray(new Theme[0]);
 	}
 
+	public Theme importTheme(String fileName) {
+		Theme theme = loadTheme(new File(fileName));
+		saveTheme(theme);
+		return theme;
+	}
+
 	public void applyTheme(Theme theme) {
 		for (String propertyName : theme.getProperties().keySet()) {
-			Raptor.getInstance().getPreferences().setValue(propertyName,
-					theme.getProperties().get(propertyName));
+			Raptor.getInstance()
+					.getPreferences()
+					.setValue(propertyName,
+							theme.getProperties().get(propertyName));
 		}
 		Raptor.getInstance().getPreferences().save();
 	}
 
 	public void saveTheme(Theme theme) {
+		saveTheme(theme, THEME_USER_DIR);
+		themeMap.put(theme.getName(), theme);
+	}
+
+	public void saveTheme(Theme theme, String directory) {
 		Properties properties = new Properties();
 		properties.put(THEME_NAME, theme.getName());
 		for (String key : theme.getProperties().keySet()) {
@@ -169,8 +183,8 @@ public class ThemeService {
 		}
 		FileOutputStream fileOut = null;
 		try {
-			fileOut = new FileOutputStream(THEME_USER_DIR + "/"
-					+ theme.getName() + ".properties", false);
+			fileOut = new FileOutputStream(directory + "/" + theme.getName()
+					+ ".properties", false);
 			properties.store(fileOut, "Created in Raptor");
 		} catch (Throwable t) {
 			Raptor.getInstance().onError("Error saving theme: " + theme, t);
@@ -182,131 +196,147 @@ public class ThemeService {
 				}
 			}
 		}
-		themeMap.put(theme.getName(), theme);
 	}
 
-	public void saveCurrentAsTheme(String name) {
+	public void exportCurrentTheme(String themeName, String directoryName) {
+		Theme theme = getCurrentAsTheme(themeName);
+		saveTheme(theme, directoryName);
+	}
+
+	public Theme getCurrentAsTheme(String name) {
 		Theme theme = new Theme();
 		theme.setName(name);
 		// Board colors
 		theme.getProperties().put(
 				PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.BOARD_ACTIVE_CLOCK_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.BOARD_BACKGROUND_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_BACKGROUND_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.BOARD_BACKGROUND_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.BOARD_COORDINATES_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_COORDINATES_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.BOARD_COORDINATES_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.BOARD_INACTIVE_CLOCK_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
-		theme.getProperties().put(
-				PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
-		theme.getProperties().put(
-				PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.BOARD_LAG_OVER_20_SEC_COLOR));
+		theme.getProperties()
+				.put(PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR,
+						Raptor.getInstance()
+								.getPreferences()
+								.getString(
+										PreferenceKeys.BOARD_PIECE_JAIL_BACKGROUND_COLOR));
+		theme.getProperties()
+				.put(PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR,
+						Raptor.getInstance()
+								.getPreferences()
+								.getString(
+										PreferenceKeys.BOARD_PIECE_JAIL_LABEL_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.BOARD_CONTROL_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_CONTROL_COLOR));
-		theme.getProperties().put(
-				PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.BOARD_CONTROL_COLOR));
+		theme.getProperties()
+				.put(PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA,
+						Raptor.getInstance()
+								.getPreferences()
+								.getString(
+										PreferenceKeys.BOARD_PIECE_JAIL_SHADOW_ALPHA));
 		theme.getProperties().put(
 				PreferenceKeys.BOARD_PIECE_SHADOW_ALPHA,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.BOARD_PIECE_SHADOW_ALPHA));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.BOARD_PIECE_SHADOW_ALPHA));
 		theme.getProperties().put(
 				PreferenceKeys.ARROW_OBS_OPP_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.ARROW_OBS_OPP_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.ARROW_OBS_OPP_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.ARROW_PREMOVE_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.ARROW_PREMOVE_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.ARROW_PREMOVE_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.ARROW_MY_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.ARROW_MY_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.ARROW_MY_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.ARROW_OBS_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.ARROW_OBS_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.ARROW_OBS_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.HIGHLIGHT_PREMOVE_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.HIGHLIGHT_PREMOVE_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.HIGHLIGHT_PREMOVE_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.HIGHLIGHT_OBS_OPP_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.HIGHLIGHT_OBS_OPP_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.HIGHLIGHT_OBS_OPP_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.HIGHLIGHT_MY_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.HIGHLIGHT_MY_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.HIGHLIGHT_MY_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.HIGHLIGHT_OBS_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.HIGHLIGHT_OBS_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.HIGHLIGHT_OBS_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.RESULTS_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.RESULTS_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.RESULTS_COLOR));
 
 		// Chat console colors
-		theme.getProperties().put(
-				PreferenceKeys.CHAT_CONSOLE_BACKGROUND_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.CHAT_CONSOLE_BACKGROUND_COLOR));
+		theme.getProperties()
+				.put(PreferenceKeys.CHAT_CONSOLE_BACKGROUND_COLOR,
+						Raptor.getInstance()
+								.getPreferences()
+								.getString(
+										PreferenceKeys.CHAT_CONSOLE_BACKGROUND_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.CHAT_INPUT_BACKGROUND_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.CHAT_INPUT_BACKGROUND_COLOR));
-		theme.getProperties().put(
-				PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.CHAT_INPUT_BACKGROUND_COLOR));
+		theme.getProperties()
+				.put(PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR,
+						Raptor.getInstance()
+								.getPreferences()
+								.getString(
+										PreferenceKeys.CHAT_INPUT_DEFAULT_TEXT_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR));
-		theme.getProperties().put(
-				PreferenceKeys.CHAT_OUTPUT_BACKGROUND_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.CHAT_OUTPUT_BACKGROUND_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.CHAT_LINK_UNDERLINE_COLOR));
+		theme.getProperties()
+				.put(PreferenceKeys.CHAT_OUTPUT_BACKGROUND_COLOR,
+						Raptor.getInstance()
+								.getPreferences()
+								.getString(
+										PreferenceKeys.CHAT_OUTPUT_BACKGROUND_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.CHAT_OUTPUT_TEXT_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.CHAT_OUTPUT_TEXT_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.CHAT_OUTPUT_TEXT_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.CHAT_PROMPT_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.CHAT_PROMPT_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.CHAT_PROMPT_COLOR));
 		theme.getProperties().put(
 				PreferenceKeys.CHAT_QUOTE_UNDERLINE_COLOR,
-				Raptor.getInstance().getPreferences().getString(
-						PreferenceKeys.CHAT_QUOTE_UNDERLINE_COLOR));
+				Raptor.getInstance().getPreferences()
+						.getString(PreferenceKeys.CHAT_QUOTE_UNDERLINE_COLOR));
 
 		// Set all chat types except channel tells.
 		for (ChatType type : ChatType.values()) {
 			if (type != ChatType.CHANNEL_TELL) {
 				String key = Raptor.getInstance().getPreferences()
 						.getKeyForChatType(type);
-				String value = Raptor.getInstance().getPreferences().getString(
-						key);
+				String value = Raptor.getInstance().getPreferences()
+						.getString(key);
 				if (StringUtils.isNotBlank(value)) {
 					theme.getProperties().put(key, value);
 				}
@@ -316,17 +346,22 @@ public class ThemeService {
 		// Set channel tell colors.
 		for (String key : Raptor.getInstance().getPreferences()
 				.preferenceNames()) {
-			if (key
-					.startsWith(PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-							+ ChatType.CHANNEL_TELL)) {
-				String value = Raptor.getInstance().getPreferences().getString(
-						key);
+			if (key.startsWith(PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+					+ ChatType.CHANNEL_TELL)) {
+				String value = Raptor.getInstance().getPreferences()
+						.getString(key);
 				if (StringUtils.isNotBlank(value)) {
 					theme.getProperties().put(key, value);
 				}
 			}
 		}
+		return theme;
+	}
+
+	public Theme saveCurrentAsTheme(String name) {
+		Theme theme = getCurrentAsTheme(name);
 		saveTheme(theme);
+		return theme;
 	}
 
 	public String[] getThemeNames() {
