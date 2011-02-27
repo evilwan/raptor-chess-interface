@@ -57,6 +57,7 @@ public class FileDialog extends InputDialog {
 		createContents(shell);
 		shell.pack();
 		errorText.setText(getMessage());
+		SWTUtils.center(shell);
 		shell.open();
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {

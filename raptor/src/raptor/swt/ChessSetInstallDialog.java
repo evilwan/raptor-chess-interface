@@ -280,6 +280,8 @@ public class ChessSetInstallDialog extends Dialog {
 		cancelButton.setText("Cancel");
 		cancelButton.setEnabled(mayCancel);
 		cancelButton.setVisible(false);
+		
+		SWTUtils.center(shell);
 	}
 
 	protected void copyInputStream(InputStream in, OutputStream out)

@@ -60,6 +60,7 @@ public class RegularExpressionEditorDialog extends InputDialog {
 		shell.pack();
 		textToTest.setText("");
 		regEx.setText(getInput() == null ? "" : getInput().trim());
+		SWTUtils.center(shell);
 		shell.open();
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {

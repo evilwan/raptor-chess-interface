@@ -46,6 +46,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -1655,48 +1656,81 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 		windowMenu.add(layoutsMenu);
 
-		final MenuManager themesSubMenu = new MenuManager("&Load Theme");
+		final MenuManager themesMenu = new MenuManager("&Themes");
+		windowMenu.add(themesMenu);
+		themesMenu.add(new Action("&Save") {
+			@Override
+			public void run() {
+				String themeName = Raptor.getInstance().promptForText(
+						"Enter the name of the new theme:");
+				if (StringUtils.isNotBlank(themeName)) {
+					final Theme newTheme = ThemeService.getInstance().saveCurrentAsTheme(themeName);
+					themesMenu.add(new Action(newTheme.getName()) {
+						@Override
+						public void run() {
+							ThemeService.getInstance().applyTheme(newTheme);
+						}
+					});
+				}
+			}
+		});
+		themesMenu.add(new Action("&Export") {
+			@Override
+			public void run() {
+				DirectoryDialog fd = new DirectoryDialog(getShell(), SWT.OPEN);
+				fd.setFilterPath("");
+
+				fd.setText("Select the name of the directory to export to");
+				final String directory = fd.open();
+				
+				if (!StringUtils.isBlank(directory)) {
+					final String themeName = Raptor.getInstance().promptForText("Theme Name:");
+					if (StringUtils.isNotBlank(themeName)) {
+						ThemeService.getInstance().exportCurrentTheme(themeName,directory);
+						Raptor.getInstance().alert("Exported " + directory + "/" + themeName + ".properties" );
+
+					}
+				}
+			}
+		});
+		themesMenu.add(new Action("&Import") {
+			@Override
+			public void run() {
+				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
+				fd.setFilterPath("");
+
+				fd.setText("Select the theme to import");
+				String[] filterExt = { "*.properties"};
+				fd.setFilterExtensions(filterExt);
+				final String selected = fd.open();
+				
+				if (!StringUtils.isBlank(selected)) {
+					final Theme theme = ThemeService.getInstance().importTheme(selected);
+					themesMenu.add(new Action(theme.getName()) {
+						@Override
+						public void run() {
+							ThemeService.getInstance().applyTheme(theme);
+						}
+					});
+					Raptor.getInstance().alert("Added theme " + theme.getName() );
+				}
+				
+			}
+		});
+		
+		themesMenu.add(new Separator());		
+
 		String[] themeNames = ThemeService.getInstance().getThemeNames();
 		for (String themeName : themeNames) {
 			final Theme theme = ThemeService.getInstance().getTheme(themeName);
 
-			themesSubMenu.add(new Action(theme.getName()) {
+			themesMenu.add(new Action(theme.getName()) {
 				@Override
 				public void run() {
 					ThemeService.getInstance().applyTheme(theme);
 				}
 			});
 		}
-
-		MenuManager themesMenu = new MenuManager("&Themes");
-		windowMenu.add(themesMenu);
-		themesMenu.add(new Action("&Save Current As Theme") {
-			@Override
-			public void run() {
-				String themeName = Raptor.getInstance().promptForText(
-						"Enter the name of the new theme:");
-				if (StringUtils.isNotBlank(themeName)) {
-					ThemeService.getInstance().saveCurrentAsTheme(themeName);
-
-					// Reload the themeSubMenu so it will show up next time.
-					themesSubMenu.removeAll();
-					String[] themeNames = ThemeService.getInstance()
-							.getThemeNames();
-					for (String currentThemeName : themeNames) {
-						final Theme theme = ThemeService.getInstance()
-								.getTheme(currentThemeName);
-						themesSubMenu.add(new Action(theme.getName()) {
-							@Override
-							public void run() {
-								ThemeService.getInstance().applyTheme(theme);
-							}
-						});
-					}
-				}
-			}
-		});
-		themesMenu.add(new Separator());
-		themesMenu.add(themesSubMenu);
 	}
 
 	public void buildHelpMenu(MenuManager helpMenu) {

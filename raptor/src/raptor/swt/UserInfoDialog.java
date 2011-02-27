@@ -29,6 +29,7 @@ public class UserInfoDialog extends Dialog {
 		shell.setText(getText());
 		createContents(shell);
 		shell.setSize(600, 500);
+		SWTUtils.center(shell);
 		shell.open();
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {

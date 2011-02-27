@@ -52,6 +52,16 @@ public class SWTUtils {
 		|| (e.stateMask & SWT.CONTROL) != 0;
         return e.button == 3 || (e.button == 1 && isRightClickKeyMask);
 	}
+	
+	public static void center(Shell shell) {
+        Rectangle bds = shell.getDisplay().getBounds();
+        Point p = shell.getSize();
+
+        int nLeft = (bds.width - p.x) / 2;
+        int nTop = (bds.height - p.y) / 2;
+
+        shell.setBounds(nLeft, nTop, p.x, p.y);
+	}
 
 	/**
 	 * Centers the shell in the RaptorWindow.

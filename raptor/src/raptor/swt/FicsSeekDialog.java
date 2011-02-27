@@ -153,6 +153,7 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys {
 		shell = new Shell(getParent(), getStyle());
 		shell.setText(getText());
 		createContents(shell);
+		SWTUtils.center(shell);
 		shell.pack();
 		shell.open();
 		Display display = getParent().getDisplay();

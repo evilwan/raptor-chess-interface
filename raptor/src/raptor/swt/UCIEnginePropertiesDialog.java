@@ -75,6 +75,7 @@ public class UCIEnginePropertiesDialog extends Dialog {
 		createContents();
 		shell.pack();
 		shell.layout(true, true);
+		SWTUtils.center(shell);
 		shell.open();
 
 		// Move the dialog to the center of the top level shell.

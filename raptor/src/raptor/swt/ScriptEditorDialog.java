@@ -59,6 +59,7 @@ public class ScriptEditorDialog extends InputDialog {
 		shell.setSize(preferredSize.x > 700 ? 700 : preferredSize.x,
 				preferredSize.y > 550 ? 550 : preferredSize.y);
 		script.setText(getInput() == null ? "" : getInput().trim());
+		SWTUtils.center(shell);
 		shell.open();
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {

@@ -60,6 +60,7 @@ public class ProfileDialog extends Dialog {
 		shell.setText(getText());
 		createContents(shell);
 		shell.pack();
+		SWTUtils.center(shell);
 		shell.open();
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {

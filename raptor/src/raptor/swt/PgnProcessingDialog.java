@@ -257,6 +257,8 @@ public class PgnProcessingDialog extends Dialog {
 		cancelButton.setLayoutData(new GridData(78, SWT.DEFAULT));
 		cancelButton.setText("Cancel");
 		cancelButton.setEnabled(mayCancel);
+		
+		SWTUtils.center(shell);
 
 	}
 }

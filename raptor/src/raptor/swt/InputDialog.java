@@ -16,6 +16,8 @@ package raptor.swt;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -71,6 +73,9 @@ public class InputDialog extends Dialog {
 		shell.setText(getText());
 		createContents(shell);
 		shell.pack();
+
+		SWTUtils.center(shell);
+
 		shell.open();
 		Display display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
@@ -119,9 +124,7 @@ public class InputDialog extends Dialog {
 
 		// Display the input box
 		final Text text = new Text(shell, SWT.BORDER);
-		text
-				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
-						2, 1));
+		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
 		if (getInput() != null) {
 			text.setText(getInput());
 		}
@@ -131,9 +134,7 @@ public class InputDialog extends Dialog {
 		// to the entered value
 		Button ok = new Button(shell, SWT.PUSH);
 		ok.setText("OK");
-		ok
-				.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false,
-						1, 1));
+		ok.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		ok.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
