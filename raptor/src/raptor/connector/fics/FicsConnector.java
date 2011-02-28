@@ -204,11 +204,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	}
 
 	protected String getInitialTimesealString() {
-		if (getPreferences().getBoolean(FICS_TIMESEAL_IS_TIMESEAL_2)) {
-			return "TIMESEAL2|OpenSeal|OpenSeal|";
-		} else {
-			return "TIMESTAMP|iv|OpenSeal|";
-		}
+		return "TIMESTAMP|iv|OpenSeal|";
+//		if (getPreferences().getBoolean(FICS_TIMESEAL_IS_TIMESEAL_2)) {
+//			return "TIMESEAL2|OpenSeal|OpenSeal|";
+//		} else {
+//			return "TIMESTAMP|iv|OpenSeal|";
+//		}
 	}
 
 	public GameBotService getGameBotService() {
