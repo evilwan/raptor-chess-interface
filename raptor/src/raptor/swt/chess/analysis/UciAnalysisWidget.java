@@ -18,11 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import raptor.util.RaptorLogger;
-
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.Clipboard;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -32,7 +34,11 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 import raptor.Raptor;
 import raptor.chess.Game;
@@ -56,10 +62,13 @@ import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.swt.RaptorTable;
+import raptor.swt.RaptorTable.RaptorTableAdapter;
+import raptor.swt.BugPartners;
 import raptor.swt.SWTUtils;
 import raptor.swt.UCIEnginePropertiesDialog;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.EngineAnalysisWidget;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
@@ -458,6 +467,34 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 		bestMoves.addColumn("Principal Variation", SWT.LEFT, 60, false, null);
 		bestMoves.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
+
+		bestMoves.addRaptorTableListener(new RaptorTableAdapter() {
+			@Override
+			public void rowRightClicked(MouseEvent event, final String[] rowData) {
+				Menu menu = new Menu(UciAnalysisWidget.this.composite
+						.getShell(), SWT.POP_UP);
+				MenuItem item = new MenuItem(menu, SWT.PUSH);
+				item.setText("Copy");
+				item.addListener(SWT.Selection, new Listener() {
+					public void handleEvent(Event e) {
+						Clipboard clipboard = new Clipboard(composite.getDisplay());
+						String text = GameUtils.removeUnicodePieces(rowData[4]);
+						TextTransfer textTransfer = TextTransfer.getInstance();
+						Transfer[] transfers = new Transfer[] { textTransfer };
+						Object[] data = new Object[] { text };
+						clipboard.setContents(data, transfers);
+						clipboard.dispose();
+					}
+				});
+				menu.setVisible(true);
+				while (!menu.isDisposed() && menu.isVisible()) {
+					if (!composite.getDisplay().readAndDispatch()) {
+						composite.getDisplay().sleep();
+					}
+				}
+				menu.dispose();
+			}
+		});
 
 		updateEnginesCombo();
 		// updateCustomButtons();
