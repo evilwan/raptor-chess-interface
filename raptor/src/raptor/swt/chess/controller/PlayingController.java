@@ -1050,6 +1050,7 @@ public class PlayingController extends ChessBoardController {
 		}
 
 		adjustPremoveLabelHighlightsAndArrows();
+		board.redrawPiecesAndArtifacts(false);
 
 		wasLastMovePremove = result;
 		return result;
