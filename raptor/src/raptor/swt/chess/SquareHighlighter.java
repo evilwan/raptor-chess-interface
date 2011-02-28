@@ -118,6 +118,10 @@ public class SquareHighlighter {
 	 * are not fade away will need to be removed to clear them.
 	 */
 	public void addHighlight(final Highlight highlight) {
+		if (decorators == null) {
+			return;
+		}
+		
 		if (ChessBoardUtils.isPieceJailSquare(highlight.getStartSquare())) {
 			dropSquareDecorators[ChessBoardUtils
 					.pieceJailSquareToPiece(highlight.getStartSquare())]
@@ -172,6 +176,10 @@ public class SquareHighlighter {
 	 * @return The result.
 	 */
 	public boolean containsHighlight(Highlight highlight) {
+		if (decorators == null) {
+			return false;
+		}
+		
 		boolean result = false;
 		for (HighlightDecorator decorator : decorators) {
 			result = decorator.highlights.contains(highlight);
@@ -222,6 +230,9 @@ public class SquareHighlighter {
 	 * Removes all non fade away highlights.
 	 */
 	public void removeAllHighlights() {
+		if (decorators == null) {
+			return;
+		}
 		removeAllHighlights(true);
 	}
 
@@ -230,6 +241,9 @@ public class SquareHighlighter {
 	 * removed internally.
 	 */
 	public void removeHighlight(Highlight highlight) {
+		if (decorators == null) {
+			return;
+		}
 		removeHighlight(highlight, true);
 	}
 
@@ -271,6 +285,10 @@ public class SquareHighlighter {
 	 * Removes all non fade away highlights.
 	 */
 	protected void removeAllHighlights(boolean isForcing) {
+		if (decorators == null) {
+			return;
+		}
+		
 		for (HighlightDecorator decorator : decorators) {
 			decorator.clear(true);
 			decorator.square.setDirty(true);
@@ -288,6 +306,9 @@ public class SquareHighlighter {
 	 * removed internally.
 	 */
 	protected void removeHighlight(Highlight highlight, boolean isForced) {
+		if (decorators == null) {
+			return;
+		}
 		for (HighlightDecorator decorator : decorators) {
 			decorator.remove(highlight, true);
 		}

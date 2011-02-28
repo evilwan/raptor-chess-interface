@@ -209,6 +209,10 @@ public class ResultDecorator implements BoardConstants {
 	}
 
 	public void setDecorationFromResult(Result result) {
+		if (decorators == null) {
+			return;
+		}
+		
 		if (!Raptor.getInstance().getPreferences().getBoolean(
 				RESULTS_IS_SHOWING)) {
 			decoration = null;
@@ -327,6 +331,10 @@ public class ResultDecorator implements BoardConstants {
 	 * Redraws all squares that have arrow segments.
 	 */
 	protected void redrawSquares(boolean force) {
+		if (decorators == null) {
+			return;
+		}
+		
 		for (SquareDecorator decorator : decorators) {
 			if (force) {
 			decorator.square.redraw();

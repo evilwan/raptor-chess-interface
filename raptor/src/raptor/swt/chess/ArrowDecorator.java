@@ -1272,6 +1272,9 @@ public class ArrowDecorator {
 	 * @param forceUpdate If true, the square is redrawn, else it is just set to dirty.
 	 */
 	protected void redrawSquares(boolean forceUpdate) {
+		if (decorators == null) {
+			return;
+		}
 		// Use for loops here with int. If you dont you can get concurrent
 		// modification errors.
 		for (int i = 0; i < decorators.length; i++) {
@@ -1290,6 +1293,10 @@ public class ArrowDecorator {
 	 * Removes all non fade away arrows on the chess board.
 	 */
 	protected void removeAllArrows(boolean isForcing) {
+		if (decorators == null) {
+			return;
+		}
+		
 		for (SquareArrowDecorator decorator : decorators) {
 			decorator.clear(isForcing);
 		}
@@ -1299,6 +1306,10 @@ public class ArrowDecorator {
 	 * Removes an arrow.
 	 */
 	protected void removeArrow(Arrow arrow, boolean isForced) {
+		if (decorators == null) {
+			return;
+		}
+		
 		for (SquareArrowDecorator decorator : decorators) {
 			decorator.remove(arrow, isForced);
 			decorator.square.setDirty(true);
