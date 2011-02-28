@@ -89,10 +89,6 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				"Log channel tells to " + Raptor.USER_RAPTOR_HOME_PATH
 						+ "/logs/console/${ConnectorName}-${Channel}.txt",
 				getFieldEditorParent()));
-
-		addField(new BooleanFieldEditor(
-				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
-				"Launch browser on startup", getFieldEditorParent()));
 		
 		addField(new FileFieldEditor(
 				PreferenceKeys.APP_PGN_FILE, "Save my games in PGN format to: ",
