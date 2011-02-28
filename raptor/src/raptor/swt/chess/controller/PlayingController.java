@@ -32,7 +32,7 @@ import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
 import raptor.util.RaptorLogger;
- 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -98,7 +98,8 @@ public class PlayingController extends ChessBoardController {
 		boolean isPremoveDrop = false;
 	}
 
-	static final RaptorLogger LOG = RaptorLogger.getLog(PlayingController.class);
+	static final RaptorLogger LOG = RaptorLogger
+			.getLog(PlayingController.class);
 
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
@@ -122,8 +123,8 @@ public class PlayingController extends ChessBoardController {
 		@Override
 		public void droppablePiecesChanged(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
-						new RaptorRunnable(getConnector()) {
+				board.getControl().getDisplay()
+						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 
@@ -143,8 +144,8 @@ public class PlayingController extends ChessBoardController {
 		@Override
 		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
-						new RaptorRunnable(getConnector()) {
+				board.getControl().getDisplay()
+						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 
@@ -199,8 +200,8 @@ public class PlayingController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
-						new RaptorRunnable(getConnector()) {
+				board.getControl().getDisplay()
+						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 								if (isDisposed()) {
@@ -222,10 +223,10 @@ public class PlayingController extends ChessBoardController {
 									handleAnnounceCheck();
 									if (!handlePremove()) {
 										if (LOG.isDebugEnabled()) {
-											LOG
-													.debug("In did not make premove block "
-															+ getGame().getId()
-															+ " " + isNewMove);
+											LOG.debug("In did not make premove block "
+													+ getGame().getId()
+													+ " "
+													+ isNewMove);
 										}
 
 										boolean wasUserMove = !isUsersMove();
@@ -243,8 +244,7 @@ public class PlayingController extends ChessBoardController {
 										}
 									} else {
 										if (LOG.isDebugEnabled()) {
-											LOG
-													.debug("Premove was made. Playing move sound. ");
+											LOG.debug("Premove was made. Playing move sound. ");
 										}
 										if (!handleSpeakMove(game.getLastMove())) {
 											onPlayMoveSound();
@@ -252,8 +252,7 @@ public class PlayingController extends ChessBoardController {
 									}
 								} else {
 									if (LOG.isDebugEnabled()) {
-										LOG
-												.debug("This isnt an update from a move, doing a full refresh.");
+										LOG.debug("This isnt an update from a move, doing a full refresh.");
 									}
 
 									addDecorationsForLastMoveListMove();
@@ -267,8 +266,8 @@ public class PlayingController extends ChessBoardController {
 		@Override
 		public void illegalMove(Game game, final String move) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
-						new RaptorRunnable(getConnector()) {
+				board.getControl().getDisplay()
+						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 								if (isDisposed()) {
@@ -337,11 +336,13 @@ public class PlayingController extends ChessBoardController {
 	 */
 	public void adjustForIllegalMove(int from, int to, boolean adjustClocks) {
 		try {
-			adjustForIllegalMove("Illegal Move: "
-					+ getPseudoSan(getGame(), from, to), adjustClocks);
+			adjustForIllegalMove(
+					"Illegal Move: " + getPseudoSan(getGame(), from, to),
+					adjustClocks);
 		} catch (IllegalArgumentException iae) {
-			adjustForIllegalMove("Illegal Move: "
-					+ getPseudoSan(getGame(), from, to), adjustClocks);
+			adjustForIllegalMove(
+					"Illegal Move: " + getPseudoSan(getGame(), from, to),
+					adjustClocks);
 		}
 	}
 
@@ -357,6 +358,8 @@ public class PlayingController extends ChessBoardController {
 		if (!getPreferences().getBoolean(
 				PreferenceKeys.BOARD_QUEUED_PREMOVE_ENABLED)) {
 			onClearPremoves();
+		} else {
+			onClearLastPremove();
 		}
 
 		board.unhidePieces();
@@ -553,8 +556,8 @@ public class PlayingController extends ChessBoardController {
 	 * Returns true if the premove preference is enabled.
 	 */
 	public boolean isPremoveable() {
-		return Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.BOARD_PREMOVE_ENABLED);
+		return Raptor.getInstance().getPreferences()
+				.getBoolean(PreferenceKeys.BOARD_PREMOVE_ENABLED);
 	}
 
 	public boolean isUsersMove() {
@@ -583,10 +586,21 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	public void onClearPremoves() {
-		premoves.clear();
-		removeAllMoveDecorations();
-		adjustPremoveLabelHighlightsAndArrows();
-		board.redrawPiecesAndArtifacts(false);
+		if (!premoves.isEmpty()) {
+			premoves.clear();
+			removeAllMoveDecorations();
+			adjustPremoveLabelHighlightsAndArrows();
+			board.redrawPiecesAndArtifacts(false);
+		}
+	}
+
+	public void onClearLastPremove() {
+		if (!premoves.isEmpty()) {
+			premoves.remove(premoves.size() - 1);
+			removeAllMoveDecorations();
+			adjustPremoveLabelHighlightsAndArrows();
+			board.redrawPiecesAndArtifacts(false);
+		}
 	}
 
 	@Override
@@ -686,15 +700,13 @@ public class PlayingController extends ChessBoardController {
 		if (isUsersMove()) {
 			if (fromSquare == toSquare) {
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("User tried to make a move where from square == to square.");
+					LOG.debug("User tried to make a move where from square == to square.");
 				}
 				refreshBoard();
 				return;
 			} else if (ChessBoardUtils.isPieceJailSquare(toSquare)) {
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
+					LOG.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
 				}
 				adjustForIllegalMove(fromSquare, toSquare, false);
 				return;
@@ -740,8 +752,7 @@ public class PlayingController extends ChessBoardController {
 			// Premove logic flows through here
 			if (fromSquare == toSquare) {
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("User tried to make a premove with fromSquare == toSquare.");
+					LOG.debug("User tried to make a premove with fromSquare == toSquare.");
 				}
 				refreshBoard();
 				return;
@@ -750,8 +761,7 @@ public class PlayingController extends ChessBoardController {
 				// canUserInitiateMoveFrom
 
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("User tried to make a premove that failed immediate validation.");
+					LOG.debug("User tried to make a premove that failed immediate validation.");
 				}
 
 				adjustForIllegalMove(fromSquare, toSquare, false);
@@ -1312,10 +1322,8 @@ public class PlayingController extends ChessBoardController {
 
 			if (getGame().getDropCount(color, PAWN) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item
-						.setText(getPieceRepresentation(getColoredPiece(PAWN,
-								color))
-								+ "@" + getSan(square));
+				item.setText(getPieceRepresentation(getColoredPiece(PAWN, color))
+						+ "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
 						userMadeMove(
@@ -1328,8 +1336,7 @@ public class PlayingController extends ChessBoardController {
 			if (getGame().getDropCount(color, KNIGHT) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
 				item.setText(getPieceRepresentation(getColoredPiece(KNIGHT,
-						color))
-						+ "@" + getSan(square));
+						color)) + "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
 						userMadeMove(
@@ -1341,8 +1348,7 @@ public class PlayingController extends ChessBoardController {
 			if (getGame().getDropCount(color, BISHOP) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
 				item.setText(getPieceRepresentation(getColoredPiece(BISHOP,
-						color))
-						+ "@" + getSan(square));
+						color)) + "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
 						userMadeMove(
@@ -1353,10 +1359,8 @@ public class PlayingController extends ChessBoardController {
 			}
 			if (getGame().getDropCount(color, ROOK) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item
-						.setText(getPieceRepresentation(getColoredPiece(ROOK,
-								color))
-								+ "@" + getSan(square));
+				item.setText(getPieceRepresentation(getColoredPiece(ROOK, color))
+						+ "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
 						userMadeMove(
@@ -1368,8 +1372,7 @@ public class PlayingController extends ChessBoardController {
 			if (getGame().getDropCount(color, QUEEN) > 0) {
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
 				item.setText(getPieceRepresentation(getColoredPiece(QUEEN,
-						color))
-						+ "@" + getSan(square));
+						color)) + "@" + getSan(square));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event event) {
 						userMadeMove(
@@ -1405,8 +1408,8 @@ public class PlayingController extends ChessBoardController {
 				}
 
 				if (foundMoves.size() > 0) {
-					Move move = foundMoves.get(random
-							.nextInt(foundMoves.size()));
+					Move move = foundMoves
+							.get(random.nextInt(foundMoves.size()));
 
 					if (game.move(move)) {
 						game.rollback();
@@ -1428,8 +1431,7 @@ public class PlayingController extends ChessBoardController {
 				}
 			} else {
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("Rejected onRandomCapture since its not users move.");
+					LOG.debug("Rejected onRandomCapture since its not users move.");
 				}
 				onPlayIllegalMoveSound();
 			}
@@ -1495,8 +1497,8 @@ public class PlayingController extends ChessBoardController {
 				}
 
 				if (foundMoves.size() > 0) {
-					Move move = foundMoves.get(random
-							.nextInt(foundMoves.size()));
+					Move move = foundMoves
+							.get(random.nextInt(foundMoves.size()));
 
 					if (game.move(move)) {
 						game.rollback();
@@ -1518,8 +1520,7 @@ public class PlayingController extends ChessBoardController {
 				}
 			} else {
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("Rejected onRandomRecapture since its not users move.");
+					LOG.debug("Rejected onRandomRecapture since its not users move.");
 				}
 				onPlayIllegalMoveSound();
 			}
