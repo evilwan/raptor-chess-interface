@@ -20,6 +20,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
@@ -27,10 +28,12 @@ import raptor.service.SoundService;
 
 public class SoundPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public SoundPage() {
 		super(FLAT);
-		setTitle("Sound");
+		setTitle(local.getString("sound"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -39,23 +42,18 @@ public class SoundPage extends FieldEditorPreferencePage {
 		LabelFieldEditor userHomeDir = new LabelFieldEditor(
 				"NONE",
 				WordUtils
-						.wrap(
-								"Raptor has two different ways of playing sound.One which is used in Mac OS X and Windows, and "
-										+ "another one for Linux and Solaris.However, some linux/Solaris "
-										+ "users might run into problems mixing sounds with other applications. If this is the "
-										+ "case they can configure a process to use for sounds , play or aoss for instance, instead "
-										+ "of using the java sound apis. To remove the process setting just delete the process name.",
+						.wrap(local.getString("soundP1"),
 								70), getFieldEditorParent());
 		addField(userHomeDir);
 
 		final StringFieldEditor soundProcessName = new StringFieldEditor(
-				PreferenceKeys.SOUND_PROCESS_NAME, "Sound process name:",
+				PreferenceKeys.SOUND_PROCESS_NAME, local.getString("soundP2"),
 				getFieldEditorParent());
 		addField(soundProcessName);
 
 		labelButtonFieldEditor = new LabelButtonFieldEditor(
 				"NONE",
-				"You can use this button to test the setting (Requires an apply): ",
+				local.getString("soundP3"),
 				getFieldEditorParent(), "Test", new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {

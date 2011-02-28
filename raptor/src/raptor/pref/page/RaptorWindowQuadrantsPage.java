@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 
 import raptor.Quadrant;
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.ListFieldEditor;
 import raptor.swt.BrowserWindowItem;
@@ -30,10 +31,12 @@ import raptor.swt.chess.ChessBoardWindowItem;
 public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 
 	protected String layoutPrefix;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public RaptorWindowQuadrantsPage(String layoutName) {
 		super(GRID);
-		setTitle("Quadrants");
+		setTitle(local.getString("quadrants"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -53,18 +56,9 @@ public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 				false, 2, 1));
 		textLabel
 				.setText(WordUtils
-						.wrap("\tRaptor uses a quadrant system to layout content. "
-								+ "If a quadrant contains no items, the quadrant disappears and the "
-								+ "remaining quadrants consume the space."
-								+ "You may drag and drop items between quadrants by dragging "
-								+ "the tab and dropping anywhere in another quadrant."
-								+ "Double click on a tab to maximize a quadrant, and double "
-								+ "click again to restore it. Right clicking on a tab brings up a "
-								+ "list of options as well.", 70)
+						.wrap(local.getString("rapWindQuad1"), 70)
 						+ "\n\t"
-						+ WordUtils.wrap(
-								"On this page you can customize the quadrant the following content "
-										+ "is originally created in.", 70));
+						+ WordUtils.wrap(local.getString("rapWindQuad2"), 70));
 
 		Label label = new Label(getFieldEditorParent(), SWT.NONE);
 		label.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false,
@@ -73,13 +67,13 @@ public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 				Raptor.RESOURCES_DIR + "/images/quadrants.png"));
 
 		ComboFieldEditor internalBrowserQuad = new ComboFieldEditor(
-				PreferenceKeys.APP_BROWSER_QUADRANT, "Internal Web Browser:",
+				PreferenceKeys.APP_BROWSER_QUADRANT, local.getString("rapWindQuad3"),
 				buildQuadrantArray(BrowserWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(internalBrowserQuad);
 
 		ComboFieldEditor pgnResuoltsPageQuad = new ComboFieldEditor(
-				PreferenceKeys.APP_PGN_RESULTS_QUADRANT, "Pgn Game List:",
+				PreferenceKeys.APP_PGN_RESULTS_QUADRANT, local.getString("rapWindQuad4"),
 				buildQuadrantArray(ChessBoardWindowItem.MOVE_TO_QUADRANTS),
 				getFieldEditorParent());
 		addField(pgnResuoltsPageQuad);
@@ -89,7 +83,7 @@ public class RaptorWindowQuadrantsPage extends FieldEditorPreferencePage {
 				2, 1));
 
 		addField(new ListFieldEditor(PreferenceKeys.APP_CHESS_BOARD_QUADRANTS,
-				"Chess board quadrants: (I,II,III,IV,V,VI,VII,VIII,IX)",
+				local.getString("rapWindQuad5"),
 				getFieldEditorParent(), ',', 300) {
 
 			@Override

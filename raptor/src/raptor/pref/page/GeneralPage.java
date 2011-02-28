@@ -23,6 +23,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
@@ -31,16 +32,18 @@ import raptor.util.RaptorLogger;
 
 public class GeneralPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
+	
+	protected static L10n local = L10n.getInstance();
 
 	public static final String[][] POLLING_REFRESH = {
-			{ "Every 2 Seconds", "" + 2 }, { "Every 3 Seconds", "" + 3 },
-			{ "Every 4 Seconds", "" + 4 }, { "Every 5 Seconds", "" + 5 },
-			{ "Every 6 Seconds", "" + 6 }, { "Every 7 Seconds", "" + 7 },
-			{ "Every 8 Seconds", "" + 8 }, };
+			{ local.getString("everySec", 2), "" + 2 }, { local.getString("everySec", 3), "" + 3 },
+			{ local.getString("everySec", 4), "" + 4 }, { local.getString("everySec", 5), "" + 5 },
+			{ local.getString("everySec", 6), "" + 6 }, { local.getString("everySec", 7), "" + 7 },
+			{ local.getString("everySec", 8), "" + 8 }, };
 
 	public GeneralPage() {
 		super(FLAT);
-		setTitle("General");
+		setTitle(local.getString("general"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -48,90 +51,86 @@ public class GeneralPage extends FieldEditorPreferencePage {
 	protected void createFieldEditors() {
 		LabelFieldEditor userHomeDir = new LabelFieldEditor(
 				"NONE",
-				"Raptor user's home directory: " + Raptor.USER_RAPTOR_HOME_PATH,
+				local.getString("genP1") + Raptor.USER_RAPTOR_HOME_PATH,
 				getFieldEditorParent());
 		addField(userHomeDir);
 
 		LabelFieldEditor javaVersion = new LabelFieldEditor("NONE",
-				WordUtils.wrap("Java Version: "
+				WordUtils.wrap(local.getString("genP2")
 						+ System.getProperty("java.version"), 70),
 				getFieldEditorParent());
 		addField(javaVersion);
 
 		LabelFieldEditor osVersion = new LabelFieldEditor("NONE", WordUtils
-				.wrap("Operating System: " + System.getProperty("os.name")
+				.wrap(local.getString("genP3") + System.getProperty("os.name")
 						+ " " + System.getProperty("os.version"), 70),
 				getFieldEditorParent());
 		addField(osVersion);
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
-				"Launch browser on startup", getFieldEditorParent()));
+				local.getString("genP4"), getFieldEditorParent()));
 
 		BooleanFieldEditor launchExternalLinkx = new BooleanFieldEditor(
 				PreferenceKeys.APP_OPEN_LINKS_IN_EXTERNAL_BROWSER,
-				"Launch links in external browser", getFieldEditorParent());
+				local.getString("genP5"), getFieldEditorParent());
 		addField(launchExternalLinkx);
 
 		addField(new BooleanFieldEditor(PreferenceKeys.APP_IS_LOGGING_CONSOLE,
-				"Log console messages to " + Raptor.USER_RAPTOR_HOME_PATH
+				local.getString("genP6") + Raptor.USER_RAPTOR_HOME_PATH
 						+ "/logs/console/${ConnectorName}-Console.txt",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LOGGING_PERSON_TELLS,
-				"Log person tells to " + Raptor.USER_RAPTOR_HOME_PATH
+				local.getString("genP7") + Raptor.USER_RAPTOR_HOME_PATH
 						+ "/logs/console/${ConnectorName}-${PersonName}.txt",
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LOGGING_CHANNEL_TELLS,
-				"Log channel tells to " + Raptor.USER_RAPTOR_HOME_PATH
+				local.getString("genP8") + Raptor.USER_RAPTOR_HOME_PATH
 						+ "/logs/console/${ConnectorName}-${Channel}.txt",
 				getFieldEditorParent()));
 		
 		addField(new FileFieldEditor(
-				PreferenceKeys.APP_PGN_FILE, "Save my games in PGN format to: ",
+				PreferenceKeys.APP_PGN_FILE, local.getString("genP9"),
 				getFieldEditorParent()));
 
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
-				"Show chess piece unicode chars (e.g. \u2654\u2655\u2656\u2657\u2658\u2659)",
+				local.getString("genP10"),
 				getFieldEditorParent()));
 
 		BooleanFieldEditor isPlayingSound = new BooleanFieldEditor(
-				PreferenceKeys.APP_SOUND_ENABLED, "Sound Enabled",
+				PreferenceKeys.APP_SOUND_ENABLED, local.getString("genP11"),
 				getFieldEditorParent());
 		addField(isPlayingSound);
 
 		StringFieldEditor homePage = new StringFieldEditor(
-				PreferenceKeys.APP_HOME_URL, "Browser Home Page:",
+				PreferenceKeys.APP_HOME_URL, local.getString("genP12"),
 				getFieldEditorParent());
 		addField(homePage);
 
 		StringFieldEditor linuxBrowserPage = new StringFieldEditor(
 				PreferenceKeys.APP_LINUX_UNIX_BROWSER_NAME,
-				"External Browser Name (Linux/Unix Only) (Advanced):",
+				local.getString("genP13"),
 				getFieldEditorParent());
 		addField(linuxBrowserPage);
 
 		addField(new ComboFieldEditor(
 				PreferenceKeys.APP_WINDOW_ITEM_POLL_INTERVAL,
-				"Polling Refresh Interval (Seek Tab,BugWho Tab, etc):",
+				local.getString("genP14"),
 				POLLING_REFRESH, getFieldEditorParent()));
 
 		addField(new LabelButtonFieldEditor("NONE", "", getFieldEditorParent(),
-				"Reset Raptor To Defaults", new SelectionAdapter() {
+				local.getString("genP15"), new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						if (Raptor
 								.getInstance()
-								.confirm(
-										"You will lose all preferences,saved scripts,saved games,and image caching. "
-												+ "Raptor will also exit after executing this action, and will "
-												+ "have to be restarted. "
-												+ "Do you wish to continue?")) {
+								.confirm(local.getString("genP16"))) {
 							Raptor.getInstance().shutdownWithoutExit(true);
 							RaptorLogger.releaseAll();
 							FileUtils.deleteDir(Raptor.USER_RAPTOR_DIR);

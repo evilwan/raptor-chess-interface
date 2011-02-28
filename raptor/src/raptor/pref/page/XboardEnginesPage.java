@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
 import raptor.engine.xboard.XboardEngine;
+import raptor.international.L10n;
 import raptor.service.XboardEngineService;
 
 public class XboardEnginesPage extends PreferencePage {
@@ -36,10 +37,12 @@ public class XboardEnginesPage extends PreferencePage {
 	protected Composite parent;
 	protected boolean isBuildingEnginesCombo = false;
 	
+	protected static L10n local = L10n.getInstance();
+	
 	public XboardEnginesPage() {
 		super();
 		setPreferenceStore(Raptor.getInstance().getPreferences());
-		setTitle("Xboard Engines");
+		setTitle(local.getString("xboardEng"));
 	}
 
 	@Override
@@ -53,14 +56,12 @@ public class XboardEnginesPage extends PreferencePage {
 				1));
 		label
 				.setText(WordUtils
-						.wrap(
-								"\tOn this page you can configure Xboard Chess Engines. Start out by selecting the engine "
-										+ "process and giving it a nickname. When you are finished click the apply button.",
+						.wrap(local.getString("xboardEngP1"),
 								70));
 		Label enginesLabel = new Label(parent, SWT.LEFT);
 		enginesLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
-		enginesLabel.setText("Engines:");
+		enginesLabel.setText(local.getString("engines"));
 
 		enginesCombo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
 		enginesCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -81,7 +82,7 @@ public class XboardEnginesPage extends PreferencePage {
 		Label processLabel = new Label(parent, SWT.LEFT);
 		processLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
-		processLabel.setText("Engine Location:");
+		processLabel.setText(local.getString("engLoc"));
 
 		Composite processComposite = new Composite(parent, SWT.NONE);
 		processComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -94,14 +95,14 @@ public class XboardEnginesPage extends PreferencePage {
 				true, false, 1, 1));
 
 		pickFileButton = new Button(processComposite, SWT.PUSH);
-		pickFileButton.setText("Select Location");
+		pickFileButton.setText(local.getString("selLoc"));
 		pickFileButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
 		pickFileButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
-				fd.setText("Select the Xboard chess engine location");
+				fd.setText(local.getString("xboardEngP2"));
 				fd.setFilterPath("");
 				final String selected = fd.open();
 				if (!StringUtils.isBlank(selected)) {
@@ -109,7 +110,7 @@ public class XboardEnginesPage extends PreferencePage {
 						processLocationText.setText(new File(selected)
 								.getCanonicalPath());
 					} catch (IOException ioe) {
-						Raptor.getInstance().onError("Error getting filename",
+						Raptor.getInstance().onError(local.getString("errGetFl"),
 								ioe);
 					}
 
@@ -125,14 +126,14 @@ public class XboardEnginesPage extends PreferencePage {
 		});
 
 		defaultButton = new Button(parent, SWT.CHECK);
-		defaultButton.setText("Default Engine");
+		defaultButton.setText(local.getString("defEng"));
 		defaultButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 2, 1));
 
 		Label userNameLabel = new Label(parent, SWT.LEFT);
 		userNameLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
-		userNameLabel.setText("Nickname:");
+		userNameLabel.setText(local.getString("nickname"));
 
 		userNameText = new Text(parent, SWT.SINGLE | SWT.BORDER);
 		userNameText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -141,7 +142,7 @@ public class XboardEnginesPage extends PreferencePage {
 		Label engineNameHeaderLabel = new Label(parent, SWT.LEFT);
 		engineNameHeaderLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false, 1, 1));
-		engineNameHeaderLabel.setText("Engine Name:");
+		engineNameHeaderLabel.setText(local.getString("engName"));
 
 		engineName = new Label(parent, SWT.LEFT);
 		engineName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -150,7 +151,7 @@ public class XboardEnginesPage extends PreferencePage {
 		deleteButton = new Button(parent, SWT.LEFT);
 		deleteButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
-		deleteButton.setText("Delete Engine");
+		deleteButton.setText(local.getString("delEng"));
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -167,8 +168,7 @@ public class XboardEnginesPage extends PreferencePage {
 			if (!engine.connect()) {
 				Raptor
 						.getInstance()
-						.alert(
-								"Could not connect to the engine. Make sure it is a Xboard chess engine.");
+						.alert(local.getString("engTlbAlert"));
 				return;
 			}
 		}
@@ -193,13 +193,11 @@ public class XboardEnginesPage extends PreferencePage {
 
 	protected void onSave() {
 		if (StringUtils.isBlank(processLocationText.getText())) {
-			Raptor.getInstance().alert("Engine location can not be empty.");
+			Raptor.getInstance().alert(local.getString("engLocEmpt"));
 		} else if (StringUtils.isBlank(userNameText.getText())) {
-			Raptor.getInstance().alert("Nickname location can not be empty.");
+			Raptor.getInstance().alert(local.getString("nickLocEmpt"));
 		} else if (currentEngine == null) {
-			Raptor.getInstance().alert(
-					"You need to test the engine by clicking the "
-							+ "connect button before applying.");
+			Raptor.getInstance().alert(local.getString("engTlbAlert3"));
 		} else {
 			if (currentEngine != null) {
 				currentEngine.quit();
