@@ -201,6 +201,15 @@ public class GameUtils implements GameConstants {
 	public static final long getBitboard(int square) {
 		return SQUARE_TO_COORDINATE[square];
 	}
+	
+	public static String removeUnicodePieces(String string) {
+		return string.replace('\u2659', 'p').replace('\u265F', 'p').
+		replace('\u2658', 'n').replace('\u265E', 'n').
+		replace('\u2657', 'b').replace('\u265D', 'b').
+		replace('\u2656', 'r').replace('\u265C', 'r').
+		replace('\u2655', 'q').replace('\u265B', 'q').
+		replace('\u2654', 'p').replace('\u265A', 'k');
+	}
 
 	public static String getChessPieceCharacter(int piece) {
 		if (Raptor.getInstance().getPreferences().getBoolean(
