@@ -63,7 +63,6 @@ import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.swt.RaptorTable;
 import raptor.swt.RaptorTable.RaptorTableAdapter;
-import raptor.swt.BugPartners;
 import raptor.swt.SWTUtils;
 import raptor.swt.UCIEnginePropertiesDialog;
 import raptor.swt.chess.ChessBoardController;
