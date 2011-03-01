@@ -52,7 +52,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void droppablePiecesChanged(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
+				board.getControl().getDisplay().syncExec(
 						new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
@@ -69,7 +69,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
+				board.getControl().getDisplay().syncExec(
 						new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
@@ -91,6 +91,7 @@ public class ObserveController extends ChessBoardController {
 								getBoard().setController(inactiveController);
 								inactiveController.setBoard(board);
 
+								
 								getConnector().getGameService()
 										.removeGameServiceListener(listener);
 								inactiveController
@@ -98,10 +99,13 @@ public class ObserveController extends ChessBoardController {
 								// Clear the cool bar and init the inactive
 								// controller.
 								ChessBoardUtils.clearCoolbar(getBoard());
+								
+								
 								inactiveController.init();
 								// Set the listeners to null so they wont get
 								// cleared and disposed
 								setItemChangedListeners(null);
+								
 								ObserveController.this.dispose();
 							}
 						});
@@ -111,7 +115,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void gameMovesAdded(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
+				board.getControl().getDisplay().syncExec(
 						new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
@@ -130,7 +134,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
+				board.getControl().getDisplay().syncExec(
 						new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
@@ -168,7 +172,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void observedGameBecameExamined(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				board.getControl().getDisplay().asyncExec(
+				board.getControl().getDisplay().syncExec(
 						new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
@@ -256,6 +260,7 @@ public class ObserveController extends ChessBoardController {
 			}
 			super.dispose();
 		} catch (Throwable t) {// Eat it its prob a disposed exception.
+		    t.printStackTrace();
 		}
 	}
 

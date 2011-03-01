@@ -124,7 +124,7 @@ public class PlayingController extends ChessBoardController {
 		public void droppablePiecesChanged(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay()
-						.asyncExec(new RaptorRunnable(getConnector()) {
+						.syncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 
@@ -145,7 +145,7 @@ public class PlayingController extends ChessBoardController {
 		public void gameInactive(final Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay()
-						.asyncExec(new RaptorRunnable(getConnector()) {
+						.syncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 
@@ -201,7 +201,7 @@ public class PlayingController extends ChessBoardController {
 		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay()
-						.asyncExec(new RaptorRunnable(getConnector()) {
+						.syncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 								if (isDisposed()) {
@@ -267,7 +267,7 @@ public class PlayingController extends ChessBoardController {
 		public void illegalMove(Game game, final String move) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay()
-						.asyncExec(new RaptorRunnable(getConnector()) {
+						.syncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 								if (isDisposed()) {
