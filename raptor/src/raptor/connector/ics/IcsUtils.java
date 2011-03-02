@@ -16,10 +16,11 @@ package raptor.connector.ics;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.graphics.Point;
 
 import raptor.Raptor;
-import raptor.chat.ChatType;
 import raptor.chat.Bugger.BuggerStatus;
+import raptor.chat.ChatType;
 import raptor.chess.AtomicGame;
 import raptor.chess.BughouseGame;
 import raptor.chess.ClassicGame;
@@ -358,7 +359,9 @@ public class IcsUtils implements GameConstants {
 
 	public static Game createGame(G1Message g1, Style12Message style12,
 			boolean isBics) {
-		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);		
+		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);
+		System.err.println("Style 12 relation = " + style12.relation);
+		
 		Game result = createGameFromVariant(variant, style12, isBics);
 		result.setId(g1.gameId);
 		result.addState(Game.UPDATING_SAN_STATE);
@@ -488,6 +491,12 @@ public class IcsUtils implements GameConstants {
 	public static Game createGameFromVariant(Variant variant,
 			Style12Message message, boolean isBicsMessage) {
 		Game result = null;
+		
+		if (message.relation == Style12Message.OBSERVING_EXAMINED_GAME_RELATION) {
+			result = new SetupGame();
+			result.setHeader(PgnHeader.Variant, variant.name());
+			return result;
+		}
 
 		boolean isFrBugOrFrZh = false;
 
