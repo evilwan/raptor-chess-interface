@@ -372,7 +372,8 @@ public class GameService {
 	protected List<Offer> offers = new ArrayList<Offer>(10);
 	protected List<GameInfo> gameInfo = new ArrayList<GameInfo>(400);
 
-	protected List<GameServiceListener> listeners = new ArrayList<GameServiceListener>(20);
+	protected List<GameServiceListener> listeners = Collections
+			.synchronizedList(new ArrayList<GameServiceListener>(20));
 
 	public GameInfo[] getGameInfos() {
 		return gameInfo.toArray(new GameInfo[0]);
@@ -382,8 +383,7 @@ public class GameService {
 		gameMap.put(game.getId(), game);
 	}
 
-	public void addGameServiceListener(final GameServiceListener listener) {
-
+	public void addGameServiceListener(GameServiceListener listener) {
 		listeners.add(listener);
 	}
 
@@ -398,7 +398,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.droppablePiecesChanged(game);
 				}
 			}
@@ -412,7 +412,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.examinedGameBecameSetup(game);
 				}
 			}
@@ -426,7 +426,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.gameCreated(game);
 				}
 			}
@@ -444,7 +444,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.gameInactive(game);
 				}
 			}
@@ -459,7 +459,7 @@ public class GameService {
 				gameInfo.add(info);
 			}
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.gameInfoChanged();
 				}
 			}
@@ -473,7 +473,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.gameMovesAdded(game);
 				}
 			}
@@ -487,7 +487,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.gameStateChanged(game, isNewMove);
 				}
 			}
@@ -501,7 +501,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.illegalMove(game, move);
 				}
 			}
@@ -515,7 +515,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.observedGameBecameExamined(game);
 				}
 			}
@@ -531,7 +531,7 @@ public class GameService {
 	public void fireOfferIssued(Offer offer) {
 		offers.add(offer);
 		synchronized (listeners) {
-			for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+			for (GameServiceListener listener : listeners) {
 				listener.offerIssued(offer);
 			}
 		}
@@ -546,7 +546,7 @@ public class GameService {
 	public void fireOfferReceived(Offer offer) {
 		offers.add(offer);
 		synchronized (listeners) {
-			for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+			for (GameServiceListener listener : listeners) {
 				listener.offerReceived(offer);
 			}
 		}
@@ -569,7 +569,7 @@ public class GameService {
 		if (foundChallenge != null) {
 			offers.remove(foundChallenge);
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.offerRemoved(foundChallenge);
 				}
 			}
@@ -583,7 +583,7 @@ public class GameService {
 		Game game = getGame(gameId);
 		if (game != null) {
 			synchronized (listeners) {
-				for (GameServiceListener listener : listeners.toArray(new GameServiceListener[0])) {
+				for (GameServiceListener listener : listeners) {
 					listener.setupGameBecameExamined(game);
 				}
 			}
@@ -635,7 +635,7 @@ public class GameService {
 	/**
 	 * Removes a game service listener.
 	 */
-	public void removeGameServiceListener(final GameServiceListener listener) {
+	public void removeGameServiceListener(GameServiceListener listener) {
 		listeners.remove(listener);
 	}
 }
