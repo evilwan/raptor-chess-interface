@@ -808,8 +808,19 @@ public class IcsParser implements GameConstants {
 						.debug("Received removing obs game message for a game not in the GameService."
 								+ message);
 			}
-		} else {
-			if (!entireMessage.contains("has made you an examiner of game ")) {
+		}
+		else if (!entireMessage.contains("has made you an examiner of game ")) {
+			boolean processUnobserve = false;
+			if (game.getVariant() == Variant.bughouse) {				
+				BughouseGame bughouseGame = (BughouseGame) game;
+				processUnobserve = (bughouseGame.getOtherBoard().getState() & Game.ACTIVE_STATE) !=0;
+				bughouseGame
+				.clearState(Game.ACTIVE_STATE
+						| Game.IS_CLOCK_TICKING_STATE);
+		    }
+			System.err.println("Process unobserve = " + processUnobserve);
+			
+			if (processUnobserve) {
 				game.setHeader(PgnHeader.ResultDescription,
 						"Interrupted by unobserve");
 				game.setHeader(PgnHeader.Result, Result.UNDETERMINED
