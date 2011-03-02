@@ -16,7 +16,6 @@ package raptor.connector.ics;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.swt.graphics.Point;
 
 import raptor.Raptor;
 import raptor.chat.Bugger.BuggerStatus;
