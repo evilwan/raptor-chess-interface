@@ -56,7 +56,7 @@ public class BugTeams extends Composite {
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
-			if (isActive) {
+			if (isActive && !isDisposed()) {
 				service.refreshAvailablePartnerships();
 				ThreadService
 						.getInstance()

@@ -50,7 +50,7 @@ public class BugGames extends Composite {
 	protected boolean isActive = false;
 	protected Runnable timer = new Runnable() {
 		public void run() {
-			if (isActive) {
+			if (isActive && !isDisposed()) {
 				service.refreshGamesInProgress();
 				ThreadService
 						.getInstance()

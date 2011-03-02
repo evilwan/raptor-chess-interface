@@ -94,7 +94,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
-			if (isActive) {
+			if (isActive && !composite.isDisposed()) {
 				issueGamesMessage();
 				// Never drop this below 60 seconds. It causes bandwidth
 				// issues with fics.

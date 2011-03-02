@@ -83,7 +83,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
-			if (isActive) {
+			if (isActive && !composite.isDisposed()) {
 				service.refreshSeeks();
 				ThreadService
 						.getInstance()
