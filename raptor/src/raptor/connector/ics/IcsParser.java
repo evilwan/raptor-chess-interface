@@ -809,24 +809,6 @@ public class IcsParser implements GameConstants {
 						+ message);
 			}
 		} else if (!entireMessage.contains("has made you an examiner of game ")) {
-			boolean processUnobserve = true;
-			if (game.getVariant() == Variant.bughouse) {
-				BughouseGame bughouseGame = (BughouseGame) game;
-				if ((bughouseGame.getOtherBoard().getState() & Game.ACTIVE_STATE) != 0) {
-					bughouseGame.setHeader(
-							PgnHeader.ResultDescription,
-							bughouseGame.getOtherBoard().getHeader(
-									PgnHeader.ResultDescription));
-					game.clearState(Game.ACTIVE_STATE
-							| Game.IS_CLOCK_TICKING_STATE);
-					game.addState(Game.INACTIVE_STATE);
-					service.fireGameInactive(game.getId());
-					service.removeGame(game);
-					takebackParser.clearTakebackMessages(game.getId());
-					processUnobserve = false;
-				} 
-			}
-			if (processUnobserve) {
 				game.setHeader(PgnHeader.ResultDescription,
 						"Interrupted by unobserve");
 				game.setHeader(PgnHeader.Result,
@@ -836,7 +818,6 @@ public class IcsParser implements GameConstants {
 				service.fireGameInactive(game.getId());
 				service.removeGame(game);
 				takebackParser.clearTakebackMessages(game.getId());
-			}
 		}
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processed removing obs game: " + message);
