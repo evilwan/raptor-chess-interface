@@ -85,7 +85,8 @@ import raptor.util.RaptorStringTokenizer;
  * An implementation of IcsParser that is both BICS and FICS friendly.
  */
 public class IcsParser implements GameConstants {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(IcsParser.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(IcsParser.class);
 	public static final int MAX_GAME_MESSAGE = 1000;
 
 	protected B1Parser b1Parser;
@@ -105,7 +106,7 @@ public class IcsParser implements GameConstants {
 	protected BugWhoGParser bugWhoGParser;
 	protected BugWhoPParser bugWhoPParser;
 	protected BugWhoUParser bugWhoUParser;
-	
+
 	protected UserInfoDialog fullUserInfoDialog;
 
 	protected GameInfoParser gameInfoParser;
@@ -148,7 +149,7 @@ public class IcsParser implements GameConstants {
 	 * resort to this to link the bug games together.
 	 */
 	protected List<String> bugGamesWithoutBoard2 = new ArrayList<String>(10);
-	
+
 	private ChatEvent finger, var;
 
 	public IcsParser(boolean isBicsParser) {
@@ -267,28 +268,28 @@ public class IcsParser implements GameConstants {
 							+ event.getMessage());
 					finger = event;
 				} else if (event.getType() == ChatType.VARIABLES) {
-					LOG.debug("Received var for usinfo: "
-							+ event.getMessage());
+					LOG.debug("Received var for usinfo: " + event.getMessage());
 					var = event;
 				}
 			}
-			
+
 			if (finger != null && events.contains(finger))
 				events.remove(finger);
-			
-			if (var != null && events.contains(var)) 
-				events.remove(var);	
-			
+
+			if (var != null && events.contains(var))
+				events.remove(var);
+
 			if (finger != null && var != null) {
-				UserInfoParser pars = new UserInfoParser(finger.getMessage(), var.getMessage());
+				UserInfoParser pars = new UserInfoParser(finger.getMessage(),
+						var.getMessage());
 				LOG.debug("Parser output: " + pars.getOnFor() + " "
 						+ pars.getInterface());
-				fullUserInfoDialog.updateData(pars.getOnFor(), pars
-						.getInterface(), "", finger.getMessage());
+				fullUserInfoDialog.updateData(pars.getOnFor(),
+						pars.getInterface(), "", finger.getMessage());
 				setParseFullUserInfo(null);
 			}
 		}
-		
+
 		return events.toArray(new ChatEvent[0]);
 	}
 
@@ -300,8 +301,7 @@ public class IcsParser implements GameConstants {
 		for (Game game : activeGames) {
 			if (game.isInState(Game.EXAMINING_STATE)) {
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("Handling transition from examined game to bsetup.");
+					LOG.debug("Handling transition from examined game to bsetup.");
 				}
 				SetupGame setupGame = new SetupGame();
 				game.overwrite(setupGame, true);
@@ -345,8 +345,11 @@ public class IcsParser implements GameConstants {
 	public boolean vetoGameCreation(Game game, G1Message g1Message) {
 		boolean result = false;
 		if (game.isInState(Game.OBSERVING_STATE)
-				&& Raptor.getInstance().getPreferences().getBoolean(
-						PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING)
+				&& Raptor
+						.getInstance()
+						.getPreferences()
+						.getBoolean(
+								PreferenceKeys.BOARD_IGNORE_OBSERVED_GAMES_IF_PLAYING)
 				&& (!isBughouse(game) || (isBughouse(game) && !connector
 						.getGameService().isManaging(g1Message.parterGameId)))) {
 			for (Connector connector : ConnectorService.getInstance()
@@ -464,12 +467,12 @@ public class IcsParser implements GameConstants {
 					.stripTitles(game.getHeader(PgnHeader.Black));
 
 			if (StringUtils.equalsIgnoreCase(white, connector.getUserName())
-					|| StringUtils.equalsIgnoreCase(white, connector
-							.getSimulBugPartnerName())
-					|| StringUtils.equalsIgnoreCase(black, connector
-							.getUserName())
-					|| StringUtils.equalsIgnoreCase(black, connector
-							.getSimulBugPartnerName())) {
+					|| StringUtils.equalsIgnoreCase(white,
+							connector.getSimulBugPartnerName())
+					|| StringUtils.equalsIgnoreCase(black,
+							connector.getUserName())
+					|| StringUtils.equalsIgnoreCase(black,
+							connector.getSimulBugPartnerName())) {
 				return false;
 			}
 		}
@@ -549,8 +552,8 @@ public class IcsParser implements GameConstants {
 				RemovingObsGameMessage removingObsGameMessage = removingObsGameParser
 						.parse(line);
 				if (removingObsGameMessage != null) {
-					process(removingObsGameMessage, inboundMessage, connector
-							.getGameService());
+					process(removingObsGameMessage, inboundMessage,
+							connector.getGameService());
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 					continue;
 				}
@@ -563,8 +566,8 @@ public class IcsParser implements GameConstants {
 				NoLongerExaminingGameMessage noLonerExaminingGameMessage = noLongerExaminingParser
 						.parse(line);
 				if (noLonerExaminingGameMessage != null) {
-					process(noLonerExaminingGameMessage, connector
-							.getGameService());
+					process(noLonerExaminingGameMessage,
+							connector.getGameService());
 					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
 					continue;
 				}
@@ -625,9 +628,8 @@ public class IcsParser implements GameConstants {
 
 			} else {
 				if (LOG.isInfoEnabled()) {
-					LOG
-							.info("Received B1 for a game not in the GameService. "
-									+ "You could be ignoring a bug or zh game and get this.");
+					LOG.info("Received B1 for a game not in the GameService. "
+							+ "You could be ignoring a bug or zh game and get this.");
 				}
 			}
 		} else {
@@ -655,16 +657,16 @@ public class IcsParser implements GameConstants {
 			case GameEndMessage.ABORTED:
 			case GameEndMessage.ADJOURNED:
 			case GameEndMessage.UNDETERMINED:
-				game.setHeader(PgnHeader.Result, Result.UNDETERMINED
-						.getDescription());
+				game.setHeader(PgnHeader.Result,
+						Result.UNDETERMINED.getDescription());
 				break;
 			case GameEndMessage.BLACK_WON:
-				game.setHeader(PgnHeader.Result, Result.BLACK_WON
-						.getDescription());
+				game.setHeader(PgnHeader.Result,
+						Result.BLACK_WON.getDescription());
 				break;
 			case GameEndMessage.WHITE_WON:
-				game.setHeader(PgnHeader.Result, Result.WHITE_WON
-						.getDescription());
+				game.setHeader(PgnHeader.Result,
+						Result.WHITE_WON.getDescription());
 				break;
 			case GameEndMessage.DRAW:
 				game.setHeader(PgnHeader.Result, Result.DRAW.getDescription());
@@ -726,9 +728,8 @@ public class IcsParser implements GameConstants {
 					LOG.debug("Firing game created.");
 				}
 			} else {
-				LOG
-						.warn("Received a MovesMessage for a game not being managed. This can occur if the user manually types in the moves command. "
-								+ message.gameId);
+				LOG.warn("Received a MovesMessage for a game not being managed. This can occur if the user manually types in the moves command. "
+						+ message.gameId);
 			}
 		} else {
 			Style12Message style12 = exaimineGamesWaitingOnMoves
@@ -786,8 +787,8 @@ public class IcsParser implements GameConstants {
 		} else {
 			game.setHeader(PgnHeader.ResultDescription,
 					"Interrupted by unexamine.");
-			game.setHeader(PgnHeader.Result, Result.UNDETERMINED
-					.getDescription());
+			game.setHeader(PgnHeader.Result,
+					Result.UNDETERMINED.getDescription());
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());
@@ -804,30 +805,34 @@ public class IcsParser implements GameConstants {
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
 			if (LOG.isDebugEnabled()) {
-				LOG
-						.debug("Received removing obs game message for a game not in the GameService."
-								+ message);
+				LOG.debug("Received removing obs game message for a game not in the GameService."
+						+ message);
 			}
-		}
-		else if (!entireMessage.contains("has made you an examiner of game ")) {
+		} else if (!entireMessage.contains("has made you an examiner of game ")) {
 			boolean processUnobserve = false;
-			if (game.getVariant() == Variant.bughouse) {				
+			if (game.getVariant() == Variant.bughouse) {
 				BughouseGame bughouseGame = (BughouseGame) game;
-				processUnobserve = (bughouseGame.getOtherBoard().getState() & Game.ACTIVE_STATE) !=0;
-				bughouseGame
-				.clearState(Game.ACTIVE_STATE
-						| Game.IS_CLOCK_TICKING_STATE);
-		    }
-			System.err.println("Process unobserve = " + processUnobserve);
-			
+				if ((bughouseGame.getOtherBoard().getState() & Game.ACTIVE_STATE) != 0) {
+					bughouseGame.setHeader(
+							PgnHeader.ResultDescription,
+							bughouseGame.getOtherBoard().getHeader(
+									PgnHeader.ResultDescription));
+					game.clearState(Game.ACTIVE_STATE
+							| Game.IS_CLOCK_TICKING_STATE);
+					game.addState(Game.INACTIVE_STATE);
+					service.fireGameInactive(game.getId());
+					service.removeGame(game);
+					takebackParser.clearTakebackMessages(game.getId());
+				} else {
+					processUnobserve = true;
+				}
+			}
 			if (processUnobserve) {
 				game.setHeader(PgnHeader.ResultDescription,
 						"Interrupted by unobserve");
-				game.setHeader(PgnHeader.Result, Result.UNDETERMINED
-						.getDescription());
-				game
-						.clearState(Game.ACTIVE_STATE
-								| Game.IS_CLOCK_TICKING_STATE);
+				game.setHeader(PgnHeader.Result,
+						Result.UNDETERMINED.getDescription());
+				game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 				game.addState(Game.INACTIVE_STATE);
 				service.fireGameInactive(game.getId());
 				service.removeGame(game);
@@ -1029,9 +1034,7 @@ public class IcsParser implements GameConstants {
 				String challengeDescription = tok.getWhatsLeft();
 				offer.setDeclineDescription("Decline challenge "
 						+ challengeDescription);
-				offer
-						.setDescription("Accept challenge "
-								+ challengeDescription);
+				offer.setDescription("Accept challenge " + challengeDescription);
 			} else if (type.equals("draw")) {
 				offer.setType(OfferType.draw);
 				offer.setCommand("accept " + offer.getId());
@@ -1101,9 +1104,7 @@ public class IcsParser implements GameConstants {
 				offer.setType(OfferType.match);
 				offer.setCommand("withdraw " + offer.getId());
 				tok.nextToken();
-				offer
-						.setDescription("Withdraw challenge "
-								+ tok.getWhatsLeft());
+				offer.setDescription("Withdraw challenge " + tok.getWhatsLeft());
 			} else if (type.equals("draw")) {
 				offer.setType(OfferType.draw);
 				offer.setCommand("withdraw " + offer.getId());
@@ -1188,8 +1189,7 @@ public class IcsParser implements GameConstants {
 		} else if (game.isInState(Game.EXAMINING_STATE)
 				&& entireMessage.contains("Entering setup mode.\n")) {
 			if (LOG.isDebugEnabled()) {
-				LOG
-						.debug("Handling examined game became setup game transition.");
+				LOG.debug("Handling examined game became setup game transition.");
 			}
 			// Handles an examined game becoming a setup game.
 
@@ -1199,8 +1199,7 @@ public class IcsParser implements GameConstants {
 		} else {
 			// No game state transition occured.
 			if (LOG.isDebugEnabled()) {
-				LOG
-						.debug("No state transitions occured. Processing style12 on existing game.");
+				LOG.debug("No state transitions occured. Processing style12 on existing game.");
 			}
 
 			// Takebacks may have effected the state of the game so first
@@ -1223,8 +1222,7 @@ public class IcsParser implements GameConstants {
 					// anymore.
 					// TO DO: look at removing it.
 					if (LOG.isDebugEnabled()) {
-						LOG
-								.debug("Position was not a move firing state changed.");
+						LOG.debug("Position was not a move firing state changed.");
 					}
 					service.fireGameStateChanged(message.gameId, false);
 				}
@@ -1253,11 +1251,10 @@ public class IcsParser implements GameConstants {
 			// playing.
 			// Just return the unobserve has'nt taken effect yet.
 			if (LOG.isInfoEnabled()) {
-				LOG
-						.info("A style 12 message was received for an observed game "
-								+ "that wasnt being managed. Assuming this was because you "
-								+ "are playing a game and have the ignore observed games if playing "
-								+ "preference enabled.");
+				LOG.info("A style 12 message was received for an observed game "
+						+ "that wasnt being managed. Assuming this was because you "
+						+ "are playing a game and have the ignore observed games if playing "
+						+ "preference enabled.");
 			}
 			return;
 		}
