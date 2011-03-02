@@ -59,6 +59,7 @@ import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.layout.Layout;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.PreferenceUtils;
@@ -101,6 +102,8 @@ import raptor.util.RegExUtils;
  * visible quadrants.
  */
 public class RaptorWindow extends ApplicationWindow {
+	protected static L10n local = L10n.getInstance();
+	
 	/**
 	 * A RaptorTabFolder which keeps track of the Quadrant it is in in and its
 	 * parent RaptorSashForm. Also provides a raptorMaximize and a raptorRestore
@@ -112,6 +115,7 @@ public class RaptorWindow extends ApplicationWindow {
 	protected class RaptorTabFolder extends CTabFolder {
 		protected Quadrant quad;
 		protected RaptorWindowSashForm raptorSash;
+		
 
 		public RaptorTabFolder(RaptorWindowSashForm raptorSash, int style,
 				Quadrant quad) {
@@ -384,7 +388,7 @@ public class RaptorWindow extends ApplicationWindow {
 		public void onMoveTo(RaptorTabFolder newParent, int index) {
 			if (!raptorItem.getControl().isReparentable()) {
 				Raptor.getInstance()
-						.alert("You can only move between quadrants if reparenting is supported in your SWT environment.");
+						.alert(local.getString("rapWinL1"));
 			} else {
 				// This code is quite tricky and must happen in an exact order
 				// or subtle issues occur with tool bars.
@@ -1477,7 +1481,7 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	protected void buildFileMenu(MenuManager fileMenu) {
-		fileMenu.add(new Action("Open PGN File") {
+		fileMenu.add(new Action(local.getString("rapWinL2")) {
 			@Override
 			public void run() {
 				String lastFile = getPreferences().getString(
@@ -1489,7 +1493,7 @@ public class RaptorWindow extends ApplicationWindow {
 				} else {
 					fd.setFilterPath("");
 				}
-				fd.setText("Select the pgn file to view");
+				fd.setText(local.getString("rapWinL3"));
 				String[] filterExt = { "*.pgn", "*" };
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
@@ -1502,14 +1506,14 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		fileMenu.add(new Action("Show my saved games") {
+		fileMenu.add(new Action(local.getString("rapWinL4")) {
 			@Override
 			public void run() {
 				File file = new File(getPreferences().getString(
 						PreferenceKeys.APP_PGN_FILE));
 				if (!file.exists()) {
 					Raptor.getInstance().alert(
-							"You currently do not have any games saved in "
+							local.getString("rapWinL5")
 									+ file.getAbsolutePath());
 				} else {
 					PgnProcessingDialog dialog = new PgnProcessingDialog(
@@ -1519,7 +1523,7 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 		fileMenu.add(new Separator());
-		fileMenu.add(new Action("Show memos") {
+		fileMenu.add(new Action(local.getString("rapWinL6")) {
 			@Override
 			public void run() {
 				String html = MemoService.getInstance().getMemosHTML();
@@ -1527,7 +1531,7 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 		fileMenu.add(new Separator());
-		fileMenu.add(new Action("Show console logs") {
+		fileMenu.add(new Action(local.getString("rapWinL7")) {
 			@Override
 			public void run() {
 				if (OSUtils.isLikelyWindows()) {
@@ -1540,7 +1544,7 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		fileMenu.add(new Action("Show error log") {
+		fileMenu.add(new Action(local.getString("rapWinL8")) {
 			@Override
 			public void run() {
 				String html = FileUtils
@@ -1555,20 +1559,20 @@ public class RaptorWindow extends ApplicationWindow {
 		});
 
 		fileMenu.add(new Separator());
-		fileMenu.add(new Action("Download chess sets") {
+		fileMenu.add(new Action(local.getString("rapWinL9")) {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/AdditionalChessSets");
 			}
 		});
-		fileMenu.add(new Action("Install chess set") {
+		fileMenu.add(new Action(local.getString("rapWinL10")) {
 			@Override
 			public void run() {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 				fd.setFilterPath("");
 
-				fd.setText("Select the chess set to install");
+				fd.setText(local.getString("rapWinL11"));
 				String[] filterExt = { "*.zip" };
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
@@ -1582,7 +1586,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 		if (!OSUtils.isLikelyOSXCocoa()) {
 			fileMenu.add(new Separator());
-			fileMenu.add(new Action("Preferences") {
+			fileMenu.add(new Action(local.getString("rapWinL12")) {
 				@Override
 				public void run() {
 					PreferenceUtils.launchPreferenceDialog();
@@ -1593,7 +1597,7 @@ public class RaptorWindow extends ApplicationWindow {
 		String osName = System.getProperty("os.name");
 		if (!osName.startsWith("Mac OS")) {
 			fileMenu.add(new Separator());
-			fileMenu.add(new Action("Quit Raptor") {
+			fileMenu.add(new Action(local.getString("rapWinL13")) {
 				@Override
 				public void run() {
 					Raptor.getInstance().shutdown();
@@ -1603,12 +1607,12 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	protected void buildWindowMenu(MenuManager windowMenu) {
-		final MenuManager layoutsMenu = new MenuManager("&Layouts");
-		layoutsMenu.add(new Action("&Save") {
+		final MenuManager layoutsMenu = new MenuManager(local.getString("rapWinL14"));
+		layoutsMenu.add(new Action(local.getString("rapWinL15")) {
 			@Override
 			public void run() {
 				String layoutName = Raptor.getInstance().promptForText(
-						"Enter the name of the new layout:");
+						local.getString("rapWinL16"));
 				if (StringUtils.isNotBlank(layoutName)) {
 					final Layout newLayout = LayoutService.getInstance()
 							.saveCurrentAsCustomLayout(layoutName);
@@ -1621,17 +1625,17 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		layoutsMenu.add(new Action("&Export") {
+		layoutsMenu.add(new Action(local.getString("rapWinL17")) {
 			@Override
 			public void run() {
 				DirectoryDialog fd = new DirectoryDialog(getShell(), SWT.OPEN);
 				fd.setFilterPath("");
 
-				fd.setText("Select the name of the directory to export to");
+				fd.setText(local.getString("rapWinL18"));
 				final String directory = fd.open();
 				
 				if (!StringUtils.isBlank(directory)) {
-					final String layoutName = Raptor.getInstance().promptForText("Layout Name:");
+					final String layoutName = Raptor.getInstance().promptForText(local.getString("rapWinL19"));
 					if (StringUtils.isNotBlank(layoutName)) {
 						LayoutService.getInstance().exportCurrentLayout(layoutName,directory);
 						Raptor.getInstance().alert("Exported " + directory + "/" + layoutName + ".properties" );
@@ -1640,13 +1644,13 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		layoutsMenu.add(new Action("&Import") {
+		layoutsMenu.add(new Action(local.getString("rapWinL20")) {
 			@Override
 			public void run() {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 				fd.setFilterPath("");
 
-				fd.setText("Select the theme to import");
+				fd.setText(local.getString("rapWinL21"));
 				String[] filterExt = { "*.properties"};
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
@@ -1659,14 +1663,14 @@ public class RaptorWindow extends ApplicationWindow {
 							layout.apply();
 						}
 					});
-					Raptor.getInstance().alert("Added layout " + layout.getName() );
+					Raptor.getInstance().alert(local.getString("rapWinL22") + layout.getName() );
 				}
 				
 			}
 		});
 		layoutsMenu.add(new Separator());
 
-		MenuManager bughouseLayoutsMenu = new MenuManager("&Bughouse Layouts");
+		MenuManager bughouseLayoutsMenu = new MenuManager(local.getString("rapWinL23"));
 		Layout[] bughouseLayouts = LayoutService.getInstance()
 				.getBughouoseSystemLayouts();
 		for (final Layout bugLayout : bughouseLayouts) {
@@ -1699,13 +1703,13 @@ public class RaptorWindow extends ApplicationWindow {
 		}
 		windowMenu.add(layoutsMenu);
 
-		final MenuManager themesMenu = new MenuManager("&Themes");
+		final MenuManager themesMenu = new MenuManager(local.getString("rapWinL24"));
 		windowMenu.add(themesMenu);
-		themesMenu.add(new Action("&Save") {
+		themesMenu.add(new Action(local.getString("rapWinL25")) {
 			@Override
 			public void run() {
 				String themeName = Raptor.getInstance().promptForText(
-						"Enter the name of the new theme:");
+						local.getString("rapWinL26"));
 				if (StringUtils.isNotBlank(themeName)) {
 					final Theme newTheme = ThemeService.getInstance().saveCurrentAsTheme(themeName);
 					themesMenu.add(new Action(newTheme.getName()) {
@@ -1717,17 +1721,17 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		themesMenu.add(new Action("&Export") {
+		themesMenu.add(new Action(local.getString("rapWinL17")) {
 			@Override
 			public void run() {
 				DirectoryDialog fd = new DirectoryDialog(getShell(), SWT.OPEN);
 				fd.setFilterPath("");
 
-				fd.setText("Select the name of the directory to export to");
+				fd.setText(local.getString("rapWinL27"));
 				final String directory = fd.open();
 				
 				if (!StringUtils.isBlank(directory)) {
-					final String themeName = Raptor.getInstance().promptForText("Theme Name:");
+					final String themeName = Raptor.getInstance().promptForText(local.getString("rapWinL28"));
 					if (StringUtils.isNotBlank(themeName)) {
 						ThemeService.getInstance().exportCurrentTheme(themeName,directory);
 						Raptor.getInstance().alert("Exported " + directory + "/" + themeName + ".properties" );
@@ -1736,13 +1740,13 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		themesMenu.add(new Action("&Import") {
+		themesMenu.add(new Action(local.getString("rapWinL20")) {
 			@Override
 			public void run() {
 				FileDialog fd = new FileDialog(getShell(), SWT.OPEN);
 				fd.setFilterPath("");
 
-				fd.setText("Select the theme to import");
+				fd.setText(local.getString("rapWinL29"));
 				String[] filterExt = { "*.properties"};
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
@@ -1789,7 +1793,7 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			});
 
-			helpMenu.add(new Action("&Raptor Home Page") {
+			helpMenu.add(new Action(local.getString("rapWinL30")) {
 				@Override
 				public void run() {
 					BrowserUtils
@@ -1797,7 +1801,7 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			});
 		}
-		helpMenu.add(new Action("&License") {
+		helpMenu.add(new Action(local.getString("rapWinL31")) {
 			@Override
 			public void run() {
 				String html = FileUtils.fileAsString("bsd-new-license.html");
@@ -1806,14 +1810,14 @@ public class RaptorWindow extends ApplicationWindow {
 				}
 			}
 		});
-		helpMenu.add(new Action("T&hanks") {
+		helpMenu.add(new Action(local.getString("rapWinL32")) {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/Thanks");
 			}
 		});
-		helpMenu.add(new Action("&Third Party Content") {
+		helpMenu.add(new Action(local.getString("rapWinL33")) {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1823,22 +1827,22 @@ public class RaptorWindow extends ApplicationWindow {
 		});
 		helpMenu.add(new Separator());
 
-		MenuManager raptorHelp = new MenuManager("&Raptor Help");
-		raptorHelp.add(new Action("&Raptor New User's Guide") {
+		MenuManager raptorHelp = new MenuManager(local.getString("rapWinL34"));
+		raptorHelp.add(new Action(local.getString("rapWinL35")) {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NewToRaptor");
 			}
 		});
-		raptorHelp.add(new Action("&Aliases") {
+		raptorHelp.add(new Action(local.getString("rapWinL36")) {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openHtml(AliasService.getInstance().getAliasHtml());
 			}
 		});
-		raptorHelp.add(new Action("&Frequently Asked Questions") {
+		raptorHelp.add(new Action(local.getString("rapWinL37")) {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1846,27 +1850,27 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
-		raptorHelp.add(new Action("&Linux Sound Issues") {
+		raptorHelp.add(new Action(local.getString("rapWinL38")) {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/LinuxSoundIssues");
 			}
 		});
-		raptorHelp.add(new Action("&Regular Expressions") {
+		raptorHelp.add(new Action(local.getString("rapWinL39")) {
 			@Override
 			public void run() {
 				BrowserUtils.openHtml(RegExUtils.getRegularExpressionHelpHtml());
 			}
 		});
-		raptorHelp.add(new Action("&Scripting") {
+		raptorHelp.add(new Action(local.getString("rapWinL40")) {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/Scripting");
 			}
 		});
-		raptorHelp.add(new Action("&Tips") {
+		raptorHelp.add(new Action(local.getString("rapWinL41")) {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1876,15 +1880,15 @@ public class RaptorWindow extends ApplicationWindow {
 		});
 		helpMenu.add(raptorHelp);
 
-		MenuManager ficsHelp = new MenuManager("&Fics Help");
-		ficsHelp.add(new Action("&Fics New User's Guide") {
+		MenuManager ficsHelp = new MenuManager(local.getString("rapWinL42"));
+		ficsHelp.add(new Action(local.getString("rapWinL43")) {
 			@Override
 			public void run() {
 				BrowserUtils
 						.openUrl("http://code.google.com/p/raptor-chess-interface/wiki/NewToFics");
 			}
 		});
-		ficsHelp.add(new Action("&Command Help") {
+		ficsHelp.add(new Action(local.getString("rapWinL44")) {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1892,7 +1896,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
-		ficsHelp.add(new Action("&Frequently Asked Questions") {
+		ficsHelp.add(new Action(local.getString("rapWinL45")) {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1900,7 +1904,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 			}
 		});
-		ficsHelp.add(new Action("&Help Page") {
+		ficsHelp.add(new Action(local.getString("rapWinL46")) {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1910,7 +1914,7 @@ public class RaptorWindow extends ApplicationWindow {
 		helpMenu.add(ficsHelp);
 
 		helpMenu.add(new Separator());
-		helpMenu.add(new Action("&Mini Profiler") {
+		helpMenu.add(new Action(local.getString("rapWinL47")) {
 			@Override
 			public void run() {
 				ProfileDialog dialog = new ProfileDialog();
@@ -1918,7 +1922,7 @@ public class RaptorWindow extends ApplicationWindow {
 			}
 		});
 
-		helpMenu.add(new Action("&Report an Issue") {
+		helpMenu.add(new Action(local.getString("rapWinL48")) {
 			@Override
 			public void run() {
 				BrowserUtils
@@ -1932,10 +1936,10 @@ public class RaptorWindow extends ApplicationWindow {
 	 */
 	@Override
 	protected MenuManager createMenuManager() {
-		MenuManager menuBar = new MenuManager("Main");
-		MenuManager fileMenu = new MenuManager("File");
-		MenuManager windowMenu = new MenuManager("&Window");
-		MenuManager helpMenu = new MenuManager("&Help");
+		MenuManager menuBar = new MenuManager(local.getString("rapWinL49"));
+		MenuManager fileMenu = new MenuManager(local.getString("rapWinL50"));
+		MenuManager windowMenu = new MenuManager(local.getString("rapWinL51"));
+		MenuManager helpMenu = new MenuManager(local.getString("rapWinL52"));
 
 		buildFileMenu(fileMenu);
 		menuBar.add(fileMenu);
@@ -2083,7 +2087,7 @@ public class RaptorWindow extends ApplicationWindow {
 		zoomCombo.add("200%");
 		zoomCombo.add("250%");
 		zoomCombo
-				.setToolTipText("Adjusts font size percentages in chat consoles and chess boards.");
+				.setToolTipText(local.getString("rapWinL53"));
 
 		int selection = -1;
 
@@ -2145,7 +2149,7 @@ public class RaptorWindow extends ApplicationWindow {
 			if (item instanceof ChessBoardWindowItem)
 				if (((ChessBoardWindowItem) item).getController() instanceof PlayingController) {
 					if (!Raptor.getInstance().confirm(
-							"Do you really want to exit?"))
+							local.getString("rapWinL54")))
 						return;
 				}
 		}
@@ -2263,7 +2267,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 					if (folder.getItemCount() > 0) {
 						MenuItem item = new MenuItem(menu, SWT.PUSH);
-						item.setText("Close");
+						item.setText(local.getString("close"));
 						item.addListener(SWT.Selection, new Listener() {
 							public void handleEvent(Event e) {
 								if (folder.getRaptorTabItemSelection() != null) {
@@ -2283,7 +2287,7 @@ public class RaptorWindow extends ApplicationWindow {
 					}
 					if (folder.getItemCount() > 1) {
 						MenuItem item = new MenuItem(menu, SWT.PUSH);
-						item.setText("Close Others");
+						item.setText(local.getString("rapWinL55"));
 						item.addListener(SWT.Selection, new Listener() {
 							public void handleEvent(Event e) {
 								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
@@ -2305,7 +2309,7 @@ public class RaptorWindow extends ApplicationWindow {
 					}
 					if (folder.getItemCount() > 0) {
 						MenuItem item = new MenuItem(menu, SWT.PUSH);
-						item.setText("Close All");
+						item.setText(local.getString("rapWinL56"));
 						item.addListener(SWT.Selection, new Listener() {
 							public void handleEvent(Event e) {
 								List<RaptorTabItem> itemsToClose = new ArrayList<RaptorTabItem>(
@@ -2347,7 +2351,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 					if (itemIndex != -1 && itemIndex > 0) {
 						MenuItem moveLeft = new MenuItem(menu, SWT.PUSH);
-						moveLeft.setText("Move Left");
+						moveLeft.setText(local.getString("rapWinL57"));
 						moveLeft.addListener(SWT.Selection, new Listener() {
 							public void handleEvent(Event e) {
 								raptorTabItem.onMoveTo(folder,
@@ -2359,7 +2363,7 @@ public class RaptorWindow extends ApplicationWindow {
 					if (itemIndex != -1
 							&& itemIndex < folder.getItemCount() - 1) {
 						MenuItem moveLeft = new MenuItem(menu, SWT.PUSH);
-						moveLeft.setText("Move Right");
+						moveLeft.setText(local.getString("rapWinL58"));
 						moveLeft.addListener(SWT.Selection, new Listener() {
 							public void handleEvent(Event e) {
 								raptorTabItem.onMoveTo(folder,
@@ -2379,7 +2383,7 @@ public class RaptorWindow extends ApplicationWindow {
 					if (OSUtils.isLikelyWindows()) {
 						MenuItem defaultMenuItem = new MenuItem(menu,
 								SWT.CASCADE);
-						defaultMenuItem.setText("Move to Quadrant");
+						defaultMenuItem.setText(local.getString("rapWinL59"));
 
 						Menu moveToMenu = new Menu(defaultMenuItem);
 						defaultMenuItem.setMenu(moveToMenu);
@@ -2497,9 +2501,9 @@ public class RaptorWindow extends ApplicationWindow {
 							dragStartItem.onMoveTo(dropFolder);
 						} else {
 							Raptor.getInstance()
-									.alert("You can't move this item to quadrant "
+									.alert(local.getString("rapWinL60")
 											+ dropFolder.quad
-											+ ". You can only move it to quadrants: "
+											+ local.getString("rapWinL61")
 											+ Arrays.toString(dragStartItem.raptorItem
 													.getMoveToQuadrants()));
 						}

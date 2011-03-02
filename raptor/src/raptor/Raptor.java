@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ActionScriptService;
@@ -79,7 +80,8 @@ public class Raptor implements PreferenceKeys {
 	public static final String ENGINES_DIR = USER_RAPTOR_HOME_PATH + "/engines";
 	private static Raptor instance;
 	private static Display display;
-
+	protected static L10n local = L10n.getInstance();
+	
 	static {
 		RaptorLogger.initializeLogger();
 	}
@@ -244,7 +246,7 @@ public class Raptor implements PreferenceKeys {
 						@Override
 						public void execute() {
 							MessageDialog.openInformation(Raptor.getInstance()
-									.getWindow().getShell(), "Alert", message);
+									.getWindow().getShell(), local.getString("alert"), message);
 						}
 					});
 		}
@@ -257,7 +259,7 @@ public class Raptor implements PreferenceKeys {
 	public boolean confirm(final String question) {
 		if (!isDisposed()) {
 			return MessageDialog.openConfirm(Raptor.getInstance().getWindow()
-					.getShell(), "Confirm", question);
+					.getShell(), local.getString("confirm"), question);
 		}
 		return false;
 	}
@@ -389,9 +391,7 @@ public class Raptor implements PreferenceKeys {
 						public void run() {
 							ErrorDialog dialog = new ErrorDialog(
 									Raptor.getInstance().getWindow().getShell(),
-									"Error occured! We are trying to make Raptor "
-											+ "bug free and we need your help! Please take a moment to report this "
-											+ "issue by selecting the menu:\n  Help -> Report Issue \n\n"
+									local.getString("rapErr")
 											+ error
 											+ "\n"
 											+ (throwable != null ? ExceptionUtils
@@ -414,7 +414,7 @@ public class Raptor implements PreferenceKeys {
 	public String promptForText(final String question) {
 		if (!isDisposed()) {
 			InputDialog dialog = new InputDialog(Raptor.getInstance()
-					.getWindow().getShell(), "Enter Text", question);
+					.getWindow().getShell(), local.getString("entText"), question);
 			return dialog.open();
 		} else {
 			return null;
@@ -430,7 +430,7 @@ public class Raptor implements PreferenceKeys {
 	public String promptForText(final String question, String answer) {
 		if (!isDisposed()) {
 			InputDialog dialog = new InputDialog(Raptor.getInstance()
-					.getWindow().getShell(), "Enter Text", question);
+					.getWindow().getShell(), local.getString("entText"), question);
 			if (answer != null) {
 				dialog.setInput(answer);
 			}
