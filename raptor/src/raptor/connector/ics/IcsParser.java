@@ -809,7 +809,7 @@ public class IcsParser implements GameConstants {
 						+ message);
 			}
 		} else if (!entireMessage.contains("has made you an examiner of game ")) {
-			boolean processUnobserve = false;
+			boolean processUnobserve = true;
 			if (game.getVariant() == Variant.bughouse) {
 				BughouseGame bughouseGame = (BughouseGame) game;
 				if ((bughouseGame.getOtherBoard().getState() & Game.ACTIVE_STATE) != 0) {
@@ -823,9 +823,8 @@ public class IcsParser implements GameConstants {
 					service.fireGameInactive(game.getId());
 					service.removeGame(game);
 					takebackParser.clearTakebackMessages(game.getId());
-				} else {
-					processUnobserve = true;
-				}
+					processUnobserve = false;
+				} 
 			}
 			if (processUnobserve) {
 				game.setHeader(PgnHeader.ResultDescription,
