@@ -2026,7 +2026,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				String message = ptell
 						.substring(colonIndex + 1, ptell.length()).trim();
 				RaptorStringTokenizer tok = new RaptorStringTokenizer(message,
-						"\n", true);
+						"\n?", true);
 				message = tok.nextToken().trim();
 				for (String bugSound : bughouseSounds) {
 					if (bugSound.equalsIgnoreCase(message)) {
