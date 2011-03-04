@@ -21,6 +21,7 @@ import org.eclipse.jface.preference.PreferencePage;
 import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ActionKeyBindingsPage;
 import raptor.pref.page.ActionScriptsPage;
@@ -62,6 +63,8 @@ import raptor.service.ConnectorService;
  */
 public class PreferenceUtils {
 
+	protected static L10n local = L10n.getInstance();
+	
 	/**
 	 * Launches the preference dialog.
 	 * 
@@ -83,9 +86,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"buttons",
 								new ActionContainerPage(
-										"Buttons",
-										"\tOn this page you can configure the bughouse button actions shown in the bughouse"
-												+ "buttons screen.You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil1"),
+										local.getString("prefUtil2"),
 										RaptorActionContainer.BugButtons)));
 		mgr.addToRoot(new PreferenceNode("chessBoard", new ChessBoardPage()));
 		mgr.addTo("chessBoard", new PreferenceNode("arrows",
@@ -114,10 +116,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"bugSuggest",
 								new ActionContainerPage(
-										"Bughouse Suggest",
-										"\tOn this page you can configure the toolbar for the "
-												+ "bughouse suggest chess board, i.e. your partners chess board when you are playing a bughouse "
-												+ "game. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil3"),
+										local.getString("prefUtil4"),
 										RaptorActionContainer.BughouseSuggestChessBoard)));
 		mgr
 				.addTo(
@@ -125,10 +125,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"examining",
 								new ActionContainerPage(
-										"Examining",
-										"\tOn this page you can configure the toolbar "
-												+ "for the examine chess board, on fics this is shown when you are examining a game. "
-												+ "You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil5"),
+										local.getString("prefUtil6"),
 										RaptorActionContainer.ExaminingChessBoard)));
 		mgr
 				.addTo(
@@ -136,9 +134,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"inactive",
 								new ActionContainerPage(
-										"Inactive",
-										"\tOn this page you can configure the toolbar for the inactive "
-												+ "chessboards. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil7"),
+										local.getString("prefUtil8"),
 										RaptorActionContainer.InactiveChessBoard)));
 		mgr
 				.addTo(
@@ -146,10 +143,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"observing",
 								new ActionContainerPage(
-										"Observing",
-										"\tOn this page you can configure the toolbar "
-												+ "for the observing chess board, on fics this is shown when you are observing a "
-												+ "game. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil9"),
+										local.getString("prefUtil10"),
 										RaptorActionContainer.ObservingChessBoard)));
 		mgr
 				.addTo(
@@ -157,10 +152,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"playing",
 								new ActionContainerPage(
-										"Playing",
-										"\tOn this page you can configure the toolbar "
-												+ "for the playing chess board, on fics this is shown when you are playing a "
-												+ "game. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil11"),
+										local.getString("prefUtil12"),
 										RaptorActionContainer.PlayingChessBoard)));
 		mgr
 				.addTo(
@@ -168,10 +161,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"setup",
 								new ActionContainerPage(
-										"Setup",
-										"\tOn this page you can configure the toolbar for the setup "
-												+ "chess board, on fics this is shown during bsetup. You can add new actions on the "
-												+ "Action Scripts Page.",
+										local.getString("prefUtil13"),
+										local.getString("prefUtil14"),
 										RaptorActionContainer.SetupChessBoard)));
 		mgr.addTo("chessBoard", new PreferenceNode("results",
 				new ChessBoardResultsPage()));
@@ -194,9 +185,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"channel",
 								new ActionContainerPage(
-										"Channel",
-										"\tOn this page you can configure the toolbar for the "
-												+ "channel chat console. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil15"),
+										local.getString("prefUtil16"),
 										RaptorActionContainer.ChannelChatConsole)));
 		mgr
 				.addTo(
@@ -204,9 +194,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"main",
 								new ActionContainerPage(
-										"Main",
-										"\tOn this page you can configure the toolbar for the "
-												+ "main chat console. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil17"),
+										local.getString("prefUtil18"),
 										RaptorActionContainer.MainChatConsole)));
 		mgr
 				.addTo(
@@ -214,9 +203,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"partner",
 								new ActionContainerPage(
-										"Partner",
-										"\tOn this page you can configure the toolbar for the "
-												+ "bughouse partner console. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil19"),
+										local.getString("prefUtil20"),
 										RaptorActionContainer.BughousePartnerChatConsole)));
 		mgr
 				.addTo(
@@ -224,9 +212,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"person",
 								new ActionContainerPage(
-										"Person",
-										"\tOn this page you can configure the toolbar for the "
-												+ "person chat console. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil21"),
+										local.getString("prefUtil22"),
 										RaptorActionContainer.PersonChatConsole)));
 		mgr
 				.addTo(
@@ -234,9 +221,8 @@ public class PreferenceUtils {
 						new PreferenceNode(
 								"regex",
 								new ActionContainerPage(
-										"Chat Event Scripts",
-										"\tOn this page you can configure the toolbar for the "
-												+ "chat event console. You can add new actions on the Action Scripts Page.",
+										local.getString("prefUtil23"),
+										local.getString("prefUtil24"),
 										RaptorActionContainer.RegExChatConsole)));
 		mgr.addToRoot(new PreferenceNode("engines", new ChessEnginesPage()));
 		mgr.addTo("engines", new PreferenceNode("uciEngines",

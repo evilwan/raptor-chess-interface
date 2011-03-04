@@ -126,7 +126,7 @@ public class ActionContainerPage extends PreferencePage {
 		Label strut4 = new Label(addRemoveComposite, SWT.NONE);
 		strut4.setText(" ");
 		Button addButton = new Button(addRemoveComposite, SWT.PUSH);
-		addButton.setImage(Raptor.getInstance().getIcon(local.getString("back")));
+		addButton.setImage(Raptor.getInstance().getIcon("back"));
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -158,7 +158,7 @@ public class ActionContainerPage extends PreferencePage {
 		});
 
 		Button removeButton = new Button(addRemoveComposite, SWT.PUSH);
-		removeButton.setImage(Raptor.getInstance().getIcon(local.getString("next")));
+		removeButton.setImage(Raptor.getInstance().getIcon("next"));
 		removeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -201,7 +201,7 @@ public class ActionContainerPage extends PreferencePage {
 				false, 2, 1));
 		buttonsComposite.setLayout(new RowLayout());
 		Button upButton = new Button(buttonsComposite, SWT.PUSH);
-		upButton.setImage(Raptor.getInstance().getIcon(local.getString("up")));
+		upButton.setImage(Raptor.getInstance().getIcon("up"));
 		upButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -233,7 +233,7 @@ public class ActionContainerPage extends PreferencePage {
 			}
 		});
 		Button downButton = new Button(buttonsComposite, SWT.PUSH);
-		downButton.setImage(Raptor.getInstance().getIcon(local.getString("down")));
+		downButton.setImage(Raptor.getInstance().getIcon("down"));
 		downButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -391,7 +391,7 @@ public class ActionContainerPage extends PreferencePage {
 			scriptText.setText(((ScriptedAction) currentAction).getScript()
 					.trim());
 		} else {
-			scriptText.setText("Not a script action");
+			scriptText.setText(local.getString("actContAlert3"));
 		}
 		categoryText.setText(currentAction.getCategory().toString());
 
