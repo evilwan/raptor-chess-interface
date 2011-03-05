@@ -104,6 +104,8 @@ public class PlayingController extends ChessBoardController {
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
 
+	protected Object eventLock = new Object();
+
 	protected MouseListener clearPremovesLabelListener = new MouseListener() {
 		public void mouseDoubleClick(MouseEvent e) {
 		}
@@ -127,13 +129,15 @@ public class PlayingController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
+								synchronized (eventLock) {
 
-								if (isDisposed()) {
-									return;
-								}
+									if (isDisposed()) {
+										return;
+									}
 
-								if (!handlePremoveDrop()) {
-									refreshBoard();
+									if (!handlePremoveDrop()) {
+										refreshBoard();
+									}
 								}
 
 							}
@@ -148,50 +152,56 @@ public class PlayingController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
+								synchronized (eventLock) {
 
-								if (isDisposed()) {
-									return;
-								}
-
-								board.getResultDecorator()
-										.setDecorationFromResult(
-												getGame().getResult());
-								board.redrawPiecesAndArtifacts(true);
-
-								if (!handleSpeakResults(game)) {
-									onPlayGameEndSound();
-								}
-
-								handleGameStatistics();
-								ThreadService.getInstance().run(new Runnable() {
-									public void run() {
-										PgnUtils.appendGameToFile(getGame());
+									if (isDisposed()) {
+										return;
 									}
-								});
 
-								// Now swap controllers to the inactive
-								// controller.
-								InactiveController inactiveController = new InactiveController(
-										game, getConnector());
-								getBoard().setController(inactiveController);
-								inactiveController.setBoard(board);
-								inactiveController
-										.setItemChangedListeners(itemChangedListeners);
+									board.getResultDecorator()
+											.setDecorationFromResult(
+													getGame().getResult());
+									board.redrawPiecesAndArtifacts(true);
 
-								// Detatch from the GameService.
-								connector.getGameService()
-										.removeGameServiceListener(listener);
+									if (!handleSpeakResults(game)) {
+										onPlayGameEndSound();
+									}
 
-								// Clear the cool bar and init the inactive
-								// controller.
-								ChessBoardUtils.clearCoolbar(getBoard());
-								inactiveController.init();
+									handleGameStatistics();
+									ThreadService.getInstance().run(
+											new Runnable() {
+												public void run() {
+													PgnUtils.appendGameToFile(getGame());
+												}
+											});
 
-								// Set the listeners to null so they wont get
-								// cleared and we wont get notified.
-								setItemChangedListeners(null);
-								// And finally dispose.
-								PlayingController.this.dispose();
+									// Now swap controllers to the inactive
+									// controller.
+									InactiveController inactiveController = new InactiveController(
+											game, getConnector());
+									getBoard()
+											.setController(inactiveController);
+									inactiveController.setBoard(board);
+									inactiveController
+											.setItemChangedListeners(itemChangedListeners);
+
+									// Detatch from the GameService.
+									connector
+											.getGameService()
+											.removeGameServiceListener(listener);
+
+									// Clear the cool bar and init the inactive
+									// controller.
+									ChessBoardUtils.clearCoolbar(getBoard());
+									inactiveController.init();
+
+									// Set the listeners to null so they wont
+									// get
+									// cleared and we wont get notified.
+									setItemChangedListeners(null);
+									// And finally dispose.
+									PlayingController.this.dispose();
+								}
 							}
 						});
 			}
@@ -204,59 +214,62 @@ public class PlayingController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
-								if (isDisposed()) {
-									return;
-								}
-
-								if (LOG.isDebugEnabled()) {
-									LOG.debug("In gameStateChanged "
-											+ getGame().getId() + " "
-											+ isNewMove);
-								}
-
-								if (isNewMove) {
-									cursor.setCursorMasterLast();
-									handleAutoDraw();
-									if (!wasLastMovePremove) {
-										removeAllMoveDecorations();
+								synchronized (eventLock) {
+									if (isDisposed()) {
+										return;
 									}
-									handleAnnounceCheck();
-									if (!handlePremove()) {
-										if (LOG.isDebugEnabled()) {
-											LOG.debug("In did not make premove block "
-													+ getGame().getId()
-													+ " "
-													+ isNewMove);
+
+									if (LOG.isDebugEnabled()) {
+										LOG.debug("In gameStateChanged "
+												+ getGame().getId() + " "
+												+ isNewMove);
+									}
+
+									if (isNewMove) {
+										cursor.setCursorMasterLast();
+										handleAutoDraw();
+										if (!wasLastMovePremove) {
+											removeAllMoveDecorations();
 										}
+										handleAnnounceCheck();
+										if (!handlePremove()) {
+											if (LOG.isDebugEnabled()) {
+												LOG.debug("In did not make premove block "
+														+ getGame().getId()
+														+ " " + isNewMove);
+											}
 
-										boolean wasUserMove = !isUsersMove();
-										addDecorationsForMove(getGame()
-												.getLastMove(), wasUserMove);
+											boolean wasUserMove = !isUsersMove();
+											addDecorationsForMove(getGame()
+													.getLastMove(), wasUserMove);
 
-										if (LOG.isDebugEnabled()) {
-											LOG.debug("Invoking refresh "
-													+ wasUserMove);
-										}
+											if (LOG.isDebugEnabled()) {
+												LOG.debug("Invoking refresh "
+														+ wasUserMove);
+											}
 
-										refresh();
-										if (!handleSpeakMove(game.getLastMove())) {
-											onPlayMoveSound();
+											refresh();
+											if (!handleSpeakMove(game
+													.getLastMove())) {
+												onPlayMoveSound();
+											}
+										} else {
+											if (LOG.isDebugEnabled()) {
+												LOG.debug("Premove was made. Playing move sound. ");
+											}
+											if (!handleSpeakMove(game
+													.getLastMove())) {
+												onPlayMoveSound();
+											}
 										}
 									} else {
 										if (LOG.isDebugEnabled()) {
-											LOG.debug("Premove was made. Playing move sound. ");
+											LOG.debug("This isnt an update from a move, doing a full refresh.");
 										}
-										if (!handleSpeakMove(game.getLastMove())) {
-											onPlayMoveSound();
-										}
-									}
-								} else {
-									if (LOG.isDebugEnabled()) {
-										LOG.debug("This isnt an update from a move, doing a full refresh.");
-									}
 
-									addDecorationsForLastMoveListMove();
-									refresh();
+										addDecorationsForLastMoveListMove();
+										refresh();
+									}
 								}
 							}
 						});
@@ -398,6 +411,8 @@ public class PlayingController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("canUserInitiateMoveFrom " + getSan(squareId));
 		}
+		System.err.println("canUserInitiateMoveFrom " + squareId);
+
 		if (!isUsersMove()) {
 			if (isPremoveable()) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)
