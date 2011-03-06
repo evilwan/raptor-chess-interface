@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.action.Action;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
@@ -161,12 +162,29 @@ public class ThemeService {
 	}
 
 	public void applyTheme(Theme theme) {
+		// Remove all channel color presets before applying the theme.
+		// This is currently not working but I might fix it later, so its
+		// commented out.
+		// String[] prefNames = Raptor.getInstance().getPreferences()
+		// .preferenceNames();
+		// for (String name : prefNames) {
+		// if
+		// (name.startsWith(PreferenceKeys.CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+		// + ChatType.CHANNEL_TELL)
+		// && name.endsWith("-color")) {
+		// Raptor.getInstance().getPreferences().(name);
+		// }
+		// }
+
+		// Apply theme.
 		for (String propertyName : theme.getProperties().keySet()) {
 			Raptor.getInstance()
 					.getPreferences()
 					.setValue(propertyName,
 							theme.getProperties().get(propertyName));
 		}
+
+		// Save preferences.
 		Raptor.getInstance().getPreferences().save();
 	}
 
