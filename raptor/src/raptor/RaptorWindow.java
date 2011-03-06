@@ -103,7 +103,7 @@ import raptor.util.RegExUtils;
  */
 public class RaptorWindow extends ApplicationWindow {
 	protected static L10n local = L10n.getInstance();
-	
+
 	/**
 	 * A RaptorTabFolder which keeps track of the Quadrant it is in in and its
 	 * parent RaptorSashForm. Also provides a raptorMaximize and a raptorRestore
@@ -115,7 +115,6 @@ public class RaptorWindow extends ApplicationWindow {
 	protected class RaptorTabFolder extends CTabFolder {
 		protected Quadrant quad;
 		protected RaptorWindowSashForm raptorSash;
-		
 
 		public RaptorTabFolder(RaptorWindowSashForm raptorSash, int style,
 				Quadrant quad) {
@@ -387,8 +386,7 @@ public class RaptorWindow extends ApplicationWindow {
 
 		public void onMoveTo(RaptorTabFolder newParent, int index) {
 			if (!raptorItem.getControl().isReparentable()) {
-				Raptor.getInstance()
-						.alert(local.getString("rapWinL1"));
+				Raptor.getInstance().alert(local.getString("rapWinL1"));
 			} else {
 				// This code is quite tricky and must happen in an exact order
 				// or subtle issues occur with tool bars.
@@ -1607,7 +1605,8 @@ public class RaptorWindow extends ApplicationWindow {
 	}
 
 	protected void buildWindowMenu(MenuManager windowMenu) {
-		final MenuManager layoutsMenu = new MenuManager(local.getString("rapWinL14"));
+		final MenuManager layoutsMenu = new MenuManager(
+				local.getString("rapWinL14"));
 		layoutsMenu.add(new Action(local.getString("rapWinL15")) {
 			@Override
 			public void run() {
@@ -1619,7 +1618,10 @@ public class RaptorWindow extends ApplicationWindow {
 
 					layoutsMenu.add(new Action(newLayout.getName(), null) {
 						public void run() {
-							newLayout.apply();
+							if (Raptor.getInstance().confirm(
+									local.getString("rapWinL63"))) {
+								newLayout.apply();
+							}
 						}
 					});
 				}
@@ -1633,12 +1635,16 @@ public class RaptorWindow extends ApplicationWindow {
 
 				fd.setText(local.getString("rapWinL18"));
 				final String directory = fd.open();
-				
+
 				if (!StringUtils.isBlank(directory)) {
-					final String layoutName = Raptor.getInstance().promptForText(local.getString("rapWinL19"));
+					final String layoutName = Raptor.getInstance()
+							.promptForText(local.getString("rapWinL19"));
 					if (StringUtils.isNotBlank(layoutName)) {
-						LayoutService.getInstance().exportCurrentLayout(layoutName,directory);
-						Raptor.getInstance().alert("Exported " + directory + "/" + layoutName + ".properties" );
+						LayoutService.getInstance().exportCurrentLayout(
+								layoutName, directory);
+						Raptor.getInstance().alert(
+								"Exported " + directory + "/" + layoutName
+										+ ".properties");
 
 					}
 				}
@@ -1651,32 +1657,41 @@ public class RaptorWindow extends ApplicationWindow {
 				fd.setFilterPath("");
 
 				fd.setText(local.getString("rapWinL21"));
-				String[] filterExt = { "*.properties"};
+				String[] filterExt = { "*.properties" };
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
-				
+
 				if (!StringUtils.isBlank(selected)) {
-					final Layout layout = LayoutService.getInstance().importLayout(selected);
+					final Layout layout = LayoutService.getInstance()
+							.importLayout(selected);
 					layoutsMenu.add(new Action(layout.getName()) {
 						@Override
 						public void run() {
-							layout.apply();
+							if (Raptor.getInstance().confirm(
+									local.getString("rapWinL63"))) {
+								layout.apply();
+							}
 						}
 					});
-					Raptor.getInstance().alert(local.getString("rapWinL22") + layout.getName() );
+					Raptor.getInstance().alert(
+							local.getString("rapWinL22") + layout.getName());
 				}
-				
+
 			}
 		});
 		layoutsMenu.add(new Separator());
 
-		MenuManager bughouseLayoutsMenu = new MenuManager(local.getString("rapWinL23"));
+		MenuManager bughouseLayoutsMenu = new MenuManager(
+				local.getString("rapWinL23"));
 		Layout[] bughouseLayouts = LayoutService.getInstance()
 				.getBughouoseSystemLayouts();
 		for (final Layout bugLayout : bughouseLayouts) {
 			bughouseLayoutsMenu.add(new Action(bugLayout.getName(), null) {
 				public void run() {
-					bugLayout.apply();
+					if (Raptor.getInstance().confirm(
+							local.getString("rapWinL63"))) {
+						bugLayout.apply();
+					}
 				}
 			});
 		}
@@ -1687,23 +1702,30 @@ public class RaptorWindow extends ApplicationWindow {
 		for (final Layout layout : layouts) {
 			layoutsMenu.add(new Action(layout.getName(), null) {
 				public void run() {
-					layout.apply();
+					if (Raptor.getInstance().confirm(
+							local.getString("rapWinL63"))) {
+						layout.apply();
+					}
 				}
 			});
 		}
 
-		//layoutsMenu.add(new Separator());
+		// layoutsMenu.add(new Separator());
 		Layout[] customLayouts = LayoutService.getInstance().getCustomLayouts();
 		for (final Layout layout : customLayouts) {
 			layoutsMenu.add(new Action(layout.getName(), null) {
 				public void run() {
-					layout.apply();
+					if (Raptor.getInstance().confirm(
+							local.getString("rapWinL63"))) {
+						layout.apply();
+					}
 				}
 			});
 		}
 		windowMenu.add(layoutsMenu);
 
-		final MenuManager themesMenu = new MenuManager(local.getString("rapWinL24"));
+		final MenuManager themesMenu = new MenuManager(
+				local.getString("rapWinL24"));
 		windowMenu.add(themesMenu);
 		themesMenu.add(new Action(local.getString("rapWinL25")) {
 			@Override
@@ -1711,11 +1733,15 @@ public class RaptorWindow extends ApplicationWindow {
 				String themeName = Raptor.getInstance().promptForText(
 						local.getString("rapWinL26"));
 				if (StringUtils.isNotBlank(themeName)) {
-					final Theme newTheme = ThemeService.getInstance().saveCurrentAsTheme(themeName);
+					final Theme newTheme = ThemeService.getInstance()
+							.saveCurrentAsTheme(themeName);
 					themesMenu.add(new Action(newTheme.getName()) {
 						@Override
 						public void run() {
-							ThemeService.getInstance().applyTheme(newTheme);
+							if (Raptor.getInstance().confirm(
+									local.getString("rapWinL62"))) {
+								ThemeService.getInstance().applyTheme(newTheme);
+							}
 						}
 					});
 				}
@@ -1729,12 +1755,16 @@ public class RaptorWindow extends ApplicationWindow {
 
 				fd.setText(local.getString("rapWinL27"));
 				final String directory = fd.open();
-				
+
 				if (!StringUtils.isBlank(directory)) {
-					final String themeName = Raptor.getInstance().promptForText(local.getString("rapWinL28"));
+					final String themeName = Raptor.getInstance()
+							.promptForText(local.getString("rapWinL28"));
 					if (StringUtils.isNotBlank(themeName)) {
-						ThemeService.getInstance().exportCurrentTheme(themeName,directory);
-						Raptor.getInstance().alert("Exported " + directory + "/" + themeName + ".properties" );
+						ThemeService.getInstance().exportCurrentTheme(
+								themeName, directory);
+						Raptor.getInstance().alert(
+								"Exported " + directory + "/" + themeName
+										+ ".properties");
 
 					}
 				}
@@ -1747,25 +1777,30 @@ public class RaptorWindow extends ApplicationWindow {
 				fd.setFilterPath("");
 
 				fd.setText(local.getString("rapWinL29"));
-				String[] filterExt = { "*.properties"};
+				String[] filterExt = { "*.properties" };
 				fd.setFilterExtensions(filterExt);
 				final String selected = fd.open();
-				
+
 				if (!StringUtils.isBlank(selected)) {
-					final Theme theme = ThemeService.getInstance().importTheme(selected);
+					final Theme theme = ThemeService.getInstance().importTheme(
+							selected);
 					themesMenu.add(new Action(theme.getName()) {
 						@Override
 						public void run() {
-							ThemeService.getInstance().applyTheme(theme);
+							if (Raptor.getInstance().confirm(
+									local.getString("rapWinL62"))) {
+								ThemeService.getInstance().applyTheme(theme);
+							}
 						}
 					});
-					Raptor.getInstance().alert("Added theme " + theme.getName() );
+					Raptor.getInstance()
+							.alert("Added theme " + theme.getName());
 				}
-				
+
 			}
 		});
-		
-		themesMenu.add(new Separator());		
+
+		themesMenu.add(new Separator());
 
 		String[] themeNames = ThemeService.getInstance().getThemeNames();
 		for (String themeName : themeNames) {
@@ -1774,7 +1809,10 @@ public class RaptorWindow extends ApplicationWindow {
 			themesMenu.add(new Action(theme.getName()) {
 				@Override
 				public void run() {
-					ThemeService.getInstance().applyTheme(theme);
+					if (Raptor.getInstance().confirm(
+							local.getString("rapWinL62"))) {
+						ThemeService.getInstance().applyTheme(theme);
+					}
 				}
 			});
 		}
@@ -2086,8 +2124,7 @@ public class RaptorWindow extends ApplicationWindow {
 		zoomCombo.add("175%");
 		zoomCombo.add("200%");
 		zoomCombo.add("250%");
-		zoomCombo
-				.setToolTipText(local.getString("rapWinL53"));
+		zoomCombo.setToolTipText(local.getString("rapWinL53"));
 
 		int selection = -1;
 
