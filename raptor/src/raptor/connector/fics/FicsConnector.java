@@ -48,6 +48,7 @@ import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.IcsParser;
 import raptor.connector.ics.IcsUtils;
 import raptor.connector.ics.dialog.IcsLoginDialog;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ConnectorMessageBlockPage;
@@ -71,11 +72,12 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		GameConstants {
+	protected static L10n local = L10n.getInstance();
 	private static final RaptorLogger LOG = RaptorLogger
 			.getLog(FicsConnector.class);
 	protected static final String[][] PROBLEM_ACTIONS = {
-			{ "Tactics", "tell puzzlebot gettactics" },
-			{ "Mate", "tell puzzlebot getmate" },
+			{ local.getString("ficsConn1"), "tell puzzlebot gettactics" },
+			{ local.getString("ficsConn2"), "tell puzzlebot getmate" },
 			{ "separator", "separator" },
 			{
 					getChessPieceCharacter(KING, true)
@@ -283,9 +285,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				new PreferenceNode(
 						"ficsMenuActions",
 						new ActionContainerPage(
-								"Fics Menu URLs",
-								"\tOn this page you can configure the actions shown in the Fics Links "
-										+ "menu. You can add new actions on the Action Scripts Page.",
+								local.getString("ficsConn3"),
+								local.getString("ficsConn4"),
 								RaptorActionContainer.FicsMenu)),
 				new PreferenceNode("fics",
 						new ConnectorMessageBlockPage("fics")),
@@ -477,12 +478,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	 * Creates the connectionsMenu and all of the actions associated with it.
 	 */
 	protected void createMenuActions() {
-		ficsMenu = new MenuManager("&Fics");
-		connectAction = new Action("&Connect") {
+		ficsMenu = new MenuManager(local.getString("ficsConn5"));
+		connectAction = new Action(local.getString("ficsConn6")) {
 			@Override
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(
-						context.getPreferencePrefix(), "Fics Login");
+						context.getPreferencePrefix(), local.getString("ficsConn7"));
 				dialog.open();
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "profile",
@@ -496,14 +497,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action disconnectAction = new Action("&Disconnect") {
+		Action disconnectAction = new Action(local.getString("ficsConn8")) {
 			@Override
 			public void run() {
 				disconnect();
 			}
 		};
 
-		Action reconnectAction = new Action("&Reconnect") {
+		Action reconnectAction = new Action(local.getString("ficsConn9")) {
 			@Override
 			public void run() {
 				disconnect();
@@ -516,41 +517,41 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action seekTableAction = new Action("&Seeks") {
+		Action seekTableAction = new Action(local.getString("ficsConn10")) {
 			@Override
 			public void run() {
 				SWTUtils.openSeekTableWindowItem(FicsConnector.this);
 			}
 		};
 
-		Action bugwhoAction = new Action("Bug Who") {
+		Action bugwhoAction = new Action(local.getString("ficsConn11")) {
 			@Override
 			public void run() {
 				SWTUtils.openBugWhoWindowItem(FicsConnector.this);
 			}
 		};
 
-		Action bugbuttonsAction = new Action("Bug &Buttons") {
+		Action bugbuttonsAction = new Action(local.getString("ficsConn12")) {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(FicsConnector.this);
 			}
 		};
 
-		Action gamesAction = new Action("&Games") {
+		Action gamesAction = new Action(local.getString("ficsConn13")) {
 			@Override
 			public void run() {
 				SWTUtils.openGamesWindowItem(FicsConnector.this);
 			}
 		};
 
-		Action regexTabAction = new Action("&Regular Expression") {
+		Action regexTabAction = new Action(local.getString("ficsConn14")) {
 			@Override
 			public void run() {
 				RegularExpressionEditorDialog regExDialog = new RegularExpressionEditorDialog(
 						Raptor.getInstance().getWindow().getShell(),
-						getShortName() + " Regular Expression Dialog",
-						"Enter the regular expression below:");
+						getShortName() + local.getString("ficsConn15"),
+						local.getString("ficsConn16"));
 				String regEx = regExDialog.open();
 				if (StringUtils.isNotBlank(regEx)) {
 					final RegExController controller = new RegExController(
@@ -566,7 +567,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		autoConnectAction = new Action("Toggle Auto &Login",
+		autoConnectAction = new Action(local.getString("ficsConn17"),
 				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
@@ -577,12 +578,12 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		fics2.connectAction = new Action("&Connect") {
+		fics2.connectAction = new Action(local.getString("ficsConn18")) {
 			@Override
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(
 						context.getPreferencePrefix(),
-						"Fics Simultaneous Login");
+						local.getString("ficsConn19"));
 				if (isConnected()) {
 					dialog.setShowingSimulBug(true);
 				}
@@ -611,14 +612,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action fics2DisconnectAction = new Action("&Disconnect") {
+		Action fics2DisconnectAction = new Action(local.getString("ficsConn8")) {
 			@Override
 			public void run() {
 				fics2.disconnect();
 			}
 		};
 
-		Action fics2ReconnectAction = new Action("&Reconnect") {
+		Action fics2ReconnectAction = new Action(local.getString("ficsConn9")) {
 			@Override
 			public void run() {
 				fics2.disconnect();
@@ -631,34 +632,34 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action fics2SeekTableAction = new Action("&Seeks") {
+		Action fics2SeekTableAction = new Action(local.getString("ficsConn10")) {
 			@Override
 			public void run() {
 				SWTUtils.openSeekTableWindowItem(fics2);
 			}
 		};
 
-		Action fics2GamesAction = new Action("&Games") {
+		Action fics2GamesAction = new Action(local.getString("ficsConn13")) {
 			@Override
 			public void run() {
 				SWTUtils.openGamesWindowItem(fics2);
 			}
 		};
 
-		Action fics2bugwhoAction = new Action("Bug &Who") {
+		Action fics2bugwhoAction = new Action(local.getString("ficsConn11")) {
 			@Override
 			public void run() {
 				SWTUtils.openBugWhoWindowItem(fics2);
 			}
 		};
 
-		Action fics2RegexTabAction = new Action("&Regular Expression") {
+		Action fics2RegexTabAction = new Action(local.getString("ficsConn14")) {
 			@Override
 			public void run() {
 				RegularExpressionEditorDialog regExDialog = new RegularExpressionEditorDialog(
 						Raptor.getInstance().getWindow().getShell(),
-						getShortName() + " Regular Expression Dialog",
-						"Enter the regular expression below:");
+						getShortName() + local.getString("ficsConn15"),
+						local.getString("ficsConn16"));
 				String regEx = regExDialog.open();
 				if (StringUtils.isNotBlank(regEx)) {
 					final RegExController controller = new RegExController(
@@ -674,14 +675,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		Action fics2BugbuttonsAction = new Action("Bughouse &Buttons") {
+		Action fics2BugbuttonsAction = new Action(local.getString("ficsConn20")) {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(fics2);
 			}
 		};
 
-		Action showSeekDialogAction = new Action("Seek A Game") {
+		Action showSeekDialogAction = new Action(local.getString("ficsConn21")) {
 			public void run() {
 				FicsSeekDialog dialog = new FicsSeekDialog(Raptor.getInstance()
 						.getWindow().getShell());
@@ -692,7 +693,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		MenuManager actions = new MenuManager("Actions");
+		MenuManager actions = new MenuManager(local.getString("ficsConn22"));
 
 		RaptorAction[] scripts = ActionScriptService.getInstance().getActions(
 				Category.IcsCommands);
@@ -756,7 +757,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 		MenuManager fics2Menu = new MenuManager(
 				"&Another Simultaneous Connection");
-		MenuManager fics2TabsMenu = new MenuManager("&Tabs");
+		MenuManager fics2TabsMenu = new MenuManager(local.getString("ficsConn23"));
 		fics2Menu.add(fics2.connectAction);
 		fics2Menu.add(fics2DisconnectAction);
 		fics2Menu.add(fics2ReconnectAction);
@@ -773,7 +774,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 		ficsMenu.add(new Separator());
 		ficsMenu.add(actions);
-		MenuManager tabsMenu = new MenuManager("&Tabs");
+		MenuManager tabsMenu = new MenuManager(local.getString("ficsConn23"));
 		tabsMenu.add(gamesAction);
 		tabsMenu.add(seekTableAction);
 		tabsMenu.add(new Separator());
@@ -782,7 +783,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		tabsMenu.add(new Separator());
 		tabsMenu.add(regexTabAction);
 		ficsMenu.add(tabsMenu);
-		MenuManager linksMenu = new MenuManager("&Links");
+		MenuManager linksMenu = new MenuManager(local.getString("ficsConn24"));
 		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
 				.getActions(RaptorActionContainer.FicsMenu);
 		for (final RaptorAction raptorAction : ficsMenuActions) {
@@ -801,7 +802,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		}
 		ficsMenu.add(linksMenu);
-		MenuManager problems = new MenuManager("&Puzzles");
+		MenuManager problems = new MenuManager(local.getString("ficsConn25"));
 		addProblemActions(problems);
 		ficsMenu.add(problems);
 		ficsMenu.add(showSeekDialogAction);
@@ -812,7 +813,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				new IcsConnectorContext(new IcsParser(false)) {
 					@Override
 					public String getDescription() {
-						return "Free Internet Chess Server Another Simultaneous Connection";
+						return local.getString("ficsConn26");
 					}
 
 					@Override
