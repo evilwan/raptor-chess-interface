@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -40,7 +41,10 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.layout.ClassicLayout;
 import raptor.service.SeekService.SeekType;
+import raptor.service.ThemeService;
+import raptor.service.ThemeService.Theme;
 import raptor.swt.BugPartners;
 import raptor.swt.GamesWindowItem;
 import raptor.swt.SWTUtils;
@@ -391,6 +395,26 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		return RaptorStringUtils.stringArrayFromString(getString(key));
 	}
 
+	public void applyDefaultTheme() {
+		Theme theme = ThemeService.getInstance().getTheme("Raptor");
+		for (String propertyName : theme.getProperties().keySet()) {
+			setDefault(propertyName, theme.getProperties().get(propertyName));
+		}
+	}
+
+	public void applyDefaultLayout() {
+		Map<String, String> map = new ClassicLayout()
+				.getPreferenceAdjustments();
+		for (String key : map.keySet()) {
+			String value = map.get(key);
+			if (value == null) {
+				setToDefault(key);
+			} else {
+				setDefault(key, map.get(key));
+			}
+		}
+	}
+
 	public void loadDefaults() {
 		defaultFontName = Raptor.getInstance().getFontRegistry().defaultFont()
 				.getFontData()[0].getName();
@@ -439,13 +463,14 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
-		setDefault(APP_QUAD9_QUAD12345678_SASH_WEIGHTS, new int[] { 10, 90 });
-		setDefault(APP_QUAD1_QUAD2345678_SASH_WEIGHTS, new int[] { 50, 50 });
-		setDefault(APP_QUAD2345_QUAD678_SASH_WEIGHTS, new int[] { 70, 30 });
-		setDefault(APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS, new int[] { 25,
-				25, 25, 25 });
-		setDefault(APP_QUAD67_QUAD8_SASH_WEIGHTS, new int[] { 70, 30 });
-		setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
+		// setDefault(APP_QUAD9_QUAD12345678_SASH_WEIGHTS, new int[] { 10, 90
+		// });
+		// setDefault(APP_QUAD1_QUAD2345678_SASH_WEIGHTS, new int[] { 50, 50 });
+		// setDefault(APP_QUAD2345_QUAD678_SASH_WEIGHTS, new int[] { 70, 30 });
+		// setDefault(APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS, new int[] { 25,
+		// 25, 25, 25 });
+		// setDefault(APP_QUAD67_QUAD8_SASH_WEIGHTS, new int[] { 70, 30 });
+		// setDefault(APP_QUAD6_QUAD7_SASH_WEIGHTS, new int[] { 50, 50 });
 		setDefault(APP_ZOOM_FACTOR, 1.0);
 
 		if (OSUtils.isLikelyWindows() && !OSUtils.isLikelyWindows7()) {
@@ -510,28 +535,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT,
 				SquareBackgroundImageEffect.RandomCrop.toString());
 		setDefault(BOARD_TRAVERSE_WITH_MOUSE_WHEEL, true);
-
-		PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new RGB(0,
-				0, 0));
-		PreferenceConverter.setDefault(this, BOARD_COORDINATES_COLOR, new RGB(
-				0, 0, 0));
-		PreferenceConverter.setDefault(this, BOARD_ACTIVE_CLOCK_COLOR, new RGB(
-				0, 255, 0));
-		PreferenceConverter.setDefault(this, BOARD_INACTIVE_CLOCK_COLOR,
-				new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this, BOARD_CONTROL_COLOR, new RGB(128,
-				128, 128));
-		PreferenceConverter.setDefault(this, BOARD_LAG_OVER_20_SEC_COLOR,
-				new RGB(255, 0, 0));
-		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_LABEL_COLOR,
-				new RGB(0, 255, 0));
-		PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_BACKGROUND_COLOR,
-				new RGB(0, 0, 0));
-		PreferenceConverter
-				.setDefault(this, BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR,
-						new RGB(0, 153, 197));
-		PreferenceConverter.setDefault(this,
-				BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 0, 0));
 
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName,
@@ -661,14 +664,16 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(GAMES_TABLE_SHOW_PRIVATE, true);
 
 		// Arrows
-		PreferenceConverter.setDefault(this, ARROW_OBS_OPP_COLOR, new RGB(255,
-				0, 255));
-		PreferenceConverter
-				.setDefault(this, ARROW_MY_COLOR, new RGB(0, 0, 255));
-		PreferenceConverter.setDefault(this, ARROW_PREMOVE_COLOR, new RGB(0, 0,
-				255));
-		PreferenceConverter.setDefault(this, ARROW_OBS_COLOR,
-				new RGB(0, 0, 255));
+		// PreferenceConverter.setDefault(this, ARROW_OBS_OPP_COLOR, new
+		// RGB(255,
+		// 0, 255));
+		// PreferenceConverter
+		// .setDefault(this, ARROW_MY_COLOR, new RGB(0, 0, 255));
+		// PreferenceConverter.setDefault(this, ARROW_PREMOVE_COLOR, new RGB(0,
+		// 0,
+		// 255));
+		// PreferenceConverter.setDefault(this, ARROW_OBS_COLOR,
+		// new RGB(0, 0, 255));
 		setDefault(ARROW_SHOW_ON_OBS_AND_OPP_MOVES, true);
 		setDefault(ARROW_SHOW_ON_MOVE_LIST_MOVES, true);
 		setDefault(ARROW_SHOW_ON_MY_PREMOVES, true);
@@ -678,14 +683,18 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ARROW_WIDTH_PERCENTAGE, 15);
 
 		// Highlights
-		PreferenceConverter.setDefault(this, HIGHLIGHT_OBS_OPP_COLOR, new RGB(
-				255, 0, 255));
-		PreferenceConverter.setDefault(this, HIGHLIGHT_MY_COLOR, new RGB(0, 0,
-				255));
-		PreferenceConverter.setDefault(this, HIGHLIGHT_PREMOVE_COLOR, new RGB(
-				0, 0, 255));
-		PreferenceConverter.setDefault(this, HIGHLIGHT_OBS_COLOR, new RGB(0, 0,
-				255));
+		// PreferenceConverter.setDefault(this, HIGHLIGHT_OBS_OPP_COLOR, new
+		// RGB(
+		// 255, 0, 255));
+		// PreferenceConverter.setDefault(this, HIGHLIGHT_MY_COLOR, new RGB(0,
+		// 0,
+		// 255));
+		// PreferenceConverter.setDefault(this, HIGHLIGHT_PREMOVE_COLOR, new
+		// RGB(
+		// 0, 0, 255));
+		// PreferenceConverter.setDefault(this, HIGHLIGHT_OBS_COLOR, new RGB(0,
+		// 0,
+		// 255));
 		setDefault(HIGHLIGHT_SHOW_ON_OBS_AND_OPP_MOVES, true);
 		setDefault(HIGHLIGHT_SHOW_ON_MOVE_LIST_MOVES, true);
 		setDefault(HIGHLIGHT_SHOW_ON_MY_PREMOVES, true);
@@ -695,7 +704,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(HIGHLIGHT_WIDTH_PERCENTAGE, 3);
 
 		// Game Results
-		PreferenceConverter.setDefault(this, RESULTS_COLOR, new RGB(255, 0, 0));
+		// PreferenceConverter.setDefault(this, RESULTS_COLOR, new RGB(255, 0,
+		// 0));
 		PreferenceConverter.setDefault(this, RESULTS_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName, 40,
 						SWT.BOLD) });
@@ -731,95 +741,116 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				new FontData[] { new FontData(defaultMonospacedFontName,
 						defaultMediumFontSize, 0) });
 
-		PreferenceConverter.setDefault(this, CHAT_INPUT_BACKGROUND_COLOR,
-				new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(this, CHAT_CONSOLE_BACKGROUND_COLOR,
-				new RGB(0, 0, 0));
-		PreferenceConverter.setDefault(this, CHAT_INPUT_DEFAULT_TEXT_COLOR,
-				new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this, CHAT_OUTPUT_BACKGROUND_COLOR,
-				new RGB(255, 255, 255));
-		PreferenceConverter.setDefault(this, CHAT_OUTPUT_TEXT_COLOR, new RGB(0,
-				0, 0));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHALLENGE
-						+ "-color", new RGB(100, 149, 237));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CSHOUT
-						+ "-color", new RGB(221, 160, 221));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.SHOUT
-						+ "-color", new RGB(221, 160, 221));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.KIBITZ
-						+ "-color", new RGB(100, 149, 237));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.WHISPER
-						+ "-color", new RGB(100, 149, 237));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.OUTBOUND
-						+ "-color", new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.PARTNER_TELL
-						+ "-color", new RGB(255, 0, 0));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.DRAW_REQUEST
-						+ "-color", new RGB(255, 0, 0));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.ABORT_REQUEST
-						+ "-color", new RGB(255, 0, 0));
-		PreferenceConverter
-				.setDefault(this, CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.TELL + "-color", new RGB(255, 0, 0));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
-						+ "-" + 1 + "-color", new RGB(255, 200, 0));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
-						+ "-" + 4 + "-color", new RGB(0, 255, 0));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
-						+ "-" + 50 + "-color", new RGB(255, 175, 175));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
-						+ "-" + 53 + "-color", new RGB(255, 0, 255));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.INTERNAL
-						+ "-color", new RGB(255, 0, 0));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.PLAYING_STATISTICS + "-color", new RGB(100,
-						149, 237));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.QTELL
-						+ "-color", new RGB(128, 128, 128));
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.FINGER
-						+ "-color", new RGB(128, 128, 128));
+		applyDefaultTheme();
+		applyDefaultLayout();
 
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.HISTORY
-						+ "-color", new RGB(128, 128, 128));
-
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.GAMES
-						+ "-color", new RGB(128, 128, 128));
-
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.BUGWHO_ALL
-						+ "-color", new RGB(128, 128, 128));
-
-		PreferenceConverter.setDefault(this,
-				CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
-						+ ChatType.NOTIFICATION_ARRIVAL + "-color", new RGB(
-						255, 0, 0));
-
-		PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
-				128, 128));
-		PreferenceConverter.setDefault(this, CHAT_QUOTE_UNDERLINE_COLOR,
-				new RGB(0, 255, 0));
-		PreferenceConverter.setDefault(this, CHAT_LINK_UNDERLINE_COLOR,
-				new RGB(11, 133, 238));
+		//
+		// PreferenceConverter.setDefault(this, BOARD_BACKGROUND_COLOR, new
+		// RGB(0,
+		// 0, 0));
+		// PreferenceConverter.setDefault(this, BOARD_COORDINATES_COLOR, new
+		// RGB(
+		// 0, 0, 0));
+		// PreferenceConverter.setDefault(this, BOARD_ACTIVE_CLOCK_COLOR, new
+		// RGB(
+		// 0, 255, 0));
+		// PreferenceConverter.setDefault(this, BOARD_INACTIVE_CLOCK_COLOR,
+		// new RGB(128, 128, 128));
+		// PreferenceConverter.setDefault(this, BOARD_CONTROL_COLOR, new
+		// RGB(128,
+		// 128, 128));
+		// PreferenceConverter.setDefault(this, BOARD_LAG_OVER_20_SEC_COLOR,
+		// new RGB(255, 0, 0));
+		// PreferenceConverter.setDefault(this, BOARD_PIECE_JAIL_LABEL_COLOR,
+		// new RGB(0, 255, 0));
+		// PreferenceConverter.setDefault(this,
+		// BOARD_PIECE_JAIL_BACKGROUND_COLOR,
+		// new RGB(0, 0, 0));
+		// PreferenceConverter
+		// .setDefault(this, BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR,
+		// new RGB(0, 153, 197));
+		// PreferenceConverter.setDefault(this,
+		// BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 0, 0));
+		//
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHALLENGE
+		// + "-color", new RGB(100, 149, 237));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CSHOUT
+		// + "-color", new RGB(221, 160, 221));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.SHOUT
+		// + "-color", new RGB(221, 160, 221));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.KIBITZ
+		// + "-color", new RGB(100, 149, 237));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.WHISPER
+		// + "-color", new RGB(100, 149, 237));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.OUTBOUND
+		// + "-color", new RGB(128, 128, 128));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.PARTNER_TELL
+		// + "-color", new RGB(255, 0, 0));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.DRAW_REQUEST
+		// + "-color", new RGB(255, 0, 0));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.ABORT_REQUEST
+		// + "-color", new RGB(255, 0, 0));
+		// PreferenceConverter
+		// .setDefault(this, CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+		// + ChatType.TELL + "-color", new RGB(255, 0, 0));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
+		// + "-" + 1 + "-color", new RGB(255, 200, 0));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
+		// + "-" + 4 + "-color", new RGB(0, 255, 0));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
+		// + "-" + 50 + "-color", new RGB(255, 175, 175));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHANNEL_TELL
+		// + "-" + 53 + "-color", new RGB(255, 0, 255));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.INTERNAL
+		// + "-color", new RGB(255, 0, 0));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+		// + ChatType.PLAYING_STATISTICS + "-color", new RGB(100,
+		// 149, 237));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.QTELL
+		// + "-color", new RGB(128, 128, 128));
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.FINGER
+		// + "-color", new RGB(128, 128, 128));
+		//
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.HISTORY
+		// + "-color", new RGB(128, 128, 128));
+		//
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.GAMES
+		// + "-color", new RGB(128, 128, 128));
+		//
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.BUGWHO_ALL
+		// + "-color", new RGB(128, 128, 128));
+		//
+		// PreferenceConverter.setDefault(this,
+		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO
+		// + ChatType.NOTIFICATION_ARRIVAL + "-color", new RGB(
+		// 255, 0, 0));
+		//
+		// PreferenceConverter.setDefault(this, CHAT_PROMPT_COLOR, new RGB(128,
+		// 128, 128));
+		// PreferenceConverter.setDefault(this, CHAT_QUOTE_UNDERLINE_COLOR,
+		// new RGB(0, 255, 0));
+		// PreferenceConverter.setDefault(this, CHAT_LINK_UNDERLINE_COLOR,
+		// new RGB(11, 133, 238));
 
 		// Bug house buttons settings.
 		PreferenceConverter.setDefault(this, BUG_BUTTONS_FONT,

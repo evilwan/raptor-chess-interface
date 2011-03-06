@@ -94,6 +94,8 @@ public abstract class AbstractLayout implements Layout {
 			Map<String, String> preferenceAdjustments) {
 		this.preferenceAdjustments = preferenceAdjustments;
 	}
+	
+
 
 	public void apply() {
 		for (String key : preferenceAdjustments.keySet()) {

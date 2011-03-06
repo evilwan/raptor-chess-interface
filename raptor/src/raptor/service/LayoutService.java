@@ -132,6 +132,10 @@ public class LayoutService {
 		return customLayouts.toArray(new CustomLayout[0]);
 
 	}
+	
+	public Layout getDefaultLayout() {
+		return new ClassicLayout();
+	}
 
 	public void exportCurrentLayout(String layoutName, String directory) {
 		CustomLayout layout = CustomLayout.createFromCurrentSettings();

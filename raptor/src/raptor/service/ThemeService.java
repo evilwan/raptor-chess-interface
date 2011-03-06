@@ -160,6 +160,7 @@ public class ThemeService {
 		saveTheme(theme);
 		return theme;
 	}
+	
 
 	public void applyTheme(Theme theme) {
 		// Remove all channel color presets before applying the theme.
@@ -390,6 +391,9 @@ public class ThemeService {
 	}
 
 	public Theme getTheme(String name) {
+		for (String themeName : getThemeNames()) {
+			System.err.println(themeName);
+		}
 		return themeMap.get(name);
 	}
 
