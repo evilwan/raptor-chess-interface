@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="64px"
+   height="64px"
+   id="svg2816"
+   version="1.1"
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="br.svg">
+  <defs
+     id="defs2818">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 32 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="64 : 32 : 1"
+       inkscape:persp3d-origin="32 : 21.333333 : 1"
+       id="perspective2824" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.5"
+     inkscape:cx="32"
+     inkscape:cy="32"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:document-units="px"
+     inkscape:grid-bbox="true"
+     inkscape:window-width="1365"
+     inkscape:window-height="878"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata2821">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer">
+    <text
+       xml:space="preserve"
+       style="font-size:64px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;font-family:Chess Alpha;-inkscape-font-specification:Chess Alpha"
+       x="0.54545456"
+       y="63.272728"
+       id="text2826"><tspan
+         sodipodi:role="line"
+         id="tspan2828"
+         x="0.54545456"
+         y="63.272728">t</tspan></text>
+    <path
+       style="fill:#ffffff"
+       d="m 20.729274,45.536364 c 0.0011,-0.375 0.05271,-0.988637 0.114698,-1.363637 l 0.112698,-0.681818 11.588785,0 11.588785,0 0.112696,0.681818 c 0.06198,0.375 0.113599,0.988637 0.114699,1.363637 l 0.002,0.681818 -11.818181,0 -11.818182,0 0.002,-0.681818 z"
+       id="path3204" />
+    <path
+       style="fill:#ffffff"
+       d="M 22.246937,25.172727 C 22.30892,24.797727 22.360535,24.225 22.361635,23.9 l 0.002,-0.590909 10.181819,0 10.181818,0 0.002,0.590909 c 0.0011,0.325 0.05271,0.897727 0.114698,1.272727 l 0.112698,0.681818 -10.411214,0 -10.411216,0 0.112698,-0.681818 z"
+       id="path3206" />
+  </g>
+</svg>
