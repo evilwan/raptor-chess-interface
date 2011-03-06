@@ -1870,7 +1870,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 */
 	public void messageArrived(StringBuilder buffer) {
 
-		System.err.println("Message arrived (buffer): " + buffer);
+		//System.err.println("Message arrived (buffer): " + buffer);
 
 		if (lastSendPingTime != 0 && (lagNotifyCounter % 10 == 0)) {
 			ThreadService.getInstance().run(new Runnable() {
