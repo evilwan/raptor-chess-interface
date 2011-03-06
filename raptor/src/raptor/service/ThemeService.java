@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.action.Action;
 
 import raptor.Raptor;
 import raptor.chat.ChatType;
