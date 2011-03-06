@@ -257,6 +257,7 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
+		System.err.println("canUserInitiateMoveFrom " + squareId);
 		return false;
 	}
 

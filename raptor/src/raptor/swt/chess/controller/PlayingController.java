@@ -396,6 +396,18 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	/**
+	 * Handles premove dropping in bughouse.
+	 */
+	public boolean canUserInitiateMoveFromEmptySquare(int squareId) {
+		if (isBughouse() && ChessBoardUtils.isPieceJailSquare(squareId)) {
+			return isUserWhite && ChessBoardUtils.isJailSquareWhitePiece(squareId)
+					|| !isUserWhite && ChessBoardUtils.isJailSquareBlackPiece(squareId);
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Invoked when the user tries to start a dnd or click click move operation
 	 * on the board. This method returns false if its not allowed.
 	 * 
@@ -695,6 +707,36 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	/**
+	 * Returns true if the from square to square represents a premove drop.
+	 * @param fromSquare The from square.
+	 * @param toSquare The true square.
+	 * @return True if premove drop, otherwise false.
+	 */
+	protected boolean isPremoveDrop(int fromSquare, int toSquare) {
+		return isBughouse() && ChessBoardUtils.isPieceJailSquare(fromSquare)
+				&& board.getSquare(fromSquare).getPiece() == EMPTY;
+	}
+
+	/**
+	 * Handles making a premove drop.
+	 * @param fromSquare The from square.
+	 * @param toSquare The true square.
+	 */
+	protected void handlePremoveDrop(int fromSquare, int toSquare) {
+		PremoveInfo premoveInfo = new PremoveInfo();
+		premoveInfo.isPremoveDrop = true;
+		premoveInfo.toSquare = toSquare;
+		premoveInfo.fromSquare = fromSquare;
+		premoveInfo.fromPiece = ChessBoardUtils
+				.pieceJailSquareToPiece(fromSquare);
+		premoves.add(premoveInfo);
+		adjustPremoveLabelHighlightsAndArrows();
+		board.unhidePieces();
+		refreshBoard();
+		return;
+	}
+
+	/**
 	 * Invoked when a user makes a dnd move or a click click move on the
 	 * chessboard.
 	 */
@@ -724,6 +766,9 @@ public class PlayingController extends ChessBoardController {
 					LOG.debug("User tried to make a move where from square == to square or toSquar was the piece jail.");
 				}
 				adjustForIllegalMove(fromSquare, toSquare, false);
+				return;
+			} else if (isPremoveDrop(fromSquare, toSquare)) {
+				handlePremoveDrop(fromSquare, toSquare);
 				return;
 			}
 
@@ -780,6 +825,9 @@ public class PlayingController extends ChessBoardController {
 				}
 
 				adjustForIllegalMove(fromSquare, toSquare, false);
+				return;
+			} else if (isPremoveDrop(fromSquare, toSquare)) {
+				handlePremoveDrop(fromSquare, toSquare);
 				return;
 			}
 
