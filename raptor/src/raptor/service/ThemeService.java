@@ -390,9 +390,6 @@ public class ThemeService {
 	}
 
 	public Theme getTheme(String name) {
-		for (String themeName : getThemeNames()) {
-			System.err.println(themeName);
-		}
 		return themeMap.get(name);
 	}
 
