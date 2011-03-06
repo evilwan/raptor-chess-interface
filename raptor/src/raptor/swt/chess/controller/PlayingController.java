@@ -733,6 +733,17 @@ public class PlayingController extends ChessBoardController {
 		refreshBoard();
 		return;
 	}
+	
+	/**
+	 * Removes all of the premove drops from premoves.
+	 */
+	protected void removeAllPremoveDrops() {
+		for (PremoveInfo info : premoves.toArray(new PremoveInfo[0])) {
+			if (info.isPremoveDrop) {
+				premoves.remove(info);
+			}
+		}
+	}
 
 	/**
 	 * Invoked when a user makes a dnd move or a click click move on the
@@ -804,6 +815,7 @@ public class PlayingController extends ChessBoardController {
 					adjustForIllegalMove("Illegal Move: " + move.toString(),
 							false);
 				}
+				removeAllPremoveDrops();
 			}
 
 		} else if (isPremoveable()) {
@@ -1055,7 +1067,7 @@ public class PlayingController extends ChessBoardController {
 				Move move = null;
 				try {
 					if (info.isPremoveDrop) {
-						premovesToRemove.add(info);
+						//premovesToRemove.add(info);
 						continue;
 					} else if (info.promotionColorlessPiece == EMPTY) {
 						move = game.makeMove(info.fromSquare, info.toSquare);
