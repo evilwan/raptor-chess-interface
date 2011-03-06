@@ -191,8 +191,9 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 								+ numRead + " bytes.");
 					}
 					
-					System.err.println("Raw in: " + new String(buffer, 0,
-							numRead));
+
+					// System.err.println("Raw in: " + new String(buffer, 0,
+					// numRead));
 
 					String text = isTimesealOn ? handleTimeseal(new String(
 							buffer, 0, numRead)) : new String(buffer, 0,
