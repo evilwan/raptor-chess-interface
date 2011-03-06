@@ -229,8 +229,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			Game game = controller.getGame();
 			int moveListSize = game.getMoveList().getSize();
 			if (moveListSize == 0 && textPanel.getCharCount() != 0) {
-				textPanel.replaceTextRange(movesTextStart, textPanel
-						.getCharCount(), "");
+				textPanel.setText("");
 			} else {
 				if (moveListSize == moveNodes.size()) {
 					if (!lastMoveSan.equals(game
