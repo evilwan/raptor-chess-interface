@@ -535,6 +535,13 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(BOARD_SQUARE_BACKGROUND_IMAGE_EFFECT,
 				SquareBackgroundImageEffect.RandomCrop.toString());
 		setDefault(BOARD_TRAVERSE_WITH_MOUSE_WHEEL, true);
+		
+		
+		PreferenceConverter
+				.setDefault(this, BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR,
+						new RGB(0, 153, 197));
+		PreferenceConverter.setDefault(this,
+				BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 0, 0));
 
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName,
@@ -766,12 +773,6 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		// PreferenceConverter.setDefault(this,
 		// BOARD_PIECE_JAIL_BACKGROUND_COLOR,
 		// new RGB(0, 0, 0));
-		// PreferenceConverter
-		// .setDefault(this, BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR,
-		// new RGB(0, 153, 197));
-		// PreferenceConverter.setDefault(this,
-		// BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 0, 0));
-		//
 		// PreferenceConverter.setDefault(this,
 		// CHAT_CHAT_EVENT_TYPE_COLOR_APPEND_TO + ChatType.CHALLENGE
 		// + "-color", new RGB(100, 149, 237));
