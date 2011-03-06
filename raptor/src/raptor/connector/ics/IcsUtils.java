@@ -359,7 +359,6 @@ public class IcsUtils implements GameConstants {
 	public static Game createGame(G1Message g1, Style12Message style12,
 			boolean isBics) {
 		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);
-		System.err.println("Style 12 relation = " + style12.relation);
 		
 		Game result = createGameFromVariant(variant, style12, isBics);
 		result.setId(g1.gameId);
