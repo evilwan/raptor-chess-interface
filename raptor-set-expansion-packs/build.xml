@@ -45,6 +45,13 @@
 				<exclude name=".svn" />
 			</zipfileset>
 		</zip>
+		<zip destfile="build/dist/ChessSet_Glass.zip">
+			<zipfileset dir="sets/Glass" prefix="Glass" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>		
 		<zip destfile="build/dist/ChessSet_JinAlpha.zip">
 			<zipfileset dir="sets/JinAlpha" prefix="JinAlpha" dirmode="777" filemode="755">
 				<include name="**/*" />
