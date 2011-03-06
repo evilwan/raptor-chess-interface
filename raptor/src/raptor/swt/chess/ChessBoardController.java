@@ -245,6 +245,14 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * Returns true if a user can begin making a move from the specified square.
 	 */
 	public abstract boolean canUserInitiateMoveFrom(int squareId);
+	
+	/**
+	 * Returns true if a user can begin making a move from the specified square.
+	 * The default implementation always returns false.
+	 */
+	public boolean canUserInitiateMoveFromEmptySquare(int squareId) {
+		return false;
+	}
 
 	/**
 	 * Confirms closing of the window the game is being viewed in. Default is to

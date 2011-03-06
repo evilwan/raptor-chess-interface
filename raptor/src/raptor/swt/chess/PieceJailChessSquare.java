@@ -14,6 +14,7 @@
 package raptor.swt.chess;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Point;
@@ -89,6 +90,27 @@ public class PieceJailChessSquare extends ChessSquare {
 		ignorePaint = true;
 		this.pieceJailPiece = pieceJailPiece;
 		addPaintListener(paintListener);
+	}
+	
+	/**
+	 * Updates the cursor for a drag with the specified piece.
+	 */
+	protected void updateCursorForDrag(int piece) {
+		if (getPreferences().getBoolean(
+				PreferenceKeys.BOARD_IS_USING_CROSSHAIRS_CURSOR)) {
+			getShell().setCursor(
+					Raptor.getInstance().getDisplay()
+							.getSystemCursor(SWT.CURSOR_CROSS));
+		} else if (piece != EMPTY){
+			int imageSide = getImageSize();
+			getShell().setCursor(
+					ChessBoardUtils.getCursorForPiece(piece, imageSide));
+		}
+		else if (piece == EMPTY) {
+			int imageSide = getImageSize();
+			getShell().setCursor(
+					ChessBoardUtils.getCursorForPiece(ChessBoardUtils.pieceJailSquareToPiece(getId()),imageSide));
+		}
 	}
 
 	/**

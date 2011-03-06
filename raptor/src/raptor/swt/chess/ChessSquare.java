@@ -95,6 +95,14 @@ public class ChessSquare extends Canvas implements BoardConstants {
 					board.getControl().setData(DROP_HANDLED, false);
 					updateCursorForDrag(piece);
 					board.controller.userInitiatedMove(id);
+				} else if (piece == EMPTY
+						&& board.getController()
+								.canUserInitiateMoveFromEmptySquare(id)) {
+					board.getControl()
+							.setData(DRAG_INITIATOR, ChessSquare.this);
+					board.getControl().setData(DROP_HANDLED, false);
+					updateCursorForDrag(piece);
+					board.controller.userInitiatedMove(id);
 				} else {
 					board.getControl().setData(DRAG_INITIATOR, null);
 					board.getControl().setData(DROP_HANDLED, false);
