@@ -1,0 +1,1 @@
+Gorgonian built this in inkscape from a TTS font. You need it installed to generate the pngs properly.
