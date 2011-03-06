@@ -167,7 +167,8 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 	 * @throws IOException
 	 */
 	protected String handleTimeseal(String text) throws IOException {
-		String result = text.replace("[G]\0", "").replace("\n\r[G]\n\r", "");
+		//text.replace("[G]\0", "") TIMESEAL 2.
+		String result = text.replace("\n\r[G]\n\r", "");
 		if (result.length() != text.length()) {
 			sendAck();
 		}
@@ -181,6 +182,7 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 	protected void messageLoop() {
 		try {
 			while (isConnected()) {
+				//long start = System.currentTimeMillis();
 				byte[] buffer = new byte[40000];
 				int numRead = socket.getInputStream().read(buffer);
 				if (numRead > 0) {
@@ -188,6 +190,9 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 						LOG.debug("TimesealSocketMessageProducer " + "Read "
 								+ numRead + " bytes.");
 					}
+					
+					System.err.println("Raw in: " + new String(buffer, 0,
+							numRead));
 
 					String text = isTimesealOn ? handleTimeseal(new String(
 							buffer, 0, numRead)) : new String(buffer, 0,
@@ -206,6 +211,7 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 					close();
 					break;
 				}
+				//System.err.println("Processed message in " + (System.currentTimeMillis() - start));
 			}
 			LOG.debug("TimesealSocketMessageProducer "
 					+ "Not connected disconnecting.");
