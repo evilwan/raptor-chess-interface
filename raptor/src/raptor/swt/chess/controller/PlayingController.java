@@ -423,8 +423,6 @@ public class PlayingController extends ChessBoardController {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("canUserInitiateMoveFrom " + getSan(squareId));
 		}
-		System.err.println("canUserInitiateMoveFrom " + squareId);
-
 		if (!isUsersMove()) {
 			if (isPremoveable()) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)
