@@ -190,6 +190,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 
 	protected boolean isSimulBugConnector = false;
 
+	protected long lagNotifyCounter = 0;
+
 	protected String simulBugPartnerName;
 	protected Runnable keepAlive = new Runnable() {
 		public void run() {
@@ -1868,7 +1870,9 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 */
 	public void messageArrived(StringBuilder buffer) {
 
-		if (lastSendPingTime != 0) {
+		System.err.println("Message arrived (buffer): " + buffer);
+
+		if (lastSendPingTime != 0 && (lagNotifyCounter % 10 == 0)) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
 					long currentTime = System.currentTimeMillis();
@@ -1990,28 +1994,27 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 * message will always use \n as the line delimiter.
 	 */
 	protected void parseMessage(final String message) {
-		ThreadService.getInstance().run(new Runnable() {
-			public void run() {
-				String filteredMessage = filterTrailingPrompts(message);
-				ChatEvent[] events = null;
-				try {
-					events = context.getParser().parse(filteredMessage);
-				} catch (RuntimeException re) {
-					throw new RuntimeException(
-							"Error occured parsing message: " + message, re);
-				}
+		try {
+			String filteredMessage = filterTrailingPrompts(message);
+			
+			//This call will handle all game events, and return back a list of ChatEvents to process.
+			final ChatEvent[] events = context.getParser().parse(
+					filteredMessage);
 
-				for (ChatEvent event : events) {
-					event.setMessage(IcsUtils.maciejgFormatToUnicode(event
-							.getMessage()));
-					publishEvent(event);
-				}
-			}
+			ThreadService.getInstance().run(new Runnable() {
+				public void run() {
 
-			public String toString() {
-				return "IcsConnector.parseMessage runnable";
-			}
-		});
+					for (ChatEvent event : events) {
+						event.setMessage(IcsUtils.maciejgFormatToUnicode(event
+								.getMessage()));
+						publishEvent(event);
+					}
+				}
+			});
+		} catch (RuntimeException re) {
+			throw new RuntimeException("Error occured parsing message: "
+					+ message, re);
+		}
 	}
 
 	/**
