@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -12,12 +13,19 @@
    height="45"
    id="svg3128"
    sodipodi:version="0.32"
-   inkscape:version="0.44.1"
+   inkscape:version="0.47 r22583"
    version="1.0"
-   sodipodi:docbase="/home/cburnett/wikipedia/images/chess"
-   sodipodi:docname="Chess pdt45.svg">
+   sodipodi:docname="bp.svg">
   <defs
-     id="defs3130" />
+     id="defs3130">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 22.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="45 : 22.5 : 1"
+       inkscape:persp3d-origin="22.5 : 15 : 1"
+       id="perspective8" />
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -37,12 +45,24 @@
      width="45px"
      inkscape:grid-points="true"
      showgrid="true"
-     inkscape:window-width="977"
-     inkscape:window-height="965"
-     inkscape:window-x="0"
-     inkscape:window-y="31"
-     gridspacingx="0.5px"
-     gridspacingy="0.5px" />
+     inkscape:window-width="1365"
+     inkscape:window-height="878"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       id="GridFromPre046Settings"
+       type="xygrid"
+       originx="0px"
+       originy="0px"
+       spacingx="0.5px"
+       spacingy="0.5px"
+       color="#0000ff"
+       empcolor="#0000ff"
+       opacity="0.2"
+       empopacity="0.4"
+       empspacing="5" />
+  </sodipodi:namedview>
   <metadata
      id="metadata3133">
     <rdf:RDF>
@@ -62,5 +82,9 @@
        style="opacity:1;fill:#2B2B3C;fill-opacity:1;fill-rule:nonzero;stroke:#303042;stroke-width:1;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:10;stroke-opacity:1"
        d="M 22 9 C 19.792 9 18 10.792 18 13 C 18 13.885103 18.29397 14.712226 18.78125 15.375 C 16.829274 16.496917 15.5 18.588492 15.5 21 C 15.5 23.033947 16.442042 24.839082 17.90625 26.03125 C 14.907101 27.08912 10.5 31.578049 10.5 39.5 L 33.5 39.5 C 33.5 31.578049 29.092899 27.08912 26.09375 26.03125 C 27.557958 24.839082 28.5 23.033948 28.5 21 C 28.5 18.588492 27.170726 16.496917 25.21875 15.375 C 25.70603 14.712226 26 13.885103 26 13 C 26 10.792 24.208 9 22 9 z "
        id="path3194" />
+    <path
+       style="fill:#000000"
+       d="m 10.036797,39.167768 c 0,-1.525708 0.297161,-3.528309 0.76114,-5.129402 0.937974,-3.236751 3.144507,-6.324846 5.533503,-7.744266 0.34375,-0.204239 0.637942,-0.379929 0.653761,-0.390423 0.01582,-0.01049 -0.177848,-0.273993 -0.43037,-0.585556 -0.519571,-0.641047 -1.078921,-1.735847 -1.293005,-2.530762 -0.499178,-1.85349 -0.11585,-4.074496 0.980045,-5.678393 0.383563,-0.561365 1.181358,-1.39158 1.64222,-1.708956 l 0.213365,-0.146936 -0.189638,-0.473929 c -0.409969,-1.024564 -0.464315,-2.11581 -0.155434,-3.12103 0.449396,-1.462507 1.633291,-2.580486 3.145515,-2.970382 3.569926,-0.9204321 6.586996,2.616257 5.196449,6.091412 l -0.189637,0.473929 0.213364,0.146936 c 0.460861,0.317376 1.258656,1.147591 1.642219,1.708956 1.087201,1.591173 1.473649,3.829992 0.98016,5.678393 -0.207102,0.775715 -0.779943,1.890617 -1.308301,2.546302 -0.295037,0.366139 -0.418267,0.582965 -0.345167,0.607331 0.06253,0.02084 0.465829,0.27344 0.896222,0.561325 2.715578,1.81642 4.785937,5.146646 5.581082,8.977308 0.214451,1.033133 0.399419,2.728627 0.400303,3.669341 l 7.76e-4,0.825893 -11.964286,0 -11.964286,0 0,-0.807091 z"
+       id="path2814" />
   </g>
 </svg>
