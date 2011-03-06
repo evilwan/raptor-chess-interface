@@ -199,6 +199,11 @@ public class IcsParser implements GameConstants {
 
 	}
 
+	/**
+	 * Handles game events, and returns an array of ChatEvents which were parsed.
+	 * @param inboundMessage
+	 * @return
+	 */
 	public ChatEvent[] parse(String inboundMessage) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Raw message in: " + inboundMessage);
