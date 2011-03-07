@@ -37,10 +37,13 @@ public class AddExtendedCensorAlias extends RaptorAlias {
 			if (whatsLeft.length() < 3) {
 				return new RaptorAliasResult(null, "Invalid username: "
 						+ whatsLeft + "\n" + getUsage());
-			} else {
+			} else if (!controller.getConnector().isOnExtendedCensor(whatsLeft)) {
 				controller.getConnector().addExtendedCensor(whatsLeft);
 				return new RaptorAliasResult(null, "Added " + whatsLeft
 						+ " to extended censor.");
+			} else {
+				return new RaptorAliasResult(null, whatsLeft
+						+ " is already on your extended censor list.");
 			}
 		} else {
 			return null;
