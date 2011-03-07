@@ -826,7 +826,7 @@ public class IcsUtils implements GameConstants {
 
 	public static String stripTitles(String playerName) {
 		StringTokenizer stringtokenizer = new StringTokenizer(playerName,
-				"()[]");
+				"()[]'");
 		if (stringtokenizer.hasMoreTokens()) {
 			return stringtokenizer.nextToken();
 		} else {
@@ -841,12 +841,7 @@ public class IcsUtils implements GameConstants {
 	public static String stripWord(String word) {
 		if (word != null) {
 			word = stripTitles(word);
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(word,
-					STRIP_CHARS, true);
-			while (tok.hasMoreTokens()) {
-				word = tok.nextToken();
-			}
-			return word;
+			return StringUtils.replaceChars(word, STRIP_CHARS, "");
 		}
 		return null;
 	}
