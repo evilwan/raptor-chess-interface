@@ -51,7 +51,7 @@
 				<exclude name="Thumbs.db" />
 				<exclude name=".svn" />
 			</zipfileset>
-		</zip>		
+		</zip>
 		<zip destfile="build/dist/ChessSet_JinAlpha.zip">
 			<zipfileset dir="sets/JinAlpha" prefix="JinAlpha" dirmode="777" filemode="755">
 				<include name="**/*" />
@@ -187,27 +187,41 @@
 				<exclude name=".svn" />
 			</zipfileset>
 		</zip>
-			<zip destfile="build/dist/ChessSet_Odisea.zip">
-				<zipfileset dir="sets/Odisea" prefix="Odisea" dirmode="777" filemode="755">
-					<include name="**/*" />
-					<exclude name="Thumbs.db" />
-					<exclude name=".svn" />
-				</zipfileset>
-			</zip>
-			<zip destfile="build/dist/ChessSet_PortableGray.zip">
-				<zipfileset dir="sets/PortableGray" prefix="PortableGray" dirmode="777" filemode="755">
-					<include name="**/*" />
-					<exclude name="Thumbs.db" />
-					<exclude name=".svn" />
-				</zipfileset>
-			</zip>
-			<zip destfile="build/dist/ChessSet_Tribal.zip">
-				<zipfileset dir="sets/Tribal" prefix="Tribal" dirmode="777" filemode="755">
-					<include name="**/*" />
-					<exclude name="Thumbs.db" />
-					<exclude name=".svn" />
-				</zipfileset>
-			</zip>
+		<zip destfile="build/dist/ChessSet_Odisea.zip">
+			<zipfileset dir="sets/Odisea" prefix="Odisea" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_PortableGray.zip">
+			<zipfileset dir="sets/PortableGray" prefix="PortableGray" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Skulls.zip">
+			<zipfileset dir="sets/Skulls" prefix="Skulls" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Simple.zip">
+			<zipfileset dir="sets/Simple" prefix="Simplel" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
+		<zip destfile="build/dist/ChessSet_Tribal.zip">
+			<zipfileset dir="sets/Tribal" prefix="Tribal" dirmode="777" filemode="755">
+				<include name="**/*" />
+				<exclude name="Thumbs.db" />
+				<exclude name=".svn" />
+			</zipfileset>
+		</zip>
 
 		<zip destfile="build/dist/ChessSet_WikiGray.zip">
 			<zipfileset dir="sets/WikiGray" prefix="WikiGray" dirmode="777" filemode="755">
