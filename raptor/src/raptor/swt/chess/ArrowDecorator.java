@@ -745,7 +745,7 @@ public class ArrowDecorator {
 					}
 
 					e.gc.setAdvanced(true);
-					e.gc.setAlpha(25 * spec.arrow.frame);
+					e.gc.setAlpha(81 * spec.arrow.frame);
 
 					ArrowSegment segment = board.isWhiteOnTop() ? spec.segment
 							.rotate180() : spec.segment;
