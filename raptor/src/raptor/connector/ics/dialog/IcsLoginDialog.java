@@ -182,12 +182,12 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 			
 		};
 
-		profile.addSelectionListener(keyListener);
+		profile.addKeyListener(keyListener);
 		handleField.addKeyListener(keyListener);
 		passwordField.addKeyListener(keyListener);
 		serverField.addKeyListener(keyListener);
 		portField.addKeyListener(keyListener);
-		guestLoginCheckBox.addSelectionListener(keyListener);
+		guestLoginCheckBox.addKeyListener(keyListener);
 		timesealEnabledCheckBox.addKeyListener(keyListener);
 		autoLoginCheckBox.addKeyListener(keyListener);
 		loginButton.addSelectionListener(selectionListener);
