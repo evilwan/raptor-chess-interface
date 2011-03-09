@@ -16,6 +16,9 @@ package raptor.connector.ics.dialog;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.KeyAdapter;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -60,6 +63,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	protected Text serverField;
 	protected Label serverLabel;
 	protected Button simulBugButton;
+	protected Composite content;
 
 	protected Button timesealEnabledCheckBox;
 	protected String title;
@@ -78,7 +82,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	public Composite createContents(Composite parent) {
 		getShell().setText(title);
 
-		final Composite content = new Composite(parent, SWT.NONE);
+		Composite content = new Composite(parent, SWT.NONE);
 		content.setLayout(new GridLayout(2, false));
 
 		profileLabel = new Label(content, SWT.NONE);
@@ -161,63 +165,27 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 				if (e.widget == guestLoginCheckBox
 						|| e.widget == timesealEnabledCheckBox) {
 					adjustToCheckBoxControls();
-				} else if (e.widget == loginButton) {
-					String handleText = handleField.getText();
-					String passwordText = passwordField.getText();
-
-					if (StringUtils.isNotEmpty(handleText)
-							&& (handleText.length() < 3 || handleText.length() > 17)) {
-						MessageBox box = new MessageBox(content.getShell(),
-								SWT.ERROR | SWT.OK);
-						box
-								.setMessage("Login must be between 3 and 17 chracters.");
-						box.setText("Invalid Login.");
-						box.open();
-					} else if (StringUtils.isNotBlank(handleText)
-							&& !handleText.matches("[a-zA-Z]*")) {
-						MessageBox box = new MessageBox(content.getShell(),
-								SWT.ERROR | SWT.OK);
-						box.setMessage("Handle must contain only letters.");
-						box.setText("Invalid Login.");
-						box.open();
-					} else if (!guestLoginCheckBox.getSelection()
-							&& StringUtils.isBlank(handleText)) {
-						MessageBox box = new MessageBox(content.getShell(),
-								SWT.ERROR | SWT.OK);
-						box
-								.setMessage("You must enter a handle if you are not logging in as a guest.");
-						box.setText("Invalid Login.");
-						box.open();
-					} else if (!guestLoginCheckBox.getSelection()
-							&& StringUtils.isBlank(passwordText)) {
-						MessageBox box = new MessageBox(content.getShell(),
-								SWT.ERROR | SWT.OK);
-						box
-								.setMessage("You must enter a password if you are not logging in as a guest.");
-						box.setText("Invalid Password.");
-						box.open();
-					} else {
-						String itemSelected = profile.getItem(profile
-								.getSelectionIndex());
-						lastSelection = itemSelected;
-						storeProfile(itemSelected);
-						try {
-							Raptor.getInstance().getPreferences().save();
-						} catch (Throwable t) {
-						}
-						wasLoginPressed = true;
-
-						if (isShowingSimulBug()) {
-							isSimulBugLogin = simulBugButton.getSelection();
-						}
-						close();
-					}
+				} else if (e.widget == handleField) {
+					processLogin();
 				}
 			}
+		};
+		
+		KeyListener keyListener = new KeyAdapter() {
+
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.keyCode == '\r' || e.character == '\r') {
+					processLogin();
+				}
+			}
+			
 		};
 
 		loginButton.addSelectionListener(selectionListener);
 		guestLoginCheckBox.addSelectionListener(selectionListener);
+	    passwordField.addKeyListener(keyListener);
+		handleField.addKeyListener(keyListener);
 
 		String currentProfile = Raptor.getInstance().getPreferences()
 				.getString(profilePrefix + "profile");
@@ -237,6 +205,59 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		content.pack();
 		parent.pack();
 		return content;
+	}
+	
+	public void processLogin() {
+		String handleText = handleField.getText();
+		String passwordText = passwordField.getText();
+
+		if (StringUtils.isNotEmpty(handleText)
+				&& (handleText.length() < 3 || handleText.length() > 17)) {
+			MessageBox box = new MessageBox(content.getShell(),
+					SWT.ERROR | SWT.OK);
+			box
+					.setMessage("Login must be between 3 and 17 chracters.");
+			box.setText("Invalid Login.");
+			box.open();
+		} else if (StringUtils.isNotBlank(handleText)
+				&& !handleText.matches("[a-zA-Z]*")) {
+			MessageBox box = new MessageBox(content.getShell(),
+					SWT.ERROR | SWT.OK);
+			box.setMessage("Handle must contain only letters.");
+			box.setText("Invalid Login.");
+			box.open();
+		} else if (!guestLoginCheckBox.getSelection()
+				&& StringUtils.isBlank(handleText)) {
+			MessageBox box = new MessageBox(content.getShell(),
+					SWT.ERROR | SWT.OK);
+			box
+					.setMessage("You must enter a handle if you are not logging in as a guest.");
+			box.setText("Invalid Login.");
+			box.open();
+		} else if (!guestLoginCheckBox.getSelection()
+				&& StringUtils.isBlank(passwordText)) {
+			MessageBox box = new MessageBox(content.getShell(),
+					SWT.ERROR | SWT.OK);
+			box
+					.setMessage("You must enter a password if you are not logging in as a guest.");
+			box.setText("Invalid Password.");
+			box.open();
+		} else {
+			String itemSelected = profile.getItem(profile
+					.getSelectionIndex());
+			lastSelection = itemSelected;
+			storeProfile(itemSelected);
+			try {
+				Raptor.getInstance().getPreferences().save();
+			} catch (Throwable t) {
+			}
+			wasLoginPressed = true;
+
+			if (isShowingSimulBug()) {
+				isSimulBugLogin = simulBugButton.getSelection();
+			}
+			close();
+		}
 	}
 
 	public boolean isShowingAutoLogin() {
