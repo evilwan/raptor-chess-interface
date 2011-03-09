@@ -192,6 +192,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	protected GameBotService gameBotService = new GameBotService(this);
 	protected GameBotParser gameBotParser = new GameBotParser(this);
 	protected String partnerOnConnect;
+	protected boolean isDisconnecting = false;
 
 	public FicsConnector() {
 		this(new IcsConnectorContext(new IcsParser(false)));
@@ -207,11 +208,11 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 	protected String getInitialTimesealString() {
 		return "TIMESTAMP|iv|OpenSeal|";
-//		if (getPreferences().getBoolean(FICS_TIMESEAL_IS_TIMESEAL_2)) {
-//			return "TIMESEAL2|OpenSeal|OpenSeal|";
-//		} else {
-//			return "TIMESTAMP|iv|OpenSeal|";
-//		}
+		// if (getPreferences().getBoolean(FICS_TIMESEAL_IS_TIMESEAL_2)) {
+		// return "TIMESEAL2|OpenSeal|OpenSeal|";
+		// } else {
+		// return "TIMESTAMP|iv|OpenSeal|";
+		// }
 	}
 
 	public GameBotService getGameBotService() {
@@ -226,24 +227,29 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	public void disconnect() {
 
 		synchronized (this) {
-			if (isConnected()) {
+			if (!isDisconnecting && isConnected()) {
+				isDisconnecting = true;
 				try {
-					for (Game game : getGameService().getAllActiveGames()) {
-						if (game.isInState(Game.PLAYING_STATE)) {
-							onResign(game);
+					try {
+						for (Game game : getGameService().getAllActiveGames()) {
+							if (game.isInState(Game.PLAYING_STATE)) {
+								onResign(game);
+							}
 						}
+					} catch (Throwable t) {
+						LOG.warn("Error trying to resign game:", t);
 					}
-				} catch (Throwable t) {
-					LOG.warn("Error trying to resign game:", t);
-				}
 
-				super.disconnect();
-				connectAction.setEnabled(true);
-				if (autoConnectAction != null) {
-					autoConnectAction.setEnabled(true);
-				}
-				for (Action action : onlyEnabledOnConnectActions) {
-					action.setEnabled(false);
+					super.disconnect();
+					connectAction.setEnabled(true);
+					if (autoConnectAction != null) {
+						autoConnectAction.setEnabled(true);
+					}
+					for (Action action : onlyEnabledOnConnectActions) {
+						action.setEnabled(false);
+					}
+				} finally {
+					isDisconnecting = false;
 				}
 			}
 		}
@@ -282,12 +288,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] {
-				new PreferenceNode(
-						"ficsMenuActions",
-						new ActionContainerPage(
-								local.getString("ficsConn3"),
-								local.getString("ficsConn4"),
-								RaptorActionContainer.FicsMenu)),
+				new PreferenceNode("ficsMenuActions", new ActionContainerPage(
+						local.getString("ficsConn3"),
+						local.getString("ficsConn4"),
+						RaptorActionContainer.FicsMenu)),
 				new PreferenceNode("fics",
 						new ConnectorMessageBlockPage("fics")),
 				new PreferenceNode("fics", new FicsRightClickChannelMenu()),
@@ -483,7 +487,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			@Override
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(
-						context.getPreferencePrefix(), local.getString("ficsConn7"));
+						context.getPreferencePrefix(),
+						local.getString("ficsConn7"));
 				dialog.open();
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "profile",
@@ -757,7 +762,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 		MenuManager fics2Menu = new MenuManager(
 				"&Another Simultaneous Connection");
-		MenuManager fics2TabsMenu = new MenuManager(local.getString("ficsConn23"));
+		MenuManager fics2TabsMenu = new MenuManager(
+				local.getString("ficsConn23"));
 		fics2Menu.add(fics2.connectAction);
 		fics2Menu.add(fics2DisconnectAction);
 		fics2Menu.add(fics2ReconnectAction);

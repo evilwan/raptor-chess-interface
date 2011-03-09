@@ -1025,6 +1025,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 * are published on separate threads via ThreadService.
 	 */
 	public void publishEvent(final ChatEvent event) {
+		//System.err.println("In publish event: " + event);
 
 		if (chatService != null) { // Could have been disposed.
 			if (LOG.isDebugEnabled()) {
@@ -1279,6 +1280,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				}
 
 			} catch (Throwable t) {
+				t.printStackTrace(); //Used to track down issues when developing. Dont remove.
 				publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Error: "
 						+ t.getMessage()));
 				disconnect();
@@ -1705,6 +1707,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 * Opens new tabs based on the users preferences.
 	 */
 	protected void handleOpeningTabs(final ChatEvent event) {
+		if (!isConnected()) {
+			return;
+		}
+		
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
 				if (getPreferences().getBoolean(
@@ -2320,6 +2326,9 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	}
 
 	protected void updateAutoComplete(final ChatEvent event) {
+		if (!isConnected()) {
+			return;
+		}
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
 				if (StringUtils.isNotBlank(event.getSource())) {
