@@ -1532,6 +1532,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
 				try {
+					isConnecting = true;
+					
 					boolean isTimesealEnabled = getPreferences().getBoolean(
 							profilePrefix + "timeseal-enabled");
 
@@ -1556,6 +1558,11 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				} catch (Throwable ce) {
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Error: " + ce.getMessage()));
+					
+					//An error occured connecting so set auto connect to false so the user can easily fix it on next connect.
+					//It could be an invalid username/pw url/port.
+					Raptor.getInstance().getPreferences().setValue(context.getPreferencePrefix() + "auto-connect",false);
+					
 					disconnect();
 					return;
 				}
@@ -1565,7 +1572,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				return "IcsConnector.connection intiliazation runnable";
 			}
 		});
-		isConnecting = true;
+
 
 		if (getPreferences().getBoolean(context.getShortName() + "-keep-alive")) {
 			ThreadService.getInstance().scheduleOneShot(30 * 60 * 1000,
