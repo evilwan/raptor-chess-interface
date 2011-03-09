@@ -168,11 +168,18 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 	 */
 	protected String handleTimeseal(String text) throws IOException {
 		//text.replace("[G]\0", "") TIMESEAL 2.
-		String result = text.replace("\n\r[G]\n\r", "");
-		if (result.length() != text.length()) {
+		
+		//Send an ack for each \n\r[G]\n\r received.
+		String beforeReplace = text;
+		String afterReplace  = StringUtils.replaceOnce(beforeReplace,"\n\r[G]\n\r", "");
+		
+		while (!StringUtils.equals(beforeReplace,afterReplace)) {
 			sendAck();
+			beforeReplace = afterReplace;
+			afterReplace  = StringUtils.replaceOnce(beforeReplace,"\n\r[G]\n\r", "");
 		}
-		return result;
+
+		return afterReplace;
 	}
 
 	/**
