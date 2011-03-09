@@ -82,7 +82,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	public Composite createContents(Composite parent) {
 		getShell().setText(title);
 
-		Composite content = new Composite(parent, SWT.NONE);
+		content = new Composite(parent, SWT.NONE);
 		content.setLayout(new GridLayout(2, false));
 
 		profileLabel = new Label(content, SWT.NONE);
@@ -165,7 +165,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 				if (e.widget == guestLoginCheckBox
 						|| e.widget == timesealEnabledCheckBox) {
 					adjustToCheckBoxControls();
-				} else if (e.widget == handleField) {
+				} else if (e.widget == loginButton) {
 					processLogin();
 				}
 			}
@@ -191,6 +191,8 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		timesealEnabledCheckBox.addKeyListener(keyListener);
 		autoLoginCheckBox.addKeyListener(keyListener);
 		loginButton.addSelectionListener(selectionListener);
+		guestLoginCheckBox.addSelectionListener(selectionListener);
+		timesealEnabledCheckBox.addSelectionListener(selectionListener);
 		
 		String currentProfile = Raptor.getInstance().getPreferences()
 				.getString(profilePrefix + "profile");
