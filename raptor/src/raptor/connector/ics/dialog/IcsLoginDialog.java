@@ -186,7 +186,12 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		guestLoginCheckBox.addSelectionListener(selectionListener);
 	    passwordField.addKeyListener(keyListener);
 		handleField.addKeyListener(keyListener);
-
+		serverField.addKeyListener(keyListener);
+		portField.addKeyListener(keyListener);
+		guestLoginCheckBox.addKeyListener(keyListener);
+		timesealEnabledCheckBox.addKeyListener(keyListener);
+		autoLoginCheckBox.addKeyListener(keyListener);
+		
 		String currentProfile = Raptor.getInstance().getPreferences()
 				.getString(profilePrefix + "profile");
 		lastSelection = currentProfile;
