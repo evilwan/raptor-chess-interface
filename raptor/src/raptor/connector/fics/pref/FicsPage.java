@@ -18,10 +18,14 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.TextFieldEditor;
 
 public class FicsPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
+	
 	public FicsPage() {
 		super(FLAT);
 		setTitle("Fics");
@@ -31,7 +35,7 @@ public class FicsPage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		BooleanFieldEditor bfe = new BooleanFieldEditor(
-				PreferenceKeys.FICS_AUTO_CONNECT, "Auto Connect",
+				PreferenceKeys.FICS_AUTO_CONNECT, local.getString("ficsP1"),
 				getFieldEditorParent());
 		addField(bfe);
 
@@ -42,32 +46,32 @@ public class FicsPage extends FieldEditorPreferencePage {
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.FICS_CLOSE_TABS_ON_DISCONNECT,
-				"Close all fics tabs on disconnect", getFieldEditorParent()));
+				local.getString("ficsP2"), getFieldEditorParent()));
 
 		BooleanFieldEditor bfe2 = new BooleanFieldEditor(
 				PreferenceKeys.FICS_KEEP_ALIVE,
-				"Keep Alive (Sends Keep-Alive command below to avoid the hour idle kickout)",
+				local.getString("ficsP3"),
 				getFieldEditorParent());
 		addField(bfe2);
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.FICS_NO_WRAP_ENABLED,
-				"Remove server line wrapping (*Requires reconnect to take effect)",
+				local.getString("ficsP4"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.FICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP,
-				"Show bughouse buttons on partnerships (excluding simul)",
+				local.getString("ficsP5"),
 				getFieldEditorParent()));
 
 		addField(new TextFieldEditor(PreferenceKeys.FICS_LOGIN_SCRIPT,
-				"Login Script:", getFieldEditorParent()));
+				local.getString("ficsP6"), getFieldEditorParent()));
 
 		addField(new StringFieldEditor(PreferenceKeys.FICS_KEEP_ALIVE_COMMAND,
-				"Keep-Alive command", getFieldEditorParent()));
+				local.getString("ficsP7"), getFieldEditorParent()));
 		
 		addField(new BooleanFieldEditor(PreferenceKeys.FICS_REMOVE_BLANK_LINES,
-				"Remove blank lines", getFieldEditorParent()));
+				local.getString("ficsP8"), getFieldEditorParent()));
 
 	}
 }

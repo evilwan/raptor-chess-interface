@@ -17,14 +17,17 @@ import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelFieldEditor;
 import raptor.pref.fields.ListFieldEditor;
 
 public class FicsRightClickPersonMenu extends FieldEditorPreferencePage {
+	protected static L10n local = L10n.getInstance();
+	
 	public FicsRightClickPersonMenu() {
 		super(FLAT);
-		setTitle("Person Popup Menu");
+		setTitle(local.getString("ficsRClkPP1"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -33,15 +36,14 @@ public class FicsRightClickPersonMenu extends FieldEditorPreferencePage {
 		addField(new LabelFieldEditor(
 				"none",
 				WordUtils
-						.wrap(
-								"You can use $person for the person right clicked on, and $userName for the logged in user name in the scripts below.",
+						.wrap(local.getString("ficsRClkPP2"),
 								70)
 						+ "\n ", getFieldEditorParent()));
 
 		addField(new ListFieldEditor(PreferenceKeys.FICS_PERSON_QUICK_COMMANDS,
-				"Quick Person Commands:", getFieldEditorParent(), ',', 75));
+				local.getString("ficsRClkPP3"), getFieldEditorParent(), ',', 75));
 
 		addField(new ListFieldEditor(PreferenceKeys.FICS_PERSON_COMMANDS,
-				"Other Person Commands:", getFieldEditorParent(), ',', 75));
+				local.getString("ficsRClkPP4"), getFieldEditorParent(), ',', 75));
 	}
 }

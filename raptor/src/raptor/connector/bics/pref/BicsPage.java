@@ -18,10 +18,13 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.StringFieldEditor;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.TextFieldEditor;
 
 public class BicsPage extends FieldEditorPreferencePage {
+	
+	protected static L10n local = L10n.getInstance();
 	public BicsPage() {
 		super(FLAT);
 		setTitle("Bics");
@@ -31,29 +34,29 @@ public class BicsPage extends FieldEditorPreferencePage {
 	@Override
 	protected void createFieldEditors() {
 		addField(new BooleanFieldEditor(PreferenceKeys.BICS_AUTO_CONNECT,
-				"Auto Connect", getFieldEditorParent()));
+				local.getString("bicsP1"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BICS_CLOSE_TABS_ON_DISCONNECT,
-				"Close all bics tabs on disconnect", getFieldEditorParent()));
+				local.getString("bicsP2"), getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BICS_KEEP_ALIVE,
-				"Keep Alive (Sends Keep-Alive command below to avoid the hour idle kickout)",
+				local.getString("bicsP3"),
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.BICS_SHOW_BUGBUTTONS_ON_PARTNERSHIP,
-				"Show bughouse buttons on partnerships (excluding simul)",
+				local.getString("bicsP4"),
 				getFieldEditorParent()));
 
 		addField(new TextFieldEditor(PreferenceKeys.BICS_LOGIN_SCRIPT,
-				"Login Script:", getFieldEditorParent()));
+				local.getString("bicsP5"), getFieldEditorParent()));
 
 		addField(new StringFieldEditor(PreferenceKeys.BICS_KEEP_ALIVE_COMMAND,
-				"Keep-Alive command", getFieldEditorParent()));
+				local.getString("bicsP6"), getFieldEditorParent()));
 		
 		addField(new BooleanFieldEditor(PreferenceKeys.BICS_REMOVE_BLANK_LINES,
-				"Remove blank lines", getFieldEditorParent()));
+				local.getString("bicsP7"), getFieldEditorParent()));
 	}
 }

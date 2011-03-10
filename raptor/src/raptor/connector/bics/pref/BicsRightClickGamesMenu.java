@@ -17,14 +17,16 @@ import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.fields.LabelFieldEditor;
 import raptor.pref.fields.ListFieldEditor;
 
 public class BicsRightClickGamesMenu extends FieldEditorPreferencePage {
+	protected static L10n local = L10n.getInstance();
 	public BicsRightClickGamesMenu() {
 		super(FLAT);
-		setTitle("Games Popup Menu");
+		setTitle(local.getString("bicsRGP1"));
 		setPreferenceStore(Raptor.getInstance().getPreferences());
 	}
 
@@ -33,12 +35,11 @@ public class BicsRightClickGamesMenu extends FieldEditorPreferencePage {
 		addField(new LabelFieldEditor(
 				"none",
 				WordUtils
-						.wrap(
-								"You can use $gameId for the game id right clicked on, and $userName for the logged in user name in the scripts below.",
+						.wrap(local.getString("bicsRGP2"),
 								70)
 						+ "\n ", getFieldEditorParent()));
 		
 		addField(new ListFieldEditor(PreferenceKeys.FICS_GAME_COMMANDS,
-				"Right Click Game Commands:", getFieldEditorParent(), ',', 75));
+				local.getString("bicsRGP3"), getFieldEditorParent(), ',', 75));
 	}
 }
