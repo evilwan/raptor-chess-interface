@@ -182,17 +182,27 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 			
 		};
 
-		profile.addKeyListener(keyListener);
+		// Commented out because it doesn't allow for enter key login with GTK like I thought it would.
+		// In OSX the selection box can't get focus, but in Linux it can which is a pain.
+		//profile.addKeyListener(keyListener);
+		//profile.addSelectionListener(selectionListener);
+		
 		handleField.addKeyListener(keyListener);
 		passwordField.addKeyListener(keyListener);
 		serverField.addKeyListener(keyListener);
 		portField.addKeyListener(keyListener);
 		guestLoginCheckBox.addKeyListener(keyListener);
-		timesealEnabledCheckBox.addKeyListener(keyListener);
-		autoLoginCheckBox.addKeyListener(keyListener);
-		loginButton.addSelectionListener(selectionListener);
 		guestLoginCheckBox.addSelectionListener(selectionListener);
+		timesealEnabledCheckBox.addKeyListener(keyListener);
 		timesealEnabledCheckBox.addSelectionListener(selectionListener);
+		
+		// if statement needed to allow "another simultaneous connection"
+		if (autoLoginCheckBox != null) {
+			autoLoginCheckBox.addKeyListener(keyListener);
+		}
+		
+		loginButton.addSelectionListener(selectionListener);
+
 		
 		String currentProfile = Raptor.getInstance().getPreferences()
 				.getString(profilePrefix + "profile");
