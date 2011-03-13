@@ -29,6 +29,7 @@ import raptor.chat.BugGame;
 import raptor.chat.Bugger;
 import raptor.chat.Partnership;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
@@ -45,6 +46,8 @@ public class BugGames extends Composite {
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 
 	protected BughouseService service;
+	
+	protected static L10n local = L10n.getInstance();
 
 	protected RaptorTable bugGamesTable;
 	protected boolean isActive = false;
@@ -96,17 +99,17 @@ public class BugGames extends Composite {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		bugGamesTable
 				.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		bugGamesTable.addColumn("ID", SWT.LEFT, 10, true,
+		bugGamesTable.addColumn(local.getString("bugGames1"), SWT.LEFT, 10, true,
 				new IntegerComparator());
-		bugGamesTable.addColumn("PID", SWT.LEFT, 10, true,
+		bugGamesTable.addColumn(local.getString("bugGames2"), SWT.LEFT, 10, true,
 				new IntegerComparator());
-		bugGamesTable.addColumn("WElo", SWT.LEFT, 14, true,
+		bugGamesTable.addColumn(local.getString("bugGames3"), SWT.LEFT, 14, true,
 				new RatingComparator());
-		bugGamesTable.addColumn("WName", SWT.LEFT, 19, true, null);
-		bugGamesTable.addColumn("BElo", SWT.LEFT, 14, true,
+		bugGamesTable.addColumn(local.getString("bugGames4"), SWT.LEFT, 19, true, null);
+		bugGamesTable.addColumn(local.getString("bugGames5"), SWT.LEFT, 14, true,
 				new RatingComparator());
-		bugGamesTable.addColumn("BName", SWT.LEFT, 19, true, null);
-		bugGamesTable.addColumn("Time", SWT.LEFT, 14, true, null);
+		bugGamesTable.addColumn(local.getString("bugGames6"), SWT.LEFT, 19, true, null);
+		bugGamesTable.addColumn(local.getString("bugGames7"), SWT.LEFT, 14, true, null);
 
 		bugGamesTable.addRaptorTableListener(new RaptorTableAdapter() {
 			@Override
@@ -125,7 +128,7 @@ public class BugGames extends Composite {
 		buttonsComposite.setLayout(new RowLayout());
 
 		Button obsButton = new Button(buttonsComposite, SWT.PUSH);
-		obsButton.setText("Observe");
+		obsButton.setText(local.getString("bugGames8"));
 		obsButton.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -140,7 +143,7 @@ public class BugGames extends Composite {
 										.getText(0));
 					} else {
 						Raptor.getInstance().alert(
-								"You must selected a game to observe.");
+								local.getString("bugGames9"));
 					}
 				}
 

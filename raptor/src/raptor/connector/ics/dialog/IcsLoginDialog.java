@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import raptor.Raptor;
-import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.util.RaptorLogger;
@@ -73,8 +72,6 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 	protected boolean isSimulBugLogin;
 	protected boolean isShowingAutoLogin = true;
 
-	protected static L10n local = L10n.getInstance();
-	
 	public IcsLoginDialog(String profilePrefix, String title) {
 		super(Raptor.getInstance().getWindow().getShell());
 		this.profilePrefix = profilePrefix;
@@ -89,11 +86,11 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		content.setLayout(new GridLayout(2, false));
 
 		profileLabel = new Label(content, SWT.NONE);
-		profileLabel.setText(local.getString("profile"));
+		profileLabel.setText("Profile:");
 		profile = new Combo(content, SWT.DROP_DOWN | SWT.READ_ONLY);
-		profile.add(local.getString("prim"));
-		profile.add(local.getString("second"));
-		profile.add(local.getString("tert"));
+		profile.add("Primary");
+		profile.add("Secondary");
+		profile.add("Tertiary");
 
 		profile.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
@@ -106,40 +103,40 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		});
 
 		handleLabel = new Label(content, SWT.NONE);
-		handleLabel.setText(local.getString("login"));
+		handleLabel.setText("Login:");
 		handleField = new Text(content, SWT.BORDER);
 		handleField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		passwordLabel = new Label(content, SWT.NONE);
-		passwordLabel.setText(local.getString("password"));
+		passwordLabel.setText("Password:");
 		passwordField = new Text(content, SWT.BORDER | SWT.PASSWORD);
 		passwordField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		serverLabel = new Label(content, SWT.NONE);
-		serverLabel.setText(local.getString("server"));
+		serverLabel.setText("Server:");
 		serverField = new Text(content, SWT.BORDER);
 		serverField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		portLabel = new Label(content, SWT.NONE);
-		portLabel.setText(local.getString("port"));
+		portLabel.setText("Port:");
 		portField = new Text(content, SWT.BORDER);
 		portField.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		guestLoginCheckBox = new Button(content, SWT.CHECK);
-		guestLoginCheckBox.setText(local.getString("logAsG"));
+		guestLoginCheckBox.setText("Login as guest");
 		GridData data = new GridData();
 		data.horizontalSpan = 2;
 		guestLoginCheckBox.setLayoutData(data);
 
 		timesealEnabledCheckBox = new Button(content, SWT.CHECK);
-		timesealEnabledCheckBox.setText(local.getString("timeseal"));
+		timesealEnabledCheckBox.setText("Timeseal");
 		data = new GridData();
 		data.horizontalSpan = 2;
 		timesealEnabledCheckBox.setLayoutData(data);
 
 		if (isShowingAutoLogin) {
 			autoLoginCheckBox = new Button(content, SWT.CHECK);
-			autoLoginCheckBox.setText(local.getString("icsLogD1"));
+			autoLoginCheckBox.setText("Automatically log me in me next time.");
 			data = new GridData();
 			data.horizontalSpan = 2;
 			autoLoginCheckBox.setLayoutData(data);
@@ -147,14 +144,14 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
 		if (isShowingSimulBug()) {
 			simulBugButton = new Button(content, SWT.CHECK);
-			simulBugButton.setText(local.getString("icsLogD2"));
+			simulBugButton.setText("Simul bughouse mode.");
 			data = new GridData();
 			data.horizontalSpan = 2;
 			simulBugButton.setLayoutData(data);
 		}
 
 		loginButton = new Button(content, SWT.PUSH);
-		loginButton.setText(local.getString("icsLogD3"));
+		loginButton.setText("Login");
 		data = new GridData();
 		data.horizontalSpan = 2;
 		data.horizontalAlignment = SWT.CENTER;
@@ -236,31 +233,31 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 			MessageBox box = new MessageBox(content.getShell(),
 					SWT.ERROR | SWT.OK);
 			box
-					.setMessage(local.getString("icsLogD4"));
-			box.setText(local.getString("icsLogD7"));
+					.setMessage("Login must be between 3 and 17 chracters.");
+			box.setText("Invalid Login.");
 			box.open();
 		} else if (StringUtils.isNotBlank(handleText)
 				&& !handleText.matches("[a-zA-Z]*")) {
 			MessageBox box = new MessageBox(content.getShell(),
 					SWT.ERROR | SWT.OK);
-			box.setMessage(local.getString("icsLogD6"));
-			box.setText(local.getString("icsLogD7"));
+			box.setMessage("Handle must contain only letters.");
+			box.setText("Invalid Login.");
 			box.open();
 		} else if (!guestLoginCheckBox.getSelection()
 				&& StringUtils.isBlank(handleText)) {
 			MessageBox box = new MessageBox(content.getShell(),
 					SWT.ERROR | SWT.OK);
 			box
-					.setMessage(local.getString("icsLogD8"));
-			box.setText(local.getString("icsLogD7"));
+					.setMessage("You must enter a handle if you are not logging in as a guest.");
+			box.setText("Invalid Login.");
 			box.open();
 		} else if (!guestLoginCheckBox.getSelection()
 				&& StringUtils.isBlank(passwordText)) {
 			MessageBox box = new MessageBox(content.getShell(),
 					SWT.ERROR | SWT.OK);
 			box
-					.setMessage(local.getString("icsLogD9"));
-			box.setText(local.getString("icsLogD10"));
+					.setMessage("You must enter a password if you are not logging in as a guest.");
+			box.setText("Invalid Password.");
 			box.open();
 		} else {
 			String itemSelected = profile.getItem(profile
@@ -400,3 +397,4 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 		LOG.info("Saved " + profileName);
 	}
 }
+

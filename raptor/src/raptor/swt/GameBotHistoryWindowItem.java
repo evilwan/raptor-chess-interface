@@ -40,6 +40,7 @@ import raptor.RaptorConnectorWindowItem;
 import raptor.connector.Connector;
 import raptor.connector.fics.FicsConnector;
 import raptor.connector.fics.GameBotService.GameBotListener;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.RaptorTable.RaptorTableAdapter;
 import raptor.swt.chat.ChatConsoleWindowItem;
@@ -67,6 +68,7 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 	protected Button previousPageButton;
 	protected Button nextPageButton;
 	protected String player;
+	protected static L10n local = L10n.getInstance();
 
 	protected GameBotListener listener = new GameBotListener() {
 		@Override
@@ -82,20 +84,20 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 		@Override
 		public void gameBotPlayerNotInDB(String playerName) {
 			statusLabel.setText(playerName
-					+ " is not in the fics games database.");
+					+ local.getString("gbotHistWI1"));
 			isPlayerNotFound = true;
 		}
 	};
 
 	protected String[][] convertPage(String[][] gamesBotPage) {
-		// gameBotPageTable.addColumn("ID", SWT.LEFT, 10, false, null);
-		// gameBotPageTable.addColumn("Date", SWT.LEFT, 10, false, null);
-		// gameBotPageTable.addColumn("Type", SWT.LEFT, 8, false, null);
-		// gameBotPageTable.addColumn("White", SWT.LEFT, 20, false, null);
-		// gameBotPageTable.addColumn("W ELO", SWT.LEFT, 8, false, null);
-		// gameBotPageTable.addColumn("Black", SWT.LEFT, 20, false, null);
-		// gameBotPageTable.addColumn("B ELO", SWT.LEFT, 8, false, null);
-		// gameBotPageTable.addColumn("Result", SWT.LEFT, 10, true, null);
+		// gameBotPageTable.addColumn(local.getString("gbotHistWI2"), SWT.LEFT, 10, false, null);
+		// gameBotPageTable.addColumn(local.getString("gbotHistWI3"), SWT.LEFT, 10, false, null);
+		// gameBotPageTable.addColumn(local.getString("gbotHistWI4"), SWT.LEFT, 8, false, null);
+		// gameBotPageTable.addColumn(local.getString("gbotHistWI5"), SWT.LEFT, 20, false, null);
+		// gameBotPageTable.addColumn(local.getString("gbotHistWI6"), SWT.LEFT, 8, false, null);
+		// gameBotPageTable.addColumn(local.getString("gbotHistWI7"), SWT.LEFT, 20, false, null);
+		// gameBotPageTable.addColumn(local.getString("gbotHistWI8"), SWT.LEFT, 8, false, null);
+		// gameBotPageTable.addColumn(local.getString("gbotHistWI9"), SWT.LEFT, 10, true, null);
 		// 241433469:aire:CDay:1525:1624:0-1:blitz:1:5:0:Fla:A40:82:1264389026
 
 		String[][] result = new String[gamesBotPage.length][9];
@@ -142,7 +144,7 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 	public void setPlayerName(String player) {
 		if (composite != null) {
 			pages.clear();
-			statusLabel.setText("Retrieving games for player " + player + ".");
+			statusLabel.setText(local.getString("gbotHistWI20") + player + ".");
 			this.player = player;
 			hasRetrievedAllPages = false;
 			isPlayerNotFound = false;
@@ -197,7 +199,7 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public String getTitle() {
-		return getConnector().getShortName() + "(GameBot History)";
+		return getConnector().getShortName() + local.getString("gbotHistWI21");
 	}
 
 	public Control getToolbar(Composite parent) {
@@ -257,8 +259,8 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 			public void widgetSelected(SelectionEvent arg0) {
 				if (!isPlayerNotFound && currentPage == pages.size() - 1) {
 					if (!hasRetrievedAllPages) {
-						statusLabel.setText("Player " + player
-								+ ": Retrieving next page...");
+						statusLabel.setText(local.getString("gbotHistWI22") + player
+								+ local.getString("gbotHistWI23"));
 						composite.layout(true, true);
 						connector.getGameBotService().nextPage();
 					}
@@ -277,14 +279,14 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 		gameBotPageTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true));
 
-		gameBotPageTable.addColumn("ID", SWT.LEFT, 0, false, null);
-		gameBotPageTable.addColumn("Date", SWT.LEFT, 24, false, null);
-		gameBotPageTable.addColumn("Type", SWT.LEFT, 12, false, null);
-		gameBotPageTable.addColumn("White", SWT.LEFT, 20, false, null);
-		gameBotPageTable.addColumn("W ELO", SWT.LEFT, 8, false, null);
-		gameBotPageTable.addColumn("Black", SWT.LEFT, 20, false, null);
-		gameBotPageTable.addColumn("B ELO", SWT.LEFT, 8, false, null);
-		gameBotPageTable.addColumn("Result", SWT.LEFT, 8, true, null);
+		gameBotPageTable.addColumn(local.getString("gbotHistWI2"), SWT.LEFT, 0, false, null);
+		gameBotPageTable.addColumn(local.getString("gbotHistWI3"), SWT.LEFT, 24, false, null);
+		gameBotPageTable.addColumn(local.getString("gbotHistWI4"), SWT.LEFT, 12, false, null);
+		gameBotPageTable.addColumn(local.getString("gbotHistWI5"), SWT.LEFT, 20, false, null);
+		gameBotPageTable.addColumn(local.getString("gbotHistWI6"), SWT.LEFT, 8, false, null);
+		gameBotPageTable.addColumn(local.getString("gbotHistWI7"), SWT.LEFT, 20, false, null);
+		gameBotPageTable.addColumn(local.getString("gbotHistWI8"), SWT.LEFT, 8, false, null);
+		gameBotPageTable.addColumn(local.getString("gbotHistWI9"), SWT.LEFT, 8, true, null);
 
 		gameBotPageTable.addRaptorTableListener(new RaptorTableAdapter() {
 			@Override
@@ -322,7 +324,7 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 			}
 			final String person = getConnector().parsePerson(word);
 			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add a tab for person: " + person);
+			item.setText(local.getString("gbotHistWI24") + person);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					if (!Raptor.getInstance().getWindow()
@@ -367,7 +369,7 @@ public class GameBotHistoryWindowItem implements RaptorConnectorWindowItem {
 					return;
 				}
 				synchronized (gameBotPageTable.getTable()) {
-					statusLabel.setText("Player " + player + ": ("
+					statusLabel.setText(local.getString("gbotHistWI22") + player + ": ("
 							+ (currentPage + 1) + " of "
 							+ (hasRetrievedAllPages ? pages.size() : "?")
 							+ " pages.)");

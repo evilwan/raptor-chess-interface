@@ -37,6 +37,7 @@ import raptor.chat.BugGame;
 import raptor.chat.Bugger;
 import raptor.chat.Partnership;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.BughouseService.BughouseServiceListener;
@@ -53,6 +54,7 @@ public class BugTeams extends Composite {
 	protected RaptorTable player2Table;
 	protected boolean isActive = false;
 	protected Button isRated;
+	protected static L10n local = L10n.getInstance();
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
@@ -109,9 +111,9 @@ public class BugTeams extends Composite {
 		tableComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
 		player1Table = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		player1Table.addColumn("Elo", SWT.LEFT, 20, false, null);
-		player1Table.addColumn("Name", SWT.LEFT, 45, false, null);
-		player1Table.addColumn("Status", SWT.LEFT, 35, false, null);
+		player1Table.addColumn(local.getString("bugTeams1"), SWT.LEFT, 20, false, null);
+		player1Table.addColumn(local.getString("bugTeams2"), SWT.LEFT, 45, false, null);
+		player1Table.addColumn(local.getString("bugTeams3"), SWT.LEFT, 35, false, null);
 		player1Table.addRaptorTableListener(new RaptorTableAdapter() {
 			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
@@ -133,9 +135,9 @@ public class BugTeams extends Composite {
 
 		player2Table = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		player2Table.addColumn("Elo", SWT.LEFT, 20, false, null);
-		player2Table.addColumn("Name", SWT.LEFT, 45, false, null);
-		player2Table.addColumn("Status", SWT.LEFT, 35, false, null);
+		player2Table.addColumn(local.getString("bugTeams1"), SWT.LEFT, 20, false, null);
+		player2Table.addColumn(local.getString("bugTeams2"), SWT.LEFT, 45, false, null);
+		player2Table.addColumn(local.getString("bugTeams3"), SWT.LEFT, 35, false, null);
 		player2Table.addRaptorTableListener(new RaptorTableAdapter() {
 
 			@Override
@@ -161,7 +163,7 @@ public class BugTeams extends Composite {
 
 		isRated = new Button(BugTeams.this, SWT.CHECK);
 		isRated.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, true, false));
-		isRated.setText("Match Rated");
+		isRated.setText(local.getString("bugTeams4"));
 		isRated.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.BUG_ARENA_TEAMS_IS_RATED));
 		isRated.addSelectionListener(new SelectionListener() {
@@ -182,7 +184,7 @@ public class BugTeams extends Composite {
 		controlsComposite.setLayout(new GridLayout(4, false));
 		
 		CLabel label = new CLabel(controlsComposite, SWT.LEFT);
-		label.setText("Team Rating >=");
+		label.setText(local.getString("bugTeams5"));
 		availablePartnershipsFilter = new Combo(controlsComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
 		availablePartnershipsFilter.add("0");
@@ -217,12 +219,12 @@ public class BugTeams extends Composite {
 				});
 
 		CLabel label2 = new CLabel(controlsComposite, SWT.LEFT);
-		label2.setText("Match: ");
+		label2.setText(local.getString("bugTeams6"));
 		matchHighLowBoth = new Combo(controlsComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
-		matchHighLowBoth.add("High vs High");
-		matchHighLowBoth.add("High vs Low");
-		matchHighLowBoth.add("Both High and Low");
+		matchHighLowBoth.add(local.getString("bugTeams7"));
+		matchHighLowBoth.add(local.getString("bugTeams8"));
+		matchHighLowBoth.add(local.getString("bugTeams9"));
 		matchHighLowBoth.select(Raptor.getInstance().getPreferences()
 				.getInt(PreferenceKeys.BUG_ARENA_HI_LOW_INDEX));
 		matchHighLowBoth.addSelectionListener(new SelectionListener() {
@@ -243,7 +245,7 @@ public class BugTeams extends Composite {
 		matchComposite.setLayout(new GridLayout(4, false));
 
 		CLabel matchSelectedLabel = new CLabel(matchComposite, SWT.LEFT);
-		matchSelectedLabel.setText("Match selected:");
+		matchSelectedLabel.setText(local.getString("bugTeams10"));
 
 		Button selected10Button = new Button(matchComposite, SWT.PUSH);
 		selected10Button.setText("1 0");
@@ -274,7 +276,7 @@ public class BugTeams extends Composite {
 
 				if (!matchedSomeone) {
 					Raptor.getInstance().alert(
-							"You must select atleast 1 team member.");
+							local.getString("bugTeams11"));
 				}
 			}
 		});
@@ -308,7 +310,7 @@ public class BugTeams extends Composite {
 
 				if (!matchedSomeone) {
 					Raptor.getInstance().alert(
-							"You must select atleast 1 team member.");
+							local.getString("bugTeams11"));
 				}
 			}
 		});
@@ -342,13 +344,13 @@ public class BugTeams extends Composite {
 
 				if (!matchedSomeone) {
 					Raptor.getInstance().alert(
-							"You must select atleast 1 team member.");
+							local.getString("bugTeams11"));
 				}
 			}
 		});
 
 		CLabel matchAllLabel = new CLabel(matchComposite, SWT.LEFT);
-		matchAllLabel.setText("Match all:");
+		matchAllLabel.setText(local.getString("bugTeams12"));
 
 		Button all10Button = new Button(matchComposite, SWT.PUSH);
 		all10Button.setText("1 0");
@@ -399,14 +401,14 @@ public class BugTeams extends Composite {
 			int items = player1Table.getTable().getItems().length;
 
 			for (int i = 0; i < items; i++) {
-				if ("High vs High".equals(matchHighLow)) {
+				if (local.getString("bugTeams7").equals(matchHighLow)) {
 					if (isHigh(true, i) && isUserHigh) {
 						match(true, i, time, inc);
 					} else {
 						match(false, i, time, inc);
 
 					}
-				} else if ("High vs Low".equals(matchHighLow)) {
+				} else if (local.getString("bugTeams8").equals(matchHighLow)) {
 					if (!isHigh(true, i) && isUserHigh) {
 						match(true, i, time, inc);
 					} else {

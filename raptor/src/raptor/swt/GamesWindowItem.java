@@ -40,6 +40,7 @@ import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.service.GameService.GameInfo;
@@ -91,6 +92,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 	protected RaptorTable gamesTable;
 	protected Composite settings;
 	protected boolean isActive = false;
+	protected static L10n local = L10n.getInstance();
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
@@ -120,7 +122,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 			Raptor.getInstance().getDisplay().asyncExec(new RaptorRunnable() {
 				@Override
 				public void execute() {
-					lastRefreshLabel.setText("Refreshing...");
+					lastRefreshLabel.setText(local.getString("gameWI1"));
 				}
 			});
 			sendGamesMessage();
@@ -172,7 +174,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public String getTitle() {
-		return getConnector().getShortName() + "(Games)";
+		return getConnector().getShortName() + "("+local.getString("gameWI3")+")";
 	}
 
 	public Control getToolbar(Composite parent) {
@@ -187,14 +189,14 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		TabItem controlsTab = new TabItem(tabFolder, SWT.NONE);
-		controlsTab.setText("Settings");
+		controlsTab.setText(local.getString("gameWI2"));
 		settings = new Composite(tabFolder, SWT.NONE);
 		settings.setLayout(new GridLayout(1, false));
 		buildSettingsComposite(settings);
 		controlsTab.setControl(settings);
 
 		TabItem tableTab = new TabItem(tabFolder, SWT.NULL);
-		tableTab.setText("Games");
+		tableTab.setText(local.getString("gameWI3"));
 
 		Composite tableComposite = new Composite(tabFolder, SWT.NONE);
 		tableComposite.setLayout(new GridLayout(1, false));
@@ -203,7 +205,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		lastRefreshLabel = new CLabel(tableComposite, SWT.LEFT);
 		lastRefreshLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
 				false));
-		lastRefreshLabel.setText("Refreshes every minute.");
+		lastRefreshLabel.setText(local.getString("gameWI4"));
 		lastRefreshLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent arg0) {
@@ -215,13 +217,13 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		gamesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		gamesTable.addColumn("ID", SWT.LEFT, 10, true, new IntegerComparator());
-		gamesTable.addColumn("W ELO", SWT.LEFT, 15, true,
+		gamesTable.addColumn(local.getString("gameWI5"), SWT.LEFT, 10, true, new IntegerComparator());
+		gamesTable.addColumn(local.getString("gameWI6"), SWT.LEFT, 15, true,
 				new RatingComparator());
-		gamesTable.addColumn("White", SWT.LEFT, 20, true, null);
-		gamesTable.addColumn("B ELO", SWT.LEFT, 15, true, null);
-		gamesTable.addColumn("Black", SWT.LEFT, 20, true, null);
-		gamesTable.addColumn("Type", SWT.LEFT, 20, true, null);
+		gamesTable.addColumn(local.getString("gameWI7"), SWT.LEFT, 20, true, null);
+		gamesTable.addColumn(local.getString("gameWI8"), SWT.LEFT, 15, true, null);
+		gamesTable.addColumn(local.getString("gameWI9"), SWT.LEFT, 20, true, null);
+		gamesTable.addColumn(local.getString("gameWI10"), SWT.LEFT, 20, true, null);
 
 		// Sort once so when data is refreshed it will be on elo descending.
 		gamesTable.sort(1);
@@ -321,7 +323,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		RaptorLabel label = new RaptorLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText(">= Rating <=");
+		label.setText(">= "+local.getString("gameWI11")+" <=");
 		maxRatingsFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
 		for (String rating : getRatings()) {
@@ -348,11 +350,11 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 				false));
 
 		label = new RaptorLabel(ratedComposite, SWT.LEFT);
-		label.setText("Rated:");
+		label.setText(local.getString("gameWI12"));
 		ratedFilter = new Combo(ratedComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		ratedFilter.add("Rated and Unrated");
-		ratedFilter.add("Rated");
-		ratedFilter.add("Unrated");
+		ratedFilter.add(local.getString("gameWI13"));
+		ratedFilter.add(local.getString("gameWI14"));
+		ratedFilter.add(local.getString("gameWI15"));
 		ratedFilter.select(Raptor.getInstance().getPreferences().getInt(
 				PreferenceKeys.GAMES_TABLE_RATED_INDEX));
 		ratedFilter.addSelectionListener(new SelectionListener() {
@@ -372,7 +374,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		typeFilterComposite.setLayout(new GridLayout(3, false));
 
 		isShowingAtomic = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingAtomic.setText("Atomic");
+		isShowingAtomic.setText(local.getString("gameWI16"));
 		isShowingAtomic.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_ATOMIC));
 		isShowingAtomic.addSelectionListener(new SelectionListener() {
@@ -389,7 +391,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingBlitz = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingBlitz.setText("Blitz");
+		isShowingBlitz.setText(local.getString("gameWI17"));
 		isShowingBlitz.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_BLITZ));
 		isShowingBlitz.addSelectionListener(new SelectionListener() {
@@ -406,7 +408,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingBughouse = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingBughouse.setText("Bughouse");
+		isShowingBughouse.setText(local.getString("gameWI18"));
 		isShowingBughouse.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_BUGHOUSE));
 		isShowingBughouse.addSelectionListener(new SelectionListener() {
@@ -423,7 +425,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingCrazyhouse = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingCrazyhouse.setText("Crazyhouse");
+		isShowingCrazyhouse.setText(local.getString("gameWI19"));
 		isShowingCrazyhouse.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_CRAZYHOUSE));
 		isShowingCrazyhouse.addSelectionListener(new SelectionListener() {
@@ -440,7 +442,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingExamined = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingExamined.setText("Examined");
+		isShowingExamined.setText(local.getString("gameWI20"));
 		isShowingExamined.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_EXAMINED));
 		isShowingExamined.addSelectionListener(new SelectionListener() {
@@ -457,7 +459,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingLightning = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingLightning.setText("Lightning");
+		isShowingLightning.setText(local.getString("gameWI21"));
 		isShowingLightning.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_LIGHTNING));
 		isShowingLightning.addSelectionListener(new SelectionListener() {
@@ -474,7 +476,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingLosers = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingLosers.setText("Losers");
+		isShowingLosers.setText(local.getString("gameWI22"));
 		isShowingLosers.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_LOSERS));
 		isShowingLosers.addSelectionListener(new SelectionListener() {
@@ -491,7 +493,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingNonstandard = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingNonstandard.setText("Nonstandard");
+		isShowingNonstandard.setText(local.getString("gameWI23"));
 		isShowingNonstandard.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_NONSTANDARD));
 		isShowingNonstandard.addSelectionListener(new SelectionListener() {
@@ -508,7 +510,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingPrivate = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingPrivate.setText("Private");
+		isShowingPrivate.setText(local.getString("gameWI24"));
 		isShowingPrivate.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_PRIVATE));
 		isShowingPrivate.addSelectionListener(new SelectionListener() {
@@ -525,7 +527,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingSuicide = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingSuicide.setText("Suicide");
+		isShowingSuicide.setText(local.getString("gameWI25"));
 		isShowingSuicide.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_SUICIDE));
 		isShowingSuicide.addSelectionListener(new SelectionListener() {
@@ -542,7 +544,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingStandard = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingStandard.setText("Standard");
+		isShowingStandard.setText(local.getString("gameWI26"));
 		isShowingStandard.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_STANDARD));
 		isShowingStandard.addSelectionListener(new SelectionListener() {
@@ -559,7 +561,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingUntimed = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingUntimed.setText("Untimed");
+		isShowingUntimed.setText(local.getString("gameWI27"));
 		isShowingUntimed.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_UNTIMED));
 		isShowingUntimed.addSelectionListener(new SelectionListener() {
@@ -576,7 +578,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingWild = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingWild.setText("Wild");
+		isShowingWild.setText(local.getString("gameWI28"));
 		isShowingWild.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.GAMES_TABLE_SHOW_WILD));
 		isShowingWild.addSelectionListener(new SelectionListener() {
@@ -707,11 +709,11 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 						data[i][3] = info.getBlackElo();
 						data[i][4] = info.getBlackName();
 						data[i][5] = info.getCategory().toString()
-								+ (info.isBeingExamined() ? "(examine)" : "");
+								+ (info.isBeingExamined() ? "("+local.getString("gameWI29")+")" : "");
 					}
 					gamesTable.refreshTable(data);
 
-					lastRefreshLabel.setText("Last refreshed: "
+					lastRefreshLabel.setText(local.getString("gameWI30")
 							+ LAST_REFRESH_DATE_FORMAT.format(new Date()));
 				}
 			}

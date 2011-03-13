@@ -32,6 +32,7 @@ import raptor.RaptorConnectorWindowItem;
 import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ActionScriptService;
 
@@ -57,7 +58,7 @@ public class BugButtonsWindowItem implements RaptorConnectorWindowItem {
 	};
 
 	public BugButtonsWindowItem(Connector connector) {
-		title = connector.getShortName() + "(Bughouse Buttons)";
+		title = connector.getShortName() + L10n.getInstance().getString("bugButt");
 		this.connector = connector;
 	}
 

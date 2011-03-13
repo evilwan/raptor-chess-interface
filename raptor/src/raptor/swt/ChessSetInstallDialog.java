@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import raptor.Raptor;
 import raptor.chess.pgn.PgnUtils;
+import raptor.international.L10n;
 import raptor.service.ThreadService;
 import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
@@ -64,6 +65,7 @@ public class ChessSetInstallDialog extends Dialog {
 	private static final RaptorLogger LOG = RaptorLogger
 			.getLog(ChessSetInstallDialog.class);
 
+	protected static L10n local = L10n.getInstance();
 	private Button cancelButton;
 	private Composite cancelComposite;
 	protected int executeTime = 50;
@@ -75,7 +77,7 @@ public class ChessSetInstallDialog extends Dialog {
 	private CLabel message;
 
 	protected int processBarStyle = SWT.SMOOTH; // process bar style
-	protected String processMessage = "Processing...";
+	protected String processMessage = local.getString("chessSetID1");
 	protected int unzipCounter = 0;
 	private Label processMessageLabel;
 	private ProgressBar progressBar = null;
@@ -105,7 +107,7 @@ public class ChessSetInstallDialog extends Dialog {
 								@Override
 								public void execute() {
 									processMessageLabel
-											.setText("Verifying zip file...");
+											.setText(local.getString("chessSetID2"));
 									shell.layout(true, true);
 								}
 							});
@@ -155,10 +157,10 @@ public class ChessSetInstallDialog extends Dialog {
 									@Override
 									public void execute() {
 										processMessageLabel
-												.setText("Installiation failed: Invalid chess set file\n"
+												.setText(local.getString("chessSetID3")
 														+ finalInvalidEntryName);
 										cancelButton.setVisible(true);
-										cancelButton.setText("Close");
+										cancelButton.setText(local.getString("chessSetID4"));
 										shell.layout(true, true);
 									}
 								});
@@ -184,9 +186,9 @@ public class ChessSetInstallDialog extends Dialog {
 									@Override
 									public void execute() {
 										processMessageLabel
-												.setText("Installation Complete");
+												.setText(local.getString("chessSetID5"));
 										cancelButton.setVisible(true);
-										cancelButton.setText("Close");
+										cancelButton.setText(local.getString("chessSetID4"));
 										shell.layout(true, true);
 									}
 								});
@@ -195,7 +197,7 @@ public class ChessSetInstallDialog extends Dialog {
 					if (!isClosed) {
 						LOG.error("Error installing chess set", t);
 						Raptor.getInstance().onError(
-								"Error installing chess set from zip: " + file,
+								local.getString("chessSetID6") + file,
 								t);
 					}
 				} finally {
@@ -232,7 +234,7 @@ public class ChessSetInstallDialog extends Dialog {
 
 		shell.setLayout(gridLayout);
 		shell.setSize(483, 181);
-		shell.setText("Installing chess set(s) from " + file.getName());
+		shell.setText(local.getString("chessSetID7") + file.getName());
 
 		final Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,
@@ -277,7 +279,7 @@ public class ChessSetInstallDialog extends Dialog {
 			}
 		});
 		cancelButton.setLayoutData(new GridData(78, SWT.DEFAULT));
-		cancelButton.setText("Cancel");
+		cancelButton.setText(local.getString("chessSetID8"));
 		cancelButton.setEnabled(mayCancel);
 		cancelButton.setVisible(false);
 		
@@ -320,7 +322,7 @@ public class ChessSetInstallDialog extends Dialog {
 							@Override
 							public void execute() {
 								processMessageLabel
-										.setText("Extracting directory: "
+										.setText(local.getString("chessSetID9")
 												+ zipEntry.getName());
 								progressBar.setSelection(++unzipCounter);
 							}
@@ -339,7 +341,7 @@ public class ChessSetInstallDialog extends Dialog {
 						.asyncExec(new RaptorRunnable() {
 							@Override
 							public void execute() {
-								processMessageLabel.setText("Extracting file: "
+								processMessageLabel.setText(local.getString("chessSetID10")
 										+ zipEntry.getName());
 								progressBar.setSelection(++unzipCounter);
 							}

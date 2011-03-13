@@ -28,6 +28,7 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
@@ -44,6 +45,7 @@ public class BugWhoWindowItem implements RaptorConnectorWindowItem {
 	protected BugTeams bugTeams;
 	protected Composite composite;
 	protected boolean isActive = false;
+	protected static L10n local = L10n.getInstance();
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
@@ -110,7 +112,7 @@ public class BugWhoWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public String getTitle() {
-		return service.getConnector().getShortName() + "(Bug Who)";
+		return service.getConnector().getShortName() + local.getString("bugWhoWI1");
 	}
 
 	public Control getToolbar(Composite parent) {
@@ -125,16 +127,16 @@ public class BugWhoWindowItem implements RaptorConnectorWindowItem {
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		TabItem bugPartnersTab = new TabItem(tabFolder, SWT.NONE);
-		bugPartnersTab.setText("Partners");
+		bugPartnersTab.setText(local.getString("bugWhoWI2"));
 		bugPartnersTab.setControl(bugPartners = new BugPartners(tabFolder,
 				service));
 
 		TabItem bugTeamsTab = new TabItem(tabFolder, SWT.NONE);
-		bugTeamsTab.setText("Teams");
+		bugTeamsTab.setText(local.getString("bugWhoWI3"));
 		bugTeamsTab.setControl(bugTeams = new BugTeams(tabFolder, service));
 
 		TabItem bugGamesTab = new TabItem(tabFolder, SWT.NONE);
-		bugGamesTab.setText("Games");
+		bugGamesTab.setText(local.getString("bugWhoWI4"));
 		bugGamesTab.setControl(bugGames = new BugGames(tabFolder, service));
 
 		tabFolder.addSelectionListener(new SelectionListener() {

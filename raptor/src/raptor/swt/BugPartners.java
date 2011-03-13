@@ -37,6 +37,7 @@ import raptor.chat.BugGame;
 import raptor.chat.Bugger;
 import raptor.chat.Partnership;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.service.BughouseService;
 import raptor.service.ThreadService;
@@ -60,6 +61,7 @@ public class BugPartners extends Composite {
 	protected Combo maxAvailablePartnersFilter;
 	protected boolean isActive = false;
 
+	protected static L10n local = L10n.getInstance();
 	protected RaptorTable table;
 
 	protected Runnable timer = new Runnable() {
@@ -139,7 +141,7 @@ public class BugPartners extends Composite {
 				});
 
 		CLabel label = new CLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText(">= Rating <= ");
+		label.setText(local.getString("bugPartners1"));
 		maxAvailablePartnersFilter = new Combo(ratingFilterComposite,
 				SWT.DROP_DOWN | SWT.READ_ONLY);
 		for (String rating : getRatings()) {
@@ -168,9 +170,9 @@ public class BugPartners extends Composite {
 				| SWT.SINGLE | SWT.FULL_SELECTION);
 		table.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		table.addColumn("Rating", SWT.LEFT, 25, true, new RatingComparator());
-		table.addColumn("Name", SWT.LEFT, 50, true, null);
-		table.addColumn("Status", SWT.LEFT, 25, true, null);
+		table.addColumn(local.getString("bugPartners2"), SWT.LEFT, 25, true, new RatingComparator());
+		table.addColumn(local.getString("bugPartners3"), SWT.LEFT, 50, true, null);
+		table.addColumn(local.getString("bugPartners4"), SWT.LEFT, 25, true, null);
 
 		// Sort once so it will sort by rating descending.
 		table.sort(0);
@@ -208,7 +210,7 @@ public class BugPartners extends Composite {
 		buttonsComposite.setLayout(new RowLayout());
 
 		Button partnerSelected = new Button(buttonsComposite, SWT.PUSH);
-		partnerSelected.setText("Partner Selected");
+		partnerSelected.setText(local.getString("bugPartners5"));
 		partnerSelected.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}
@@ -220,7 +222,7 @@ public class BugPartners extends Composite {
 				}
 				if (selectedIndexes == null || selectedIndexes.length == 0) {
 					Raptor.getInstance().alert(
-							"You must first some select buggers to partner.");
+							local.getString("bugPartners6"));
 				} else {
 					synchronized (table.getTable()) {
 						for (int i = 0; i < selectedIndexes.length; i++) {
@@ -235,7 +237,7 @@ public class BugPartners extends Composite {
 		});
 
 		Button partnerAll = new Button(buttonsComposite, SWT.PUSH);
-		partnerAll.setText("Partner All");
+		partnerAll.setText(local.getString("bugPartners7"));
 		partnerAll.addSelectionListener(new SelectionListener() {
 			public void widgetDefaultSelected(SelectionEvent e) {
 			}

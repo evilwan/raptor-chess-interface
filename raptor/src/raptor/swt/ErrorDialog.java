@@ -24,6 +24,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
+import raptor.international.L10n;
+
 public class ErrorDialog extends InputDialog {
 	protected StyledText errorText;
 
@@ -37,8 +39,8 @@ public class ErrorDialog extends InputDialog {
 	 */
 	public ErrorDialog(Shell parent, String errorText) {
 		// Let users override the default styles
-		super(parent, "Raptor Error", "");
-		setText("Raptor Error");
+		super(parent, L10n.getInstance().getString("raptorError"), "");
+		setText(L10n.getInstance().getString("raptorError"));
 		setMessage(errorText);
 	}
 

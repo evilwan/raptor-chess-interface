@@ -38,6 +38,7 @@ import org.eclipse.swt.widgets.Text;
 import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 /**
@@ -47,6 +48,8 @@ import raptor.pref.PreferenceKeys;
 public class BrowserWindowItem implements RaptorWindowItem {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(BrowserWindowItem.class);
 
+	protected static L10n local = L10n.getInstance();
+	
 	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
@@ -88,8 +91,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	public void dispose() {
 		try {
 			browser.stop();
-			browser.setText("<html><body>I have to do this to get a browser "
-					+ "to shut down correctly. Duno why.</body><html>");
+			browser.setText("<html><body>"+local.getString("browWinIt1")+"</body><html>");
 			browser.close();
 			browser.dispose();
 		} catch (Throwable t) {
@@ -130,7 +132,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 	}
 
 	public String getTitle() {
-		return "Browser";
+		return local.getString("browWinIt2");
 	}
 
 	public Control getToolbar(Composite parent) {
@@ -275,7 +277,7 @@ public class BrowserWindowItem implements RaptorWindowItem {
 			browser.stop();
 			if (!browser.setUrl(url)) {
 				browser
-						.setText("<html><<body><h1>The page could not be loaded.</h1></body>/html>");
+						.setText("<html><body><h1>" + local.getString("browWinIt3") + "</h1></body>/html>");
 			}
 		}
 	}
