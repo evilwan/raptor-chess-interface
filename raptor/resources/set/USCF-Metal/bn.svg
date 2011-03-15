@@ -65,7 +65,6 @@
          id="feBlend2829"
          in2="result5"
          result="fbSourceGraphic"
-         lighting-color="rgb(224,128,0)"
          mode="multiply" />
       <feGaussianBlur
          id="feGaussianBlur2831"
@@ -76,15 +75,11 @@
          id="feSpecularLighting2833"
          in="result0"
          result="result1"
-         lighting-color="rgb(224,128,0)"
+         lighting-color="rgb(224,132,0)"
          surfaceScale="3"
          specularConstant="0.35"
-         specularExponent="15">
-        <fePointLight
-           id="fePointLight2835"
-           x="-5000"
-           y="-10000"
-           z="20000" />
+         specularExponent="5">
+        <feDistantLight azimuth = "225" elevation = "45"/>
       </feSpecularLighting>
       <feComposite
          id="feComposite2837"

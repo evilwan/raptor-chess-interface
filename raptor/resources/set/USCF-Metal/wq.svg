@@ -78,12 +78,8 @@
          lighting-color="rgb(240,248,255)"
          surfaceScale="3"
          specularConstant="0.35"
-         specularExponent="15">
-        <fePointLight
-           id="fePointLight2837"
-           x="-5000"
-           y="-10000"
-           z="20000" />
+         specularExponent="5">
+        <feDistantLight azimuth = "225" elevation = "45"/>
       </feSpecularLighting>
       <feComposite
          id="feComposite2839"
