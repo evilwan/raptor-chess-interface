@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import raptor.international.L10n;
+
 public class InputDialog extends Dialog {
 	protected String input;
 	protected String message;
@@ -131,7 +133,7 @@ public class InputDialog extends Dialog {
 		// so that pressing it will set input
 		// to the entered value
 		Button ok = new Button(shell, SWT.PUSH);
-		ok.setText("OK");
+		ok.setText(L10n.getInstance().getString("ok"));
 		ok.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		ok.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -144,7 +146,7 @@ public class InputDialog extends Dialog {
 		// Create the cancel button and add a handler
 		// so that pressing it will set input to null
 		Button cancel = new Button(shell, SWT.PUSH);
-		cancel.setText("Cancel");
+		cancel.setText(L10n.getInstance().getString("cancel"));
 		cancel.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false,
 				1, 1));
 		cancel.addSelectionListener(new SelectionAdapter() {

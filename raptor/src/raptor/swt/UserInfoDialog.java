@@ -12,6 +12,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 
 public class UserInfoDialog extends Dialog {
 	
@@ -20,7 +21,7 @@ public class UserInfoDialog extends Dialog {
 
 	public UserInfoDialog() {
 		super(Raptor.getInstance().getWindow().getShell(), SWT.DIALOG_TRIM);
-		setText("User profile");
+		setText(L10n.getInstance().getString("userProf"));
 	}
 	
 	public void open() {
@@ -55,7 +56,7 @@ public class UserInfoDialog extends Dialog {
 				1, 1));
 		iface.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1,
 				1));
-		timeOn.setText("Please wait...");
+		timeOn.setText(L10n.getInstance().getString("plsWait"));
 		fingerText = new StyledText(parent, SWT.V_SCROLL | SWT.MULTI | SWT.BORDER);
 		fingerText.setEditable(false);
 		fingerText.setFont(Raptor.getInstance().getPreferences().getFont("chat-input-font"));

@@ -40,6 +40,7 @@ import raptor.chess.pgn.LenientPgnParserListener;
 import raptor.chess.pgn.PgnParserError;
 import raptor.chess.pgn.PgnUtils;
 import raptor.chess.pgn.StreamingPgnParser;
+import raptor.international.L10n;
 import raptor.service.ThreadService;
 import raptor.swt.chess.PgnParseResultsWindowItem;
 import raptor.util.RaptorRunnable;
@@ -109,7 +110,7 @@ public class PgnProcessingDialog extends Dialog {
 	private CLabel message;
 
 	protected int processBarStyle = SWT.SMOOTH; // process bar style
-	protected String processMessage = "Processing...";
+	protected String processMessage = L10n.getInstance().getString("processing");
 	private Label processMessageLabel;
 	private ProgressBar progressBar = null;
 	private Composite progressBarComposite;
@@ -123,10 +124,8 @@ public class PgnProcessingDialog extends Dialog {
 		if (this.file.length() > MAX_BYTES_IN_FILE) {
 			Raptor
 					.getInstance()
-					.alert(
-							"Large file detected. Raptor will only parse the first "
-									+ MAX_BYTES_IN_FILE
-									+ " bytes from this file. Future support is planned for large pgn files.");
+					.alert(L10n.getInstance().getString("pgnProcD1")
+							.replaceAll("MAX_BYTES_IN_FILE", Integer.toString(MAX_BYTES_IN_FILE)));
 
 		}
 	}
@@ -165,7 +164,7 @@ public class PgnProcessingDialog extends Dialog {
 					if (!isClosed) {
 						LOG.error("Error parsing pgn file", t);
 						Raptor.getInstance().onError(
-								"Error parsing pgn file: " + file, t);
+								L10n.getInstance().getString("pgnProcD2") + file, t);
 					}
 				} finally {
 					try {
@@ -255,7 +254,7 @@ public class PgnProcessingDialog extends Dialog {
 			}
 		});
 		cancelButton.setLayoutData(new GridData(78, SWT.DEFAULT));
-		cancelButton.setText("Cancel");
+		cancelButton.setText(L10n.getInstance().getString("cancel"));
 		cancelButton.setEnabled(mayCancel);
 		
 		SWTUtils.center(shell);

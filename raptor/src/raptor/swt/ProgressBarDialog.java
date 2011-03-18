@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+import raptor.international.L10n;
 import raptor.util.RaptorRunnable;
 
 /**
@@ -113,7 +114,7 @@ public abstract class ProgressBarDialog extends Dialog {
 	private Object result; //
 	private Shell shell; //
 
-	protected String shellTitle = "Progress..."; //
+	protected String shellTitle = L10n.getInstance().getString("progress"); //
 
 	public ProgressBarDialog(Shell parent) {
 		super(parent);
@@ -217,7 +218,7 @@ public abstract class ProgressBarDialog extends Dialog {
 			}
 		});
 		cancelButton.setLayoutData(new GridData(78, SWT.DEFAULT));
-		cancelButton.setText("Cancel");
+		cancelButton.setText(L10n.getInstance().getString("cancel"));
 		cancelButton.setEnabled(mayCancel);
 		
 		SWTUtils.center(shell);

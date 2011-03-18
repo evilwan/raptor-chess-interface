@@ -45,6 +45,7 @@ import raptor.engine.uci.options.UCICheck;
 import raptor.engine.uci.options.UCICombo;
 import raptor.engine.uci.options.UCISpinner;
 import raptor.engine.uci.options.UCIString;
+import raptor.international.L10n;
 import raptor.service.UCIEngineService;
 
 public class UCIEnginePropertiesDialog extends Dialog {
@@ -54,11 +55,13 @@ public class UCIEnginePropertiesDialog extends Dialog {
 	protected Text goAnalysisParams;
 	protected UCIEngine engine;
 	protected Shell shell;
+	protected static L10n local = L10n.getInstance();
 
 	public UCIEnginePropertiesDialog(Shell parent, UCIEngine engine) {
 		super(parent);
-		setText("Profile: " + engine.getUserName() + "    Engine: "
-				+ engine.getEngineName() + " by " + engine.getEngineAuthor());
+		setText(local.getString("uciEngPropD1") + engine.getUserName() 
+				+ local.getString("uciEngPropD2")
+				+ engine.getEngineName() + local.getString("uciEngPropD3") + engine.getEngineAuthor());
 		this.engine = engine;
 	}
 
@@ -122,7 +125,7 @@ public class UCIEnginePropertiesDialog extends Dialog {
 		Label goParametersLabel = new Label(customControls, SWT.LEFT);
 		goParametersLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
 				false, false, 1, 1));
-		goParametersLabel.setText("Go Analysis Parameters (Advanced):");
+		goParametersLabel.setText(local.getString("uciEngPropD4"));
 
 		goAnalysisParams = new Text(customControls, SWT.SINGLE | SWT.BORDER);
 		goAnalysisParams.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
@@ -133,7 +136,7 @@ public class UCIEnginePropertiesDialog extends Dialog {
 				customControls, SWT.CHECK);
 		multiplyBlackScoreByMinus1Button.setLayoutData(new GridData(SWT.LEFT,
 				SWT.CENTER, false, false, 2, 1));
-		multiplyBlackScoreByMinus1Button.setText("Multiply black score by -1");
+		multiplyBlackScoreByMinus1Button.setText(local.getString("uciEngPropD5"));
 		multiplyBlackScoreByMinus1Button.setSelection(engine
 				.isMultiplyBlackScoreByMinus1());
 
@@ -220,7 +223,7 @@ public class UCIEnginePropertiesDialog extends Dialog {
 		buttonsComposite.setLayout(new RowLayout());
 
 		Button saveButton = new Button(buttonsComposite, SWT.PUSH);
-		saveButton.setText("Save");
+		saveButton.setText(local.getString("save"));
 		saveButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -238,7 +241,7 @@ public class UCIEnginePropertiesDialog extends Dialog {
 		});
 
 		Button cancelButton = new Button(buttonsComposite, SWT.PUSH);
-		cancelButton.setText("Cancel");
+		cancelButton.setText(local.getString("cancel"));
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

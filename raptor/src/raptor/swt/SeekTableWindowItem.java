@@ -37,6 +37,7 @@ import raptor.Raptor;
 import raptor.RaptorConnectorWindowItem;
 import raptor.chat.Seek;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.service.SeekService;
 import raptor.service.ThreadService;
@@ -60,6 +61,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 				"9999" };
 	}
 
+	protected static L10n local = L10n.getInstance();
 	protected SeekService service;
 	protected Composite composite;
 	protected Combo minRatingsFilter;
@@ -154,7 +156,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public String getTitle() {
-		return service.getConnector().getShortName() + "(Seeks)";
+		return service.getConnector().getShortName() + local.getString("seekTabWI1");
 	}
 
 	public Control getToolbar(Composite parent) {
@@ -169,14 +171,14 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		tabFolder.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		TabItem controlsTab = new TabItem(tabFolder, SWT.NONE);
-		controlsTab.setText("Settings");
+		controlsTab.setText(local.getString("seekTabWI2"));
 		settings = new Composite(tabFolder, SWT.NONE);
 		settings.setLayout(new GridLayout(1, false));
 		buildSettingsComposite(settings);
 		controlsTab.setControl(settings);
 
 		TabItem tableTab = new TabItem(tabFolder, SWT.NULL);
-		tableTab.setText("Seek Table");
+		tableTab.setText(local.getString("seekTabWI3"));
 
 		Composite tableComposite = new Composite(tabFolder, SWT.NONE);
 		tableComposite.setLayout(new GridLayout(1, false));
@@ -186,20 +188,20 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		seeksTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		seeksTable.addColumn("Ad", SWT.LEFT, 8, true, new IntegerComparator());
-		seeksTable.addColumn("Elo", SWT.LEFT, 11, true, new RatingComparator());
-		seeksTable.addColumn("Time", SWT.LEFT, 11, true, null);
-		seeksTable.addColumn("Type", SWT.LEFT, 14, true, null);
-		seeksTable.addColumn("Name", SWT.LEFT, 27, true, null);
-		seeksTable.addColumn("Rating Range", SWT.LEFT, 19, true, null);
-		seeksTable.addColumn("Flags", SWT.LEFT, 10, true, null);
+		seeksTable.addColumn(local.getString("seekTabWI4"), SWT.LEFT, 8, true, new IntegerComparator());
+		seeksTable.addColumn(local.getString("seekTabWI5"), SWT.LEFT, 11, true, new RatingComparator());
+		seeksTable.addColumn(local.getString("seekTabWI6"), SWT.LEFT, 11, true, null);
+		seeksTable.addColumn(local.getString("seekTabWI7"), SWT.LEFT, 14, true, null);
+		seeksTable.addColumn(local.getString("seekTabWI8"), SWT.LEFT, 27, true, null);
+		seeksTable.addColumn(local.getString("seekTabWI9"), SWT.LEFT, 19, true, null);
+		seeksTable.addColumn(local.getString("seekTabWI10"), SWT.LEFT, 10, true, null);
 
 		// Sort once so when data is refreshed it will be on elo descending.
 		seeksTable.sort(1);
 
 		seekGraph = new SeekGraph(tabFolder, service);
 		TabItem graphTab = new TabItem(tabFolder, SWT.NULL);
-		graphTab.setText("Seek Graph");
+		graphTab.setText(local.getString("seekTabWI11"));
 		graphTab.setControl(seekGraph);
 
 		seeksTable.addRaptorTableListener(new RaptorTableAdapter() {
@@ -299,7 +301,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		RaptorLabel label = new RaptorLabel(ratingFilterComposite, SWT.LEFT);
-		label.setText(">= Rating <=");
+		label.setText(local.getString("seekTabWI12"));
 		maxRatingsFilter = new Combo(ratingFilterComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);
 		for (String rating : getRatings()) {
@@ -326,11 +328,11 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 				false));
 
 		label = new RaptorLabel(ratedComposite, SWT.LEFT);
-		label.setText("Rated:");
+		label.setText(local.getString("seekTabWI13"));
 		ratedFilter = new Combo(ratedComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
-		ratedFilter.add("Rated and Unrated");
-		ratedFilter.add("Rated");
-		ratedFilter.add("Unrated");
+		ratedFilter.add(local.getString("seekTabWI14"));
+		ratedFilter.add(local.getString("seekTabWI15"));
+		ratedFilter.add(local.getString("seekTabWI16"));
 		ratedFilter.select(Raptor.getInstance().getPreferences().getInt(
 				PreferenceKeys.SEEK_TABLE_RATED_INDEX));
 		ratedFilter.addSelectionListener(new SelectionListener() {
@@ -350,7 +352,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		typeFilterComposite.setLayout(new GridLayout(3, false));
 
 		isShowingAtomic = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingAtomic.setText("Atomic");
+		isShowingAtomic.setText(local.getString("seekTabWI17"));
 		isShowingAtomic.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_ATOMIC));
 		isShowingAtomic.addSelectionListener(new SelectionListener() {
@@ -367,7 +369,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingBlitz = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingBlitz.setText("Blitz");
+		isShowingBlitz.setText(local.getString("seekTabWI18"));
 		isShowingBlitz.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_BLITZ));
 		isShowingBlitz.addSelectionListener(new SelectionListener() {
@@ -384,7 +386,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingComputers = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingComputers.setText("Computers");
+		isShowingComputers.setText(local.getString("seekTabWI19"));
 		isShowingComputers.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_COMPUTERS));
 		isShowingComputers.addSelectionListener(new SelectionListener() {
@@ -401,7 +403,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingCrazyhouse = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingCrazyhouse.setText("Crazyhouse");
+		isShowingCrazyhouse.setText(local.getString("seekTabWI20"));
 		isShowingCrazyhouse.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_CRAZYHOUSE));
 		isShowingCrazyhouse.addSelectionListener(new SelectionListener() {
@@ -418,7 +420,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingFR = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingFR.setText("Fischer Random");
+		isShowingFR.setText(local.getString("seekTabWI21"));
 		isShowingFR.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_FR));
 		isShowingFR.addSelectionListener(new SelectionListener() {
@@ -435,7 +437,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingLightning = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingLightning.setText("Lightning");
+		isShowingLightning.setText(local.getString("seekTabWI22"));
 		isShowingLightning.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_LIGHTNING));
 		isShowingLightning.addSelectionListener(new SelectionListener() {
@@ -452,7 +454,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingLosers = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingLosers.setText("Losers");
+		isShowingLosers.setText(local.getString("seekTabWI23"));
 		isShowingLosers.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_LOSERS));
 		isShowingLosers.addSelectionListener(new SelectionListener() {
@@ -469,7 +471,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingStandard = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingStandard.setText("Standard");
+		isShowingStandard.setText(local.getString("seekTabWI24"));
 		isShowingStandard.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_STANDARD));
 		isShowingStandard.addSelectionListener(new SelectionListener() {
@@ -486,7 +488,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingSuicide = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingSuicide.setText("Suicide");
+		isShowingSuicide.setText(local.getString("seekTabWI25"));
 		isShowingSuicide.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_SUICIDE));
 		isShowingSuicide.addSelectionListener(new SelectionListener() {
@@ -503,7 +505,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingUntimed = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingUntimed.setText("Untimed");
+		isShowingUntimed.setText(local.getString("seekTabWI26"));
 		isShowingUntimed.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_UNTIMED));
 		isShowingUntimed.addSelectionListener(new SelectionListener() {
@@ -520,7 +522,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 		});
 
 		isShowingWild = new Button(typeFilterComposite, SWT.CHECK);
-		isShowingWild.setText("Wild");
+		isShowingWild.setText(local.getString("seekTabWI27"));
 		isShowingWild.setSelection(Raptor.getInstance().getPreferences()
 				.getBoolean(PreferenceKeys.SEEK_TABLE_SHOW_WILD));
 		isShowingWild.addSelectionListener(new SelectionListener() {

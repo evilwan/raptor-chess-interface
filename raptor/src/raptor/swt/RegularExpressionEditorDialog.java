@@ -24,11 +24,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import raptor.international.L10n;
 import raptor.util.RegExUtils;
 
 public class RegularExpressionEditorDialog extends InputDialog {
 	protected StyledText regEx;
 	protected StyledText textToTest;
+	protected static L10n local = L10n.getInstance();
 
 	/**
 	 * InputDialog constructor
@@ -84,9 +86,7 @@ public class RegularExpressionEditorDialog extends InputDialog {
 
 		Label label = new Label(shell, SWT.NONE);
 		label
-				.setText("Example: .*word.* will return true whenever word is encountered.\n"
-						+ "For help with regular expressions with in Raptor:\n"
-						+ "Help->Raptor Help->Regular Expressions");
+				.setText(local.getString("regexD1"));
 
 		// Show the message
 		label = new Label(shell, SWT.NONE);
@@ -106,7 +106,7 @@ public class RegularExpressionEditorDialog extends InputDialog {
 
 		// Show the message
 		label = new Label(shell, SWT.NONE);
-		label.setText("Enter some text to test below:");
+		label.setText(local.getString("regexD2"));
 		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 2,
 				1));
 
@@ -131,7 +131,7 @@ public class RegularExpressionEditorDialog extends InputDialog {
 		// so that pressing it will set input
 		// to the entered value
 		Button test = new Button(shell, SWT.PUSH);
-		test.setText("Test");
+		test.setText(local.getString("regexD3"));
 		test
 				.setLayoutData(new GridData(SWT.END, SWT.CENTER, true, false,
 						1, 1));
@@ -141,11 +141,11 @@ public class RegularExpressionEditorDialog extends InputDialog {
 				boolean isSuccessful = RegExUtils.matches(regEx.getText(),
 						textToTest.getText());
 				if (isSuccessful) {
-					successLabel.setText("Successful");
+					successLabel.setText(local.getString("regexD4"));
 					successLabel.setForeground(shell.getDisplay()
 							.getSystemColor(SWT.COLOR_GREEN));
 				} else {
-					successLabel.setText("Failed");
+					successLabel.setText(local.getString("regexD5"));
 					successLabel.setForeground(shell.getDisplay()
 							.getSystemColor(SWT.COLOR_RED));
 				}
@@ -153,7 +153,7 @@ public class RegularExpressionEditorDialog extends InputDialog {
 		});
 
 		Button ok = new Button(shell, SWT.PUSH);
-		ok.setText("OK");
+		ok.setText(local.getString("ok"));
 		ok.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false, 1, 1));
 		ok.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -166,7 +166,7 @@ public class RegularExpressionEditorDialog extends InputDialog {
 		// Create the cancel button and add a handler
 		// so that pressing it will set input to null
 		Button cancel = new Button(shell, SWT.PUSH);
-		cancel.setText("Cancel");
+		cancel.setText(local.getString("cancel"));
 		cancel.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false, 1,
 				1));
 		cancel.addSelectionListener(new SelectionAdapter() {

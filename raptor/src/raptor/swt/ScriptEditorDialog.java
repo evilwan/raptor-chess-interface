@@ -25,9 +25,12 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
+import raptor.international.L10n;
+
 public class ScriptEditorDialog extends InputDialog {
 	protected StyledText script;
-
+	protected static L10n local = L10n.getInstance();
+	
 	/**
 	 * InputDialog constructor
 	 * 
@@ -38,8 +41,8 @@ public class ScriptEditorDialog extends InputDialog {
 	 */
 	public ScriptEditorDialog(Shell parent, String question) {
 		// Let users override the default styles
-		super(parent, "Script Editor", question);
-		setText("Script Editor");
+		super(parent, local.getString("sriptEdD1"), question);
+		setText(local.getString("sriptEdD1"));
 		setMessage(question);
 	}
 
@@ -83,7 +86,7 @@ public class ScriptEditorDialog extends InputDialog {
 
 		Label label = new Label(shell, SWT.NONE);
 		label
-				.setText("To find out more about see Help->Raptor Help->Scripting.");
+				.setText(local.getString("sriptEdD2"));
 		// Show the message
 		label = new Label(shell, SWT.NONE);
 		label.setText(message);
@@ -105,7 +108,7 @@ public class ScriptEditorDialog extends InputDialog {
 		}
 
 		Button ok = new Button(shell, SWT.PUSH);
-		ok.setText("OK");
+		ok.setText(local.getString("ok"));
 		ok.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false, 1, 1));
 		ok.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -118,7 +121,7 @@ public class ScriptEditorDialog extends InputDialog {
 		// Create the cancel button and add a handler
 		// so that pressing it will set input to null
 		Button cancel = new Button(shell, SWT.PUSH);
-		cancel.setText("Cancel");
+		cancel.setText(local.getString("cancel"));
 		cancel.setLayoutData(new GridData(SWT.END, SWT.CENTER, false, false, 1,
 				1));
 		cancel.addSelectionListener(new SelectionAdapter() {

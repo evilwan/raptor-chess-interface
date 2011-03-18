@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.service.ThreadService;
 import raptor.util.RaptorStringUtils;
 
@@ -43,10 +44,11 @@ public class ProfileDialog extends Dialog {
 	private Label heapm, heap1, heap2, heap3, heap4, stackm, stack1, stack2,
 			stack3, stack4, threadsm, threads1, threads2, threads3, threads4,
 			threads5, image1;
+	protected static L10n local = L10n.getInstance();
 
 	public ProfileDialog() {
 		super(Raptor.getInstance().getWindow().getShell(), SWT.DIALOG_TRIM);
-		setText("Mini Profiler");
+		setText(local.getString("profileDialog1"));
 	}
 
 	/**
@@ -82,48 +84,48 @@ public class ProfileDialog extends Dialog {
 		composite.setLayout(new GridLayout(1, false));
 
 		heapm = new Label(composite, SWT.NONE);
-		heapm.setText("Heap: ");
+		heapm.setText(local.getString("profileDialog2"));
 		heap1 = new Label(composite, SWT.NONE);
 		heap2 = new Label(composite, SWT.NONE);
 		heap3 = new Label(composite, SWT.NONE);
 		heap4 = new Label(composite, SWT.NONE);
 
 		stackm = new Label(composite, SWT.NONE);
-		stackm.setText("Stack: ");
+		stackm.setText(local.getString("profileDialog3"));
 		stack1 = new Label(composite, SWT.NONE);
 		stack2 = new Label(composite, SWT.NONE);
 		stack3 = new Label(composite, SWT.NONE);
 		stack4 = new Label(composite, SWT.NONE);
 
-		heap1.setText("   Initial: "
+		heap1.setText(local.getString("profileDialog4")
 				+ RaptorStringUtils.getMegs(heap.getInit()));
-		heap2.setText("   Used: " + RaptorStringUtils.getMegs(heap.getUsed()));
-		heap3.setText("   Committed: "
+		heap2.setText(local.getString("profileDialog5") + RaptorStringUtils.getMegs(heap.getUsed()));
+		heap3.setText(local.getString("profileDialog6")
 				+ RaptorStringUtils.getMegs(heap.getMax()));
-		heap4.setText("   Max: " + RaptorStringUtils.getMegs(heap.getMax()));
-		stack1.setText("   Initial: "
+		heap4.setText(local.getString("profileDialog7") + RaptorStringUtils.getMegs(heap.getMax()));
+		stack1.setText(local.getString("profileDialog4")
 				+ RaptorStringUtils.getMegs(stack.getInit()));
 		stack2
-				.setText("   Used: "
+				.setText(local.getString("profileDialog5")
 						+ RaptorStringUtils.getMegs(stack.getUsed()));
-		stack3.setText("   Committed: "
+		stack3.setText(local.getString("profileDialog6")
 				+ RaptorStringUtils.getMegs(stack.getMax()));
-		stack4.setText("   Max: " + RaptorStringUtils.getMegs(stack.getMax()));
+		stack4.setText(local.getString("profileDialog7") + RaptorStringUtils.getMegs(stack.getMax()));
 
 		threadsm = new Label(composite, SWT.NONE);
-		threadsm.setText("Threads:");
+		threadsm.setText(local.getString("profileDialog8"));
 		threads1 = new Label(composite, SWT.NONE);
-		threads1.setText("   Threads: " + threads.getThreadCount());
+		threads1.setText(local.getString("profileDialog9") + threads.getThreadCount());
 		threads2 = new Label(composite, SWT.NONE);
-		threads2.setText("   Peak Threads: " + threads.getPeakThreadCount());
+		threads2.setText(local.getString("profileDialog10") + threads.getPeakThreadCount());
 		threads3 = new Label(composite, SWT.NONE);
-		threads3.setText("   Total Started Threads: "
+		threads3.setText(local.getString("profileDialog11")
 				+ threads.getTotalStartedThreadCount());
 
 		Label label = new Label(composite, SWT.NONE);
-		label.setText("ThreadService:");
+		label.setText(local.getString("profileDialog12"));
 		threads4 = new Label(composite, SWT.NONE);
-		threads4.setText("   Size/Core/Largest/Max: "
+		threads4.setText(local.getString("profileDialog13")
 				+ ThreadService.getInstance().getExecutor().getPoolSize()
 				+ "/"
 				+ ThreadService.getInstance().getExecutor().getCorePoolSize()
@@ -134,14 +136,14 @@ public class ProfileDialog extends Dialog {
 				+ ThreadService.getInstance().getExecutor()
 						.getMaximumPoolSize());
 		threads5 = new Label(composite, SWT.NONE);
-		threads5.setText("   Task Scheduled/Completed: "
+		threads5.setText(local.getString("profileDialog14")
 				+ ThreadService.getInstance().getExecutor().getTaskCount()
 				+ "/"
 				+ ThreadService.getInstance().getExecutor()
 						.getCompletedTaskCount());
 
 		image1 = new Label(composite, SWT.NONE);
-		image1.setText("Cached Images/Fonts/Colors/Cursors: "
+		image1.setText(local.getString("profileDialog15")
 				+ Raptor.getInstance().getImageRegistry().getSize() + "/"
 				+ Raptor.getInstance().getFontRegistry().getKeySet().size()
 				+ "/"
@@ -149,7 +151,7 @@ public class ProfileDialog extends Dialog {
 				+ "/" + Raptor.getInstance().getCursorRegistry().getSize());
 
 		Button button = new Button(composite, SWT.PUSH);
-		button.setText("Suggest Garbage Collection");
+		button.setText(local.getString("profileDialog16"));
 		button.addSelectionListener(new SelectionListener() {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -172,35 +174,35 @@ public class ProfileDialog extends Dialog {
 						ThreadMXBean curThreads = ManagementFactory
 								.getThreadMXBean();
 
-						heap1.setText("   Initial: "
+						heap1.setText(local.getString("profileDialog4")
 								+ RaptorStringUtils.getMegs(curHeap.getInit()));
-						heap2.setText("   Used: "
+						heap2.setText(local.getString("profileDialog5")
 								+ RaptorStringUtils.getMegs(curHeap.getUsed()));
-						heap3.setText("   Committed: "
+						heap3.setText(local.getString("profileDialog6")
 								+ RaptorStringUtils.getMegs(curHeap.getMax()));
-						heap4.setText("   Max: "
+						heap4.setText(local.getString("profileDialog7")
 								+ RaptorStringUtils.getMegs(curHeap.getMax()));
 						stack1
-								.setText("   Initial: "
+								.setText(local.getString("profileDialog4")
 										+ RaptorStringUtils.getMegs(curStack
 												.getInit()));
 						stack2
-								.setText("   Used: "
+								.setText(local.getString("profileDialog5")
 										+ RaptorStringUtils.getMegs(curStack
 												.getUsed()));
-						stack3.setText("   Committed: "
+						stack3.setText(local.getString("profileDialog6")
 								+ RaptorStringUtils.getMegs(curStack.getMax()));
-						stack4.setText("   Max: "
+						stack4.setText(local.getString("profileDialog7")
 								+ RaptorStringUtils.getMegs(curStack.getMax()));
 
-						threads1.setText("   Threads: "
+						threads1.setText(local.getString("profileDialog9")
 								+ curThreads.getThreadCount());
-						threads2.setText("   Peak Threads: "
+						threads2.setText(local.getString("profileDialog10")
 								+ curThreads.getPeakThreadCount());
-						threads3.setText("   Total Started Threads: "
+						threads3.setText(local.getString("profileDialog11")
 								+ curThreads.getTotalStartedThreadCount());
 
-						threads4.setText("   Size/Core/Largest/Max: "
+						threads4.setText(local.getString("profileDialog13")
 								+ ThreadService.getInstance().getExecutor()
 										.getPoolSize()
 								+ "/"
@@ -212,13 +214,13 @@ public class ProfileDialog extends Dialog {
 								+ "/"
 								+ ThreadService.getInstance().getExecutor()
 										.getMaximumPoolSize());
-						threads5.setText("   Task Scheduled/Completed: "
+						threads5.setText(local.getString("profileDialog14")
 								+ ThreadService.getInstance().getExecutor()
 										.getTaskCount()
 								+ "/"
 								+ ThreadService.getInstance().getExecutor()
 										.getCompletedTaskCount());
-						image1.setText("Cached Images/Fonts/Colors/Cursors: "
+						image1.setText(local.getString("profileDialog15")
 								+ Raptor.getInstance().getImageRegistry()
 										.getSize()
 								+ "/"
