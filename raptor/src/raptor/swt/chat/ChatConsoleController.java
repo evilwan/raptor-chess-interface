@@ -804,6 +804,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		setCaretToOutputTextEnd();
 		awayList.clear();
 		adjustAwayButtonEnabled();
+		
+		smartScroll(true);
 	}
 
 	public void processInputTextKeystroke(Event event, boolean isKeyUp) {
@@ -2427,21 +2429,28 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					getChatConsole().getOutputText().getCharCount());
 		}
 	}
-
-	protected void smartScroll() {
+	
+	protected void smartScroll(boolean force) {
 		ScrollBar scrollbar = chatConsole.inputText.getVerticalBar();
 		if (scrollbar != null
 				&& scrollbar.isVisible()
 				&& getPreferences().getBoolean(
 						PreferenceKeys.CHAT_IS_SMART_SCROLL_ENABLED)) {
 
-			if (scrollbar.getMaximum() == scrollbar.getSelection()
+			if (force) {
+				setAutoScrolling(true);
+			}
+			else if (scrollbar.getMaximum() == scrollbar.getSelection()
 					+ scrollbar.getThumb()) {
 				setAutoScrolling(true);
 			} else {
 				setAutoScrolling(false);
 			}
 		}
+	}
+
+	protected void smartScroll() {
+		smartScroll(false);
 	}
 
 	protected void updateImageIcon(ChatEvent event) {
