@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import raptor.Raptor;
 import raptor.action.RaptorAction.Category;
 import raptor.action.RaptorAction.RaptorActionContainer;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorStringUtils;
 
@@ -61,7 +62,10 @@ public class RaptorActionFactory {
 		}
 
 		try {
-			result.setDescription(properties.getProperty("description"));
+			String desc = properties.getProperty("description");
+			desc = desc.startsWith("$") ? L10n.getInstance().getString(desc)
+					: desc;
+			result.setDescription(desc);
 			result.setName(properties.getProperty("name"));
 			result.setIcon(properties.getProperty("icon"));
 			if (StringUtils.isBlank(result.getIcon())) {
