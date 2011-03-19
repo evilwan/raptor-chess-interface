@@ -54,9 +54,10 @@ public class LinuxSoundPlayer implements SoundPlayer {
 		if (isPlaying == null || !isPlaying) {
 			soundsPlaying.put(pathToSound, true);
 			SourceDataLine auline = null;
+			AudioInputStream audioInputStream = null;
 			try {
 				File soundFile = new File(pathToSound);
-				AudioInputStream audioInputStream = AudioSystem
+				audioInputStream = AudioSystem
 						.getAudioInputStream(soundFile);
 
 				AudioFormat audioFormat = audioInputStream.getFormat();
@@ -97,6 +98,7 @@ public class LinuxSoundPlayer implements SoundPlayer {
 				} finally {
 					try {
 						auline.drain();
+						
 					} catch (Throwable t) {
 					}
 				}
@@ -107,6 +109,12 @@ public class LinuxSoundPlayer implements SoundPlayer {
 				try {
 					auline.close();
 				} catch (Throwable t) {
+				}
+				
+				try {
+					audioInputStream.close();
+				}catch (Throwable t) {
+					
 				}
 				soundsPlaying.put(pathToSound, false);
 			}
