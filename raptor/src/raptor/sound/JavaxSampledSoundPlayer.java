@@ -66,11 +66,21 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 				clip.addLineListener(new LineListener() {
 					public void update(LineEvent arg0) {
 						LineEvent.Type type = arg0.getType();
-						if (type == LineEvent.Type.STOP) {
+						if (type == LineEvent.Type.STOP || type == LineEvent.Type.CLOSE) {
 							try {
 								soundsPlaying.put(pathToSound, false);
-								stream.close();
+								clip.drain();
+								clip.close();
 							} catch (Throwable t) {
+								t.printStackTrace();
+							}finally {
+								try {
+									clip.close();
+								} catch (Throwable t){t.printStackTrace();}
+								try {
+									stream.close();
+								} catch (Throwable t){t.printStackTrace();}
+								
 							}
 						}
 					}
