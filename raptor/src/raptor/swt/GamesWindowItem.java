@@ -92,7 +92,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 	protected RaptorTable gamesTable;
 	protected Composite settings;
 	protected boolean isActive = false;
-	protected static L10n local = L10n.getInstance();
+	protected static L10n local;
 
 	protected Runnable timer = new Runnable() {
 		public void run() {
@@ -113,6 +113,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 	};
 
 	public GamesWindowItem(Connector connector) {
+		local = L10n.getInstance();
 		this.connector = connector;
 		connector.getGameService().addGameServiceListener(listener);
 	}

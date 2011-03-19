@@ -20,7 +20,7 @@ import raptor.util.RaptorStringUtils;
 
 public class ClassicLayout extends AbstractLayout {
 	public ClassicLayout() {
-		super(null, L10n.getInstance().getString("consBottom"));
+		super(null, "Console on bottom");
 
 		addCrossConnectorSetting(PreferenceKeys.BUG_BUTTONS_QUADRANT,
 				Quadrant.IX.toString());

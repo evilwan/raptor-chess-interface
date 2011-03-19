@@ -61,7 +61,7 @@ public class BugPartners extends Composite {
 	protected Combo maxAvailablePartnersFilter;
 	protected boolean isActive = false;
 
-	protected static L10n local = L10n.getInstance();
+	protected static L10n local;
 	protected RaptorTable table;
 
 	protected Runnable timer = new Runnable() {
@@ -93,6 +93,7 @@ public class BugPartners extends Composite {
 
 	public BugPartners(Composite parent, final BughouseService service) {
 		super(parent, SWT.NONE);
+		local = L10n.getInstance();
 		this.service = service;
 		init();
 		service.addBughouseServiceListener(listener);

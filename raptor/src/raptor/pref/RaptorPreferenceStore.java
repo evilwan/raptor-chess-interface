@@ -41,6 +41,7 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.international.L10n;
 import raptor.layout.ClassicLayout;
 import raptor.service.SeekService.SeekType;
 import raptor.service.ThemeService;
@@ -135,11 +136,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		super();
 		FileInputStream fileIn = null;
 		FileOutputStream fileOut = null;
-
+		
 		try {
 			LOG.info("Loading RaptorPreferenceStore store "
 					+ PREFERENCE_PROPERTIES_FILE);
-			loadDefaults();
+			loadDefaults();			
 			if (RAPTOR_PROPERTIES.exists()) {
 				load(fileIn = new FileInputStream(RAPTOR_PROPERTIES));
 				resetChessSetIfDeleted();
@@ -396,15 +397,15 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	}
 
 	public void applyDefaultTheme() {
-		Theme theme = ThemeService.getInstance().getTheme("Raptor");
+		Theme theme = ThemeService.getInstance().getTheme("Raptor");		
 		for (String propertyName : theme.getProperties().keySet()) {
 			setDefault(propertyName, theme.getProperties().get(propertyName));
-		}
+		}		
 	}
 
 	public void applyDefaultLayout() {
 		Map<String, String> map = new ClassicLayout()
-				.getPreferenceAdjustments();
+				.getPreferenceAdjustments();		
 		for (String key : map.keySet()) {
 			String value = map.get(key);
 			if (value == null) {
@@ -460,7 +461,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_IS_LOGGING_PERSON_TELLS, false);
 		setDefault(APP_IS_LOGGING_CHANNEL_TELLS, false);
 		setDefault(PreferenceKeys.APP_SHOW_STATUS_BAR, false);
-
+		setDefault(APP_LOCALE, L10n.getSuitableLocaleName());
+		
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));
 		// setDefault(APP_QUAD9_QUAD12345678_SASH_WEIGHTS, new int[] { 10, 90
@@ -571,7 +573,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, BOARD_PREMOVES_FONT,
 				new FontData[] { new FontData(defaultFontName,
 						defaultTinyFontSize, 0) });
-
+		
 		// Controller button preferences.
 		setDefault(PLAYING_CONTROLLER + LEFT_MOUSE_BUTTON_ACTION,
 				PlayingMouseAction.None.toString());
@@ -610,7 +612,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				InactiveMouseAction.None.toString());
 		setDefault(INACTIVE_CONTROLLER + LEFT_DOUBLE_CLICK_MOUSE_BUTTON_ACTION,
 				InactiveMouseAction.None.toString());
-
+		
 		// BugArena
 		setDefault(BUG_ARENA_PARTNERS_INDEX, 0);
 		setDefault(BUG_ARENA_MAX_PARTNERS_INDEX,
@@ -747,7 +749,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		PreferenceConverter.setDefault(this, CHAT_OUTPUT_FONT,
 				new FontData[] { new FontData(defaultMonospacedFontName,
 						defaultMediumFontSize, 0) });
-
+		
 		applyDefaultTheme();
 		applyDefaultLayout();
 
@@ -933,7 +935,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(FICS_TERTIARY_PORT, 5000);
 		setDefault(FICS_TERTIARY_TIMESEAL_ENABLED, true);
 		setDefault(FICS_REMOVE_BLANK_LINES, false);
-
+		
 		// Fics Timeseal
 		// Timeseal 2 forced for OSX, Timeseal 1 for other OSes.
 		// For some reason windows/linux have timeseal2 issues.

@@ -42,22 +42,22 @@ public abstract class AbstractLayout implements Layout {
 
 	protected void addAdjusmentsToClearConnectorLayoutInfo() {
 		preferenceAdjustments.put("fics-"
-				+ L10n.getInstance().getString("prim") + "-"
+				+ "Primary" + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
 		preferenceAdjustments.put("fics-"
-				+ L10n.getInstance().getString("second") + "-"
+				+ "Secondary" + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
 		preferenceAdjustments.put("fics-"
-				+ L10n.getInstance().getString("tert") + "-"
+				+ "Tertiary" + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
 		preferenceAdjustments.put("bics-"
-				+ L10n.getInstance().getString("prim") + "-"
+				+ "Primary" + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
 		preferenceAdjustments.put("bics-"
-				+ L10n.getInstance().getString("second") + "-"
+				+ "Secondary" + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
 		preferenceAdjustments.put("bics-"
-				+ L10n.getInstance().getString("tert") + "-"
+				+ "Tertiary" + "-"
 				+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO, null);
 	}
 

@@ -17,12 +17,19 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import raptor.Raptor;
+import raptor.pref.PreferenceKeys;
+
 public class L10n {
 	
-	private static final L10n singletonInstance = new L10n();
+	private static L10n singletonInstance;
 	private ResourceBundle captions;
+	private static String[] availableLocales = { "en", "it" };
 
-	public static L10n getInstance() {
+	public static L10n getInstance() {		
+		if (singletonInstance == null)
+			singletonInstance = new L10n();
+		
 		return singletonInstance;
 	}
 	
@@ -30,9 +37,11 @@ public class L10n {
 		init();		
 	}
 
-	private void init() {
-		Locale locale = new Locale("en","US");
-		captions= ResourceBundle.getBundle("raptor.international.Messages",
+	private void init() {		
+		Locale locale = new Locale(
+				Raptor.getInstance().getPreferences()
+				.getString(PreferenceKeys.APP_LOCALE));
+		captions = ResourceBundle.getBundle("raptor.international.Messages",
 				locale);
 	}
 	
@@ -55,5 +64,15 @@ public class L10n {
 			return new MessageFormat(getString(key))
 					.format(new Object[] { param0 });
 		}
+	}
+
+	public static String getSuitableLocaleName() {
+		String systemLang = Locale.getDefault().getLanguage();
+		for (String loc: availableLocales) {
+			if (loc.equals(systemLang))
+				return systemLang;
+		}		
+		
+		return "en"; // Default
 	}
 }

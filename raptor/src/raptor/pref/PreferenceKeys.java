@@ -53,6 +53,7 @@ public interface PreferenceKeys {
 
 	// Starting from here and on down the constants are only preference names.
 	public static final String APP_NAME = "app-name";
+	public static final String APP_LOCALE = "app-locale";
 	public static final String APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS = "board-is-showing-piece-unicode-chars";
 	public static final String APP_USER_TAGS = "app-user-tags";
 	public static final String APP_ICON_SIZE = "app-icon-size";

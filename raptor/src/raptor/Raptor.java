@@ -80,7 +80,7 @@ public class Raptor implements PreferenceKeys {
 	public static final String ENGINES_DIR = USER_RAPTOR_HOME_PATH + "/engines";
 	private static Raptor instance;
 	private static Display display;
-	protected static L10n local = L10n.getInstance();
+	protected static L10n local;
 	
 	static {
 		RaptorLogger.initializeLogger();
@@ -88,7 +88,7 @@ public class Raptor implements PreferenceKeys {
 
 	public static void createInstance() {
 		instance = new Raptor();
-		instance.init();
+		instance.init();		
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Raptor implements PreferenceKeys {
 		try {
 			Display.setAppName("Raptor");
 			display = new Display();
-
+			
 			createInstance();
 
 			// Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -116,7 +116,7 @@ public class Raptor implements PreferenceKeys {
 			// getInstance().shutdown();
 			// }
 			// });
-
+			
 			display.addListener(SWT.Close, new Listener() {
 				public void handleEvent(Event event) {
 					getInstance().shutdown();
@@ -582,15 +582,15 @@ public class Raptor implements PreferenceKeys {
 	public void shutdown(boolean isIgnoringPreferenceSaves) {
 		shutdownWithoutExit(isIgnoringPreferenceSaves);
 		System.exit(0);
-	}
+	}	
 
 	/**
 	 * Initializes raptor.
 	 */
 	private void init() {
-		preferences = new RaptorPreferenceStore();
-
-		install();
+		preferences = new RaptorPreferenceStore();	
+		local = L10n.getInstance();
+		install();		
 
 		// Make sure all of the Singleton services get loaded.
 		ThreadService.getInstance();

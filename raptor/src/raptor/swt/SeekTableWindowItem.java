@@ -61,7 +61,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 				"9999" };
 	}
 
-	protected static L10n local = L10n.getInstance();
+	protected static L10n local;
 	protected SeekService service;
 	protected Composite composite;
 	protected Combo minRatingsFilter;
@@ -107,6 +107,7 @@ public class SeekTableWindowItem implements RaptorConnectorWindowItem {
 	};
 
 	public SeekTableWindowItem(SeekService service) {
+		local = L10n.getInstance();
 		this.service = service;
 		service.adSeekServiceListener(listener);
 	}
