@@ -40,6 +40,10 @@ public class GeneralPage extends FieldEditorPreferencePage {
 			{ local.getString("everySec", 4), "" + 4 }, { local.getString("everySec", 5), "" + 5 },
 			{ local.getString("everySec", 6), "" + 6 }, { local.getString("everySec", 7), "" + 7 },
 			{ local.getString("everySec", 8), "" + 8 }, };
+	
+	public static final String[][] LANGUAGES = {
+		{"English", "en"}, {"Italiano", "it"}
+	};
 
 	public GeneralPage() {
 		super(FLAT);
@@ -66,11 +70,15 @@ public class GeneralPage extends FieldEditorPreferencePage {
 						+ " " + System.getProperty("os.version"), 70),
 				getFieldEditorParent());
 		addField(osVersion);
+		
+		addField(new ComboFieldEditor(PreferenceKeys.APP_LOCALE,
+				local.getString("language"), LANGUAGES,
+				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
 				local.getString("genP4"), getFieldEditorParent()));
-
+		
 		BooleanFieldEditor launchExternalLinkx = new BooleanFieldEditor(
 				PreferenceKeys.APP_OPEN_LINKS_IN_EXTERNAL_BROWSER,
 				local.getString("genP5"), getFieldEditorParent());
