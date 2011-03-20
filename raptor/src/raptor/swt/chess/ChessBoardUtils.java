@@ -96,6 +96,7 @@ public class ChessBoardUtils implements BoardConstants {
 	public static final Object PGN_PREPEND_SYNCH = new Object();
 	private static Random RANDOM = new SecureRandom();
 	private static HashMap<String, List<Integer>> chessSetSizes = new HashMap<String, List<Integer>>();
+	private static HashMap<String, List<Integer>> squareBackgroundSizes = new HashMap<String, List<Integer>>();
 
 	public static void addActionsToToolbar(
 			final ChessBoardController controller,
@@ -228,6 +229,30 @@ public class ChessBoardUtils implements BoardConstants {
 		}
 		return sizes;
 	}
+	
+	public static List<Integer> getSquareBackgroundSizes(String squareBackgroundName) {
+		List<Integer> sizes = squareBackgroundSizes.get(squareBackgroundName);
+		if (sizes == null) {
+			sizes = new ArrayList<Integer>(100);
+
+			File file = new File(SQUARE_BACKGROUND_DIR + squareBackgroundName);
+			File[] files = file.listFiles();
+			for (File currentFile : files) {
+				if (currentFile.isDirectory()) {
+					try {
+						int size = Integer.parseInt(currentFile.getName());
+						sizes.add(size);
+					} catch (NumberFormatException nfe) {
+					}
+				}
+			}
+			Collections.sort(sizes);
+			squareBackgroundSizes.put(squareBackgroundName, sizes);
+			
+			System.err.println("Sizes: " + squareBackgroundSizes);
+		}
+		return sizes;
+	}
 
 	/**
 	 * Returns the image with the specified of the specified name,type,width and
@@ -276,6 +301,108 @@ public class ChessBoardUtils implements BoardConstants {
 			} else {
 				return image;
 			}
+		}
+	}
+	
+	/**
+	 * Returns the Image for users current background name
+	 */
+	public static Image getSquareBackgroundImage(String name,
+			SquareBackgroundImageEffect effect, boolean isLight, int squareId,
+			int width, int height) {
+		if (width <= 0 || height <= 0) {
+			width = 10;
+			height = 10;
+		}
+		
+		//There are two types of square backgrounds supported.
+		//Type 1 (Classic):
+		//    Consists of two images a light image and a dark image.
+		//    Has an effect, Crop, Random Crop, or Scale.
+		//    Crop crops out only what is needed form the image based on width and height.
+		//    Random crop crops out random areas of the image, even rotating it 180 degrees.
+		//    Scale scales the image to size.
+		//    Works great for wood grain and marble.
+		//Type 2 (Images for every size):
+		//    Type 2 consists of a light image and a dark image for each possible square size 10-200+
+		//    It is great for square backgrounds with decorations like borders and diagonal lines.
+		//    No scaling or cropping is involved, and using the chess set creator you can create all
+		//     of the sizes from svg.
+
+		String key = name + "_" + effect + "_" + isLight + "_" + squareId + "_"
+				+ width + "x" + height;
+
+		Image result = Raptor.getInstance().getImageRegistry().get(key);
+
+		if (result == null) {
+			//This list is sorted ascending.
+			List<Integer> supportedSizes = getSquareBackgroundSizes(name);
+			
+			if (supportedSizes.isEmpty()) { //Type 1
+				Image moldImage = getSquareBackgroundMold(name, isLight);
+	
+				// If the image is smaller than the width/height needed then just
+				// scale it and ignore the effect.
+				if (moldImage.getImageData().width < width
+						|| moldImage.getImageData().height < height) {
+					effect = SquareBackgroundImageEffect.Scale;
+				}
+	
+				switch (effect) {
+				case Scale:
+					result = new Image(Display.getCurrent(),
+							getSquareBackgroundMold(name, isLight).getImageData()
+									.scaledTo(width, height));
+					break;
+				case Crop:
+					result = ImageUtil.cropImage(moldImage, 0, 0, width, height);
+					break;
+				case RandomCrop:
+					int x = RANDOM.nextInt(moldImage.getImageData().width - width);
+					int y = RANDOM
+							.nextInt(moldImage.getImageData().height - height);
+	
+					// Add some more randomness by flipping the image 180 degrees.
+					// This is safe for most images, including wood grain.
+					if (RANDOM.nextBoolean()) {
+						result = ImageUtil
+								.cropImage(moldImage, x, y, width, height);
+					} else {
+						result = ImageUtil.flipAndCrop(moldImage, x, y, width,
+								height);
+					}
+					break;
+				}
+			}
+			else { //Type 2
+				if (!supportedSizes.contains(width)) {
+					//TO DO: make this more of a binary search for speed.
+					int lastSize = supportedSizes.get(0);
+					boolean foundMatch = false;
+					
+					for (int currentSize : supportedSizes) {
+						if (currentSize > width) {
+							width = lastSize;
+							foundMatch = true;
+							break;
+						}
+						lastSize = currentSize;
+					}
+					
+					if (!foundMatch) {
+						//This will be the largest size found.
+						width = lastSize;
+					}
+				}
+				result = new Image(Display.getCurrent(), SQUARE_BACKGROUND_DIR
+						+ name + "/" + width + "/" + (isLight ? "light.png" : "dark.png"));
+				
+			}
+			Raptor.getInstance().getImageRegistry().put(key, result);
+			return result;
+		} else {
+			//The image is already cached so just return it.
+			return result;
 		}
 	}
 
@@ -449,63 +576,7 @@ public class ChessBoardUtils implements BoardConstants {
 				isLight, squareId, width, height);
 	}
 
-	/**
-	 * Returns the Image for users current background name
-	 */
-	public static Image getSquareBackgroundImage(String name,
-			SquareBackgroundImageEffect effect, boolean isLight, int squareId,
-			int width, int height) {
-		if (width <= 0 || height <= 0) {
-			width = 10;
-			height = 10;
-		}
 
-		String key = name + "_" + effect + "_" + isLight + "_" + squareId + "_"
-				+ width + "x" + height;
-
-		Image result = Raptor.getInstance().getImageRegistry().get(key);
-
-		if (result == null) {
-			Image moldImage = getSquareBackgroundMold(name, isLight);
-
-			// If the image is smaller than the width/height needed then just
-			// scale it and ignore the effect.
-			if (moldImage.getImageData().width < width
-					|| moldImage.getImageData().height < height) {
-				effect = SquareBackgroundImageEffect.Scale;
-			}
-
-			switch (effect) {
-			case Scale:
-				result = new Image(Display.getCurrent(),
-						getSquareBackgroundMold(name, isLight).getImageData()
-								.scaledTo(width, height));
-				break;
-			case Crop:
-				result = ImageUtil.cropImage(moldImage, 0, 0, width, height);
-				break;
-			case RandomCrop:
-				int x = RANDOM.nextInt(moldImage.getImageData().width - width);
-				int y = RANDOM
-						.nextInt(moldImage.getImageData().height - height);
-
-				// Add some more randomness by flipping the image 180 degrees.
-				// This is safe for most images, including wood grain.
-				if (RANDOM.nextBoolean()) {
-					result = ImageUtil
-							.cropImage(moldImage, x, y, width, height);
-				} else {
-					result = ImageUtil.flipAndCrop(moldImage, x, y, width,
-							height);
-				}
-				break;
-			}
-			Raptor.getInstance().getImageRegistry().put(key, result);
-			return result;
-		} else {
-			return result;
-		}
-	}
 
 	/**
 	 * Returns the path to the backgrund image name.
@@ -524,6 +595,7 @@ public class ChessBoardUtils implements BoardConstants {
 		return Raptor.getInstance().getImage(
 				getSquareBackgroundImageName(name, isLight));
 	}
+
 
 	/**
 	 * Returns the users current square background name.
@@ -623,15 +695,6 @@ public class ChessBoardUtils implements BoardConstants {
 
 	public static boolean isBlackPiece(int setPieceType) {
 		return setPieceType >= 7 && setPieceType < 13;
-	}
-
-	public static boolean isChessSetOptimized(String setName) {
-		File file = new File(getUserImageCachePieceName(setName,
-				GameConstants.WP, 6, 6));
-		File file2 = new File(getUserImageCachePieceName(setName,
-				GameConstants.BP, 100, 100));
-		return file.exists() && file2.exists();
-
 	}
 
 	public static boolean isJailSquareBlackPiece(int pieceJailSquare) {
