@@ -19,7 +19,6 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Image;
 
 import raptor.Raptor;
-import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 
 public abstract class AbstractLayout implements Layout {

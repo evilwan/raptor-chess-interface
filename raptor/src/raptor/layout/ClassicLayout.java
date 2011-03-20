@@ -14,7 +14,6 @@
 package raptor.layout;
 
 import raptor.Quadrant;
-import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.util.RaptorStringUtils;
 
