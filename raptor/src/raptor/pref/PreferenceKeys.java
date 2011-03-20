@@ -212,7 +212,7 @@ public interface PreferenceKeys {
 	public static final String ARROW_SHOW_ON_MOVE_LIST_MOVES = "arrow-show-on-move-list-moves";
 	public static final String ARROW_SHOW_ON_MY_PREMOVES = "arrow-show-on-my-premoves";
 	public static final String ARROW_SHOW_ON_MY_MOVES = "arrow-show-on-my-moves";
-	public static final String ARROW_ANIMATION_DELAY = "arrow-animotion-delay";
+	public static final String ARROW_ANIMATION_DELAY = "arrow-animotion-delayv2";
 	public static final String ARROW_WIDTH_PERCENTAGE = "arrow-width-percentage";
 	public static final String ARROW_FADE_AWAY_MODE = "arrow-fade-away-mode";
 
@@ -225,11 +225,11 @@ public interface PreferenceKeys {
 	public static final String HIGHLIGHT_SHOW_ON_MY_PREMOVES = "hilight-show-on-my-premoves";
 	public static final String HIGHLIGHT_SHOW_ON_MY_MOVES = "hilight-show-on-my-moves";
 	public static final String HIGHLIGHT_FADE_AWAY_MODE = "hilight-fade-away-mode";
-	public static final String HIGHLIGHT_ANIMATION_DELAY = "highlight-animation-delay";
+	public static final String HIGHLIGHT_ANIMATION_DELAY = "highlight-animation-delayv2";
 	public static final String HIGHLIGHT_WIDTH_PERCENTAGE = "highlight-width-percentage";
 
 	public static final String RESULTS_COLOR = "results-color";
-	public static final String RESULTS_ANIMATION_DELAY = "results-animation-delay";
+	public static final String RESULTS_ANIMATION_DELAY = "results-animation-delayv2";
 	public static final String RESULTS_WIDTH_PERCENTAGE = "results-width-percentage";
 	public static final String RESULTS_FADE_AWAY_MODE = "results-fade-away-mode";
 	public static final String RESULTS_FONT = "results-font";
