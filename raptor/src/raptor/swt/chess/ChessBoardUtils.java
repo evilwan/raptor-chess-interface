@@ -248,8 +248,6 @@ public class ChessBoardUtils implements BoardConstants {
 			}
 			Collections.sort(sizes);
 			squareBackgroundSizes.put(squareBackgroundName, sizes);
-			
-			System.err.println("Sizes: " + squareBackgroundSizes);
 		}
 		return sizes;
 	}
