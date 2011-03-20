@@ -687,7 +687,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ARROW_SHOW_ON_MOVE_LIST_MOVES, true);
 		setDefault(ARROW_SHOW_ON_MY_PREMOVES, true);
 		setDefault(ARROW_SHOW_ON_MY_MOVES, false);
-		setDefault(ARROW_ANIMATION_DELAY, 200L);
+		setDefault(ARROW_ANIMATION_DELAY, 1000L);
 		setDefault(ARROW_FADE_AWAY_MODE, true);
 		setDefault(ARROW_WIDTH_PERCENTAGE, 15);
 
@@ -709,7 +709,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(HIGHLIGHT_SHOW_ON_MY_PREMOVES, true);
 		setDefault(HIGHLIGHT_SHOW_ON_MY_MOVES, false);
 		setDefault(HIGHLIGHT_FADE_AWAY_MODE, false);
-		setDefault(HIGHLIGHT_ANIMATION_DELAY, 200L);
+		setDefault(HIGHLIGHT_ANIMATION_DELAY, 1000L);
 		setDefault(HIGHLIGHT_WIDTH_PERCENTAGE, 3);
 
 		// Game Results
@@ -720,7 +720,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						SWT.BOLD) });
 		setDefault(RESULTS_IS_SHOWING, true);
 		setDefault(RESULTS_FADE_AWAY_MODE, true);
-		setDefault(RESULTS_ANIMATION_DELAY, 400L);
+		setDefault(RESULTS_ANIMATION_DELAY, 2000L);
 		setDefault(RESULTS_WIDTH_PERCENTAGE, 80);
 
 		// Chat

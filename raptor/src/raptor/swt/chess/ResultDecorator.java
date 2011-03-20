@@ -31,6 +31,9 @@ import raptor.swt.SWTUtils;
  * Paints the game result over the chess board if it is inactive.
  */
 public class ResultDecorator implements BoardConstants {
+	public static final int ANIMATION_STAGES = 2;
+	
+	
 	public static enum ResultDecoration {
 		WhiteWin, BlackWin, Draw, Undetermined
 	}
@@ -238,7 +241,7 @@ public class ResultDecorator implements BoardConstants {
 
 		if (Raptor.getInstance().getPreferences().getBoolean(
 				RESULTS_FADE_AWAY_MODE)) {
-			frame = 10;
+			frame = ANIMATION_STAGES;
 			redrawSquares(false);
 			Raptor.getInstance().getDisplay().timerExec(
 					Raptor.getInstance().getPreferences().getInt(
@@ -286,7 +289,7 @@ public class ResultDecorator implements BoardConstants {
 
 			if (frame != -1) {
 				e.gc.setAdvanced(true);
-				e.gc.setAlpha(25 * frame);
+				e.gc.setAlpha((int)(255.0/ANIMATION_STAGES * frame));
 				e.gc.drawString(text, e.width / 2 - extent.x / 2, e.height / 2
 						- extent.y / 2, true);
 				e.gc.setAlpha(255);

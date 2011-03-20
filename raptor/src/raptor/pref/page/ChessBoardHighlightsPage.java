@@ -33,7 +33,12 @@ public class ChessBoardHighlightsPage extends FieldEditorPreferencePage {
 		{ local.getString("xMilliseconds",350), "350" }, { local.getString("xMilliseconds",400), "400" },
 		{ local.getString("xMilliseconds",500), "500" }, { local.getString("xMilliseconds",600), "600" },
 		{ local.getString("xMilliseconds",700), "700" }, { local.getString("xMilliseconds",800), "800" },
-		{ local.getString("xMilliseconds",900), "900" }, { local.getString("xMilliseconds",1000), "1000" }, };
+		{ local.getString("xMilliseconds",900), "900" }, { local.getString("xMilliseconds",1000), "1000" }, 
+		{ local.getString("xMilliseconds",1200), "1200" }, { local.getString("xMilliseconds",1400), "1400" },
+		{ local.getString("xMilliseconds",1600), "1600" }, { local.getString("xMilliseconds",1800), "1800" },
+		{ local.getString("xMilliseconds",2000), "2000" }, { local.getString("xMilliseconds",2500), "2500" },
+		{ local.getString("xMilliseconds",3000), "3000" }, { local.getString("xMilliseconds",3500), "3500" },
+		{ local.getString("xMilliseconds",4000), "4000" }, { local.getString("xMilliseconds",4500), "4500" }};
 
 	public static final String[][] HIGHLIGHT_BORDER_PERCENTAGE_OPTIONS = {
 			{ "2%", "2" }, { "3%", "3" }, { "5%", "4" }, { "8%", "8" },
