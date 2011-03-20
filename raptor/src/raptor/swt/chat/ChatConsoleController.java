@@ -62,6 +62,7 @@ import raptor.chat.ChatType;
 import raptor.chess.Game;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ParameterScript;
@@ -96,6 +97,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public static int[] DONT_FORWARD_KEYSTROKES = { SWT.PAGE_UP, SWT.PAGE_DOWN,
 			SWT.HOME, SWT.END };
 	public static int[] DONT_FORWARD_KEYMASKS = { SWT.COMMAND, SWT.CONTROL };
+	protected static L10n local = L10n.getInstance();
 
 	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
 	protected ChatConsole chatConsole;
@@ -469,13 +471,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	 */
 	public String getTitle() {
 		if (connector == null) {
-			return "Error";
+			return local.getString("chatConsCont1");
 		} else if (connector.isConnecting()) {
-			return connector.getShortName() + "(Connecting-" + getName() + ")";
+			return connector.getShortName() + local.getString("chatConsCont2") + getName() + ")";
 		} else if (connector.isConnected()) {
 			return connector.getShortName() + "(" + getName() + ")";
 		} else {
-			return connector.getShortName() + "(Disconnected-" + getName()
+			return connector.getShortName() + local.getString("chatConsCont3") + getName()
 					+ ")";
 		}
 	}
@@ -622,7 +624,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (isAwayable()) {
 			ignoreAwayList = true;
 			onAppendChatEventToInputText(new ChatEvent(null, ChatType.OUTBOUND,
-					"Direct tells you missed while you were away:"));
+					local.getString("chatConsCont4")));
 			for (ChatEvent event : awayList) {
 				onAppendChatEventToInputText(event);
 			}
@@ -662,7 +664,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			return;
 		}
 		FileDialog fd = new FileDialog(chatConsole.getShell(), SWT.SAVE);
-		fd.setText("Save Console Output.");
+		fd.setText(local.getString("chatConsCont5"));
 		fd.setFilterPath("");
 		String[] filterExt = { "*.txt", "*.*" };
 		fd.setFilterExtensions(filterExt);
@@ -675,7 +677,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							FileWriter writer = null;
 							try {
 								writer = new FileWriter(selected);
-								writer.append("Raptor console log created on "
+								writer.append(local.getString("chatConsCont6")
 										+ new Date() + "\n");
 								int i = 0;
 								while (i < chatConsole.getInputText()
@@ -720,8 +722,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								MessageBox box = new MessageBox(chatConsole
 										.getShell(), SWT.ICON_INFORMATION
 										| SWT.OK);
-								box.setMessage("You must enter text in the input field to search on.");
-								box.setText("Alert");
+								box.setMessage(local.getString("chatConsCont7"));
+								box.setText(local.getString("chatConsCont8"));
 								box.open();
 							} else {
 								boolean foundText = false;
@@ -774,9 +776,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 									MessageBox box = new MessageBox(chatConsole
 											.getShell(), SWT.ICON_INFORMATION
 											| SWT.OK);
-									box.setMessage("Could not find any occurances of '"
+									box.setMessage(local.getString("chatConsCont9")
 											+ searchString + "'.");
-									box.setText("Alert");
+									box.setText(local.getString("chatConsCont8"));
 									box.open();
 								}
 							}
@@ -959,7 +961,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				if (autoComplete.length == 0) {
 					onAppendChatEventToInputText(new ChatEvent(null,
 							ChatType.INTERNAL,
-							"Auto-Complete: No matches found."));
+							local.getString("chatConsCont10")));
 				} else if (autoComplete.length == 1) {
 					chatConsole.getOutputText().insert(
 							autoComplete[0].substring(wordToAutoComplete
@@ -968,7 +970,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							startIndex + autoComplete[0].length());
 				} else {
 					StringBuilder matchesBuilder = new StringBuilder(100);
-					matchesBuilder.append("Auto-Complete matches:\n");
+					matchesBuilder.append(local.getString("chatConsCont11"));
 					int counter = 0;
 					for (int i = 0; i < autoComplete.length; i++) {
 						matchesBuilder.append(StringUtils.rightPad(
@@ -1015,7 +1017,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				if (item != null) {
 					item.setSelection(true);
 					item.setImage(Raptor.getInstance().getIcon("locked"));
-					item.setToolTipText("Scroll lock enabled.");
+					item.setToolTipText(local.getString("chatConsCont12"));
 				}
 				onForceAutoScroll();
 			} else {
@@ -1024,7 +1026,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				if (item != null) {
 					item.setSelection(false);
 					item.setImage(Raptor.getInstance().getIcon("unlocked"));
-					item.setToolTipText("Scroll lock disabled.");
+					item.setToolTipText(local.getString("chatConsCont13"));
 				}
 			}
 		}
@@ -1083,7 +1085,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			MenuItem item = null;
 			item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add channel tab: " + channel);
+			item.setText(local.getString("chatConsCont14") + channel);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					if (!Raptor.getInstance().getWindow()
@@ -1103,7 +1105,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			if (connectorChannelItems != null) {
 				MenuItem channelItem = new MenuItem(menu, SWT.CASCADE);
 				channelItem.setText(getConnector().getShortName()
-						+ " channel commands: " + channel);
+						+ local.getString("chatConsCont15") + channel);
 				Menu channelItemMenu = new Menu(menu);
 				channelItem.setMenu(channelItemMenu);
 
@@ -1153,13 +1155,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			if (parameterMap.containsKey("chatEvent")) {
 
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText("Add message as a memo");
+				menuItem.setText(local.getString("chatConsCont16"));
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						MemoService.getInstance().addMemo(
 								(ChatEvent) parameterMap.get("chatEvent"));
 						onAppendChatEventToInputText(new ChatEvent(null,
-								ChatType.INTERNAL, "Added memo."));
+								ChatType.INTERNAL, local.getString("chatConsCont17")));
 					}
 				});
 			}
@@ -1173,7 +1175,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				final String url = message.replace("\"","");
 
 				MenuItem internalBrowserItem = new MenuItem(menu, SWT.PUSH);
-				internalBrowserItem.setText("Open in internal browser: '"
+				internalBrowserItem.setText(local.getString("chatConsCont18")
 						+ message + "'");
 				internalBrowserItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
@@ -1182,7 +1184,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				});
 
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText("Open in external browser: '" + message + "'");
+				menuItem.setText(local.getString("chatConsCont18") + message + "'");
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						BrowserUtils.openExternalUrl(url);
@@ -1191,7 +1193,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 
 			MenuItem scriptsItem = new MenuItem(menu, SWT.CASCADE);
-			scriptsItem.setText("Right Click Scripts");
+			scriptsItem.setText(local.getString("chatConsCont19"));
 			Menu scriptsMenu = new Menu(menu);
 			scriptsItem.setMenu(scriptsMenu);
 			ParameterScript[] scripts = ScriptService.getInstance()
@@ -1222,7 +1224,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			final String gameId = connector.parseGameId(word);
 
 			item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add game chat tab: " + word);
+			item.setText(local.getString("chatConsCont20") + word);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					ChatUtils.openGameChatTab(getConnector(), gameId, true);
@@ -1233,7 +1235,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			if (gameIdItems != null) {
 				MenuItem gameCommands = new MenuItem(menu, SWT.CASCADE);
 				gameCommands.setText(getConnector().getShortName()
-						+ " game commands: " + word);
+						+ local.getString("chatConsCont21") + word);
 				Menu gameCommandsMenu = new Menu(menu);
 				gameCommands.setMenu(gameCommandsMenu);
 				for (int i = 0; i < gameIdItems.length; i++) {
@@ -2168,7 +2170,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
 		if (wasSelectedText) {
 			MenuItem copyItem = new MenuItem(menu, SWT.PUSH);
-			copyItem.setText("Copy (remove line breaks)");
+			copyItem.setText(local.getString("chatConsCont22"));
 			copyItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					chatConsole.inputText.copy();
@@ -2176,7 +2178,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			});
 
 			MenuItem copyPreserveItem = new MenuItem(menu, SWT.PUSH);
-			copyPreserveItem.setText("Copy (preserve line breaks)");
+			copyPreserveItem.setText(local.getString("chatConsCont23"));
 			copyPreserveItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					TextTransfer plainTextTransfer = TextTransfer.getInstance();
@@ -2196,7 +2198,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (menu.getItemCount() > 0) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Showing popup with " + menu.getItemCount()
-						+ " items. "
+						+ " items."
 						+ chatConsole.inputText.toDisplay(e.x, e.y));
 			}
 			menu.setLocation(chatConsole.inputText.toDisplay(e.x, e.y));
@@ -2235,7 +2237,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		Menu menu = new Menu(chatConsole.getShell(), SWT.POP_UP);
 		if (wasSelectedText) {
 			MenuItem copyItem = new MenuItem(menu, SWT.PUSH);
-			copyItem.setText("copy");
+			copyItem.setText(local.getString("chatConsCont24"));
 			copyItem.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					chatConsole.outputText.copy();
@@ -2244,7 +2246,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 
 		MenuItem pasteItem = new MenuItem(menu, SWT.PUSH);
-		pasteItem.setText("paste");
+		pasteItem.setText(local.getString("chatConsCont31"));
 		pasteItem.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event e) {
 				chatConsole.outputText.paste();
@@ -2254,7 +2256,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
 			new MenuItem(menu, SWT.SEPARATOR);
 			MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
-			showWordsThatStartWithAction.setText("Spelling suggestions for "
+			showWordsThatStartWithAction.setText(local.getString("chatConsCont25")
 					+ finalWord);
 			showWordsThatStartWithAction.addListener(SWT.Selection,
 					new Listener() {
@@ -2269,7 +2271,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK)) {
 			new MenuItem(menu, SWT.SEPARATOR);
 			MenuItem showWordsThatStartWithAction = new MenuItem(menu, SWT.PUSH);
-			showWordsThatStartWithAction.setText("Show words that start with '"
+			showWordsThatStartWithAction.setText(local.getString("chatConsCont26")
 					+ word + "'");
 			showWordsThatStartWithAction.addListener(SWT.Selection,
 					new Listener() {
@@ -2279,9 +2281,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							StringBuilder output = new StringBuilder(2000);
 
 							if (words == null || words.length == 0) {
-								output.append("No words found.");
+								output.append(local.getString("chatConsCont27"));
 							} else {
-								output.append("Words starting with "
+								output.append(local.getString("chatConsCont28")
 										+ finalWord + ":\n");
 								int count = 0;
 								for (int i = 0; i < words.length; i++) {
@@ -2304,7 +2306,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				&& word != null && !isSpelledCorrectly(null, word)) {
 
 			MenuItem addWord = new MenuItem(menu, SWT.PUSH);
-			addWord.setText("Add " + word + " to dictionary");
+			addWord.setText(local.getString("chatConsCont29") + word + local.getString("chatConsCont30"));
 			addWord.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					DictionaryService.getInstance().addWord(finalWord);
@@ -2315,7 +2317,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (menu.getItemCount() > 0) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Showing popup with " + menu.getItemCount()
-						+ " items. "
+						+ " items."
 						+ chatConsole.inputText.toDisplay(e.x, e.y));
 			}
 			menu.setLocation(chatConsole.outputText.toDisplay(e.x, e.y));

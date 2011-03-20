@@ -48,6 +48,7 @@ import raptor.chat.ChatLogger.ChatEventParseListener;
 import raptor.connector.Connector;
 import raptor.connector.fics.FicsConnector;
 import raptor.connector.ics.IcsConnector;
+import raptor.international.L10n;
 import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.service.UserTagService;
@@ -66,6 +67,7 @@ public class ChatUtils {
 	public static final String FORWARD_CHAR = " `1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./?><MNBVCXZ\":LKJHGFDSA|}{POIUYTREWQ+_)(*&^%$#@!~";
 	private static final RaptorLogger LOG = RaptorLogger.getLog(ChatUtils.class);
 	public static final String whiteSpaceChars = " \r\n\t";
+	protected static L10n local = L10n.getInstance();
 
 	public static boolean isWhiteSpaceChar(char c) {
 		return whiteSpaceChars.indexOf(c) != -1;
@@ -351,7 +353,7 @@ public class ChatUtils {
 			}
 			final String person = connector.parsePerson(personsName);
 			MenuItem item = new MenuItem(menu, SWT.PUSH);
-			item.setText("Add person tab: " + person);
+			item.setText(local.getString("chatUtils1") + person);
 			item.addListener(SWT.Selection, new Listener() {
 				public void handleEvent(Event e) {
 					if (!Raptor.getInstance().getWindow()
@@ -368,7 +370,7 @@ public class ChatUtils {
 
 			if (connector instanceof FicsConnector) {
 				MenuItem gamebotItem = new MenuItem(menu, SWT.PUSH);
-				gamebotItem.setText("Add gamebot tab: " + person);
+				gamebotItem.setText(local.getString("chatUtils2") + person);
 				gamebotItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						SWTUtils.openGamesBotWindowItem(
@@ -426,8 +428,8 @@ public class ChatUtils {
 					.getPersonActions(person);
 			if (connectorPersonItems != null) {
 				MenuItem personCommands = new MenuItem(menu, SWT.CASCADE);
-				personCommands.setText("Other " + connector.getShortName()
-						+ " commands:");
+				personCommands.setText(local.getString("chatUtils4") + connector.getShortName()
+						+ local.getString("chatUtils5"));
 				Menu personCommandsMenu = new Menu(menu);
 				personCommands.setMenu(personCommandsMenu);
 
@@ -456,8 +458,8 @@ public class ChatUtils {
 					public void handleEvent(Event e) {
 						connector.addExtendedCensor(person);
 						connector.publishEvent(new ChatEvent(null,
-								ChatType.INTERNAL, "Added " + person
-										+ " to extended censor."));
+								ChatType.INTERNAL, local.getString("chatUtils6") + person
+										+ local.getString("chatUtils7")));
 					}
 				});
 			} else {
@@ -467,10 +469,10 @@ public class ChatUtils {
 					public void handleEvent(Event e) {
 						boolean result = connector.removeExtendedCensor(person);
 						connector.publishEvent(new ChatEvent(null,
-								ChatType.INTERNAL, result ? "Removed " + person
-										+ " to extended censor." : " Person "
+								ChatType.INTERNAL, result ? local.getString("chatUtils8") + person
+										+ local.getString("chatUtils7") : " Person "
 										+ person
-										+ " is not on extended censor."));
+										+ local.getString("chatUtils9")));
 					}
 				});
 			}
@@ -479,7 +481,7 @@ public class ChatUtils {
 			Arrays.sort(tags);
 			if (tags.length > 0) {
 				MenuItem addTagsItem = new MenuItem(menu, SWT.CASCADE);
-				addTagsItem.setText("Add tag to '" + person + "'");
+				addTagsItem.setText(local.getString("chatUtils10") + person + "'");
 				Menu addTags = new Menu(menu);
 				addTagsItem.setMenu(addTags);
 
@@ -490,8 +492,8 @@ public class ChatUtils {
 						public void handleEvent(Event e) {
 							UserTagService.getInstance().addUser(tag, person);
 							connector.publishEvent(new ChatEvent(null,
-									ChatType.INTERNAL, "Added " + tag
-											+ " tag to " + person));
+									ChatType.INTERNAL, local.getString("chatUtils6") + tag
+											+ local.getString("chatUtils12") + person));
 						}
 					});
 				}
@@ -501,7 +503,7 @@ public class ChatUtils {
 			Arrays.sort(tags);
 			if (tags.length > 0) {
 				MenuItem addTagsItem = new MenuItem(menu, SWT.CASCADE);
-				addTagsItem.setText("Remove tags from '" + person + "'");
+				addTagsItem.setText(local.getString("chatUtils13") + person + "'");
 				Menu addTags = new Menu(menu);
 				addTagsItem.setMenu(addTags);
 
@@ -512,8 +514,8 @@ public class ChatUtils {
 						public void handleEvent(Event e) {
 							UserTagService.getInstance().clearTag(tag, person);
 							connector.publishEvent(new ChatEvent(null,
-									ChatType.INTERNAL, "Removed " + tag
-											+ " tag from " + person));
+									ChatType.INTERNAL, local.getString("chatUtils8") + tag
+											+ local.getString("chatUtils15") + person));
 						}
 					});
 				}
@@ -521,7 +523,7 @@ public class ChatUtils {
 
 			if (connector instanceof FicsConnector) {
 				MenuItem websiteLookupItem = new MenuItem(menu, SWT.CASCADE);
-				websiteLookupItem.setText("Website lookups: " + person);
+				websiteLookupItem.setText(local.getString("chatUtils16") + person);
 				Menu websiteMenu = new Menu(menu);
 				websiteLookupItem.setMenu(websiteMenu);
 
@@ -537,7 +539,7 @@ public class ChatUtils {
 				});
 
 				MenuItem ficsGamesStats = new MenuItem(websiteMenu, SWT.PUSH);
-				ficsGamesStats.setText("http://www.ficsgames.com statistics: "
+				ficsGamesStats.setText(local.getString("chatUtils3")
 						+ person);
 				ficsGamesStats.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
@@ -548,7 +550,7 @@ public class ChatUtils {
 				});
 
 				MenuItem watchBotStats = new MenuItem(websiteMenu, SWT.PUSH);
-				watchBotStats.setText("WatchBot history: " + person);
+				watchBotStats.setText(local.getString("chatUtils17") + person);
 				watchBotStats.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						BrowserUtils.openHtml(BrowserUtils
@@ -603,7 +605,7 @@ public class ChatUtils {
 		} else if (action instanceof ToggleScrollLock) {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			result.setSelection(true);
-			result.setToolTipText("Scroll lock enabled");
+			result.setToolTipText(local.getString("chatUtils18"));
 			controller.addToolItem(ToolBarItemKey.AUTO_SCROLL_BUTTON, result);
 		} else if (action instanceof PrependAction) {
 			result = new ToolItem(toolbar, SWT.CHECK);
@@ -638,7 +640,7 @@ public class ChatUtils {
 			result.setImage(Raptor.getInstance().getIcon(action.getIcon()));
 		} else {
 			Raptor.getInstance().alert(
-					"There is no image or short name set for action "
+					local.getString("chatUtils19")
 							+ action.getName());
 		}
 

@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.swt.RaptorStyledText;
@@ -199,7 +200,7 @@ public class ChatConsole extends Composite implements PreferenceKeys {
 	protected void addButtons() {
 		Button sendButton = new Button(buttonComposite, SWT.FLAT);
 		sendButton.setImage(Raptor.getInstance().getIcon("enter"));
-		sendButton.setToolTipText("Sends the message in the input field.");
+		sendButton.setToolTipText(L10n.getInstance().getString("chatCons1"));
 		sendButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {

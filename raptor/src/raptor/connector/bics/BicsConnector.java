@@ -42,6 +42,7 @@ import raptor.connector.ics.IcsConnectorContext;
 import raptor.connector.ics.IcsParser;
 import raptor.connector.ics.IcsUtils;
 import raptor.connector.ics.dialog.IcsLoginDialog;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ConnectorMessageBlockPage;
@@ -57,6 +58,8 @@ import raptor.util.RaptorStringTokenizer;
  * The connector used to connect to bics type server.
  */
 public class BicsConnector extends IcsConnector implements PreferenceKeys {
+	protected static L10n local = L10n.getInstance();
+	
 	public static class BicsConnectorContext extends IcsConnectorContext {
 		public BicsConnectorContext() {
 			super(new IcsParser(true));
@@ -211,9 +214,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				new PreferenceNode(
 						"bicsMenuActions",
 						new ActionContainerPage(
-								"Bics Menu URLs",
-								"\tOn this page you can configure the actions shown in the Bics "
-										+ "menu. You can add new actions on the Action Scripts Page.",
+								local.getString("bicsConnector1"),
+								local.getString("bicsConnector2"),
 								RaptorActionContainer.BicsMenu)),
 				new PreferenceNode("bics",
 						new ConnectorMessageBlockPage("bics")),
@@ -299,8 +301,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				simulBugPartnerName = null;
 
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("Partnership destroyed. Resetting partnership information.");
+					LOG.debug("Partnership destroyed. Resetting partnership information.");
 				}
 
 				// clear out the fics2 or fics1 depending on what this is.
@@ -356,12 +357,12 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	 * Creates the connectionsMenu and all of the actions associated with it.
 	 */
 	protected void createMenuActions() {
-		bicsMenu = new MenuManager("&Bics");
-		connectAction = new Action("&Connect") {
+		bicsMenu = new MenuManager(local.getString("bicsConnector3"));
+		connectAction = new Action(local.getString("bicsConnector4")) {
 			@Override
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(context
-						.getPreferencePrefix(), "Bics Login");
+						.getPreferencePrefix(), local.getString("bicsConnector5"));
 				dialog.open();
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "profile",
@@ -375,14 +376,14 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		disconnectAction = new Action("&Disconnect") {
+		disconnectAction = new Action(local.getString("bicsConnector6")) {
 			@Override
 			public void run() {
 				disconnect();
 			}
 		};
 
-		reconnectAction = new Action("&Reconnect") {
+		reconnectAction = new Action(local.getString("bicsConnector7")) {
 			@Override
 			public void run() {
 				disconnect();
@@ -395,14 +396,14 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bugbuttonsAction = new Action("Bug &Buttons") {
+		bugbuttonsAction = new Action(local.getString("bicsConnector8")) {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(BicsConnector.this);
 			}
 		};
 
-		autoConnectAction = new Action("Toggle Auto &Login",
+		autoConnectAction = new Action(local.getString("bicsConnector9"),
 				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
@@ -413,11 +414,11 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bics2.connectAction = new Action("&Connect") {
+		bics2.connectAction = new Action(local.getString("bicsConnector4")) {
 			@Override
 			public void run() {
 				IcsLoginDialog dialog = new IcsLoginDialog(context
-						.getPreferencePrefix(), "Bics Simultaneous Login");
+						.getPreferencePrefix(), local.getString("bicsConnector11"));
 				if (isConnected()) {
 					dialog.setShowingSimulBug(true);
 				}
@@ -447,14 +448,14 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bics2.disconnectAction = new Action("&Disconnect") {
+		bics2.disconnectAction = new Action(local.getString("bicsConnector6")) {
 			@Override
 			public void run() {
 				bics2.disconnect();
 			}
 		};
 
-		bics2.reconnectAction = new Action("&Reconnect") {
+		bics2.reconnectAction = new Action(local.getString("bicsConnector7")) {
 			@Override
 			public void run() {
 				bics2.disconnect();
@@ -467,14 +468,14 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		};
 
-		bics2.autoConnectAction = new Action("Toggle Auto &Login",
+		bics2.autoConnectAction = new Action(local.getString("bicsConnector9"),
 				IAction.AS_CHECK_BOX) {
 			@Override
 			public void run() {
 			}
 		};
 
-		bics2.bugbuttonsAction = new Action("Bug &Buttons") {
+		bics2.bugbuttonsAction = new Action(local.getString("bicsConnector8")) {
 			@Override
 			public void run() {
 				SWTUtils.openBugButtonsWindowItem(bics2);
@@ -498,22 +499,22 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bicsMenu.add(autoConnectAction);
 
 		MenuManager bics2Menu = new MenuManager(
-				"&Another Simultaneous Connection");
+				local.getString("bicsConnector16"));
 		bics2Menu.add(bics2.connectAction);
 		bics2Menu.add(bics2.disconnectAction);
 		bics2Menu.add(bics2.reconnectAction);
 		bics2Menu.add(new Separator());
-		MenuManager bics2Tabs = new MenuManager("&Tabs");
+		MenuManager bics2Tabs = new MenuManager(local.getString("bicsConnector17"));
 		bics2Tabs.add(bics2.bugbuttonsAction);
 		bics2Menu.add(bics2Tabs);
 		bicsMenu.add(bics2Menu);
 
 		bicsMenu.add(new Separator());
-		MenuManager tabsMenu = new MenuManager("&Tabs");
+		MenuManager tabsMenu = new MenuManager(local.getString("bicsConnector17"));
 		tabsMenu.add(bugbuttonsAction);
 		bicsMenu.add(tabsMenu);
 
-		MenuManager linksMenu = new MenuManager("&Links");
+		MenuManager linksMenu = new MenuManager(local.getString("bicsConnector18"));
 		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
 				.getActions(RaptorActionContainer.BicsMenu);
 		for (final RaptorAction raptorAction : ficsMenuActions) {
@@ -538,7 +539,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bics2 = new BicsConnector(new BicsConnectorContext() {
 			@Override
 			public String getDescription() {
-				return "Bughouse Internet Chess Server Another Simultaneous Connection";
+				return local.getString("bicsConnector19");
 			}
 
 			@Override
@@ -601,7 +602,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 					}
 
 				} catch (Throwable t) {
-					onError("Error reading " + EXTENDED_CENSOR_FILE_NAME, t);
+					onError(local.getString("bicsConnector20") + EXTENDED_CENSOR_FILE_NAME, t);
 
 				} finally {
 					if (reader != null) {
@@ -674,7 +675,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				writer.flush();
 
 			} catch (Throwable t) {
-				onError("Error writing " + EXTENDED_CENSOR_FILE_NAME, t);
+				onError(local.getString("bicsConnector21") + EXTENDED_CENSOR_FILE_NAME, t);
 			} finally {
 				if (writer != null) {
 					try {
