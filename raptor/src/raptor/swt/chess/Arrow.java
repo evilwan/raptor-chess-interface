@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Color;
  * of arrows: those that fade away and those that do not.
  */
 public class Arrow {
+	public static final int ANIMATION_STAGES = 2;
 	protected int startSquare;
 	protected int endSquare;
 	protected Color color;
@@ -41,7 +42,7 @@ public class Arrow {
 		if (!isFadeAway) {
 			frame = -1;
 		} else {
-			frame = 3;
+			frame = ANIMATION_STAGES;
 		}
 	}
 
