@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
-import raptor.util.RaptorLogger;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -58,11 +56,11 @@ import raptor.chess.pgn.PgnUtils;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
+import raptor.service.GameService.GameServiceAdapter;
+import raptor.service.GameService.GameServiceListener;
 import raptor.service.PlayingStatisticsService;
 import raptor.service.SoundService;
 import raptor.service.ThreadService;
-import raptor.service.GameService.GameServiceAdapter;
-import raptor.service.GameService.GameServiceListener;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.Arrow;
 import raptor.swt.chess.ChessBoardController;
@@ -70,6 +68,7 @@ import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.ClockLabelUpdater;
 import raptor.swt.chess.Highlight;
 import raptor.swt.chess.MouseButtonAction;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
@@ -124,7 +123,7 @@ public class PlayingController extends ChessBoardController {
 
 		@Override
 		public void droppablePiecesChanged(Game game) {
-			final long startTime = System.currentTimeMillis();
+			//final long startTime = System.currentTimeMillis();
 
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay()
@@ -140,7 +139,7 @@ public class PlayingController extends ChessBoardController {
 										adjustPieceJail();
 										board.redrawPiecesAndArtifacts(false);
 									}
-									System.err.println("Handled droppable pieces changed in " + (System.currentTimeMillis() - startTime));
+									//System.err.println("Handled droppable pieces changed in " + (System.currentTimeMillis() - startTime));
 								}
 
 							}
@@ -213,7 +212,7 @@ public class PlayingController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				final long startTime = System.currentTimeMillis();
+				//final long startTime = System.currentTimeMillis();
 				board.getControl().getDisplay()
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
@@ -275,7 +274,7 @@ public class PlayingController extends ChessBoardController {
 										addDecorationsForLastMoveListMove();
 										refresh();
 									}
-									System.err.println("Handled move in " + (System.currentTimeMillis() - startTime));
+									//System.err.println("Handled move in " + (System.currentTimeMillis() - startTime));
 								}
 							}
 						});

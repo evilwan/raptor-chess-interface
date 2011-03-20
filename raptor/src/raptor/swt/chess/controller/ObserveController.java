@@ -13,8 +13,6 @@
  */
 package raptor.swt.chess.controller;
 
-import raptor.util.RaptorLogger;
-
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.ToolBar;
@@ -27,14 +25,15 @@ import raptor.chess.Move;
 import raptor.chess.pgn.PgnHeader;
 import raptor.connector.Connector;
 import raptor.pref.PreferenceKeys;
-import raptor.service.SoundService;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
+import raptor.service.SoundService;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatUtils;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.MouseButtonAction;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
 
@@ -54,7 +53,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void droppablePiecesChanged(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				final long startTime = System.currentTimeMillis();
+				//final long startTime = System.currentTimeMillis();
 				synchronized (eventLock) {
 					board.getControl().getDisplay()
 							.asyncExec(new RaptorRunnable(getConnector()) {
@@ -67,7 +66,7 @@ public class ObserveController extends ChessBoardController {
 									adjustPieceJail();
 									board.redrawPiecesAndArtifacts(false);
 									
-									System.err.println("Handled obs drop changesmove in " + (System.currentTimeMillis() - startTime));
+									//System.err.println("Handled obs drop changesmove in " + (System.currentTimeMillis() - startTime));
 								}
 							});
 				}
@@ -145,7 +144,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
-				final long startTime = System.currentTimeMillis();
+				//final long startTime = System.currentTimeMillis();
 
 				
 				board.getControl().getDisplay()
@@ -181,7 +180,7 @@ public class ObserveController extends ChessBoardController {
 										refresh();
 									}
 									
-									System.err.println("Handled obs move in move in " + (System.currentTimeMillis() - startTime));
+									//System.err.println("Handled obs move in move in " + (System.currentTimeMillis() - startTime));
 								}
 							}
 						});
