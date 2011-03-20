@@ -54,6 +54,7 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void droppablePiecesChanged(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				final long startTime = System.currentTimeMillis();
 				synchronized (eventLock) {
 					board.getControl().getDisplay()
 							.asyncExec(new RaptorRunnable(getConnector()) {
@@ -63,7 +64,10 @@ public class ObserveController extends ChessBoardController {
 										return;
 									}
 
-									refreshBoard();
+									adjustPieceJail();
+									board.redrawPiecesAndArtifacts(false);
+									
+									System.err.println("Handled obs drop changesmove in " + (System.currentTimeMillis() - startTime));
 								}
 							});
 				}
@@ -92,7 +96,7 @@ public class ObserveController extends ChessBoardController {
 									}
 
 									InactiveController inactiveController = new InactiveController(
-											getGame());
+											getGame(),getConnector());
 									getBoard()
 											.setController(inactiveController);
 									inactiveController.setBoard(board);
@@ -141,6 +145,9 @@ public class ObserveController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				final long startTime = System.currentTimeMillis();
+
+				
 				board.getControl().getDisplay()
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
@@ -173,6 +180,8 @@ public class ObserveController extends ChessBoardController {
 										}
 										refresh();
 									}
+									
+									System.err.println("Handled obs move in move in " + (System.currentTimeMillis() - startTime));
 								}
 							}
 						});

@@ -124,20 +124,23 @@ public class PlayingController extends ChessBoardController {
 
 		@Override
 		public void droppablePiecesChanged(Game game) {
+			final long startTime = System.currentTimeMillis();
+
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay()
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 								synchronized (eventLock) {
-
 									if (isDisposed()) {
 										return;
 									}
 
 									if (!handlePremoveDrop()) {
-										refreshBoard();
+										adjustPieceJail();
+										board.redrawPiecesAndArtifacts(false);
 									}
+									System.err.println("Handled droppable pieces changed in " + (System.currentTimeMillis() - startTime));
 								}
 
 							}
@@ -210,11 +213,13 @@ public class PlayingController extends ChessBoardController {
 		@Override
 		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
+				final long startTime = System.currentTimeMillis();
 				board.getControl().getDisplay()
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
 								synchronized (eventLock) {
+									
 									if (isDisposed()) {
 										return;
 									}
@@ -270,6 +275,7 @@ public class PlayingController extends ChessBoardController {
 										addDecorationsForLastMoveListMove();
 										refresh();
 									}
+									System.err.println("Handled move in " + (System.currentTimeMillis() - startTime));
 								}
 							}
 						});

@@ -67,7 +67,7 @@ public class SetupController extends ChessBoardController {
 
 								onPlayGameEndSound();
 								InactiveController inactiveController = new InactiveController(
-										game);
+										game,getConnector());
 								getBoard().setController(inactiveController);
 
 								inactiveController.setBoard(board);
