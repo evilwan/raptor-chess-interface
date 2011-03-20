@@ -297,6 +297,8 @@ public class BughouseSuggestController extends ObserveController {
 			}
 			adjustForIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
 					toSquare));
+			refreshBoard();
+			return;
 		}
 
 		if (LOG.isDebugEnabled()) {
