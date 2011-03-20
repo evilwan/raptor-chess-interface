@@ -1,5 +1,5 @@
                          Raptor Set Creator README 
-                 (c) 2010 Raptor Project (All rights reserved).
+                 (c) 2009-2011 Raptor Project (All rights reserved).
  
 About
 -----
@@ -78,3 +78,22 @@ out you can copy this directory into your RAPTOR_APP/resources/set directory. Op
 you can add a author.txt file containing your name/email and a license.txt file containing
 the sets license. If you submit the set to the Raptor project zip up this directory and 
 submit that. It will contain everything needed to add your set to the project.
+
+
+
+
+SquareBackgroundCreator
+-----------------------
+Similar to setCreator except it creates square backgrounds from svg files for all sizes. This is 
+useful if you have borders or square patterns that do not scale or crop well. You only need two 
+images in the square directory, light.svg and dark.svg.
+
+   The following will create the CGCom square backgrounds in Raptor.
+   (Unix/OS X/Linux)
+   1) open up a terminal
+   2) cd to the RAPTOR_UNZIP_DIRECTORY
+   3) ./squareBackgroundCreator square/CGCom CGCom
+   (Windows)
+   1) Open up a command promt. (windows key r type in cmd).
+   2) cd to the RAPTOR_UNZIP_DIRECTORY
+   3) squareBackgroundCreator square/CGCom CGCom

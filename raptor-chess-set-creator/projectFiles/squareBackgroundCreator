@@ -1,0 +1,4 @@
+#!/bin/sh
+#Usage squareBackgroundDir svgSourceDir squareBackgroundName
+# (c) 2009-2011 Raptor Project (All rights reserved)
+java -classpath raptorSetCreator.jar raptor.SquareCreator $1 $2
