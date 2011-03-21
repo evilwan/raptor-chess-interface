@@ -206,7 +206,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	public void adjustTimeUpLabel() {
 		if (getPreferences().getBoolean(
 				PreferenceKeys.BOARD_SHOW_BUGHOUSE_SIDE_UP_TIME)
-				&& getGame().getVariant() == Variant.bughouse) {
+				&& getGame().getVariant() == Variant.bughouse && getGame() instanceof BughouseGame) {
 			BughouseGame bugGame = getGame() instanceof GameCursor ? (BughouseGame) ((GameCursor) getGame())
 					.getMasterGame()
 					: (BughouseGame) getGame();
