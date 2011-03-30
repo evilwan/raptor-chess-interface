@@ -1025,7 +1025,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 * are published on separate threads via ThreadService.
 	 */
 	public void publishEvent(final ChatEvent event) {
-		//System.err.println("In publish event: " + event);
+		// System.err.println("In publish event: " + event);
 
 		if (chatService != null) { // Could have been disposed.
 			if (LOG.isDebugEnabled()) {
@@ -1280,7 +1280,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				}
 
 			} catch (Throwable t) {
-				t.printStackTrace(); //Used to track down issues when developing. Dont remove.
+				t.printStackTrace(); // Used to track down issues when
+										// developing. Dont remove.
 				publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Error: "
 						+ t.getMessage()));
 				disconnect();
@@ -1533,7 +1534,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			public void run() {
 				try {
 					isConnecting = true;
-					
+
 					boolean isTimesealEnabled = getPreferences().getBoolean(
 							profilePrefix + "timeseal-enabled");
 
@@ -1558,11 +1559,16 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				} catch (Throwable ce) {
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
 							"Error: " + ce.getMessage()));
-					
-					//An error occured connecting so set auto connect to false so the user can easily fix it on next connect.
-					//It could be an invalid username/pw url/port.
-					Raptor.getInstance().getPreferences().setValue(context.getPreferencePrefix() + "auto-connect",false);
-					
+
+					// An error occured connecting so set auto connect to false
+					// so the user can easily fix it on next connect.
+					// It could be an invalid username/pw url/port.
+					Raptor.getInstance()
+							.getPreferences()
+							.setValue(
+									context.getPreferencePrefix()
+											+ "auto-connect", false);
+
 					disconnect();
 					return;
 				}
@@ -1572,7 +1578,6 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				return "IcsConnector.connection intiliazation runnable";
 			}
 		});
-
 
 		if (getPreferences().getBoolean(context.getShortName() + "-keep-alive")) {
 			ThreadService.getInstance().scheduleOneShot(30 * 60 * 1000,
@@ -1717,7 +1722,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		if (!isConnected()) {
 			return;
 		}
-		
+
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
 				if (getPreferences().getBoolean(
@@ -1751,21 +1756,25 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 *            The message being sent.
 	 */
 	protected void handleUnexamineOnSendMessage(String message) {
-		if (StringUtils.startsWithIgnoreCase(message, "getgame")
-				|| StringUtils.startsWithIgnoreCase(message, "examine")
-				|| StringUtils.startsWithIgnoreCase(message, "$$examine")
-				|| StringUtils.startsWithIgnoreCase(message, "examin")
-				|| StringUtils.startsWithIgnoreCase(message, "exami")
-				|| StringUtils.startsWithIgnoreCase(message, "exam")
-				|| StringUtils.startsWithIgnoreCase(message, "exa")
-				|| StringUtils.startsWithIgnoreCase(message, "ex")
-				|| StringUtils.startsWithIgnoreCase(message, "play ")
-				|| StringUtils.startsWithIgnoreCase(message, "seek ")
-				|| StringUtils.startsWithIgnoreCase(message, "match ")
-				|| StringUtils.startsWithIgnoreCase(message, "matc ")
-				|| StringUtils.startsWithIgnoreCase(message, "mat ")
-				|| StringUtils.startsWithIgnoreCase(message, "ma ")
-				|| StringUtils.startsWithIgnoreCase(message, "m ")) {
+		if (StringUtils.isBlank(message)) {
+			return;
+		}
+		String firstWord = message.split(" ")[0];
+		if (StringUtils.equalsIgnoreCase(firstWord, "getgame")
+				|| StringUtils.equalsIgnoreCase(firstWord, "examine")
+				|| StringUtils.equalsIgnoreCase(firstWord, "$$examine")
+				|| StringUtils.equalsIgnoreCase(firstWord, "examin")
+				|| StringUtils.equalsIgnoreCase(firstWord, "exami")
+				|| StringUtils.equalsIgnoreCase(firstWord, "exam")
+				|| StringUtils.equalsIgnoreCase(firstWord, "exa")
+				|| StringUtils.equalsIgnoreCase(firstWord, "ex")
+				|| StringUtils.equalsIgnoreCase(firstWord, "play")
+				|| StringUtils.equalsIgnoreCase(firstWord, "seek")
+				|| StringUtils.equalsIgnoreCase(firstWord, "match")
+				|| StringUtils.equalsIgnoreCase(firstWord, "matc")
+				|| StringUtils.equalsIgnoreCase(firstWord, "mat")
+				|| StringUtils.equalsIgnoreCase(firstWord, "ma")
+				|| StringUtils.equalsIgnoreCase(firstWord, "m")) {
 			Game[] games = gameService.getAllActiveGames();
 			Game examinedGame = null;
 			for (Game game : games) {
@@ -1883,7 +1892,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 */
 	public void messageArrived(StringBuilder buffer) {
 
-		//System.err.println("Message arrived (buffer): " + buffer);
+		// System.err.println("Message arrived (buffer): " + buffer);
 
 		if (lastSendPingTime != 0 && (lagNotifyCounter % 10 == 0)) {
 			ThreadService.getInstance().run(new Runnable() {
@@ -2009,8 +2018,9 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	protected void parseMessage(final String message) {
 		try {
 			String filteredMessage = filterTrailingPrompts(message);
-			
-			//This call will handle all game events, and return back a list of ChatEvents to process.
+
+			// This call will handle all game events, and return back a list of
+			// ChatEvents to process.
 			final ChatEvent[] events = context.getParser().parse(
 					filteredMessage);
 
