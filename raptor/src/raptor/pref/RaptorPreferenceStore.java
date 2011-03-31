@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -422,12 +423,13 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		defaultMonospacedFontName = getDefaultMonospacedFont();
 
 		setDefaultMonitorBasedSizes();
-
+		
 		// Action
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
-		// App settings.
+		// App settings.		
 		setDefault(APP_NAME, "Raptor .98 RC11");
+		setDefault(APP_LOCALE, L10n.getSuitableLocaleName());		
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
 				!OSUtils.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);
@@ -460,8 +462,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_IS_LOGGING_CONSOLE, false);
 		setDefault(APP_IS_LOGGING_PERSON_TELLS, false);
 		setDefault(APP_IS_LOGGING_CHANNEL_TELLS, false);
-		setDefault(PreferenceKeys.APP_SHOW_STATUS_BAR, false);
-		setDefault(APP_LOCALE, L10n.getSuitableLocaleName());
+		setDefault(PreferenceKeys.APP_SHOW_STATUS_BAR, false);		
 		
 		// Layout 1 settings.
 		setDefault(APP_WINDOW_BOUNDS, new Rectangle(0, 0, -1, -1));

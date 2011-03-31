@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -104,6 +105,7 @@ public class Raptor implements PreferenceKeys {
 	 * The applications main method. Takes no arguments.
 	 */
 	public static void main(String args[]) {
+		Locale.setDefault(L10n.getSuitableLocale());
 		try {
 			Display.setAppName("Raptor");
 			display = new Display();
