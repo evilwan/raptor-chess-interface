@@ -95,6 +95,9 @@ public class IcsUtils implements GameConstants {
 	 * occur on a refresh or a game end.).
 	 */
 	public static boolean addCurrentMove(Game game, Style12Message message) {
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("addCurrentMove: " + message + "\n" + game);
+		}
 		boolean result = false;
 		if (!message.isWhitesMoveAfterMoveIsMade
 				&& game.getColorToMove() != WHITE
@@ -107,16 +110,17 @@ public class IcsUtils implements GameConstants {
 			game.setHeader(PgnHeader.BlackRemainingMillis, ""
 					+ message.blackRemainingTimeMillis);
 
-			if (message.timeTakenForLastMoveMillis != 0) {
-				game.getMoveList().get(game.getMoveList().getSize() - 1)
+			if (message.timeTakenForLastMoveMillis != 0
+					&& game.getMoveList().getSize() > 1) {
+				game.getMoveList()
+						.get(game.getMoveList().getSize() - 1)
 						.addAnnotation(
 								new TimeTakenForMove(
 										message.timeTakenForLastMoveMillis));
 			}
 		} else {
 			if (message.san.equals("none")) {
-				Raptor
-						.getInstance()
+				Raptor.getInstance()
 						.onError(
 								"Received a none for san in a style 12 event. This should have contained a move.");
 			} else {
@@ -131,15 +135,15 @@ public class IcsUtils implements GameConstants {
 					+ message.blackRemainingTimeMillis);
 
 			if (message.isWhitesMoveAfterMoveIsMade) {
-				String lag = StringUtils.defaultString(game
-						.getHeader(PgnHeader.BlackLagMillis), "0");
-				game.setHeader(PgnHeader.BlackLagMillis, ""
-						+ (Long.parseLong(lag) + message.lagInMillis));
+				String lag = StringUtils.defaultString(
+						game.getHeader(PgnHeader.BlackLagMillis), "0");
+				game.setHeader(PgnHeader.BlackLagMillis,
+						"" + (Long.parseLong(lag) + message.lagInMillis));
 			} else {
-				String lag = StringUtils.defaultString(game
-						.getHeader(PgnHeader.WhiteLagMillis), "0");
-				game.setHeader(PgnHeader.WhiteLagMillis, ""
-						+ (Long.parseLong(lag) + message.lagInMillis));
+				String lag = StringUtils.defaultString(
+						game.getHeader(PgnHeader.WhiteLagMillis), "0");
+				game.setHeader(PgnHeader.WhiteLagMillis,
+						"" + (Long.parseLong(lag) + message.lagInMillis));
 
 			}
 			result = true;
@@ -150,6 +154,9 @@ public class IcsUtils implements GameConstants {
 		} else {
 			game.clearState(Game.IS_CLOCK_TICKING_STATE);
 		}
+		if (LOG.isDebugEnabled()) {
+			LOG.debug("after addCurrentMove: " + message + "\n" + game);
+		}
 		return result;
 	}
 
@@ -159,6 +166,11 @@ public class IcsUtils implements GameConstants {
 	public static boolean adjustToTakebacks(Game game, Style12Message message,
 			Connector connector) {
 		boolean result = false;
+		if (game.isInState(Game.EXAMINING_STATE)
+				|| game.isInState(Game.OBSERVING_EXAMINED_STATE)
+				|| game.isInState(Game.SETUP_STATE)) {
+			return false;
+		}
 
 		// fics ----- game halfmove
 		// 1 w b ---- 0 1
@@ -180,8 +192,7 @@ public class IcsUtils implements GameConstants {
 
 			if (game.getHalfMoveCount() < currentHalfMove) {
 				if (LOG.isDebugEnabled()) {
-					LOG
-							.debug("Didnt have all the moves needed for rollback. Resetting game and sending moves request.");
+					LOG.debug("Didnt have all the moves needed for rollback. Resetting game and sending moves request.");
 				}
 				resetGame(game, message);
 				connector.sendMessage("moves " + message.gameId, true,
@@ -248,9 +259,9 @@ public class IcsUtils implements GameConstants {
 				if (((BughouseGame) game).getOtherBoard().isInState(
 						Game.PLAYING_STATE)) {
 					Game otherGame = ((BughouseGame) game).getOtherBoard();
-					boolean isPartnerWhite = !StringUtils.equals(otherGame
-							.getHeader(PgnHeader.White), connector
-							.getUserName());
+					boolean isPartnerWhite = !StringUtils.equals(
+							otherGame.getHeader(PgnHeader.White),
+							connector.getUserName());
 					controller = new BughouseSuggestController(game, connector,
 							isPartnerWhite);
 				} else {
@@ -338,12 +349,12 @@ public class IcsUtils implements GameConstants {
 			}
 		}
 		updateNonPositionFields(result, gameStateStyle12Message);
-		result.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
-				.currentTimeMillis()));
+		result.setHeader(PgnHeader.Date,
+				PgnUtils.longToPgnDate(System.currentTimeMillis()));
 		result.setHeader(PgnHeader.Round, "?");
 		result.setHeader(PgnHeader.Site, "freechess.org");
-		result.setHeader(PgnHeader.TimeControl, PgnUtils
-				.timeIncMillisToTimeControl(0, 0));
+		result.setHeader(PgnHeader.TimeControl,
+				PgnUtils.timeIncMillisToTimeControl(0, 0));
 		result.setHeader(PgnHeader.BlackRemainingMillis, "" + 0);
 		result.setHeader(PgnHeader.WhiteRemainingMillis, "" + 0);
 		result.setHeader(PgnHeader.WhiteClock, PgnUtils.timeToClock(0));
@@ -359,13 +370,13 @@ public class IcsUtils implements GameConstants {
 	public static Game createGame(G1Message g1, Style12Message style12,
 			boolean isBics) {
 		Variant variant = IcsUtils.identifierToGameType(g1.gameTypeDescription);
-		
+
 		Game result = createGameFromVariant(variant, style12, isBics);
 		result.setId(g1.gameId);
 		result.addState(Game.UPDATING_SAN_STATE);
 		result.addState(Game.UPDATING_ECO_HEADERS_STATE);
-		result.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
-				.currentTimeMillis()));
+		result.setHeader(PgnHeader.Date,
+				PgnUtils.longToPgnDate(System.currentTimeMillis()));
 		result.setHeader(PgnHeader.Round, "?");
 		result.setHeader(PgnHeader.Site, "freechess.org");
 		result.setHeader(PgnHeader.TimeControl, PgnUtils
@@ -375,10 +386,10 @@ public class IcsUtils implements GameConstants {
 				+ g1.initialBlackTimeMillis);
 		result.setHeader(PgnHeader.WhiteRemainingMillis, ""
 				+ g1.initialWhiteTimeMillis);
-		result.setHeader(PgnHeader.WhiteClock, PgnUtils
-				.timeToClock(g1.initialWhiteTimeMillis));
-		result.setHeader(PgnHeader.BlackClock, PgnUtils
-				.timeToClock(g1.initialBlackTimeMillis));
+		result.setHeader(PgnHeader.WhiteClock,
+				PgnUtils.timeToClock(g1.initialWhiteTimeMillis));
+		result.setHeader(PgnHeader.BlackClock,
+				PgnUtils.timeToClock(g1.initialBlackTimeMillis));
 		result.setHeader(PgnHeader.BlackElo, g1.blackRating);
 		result.setHeader(PgnHeader.WhiteElo, g1.whiteRating);
 		result.setHeader(PgnHeader.Event, g1.initialWhiteTimeMillis / 60000
@@ -392,17 +403,17 @@ public class IcsUtils implements GameConstants {
 	public static Game createGame(Style12Message message, String entireMessage) {
 		if (message.relation == Style12Message.EXAMINING_GAME_RELATION) {
 
-			boolean isSetup = entireMessage.contains("Entering setup mode.\n");
+			boolean isSetup = entireMessage.contains("setup mode");
 			Game game = isSetup ? new SetupGame() : new ClassicGame();
 			game.setId(message.gameId);
 			game.addState(Game.UPDATING_SAN_STATE);
 			game.addState(Game.UPDATING_ECO_HEADERS_STATE);
-			game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
-					.currentTimeMillis()));
+			game.setHeader(PgnHeader.Date,
+					PgnUtils.longToPgnDate(System.currentTimeMillis()));
 			game.setHeader(PgnHeader.Round, "?");
 			game.setHeader(PgnHeader.Site, "freechess.org");
-			game.setHeader(PgnHeader.TimeControl, PgnUtils
-					.timeIncMillisToTimeControl(0, 0));
+			game.setHeader(PgnHeader.TimeControl,
+					PgnUtils.timeIncMillisToTimeControl(0, 0));
 			game.setHeader(PgnHeader.BlackRemainingMillis, "" + 0);
 			game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 0);
 			game.setHeader(PgnHeader.WhiteClock, PgnUtils.timeToClock(0));
@@ -420,12 +431,12 @@ public class IcsUtils implements GameConstants {
 			game.setId(message.gameId);
 			game.addState(Game.UPDATING_SAN_STATE);
 			game.addState(Game.UPDATING_ECO_HEADERS_STATE);
-			game.setHeader(PgnHeader.Date, PgnUtils.longToPgnDate(System
-					.currentTimeMillis()));
+			game.setHeader(PgnHeader.Date,
+					PgnUtils.longToPgnDate(System.currentTimeMillis()));
 			game.setHeader(PgnHeader.Round, "?");
 			game.setHeader(PgnHeader.Site, "freechess.org");
-			game.setHeader(PgnHeader.TimeControl, PgnUtils
-					.timeIncMillisToTimeControl(0, 0));
+			game.setHeader(PgnHeader.TimeControl,
+					PgnUtils.timeIncMillisToTimeControl(0, 0));
 			game.setHeader(PgnHeader.BlackRemainingMillis, "" + 0);
 			game.setHeader(PgnHeader.WhiteRemainingMillis, "" + 0);
 			game.setHeader(PgnHeader.WhiteClock, PgnUtils.timeToClock(0));
@@ -489,7 +500,7 @@ public class IcsUtils implements GameConstants {
 	public static Game createGameFromVariant(Variant variant,
 			Style12Message message, boolean isBicsMessage) {
 		Game result = null;
-		
+
 		if (message.relation == Style12Message.OBSERVING_EXAMINED_GAME_RELATION) {
 			result = new SetupGame();
 			result.setHeader(PgnHeader.Variant, variant.name());
@@ -509,7 +520,7 @@ public class IcsUtils implements GameConstants {
 					|| message.position[0][6] != KNIGHT
 					|| message.position[0][7] != ROOK;
 		}
-        
+
 		switch (variant) {
 		case classic:
 		case blitz:
@@ -819,8 +830,8 @@ public class IcsUtils implements GameConstants {
 
 	public static String stripGameId(String gameId) {
 		if (gameId.endsWith(")"))
-			return gameId.substring(0, gameId.length()-1);
-		
+			return gameId.substring(0, gameId.length() - 1);
+
 		return gameId;
 	}
 
@@ -835,8 +846,8 @@ public class IcsUtils implements GameConstants {
 	}
 
 	/**
-	 * Returns the word with all characters in STRIP_CHARS removed. If word contains multiple tokens, the last
-	 * word is returned.
+	 * Returns the word with all characters in STRIP_CHARS removed. If word
+	 * contains multiple tokens, the last word is returned.
 	 */
 	public static String stripWord(String word) {
 		if (word != null) {
@@ -870,7 +881,7 @@ public class IcsUtils implements GameConstants {
 	public static void updateGamesMoves(Game game, MovesMessage message) {
 		int halfMoveCountGameStartedOn = game.getHalfMoveCount()
 				- game.getMoveList().getSize();
-		
+
 		if (message.moves.length > 0 && halfMoveCountGameStartedOn != 0) {
 			Game gameClone = null;
 			if (message.style12 == null) {
@@ -888,8 +899,7 @@ public class IcsUtils implements GameConstants {
 					((FischerRandomCrazyhouseGame) gameClone)
 							.initialPositionIsSet();
 				} else if (gameClone.getVariant() == Variant.wild) {
-					((WildGame) gameClone)
-							.initialPositionIsSet();
+					((WildGame) gameClone).initialPositionIsSet();
 				}
 
 				updateNonPositionFields(gameClone, message.style12);
@@ -928,14 +938,14 @@ public class IcsUtils implements GameConstants {
 			if (StringUtils.isBlank(game.getHeader(PgnHeader.ECO))
 					&& StringUtils.isNotBlank(gameClone
 							.getHeader(PgnHeader.ECO))) {
-				game.setHeader(PgnHeader.ECO, gameClone
-						.getHeader(PgnHeader.ECO));
+				game.setHeader(PgnHeader.ECO,
+						gameClone.getHeader(PgnHeader.ECO));
 			}
 			if (StringUtils.isBlank(game.getHeader(PgnHeader.Opening))
 					&& StringUtils.isNotBlank(gameClone
 							.getHeader(PgnHeader.Opening))) {
-				game.setHeader(PgnHeader.Opening, gameClone
-						.getHeader(PgnHeader.Opening));
+				game.setHeader(PgnHeader.Opening,
+						gameClone.getHeader(PgnHeader.Opening));
 			}
 		} else if (message.moves.length == 0 && message.style12 != null) {
 			game.clear();
@@ -978,21 +988,15 @@ public class IcsUtils implements GameConstants {
 
 		game.addState(Game.ACTIVE_STATE);
 
-		game
-				.setHeader(PgnHeader.Black, IcsUtils
-						.stripTitles(message.blackName));
-		game
-				.setHeader(PgnHeader.White, IcsUtils
-						.stripTitles(message.whiteName));
+		game.setHeader(PgnHeader.Black, IcsUtils.stripTitles(message.blackName));
+		game.setHeader(PgnHeader.White, IcsUtils.stripTitles(message.whiteName));
 
 		game.setHeader(PgnHeader.WhiteRemainingMillis, ""
 				+ message.whiteRemainingTimeMillis);
 		game.setHeader(PgnHeader.BlackRemainingMillis, ""
 				+ message.blackRemainingTimeMillis);
 
-		game
-				.setColorToMove(message.isWhitesMoveAfterMoveIsMade ? WHITE
-						: BLACK);
+		game.setColorToMove(message.isWhitesMoveAfterMoveIsMade ? WHITE : BLACK);
 
 		game.setCastling(WHITE, message.canWhiteCastleKSide
 				&& message.canWhiteCastleQSide ? CASTLE_BOTH
@@ -1019,9 +1023,8 @@ public class IcsUtils implements GameConstants {
 		game.setFiftyMoveCount(message.numberOfMovesSinceLastIrreversible);
 
 		int fullMoveCount = message.fullMoveNumber;
-		game
-				.setHalfMoveCount(game.getColorToMove() == BLACK ? fullMoveCount * 2 - 1
-						: fullMoveCount * 2 - 2);
+		game.setHalfMoveCount(game.getColorToMove() == BLACK ? fullMoveCount * 2 - 1
+				: fullMoveCount * 2 - 2);
 
 		game.incrementRepCount();
 	}
@@ -1041,15 +1044,14 @@ public class IcsUtils implements GameConstants {
 							.pieceFromColoredPiece(style12.position[i][j]);
 					long squareBB = GameUtils.getBitboard(square);
 
-					game.setPieceCount(pieceColor, piece, game.getPieceCount(
-							pieceColor, piece) + 1);
+					game.setPieceCount(pieceColor, piece,
+							game.getPieceCount(pieceColor, piece) + 1);
 					game.getBoard()[square] = piece;
 					game.setColorBB(pieceColor, game.getColorBB(pieceColor)
 							| squareBB);
 					game.setOccupiedBB(game.getOccupiedBB() | squareBB);
-					game.setPieceBB(pieceColor, piece, game.getPieceBB(
-							pieceColor, piece)
-							| squareBB);
+					game.setPieceBB(pieceColor, piece,
+							game.getPieceBB(pieceColor, piece) | squareBB);
 				}
 			}
 		}
@@ -1059,9 +1061,9 @@ public class IcsUtils implements GameConstants {
 
 		game.setZobristPositionHash(ZobristUtils.zobristHashPositionOnly(game));
 		game.setZobristGameHash(game.getZobristPositionHash()
-				^ ZobristUtils.zobrist(game.getColorToMove(), game
-						.getEpSquare(), game.getCastling(WHITE), game
-						.getCastling(BLACK)));
+				^ ZobristUtils.zobrist(game.getColorToMove(),
+						game.getEpSquare(), game.getCastling(WHITE),
+						game.getCastling(BLACK)));
 
 		if (game.isInState(Game.SETUP_STATE)) {
 			game.setPieceCount(WHITE, PAWN, 1);
