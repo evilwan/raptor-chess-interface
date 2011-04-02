@@ -119,7 +119,7 @@ public class ActionScriptsPage extends PreferencePage {
 		Label iconLabel = new Label(iconComposite, SWT.NONE);
 		iconLabel
 				.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
-		iconLabel.setText("Icon: ");
+		iconLabel.setText(local.getString("icon"));
 		icons = new Combo(iconComposite, SWT.DROP_DOWN | SWT.READ_ONLY);
 		icons.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false));
 		icons.add("<None>");

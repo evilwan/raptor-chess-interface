@@ -763,7 +763,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		ficsMenu.add(autoConnectAction);
 
 		MenuManager fics2Menu = new MenuManager(
-				"&Another Simultaneous Connection");
+				local.getString("bicsConnector16"));
 		MenuManager fics2TabsMenu = new MenuManager(
 				local.getString("ficsConn23"));
 		fics2Menu.add(fics2.connectAction);

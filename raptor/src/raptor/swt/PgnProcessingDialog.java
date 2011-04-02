@@ -75,9 +75,9 @@ public class PgnProcessingDialog extends Dialog {
 					shell.getDisplay().asyncExec(new RaptorRunnable() {
 						@Override
 						public void execute() {
-							processMessageLabel.setText("Line number "
-									+ lineNumber + " Games " + games.size()
-									+ " Errors " + errors.size());
+							processMessageLabel.setText(L10n.getInstance().getString("pgnParseWI30")
+									+ lineNumber + " "+L10n.getInstance().getString("pgnParseWI3") + games.size()
+									+ " " + L10n.getInstance().getString("pgnParseWI27") + errors.size());
 							progressBar.setSelection(games.size());
 						}
 					});
