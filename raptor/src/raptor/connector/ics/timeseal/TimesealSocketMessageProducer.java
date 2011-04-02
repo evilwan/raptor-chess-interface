@@ -39,10 +39,12 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 				}
 			} else {
 				byteArrayOutputStream.write(i);
+				//System.err.print(i);
 			}
 		}
 
 		private int crypt(byte stringToWriteBytes[], long timestamp) {
+			//System.err.println("Writing " + stringToWriteBytes);
 			int bytesInLength = stringToWriteBytes.length;
 			System.arraycopy(stringToWriteBytes, 0, buffer, 0,
 					stringToWriteBytes.length);
@@ -199,8 +201,8 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 					}
 					
 
-					// System.err.println("Raw in: " + new String(buffer, 0,
-					// numRead));
+					//System.err.println("Raw in: " + new String(buffer, 0,
+					//numRead));
 
 					String text = isTimesealOn ? handleTimeseal(new String(
 							buffer, 0, numRead)) : new String(buffer, 0,
