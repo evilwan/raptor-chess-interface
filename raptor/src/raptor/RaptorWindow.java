@@ -950,7 +950,7 @@ public class RaptorWindow extends ApplicationWindow {
 						}
 					}
 				}
-				if (item != null) {
+				if (item != null && tabItem != null) {
 					tabItem.dispose();
 					restoreFolders();
 				}
