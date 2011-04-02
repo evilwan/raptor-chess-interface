@@ -24,6 +24,7 @@ import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.swt.chat.ChatUtils;
@@ -36,21 +37,21 @@ public class BughousePartnerController extends ChatConsoleController {
 
 	@Override
 	public String getName() {
-		return "PartnerTells";
+		return L10n.getInstance().getString("bugPartCont0");
 	}
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences()
 				.getQuadrant(
-						getConnector().getShortName() + "-"
+						getConnector().getShortName() + "-" 
 								+ PARTNER_TELL_TAB_QUADRANT);
 	}
 
 	@Override
 	public String getPrependText(boolean checkButton) {
 		if (isIgnoringActions()) {
-			return "";
+			return ""; 
 		}
 
 		if (checkButton
@@ -59,7 +60,7 @@ public class BughousePartnerController extends ChatConsoleController {
 		} else if (!checkButton) {
 			return connector.getPartnerTellPrefix();
 		} else {
-			return "";
+			return ""; 
 		}
 	}
 

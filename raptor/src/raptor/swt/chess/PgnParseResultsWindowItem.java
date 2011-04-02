@@ -47,6 +47,7 @@ import raptor.chess.Game;
 import raptor.chess.Result;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.PgnParserError;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.swt.ItemChangedListener;
 import raptor.swt.RaptorTable;
@@ -76,6 +77,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	protected String title;
 	protected boolean isPassive;
 	protected String pathToFile;
+	protected static L10n local = L10n.getInstance();
 
 	public PgnParseResultsWindowItem(String title, List<PgnParserError> errors,
 			List<Game> games, String pathToFile) {
@@ -111,7 +113,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			composite.dispose();
 		}
 		if (LOG.isInfoEnabled()) {
-			LOG.info("Disposed PgnParseResultsWindowItem");
+			LOG.info("Disposed PgnParseResultsWindowItem"); 
 		}
 
 	}
@@ -133,11 +135,11 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
 	public String getPercentage(int count, int total) {
 		if (total == 0 || count == 0) {
-			return "0%";
+			return "0%"; 
 		} else {
 			return new BigDecimal((double) count / (double) total * 100.0)
 					.setScale(2, BigDecimal.ROUND_HALF_UP).toString()
-					+ "%";
+					+ "%"; 
 		}
 	}
 
@@ -178,9 +180,9 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
 		Label gamesTotalLabel = new Label(composite, SWT.LEFT);
 
-		gamesTotalLabel.setText("Games: " + games.size() + "   White Win: "
-				+ getPercentage(whiteWins, finishedGames) + "   Black Win: "
-				+ getPercentage(blackWins, finishedGames) + "   Draw: "
+		gamesTotalLabel.setText(local.getString("pgnParseWI3") + games.size() + local.getString("pgnParseWI4")
+				+ getPercentage(whiteWins, finishedGames) + local.getString("pgnParseWI5")
+				+ getPercentage(blackWins, finishedGames) + local.getString("pgnParseWI6")
 				+ getPercentage(draws, finishedGames));
 		gamesTotalLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
@@ -189,19 +191,19 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		gamesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		gamesTable.addColumn("ID", SWT.LEFT, 3, true, new IntegerComparator());
-		gamesTable.addColumn("Variant", SWT.LEFT, 5, true, null);
-		gamesTable.addColumn("Date", SWT.LEFT, 10, true, null);
-		gamesTable.addColumn("Event", SWT.LEFT, 15, true, null);
-		gamesTable.addColumn("White", SWT.LEFT, 15, true, null);
+		gamesTable.addColumn(local.getString("pgnParseWI7"), SWT.LEFT, 3, true, new IntegerComparator());
+		gamesTable.addColumn(local.getString("pgnParseWI8"), SWT.LEFT, 5, true, null);
+		gamesTable.addColumn(local.getString("pgnParseWI9"), SWT.LEFT, 10, true, null);
+		gamesTable.addColumn(local.getString("pgnParseWI10"), SWT.LEFT, 15, true, null);
+		gamesTable.addColumn(local.getString("pgnParseWI11"), SWT.LEFT, 15, true, null);
 		gamesTable
-				.addColumn("WELO", SWT.LEFT, 5, true, new IntegerComparator());
-		gamesTable.addColumn("Black", SWT.LEFT, 15, true, null);
+				.addColumn(local.getString("pgnParseWI12"), SWT.LEFT, 5, true, new IntegerComparator());
+		gamesTable.addColumn(local.getString("pgnParseWI13"), SWT.LEFT, 15, true, null);
 		gamesTable
-				.addColumn("BELO", SWT.LEFT, 5, true, new IntegerComparator());
-		gamesTable.addColumn("Result", SWT.LEFT, 3, true, null);
-		gamesTable.addColumn("ECO", SWT.LEFT, 3, true, null);
-		gamesTable.addColumn("Opening", SWT.LEFT, 21, true, null);
+				.addColumn(local.getString("pgnParseWI14"), SWT.LEFT, 5, true, new IntegerComparator());
+		gamesTable.addColumn(local.getString("pgnParseWI15"), SWT.LEFT, 3, true, null);
+		gamesTable.addColumn(local.getString("pgnParseWI16"), SWT.LEFT, 3, true, null);
+		gamesTable.addColumn(local.getString("pgnParseWI17"), SWT.LEFT, 21, true, null);
 
 		gamesTable.addRaptorTableListener(new RaptorTableListener() {
 
@@ -218,7 +220,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			public void rowRightClicked(MouseEvent event, final String[] rowData) {
 				Menu menu = new Menu(composite.getShell(), SWT.POP_UP);
 				MenuItem deleteItem = new MenuItem(menu, SWT.PUSH);
-				deleteItem.setText("Delete game " + rowData[0]);
+				deleteItem.setText(local.getString("pgnParseWI18") + rowData[0]);
 				deleteItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						String id = rowData[0];
@@ -257,7 +259,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		Button saveButton = new Button(composite, SWT.PUSH);
 		saveButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
-		saveButton.setText("Save");
+		saveButton.setText(local.getString("pgnParseWI19"));
 		saveButton.addSelectionListener(new SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -266,12 +268,12 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (games.size() == 0) {
-					Raptor.getInstance().alert("There are no games to save.");
+					Raptor.getInstance().alert(local.getString("pgnParseWI20"));
 					return;
 				}
 
 				FileDialog fd = new FileDialog(composite.getShell(), SWT.SAVE);
-				fd.setText("Select file to save.");
+				fd.setText(local.getString("pgnParseWI21"));
 				File file = new File(pathToFile);
 				fd.setFilterPath(file.getParent());
 				fd.setFileName(file.getName());
@@ -284,15 +286,15 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 						for (int i = 0; i < gamesTable.getRowCount(); i++) {
 							int id = Integer.parseInt(gamesTable.getText(0, 0));
 							Game game = games.get(id);
-							fileWriter.write(game.toPgn() + "\n\n");
+							fileWriter.write(game.toPgn() + "\n\n"); 
 							fileWriter.flush();
 						}
 						Raptor.getInstance().alert(
-								"Saved " + gamesTable.getRowCount()
-										+ " to file " + pathToFile + ".");
+								local.getString("pgnParseWI23") + gamesTable.getRowCount()
+										+ local.getString("pgnParseWI24") + pathToFile + "."); //$NON-NLS-2$
 					} catch (Throwable t) {
 						Raptor.getInstance().onError(
-								"Error saving pgn file: " + pathToFile);
+								local.getString("pgnParseWI26") + pathToFile);
 					} finally {
 						if (fileWriter != null) {
 							try {
@@ -307,7 +309,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
 		if (!errors.isEmpty()) {
 			Label errorsLabel = new Label(composite, SWT.LEFT);
-			errorsLabel.setText("Errors: " + errors.size());
+			errorsLabel.setText(local.getString("pgnParseWI27") + errors.size());
 			errorsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 					false));
 
@@ -315,16 +317,16 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 					| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 			errorsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 					true));
-			errorsTable.addColumn("PGN Error", SWT.LEFT, 50, true, null);
-			errorsTable.addColumn("Action Taken", SWT.LEFT, 40, true, null);
-			errorsTable.addColumn("Line Number", SWT.LEFT, 10, true,
+			errorsTable.addColumn(local.getString("pgnParseWI28"), SWT.LEFT, 50, true, null);
+			errorsTable.addColumn(local.getString("pgnParseWI29"), SWT.LEFT, 40, true, null);
+			errorsTable.addColumn(local.getString("pgnParseWI30"), SWT.LEFT, 10, true,
 					new IntegerComparator());
 			String[][] content = new String[errors.size()][3];
 			for (int i = 0; i < errors.size(); i++) {
 				PgnParserError error = errors.get(i);
 				content[i][0] = error.getType().name();
 				content[i][1] = error.getAction().name();
-				content[i][2] = "" + error.getLineNumber();
+				content[i][2] = "" + error.getLineNumber(); 
 			}
 			errorsTable.refreshTable(content);
 		}
@@ -357,7 +359,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		Game selectedGame = games.get(index);
 		Raptor.getInstance().getWindow().addRaptorWindowItem(
 				new ChessBoardWindowItem(new InactiveController(selectedGame,
-						selectedGame.getHeader(PgnHeader.White) + " vs "
+						selectedGame.getHeader(PgnHeader.White) + " vs " 
 								+ selectedGame.getHeader(PgnHeader.Black),
 						false)));
 	}
@@ -366,27 +368,27 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		String[][] gamesData = new String[games.size()][11];
 		for (int i = 0; i < games.size(); i++) {
 			Game game = games.get(i);
-			gamesData[i][0] = "" + i;
+			gamesData[i][0] = "" + i; 
 			gamesData[i][1] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.Variant), "?");
+					.getHeader(PgnHeader.Variant), "?"); 
 			gamesData[i][2] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.Date), "?");
+					.getHeader(PgnHeader.Date), "?"); 
 			gamesData[i][3] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.Event), "?");
+					.getHeader(PgnHeader.Event), "?"); 
 			gamesData[i][4] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.White), "?");
+					.getHeader(PgnHeader.White), "?"); 
 			gamesData[i][5] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.WhiteElo), "?");
+					.getHeader(PgnHeader.WhiteElo), "?"); 
 			gamesData[i][6] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.Black), "?");
+					.getHeader(PgnHeader.Black), "?"); 
 			gamesData[i][7] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.BlackElo), "?");
+					.getHeader(PgnHeader.BlackElo), "?"); 
 			gamesData[i][8] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.Result), "?");
+					.getHeader(PgnHeader.Result), "?"); 
 			gamesData[i][9] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.ECO), "");
+					.getHeader(PgnHeader.ECO), ""); 
 			gamesData[i][10] = StringUtils.defaultString(game
-					.getHeader(PgnHeader.Opening), "");
+					.getHeader(PgnHeader.Opening), ""); 
 		}
 		gamesTable.refreshTable(gamesData);
 	}

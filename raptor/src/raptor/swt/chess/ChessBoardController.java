@@ -36,6 +36,7 @@ import raptor.chess.Variant;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.SoundService;
@@ -177,19 +178,19 @@ public abstract class ChessBoardController implements BoardConstants,
 					int moveNumber = lastMove.getFullMoveCount();
 
 					board.getStatusLabel().setText(
-							"Last Move: "
+							L10n.getInstance().getString("chessBCont0")
 									+ moveNumber
-									+ ") "
-									+ (lastMove.isWhitesMove() ? "" : "... ")
+									+ ") " 
+									+ (lastMove.isWhitesMove() ? "" : "... ")  
 									+ GameUtils.convertSanToUseUnicode(lastMove
 											.toString(), lastMove
 											.isWhitesMove()));
 				} else {
-					board.getStatusLabel().setText("");
+					board.getStatusLabel().setText(""); 
 				}
 
 			} else {
-				board.getStatusLabel().setText("");
+				board.getStatusLabel().setText(""); 
 			}
 		} else {
 			String result = getGame().getHeader(PgnHeader.ResultDescription);
@@ -233,13 +234,13 @@ public abstract class ChessBoardController implements BoardConstants,
 
 				if (teamOneWhite > teamTwoWhite) {
 					getBoard().getWhiteLagLabel().setImage(
-							Raptor.getInstance().getIcon("up"));
+							Raptor.getInstance().getIcon("up")); 
 				} else {
 					getBoard().getWhiteLagLabel().setImage(null);
 				}
 				if (teamOneBlack > teamTwoBlack) {
 					getBoard().getBlackLagLabel().setImage(
-							Raptor.getInstance().getIcon("up"));
+							Raptor.getInstance().getIcon("up")); 
 				} else {
 					getBoard().getBlackLagLabel().setImage(null);
 				}
@@ -305,7 +306,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		board = null;
 
 		if (LOG.isInfoEnabled()) {
-			LOG.info("Disposed ChessBoardController");
+			LOG.info("Disposed ChessBoardController"); 
 		}
 	}
 
@@ -316,7 +317,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void fireItemChanged() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Firing itemChanged");
+			LOG.debug("Firing itemChanged"); 
 		}
 		for (ItemChangedListener listener : itemChangedListeners) {
 			listener.itemStateChanged();
@@ -430,7 +431,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onActivate() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("In onActivate : " + game.getId() + " "
+			LOG.debug("In onActivate : " + game.getId() + " "  
 					+ game.getHeader(PgnHeader.Event));
 		}
 	}
@@ -481,7 +482,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onFlip() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("onFlip");
+			LOG.debug("onFlip"); 
 		}
 		onFlipIgnoreBughouseOtherBoard();
 
@@ -515,7 +516,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onFlipIgnoreBughouseOtherBoard() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("onFlip");
+			LOG.debug("onFlip"); 
 		}
 		board.setWhiteOnTop(!board.isWhiteOnTop());
 		board.setWhitePieceJailOnTop(!board.isWhitePieceJailOnTop());
@@ -556,7 +557,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 */
 	public void onPassivate() {
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("In onPassivate : " + game.getId() + " "
+			LOG.debug("In onPassivate : " + game.getId() + " "  
 					+ game.getHeader(PgnHeader.Event));
 		}
 	}
@@ -588,7 +589,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			return;
 		}
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("refresh " + getGame().getId() + " ...");
+			LOG.debug("refresh " + getGame().getId() + " ...");  
 		}
 		long startTime = System.currentTimeMillis();
 
@@ -606,9 +607,9 @@ public abstract class ChessBoardController implements BoardConstants,
 
 		if (LOG.isDebugEnabled()) {
 			LOG
-					.debug("Completed refresh of game " + getGame().getId()
-							+ "  in "
-							+ (System.currentTimeMillis() - startTime) + "ms");
+					.debug("Completed refresh of game " + getGame().getId() 
+							+ "  in " 
+							+ (System.currentTimeMillis() - startTime) + "ms"); 
 		}
 	}
 
@@ -661,54 +662,54 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	public void speakMove(Move move) {
-		String text = "";
+		String text = ""; 
 
 		switch (move.getPiece()) {
 		case PAWN:
-			text += "pawn ";
+			text += "pawn "; 
 			break;
 		case KNIGHT:
-			text += "knight ";
+			text += "knight "; 
 			break;
 		case BISHOP:
-			text += "bishop ";
+			text += "bishop "; 
 			break;
 		case ROOK:
-			text += "rook ";
+			text += "rook "; 
 			break;
 		case QUEEN:
-			text += "queen ";
+			text += "queen "; 
 			break;
 		case KING:
-			text += "king ";
+			text += "king "; 
 			break;
 		}
 
 		if (move.isCapture()) {
-			text += "takes ";
+			text += "takes "; 
 		} else {
-			text += "to ";
+			text += "to "; 
 		}
 
-		text += GameUtils.getSan(move.getTo()) + " ";
+		text += GameUtils.getSan(move.getTo()) + " "; 
 
 		if (move.isPromotion()) {
-			text += GameUtils.getSan(move.getTo()) + "promote to ";
+			text += GameUtils.getSan(move.getTo()) + "promote to "; 
 			switch (move.getPiecePromotedTo()) {
 			case KNIGHT:
-				text += "knight";
+				text += "knight"; 
 				break;
 			case BISHOP:
-				text += "bishop";
+				text += "bishop"; 
 				break;
 			case ROOK:
-				text += "rook";
+				text += "rook"; 
 				break;
 			case QUEEN:
-				text += "queen";
+				text += "queen"; 
 				break;
 			case KING:
-				text += "king";
+				text += "king"; 
 				break;
 			}
 		}
@@ -720,23 +721,23 @@ public abstract class ChessBoardController implements BoardConstants,
 		if (text == null) {
 			switch (game.getResult()) {
 			case BLACK_WON: {
-				text = "zero one";
+				text = "zero one"; 
 				break;
 			}
 			case WHITE_WON: {
-				text = "one zero";
+				text = "one zero"; 
 				break;
 			}
 			case DRAW: {
-				text = "one half one half";
+				text = "one half one half"; 
 				break;
 			}
 			case UNDETERMINED: {
-				text = "Game ended.";
+				text = "Game ended."; 
 				break;
 			}
 			case ON_GOING: {
-				text = "Game ended";
+				text = "Game ended"; 
 				break;
 			}
 			}
@@ -967,19 +968,19 @@ public abstract class ChessBoardController implements BoardConstants,
 		String blackNameRating = null;
 
 		if (StringUtils.isBlank(whiteName)) {
-			whiteNameRating = "White";
+			whiteNameRating = L10n.getInstance().getString("chessBCont1");
 		} else if (StringUtils.isBlank(whiteRating)) {
 			whiteNameRating = whiteName;
 		} else {
-			whiteNameRating = whiteName + " " + whiteRating;
+			whiteNameRating = whiteName + " " + whiteRating; 
 		}
 
 		if (StringUtils.isBlank(blackName)) {
-			blackNameRating = "Black";
+			blackNameRating = L10n.getInstance().getString("chessBCont2");
 		} else if (StringUtils.isBlank(blackRating)) {
 			blackNameRating = blackName;
 		} else {
-			blackNameRating = blackName + " " + blackRating;
+			blackNameRating = blackName + " " + blackRating; 
 		}
 
 		board.blackNameRatingLabel.setText(blackNameRating);
@@ -1001,8 +1002,8 @@ public abstract class ChessBoardController implements BoardConstants,
 		String eco = getGame().getHeader(PgnHeader.ECO);
 		String opening = getGame().getHeader(PgnHeader.Opening);
 
-		String description = StringUtils.isBlank(eco) ? "" : "(" + eco + ") ";
-		description += StringUtils.isBlank(opening) ? "" : opening;
+		String description = StringUtils.isBlank(eco) ? "" : "(" + eco + ") ";  
+		description += StringUtils.isBlank(opening) ? "" : opening; 
 		board.getOpeningDescriptionLabel().setText(description);
 	}
 
@@ -1087,7 +1088,7 @@ public abstract class ChessBoardController implements BoardConstants,
 		if (isDisposed()) {
 			return;
 		}
-		board.currentPremovesLabel.setText("");
+		board.currentPremovesLabel.setText(""); 
 	}
 
 	/**

@@ -39,6 +39,7 @@ import raptor.Raptor;
 import raptor.chess.util.GameUtils;
 import raptor.engine.xboard.XboardEngine;
 import raptor.engine.xboard.XboardInfoListener;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.service.ThreadService;
 import raptor.service.XboardEngineService;
@@ -60,7 +61,7 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 	protected Combo engineCombo;
 	protected RaptorTable bestMoves;
 	protected Button startStopButton, propertiesButton;
-
+	protected static L10n local = L10n.getInstance();
 	private boolean ignoreEngineSelection;
 	
 	protected XboardInfoListener listener = new XboardInfoListener() {
@@ -180,7 +181,7 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 					});
 
 				}
-				startStopButton.setText("Stop");
+				startStopButton.setText(local.getString("uciAnalW_7"));
 				ThreadService.getInstance().run(new Runnable() {
 					public void run() {
 						try {
@@ -204,28 +205,28 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 				.createMarginlessRowLayout(SWT.VERTICAL));
 
 		startStopButton = new Button(topLine, SWT.FLAT);
-		startStopButton.setText("Stop");
+		startStopButton.setText(local.getString("uciAnalW_7"));
 		startStopButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (startStopButton.getText().equals("Start")) {
+				if (startStopButton.getText().equals(local.getString("uciAnalW_32"))) {
 					start();
-					startStopButton.setText("Stop");
+					startStopButton.setText(local.getString("uciAnalW_7"));
 				} else {
 					stop();
-					startStopButton.setText("Start");
+					startStopButton.setText(local.getString("uciAnalW_32"));
 				}
 			}
 		});
 
 		bestMoves = new RaptorTable(composite, SWT.BORDER | SWT.FULL_SELECTION,
 				false, true);
-		bestMoves.setToolTipText("The current best lines in the position.");
-		bestMoves.addColumn("Score(Pawns)", SWT.LEFT, 10, false, null);
-		bestMoves.addColumn("Depth(ply)", SWT.LEFT, 10, false, null);
-		bestMoves.addColumn("Time(sec)", SWT.LEFT, 10, false, null);
-		bestMoves.addColumn("Nodes(K)", SWT.LEFT, 10, false, null);
-		bestMoves.addColumn("Principal Variation", SWT.LEFT, 60, false, null);
+		bestMoves.setToolTipText(local.getString("uciAnalW_37"));
+		bestMoves.addColumn(local.getString("uciAnalW_38"), SWT.LEFT, 10, false, null);
+		bestMoves.addColumn(local.getString("uciAnalW_39"), SWT.LEFT, 10, false, null);
+		bestMoves.addColumn(local.getString("uciAnalW_40"), SWT.LEFT, 10, false, null);
+		bestMoves.addColumn(local.getString("uciAnalW_41"), SWT.LEFT, 10, false, null);
+		bestMoves.addColumn(local.getString("uciAnalW_42"), SWT.LEFT, 60, false, null);
 		bestMoves.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
 				1));
 		
@@ -235,7 +236,7 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 				Menu menu = new Menu(XboardAnalysisWidget.this.composite
 						.getShell(), SWT.POP_UP);
 				MenuItem item = new MenuItem(menu, SWT.PUSH);
-				item.setText("Copy");
+				item.setText(local.getString("uciAnalW_43"));
 				item.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						Clipboard clipboard = new Clipboard(composite.getDisplay());
@@ -332,7 +333,7 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 							new RaptorRunnable() {
 								@Override
 								public void execute() {
-									startStopButton.setText("Stop");
+									startStopButton.setText(local.getString("uciAnalW_7"));
 								}
 							});
 
@@ -353,7 +354,7 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 								new RaptorRunnable() {
 									@Override
 									public void execute() {
-										startStopButton.setText("Start");
+										startStopButton.setText(local.getString("uciAnalW_32"));
 									}
 								});
 					}
@@ -371,7 +372,7 @@ public class XboardAnalysisWidget implements EngineAnalysisWidget {
 	}
 
 	public void updateToGame() {
-		if (startStopButton.getText().equals("Stop")) {
+		if (startStopButton.getText().equals(local.getString("uciAnalW_7"))) {
 			start();
 		}
 	}

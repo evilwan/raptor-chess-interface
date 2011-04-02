@@ -22,6 +22,7 @@ import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleController;
 import raptor.swt.chat.ChatUtils;
@@ -47,19 +48,19 @@ public class GameChatController extends ChatConsoleController {
 
 	@Override
 	public String getName() {
-		return "Game:" + gameId;
+		return L10n.getInstance().getString("gameChatCont0") + gameId;
 	}
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
-				getConnector().getShortName() + "-" + GAME_CHAT_TAB_QUADRANT);
+				getConnector().getShortName() + "-" + GAME_CHAT_TAB_QUADRANT); 
 	}
 
 	@Override
 	public String getPrependText(boolean checkButton) {
 		if (isIgnoringActions()) {
-			return "";
+			return ""; 
 		}
 
 		if (checkButton
@@ -68,7 +69,7 @@ public class GameChatController extends ChatConsoleController {
 		} else if (!checkButton) {
 			return connector.getGameChatTabPrefix(gameId);
 		} else {
-			return "";
+			return ""; 
 		}
 	}
 

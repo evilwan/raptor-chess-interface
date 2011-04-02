@@ -24,6 +24,7 @@ import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.swt.RegularExpressionEditorDialog;
 import raptor.swt.SWTUtils;
 import raptor.swt.chat.ChatConsoleController;
@@ -50,7 +51,7 @@ public class RegExController extends ChatConsoleController {
 	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
-				getConnector().getShortName() + "-" + REGEX_TAB_QUADRANT);
+				getConnector().getShortName() + "-" + REGEX_TAB_QUADRANT); 
 
 	}
 
@@ -101,12 +102,12 @@ public class RegExController extends ChatConsoleController {
 		RegularExpressionEditorDialog regExDialog = new RegularExpressionEditorDialog(
 				Raptor.getInstance().getWindow().getShell(), connector
 						.getShortName()
-						+ " Adjust regular expression dialog",
-				"Enter the regular expression the new regular expression below:");
+						+ L10n.getInstance().getString("regexCont1"),
+						L10n.getInstance().getString("regexCont2"));
 		regExDialog.setInput(pattern.pattern());
 		String regEx = regExDialog.open();
 		if (StringUtils.isNotBlank(regEx)) {
-			chatConsole.getInputText().setText("");
+			chatConsole.getInputText().setText(""); 
 			pattern = RegExUtils.getPattern(regEx);
 			fireItemChanged();
 			ChatUtils.appendPreviousChatsToController(chatConsole);

@@ -22,6 +22,7 @@ import raptor.Raptor;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.connector.Connector;
+import raptor.international.L10n;
 import raptor.service.GameService.GameServiceAdapter;
 import raptor.service.GameService.GameServiceListener;
 import raptor.service.GameService.Offer;
@@ -58,9 +59,9 @@ public class MainController extends ChatConsoleController {
 		boolean result = true;
 		if (connector.isConnected()) {
 			result = Raptor.getInstance().confirm(
-					"Closing a main console will disconnect you from "
+					L10n.getInstance().getString("mainCont0")
 							+ connector.getShortName()
-							+ ". Do you wish to proceed?");
+							+ L10n.getInstance().getString("mainCont1"));
 
 			if (result) {
 				connector.disconnect();
@@ -78,13 +79,13 @@ public class MainController extends ChatConsoleController {
 
 	@Override
 	public String getName() {
-		return "Main";
+		return L10n.getInstance().getString("mainCont2");
 	}
 
 	@Override
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
-				getConnector().getShortName() + "-" + MAIN_TAB_QUADRANT);
+				getConnector().getShortName() + "-" + MAIN_TAB_QUADRANT); 
 	}
 
 	@Override
@@ -140,12 +141,12 @@ public class MainController extends ChatConsoleController {
 				if (offers.length == 0) {
 					if (item != null) {
 						item.setImage(Raptor.getInstance().getIcon(
-								"dimLightbulb"));
+								"dimLightbulb")); 
 					}
 				} else {
 					if (item != null) {
 						item.setImage(Raptor.getInstance().getIcon(
-								"litLightbulb"));
+								"litLightbulb")); 
 					}
 				}
 			}
