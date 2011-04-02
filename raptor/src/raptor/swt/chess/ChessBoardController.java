@@ -200,7 +200,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			}
 		}
 	}
-
+	
 	/**
 	 * Adjusts the time up label if the game is bughouse.
 	 */
@@ -234,13 +234,13 @@ public abstract class ChessBoardController implements BoardConstants,
 
 				if (teamOneWhite > teamTwoWhite) {
 					getBoard().getWhiteLagLabel().setImage(
-							Raptor.getInstance().getIcon("up")); 
+							Raptor.getInstance().getIcon("up"));
 				} else {
 					getBoard().getWhiteLagLabel().setImage(null);
 				}
 				if (teamOneBlack > teamTwoBlack) {
 					getBoard().getBlackLagLabel().setImage(
-							Raptor.getInstance().getIcon("up")); 
+							Raptor.getInstance().getIcon("up"));
 				} else {
 					getBoard().getBlackLagLabel().setImage(null);
 				}
