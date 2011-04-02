@@ -134,7 +134,7 @@ public class ExamineController extends ChessBoardController {
 		}
 
 		@Override
-		public void gameStateChanged(Game game, final boolean isNewMove) {
+		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay()
 						.asyncExec(new RaptorRunnable(getConnector()) {
@@ -143,6 +143,7 @@ public class ExamineController extends ChessBoardController {
 								if (isDisposed()) {
 									return;
 								}
+								setGame(game);
 								examinePositionUpdate();
 							}
 						});

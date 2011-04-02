@@ -50,7 +50,7 @@ import raptor.util.RaptorRunnable;
  * backing connector
  */
 public class SetupController extends ChessBoardController {
-	static final RaptorLogger LOG = RaptorLogger.getLog(ExamineController.class);
+	static final RaptorLogger LOG = RaptorLogger.getLog(SetupController.class);
 
 	protected GameServiceListener listener = new GameServiceAdapter() {
 
@@ -96,7 +96,7 @@ public class SetupController extends ChessBoardController {
 		}
 
 		@Override
-		public void gameStateChanged(Game game, final boolean isNewMove) {
+		public void gameStateChanged(final Game game, final boolean isNewMove) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				board.getControl().getDisplay().asyncExec(
 						new RaptorRunnable(getConnector()) {
@@ -105,7 +105,7 @@ public class SetupController extends ChessBoardController {
 								if (isDisposed()) {
 									return;
 								}
-
+								setGame(game);
 								setupPositionUpdated();
 							}
 						});
@@ -122,7 +122,6 @@ public class SetupController extends ChessBoardController {
 								if (isDisposed()) {
 									return;
 								}
-
 								setupOnIllegalMove(move);
 							}
 						});
