@@ -103,8 +103,6 @@ public class PlayingController extends ChessBoardController {
 	protected boolean isUserWhite;
 	protected GameCursor cursor = null;
 
-	protected Object eventLock = new Object();
-
 	protected MouseListener clearPremovesLabelListener = new MouseListener() {
 		public void mouseDoubleClick(MouseEvent e) {
 		}
@@ -130,7 +128,6 @@ public class PlayingController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
-								synchronized (eventLock) {
 									if (isDisposed()) {
 										return;
 									}
@@ -140,8 +137,6 @@ public class PlayingController extends ChessBoardController {
 										board.redrawPiecesAndArtifacts(false);
 									}
 									//System.err.println("Handled droppable pieces changed in " + (System.currentTimeMillis() - startTime));
-								}
-
 							}
 						});
 			}
@@ -154,8 +149,6 @@ public class PlayingController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
-								synchronized (eventLock) {
-
 									if (isDisposed()) {
 										return;
 									}
@@ -204,7 +197,6 @@ public class PlayingController extends ChessBoardController {
 									// And finally dispose.
 									PlayingController.this.dispose();
 								}
-							}
 						});
 			}
 		}
@@ -216,9 +208,7 @@ public class PlayingController extends ChessBoardController {
 				board.getControl().getDisplay()
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
-							public void execute() {
-								synchronized (eventLock) {
-									
+							public void execute() {									
 									if (isDisposed()) {
 										return;
 									}
@@ -276,7 +266,6 @@ public class PlayingController extends ChessBoardController {
 									}
 									//System.err.println("Handled move in " + (System.currentTimeMillis() - startTime));
 								}
-							}
 						});
 			}
 		}

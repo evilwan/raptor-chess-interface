@@ -48,13 +48,11 @@ public class ObserveController extends ChessBoardController {
 			.getLog(ObserveController.class);
 
 	protected GameCursor cursor = null;
-	protected Object eventLock = new Object();
 	protected GameServiceListener listener = new GameServiceAdapter() {
 		@Override
 		public void droppablePiecesChanged(Game game) {
 			if (!isDisposed() && game.getId().equals(getGame().getId())) {
 				//final long startTime = System.currentTimeMillis();
-				synchronized (eventLock) {
 					board.getControl().getDisplay()
 							.asyncExec(new RaptorRunnable(getConnector()) {
 								@Override
@@ -69,7 +67,6 @@ public class ObserveController extends ChessBoardController {
 									//System.err.println("Handled obs drop changesmove in " + (System.currentTimeMillis() - startTime));
 								}
 							});
-				}
 			}
 		}
 
@@ -80,7 +77,6 @@ public class ObserveController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
-								synchronized (eventLock) {
 									if (isDisposed()) {
 										return;
 									}
@@ -115,7 +111,6 @@ public class ObserveController extends ChessBoardController {
 									setItemChangedListeners(null);
 									ObserveController.this.dispose();
 								}
-							}
 						});
 			}
 		}
@@ -127,15 +122,12 @@ public class ObserveController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
-								synchronized (eventLock) {
 									if (isDisposed()) {
 										return;
 									}
 
 									cursor.setCursorMasterLast();
 									refresh();
-								}
-
 							}
 						});
 			}
@@ -151,7 +143,6 @@ public class ObserveController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
-								synchronized (eventLock) {
 									if (isDisposed()) {
 										return;
 									}
@@ -182,7 +173,6 @@ public class ObserveController extends ChessBoardController {
 									
 									//System.err.println("Handled obs move in move in " + (System.currentTimeMillis() - startTime));
 								}
-							}
 						});
 			}
 
@@ -195,7 +185,6 @@ public class ObserveController extends ChessBoardController {
 						.asyncExec(new RaptorRunnable(getConnector()) {
 							@Override
 							public void execute() {
-								synchronized (eventLock) {
 									if (isDisposed()) {
 										return;
 									}
@@ -223,7 +212,6 @@ public class ObserveController extends ChessBoardController {
 
 									unobserveOnDispose = false;
 									ObserveController.this.dispose();
-								}
 							}
 						});
 			}
