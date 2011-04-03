@@ -133,12 +133,7 @@ public class IcsUtils implements GameConstants {
 					connector
 							.onError("Raptor thinks "
 									+ message.san
-									+ " is illegal. An attempt was made to correct the position.");
-					LOG.error(
-							"Raptor encountered a move from fics it thought was illegal. "
-									+ message.san
-									+ " An attempt was made to correct the position.",
-							iae);
+									+ " is illegal. An attempt was made to correct the position.\n"  +iae);
 					resetGame(game, message);
 				}
 			}
