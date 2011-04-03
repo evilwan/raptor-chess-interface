@@ -18,6 +18,8 @@ import org.junit.Test;
 import raptor.chess.Game;
 import raptor.chess.GameFactory;
 import raptor.chess.Variant;
+import raptor.chess.pgn.PgnHeader;
+import raptor.chess.pgn.PgnUtils;
 
 public class TestAtomic {
 	@Test
@@ -47,6 +49,48 @@ public class TestAtomic {
 		game.makeSanMove("Bf1");
 		game.makeSanMove("e5");
 		game.makeSanMove("Bh3");
+	}
+	
+	@Test
+	public void testPromotion() {
+		Game game = GameFactory.createStartingPosition(Variant.atomic);
+		//game.addState(Game.UPDATING_SAN_STATE);
+		game.setId("1");
+		game.addState(Game.UPDATING_SAN_STATE);
+		game.addState(Game.UPDATING_ECO_HEADERS_STATE);
+		game.setHeader(PgnHeader.Date,
+				PgnUtils.longToPgnDate(System.currentTimeMillis()));
+		game.setHeader(PgnHeader.Round, "?");
+		game.setHeader(PgnHeader.Site, "freechess.org");
+		game.setHeader(PgnHeader.TimeControl, PgnUtils
+				.timeIncMillisToTimeControl(5,
+						0));
+		game.setHeader(PgnHeader.BlackRemainingMillis, ""
+				+ 131);
+		game.setHeader(PgnHeader.WhiteRemainingMillis, ""
+				+ 131);
+		game.setHeader(PgnHeader.WhiteClock,
+				PgnUtils.timeToClock(5));
+		game.setHeader(PgnHeader.BlackClock,
+				PgnUtils.timeToClock(5));
+		game.setHeader(PgnHeader.BlackElo, "1343");
+		game.setHeader(PgnHeader.WhiteElo, "1445");
+		game.setHeader(PgnHeader.Event, 5 / 60000
+				+ " " + 0 / 1000 + " "
+				+  "unrated" + " "
+				+   "atmoic");
+		game.makeSanMove("a4");
+		game.makeSanMove("a6");
+		game.makeSanMove("a5");	
+		game.makeSanMove("b5");
+		game.makeSanMove("axb6");
+		game.makeSanMove("Nc6");
+		game.makeSanMove("b4");
+		game.makeSanMove("a5");
+		System.err.println(game);
+		game.makeSanMove("b5");
+		System.err.println("after b5");
+		System.err.println(game);
 	}
 
 }
