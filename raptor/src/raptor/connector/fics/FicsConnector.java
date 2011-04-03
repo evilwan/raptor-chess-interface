@@ -231,16 +231,6 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 				isDisconnecting = true;
 				try {
 					if (isConnected()) {
-						try {
-							for (Game game : getGameService().getAllActiveGames()) {
-								if (game.isInState(Game.PLAYING_STATE)) {
-									onResign(game);
-								}
-							}
-						} catch (Throwable t) {
-							LOG.warn("Error trying to resign game:", t);
-						}
-	
 						super.disconnect();
 					}
 					connectAction.setEnabled(true);
