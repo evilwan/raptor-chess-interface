@@ -1253,13 +1253,13 @@ public class IcsParser implements GameConstants {
 	}
 
 	/**
-	 * Setup style 12 adjustments flow through here.
+	 * Setup and examine and observing examine style 12 adjustments flow through here.
 	 */
 	protected void processStyle12ExamineAndSetupAdjustment(Game game,
 			Style12Message message, GameService service, String entireMessage) {
 		// Examined/BSetup/obs ex moves flow through here.
 		if (LOG.isDebugEnabled()) {
-			LOG.debug("Processing bsetup or examine position move.");
+			LOG.debug("Processing bsetup/examine/obs examine position move.");
 		}
 		if (game.isInState(Game.OBSERVING_EXAMINED_STATE)
 				&& message.relation == Style12Message.EXAMINING_GAME_RELATION) {
@@ -1312,6 +1312,10 @@ public class IcsParser implements GameConstants {
 			IcsUtils.resetGame(game, message);
 
 			service.fireGameStateChanged(message.gameId, true);
+			
+			//Send a moves request to get the move list.
+			connector.sendMessage("moves " + message.gameId, true,
+					ChatType.MOVES);
 		}
 	}
 

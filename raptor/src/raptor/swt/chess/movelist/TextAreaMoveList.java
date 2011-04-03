@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import raptor.util.RaptorLogger;
- 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
@@ -47,21 +47,23 @@ import raptor.swt.chess.ChessBoardMoveList;
  * TODO support customization
  */
 public class TextAreaMoveList implements ChessBoardMoveList {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(TextAreaMoveList.class);
-	
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(TextAreaMoveList.class);
+
 	protected ChessBoardController controller;
 	protected StyledText textPanel;
-	
+
 	/**
-	 * Defines offsets for each move node, where the list index is the move number
+	 * Defines offsets for each move node, where the list index is the move
+	 * number
 	 */
 	protected List<Integer> moveNodes;
-	
+
 	/**
 	 * Defines lengths (in chars) for each move node
 	 */
 	protected List<Integer> moveNodesLengths;
-	
+
 	/**
 	 * Offset where the header ends
 	 */
@@ -87,10 +89,10 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		if (textPanel == null) {
 			createControls(parent);
 		}
-		return textPanel;		
+		return textPanel;
 	}
 
-	private void createControls(Composite parent) {		
+	private void createControls(Composite parent) {
 		textPanel = new StyledText(parent, SWT.BORDER | SWT.V_SCROLL);
 		textPanel.setEditable(false);
 		textPanel.setWordWrap(true);
@@ -101,27 +103,30 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			@Override
 			public void mouseDown(MouseEvent e) {
 				int caretOffset = textPanel.getCaretOffset();
-				
+
 				if (caretOffset > moveNodes.get(moveNodes.size() - 1)) {
 					controller.userSelectedMoveListMove(moveNodes.size());
 					return;
 				}
 
 				int count = 0;
-				for (int nodeOffset: moveNodes) {
+				for (int nodeOffset : moveNodes) {
 					if (nodeOffset > caretOffset) {
 						controller.userSelectedMoveListMove(count);
 						break;
 					}
-					count++;	
+					count++;
 				}
 			}
 		});
 		textPanel.addMouseWheelListener(new MouseWheelListener() {
 			public void mouseScrolled(MouseEvent e) {
 				if (System.currentTimeMillis() - lastWheel > 100
-						&& Raptor.getInstance().getPreferences().getBoolean(
-								PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL)) {
+						&& Raptor
+								.getInstance()
+								.getPreferences()
+								.getBoolean(
+										PreferenceKeys.BOARD_TRAVERSE_WITH_MOUSE_WHEEL)) {
 					getChessBoardController().userMouseWheeled(e.count);
 					lastWheel = System.currentTimeMillis();
 				}
@@ -132,10 +137,10 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			public void keyReleased(KeyEvent e) {
 				switch (e.keyCode) {
 				case 16777219: // left key
-					controller.userSelectedMoveListMove(selectedHalfmove-1);
+					controller.userSelectedMoveListMove(selectedHalfmove - 1);
 					break;
 				case 16777220: // right key
-					controller.userSelectedMoveListMove(selectedHalfmove+1);
+					controller.userSelectedMoveListMove(selectedHalfmove + 1);
 					break;
 				}
 			}
@@ -169,7 +174,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	public void select(int halfMoveIndex) {
 		if (selectedHalfmove == halfMoveIndex || moveNodes.size() == 0)
 			return;
-		
+
 		if (halfMoveIndex >= moveNodes.size())
 			halfMoveIndex = moveNodes.size();
 
@@ -183,25 +188,29 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		sR.length = moveNodesLengths.get(halfMoveIndex);
 
 		selectedHalfmove--;
-		if (selectedHalfmove >= 0 && selectedHalfmove < moveNodes.size()) { 
+		if (selectedHalfmove >= 0 && selectedHalfmove < moveNodes.size()) {
 			// clear previous move selection
 			StyleRange cL = new StyleRange();
 			cL.start = moveNodes.get(selectedHalfmove);
 			cL.length = moveNodesLengths.get(selectedHalfmove);
-			textPanel.setStyleRange(cL);
+			try {
+				textPanel.setStyleRange(cL);
+			} catch (IllegalArgumentException iae) {
+				return;
+			}
 		}
-		
+
 		textPanel.setStyleRange(sR);
 		textPanel.setCaretOffset(sR.start + sR.length);
-		selectedHalfmove = halfMoveIndex+1;
-		textPanel.setSelection(sR.start+sR.length);
+		selectedHalfmove = halfMoveIndex + 1;
+		textPanel.setSelection(sR.start + sR.length);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public void setController(ChessBoardController controller) {
-		this.controller = controller;		
+		this.controller = controller;
 	}
 
 	/**
@@ -232,14 +241,12 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				textPanel.setText("");
 			} else {
 				if (moveListSize == moveNodes.size()) {
-					if (!lastMoveSan.equals(game
-							.getMoveList().get(moveListSize-1).toString())) {
+					if (!lastMoveSan.equals(game.getMoveList()
+							.get(moveListSize - 1).toString())) {
 						prepareForRepaint();
-					}
-					else
-						return;					
-				}					
-				else if (moveListSize <= moveNodes.size()) { 
+					} else
+						return;
+				} else if (moveListSize <= moveNodes.size()) {
 					// move list shrinked
 					prepareForRepaint();
 				}
@@ -253,7 +260,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 									.getMoveList().get(i).toString(), true);
 					buff.append(move);
 					length = move.length();
-					
+
 					for (Nag nag : game.getMoveList().get(i).getNags()) {
 						if (nag.hasSymbol()) {
 							buff.append(nag.getSymbol());
@@ -266,42 +273,43 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 						buff.append(" ");
 						buff.append(comment);
 					}
-					
+
 					moveNodes.add(start);
 					moveNodesLengths.add(length);
 					buff.append(" ");
 				}
 				textPanel.append(buff.toString());
 				select(game.getHalfMoveCount());
-				lastMoveSan = game.getMoveList().get(moveListSize - 1)
-						.toString();
+				if (game.getMoveList().get(moveListSize - 1) != null) {
+					lastMoveSan = game.getMoveList().get(moveListSize - 1)
+							.toString();
+				}
 			}
-			
+
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Updated to game in : "
 						+ (System.currentTimeMillis() - startTime));
 			}
 		}
-		
+
 	}
 
 	private void prepareForRepaint() {
-		textPanel.replaceTextRange(movesTextStart, textPanel
-				.getCharCount()
+		textPanel.replaceTextRange(movesTextStart, textPanel.getCharCount()
 				- movesTextStart, "");
 		moveNodes.clear();
-		moveNodesLengths.clear();		
+		moveNodesLengths.clear();
 	}
 
 	protected void appendMove(int moveListSize) {
 		textPanel.append(getMoveNumber(moveListSize)
 				+ GameUtils.convertSanToUseUnicode(controller.getGame()
 						.getMoveList().get(moveListSize).toString(), true));
-		select(moveListSize-1);
+		select(moveListSize - 1);
 	}
-	
+
 	private String getMoveNumber(int i) {
-		return (i % 2 == 0) ? Integer.toString((i+3)/2) + "." : "";
+		return (i % 2 == 0) ? Integer.toString((i + 3) / 2) + "." : "";
 	}
-	
+
 }
