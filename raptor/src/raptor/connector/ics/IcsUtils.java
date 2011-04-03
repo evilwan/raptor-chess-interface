@@ -94,7 +94,8 @@ public class IcsUtils implements GameConstants {
 	 * Returns true if a move was added, false if no move was added (This can
 	 * occur on a refresh or a game end.).
 	 */
-	public static boolean addCurrentMove(Game game, Style12Message message) {
+	public static boolean addCurrentMove(Game game, Style12Message message,
+			Connector connector) {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("addCurrentMove: " + message + "\n" + game);
 		}
@@ -124,9 +125,22 @@ public class IcsUtils implements GameConstants {
 						.onError(
 								"Received a none for san in a style 12 event. This should have contained a move.");
 			} else {
-				Move move = game.makeSanMove(message.san);
-				move.addAnnotation(new TimeTakenForMove(
-						message.timeTakenForLastMoveMillis));
+				try {
+					Move move = game.makeSanMove(message.san);
+					move.addAnnotation(new TimeTakenForMove(
+							message.timeTakenForLastMoveMillis));
+				} catch (IllegalArgumentException iae) {
+					connector
+							.onError("Raptor thinks "
+									+ message.san
+									+ " is illegal. An attempt was made to correct the position.");
+					LOG.error(
+							"Raptor encountered a move from fics it thought was illegal. "
+									+ message.san
+									+ " An attempt was made to correct the position.",
+							iae);
+					resetGame(game, message);
+				}
 			}
 
 			game.setHeader(PgnHeader.WhiteRemainingMillis, ""

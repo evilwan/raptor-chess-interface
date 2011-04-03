@@ -1187,7 +1187,7 @@ public class IcsParser implements GameConstants {
 			}
 			// Now add the move to the game.
 			// Game Ends and Refreshes dont involve adding a move.
-			if (IcsUtils.addCurrentMove(game, message)) {
+			if (IcsUtils.addCurrentMove(game, message,connector)) {
 				if (LOG.isDebugEnabled()) {
 					LOG.debug("Position was a move firing state changed.");
 				}
