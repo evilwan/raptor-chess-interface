@@ -542,9 +542,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		
 		PreferenceConverter
 				.setDefault(this, BOARD_LIGHT_SQUARE_SOLID_BACKGROUND_COLOR,
-						new RGB(0, 153, 197));
+						new RGB(178, 180, 78));
 		PreferenceConverter.setDefault(this,
-				BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(0, 0, 0));
+				BOARD_DARK_SQUARE_SOLID_BACKGROUND_COLOR, new RGB(94, 145, 91));
 
 		PreferenceConverter.setDefault(this, BOARD_COORDINATES_FONT,
 				new FontData[] { new FontData(defaultFontName,
