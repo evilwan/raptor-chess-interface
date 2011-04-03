@@ -52,7 +52,7 @@ public class TestAtomic {
 	}
 	
 	@Test
-	public void testPromotion() {
+	public void testEPRollback() {
 		Game game = GameFactory.createStartingPosition(Variant.atomic);
 		//game.addState(Game.UPDATING_SAN_STATE);
 		game.setId("1");
@@ -80,17 +80,23 @@ public class TestAtomic {
 				+  "unrated" + " "
 				+   "atmoic");
 		game.makeSanMove("a4");
+		game.getLegalMoves();
 		game.makeSanMove("a6");
-		game.makeSanMove("a5");	
-		game.makeSanMove("b5");
-		game.makeSanMove("axb6");
-		game.makeSanMove("Nc6");
-		game.makeSanMove("b4");
+		game.getLegalMoves();
 		game.makeSanMove("a5");
-		System.err.println(game);
+		game.getLegalMoves();
 		game.makeSanMove("b5");
-		System.err.println("after b5");
-		System.err.println(game);
+		game.getLegalMoves();
+		game.makeSanMove("axb6");
+		game.getLegalMoves();
+		game.makeSanMove("Nc6");
+		game.getLegalMoves();
+		game.makeSanMove("b4");
+		game.getLegalMoves();
+		game.makeSanMove("a5");
+		game.getLegalMoves();
+		game.makeSanMove("b5");
+		game.getLegalMoves();
 	}
 
 }
