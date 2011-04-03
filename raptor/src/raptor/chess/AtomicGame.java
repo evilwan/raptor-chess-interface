@@ -727,6 +727,8 @@ public class AtomicGame extends ClassicGame {
 		xor(oppositeColor, fromToBB);
 		setOccupiedBB(getOccupiedBB() ^ fromToBB);
 		setEmptyBB(getEmptyBB() ^ fromToBB);
+		setEmptyBB(getEmptyBB() ^ captureBB);
+		setOccupiedBB(getOccupiedBB() ^ captureBB);
 
 		xor(getColorToMove(), move.getCapture(), captureBB);
 		xor(getColorToMove(), captureBB);
