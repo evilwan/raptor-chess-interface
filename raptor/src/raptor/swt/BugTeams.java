@@ -103,17 +103,18 @@ public class BugTeams extends Composite {
 	public void init() {
 		setLayout(new GridLayout(1, false));
 
-	
-
 		Composite tableComposite = new Composite(this, SWT.NONE);
 		tableComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
 				true));
 		tableComposite.setLayout(new FillLayout(SWT.HORIZONTAL));
 		player1Table = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		player1Table.addColumn(local.getString("bugTeams1"), SWT.LEFT, 20, false, null);
-		player1Table.addColumn(local.getString("bugTeams2"), SWT.LEFT, 45, false, null);
-		player1Table.addColumn(local.getString("bugTeams3"), SWT.LEFT, 35, false, null);
+		player1Table.addColumn(local.getString("bugTeams1"), SWT.LEFT, 20,
+				false, null);
+		player1Table.addColumn(local.getString("bugTeams2"), SWT.LEFT, 45,
+				false, null);
+		player1Table.addColumn(local.getString("bugTeams3"), SWT.LEFT, 35,
+				false, null);
 		player1Table.addRaptorTableListener(new RaptorTableAdapter() {
 			@Override
 			public void rowRightClicked(MouseEvent event, String[] rowData) {
@@ -135,9 +136,12 @@ public class BugTeams extends Composite {
 
 		player2Table = new RaptorTable(tableComposite, SWT.BORDER
 				| SWT.H_SCROLL | SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		player2Table.addColumn(local.getString("bugTeams1"), SWT.LEFT, 20, false, null);
-		player2Table.addColumn(local.getString("bugTeams2"), SWT.LEFT, 45, false, null);
-		player2Table.addColumn(local.getString("bugTeams3"), SWT.LEFT, 35, false, null);
+		player2Table.addColumn(local.getString("bugTeams1"), SWT.LEFT, 20,
+				false, null);
+		player2Table.addColumn(local.getString("bugTeams2"), SWT.LEFT, 45,
+				false, null);
+		player2Table.addColumn(local.getString("bugTeams3"), SWT.LEFT, 35,
+				false, null);
 		player2Table.addRaptorTableListener(new RaptorTableAdapter() {
 
 			@Override
@@ -158,8 +162,6 @@ public class BugTeams extends Composite {
 			}
 
 		});
-		
-
 
 		isRated = new Button(BugTeams.this, SWT.CHECK);
 		isRated.setLayoutData(new GridData(SWT.LEFT, SWT.NONE, true, false));
@@ -177,12 +179,12 @@ public class BugTeams extends Composite {
 								isRated.getSelection());
 			}
 		});
-		
+
 		Composite controlsComposite = new Composite(BugTeams.this, SWT.NONE);
-		controlsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
-				false));
+		controlsComposite.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER,
+				true, false));
 		controlsComposite.setLayout(new GridLayout(4, false));
-		
+
 		CLabel label = new CLabel(controlsComposite, SWT.LEFT);
 		label.setText(local.getString("bugTeams5"));
 		availablePartnershipsFilter = new Combo(controlsComposite,
@@ -275,8 +277,7 @@ public class BugTeams extends Composite {
 				}
 
 				if (!matchedSomeone) {
-					Raptor.getInstance().alert(
-							local.getString("bugTeams11"));
+					Raptor.getInstance().alert(local.getString("bugTeams11"));
 				}
 			}
 		});
@@ -309,8 +310,7 @@ public class BugTeams extends Composite {
 				}
 
 				if (!matchedSomeone) {
-					Raptor.getInstance().alert(
-							local.getString("bugTeams11"));
+					Raptor.getInstance().alert(local.getString("bugTeams11"));
 				}
 			}
 		});
@@ -343,8 +343,7 @@ public class BugTeams extends Composite {
 				}
 
 				if (!matchedSomeone) {
-					Raptor.getInstance().alert(
-							local.getString("bugTeams11"));
+					Raptor.getInstance().alert(local.getString("bugTeams11"));
 				}
 			}
 		});
@@ -402,14 +401,16 @@ public class BugTeams extends Composite {
 
 			for (int i = 0; i < items; i++) {
 				if (local.getString("bugTeams7").equals(matchHighLow)) {
-					if (isHigh(true, i) && isUserHigh) {
+					if ((isHigh(true, i) && isUserHigh)
+							|| (!isHigh(true, i) && !isUserHigh)) {
 						match(true, i, time, inc);
 					} else {
 						match(false, i, time, inc);
 
 					}
 				} else if (local.getString("bugTeams8").equals(matchHighLow)) {
-					if (!isHigh(true, i) && isUserHigh) {
+					if ((!isHigh(true, i) && isUserHigh)
+							|| (isHigh(true, i) && !isUserHigh)) {
 						match(true, i, time, inc);
 					} else {
 						match(false, i, time, inc);
@@ -466,7 +467,7 @@ public class BugTeams extends Composite {
 			player2EloInt = Integer.parseInt(player2Elo);
 		} catch (NumberFormatException e2) {
 		}
-		
+
 		return isTable1 ? player1EloInt > player2EloInt
 				: player2EloInt > player1EloInt;
 	}
