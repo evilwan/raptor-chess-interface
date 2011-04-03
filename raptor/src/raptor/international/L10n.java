@@ -27,6 +27,7 @@ public class L10n {
 	private static L10n singletonInstance;
 	private ResourceBundle captions;
 	private static String[] availableLocaleNames = { "en", "it" };
+	@SuppressWarnings("unused")
 	private static Locale[] availableLocales = { Locale.ENGLISH, Locale.ITALIAN };
 
 	public static L10n getInstance() {		
