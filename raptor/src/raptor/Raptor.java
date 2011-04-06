@@ -106,6 +106,7 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public static void main(String args[]) {
 		Locale.setDefault(L10n.getSuitableLocale());
+		local = L10n.getInstance();
 		try {
 			Display.setAppName("Raptor");
 			display = new Display();
@@ -590,8 +591,7 @@ public class Raptor implements PreferenceKeys {
 	 * Initializes raptor.
 	 */
 	private void init() {
-		preferences = new RaptorPreferenceStore();	
-		local = L10n.getInstance();
+		preferences = new RaptorPreferenceStore();			
 		install();		
 
 		// Make sure all of the Singleton services get loaded.

@@ -427,7 +427,7 @@ public class ChatUtils {
 					.getPersonActions(person);
 			if (connectorPersonItems != null) {
 				MenuItem personCommands = new MenuItem(menu, SWT.CASCADE);
-				personCommands.setText(local.getString("chatUtils4") + connector.getShortName()
+				personCommands.setText(local.getString("chatUtils4") //+ connector.getShortName()
 						+ local.getString("chatUtils5"));
 				Menu personCommandsMenu = new Menu(menu);
 				personCommands.setMenu(personCommandsMenu);

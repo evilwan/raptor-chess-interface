@@ -29,7 +29,8 @@ public class L10n {
 	private static String[] availableLocaleNames = { "en", "it" };
 	@SuppressWarnings("unused")
 	private static Locale[] availableLocales = { Locale.ENGLISH, Locale.ITALIAN };
-
+	private static Locale suitLocCache;
+	
 	public static L10n getInstance() {		
 		if (singletonInstance == null)
 			singletonInstance = new L10n();
@@ -42,9 +43,7 @@ public class L10n {
 	}
 
 	private void init() {		
-		Locale locale = new Locale(
-				Raptor.getInstance().getPreferences()
-				.getString(PreferenceKeys.APP_LOCALE));		
+		Locale locale = getSuitableLocale();		
 		captions = ResourceBundle.getBundle("raptor.international.Messages",
 				locale);
 	}
@@ -71,6 +70,9 @@ public class L10n {
 	}
 	
 	public static Locale getSuitableLocale() {
+		if (suitLocCache != null)
+			return suitLocCache;
+		
 		try {
 			FileInputStream fstream = new FileInputStream(
 					RaptorPreferenceStore.RAPTOR_PROPERTIES);
@@ -78,14 +80,17 @@ public class L10n {
 					fstream));
 			String strLine;
 			while ((strLine = br.readLine()) != null) {
-				if (strLine.startsWith("app-locale="))
-					return new Locale(strLine.substring(11));
+				if (strLine.startsWith("app-locale=")) {
+					suitLocCache = new Locale(strLine.substring(11));
+					return suitLocCache;
+				}
 			}
 			fstream.close();
 		} catch (IOException e) {
 		}
 
-		return Locale.ENGLISH; // Default
+		suitLocCache = Locale.ENGLISH; // Default;
+		return suitLocCache;
 	}
 
 	public static String getSuitableLocaleName() {
