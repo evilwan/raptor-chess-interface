@@ -210,7 +210,7 @@ public class PgnProcessingDialog extends Dialog {
 
 		shell.setLayout(gridLayout);
 		shell.setSize(483, 181);
-		shell.setText("Parsing " + file.getName());
+		shell.setText(L10n.getInstance().getString("Parsing", file.getName()));
 
 		final Composite composite = new Composite(shell, SWT.NONE);
 		composite.setLayoutData(new GridData(GridData.FILL, GridData.CENTER,

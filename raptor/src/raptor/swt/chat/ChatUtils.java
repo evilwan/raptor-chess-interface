@@ -390,7 +390,7 @@ public class ChatUtils {
 						item.setText(connectorPersonQuickItems[i][0]);
 						final int index = i;
 						
-						if (item.getText().startsWith("Full userinfo")) {
+						if (item.getText().startsWith(L10n.getInstance().getString("fullUinfo"))) {
 							item.addListener(SWT.Selection, new Listener() {
 								public void handleEvent(Event e) {
 									UserInfoDialog dialog = new UserInfoDialog();

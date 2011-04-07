@@ -49,6 +49,7 @@ import raptor.connector.MessageCallback;
 import raptor.connector.ics.timeseal.MessageListener;
 import raptor.connector.ics.timeseal.MessageProducer;
 import raptor.connector.ics.timeseal.TimesealSocketMessageProducer;
+import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.script.ChatEventScript;
@@ -665,7 +666,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			result[i][1] = action;
 		}
 
-		result[matchActionsArray.length][0] = "Full userinfo of " + person;
+		result[matchActionsArray.length][0] = L10n.getInstance()
+							.getString("fullUinfoOf", person);
 		result[matchActionsArray.length][1] = person;
 
 		return result;
@@ -1522,7 +1524,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					+ getPreferences().getString(profilePrefix + "server-url")
 					+ " " + getPreferences().getInt(profilePrefix + "port"));
 		}
-		publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Connecting to "
+		publishEvent(new ChatEvent(null, ChatType.INTERNAL, L10n.getInstance().getString("connTo")
 				+ getPreferences().getString(profilePrefix + "server-url")
 				+ " "
 				+ getPreferences().getInt(profilePrefix + "port")
@@ -1546,10 +1548,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 							IcsConnector.this);
 
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-							"Timeseal connection string "
+							L10n.getInstance().getString("timesString")
 									+ getInitialTimesealString()));
 					publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-							"Connected"));
+							L10n.getInstance().getString("connected")));
 
 					SoundService.getInstance().playSound("alert");
 

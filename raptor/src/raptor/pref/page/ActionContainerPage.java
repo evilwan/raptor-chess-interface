@@ -98,7 +98,7 @@ public class ActionContainerPage extends PreferencePage {
 		currentActionsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL,
 				false, true));
 		currentActionsTable.setFixedWidth(175);
-		currentActionsTable.addColumn(title + " "+local.getString("ficsConn22"), SWT.LEFT, 100, false,
+		currentActionsTable.addColumn(local.getString("actCont",title), SWT.LEFT, 100, false,
 				null);
 		currentActionsTable.getTable().addSelectionListener(
 				new SelectionAdapter() {
