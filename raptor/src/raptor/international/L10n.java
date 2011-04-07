@@ -69,6 +69,13 @@ public class L10n {
 		}
 	}
 	
+	public String getString(String key, String param0) {
+		synchronized (L10n.class) {
+			return new MessageFormat(getString(key))
+					.format(new Object[] { param0 });
+		}
+	}
+	
 	public static Locale getSuitableLocale() {
 		if (suitLocCache != null)
 			return suitLocCache;
