@@ -338,7 +338,7 @@ public class ActionContainerPage extends PreferencePage {
 				.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true));
 		scriptText.setText("\n \n \n \n \n");
 		Button editButton = new Button(scriptComposite, SWT.NONE);
-		editButton.setText("Edit");
+		editButton.setText(local.getString("edit"));
 		editButton.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false));
 		editButton.addSelectionListener(new SelectionListener() {

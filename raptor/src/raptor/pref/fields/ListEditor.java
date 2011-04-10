@@ -81,6 +81,7 @@ public abstract class ListEditor extends FieldEditor {
 	private SelectionListener selectionListener;
 
 	private int heightHint = SWT.DEFAULT;
+	protected static L10n local = L10n.getInstance();
 
 	/**
 	 * Creates a new list field editor
@@ -409,7 +410,7 @@ public abstract class ListEditor extends FieldEditor {
 	 */
 	private void addPressed() {
 		setPresentsDefaultValue(false);
-		String value = promptForText("Enter new value:");
+		String value = promptForText(local.getString("entNewVal"));
 		if (value != null && isTextValid(value)) {
 			int index = list.getSelectionIndex();
 			if (index >= 0) {
@@ -420,7 +421,7 @@ public abstract class ListEditor extends FieldEditor {
 			selectionChanged();
 		}
 		else {
-			showErrorMessage("Invalid: " + value);
+			showErrorMessage(local.getString("invalid") + value);
 		}
 	}
 
@@ -432,7 +433,7 @@ public abstract class ListEditor extends FieldEditor {
 	 */
 	private void createButtons(Composite box) {
 		addButton = createPushButton(box, "ListEditor.add", null);//$NON-NLS-1$
-		editButton = createPushButton(box, null, "Edit");
+		editButton = createPushButton(box, null, local.getString("edit"));
 		removeButton = createPushButton(box, "ListEditor.remove", null);//$NON-NLS-1$
 		upButton = createPushButton(box, "ListEditor.up", null);//$NON-NLS-1$
 		downButton = createPushButton(box, "ListEditor.down", null);//$NON-NLS-1$
@@ -473,13 +474,13 @@ public abstract class ListEditor extends FieldEditor {
 	private void editPressed() {
 		setPresentsDefaultValue(false);
 		String value = list.getItem(list.getSelectionIndex());
-		value = promptForText("Enter new value:", value);
+		value = promptForText(local.getString("entNewVal"), value);
 		if (value != null && isTextValid(value)) {
 			list.setItem(list.getSelectionIndex(), value);
 			selectionChanged();
 		}
 		else {
-			showErrorMessage("Invalid: " + value);
+			showErrorMessage(local.getString("invalid") + value);
 		}
 	}
 

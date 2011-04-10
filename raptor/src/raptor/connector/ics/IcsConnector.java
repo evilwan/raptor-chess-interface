@@ -418,8 +418,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					publishEvent(new ChatEvent(
 							null,
 							ChatType.INTERNAL,
-							"Your message was too long and Raptor could not find a nice "
-									+ "way to break it up. Your message was trimmed to:\n"
+							L10n.getInstance().getString("icsConnal")
 									+ result.get(0)));
 				}
 			} else {
@@ -427,8 +426,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				publishEvent(new ChatEvent(
 						null,
 						ChatType.INTERNAL,
-						"Your message was too long and Raptor could not find a nice "
-								+ "way to break it up. Your message was trimmed to:\n"
+						L10n.getInstance().getString("icsConnal")
 								+ result.get(0)));
 			}
 			return result.toArray(new String[0]);
@@ -504,7 +502,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 
 			isConnecting = false;
 
-			publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Disconnected"));
+			publishEvent(new ChatEvent(null, ChatType.INTERNAL, L10n.getInstance()
+					.getString("disconn")));
 
 			Raptor.getInstance().getWindow().setPingTime(this, -1);
 			fireDisconnected();
@@ -882,9 +881,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	public void onError(String message, Throwable t) {
 		LOG.error(message, t);
 		String errorMessage = IcsUtils
-				.cleanupMessage("Critical error occured! We are trying to make Raptor "
-						+ "bug free and we need your help! Please take a moment to report this "
-						+ "error by selecting the menu: \n Help -> Report Issue\n\n Error: "
+				.cleanupMessage(L10n.getInstance().getString("rapErr")
 						+ message
 						+ (t == null ? "" : "\n"
 								+ ExceptionUtils.getFullStackTrace(t)));
@@ -1284,7 +1281,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			} catch (Throwable t) {
 				t.printStackTrace(); // Used to track down issues when
 										// developing. Dont remove.
-				publishEvent(new ChatEvent(null, ChatType.INTERNAL, "Error: "
+				publishEvent(new ChatEvent(null, ChatType.INTERNAL, 
+						L10n.getInstance().getString("err")
 						+ t.getMessage()));
 				disconnect();
 			}
@@ -1295,9 +1293,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			}
 		} else {
 			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-					"Error: Unable to send " + message + " to "
-							+ getShortName()
-							+ ". There is currently no connection."));
+					L10n.getInstance().getString("unnToSend", 
+							message, getShortName())));
 		}
 	}
 
@@ -1529,8 +1526,9 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				+ " "
 				+ getPreferences().getInt(profilePrefix + "port")
 				+ (getPreferences().getBoolean(
-						profilePrefix + "timeseal-enabled") ? " with "
-						: " without ") + "timeseal ..."));
+						profilePrefix + "timeseal-enabled") ? L10n.getInstance()
+								.getString("withTs") : L10n.getInstance()
+								.getString("withoutTs"))));
 
 		ThreadService.getInstance().run(new Runnable() {
 			public void run() {
@@ -1799,8 +1797,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		case TELL:
 			if (isOnExtendedCensor(event.getSource())) {
 				publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-						"Blocked tell sent from " + event.getSource()
-								+ " because he/she is on extended censor."));
+						L10n.getInstance().getString("blockTell", event.getSource())));
 				result = true;
 			}
 			break;
@@ -2368,7 +2365,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		boolean result = false;
 		if (message.startsWith("set ptime")) {
 			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-					"Raptor will not work with ptime set. Command vetoed."));
+					L10n.getInstance().getString("rapPtime")));
 			return true;
 		}
 		return result;

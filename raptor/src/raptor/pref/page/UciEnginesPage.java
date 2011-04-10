@@ -64,7 +64,7 @@ public class UciEnginesPage extends PreferencePage {
 		Label enginesLabel = new Label(parent, SWT.LEFT);
 		enginesLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1));
-		enginesLabel.setText("Engines:");
+		enginesLabel.setText(local.getString("engines"));
 
 		enginesCombo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
 		enginesCombo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true,
