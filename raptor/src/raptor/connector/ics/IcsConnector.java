@@ -1525,7 +1525,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				+ getPreferences().getString(profilePrefix + "server-url")
 				+ " "
 				+ getPreferences().getInt(profilePrefix + "port")
-				+ (getPreferences().getBoolean(
+				+ " " + (getPreferences().getBoolean(
 						profilePrefix + "timeseal-enabled") ? L10n.getInstance()
 								.getString("withTs") : L10n.getInstance()
 								.getString("withoutTs"))));

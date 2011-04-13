@@ -54,7 +54,7 @@ public class SoundPage extends FieldEditorPreferencePage {
 		labelButtonFieldEditor = new LabelButtonFieldEditor(
 				"NONE",
 				local.getString("soundP3"),
-				getFieldEditorParent(), "Test", new SelectionAdapter() {
+				getFieldEditorParent(), local.getString("test"), new SelectionAdapter() {
 					@Override
 					public void widgetSelected(SelectionEvent e) {
 						SoundService.getInstance().initSoundPlayer();
