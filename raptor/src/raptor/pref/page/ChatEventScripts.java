@@ -37,7 +37,6 @@ import raptor.Raptor;
 import raptor.chat.ChatType;
 import raptor.international.L10n;
 import raptor.script.ChatEventScript;
-import raptor.script.ScriptConnectorType;
 import raptor.service.ScriptService;
 import raptor.swt.RaptorTable;
 import raptor.swt.ScriptEditorDialog;
@@ -56,7 +55,6 @@ public class ChatEventScripts extends PreferencePage {
 	protected CLabel script;
 	protected Button scriptEditor;
 	protected Combo typeCombo;
-	protected Combo connectorTypeCombo;
 
 	protected Button saveButton;
 	protected Button deleteButton;
@@ -220,24 +218,15 @@ public class ChatEventScripts extends PreferencePage {
 		controlsComposite.setLayout(new GridLayout(2, false));
 		controlsComposite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				true, false, 3, 1));
-		Label connectorTypeLabel = new Label(controlsComposite, SWT.NONE);
-		connectorTypeLabel.setText(local.getString("conType"));
-		connectorTypeCombo = new Combo(controlsComposite, SWT.DROP_DOWN
-				| SWT.READ_ONLY);
-		for (ScriptConnectorType scriptConnectorType : ScriptConnectorType
-				.values()) {
-			connectorTypeCombo.add(scriptConnectorType.name());
-		}
-		connectorTypeCombo.select(0);
 
 		Composite regularExpressionComposite = new Composite(composite,
 				SWT.NONE);
 		regularExpressionComposite.setLayout(new GridLayout(2, false));
 		regularExpressionComposite.setLayoutData(new GridData(SWT.FILL,
 				SWT.CENTER, true, false, 3, 1));
-		Label regExLabel = new Label(regularExpressionComposite, SWT.NONE);
-		regExLabel.setText(local.getString("trigCharEv"));
-		regExLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+		Label trigCharEv = new Label(regularExpressionComposite, SWT.NONE);
+		trigCharEv.setText(local.getString("trigCharEv"));
+		trigCharEv.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 				false, false, 3, 1));
 		chatEventCombo = new Combo(regularExpressionComposite, SWT.DROP_DOWN
 				| SWT.READ_ONLY);		
@@ -324,17 +313,6 @@ public class ChatEventScripts extends PreferencePage {
 		descriptionText.setText(currentScript.getDescription());
 		isActiveButton.setSelection(currentScript.isActive());
 
-		int connectorTypeSelection = 0;
-		String[] connectorTypeItems = connectorTypeCombo.getItems();
-		for (int i = 0; i < connectorTypeItems.length; i++) {
-			if (connectorTypeItems[i].equals(currentScript.getConnectorType()
-					.name())) {
-				connectorTypeSelection = i;
-				break;
-			}
-		}
-		connectorTypeCombo.select(connectorTypeSelection);
-
 		script.setText(currentScript.getScript());
 		
 		for (int i = 0; i < chatEventCombo.getItemCount(); i++) {
@@ -377,9 +355,6 @@ public class ChatEventScripts extends PreferencePage {
 		
 		newScript.setChatType(ChatType.valueOf(name));
 		newScript.setScript(script.getText());
-		newScript.setConnectorType(ScriptConnectorType
-				.valueOf(connectorTypeCombo.getItem(connectorTypeCombo
-						.getSelectionIndex())));
 		ScriptService.getInstance().save(newScript);
 		refreshTables();
 	}
