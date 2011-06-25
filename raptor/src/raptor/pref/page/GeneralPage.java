@@ -25,6 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import raptor.Raptor;
 import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
+import raptor.pref.PreferenceUtils;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
 import raptor.util.FileUtils;
@@ -34,6 +35,9 @@ public class GeneralPage extends FieldEditorPreferencePage {
 	LabelButtonFieldEditor labelButtonFieldEditor;
 	
 	protected static L10n local = L10n.getInstance();
+	
+	/* Last set language before the dialog launch */
+	private static String lastLang;
 
 	public static final String[][] POLLING_REFRESH = {
 			{ local.getString("everySec", 2), "" + 2 }, { local.getString("everySec", 3), "" + 3 },
@@ -53,6 +57,9 @@ public class GeneralPage extends FieldEditorPreferencePage {
 
 	@Override
 	protected void createFieldEditors() {
+		lastLang = Raptor.getInstance().
+			getPreferences().getString(PreferenceKeys.APP_LOCALE);
+			
 		LabelFieldEditor userHomeDir = new LabelFieldEditor(
 				"NONE",
 				local.getString("genP1") + Raptor.USER_RAPTOR_HOME_PATH,
@@ -146,5 +153,18 @@ public class GeneralPage extends FieldEditorPreferencePage {
 						}
 					}
 				}));
+	}
+	
+	public boolean performOk() {
+		super.performOk();
+		String currLocale = Raptor.getInstance().
+			getPreferences().getString(PreferenceKeys.APP_LOCALE);
+		
+		if (!currLocale.equals(lastLang)) {
+			L10n.getInstance().updateLanguage();
+			PreferenceUtils.restartDialog();
+		}		
+		
+		return true;
 	}
 }

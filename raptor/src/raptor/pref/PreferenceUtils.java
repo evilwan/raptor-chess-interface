@@ -64,6 +64,7 @@ import raptor.service.ConnectorService;
 public class PreferenceUtils {
 
 	protected static L10n local = L10n.getInstance();
+	private static PreferenceDialog dlg;
 	
 	/**
 	 * Launches the preference dialog.
@@ -71,6 +72,19 @@ public class PreferenceUtils {
 	 * All connectors in the ConnectorService have their preference nodes added.
 	 */
 	public static void launchPreferenceDialog() {
+		create();
+
+		// Open the dialog
+		dlg.open();
+	}
+	
+	public static void restartDialog() {
+		dlg.close();
+		create();
+		dlg.open();
+	}
+	
+	private static void create() {
 		// Create the preference manager
 		PreferenceManager mgr = new PreferenceManager('/');
 
@@ -262,10 +276,7 @@ public class PreferenceUtils {
 		}
 
 		// Create the preferences dialog
-		PreferenceDialog dlg = new PreferenceDialog(Raptor.getInstance()
+		dlg = new PreferenceDialog(Raptor.getInstance()
 				.getWindow().getShell(), mgr);
-
-		// Open the dialog
-		dlg.open();
 	}
 }

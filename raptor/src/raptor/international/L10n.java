@@ -53,6 +53,16 @@ public class L10n {
 	}
 	
 	/**
+	 * Reloads messages for new locale set in the preference store
+	 */
+	public void updateLanguage() {
+		Locale locale = new Locale(Raptor.getInstance().
+				getPreferences().getString(PreferenceKeys.APP_LOCALE));		
+		captions = ResourceBundle.getBundle("raptor.international.Messages",
+				locale);
+	}
+	
+	/**
 	 * Returns the internationalized message for the specified key and integer
 	 * parameter.
 	 * 
