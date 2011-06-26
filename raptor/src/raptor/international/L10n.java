@@ -56,10 +56,21 @@ public class L10n {
 	 * Reloads messages for new locale set in the preference store
 	 */
 	public void updateLanguage() {
-		Locale locale = new Locale(Raptor.getInstance().
-				getPreferences().getString(PreferenceKeys.APP_LOCALE));		
+		Locale locale = new Locale(Raptor.getInstance().getPreferences()
+				.getString(PreferenceKeys.APP_LOCALE));
 		captions = ResourceBundle.getBundle("raptor.international.Messages",
 				locale);
+		try {
+			File localeFile = new File(Raptor.USER_RAPTOR_DIR + File.separator
+					+ "locale");
+			if (localeFile.exists()) {
+				localeFile.delete();
+			}
+			FileOutputStream fstream = new FileOutputStream(localeFile);
+			fstream.write(locale.getLanguage().getBytes());
+			fstream.close();
+		} catch (IOException e) {
+		}
 	}
 	
 	/**
@@ -96,24 +107,22 @@ public class L10n {
 	public static Locale getSuitableLocale() {
 		if (suitLocCache != null)
 			return suitLocCache;
-		
-		try {
-			FileInputStream fstream = new FileInputStream(
-					RaptorPreferenceStore.RAPTOR_PROPERTIES);
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					fstream));
-			String strLine;
-			while ((strLine = br.readLine()) != null) {
-				if (strLine.startsWith("app-locale=")) {
-					suitLocCache = new Locale(strLine.substring(11));
-					return suitLocCache;
-				}
-			}
-			fstream.close();
-		} catch (IOException e) {
-		}
 
 		suitLocCache = Locale.ENGLISH; // Default;
+		try {
+			File localeFile = new File(Raptor.USER_RAPTOR_DIR + File.separator
+					+ "locale");
+			if (!localeFile.exists()) {
+				return suitLocCache;
+			}
+			FileInputStream fstream = new FileInputStream(localeFile);
+			byte[] lang = new byte[2];
+			fstream.read(lang);
+			fstream.close();
+			suitLocCache = new Locale(new String(lang));
+			return suitLocCache;
+		} catch (IOException e) {
+		}
 		return suitLocCache;
 	}
 

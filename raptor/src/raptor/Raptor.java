@@ -49,6 +49,7 @@ import raptor.service.ThemeService;
 import raptor.service.ThreadService;
 import raptor.service.UCIEngineService;
 import raptor.service.UserTagService;
+import raptor.service.XboardEngineService;
 import raptor.swt.ErrorDialog;
 import raptor.swt.InputDialog;
 import raptor.swt.RaptorCursorRegistry;
@@ -167,7 +168,7 @@ public class Raptor implements PreferenceKeys {
 
 						// Initialize the UCIEngineService after a half second.
 						// Requires a raptor window in case there is an error.
-						UCIEngineService.getInstance();
+						//UCIEngineService.getInstance();
 						
 						//Remove the old imageCache user directory if its there. (version .98)
 						FileUtils.deleteDir(new File(USER_RAPTOR_HOME_PATH + "/imagecache"));
@@ -521,6 +522,14 @@ public class Raptor implements PreferenceKeys {
 				LOG.warn("Error shutting UCIEngineService", t);
 			}
 		}
+		
+		if (XboardEngineService.serviceCreated) {
+			try {
+				XboardEngineService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting UCIEngineService", t);
+			}
+		}
 
 		try {
 			ThreadService.getInstance().dispose();
@@ -627,7 +636,7 @@ public class Raptor implements PreferenceKeys {
 		//SoundService.getInstance();
 		//ScriptService.getInstance();
 		//ActionScriptService.getInstance();
-		UCIEngineService.getInstance();
+		//UCIEngineService.getInstance();
 		//AliasService.getInstance();
 	}
 

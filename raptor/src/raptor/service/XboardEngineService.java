@@ -18,16 +18,22 @@ public class XboardEngineService {
 	private static final RaptorLogger LOG = RaptorLogger
 			.getLog(XboardEngineService.class);
 	
-	public static final XboardEngineService singletonInstance = new XboardEngineService();
+	public static XboardEngineService singletonInstance;
+	public static boolean serviceCreated = false;
 	
 	protected Map<String, XboardEngine> nameToEngine = new HashMap<String, XboardEngine>();
 
 	public static XboardEngineService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new XboardEngineService();
 		return singletonInstance;
 	}
 
 	private XboardEngineService() {
 		loadEngines();
+		serviceCreated = true;
 	}
 	
 	public void dispose() {
