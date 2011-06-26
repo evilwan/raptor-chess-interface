@@ -482,34 +482,44 @@ public class Raptor implements PreferenceKeys {
 		// Dont try catch around this block. Let eclipse bomb out on it.
 		clipboard.dispose();
 
-		try {
-			EcoService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down EcoService", t);
-		}
-
-		try {
-			SoundService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down SoundService", t);
-		}
-
-		try {
-			ChessBoardCacheService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting ChessBoardCacheService", t);
+		if (EcoService.serviceCreated) {
+			try {
+				EcoService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting down EcoService", t);
+			}
 		}
 		
-		try {
-			ThemeService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting ThemeService", t);
+		if (SoundService.serviceCreated) {
+			try {
+				SoundService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting down SoundService", t);
+			}
 		}
 
-		try {
-			UCIEngineService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting UCIEngineService", t);
+		if (ChessBoardCacheService.serviceCreated) {
+			try {
+				ChessBoardCacheService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting ChessBoardCacheService", t);
+			}
+		}
+
+		if (ThemeService.serviceCreated) {
+			try {
+				ThemeService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting ThemeService", t);
+			}
+		}
+
+		if (UCIEngineService.serviceCreated) {
+			try {
+				UCIEngineService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting UCIEngineService", t);
+			}
 		}
 
 		try {
@@ -518,40 +528,52 @@ public class Raptor implements PreferenceKeys {
 			LOG.warn("Error shutting down ThreadService", t);
 		}
 
-		try {
-			ActionScriptService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down ActionService", t);
+		if (ActionScriptService.serviceCreated) {
+			try {
+				ActionScriptService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting down ActionService", t);
+			}
 		}
 
-		try {
-			ScriptService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down ScriptService", t);
+		if (ScriptService.serviceCreated) {
+			try {
+				ScriptService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting down ScriptService", t);
+			}
 		}
 
-		try {
-			AliasService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down AliasService", t);
+		if (AliasService.serviceCreated) {
+			try {
+				AliasService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting down AliasService", t);
+			}
 		}
 
-		try {
-			MemoService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down MemoService", t);
+		if (MemoService.serviceCreated) {
+			try {
+				MemoService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting down MemoService", t);
+			}
 		}
 
-		try {
-			UserTagService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down UserTagService", t);
+		if (UserTagService.serviceCreated) {
+			try {
+				UserTagService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting down UserTagService", t);
+			}
 		}
 
-		try {
-			DictionaryService.getInstance().dispose();
-		} catch (Throwable t) {
-			LOG.warn("Error shutting down DictionaryService", t);
+		if (DictionaryService.serviceCreated) {
+			try {
+				DictionaryService.getInstance().dispose();
+			} catch (Throwable t) {
+				LOG.warn("Error shutting down DictionaryService", t);
+			}
 		}
 
 		try {

@@ -46,6 +46,8 @@ public class ActionScriptService {
 	}
 
 	private static final RaptorLogger LOG = RaptorLogger.getLog(ActionScriptService.class);
+	
+	public static boolean serviceCreated = false;
 
 	private static final ActionScriptService singletonInstance = new ActionScriptService();
 
@@ -60,6 +62,7 @@ public class ActionScriptService {
 
 	private ActionScriptService() {
 		reload();
+		serviceCreated = true;
 	}
 
 	public void addActionServiceListener(ActionServiceListener listener) {

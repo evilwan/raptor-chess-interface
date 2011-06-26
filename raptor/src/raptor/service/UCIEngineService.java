@@ -36,7 +36,7 @@ import raptor.util.RaptorStringUtils;
 
 public class UCIEngineService {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(UCIEngineService.class);
-
+	public static boolean serviceCreated = false;
 	public static final UCIEngineService singletonInstance = new UCIEngineService();
 
 	public static UCIEngineService getInstance() {
@@ -47,6 +47,7 @@ public class UCIEngineService {
 
 	private UCIEngineService() {
 		loadEngines();
+		serviceCreated = true;
 	}
 
 	public void deleteConfiguration(String userName) {

@@ -22,6 +22,7 @@ import raptor.util.RaptorLogger;
 public class ThemeService {
 	private static final RaptorLogger LOG = RaptorLogger
 			.getLog(ThemeService.class);
+	public static boolean serviceCreated = false;
 	private static final String THEME_SYSTEM_DIR = Raptor.RESOURCES_DIR
 			+ "themes";
 	private static final String THEME_USER_DIR = Raptor.USER_RAPTOR_HOME_PATH
@@ -62,6 +63,7 @@ public class ThemeService {
 
 	private ThemeService() {
 		init();
+		serviceCreated = true;
 	}
 
 	protected void loadThemes() {

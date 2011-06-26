@@ -39,7 +39,7 @@ public class UserTagService {
 	private static final String TAG_FILE = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/tags.txt";
 	private static final UserTagService singletonInstance = new UserTagService();
-
+	public static boolean serviceCreated = false;
 	protected Map<String, Set<String>> tagToUsersMap = new TreeMap<String, Set<String>>();
 
 	public static UserTagService getInstance() {
@@ -58,6 +58,7 @@ public class UserTagService {
 			throw new RuntimeException("Error opening tags file: " + TAG_FILE,
 					ioe);
 		}
+		serviceCreated = true;
 	}
 
 	protected void loadFile() {

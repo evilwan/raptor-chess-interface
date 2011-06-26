@@ -34,6 +34,7 @@ import raptor.util.RegExUtils;
 
 public class DictionaryService {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(DictionaryService.class);
+	public static boolean serviceCreated = false;
 	private static final String DICTIONARY_PATH = Raptor.RESOURCES_DIR
 			+ "words.txt";
 	private static final String FICS_DICTIONARY_PATH = Raptor.RESOURCES_DIR
@@ -49,6 +50,7 @@ public class DictionaryService {
 
 	private DictionaryService() {
 		init();
+		serviceCreated = true;
 	}
 
 	public static DictionaryService getInstance() {

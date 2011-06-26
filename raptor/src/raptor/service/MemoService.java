@@ -29,7 +29,7 @@ public class MemoService {
 	private static final String MEMOS_FILE = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/memos.txt";
 	private static final MemoService singletonInstance = new MemoService();
-
+	public static boolean serviceCreated = false;
 	public static final SimpleDateFormat FORMAT = new SimpleDateFormat(
 			"'['yyyy-MM-dd' 'hh:mma']'");
 
@@ -50,6 +50,7 @@ public class MemoService {
 			throw new RuntimeException("Error opening memos file: "
 					+ MEMOS_FILE, ioe);
 		}
+		serviceCreated = true;
 	}
 
 	public void dispose() {

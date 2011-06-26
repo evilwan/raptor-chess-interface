@@ -29,7 +29,7 @@ public class ChessBoardCacheService {
 			.getLog(ChessBoardCacheService.class);
 
 	protected static final int CHESS_BOARD_CACHE_SIZE = 4;
-
+	public static boolean serviceCreated = false;
 	protected static final ChessBoardCacheService singletonInstance = new ChessBoardCacheService();
 
 	public static ChessBoardCacheService getInstance() {
@@ -50,6 +50,7 @@ public class ChessBoardCacheService {
 
 	private ChessBoardCacheService() {
 		init();
+		serviceCreated = true;
 	}
 
 	public void dispose() {

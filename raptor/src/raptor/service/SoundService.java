@@ -31,6 +31,7 @@ import raptor.util.RaptorLogger;
  */
 public class SoundService {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(SoundService.class);
+	public static boolean serviceCreated = false;
 	private static final SoundService instance = new SoundService();
 
 	/**
@@ -47,6 +48,7 @@ public class SoundService {
 
 	private SoundService() {
 		init();
+		serviceCreated = true;
 	}
 
 	public void dispose() {

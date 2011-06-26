@@ -54,7 +54,7 @@ public class ScriptService {
 	}
 
 	private static final RaptorLogger LOG = RaptorLogger.getLog(ScriptService.class);
-
+	public static boolean serviceCreated = false;
 	private static final ScriptService singletonInstance = new ScriptService();
 
 	public static ScriptService getInstance() {
@@ -70,6 +70,7 @@ public class ScriptService {
 
 	private ScriptService() {
 		reload();
+		serviceCreated = true;
 	}
 
 	public void addScriptServiceListener(ScriptServiceListener listener) {

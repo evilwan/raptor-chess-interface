@@ -70,6 +70,7 @@ import raptor.util.RaptorLogger;
 @SuppressWarnings("deprecation")
 public class AliasService {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(AliasService.class);
+	public static boolean serviceCreated = false;
 	@SuppressWarnings({ "rawtypes" })
 	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
@@ -113,6 +114,7 @@ public class AliasService {
 		} catch (Throwable t) {
 			Raptor.getInstance().onError("Error loading AliasService", t);
 		}
+		serviceCreated = true;
 	}
 
 	public void dispose() {
