@@ -42,11 +42,15 @@ public class EcoService {
 
 	private static final RaptorLogger LOG = RaptorLogger.getLog(EcoService.class);
 
-	private static final EcoService singletonInstance = new EcoService();
+	private static EcoService singletonInstance;
 	
 	public static boolean serviceCreated = false;
 
 	public static EcoService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new EcoService();
 		return singletonInstance;
 	}
 

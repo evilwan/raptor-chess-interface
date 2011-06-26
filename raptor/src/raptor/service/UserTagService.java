@@ -38,11 +38,15 @@ public class UserTagService {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(UserTagService.class);
 	private static final String TAG_FILE = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/tags.txt";
-	private static final UserTagService singletonInstance = new UserTagService();
+	private static UserTagService singletonInstance;
 	public static boolean serviceCreated = false;
 	protected Map<String, Set<String>> tagToUsersMap = new TreeMap<String, Set<String>>();
 
 	public static UserTagService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new UserTagService();
 		return singletonInstance;
 	}
 

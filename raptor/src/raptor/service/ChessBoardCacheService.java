@@ -30,9 +30,13 @@ public class ChessBoardCacheService {
 
 	protected static final int CHESS_BOARD_CACHE_SIZE = 4;
 	public static boolean serviceCreated = false;
-	protected static final ChessBoardCacheService singletonInstance = new ChessBoardCacheService();
+	protected static ChessBoardCacheService singletonInstance;
 
 	public static ChessBoardCacheService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new ChessBoardCacheService();
 		return singletonInstance;
 	}
 

@@ -32,13 +32,17 @@ import raptor.util.RaptorLogger;
 public class SoundService {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(SoundService.class);
 	public static boolean serviceCreated = false;
-	private static final SoundService instance = new SoundService();
+	private static SoundService singletonInstance;
 
 	/**
 	 * Returns the singleton instance.
 	 */
 	public static SoundService getInstance() {
-		return instance;
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new SoundService();
+		return singletonInstance;
 	}
 
 	protected String[] bughouseSounds;

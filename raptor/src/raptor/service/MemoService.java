@@ -28,12 +28,16 @@ import raptor.chat.ChatLogger.ChatEventParseListener;
 public class MemoService {
 	private static final String MEMOS_FILE = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/logs/memos.txt";
-	private static final MemoService singletonInstance = new MemoService();
+	private static MemoService singletonInstance;
 	public static boolean serviceCreated = false;
 	public static final SimpleDateFormat FORMAT = new SimpleDateFormat(
 			"'['yyyy-MM-dd' 'hh:mma']'");
 
 	public static MemoService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new MemoService();
 		return singletonInstance;
 	}
 

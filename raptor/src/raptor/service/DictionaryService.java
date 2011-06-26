@@ -44,7 +44,7 @@ public class DictionaryService {
 
 	private static final Pattern VALID_WORD_PATTERN = RegExUtils
 			.getPattern("[a-zA-Z']*");
-	private static final DictionaryService singletonInstance = new DictionaryService();
+	private static DictionaryService singletonInstance;
 
 	public Set<String> customDictionary = new TreeSet<String>();
 
@@ -54,6 +54,10 @@ public class DictionaryService {
 	}
 
 	public static DictionaryService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new DictionaryService();
 		return singletonInstance;
 	}
 

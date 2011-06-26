@@ -28,7 +28,7 @@ public class ThemeService {
 	private static final String THEME_USER_DIR = Raptor.USER_RAPTOR_HOME_PATH
 			+ "/themes";
 	private static final String THEME_NAME = "theme-name";
-	private static final ThemeService singletonInstance = new ThemeService();
+	private static ThemeService singletonInstance;
 	private Map<String, Theme> themeMap = new HashMap<String, Theme>();
 
 	public class Theme {
@@ -396,6 +396,10 @@ public class ThemeService {
 	}
 
 	public static ThemeService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new ThemeService();
 		return singletonInstance;
 	}
 

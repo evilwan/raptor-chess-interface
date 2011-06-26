@@ -49,9 +49,13 @@ public class ActionScriptService {
 	
 	public static boolean serviceCreated = false;
 
-	private static final ActionScriptService singletonInstance = new ActionScriptService();
+	private static ActionScriptService singletonInstance;
 
 	public static ActionScriptService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new ActionScriptService();
 		return singletonInstance;
 	}
 

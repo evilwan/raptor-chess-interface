@@ -92,9 +92,13 @@ public class AliasService {
 			ShowRegexAlias.class, ShowTellsAlias.class, ShowTagsAlias.class,
 			ShowScriptAlias.class, TellAllInChannelAlias.class,
 			TellLastPersonWhoToldYouAlias.class, TimedCommandAlias.class };
-	private static final AliasService singletonInstance = new AliasService();
+	private static AliasService singletonInstance;
 
 	public static AliasService getInstance() {
+		if (singletonInstance != null)
+			return singletonInstance;
+
+		singletonInstance = new AliasService();
 		return singletonInstance;
 	}
 
