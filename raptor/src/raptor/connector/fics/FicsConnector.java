@@ -73,6 +73,7 @@ import raptor.util.RaptorStringTokenizer;
 public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		GameConstants {
 	protected static L10n local = L10n.getInstance();
+	private MenuManager actions, linksMenu;
 	private static final RaptorLogger LOG = RaptorLogger
 			.getLog(FicsConnector.class);
 	protected static final String[][] PROBLEM_ACTIONS = {
@@ -442,6 +443,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 	@Override
 	protected void connect(final String profileName) {
+		createFicsMenuActions();
 		synchronized (this) {
 			if (!isConnected()) {
 				for (Action action : onlyEnabledOnConnectActions) {
@@ -466,6 +468,47 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 										new BugButtonsWindowItem(this));
 					}
 				}
+			}
+		}
+	}
+	
+	/**
+	 * Creates menu with fics server actions all of which can be invoked
+	 * only after connecting to the server
+	 */
+	private void createFicsMenuActions() {
+		// create fics actions menu
+		RaptorAction[] scripts = ActionScriptService.getInstance().getActions(
+				Category.IcsCommands);
+		for (final RaptorAction raptorAction : scripts) {
+			Action action = new Action(raptorAction.getName()) {
+				public void run() {
+					raptorAction.setConnectorSource(FicsConnector.this);
+					raptorAction.run();
+				}
+			};
+			action.setEnabled(false);
+			action.setToolTipText(raptorAction.getDescription());
+			onlyEnabledOnConnectActions.add(action);
+			actions.add(action);
+		}
+
+		// create links menu
+		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
+				.getActions(RaptorActionContainer.FicsMenu);
+		for (final RaptorAction raptorAction : ficsMenuActions) {
+			if (raptorAction instanceof Separator) {
+				linksMenu.add(new Separator());
+			} else {
+				Action action = new Action(raptorAction.getName()) {
+					@Override
+					public void run() {
+						raptorAction.setConnectorSource(FicsConnector.this);
+						raptorAction.run();
+					}
+				};
+				action.setToolTipText(raptorAction.getDescription());
+				linksMenu.add(action);
 			}
 		}
 	}
@@ -690,22 +733,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		};
 
-		MenuManager actions = new MenuManager(local.getString("ficsConn22"));
-
-		RaptorAction[] scripts = ActionScriptService.getInstance().getActions(
-				Category.IcsCommands);
-		for (final RaptorAction raptorAction : scripts) {
-			Action action = new Action(raptorAction.getName()) {
-				public void run() {
-					raptorAction.setConnectorSource(FicsConnector.this);
-					raptorAction.run();
-				}
-			};
-			action.setEnabled(false);
-			action.setToolTipText(raptorAction.getDescription());
-			onlyEnabledOnConnectActions.add(action);
-			actions.add(action);
-		}
+		actions = new MenuManager(local.getString("ficsConn22"));		
 
 		connectAction.setEnabled(true);
 		disconnectAction.setEnabled(false);
@@ -781,24 +809,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		tabsMenu.add(new Separator());
 		tabsMenu.add(regexTabAction);
 		ficsMenu.add(tabsMenu);
-		MenuManager linksMenu = new MenuManager(local.getString("ficsConn24"));
-		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
-				.getActions(RaptorActionContainer.FicsMenu);
-		for (final RaptorAction raptorAction : ficsMenuActions) {
-			if (raptorAction instanceof Separator) {
-				linksMenu.add(new Separator());
-			} else {
-				Action action = new Action(raptorAction.getName()) {
-					@Override
-					public void run() {
-						raptorAction.setConnectorSource(FicsConnector.this);
-						raptorAction.run();
-					}
-				};
-				action.setToolTipText(raptorAction.getDescription());
-				linksMenu.add(action);
-			}
-		}
+		linksMenu = new MenuManager(local.getString("ficsConn24"));		
 		ficsMenu.add(linksMenu);
 		MenuManager problems = new MenuManager(local.getString("ficsConn25"));
 		addProblemActions(problems);

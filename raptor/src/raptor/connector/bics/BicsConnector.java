@@ -59,6 +59,7 @@ import raptor.util.RaptorStringTokenizer;
  */
 public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	protected static L10n local = L10n.getInstance();
+	private MenuManager linksMenu;
 	
 	public static class BicsConnectorContext extends IcsConnectorContext {
 		public BicsConnectorContext() {
@@ -352,6 +353,26 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 			}
 		}
 	}
+	
+	private void createMenuLinks() {
+		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
+				.getActions(RaptorActionContainer.BicsMenu);
+		for (final RaptorAction raptorAction : ficsMenuActions) {
+			if (raptorAction instanceof Separator) {
+				bicsMenu.add(new Separator());
+			} else {
+				Action action = new Action(raptorAction.getName()) {
+					@Override
+					public void run() {
+						raptorAction.setConnectorSource(BicsConnector.this);
+						raptorAction.run();
+					}
+				};
+				action.setToolTipText(raptorAction.getDescription());
+				linksMenu.add(action);
+			}
+		}
+	}
 
 	/**
 	 * Creates the connectionsMenu and all of the actions associated with it.
@@ -514,24 +535,7 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		tabsMenu.add(bugbuttonsAction);
 		bicsMenu.add(tabsMenu);
 
-		MenuManager linksMenu = new MenuManager(local.getString("bicsConnector18"));
-		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
-				.getActions(RaptorActionContainer.BicsMenu);
-		for (final RaptorAction raptorAction : ficsMenuActions) {
-			if (raptorAction instanceof Separator) {
-				bicsMenu.add(new Separator());
-			} else {
-				Action action = new Action(raptorAction.getName()) {
-					@Override
-					public void run() {
-						raptorAction.setConnectorSource(BicsConnector.this);
-						raptorAction.run();
-					}
-				};
-				action.setToolTipText(raptorAction.getDescription());
-				linksMenu.add(action);
-			}
-		}
+		linksMenu = new MenuManager(local.getString("bicsConnector18"));		
 		bicsMenu.add(linksMenu);
 	}
 
