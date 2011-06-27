@@ -105,15 +105,17 @@ public class Raptor implements PreferenceKeys {
 	/**
 	 * The applications main method. Takes no arguments.
 	 */
-	public static void main(String args[]) {
-		Locale.setDefault(L10n.getSuitableLocale());
+	public static void main(String args[]) {		
 		local = L10n.getInstance();
+		Locale.setDefault(L10n.currentLocale);
 		try {
 			Display.setAppName("Raptor");
 			display = new Display();
 			
 			createInstance();
-
+                        
+			if (L10n.noSavedLocaleFile)
+				L10n.updateLanguage();
 			// Runtime.getRuntime().addShutdownHook(new Thread() {
 			// @Override
 			// public void run() {

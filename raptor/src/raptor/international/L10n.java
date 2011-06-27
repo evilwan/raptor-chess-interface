@@ -20,15 +20,14 @@ import java.util.ResourceBundle;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.RaptorPreferenceStore;
+import raptor.swt.LanguageDialog;
 
 public class L10n {
-	
+	public static Locale currentLocale;
+        public static boolean noSavedLocaleFile = false;
 	private static L10n singletonInstance;
-	private ResourceBundle captions;
-	private static String[] availableLocaleNames = { "en", "it" };
-	@SuppressWarnings("unused")
-	private static Locale[] availableLocales = { Locale.ENGLISH, Locale.ITALIAN };
+	private static ResourceBundle captions;
+	public static Locale[] availableLocales = { Locale.ENGLISH, Locale.ITALIAN };
 	private static Locale suitLocCache;
 	
 	public static L10n getInstance() {		
@@ -43,7 +42,8 @@ public class L10n {
 	}
 
 	private void init() {		
-		Locale locale = getSuitableLocale();		
+		Locale locale = getSuitableLocale();
+		currentLocale = locale;
 		captions = ResourceBundle.getBundle("raptor.international.Messages",
 				locale);
 	}
@@ -55,9 +55,10 @@ public class L10n {
 	/**
 	 * Reloads messages for new locale set in the preference store
 	 */
-	public void updateLanguage() {
+	public static void updateLanguage() {
 		Locale locale = new Locale(Raptor.getInstance().getPreferences()
 				.getString(PreferenceKeys.APP_LOCALE));
+		currentLocale = locale;
 		captions = ResourceBundle.getBundle("raptor.international.Messages",
 				locale);
 		try {
@@ -113,6 +114,8 @@ public class L10n {
 			File localeFile = new File(Raptor.USER_RAPTOR_DIR + File.separator
 					+ "locale");
 			if (!localeFile.exists()) {
+				suitLocCache = new LanguageDialog().open(getSuitableLocaleName());
+                                noSavedLocaleFile = true;                                
 				return suitLocCache;
 			}
 			FileInputStream fstream = new FileInputStream(localeFile);
@@ -126,13 +129,13 @@ public class L10n {
 		return suitLocCache;
 	}
 
-	public static String getSuitableLocaleName() {
-		String systemLang = Locale.getDefault().getLanguage();
-		for (String loc: availableLocaleNames) {
-			if (loc.equals(systemLang))
+	public static Locale getSuitableLocaleName() {
+		Locale systemLang = Locale.getDefault();
+		for (Locale loc: availableLocales) {
+			if (loc.getLanguage().equals(systemLang.getLanguage()))
 				return systemLang;
 		}		
 		
-		return "en"; // Default
+		return Locale.ENGLISH; // Default
 	}
 }
