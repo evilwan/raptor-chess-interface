@@ -65,7 +65,7 @@ public class LanguageDialog {
         bt.addListener(SWT.Selection, new Listener() {
 
             public void handleEvent(Event event) {
-                lang = L10n.availableLocales[combo1.getSelectionIndex()];
+                lang = L10n.availableLocales[combo1.getSelectionIndex()];                
                 shell.close();
             }
         });

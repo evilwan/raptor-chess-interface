@@ -115,7 +115,7 @@ public class Raptor implements PreferenceKeys {
 			createInstance();
                         
 			if (L10n.noSavedLocaleFile)
-				L10n.updateLanguage();
+				L10n.updateLanguage(true);
 			// Runtime.getRuntime().addShutdownHook(new Thread() {
 			// @Override
 			// public void run() {

@@ -55,10 +55,20 @@ public class L10n {
 	/**
 	 * Reloads messages for new locale set in the preference store
 	 */
-	public static void updateLanguage() {
-		Locale locale = new Locale(Raptor.getInstance().getPreferences()
+	public static void updateLanguage(boolean useCurrentLocale) {
+		Locale locale;
+                if (useCurrentLocale)  {
+                    locale = currentLocale;
+                    Raptor.getInstance().getPreferences().setValue(
+                            PreferenceKeys.APP_LOCALE, locale.getLanguage());
+                }
+                else {
+                    locale = new Locale(Raptor.getInstance().getPreferences()
 				.getString(PreferenceKeys.APP_LOCALE));
-		currentLocale = locale;
+                    currentLocale = locale;
+                }
+                    
+                
 		captions = ResourceBundle.getBundle("raptor.international.Messages",
 				locale);
 		try {
