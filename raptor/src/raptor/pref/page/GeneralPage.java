@@ -161,7 +161,7 @@ public class GeneralPage extends FieldEditorPreferencePage {
 			getPreferences().getString(PreferenceKeys.APP_LOCALE);
 		
 		if (!currLocale.equals(lastLang)) {
-			L10n.getInstance().updateLanguage(false);
+			L10n.updateLanguage(false);
 			PreferenceUtils.restartDialog();
 		}		
 		
