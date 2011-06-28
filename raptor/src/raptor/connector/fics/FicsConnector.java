@@ -443,7 +443,10 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 	@Override
 	protected void connect(final String profileName) {
-		createFicsMenuActions();
+		if (actions != null) {
+			//Don't do this for fics2.
+			createFicsMenuActions();
+		}
 		synchronized (this) {
 			if (!isConnected()) {
 				for (Action action : onlyEnabledOnConnectActions) {
