@@ -41,7 +41,6 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
-import raptor.international.L10n;
 import raptor.layout.ClassicLayout;
 import raptor.service.SeekService.SeekType;
 import raptor.service.ThemeService;
