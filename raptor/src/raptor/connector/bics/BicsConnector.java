@@ -28,7 +28,6 @@ import org.eclipse.jface.preference.PreferencePage;
 
 import raptor.Raptor;
 import raptor.RaptorWindowItem;
-import raptor.action.RaptorAction;
 import raptor.action.RaptorAction.RaptorActionContainer;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
@@ -47,7 +46,6 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.page.ActionContainerPage;
 import raptor.pref.page.ConnectorMessageBlockPage;
 import raptor.pref.page.ConnectorQuadrantsPage;
-import raptor.service.ActionScriptService;
 import raptor.service.ThreadService;
 import raptor.swt.BugButtonsWindowItem;
 import raptor.swt.SWTUtils;
@@ -60,7 +58,7 @@ import raptor.util.RaptorStringTokenizer;
 public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	protected static L10n local = L10n.getInstance();
 	private MenuManager linksMenu;
-	
+
 	public static class BicsConnectorContext extends IcsConnectorContext {
 		public BicsConnectorContext() {
 			super(new IcsParser(true));
@@ -122,7 +120,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		}
 	}
 
-	private static final RaptorLogger LOG = RaptorLogger.getLog(BicsConnector.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(BicsConnector.class);
 
 	/**
 	 * Raptor allows connecting to bics twice with different profiles. Override
@@ -212,12 +211,10 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 	 */
 	public PreferenceNode[] getSecondaryPreferenceNodes() {
 		return new PreferenceNode[] {
-				new PreferenceNode(
-						"bicsMenuActions",
-						new ActionContainerPage(
-								local.getString("bicsConnector1"),
-								local.getString("bicsConnector2"),
-								RaptorActionContainer.BicsMenu)),
+				new PreferenceNode("bicsMenuActions", new ActionContainerPage(
+						local.getString("bicsConnector1"),
+						local.getString("bicsConnector2"),
+						RaptorActionContainer.BicsMenu)),
 				new PreferenceNode("bics",
 						new ConnectorMessageBlockPage("bics")),
 				new PreferenceNode("bics", new BicsRightClickChannelMenu()),
@@ -263,8 +260,9 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				if (bics2 != null
 						&& isConnected()
 						&& bics2.isConnected()
-						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
-								event.getSource()).trim(), bics2.getUserName())) {
+						&& StringUtils.equalsIgnoreCase(
+								IcsUtils.stripTitles(event.getSource()).trim(),
+								bics2.getUserName())) {
 					// here we are in fics1 where a partnership was created.
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Created simul bughouse partnership with "
@@ -278,8 +276,9 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 						&& bics1 != null
 						&& bics1.isConnected()
 						&& isConnected()
-						&& StringUtils.equalsIgnoreCase(IcsUtils.stripTitles(
-								event.getSource()).trim(), bics1.getUserName())) {
+						&& StringUtils.equalsIgnoreCase(
+								IcsUtils.stripTitles(event.getSource()).trim(),
+								bics1.getUserName())) {
 					// here we are in fics2 when a partnership was created.
 					if (LOG.isDebugEnabled()) {
 						LOG.debug("Created simul bughouse partnership with "
@@ -332,7 +331,6 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 
 	@Override
 	protected void connect(final String profileName) {
-
 		synchronized (this) {
 			if (!isConnected()) {
 				super.connect(profileName);
@@ -347,29 +345,10 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				if (getPreferences().getBoolean(
 						context.getPreferencePrefix()
 								+ "show-bugbuttons-on-connect")) {
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							new BugButtonsWindowItem(this));
+					Raptor.getInstance()
+							.getWindow()
+							.addRaptorWindowItem(new BugButtonsWindowItem(this));
 				}
-			}
-		}
-	}
-	
-	private void createMenuLinks() {
-		RaptorAction[] ficsMenuActions = ActionScriptService.getInstance()
-				.getActions(RaptorActionContainer.BicsMenu);
-		for (final RaptorAction raptorAction : ficsMenuActions) {
-			if (raptorAction instanceof Separator) {
-				bicsMenu.add(new Separator());
-			} else {
-				Action action = new Action(raptorAction.getName()) {
-					@Override
-					public void run() {
-						raptorAction.setConnectorSource(BicsConnector.this);
-						raptorAction.run();
-					}
-				};
-				action.setToolTipText(raptorAction.getDescription());
-				linksMenu.add(action);
 			}
 		}
 	}
@@ -382,8 +361,9 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		connectAction = new Action(local.getString("bicsConnector4")) {
 			@Override
 			public void run() {
-				IcsLoginDialog dialog = new IcsLoginDialog(context
-						.getPreferencePrefix(), local.getString("bicsConnector5"));
+				IcsLoginDialog dialog = new IcsLoginDialog(
+						context.getPreferencePrefix(),
+						local.getString("bicsConnector5"));
 				dialog.open();
 				getPreferences().setValue(
 						context.getPreferencePrefix() + "profile",
@@ -438,8 +418,9 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bics2.connectAction = new Action(local.getString("bicsConnector4")) {
 			@Override
 			public void run() {
-				IcsLoginDialog dialog = new IcsLoginDialog(context
-						.getPreferencePrefix(), local.getString("bicsConnector11"));
+				IcsLoginDialog dialog = new IcsLoginDialog(
+						context.getPreferencePrefix(),
+						local.getString("bicsConnector11"));
 				if (isConnected()) {
 					dialog.setShowingSimulBug(true);
 				}
@@ -525,17 +506,19 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 		bics2Menu.add(bics2.disconnectAction);
 		bics2Menu.add(bics2.reconnectAction);
 		bics2Menu.add(new Separator());
-		MenuManager bics2Tabs = new MenuManager(local.getString("bicsConnector17"));
+		MenuManager bics2Tabs = new MenuManager(
+				local.getString("bicsConnector17"));
 		bics2Tabs.add(bics2.bugbuttonsAction);
 		bics2Menu.add(bics2Tabs);
 		bicsMenu.add(bics2Menu);
 
 		bicsMenu.add(new Separator());
-		MenuManager tabsMenu = new MenuManager(local.getString("bicsConnector17"));
+		MenuManager tabsMenu = new MenuManager(
+				local.getString("bicsConnector17"));
 		tabsMenu.add(bugbuttonsAction);
 		bicsMenu.add(tabsMenu);
 
-		linksMenu = new MenuManager(local.getString("bicsConnector18"));		
+		linksMenu = new MenuManager(local.getString("bicsConnector18"));
 		bicsMenu.add(linksMenu);
 	}
 
@@ -606,7 +589,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 					}
 
 				} catch (Throwable t) {
-					onError(local.getString("bicsConnector20") + EXTENDED_CENSOR_FILE_NAME, t);
+					onError(local.getString("bicsConnector20")
+							+ EXTENDED_CENSOR_FILE_NAME, t);
 
 				} finally {
 					if (reader != null) {
@@ -679,7 +663,8 @@ public class BicsConnector extends IcsConnector implements PreferenceKeys {
 				writer.flush();
 
 			} catch (Throwable t) {
-				onError(local.getString("bicsConnector21") + EXTENDED_CENSOR_FILE_NAME, t);
+				onError(local.getString("bicsConnector21")
+						+ EXTENDED_CENSOR_FILE_NAME, t);
 			} finally {
 				if (writer != null) {
 					try {
