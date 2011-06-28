@@ -189,7 +189,10 @@ public class ChatUtils {
 	}
 
 	public static String getUrl(String text) {
-		String strippedText = text == null ? null : StringUtils.removeEnd(StringUtils.replaceChars(text, "()'\"<>;,", ""),".");
+		String strippedText = text == null ? null : StringUtils.removeEnd(StringUtils.replaceChars(text, "()'\"<>,", ""),".");
+		if (strippedText.endsWith(";")) {
+			strippedText = strippedText.substring(0,strippedText.length() - 1);
+		}
 		if (strippedText != null
 				&& (strippedText.startsWith("http://") || strippedText.startsWith("https://"))) {
 			return strippedText;
