@@ -15,7 +15,7 @@ public class LanguageDialog {
 
     public Locale open(Locale def) {
         Display display = new Display();
-        Shell shell = new Shell(display);
+        Shell shell = new Shell(display, SWT.DIALOG_TRIM | SWT.MIN);        
         shell.setText("Language");
         shell.addListener(SWT.Close, new Listener() {
 
@@ -25,7 +25,7 @@ public class LanguageDialog {
             }
         });
         createContents(shell, def);
-        shell.setSize(370, 100);
+        shell.pack();
         SWTUtils.center(shell);
         shell.open();
         while (!shell.isDisposed()) {
@@ -56,7 +56,6 @@ public class LanguageDialog {
 
             n++;
         }
-
 
         Button bt = new Button(shell, SWT.PUSH);
         bt.setText("OK");

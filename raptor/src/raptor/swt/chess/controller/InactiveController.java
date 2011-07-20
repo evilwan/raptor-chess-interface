@@ -598,6 +598,13 @@ public class InactiveController extends ChessBoardController implements
 		addDecorationsForLastMoveListMove();
 	}
 
+	public void gotoHalfMove(int halfMoveNumber) {
+		board.getResultDecorator().setDecoration(null);
+		cursor.setCursor(halfMoveNumber);
+		enableDisableNavButtons();
+		refresh();
+	}
+	
 	/**
 	 * Over-ridden to provide support for viewing pgn files.
 	 */

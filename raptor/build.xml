@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="Linux_x86_GTK2" />
 
-	<property name="version" value="v98" />
+	<property name="version" value="v98u1" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />

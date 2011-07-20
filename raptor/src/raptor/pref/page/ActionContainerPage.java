@@ -13,6 +13,10 @@
  */
 package raptor.pref.page;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.eclipse.jface.preference.PreferencePage;
@@ -32,6 +36,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import raptor.Raptor;
 import raptor.action.RaptorAction;
+import raptor.action.RaptorAction.Category;
 import raptor.action.RaptorActionFactory;
 import raptor.action.ScriptedAction;
 import raptor.action.SeparatorAction;
@@ -406,12 +411,21 @@ public class ActionContainerPage extends PreferencePage {
 	}
 
 	protected void refreshAvailableActions() {
-		RaptorAction[] availableActions = ActionScriptService.getInstance()
+		RaptorAction[] allAvailableActions = ActionScriptService.getInstance()
 				.getAllActions();
-		String[][] data = new String[availableActions.length][2];
+		List<RaptorAction> availableActions = new ArrayList<RaptorAction>();
+		for (RaptorAction a: allAvailableActions) {
+			if (a.getCategory() == Category.GameCommands 
+					&& !Arrays.asList(a.getContainers()).contains(container))
+				continue;
+			
+			availableActions.add(a);
+		}
+		
+		String[][] data = new String[availableActions.size()][2];
 
-		for (int i = 0; i < availableActions.length; i++) {
-			RaptorAction action = availableActions[i];
+		for (int i = 0; i < availableActions.size(); i++) {
+			RaptorAction action = availableActions.get(i);
 			data[i][0] = action.getName();
 			data[i][1] = action.getCategory().toString();
 		}
