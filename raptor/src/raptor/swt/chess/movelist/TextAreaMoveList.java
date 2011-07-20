@@ -91,6 +91,32 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		}
 		return textPanel;
 	}
+	
+	/**
+	 * Inserts a text string comment near the specified half move.
+	 * @param halfMoveIndex Half move number
+	 * @param text Text to insert
+	 */
+	public void addCommentToMove(int halfMoveIndex, String text) {
+		int origCaretPos = textPanel.getCaretOffset();
+		int start = moveNodes.get(halfMoveIndex);
+		int length = moveNodesLengths.get(halfMoveIndex);
+		textPanel.setCaretOffset(start + length);
+		textPanel.insert(" "+text);
+		StyleRange styleRange = new StyleRange();
+		styleRange.start = start + length;
+		styleRange.length = text.length()+1;
+		styleRange.fontStyle = SWT.ITALIC;
+		textPanel.setStyleRange(styleRange);
+		textPanel.setCaretOffset(origCaretPos);
+		
+		// correct offsets for the following moves
+		int moveIndex = halfMoveIndex+1;
+		while (moveIndex < moveNodes.size()) {
+			moveNodes.set(moveIndex, moveNodes.get(moveIndex)+text.length()+1);
+			moveIndex++;
+		}		
+	}
 
 	private void createControls(Composite parent) {
 		textPanel = new StyledText(parent, SWT.BORDER | SWT.V_SCROLL);
@@ -239,6 +265,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			int moveListSize = game.getMoveList().getSize();
 			if (moveListSize == 0 && textPanel.getCharCount() != 0) {
 				textPanel.setText("");
+				return;
 			} else {
 				if (moveListSize == moveNodes.size()) {
 					if (!lastMoveSan.equals(game.getMoveList()
@@ -252,14 +279,21 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				}
 
 				StringBuffer buff = new StringBuffer();
+				int lastMoveNLength = -1; 
 				for (int i = moveNodes.size(); i < moveListSize; i++) {
+					boolean hasComments = false;
 					int start, length;
 					start = textPanel.getCharCount() + buff.length();
 					String move = getMoveNumber(i)
 							+ GameUtils.convertSanToUseUnicode(game
 									.getMoveList().get(i).toString(), true);
-					buff.append(move);
+					buff.append(move);					
 					length = move.length();
+					if (lastMoveNLength != -1) {
+						start -= lastMoveNLength;
+						length += lastMoveNLength;
+						lastMoveNLength = -1;
+					}
 
 					for (Nag nag : game.getMoveList().get(i).getNags()) {
 						if (nag.hasSymbol()) {
@@ -270,13 +304,23 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 
 					for (Comment comment : game.getMoveList().get(i)
 							.getComments()) {
-						buff.append(" ");
+						String sd = textPanel.getLineDelimiter();
+						buff.append(sd);
 						buff.append(comment);
+						buff.append(sd);
+						hasComments = true;
 					}
 
 					moveNodes.add(start);
 					moveNodesLengths.add(length);
-					buff.append(" ");
+					
+					if (!hasComments)
+						buff.append(" ");
+					else {
+						String num = getMoveNumberBlack(i);
+						buff.append(num);
+						lastMoveNLength = num.length();
+					}
 				}
 				textPanel.append(buff.toString());
 				select(game.getHalfMoveCount());
@@ -286,6 +330,23 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				}
 			}
 
+			int firstMove = 0;
+			int secondMove = 1;
+			while (secondMove < moveNodes.size()) {
+				int start = moveNodes.get(firstMove)+moveNodesLengths.get(firstMove);
+				int length =  moveNodes.get(secondMove)-start;
+				
+				if (length > 1) {
+					StyleRange styleRange = new StyleRange();
+					styleRange.start = start;
+					styleRange.length = length;
+					styleRange.fontStyle = SWT.ITALIC;
+					textPanel.setStyleRange(styleRange);
+				}				
+				firstMove++;
+				secondMove++;
+			}
+			
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Updated to game in : "
 						+ (System.currentTimeMillis() - startTime));
@@ -312,4 +373,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		return (i % 2 == 0) ? Integer.toString((i + 3) / 2) + "." : "";
 	}
 
+	private String getMoveNumberBlack(int i) {
+		return (i % 2 == 0) ? Integer.toString((i + 3) / 2) + "..." : "";
+	}
 }

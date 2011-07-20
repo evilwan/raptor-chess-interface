@@ -3,6 +3,7 @@ package raptor.action.game;
 import raptor.Raptor;
 import raptor.action.AbstractRaptorAction;
 import raptor.swt.chess.controller.InactiveController;
+import raptor.swt.chess.movelist.TextAreaMoveList;
 
 public class AutomaticGameAnalysis extends AbstractRaptorAction {
 	public AutomaticGameAnalysis() {
@@ -19,7 +20,7 @@ public class AutomaticGameAnalysis extends AbstractRaptorAction {
 		if (getChessBoardControllerSource() != null) {
 			if (getChessBoardControllerSource() instanceof InactiveController) {
 				InactiveController controller = (InactiveController) getChessBoardControllerSource();
-				controller.gotoHalfMove(controller.getGame().getMoveList().getSize());
+				((TextAreaMoveList) controller.getBoard().getMoveList()).addCommentToMove(15, "Comment");
 
 				wasHandled = true;
 			}
