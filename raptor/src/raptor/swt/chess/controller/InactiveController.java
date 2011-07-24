@@ -456,11 +456,11 @@ public class InactiveController extends ChessBoardController implements
 		if (isDisposed()) {
 			return;
 		}
+		board.getEngineAnalysisWidget().updateToGame();
 		board.getMoveList().updateToGame();
 		board.getMoveList().select(cursor.getCursorPosition());
 		enableDisableNavButtons();
-		super.refresh();
-		board.getEngineAnalysisWidget().updateToGame();
+		super.refresh();		
 	}
 
 	/**
@@ -596,6 +596,14 @@ public class InactiveController extends ChessBoardController implements
 		enableDisableNavButtons();
 		refresh();
 		addDecorationsForLastMoveListMove();
+	}
+	
+	public void gotoMove(int halfMoveNumber) {
+		board.getResultDecorator().setDecoration(null);
+		cursor.setCursor(halfMoveNumber);
+		enableDisableNavButtons();
+		refresh();
+		addDecorationsForLastMoveListMove(false);
 	}
 	
 	/**

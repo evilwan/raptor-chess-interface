@@ -489,7 +489,6 @@ public class ChessBoard implements BoardConstants {
 	}
 
 	public synchronized void showEngineAnalysisWidget() {
-		System.out.println(engineAnalysisWidget);
 		engineAnalysisWidget.getControl().setVisible(true);
 		analysisSash.setMaximizedControl(null);
 		engineAnalysisWidget.onShow();

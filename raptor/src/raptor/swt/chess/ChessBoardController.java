@@ -104,6 +104,10 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	public void addDecorationsForLastMoveListMove() {
+		addDecorationsForLastMoveListMove(true);
+	}
+	
+	public void addDecorationsForLastMoveListMove(boolean displayArrow) {
 		removeAllMoveDecorations();
 		Move lastMove = getGame().getLastMove();
 		if (lastMove != null) {
@@ -124,7 +128,7 @@ public abstract class ChessBoardController implements BoardConstants,
 			}
 
 			if (getPreferences().getBoolean(
-					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES)) {
+					PreferenceKeys.ARROW_SHOW_ON_MOVE_LIST_MOVES) && displayArrow) {
 				board.getArrowDecorator().addArrow(
 						new Arrow(lastMove.getFrom(), lastMove.getTo(),
 								getPreferences().getColor(
@@ -1243,7 +1247,9 @@ public abstract class ChessBoardController implements BoardConstants,
 	}
 
 	protected void removeAllMoveDecorations() {
-		board.getArrowDecorator().removeAllArrows();
+		if (board.getArrowDecorator() != null)
+			board.getArrowDecorator().removeAllArrows();
+		
 		board.getSquareHighlighter().removeAllHighlights();
 	}
 

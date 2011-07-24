@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import raptor.Raptor;
 import raptor.chess.Game;
+import raptor.chess.GameFactory;
 import raptor.chess.Move;
 import raptor.chess.Variant;
 import raptor.chess.util.GameUtils;
@@ -133,7 +134,7 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 								} else if (info instanceof DepthInfo) {
 									DepthInfo depthInfo = (DepthInfo) info;
 									depth = depthInfo.getSearchDepthPlies()
-											+ local.getString("uciAnalW_4"); 
+											+ local.getString("uciAnalW_4");
 								} else if (info instanceof NodesSearchedInfo) {
 									NodesSearchedInfo nodesSearchedInfo = (NodesSearchedInfo) info;
 									nodes = RaptorStringUtils.formatAsNumber("" 
@@ -163,10 +164,13 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 													BigDecimal.ROUND_HALF_UP)
 											.toString();
 								} else if (info instanceof BestLineFoundInfo) {
+									if (!currentEngine.isProcessingGo())
+										return;
+									
 									BestLineFoundInfo bestLineFoundInfo = (BestLineFoundInfo) info;
 									StringBuilder line = new StringBuilder(100);
-									Game gameClone = controller.getGame()
-											.deepCopy(true);
+									Game gameClone = GameFactory.createFromFen(currentEngine.getLastSetFen(),
+											controller.getGame().getVariant());
 									gameClone.addState(Game.UPDATING_SAN_STATE);
 									gameClone
 											.clearState(Game.UPDATING_ECO_HEADERS_STATE);
@@ -549,7 +553,7 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 		}
 	}
 
-	public void stop() {
+	public void stop() {		
 		if (currentEngine != null) {
 			ThreadService.getInstance().run(new Runnable() {
 				public void run() {
@@ -590,7 +594,6 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 	}
 
 	protected void start(boolean override) {
-
 		if (currentEngine != null && (!isInStart || override)) {
 			isInStart = true;
 			ThreadService.getInstance().run(new Runnable() {

@@ -81,6 +81,7 @@ public class UCIEngine {
 	protected Object stopSynch = new Object();
 	protected String goAnalysisParameters = "infinite";
 	private boolean supportsFischerRandom;
+	private String lastSetFen;
 
 	/**
 	 * Connects to the engine. After this method is invoked the engine name,
@@ -561,6 +562,7 @@ public class UCIEngine {
 			throw new IllegalStateException("Engine is not connected.");
 		}
 
+		lastSetFen = fen;
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Entering setPosition(" + fen + ",...)");
 		}
@@ -579,6 +581,10 @@ public class UCIEngine {
 			}
 			send("position fen " + fen + " " + movesString);
 		}
+	}
+
+	public String getLastSetFen() {
+		return lastSetFen;
 	}
 
 	/**
@@ -847,6 +853,9 @@ public class UCIEngine {
 	 * </pre>
 	 */
 	protected void parseInfoLine(String info, UCIInfoListener listener) {
+		if (!isProcessingGo() || Thread.holdsLock(stopSynch))
+			return;
+		
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Entering parseInfoLine(" + info + ",...)");
 		}
