@@ -96,8 +96,9 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	 * Inserts a text string comment near the specified half move.
 	 * @param halfMoveIndex Half move number
 	 * @param text Text to insert
+	 * @param coloring Whether to color the text with red colour
 	 */
-	public void addCommentToMove(int halfMoveIndex, String text) {
+	public void addCommentToMove(int halfMoveIndex, String text, boolean coloring) {
 		int origCaretPos = textPanel.getCaretOffset();
 		int start = moveNodes.get(halfMoveIndex);
 		int length = moveNodesLengths.get(halfMoveIndex);
@@ -107,6 +108,9 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		styleRange.start = start + length;
 		styleRange.length = text.length()+1;
 		styleRange.fontStyle = SWT.ITALIC;
+		if (coloring)
+			styleRange.foreground = Display.getCurrent().getSystemColor(SWT.COLOR_RED);
+		
 		textPanel.setStyleRange(styleRange);
 		textPanel.setCaretOffset(origCaretPos);
 		
@@ -316,7 +320,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 					
 					if (!hasComments)
 						buff.append(" ");
-					else {
+					else if (moveListSize-1 != i) {
 						String num = getMoveNumberBlack(i);
 						buff.append(num);
 						lastMoveNLength = num.length();

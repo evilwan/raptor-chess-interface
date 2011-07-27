@@ -58,9 +58,9 @@ public class AutomaticAnalysisDialog extends Dialog {
 	}
 	
 	protected void createContents(final Shell parent) {
-		final Label timePerMove, threshold;
+		final Label timePerMove, threshold, firstMove;
 		final Button start, cancel;
-		final Spinner timeSpinner, thresholdSpinner;
+		final Spinner timeSpinner, thresholdSpinner, firstMoveSpinner;
 		
 		parent.setLayout(new FillLayout());
 		Composite composite = new Composite(parent, SWT.NONE);
@@ -68,7 +68,7 @@ public class AutomaticAnalysisDialog extends Dialog {
 		timePerMove = new Label(composite, SWT.NONE);
 		timePerMove.setText("Time per move (seconds): ");
 		timeSpinner = new Spinner(composite, SWT.NONE);
-		timeSpinner.setSelection(1);
+		timeSpinner.setSelection(3);
 		timeSpinner.setMinimum(1);
 		threshold = new Label(composite, SWT.NONE);
 		threshold.setText("Blunder threshold (pawns): ");
@@ -78,6 +78,14 @@ public class AutomaticAnalysisDialog extends Dialog {
 		thresholdSpinner.setMaximum(10000);
 		thresholdSpinner.setIncrement(1);
 		thresholdSpinner.setSelection(100);
+		firstMove = new Label(composite, SWT.NONE);
+		firstMove.setText("Begin analysis from move: ");
+		firstMoveSpinner = new Spinner(composite, SWT.NONE);
+		firstMoveSpinner.setMinimum(1);
+		int moveSize = (controller.getGame().getMoveList().getSize()%2!=0 ? (controller.getGame().getMoveList().getSize()-1)/2 :
+			controller.getGame().getMoveList().getSize()/2);
+		firstMoveSpinner.setMaximum(moveSize-1);
+		firstMoveSpinner.setSelection(moveSize > 11 ? 10 : 1);		
 		start = new Button(composite, SWT.PUSH);
 		start.setText("Start");
 		start.addSelectionListener(new SelectionListener()  {
@@ -87,13 +95,23 @@ public class AutomaticAnalysisDialog extends Dialog {
 
 			public void widgetSelected(SelectionEvent e) {
 				new AutomaticAnalysisController(controller).startAnalysis(timeSpinner.getSelection(), 
-						thresholdSpinner.getSelection());
+						thresholdSpinner.getSelection()/100, firstMoveSpinner.getSelection());
 				parent.close();
 			}
 
 		});
 		cancel = new Button(composite, SWT.PUSH);
 		cancel.setText("Cancel");
+		cancel.addSelectionListener(new SelectionListener()  {
+
+			public void widgetDefaultSelected(SelectionEvent e) {
+			}
+
+			public void widgetSelected(SelectionEvent e) {
+				parent.close();
+			}
+
+		});
 	}
 
 }

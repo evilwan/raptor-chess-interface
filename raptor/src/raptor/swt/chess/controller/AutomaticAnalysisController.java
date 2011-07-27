@@ -13,53 +13,142 @@
  */
 package raptor.swt.chess.controller;
 
-import org.eclipse.swt.widgets.Display;
+import java.math.BigDecimal;
 
+import raptor.engine.uci.UCIInfo;
+import raptor.engine.uci.info.BestLineFoundInfo;
+import raptor.engine.uci.info.ScoreInfo;
+import raptor.international.L10n;
 import raptor.service.ThreadService;
+import raptor.swt.chess.movelist.TextAreaMoveList;
+import raptor.swt.chess.analysis.UciAnalysisWidget;
 
 public class AutomaticAnalysisController {
+	protected static L10n local = L10n.getInstance();
 	private InactiveController boardController;
+	private ScoreInfo previousPosScore;
+	private ScoreInfo thisPosScore;
+	private BestLineFoundInfo thisPosBestLine;
+	private boolean isMultiplyBlackScoreByMinus;
 
 	public AutomaticAnalysisController(InactiveController boardController) {
 		this.boardController = boardController;
 	}
-	
-	public void startAnalysis(int secsPerMove, float threshold) {	
+
+	private double asDouble(ScoreInfo score) {
+		return (boardController.getGame().isWhitesMove() || isMultiplyBlackScoreByMinus) ? score
+				.getValueInCentipawns() / 100.0
+				: -score.getValueInCentipawns() / 100.0;
+	}
+
+	public void startAnalysis(final int secsPerMove, final float threshold,
+			final int startMove) {
+		final AutomaticAnalysisController thisCont = this;
 		ThreadService.getInstance().run(new Runnable() {
 
 			@Override
 			public void run() {
-				boardController.getBoard().getControl().getDisplay().syncExec(new Runnable() {
+				boardController.getBoard().getControl().getDisplay()
+						.syncExec(new Runnable() {
+							@Override
+							public void run() {
+								boardController.getBoard()
+										.showEngineAnalysisWidget();
+								boardController.getBoard().showMoveList();
+							}
+						});
+				((UciAnalysisWidget) boardController.getBoard()
+						.getEngineAnalysisWidget())
+						.setAnalysisController(thisCont);
 
-					@Override
-					public void run() {	
-						boardController.getBoard().showEngineAnalysisWidget();						
-					}
-					
-				});
-				int nOfMoves = boardController.getGame().getMoveList().getSize();
-				for (int i = 0; i < nOfMoves; i++) {
+				int nOfMoves = boardController.getGame().getMoveList()
+						.getSize();
+				for (int i = startMove * 2 - 1; i <= nOfMoves; i++) {
 					final int ii = i;
-					boardController.getBoard().getControl().getDisplay().syncExec(new Runnable() {
+					boardController.getBoard().getControl().getDisplay()
+							.syncExec(new Runnable() {
+								@Override
+								public void run() {
+									boardController.gotoMove(ii);
+								}
+							});
 
-						@Override
-						public void run() {
-							boardController.gotoMove(ii);
-						}
-						
-					});
-					
 					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException e) {	}
+						Thread.sleep(secsPerMove * 1000);
+					} catch (InterruptedException e) {
+					}
+					boardController.getBoard().getControl().getDisplay()
+							.syncExec(new Runnable() {
+								@Override
+								public void run() {
+									String score;
+									if (thisPosScore.getMateInMoves() != 0) {
+										score = local.getString("uciAnalW_0")
+												+ Math.abs(thisPosScore.getMateInMoves());
+									} else if (thisPosScore.isLowerBoundScore()) {
+										score = local.getString("uciAnalW_1");
+									} else if (thisPosScore.isUpperBoundScore()) {
+										score = local.getString("uciAnalW_2");
+									} else {
+										double scoreAsDouble = asDouble(thisPosScore);
+
+										score = ""
+												+ new BigDecimal(scoreAsDouble)
+														.setScale(
+																2,
+																BigDecimal.ROUND_HALF_UP)
+														.toString();
+									}
+
+									boolean bad = false;
+									if (previousPosScore != null && thisPosScore.getMateInMoves() == 0) {
+										System.out.println("This: " + asDouble(thisPosScore));
+										System.out.println("Prev: " + asDouble(previousPosScore));
+										System.out.println(boardController.getGame().isWhitesMove());
+										double prevMoveDiff = boardController
+												.getGame().isWhitesMove() ? (-asDouble(thisPosScore) + asDouble(previousPosScore))
+												: (-asDouble(previousPosScore) - asDouble(thisPosScore));
+
+										if (prevMoveDiff > threshold * 2) {
+											score += " VERY BAD!";
+											bad = true;
+										}
+										else if (prevMoveDiff > threshold) {
+											score += " BAD!";
+											bad = true;
+										}
+									}
+									score = "(" + score + ")";
+									((TextAreaMoveList) boardController
+											.getBoard().getMoveList())
+											.addCommentToMove(ii - 1, score, bad);
+									previousPosScore = thisPosScore;
+								}
+							});
 				}
-				
+				boardController.getBoard().getControl().getDisplay()
+						.syncExec(new Runnable() {
+							@Override
+							public void run() {
+								boardController.getBoard()
+										.hideEngineAnalysisWidget();
+							}
+						});
 			}
-			
+
 		});
-		
-		
-			}
-	
-	
+
+	}
+
+	public void engineSentInfo(UCIInfo[] infos,
+			boolean isMultiplyBlackScoreByMinus) {
+		this.isMultiplyBlackScoreByMinus = isMultiplyBlackScoreByMinus;
+		for (UCIInfo info : infos) {
+			if (info instanceof ScoreInfo) {
+				thisPosScore = (ScoreInfo) info;
+			} else if (info instanceof BestLineFoundInfo)
+				thisPosBestLine = (BestLineFoundInfo) info;
+		}
+	}
+
 }

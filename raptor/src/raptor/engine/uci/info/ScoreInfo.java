@@ -20,7 +20,7 @@ public class ScoreInfo extends UCIInfo {
 	protected int mateInMoves;
 	protected boolean isLowerBoundScore;
 	protected boolean isUpperBoundScore;
-
+	
 	public int getMateInMoves() {
 		return mateInMoves;
 	}

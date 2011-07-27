@@ -778,7 +778,7 @@ public class ClassicGame implements Game {
 		if (move == null) {
 			throw new IllegalArgumentException("Invalid move: "
 					+ getSan(startSquare) + "-" + getSan(endSquare) + "="
-					+ GameConstants.PIECE_TO_SAN.charAt(promotePiece) + "\n"
+					//+ GameConstants.PIECE_TO_SAN.charAt(promotePiece) + "\n"
 					+ toString());
 		} else {
 			forceMove(move);

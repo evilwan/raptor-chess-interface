@@ -69,6 +69,7 @@ import raptor.swt.SWTUtils;
 import raptor.swt.UCIEnginePropertiesDialog;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.EngineAnalysisWidget;
+import raptor.swt.chess.controller.AutomaticAnalysisController;
 import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringUtils;
@@ -78,6 +79,7 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 			.getLog(UciAnalysisWidget.class);
 
 	protected ChessBoardController controller;
+	protected AutomaticAnalysisController analysisController;
 	protected Composite composite, topLine, labelComposite;
 	protected UCIEngine currentEngine;
 	protected Label nodesPerSecondLabel;
@@ -93,6 +95,10 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 		}
 
 		public void engineSentInfo(final UCIInfo[] infos) {
+			if (analysisController != null)
+				analysisController.engineSentInfo(infos, currentEngine
+						.isMultiplyBlackScoreByMinus1());
+			
 			Raptor.getInstance().getDisplay()
 					.asyncExec(new RaptorRunnable(controller.getConnector()) {
 						@Override
@@ -689,5 +695,13 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 		ignoreEngineSelection = false;
 		topLine.pack(true);
 		topLine.layout(true, true);
+	}
+	
+	public AutomaticAnalysisController getAnalysisController() {
+		return analysisController;
+	}
+
+	public void setAnalysisController(AutomaticAnalysisController analysisController) {
+		this.analysisController = analysisController;
 	}
 }
