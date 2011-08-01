@@ -17,6 +17,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -58,8 +59,8 @@ public class AutomaticAnalysisDialog extends Dialog {
 	}
 	
 	protected void createContents(final Shell parent) {
-		final Label timePerMove, threshold, firstMove;
-		final Button start, cancel;
+		final Label timePerMove, threshold, firstMove, playerConf;
+		final Button start, cancel, radioBoth, radioWhite, radioBlack;
 		final Spinner timeSpinner, thresholdSpinner, firstMoveSpinner;
 		
 		parent.setLayout(new FillLayout());
@@ -85,7 +86,20 @@ public class AutomaticAnalysisDialog extends Dialog {
 		int moveSize = (controller.getGame().getMoveList().getSize()%2!=0 ? (controller.getGame().getMoveList().getSize()-1)/2 :
 			controller.getGame().getMoveList().getSize()/2);
 		firstMoveSpinner.setMaximum(moveSize-1);
-		firstMoveSpinner.setSelection(moveSize > 11 ? 10 : 1);		
+		firstMoveSpinner.setSelection(moveSize > 11 ? 10 : 1);	
+		
+		playerConf = new Label(composite, SWT.NONE);
+		playerConf.setText("Analyze moves for: ");
+		Composite composite2 = new Composite(composite, SWT.NONE);
+		composite2.setLayout(new GridLayout(3, false));
+		radioBoth = new Button(composite2, SWT.RADIO);
+		radioBoth.setText("Both");
+		radioBoth.setSelection(true);
+		radioWhite = new Button(composite2, SWT.RADIO);
+		radioWhite.setText("White");
+		radioBlack = new Button(composite2, SWT.RADIO);
+		radioBlack.setText("Black");
+		
 		start = new Button(composite, SWT.PUSH);
 		start.setText("Start");
 		start.addSelectionListener(new SelectionListener()  {
@@ -94,8 +108,11 @@ public class AutomaticAnalysisDialog extends Dialog {
 			}
 
 			public void widgetSelected(SelectionEvent e) {
+				boolean ansWhite = (radioBoth.getSelection() || radioWhite.getSelection());
+				boolean ansBlack = (radioBoth.getSelection() || radioBlack.getSelection());
 				new AutomaticAnalysisController(controller).startAnalysis(timeSpinner.getSelection(), 
-						thresholdSpinner.getSelection()/100, firstMoveSpinner.getSelection());
+						thresholdSpinner.getSelection()/100, firstMoveSpinner.getSelection(),
+						ansWhite, ansBlack);
 				parent.close();
 			}
 

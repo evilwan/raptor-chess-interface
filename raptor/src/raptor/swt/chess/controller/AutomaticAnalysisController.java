@@ -22,8 +22,10 @@ import raptor.international.L10n;
 import raptor.service.ThreadService;
 import raptor.swt.chess.movelist.TextAreaMoveList;
 import raptor.swt.chess.analysis.UciAnalysisWidget;
+import raptor.util.RaptorLogger;
 
 public class AutomaticAnalysisController {
+	private static final RaptorLogger LOG = RaptorLogger.getLog(AutomaticAnalysisController.class);
 	protected static L10n local = L10n.getInstance();
 	private InactiveController boardController;
 	private ScoreInfo previousPosScore;
@@ -42,7 +44,7 @@ public class AutomaticAnalysisController {
 	}
 
 	public void startAnalysis(final int secsPerMove, final float threshold,
-			final int startMove) {
+			final int startMove, final boolean ansWhite, final boolean ansBlack) {
 		final AutomaticAnalysisController thisCont = this;
 		ThreadService.getInstance().run(new Runnable() {
 
@@ -65,10 +67,13 @@ public class AutomaticAnalysisController {
 						.getSize();
 				for (int i = startMove * 2 - 1; i <= nOfMoves; i++) {
 					final int ii = i;
+					if (!(ii%2!=0 && ansWhite || ii%2==0 && ansBlack))
+						continue;
+					
 					boardController.getBoard().getControl().getDisplay()
 							.syncExec(new Runnable() {
 								@Override
-								public void run() {
+								public void run() {	
 									boardController.gotoMove(ii);
 								}
 							});
@@ -102,12 +107,21 @@ public class AutomaticAnalysisController {
 
 									boolean bad = false;
 									if (previousPosScore != null && thisPosScore.getMateInMoves() == 0) {
-										System.out.println("This: " + asDouble(thisPosScore));
-										System.out.println("Prev: " + asDouble(previousPosScore));
-										System.out.println(boardController.getGame().isWhitesMove());
-										double prevMoveDiff = boardController
-												.getGame().isWhitesMove() ? (-asDouble(thisPosScore) + asDouble(previousPosScore))
-												: (-asDouble(previousPosScore) - asDouble(thisPosScore));
+										double prevMoveDiff;
+										if (!(ansWhite && ansBlack) && ansWhite) {
+											prevMoveDiff = asDouble(previousPosScore) - asDouble(thisPosScore);
+										}
+										else if (!(ansWhite && ansBlack) && ansBlack) {
+											prevMoveDiff = asDouble(thisPosScore) - asDouble(previousPosScore);
+										}
+										else
+											prevMoveDiff = boardController
+												.getGame().isWhitesMove() ? asDouble(thisPosScore) + asDouble(previousPosScore)
+												: -asDouble(previousPosScore) - asDouble(thisPosScore);
+												
+										LOG.debug("ThisScore: " + asDouble(thisPosScore) 
+												+" PrevScore: " + asDouble(previousPosScore)
+												+" prevMoveDiff: " + prevMoveDiff);
 
 										if (prevMoveDiff > threshold * 2) {
 											score += " VERY BAD!";
