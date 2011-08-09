@@ -21,6 +21,7 @@ import raptor.engine.uci.info.ScoreInfo;
 import raptor.international.L10n;
 import raptor.service.ThreadService;
 import raptor.swt.chess.movelist.TextAreaMoveList;
+import raptor.swt.chess.analysis.AnalysisCommentsGenerator;
 import raptor.swt.chess.analysis.UciAnalysisWidget;
 import raptor.util.RaptorLogger;
 
@@ -106,6 +107,7 @@ public class AutomaticAnalysisController {
 									}
 
 									boolean bad = false;
+									String comment = "";
 									if (previousPosScore != null && thisPosScore.getMateInMoves() == 0) {
 										double prevMoveDiff;
 										if (!(ansWhite && ansBlack) && ansWhite) {
@@ -131,8 +133,12 @@ public class AutomaticAnalysisController {
 											score += " BAD!";
 											bad = true;
 										}
+										comment = AnalysisCommentsGenerator
+												.getComment(asDouble(previousPosScore), asDouble(thisPosScore),
+														prevMoveDiff, !boardController
+														.getGame().isWhitesMove(), thisPosBestLine);
 									}
-									score = "(" + score + ")";
+									score = "(" + score + comment + ")";
 									((TextAreaMoveList) boardController
 											.getBoard().getMoveList())
 											.addCommentToMove(ii - 1, score, bad);
