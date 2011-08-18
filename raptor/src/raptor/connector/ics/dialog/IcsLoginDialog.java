@@ -48,6 +48,7 @@ import raptor.util.RaptorLogger;
 public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
 	private static final RaptorLogger LOG = RaptorLogger.getLog(IcsLoginDialog.class);
+	private static String[] PROFILES = {"Primary", "Secondary", "Tertiary"};
 	protected Button autoLoginCheckBox;
 	protected Button guestLoginCheckBox;
 	protected Text handleField;
@@ -96,8 +97,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
 		profile.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				String itemSelected = profile.getItem(profile
-						.getSelectionIndex());
+				String itemSelected = PROFILES[profile.getSelectionIndex()];
 				storeProfile(lastSelection);
 				loadFromProfile(itemSelected);
 				lastSelection = itemSelected;
@@ -207,13 +207,13 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
 		
 		String currentProfile = Raptor.getInstance().getPreferences()
-				.getString(profilePrefix + local.getString("icsLoginD13"));
+				.getString(profilePrefix + "profile");
 		lastSelection = currentProfile;
 		loadFromProfile(currentProfile);
 
 		int selectedIndex = 0;
-		for (int i = 0; i < profile.getItems().length; i++) {
-			if (StringUtils.equals(profile.getItem(i), currentProfile)) {
+		for (int i = 0; i < PROFILES.length; i++) {
+			if (StringUtils.equals(PROFILES[i], currentProfile)) {
 				selectedIndex = i;
 				break;
 			}
@@ -262,8 +262,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 			box.setText(local.getString("icsLoginD22"));
 			box.open();
 		} else {
-			String itemSelected = profile.getItem(profile
-					.getSelectionIndex());
+			String itemSelected = PROFILES[profile.getSelectionIndex()];
 			lastSelection = itemSelected;
 			storeProfile(itemSelected);
 			try {
