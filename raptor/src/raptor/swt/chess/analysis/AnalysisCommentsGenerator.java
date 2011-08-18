@@ -13,14 +13,63 @@
  */
 package raptor.swt.chess.analysis;
 
+import raptor.chess.Game;
+import raptor.chess.GameConstants;
+import raptor.chess.util.GameUtils;
+import raptor.engine.uci.UCIMove;
 import raptor.engine.uci.info.BestLineFoundInfo;
 
 public class AnalysisCommentsGenerator {
-	public static String getComment(double previous, double current,
-			double scoreDiff, boolean isWhite, BestLineFoundInfo thisPosBestLine) {
+	boolean doubleBishopFired = false;
+	int lastMaterial = 0;
+
+	public String getComment(double previous, double current, double scoreDiff,
+			boolean isWhite, BestLineFoundInfo thisPosBestLine, Game game) {
 		if ((isWhite && previous < -2.0 && scoreDiff >= 2.0)
 				|| (!isWhite && previous > 2.0 && scoreDiff >= 2.0))
 			return " Loses the initiative.";
+		else if (!doubleBishopFired) {
+			if (game.getPieceCount(GameConstants.WHITE, GameConstants.BISHOP) == 2
+					&& game.getPieceCount(GameConstants.BLACK,
+							GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1)) {
+				doubleBishopFired = true;
+				return " White has double bishop advantage.";
+			}
+			else if (game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP) == 2
+					&& game.getPieceCount(GameConstants.WHITE,
+							GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1)) {
+				doubleBishopFired = true;
+				return " Black has double bishop advantage.";
+			}			
+			else if (((isWhite && current > 2) || (!isWhite && current < -2)) ) {				
+				Game gameCopy = game.deepCopy(true);
+				gameCopy.rollback();
+				int materialPrevious = GameUtils.getMaterialScore(gameCopy);
+				gameCopy.move(game.getLastMove());
+				int captureSquare = game.getLastMove().getTo();
+				for (UCIMove move: thisPosBestLine.getMoves()) {
+					if (move.isPromotion()) {
+						gameCopy.makeMove(
+								move.getStartSquare(),
+								move.getEndSquare(),
+								move.getPromotedPiece());
+					} else {
+						gameCopy.makeMove(
+								move.getStartSquare(),
+								move.getEndSquare());
+					}
+					
+					if (!(move.getEndSquare() == captureSquare 
+							|| gameCopy.isInCheck()))
+						break;
+				}
+				int materialScore = GameUtils.getMaterialScore(gameCopy);
+				
+				if (isWhite && (materialPrevious-materialScore) <= -2 
+						|| !isWhite && (materialPrevious-materialScore) >= 2)
+					return " What a sacrifice!";
+			}
+		}
 
 		return "";
 	}

@@ -33,13 +33,18 @@ public class AutomaticAnalysisController {
 	private ScoreInfo thisPosScore;
 	private BestLineFoundInfo thisPosBestLine;
 	private boolean isMultiplyBlackScoreByMinus;
+	private final AnalysisCommentsGenerator commGenerator = new AnalysisCommentsGenerator();
 
 	public AutomaticAnalysisController(InactiveController boardController) {
 		this.boardController = boardController;
 	}
 
 	private double asDouble(ScoreInfo score) {
-		return (boardController.getGame().isWhitesMove() || isMultiplyBlackScoreByMinus) ? score
+		if (score.getMateInMoves() != 0)
+			return (boardController.getGame().isWhitesMove() || isMultiplyBlackScoreByMinus) ? Integer.MIN_VALUE
+					: Integer.MAX_VALUE;
+		else
+			return (boardController.getGame().isWhitesMove() || isMultiplyBlackScoreByMinus) ? score
 				.getValueInCentipawns() / 100.0
 				: -score.getValueInCentipawns() / 100.0;
 	}
@@ -108,7 +113,7 @@ public class AutomaticAnalysisController {
 
 									boolean bad = false;
 									String comment = "";
-									if (previousPosScore != null && thisPosScore.getMateInMoves() == 0) {
+									if (previousPosScore != null) {
 										double prevMoveDiff;
 										if (!(ansWhite && ansBlack) && ansWhite) {
 											prevMoveDiff = asDouble(previousPosScore) - asDouble(thisPosScore);
@@ -133,10 +138,10 @@ public class AutomaticAnalysisController {
 											score += " BAD!";
 											bad = true;
 										}
-										comment = AnalysisCommentsGenerator
+										comment = commGenerator
 												.getComment(asDouble(previousPosScore), asDouble(thisPosScore),
 														prevMoveDiff, !boardController
-														.getGame().isWhitesMove(), thisPosBestLine);
+														.getGame().isWhitesMove(), thisPosBestLine, boardController.getGame());
 									}
 									score = "(" + score + comment + ")";
 									((TextAreaMoveList) boardController

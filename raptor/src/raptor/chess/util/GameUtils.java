@@ -981,4 +981,20 @@ public class GameUtils implements GameConstants {
 		}
 	}
 
+	public static int getMaterialScore(Game game) {
+		final int WHITE = GameConstants.WHITE;
+		final int BLACK = GameConstants.BLACK;
+		int score = game.getPieceCount(WHITE, GameConstants.PAWN) 
+				+ game.getPieceCount(WHITE, GameConstants.KNIGHT)*3 
+				+ game.getPieceCount(WHITE, GameConstants.BISHOP)*3
+				+ game.getPieceCount(WHITE, GameConstants.ROOK)*5
+				+ game.getPieceCount(WHITE, GameConstants.QUEEN)*9;
+		score -= game.getPieceCount(BLACK, GameConstants.PAWN) 
+				+ game.getPieceCount(BLACK, GameConstants.KNIGHT)*3 
+				+ game.getPieceCount(BLACK, GameConstants.BISHOP)*3
+				+ game.getPieceCount(BLACK, GameConstants.ROOK)*5
+				+ game.getPieceCount(BLACK, GameConstants.QUEEN)*9;
+		return score;
+	}
+
 }
