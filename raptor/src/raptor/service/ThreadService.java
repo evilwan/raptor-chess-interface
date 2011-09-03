@@ -112,7 +112,7 @@ public class ThreadService {
 
 	private ThreadService() {
 		executor.setCorePoolSize(25);
-		executor.setMaximumPoolSize(50);
+		//executor.setMaximumPoolSize(50);
 		executor.setKeepAliveTime(300, TimeUnit.SECONDS);
 		executor.prestartAllCoreThreads();
 	}

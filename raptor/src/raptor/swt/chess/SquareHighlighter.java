@@ -26,7 +26,7 @@ import raptor.pref.PreferenceKeys;
  * Manages the squares being highlighted on a chess board.
  */
 public class SquareHighlighter {
-	protected class HighlightDecorator implements PaintListener {
+	protected static class HighlightDecorator implements PaintListener {
 		protected ChessSquare square;
 		protected List<Highlight> highlights = new ArrayList<Highlight>(10);
 

@@ -147,22 +147,30 @@ public class EcoService {
 		try {
 			reader = new BufferedReader(new FileReader(file));
 			String currentLine = null;
+			StringBuilder fen = new StringBuilder();
 			while ((currentLine = reader.readLine()) != null) {
 				if (StringUtils.isNotBlank(currentLine)) {
 
 					RaptorStringTokenizer tok = new RaptorStringTokenizer(
 							currentLine, " ", true);
 					String eco = tok.nextToken();
-					String description = tok.nextToken();
+					StringBuilder description = new StringBuilder(tok.nextToken());
 
 					String lastToken = null;
 					while (!(lastToken = tok.nextToken()).contains("/")) {
-						description += " " + lastToken;
+						description.append(" ");
+						description.append(lastToken);
 					}
-					String fen = lastToken + " " + tok.nextToken() + " "
-							+ tok.nextToken() + " " + tok.nextToken();
+					fen.setLength(0);
+					fen.append(lastToken);
+					fen.append(" ");
+					fen.append(tok.nextToken());
+					fen.append(" ");
+					fen.append(tok.nextToken());
+					fen.append(" ");
+					fen.append(tok.nextToken());
 
-					result.put(fen, new EcoInfo(fen, eco, description));
+					result.put(fen.toString(), new EcoInfo(fen.toString(), eco, description.toString()));
 				}
 
 			}

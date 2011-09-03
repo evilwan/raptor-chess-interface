@@ -20,11 +20,8 @@ import org.eclipse.jface.preference.StringFieldEditor;
 import raptor.Raptor;
 import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ChatConsoleBehaviorPage extends FieldEditorPreferencePage {
-	LabelButtonFieldEditor labelButtonFieldEditor;
-	
 	protected static L10n local = L10n.getInstance();
 
 	public ChatConsoleBehaviorPage() {

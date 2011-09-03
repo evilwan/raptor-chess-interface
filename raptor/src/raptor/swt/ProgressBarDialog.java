@@ -111,7 +111,6 @@ public abstract class ProgressBarDialog extends Dialog {
 	private Label processMessageLabel; // info of process finish
 	private ProgressBar progressBar = null; //
 	private Composite progressBarComposite;//
-	private Object result; //
 	private Shell shell; //
 
 	protected String shellTitle = L10n.getInstance().getString("progress"); //
@@ -122,7 +121,7 @@ public abstract class ProgressBarDialog extends Dialog {
 
 	public abstract void initGuage();
 
-	public Object open() {
+	public void open() {
 		createContents(); // create window
 		shell.open();
 		shell.layout();
@@ -136,7 +135,6 @@ public abstract class ProgressBarDialog extends Dialog {
 				display.sleep();
 			}
 		}
-		return result;
 	}
 
 	public void setExecuteTime(int executeTime) {

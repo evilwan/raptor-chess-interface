@@ -17,11 +17,8 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 
 import raptor.Raptor;
 import raptor.international.L10n;
-import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ChatConsoleToolbarsPage extends FieldEditorPreferencePage {
-	LabelButtonFieldEditor labelButtonFieldEditor;
-
 	public ChatConsoleToolbarsPage() {
 		super(GRID);
 		setTitle(L10n.getInstance().getString("toolbs"));

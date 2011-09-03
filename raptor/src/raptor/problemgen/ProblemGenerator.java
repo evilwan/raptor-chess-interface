@@ -203,7 +203,7 @@ public class ProblemGenerator {
 						+ ") ... "
 						: gameMove.isWhitesMove() ? gameMove.getFullMoveCount()
 								+ ") " : "";
-				line.append((line.equals("") ? "" : " ") + moveNumber + san
+				line.append((line.toString().equals("") ? "" : " ") + moveNumber + san
 						+ (game.isInCheck() ? "+" : "")
 						+ (game.isCheckmate() ? "#" : ""));
 				isFirstMove = false;

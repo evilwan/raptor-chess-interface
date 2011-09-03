@@ -31,7 +31,7 @@ public class ThemeService {
 	private static ThemeService singletonInstance;
 	private Map<String, Theme> themeMap = new HashMap<String, Theme>();
 
-	public class Theme {
+	public static class Theme {
 		protected String name;
 		protected HashMap<String, String> properties = new HashMap<String, String>();
 		protected boolean isSystemTheme;

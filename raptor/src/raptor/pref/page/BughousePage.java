@@ -20,11 +20,8 @@ import org.eclipse.jface.preference.FontFieldEditor;
 import raptor.Raptor;
 import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.fields.LabelButtonFieldEditor;
 
-public class BughousePage extends FieldEditorPreferencePage {
-	LabelButtonFieldEditor labelButtonFieldEditor;
-	
+public class BughousePage extends FieldEditorPreferencePage {	
 	protected static L10n local = L10n.getInstance();
 
 	public BughousePage() {

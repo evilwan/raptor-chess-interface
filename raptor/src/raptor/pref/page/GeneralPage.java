@@ -32,8 +32,6 @@ import raptor.util.FileUtils;
 import raptor.util.RaptorLogger;
 
 public class GeneralPage extends FieldEditorPreferencePage {
-	LabelButtonFieldEditor labelButtonFieldEditor;
-	
 	protected static L10n local = L10n.getInstance();
 	
 	/* Last set language before the dialog launch */

@@ -19,12 +19,9 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import raptor.Raptor;
 import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
 
 public class ChessBoardToolbarsPage extends FieldEditorPreferencePage {
-	LabelButtonFieldEditor labelButtonFieldEditor;
-	
 	protected static L10n local = L10n.getInstance();
 
 	public ChessBoardToolbarsPage() {

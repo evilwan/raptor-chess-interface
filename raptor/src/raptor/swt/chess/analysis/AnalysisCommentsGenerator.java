@@ -33,15 +33,15 @@ public class AnalysisCommentsGenerator {
 					&& game.getPieceCount(GameConstants.BLACK,
 							GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1)) {
 				doubleBishopFired = true;
-				return " White has double bishop advantage.";
+				return " White has the advantage of double bishops.";
 			}
 			else if (game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP) == 2
 					&& game.getPieceCount(GameConstants.WHITE,
 							GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1)) {
 				doubleBishopFired = true;
-				return " Black has double bishop advantage.";
+				return " Black has the advantage of double bishops.";
 			}			
-			else if (((isWhite && current > 2) || (!isWhite && current < -2)) ) {				
+			/*else if (((isWhite && current > 2) || (!isWhite && current < -2)) ) {				
 				Game gameCopy = game.deepCopy(true);
 				gameCopy.rollback();
 				int materialPrevious = GameUtils.getMaterialScore(gameCopy);
@@ -68,7 +68,7 @@ public class AnalysisCommentsGenerator {
 				if (isWhite && (materialPrevious-materialScore) <= -2 
 						|| !isWhite && (materialPrevious-materialScore) >= 2)
 					return " What a sacrifice!";
-			}
+			}*/
 		}
 
 		return "";

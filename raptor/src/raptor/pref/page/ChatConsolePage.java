@@ -25,7 +25,6 @@ import org.eclipse.swt.widgets.Label;
 import raptor.Raptor;
 import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
-import raptor.pref.fields.LabelButtonFieldEditor;
 
 public class ChatConsolePage extends FieldEditorPreferencePage {
 	
@@ -36,8 +35,6 @@ public class ChatConsolePage extends FieldEditorPreferencePage {
 			{ local.getString("char250t"), "250000" },
 			{ local.getString("char500t"), "500000" },
 			{ local.getString("char1000t"), "1000000" } };
-
-	LabelButtonFieldEditor labelButtonFieldEditor;
 
 	public ChatConsolePage() {
 		super(GRID);

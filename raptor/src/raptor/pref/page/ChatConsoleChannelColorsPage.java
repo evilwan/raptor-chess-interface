@@ -39,8 +39,6 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 	Text channelName;
 	Combo channels;
 	ColorSelector colorSelector;
-	Button deleteButton;
-	Composite parent;
 	RaptorPreferenceStore raptorPreferenceStore;
 	Button saveButton;
 	

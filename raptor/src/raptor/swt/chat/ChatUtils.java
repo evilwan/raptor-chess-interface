@@ -189,16 +189,14 @@ public class ChatUtils {
 	}
 
 	public static String getUrl(String text) {
-		String strippedText = text == null ? null : StringUtils.removeEnd(StringUtils.replaceChars(text, "()'\"<>,", ""),".");
+		String strippedText = text == null ? "" : StringUtils.removeEnd(StringUtils.replaceChars(text, "()'\"<>,", ""),".");
 		if (strippedText.endsWith(";")) {
 			strippedText = strippedText.substring(0,strippedText.length() - 1);
 		}
-		if (strippedText != null
-				&& (strippedText.startsWith("http://") || strippedText.startsWith("https://"))) {
+		if ((strippedText.startsWith("http://") || strippedText.startsWith("https://"))) {
 			return strippedText;
 			
-		} else if (strippedText != null
-				&& (strippedText.endsWith(".com") || strippedText.endsWith(".org")
+		} else if ((strippedText.endsWith(".com") || strippedText.endsWith(".org")
 						|| strippedText.endsWith(".gov") || strippedText.endsWith(".edu") || strippedText
 						.startsWith("www."))) {
 			return "http://" + strippedText;

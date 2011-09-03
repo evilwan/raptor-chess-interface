@@ -96,7 +96,7 @@ import raptor.util.RegExUtils;
  * override some methods in order to get it working.
  */
 public abstract class IcsConnector implements Connector, MessageListener {
-	protected class MessageCallbackEntry {
+	protected static class MessageCallbackEntry {
 		protected boolean isOneShot;
 		protected int missCount;
 		protected Pattern regularExpression;
@@ -300,8 +300,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			for (String regex : regexPatterns) {
 				Pattern pattern = RegExUtils.getPattern(regex);
 				if (pattern == null) {
-					LOG.error("Invalid regex pattern: " + pattern
-							+ ". Will be ignored.");
+					LOG.error("Invalid regex pattern. Will be ignored.");
 				} else {
 					patternsToBlock.add(pattern);
 				}

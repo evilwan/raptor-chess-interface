@@ -333,7 +333,6 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 			{ "125", "125" }, { "150", "150" } };
 
 	ChessBoardPageComboFieldEditor backgroundFieldEditor;
-	ChessBoardPageComboFieldEditor highlightPercentage;
 	Composite dropSquaresBoard;
 	Composite miniBoard;
 	Composite shadowsComposite;

@@ -215,14 +215,15 @@ public class ActionKeyBindingsPage extends PreferencePage {
 				action.setKeyCode(0);
 				action.setModifierKey(0);
 			}
-		}
-		ActionScriptService.getInstance().saveAction(action);
-		refreshActions();
-		for (int i = 0; i < actionsTable.getTable().getItemCount(); i++) {
-			if (actionsTable.getTable().getItem(i).getText(1).equals(
-					action.getName())) {
-				actionsTable.getTable().select(i);
-				break;
+
+			ActionScriptService.getInstance().saveAction(action);
+			refreshActions();
+			for (int i = 0; i < actionsTable.getTable().getItemCount(); i++) {
+				if (actionsTable.getTable().getItem(i).getText(1).equals(
+						action.getName())) {
+					actionsTable.getTable().select(i);
+					break;
+				}
 			}
 		}
 	}

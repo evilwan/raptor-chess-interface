@@ -576,7 +576,7 @@ public class UCIEngine {
 		} else {
 			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-				movesString.append((movesString.equals("") ? "" : " ")
+				movesString.append((movesString.toString().equals("") ? "" : " ")
 						+ move.getValue());
 			}
 			send("position fen " + fen + " " + movesString);
@@ -624,7 +624,7 @@ public class UCIEngine {
 		} else {
 			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-				movesString.append((movesString.equals("") ? "" : " ")
+				movesString.append((movesString.toString().equals("") ? "" : " ")
 						+ move.getValue());
 			}
 			send("position startpos " + movesString);
@@ -1097,17 +1097,19 @@ public class UCIEngine {
 	}
 
 	protected String parseUntil(String untilKeyword, RaptorStringTokenizer tok) {
-		String result = "";
+		StringBuilder result = new StringBuilder();
 		String token = tok.nextToken();
 		while (!token.equalsIgnoreCase(untilKeyword) && tok.hasMoreTokens()) {
-			result += (result.equals("") ? "" : " ") + token;
+			result.append((result.equals("") ? "" : " "));
+			result.append(token);
 			token = tok.nextToken();
 		}
 
 		if (!token.equalsIgnoreCase(untilKeyword)) {
-			result += (result.equals("") ? "" : " ") + token;
+			result.append((result.equals("") ? "" : " ") + token);
+			result.append(token);
 		}
-		return result;
+		return result.toString();
 	}
 
 	protected String readLine() throws Exception {

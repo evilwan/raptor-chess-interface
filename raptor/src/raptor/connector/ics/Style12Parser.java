@@ -164,8 +164,8 @@ public class Style12Parser implements GameConstants {
 
 			result.relation = Integer.parseInt(tok.nextToken());
 
-			result.initialTimeMillis = Integer.parseInt(tok.nextToken()) * 1000 * 60;
-			result.initialIncMillis = Integer.parseInt(tok.nextToken()) * 1000 * 60;
+			result.initialTimeMillis = Integer.parseInt(tok.nextToken()) * 1000L * 60;
+			result.initialIncMillis = Integer.parseInt(tok.nextToken()) * 1000L * 60;
 
 			result.whiteStrength = Integer.parseInt(tok.nextToken());
 			result.blackStrength = Integer.parseInt(tok.nextToken());

@@ -38,7 +38,7 @@ public class PlayingStatisticsService {
 		double totalScore;
 	}
 
-	protected class PlayingGameResult {
+	protected static class PlayingGameResult {
 		double score = -1.0;
 		Variant variant;
 		String opponentName;
@@ -198,13 +198,13 @@ public class PlayingStatisticsService {
 			VsStats vsStats = getVsStats(connector, opponentName);
 
 			String yourAvgMoveTime = numPlayerMoves == 0 ? "Unknown"
-					: new BigDecimal(totalPlayerMovesTime / numPlayerMoves
+					: new BigDecimal((float)totalPlayerMovesTime / (float)numPlayerMoves
 							/ 1000.0).setScale(1, BigDecimal.ROUND_HALF_UP)
 							.toString()
 							+ "sec";
 
 			String oppAvgMoveTime = numOpponentMoves == 0 ? "Unknown"
-					: new BigDecimal(totalOpponentMovesTime / numOpponentMoves
+					: new BigDecimal((float)totalOpponentMovesTime / (float)numOpponentMoves
 							/ 1000.0).setScale(1, BigDecimal.ROUND_HALF_UP)
 							.toString()
 							+ "sec";
