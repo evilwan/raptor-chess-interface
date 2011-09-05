@@ -1101,7 +1101,11 @@ public abstract class IcsConnector implements Connector, MessageListener {
 
 			int ignoreIndex = ignoringChatTypes.indexOf(event.getType());
 			if (ignoreIndex != -1) {
-				ignoringChatTypes.remove(ignoreIndex);
+				try {
+					ignoringChatTypes.remove(ignoreIndex);
+				} catch (ArrayIndexOutOfBoundsException aiobe) {
+					// Eat it there could be a synchronization problem.§
+				}
 			} else {
 				// It is interesting to note messages are handled sequentially
 				// up to this point. chatService will publish the event
@@ -2363,8 +2367,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		}
 		boolean result = false;
 		if (message.startsWith("set ptime")) {
-			publishEvent(new ChatEvent(null, ChatType.INTERNAL,
-					L10n.getInstance().getString("rapPtime")));
+			publishEvent(new ChatEvent(null, ChatType.INTERNAL, L10n
+					.getInstance().getString("rapPtime")));
 			return true;
 		}
 		return result;
