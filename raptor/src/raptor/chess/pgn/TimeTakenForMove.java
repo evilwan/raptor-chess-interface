@@ -37,8 +37,14 @@ public class TimeTakenForMove implements MoveAnnotation {
 	}
 
 	public long getMilliseconds() {
-		RaptorStringTokenizer tok = new RaptorStringTokenizer(getText(),
+		RaptorStringTokenizer tok;
+		if (getText().startsWith("[%emt "))
+			tok = new RaptorStringTokenizer(getText(),
 				"[%emt ]", true);
+		else
+			tok = new RaptorStringTokenizer(getText(),
+					"[emt ]", true);
+		
 		if (tok.hasMoreTokens()) {
 			String elapsedTimeInSeconds = tok.nextToken();
 			try {

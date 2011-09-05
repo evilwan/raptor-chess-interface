@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 
 import chesspresso.Chess;
+import chesspresso.pgn.PGNSyntaxError;
 
 import raptor.Quadrant;
 import raptor.Raptor;
@@ -82,6 +83,8 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	protected String title;
 	protected boolean isPassive;
 	protected String pathToFile;
+
+	private List<PGNSyntaxError> chprsErrors;
 	protected static L10n local = L10n.getInstance();
 
 	public PgnParseResultsWindowItem(String title, List<PgnParserError> errors,
@@ -92,11 +95,12 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		this.pathToFile = pathToFile;
 	}
 
-	public PgnParseResultsWindowItem(String title,
+	public PgnParseResultsWindowItem(String title, List<PGNSyntaxError> chprsErrors,
 			ArrayList<chesspresso.game.Game> chprsGames, String pathToFile) {
 		this.chprsGames = chprsGames;
 		this.title = title;
 		this.pathToFile = pathToFile;
+		this.chprsErrors = chprsErrors;
 	}
 
 	public void addItemChangedListener(ItemChangedListener listener) {
@@ -181,7 +185,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 		int blackWins = 0;
 		int draws = 0;
 
-		if (games != null) {
+		if (games != null) { // used standard SimplePgnParser
 			for (Game game : games) {
 				if (game.getResult() == Result.WHITE_WON) {
 					whiteWins++;
@@ -195,7 +199,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				}
 			}
 		}
-		else {
+		else { // Chesspresso was used during parsing
 			for (chesspresso.game.Game game: chprsGames) {
 				if (game.getResult() == Chess.RES_WHITE_WINS) {
 					whiteWins++;
@@ -224,7 +228,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
 		gamesTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
-		if (games != null) {
+		if (games != null) { // used standard SimplePgnParser 
 			gamesTable.addColumn(local.getString("pgnParseWI7"), SWT.LEFT, 3,
 					true, new IntegerComparator());
 			gamesTable.addColumn(local.getString("pgnParseWI8"), SWT.LEFT, 5,
@@ -248,7 +252,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			gamesTable.addColumn(local.getString("pgnParseWI17"), SWT.LEFT, 21,
 					true, null);
 		}
-		else {
+		else { // Chesspresso was used during parsing
 			gamesTable.addColumn(local.getString("pgnParseWI7"), SWT.LEFT, 3,
 					true, new IntegerComparator());
 			gamesTable.addColumn(local.getString("pgnParseWI8"), SWT.LEFT, 10,
@@ -398,6 +402,29 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			}
 			errorsTable.refreshTable(content);
 		}
+		else if (chprsErrors != null && !chprsErrors.isEmpty() && chprsErrors.size() > 3) {
+			Label errorsLabel = new Label(composite, SWT.LEFT);
+			errorsLabel.setText(local.getString("pgnParseWI27") + chprsErrors.size());
+			errorsLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false,
+					false));
+
+			errorsTable = new RaptorTable(composite, SWT.BORDER | SWT.H_SCROLL
+					| SWT.V_SCROLL | SWT.SINGLE | SWT.FULL_SELECTION);
+			errorsTable.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true,
+					true));
+			errorsTable.addColumn(local.getString("pgnParseWI28"), SWT.LEFT, 50, true, null);
+			errorsTable.addColumn(local.getString("pgnParseWI29"), SWT.LEFT, 40, true, null);
+			errorsTable.addColumn(local.getString("pgnParseWI30"), SWT.LEFT, 10, true,
+					new IntegerComparator());
+			String[][] content = new String[chprsErrors.size()][3];
+			for (int i = 0; i < chprsErrors.size(); i++) {
+				PGNSyntaxError error = chprsErrors.get(i);
+				content[i][0] = error.getMessage();
+				content[i][1] = "";
+				content[i][2] = "" + (error.getLineNumber()==0?"Und":error.getLineNumber()); 
+			}
+			errorsTable.refreshTable(content);
+		}
 	}
 
 	public void onActivate() {
@@ -424,7 +451,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	}
 
 	protected void openGame(int index) {
-		if (games != null) {
+		if (games != null) { // used standard SimplePgnParser
 			Game selectedGame = games.get(index);
 			Raptor.getInstance().getWindow().addRaptorWindowItem(
 					new ChessBoardWindowItem(new InactiveController(
@@ -434,7 +461,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 									+ selectedGame.getHeader(PgnHeader.Black),
 							false)));
 		}
-		else {
+		else { // Chesspresso was used during parsing
 			chesspresso.game.Game selGame = chprsGames.get(index);
 			Game raptorGame = ChesspressoPgnParser.convertToRaptorGame(selGame);
 			Raptor.getInstance().getWindow().addRaptorWindowItem(
@@ -448,7 +475,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 	}
 
 	protected void populateGamesTable() {
-		if (games == null) {
+		if (games == null) { // Chesspresso was used during parsing
 			String[][] gamesData = new String[chprsGames.size()][10];
 			for (int i = 0; i < chprsGames.size(); i++) {
 				chesspresso.game.Game game = chprsGames.get(i);
@@ -464,7 +491,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				gamesData[i][9] = game.getECO();
 			}
 			gamesTable.refreshTable(gamesData);
-		} else {
+		} else { // used standard SimplePgnParser
 			String[][] gamesData = new String[games.size()][11];
 			for (int i = 0; i < games.size(); i++) {
 				Game game = games.get(i);

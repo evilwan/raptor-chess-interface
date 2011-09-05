@@ -37,6 +37,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
+import chesspresso.pgn.PGNSyntaxError;
+
 import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.pgn.AbstractPgnParser;
@@ -103,17 +105,24 @@ public class PgnProcessingDialog extends Dialog {
 	public class ChesspressoPgnProgressListener extends LenientPgnParserListener {
 
 		private ArrayList<chesspresso.game.Game> games = new ArrayList<chesspresso.game.Game>();
-		private int errors = 0;
+		private ArrayList<PGNSyntaxError> errors = new ArrayList<PGNSyntaxError>();
+		
+		
+		public void error(PGNSyntaxError error) {
+			errors.add(error);
+		}
 		
 		@Override
 		public void errorEncountered(PgnParserError error) {
-			errors++;
 		}
 
 		@Override
 		public void gameParsed(Game game, int lineNumber) {			
 		}
 		
+		/**
+		 * Analogous to the inherited method, but instead uses Chesspresso game object 
+		 */
 		public void gameParsed(chesspresso.game.Game game, final int lineNumber) {	
 			if (isClosed) {
 				throw new RuntimeException("Closed");
@@ -125,7 +134,7 @@ public class PgnProcessingDialog extends Dialog {
 						public void execute() {
 							processMessageLabel.setText(L10n.getInstance().getString("pgnParseWI30")  + ": " +
 									lineNumber + " "+L10n.getInstance().getString("pgnParseWI3") + games.size()
-									+ " " + L10n.getInstance().getString("pgnParseWI27") + errors);
+									+ " " + L10n.getInstance().getString("pgnParseWI27") + errors.size());
 							progressBar.setSelection(games.size());
 						}
 					});
@@ -137,6 +146,9 @@ public class PgnProcessingDialog extends Dialog {
 			return games;
 		}
 		
+		public ArrayList<PGNSyntaxError> getErrors() {
+			return errors;
+		}		
 	}
 
 	public static final int MAX_BYTES_IN_FILE = 1048576 * 15;
@@ -209,7 +221,8 @@ public class PgnProcessingDialog extends Dialog {
 
 					if (!pgnContainsVariants) {
 						PgnParseResultsWindowItem windowItem = new PgnParseResultsWindowItem(
-								file.getName(), ((ChesspressoPgnProgressListener)listener)
+								file.getName(), ((ChesspressoPgnProgressListener)listener).getErrors(),
+								((ChesspressoPgnProgressListener)listener)
 										.getGames(), file.getAbsolutePath());
 						Raptor.getInstance().getWindow().addRaptorWindowItem(
 								windowItem);
