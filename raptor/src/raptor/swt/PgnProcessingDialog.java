@@ -13,8 +13,11 @@
  */
 package raptor.swt;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import raptor.util.RaptorLogger;
@@ -36,10 +39,12 @@ import org.eclipse.swt.widgets.Shell;
 
 import raptor.Raptor;
 import raptor.chess.Game;
+import raptor.chess.pgn.AbstractPgnParser;
 import raptor.chess.pgn.LenientPgnParserListener;
 import raptor.chess.pgn.PgnParserError;
 import raptor.chess.pgn.PgnUtils;
 import raptor.chess.pgn.StreamingPgnParser;
+import raptor.chess.pgn.chesspresso.ChesspressoPgnParser;
 import raptor.international.L10n;
 import raptor.service.ThreadService;
 import raptor.swt.chess.PgnParseResultsWindowItem;
@@ -75,8 +80,8 @@ public class PgnProcessingDialog extends Dialog {
 					shell.getDisplay().asyncExec(new RaptorRunnable() {
 						@Override
 						public void execute() {
-							processMessageLabel.setText(L10n.getInstance().getString("pgnParseWI30")
-									+ lineNumber + " "+L10n.getInstance().getString("pgnParseWI3") + games.size()
+							processMessageLabel.setText(L10n.getInstance().getString("pgnParseWI30") + ": " +
+									lineNumber + " "+L10n.getInstance().getString("pgnParseWI3") + games.size()
 									+ " " + L10n.getInstance().getString("pgnParseWI27") + errors.size());
 							progressBar.setSelection(games.size());
 						}
@@ -93,6 +98,45 @@ public class PgnProcessingDialog extends Dialog {
 			return games;
 		}
 
+	}
+	
+	public class ChesspressoPgnProgressListener extends LenientPgnParserListener {
+
+		private ArrayList<chesspresso.game.Game> games = new ArrayList<chesspresso.game.Game>();
+		private int errors = 0;
+		
+		@Override
+		public void errorEncountered(PgnParserError error) {
+			errors++;
+		}
+
+		@Override
+		public void gameParsed(Game game, int lineNumber) {			
+		}
+		
+		public void gameParsed(chesspresso.game.Game game, final int lineNumber) {	
+			if (isClosed) {
+				throw new RuntimeException("Closed");
+			} else {				
+				games.add(game);
+				if (games.size() % 20 == 0) {
+					shell.getDisplay().asyncExec(new RaptorRunnable() {
+						@Override
+						public void execute() {
+							processMessageLabel.setText(L10n.getInstance().getString("pgnParseWI30")  + ": " +
+									lineNumber + " "+L10n.getInstance().getString("pgnParseWI3") + games.size()
+									+ " " + L10n.getInstance().getString("pgnParseWI27") + errors);
+							progressBar.setSelection(games.size());
+						}
+					});
+				}
+			}
+		}
+		
+		public ArrayList<chesspresso.game.Game> getGames() {
+			return games;
+		}
+		
 	}
 
 	public static final int MAX_BYTES_IN_FILE = 1048576 * 15;
@@ -138,28 +182,45 @@ public class PgnProcessingDialog extends Dialog {
 		ThreadService.getInstance().scheduleOneShot(250, new Runnable() {
 			public void run() {
 				FileReader reader = null;
-				try {
-					// start work
-					StreamingPgnParser parser = new StreamingPgnParser(
-							reader = new FileReader(file), MAX_BYTES_IN_FILE);
-					ProfressPgnParserListener listener = new ProfressPgnParserListener();
+				LenientPgnParserListener listener;
+				try {					
+					AbstractPgnParser parser;
+					boolean pgnContainsVariants = pgnHasVariantGames(file);
+					if (!pgnContainsVariants) {
+						parser = new ChesspressoPgnParser(reader = new FileReader(file));
+						listener = new ChesspressoPgnProgressListener();
+					}
+					else {
+						// start work
+						parser = new StreamingPgnParser(
+								reader = new FileReader(file), MAX_BYTES_IN_FILE);
+						listener = new ProfressPgnParserListener();
+					}	
 					parser.addPgnParserListener(listener);
-
+					
 					long startTime = System.currentTimeMillis();
 					parser.parse();
 
 					if (LOG.isDebugEnabled()) {
-						LOG.debug("Parsed " + listener.getGames().size()
-								+ " games " + " in "
+						LOG.debug("Parsed in "
 								+ (System.currentTimeMillis() - startTime)
 								+ "ms");
 					}
 
-					PgnParseResultsWindowItem windowItem = new PgnParseResultsWindowItem(
-							file.getName(), listener.getErrors(), listener
-									.getGames(), file.getAbsolutePath());
-					Raptor.getInstance().getWindow().addRaptorWindowItem(
-							windowItem);
+					if (!pgnContainsVariants) {
+						PgnParseResultsWindowItem windowItem = new PgnParseResultsWindowItem(
+								file.getName(), ((ChesspressoPgnProgressListener)listener)
+										.getGames(), file.getAbsolutePath());
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem);
+					}
+					else {
+						PgnParseResultsWindowItem windowItem = new PgnParseResultsWindowItem(
+								file.getName(), ((ProfressPgnParserListener)listener).getErrors(), 
+								((ProfressPgnParserListener)listener).getGames(), file.getAbsolutePath());
+						Raptor.getInstance().getWindow().addRaptorWindowItem(
+								windowItem);
+					}
 				} catch (Throwable t) {
 					if (!isClosed) {
 						LOG.error("Error parsing pgn file", t);
@@ -178,6 +239,41 @@ public class PgnProcessingDialog extends Dialog {
 						shell.close();
 					}
 				});
+			}
+
+			private boolean pgnHasVariantGames(File fileName) {
+				BufferedReader reader = null;
+				try {
+					reader = new BufferedReader(
+						new FileReader(fileName));
+					String line;
+					while( null != ( line = reader.readLine() ) ) 	{
+					   if ((line.contains("[Variant")
+							   && (line.contains("atomic")
+							   || line.contains("crazyhouse")
+							   || line.contains("suicide")
+							   || line.contains("losers")))
+							   ||
+							   (line.startsWith("[Event \"FICS") && 
+									   (line.contains("wild") 
+											   || line.contains("atomic")
+											   || line.contains("crazyhouse")
+											   || line.contains("suicide")
+											   || line.contains("losers")
+											   )))
+						   return true;
+					}
+				} catch (FileNotFoundException e) {
+					
+				} catch (IOException e) {
+				}
+				finally {
+					try {
+						reader.close();
+					} catch (IOException e) {
+					}
+				}
+				return false;
 			}
 		});
 

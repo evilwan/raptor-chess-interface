@@ -47,21 +47,21 @@ public class RaptorStringUtils {
 	 */
 	public static String defaultTimeString(int value, int digits) {
 		String valueAsString = "" + value;
-		StringBuilder result = new StringBuilder();
-		if (valueAsString.length() > digits) {
-			for (int i = 0; i < digits; i++) {
-				result.append(valueAsString.charAt(i));
-			}
-		} else if (valueAsString.length() < digits) {
-			result = new StringBuilder(valueAsString);
-			while (result.length() < digits) {
-				result.append("0");
-				result.append(result);
-			}
-		} else {
-			result = new StringBuilder(valueAsString);
-		}
-		return result.toString();
+        String result = "";
+        if (valueAsString.length() > digits) {
+                for (int i = 0; i < digits; i++) {
+                        result += valueAsString.charAt(i);
+                }
+        } else if (valueAsString.length() < digits) {
+                result = valueAsString;
+                while (result.length() < digits) {
+                        result = "0" + result;
+                }
+        } else {
+                result = valueAsString;
+        }
+        return result;
+
 	}
 
 	public static boolean equals(String[] array1, String[] array2) {
