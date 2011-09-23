@@ -50,6 +50,7 @@ import raptor.swt.chess.BoardConstants;
 import raptor.swt.chess.ChessBoardController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.swt.chess.MouseButtonAction;
+import raptor.swt.chess.movelist.TextAreaMoveList;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 
@@ -68,6 +69,7 @@ public class InactiveController extends ChessBoardController implements
 	protected ToolBar toolbar;
 	protected boolean userMadeAdjustment = false;
 	protected boolean canBeTakenOver;
+	private boolean variationMode;
 
 	/**
 	 * You can set the PgnHeader WhiteOnTop to toggle if white should be
@@ -141,7 +143,7 @@ public class InactiveController extends ChessBoardController implements
 	 */
 	@Override
 	public void adjustGameStatusLabel() {
-		if (userMadeAdjustment) {
+		if (userMadeAdjustment || variationMode) {
 			if (getGame().getMoveList().getSize() > 0) {
 				Move lastMove = getGame().getMoveList().get(
 						getGame().getMoveList().getSize() - 1);
@@ -153,7 +155,7 @@ public class InactiveController extends ChessBoardController implements
 								+ ") "
 								+ (lastMove.isWhitesMove() ? "" : "... ")
 								+ GameUtils.convertSanToUseUnicode(lastMove
-										.toString(), !game.isWhitesMove()));
+										.toString(), !getGame().isWhitesMove()));
 
 			} else {
 				board.getStatusLabel().setText("");
@@ -176,8 +178,8 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	@Override
-	public boolean canUserInitiateMoveFrom(int squareId) {
-		if (!isDisposed()) {
+	public boolean canUserInitiateMoveFrom(int squareId) {		
+		if (!isDisposed()) {			
 			if (ChessBoardUtils.isPieceJailSquare(squareId)) {
 				if (getGame().isInState(Game.DROPPABLE_STATE)) {
 					int pieceType = ChessBoardUtils
@@ -212,12 +214,12 @@ public class InactiveController extends ChessBoardController implements
 	}
 
 	public void enableDisableNavButtons() {
-		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, cursor.hasNext());
-		setToolItemEnabled(ToolBarItemKey.BACK_NAV, cursor.hasPrevious());
-		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, cursor.hasFirst());
-		setToolItemEnabled(ToolBarItemKey.LAST_NAV, cursor.hasLast());
-		setToolItemEnabled(ToolBarItemKey.REVERT_NAV, cursor.canRevert());
-		setToolItemEnabled(ToolBarItemKey.COMMIT_NAV, cursor.canCommit());
+		setToolItemEnabled(ToolBarItemKey.NEXT_NAV, getCursor().hasNext());
+		setToolItemEnabled(ToolBarItemKey.BACK_NAV, getCursor().hasPrevious());
+		setToolItemEnabled(ToolBarItemKey.FIRST_NAV, getCursor().hasFirst());
+		setToolItemEnabled(ToolBarItemKey.LAST_NAV, getCursor().hasLast());
+		setToolItemEnabled(ToolBarItemKey.REVERT_NAV, getCursor().canRevert());
+		setToolItemEnabled(ToolBarItemKey.COMMIT_NAV, getCursor().canCommit());
 	}
 
 	@Override
@@ -236,7 +238,7 @@ public class InactiveController extends ChessBoardController implements
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.InactiveChessBoard, toolbar, true);
 
-			if (game.getVariant() == Variant.suicide) {
+			if (getGame().getVariant() == Variant.suicide) {
 				setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
 			} else {
 				setToolItemSelected(ToolBarItemKey.AUTO_QUEEN, true);
@@ -273,7 +275,7 @@ public class InactiveController extends ChessBoardController implements
 			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
 		}
 		board.getMoveList().updateToGame();
-		cursor.setCursorMasterLast();
+		getCursor().setCursorMasterLast();
 
 		if (getPreferences().getBoolean(PreferenceKeys.BOARD_COOLBAR_MODE)) {
 			getToolbar(null);
@@ -285,22 +287,27 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void onBack() {
+		if (board.getMoveList() instanceof TextAreaMoveList) {
+			((TextAreaMoveList)board.getMoveList()).arrangeForVarMode(
+					getCursor().getCursorPosition()-1);
+		}
+		
 		board.getResultDecorator().setDecoration(null);
-		cursor.setCursorPrevious();
+		getCursor().setCursorPrevious();
 		refresh();
 		addDecorationsForLastMoveListMove();
 	}
 
 	@Override
 	public void onCommit() {
-		cursor.commit();
+		getCursor().commit();
 		refresh();
 	}
 
 	@Override
 	public void onFirst() {
 		board.getResultDecorator().setDecoration(null);
-		cursor.setCursorFirst();
+		getCursor().setCursorFirst();
 		refresh();
 		addDecorationsForLastMoveListMove();
 	}
@@ -308,7 +315,7 @@ public class InactiveController extends ChessBoardController implements
 	@Override
 	public void onForward() {
 		board.getResultDecorator().setDecoration(null);
-		cursor.setCursorNext();
+		getCursor().setCursorNext();
 		refresh();
 		addDecorationsForLastMoveListMove();
 	}
@@ -316,7 +323,7 @@ public class InactiveController extends ChessBoardController implements
 	@Override
 	public void onLast() {
 		board.getResultDecorator().setDecoration(null);
-		cursor.setCursorLast();
+		getCursor().setCursorLast();
 		refresh();
 		addDecorationsForLastMoveListMove();
 	}
@@ -419,7 +426,7 @@ public class InactiveController extends ChessBoardController implements
 
 	@Override
 	public void onRevert() {
-		cursor.revert();
+		getCursor().revert();
 		refresh();
 		addDecorationsForLastMoveListMove();
 	}
@@ -433,7 +440,7 @@ public class InactiveController extends ChessBoardController implements
 		final String selected = fd.open();
 
 		if (selected != null) {
-			String pgn = cursor.toPgn();
+			String pgn = getCursor().toPgn();
 			FileWriter writer = null;
 
 			try {
@@ -456,9 +463,12 @@ public class InactiveController extends ChessBoardController implements
 		if (isDisposed()) {
 			return;
 		}
-		board.getEngineAnalysisWidget().updateToGame();
+		board.getEngineAnalysisWidget().updateToGame();	
+		
+		//if (!variationMode)
+		board.getMoveList().select(getCursor().getCursorPosition());			
+		
 		board.getMoveList().updateToGame();
-		board.getMoveList().select(cursor.getCursorPosition());
 		enableDisableNavButtons();
 		super.refresh();		
 	}
@@ -492,6 +502,19 @@ public class InactiveController extends ChessBoardController implements
 			board.getSquare(square).redraw();
 		}
 	}
+	
+	@Override
+	public Game getGame() {
+		return variationMode ?
+				((TextAreaMoveList)board.getMoveList()).getCurrVariation().getVarGame()
+				: game;
+	}
+	
+	public Game getGame(boolean allowVarGame) {
+		return (variationMode && allowVarGame) ?
+				((TextAreaMoveList)board.getMoveList()).getCurrVariation().getVarGame()
+				: game;
+	}
 
 	@Override
 	public void userMadeMove(int fromSquare, int toSquare) {
@@ -516,7 +539,7 @@ public class InactiveController extends ChessBoardController implements
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Processing user move..");
 		}
-
+		
 		Move move = null;
 		if (GameUtils.isPromotion(getGame(), fromSquare, toSquare)) {
 			move = ChessBoardUtils.createMove(getGame(), fromSquare, toSquare,
@@ -530,7 +553,12 @@ public class InactiveController extends ChessBoardController implements
 					toSquare));
 		} else {
 			addDecorationsForMove(move, true);
-			if (game.move(move)) {
+			boolean moveMade = getGame().move(move);
+			if (variationMode && move != null) {
+				((TextAreaMoveList)board.getMoveList()).variationMove(move);
+			}
+			
+			if (moveMade) {
 				refresh();
 				onPlayMoveSound();
 			} else {
@@ -540,7 +568,7 @@ public class InactiveController extends ChessBoardController implements
 						new Throwable(getGame().toString()));
 				adjustForIllegalMove(move.toString());
 			}
-		}
+		}		
 	}
 
 	@Override
@@ -590,9 +618,11 @@ public class InactiveController extends ChessBoardController implements
 	 * functionality.
 	 */
 	@Override
-	public void userSelectedMoveListMove(int halfMoveNumber) {
+	public void userSelectedMoveListMove(int halfMoveNumber) {		
 		board.getResultDecorator().setDecoration(null);
-		cursor.setCursor(halfMoveNumber);
+		
+		getCursor().setCursor(halfMoveNumber);
+		
 		enableDisableNavButtons();
 		refresh();
 		addDecorationsForLastMoveListMove();
@@ -600,7 +630,7 @@ public class InactiveController extends ChessBoardController implements
 	
 	public void gotoMove(int halfMoveNumber) {
 		board.getResultDecorator().setDecoration(null);
-		cursor.setCursor(halfMoveNumber);
+		getCursor().setCursor(halfMoveNumber);
 		enableDisableNavButtons();
 		refresh();
 		addDecorationsForLastMoveListMove(false);
@@ -616,7 +646,7 @@ public class InactiveController extends ChessBoardController implements
 
 		int inc = 0;
 
-		if (cursor.getCursorPosition() == cursor.getMasterGameLength()
+		if (getCursor().getCursorPosition() == getCursor().getMasterGameLength()
 				&& StringUtils.isNotBlank(getGame().getHeader(
 						PgnHeader.WhiteRemainingMillis))
 				&& StringUtils.isNotBlank(getGame().getHeader(
@@ -647,7 +677,7 @@ public class InactiveController extends ChessBoardController implements
 									nfe);
 				}
 
-				MoveList moveList = cursor.getCursorGame().getMoveList();
+				MoveList moveList = getCursor().getCursorGame().getMoveList();
 				for (int i = 0; i < moveList.getSize(); i++) {
 					Move move = moveList.get(i);
 					if (move.isWhitesMove()) {
@@ -687,8 +717,33 @@ public class InactiveController extends ChessBoardController implements
 	protected void onPlayIllegalMoveSound() {
 		SoundService.getInstance().playSound("illegalMove");
 	}
+	
+	@Override
+	protected void adjustBoard() {
+		if (isDisposed()) {
+			return;
+		}
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				board.getSquare(i, j).setPiece(
+						GameUtils.getColoredPiece(GameUtils.getSquare(i, j),
+								getGame()));
+			}
+		}
+	}
 
 	protected void onPlayMoveSound() {
 		SoundService.getInstance().playSound("move");
+	}
+
+	public void setVariationMode(boolean variationMode) {		
+		((TextAreaMoveList)board.getMoveList()).setVariationMode(variationMode);
+		this.variationMode = variationMode;
+	}
+
+	public GameCursor getCursor() {
+		return variationMode ? 
+				((GameCursor)((TextAreaMoveList)board.getMoveList()).getCurrVariation().getVarGame())
+				: cursor;
 	}
 }

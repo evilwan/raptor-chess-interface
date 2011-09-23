@@ -87,7 +87,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 						&& ((System.currentTimeMillis() - lastDropTime) < 50)) {
 					return;
 				}
-
+				
 				if (piece != EMPTY
 						&& board.getController().canUserInitiateMoveFrom(id)) {
 					board.getControl()

@@ -218,6 +218,13 @@ public class PgnProcessingDialog extends Dialog {
 								+ (System.currentTimeMillis() - startTime)
 								+ "ms");
 					}
+					
+					shell.getDisplay().asyncExec(new RaptorRunnable() {
+						@Override
+						public void execute() {
+							shell.close();
+						}
+					});
 
 					if (!pgnContainsVariants) {
 						PgnParseResultsWindowItem windowItem = new PgnParseResultsWindowItem(
@@ -245,13 +252,7 @@ public class PgnProcessingDialog extends Dialog {
 						reader.close();
 					} catch (Throwable t) {
 					}
-				}
-				shell.getDisplay().asyncExec(new RaptorRunnable() {
-					@Override
-					public void execute() {
-						shell.close();
-					}
-				});
+				}				
 			}
 
 			private boolean pgnHasVariantGames(File fileName) {

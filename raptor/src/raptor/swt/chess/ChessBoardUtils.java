@@ -64,6 +64,7 @@ import raptor.action.game.MoveListAction;
 import raptor.action.game.RematchAction;
 import raptor.action.game.RevertAction;
 import raptor.action.game.ToggleEngineAnalysisAction;
+import raptor.action.game.TryVariation;
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
@@ -906,7 +907,10 @@ public class ChessBoardUtils implements BoardConstants {
 		} else if (action instanceof ForceUpdateAction) {
 			result = new ToolItem(toolbar, SWT.CHECK);
 			controller.addToolItem(ToolBarItemKey.FORCE_UPDATE, result);
-		} else if (action instanceof AutoQueenAction) {
+		} else if (action instanceof TryVariation) {
+			result = new ToolItem(toolbar, SWT.CHECK);
+			controller.addToolItem(ToolBarItemKey.TRY_VARIATION, result);
+		}else if (action instanceof AutoQueenAction) {
 			result = new ToolItem(toolbar, SWT.RADIO);
 			controller.addToolItem(ToolBarItemKey.AUTO_QUEEN, result);
 			int pieceSize = Raptor.getInstance().getPreferences()
