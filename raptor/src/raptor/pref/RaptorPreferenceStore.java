@@ -41,6 +41,7 @@ import raptor.Quadrant;
 import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatType;
+import raptor.international.L10n;
 import raptor.layout.ClassicLayout;
 import raptor.service.SeekService.SeekType;
 import raptor.service.ThemeService;
@@ -426,10 +427,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// App settings.		
-		setDefault(APP_NAME, "Raptor .98u1 ("
+		setDefault(APP_NAME, "Raptor .98u2 ("
 				+System.getProperty("java.vendor")+" " 
 				+System.getProperty("java.version")+"; "
-				+System.getProperty("os.name")+")");				
+				+System.getProperty("os.name")+"; " + L10n.currentLocale.getISO3Language()+")");				
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
 				!OSUtils.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);
