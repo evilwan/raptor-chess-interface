@@ -199,7 +199,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				}
 			}
 		}
-		else { // Chesspresso was used during parsing
+		else { // Chesspresso was used during parsing			
 			for (chesspresso.game.Game game: chprsGames) {
 				if (game.getResult() == Chess.RES_WHITE_WINS) {
 					whiteWins++;
@@ -461,7 +461,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 									+ selectedGame.getHeader(PgnHeader.Black),
 							false)));
 		}
-		else { // Chesspresso was used during parsing
+		else if (chprsGames != null) { // Chesspresso was used during parsing
 			chesspresso.game.Game selGame = chprsGames.get(index);
 			Game raptorGame = ChesspressoPgnParser.convertToRaptorGame(selGame);
 			Raptor.getInstance().getWindow().addRaptorWindowItem(

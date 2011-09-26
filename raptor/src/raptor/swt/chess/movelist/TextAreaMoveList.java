@@ -274,7 +274,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	public void select(int halfMoveIndex) {
 
 		if ((!variationMode && selectedHalfmove + 1 == halfMoveIndex)
-				|| moveNodes.size() == 0)
+				|| moveNodes.size() == 0 || textPanel.getCharCount() == 0)
 			return;
 
 		if (variationMode) { 
@@ -290,7 +290,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			sR.background = moveSelectionColor;
 			sR.start = currVariation.getMoveNodes().get(index);
 			sR.length = currVariation.getMoveNodesLengths().get(index) - 1;
-
+			
 			textPanel.setStyleRange(sR);
 			textPanel.setCaretOffset(sR.start + sR.length);
 			selectedHalfmove = halfMoveIndex;
@@ -312,7 +312,8 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 
 		// clear previous move selection
 		clearMoveSelection(selectedHalfmove);
-
+		//System.out.println("halfMoveIndex " + halfMoveIndex);
+		//System.out.println("size " + textPanel.getCharCount());
 		textPanel.setStyleRange(sR);
 		textPanel.setCaretOffset(sR.start + sR.length);
 		selectedHalfmove = halfMoveIndex;
@@ -384,7 +385,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			Game game = controller.getGame();
 
 			int moveListSize = game.getMoveList().getSize();
-
+			
 			if (moveListSize == 0 && textPanel.getCharCount() != 0) {
 				textPanel.setText("");
 				return;
@@ -396,7 +397,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 						prepareForRepaint();
 					} else
 						return;
-				} else if (!variationMode && moveListSize <= moveNodes.size()) {
+				} else if (!variationMode && moveListSize != moveNodes.size()) {
 					// move list shrinked
 					prepareForRepaint();
 				}
@@ -467,7 +468,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 	/**
 	 * Clear all info about painted object and prepare for a new repaint operation.
 	 */
-	private void prepareForRepaint() {
+	private void prepareForRepaint() {		
 		textPanel.replaceTextRange(movesTextStart, textPanel.getCharCount()
 				- movesTextStart, "");
 		moveNodes.clear();

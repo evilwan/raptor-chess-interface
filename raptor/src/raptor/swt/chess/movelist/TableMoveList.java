@@ -149,6 +149,7 @@ public class TableMoveList implements ChessBoardMoveList {
 
 			Game game = controller.getGame();
 			int moveListSize = game.getMoveList().getSize();
+			
 			if (moveListSize == 0) {
 				movesTable.clearTable();
 			} else {

@@ -124,6 +124,9 @@ public class PgnProcessingDialog extends Dialog {
 		 * Analogous to the inherited method, but instead uses Chesspresso game object 
 		 */
 		public void gameParsed(chesspresso.game.Game game, final int lineNumber) {	
+			if (game == null)
+				return;
+			
 			if (isClosed) {
 				throw new RuntimeException("Closed");
 			} else {				
