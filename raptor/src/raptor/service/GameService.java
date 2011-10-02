@@ -469,8 +469,8 @@ public class GameService {
 	/**
 	 * This method should only be invoked from a connector.
 	 */
-	public void fireGameMovesAdded(String gameId) {
-		Game game = getGame(gameId);
+	public void fireGameMovesAdded(String gameId) {		
+		Game game = getGame(gameId);		
 		if (game != null) {
 			synchronized (listeners) {
 				for (GameServiceListener listener : listeners) {

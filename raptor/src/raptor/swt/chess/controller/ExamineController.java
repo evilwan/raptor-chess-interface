@@ -161,7 +161,6 @@ public class ExamineController extends ChessBoardController {
 								if (isDisposed()) {
 									return;
 								}
-
 								examineOnIllegalMove(move);
 							}
 						});
@@ -247,7 +246,7 @@ public class ExamineController extends ChessBoardController {
 	public void examinePositionUpdate() {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("examinePositionUpdate " + getGame().getId());
-		}
+		}		
 		refresh();
 		onPlayMoveSound();
 	}
@@ -419,7 +418,7 @@ public class ExamineController extends ChessBoardController {
 			connector.makeMove(game, move);
 			addDecorationsForMove(move, true);
 			refreshForMove(move);
-		} else {
+		} else {			
 			examineOnIllegalMove(GameUtils.getPseudoSan(getGame(), fromSquare,
 					toSquare));
 		}

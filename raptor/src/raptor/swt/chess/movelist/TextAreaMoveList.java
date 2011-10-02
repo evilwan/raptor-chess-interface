@@ -312,8 +312,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 
 		// clear previous move selection
 		clearMoveSelection(selectedHalfmove);
-		//System.out.println("halfMoveIndex " + halfMoveIndex);
-		//System.out.println("size " + textPanel.getCharCount());
+		
 		textPanel.setStyleRange(sR);
 		textPanel.setCaretOffset(sR.start + sR.length);
 		selectedHalfmove = halfMoveIndex;

@@ -790,7 +790,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	public void onSendOutputText() {
 		String text = chatConsole.outputText.getText();
 		RaptorAliasResult alias = AliasService.getInstance().processAlias(this,
-				text);
+				text);	
+		
 		if (alias == null) {
 			connector.sendMessage(text);
 		} else if (alias.getNewText() != null) {

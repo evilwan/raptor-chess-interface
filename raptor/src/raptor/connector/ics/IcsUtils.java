@@ -916,7 +916,6 @@ public class IcsUtils implements GameConstants {
 			}
 			gameClone.addState(Game.UPDATING_SAN_STATE);
 			gameClone.addState(Game.UPDATING_ECO_HEADERS_STATE);
-
 			for (int i = 0; i < halfMoveCountGameStartedOn; i++) {
 				try {
 					if (gameClone.isInState(Game.DROPPABLE_STATE)) {
@@ -957,8 +956,8 @@ public class IcsUtils implements GameConstants {
 						gameClone.getHeader(PgnHeader.Opening));
 			}
 		} else if (message.moves.length == 0 && message.style12 != null) {
-			game.clear();
-			updateNonPositionFields(game, message.style12);
+			game.clear();		
+			updateNonPositionFields(game, message.style12);	
 			updatePosition(game, message.style12);
 			game.setHeader(PgnHeader.FEN, game.toFen());
 			game.removeHeader(PgnHeader.ECO);
@@ -1004,7 +1003,7 @@ public class IcsUtils implements GameConstants {
 				+ message.whiteRemainingTimeMillis);
 		game.setHeader(PgnHeader.BlackRemainingMillis, ""
 				+ message.blackRemainingTimeMillis);
-
+		
 		game.setColorToMove(message.isWhitesMoveAfterMoveIsMade ? WHITE : BLACK);
 
 		game.setCastling(WHITE, message.canWhiteCastleKSide
@@ -1055,6 +1054,7 @@ public class IcsUtils implements GameConstants {
 
 					game.setPieceCount(pieceColor, piece,
 							game.getPieceCount(pieceColor, piece) + 1);
+					
 					game.getBoard()[square] = piece;
 					game.setColorBB(pieceColor, game.getColorBB(pieceColor)
 							| squareBB);

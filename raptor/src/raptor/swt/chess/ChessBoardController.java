@@ -577,7 +577,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * Adjusts all of the ChessBoard to the state of the board object. The
 	 * clocks are refreshed from the game.
 	 */
-	public void refresh() {
+	public void refresh() {		
 		refresh(true);
 	}
 
@@ -589,6 +589,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 *            True if the clocks should be updated, false otherwise.
 	 */
 	public void refresh(boolean isUpdatingClocks) {
+		System.out.println(game.toFen());
 		if (isDisposed()) {
 			return;
 		}

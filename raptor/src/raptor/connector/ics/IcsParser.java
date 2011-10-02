@@ -795,7 +795,19 @@ public class IcsParser implements GameConstants {
 					service.fireObservedGameBecameExamined(game.getId());
 				}
 			} else {
-				IcsUtils.updateGamesMoves(game, message);
+				// TODO: somehow fix it without this hack
+				Game[] games = connector.getGameService().getAllActiveGames();
+				boolean result = false;
+				for (Game gm : games) {
+					if (gm.isInState(Game.EXAMINING_STATE)
+							|| gm.isInState(Game.SETUP_STATE)) {
+						result = true;
+						break;
+					}
+				}
+				if (!result)
+					IcsUtils.updateGamesMoves(game, message);
+				
 				service.fireGameMovesAdded(game.getId());
 			}
 		}
