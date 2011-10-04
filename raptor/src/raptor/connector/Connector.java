@@ -357,7 +357,7 @@ public interface Connector {
 	 * If this connector is setup to auto-connect it should auto connect when
 	 * this method is invoked.
 	 */
-	public void onAutoConnect();
+	public boolean onAutoConnect();
 
 	/**
 	 * Handles declining a match request.

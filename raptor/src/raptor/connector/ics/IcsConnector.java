@@ -28,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.PreferenceNode;
 import org.eclipse.jface.preference.PreferencePage;
 
@@ -46,6 +47,7 @@ import raptor.chess.util.GameUtils;
 import raptor.connector.Connector;
 import raptor.connector.ConnectorListener;
 import raptor.connector.MessageCallback;
+import raptor.connector.ics.dialog.IcsLoginDialog;
 import raptor.connector.ics.timeseal.MessageListener;
 import raptor.connector.ics.timeseal.MessageProducer;
 import raptor.connector.ics.timeseal.TimesealSocketMessageProducer;
@@ -86,6 +88,7 @@ import raptor.swt.chat.controller.MainController;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.ChessBoardUtils;
 import raptor.util.RaptorLogger;
+import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
 import raptor.util.RegExUtils;
@@ -123,6 +126,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	protected IcsConnectorContext context;
 
 	protected String currentProfileName;
+	protected boolean loginDialogShowed = false;
 
 	protected GameService gameService;
 	protected Map<String, Object> scriptHash = new HashMap<String, Object>();
@@ -854,15 +858,17 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	public void onAcceptKeyPress() {
 		sendMessage("$$accept", true);
 	}
-
+	protected Object autoConnLock = new Object();
 	/**
 	 * Auto logs in if that is configured.
 	 */
-	public void onAutoConnect() {
+	public boolean onAutoConnect() {
 		if (Raptor.getInstance().getPreferences()
 				.getBoolean(context.getPreferencePrefix() + "auto-connect")) {
 			connect();
+			return true;
 		}
+		return false;
 	}
 
 	public void onDeclineKeyPress() {
@@ -1104,7 +1110,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				try {
 					ignoringChatTypes.remove(ignoreIndex);
 				} catch (ArrayIndexOutOfBoundsException aiobe) {
-					// Eat it there could be a synchronization problem.§
+					// Eat it there could be a synchronization problem.ï¿½
 				}
 			} else {
 				// It is interesting to note messages are handled sequentially

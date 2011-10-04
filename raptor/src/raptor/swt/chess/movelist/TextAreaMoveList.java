@@ -29,6 +29,8 @@ import org.eclipse.swt.events.MouseWheelListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 
 import raptor.Raptor;
 import raptor.chess.Game;
@@ -165,6 +167,11 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 		moveSelectionColor = new Color(Display.getCurrent(), 165, 192, 255);
 		moveNodes = new ArrayList<Integer>();
 		moveNodesLengths = new ArrayList<Integer>();
+		textPanel.addListener(SWT.MouseWheel, new Listener() {
+			public void handleEvent(Event e){
+				e.doit = false;
+			}
+		});
 		textPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDown(MouseEvent e) {

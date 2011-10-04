@@ -589,7 +589,6 @@ public abstract class ChessBoardController implements BoardConstants,
 	 *            True if the clocks should be updated, false otherwise.
 	 */
 	public void refresh(boolean isUpdatingClocks) {
-		System.out.println(game.toFen());
 		if (isDisposed()) {
 			return;
 		}

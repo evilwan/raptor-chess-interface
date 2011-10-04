@@ -33,6 +33,8 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import raptor.connector.Connector;
+import raptor.connector.bics.BicsConnector;
+import raptor.connector.fics.FicsConnector;
 import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
@@ -141,7 +143,11 @@ public class Raptor implements PreferenceKeys {
 				ThreadService.getInstance().scheduleOneShot(750,
 						new Runnable() {
 							public void run() {
-								connector.onAutoConnect();
+										boolean connected = connector.onAutoConnect();
+										if (!connected && connector instanceof FicsConnector) {
+											((FicsConnector)connector).showLoginDialog();										
+										}
+											
 							}
 						});
 			}

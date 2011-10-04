@@ -65,6 +65,7 @@ import raptor.swt.chat.ChatUtils;
 import raptor.swt.chat.controller.RegExController;
 import raptor.swt.chess.controller.PlayingMouseAction;
 import raptor.util.RaptorLogger;
+import raptor.util.RaptorRunnable;
 import raptor.util.RaptorStringTokenizer;
 
 /**
@@ -515,6 +516,29 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 			}
 		}
 	}
+	
+	public void showLoginDialog() {
+		Raptor.getInstance().getWindow().getShell().getDisplay().syncExec(
+				new RaptorRunnable() {
+					@Override
+					public void execute() {
+						IcsLoginDialog dialog = new IcsLoginDialog(
+								context.getPreferencePrefix(),
+								local.getString("ficsConn7"));
+						dialog.open();
+						getPreferences().setValue(
+								context.getPreferencePrefix() + "profile",
+								dialog.getSelectedProfile());
+						autoConnectAction.setChecked(getPreferences().getBoolean(
+								context.getPreferencePrefix() + "auto-connect"));
+						getPreferences().save();
+						if (dialog.wasLoginPressed()) {
+							connect();
+						}
+					}
+				});			
+		
+	}
 
 	/**
 	 * Creates the connectionsMenu and all of the actions associated with it.
@@ -524,19 +548,7 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 		connectAction = new Action(local.getString("ficsConn6")) {
 			@Override
 			public void run() {
-				IcsLoginDialog dialog = new IcsLoginDialog(
-						context.getPreferencePrefix(),
-						local.getString("ficsConn7"));
-				dialog.open();
-				getPreferences().setValue(
-						context.getPreferencePrefix() + "profile",
-						dialog.getSelectedProfile());
-				autoConnectAction.setChecked(getPreferences().getBoolean(
-						context.getPreferencePrefix() + "auto-connect"));
-				getPreferences().save();
-				if (dialog.wasLoginPressed()) {
-					connect();
-				}
+				showLoginDialog();				
 			}
 		};
 
