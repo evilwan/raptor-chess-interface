@@ -15,8 +15,6 @@ package raptor.swt.chess.analysis;
 
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
-import raptor.chess.util.GameUtils;
-import raptor.engine.uci.UCIMove;
 import raptor.engine.uci.info.BestLineFoundInfo;
 
 public class AnalysisCommentsGenerator {
