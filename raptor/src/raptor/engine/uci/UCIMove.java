@@ -41,8 +41,9 @@ public class UCIMove {
 		startSquare = GameUtils.getSquare(uciString.substring(0, 2));
 		endSquare = GameUtils.getSquare(uciString.substring(2, 4));
 		if (uciString.length() > 4) {
-			char pieceChar = uciString.charAt(4);
-			promotedPiece = GameConstants.PIECE_TO_SAN.indexOf(pieceChar);
+			char pieceChar = Character.toLowerCase(uciString.charAt(4));
+			promotedPiece = GameConstants.PIECE_TO_SAN
+					.toLowerCase().indexOf(pieceChar);
 		}
 	}
 
