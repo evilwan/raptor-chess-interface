@@ -33,7 +33,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 
 import raptor.connector.Connector;
-import raptor.connector.bics.BicsConnector;
 import raptor.connector.fics.FicsConnector;
 import raptor.international.L10n;
 import raptor.pref.PreferenceKeys;
@@ -159,7 +158,8 @@ public class Raptor implements PreferenceKeys {
 						// a
 						// RaptorWindow.
 						if (getInstance().getPreferences().getBoolean(
-								APP_IS_LAUNCHNG_HOME_PAGE)) {
+								APP_IS_LAUNCHNG_HOME_PAGE)
+								&& BrowserUtils.internalBrowserSupported()) {
 							BrowserUtils.openUrl(getInstance().getPreferences()
 									.getString(PreferenceKeys.APP_HOME_URL));
 						}

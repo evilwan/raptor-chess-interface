@@ -16,6 +16,11 @@ package raptor.util;
 import java.lang.reflect.Method;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.widgets.Shell;
+
 import raptor.util.RaptorLogger;
  
 
@@ -114,6 +119,22 @@ public class BrowserUtils {
 
 			Raptor.getInstance().getWindow().forceFocus(item);
 		}
+	}
+	
+	public static boolean internalBrowserSupported() {
+		boolean res = false;
+		Shell shell = new Shell(Raptor.getInstance().getDisplay());
+		  Browser browser = null;
+		  try {
+		   browser = new Browser(shell, SWT.NONE);
+		  } catch (SWTError e) {
+		  
+		  }
+		  if (browser != null) 
+			  res = true;
+			  
+		  shell.dispose();
+		  return res;
 	}
 
 	public static void openInternalUrl(String url) {
