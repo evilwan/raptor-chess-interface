@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -101,9 +103,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected List<ChatEvent> awayList = new ArrayList<ChatEvent>(100);
 	protected ChatConsole chatConsole;
+	protected Queue<ChatEvent> chatEventQueue = new ConcurrentLinkedQueue<ChatEvent>();
 	protected ChatListener chatServiceListener = new ChatListener() {
-		public void chatEventOccured(final ChatEvent event) {
+		public void chatEventOccured(final ChatEvent event) {			
 			if (!isDisposed && chatConsole != null && !chatConsole.isDisposed()) {
+				if (event.getType() == ChatType.CHANNEL_TELL)
+					chatEventQueue.add(event);
+				
 				chatConsole.getDisplay().asyncExec(
 						new RaptorRunnable(getConnector()) {
 							@Override
@@ -564,14 +570,14 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		});
 	}
-
+	
 	public void onAppendChatEventToInputText(ChatEvent event) {
 		if (!ignoreAwayList && event.getType() == ChatType.TELL
 				|| event.getType() == ChatType.PARTNER_TELL) {
 			awayList.add(event);
 			adjustAwayButtonEnabled();
 		}
-
+		
 		String appendText = null;
 		int startIndex = 0;
 
@@ -582,6 +588,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			if (chatConsole.isDisposed()) {
 				return;
 			}
+			
+			if (event.getType() == ChatType.CHANNEL_TELL)
+				event = (chatEventQueue.size()==0) ? event 
+						: chatEventQueue.poll();
 
 			String messageText = filterText(event.getMessage());
 			String date = "";
@@ -601,7 +611,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			appendText = (chatConsole.inputText.getCharCount() == 0 ? "" : "\n")
 					+ date + messageText;
-
+			
 			chatConsole.inputText.append(appendText);
 
 			startIndex = chatConsole.inputText.getCharCount()
@@ -634,6 +644,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		}
 	}
 
+	
+	
 	public void onChatEvent(ChatEvent event) {
 		onAppendChatEventToInputText(event);
 		if (!isIgnoringActions()) {
