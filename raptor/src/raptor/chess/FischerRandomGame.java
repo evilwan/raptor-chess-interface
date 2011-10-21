@@ -16,6 +16,7 @@ package raptor.chess;
 import static raptor.chess.util.GameUtils.bitscanClear;
 import static raptor.chess.util.GameUtils.bitscanForward;
 import static raptor.chess.util.GameUtils.getFile;
+import static raptor.chess.util.GameUtils.getSan;
 import raptor.chess.pgn.PgnHeader;
 
 /**
@@ -84,6 +85,36 @@ public class FischerRandomGame extends ClassicGame {
 	protected void makeCastlingMove(Move move) {
 		FischerRandomUtils.makeCastlingMove(this, move, initialKingFile,
 				initialShortRookFile, initialLongRookFile);
+	}
+	
+	/**
+	 * Overridden to suppress board castling triggers. 
+	 */
+	@Override
+	public Move makeMove(int startSquare, int endSquare)
+		throws IllegalArgumentException {
+		Move move = null;
+
+		Move[] legals = getLegalMoves().asArray();
+
+		for (int i = 0; move == null && i < legals.length; i++) {
+			Move candidate = legals[i];
+			if (candidate.getFrom() == startSquare
+					&& candidate.getTo() == endSquare && 
+					!(candidate.isCastleLong() || candidate.isCastleShort())) {
+				move = candidate;
+			}
+		}
+
+		if (move == null) {
+			throw new IllegalArgumentException("Invalid move: "
+					+ getSan(startSquare) + " " + getSan(endSquare) + " \n"
+					+ toString());
+		} else {
+			forceMove(move);
+		}
+
+		return move;
 	}
 
 	/**
