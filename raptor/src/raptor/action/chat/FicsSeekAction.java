@@ -25,13 +25,12 @@ public class FicsSeekAction extends AbstractRaptorAction {
 	}
 
 	public void run() {
-		if (getChatConsoleControllerSource() != null) {
+		if (getConnectorSource() != null) {
 			FicsSeekDialog dialog = new FicsSeekDialog(Raptor.getInstance()
 					.getWindow().getShell());
 			String seek = dialog.open();
 			if (seek != null) {
-				getChatConsoleControllerSource().getConnector().sendMessage(
-						seek);
+				getConnectorSource().sendMessage(seek);
 			}
 		}
 	}
