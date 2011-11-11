@@ -480,14 +480,14 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 	 * Creates menu with fics server actions all of which can be invoked
 	 * only after connecting to the server
 	 */
-	private void createFicsMenuActions() {
+	private void createFicsMenuActions() {		
 		// create fics actions menu
 		RaptorAction[] scripts = ActionScriptService.getInstance().getActions(
 				Category.IcsCommands);
 		for (final RaptorAction raptorAction : scripts) {
 			Action action = new Action(raptorAction.getName()) {
 				public void run() {
-					raptorAction.setConnectorSource(FicsConnector.this);
+					raptorAction.setConnectorSource(FicsConnector.this);					
 					raptorAction.run();
 				}
 			};
