@@ -149,7 +149,7 @@ public class ObserveController extends ChessBoardController {
 
 									if (isNewMove) {
 										if (!handleSpeakMove(game.getLastMove())) {
-											onPlayMoveSound();
+											onPlayMoveSound(game.getLastMove());
 										}
 									}
 
@@ -522,10 +522,15 @@ public class ObserveController extends ChessBoardController {
 		}
 	}
 
-	protected void onPlayMoveSound() {
+	protected void onPlayMoveSound(Move move) {
 		if (getPreferences().getBoolean(
 				PreferenceKeys.BOARD_PLAY_MOVE_SOUND_WHEN_OBSERVING)) {
-			SoundService.getInstance().playSound("obsMove");
+			if (move.isCapture()) {
+				SoundService.getInstance().playSound("capture");
+			}
+			else {
+				SoundService.getInstance().playSound("obsMove");
+			}
 		}
 	}
 

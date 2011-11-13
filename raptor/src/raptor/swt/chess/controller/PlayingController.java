@@ -245,7 +245,7 @@ public class PlayingController extends ChessBoardController {
 											refresh();
 											if (!handleSpeakMove(game
 													.getLastMove())) {
-												onPlayMoveSound();
+												onPlayMoveSound(game.getLastMove());
 											}
 										} else {
 											if (LOG.isDebugEnabled()) {
@@ -253,7 +253,7 @@ public class PlayingController extends ChessBoardController {
 											}
 											if (!handleSpeakMove(game
 													.getLastMove())) {
-												onPlayMoveSound();
+												onPlayMoveSound(game.getLastMove());
 											}
 										}
 									} else {
@@ -1275,9 +1275,14 @@ public class PlayingController extends ChessBoardController {
 	protected void onPlayIllegalMoveSound() {
 		SoundService.getInstance().playSound("illegalMove");
 	}
-
-	protected void onPlayMoveSound() {
-		SoundService.getInstance().playSound("move");
+	
+	protected void onPlayMoveSound(Move move) {
+		if (move.isCapture()) {
+			SoundService.getInstance().playSound("capture");
+		}
+		else {
+			SoundService.getInstance().playSound("move");
+		}
 	}
 
 	protected void onPopup(final int square) {
