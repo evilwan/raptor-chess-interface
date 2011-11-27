@@ -138,7 +138,7 @@ public class AutomaticAnalysisController {
 											score += " BAD!";
 											bad = true;
 										}
-										comment = commGenerator
+										comment = " " + commGenerator
 												.getComment(asDouble(previousPosScore), asDouble(thisPosScore),
 														prevMoveDiff, !boardController
 														.getGame().isWhitesMove(), thisPosBestLine, boardController.getGame());

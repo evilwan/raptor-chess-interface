@@ -14,6 +14,7 @@
 package raptor.chess;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class PriorityMoveList implements GameConstants {
@@ -46,12 +47,8 @@ public final class PriorityMoveList implements GameConstants {
 	public List<Move> asList() {
 		ArrayList<Move> result = new ArrayList<Move>(getSize());
 
-		for (int i = 0; i < lowPrioritySize; i++) {
-			result.add(lowPriorityMoves[i]);
-		}
-		for (int j = 0; j < highPrioritySize; j++) {
-			result.add(highPriorityMoves[j]);
-		}
+        result.addAll(Arrays.asList(lowPriorityMoves).subList(0, lowPrioritySize));
+        result.addAll(Arrays.asList(highPriorityMoves).subList(0, highPrioritySize));
 
 		return result;
 	}
@@ -78,9 +75,7 @@ public final class PriorityMoveList implements GameConstants {
 
 	public void removeHighPriority(int index) {
 		int size = highPrioritySize - 1;
-		for (int i = index; i < size; i++) {
-			highPriorityMoves[i] = highPriorityMoves[i + 1];
-		}
+        System.arraycopy(highPriorityMoves, index + 1, highPriorityMoves, index, size - index);
 		highPrioritySize--;
 	}
 
@@ -94,9 +89,7 @@ public final class PriorityMoveList implements GameConstants {
 
 	public void removeLowPriority(int index) {
 		int size = lowPrioritySize - 1;
-		for (int i = index; i < size; i++) {
-			lowPriorityMoves[i] = lowPriorityMoves[i + 1];
-		}
+        System.arraycopy(lowPriorityMoves, index + 1, lowPriorityMoves, index, size - index);
 		lowPrioritySize--;
 	}
 

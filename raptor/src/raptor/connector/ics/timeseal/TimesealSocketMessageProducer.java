@@ -59,7 +59,7 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 			}
 
 			for (int k = 0; k < bytesInLength; k++) {
-				buffer[k] = (byte) (buffer[k] | 0x80);
+                buffer[k] |= 0x80;
 			}
 
 			for (int i1 = 0; i1 < bytesInLength; i1 += 12) {
@@ -76,12 +76,12 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 
 			int l1 = 0;
 			for (int j1 = 0; j1 < bytesInLength; j1++) {
-				buffer[j1] = (byte) (buffer[j1] ^ timesealKey[l1]);
+                buffer[j1] ^= timesealKey[l1];
 				l1 = (l1 + 1) % timesealKey.length;
 			}
 
 			for (int k1 = 0; k1 < bytesInLength; k1++) {
-				buffer[k1] = (byte) (buffer[k1] - 32);
+                buffer[k1] -= 32;
 			}
 
 			buffer[bytesInLength++] = -128;

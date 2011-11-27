@@ -196,9 +196,9 @@ public class ResultDecorator implements BoardConstants {
 
 	public ChessBoard getBoard() {
 		return board;
-	};
+	}
 
-	public ResultDecoration getDecoration() {
+    public ResultDecoration getDecoration() {
 		return decoration;
 	}
 

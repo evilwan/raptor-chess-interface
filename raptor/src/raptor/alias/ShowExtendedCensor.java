@@ -32,8 +32,7 @@ public class ShowExtendedCensor extends RaptorAlias {
 					.getPeopleOnExtendedCensor();
 
 			StringBuilder output = new StringBuilder(2000);
-			output.append("Extended Censor List: (" + users.length
-					+ " user(s)):\n");
+            output.append("Extended Censor List: (").append(users.length).append(" user(s)):\n");
 			int count = 0;
 			for (int i = 0; i < users.length; i++) {
 				output.append(StringUtils.rightPad(users[i], 20));

@@ -37,7 +37,7 @@ public class ShowTagsAlias extends RaptorAlias {
 
 			builder.append("Available Tags: ");
 			for (String tag : tags) {
-				builder.append(tag + " ");
+                builder.append(tag).append(" ");
 			}
 
 			builder.append("\n\nTagged users:\n");
@@ -45,7 +45,7 @@ public class ShowTagsAlias extends RaptorAlias {
 				String[] users = UserTagService.getInstance()
 						.getUsersInTag(tag);
 				if (users.length > 0) {
-					builder.append(tag + ":\n");
+                    builder.append(tag).append(":\n");
 					Arrays.sort(users);
 					int counter = 0;
 					for (int i = 0; i < users.length; i++) {

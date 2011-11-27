@@ -54,12 +54,12 @@ public class ListScriptsAlias extends RaptorAlias {
 
 			text.append("Active Scripts:\n");
 			for (ChatEventScript script : activeScripts) {
-				text.append("    " + script.getName() + "\n");
+                text.append("    ").append(script.getName()).append("\n");
 			}
 			text.append("\n\n");
 			text.append("Inactive Scripts:\n");
 			for (ChatEventScript script : inactiveScripts) {
-				text.append("    " + script.getName() + "\n");
+                text.append("    ").append(script.getName()).append("\n");
 			}
 			return new RaptorAliasResult("", text.toString());
 		}

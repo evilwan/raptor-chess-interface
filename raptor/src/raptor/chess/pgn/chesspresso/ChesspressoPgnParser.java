@@ -52,14 +52,12 @@ public class ChesspressoPgnParser extends AbstractPgnParser {
 				for (PgnParserListener listener: listeners) {
 					((ChesspressoPgnProgressListener)listener).error(e);					
 				}
-				continue;
-			} catch (RuntimeException e) {
+            } catch (RuntimeException e) {
 				for (PgnParserListener listener: listeners) {					
 					PGNSyntaxError er = new PGNSyntaxError(0,e.getMessage(),"",0,"");
 					((ChesspressoPgnProgressListener)listener).error(er);					
 				}
-				continue;
-			} catch (IOException e) {
+            } catch (IOException e) {
 			}
 		} while(chessprGame != null);
 	}

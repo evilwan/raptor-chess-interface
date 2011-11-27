@@ -62,7 +62,7 @@ public class TimedCommandAlias extends RaptorAlias {
 					public void run() {
 						if (!controller.isDisposed()
 								&& runningTimedCommands.get(this) != null
-								&& runningTimedCommands.get(this) == true) {
+								&& runningTimedCommands.get(this)) {
 							controller.getConnector().sendMessage(message);
 							ThreadService.getInstance().scheduleOneShot(
 									Integer.parseInt(firstWord) * 1000 * 60,

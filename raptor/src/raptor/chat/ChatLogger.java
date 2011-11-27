@@ -296,8 +296,7 @@ public class ChatLogger {
 		FileWriter fileWriter = null;
 		try {
 			fileWriter = new FileWriter(fileName, true);
-			fileWriter.append("[" + DATE_FORMAT.format(new Date(event.time))
-					+ "] " + event.getMessage() + "\n");
+            fileWriter.append("[").append(DATE_FORMAT.format(new Date(event.time))).append("] ").append(event.getMessage()).append("\n");
 			fileWriter.flush();
 		} catch (IOException ioe) {
 			Raptor.getInstance().onError(

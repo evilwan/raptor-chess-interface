@@ -62,8 +62,7 @@ public class GameBotParser {
 				if (gbIdentifier.equals("<gb>")) {
 					String gameId = rowTok.nextToken();
 					if (gameId.equals("QueryResult")) {
-						continue;
-					} else if (gameId.equals("MoreGamesExist")) {
+                    } else if (gameId.equals("MoreGamesExist")) {
 						return createFromDangling(true);
 					} else if (gameId.equals("NoMoreGames")) {
 						return createFromDangling(false);
@@ -78,8 +77,7 @@ public class GameBotParser {
 							danglingRows.add(rowData
 									.toArray(new String[0]));
 						} catch (NumberFormatException nfe) {
-							continue;
-						}
+                        }
 					}
 				}
 			}

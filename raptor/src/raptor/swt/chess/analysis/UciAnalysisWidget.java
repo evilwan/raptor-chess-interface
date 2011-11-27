@@ -208,15 +208,11 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 													+ ") ... " : gameMove 
 													.isWhitesMove() ? gameMove
 													.getFullMoveCount() + ") " 
-													: ""; 
-											line.append((line.toString().equals("") ? ""  //$NON-NLS-2$
-													: " ") 
-													+ moveNumber
-													+ san
-													+ (gameClone.isInCheck() ? "+" 
-															: "") 
-													+ (gameClone.isCheckmate() ? "#" 
-															: "")); 
+													: "";
+                                            line.append(line.toString().equals("") ? ""  //$NON-NLS-2$
+                                                    : " ").append(moveNumber).append(san).append(gameClone.isInCheck() ? "+"
+                                                    : "").append(gameClone.isCheckmate() ? "#"
+                                                    : "");
 											isFirstMove = false;
 										} catch (Throwable t) {
 											if (LOG.isInfoEnabled()) {

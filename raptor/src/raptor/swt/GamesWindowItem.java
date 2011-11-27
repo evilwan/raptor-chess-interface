@@ -68,9 +68,9 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 
 	public static enum GameInfoCategory {
 		blitz, lightning, untimed, examined, standard, wild, atomic, crazyhouse, bughouse, losers, suicide, nonstandard
-	};
+	}
 
-	protected Connector connector;
+    protected Connector connector;
 	protected Composite composite;
 	protected Combo minRatingsFilter;
 	protected Combo maxRatingsFilter;

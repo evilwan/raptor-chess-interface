@@ -234,8 +234,7 @@ public class ChessBoardWindowItem implements RaptorConnectorWindowItem {
 			boolean allowTakeover = Raptor.getInstance().getPreferences()
 					.getBoolean(PreferenceKeys.BOARD_TAKEOVER_INACTIVE_GAMES);
 			ChessBoardController controller = getController();
-			return !allowTakeover || controller == null ? false
-					: controller instanceof InactiveController;
+			return !(!allowTakeover || controller == null) && controller instanceof InactiveController;
 		}
 	}
 

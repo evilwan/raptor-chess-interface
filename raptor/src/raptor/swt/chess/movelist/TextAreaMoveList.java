@@ -355,8 +355,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 			try {
 				textPanel.setStyleRange(cL);
 			} catch (IllegalArgumentException iae) {
-				return;
-			}
+            }
 		}
 	}
 
@@ -436,7 +435,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 							.getComments()) {
 						String sd = textPanel.getLineDelimiter();
 						buff.append(sd);
-						buff.append("  [" + comment + "]");
+                        buff.append("  [").append(comment).append("]");
 						buff.append(sd);
 						hasComments = true;
 					}

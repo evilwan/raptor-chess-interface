@@ -28,9 +28,9 @@ public class GameService {
 	public static class GameInfo {
 		public static enum GameInfoCategory {
 			blitz, lightning, untimed, examined, standard, wild, atomic, crazyhouse, bughouse, losers, suicide, nonstandard
-		};
+		}
 
-		protected String id;
+        protected String id;
 		protected String whiteName;
 		protected String blackName;
 		protected String whiteElo;
@@ -274,9 +274,9 @@ public class GameService {
 	public static class Offer {
 		public static enum OfferType {
 			match, partner, draw, abort, adjourn, takeback
-		};
+		}
 
-		protected boolean isReceiving;
+        protected boolean isReceiving;
 		protected String source;
 		protected String description;
 		protected String id;
@@ -455,9 +455,7 @@ public class GameService {
 	public void fireGameInfoChanged(GameInfo[] gameInfos) {
 		synchronized (gameInfo) {
 			gameInfo.clear();
-			for (GameInfo info : gameInfos) {
-				gameInfo.add(info);
-			}
+            Collections.addAll(gameInfo, gameInfos);
 			synchronized (listeners) {
 				for (GameServiceListener listener : listeners) {
 					listener.gameInfoChanged();

@@ -27,31 +27,31 @@ public class B1Parser implements GameConstants {
 			switch (s.charAt(i)) {
 			case 'P':
 			case 'p':
-				result[PAWN] = result[PAWN] + 1;
+                result[PAWN] += 1;
 				break;
 
 			case 'N':
 			case 'n':
-				result[KNIGHT] = result[KNIGHT] + 1;
+                result[KNIGHT] += 1;
 				break;
 
 			case 'B':
 			case 'b':
-				result[BISHOP] = result[BISHOP] + 1;
+                result[BISHOP] += 1;
 				break;
 
 			case 'R':
 			case 'r':
-				result[ROOK] = result[ROOK] + 1;
+                result[ROOK] += 1;
 				break;
 
 			case 'Q':
 			case 'q':
-				result[QUEEN] = result[QUEEN] + 1;
+                result[QUEEN] += 1;
 				break;
 			case 'K':
 			case 'k':
-				result[KING] = result[KING] + 1;
+                result[KING] += 1;
 				break;
 			default:
 				throw new IllegalArgumentException("Invalid piece "

@@ -38,6 +38,6 @@ public class SetupGame extends ClassicGame {
 	 */
 	@Override
 	public boolean isLegalPosition() {
-		return isInState(Game.SETUP_STATE) ? true : super.isLegalPosition();
+		return isInState(Game.SETUP_STATE) || super.isLegalPosition();
 	}
 }

@@ -13,10 +13,6 @@
  */
 package raptor.swt.chess.analysis;
 
-
-
-import javax.swing.JOptionPane;
-
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.engine.uci.info.BestLineFoundInfo;
@@ -62,13 +58,12 @@ public class AnalysisCommentsGenerator {
 		
 		if ((isWhite && previous < -2.0 && scoreDiff >= 2.0)
 				|| (!isWhite && previous > 2.0 && scoreDiff >= 2.0))
-			return " Loses the initiative."; //White or black had an advantage by over 2 points, then score changed by at least 2 and hence they lose the initiative 
+			return "Loses the initiative."; //White or black had an advantage by over 2 points, then score changed by at least 2 and hence they lose the initiative 
 		
 		if ((isWhite && previous < -2.0 && scoreDiff >= 4.0)
 				|| (!isWhite && previous > 2.0 && scoreDiff >= 4.0))
-			return " Blunder!.";
-		
-		
+			return "Blunder!.";
+				
 		if (!queenFired){
 			
 			if (game.getPieceCount(GameConstants.WHITE, GameConstants.QUEEN) == 1
@@ -91,14 +86,14 @@ public class AnalysisCommentsGenerator {
 							GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1)) //On the previous move, score was roughly even..
 				{
 				doubleBishopFired = true;
-				return " White has the advantage of double bishops.";
+				return "White has the advantage of double bishops.";
 			}
 			else if (game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP) == 2
 					&& game.getPieceCount(GameConstants.WHITE,
 							GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1)) 
 			{
 				doubleBishopFired = true;
-				return " Black has the advantage of double bishops.";
+				return "Black has the advantage of double bishops.";
 			}//Delete if unwanted
 			else if (!singleBishopFired){
 				

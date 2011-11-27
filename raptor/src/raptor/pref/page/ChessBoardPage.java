@@ -77,10 +77,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		protected int getImageSize() {
 			try {
 				double imageSquareSideAdjustment = Double
-						.parseDouble(pieceResize.getValue().toString());
+						.parseDouble(pieceResize.getValue());
 				int imageSide = (int) (getSize().x * (1.0 - imageSquareSideAdjustment));
 				if (imageSide % 2 != 0) {
-					imageSide = imageSide - 1;
+                    imageSide -= 1;
 				}
 				return imageSide;
 			} catch (Exception e) {
@@ -263,10 +263,10 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		protected int getImageSize() {
 			try {
 				double imageSquareSideAdjustment = Double
-						.parseDouble(pieceResize.getValue().toString());
+						.parseDouble(pieceResize.getValue());
 				int imageSide = (int) (getSize().x * (1.0 - imageSquareSideAdjustment));
 				if (imageSide % 2 != 0) {
-					imageSide = imageSide - 1;
+                    imageSide -= 1;
 				}
 				return imageSide;
 			} catch (Exception e) {

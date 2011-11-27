@@ -189,9 +189,8 @@ public class UCIEngineService {
 		engine.setSupportsFischerRandom(fr != null && fr.equals("true"));
 		
 		engine.setMultiplyBlackScoreByMinus1(properties
-				.contains("multiplyBlackScoreByMinus1") ? properties
-				.getProperty("multiplyBlackScoreByMinus1").equals("true")
-				: false);
+                .contains("multiplyBlackScoreByMinus1") && properties
+                .getProperty("multiplyBlackScoreByMinus1").equals("true"));
 		engine.setProcessPath(properties.getProperty("processPath"));
 		engine.setUserName(properties.getProperty("userName"));
 		engine.setGoAnalysisParameters(properties

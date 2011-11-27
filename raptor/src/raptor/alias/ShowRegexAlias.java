@@ -77,15 +77,12 @@ public class ShowRegexAlias extends RaptorAlias {
 																		regExPattern,
 																		event
 																				.getMessage())) {
-													builder
-															.append(FORMAT
-																	.format(new Date(
-																			event
-																					.getTime()))
-																	+ event
-																			.getMessage()
-																			.trim()
-																	+ "\n");
+                                                    builder.append(FORMAT
+                                                            .format(new Date(
+                                                                    event
+                                                                            .getTime()))).append(event
+                                                            .getMessage()
+                                                            .trim()).append("\n");
 												}
 												return true;
 											}

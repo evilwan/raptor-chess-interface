@@ -1253,10 +1253,10 @@ public class ClassicGame implements Game {
 
 		result.append(colorToMove == WHITE ? " w" : " b");
 
-		result.append(" " + getFenCastle());
-		result.append(" " + getSan(epSquare));
-		result.append(" " + fiftyMoveCount);
-		result.append(" " + getFullMoveCount());
+        result.append(" ").append(getFenCastle());
+        result.append(" ").append(getSan(epSquare));
+        result.append(" ").append(fiftyMoveCount);
+        result.append(" ").append(getFullMoveCount());
 
 		return result.toString();
 	}
@@ -1286,8 +1286,7 @@ public class ClassicGame implements Game {
 				}
 			}
 			if (j != 0) {
-				result.append((consecutiveEmpty != 0 ? consecutiveEmpty : "")
-						+ "/");
+                result.append(consecutiveEmpty != 0 ? consecutiveEmpty : "").append("/");
 			} else if (j == 0) {
 				result.append(consecutiveEmpty != 0 ? consecutiveEmpty : "");
 			}
@@ -1350,27 +1349,24 @@ public class ClassicGame implements Game {
 	public String toString() {
 		StringBuilder result = new StringBuilder(1000);
 
-		result.append(getString(new String[] { "emptyBB", "occupiedBB",
-				"notColorToMoveBB", "color[WHITE]", "color[BLACK]" },
-				new long[] { emptyBB, occupiedBB, notColorToMoveBB,
-						getColorBB(WHITE), getColorBB(BLACK) })
-				+ "\n\n");
+        result.append(getString(new String[]{"emptyBB", "occupiedBB",
+                "notColorToMoveBB", "color[WHITE]", "color[BLACK]"},
+                new long[]{emptyBB, occupiedBB, notColorToMoveBB,
+                        getColorBB(WHITE), getColorBB(BLACK)})).append("\n\n");
 
-		result.append(getString(new String[] { "[WHITE][PAWN]",
-				"[WHITE][KNIGHT]", "[WHITE][BISHOP]", "[WHITE][ROOK]",
-				"[WHITE][QUEEN]", "[WHITE][KING]" }, new long[] {
-				getPieceBB(WHITE, PAWN), getPieceBB(WHITE, KNIGHT),
-				getPieceBB(WHITE, BISHOP), getPieceBB(WHITE, ROOK),
-				getPieceBB(WHITE, QUEEN), getPieceBB(WHITE, KING) })
-				+ "\n\n");
+        result.append(getString(new String[]{"[WHITE][PAWN]",
+                "[WHITE][KNIGHT]", "[WHITE][BISHOP]", "[WHITE][ROOK]",
+                "[WHITE][QUEEN]", "[WHITE][KING]"}, new long[]{
+                getPieceBB(WHITE, PAWN), getPieceBB(WHITE, KNIGHT),
+                getPieceBB(WHITE, BISHOP), getPieceBB(WHITE, ROOK),
+                getPieceBB(WHITE, QUEEN), getPieceBB(WHITE, KING)})).append("\n\n");
 
-		result.append(getString(new String[] { "[BLACK][PAWN]",
-				"[BLACK][KNIGHT]", "[BLACK][BISHOP]", "[BLACK][ROOK]",
-				"[BLACK][QUEEN]", "[BLACK][KING]" }, new long[] {
-				getPieceBB(BLACK, PAWN), getPieceBB(BLACK, KNIGHT),
-				getPieceBB(BLACK, BISHOP), getPieceBB(BLACK, ROOK),
-				getPieceBB(BLACK, QUEEN), getPieceBB(BLACK, KING) })
-				+ "\n\n");
+        result.append(getString(new String[]{"[BLACK][PAWN]",
+                "[BLACK][KNIGHT]", "[BLACK][BISHOP]", "[BLACK][ROOK]",
+                "[BLACK][QUEEN]", "[BLACK][KING]"}, new long[]{
+                getPieceBB(BLACK, PAWN), getPieceBB(BLACK, KNIGHT),
+                getPieceBB(BLACK, BISHOP), getPieceBB(BLACK, ROOK),
+                getPieceBB(BLACK, QUEEN), getPieceBB(BLACK, KING)})).append("\n\n");
 
 		for (int i = 7; i > -1; i--) {
 			for (int j = 0; j < 8; j++) {
@@ -1379,53 +1375,36 @@ public class ClassicGame implements Game {
 				int color = (getBitboard(square) & getColorBB(colorToMove)) != 0L ? colorToMove
 						: getOppositeColor(colorToMove);
 
-				result.append("|" + COLOR_PIECE_TO_CHAR[color].charAt(piece));
+                result.append("|").append(COLOR_PIECE_TO_CHAR[color].charAt(piece));
 			}
 			result.append("|   ");
 
 			switch (i) {
 			case 7:
-				result.append("To Move: " + COLOR_DESCRIPTION[colorToMove]
-						+ " " + "Last Move: "
-						+ (moves.getSize() == 0 ? "" : moves.getLast()));
+                result.append("To Move: ").append(COLOR_DESCRIPTION[colorToMove]).append(" " + "Last Move: ").append(moves.getSize() == 0 ? "" : moves.getLast());
 				break;
 
 			case 6:
 				result.append(getPieceCountsString());
 				break;
 			case 5:
-				result.append("Moves: " + halfMoveCount + " EP: "
-						+ getSan(epSquare) + " Castle: " + getFenCastle());
+                result.append("Moves: ").append(halfMoveCount).append(" EP: ").append(getSan(epSquare)).append(" Castle: ").append(getFenCastle());
 				break;
 			case 4:
-				result.append("FEN: " + toFen());
+                result.append("FEN: ").append(toFen());
 				break;
 			case 3:
-				result.append("State: " + state + " Variant="
-						+ getHeader(PgnHeader.Variant) + " Result="
-						+ getResult());
+                result.append("State: ").append(state).append(" Variant=").append(getHeader(PgnHeader.Variant)).append(" Result=").append(getResult());
 				break;
 			case 2:
-				result.append("Event: " + getHeader(PgnHeader.Event) + " Site="
-						+ getHeader(PgnHeader.Site) + " Date="
-						+ getHeader(PgnHeader.Date));
+                result.append("Event: ").append(getHeader(PgnHeader.Event)).append(" Site=").append(getHeader(PgnHeader.Site)).append(" Date=").append(getHeader(PgnHeader.Date));
 				break;
 			case 1:
-				result.append("WhiteName: " + getHeader(PgnHeader.White)
-						+ " BlackName=" + getHeader(PgnHeader.Black)
-						+ " WhiteTime="
-						+ getHeader(PgnHeader.WhiteRemainingMillis)
-						+ " whiteLag=" + getHeader(PgnHeader.WhiteLagMillis)
-						+ " blackRemainingTImeMillis = "
-						+ getHeader(PgnHeader.BlackRemainingMillis)
-						+ " blackLag=" + getHeader(PgnHeader.BlackLagMillis));
+                result.append("WhiteName: ").append(getHeader(PgnHeader.White)).append(" BlackName=").append(getHeader(PgnHeader.Black)).append(" WhiteTime=").append(getHeader(PgnHeader.WhiteRemainingMillis)).append(" whiteLag=").append(getHeader(PgnHeader.WhiteLagMillis)).append(" blackRemainingTImeMillis = ").append(getHeader(PgnHeader.BlackRemainingMillis)).append(" blackLag=").append(getHeader(PgnHeader.BlackLagMillis));
 
 				break;
 			default:
-				result.append("initialWhiteClock: "
-						+ getHeader(PgnHeader.WhiteClock)
-						+ " initialBlackClocks="
-						+ getHeader(PgnHeader.BlackClock));
+                result.append("initialWhiteClock: ").append(getHeader(PgnHeader.WhiteClock)).append(" initialBlackClocks=").append(getHeader(PgnHeader.BlackClock));
 				break;
 			}
 
@@ -1444,8 +1423,7 @@ public class ClassicGame implements Game {
 				squaresWithPromoteMasks.add(getSan(i));
 			}
 		}
-		result.append("\nSquares with promote masks: "
-				+ squaresWithPromoteMasks);
+        result.append("\nSquares with promote masks: ").append(squaresWithPromoteMasks);
 
 		return result.toString();
 	}

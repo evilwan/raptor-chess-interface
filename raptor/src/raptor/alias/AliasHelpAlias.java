@@ -68,11 +68,10 @@ public class AliasHelpAlias extends RaptorAlias {
 							+ " 'not found.");
 				} else {
 					StringBuilder aliasHelp = new StringBuilder(2000);
-					aliasHelp.append("Alias '" + aliasName + "':\n");
-					aliasHelp.append("    Description: " + alias.getDescription()
-							+ "\n");
+                    aliasHelp.append("Alias '").append(aliasName).append("':\n");
+                    aliasHelp.append("    Description: ").append(alias.getDescription()).append("\n");
 					aliasHelp.append("\n");
-					aliasHelp.append("    Usage: " + alias.getUsage() + "\n");
+                    aliasHelp.append("    Usage: ").append(alias.getUsage()).append("\n");
 					return new RaptorAliasResult(null, aliasHelp.toString());
 				}
 			}

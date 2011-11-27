@@ -14,6 +14,7 @@
 package raptor.chess;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class MoveList implements GameConstants {
@@ -42,9 +43,7 @@ public final class MoveList implements GameConstants {
 
 	public List<Move> asList() {
 		List<Move> result = new ArrayList<Move>(size);
-		for (int i = 0; i < size; i++) {
-			result.add(moves[i]);
-		}
+        result.addAll(Arrays.asList(moves).subList(0, size));
 		return result;
 	}
 
@@ -54,9 +53,7 @@ public final class MoveList implements GameConstants {
 
 	public MoveList deepCopy() {
 		MoveList result = new MoveList();
-		for (int i = 0; i < moves.length; i++) {
-			result.moves[i] = moves[i];
-		}
+        System.arraycopy(moves, 0, result.moves, 0, moves.length);
 		result.size = size;
 		return result;
 	}
@@ -80,21 +77,17 @@ public final class MoveList implements GameConstants {
 		Move[] newMoves = new Move[maxSize];
 
 		// Add all of the moves to prepend.
-		for (int i = 0; i < movesToPrepend.length; i++) {
-			newMoves[i] = movesToPrepend[i];
-		}
+        System.arraycopy(movesToPrepend, 0, newMoves, 0, movesToPrepend.length);
 
 		/**
 		 * If a move is appended while this is going on the move list will be
 		 * disrupted. Lets gamble and take that chance so we don't have to add
 		 * slow synchronized code
 		 */
-		for (int i = movesToPrepend.length; i < size + movesToPrepend.length; i++) {
-			newMoves[i] = moves[i - movesToPrepend.length];
-		}
+        System.arraycopy(moves, movesToPrepend.length - movesToPrepend.length, newMoves, movesToPrepend.length, size + movesToPrepend.length - movesToPrepend.length);
 
 		moves = newMoves;
-		size = size + movesToPrepend.length;
+        size += movesToPrepend.length;
 	}
 
 	public Move removeLast() {

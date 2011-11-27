@@ -550,7 +550,7 @@ public class IcsParser implements GameConstants {
 				GameEndMessage gameEndMessage = gameEndParser.parse(line);
 				if (gameEndMessage != null) {
 					process(gameEndMessage, connector.getGameService());
-					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
+                    result.append(line).append(tok.hasMoreTokens() ? "\n" : "");
 					trimAtEnd = true;
 					continue;
 				}
@@ -559,7 +559,7 @@ public class IcsParser implements GameConstants {
 						.parse(line);
 				if (illegalMoveMessage != null) {
 					process(illegalMoveMessage, connector.getGameService());
-					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
+                    result.append(line).append(tok.hasMoreTokens() ? "\n" : "");
 					continue;
 				}
 
@@ -568,7 +568,7 @@ public class IcsParser implements GameConstants {
 				if (removingObsGameMessage != null) {
 					process(removingObsGameMessage, inboundMessage,
 							connector.getGameService());
-					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
+                    result.append(line).append(tok.hasMoreTokens() ? "\n" : "");
 					continue;
 				}
 
@@ -582,7 +582,7 @@ public class IcsParser implements GameConstants {
 				if (noLonerExaminingGameMessage != null) {
 					process(noLonerExaminingGameMessage,
 							connector.getGameService());
-					result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
+                    result.append(line).append(tok.hasMoreTokens() ? "\n" : "");
 					continue;
 				}
 
@@ -608,7 +608,7 @@ public class IcsParser implements GameConstants {
 					processExaminedGameBecameSetup();
 				}
 
-				result.append(line + (tok.hasMoreTokens() ? "\n" : ""));
+                result.append(line).append(tok.hasMoreTokens() ? "\n" : "");
 			}
 			return trimAtEnd ? result.toString().trim() : result.toString();
 		}

@@ -434,7 +434,7 @@ public class SeekGraph extends Canvas {
 				int height = getClientArea().height;
 				Point where = scale(loc, width - 2 * inset, height - 2 * inset);
 				where.y = height - inset - where.y;
-				where.x = where.x + inset;
+                where.x += inset;
 				redraw(where.x - SEEK_SIZE / 2, where.y - SEEK_SIZE / 2,
 						SEEK_SIZE, SEEK_SIZE, false);
 			}
@@ -613,7 +613,7 @@ public class SeekGraph extends Canvas {
 						+ " "
 						+ (seek.getType() != null ? seek.getType().toString()
 								: "");
-				all.append(text + "\n");
+                all.append(text).append("\n");
 			}
 			tooltip.setText(all.substring(0, all.length() - 1));
 			lastPopupRect = rect;

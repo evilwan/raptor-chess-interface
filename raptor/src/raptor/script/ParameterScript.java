@@ -19,9 +19,9 @@ import bsh.Interpreter;
 public class ParameterScript implements Comparable<ParameterScript> {
 	public enum Type {
 		ConsoleRightClickScripts
-	};
+	}
 
-	protected String name = "";
+    protected String name = "";
 	protected String description = "";
 	protected String script = "";
 	protected boolean isActive = false;

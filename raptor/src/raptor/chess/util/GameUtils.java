@@ -437,8 +437,8 @@ public class GameUtils implements GameConstants {
 	public static String getPseudoSan(Game game, int fromSquare, int toSquare,
 			boolean useUnicodePieces) {
 		boolean isDrop = isDropSquare(fromSquare);
-		boolean isToPieceEmpty = GameUtils.isDropSquare(toSquare) ? true : game
-				.getPiece(toSquare) == EMPTY;
+		boolean isToPieceEmpty = GameUtils.isDropSquare(toSquare) || game
+                .getPiece(toSquare) == EMPTY;
 
 		int fromPiece = -1;
 
@@ -570,10 +570,8 @@ public class GameUtils implements GameConstants {
 		for (int i = 7; i > -1; i--) {
 			result.append(" ");
 			for (int j = 0; j < 8; j++) {
-				result
-						.append(((board & SQUARE_TO_COORDINATE[getSquare(i, j)]) == 0 ? 0
-								: 1)
-								+ " ");
+                result.append((board & SQUARE_TO_COORDINATE[getSquare(i, j)]) == 0 ? 0
+                        : 1).append(" ");
 			}
 
 			if (i != 0) {
@@ -594,7 +592,7 @@ public class GameUtils implements GameConstants {
 				labels[i] = labels[i].substring(0, 18);
 			}
 			int spaces = 18 - labels[i].length();
-			result.append(labels[i] + SPACES.substring(0, spaces));
+            result.append(labels[i]).append(SPACES.substring(0, spaces));
 		}
 		result.append("\n");
 
@@ -602,9 +600,8 @@ public class GameUtils implements GameConstants {
 			for (long bitBoard : bitBoards) {
 				result.append(" ");
 				for (int j = 0; j < 8; j++) {
-					result.append(((bitBoard & SQUARE_TO_COORDINATE[getSquare(
-							i, j)]) == 0 ? 0 : 1)
-							+ " ");
+                    result.append((bitBoard & SQUARE_TO_COORDINATE[getSquare(
+                            i, j)]) == 0 ? 0 : 1).append(" ");
 				}
 				result.append("  ");
 			}

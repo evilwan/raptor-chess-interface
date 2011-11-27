@@ -316,7 +316,7 @@ public class RaptorWindow extends ApplicationWindow {
 							layout(true);
 						}
 					} else if (existingControl != null
-							&& existingControl.isVisible() == false) {
+							&& !existingControl.isVisible()) {
 						existingControl.setVisible(true);
 						existingControl.redraw();
 					}
@@ -713,7 +713,7 @@ public class RaptorWindow extends ApplicationWindow {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
 					new RaptorTabItem(folder, SWT.NONE, item, true, folder
-							.getItemCount() == 0 ? true : isSelecting);
+                            .getItemCount() == 0 || isSelecting);
 					folder.setMinimized(false);
 					restoreFolders();
 				}
@@ -725,7 +725,7 @@ public class RaptorWindow extends ApplicationWindow {
 					RaptorTabFolder folder = getRaptorTabFolder(item
 							.getPreferredQuadrant());
 					new RaptorTabItem(folder, SWT.NONE, item, true, folder
-							.getItemCount() == 0 ? true : isSelecting);
+                            .getItemCount() == 0 || isSelecting);
 					folder.setMinimized(false);
 					restoreFolders();
 				}

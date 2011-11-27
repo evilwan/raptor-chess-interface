@@ -93,7 +93,7 @@ public class RaptorStyledText extends StyledText {
 							" ", true);
 					StringBuilder result = new StringBuilder(text.length());
 					while (tok.hasMoreTokens()) {
-						result.append(tok.nextToken() + " ");
+                        result.append(tok.nextToken()).append(" ");
 					}
 					replaceTextRange(getSelection().x, 0, result.toString());
 				}

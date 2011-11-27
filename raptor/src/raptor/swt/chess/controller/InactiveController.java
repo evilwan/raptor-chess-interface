@@ -270,9 +270,9 @@ public class InactiveController extends ChessBoardController implements
 				.getHeader(PgnHeader.WhiteOnTop)));
 
 		if (getGame().isInState(Game.DROPPABLE_STATE)) {
-			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop());
 		} else {
-			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
+			board.setWhitePieceJailOnTop(!board.isWhiteOnTop());
 		}
 		board.getMoveList().updateToGame();
 		getCursor().setCursorMasterLast();

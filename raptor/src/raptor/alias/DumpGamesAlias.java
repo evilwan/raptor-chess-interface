@@ -37,7 +37,7 @@ public class DumpGamesAlias extends RaptorAlias {
 			Game[] games = controller.getConnector().getGameService()
 					.getAllActiveGames();
 			for (Game game : games) {
-				output.append("Game " + game.getId() + ":\n" + game.toString());
+                output.append("Game ").append(game.getId()).append(":\n").append(game.toString());
 			}
 			return new RaptorAliasResult(null, output.toString());
 		}

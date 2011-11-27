@@ -94,7 +94,7 @@ public class PgnUtils {
 				FileWriter fileWriter = null;
 				try {
 					fileWriter = new FileWriter(file, true);
-					fileWriter.append(pgn + "\n\n");
+                    fileWriter.append(pgn).append("\n\n");
 					fileWriter.flush();
 				} catch (IOException ioe) {
 					LOG.error("Error saving game", ioe);
@@ -140,13 +140,9 @@ public class PgnUtils {
 	 */
 	public static void getHeaderLine(StringBuilder builder,
 			String pgnHeaderName, String pgnHeaderValue) {
-		builder
-				.append("["
-						+ pgnHeaderName
-						+ " \""
-						+ (pgnHeaderValue == null
-								|| pgnHeaderValue.length() == 0 ? PgnHeader.UNKNOWN_VALUE
-								: pgnHeaderValue) + "\"]");
+        builder.append("[").append(pgnHeaderName).append(" \"").append(pgnHeaderValue == null
+                || pgnHeaderValue.length() == 0 ? PgnHeader.UNKNOWN_VALUE
+                : pgnHeaderValue).append("\"]");
 	}
 
 	/**
@@ -159,7 +155,7 @@ public class PgnUtils {
 
 		if (forceMoveNumber || move.isWhitesMove()) {
 			int moveNumber = move.getFullMoveCount();
-			builder.append(moveNumber + (move.isWhitesMove() ? ". " : "... "));
+            builder.append(moveNumber).append(move.isWhitesMove() ? ". " : "... ");
 		}
 		builder.append(move.toString());
 
@@ -172,15 +168,15 @@ public class PgnUtils {
 		}
 
 		for (Comment comment : move.getComments()) {
-			builder.append(" {" + comment.getText() + "}");
+            builder.append(" {").append(comment.getText()).append("}");
 		}
 
 		for (Nag nag : move.getNags()) {
-			builder.append(" " + nag.getNagString());
+            builder.append(" ").append(nag.getNagString());
 		}
 
 		for (TimeTakenForMove timeTaken : move.getTimeTakenForMove()) {
-			builder.append(" {" + timeTaken.getText() + "}");
+            builder.append(" {").append(timeTaken.getText()).append("}");
 			break;
 		}
 

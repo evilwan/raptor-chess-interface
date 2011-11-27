@@ -112,9 +112,7 @@ public class UCIEngine {
 			} else {
 				String[] args = new String[parameters.length + 1];
 				args[0] = processPath;
-				for (int i = 0; i < parameters.length; i++) {
-					args[1 + i] = parameters[i];
-				}
+                System.arraycopy(parameters, 0, args, 1, parameters.length);
 				process = new ProcessBuilder(args).start();
 			}
 			in = new BufferedReader(new InputStreamReader(process
@@ -576,8 +574,7 @@ public class UCIEngine {
 		} else {
 			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-				movesString.append((movesString.toString().equals("") ? "" : " ")
-						+ move.getValue());
+                movesString.append(movesString.toString().equals("") ? "" : " ").append(move.getValue());
 			}
 			send("position fen " + fen + " " + movesString);
 		}
@@ -624,8 +621,7 @@ public class UCIEngine {
 		} else {
 			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-				movesString.append((movesString.toString().equals("") ? "" : " ")
-						+ move.getValue());
+                movesString.append(movesString.toString().equals("") ? "" : " ").append(move.getValue());
 			}
 			send("position startpos " + movesString);
 		}
@@ -1106,7 +1102,7 @@ public class UCIEngine {
 		}
 
 		if (!token.equalsIgnoreCase(untilKeyword)) {
-			result.append((result.equals("") ? "" : " ") + token);
+            result.append(result.equals("") ? "" : " ").append(token);
 			result.append(token);
 		}
 		return result.toString();

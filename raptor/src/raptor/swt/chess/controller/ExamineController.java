@@ -307,9 +307,9 @@ public class ExamineController extends ChessBoardController {
 		 * your opponent owns your piece jail.
 		 */
 		if (getGame().isInState(Game.DROPPABLE_STATE)) {
-			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop());
 		} else {
-			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
+			board.setWhitePieceJailOnTop(!board.isWhiteOnTop());
 		}
 
 		if (getPreferences().getBoolean(PreferenceKeys.BOARD_COOLBAR_MODE)) {

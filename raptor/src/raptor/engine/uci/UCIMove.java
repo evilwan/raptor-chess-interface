@@ -30,8 +30,7 @@ public class UCIMove {
 			promotedPiece = move.getPiecePromotedTo();
 			value = GameUtils.getSan(startSquare) + GameUtils.getSan(endSquare)
 					+ "=" + GameConstants.PIECE_TO_SAN.charAt(promotedPiece);
-			;
-		} else {
+        } else {
 			value = GameUtils.getSan(startSquare) + GameUtils.getSan(endSquare);
 		}
 	}

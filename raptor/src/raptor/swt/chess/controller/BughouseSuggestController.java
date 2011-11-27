@@ -59,8 +59,7 @@ public class BughouseSuggestController extends ObserveController {
 	@Override
 	public boolean canUserInitiateMoveFrom(int squareId) {
 		if (!isDisposed()) {
-			return ChessBoardUtils.isPieceJailSquare(squareId) ? true
-					: getGame().getPiece(squareId) != EMPTY;
+			return ChessBoardUtils.isPieceJailSquare(squareId) || getGame().getPiece(squareId) != EMPTY;
 		}
 		return false;
 	}

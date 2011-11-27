@@ -107,7 +107,7 @@ public class TableMoveList implements ChessBoardMoveList {
 			ignoreSelection = true;
 
 			if (halfMoveIndex > 0) {
-				halfMoveIndex = halfMoveIndex - 1;
+                halfMoveIndex -= 1;
 			}
 
 			if (movesTable.getTable().getItemCount() == 0) {

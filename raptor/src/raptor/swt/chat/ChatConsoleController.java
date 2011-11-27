@@ -332,8 +332,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			default: {
 				if (wordStart == -1) {
 					wordStart = i;
-					continue;
-				}
+                }
 			}
 			}
 		}
@@ -689,8 +688,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							FileWriter writer = null;
 							try {
 								writer = new FileWriter(selected);
-								writer.append(local.getString("chatConsCont6")
-										+ new Date() + "\n");
+                                writer.append(local.getString("chatConsCont6")).append(String.valueOf(new Date())).append("\n");
 								int i = 0;
 								while (i < chatConsole.getInputText()
 										.getCharCount() - 1) {
@@ -1010,12 +1008,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		boolean isMaskedKey = (keyEvent.stateMask & SWT.CONTROL) != 0
 				|| (keyEvent.stateMask & SWT.ALT) != 0
 				|| (keyEvent.stateMask & SWT.COMMAND) != 0;
-		if (isMaskedKey
-				&& (keyEvent.character == ' ' || keyEvent.keyCode == ' ')) {
-			return true;
-		}
-		return false;
-	}
+        return isMaskedKey
+                && (keyEvent.character == ' ' || keyEvent.keyCode == ' ');
+    }
 
 	public void removeItemChangedListener(ItemChangedListener listener) {
 		itemChangedListeners.remove(listener);
@@ -2296,8 +2291,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 							if (words == null || words.length == 0) {
 								output.append(local.getString("chatConsCont27"));
 							} else {
-								output.append(local.getString("chatConsCont28")
-										+ finalWord + ":\n");
+                                output.append(local.getString("chatConsCont28")).append(finalWord).append(":\n");
 								int count = 0;
 								for (int i = 0; i < words.length; i++) {
 									output.append(StringUtils.rightPad(

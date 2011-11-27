@@ -210,11 +210,10 @@ public class SimplePgnParser extends AbstractPgnParser {
 									closingBraceIndex = currentLine
 											.indexOf('}');
 									if (closingBraceIndex == -1) {
-										annotation.append(" " + currentLine);
+                                        annotation.append(" ").append(currentLine);
 									} else {
-										annotation.append(" "
-												+ currentLine.substring(0,
-														closingBraceIndex));
+                                        annotation.append(" ").append(currentLine.substring(0,
+                                                closingBraceIndex));
 									}
 								}
 							} while (currentLine != null

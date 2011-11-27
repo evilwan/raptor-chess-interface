@@ -37,9 +37,8 @@ public class MemosAlias extends RaptorAlias {
 			result.append("Memos:\n");
 			for (ChatEvent event : memos) {
 
-				result.append(MemoService.FORMAT.format(new Date(event
-						.getTime()))
-						+ event.getMessage() + "\n");
+                result.append(MemoService.FORMAT.format(new Date(event
+                        .getTime()))).append(event.getMessage()).append("\n");
 
 			}
 			return new RaptorAliasResult(null, result.toString());

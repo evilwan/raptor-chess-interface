@@ -145,8 +145,7 @@ public class UserTagService {
 		StringBuilder result = new StringBuilder(1000);
 		String[] users = set.toArray(new String[0]);
 		for (int i = 0; i < users.length; i++) {
-			result.append(users[i]
-					+ (i < users.length - 1 ? FIELD_SEPARATOR : ""));
+            result.append(users[i]).append(i < users.length - 1 ? FIELD_SEPARATOR : "");
 		}
 		return result.toString();
 	}

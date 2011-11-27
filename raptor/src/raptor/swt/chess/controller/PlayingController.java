@@ -550,9 +550,9 @@ public class PlayingController extends ChessBoardController {
 		 * your opponent owns your piece jail.
 		 */
 		if (getGame().isInState(Game.DROPPABLE_STATE)) {
-			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? true : false);
+			board.setWhitePieceJailOnTop(board.isWhiteOnTop());
 		} else {
-			board.setWhitePieceJailOnTop(board.isWhiteOnTop() ? false : true);
+			board.setWhitePieceJailOnTop(!board.isWhiteOnTop());
 		}
 
 		if (getPreferences().getBoolean(PreferenceKeys.BOARD_COOLBAR_MODE)) {
@@ -725,8 +725,7 @@ public class PlayingController extends ChessBoardController {
 		adjustPremoveLabelHighlightsAndArrows();
 		board.unhidePieces();
 		refreshBoard();
-		return;
-	}
+    }
 	
 	/**
 	 * Removes all of the premove drops from premoves.
@@ -1151,8 +1150,7 @@ public class PlayingController extends ChessBoardController {
 		for (PremoveInfo info : premoves) {
 			Move move = null;
 			if (!info.isPremoveDrop) {
-				continue;
-			} else if (getGame()
+            } else if (getGame()
 					.getDropCount(
 							isUserWhite() ? WHITE : BLACK,
 							getUncoloredPiece(getColoredPieceFromDropSquare(info.fromSquare))) > 0) {

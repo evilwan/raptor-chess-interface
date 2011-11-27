@@ -155,7 +155,7 @@ public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public boolean isCloseable() {
-		return controller != null ? controller.isCloseable() : true;
+		return controller == null || controller.isCloseable();
 	}
 
 	public void onActivate() {

@@ -13,10 +13,7 @@
  */
 package raptor.chess.pgn;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -160,9 +157,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 						// This can happen in chess base for now just don't
 						// support it its a pain in the ass.
 						MoveAnnotation[] annotations = pgnAnnotationToMoveAnnotations(annotation);
-						for (MoveAnnotation moveAnnotation : annotations) {
-							danglingAnnotations.add(moveAnnotation);
-						}
+                        Collections.addAll(danglingAnnotations, annotations);
 					} else {
 						MoveAnnotation[] annotations = pgnAnnotationToMoveAnnotations(annotation);
 						for (MoveAnnotation moveAnnotation : annotations) {
@@ -173,9 +168,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 				} else if (isParsingMove && !isIgnoringSubline) {
 					if (currentMoveInfo == null) {
 						MoveAnnotation[] annotations = pgnAnnotationToMoveAnnotations(annotation);
-						for (MoveAnnotation moveAnnotation : annotations) {
-							danglingAnnotations.add(moveAnnotation);
-						}
+                        Collections.addAll(danglingAnnotations, annotations);
 					} else {
 						MoveAnnotation[] annotations = pgnAnnotationToMoveAnnotations(annotation);
 						for (MoveAnnotation moveAnnotation : annotations) {
@@ -185,9 +178,7 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 				}
 			} else if (!isIgnoringSubline) {
 				MoveAnnotation[] annotations = pgnAnnotationToMoveAnnotations(annotation);
-				for (MoveAnnotation moveAnnotation : annotations) {
-					danglingAnnotations.add(moveAnnotation);
-				}
+                Collections.addAll(danglingAnnotations, annotations);
 			}
 		}
 	}

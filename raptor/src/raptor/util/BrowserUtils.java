@@ -160,8 +160,7 @@ public class BrowserUtils {
 			if (Raptor.getInstance().getPreferences().getBoolean(
 					PreferenceKeys.APP_OPEN_LINKS_IN_EXTERNAL_BROWSER)) {
 				openExternalUrl(url);
-				return;
-			} else {
+            } else {
 				openInternalUrl(url);
 			}
 		}

@@ -88,8 +88,7 @@ public class MemoService {
 		result.append("<ul>");
 		ChatEvent[] memos = getMemos();
 		for (ChatEvent event : memos) {
-			result.append("<li>" + FORMAT.format(new Date(event.getTime()))
-					+ event.getMessage() + "</li>\n");
+            result.append("<li>").append(FORMAT.format(new Date(event.getTime()))).append(event.getMessage()).append("</li>\n");
 		}
 		result.append("</ul>");
 		result.append("</body>\n");

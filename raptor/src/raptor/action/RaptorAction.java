@@ -189,9 +189,9 @@ public interface RaptorAction {
 					* ActionUtils.keyBindingToString(action1).compareTo(
 							ActionUtils.keyBindingToString(action2));
 		}
-	};;
+	};
 
-	/**
+    /**
 	 * Adds the specified RaptorActionToolbar to the list of containers this
 	 * RaptorAction is displayed in.
 	 */

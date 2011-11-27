@@ -164,7 +164,7 @@ public class XboardEngine {
 		nodes = infos.get(3).trim();
 		
 		for (int i = 4; i < infos.size(); i++) {
-			pv.append(infos.get(i) + " ");
+            pv.append(infos.get(i)).append(" ");
 		}
 
 		if (LOG.isDebugEnabled()) {

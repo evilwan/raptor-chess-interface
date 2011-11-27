@@ -314,8 +314,7 @@ public class ChessSetInstallDialog extends Dialog {
 	protected void unzipEntry(final ZipFile zipFile, final ZipEntry zipEntry,
 			boolean isJinSet) throws IOException {
 		if (isClosed) {
-			return;
-		} else {
+        } else {
 			if (zipEntry.isDirectory()) {
 				Raptor.getInstance().getDisplay()
 						.asyncExec(new RaptorRunnable() {

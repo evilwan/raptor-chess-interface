@@ -268,7 +268,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 							getCoordinatesSizePercentage(), size.y));
 
 					int fontHeight = e.gc.getFontMetrics().getAscent()
-							+ e.gc.getFontMetrics().getDescent() + 0;
+                            + e.gc.getFontMetrics().getDescent();
 
 					e.gc.drawString(fileLabel, size.x
 							- e.gc.getFontMetrics().getAverageCharWidth() - 2,
@@ -493,7 +493,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 
 		int imageSide = (int) (getSize().x * (1.0 - imageSquareSideAdjustment));
 		if (imageSide % 2 != 0) {
-			imageSide = imageSide - 1;
+            imageSide -= 1;
 		}
 
 		return imageSide;

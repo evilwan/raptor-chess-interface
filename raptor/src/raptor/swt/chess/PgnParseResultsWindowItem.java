@@ -67,9 +67,9 @@ import raptor.util.IntegerComparator;
  * 
  */
 public class PgnParseResultsWindowItem implements RaptorWindowItem {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(PgnParseResultsWindowItem.class);;
+	private static final RaptorLogger LOG = RaptorLogger.getLog(PgnParseResultsWindowItem.class);
 
-	public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
+    public static final Quadrant[] MOVE_TO_QUADRANTS = { Quadrant.I,
 			Quadrant.II, Quadrant.III, Quadrant.IV, Quadrant.V, Quadrant.VI,
 			Quadrant.VII, Quadrant.VIII, Quadrant.IX };
 

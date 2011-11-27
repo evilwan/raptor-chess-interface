@@ -44,4 +44,4 @@ public class ListMaintainingPgnParserListener extends LenientPgnParserListener {
 		return games;
 	}
 
-};
+}

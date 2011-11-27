@@ -36,14 +36,12 @@ public class PerformanceRatingAlias extends RaptorAlias {
 					.getInstance().getConnetorsWithStats();
 
 			for (Connector connector : connectorsWithStats) {
-				text.append("\nPerformance at " + connector.getShortName()
-						+ ":\n");
+                text.append("\nPerformance at ").append(connector.getShortName()).append(":\n");
 				for (Variant variant : Variant.values()) {
 					int[] performance = PlayingStatisticsService.getInstance()
 							.getPreformanceRating(connector, variant);
 					if (performance != null) {
-						text.append(variant.toString() + " (" + performance[0]
-								+ " games): " + performance[1] + "\n");
+                        text.append(variant.toString()).append(" (").append(performance[0]).append(" games): ").append(performance[1]).append("\n");
 					}
 				}
 			}

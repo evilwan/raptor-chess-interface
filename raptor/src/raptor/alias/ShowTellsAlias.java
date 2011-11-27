@@ -62,15 +62,12 @@ public class ShowTellsAlias extends RaptorAlias {
 											public boolean onNewEventParsed(
 													ChatEvent event) {
 												if (event.getType() == ChatType.TELL) {
-													builder
-															.append(FORMAT
-																	.format(new Date(
-																			event
-																					.getTime()))
-																	+ event
-																			.getMessage()
-																			.trim()
-																	+ "\n");
+                                                    builder.append(FORMAT
+                                                            .format(new Date(
+                                                                    event
+                                                                            .getTime()))).append(event
+                                                            .getMessage()
+                                                            .trim()).append("\n");
 												}
 												return true;
 											}
@@ -117,15 +114,12 @@ public class ShowTellsAlias extends RaptorAlias {
 																		event
 																				.getChannel(),
 																		whatsLeft)) {
-													builder
-															.append(FORMAT
-																	.format(new Date(
-																			event
-																					.getTime()))
-																	+ event
-																			.getMessage()
-																			.trim()
-																	+ "\n");
+                                                    builder.append(FORMAT
+                                                            .format(new Date(
+                                                                    event
+                                                                            .getTime()))).append(event
+                                                            .getMessage()
+                                                            .trim()).append("\n");
 												}
 												return true;
 											}
@@ -170,15 +164,12 @@ public class ShowTellsAlias extends RaptorAlias {
 																		event
 																				.getSource(),
 																		whatsLeft)) {
-													builder
-															.append(FORMAT
-																	.format(new Date(
-																			event
-																					.getTime()))
-																	+ event
-																			.getMessage()
-																			.trim()
-																	+ "\n");
+                                                    builder.append(FORMAT
+                                                            .format(new Date(
+                                                                    event
+                                                                            .getTime()))).append(event
+                                                            .getMessage()
+                                                            .trim()).append("\n");
 												}
 												return true;
 											}

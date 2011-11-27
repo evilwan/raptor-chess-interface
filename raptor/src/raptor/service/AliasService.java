@@ -161,8 +161,7 @@ public class AliasService {
 		builder.append("<LH>Aliases:</LH>\n");
 		for (RaptorAlias alias : getAliases()) {
 			if (!alias.isHidden()) {
-				builder.append("<LI><a href=\"#" + alias.getName() + "\">"
-						+ alias.getName() + "</a></LI>\n");
+                builder.append("<LI><a href=\"#").append(alias.getName()).append("\">").append(alias.getName()).append("</a></LI>\n");
 			}
 		}
 		builder.append("</UL>\n");
@@ -170,12 +169,11 @@ public class AliasService {
 
 		for (RaptorAlias alias : getAliases()) {
 			if (!alias.isHidden()) {
-				builder.append("<a name=\"" + alias.getName() + "\"><h2>"
-						+ alias.getName() + "</h2></a>\n");
+                builder.append("<a name=\"").append(alias.getName()).append("\"><h2>").append(alias.getName()).append("</h2></a>\n");
 				builder.append("<h3>Description:</h3>\n");
-				builder.append("<p>" + alias.getDescription() + "</p>\n");
+                builder.append("<p>").append(alias.getDescription()).append("</p>\n");
 				builder.append("<h3>Usage:</h3>\n");
-				builder.append("<p>" + alias.getUsage() + "</p>\n");
+                builder.append("<p>").append(alias.getUsage()).append("</p>\n");
 				builder.append("<br/>\n");
 				builder.append("<br/>\n");
 			}

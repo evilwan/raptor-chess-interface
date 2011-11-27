@@ -244,8 +244,7 @@ public class RaptorStringUtils {
 			int sourceIndex = 0;
 
 			while (toRemoveIndex != -1) {
-				result.append(source.substring(sourceIndex, toRemoveIndex)
-						+ replacement);
+                result.append(source.substring(sourceIndex, toRemoveIndex)).append(replacement);
 				sourceIndex = toRemoveIndex + strToReplace.length();
 
 				toRemoveIndex = source.indexOf(strToReplace, sourceIndex);
@@ -338,7 +337,7 @@ public class RaptorStringUtils {
 		String valuesString = null; 
 		StringBuffer valuesBuffer = new StringBuffer();
 		for (String value : values) {
-			valuesBuffer.append(value + ",");
+            valuesBuffer.append(value).append(",");
 		}
 		if (StringUtils.isNotBlank(valuesBuffer.toString())) {
 			valuesString = valuesBuffer.substring(0, valuesBuffer.length() - 1);

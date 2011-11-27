@@ -774,7 +774,7 @@ public class IcsUtils implements GameConstants {
 			result.append(tok.nextToken());
 		}
 		while (tok.hasMoreTokens()) {
-			result.append(" " + tok.nextToken());
+            result.append(" ").append(tok.nextToken());
 		}
 		return result.toString();
 	}

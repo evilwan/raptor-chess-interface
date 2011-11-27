@@ -842,8 +842,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 
 				sendMessage(match);
 			} catch (NumberFormatException nfe) {
-				return;
-			}
+            }
 		}
 	}
 
@@ -1575,8 +1574,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 											+ "auto-connect", false);
 
 					disconnect();
-					return;
-				}
+                }
 			}
 
 			public String toString() {
@@ -2284,7 +2282,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					}
 					int secondPlayerStart = message.indexOf(")");
 					if (secondPlayerStart != -1) {
-						secondPlayerStart = secondPlayerStart + 2;
+                        secondPlayerStart += 2;
 						int secondPlayerEnd = message.indexOf(" ",
 								secondPlayerStart);
 						if (secondPlayerEnd != -1) {

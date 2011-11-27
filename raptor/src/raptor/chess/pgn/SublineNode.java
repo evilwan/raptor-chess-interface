@@ -147,11 +147,10 @@ public class SublineNode implements MoveAnnotation {
 			StringBuilder result = new StringBuilder();
 			if (getMove().hasSubline()) {
 				for (SublineNode node : getSublines()) {
-					result.append("(" + node.toString() + ")");
+                    result.append("(").append(node.toString()).append(")");
 				}
 			}
-			result.append(move.toString()
-					+ (reply != null ? " " + reply.toString() : ""));
+            result.append(move.toString()).append(reply != null ? " " + reply.toString() : "");
 			return result.toString();
 		}
 	}
