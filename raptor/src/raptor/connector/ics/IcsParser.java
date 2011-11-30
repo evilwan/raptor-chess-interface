@@ -796,7 +796,7 @@ public class IcsParser implements GameConstants {
 				}
 			} else {
 				// TODO: somehow fix it without this hack
-				Game[] games = connector.getGameService().getAllActiveGames();
+				/*Game[] games = connector.getGameService().getAllActiveGames();
 				boolean result = false;
 				for (Game gm : games) {
 					if (gm.isInState(Game.EXAMINING_STATE)
@@ -805,7 +805,7 @@ public class IcsParser implements GameConstants {
 						break;
 					}
 				}
-				if (!result)
+				if (!result)*/
 					IcsUtils.updateGamesMoves(game, message);
 				
 				service.fireGameMovesAdded(game.getId());

@@ -84,7 +84,7 @@ public final class MoveList implements GameConstants {
 		 * disrupted. Lets gamble and take that chance so we don't have to add
 		 * slow synchronized code
 		 */
-        System.arraycopy(moves, movesToPrepend.length - movesToPrepend.length, newMoves, movesToPrepend.length, size + movesToPrepend.length - movesToPrepend.length);
+        System.arraycopy(moves, 0, newMoves, movesToPrepend.length, size);
 
 		moves = newMoves;
         size += movesToPrepend.length;

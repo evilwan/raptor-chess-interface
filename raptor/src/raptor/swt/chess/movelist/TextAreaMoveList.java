@@ -413,7 +413,15 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 					boolean hasComments = false;
 					int start, length;
 					start = textPanel.getCharCount() + buff.length();
-					String move = getMoveNumber(i)
+					
+					String moveNumber;
+					if (moveNodes.size() == 0 && !game
+							.getMoveList().get(i).isWhitesMove())
+						moveNumber = getMoveNumberBlack(i);					
+					else
+						moveNumber = getMoveNumber(i);
+					
+					String move = moveNumber
 							+ GameUtils.convertSanToUseUnicode(game
 									.getMoveList().get(i).toString(), true);
 					buff.append(move);

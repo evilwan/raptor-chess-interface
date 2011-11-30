@@ -216,34 +216,33 @@ public class MovesParser {
 						// White move number.
 						if (lineTok.hasMoreTokens()) {
 							String token = lineTok.nextToken();
-							if (token.equals("...")) {
-								break;
-							} else {
+							if (!token.equals("...")) {
 								moves.add(token);
+								// White time.
+								if (lineTok.hasMoreTokens()) {
+									String whiteTime = lineTok.nextToken();
+									moveTimes.add(IcsUtils.timeToLong(whiteTime));
+								}
 							}
-						}
-
-						// White time.
-						if (lineTok.hasMoreTokens()) {
-							String whiteTime = lineTok.nextToken();
-							moveTimes.add(IcsUtils.timeToLong(whiteTime));
+							else
+								lineTok.nextToken();
 						}
 
 						// Blacks move
 						if (lineTok.hasMoreTokens()) {
 							String token = lineTok.nextToken();
-							if (token.equals("...")) {
-								break;
-							} else {
+							if (!token.equals("...")) {
 								moves.add(token);
+								// Blacks time
+								if (lineTok.hasMoreTokens()) {
+									String blackTime = lineTok.nextToken();
+									moveTimes.add(IcsUtils.timeToLong(blackTime));
+								}
 							}
+							else
+								lineTok.nextToken();
 						}
 
-						// Blacks time
-						if (lineTok.hasMoreTokens()) {
-							String blackTime = lineTok.nextToken();
-							moveTimes.add(IcsUtils.timeToLong(blackTime));
-						}
 					}
 				}
 				MovesMessage result = new MovesMessage();

@@ -916,7 +916,7 @@ public class IcsUtils implements GameConstants {
 			}
 			gameClone.addState(Game.UPDATING_SAN_STATE);
 			gameClone.addState(Game.UPDATING_ECO_HEADERS_STATE);
-			for (int i = 0; i < halfMoveCountGameStartedOn; i++) {
+			for (int i = 0; i < message.moves.length; i++) {
 				try {
 					if (gameClone.isInState(Game.DROPPABLE_STATE)) {
 						gameClone.setDropCount(WHITE, PAWN, 1);
