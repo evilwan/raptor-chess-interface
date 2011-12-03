@@ -293,7 +293,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	}
 
 	public String getDefaultMonospacedFont() {
-		FontData[] fonts = Raptor.getInstance().getDisplay()
+		/*FontData[] fonts = Raptor.getInstance().getDisplay()
 				.getFontList(null, true);
 		String[] preferredFontNames = null;
 
@@ -317,9 +317,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 		if (result == null) {
 			result = "Courier";
-		}
-
-		return result;
+		}*/
+		if (System.getProperty("os.name").startsWith("Windows"))
+            return "Courier";
+        else
+            return "Monaco";
 	}
 
 	protected FontData[] zoomFont(String key, double zoomFactor) {
