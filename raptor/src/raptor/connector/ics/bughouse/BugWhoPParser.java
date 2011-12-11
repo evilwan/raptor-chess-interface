@@ -35,7 +35,8 @@ import raptor.util.RaptorStringTokenizer;
  * This code was adapted from some code johnthegreat for Raptor.
  */
 public class BugWhoPParser {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(BugWhoUParser.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(BugWhoUParser.class);
 
 	public static final String ID = "Partnerships not playing bughouse\n";
 	public static final String ID2 = "\nPartnerships not playing bughouse\n";
@@ -45,17 +46,27 @@ public class BugWhoPParser {
 	}
 
 	public Partnership[] parse(String message) {
-		if (message.startsWith(ID)) {
-			message = message.substring(ID.length(), message.length());
-			message = message.replaceAll("[0-9]+ partnerships displayed.", "");
-			message = message.replaceAll("1 partnership displayed.", "");
-			message = message.replaceAll("\nfics%", "");
-			return process(message.trim());
-		} else if (message.startsWith(ID2)) {
-			message = message.replaceAll("[0-9]+ partnerships displayed.", "");
-			message = message.replaceAll("1 partnership displayed.", "");
-			message = message.replaceAll("\nfics%", "");
-			return process(message.trim());
+		try {
+			if (message.startsWith(ID)) {
+				message = message.substring(ID.length(), message.length());
+				message = message.replaceAll("[0-9]+ partnerships displayed.",
+						"");
+				message = message.replaceAll("1 partnership displayed.", "");
+				message = message.replaceAll("\nfics%", "");
+				return process(message.trim());
+			} else if (message.startsWith(ID2)) {
+				message = message.replaceAll("[0-9]+ partnerships displayed.",
+						"");
+				message = message.replaceAll("1 partnership displayed.", "");
+				message = message.replaceAll("\nfics%", "");
+				return process(message.trim());
+			}
+		} catch (Exception e) {
+			// Just log it for now and eat it. Soft crash on these there are
+			// subtle bugs in the message parsing.
+			LOG.error("Unexpected error parsing BugWho P message\r" + message,
+					e);
+			return null;
 		}
 		return null;
 	}
@@ -80,10 +91,9 @@ public class BugWhoPParser {
 			specialCharIndex = StringUtils.indexOfAny(name, new char[] { '^',
 					'~', ':', '#', '.', '&' });
 			if (specialCharIndex != -1) {
-				bugger.setStatus(IcsUtils
-						.getBuggserStatus(name.substring(0, 1)));
-				bugger.setName(IcsUtils.stripTitles(name.substring(1, name
-						.length())));
+				bugger.setStatus(IcsUtils.getBuggserStatus(name.substring(0, 1)));
+				bugger.setName(IcsUtils.stripTitles(name.substring(1,
+						name.length())));
 			} else {
 				bugger.setStatus(BuggerStatus.Available);
 				bugger.setName(IcsUtils.stripTitles(name));

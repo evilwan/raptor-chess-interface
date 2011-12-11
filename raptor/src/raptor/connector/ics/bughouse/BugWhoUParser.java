@@ -28,7 +28,8 @@ import raptor.util.RaptorStringTokenizer;
  * This code was adapted from some code johnthegreat for Raptor.
  */
 public class BugWhoUParser {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(BugWhoUParser.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(BugWhoUParser.class);
 
 	public static final String ID = "Unpartnered players with bugopen on\n";
 	public static final String ID2 = "\nUnpartnered players with bugopen on\n";
@@ -37,22 +38,30 @@ public class BugWhoUParser {
 	}
 
 	public Bugger[] parse(String message) {
-		if (message.startsWith(ID)) {
-			message = message.substring(ID.length(), message.length());
-			message = message
-					.replaceAll(
-							"[0-9]+ players displayed \\(of [0-9]+\\). \\(\\*\\) indicates system administrator.",
-							"");
-			message = message.replaceAll("\nfics%", "");
-			return process(message.trim());
-		} else if (message.startsWith(ID2)) {
-			message = message.substring(ID2.length(), message.length());
-			message = message
-					.replaceAll(
-							"[0-9]+ player displayed \\(of [0-9]+\\). \\(\\*\\) indicates system administrator.",
-							"");
-			message = message.replaceAll("\nfics%", "");
-			return process(message.trim());
+		try {
+			if (message.startsWith(ID)) {
+				message = message.substring(ID.length(), message.length());
+				message = message
+						.replaceAll(
+								"[0-9]+ players displayed \\(of [0-9]+\\). \\(\\*\\) indicates system administrator.",
+								"");
+				message = message.replaceAll("\nfics%", "");
+				return process(message.trim());
+			} else if (message.startsWith(ID2)) {
+				message = message.substring(ID2.length(), message.length());
+				message = message
+						.replaceAll(
+								"[0-9]+ player displayed \\(of [0-9]+\\). \\(\\*\\) indicates system administrator.",
+								"");
+				message = message.replaceAll("\nfics%", "");
+				return process(message.trim());
+			}
+		} catch (Throwable t) {
+			// Just log it for now and eat it. Soft crash on these there are
+			// subtle bugs in the message parsing.
+			LOG.error("Unexpected error parsing BugWho U message\r" + message,
+					t);
+			return null;
 		}
 
 		return null;
@@ -87,8 +96,8 @@ public class BugWhoUParser {
 				if (specialCharIndex != -1) {
 					bugger.setStatus(IcsUtils.getBuggserStatus(name.substring(
 							0, 1)));
-					bugger.setName(IcsUtils.stripTitles(name.substring(1, name
-							.length())));
+					bugger.setName(IcsUtils.stripTitles(name.substring(1,
+							name.length())));
 				} else {
 					bugger.setStatus(BuggerStatus.Available);
 					bugger.setName(IcsUtils.stripTitles(name));

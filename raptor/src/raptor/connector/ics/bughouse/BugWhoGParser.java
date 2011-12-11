@@ -45,7 +45,8 @@ public class BugWhoGParser {
 	 * 2 partnerships displayed.
 	 */
 
-	private static final RaptorLogger LOG = RaptorLogger.getLog(BugWhoUParser.class);
+	private static final RaptorLogger LOG = RaptorLogger
+			.getLog(BugWhoUParser.class);
 
 	public static final String ID = "Bughouse games in progress\n";
 	public static final String ID2 = "\nBughouse games in progress\n";
@@ -54,18 +55,26 @@ public class BugWhoGParser {
 	}
 
 	public BugGame[] parse(String message) {
-		if (message.startsWith(ID) && !message.contains(BugWhoPParser.ID)) {
-			message = message.substring(ID.length(), message.length());
-			message = message.replaceAll("[0-9]+ games displayed.", "");
-			message = message.replaceAll("1 game displayed.", "");
-			message = message.replaceAll("\nfics%", "");
-			return process(message.trim());
-		} else if (message.startsWith(ID2)
-				&& !message.contains(BugWhoPParser.ID)) {
-			message = message.replaceAll("[0-9]+ games displayed.", "");
-			message = message.replaceAll("1 game displayed.", "");
-			message = message.replaceAll("\nfics%", "");
-			return process(message.trim());
+		try {
+			if (message.startsWith(ID) && !message.contains(BugWhoPParser.ID)) {
+				message = message.substring(ID.length(), message.length());
+				message = message.replaceAll("[0-9]+ games displayed.", "");
+				message = message.replaceAll("1 game displayed.", "");
+				message = message.replaceAll("\nfics%", "");
+				return process(message.trim());
+			} else if (message.startsWith(ID2)
+					&& !message.contains(BugWhoPParser.ID)) {
+				message = message.replaceAll("[0-9]+ games displayed.", "");
+				message = message.replaceAll("1 game displayed.", "");
+				message = message.replaceAll("\nfics%", "");
+				return process(message.trim());
+			}
+		} catch (Exception e) {
+			// Just log it for now and eat it. Soft crash on these there are
+			// subtle bugs in the message parsing.
+			LOG.error("Unexpected error parsing BugWho G message\r" + message,
+					e);
+			return null;
 		}
 		return null;
 	}
