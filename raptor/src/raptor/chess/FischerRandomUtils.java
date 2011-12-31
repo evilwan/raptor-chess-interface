@@ -297,12 +297,12 @@ public class FischerRandomUtils implements GameConstants {
 	public static void updateCastlingRightsForNonEpNonCastlingMove(
 			ClassicGame game, Move move, int initialShortRookFile,
 			int initialLongRookFile) {
-
-		int shortRookSquare = game.getColorToMove() == WHITE ? getSquare(0,
+		
+		int shortRookSquare = game.getColorToMove() == BLACK ? getSquare(0,
 				initialShortRookFile) : getSquare(7, initialShortRookFile);
-		int longRookSquare = game.getColorToMove() == WHITE ? getSquare(0,
+		int longRookSquare = game.getColorToMove() == BLACK ? getSquare(0,
 				initialLongRookFile) : getSquare(7, initialLongRookFile);
-
+		
 		switch (move.getPiece()) {
 		case KING:
 			game.setCastling(game.getColorToMove(), CASTLE_NONE);
@@ -326,7 +326,7 @@ public class FischerRandomUtils implements GameConstants {
 					&& game.getColorToMove() == BLACK
 					|| move.getCapture() == ROOK
 					&& move.getTo() == longRookSquare
-					&& game.getColorToMove() == WHITE) {
+					&& game.getColorToMove() == WHITE) {				
 				game.setCastling(BLACK, game.getCastling(BLACK) & CASTLE_SHORT);
 			} else if (move.getPiece() == ROOK
 					&& move.getFrom() == shortRookSquare

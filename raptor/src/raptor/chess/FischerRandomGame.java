@@ -54,8 +54,18 @@ public class FischerRandomGame extends ClassicGame {
 	 * handles setting castling information used later on during the game.
 	 */
 	public void initialPositionIsSet() {
-		initialKingFile = getFile(bitscanForward(getPieceBB(WHITE, KING)));
-		long rookBB = getPieceBB(WHITE, ROOK);
+		/* This code tries to guess the initial rook files even if the positions isn't starting
+		   there is a great possibility of a mistake in a middlegame, but this eliminates 
+		   castling bug in most cases. */
+		int sideToCheck;
+		if ((getCastling(WHITE) & CASTLE_BOTH) != 0 
+				&& getPieceCount(WHITE, ROOK) == 2) 
+			sideToCheck = WHITE;
+		else
+			sideToCheck = BLACK;
+		
+		initialKingFile = getFile(bitscanForward(getPieceBB(sideToCheck, KING)));
+		long rookBB = getPieceBB(sideToCheck, ROOK);
 		int firstRook = getFile(bitscanForward(rookBB));
 		rookBB = bitscanClear(rookBB);
 		int secondRook = getFile(bitscanForward(rookBB));

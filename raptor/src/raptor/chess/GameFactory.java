@@ -111,7 +111,7 @@ public class GameFactory implements GameConstants {
 					boardIndex -= 16;
 				} else if (Character.isDigit(piece)) {
 					boardIndex += Integer.parseInt("" + piece);
-				} else {
+				} else {					
 					int pieceColor = Character.isUpperCase(piece) ? WHITE
 							: BLACK;
 					int pieceInt = PIECE_TO_SAN.indexOf(new String(
@@ -119,7 +119,7 @@ public class GameFactory implements GameConstants {
 					long pieceSquare = GameUtils.getBitboard(boardIndex);
 
 					result.setPieceCount(pieceColor, pieceInt, result
-							.getPieceCount(pieceColor, pieceInt) + 1);
+							.getPieceCount(pieceColor, pieceInt) + 1);	
 					result.getBoard()[boardIndex] = pieceInt;
 					result.setColorBB(pieceColor, result.getColorBB(pieceColor)
 							| pieceSquare);

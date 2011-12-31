@@ -171,7 +171,7 @@ public class ClassicGame implements Game {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void forceMove(Move move) {
+	public void forceMove(Move move) {		
 		move.setLastWhiteCastlingState(getCastling(WHITE));
 		move.setLastBlackCastlingState(getCastling(BLACK));
 		setSan(move);
@@ -794,7 +794,7 @@ public class ClassicGame implements Game {
 			throws IllegalArgumentException {
 		SanValidations validations = SanUtils.getValidations(shortAlgebraic);
 		Move[] pseudoLegals = getPseudoLegalMoves().asArray();
-
+		
 		Move result = makeSanMoveOverride(shortAlgebraic, validations,
 				pseudoLegals);
 		if (result == null) {
@@ -2029,7 +2029,7 @@ public class ClassicGame implements Game {
 		setEpSquare(EMPTY_SQUARE);
 	}
 
-	protected void makeNonEpNonCastlingMove(Move move) {
+	protected void makeNonEpNonCastlingMove(Move move) {		
 		long fromBB = getBitboard(move.getFrom());
 		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
@@ -2487,7 +2487,7 @@ public class ClassicGame implements Game {
 	 * Provided so it can be easily implemented for Fischer Random type of
 	 * games.
 	 */
-	protected void updateCastlingRightsForNonEpNonCastlingMove(Move move) {
+	protected void updateCastlingRightsForNonEpNonCastlingMove(Move move) {		
 		switch (move.getPiece()) {
 		case KING:
 			setCastling(getColorToMove(), CASTLE_NONE);
