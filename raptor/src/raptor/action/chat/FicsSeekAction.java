@@ -15,6 +15,7 @@ package raptor.action.chat;
 
 import raptor.Raptor;
 import raptor.action.AbstractRaptorAction;
+import raptor.connector.Connector;
 import raptor.swt.FicsSeekDialog;
 
 public class FicsSeekAction extends AbstractRaptorAction {
@@ -25,12 +26,17 @@ public class FicsSeekAction extends AbstractRaptorAction {
 	}
 
 	public void run() {
-		if (getConnectorSource() != null) {
+		Connector conn = getConnectorSource();
+		if (conn == null && getChatConsoleControllerSource() != null) {
+			conn = getChatConsoleControllerSource().getConnector();
+		}
+		
+		if (conn != null) {
 			FicsSeekDialog dialog = new FicsSeekDialog(Raptor.getInstance()
 					.getWindow().getShell());
 			String seek = dialog.open();
 			if (seek != null) {
-				getConnectorSource().sendMessage(seek);
+				conn.sendMessage(seek);
 			}
 		}
 	}
