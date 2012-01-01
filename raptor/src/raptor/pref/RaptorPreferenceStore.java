@@ -487,10 +487,10 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			try {
 				if (Runtime.getRuntime().exec(new String[] { "which", "play" })
 						.waitFor() == 0) {
-					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "aplay");
+					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "play");
 				} else if (Runtime.getRuntime()
 						.exec(new String[] { "which", "aplay" }).waitFor() == 0) {
-					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "play");
+					setDefault(PreferenceKeys.SOUND_PROCESS_NAME, "aplay");
 				}
 			} catch (Throwable t) {
 				LOG.warn(
