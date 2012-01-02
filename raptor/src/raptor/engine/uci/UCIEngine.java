@@ -921,7 +921,7 @@ public class UCIEngine {
 			} else if (type.equalsIgnoreCase("score")) {
 				ScoreInfo scoreInfo = new ScoreInfo();
 				String nextToken = tok.nextToken();
-
+				
 				while (true) {
 					if (nextToken.equalsIgnoreCase("cp")) {
 						scoreInfo.setValueInCentipawns(Integer.parseInt(tok

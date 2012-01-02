@@ -117,10 +117,6 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 									if (((ScoreInfo) info).getMateInMoves() != 0) {
 										score = local.getString("uciAnalW_0") 
 												+ scoreInfo.getMateInMoves();
-									} else if (scoreInfo.isLowerBoundScore()) {
-										score = local.getString("uciAnalW_1"); 
-									} else if (scoreInfo.isUpperBoundScore()) {
-										score = local.getString("uciAnalW_2"); 
 									} else {
 										double scoreAsDouble = controller
 												.getGame().isWhitesMove()
@@ -136,6 +132,13 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 																2,
 																BigDecimal.ROUND_HALF_UP)
 														.toString();
+										
+										if (scoreInfo.isLowerBoundScore()) {
+											score += "++";
+										} else if (scoreInfo.isUpperBoundScore()) {
+											score += "--";
+										}
+										
 									}
 								} else if (info instanceof DepthInfo) {
 									DepthInfo depthInfo = (DepthInfo) info;

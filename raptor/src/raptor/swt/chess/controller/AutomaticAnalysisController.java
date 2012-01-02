@@ -96,19 +96,20 @@ public class AutomaticAnalysisController {
 									if (thisPosScore.getMateInMoves() != 0) {
 										score = local.getString("uciAnalW_0")
 												+ Math.abs(thisPosScore.getMateInMoves());
-									} else if (thisPosScore.isLowerBoundScore()) {
-										score = local.getString("uciAnalW_1");
-									} else if (thisPosScore.isUpperBoundScore()) {
-										score = local.getString("uciAnalW_2");
 									} else {
 										double scoreAsDouble = asDouble(thisPosScore);
-
+										
 										score = ""
 												+ new BigDecimal(scoreAsDouble)
 														.setScale(
 																2,
 																BigDecimal.ROUND_HALF_UP)
 														.toString();
+										
+										if (thisPosScore.isLowerBoundScore()) 
+											score += "++"; 
+										else if (thisPosScore.isUpperBoundScore())
+											score += "--"; 
 									}
 
 									boolean bad = false;
@@ -142,6 +143,8 @@ public class AutomaticAnalysisController {
 												.getComment(asDouble(previousPosScore), asDouble(thisPosScore),
 														prevMoveDiff, !boardController
 														.getGame().isWhitesMove(), thisPosBestLine, boardController.getGame());
+										if (comment.equals(" "))
+											comment = "";
 									}
 									score = "(" + score + comment + ")";
 									((TextAreaMoveList) boardController

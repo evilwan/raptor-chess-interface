@@ -15,6 +15,7 @@ package raptor.swt.chess.analysis;
 
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
+import raptor.engine.uci.UCIMove;
 import raptor.engine.uci.info.BestLineFoundInfo;
 
 public class AnalysisCommentsGenerator {
@@ -36,6 +37,127 @@ public class AnalysisCommentsGenerator {
 	
 	int lastMaterial = 0;
 	
+	private static Game extendMoves(BestLineFoundInfo thisPosBestLine, Game game) {
+		Game newGame = game.deepCopy(true);
+		UCIMove[] possibleMoves = thisPosBestLine.getMoves();
+		for (UCIMove move: possibleMoves) {
+			newGame.makeMove(move.getStartSquare(), move.getEndSquare());
+			if (!newGame.getLastMove().isCapture()) {
+				newGame.rollback();
+				break;
+			}
+		}
+		return newGame;
+	}
+	
+	private static boolean isQueenAdvantage(int color, Game game, Game extendedGame) {
+		int oppositeColor = (color == GameConstants.WHITE) ? GameConstants.BLACK
+				: GameConstants.WHITE;
+
+		return (game.getPieceCount(color, GameConstants.QUEEN) == 1
+				&& game.getPieceCount(oppositeColor, GameConstants.QUEEN) == 0)
+				&& (extendedGame.getPieceCount(color, GameConstants.QUEEN) == 1
+				&& extendedGame.getPieceCount(oppositeColor, GameConstants.QUEEN) == 0);
+	}
+	
+	private static boolean isDBishopAdvantage(int color, Game game, Game extendedGame, double previous) {
+		int oppositeColor = (color == GameConstants.WHITE) ? GameConstants.BLACK
+				: GameConstants.WHITE;
+
+		return game.getPieceCount(color, GameConstants.BISHOP) == 2
+			&& game.getPieceCount(oppositeColor,
+				GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1) //On the previous move, score was roughly even..
+				&& extendedGame.getPieceCount(color, GameConstants.BISHOP) == 2
+				&& extendedGame.getPieceCount(oppositeColor,
+						GameConstants.BISHOP) == 0; 
+	}
+	
+	private static boolean isSBishopAdvantage(int color, Game game, Game extendedGame, double previous) {
+		int oppositeColor = (color == GameConstants.WHITE) ? GameConstants.BLACK
+				: GameConstants.WHITE;
+
+		return (game.getPieceCount(color, GameConstants.BISHOP) == 1  //If white has 1 bishop and black has none and no knights
+				&& game.getPieceCount(oppositeColor,
+						GameConstants.BISHOP) == 0) 
+						&& game.getPieceCount(oppositeColor, GameConstants.KNIGHT) == 0
+						|| (game.getPieceCount(color, GameConstants.BISHOP) == 2 //Or if white has 2 bishops and black has 1 bishop an 1 knight
+								&& game.getPieceCount(oppositeColor, GameConstants.BISHOP) == 1)
+										&& game.getPieceCount(oppositeColor, GameConstants.KNIGHT) == 1
+											&& (previous > -1 || previous < 1) //Tweak these values of 1 bishop advantage? I am not sure which values would be accurate. 
+											&& extendedGame.getPieceCount(color, GameConstants.BISHOP) == 1  //If white has 1 bishop and black has none and no knights
+											&& extendedGame.getPieceCount(oppositeColor,
+													GameConstants.BISHOP) == 0 
+													&& extendedGame.getPieceCount(oppositeColor, GameConstants.KNIGHT) == 0
+													|| (extendedGame.getPieceCount(color, GameConstants.BISHOP) == 2 //Or if white has 2 bishops and black has 1 bishop an 1 knight
+															&& extendedGame.getPieceCount(oppositeColor, GameConstants.BISHOP) == 1)
+																	&& extendedGame.getPieceCount(oppositeColor, GameConstants.KNIGHT) == 1;
+	}
+	
+	private static boolean isDRookAdvantage(int color, Game game,
+			Game extendedGame, double previous) {
+		int oppositeColor = (color == GameConstants.WHITE) ? GameConstants.BLACK
+				: GameConstants.WHITE;
+
+		return game.getPieceCount(color, GameConstants.ROOK) == 2
+				&& game.getPieceCount(oppositeColor, GameConstants.ROOK) == 0
+				&& (previous > -1 || previous < 1)
+				&& extendedGame.getPieceCount(color, GameConstants.ROOK) == 2
+				&& extendedGame.getPieceCount(oppositeColor, GameConstants.ROOK) == 0;
+	}
+	
+	private static boolean isSRookAdvantage(int color, Game game, Game extendedGame, double previous) {
+		int oppositeColor = (color == GameConstants.WHITE) ? GameConstants.BLACK
+				: GameConstants.WHITE;
+
+		return (game.getPieceCount(color, GameConstants.ROOK) == 1
+				&& game.getPieceCount(oppositeColor,
+						GameConstants.ROOK) == 0) || (game.getPieceCount(color, GameConstants.ROOK) == 2
+								&& game.getPieceCount(oppositeColor,
+										GameConstants.ROOK) == 1) && (previous > -1 || previous < 1)
+										&& (extendedGame.getPieceCount(color, GameConstants.ROOK) == 1
+										&& extendedGame.getPieceCount(oppositeColor,
+												GameConstants.ROOK) == 0) || (extendedGame.getPieceCount(color, GameConstants.ROOK) == 2
+														&& game.getPieceCount(oppositeColor,
+																GameConstants.ROOK) == 1);
+	}
+	
+	private static boolean isDKnightAdvantage(int color, Game game,
+			Game extendedGame, double previous) {
+		int oppositeColor = (color == GameConstants.WHITE) ? GameConstants.BLACK
+				: GameConstants.WHITE;
+
+		return game.getPieceCount(color, GameConstants.KNIGHT) == 2
+				&& game
+						.getPieceCount(oppositeColor,
+								GameConstants.KNIGHT) == 0
+				&& (previous > -1 || previous < 1)
+				&&  extendedGame.getPieceCount(color, GameConstants.KNIGHT) == 2
+				&& extendedGame
+				.getPieceCount(oppositeColor,
+						GameConstants.KNIGHT) == 0;
+	}
+	
+	private static boolean isSKnightAdvantage(int color, Game game, Game extendedGame, double previous) {
+		int oppositeColor = (color == GameConstants.WHITE) ? GameConstants.BLACK
+				: GameConstants.WHITE;
+
+		return (game.getPieceCount(color, GameConstants.KNIGHT) == 1  //If white has 1 knight and black has none and no bishops
+				&& game.getPieceCount(oppositeColor,
+						GameConstants.KNIGHT) == 0) && (game.getPieceCount(oppositeColor, GameConstants.BISHOP)) == 0
+								|| (game.getPieceCount(color, GameConstants.KNIGHT) == 2 //Of if white has 2 knights and black has 1 knight and 1 bishop
+								&& game.getPieceCount(oppositeColor,
+										GameConstants.KNIGHT) == 1) 
+										 && (game.getPieceCount(oppositeColor, GameConstants.BISHOP)) ==1
+										 && (previous > -1 || previous < 1)										 
+										&& (extendedGame.getPieceCount(color, GameConstants.KNIGHT) == 1  //If white has 1 knight and black has none and no bishops
+				&& extendedGame.getPieceCount(oppositeColor,
+						GameConstants.KNIGHT) == 0) && (extendedGame.getPieceCount(oppositeColor, GameConstants.BISHOP)) == 0
+								|| (extendedGame.getPieceCount(color, GameConstants.KNIGHT) == 2 //Of if white has 2 knights and black has 1 knight and 1 bishop
+								&& extendedGame.getPieceCount(oppositeColor,
+										GameConstants.KNIGHT) == 1) 
+										 && (extendedGame.getPieceCount(oppositeColor, GameConstants.BISHOP)) == 1;
+	}
+	
 	//I added in simple comments for single and double bishop, rook, knight and a queen advantage. Also a castling advantage and a 'blunder!' comment. I would like to add more.
 	//Sorry for my coding style I am fairly new to Java and I find it hard to write code using your bracketing but I will edit my code back to your format after it is fully finished.
 	
@@ -55,6 +177,7 @@ public class AnalysisCommentsGenerator {
 	public String getComment(double previous, double current, double scoreDiff,
 			boolean isWhite, BestLineFoundInfo thisPosBestLine, Game game) {
 		
+		Game extendedGame = extendMoves(thisPosBestLine, game);		
 		
 		if ((isWhite && previous < -2.0 && scoreDiff >= 2.0)
 				|| (!isWhite && previous > 2.0 && scoreDiff >= 2.0))
@@ -62,18 +185,16 @@ public class AnalysisCommentsGenerator {
 		
 		if ((isWhite && previous < -2.0 && scoreDiff >= 4.0)
 				|| (!isWhite && previous > 2.0 && scoreDiff >= 4.0))
-			return "Blunder!.";
+			return "Blunder!";
 				
 		if (!queenFired){
 			
-			if (game.getPieceCount(GameConstants.WHITE, GameConstants.QUEEN) == 1
-					&& game.getPieceCount(GameConstants.BLACK, GameConstants.QUEEN) == 0 ){
+			if (isQueenAdvantage(GameConstants.WHITE, game, extendedGame)){
 				queenFired = true;
 				return "White has the significant advantage of a queen.";
 				
 			}
-			else if (game.getPieceCount(GameConstants.BLACK, GameConstants.QUEEN) == 1
-					&& game.getPieceCount(GameConstants.WHITE, GameConstants.QUEEN) == 0 ){
+			else if (isQueenAdvantage(GameConstants.BLACK, game, extendedGame)){
 				queenFired = true;
 				return "Black has the significant advantage of a queen.";
 				
@@ -81,44 +202,26 @@ public class AnalysisCommentsGenerator {
 		}
 		
 		if (!doubleBishopFired) {
-			if (game.getPieceCount(GameConstants.WHITE, GameConstants.BISHOP) == 2
-					&& game.getPieceCount(GameConstants.BLACK,
-							GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1)) //On the previous move, score was roughly even..
+			if (isDBishopAdvantage(GameConstants.WHITE, game, extendedGame, previous)) 
 				{
 				doubleBishopFired = true;
 				return "White has the advantage of double bishops.";
 			}
-			else if (game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP) == 2
-					&& game.getPieceCount(GameConstants.WHITE,
-							GameConstants.BISHOP) == 0 && (previous > -1 || previous < 1)) 
+			else if (isDBishopAdvantage(GameConstants.BLACK, game, extendedGame, previous)) 
 			{
 				doubleBishopFired = true;
 				return "Black has the advantage of double bishops.";
 			}//Delete if unwanted
 			else if (!singleBishopFired){
 				
-				if ((game.getPieceCount(GameConstants.WHITE, GameConstants.BISHOP) == 1  //If white has 1 bishop and black has none and no knights
-						&& game.getPieceCount(GameConstants.BLACK,
-								GameConstants.BISHOP) == 0) 
-								&& game.getPieceCount(GameConstants.BLACK, GameConstants.KNIGHT) == 0
-								|| (game.getPieceCount(GameConstants.WHITE, GameConstants.BISHOP) == 2 //Or if white has 2 bishops and black has 1 bishop an 1 knight
-										&& game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP) == 1)
-												&& game.getPieceCount(GameConstants.BLACK, GameConstants.KNIGHT) == 1
-													&& (previous > -1 || previous < 1) )//Tweak these values of 1 bishop advantage? I am not sure which values would be accurate. 
+				if (isSBishopAdvantage(GameConstants.WHITE, game, extendedGame, previous))
 				{
 					singleBishopFired = true;
 					return "White has the advantage of a single bishop.";
 					
 					
 				}
-				else if ((game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP) == 1 //If Black has 1 bishop and White has none and no knights
-						&& game.getPieceCount(GameConstants.WHITE,
-								GameConstants.BISHOP) == 0) 
-								&& game.getPieceCount(GameConstants.WHITE, GameConstants.KNIGHT) == 0
-									||(game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP) == 2 //Or if Blck has 2 bishops and white has 1 bishop an 1 knight
-										&& game.getPieceCount(GameConstants.WHITE,GameConstants.BISHOP) == 1) 
-											&& game.getPieceCount(GameConstants.WHITE, GameConstants.KNIGHT) == 1
-												&& (previous > -1 || previous < 1) ){
+				else if (isSBishopAdvantage(GameConstants.BLACK, game, extendedGame, previous)){
 					singleBishopFired = true;
 					return "Black has the advantage of a single bishop.";
 				}
@@ -130,35 +233,25 @@ public class AnalysisCommentsGenerator {
 		
 		if (!doubleRookFired){
 				
-				if (game.getPieceCount(GameConstants.WHITE, GameConstants.ROOK) == 2
-						&& game.getPieceCount(GameConstants.BLACK, GameConstants.ROOK) == 0 && (previous > -1 || previous <1)){
+				if (isDRookAdvantage(GameConstants.WHITE, game, extendedGame, previous)) {
 					doubleRookFired = true;
 					return "White has the advantage of double rooks.";
 					
 				}
-				else if (game.getPieceCount(GameConstants.BLACK, GameConstants.ROOK) == 2
-						&& game.getPieceCount(GameConstants.WHITE, GameConstants.ROOK) == 0 && (previous > -1 || previous <1)){
+				else if (isDRookAdvantage(GameConstants.BLACK, game, extendedGame, previous)){
 					doubleRookFired = true;
 					return "Black has the advantage of double rooks.";
 					
 				}//Delete if unwanted
-				else if (!singleBishopFired){
+				else if (!singleRookFired){
 					
-					if ((game.getPieceCount(GameConstants.WHITE, GameConstants.ROOK) == 1
-							&& game.getPieceCount(GameConstants.BLACK,
-									GameConstants.ROOK) == 0) || (game.getPieceCount(GameConstants.WHITE, GameConstants.ROOK) == 2
-											&& game.getPieceCount(GameConstants.BLACK,
-													GameConstants.ROOK) == 1) && (previous > -1 || previous < 1) ){
+					if (isSRookAdvantage(GameConstants.WHITE, game, extendedGame, previous)) {
 						singleRookFired = true;
 						return "White has the advantage of a single rook.";
 						
 						
 					}
-					else if ((game.getPieceCount(GameConstants.BLACK, GameConstants.ROOK) == 1
-							&& game.getPieceCount(GameConstants.WHITE,
-									GameConstants.ROOK) == 0) ||(game.getPieceCount(GameConstants.BLACK, GameConstants.ROOK) == 2
-											&& game.getPieceCount(GameConstants.WHITE,
-													GameConstants.ROOK) == 1) && (previous > -1 || previous < 1) ){
+					else if (isSRookAdvantage(GameConstants.BLACK, game, extendedGame, previous)){
 						singleRookFired = true;
 						return "Black has the advantage of a single rook.";
 					}
@@ -171,50 +264,31 @@ public class AnalysisCommentsGenerator {
 		
 		if(!doubleKnightFired){
 			
-			if (game.getPieceCount(GameConstants.WHITE, GameConstants.KNIGHT) == 2
-					&& game.getPieceCount(GameConstants.BLACK, GameConstants.KNIGHT) == 0 && (previous > -1 || previous <1)){
+			if (isDKnightAdvantage(GameConstants.WHITE, game, extendedGame, previous)){
 				doubleKnightFired = true;
 				return "White has the advantage of double knights.";
 				
 			}
-			else if (game.getPieceCount(GameConstants.BLACK, GameConstants.KNIGHT) == 2
-					&& game.getPieceCount(GameConstants.WHITE, GameConstants.KNIGHT) == 0 && (previous > -1 || previous <1)){
+			else if (isDKnightAdvantage(GameConstants.BLACK, game, extendedGame, previous)){
 				doubleKnightFired = true;
 				return "Black has the advantage of double knights.";
 				
 			}//Delete if unwanted
 			else if (!singleKnightFired){
 				
-				if ((game.getPieceCount(GameConstants.WHITE, GameConstants.KNIGHT) == 1  //If white has 1 knight and black has none and no bishops
-						&& game.getPieceCount(GameConstants.BLACK,
-								GameConstants.KNIGHT) == 0) && (game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP)) == 0
-										|| (game.getPieceCount(GameConstants.WHITE, GameConstants.KNIGHT) == 2 //Of if white has 2 knights and black has 1 knight and 1 bishop
-										&& game.getPieceCount(GameConstants.BLACK,
-												GameConstants.KNIGHT) == 1) 
-												 && (game.getPieceCount(GameConstants.BLACK, GameConstants.BISHOP)) ==1
-												 && (previous > -1 || previous < 1) ){
+				if (isSKnightAdvantage(GameConstants.WHITE, game, extendedGame, previous)){
 					singleKnightFired = true;
 					return "White has the advantage of a single knight.";
 					
 					
 				}
-				else if ((game.getPieceCount(GameConstants.BLACK, GameConstants.KNIGHT) == 1
-						&& game.getPieceCount(GameConstants.WHITE,
-								GameConstants.KNIGHT) == 0)  && (game.getPieceCount(GameConstants.WHITE, GameConstants.BISHOP)) == 0
-								||(game.getPieceCount(GameConstants.BLACK, GameConstants.KNIGHT) == 2
-										&& game.getPieceCount(GameConstants.WHITE,
-												GameConstants.KNIGHT) == 1) 
-												&& (game.getPieceCount(GameConstants.WHITE, GameConstants.BISHOP)) ==1
-												&& (previous > -1 || previous < 1) ){
+				else if (isSKnightAdvantage(GameConstants.BLACK, game, extendedGame, previous) ){
 					
 					singleKnightFired = true;
 					return "Black has the advantage of a single knight.";
 				}
 			
 			}
-			
-			
-			
 			
 			
 		}
@@ -237,7 +311,6 @@ public class AnalysisCommentsGenerator {
 				return "Black has an advantage of over " + threshold + " pawns over White.";
 			}
 		
-			
 		}
 		
 		//Need to be edited to check if a player has castled and opponent cannot, then make a castle advantage comment. Not sure of how to do this. 
