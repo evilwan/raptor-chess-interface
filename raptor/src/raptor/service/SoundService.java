@@ -37,7 +37,7 @@ public class SoundService {
 	/**
 	 * Returns the singleton instance.
 	 */
-	public static SoundService getInstance() {
+	public static synchronized SoundService getInstance() {		
 		if (singletonInstance != null)
 			return singletonInstance;
 
