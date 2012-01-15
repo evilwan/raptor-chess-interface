@@ -48,7 +48,6 @@ import raptor.service.ThemeService;
 import raptor.service.ThemeService.Theme;
 import raptor.swt.BugPartners;
 import raptor.swt.GamesWindowItem;
-import raptor.swt.SWTUtils;
 import raptor.swt.SeekTableWindowItem;
 import raptor.swt.chess.SquareBackgroundImageEffect;
 import raptor.swt.chess.controller.InactiveMouseAction;
@@ -75,6 +74,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	protected int defaultSmallFontSize;
 	protected int defaultMediumFontSize;
 	protected int defaultTinyFontSize;
+	private boolean isDefFontLoaded; 
 
 	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 
@@ -318,10 +318,21 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		if (result == null) {
 			result = "Courier";
 		}*/
-		if (System.getProperty("os.name").startsWith("Windows"))
-            return "Courier";
-        else
+		if (OSUtils.isLikelyOSX())
             return "Monaco";
+		else if (OSUtils.isLikelyWindows())
+			return "Lucida Console";
+        else {  
+        	if(!isDefFontLoaded) {
+        			isDefFontLoaded = Raptor.getInstance().getDisplay().loadFont(Raptor.RESOURCES_DIR+"Inconsolata.ttf");            
+                    Font fnt = new Font(Raptor.getInstance().getDisplay(), "Inconsolata", 15, SWT.NORMAL);
+                    Raptor.getInstance().getFontRegistry()
+					.put(CHAT_OUTPUT_FONT, fnt.getFontData());
+                    Raptor.getInstance().getFontRegistry()
+					.put(CHAT_INPUT_FONT, fnt.getFontData());       
+            }
+            return "Inconsolata";
+        }
 	}
 
 	protected FontData[] zoomFont(String key, double zoomFactor) {
