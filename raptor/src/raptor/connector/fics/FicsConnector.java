@@ -444,8 +444,8 @@ public class FicsConnector extends IcsConnector implements PreferenceKeys,
 
 	@Override
 	protected void connect(final String profileName) {
-		if (actions != null) {
-			//Don't do this for fics2.
+		if (actions != null && actions.isEmpty()) {
+			// Don't do this for fics2, or if menu's been created before.
 			createFicsMenuActions();
 		}
 		synchronized (this) {
