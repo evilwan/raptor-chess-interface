@@ -48,7 +48,7 @@ import raptor.util.RaptorLogger;
 public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 
 	private static final RaptorLogger LOG = RaptorLogger.getLog(IcsLoginDialog.class);
-	private static String[] PROFILES = {"Primary", "Secondary", "Tertiary"};
+	private static final String[] PROFILES = {"Primary", "Secondary", "Tertiary"};
 	protected Button autoLoginCheckBox;
 	protected Button guestLoginCheckBox;
 	protected Text handleField;
