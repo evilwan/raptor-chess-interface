@@ -1323,7 +1323,7 @@ public class IcsParser implements GameConstants {
 			// in a setup or examine game.
 			IcsUtils.resetGame(game, message);
 
-			service.fireGameStateChanged(message.gameId, true);
+			service.fireGameStateChanged(message.gameId, false);
 			
 			//Send a moves request to get the move list.
 			connector.sendMessage("moves " + message.gameId, true,
