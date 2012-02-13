@@ -45,8 +45,7 @@ import raptor.swt.RaptorStyledText;
  * sending/receiving of text to and from a connector.
  */
 public class ChatConsole extends Composite implements PreferenceKeys {
-
-	static final RaptorLogger LOG = RaptorLogger.getLog(ChatConsole.class);
+	private static final RaptorLogger LOG = RaptorLogger.getLog(ChatConsole.class);
 
 	protected Composite buttonComposite;
 	protected ChatConsoleController controller;
