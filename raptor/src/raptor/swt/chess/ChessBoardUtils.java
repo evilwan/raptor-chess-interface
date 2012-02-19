@@ -470,7 +470,7 @@ public class ChessBoardUtils implements BoardConstants {
 
 		String key = getChessSetName() + "_" + type + "_" + size + "x" + size;
 
-		Cursor result = Raptor.getInstance().getCursorRegistry().get(key);
+		Cursor result = Raptor.getInstance().getCursorRegistry().get(key);		
 
 		if (result == null) {
 			ImageData pieceImageData = getChessPieceImage(type, size)

@@ -496,7 +496,7 @@ public class ChessBoard implements BoardConstants {
 
 	public synchronized void showMoveList() {
 
-		int width = moveList.getControl().computeSize(150, SWT.DEFAULT).x;
+		int width = moveList.getControl().computeSize(350, SWT.DEFAULT).x;
 		boardMoveListSash.setWeights(new int[] {
 				boardMoveListSash.getSize().x - width, width });
 		moveList.getControl().setVisible(true);

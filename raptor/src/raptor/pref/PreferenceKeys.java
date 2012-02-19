@@ -74,6 +74,7 @@ public interface PreferenceKeys {
 	public static final String APP_PGN_RESULTS_QUADRANT = "app-pgn-results-quadrant";
 	public static final String APP_LINUX_UNIX_BROWSER_NAME = "app-linux-unix-browser-name";
 	public static final String APP_IS_LAUNCHNG_HOME_PAGE = "app-is-launching-home-page";
+	public static final String APP_IS_LAUNCHNG_LOGIN_DIALOG = "app-is-launching-login-dialog";
 	public static final String APP_QUAD9_QUAD12345678_SASH_WEIGHTS = "app-quad9-quad2345678-sash-weights";
 	public static final String APP_QUAD1_QUAD2345678_SASH_WEIGHTS = "app-quad1-quad2345678-sash-weights";
 	public static final String APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS = "app-quad2-quad3-quad4-quad5-sash-weights";

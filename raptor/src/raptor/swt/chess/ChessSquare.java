@@ -246,7 +246,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				if (pieceImage == null && piece != EMPTY) {
 					pieceImage = getChessPieceImage(piece, imageSide);
 				}
-
+				
 				if (pieceImage != null) {
 					int pieceImageX = (size.x - imageSide) / 2;
 					int pieceImageY = (size.y - imageSide) / 2;
@@ -258,7 +258,7 @@ public class ChessSquare extends Canvas implements BoardConstants {
 						e.gc.drawImage(pieceImage, pieceImageX, pieceImageY);
 					}
 				}
-
+				
 				String fileLabel = getFileLabel();
 				if (fileLabel != null) {
 					e.gc.setForeground(getPreferences().getColor(

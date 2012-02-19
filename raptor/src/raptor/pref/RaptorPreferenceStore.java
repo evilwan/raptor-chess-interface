@@ -472,6 +472,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 						Quadrant.IV.toString(), Quadrant.V.toString() });
 		setDefault(APP_PGN_RESULTS_QUADRANT, Quadrant.III);
 		setDefault(APP_IS_LAUNCHNG_HOME_PAGE, true);
+		setDefault(APP_IS_LAUNCHNG_LOGIN_DIALOG, true);
 		setDefault(APP_WINDOW_ITEM_POLL_INTERVAL, 5);
 		setDefault(APP_IS_LOGGING_CONSOLE, false);
 		setDefault(APP_IS_LOGGING_PERSON_TELLS, false);

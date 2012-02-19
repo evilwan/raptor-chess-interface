@@ -142,8 +142,11 @@ public class Raptor implements PreferenceKeys {
 				ThreadService.getInstance().scheduleOneShot(750,
 						new Runnable() {
 							public void run() {
+								// See if we need to launch the login dialog
 										boolean connected = connector.onAutoConnect();
-										if (!connected && connector instanceof FicsConnector) {
+										if (!connected && connector instanceof FicsConnector
+												&& Raptor.getInstance().getPreferences()
+												.getBoolean(APP_IS_LAUNCHNG_LOGIN_DIALOG)) {
 											((FicsConnector)connector).showLoginDialog();										
 										}
 											
