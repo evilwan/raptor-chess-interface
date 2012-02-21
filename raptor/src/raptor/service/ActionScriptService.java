@@ -131,7 +131,6 @@ public class ActionScriptService {
 		// currently hardcoded to allow speak whispers and tells
 		if (container == RaptorAction.RaptorActionContainer.GameChatConsole) {			
 			actions.add(nameToActionMap.get("Speak Whispers and Kibs"));
-			return actions.toArray(new RaptorAction[0]);
 		}
 		
 		for (RaptorAction action : nameToActionMap.values()) {

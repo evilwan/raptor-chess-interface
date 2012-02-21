@@ -702,7 +702,7 @@ public class IcsUtils implements GameConstants {
 		boolean result = false;
 		if (word != null) {
 			try {
-				int gameId = Integer.parseInt(stripWord(word));
+				int gameId = Integer.parseInt(stripGameId(word));
 				return gameId > 0 && gameId <= 5000;
 			} catch (NumberFormatException nfe) {
 				return false;
@@ -838,9 +838,15 @@ public class IcsUtils implements GameConstants {
 	}
 
 	public static String stripGameId(String gameId) {
-		if (gameId.endsWith(")"))
+		if (gameId.endsWith(")") || gameId.endsWith(".")
+				|| gameId.endsWith(":")) {
 			return gameId.substring(0, gameId.length() - 1);
-
+		} else if (gameId.endsWith("]")) {
+			int i = gameId.lastIndexOf("[");
+			if (i != -1) {
+				return gameId.substring(i + 1, gameId.length() - 1);
+			}
+		}
 		return gameId;
 	}
 
