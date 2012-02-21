@@ -146,7 +146,7 @@ public class Raptor implements PreferenceKeys {
 										boolean connected = connector.onAutoConnect();
 										if (!connected && connector instanceof FicsConnector
 												&& Raptor.getInstance().getPreferences()
-												.getBoolean(APP_IS_LAUNCHNG_LOGIN_DIALOG)) {
+												.getBoolean(APP_IS_LAUNCHING_LOGIN_DIALOG)) {
 											((FicsConnector)connector).showLoginDialog();										
 										}
 											
@@ -161,7 +161,7 @@ public class Raptor implements PreferenceKeys {
 						// a
 						// RaptorWindow.
 						if (getInstance().getPreferences().getBoolean(
-								APP_IS_LAUNCHNG_HOME_PAGE)
+								APP_IS_LAUNCHING_HOME_PAGE)
 								&& BrowserUtils.internalBrowserSupported()) {
 							BrowserUtils.openUrl(getInstance().getPreferences()
 									.getString(PreferenceKeys.APP_HOME_URL));

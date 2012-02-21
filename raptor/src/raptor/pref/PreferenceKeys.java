@@ -19,7 +19,7 @@ package raptor.pref;
  * properties must end in color.
  */
 public interface PreferenceKeys {
-	// THe following are not preference names but suffixes of preference names.
+	// The following are not preference names but suffixes of preference names.
 	public static final String MAIN_TAB_QUADRANT = "main-quadrantv2.0";
 	public static final String PARTNER_TELL_TAB_QUADRANT = "partner-quadrantv2.0";
 	public static final String PERSON_TAB_QUADRANT = "person-quadrantv2.0";
@@ -73,8 +73,8 @@ public interface PreferenceKeys {
 	public static final String APP_CHESS_BOARD_QUADRANTS = "app-chess-board-quadrants";
 	public static final String APP_PGN_RESULTS_QUADRANT = "app-pgn-results-quadrant";
 	public static final String APP_LINUX_UNIX_BROWSER_NAME = "app-linux-unix-browser-name";
-	public static final String APP_IS_LAUNCHNG_HOME_PAGE = "app-is-launching-home-page";
-	public static final String APP_IS_LAUNCHNG_LOGIN_DIALOG = "app-is-launching-login-dialog";
+	public static final String APP_IS_LAUNCHING_HOME_PAGE = "app-is-launching-home-page";
+	public static final String APP_IS_LAUNCHING_LOGIN_DIALOG = "app-is-launching-login-dialog";
 	public static final String APP_QUAD9_QUAD12345678_SASH_WEIGHTS = "app-quad9-quad2345678-sash-weights";
 	public static final String APP_QUAD1_QUAD2345678_SASH_WEIGHTS = "app-quad1-quad2345678-sash-weights";
 	public static final String APP_QUAD2_QUAD3_QUAD4_QUAD5_SASH_WEIGHTS = "app-quad2-quad3-quad4-quad5-sash-weights";

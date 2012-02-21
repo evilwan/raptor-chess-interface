@@ -81,11 +81,11 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.APP_IS_LAUNCHNG_LOGIN_DIALOG,
+				PreferenceKeys.APP_IS_LAUNCHING_LOGIN_DIALOG,
 				local.getString("genP17"), getFieldEditorParent()));
 		
 		addField(new BooleanFieldEditor(
-				PreferenceKeys.APP_IS_LAUNCHNG_HOME_PAGE,
+				PreferenceKeys.APP_IS_LAUNCHING_HOME_PAGE,
 				local.getString("genP4"), getFieldEditorParent()));
 		
 		BooleanFieldEditor launchExternalLinkx = new BooleanFieldEditor(
