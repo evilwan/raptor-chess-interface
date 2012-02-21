@@ -47,7 +47,7 @@ public class ChatEventScript implements
 	protected Pattern pattern = null;
 
 	public int compareTo(ChatEventScript arg0) {
-		return name.compareTo(arg0.getName());
+		return name.compareTo(arg0.name);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class ChatEventScript implements
 		if (obj == null || !(obj instanceof ChatEventScript))
 			return false;
 		
-		return name.equalsIgnoreCase(((ChatEventScript) obj).getName());
+		return name.equalsIgnoreCase(((ChatEventScript) obj).name);
 	}
 	
 	@Override
@@ -73,9 +73,9 @@ public class ChatEventScript implements
 		try {
 			Interpreter interpeter = new Interpreter();
 			interpeter.set("context", context);
-			interpeter.eval("import raptor.chat.*;\n" + getScript());
+			interpeter.eval("import raptor.chat.*;\n" + script);
 		} catch (Throwable t) {
-			Raptor.getInstance().onError("Error executing script " + getName(),
+			Raptor.getInstance().onError("Error executing script " + name,
 					t);
 		}
 	}

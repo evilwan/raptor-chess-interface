@@ -49,7 +49,7 @@ public class Bugger {
 	public int getRatingAsInt() {
 		int result = 0;
 		try {
-			result = Integer.parseInt(StringUtils.replaceChars(getRating(),
+			result = Integer.parseInt(StringUtils.replaceChars(rating,
 					"EP", ""));
 		} catch (NumberFormatException nfe) {
 		}
@@ -80,7 +80,7 @@ public class Bugger {
 	 */
 	@Override
 	public String toString() {
-		return getName() + "(" + rating + ")";
+		return name + "(" + rating + ")";
 	}
 
 }

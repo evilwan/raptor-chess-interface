@@ -62,7 +62,7 @@ public class ScriptedAction extends AbstractRaptorAction {
 			try {
 				Interpreter interpeter = new Interpreter();
 				interpeter.set("context", context);
-				interpeter.eval(getScript());
+				interpeter.eval(script);
 			} catch (Throwable t) {
 				Raptor.getInstance().onError(
 						"Error executing script " + getName(), t);

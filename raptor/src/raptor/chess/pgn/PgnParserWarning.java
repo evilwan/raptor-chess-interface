@@ -60,6 +60,6 @@ public class PgnParserWarning implements Serializable {
 	public String toString() {
 		return type.name() + " "
 				+ RaptorStringUtils.toDelimitedString(args, "'") + " "
-				+ getRowNumber() + " ";
+				+ rowNumber + " ";
 	}
 }

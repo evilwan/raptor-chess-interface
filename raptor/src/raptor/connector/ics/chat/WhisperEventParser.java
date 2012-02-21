@@ -37,8 +37,8 @@ public class WhisperEventParser extends ChatEventParser {
 				if (stringtokenizer.hasMoreTokens()) {
 					String s2 = stringtokenizer.nextToken();
 					if (s2.equals(IDENTIFIER)) {
-						int j = text.indexOf("[");
-						int k = text.indexOf("]");
+						int j = text.indexOf('[');
+						int k = text.indexOf(']');
 
 						return new ChatEvent(IcsUtils.stripTitles(source)
 								.trim(), ChatType.WHISPER, text.trim(), text

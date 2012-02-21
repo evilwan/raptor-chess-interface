@@ -125,8 +125,8 @@ public class InputDialog extends Dialog {
 		// Display the input box
 		final Text text = new Text(shell, SWT.BORDER);
 		text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 2, 1));
-		if (getInput() != null) {
-			text.setText(getInput());
+		if (input != null) {
+			text.setText(input);
 		}
 
 		// Create the OK button and add a handler

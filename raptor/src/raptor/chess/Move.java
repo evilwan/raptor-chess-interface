@@ -232,17 +232,17 @@ public class Move implements GameConstants {
 		return result.toArray(new Highlight[0]);
 	}
 
-	public String getLan() {
-		return isCastleShort() ? "O-O" : isCastleLong() ? "O-O-O"
-				: isDrop() ? COLOR_PIECE_TO_CHAR[color].charAt(getPiece())
-						+ "@" + GameUtils.getSan(getTo()) : ""
-						+ GameUtils.getSan(getFrom())
-						+ "-"
-						+ GameUtils.getSan(getTo())
-						+ (isPromotion() ? "="
-								+ PIECE_TO_SAN.charAt(piecePromotedTo
-										& NOT_PROMOTED_MASK) : "");
-	}
+    public String getLan() {
+        return isCastleShort() ? "O-O" : isCastleLong() ? "O-O-O"
+                : isDrop() ? COLOR_PIECE_TO_CHAR[color].charAt(getPiece())
+                + "@" + GameUtils.getSan(getTo()) : ""
+                + GameUtils.getSan(getFrom())
+                + "-"
+                + GameUtils.getSan(getTo())
+                + (isPromotion() ? "="
+                + PIECE_TO_SAN.charAt(piecePromotedTo
+                & NOT_PROMOTED_MASK) : "");
+    }
 
 	public int getLastBlackCastlingState() {
 		return lastBlackCastlingState;
@@ -510,6 +510,6 @@ public class Move implements GameConstants {
 
 	@Override
 	public String toString() {
-		return getSan() != null ? getSan() : getLan();
+		return san != null ? san : getLan();
 	}
 }

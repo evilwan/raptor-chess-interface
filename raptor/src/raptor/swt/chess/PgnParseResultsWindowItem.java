@@ -398,7 +398,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				PgnParserError error = errors.get(i);
 				content[i][0] = error.getType().name();
 				content[i][1] = error.getAction().name();
-				content[i][2] = "" + error.getLineNumber(); 
+				content[i][2] = String.valueOf(error.getLineNumber());
 			}
 			errorsTable.refreshTable(content);
 		}
@@ -421,7 +421,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 				PGNSyntaxError error = chprsErrors.get(i);
 				content[i][0] = error.getMessage();
 				content[i][1] = "";
-				content[i][2] = "" + (error.getLineNumber()==0?"Und":error.getLineNumber()); 
+				content[i][2] = String.valueOf(error.getLineNumber() == 0 ? "Und" : error.getLineNumber());
 			}
 			errorsTable.refreshTable(content);
 		}
@@ -479,7 +479,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			String[][] gamesData = new String[chprsGames.size()][10];
 			for (int i = 0; i < chprsGames.size(); i++) {
 				chesspresso.game.Game game = chprsGames.get(i);
-				gamesData[i][0] = "" + (i+1);
+				gamesData[i][0] = String.valueOf(i + 1);
 				gamesData[i][1] = "Standard";
 				gamesData[i][2] = game.getDate();
 				gamesData[i][3] = game.getEvent();
@@ -495,7 +495,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 			String[][] gamesData = new String[games.size()][11];
 			for (int i = 0; i < games.size(); i++) {
 				Game game = games.get(i);
-				gamesData[i][0] = "" + i;
+				gamesData[i][0] = String.valueOf(i);
 				gamesData[i][1] = StringUtils.defaultString(game
 						.getHeader(PgnHeader.Variant), "?");
 				gamesData[i][2] = StringUtils.defaultString(game

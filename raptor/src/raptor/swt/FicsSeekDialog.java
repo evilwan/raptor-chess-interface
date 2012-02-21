@@ -277,11 +277,11 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys {
 				result = "seek " + getValue(minutesCombo, MINUTES) + " ";
 				result += getValue(secondsCombo, INC) + " ";
 
-				if (!getValue(gameTypeCombo, GAME_TYPE).equals("")) {
+				if (!getValue(gameTypeCombo, GAME_TYPE).isEmpty()) {
 					result += getValue(gameTypeCombo, GAME_TYPE) + " ";
 				}
 
-				if (!getValue(colorCombo, COLOR).equals("")) {
+				if (!getValue(colorCombo, COLOR).isEmpty()) {
 					result += getValue(colorCombo, COLOR) + " ";
 				}
 				result += ratedButton.getSelection() ? "r " : "u ";

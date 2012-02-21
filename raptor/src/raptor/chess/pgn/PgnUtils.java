@@ -256,8 +256,8 @@ public class PgnUtils {
 	 */
 	public static String timeIncMillisToTimeControl(long startTimeMillis,
 			long startIncMillis) {
-		String minutes = "" + startTimeMillis / 1000;
-		String inc = "" + startIncMillis / 1000;
+		String minutes = String.valueOf(startTimeMillis / 1000);
+		String inc = String.valueOf(startIncMillis / 1000);
 
 		return minutes + "+" + inc;
 	}

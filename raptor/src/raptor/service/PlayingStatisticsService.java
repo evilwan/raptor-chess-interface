@@ -217,10 +217,7 @@ public class PlayingStatisticsService {
 					+ "): " + vsStats.totalScore + "/" + vsStats.gamesPlayed
 					+ "\n" : "";
 
-			return performance + vsStat + "Average Move Time(you/opponent): "
-					+ yourAvgMoveTime + "/" + oppAvgMoveTime + ""
-					+ "\nPremoves(you/opp): " + playerPremoves + "/"
-					+ opponentPremoves;
+			return performance + vsStat + "Average Move Time(you/opponent): " + yourAvgMoveTime + "/" + oppAvgMoveTime + "\nPremoves(you/opp): " + playerPremoves + "/" + opponentPremoves;
 
 		}
 		return null;

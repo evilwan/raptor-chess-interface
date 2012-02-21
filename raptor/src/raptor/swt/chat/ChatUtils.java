@@ -337,7 +337,7 @@ public class ChatUtils {
 
 	public static String trimDateStampFromWord(String word) {
 		if (word.startsWith("[")) {
-			int closingBrace = word.indexOf("]");
+			int closingBrace = word.indexOf(']');
 			if (closingBrace != -1) {
 				return word.substring(closingBrace + 1);
 			}

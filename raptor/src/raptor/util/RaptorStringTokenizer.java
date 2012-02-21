@@ -72,7 +72,7 @@ public class RaptorStringTokenizer {
 			if (isEmpty()) {
 				return false;
 			} else {
-				if (isEatingBlocksOfDelimiters()) {
+				if (isEatingBlocksOfDelimiters) {
 					trimStartingDelimiters();
 				}
 				return !isEmpty();
@@ -97,7 +97,7 @@ public class RaptorStringTokenizer {
 			if (isEmpty()) {
 				return null;
 			} else {
-				if (isEatingBlocksOfDelimiters()) {
+				if (isEatingBlocksOfDelimiters) {
 					trimStartingDelimiters();
 				}
 
@@ -117,7 +117,7 @@ public class RaptorStringTokenizer {
 				} else {
 					result = source.substring(currentIndex, nearestDelimeter);
 					currentIndex = nearestDelimeter + 1;
-					if (isEatingBlocksOfDelimiters()) {
+					if (isEatingBlocksOfDelimiters) {
 						// Now trim all the delimiters that are at the begining
 						// of
 						// source.
@@ -138,7 +138,7 @@ public class RaptorStringTokenizer {
 			return null;
 		} else {
 			int cachedCurrentIndex = currentIndex;
-			if (isEatingBlocksOfDelimiters()) {
+			if (isEatingBlocksOfDelimiters) {
 				trimStartingDelimiters();
 			}
 

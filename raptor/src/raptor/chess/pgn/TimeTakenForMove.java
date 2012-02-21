@@ -38,11 +38,11 @@ public class TimeTakenForMove implements MoveAnnotation {
 
 	public long getMilliseconds() {
 		RaptorStringTokenizer tok;
-		if (getText().startsWith("[%emt "))
-			tok = new RaptorStringTokenizer(getText(),
+		if (text.startsWith("[%emt "))
+			tok = new RaptorStringTokenizer(text,
 				"[%emt ]", true);
 		else
-			tok = new RaptorStringTokenizer(getText(),
+			tok = new RaptorStringTokenizer(text,
 					"[emt ]", true);
 		
 		if (tok.hasMoreTokens()) {
@@ -54,12 +54,12 @@ public class TimeTakenForMove implements MoveAnnotation {
 			} catch (NumberFormatException nfe) {
 				if (LOG.isWarnEnabled()) {
 					LOG.warn("Invalid Remaining Clock Time detected: "
-							+ getText());
+							+ text);
 				}
 			}
 		} else {
 			if (LOG.isWarnEnabled()) {
-				LOG.warn("Invalid Remaining Clock Time detected: " + getText());
+				LOG.warn("Invalid Remaining Clock Time detected: " + text);
 			}
 		}
 		return 0;

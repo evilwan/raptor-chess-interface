@@ -114,16 +114,15 @@ public class RaptorActionFactory {
 				.getDescription()));
 		properties.put("name", StringUtils.defaultString(action.getName()));
 		properties.put("icon", StringUtils.defaultString(action.getIcon()));
-		properties.put("keyCode", "" + action.getKeyCode());
-		properties.put("modifierKey", "" + action.getModifierKey());
+		properties.put("keyCode", String.valueOf(action.getKeyCode()));
+		properties.put("modifierKey", String.valueOf(action.getModifierKey()));
 		properties.put("category", action.getCategory().toString());
 		properties.put("class", action.getClass().getName());
 		properties.put("containers", RaptorStringUtils.toDelimitedString(action
 				.getContainers()));
 
 		for (RaptorActionContainer container : action.getContainers()) {
-			properties.put(container.toString(), ""
-					+ action.getOrder(container));
+			properties.put(container.toString(), String.valueOf(action.getOrder(container)));
 		}
 
 		if (action instanceof ScriptedAction) {

@@ -33,7 +33,7 @@ public abstract class UCIOption {
 	}
 
 	public boolean isDefaultValue() {
-		return StringUtils.equals(getDefaultValue(), getValue());
+		return StringUtils.equals(defaultValue, getValue());
 	}
 
 	public void setDefaultValue(String defaultValue) {

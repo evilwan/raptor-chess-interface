@@ -237,21 +237,21 @@ public abstract class ChessBoardController implements BoardConstants,
 						.getHeader(PgnHeader.BlackRemainingMillis));
 
 				if (teamOneWhite > teamTwoWhite) {
-					getBoard().getWhiteLagLabel().setImage(
+                    board.getWhiteLagLabel().setImage(
 							Raptor.getInstance().getIcon("up"));
 				} else {
-					getBoard().getWhiteLagLabel().setImage(null);
+                    board.getWhiteLagLabel().setImage(null);
 				}
 				if (teamOneBlack > teamTwoBlack) {
-					getBoard().getBlackLagLabel().setImage(
+                    board.getBlackLagLabel().setImage(
 							Raptor.getInstance().getIcon("up"));
 				} else {
-					getBoard().getBlackLagLabel().setImage(null);
+                    board.getBlackLagLabel().setImage(null);
 				}
 			}
 		} else {
-			getBoard().getWhiteLagLabel().setImage(null);
-			getBoard().getBlackLagLabel().setImage(null);
+            board.getWhiteLagLabel().setImage(null);
+            board.getBlackLagLabel().setImage(null);
 		}
 	}
 
@@ -410,7 +410,7 @@ public abstract class ChessBoardController implements BoardConstants,
 	 * otherwise.
 	 */
 	public boolean isDisposed() {
-		return getBoard() == null;
+		return board == null;
 	}
 
 	/**

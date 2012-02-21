@@ -248,7 +248,7 @@ public class Raptor implements PreferenceKeys {
 	private List<Integer> errorsDisplayed = new ArrayList<Integer>();
 
 	public Raptor() {
-		clipboard = new Clipboard(getDisplay());
+		clipboard = new Clipboard(display);
 	}
 
 	/**
@@ -256,7 +256,7 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public void alert(final String message) {
 		if (!isDisposed()) {
-			getInstance().getWindow().getShell().getDisplay().asyncExec(
+            instance.raptorWindow.getShell().getDisplay().asyncExec(
 					new RaptorRunnable() {
 						@Override
 						public void execute() {
@@ -273,7 +273,7 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public boolean confirm(final String question) {
 		if (!isDisposed()) {
-			return MessageDialog.openConfirm(Raptor.getInstance().getWindow()
+			return MessageDialog.openConfirm(Raptor.getInstance().raptorWindow
 					.getShell(), local.getString("confirm"), question);
 		}
 		return false;
@@ -317,8 +317,8 @@ public class Raptor implements PreferenceKeys {
 	 * method handles that for you.
 	 */
 	public Image getIcon(String nameOfFileInIconsWithoutPng) {
-		String iconSize = getPreferences().getString(
-				PreferenceKeys.APP_ICON_SIZE);
+		String iconSize = preferences.getString(
+                PreferenceKeys.APP_ICON_SIZE);
 		String fileName = ICONS_DIR + "/" + iconSize + "/"
 				+ nameOfFileInIconsWithoutPng + ".png";
 		return getImage(fileName);
@@ -368,10 +368,10 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	public boolean isDisposed() {
-		return isShutdown || getInstance() == null
-				|| getInstance().getWindow() == null
-				|| getInstance().getWindow().getShell() != null
-				&& getInstance().getWindow().getShell().isDisposed();
+		return isShutdown || instance == null
+				|| instance.raptorWindow == null
+				|| instance.raptorWindow.getShell() != null
+				&& instance.raptorWindow.getShell().isDisposed();
 	}
 
 	public boolean isShutdown() {
@@ -399,9 +399,9 @@ public class Raptor implements PreferenceKeys {
 			if (errorsDisplayed.contains(error.hashCode()))
 				return;
 			
-			errorsDisplayed.add(error.hashCode());			
-						
-			getInstance().getWindow().getShell().getDisplay().asyncExec(
+			errorsDisplayed.add(error.hashCode());
+
+            instance.raptorWindow.getShell().getDisplay().asyncExec(
 					new Runnable() {
 						public void run() {
 							ErrorDialog dialog = new ErrorDialog(
@@ -428,8 +428,7 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public String promptForText(final String question) {
 		if (!isDisposed()) {
-			InputDialog dialog = new InputDialog(Raptor.getInstance()
-					.getWindow().getShell(), local.getString("entText"), question);
+			InputDialog dialog = new InputDialog(Raptor.getInstance().raptorWindow.getShell(), local.getString("entText"), question);
 			return dialog.open();
 		} else {
 			return null;
@@ -444,8 +443,7 @@ public class Raptor implements PreferenceKeys {
 	 */
 	public String promptForText(final String question, String answer) {
 		if (!isDisposed()) {
-			InputDialog dialog = new InputDialog(Raptor.getInstance()
-					.getWindow().getShell(), local.getString("entText"), question);
+			InputDialog dialog = new InputDialog(Raptor.getInstance().raptorWindow.getShell(), local.getString("entText"), question);
 			if (answer != null) {
 				dialog.setInput(answer);
 			}
@@ -467,15 +465,15 @@ public class Raptor implements PreferenceKeys {
 	}
 
 	public void shutdownWithoutExit(boolean isIgnoringPreferenceSaves) {
-		if (isShutdown()) {
+		if (isShutdown) {
 			return;
 		}
 		isShutdown = true;
 
 		try {
-			if (getInstance().getWindow() != null
-					&& !getInstance().getWindow().getShell().isDisposed()) {
-				getInstance().getWindow().storeWindowPreferences();
+			if (instance.raptorWindow != null
+					&& !instance.raptorWindow.getShell().isDisposed()) {
+                instance.raptorWindow.storeWindowPreferences();
 			}
 		} catch (Throwable t) {
 			LOG.warn("Error in storeWindowPreferences", t);
@@ -488,7 +486,7 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		if (!isIgnoringPreferenceSaves) {
-			getPreferences().save();
+            preferences.save();
 		}
 
 		// Dont try catch around this block. Let eclipse bomb out on it.
@@ -614,7 +612,7 @@ public class Raptor implements PreferenceKeys {
 		}
 
 		if (!isIgnoringPreferenceSaves) {
-			getPreferences().save();
+            preferences.save();
 		}
 
 		LOG.info("Shutdown Raptor");
@@ -660,8 +658,8 @@ public class Raptor implements PreferenceKeys {
 		try {
 			FileUtils.copyFiles(DEFAULT_HOME_DIR, USER_RAPTOR_DIR);
 			
-			if (!new File(getPreferences().getString(APP_PGN_FILE)).exists()) {
-				new File(getPreferences().getString(APP_PGN_FILE)).createNewFile();
+			if (!new File(preferences.getString(APP_PGN_FILE)).exists()) {
+				new File(preferences.getString(APP_PGN_FILE)).createNewFile();
 			}
 		} catch (IOException ioe) {
 			throw new RuntimeException(ioe);

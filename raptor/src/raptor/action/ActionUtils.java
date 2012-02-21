@@ -59,7 +59,7 @@ public class ActionUtils {
 		case SWT.SCROLL_LOCK:
 			return "SCRLOCK";
 		default:
-			return "" + (char) keyCode;
+			return String.valueOf((char) keyCode);
 		}
 	}
 
@@ -162,8 +162,6 @@ public class ActionUtils {
 			return SWT.F12;
 		} else if (keyBindingDescription.equals("SCRLOCK")) {
 			return SWT.SCROLL_LOCK;
-		} else if (keyBindingDescription.equals("F1")) {
-			return SWT.F1;
 		} else if (VALID_ACTION_KEY_CODES.indexOf(keyBindingDescription
 				.charAt(keyBindingDescription.length() - 1)) != -1) {
 			return keyBindingDescription

@@ -99,12 +99,11 @@ public class AutomaticAnalysisController {
 									} else {
 										double scoreAsDouble = asDouble(thisPosScore);
 										
-										score = ""
-												+ new BigDecimal(scoreAsDouble)
-														.setScale(
-																2,
-																BigDecimal.ROUND_HALF_UP)
-														.toString();
+										score = new BigDecimal(scoreAsDouble)
+                                                .setScale(
+                                                        2,
+                                                        BigDecimal.ROUND_HALF_UP)
+                                                .toString();
 										
 										if (thisPosScore.isLowerBoundScore()) 
 											score += "++"; 

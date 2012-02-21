@@ -31,7 +31,7 @@ public class GameInfoParser {
 	public GameInfo[] parse(String message) {
 		if (message.endsWith(END_MESSAGE)) {
 			String trimmed = message.trim();
-			int firstSpaceIndex = trimmed.indexOf(" ");
+			int firstSpaceIndex = trimmed.indexOf(' ');
 			if (firstSpaceIndex == -1) {
 				return null;
 			}
@@ -116,8 +116,8 @@ public class GameInfoParser {
 					// 119 2449 IMRomanko 2390 IMZaiatz [ su120 0] 2:00:00
 					// -2:00:00 (39-39) B: 1
 
-					int parenIndex = line.indexOf("(");
-					int endParenIndex = line.indexOf(")");
+					int parenIndex = line.indexOf('(');
+					int endParenIndex = line.indexOf(')');
 					line = line.substring(0, parenIndex)
 							+ line.substring(endParenIndex + 1, line.length());
 

@@ -19,7 +19,7 @@ public enum Result {
 
 	public static Result get(String gameResult) {
 		for (Result result : Result.values()) {
-			if (result.getDescription().equals(gameResult)) {
+			if (result.description.equals(gameResult)) {
 				return result;
 			}
 		}
@@ -38,7 +38,7 @@ public enum Result {
 
 	@Override
 	public String toString() {
-		return getDescription();
+		return description;
 	}
 
 }

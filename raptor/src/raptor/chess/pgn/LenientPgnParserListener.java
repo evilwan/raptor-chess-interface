@@ -618,11 +618,11 @@ public abstract class LenientPgnParserListener implements PgnParserListener {
 			currentGame.addState(Game.UPDATING_ECO_HEADERS_STATE);
 
 			// Set all of the headers.
-			for (String header : currentHeaders.keySet()) {
+			for (Map.Entry<String, String> stringStringEntry : currentHeaders.entrySet()) {
 
 				try {
-					currentGame.setHeader(PgnHeader.valueOf(header),
-							currentHeaders.get(header));
+					currentGame.setHeader(PgnHeader.valueOf(stringStringEntry.getKey()),
+                            stringStringEntry.getValue());
 				} catch (IllegalArgumentException iae) {
 					// errorEncountered(new PgnParserError(
 					// PgnParserError.Type.UNSUPPORTED_PGN_HEADER,

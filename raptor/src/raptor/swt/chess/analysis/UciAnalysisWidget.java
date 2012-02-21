@@ -126,12 +126,11 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 												: -scoreInfo
 														.getValueInCentipawns() / 100.0;
 
-										score = "" 
-												+ new BigDecimal(scoreAsDouble)
-														.setScale(
-																2,
-																BigDecimal.ROUND_HALF_UP)
-														.toString();
+										score = new BigDecimal(scoreAsDouble)
+                                                .setScale(
+                                                        2,
+                                                        BigDecimal.ROUND_HALF_UP)
+                                                .toString();
 										
 										if (scoreInfo.isLowerBoundScore()) {
 											score += "++";
@@ -146,9 +145,8 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 											+ local.getString("uciAnalW_4");
 								} else if (info instanceof NodesSearchedInfo) {
 									NodesSearchedInfo nodesSearchedInfo = (NodesSearchedInfo) info;
-									nodes = RaptorStringUtils.formatAsNumber("" 
-											+ nodesSearchedInfo
-													.getNodesSearched() / 1000);
+									nodes = RaptorStringUtils.formatAsNumber(String.valueOf(nodesSearchedInfo
+                                            .getNodesSearched() / 1000));
 								} else if (info instanceof CPULoadInfo) {
 									CPULoadInfo cpuLoad = (CPULoadInfo) info;
 									cpu = local.getString("uciAnalW_6") 
@@ -161,10 +159,9 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 								} else if (info instanceof NodesPerSecondInfo) {
 									NodesPerSecondInfo nodesPerSecondInfo = (NodesPerSecondInfo) info;
 									nps = local.getString("uciAnalW_7") 
-											+ RaptorStringUtils.formatAsNumber("" 
-													+ nodesPerSecondInfo
-															.getNodesPerSecond()
-													/ 1000);
+											+ RaptorStringUtils.formatAsNumber(String.valueOf(nodesPerSecondInfo
+                                            .getNodesPerSecond()
+                                            / 1000));
 								} else if (info instanceof TimeInfo) {
 									TimeInfo timeInfo = (TimeInfo) info;
 									time = new BigDecimal(timeInfo
@@ -212,7 +209,7 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 													.isWhitesMove() ? gameMove
 													.getFullMoveCount() + ") " 
 													: "";
-                                            line.append(line.toString().equals("") ? ""  //$NON-NLS-2$
+                                            line.append(line.toString().isEmpty() ? ""  //$NON-NLS-2$
                                                     : " ").append(moveNumber).append(san).append(gameClone.isInCheck() ? "+"
                                                     : "").append(gameClone.isCheckmate() ? "#"
                                                     : "");

@@ -22,7 +22,7 @@ public class ScriptUtils {
 	public static Properties serialize(ParameterScript script) {
 		Properties properties = new Properties();
 		properties.put("name", script.getName());
-		properties.put("isActive", "" + script.isActive());
+		properties.put("isActive", String.valueOf(script.isActive()));
 		properties.put("description", script.getDescription());
 		properties.put("script", script.getScript());
 		properties.put("type", script.getType().toString());
@@ -33,7 +33,7 @@ public class ScriptUtils {
 	public static Properties serialize(ChatEventScript script) {
 		Properties properties = new Properties();
 		properties.put("name", script.getName());
-		properties.put("isActive", "" + script.isActive());
+		properties.put("isActive", String.valueOf(script.isActive()));
 		properties.put("description", script.getDescription());
 		properties.put("script", script.getScript());
 		properties.put("chatType", script.getChatType().name());

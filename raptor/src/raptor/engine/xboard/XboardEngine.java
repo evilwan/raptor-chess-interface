@@ -133,7 +133,7 @@ public class XboardEngine {
 			}
 		}
 
-		if (!isProcessingGo()) {
+		if (!processingGo) {
 			if (LOG.isDebugEnabled()) {
 				LOG.debug("Entering analyze");
 			}
@@ -181,7 +181,7 @@ public class XboardEngine {
 			LOG.debug("Entering setPosition(" + fen + ",...)");
 		}
 
-		if (isProcessingGo()) {
+		if (processingGo) {
 			stop();
 		}		
 		
@@ -198,7 +198,7 @@ public class XboardEngine {
 		}
 		
 		synchronized (stopSynch) {
-			if (isProcessingGo()) {
+			if (processingGo) {
 				send("exit");
 				processingGo = false;
 			}
@@ -391,7 +391,7 @@ public class XboardEngine {
 	}
 
 	public void newGame(Variant var) {
-		if (isProcessingGo()) {
+		if (processingGo) {
 			stop();
 		}
 		send("new");

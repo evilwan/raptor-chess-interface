@@ -266,14 +266,14 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected boolean isSpelledCorrectly(String previousWord, String word) {
 		if (previousWord != null
-				&& getConnector().isLikelyCommandPrecedingPersonName(
-						previousWord)) {
+				&& connector.isLikelyCommandPrecedingPersonName(
+                previousWord)) {
 			return true;
 		} else if (!getPreferences().getBoolean(CHAT_COMMAND_LINE_SPELL_CHECK))
 			return true;
 		else {
-			return getConnector().isLikelyCommandPrecedingPersonName(word)
-					|| getConnector().isInAutoComplete(word)
+			return connector.isLikelyCommandPrecedingPersonName(word)
+					|| connector.isInAutoComplete(word)
 					|| DictionaryService.getInstance().isValidWord(word);
 		}
 	}
@@ -557,7 +557,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			ThreadService.getInstance().scheduleOneShot(SPELL_CHECK_DELAY,
 					spellCheckRunnable);
 		} else {
-			if (isAutoScrolling()) {
+			if (isAutoScrolling) {
 				onForceAutoScroll();
 			}
 		}
@@ -861,7 +861,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 
 				if (!dontForwardKeystroke) {
-					getChatConsole().getOutputText().setFocus();
+                    chatConsole.getOutputText().setFocus();
 					if (event.character == '\b') {
 						if (chatConsole.outputText.getCharCount() > 0) {
 							chatConsole.outputText
@@ -876,7 +876,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 											.getText().length());
 						}
 					} else {
-						String textToInsert = "" + event.character;
+						String textToInsert = String.valueOf(event.character);
 						chatConsole.getOutputText().insert(textToInsert);
 						chatConsole.getOutputText()
 								.setCaretOffset(
@@ -966,8 +966,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					.getTextRange(startIndex, endIndex - startIndex).trim();
 			if (wordToAutoComplete.length() > 0) {
 
-				String[] autoComplete = getConnector().autoComplete(
-						wordToAutoComplete);
+				String[] autoComplete = connector.autoComplete(
+                        wordToAutoComplete);
 
 				if (autoComplete.length == 0) {
 					onAppendChatEventToInputText(new ChatEvent(null,
@@ -1112,7 +1112,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					.getChannelActions(channel);
 			if (connectorChannelItems != null) {
 				MenuItem channelItem = new MenuItem(menu, SWT.CASCADE);
-				channelItem.setText(getConnector().getShortName()
+				channelItem.setText(connector.getShortName()
 						+ local.getString("chatConsCont15") + channel);
 				Menu channelItemMenu = new Menu(menu);
 				channelItem.setMenu(channelItemMenu);
@@ -1206,7 +1206,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			scriptsItem.setMenu(scriptsMenu);
 			ParameterScript[] scripts = ScriptService.getInstance()
 					.getParameterScripts(
-							getConnector().getScriptConnectorType(),
+                            connector.getScriptConnectorType(),
 							ParameterScript.Type.ConsoleRightClickScripts);
 
 			for (final ParameterScript script : scripts) {
@@ -1242,7 +1242,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			final String[][] gameIdItems = connector.getGameIdActions(gameId);
 			if (gameIdItems != null) {
 				MenuItem gameCommands = new MenuItem(menu, SWT.CASCADE);
-				gameCommands.setText(getConnector().getShortName()
+				gameCommands.setText(connector.getShortName()
 						+ local.getString("chatConsCont21") + word);
 				Menu gameCommandsMenu = new Menu(menu);
 				gameCommands.setMenu(gameCommandsMenu);
@@ -1291,7 +1291,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected void addPersonMenuItems(Menu menu, String word) {
-		ChatUtils.addPersonMenuItems(menu, getConnector(), word);
+		ChatUtils.addPersonMenuItems(menu, connector, word);
 	}
 
 	protected void adjustAwayButtonEnabled() {
@@ -1309,7 +1309,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			int lastNewlineIndex = 0;
 			int newLineIndex = 0;
-			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+			while ((newLineIndex = message.indexOf('\n', lastNewlineIndex + 1)) != -1) {
 				String line = message.substring(lastNewlineIndex + 1,
 						newLineIndex).trim();
 				if (StringUtils.isNotBlank(line)
@@ -1433,7 +1433,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			int lastNewlineIndex = 0;
 			int newLineIndex = 0;
-			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+			while ((newLineIndex = message.indexOf('\n', lastNewlineIndex + 1)) != -1) {
 				String line = message.substring(lastNewlineIndex + 1,
 						newLineIndex).trim();
 				if (StringUtils.isNotBlank(line)
@@ -1499,7 +1499,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			int lastNewlineIndex = 0;
 			int newLineIndex = 0;
-			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+			while ((newLineIndex = message.indexOf('\n', lastNewlineIndex + 1)) != -1) {
 				String line = message.substring(lastNewlineIndex + 1,
 						newLineIndex).trim();
 				if (StringUtils.isNotBlank(line)) {
@@ -1579,7 +1579,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			int lastNewlineIndex = 0;
 			int newLineIndex = 0;
-			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+			while ((newLineIndex = message.indexOf('\n', lastNewlineIndex + 1)) != -1) {
 				String line = message.substring(lastNewlineIndex + 1,
 						newLineIndex);
 				if (StringUtils.isNotBlank(line)) {
@@ -1736,7 +1736,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 
 				// Filter out emails.
-				int atIndex = message.indexOf("@", startIndex);
+				int atIndex = message.indexOf('@', startIndex);
 				if (atIndex == -1 || atIndex > linkEnd) {
 					linkRanges.add(new int[] { startIndex + 1, linkEnd });
 				}
@@ -1791,7 +1791,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 			int lastNewlineIndex = 0;
 			int newLineIndex = 0;
-			while ((newLineIndex = message.indexOf("\n", lastNewlineIndex + 1)) != -1) {
+			while ((newLineIndex = message.indexOf('\n', lastNewlineIndex + 1)) != -1) {
 				String line = message.substring(lastNewlineIndex + 1,
 						newLineIndex).trim();
 				if (StringUtils.isNotBlank(line)
@@ -1854,16 +1854,16 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			List<int[]> quotedRanges = new ArrayList<int[]>(5);
 
 			int quoteIndex = !isUnderliningDoubleQuotes ? -1 : message
-					.indexOf("\"");
+					.indexOf('\"');
 			if (quoteIndex == -1 && isUnderliningSingleQuotes) {
-				quoteIndex = message.indexOf("'");
+				quoteIndex = message.indexOf('\'');
 			}
 
 			while (quoteIndex != -1) {
 				int endQuote = !isUnderliningDoubleQuotes ? -1 : message
-						.indexOf("\"", quoteIndex + 1);
+						.indexOf('\"', quoteIndex + 1);
 				if (endQuote == -1 && isUnderliningSingleQuotes) {
-					endQuote = message.indexOf("'", quoteIndex + 1);
+					endQuote = message.indexOf('\'', quoteIndex + 1);
 				}
 
 				if (endQuote == -1) {
@@ -1873,7 +1873,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 						// If there is a newline between the quotes ignore
 						// it.
-						int newLine = message.indexOf("\n", quoteIndex);
+						int newLine = message.indexOf('\n', quoteIndex);
 
 						// If there is just one character and the a space
 						// after
@@ -1896,9 +1896,9 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 
 				quoteIndex = !isUnderliningDoubleQuotes ? -1 : message.indexOf(
-						"\"", endQuote + 1);
+                        '\"', endQuote + 1);
 				if (quoteIndex == -1 && isUnderliningSingleQuotes) {
-					quoteIndex = message.indexOf("'", endQuote + 1);
+					quoteIndex = message.indexOf('\'', endQuote + 1);
 				}
 			}
 
@@ -1950,7 +1950,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 	}
 
 	protected boolean isExaminingAGame() {
-		Game[] games = getConnector().getGameService().getAllActiveGames();
+		Game[] games = connector.getGameService().getAllActiveGames();
 		boolean result = false;
 		for (Game game : games) {
 			if (game.isInState(Game.EXAMINING_STATE)
@@ -2048,12 +2048,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								isHandled = true;
 
 								if (isExaminingAGame()) {
-									getConnector().sendMessage("unexamine",
-											true);
+                                    connector.sendMessage("unexamine",
+                                            true);
 								}
-								getConnector().sendMessage(
-										"examine " + user + " %" + firstWord,
-										true);
+                                connector.sendMessage(
+                                        "examine " + user + " %" + firstWord,
+                                        true);
 							}
 							break;
 						}
@@ -2082,12 +2082,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								isHandled = true;
 
 								if (isExaminingAGame()) {
-									getConnector().sendMessage("unexamine",
-											true);
+                                    connector.sendMessage("unexamine",
+                                            true);
 								}
-								getConnector().sendMessage(
-										"examine " + user + " " + firstWord,
-										true);
+                                connector.sendMessage(
+                                        "examine " + user + " " + firstWord,
+                                        true);
 							}
 							break;
 						}
@@ -2099,7 +2099,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			// Games and BugWho games
 			else if (NumberUtils.isDigits(firstWord)
 					&& (line.contains("W:") || line.contains("B:"))) {
-				getConnector().sendMessage("observe " + firstWord, true);
+                connector.sendMessage("observe " + firstWord, true);
 			}
 			// Game notifiucations
 			else if (line.startsWith("Game notification:")) {
@@ -2111,7 +2111,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 
 				if (lastWord != null && NumberUtils.isDigits(lastWord)) {
-					getConnector().sendMessage("observe " + lastWord, true);
+                    connector.sendMessage("observe " + lastWord, true);
 				}
 			}
 			// News
@@ -2119,7 +2119,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			else if (NumberUtils.isDigits(firstWord) && !line.contains("W:")
 					&& !line.contains("B:") && line.contains("(")
 					&& line.contains(")")) {
-				getConnector().sendMessage("news " + firstWord, true);
+                connector.sendMessage("news " + firstWord, true);
 			}
 		}
 
@@ -2434,8 +2434,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 
 	protected void setCaretToOutputTextEnd() {
 		if (!isIgnoringActions()) {
-			getChatConsole().getOutputText().setSelection(
-					getChatConsole().getOutputText().getCharCount());
+            chatConsole.getOutputText().setSelection(
+                    chatConsole.getOutputText().getCharCount());
 		}
 	}
 	

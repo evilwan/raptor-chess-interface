@@ -199,7 +199,7 @@ public class SoundService {
 			for (File currentFile : files) {
 
 				String key = currentFile.getName();
-				int dotIndex = key.indexOf(".");
+				int dotIndex = key.indexOf('.');
 				key = key.substring(0, dotIndex);
 				bughouseSoundsList.add(key);
 			}

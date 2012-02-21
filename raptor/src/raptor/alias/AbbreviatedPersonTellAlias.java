@@ -35,7 +35,7 @@ public class AbbreviatedPersonTellAlias extends RaptorAlias {
 					true);
 			String firstWord = tok.nextToken().substring(1);
 
-			if (!firstWord.equals("") && !NumberUtils.isDigits(firstWord)) {
+			if (!firstWord.isEmpty() && !NumberUtils.isDigits(firstWord)) {
 				return new RaptorAliasResult("tell " + firstWord + " "
 						+ tok.getWhatsLeft(), null);
 			}

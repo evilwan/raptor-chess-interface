@@ -30,7 +30,7 @@ public class ParameterScript implements Comparable<ParameterScript> {
 	protected ScriptConnectorType connectorType = ScriptConnectorType.ICS;
 
 	public int compareTo(ParameterScript arg0) {
-		return name.compareTo(arg0.getName());
+		return name.compareTo(arg0.name);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class ParameterScript implements Comparable<ParameterScript> {
 		if (obj == null || !(obj instanceof ParameterScript))
 			return false;
 		
-		return name.equalsIgnoreCase(((ParameterScript) obj).getName());
+		return name.equalsIgnoreCase(((ParameterScript) obj).name);
 	}
 	
 	@Override
@@ -55,9 +55,9 @@ public class ParameterScript implements Comparable<ParameterScript> {
 		try {
 			Interpreter interpeter = new Interpreter();
 			interpeter.set("context", context);
-			interpeter.eval(getScript());
+			interpeter.eval(script);
 		} catch (Throwable t) {
-			Raptor.getInstance().onError("Error executing script " + getName(),
+			Raptor.getInstance().onError("Error executing script " + name,
 					t);
 		}
 	}

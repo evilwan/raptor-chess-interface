@@ -174,7 +174,7 @@ public class MovesParser {
 
 				int style12Index = string.indexOf("<12>");
 				if (style12Index != -1) {
-					int style12End = string.indexOf("\n", style12Index);
+					int style12End = string.indexOf('\n', style12Index);
 					if (style12End != -1) {
 						message = style12Parser.parse(string.substring(
 								style12Index, style12End));

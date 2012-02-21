@@ -468,11 +468,11 @@ public class ChessSquare extends Canvas implements BoardConstants {
 		if (isShowingCoordinates() && !ChessBoardUtils.isPieceJailSquare(id)) {
 			if (board.isWhiteOnTop) {
 				if ((GameUtils.getBitboard(id) & GameConstants.RANK8) != 0) {
-					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
+					return String.valueOf(GameConstants.SQUARE_TO_FILE_SAN.charAt(id));
 				}
 			} else {
 				if ((GameUtils.getBitboard(id) & GameConstants.RANK1) != 0) {
-					return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
+					return String.valueOf(GameConstants.SQUARE_TO_FILE_SAN.charAt(id));
 				}
 			}
 		}
@@ -513,11 +513,11 @@ public class ChessSquare extends Canvas implements BoardConstants {
 				&& !ChessBoardUtils.isPieceJailSquare(id)) {
 			if (board.isWhiteOnTop) {
 				if ((GameUtils.getBitboard(id) & GameConstants.HFILE) != 0) {
-					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
+					return String.valueOf(GameConstants.SQUARE_TO_RANK_SAN.charAt(id));
 				}
 			} else {
 				if ((GameUtils.getBitboard(id) & GameConstants.AFILE) != 0) {
-					return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
+					return String.valueOf(GameConstants.SQUARE_TO_RANK_SAN.charAt(id));
 				}
 			}
 		}

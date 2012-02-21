@@ -270,17 +270,15 @@ public class UCIEnginePropertiesDialog extends Dialog {
 				Text text = (Text) optionNameToControl.get(option.getName());
 
 				if (text != null) {
-					engine.setOverrideOption(option.getName(), ""
-							+ text.getText());
+					engine.setOverrideOption(option.getName(), text.getText());
 					option.setValue(text.getText());
 				}
 			} else if (option instanceof UCISpinner) {
 				Spinner spinner = (Spinner) optionNameToControl.get(option
 						.getName());
 				if (spinner != null) {
-					engine.setOverrideOption(option.getName(), ""
-							+ spinner.getSelection());
-					option.setValue("" + spinner.getSelection());
+					engine.setOverrideOption(option.getName(), String.valueOf(spinner.getSelection()));
+					option.setValue(String.valueOf(spinner.getSelection()));
 				}
 			} else if (option instanceof UCICombo) {
 				Combo combo = (Combo) optionNameToControl.get(option.getName());

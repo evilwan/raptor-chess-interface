@@ -106,10 +106,8 @@ public class IcsUtils implements GameConstants {
 				&& game.getColorToMove() == WHITE) {
 			// At the end of a game multiple <12> messages are sent.
 			// The are also sent when a refresh is sent.
-			game.setHeader(PgnHeader.WhiteRemainingMillis, ""
-					+ message.whiteRemainingTimeMillis);
-			game.setHeader(PgnHeader.BlackRemainingMillis, ""
-					+ message.blackRemainingTimeMillis);
+			game.setHeader(PgnHeader.WhiteRemainingMillis, String.valueOf(message.whiteRemainingTimeMillis));
+			game.setHeader(PgnHeader.BlackRemainingMillis, String.valueOf(message.blackRemainingTimeMillis));
 
 			if (message.timeTakenForLastMoveMillis != 0
 					&& game.getMoveList().getSize() > 1) {
@@ -138,21 +136,19 @@ public class IcsUtils implements GameConstants {
 				}
 			}
 
-			game.setHeader(PgnHeader.WhiteRemainingMillis, ""
-					+ message.whiteRemainingTimeMillis);
-			game.setHeader(PgnHeader.BlackRemainingMillis, ""
-					+ message.blackRemainingTimeMillis);
+			game.setHeader(PgnHeader.WhiteRemainingMillis, String.valueOf(message.whiteRemainingTimeMillis));
+			game.setHeader(PgnHeader.BlackRemainingMillis, String.valueOf(message.blackRemainingTimeMillis));
 
 			if (message.isWhitesMoveAfterMoveIsMade) {
 				String lag = StringUtils.defaultString(
 						game.getHeader(PgnHeader.BlackLagMillis), "0");
 				game.setHeader(PgnHeader.BlackLagMillis,
-						"" + (Long.parseLong(lag) + message.lagInMillis));
+                        String.valueOf(Long.parseLong(lag) + message.lagInMillis));
 			} else {
 				String lag = StringUtils.defaultString(
 						game.getHeader(PgnHeader.WhiteLagMillis), "0");
 				game.setHeader(PgnHeader.WhiteLagMillis,
-						"" + (Long.parseLong(lag) + message.lagInMillis));
+                        String.valueOf(Long.parseLong(lag) + message.lagInMillis));
 
 			}
 			result = true;
@@ -239,10 +235,8 @@ public class IcsUtils implements GameConstants {
 
 			// At the end of a game multiple <12> messages are sent.
 			// The are also sent when a refresh is sent.
-			game.setHeader(PgnHeader.WhiteRemainingMillis, ""
-					+ message.whiteRemainingTimeMillis);
-			game.setHeader(PgnHeader.BlackRemainingMillis, ""
-					+ message.blackRemainingTimeMillis);
+			game.setHeader(PgnHeader.WhiteRemainingMillis, String.valueOf(message.whiteRemainingTimeMillis));
+			game.setHeader(PgnHeader.BlackRemainingMillis, String.valueOf(message.blackRemainingTimeMillis));
 		}
 
 		if (message.isClockTicking) {
@@ -391,10 +385,8 @@ public class IcsUtils implements GameConstants {
 		result.setHeader(PgnHeader.TimeControl, PgnUtils
 				.timeIncMillisToTimeControl(g1.initialWhiteTimeMillis,
 						g1.initialWhiteIncMillis));
-		result.setHeader(PgnHeader.BlackRemainingMillis, ""
-				+ g1.initialBlackTimeMillis);
-		result.setHeader(PgnHeader.WhiteRemainingMillis, ""
-				+ g1.initialWhiteTimeMillis);
+		result.setHeader(PgnHeader.BlackRemainingMillis, String.valueOf(g1.initialBlackTimeMillis));
+		result.setHeader(PgnHeader.WhiteRemainingMillis, String.valueOf(g1.initialWhiteTimeMillis));
 		result.setHeader(PgnHeader.WhiteClock,
 				PgnUtils.timeToClock(g1.initialWhiteTimeMillis));
 		result.setHeader(PgnHeader.BlackClock,
@@ -796,7 +788,7 @@ public class IcsUtils implements GameConstants {
 				try {
 					int channel = Integer.parseInt(current);
 					if (channel >= 0 && channel <= 255) {
-						return "" + channel;
+						return String.valueOf(channel);
 					}
 				} catch (NumberFormatException nfe) {
 					if (tok.hasMoreTokens()) {
@@ -804,7 +796,7 @@ public class IcsUtils implements GameConstants {
 							current = tok.nextToken();
 							int channel = Integer.parseInt(current);
 							if (channel >= 0 && channel <= 255) {
-								return "" + channel;
+								return String.valueOf(channel);
 							}
 						} catch (NumberFormatException nfe2) {
 							if (tok.hasMoreTokens()) {
@@ -812,7 +804,7 @@ public class IcsUtils implements GameConstants {
 									current = tok.nextToken();
 									int channel = Integer.parseInt(current);
 									if (channel >= 0 && channel <= 255) {
-										return "" + channel;
+										return String.valueOf(channel);
 									}
 								} catch (NumberFormatException nfe3) {
 									if (tok.hasMoreTokens()) {
@@ -821,7 +813,7 @@ public class IcsUtils implements GameConstants {
 											int channel = Integer
 													.parseInt(current);
 											if (channel >= 0 && channel <= 255) {
-												return "" + channel;
+												return String.valueOf(channel);
 											}
 										} catch (NumberFormatException nfe4) {
 										}
@@ -842,7 +834,7 @@ public class IcsUtils implements GameConstants {
 				|| gameId.endsWith(":")) {
 			return gameId.substring(0, gameId.length() - 1);
 		} else if (gameId.endsWith("]")) {
-			int i = gameId.lastIndexOf("[");
+			int i = gameId.lastIndexOf('[');
 			if (i != -1) {
 				return gameId.substring(i + 1, gameId.length() - 1);
 			}
@@ -1005,10 +997,8 @@ public class IcsUtils implements GameConstants {
 		game.setHeader(PgnHeader.Black, IcsUtils.stripTitles(message.blackName));
 		game.setHeader(PgnHeader.White, IcsUtils.stripTitles(message.whiteName));
 
-		game.setHeader(PgnHeader.WhiteRemainingMillis, ""
-				+ message.whiteRemainingTimeMillis);
-		game.setHeader(PgnHeader.BlackRemainingMillis, ""
-				+ message.blackRemainingTimeMillis);
+		game.setHeader(PgnHeader.WhiteRemainingMillis, String.valueOf(message.whiteRemainingTimeMillis));
+		game.setHeader(PgnHeader.BlackRemainingMillis, String.valueOf(message.blackRemainingTimeMillis));
 		
 		game.setColorToMove(message.isWhitesMoveAfterMoveIsMade ? WHITE : BLACK);
 

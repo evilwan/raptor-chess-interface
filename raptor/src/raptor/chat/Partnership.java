@@ -36,7 +36,7 @@ public class Partnership implements Comparable<Partnership> {
 	}
 
 	public int getTeamRating() {
-		return getBugger1().getRatingAsInt() + getBugger2().getRatingAsInt();
+		return bugger1.getRatingAsInt() + bugger2.getRatingAsInt();
 	}
 
 	public void setBugger1(Bugger bugger) {

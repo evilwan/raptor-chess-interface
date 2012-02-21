@@ -67,10 +67,10 @@ public class AnalysisCommentsGenerator {
 	 * Check if the provided game contains castling moves for a given color. 
 	 * @return True if the side is already castled.
 	 */
-	private boolean alreadyCastled(Game game, int color) {
+	private boolean notAlreadyCastled(Game game, int color) {
 		if (color == GameConstants.WHITE && whiteAlreadyCastled ||
 				color == GameConstants.BLACK && blackAlreadyCastled)
-			return true;
+			return false;
 		
 		for (Move mv: game.getMoveList().asArray()) {
 			if (mv.getColor() == color && (mv.isCastleLong() || mv.isCastleShort())) {
@@ -79,10 +79,10 @@ public class AnalysisCommentsGenerator {
 				else
 					blackAlreadyCastled = true;
 					
-				return true;
+				return false;
 			}
 		}
-		return false;
+		return true;
 	}
 	
 	/**
@@ -347,7 +347,7 @@ public class AnalysisCommentsGenerator {
 		
 		int whiteAdvMultiplicity = getAdvantageMultiplicity(whiteAdvVec);		
 		int blackAdvMultiplicity = getAdvantageMultiplicity(blackAdvVec);
-		
+
 		if (whiteAdvMultiplicity > 0) {
 			String comment = "White has the advantage of ";
 			boolean[] blackAdvVecScoreless = getAdvantageVector(GameConstants.BLACK, game, extendedGame, previous, current, false);
@@ -355,7 +355,7 @@ public class AnalysisCommentsGenerator {
 			comment += getAdvantageName(whiteAdvVec);
 			if (blackScorelessMul > 0)
 				comment += " versus " + getAdvantageName(blackAdvVecScoreless) + " in black";
-			
+
 			fireAdvantages(whiteAdvVec);
 			return comment+".";
 		}
@@ -366,19 +366,19 @@ public class AnalysisCommentsGenerator {
 			comment += getAdvantageName(blackAdvVec);
 			if (whiteScorelessMul > 0)
 				comment += " versus " + getAdvantageName(whiteAdvVecScoreless) + " in white";
-			
+
 			fireAdvantages(blackAdvVec);
 			return comment+".";
 		}
-		
-		
-		
-		//Need to be edited to check if a player has castled and opponent cannot, then make a castle advantage comment. Not sure of how to do this. 
+
+
+
+		//Need to be edited to check if a player has castled and opponent cannot, then make a castle advantage comment. Not sure of how to do this.
 		if(!whiteCastleFired){
 			
 			
 			if (!game.canBlackCastleLong() && !game.canBlackCastleShort() && (game.canWhiteCastleLong() || game.canWhiteCastleLong()) 
-					&& !alreadyCastled(game, GameConstants.BLACK)) {
+					&& notAlreadyCastled(game, GameConstants.BLACK)) {
 			
 				
 				whiteCastleFired = true;
@@ -388,7 +388,7 @@ public class AnalysisCommentsGenerator {
 		
 		if(!blackCastleFired){
 			if (!game.canWhiteCastleLong() && !game.canWhiteCastleShort() && (game.canBlackCastleLong() || game.canBlackCastleLong())
-					&& !alreadyCastled(game, GameConstants.WHITE)) {
+					&& notAlreadyCastled(game, GameConstants.WHITE)) {
 				blackCastleFired = true;
 				return "Black has the advantage of being able to castle over White.";
 			}

@@ -151,7 +151,7 @@ public class XboardEngineService {
 		}
 		
 		properties.put("isUCI", "false");
-		properties.put("isDefault", "" + engine.isDefault());
+		properties.put("isDefault", String.valueOf(engine.isDefault()));
 		properties.put("processPath", engine.getProcessPath());
 		properties.put("userName", engine.getEngineName());
 		properties.put("variants", engine.supportedVariantsInString());

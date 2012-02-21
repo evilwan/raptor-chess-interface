@@ -105,8 +105,7 @@ public class ShowRegexAlias extends RaptorAlias {
 																						"All messages matching "
 																								+ whatsLeft
 																								+ " since you logged in:\n"
-																								+ builder
-																										.toString()));
+																								+ builder));
 																	}
 																});
 											}

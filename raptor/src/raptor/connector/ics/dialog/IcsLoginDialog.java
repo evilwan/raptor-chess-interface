@@ -144,7 +144,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 			autoLoginCheckBox.setLayoutData(data);
 		}
 
-		if (isShowingSimulBug()) {
+		if (isShowingSimulBug) {
 			simulBugButton = new Button(content, SWT.CHECK);
 			simulBugButton.setText(local.getString("icsLoginD11"));
 			data = new GridData();
@@ -271,7 +271,7 @@ public class IcsLoginDialog extends Dialog implements PreferenceKeys {
 			}
 			wasLoginPressed = true;
 
-			if (isShowingSimulBug()) {
+			if (isShowingSimulBug) {
 				isSimulBugLogin = simulBugButton.getSelection();
 			}
 			close();

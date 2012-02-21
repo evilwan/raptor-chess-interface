@@ -795,7 +795,7 @@ public class ChessBoardUtils implements BoardConstants {
 		if (count < 2) {
 			return "";
 		} else {
-			return "" + count;
+			return String.valueOf(count);
 		}
 	}
 

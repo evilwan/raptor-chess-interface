@@ -98,6 +98,6 @@ public class PgnParserError implements Serializable {
 	public String toString() {
 		return type.name() + " " + action.name() + " "
 				+ RaptorStringUtils.toDelimitedString(args, "'") + " "
-				+ getLineNumber();
+				+ lineNumber;
 	}
 }

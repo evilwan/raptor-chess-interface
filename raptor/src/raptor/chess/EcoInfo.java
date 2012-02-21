@@ -65,6 +65,6 @@ public class EcoInfo {
 	 */
 	@Override
 	public String toString() {
-		return getEcoCode() + " " + getOpening();
+		return ecoCode + " " + openingName;
 	}
 }

@@ -129,7 +129,7 @@ public class PersonController extends ChatConsoleController {
 
 	protected boolean isNotLoggedInMessagePertainingToPerson(ChatEvent event) {
 		return event.getType() == ChatType.UNKNOWN
-				&& event.getMessage().startsWith(getPerson())
+				&& event.getMessage().startsWith(person)
 				&& event.getMessage().contains("is not logged in.");
 	}
 

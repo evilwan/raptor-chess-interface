@@ -248,7 +248,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		@Override
 		protected String getFileLabel() {
 			if ((GameUtils.getBitboard(id) & GameConstants.RANK1) != 0) {
-				return "" + GameConstants.SQUARE_TO_FILE_SAN.charAt(id);
+				return String.valueOf(GameConstants.SQUARE_TO_FILE_SAN.charAt(id));
 			} else {
 				return null;
 			}
@@ -277,7 +277,7 @@ public class ChessBoardPage extends FieldEditorPreferencePage {
 		@Override
 		protected String getRankLabel() {
 			if ((GameUtils.getBitboard(id) & GameConstants.AFILE) != 0) {
-				return "" + GameConstants.SQUARE_TO_RANK_SAN.charAt(id);
+				return String.valueOf(GameConstants.SQUARE_TO_RANK_SAN.charAt(id));
 			} else {
 				return null;
 			}

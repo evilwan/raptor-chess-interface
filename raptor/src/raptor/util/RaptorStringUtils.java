@@ -46,7 +46,7 @@ public class RaptorStringUtils {
 	 * value is 123 and digits is 2 then "12" is returned.
 	 */
 	public static String defaultTimeString(int value, int digits) {
-		String valueAsString = "" + value;
+		String valueAsString = String.valueOf(value);
         String result = "";
         if (valueAsString.length() > digits) {
                 for (int i = 0; i < digits; i++) {
@@ -275,8 +275,7 @@ public class RaptorStringUtils {
 		List<String> result = new ArrayList<String>(10);
 
 		if (StringUtils.isNotBlank(string)) {
-			RaptorStringTokenizer tok = new RaptorStringTokenizer(string, ""
-					+ delimiter, false);
+			RaptorStringTokenizer tok = new RaptorStringTokenizer(string, String.valueOf(delimiter), false);
 			while (tok.hasMoreTokens()) {
 				String token = tok.nextToken();
 				result.add(token);

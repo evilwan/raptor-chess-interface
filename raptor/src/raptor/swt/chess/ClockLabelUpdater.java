@@ -92,7 +92,7 @@ public class ClockLabelUpdater implements Runnable, PreferenceKeys {
 			controller.getGame().setHeader(
 					isWhite ? PgnHeader.WhiteRemainingMillis
 							: PgnHeader.BlackRemainingMillis,
-					"" + remainingTimeMillis);
+                    String.valueOf(remainingTimeMillis));
 
 			clockLabel.setText(GameUtils
 					.timeToString(remainingTimeMillis, true));

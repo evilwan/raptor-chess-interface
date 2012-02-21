@@ -27,7 +27,7 @@ public class IllegalMoveParser {
 		IllegalMoveMessage result = null;
 		if (message.startsWith(ILLEGAL_MOVE_START)) {
 			result = new IllegalMoveMessage();
-			int closingParenIndex = message.indexOf(")");
+			int closingParenIndex = message.indexOf(')');
 			result.move = message.substring(ILLEGAL_MOVE_START.length(),
 					closingParenIndex);
 		}

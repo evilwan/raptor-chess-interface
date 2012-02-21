@@ -507,7 +507,7 @@ public class PlayingController extends ChessBoardController {
 					.getCoolbar() : parent);
 			ChessBoardUtils.addActionsToToolbar(this,
 					RaptorActionContainer.PlayingChessBoard, toolbar,
-					isUserWhite());
+                    isUserWhite);
 
 			if (game.getVariant() == Variant.suicide) {
 				setToolItemSelected(ToolBarItemKey.AUTO_KING, true);
@@ -580,7 +580,7 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	public boolean isUsersMove() {
-		return isUserWhite() && game.isWhitesMove() || !isUserWhite()
+		return isUserWhite && game.isWhitesMove() || !isUserWhite
 				&& !game.isWhitesMove();
 	}
 
@@ -843,7 +843,7 @@ public class PlayingController extends ChessBoardController {
 			premoveInfo.toSquare = toSquare;
 			premoveInfo.fromPiece = board.getSquare(fromSquare).getPiece();
 			premoveInfo.toPiece = board.getSquare(toSquare).getPiece();
-			premoveInfo.promotionColorlessPiece = isPromotion(isUserWhite(),
+			premoveInfo.promotionColorlessPiece = isPromotion(isUserWhite,
 					getGame(), fromSquare, toSquare) ? getAutoPromoteSelection()
 					: EMPTY;
 
@@ -990,13 +990,13 @@ public class PlayingController extends ChessBoardController {
 	protected void handleAnnounceCheck() {
 		if (game.getVariant() != Variant.suicide && game.isInCheck()
 				&& !game.isCheckmate()) {
-			if (isUserWhite && game.isWhitesMove() || !isUserWhite()
+			if (isUserWhite && game.isWhitesMove() || !isUserWhite
 					&& !game.isWhitesMove()) {
 				if (getPreferences().getBoolean(
 						BOARD_ANNOUNCE_CHECK_WHEN_OPPONENT_CHECKS_ME)) {
 					SoundService.getInstance().playSound("check");
 				}
-			} else if (isUserWhite && !game.isWhitesMove() || !isUserWhite()
+			} else if (isUserWhite && !game.isWhitesMove() || !isUserWhite
 					&& game.isWhitesMove()) {
 				if (getPreferences().getBoolean(
 						BOARD_ANNOUNCE_CHECK_WHEN_I_CHECK_OPPONENT)) {
@@ -1027,9 +1027,9 @@ public class PlayingController extends ChessBoardController {
 			String message = PlayingStatisticsService.getInstance()
 					.getStatisticsString(connector, game, isUserWhite);
 			if (StringUtils.isNotEmpty(message)) {
-				getConnector().publishEvent(
-						new ChatEvent(null, ChatType.PLAYING_STATISTICS,
-								message));
+                connector.publishEvent(
+                        new ChatEvent(null, ChatType.PLAYING_STATISTICS,
+                                message));
 			}
 		}
 	}
@@ -1152,7 +1152,7 @@ public class PlayingController extends ChessBoardController {
 			if (!info.isPremoveDrop) {
             } else if (getGame()
 					.getDropCount(
-							isUserWhite() ? WHITE : BLACK,
+                            isUserWhite ? WHITE : BLACK,
 							getUncoloredPiece(getColoredPieceFromDropSquare(info.fromSquare))) > 0) {
 				try {
 					move = game.makeMove(info.fromSquare, info.toSquare);
@@ -1179,10 +1179,10 @@ public class PlayingController extends ChessBoardController {
 
 					break;
 				} catch (IllegalArgumentException iae) {
-					getConnector()
+                    connector
 							.onError(
-									"Couldnt make a premove drop. This should never happen.",
-									iae);
+                                    "Couldnt make a premove drop. This should never happen.",
+                                    iae);
 					premovesToRemove.add(info);
 				}
 			}
@@ -1232,9 +1232,9 @@ public class PlayingController extends ChessBoardController {
 			boolean speakCountdown = getPreferences().getBoolean(
 					BOARD_IS_PLAYING_10_SECOND_COUNTDOWN_SOUNDS);
 			whiteClockUpdater = new ClockLabelUpdater(true, this,
-					speakCountdown && isUserWhite());
+					speakCountdown && isUserWhite);
 			blackClockUpdater = new ClockLabelUpdater(false, this,
-					speakCountdown && !isUserWhite());
+					speakCountdown && !isUserWhite);
 		}
 	}
 
@@ -1249,17 +1249,17 @@ public class PlayingController extends ChessBoardController {
 	}
 
 	protected void onOfferDraw() {
-		getConnector().onDraw(getGame());
+        connector.onDraw(getGame());
 	}
 
 	protected void onPlayGameEndSound() {
-		if (isUserWhite() && game.getResult() == Result.WHITE_WON) {
+		if (isUserWhite && game.getResult() == Result.WHITE_WON) {
 			SoundService.getInstance().playSound("win");
-		} else if (!isUserWhite() && game.getResult() == Result.BLACK_WON) {
+		} else if (!isUserWhite && game.getResult() == Result.BLACK_WON) {
 			SoundService.getInstance().playSound("win");
-		} else if (isUserWhite() && game.getResult() == Result.BLACK_WON) {
+		} else if (isUserWhite && game.getResult() == Result.BLACK_WON) {
 			SoundService.getInstance().playSound("lose");
-		} else if (!isUserWhite() && game.getResult() == Result.WHITE_WON) {
+		} else if (!isUserWhite && game.getResult() == Result.WHITE_WON) {
 			SoundService.getInstance().playSound("lose");
 		} else {
 			SoundService.getInstance().playSound("obsGameEnd");
@@ -1290,7 +1290,7 @@ public class PlayingController extends ChessBoardController {
 
 		if (!ChessBoardUtils.isPieceJailSquare(square)
 				&& getGame().getPiece(square) == EMPTY) {
-			final int color = isUserWhite() ? WHITE : BLACK;
+			final int color = isUserWhite ? WHITE : BLACK;
 			Menu menu = new Menu(board.getControl().getShell(), SWT.POP_UP);
 
 			if (isBughouse() && isUsersMove()) {
@@ -1506,7 +1506,7 @@ public class PlayingController extends ChessBoardController {
 				onPlayIllegalMoveSound();
 			}
 		} catch (Throwable t) {
-			getConnector().onError("PlayingController.onRandomCapture", t);
+            connector.onError("PlayingController.onRandomCapture", t);
 		}
 	}
 
@@ -1544,7 +1544,7 @@ public class PlayingController extends ChessBoardController {
 				onPlayIllegalMoveSound();
 			}
 		} catch (Throwable t) {
-			getConnector().onError("PlayingController.onRandomMove", t);
+            connector.onError("PlayingController.onRandomMove", t);
 		}
 
 	}
@@ -1595,7 +1595,7 @@ public class PlayingController extends ChessBoardController {
 				onPlayIllegalMoveSound();
 			}
 		} catch (Throwable t) {
-			getConnector().onError("PlayingController.onRandomRecapture", t);
+            connector.onError("PlayingController.onRandomRecapture", t);
 		}
 	}
 
@@ -1635,11 +1635,11 @@ public class PlayingController extends ChessBoardController {
 						removeAllMoveDecorations();
 						refreshForMove(move);
 					} else {
-						getConnector().publishEvent(
-								new ChatEvent(null, ChatType.INTERNAL,
-										"Ambiguous smart move on square "
-												+ GameUtils.getSan(square)
-												+ "."));
+                        connector.publishEvent(
+                                new ChatEvent(null, ChatType.INTERNAL,
+                                        "Ambiguous smart move on square "
+                                                + GameUtils.getSan(square)
+                                                + "."));
 						onPlayIllegalMoveSound();
 					}
 
@@ -1670,7 +1670,7 @@ public class PlayingController extends ChessBoardController {
 				onPlayIllegalMoveSound();
 			}
 		} catch (Throwable t) {
-			getConnector().onError("PlayingController.onSmartMove", t);
+            connector.onError("PlayingController.onSmartMove", t);
 		}
 	}
 }

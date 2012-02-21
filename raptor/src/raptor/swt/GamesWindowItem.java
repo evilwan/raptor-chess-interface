@@ -138,7 +138,7 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 	 */
 	public void afterQuadrantMove(Quadrant newQuadrant) {
 		Raptor.getInstance().getPreferences().setValue(
-				getConnector().getShortName() + "-"
+                connector.getShortName() + "-"
 						+ PreferenceKeys.GAMES_TAB_QUADRANT, newQuadrant);
 	}
 
@@ -170,12 +170,12 @@ public class GamesWindowItem implements RaptorConnectorWindowItem {
 
 	public Quadrant getPreferredQuadrant() {
 		return Raptor.getInstance().getPreferences().getQuadrant(
-				getConnector().getShortName() + "-"
+                connector.getShortName() + "-"
 						+ PreferenceKeys.GAMES_TAB_QUADRANT);
 	}
 
 	public String getTitle() {
-		return getConnector().getShortName() + "("+local.getString("gameWI3")+")";
+		return connector.getShortName() + "("+local.getString("gameWI3")+")";
 	}
 
 	public Control getToolbar(Composite parent) {

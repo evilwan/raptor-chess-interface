@@ -63,14 +63,14 @@ public class SublineNode implements MoveAnnotation {
 	public SublineNode createSubline(Move move) {
 		SublineNode newSubline = new SublineNode(null, move);
 		newSubline.setSublineOwner(this);
-		getMove().addAnnotation(newSubline);
+        this.move.addAnnotation(newSubline);
 		return newSubline;
 	}
 
 	public SublineNode getGreatestParent() {
 		SublineNode result = this;
 		while (result.isChild()) {
-			result = result.getParent();
+			result = result.parent;
 		}
 		return result;
 	}
@@ -141,11 +141,11 @@ public class SublineNode implements MoveAnnotation {
 
 	@Override
 	public String toString() {
-		if (getMove() == null) {
+		if (move == null) {
 			return "empty";
 		} else {
 			StringBuilder result = new StringBuilder();
-			if (getMove().hasSubline()) {
+			if (move.hasSubline()) {
 				for (SublineNode node : getSublines()) {
                     result.append("(").append(node.toString()).append(")");
 				}

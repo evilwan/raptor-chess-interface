@@ -160,10 +160,10 @@ public class UCIEngine {
 
 	public UCIEngine getDeepCopy() {
 		UCIEngine result = new UCIEngine();
-		result.setProcessPath(getProcessPath());
-		result.setParameters(getParameters());
-		result.setUserName(getUserName());
-		result.setGoAnalysisParameters(getGoAnalysisParameters());
+		result.setProcessPath(processPath);
+		result.setParameters(parameters);
+		result.setUserName(userName);
+		result.setGoAnalysisParameters(goAnalysisParameters);
 		result.nameToOptions = nameToOptions;
 		result.overrideOptions = overrideOptions;
 		result.isDefault = isDefault;
@@ -574,7 +574,7 @@ public class UCIEngine {
 		} else {
 			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-                movesString.append(movesString.toString().equals("") ? "" : " ").append(move.getValue());
+                movesString.append(movesString.toString().isEmpty() ? "" : " ").append(move.getValue());
 			}
 			send("position fen " + fen + " " + movesString);
 		}
@@ -621,7 +621,7 @@ public class UCIEngine {
 		} else {
 			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-                movesString.append(movesString.toString().equals("") ? "" : " ").append(move.getValue());
+                movesString.append(movesString.toString().isEmpty() ? "" : " ").append(move.getValue());
 			}
 			send("position startpos " + movesString);
 		}
@@ -1147,14 +1147,14 @@ public class UCIEngine {
 	 * Sends all of the options that do not have default values to the engine.
 	 */
 	protected void sendAllNonDefaultOptions() {
-		for (String overrideOption : overrideOptions.keySet()) {
-			UCIOption option = getOption(overrideOption);
+		for (Map.Entry<String, String> stringStringEntry : overrideOptions.entrySet()) {
+			UCIOption option = getOption(stringStringEntry.getKey());
 			if (option != null) {
-				option.setValue(overrideOptions.get(overrideOption));
+				option.setValue(stringStringEntry.getValue());
 				setOption(option);
 			} else {
 				LOG.warn("Could not set default value for property "
-						+ overrideOption);
+						+ stringStringEntry.getKey());
 			}
 		}
 	}

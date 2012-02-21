@@ -242,8 +242,8 @@ public class BrowserWindowItem implements RaptorWindowItem {
 		});
 
 		browser.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		if (getHTML() != null) {
-			browser.setText(getHTML());
+		if (storedHtml != null) {
+			browser.setText(storedHtml);
 		} else {
 			setUrl(url);
 		}

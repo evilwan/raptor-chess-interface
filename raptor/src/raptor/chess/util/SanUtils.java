@@ -529,7 +529,7 @@ public class SanUtils {
 	}
 
 	public static String squareToSan(int square) {
-		return "" + squareToFileSan(square) + squareToRankSan(square);
+		return String.valueOf(squareToFileSan(square)) + squareToRankSan(square);
 	}
 
 	/**

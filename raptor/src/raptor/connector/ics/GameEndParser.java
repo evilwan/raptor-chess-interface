@@ -41,8 +41,8 @@ public class GameEndParser {
 			result.blackName = tok.nextToken();
 
 			// find description. Its between ) and }
-			int closingParenIndex = message.indexOf(")");
-			int closingBraceIndex = message.indexOf("}");
+			int closingParenIndex = message.indexOf(')');
+			int closingBraceIndex = message.indexOf('}');
 
 			if (closingParenIndex == -1 || closingBraceIndex == -1) {
 				throw new IllegalArgumentException(

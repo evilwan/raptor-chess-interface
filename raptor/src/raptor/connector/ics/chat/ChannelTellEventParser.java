@@ -39,8 +39,8 @@ public class ChannelTellEventParser extends ChatEventParser {
 				if (stringtokenizer.hasMoreTokens()) {
 					String s1 = StringUtils.remove(stringtokenizer.nextToken()
 							.trim(), ":");
-					int j = s1.lastIndexOf(")");
-					int k = s1.lastIndexOf("(");
+					int j = s1.lastIndexOf(')');
+					int k = s1.lastIndexOf('(');
 					if (k < j && k != -1 && j != -1) {
 
 						ChatEvent event = new ChatEvent(IcsUtils

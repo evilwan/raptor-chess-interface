@@ -110,7 +110,7 @@ public class GameFactory implements GameConstants {
 				if (piece == '/') {
 					boardIndex -= 16;
 				} else if (Character.isDigit(piece)) {
-					boardIndex += Integer.parseInt("" + piece);
+					boardIndex += Integer.parseInt(String.valueOf(piece));
 				} else {					
 					int pieceColor = Character.isUpperCase(piece) ? WHITE
 							: BLACK;

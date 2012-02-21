@@ -59,18 +59,18 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 
 	public void updateChannelsCombo() {
 		for (int i = 0; i < 255; i++) {
-			String key = getKey("" + i);
+			String key = getKey(String.valueOf(i));
 			if (raptorPreferenceStore.contains(key)) {
 				boolean contains = false;
 				for (int j = 0; j < channels.getItemCount(); j++) {
-					if (channels.getItem(j).equals("" + i)) {
+					if (channels.getItem(j).equals(String.valueOf(i))) {
 						contains = true;
 						break;
 					}
 				}
 
 				if (!contains) {
-					channels.add("" + i);
+					channels.add(String.valueOf(i));
 				}
 			}
 		}
@@ -104,7 +104,7 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 				String selectedChannelName = channels.getItem(channels
 						.getSelectionIndex());
 				channelName.setText(selectedChannelName);
-				String key = getKey("" + selectedChannelName);
+				String key = getKey(selectedChannelName);
 				colorSelector.setColorValue(raptorPreferenceStore.getColor(key)
 						.getRGB());
 			}
@@ -161,7 +161,7 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 			String selectedChannelName = channels.getItem(channels
 					.getSelectionIndex());
 			channelName.setText(selectedChannelName);
-			String key = getKey("" + selectedChannelName);
+			String key = getKey(selectedChannelName);
 			colorSelector.setColorValue(raptorPreferenceStore.getColor(key)
 					.getRGB());
 		}
@@ -175,19 +175,19 @@ public class ChatConsoleChannelColorsPage extends PreferencePage {
 			if (channelInt < 0 || channelInt > 256) {
 				throw new Exception();
 			}
-			String key = getKey("" + channelInt);
+			String key = getKey(String.valueOf(channelInt));
 			raptorPreferenceStore.setValue(key, colorSelector.getColorValue());
 
 			boolean channelsHasSelection = false;
 			for (int i = 0; i < channels.getItemCount(); i++) {
-				if (channels.getItem(i).equals("" + channelInt)) {
+				if (channels.getItem(i).equals(String.valueOf(channelInt))) {
 					channelsHasSelection = true;
 					break;
 				}
 			}
 
 			if (!channelsHasSelection) {
-				channels.add("" + channelInt);
+				channels.add(String.valueOf(channelInt));
 			}
 		} catch (Throwable t) {
 			MessageDialog

@@ -54,7 +54,7 @@ public abstract class RaptorAlias implements Comparable<RaptorAlias> {
 	 * Compares by name.
 	 */
 	public int compareTo(RaptorAlias arg0) {
-		return name.compareTo(arg0.getName());
+		return name.compareTo(arg0.name);
 	}
 
 	public String getDescription() {

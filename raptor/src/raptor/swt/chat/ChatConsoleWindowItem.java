@@ -106,7 +106,7 @@ public class ChatConsoleWindowItem implements RaptorConnectorWindowItem {
 	}
 
 	public Connector getConnector() {
-		return getController().getConnector();
+		return controller.getConnector();
 	}
 
 	public ChatConsole getConsole() {

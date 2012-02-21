@@ -443,7 +443,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 
 		if (!Raptor.getInstance().isDisposed()
 				&& getPreferences().getBoolean(
-						getContext().getPreferencePrefix()
+                context.getPreferencePrefix()
 								+ "close-tabs-on-disconnect")) {
 			RaptorConnectorWindowItem[] items = Raptor.getInstance()
 					.getWindow().getWindowItems(this);
@@ -549,7 +549,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				.getInstance()
 				.getPreferences()
 				.getString(
-						getContext().getPreferencePrefix()
+                        context.getPreferencePrefix()
 								+ PreferenceKeys.CHANNEL_COMMANDS);
 		String[] channelActionsArray = RaptorStringUtils.stringArrayFromString(
 				channelActions, ',');
@@ -599,7 +599,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				.getInstance()
 				.getPreferences()
 				.getString(
-						getContext().getPreferencePrefix()
+                        context.getPreferencePrefix()
 								+ PreferenceKeys.GAME_COMMANDS);
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
@@ -649,7 +649,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				.getInstance()
 				.getPreferences()
 				.getString(
-						getContext().getPreferencePrefix()
+                        context.getPreferencePrefix()
 								+ PreferenceKeys.PERSON_QUICK_COMMANDS);
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
@@ -680,7 +680,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				.getInstance()
 				.getPreferences()
 				.getString(
-						getContext().getPreferencePrefix()
+                        context.getPreferencePrefix()
 								+ PreferenceKeys.PERSON_COMMANDS);
 		String[] matchActionsArray = RaptorStringUtils.stringArrayFromString(
 				matchActions, ',');
@@ -708,7 +708,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		return lastPingTime;
 	}
 
-	public RaptorPreferenceStore getPreferences() {
+	public static RaptorPreferenceStore getPreferences() {
 		return Raptor.getInstance().getPreferences();
 	}
 
@@ -827,7 +827,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			RaptorStringTokenizer tok = new RaptorStringTokenizer(timeControl,
 					"+", true);
 			try {
-				String minutes = "" + Integer.parseInt(tok.nextToken()) / 60;
+				String minutes = String.valueOf(Integer.parseInt(tok.nextToken()) / 60);
 				String seconds = tok.nextToken();
 
 				String match = "match "
@@ -1069,7 +1069,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			}
 
 			if (event.getType() == ChatType.CHANNEL_TELL) {
-				if (!event.getSource().equals(getUserName())
+				if (!event.getSource().equals(userName)
 						&& channelToSpeakTellsFrom.contains(event.getChannel())) {
 					event.setHasSoundBeenHandled(speak(IcsUtils
 							.stripTitles(event.getSource())
@@ -1092,7 +1092,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 
 			if (event.getType() == ChatType.WHISPER
 					|| event.getType() == ChatType.KIBITZ) {
-				if (!event.getSource().equals(getUserName())
+				if (!event.getSource().equals(userName)
 						&& gamesToSpeakTellsFrom.contains(event.getGameId())) {
 					event.setHasSoundBeenHandled(speak(IcsUtils
 							.stripTitles(event.getSource())
@@ -1146,7 +1146,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				.getInstance()
 				.getPreferences()
 				.getString(
-						getContext().getShortName() + "-" + currentProfileName
+                        context.getShortName() + "-" + currentProfileName
 								+ "-" + PreferenceKeys.CHANNEL_REGEX_TAB_INFO));
 
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(preference, "`",
@@ -1306,7 +1306,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 * {@inheritDoc}
 	 */
 	public void setPrimaryGame(Game game) {
-		if (getGameService().getAllActiveGames().length > 1) {
+		if (gameService.getAllActiveGames().length > 1) {
 			sendMessage("primary " + game.getId(), true);
 		}
 	}
@@ -1426,7 +1426,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					if (chatConsoleItem.getController() instanceof ChannelController) {
 						ChannelController controller = (ChannelController) chatConsoleItem
 								.getController();
-						preference += (preference.equals("") ? "" : "`")
+						preference += (preference.isEmpty() ? "" : "`")
 								+ "Channel`"
 								+ controller.getChannel()
 								+ "`"
@@ -1435,7 +1435,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					} else if (chatConsoleItem.getController() instanceof RegExController) {
 						RegExController controller = (RegExController) chatConsoleItem
 								.getController();
-						preference += (preference.equals("") ? "" : "`")
+						preference += (preference.isEmpty() ? "" : "`")
 								+ "RegEx`"
 								+ controller.getPattern()
 								+ "`"
@@ -1443,23 +1443,23 @@ public abstract class IcsConnector implements Connector, MessageListener {
 										.getQuadrant(item).toString();
 					}
 				} else if (item instanceof SeekTableWindowItem) {
-					preference += (preference.equals("") ? "" : "`")
+					preference += (preference.isEmpty() ? "" : "`")
 							+ "SeekTableWindowItem` " + "` ";
 				} else if (item instanceof BugWhoWindowItem) {
-					preference += (preference.equals("") ? "" : "`")
+					preference += (preference.isEmpty() ? "" : "`")
 							+ "BugWhoWindowItem` " + "` ";
 				} else if (item instanceof BugButtonsWindowItem) {
-					preference += (preference.equals("") ? "" : "`")
+					preference += (preference.isEmpty() ? "" : "`")
 							+ "BugButtonsWindowItem` " + "` ";
 				} else if (item instanceof GamesWindowItem) {
-					preference += (preference.equals("") ? "" : "`")
+					preference += (preference.isEmpty() ? "" : "`")
 							+ "GamesWindowItem` ` ";
 				}
 			}
 			Raptor.getInstance()
 					.getPreferences()
 					.setValue(
-							getContext().getShortName() + "-"
+                            context.getShortName() + "-"
 									+ currentProfileName + "-"
 									+ PreferenceKeys.CHANNEL_REGEX_TAB_INFO,
 							preference);
@@ -1611,7 +1611,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 * Removes characters 0-index from inboundMessageBuffer and returns the
 	 * string removed.
 	 */
-	protected String drainInboundMessageBuffer(StringBuilder builder, int index) {
+	protected static String drainInboundMessageBuffer(StringBuilder builder, int index) {
 		String result = builder.substring(0, index);
 		builder.delete(0, index);
 		return result;
@@ -1709,8 +1709,8 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		return "TIMESTAMP|iv|OpenSeal|";
 	}
 
-	protected String getTextAfterColon(String message) {
-		int colonIndex = message.indexOf(":");
+	protected static String getTextAfterColon(String message) {
+		int colonIndex = message.indexOf(':');
 		if (colonIndex != -1) {
 			return message.substring(colonIndex + 1, message.length());
 		} else {
@@ -2049,7 +2049,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	protected void playBughouseSounds(ChatEvent event) {
 		if (getPreferences().getBoolean(PreferenceKeys.APP_SOUND_ENABLED)) {
 			String ptell = event.getMessage();
-			int colonIndex = ptell.indexOf(":");
+			int colonIndex = ptell.indexOf(':');
 			if (colonIndex != -1) {
 				String message = ptell
 						.substring(colonIndex + 1, ptell.length()).trim();
@@ -2176,7 +2176,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		}
 	}
 
-	protected String substituteTitles(String message, ChatType type) {
+	protected static String substituteTitles(String message, ChatType type) {
 		// Currently only handles fics formatting.
 		String result = message;
 		if (type == ChatType.SHOUT) {
@@ -2269,7 +2269,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 			message = message.trim();
 			if (message.startsWith("Challenge: ")) {
 				int playerStart = "Challenge: ".length();
-				int playerEnd = message.indexOf(" ", playerStart);
+				int playerEnd = message.indexOf(' ', playerStart);
 				if (playerEnd != -1) {
 					String name = message.substring(playerStart, playerEnd);
 					String[] titles = UserTagService.getInstance()
@@ -2280,10 +2280,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 							name += "(" + title + ")";
 						}
 					}
-					int secondPlayerStart = message.indexOf(")");
+					int secondPlayerStart = message.indexOf(')');
 					if (secondPlayerStart != -1) {
                         secondPlayerStart += 2;
-						int secondPlayerEnd = message.indexOf(" ",
+						int secondPlayerEnd = message.indexOf(' ',
 								secondPlayerStart);
 						if (secondPlayerEnd != -1) {
 							String secondName = message.substring(
@@ -2339,7 +2339,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 		this.userFollowing = userFollowing;
 	}
 
-	protected boolean speak(String message) {
+	protected static boolean speak(String message) {
 		message = StringUtils.remove(message, "fics%").trim();
 		return SoundService.getInstance().textToSpeech(message);
 	}

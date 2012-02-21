@@ -34,7 +34,7 @@ public class ListFieldEditor extends ListEditor {
 
 	@Override
 	protected String createList(String[] items) {
-		return RaptorStringUtils.toDelimitedString(items, "" + delimiter);
+		return RaptorStringUtils.toDelimitedString(items, String.valueOf(delimiter));
 
 	}
 

@@ -38,8 +38,8 @@ public class ChatEventUtils {
 
 	public static String serializeChatEvent(ChatEvent e) {
 		StringBuilder result = new StringBuilder(1000);
-        result.append(serializeField("" + e.time)).append(FIELD_SEPARATOR);
-        result.append(serializeField("" + e.type)).append(FIELD_SEPARATOR);
+        result.append(serializeField(String.valueOf(e.time))).append(FIELD_SEPARATOR);
+        result.append(serializeField(String.valueOf(e.type))).append(FIELD_SEPARATOR);
         result.append(serializeField(e.gameId)).append(FIELD_SEPARATOR);
         result.append(serializeField(e.channel)).append(FIELD_SEPARATOR);
         result.append(serializeField(e.source)).append(FIELD_SEPARATOR);

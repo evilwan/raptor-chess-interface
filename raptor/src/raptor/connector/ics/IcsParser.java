@@ -694,7 +694,7 @@ public class IcsParser implements GameConstants {
 				break;
 			}
 			game.setHeader(PgnHeader.ResultDescription, message.description);
-			game.setHeader(PgnHeader.PlyCount, "" + game.getHalfMoveCount());
+			game.setHeader(PgnHeader.PlyCount, String.valueOf(game.getHalfMoveCount()));
 			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
 			game.addState(Game.INACTIVE_STATE);
 			service.fireGameInactive(game.getId());

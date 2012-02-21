@@ -234,7 +234,7 @@ public class GameUtils implements GameConstants {
 						+ piece);
 			}
 		} else {
-			return "" + PIECE_TO_SAN.charAt(piece);
+			return String.valueOf(PIECE_TO_SAN.charAt(piece));
 		}
 
 	}
@@ -262,8 +262,8 @@ public class GameUtils implements GameConstants {
 						+ piece);
 			}
 		} else {
-			return isWhite ? ("" + PIECE_TO_SAN.charAt(piece)).toLowerCase()
-					: "" + PIECE_TO_SAN.charAt(piece);
+			return isWhite ? (String.valueOf(PIECE_TO_SAN.charAt(piece))).toLowerCase()
+					: String.valueOf(PIECE_TO_SAN.charAt(piece));
 		}
 
 	}
@@ -510,8 +510,7 @@ public class GameUtils implements GameConstants {
 		if (square == 64) {
 			return "-";
 		} else if (square < 100) {
-			return "" + FILE_FROM_SAN.charAt(square % 8)
-					+ RANK_FROM_SAN.charAt(square / 8);
+			return String.valueOf(FILE_FROM_SAN.charAt(square % 8)) + RANK_FROM_SAN.charAt(square / 8);
 		} else {
 			switch (square) {
 			case WN_DROP_FROM_SQUARE:

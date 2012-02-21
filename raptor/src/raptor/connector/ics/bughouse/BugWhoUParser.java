@@ -68,7 +68,7 @@ public class BugWhoUParser {
 	}
 
 	public Bugger[] process(String message) {
-		if (message.equals("")) {
+		if (message.isEmpty()) {
 			return new Bugger[0];
 		}
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(message, " \n",

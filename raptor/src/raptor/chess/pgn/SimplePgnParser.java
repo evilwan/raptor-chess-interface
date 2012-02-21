@@ -118,7 +118,7 @@ public class SimplePgnParser extends AbstractPgnParser {
 			String nextWord = wordTok.nextToken();
 
 			do {
-				if (nextWord == null || "".equals(nextWord)) {
+				if (nextWord == null || nextWord.isEmpty()) {
 					// We have reached the end of the line, read in the next
 					// line.
 					readNextLine();
@@ -178,7 +178,7 @@ public class SimplePgnParser extends AbstractPgnParser {
 					}
 
 				} else if (nextWord.startsWith("{")) {
-					int closingBrace = nextWord.indexOf("}");
+					int closingBrace = nextWord.indexOf('}');
 					if (closingBrace != -1) {
 						String annotation = nextWord.substring(1, closingBrace);
 						fireAnnotation(annotation);

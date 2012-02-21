@@ -419,12 +419,12 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	public void applyDefaultLayout() {
 		Map<String, String> map = new ClassicLayout()
 				.getPreferenceAdjustments();		
-		for (String key : map.keySet()) {
-			String value = map.get(key);
+		for (Map.Entry<String, String> stringStringEntry : map.entrySet()) {
+			String value = stringStringEntry.getValue();
 			if (value == null) {
-				setToDefault(key);
+				setToDefault(stringStringEntry.getKey());
 			} else {
-				setDefault(key, map.get(key));
+				setDefault(stringStringEntry.getKey(), stringStringEntry.getValue());
 			}
 		}
 	}

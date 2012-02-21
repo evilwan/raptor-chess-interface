@@ -402,7 +402,7 @@ public enum Nag implements MoveAnnotation {
 
 	public String toString() {
 		if (hasSymbol()) {
-			return getSymbol();
+			return symbol;
 		} else {
 			return name();
 		}

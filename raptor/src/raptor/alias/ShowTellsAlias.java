@@ -87,8 +87,7 @@ public class ShowTellsAlias extends RaptorAlias {
 																						null,
 																						ChatType.INTERNAL,
 																						"All direct tells sent since you logged in:\n"
-																								+ builder
-																										.toString()));
+																								+ builder));
 																	}
 																});
 											}
@@ -138,8 +137,7 @@ public class ShowTellsAlias extends RaptorAlias {
 																						"All "
 																								+ whatsLeft
 																								+ " tells sent since you logged in:\n"
-																								+ builder
-																										.toString()));
+																								+ builder));
 																	}
 																});
 											}
@@ -191,8 +189,7 @@ public class ShowTellsAlias extends RaptorAlias {
 																						"All "
 																								+ whatsLeft
 																								+ " tells sent since you logged in:\n"
-																								+ builder
-																										.toString()));
+																								+ builder));
 																	}
 																});
 											}

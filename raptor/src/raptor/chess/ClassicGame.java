@@ -89,7 +89,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public void addState(int state) {
-		setState(getState() | state);
+		setState(this.state | state);
 	}
 
 	/**
@@ -156,7 +156,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public void clearState(int state) {
-		setState(getState() & ~state);
+		setState(this.state & ~state);
 	}
 
 	/**
@@ -191,35 +191,35 @@ public class ClassicGame implements Game {
 			break;
 		}
 
-		int oppToMove = getOppositeColor(getColorToMove());
+		int oppToMove = getOppositeColor(colorToMove);
 
-		move.setPrevious50MoveCount(getFiftyMoveCount());
+		move.setPrevious50MoveCount(fiftyMoveCount);
 		if (move.isCapture()) {
 			decrementPieceCount(oppToMove, move.getCaptureWithPromoteMask());
-			incrementDropCount(getColorToMove(), move
+			incrementDropCount(colorToMove, move
 					.getCaptureWithPromoteMask());
 			setFiftyMoveCount(0);
 		} else if (move.isDrop()) {
-			incrementPieceCount(getColorToMove(), move.getPiece());
-			decrementDropCount(getColorToMove(), move.getPiece());
+			incrementPieceCount(colorToMove, move.getPiece());
+			decrementDropCount(colorToMove, move.getPiece());
 			setFiftyMoveCount(0);
 		} else if (move.getPiece() == PAWN) {
 			setFiftyMoveCount(0);
 		} else {
-			setFiftyMoveCount(getFiftyMoveCount() + 1);
+			setFiftyMoveCount(fiftyMoveCount + 1);
 		}
 
 		setColorToMove(oppToMove);
-		setNotColorToMoveBB(~getColorBB(getColorToMove()));
-		setHalfMoveCount(getHalfMoveCount() + 1);
+		setNotColorToMoveBB(~getColorBB(colorToMove));
+		setHalfMoveCount(halfMoveCount + 1);
 
-		getMoveList().append(move);
+        moves.append(move);
 
 		updateZobristHash();
 		incrementRepCount();
 		
-		move.setFullMoveCount((getHalfMoveCount() - 1) / 2 + 1);
-		move.setHalfMoveCount(getHalfMoveCount());
+		move.setFullMoveCount((halfMoveCount - 1) / 2 + 1);
+		move.setHalfMoveCount(halfMoveCount);
 		
 		if (move.getFullMoveCount() < 19) {
 			updateEcoHeaders(move);
@@ -303,7 +303,7 @@ public class ClassicGame implements Game {
 				: getCastling(BLACK) == CASTLE_BOTH ? "kq"
 						: getCastling(BLACK) == CASTLE_SHORT ? "k" : "q";
 
-		return whiteCastlingFen.equals("") && blackCastlingFen.equals("") ? "-"
+		return whiteCastlingFen.isEmpty() && blackCastlingFen.isEmpty() ? "-"
 				: whiteCastlingFen + blackCastlingFen;
 	}
 
@@ -318,7 +318,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public int getFullMoveCount() {
-		return getHalfMoveCount() / 2 + 1;
+		return halfMoveCount / 2 + 1;
 	}
 
 	/**
@@ -590,7 +590,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public boolean isCheckmate(PriorityMoveList moveList) {
-		return moveList.getSize() == 0 && isInCheck(getColorToMove());
+		return moveList.getSize() == 0 && isInCheck(colorToMove);
 	}
 
 	/**
@@ -617,9 +617,9 @@ public class ClassicGame implements Game {
 
 		return !(pawnCapture(oppositeColor, getPieceBB(oppositeColor, PAWN),
 				kingBB) == 0L
-				&& (orthogonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
+				&& (orthogonalMove(kingSquare, emptyBB, occupiedBB) & (getPieceBB(
 						oppositeColor, ROOK) | getPieceBB(oppositeColor, QUEEN))) == 0L
-				&& (diagonalMove(kingSquare, getEmptyBB(), getOccupiedBB()) & (getPieceBB(
+				&& (diagonalMove(kingSquare, emptyBB, occupiedBB) & (getPieceBB(
 						oppositeColor, BISHOP) | getPieceBB(oppositeColor,
 						QUEEN))) == 0L
 				&& (kingMove(kingSquare) & getPieceBB(oppositeColor, KING)) == 0L && (knightMove(kingSquare) & getPieceBB(
@@ -630,7 +630,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public boolean isInState(int state) {
-		return (getState() & state) != 0;
+		return (this.state & state) != 0;
 	}
 
 	/**
@@ -638,7 +638,7 @@ public class ClassicGame implements Game {
 	 */
 	public boolean isLegalPosition() {
 		return areBothKingsOnBoard()
-				&& !isInCheck(getOppositeColor(getColorToMove()));
+				&& !isInCheck(getOppositeColor(colorToMove));
 	}
 
 	/**
@@ -666,7 +666,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public boolean isStalemate(PriorityMoveList moveList) {
-		return moveList.getSize() == 0 && !isInCheck(getColorToMove());
+		return moveList.getSize() == 0 && !isInCheck(colorToMove);
 	}
 
 	/**
@@ -1063,7 +1063,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public void rollback() {
-		Move move = getMoveList().removeLast();
+		Move move = moves.removeLast();
 		decrementRepCount();
 
 		switch (move.getMoveCharacteristic()) {
@@ -1082,10 +1082,10 @@ public class ClassicGame implements Game {
 			break;
 		}
 
-		int oppositeToMove = getOppositeColor(getColorToMove());
+		int oppositeToMove = getOppositeColor(colorToMove);
 
 		if (move.isCapture()) {
-			incrementPieceCount(getColorToMove(), move
+			incrementPieceCount(colorToMove, move
 					.getCaptureWithPromoteMask());
 			decrementDropCount(oppositeToMove, move.getCaptureWithPromoteMask());
 		} else if (move.isDrop()) {
@@ -1094,8 +1094,8 @@ public class ClassicGame implements Game {
 		}
 
 		setColorToMove(oppositeToMove);
-		setNotColorToMoveBB(~getColorBB(getColorToMove()));
-		setHalfMoveCount(getHalfMoveCount() - 1);
+		setNotColorToMoveBB(~getColorBB(colorToMove));
+		setHalfMoveCount(halfMoveCount - 1);
 
 		setFiftyMoveCount(move.getPrevious50MoveCount());
 		setCastling(WHITE, move.getLastWhiteCastlingState());
@@ -1323,9 +1323,9 @@ public class ClassicGame implements Game {
 		int charsInCurrentLine = 0;
 
 		// TO DO: add breaking up lines in comments.
-		for (int i = 0; i < getHalfMoveCount(); i++) {
+		for (int i = 0; i < halfMoveCount; i++) {
 			int charsBefore = builder.length();
-			nextMoveRequiresNumber = PgnUtils.getMove(builder, getMoveList()
+			nextMoveRequiresNumber = PgnUtils.getMove(builder, moves
 					.get(i), nextMoveRequiresNumber);
 			charsInCurrentLine += builder.length() - charsBefore;
 
@@ -1488,13 +1488,13 @@ public class ClassicGame implements Game {
 	 *            A move list.
 	 */
 	protected void generatePseudoBishopMoves(PriorityMoveList moves) {
-		long fromBB = getPieceBB(getColorToMove(), BISHOP);
+		long fromBB = getPieceBB(colorToMove, BISHOP);
 
 		while (fromBB != 0) {
 			int fromSquare = bitscanForward(fromBB);
 
-			long toBB = diagonalMove(fromSquare, getEmptyBB(), getOccupiedBB())
-					& getNotColorToMoveBB();
+			long toBB = diagonalMove(fromSquare, emptyBB, occupiedBB)
+					& notColorToMoveBB;
 
 			while (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
@@ -1502,7 +1502,7 @@ public class ClassicGame implements Game {
 				int contents = getPieceWithPromoteMask(toSquare);
 
 				addMove(new Move(fromSquare, toSquare,
-						getPieceWithPromoteMask(fromSquare), getColorToMove(),
+						getPieceWithPromoteMask(fromSquare), colorToMove,
 						contents), moves);
 				toBB = bitscanClear(toBB);
 			}
@@ -1522,45 +1522,45 @@ public class ClassicGame implements Game {
 		// The king destination square isnt checked, its checked when legal
 		// getMoves() are checked.
 
-		if (getColorToMove() == WHITE
-				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
+		if (colorToMove == WHITE
+				&& (getCastling(colorToMove) & CASTLE_SHORT) != 0
 				&& fromBB == E1 && getPiece(SQUARE_G1) == EMPTY
 				&& GameUtils.isWhitePiece(this, SQUARE_H1)
 				&& getPiece(SQUARE_H1) == ROOK && getPiece(SQUARE_F1) == EMPTY
 				&& !isInCheck(WHITE, E1) && !isInCheck(WHITE, F1)) {
 			moves
 					.appendLowPriority(new Move(SQUARE_E1, SQUARE_G1, KING,
-							getColorToMove(), EMPTY,
+                            colorToMove, EMPTY,
 							Move.SHORT_CASTLING_CHARACTERISTIC));
 		}
 
-		if (getColorToMove() == WHITE
-				&& (getCastling(getColorToMove()) & CASTLE_LONG) != 0
+		if (colorToMove == WHITE
+				&& (getCastling(colorToMove) & CASTLE_LONG) != 0
 				&& fromBB == E1 && GameUtils.isWhitePiece(this, SQUARE_A1)
 				&& getPiece(SQUARE_A1) == ROOK && getPiece(SQUARE_D1) == EMPTY
 				&& getPiece(SQUARE_C1) == EMPTY && getPiece(SQUARE_B1) == EMPTY
 				&& !isInCheck(WHITE, E1) && !isInCheck(WHITE, D1)) {
 			moves
 					.appendLowPriority(new Move(SQUARE_E1, SQUARE_C1, KING,
-							getColorToMove(), EMPTY,
+                            colorToMove, EMPTY,
 							Move.LONG_CASTLING_CHARACTERISTIC));
 		}
 
-		if (getColorToMove() == BLACK
-				&& (getCastling(getColorToMove()) & CASTLE_SHORT) != 0
+		if (colorToMove == BLACK
+				&& (getCastling(colorToMove) & CASTLE_SHORT) != 0
 				&& fromBB == E8 && !GameUtils.isWhitePiece(this, SQUARE_H8)
 				&& getPiece(SQUARE_H8) == ROOK && getPiece(SQUARE_G8) == EMPTY
 				&& getPiece(SQUARE_F8) == EMPTY && !isInCheck(BLACK, E8)
 				&& !isInCheck(BLACK, F8)) {
 			moves
 					.appendLowPriority(new Move(SQUARE_E8, SQUARE_G8, KING,
-							getColorToMove(), EMPTY,
+                            colorToMove, EMPTY,
 							Move.SHORT_CASTLING_CHARACTERISTIC));
 
 		}
 
-		if (getColorToMove() == BLACK
-				&& (getCastling(getColorToMove()) & CASTLE_LONG) != 0
+		if (colorToMove == BLACK
+				&& (getCastling(colorToMove) & CASTLE_LONG) != 0
 				&& !GameUtils.isWhitePiece(this, SQUARE_A8)
 				&& getPiece(SQUARE_A8) == ROOK && fromBB == E8
 				&& getPiece(SQUARE_D8) == EMPTY && getPiece(SQUARE_C8) == EMPTY
@@ -1568,7 +1568,7 @@ public class ClassicGame implements Game {
 				&& !isInCheck(BLACK, D8)) {
 			moves
 					.appendLowPriority(new Move(SQUARE_E8, SQUARE_C8, KING,
-							getColorToMove(), EMPTY,
+                            colorToMove, EMPTY,
 							Move.LONG_CASTLING_CHARACTERISTIC));
 		}
 	}
@@ -1581,9 +1581,9 @@ public class ClassicGame implements Game {
 	 *            A move list.
 	 */
 	protected void generatePseudoKingMoves(PriorityMoveList moves) {
-		long fromBB = getPieceBB(getColorToMove(), KING);
+		long fromBB = getPieceBB(colorToMove, KING);
 		int fromSquare = bitscanForward(fromBB);
-		long toBB = kingMove(fromSquare) & getNotColorToMoveBB();
+		long toBB = kingMove(fromSquare) & notColorToMoveBB;
 
 		generatePseudoKingCastlingMoves(fromBB, moves);
 
@@ -1592,7 +1592,7 @@ public class ClassicGame implements Game {
 
 			int contents = getPieceWithPromoteMask(toSquare);
 
-			addMove(new Move(fromSquare, toSquare, KING, getColorToMove(),
+			addMove(new Move(fromSquare, toSquare, KING, colorToMove,
 					contents), moves);
 			toBB = bitscanClear(toBB);
 			toSquare = bitscanForward(toBB);
@@ -1608,19 +1608,19 @@ public class ClassicGame implements Game {
 	 */
 	protected void generatePseudoKnightMoves(PriorityMoveList moves) {
 
-		long fromBB = getPieceBB(getColorToMove(), KNIGHT);
+		long fromBB = getPieceBB(colorToMove, KNIGHT);
 
 		while (fromBB != 0) {
 			int fromSquare = bitscanForward(fromBB);
 
-			long toBB = knightMove(fromSquare) & getNotColorToMoveBB();
+			long toBB = knightMove(fromSquare) & notColorToMoveBB;
 
 			while (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
 				int contents = getPieceWithPromoteMask(toSquare);
 
 				addMove(new Move(fromSquare, toSquare,
-						getPieceWithPromoteMask(fromSquare), getColorToMove(),
+						getPieceWithPromoteMask(fromSquare), colorToMove,
 						contents), moves);
 
 				toBB = bitscanClear(toBB);
@@ -1641,26 +1641,26 @@ public class ClassicGame implements Game {
 	protected void generatePseudoPawnCaptures(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
 
-		long toBB = pawnCapture(getColorToMove(), fromBB,
+		long toBB = pawnCapture(colorToMove, fromBB,
 				getColorBB(oppositeColor));
 
 		while (toBB != 0L) {
 			int toSquare = bitscanForward(toBB);
 			if ((toBB & RANK8_OR_RANK1) != 0L) {
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						getPieceWithPromoteMask(toSquare), KNIGHT,
 						EMPTY_SQUARE, Move.PROMOTION_CHARACTERISTIC), moves);
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						getPieceWithPromoteMask(toSquare), BISHOP,
 						EMPTY_SQUARE, Move.PROMOTION_CHARACTERISTIC), moves);
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						getPieceWithPromoteMask(toSquare), QUEEN, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						getPieceWithPromoteMask(toSquare), ROOK, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 			} else {
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						getPieceWithPromoteMask(toSquare)), moves);
 			}
 			toBB = bitscanClear(toBB);
@@ -1677,11 +1677,11 @@ public class ClassicGame implements Game {
 	protected void generatePseudoPawnDoublePush(int fromSquare, long fromBB,
 			int oppositeColor, int epModifier, PriorityMoveList moves) {
 
-		long toBB = pawnDoublePush(getColorToMove(), fromBB, getEmptyBB());
+		long toBB = pawnDoublePush(colorToMove, fromBB, emptyBB);
 
 		while (toBB != 0) {
 			int toSquare = bitscanForward(toBB);
-			addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+			addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 					EMPTY, EMPTY, toSquare + epModifier,
 					Move.DOUBLE_PAWN_PUSH_CHARACTERISTIC), moves);
 			toBB = bitscanClear(toBB);
@@ -1698,15 +1698,15 @@ public class ClassicGame implements Game {
 	 */
 	protected void generatePseudoPawnEPCaptures(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
-		if (getEpSquare() != EMPTY) {
+		if (epSquare != EMPTY) {
 
-			long toBB = pawnEpCapture(getColorToMove(), fromBB, getPieceBB(
-					oppositeColor, PAWN), getBitboard(getEpSquare()));
+			long toBB = pawnEpCapture(colorToMove, fromBB, getPieceBB(
+					oppositeColor, PAWN), getBitboard(epSquare));
 
 			if (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
 
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						PAWN, EMPTY, EMPTY_SQUARE,
 						Move.EN_PASSANT_CHARACTERISTIC), moves);
 			}
@@ -1721,10 +1721,10 @@ public class ClassicGame implements Game {
 	 *            A move list.
 	 */
 	protected void generatePseudoPawnMoves(PriorityMoveList moves) {
-		long pawnsBB = getPieceBB(getColorToMove(), PAWN);
+		long pawnsBB = getPieceBB(colorToMove, PAWN);
 		int oppositeColor, epModifier;
 
-		if (getColorToMove() == WHITE) {
+		if (colorToMove == WHITE) {
 			oppositeColor = BLACK;
 			epModifier = -8;
 		} else {
@@ -1758,26 +1758,26 @@ public class ClassicGame implements Game {
 	protected void generatePseudoPawnSinglePush(int fromSquare, long fromBB,
 			int oppositeColor, PriorityMoveList moves) {
 
-		long toBB = pawnSinglePush(getColorToMove(), fromBB, getEmptyBB());
+		long toBB = pawnSinglePush(colorToMove, fromBB, emptyBB);
 
 		while (toBB != 0) {
 			int toSquare = bitscanForward(toBB);
 
 			if ((toBB & RANK8_OR_RANK1) != 0L) {
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						EMPTY, KNIGHT, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						EMPTY, BISHOP, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						EMPTY, QUEEN, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						EMPTY, ROOK, EMPTY_SQUARE,
 						Move.PROMOTION_CHARACTERISTIC), moves);
 			} else {
-				addMove(new Move(fromSquare, toSquare, PAWN, getColorToMove(),
+				addMove(new Move(fromSquare, toSquare, PAWN, colorToMove,
 						EMPTY), moves);
 			}
 
@@ -1793,22 +1793,22 @@ public class ClassicGame implements Game {
 	 *            A move list.
 	 */
 	protected void generatePseudoQueenMoves(PriorityMoveList moves) {
-		long fromBB = getPieceBB(getColorToMove(), QUEEN);
+		long fromBB = getPieceBB(colorToMove, QUEEN);
 
 		while (fromBB != 0) {
 			int fromSquare = bitscanForward(fromBB);
 
-			long toBB = (orthogonalMove(fromSquare, getEmptyBB(),
-					getOccupiedBB()) | diagonalMove(fromSquare, getEmptyBB(),
-					getOccupiedBB()))
-					& getNotColorToMoveBB();
+			long toBB = (orthogonalMove(fromSquare, emptyBB,
+                    occupiedBB) | diagonalMove(fromSquare, emptyBB,
+                    occupiedBB))
+					& notColorToMoveBB;
 
 			while (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
 
 				int contents = getPieceWithPromoteMask(toSquare);
 				addMove(new Move(fromSquare, toSquare,
-						getPieceWithPromoteMask(fromSquare), getColorToMove(),
+						getPieceWithPromoteMask(fromSquare), colorToMove,
 						contents), moves);
 				toBB = bitscanClear(toBB);
 			}
@@ -1825,21 +1825,21 @@ public class ClassicGame implements Game {
 	 *            A move list.
 	 */
 	protected void generatePseudoRookMoves(PriorityMoveList moves) {
-		long fromBB = getPieceBB(getColorToMove(), ROOK);
+		long fromBB = getPieceBB(colorToMove, ROOK);
 
 		while (fromBB != 0) {
 			int fromSquare = bitscanForward(fromBB);
 
-			long toBB = orthogonalMove(fromSquare, getEmptyBB(),
-					getOccupiedBB())
-					& getNotColorToMoveBB();
+			long toBB = orthogonalMove(fromSquare, emptyBB,
+                    occupiedBB)
+					& notColorToMoveBB;
 
 			while (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
 
 				int contents = getPieceWithPromoteMask(toSquare);
 				addMove(new Move(fromSquare, toSquare,
-						getPieceWithPromoteMask(fromSquare), getColorToMove(),
+						getPieceWithPromoteMask(fromSquare), colorToMove,
 						contents), moves);
 				toBB = bitscanClear(toBB);
 			}
@@ -1969,15 +1969,15 @@ public class ClassicGame implements Game {
 
 		xor(move.getColor(), KING, kingFromTo);
 		xor(move.getColor(), kingFromTo);
-		setOccupiedBB(getOccupiedBB() ^ kingFromTo);
-		setEmptyBB(getEmptyBB() ^ kingFromTo);
+		setOccupiedBB(occupiedBB ^ kingFromTo);
+		setEmptyBB(emptyBB ^ kingFromTo);
 
 		xor(move.getColor(), ROOK, rookFromTo);
 		xor(move.getColor(), rookFromTo);
-		setOccupiedBB(getOccupiedBB() ^ rookFromTo);
-		setEmptyBB(getEmptyBB() ^ rookFromTo);
+		setOccupiedBB(occupiedBB ^ rookFromTo);
+		setEmptyBB(emptyBB ^ rookFromTo);
 
-		setCastling(getColorToMove(), CASTLE_NONE);
+		setCastling(colorToMove, CASTLE_NONE);
 
 		setEpSquare(EMPTY_SQUARE);
 	}
@@ -1993,8 +1993,8 @@ public class ClassicGame implements Game {
 
 		xor(move.getColor(), toBB);
 		xor(move.getColor(), move.getPiece(), toBB);
-		setOccupiedBB(getOccupiedBB() ^ toBB);
-		setEmptyBB(getEmptyBB() ^ toBB);
+		setOccupiedBB(occupiedBB ^ toBB);
+		setEmptyBB(emptyBB ^ toBB);
 
 		updateZobristDrop(move, oppositeColor);
 
@@ -2006,20 +2006,20 @@ public class ClassicGame implements Game {
 		long fromBB = getBitboard(move.getFrom());
 		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
-		long captureBB = getColorToMove() == WHITE ? moveOne(SOUTH, toBB)
+		long captureBB = colorToMove == WHITE ? moveOne(SOUTH, toBB)
 				: moveOne(NORTH, toBB);
 
 		int captureSquare = bitscanForward(captureBB);
 
 		xor(move.getColor(), move.getPiece(), fromToBB);
 		xor(move.getColor(), fromToBB);
-		setOccupiedBB(getOccupiedBB() ^ fromToBB);
-		setEmptyBB(getEmptyBB() ^ fromToBB);
+		setOccupiedBB(occupiedBB ^ fromToBB);
+		setEmptyBB(emptyBB ^ fromToBB);
 
 		xor(move.getCaptureColor(), move.getPiece(), captureBB);
 		xor(move.getCaptureColor(), captureBB);
-		setOccupiedBB(getOccupiedBB() ^ captureBB);
-		setEmptyBB(getEmptyBB() ^ captureBB);
+		setOccupiedBB(occupiedBB ^ captureBB);
+		setEmptyBB(emptyBB ^ captureBB);
 
 		setPiece(move.getFrom(), EMPTY);
 		setPiece(move.getTo(), PAWN);
@@ -2038,15 +2038,15 @@ public class ClassicGame implements Game {
 		xor(move.getColor(), fromToBB);
 
 		if (move.isCapture()) {
-			setOccupiedBB(getOccupiedBB() ^ fromBB);
-			setEmptyBB(getEmptyBB() ^ fromBB);
+			setOccupiedBB(occupiedBB ^ fromBB);
+			setEmptyBB(emptyBB ^ fromBB);
 
 			xor(oppositeColor, move.getCapture(), toBB);
 			xor(oppositeColor, toBB);
 			updateZobristPOCapture(move, oppositeColor);
 		} else {
-			setOccupiedBB(getOccupiedBB() ^ fromToBB);
-			setEmptyBB(getEmptyBB() ^ fromToBB);
+			setOccupiedBB(occupiedBB ^ fromToBB);
+			setEmptyBB(emptyBB ^ fromToBB);
 			updateZobristPONoCapture(move, oppositeColor);
 		}
 
@@ -2062,8 +2062,8 @@ public class ClassicGame implements Game {
 			// capture is handled in forceMove.
 			// promoted piece never has a promote mask only captures do.
 			// Promotes do not effect drop pieces.
-			decrementPieceCount(getColorToMove(), PAWN);
-			incrementPieceCount(getColorToMove(), move.getPiecePromotedTo());
+			decrementPieceCount(colorToMove, PAWN);
+			incrementPieceCount(colorToMove, move.getPiecePromotedTo());
 		} else {
 			xor(move.getColor(), move.getPiece(), fromToBB);
 
@@ -2131,13 +2131,13 @@ public class ClassicGame implements Game {
 
 		xor(move.getColor(), KING, kingFromTo);
 		xor(move.getColor(), kingFromTo);
-		setOccupiedBB(getOccupiedBB() ^ kingFromTo);
-		setEmptyBB(getEmptyBB() ^ kingFromTo);
+		setOccupiedBB(occupiedBB ^ kingFromTo);
+		setEmptyBB(emptyBB ^ kingFromTo);
 
 		xor(move.getColor(), ROOK, rookFromTo);
 		xor(move.getColor(), rookFromTo);
-		setOccupiedBB(getOccupiedBB() ^ rookFromTo);
-		setEmptyBB(getEmptyBB() ^ rookFromTo);
+		setOccupiedBB(occupiedBB ^ rookFromTo);
+		setEmptyBB(emptyBB ^ rookFromTo);
 
 		setEpSquareFromPreviousMove();
 	}
@@ -2148,8 +2148,8 @@ public class ClassicGame implements Game {
 
 		xor(move.getColor(), toBB);
 		xor(move.getColor(), move.getPiece(), toBB);
-		setOccupiedBB(getOccupiedBB() ^ toBB);
-		setEmptyBB(getEmptyBB() ^ toBB);
+		setOccupiedBB(occupiedBB ^ toBB);
+		setEmptyBB(emptyBB ^ toBB);
 
 		updateZobristDrop(move, oppositeColor);
 
@@ -2173,7 +2173,7 @@ public class ClassicGame implements Game {
 	}
 
 	protected void rollbackEpMove(Move move) {
-		int oppositeColor = getOppositeColor(getColorToMove());
+		int oppositeColor = getOppositeColor(colorToMove);
 		long fromBB = getBitboard(move.getFrom());
 		long toBB = getBitboard(move.getTo());
 		long fromToBB = fromBB ^ toBB;
@@ -2184,13 +2184,13 @@ public class ClassicGame implements Game {
 
 		xor(oppositeColor, move.getPiece(), fromToBB);
 		xor(oppositeColor, fromToBB);
-		setOccupiedBB(getOccupiedBB() ^ fromToBB);
-		setEmptyBB(getEmptyBB() ^ fromToBB);
-		setEmptyBB(getEmptyBB() ^ captureBB);
-		setOccupiedBB(getOccupiedBB() ^ captureBB);
+		setOccupiedBB(occupiedBB ^ fromToBB);
+		setEmptyBB(emptyBB ^ fromToBB);
+		setEmptyBB(emptyBB ^ captureBB);
+		setOccupiedBB(occupiedBB ^ captureBB);
 
-		xor(getColorToMove(), move.getCapture(), captureBB);
-		xor(getColorToMove(), captureBB);
+		xor(colorToMove, move.getCapture(), captureBB);
+		xor(colorToMove, captureBB);
 
 		setPiece(move.getTo(), EMPTY);
 		setPiece(move.getFrom(), PAWN);
@@ -2209,8 +2209,8 @@ public class ClassicGame implements Game {
 		xor(move.getColor(), fromToBB);
 
 		if (move.isCapture()) {
-			setOccupiedBB(getOccupiedBB() ^ fromBB);
-			setEmptyBB(getEmptyBB() ^ fromBB);
+			setOccupiedBB(occupiedBB ^ fromBB);
+			setEmptyBB(emptyBB ^ fromBB);
 
 			xor(oppositeColor, move.getCapture(), toBB);
 			xor(oppositeColor, toBB);
@@ -2218,8 +2218,8 @@ public class ClassicGame implements Game {
 			updateZobristPOCapture(move, oppositeColor);
 
 		} else {
-			setOccupiedBB(getOccupiedBB() ^ fromToBB);
-			setEmptyBB(getEmptyBB() ^ fromToBB);
+			setOccupiedBB(occupiedBB ^ fromToBB);
+			setEmptyBB(emptyBB ^ fromToBB);
 
 			updateZobristPONoCapture(move, oppositeColor);
 		}
@@ -2245,12 +2245,12 @@ public class ClassicGame implements Game {
 	}
 
 	protected void setEpSquareFromPreviousMove() {
-		switch (getMoveList().getSize()) {
+		switch (moves.getSize()) {
 		case 0:
-			setEpSquare(getInitialEpSquare());
+			setEpSquare(initialEpSquare);
 			break;
 		default:
-			setEpSquare(getMoveList().getLast().getEpSquare());
+			setEpSquare(moves.getLast().getEpSquare());
 			break;
 		}
 	}
@@ -2290,13 +2290,13 @@ public class ClassicGame implements Game {
 			// ambiguous)
 			{
 				int oppositeColorToMove = GameUtils
-						.getOppositeColor(getColorToMove());
-				long fromBB = getPieceBB(getColorToMove(), PAWN);
+						.getOppositeColor(colorToMove);
+				long fromBB = getPieceBB(colorToMove, PAWN);
 				int movesFound = 0;
 				while (fromBB != 0) {
 					int fromSquare = bitscanForward(fromBB);
 
-					long allPawnCapturesBB = pawnCapture(getColorToMove(),
+					long allPawnCapturesBB = pawnCapture(colorToMove,
 							getBitboard(fromSquare),
 							getColorBB(oppositeColorToMove));
 
@@ -2335,7 +2335,7 @@ public class ClassicGame implements Game {
 								+ PIECE_TO_SAN
 										.charAt(move.getPiecePromotedTo()) : "");
 			} else {
-				long fromBB = getPieceBB(getColorToMove(), move.getPiece());
+				long fromBB = getPieceBB(colorToMove, move.getPiece());
 				long toBB = getBitboard(move.getTo());
 
 				int sameFilesFound = 0;
@@ -2352,23 +2352,23 @@ public class ClassicGame implements Game {
 							resultBB = knightMove(fromSquare) & toBB;
 							break;
 						case BISHOP:
-							resultBB = diagonalMove(fromSquare, getEmptyBB(),
-									getOccupiedBB())
-									& getNotColorToMoveBB() & toBB;
+							resultBB = diagonalMove(fromSquare, emptyBB,
+                                    occupiedBB)
+									& notColorToMoveBB & toBB;
 							break;
 						case ROOK:
-							resultBB = orthogonalMove(fromSquare, getEmptyBB(),
-									getOccupiedBB())
-									& getNotColorToMoveBB() & toBB;
+							resultBB = orthogonalMove(fromSquare, emptyBB,
+                                    occupiedBB)
+									& notColorToMoveBB & toBB;
 							break;
 						case QUEEN:
-							resultBB = orthogonalMove(fromSquare, getEmptyBB(),
-									getOccupiedBB())
-									& getNotColorToMoveBB()
+							resultBB = orthogonalMove(fromSquare, emptyBB,
+                                    occupiedBB)
+									& notColorToMoveBB
 									& toBB
-									| diagonalMove(fromSquare, getEmptyBB(),
-											getOccupiedBB())
-									& getNotColorToMoveBB() & toBB;
+									| diagonalMove(fromSquare, emptyBB,
+                                    occupiedBB)
+									& notColorToMoveBB & toBB;
 							break;
 						}
 
@@ -2391,7 +2391,7 @@ public class ClassicGame implements Game {
 					}
 				}
 
-				shortAlgebraic = "" + PIECE_TO_SAN.charAt(move.getPiece());
+				shortAlgebraic = String.valueOf(PIECE_TO_SAN.charAt(move.getPiece()));
 				boolean hasHandledAmbiguity = false;
 				if (sameRanksFound > 1) {
 					shortAlgebraic += SanUtils.squareToFileSan(move.getFrom());
@@ -2490,24 +2490,24 @@ public class ClassicGame implements Game {
 	protected void updateCastlingRightsForNonEpNonCastlingMove(Move move) {		
 		switch (move.getPiece()) {
 		case KING:
-			setCastling(getColorToMove(), CASTLE_NONE);
+			setCastling(colorToMove, CASTLE_NONE);
 			break;
 		default:
 			if (move.getPiece() == ROOK && move.getFrom() == SQUARE_A1
-					&& getColorToMove() == WHITE || move.getCapture() == ROOK
-					&& move.getTo() == SQUARE_A1 && getColorToMove() == BLACK) {
+					&& colorToMove == WHITE || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_A1 && colorToMove == BLACK) {
 				setCastling(WHITE, getCastling(WHITE) & CASTLE_SHORT);
 			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_H1
-					&& getColorToMove() == WHITE || move.getCapture() == ROOK
-					&& move.getTo() == SQUARE_H1 && getColorToMove() == BLACK) {
+					&& colorToMove == WHITE || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_H1 && colorToMove == BLACK) {
 				setCastling(WHITE, getCastling(WHITE) & CASTLE_LONG);
 			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_A8
-					&& getColorToMove() == BLACK || move.getCapture() == ROOK
-					&& move.getTo() == SQUARE_A8 && getColorToMove() == WHITE) {
+					&& colorToMove == BLACK || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_A8 && colorToMove == WHITE) {
 				setCastling(BLACK, getCastling(BLACK) & CASTLE_SHORT);
 			} else if (move.getPiece() == ROOK && move.getFrom() == SQUARE_H8
-					&& getColorToMove() == BLACK || move.getCapture() == ROOK
-					&& move.getTo() == SQUARE_H8 && getColorToMove() == WHITE) {
+					&& colorToMove == BLACK || move.getCapture() == ROOK
+					&& move.getTo() == SQUARE_H8 && colorToMove == WHITE) {
 				setCastling(BLACK, getCastling(BLACK) & CASTLE_LONG);
 			}
 			break;
@@ -2545,7 +2545,7 @@ public class ClassicGame implements Game {
 
 	protected void updateZobristHash() {
 		zobristGameHash = zobristPositionHash
-				^ zobrist(getColorToMove(), getEpSquare(), getCastling(WHITE),
+				^ zobrist(colorToMove, epSquare, getCastling(WHITE),
 						getCastling(BLACK));
 	}
 

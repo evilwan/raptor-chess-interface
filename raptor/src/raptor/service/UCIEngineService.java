@@ -210,7 +210,7 @@ public class UCIEngineService {
 					&& !keyString.equals("userName")
 					&& !keyString.equals("multiplyBlackScoreByMinus1")
 					&& !keyString.equals("parameters")) {
-				engine.setOverrideOption(keyString, "" + properties.get(key));
+				engine.setOverrideOption(keyString, String.valueOf(properties.get(key)));
 			}
 		}
 		return engine;
@@ -226,13 +226,12 @@ public class UCIEngineService {
 		}
 
 		properties.put("isUCI", "" + true);
-		properties.put("chess960", "" + engine.supportsFischerRandom());
-		properties.put("isDefault", "" + engine.isDefault());
+		properties.put("chess960", String.valueOf(engine.supportsFischerRandom()));
+		properties.put("isDefault", String.valueOf(engine.isDefault()));
 		properties.put("processPath", engine.getProcessPath());
 		properties.put("userName", engine.getUserName());
 		properties.put("goAnalysisParams", engine.getGoAnalysisParameters());
-		properties.put("multiplyBlackScoreByMinus1", ""
-				+ engine.isMultiplyBlackScoreByMinus1());
+		properties.put("multiplyBlackScoreByMinus1", String.valueOf(engine.isMultiplyBlackScoreByMinus1()));
 		if (engine.getParameters() == null || engine.getParameters().length > 0) {
 			properties.put("parameters", RaptorStringUtils.toDelimitedString(
 					engine.getParameters(), "@"));

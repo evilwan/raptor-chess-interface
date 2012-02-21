@@ -192,12 +192,9 @@ public class TableMoveList implements ChessBoardMoveList {
 		} else {
 			int moveNumber = currentRow + 1;
 			movesTable.appendRow(new String[] {
-					""
-							+ moveNumber
-							+ ") "
-							+ GameUtils.convertSanToUseUnicode(game
-									.getMoveList().get(halfMoveNumber)
-									.toString(), true), "" });
+                    String.valueOf(moveNumber) + ") " + GameUtils.convertSanToUseUnicode(game
+                            .getMoveList().get(halfMoveNumber)
+                            .toString(), true), "" });
 		}
 	}
 

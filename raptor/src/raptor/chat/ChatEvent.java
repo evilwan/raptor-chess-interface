@@ -151,7 +151,7 @@ public class ChatEvent {
 	@Override
 	public String toString() {
 		return "ChatEvent: source=" + source + " type=" + type.name()
-				+ " gameId=" + gameId + " channel=" + getChannel()
+				+ " gameId=" + gameId + " channel=" + channel
 				+ " message='" + message + "'";
 	}
 

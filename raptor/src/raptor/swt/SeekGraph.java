@@ -275,12 +275,12 @@ public class SeekGraph extends Canvas {
 
 	protected void acceptGameAt(Point where) {
 		if (seekService != null) {
-			for (Point loc : screen.keySet()) {
-				Rectangle rect = new Rectangle(loc.x, loc.y, SEEK_SIZE,
+			for (Map.Entry<Point, Point> pointPointEntry : screen.entrySet()) {
+				Rectangle rect = new Rectangle(pointPointEntry.getKey().x, pointPointEntry.getKey().y, SEEK_SIZE,
 						SEEK_SIZE);
 
 				if (rect.contains(where)) {
-					List<Seek> existing = seeks.get(screen.get(loc));
+					List<Seek> existing = seeks.get(pointPointEntry.getValue());
 					if (existing.size() == 1) {
 						seekService.getConnector().acceptSeek(
 								existing.get(0).getAd());
@@ -531,14 +531,14 @@ public class SeekGraph extends Canvas {
 	}
 
 	private void drawPoints(GC gc, Rectangle clip, int width, int height) {
-		for (Point sp : seeks.keySet()) {
-			Point p = scale(sp, width - 2 * inset, height - 2 * inset);
+		for (Map.Entry<Point, List<Seek>> pointListEntry : seeks.entrySet()) {
+			Point p = scale(pointListEntry.getKey(), width - 2 * inset, height - 2 * inset);
 			p.y = height - inset - p.y - SEEK_SIZE / 2;
 			p.x = p.x + inset - SEEK_SIZE / 2;
 			// TODO: fix this...
 			// if (clip.contains(p)) { // we will honor the clip!
-			paintSeeks(gc, p, seeks.get(sp));
-			screen.put(p, sp);
+			paintSeeks(gc, p, pointListEntry.getValue());
+			screen.put(p, pointListEntry.getKey());
 			// }
 		}
 	}

@@ -662,8 +662,7 @@ public class RaptorTable extends Composite {
 			table.setRedraw(false);
 
 			ColumnInfo info = columnInfos.get(index);
-			wasLastSortAscending = lastStortedColumn == null || (lastStortedColumn == info.column ? !wasLastSortAscending
-                    : true);
+			wasLastSortAscending = lastStortedColumn == null || (lastStortedColumn != info.column || !wasLastSortAscending);
 			lastStortedColumn = info.column;
 			lastComparator = new TableItemComparator(info.comparator,
 					info.index, wasLastSortAscending);

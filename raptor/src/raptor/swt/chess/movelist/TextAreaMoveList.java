@@ -583,7 +583,7 @@ public class TextAreaMoveList implements ChessBoardMoveList {
 				textPanel.setCaretOffset(textPanel.getCaretOffset()
 						+ delim.length());
 				textPanel.insert(delim);
-				textPanel.insert(buff.toString() + "]");
+				textPanel.insert(buff + "]");
 				var.setNextNodeOffset(textPanel.getCaretOffset()
 						+ buff.toString().length());
 			} else if (buff.length() != 0) {

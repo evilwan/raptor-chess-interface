@@ -122,7 +122,7 @@ public class Seek {
 	}
 
 	public String getTimeControl() {
-		return getMinutes() + " " + getIncrement() + " "
+		return minutes + " " + increment + " "
 				+ (isRated ? "r" : "u");
 	}
 
@@ -135,7 +135,7 @@ public class Seek {
 	}
 
 	public boolean isComputer() {
-		return getName().endsWith("(C)");
+		return name.endsWith("(C)");
 	}
 
 	public boolean isFormula() {
