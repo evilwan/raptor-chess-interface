@@ -128,10 +128,10 @@ public class ActionScriptService {
 	public RaptorAction[] getActions(RaptorActionContainer container) {
 		ArrayList<RaptorAction> actions = new ArrayList<RaptorAction>(20);		
 		
-		// currently hardcoded to allow speak whispers and tells
-		if (container == RaptorAction.RaptorActionContainer.GameChatConsole) {			
-			actions.add(nameToActionMap.get("Speak Whispers and Kibs"));
-		}
+//		// currently hardcoded to allow speak whispers and tells
+//		if (container == RaptorAction.RaptorActionContainer.GameChatConsole) {			
+//			actions.add(nameToActionMap.get("Speak Whispers and Kibs"));
+//		}
 		
 		for (RaptorAction action : nameToActionMap.values()) {
 			if (action.isIn(container)) {
