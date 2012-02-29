@@ -443,7 +443,9 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(APP_NAME, "Raptor .98u3 ("
 				+System.getProperty("java.vendor")+" " 
 				+System.getProperty("java.version")+"; "
-				+System.getProperty("os.name")+"; " + L10n.currentLocale.getISO3Language()+")");				
+				+System.getProperty("os.name")+"; " + L10n.currentLocale.getISO3Language()+")");
+		putValue("app-version", ".98u3");
+		
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
 				!OSUtils.isLikelyWindowsXP());
 		setDefault(APP_SASH_WIDTH, 8);

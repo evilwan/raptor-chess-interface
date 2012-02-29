@@ -132,7 +132,7 @@ public class Raptor implements PreferenceKeys {
 
 			instance.raptorWindow = new RaptorWindow();
 			instance.raptorWindow.setBlockOnOpen(true);
-
+			//Raptor.getInstance().preferences.putValue(name, value)
 			// Auto login the connectors.
 			Connector[] connectors = ConnectorService.getInstance()
 					.getConnectors();
