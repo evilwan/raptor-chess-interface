@@ -28,6 +28,9 @@ public class CheckUpdates {
 	}
 
 	public static void checkUpdates() {
+		if (Raptor.getInstance().getPreferences().getBoolean("ready-to-update"))
+			return;
+		
 		URL google;
 		try {
 			google = new URL("file:///home/bodia/test1");
