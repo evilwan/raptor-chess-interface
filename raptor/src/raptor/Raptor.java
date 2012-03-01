@@ -39,6 +39,7 @@ import raptor.pref.PreferenceKeys;
 import raptor.pref.RaptorPreferenceStore;
 import raptor.service.ActionScriptService;
 import raptor.service.AliasService;
+import raptor.service.CheckUpdates;
 import raptor.service.ChessBoardCacheService;
 import raptor.service.ConnectorService;
 import raptor.service.DictionaryService;
@@ -142,7 +143,7 @@ public class Raptor implements PreferenceKeys {
 				ThreadService.getInstance().scheduleOneShot(750,
 						new Runnable() {
 							public void run() {
-								// See if we need to launch the login dialog
+								// See if we need to launch the login dialog		
 										boolean connected = connector.onAutoConnect();
 										if (!connected && connector instanceof FicsConnector
 												&& Raptor.getInstance().getPreferences()
@@ -156,6 +157,9 @@ public class Raptor implements PreferenceKeys {
 
 			display.timerExec(500, new Runnable() {
 				public void run() {
+					if (getInstance().getPreferences().getBoolean("app-update"))
+						CheckUpdates.checkUpdates();
+					
 					try {
 						// Launch the home page after a half second it requires
 						// a
@@ -632,8 +636,8 @@ public class Raptor implements PreferenceKeys {
 	 */
 	private void init() {
 		preferences = new RaptorPreferenceStore();			
-		install();		
-
+		install();	
+		
 		// Make sure all of the Singleton services get loaded.
 		ThreadService.getInstance();
 		//DictionaryService.getInstance();
@@ -646,7 +650,7 @@ public class Raptor implements PreferenceKeys {
 		//ScriptService.getInstance();
 		//ActionScriptService.getInstance();
 		//UCIEngineService.getInstance();
-		//AliasService.getInstance();
+		//AliasService.getInstance();			
 	}
 
 	/**

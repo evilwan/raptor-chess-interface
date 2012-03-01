@@ -444,7 +444,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				+System.getProperty("java.vendor")+" " 
 				+System.getProperty("java.version")+"; "
 				+System.getProperty("os.name")+"; " + L10n.currentLocale.getISO3Language()+")");
-		putValue("app-version", ".98u3");
+		putValue("app-version", ".98u3");		
+		putValue("app-update", "true");
 		
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
 				!OSUtils.isLikelyWindowsXP());
