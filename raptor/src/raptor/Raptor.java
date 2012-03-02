@@ -157,8 +157,11 @@ public class Raptor implements PreferenceKeys {
 
 			display.timerExec(500, new Runnable() {
 				public void run() {
-					if (getInstance().getPreferences().getBoolean("app-update"))
+					if (!getInstance().getPreferences().getBoolean("ready-to-update")
+							&& getInstance().getPreferences().getBoolean("app-update"))
 						CheckUpdates.checkUpdates();
+					else if (getInstance().getPreferences().getBoolean("ready-to-update"))
+						getInstance().getPreferences().setValue("ready-to-update", "false");
 					
 					try {
 						// Launch the home page after a half second it requires

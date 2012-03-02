@@ -2,6 +2,7 @@ package raptor.service;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -33,7 +34,7 @@ public class CheckUpdates {
 		
 		URL google;
 		try {
-			google = new URL("file:///home/bodia/test1");
+			google = new File("test1").toURI().toURL();
 			BufferedReader bin = new BufferedReader(new InputStreamReader(
 					google.openStream()), 1024);
 			final String lastVersionLine = bin.readLine();
@@ -55,7 +56,8 @@ public class CheckUpdates {
 					@Override
 					public void run() {
 						MessageDialog.openInformation(Raptor.getInstance().getDisplay().getActiveShell(), "New version",
-								"Raptor " + lastVersionLine.substring(9) + " is available. Restart to upgrade to it.");
+								"Raptor " + lastVersionLine.substring(9) + " is available. Restart to upgrade to it. You " +
+										"can turn off updates on Preferences->General page.");
 						
 					}
 					

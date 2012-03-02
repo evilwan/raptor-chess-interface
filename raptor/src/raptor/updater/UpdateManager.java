@@ -11,9 +11,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.Locale;
-
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -22,9 +22,6 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-
-import raptor.international.L10n;
-import raptor.swt.SWTUtils;
 
 public class UpdateManager {
 
@@ -37,15 +34,40 @@ public class UpdateManager {
 	private boolean isReadyToUpdate;
 	private static String appVersionStr = ".98u3";
 	
+	protected static boolean isLikelyLinux = false;
+	protected static boolean isLikelyOSX = false;
+	protected static boolean isLikelyWindows = false;
+	
+	static {
+		String osName = System.getProperty("os.name");
+		if (osName.startsWith("Mac OS")) {
+			isLikelyOSX = true;
+		} else if (osName.startsWith("Windows")) {
+			isLikelyWindows = true;
+		} else {
+			isLikelyLinux = true;
+		}
+	}
+	
 	private Label infoLabel1;
 	private Label infoLabel2;
 	
 	private Thread upgradeThread;
 	private Shell shell;
 
+	public static void center(Shell shell) {
+        Rectangle bds = shell.getDisplay().getBounds();
+        Point p = shell.getSize();
+
+        int nLeft = (bds.width - p.x) / 2;
+        int nTop = (bds.height - p.y) / 2;
+
+        shell.setBounds(nLeft, nTop, p.x, p.y);
+	}
+	
 	public void invokeMain(String args[]) {
 
-		File f = new File("/home/bodia/Raptor_v98/Raptor.jar");
+		File f = new File("Raptor.jar");
 
 		try {
 			URLClassLoader u = new URLClassLoader(
@@ -71,7 +93,7 @@ public class UpdateManager {
         });
         createGuiContents(shell);
         shell.pack();
-        SWTUtils.center(shell);
+        center(shell);
         shell.open();
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {
@@ -119,7 +141,7 @@ public class UpdateManager {
 		});
 		try {
 			boolean forVersionSet = false;
-			URL google = new URL("file:///home/bodia/test");
+			URL google = new File("test").toURI().toURL();
 			BufferedReader bin = new BufferedReader(new InputStreamReader(
 					google.openStream()),1024);
 			String currentLine = null;
@@ -143,12 +165,18 @@ public class UpdateManager {
 					String data[] = currentLine.substring(6).split(" ");
 					String tempFilename = System.getProperty("java.io.tmpdir")+
 							System.getProperty("file.separator") + Math.abs(data[1].hashCode());
-					System.out.println(data[0]);
 					URL fileUrl = new URL(data[0]);
 				    ReadableByteChannel rbc2 = Channels.newChannel(fileUrl.openStream());
 				    FileOutputStream fos2 = new FileOutputStream(tempFilename);
 				    fos2.getChannel().transferFrom(rbc2, 0, 1 << 24);
-				    fos2.close();					
+				    fos2.close();				
+				    if (isLikelyOSX)
+				    	applyOSX(tempFilename, data[1]);
+				    else if (isLikelyWindows)
+				    	applyWindows(tempFilename, data[1]);
+				    else if (isLikelyLinux)
+				    	applyLinux(tempFilename, data[1]);
+				    	
 					System.out.println(data[1]);
 				}
 			}
@@ -161,10 +189,48 @@ public class UpdateManager {
 
 			@Override
 			public void run() {
-				//shell.close();							
+				shell.close();							
 			}
 			
 		});
+	}
+
+	private void applyLinux(String tempFilename, String dest) {
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec("gksudo mv "+tempFilename+" "+dest);
+			if (p.waitFor()!=0) {
+				p = Runtime.getRuntime().exec("kdesudo mv "+tempFilename+" "+dest);
+				p.waitFor();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
+	}
+
+	private void applyWindows(String tempFilename, String dest) {
+		String[] command = new String[3];
+		command[0] = "cmd";
+		command[1] = "/c";
+		command[2] = "copy "+tempFilename+" "+dest;
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec(command);
+			p.waitFor(); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 	
+	}
+
+	private void applyOSX(String tempFilename, String dest) {
+		Process p;
+		try {
+			p = Runtime.getRuntime().exec("mv "+tempFilename+" "+dest);
+			p.waitFor(); 
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 		
 	}
 
 	void checkPrefs() {
@@ -199,29 +265,29 @@ public class UpdateManager {
 	 */
 	public static void main(String[] args) {
 		final UpdateManager manager = new UpdateManager();
-		Thread th = new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				manager.open();
-			}
-			
-		});
-		th.start();
-		
-		try {
-			Thread.sleep(600);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		manager.checkPrefs();
 		if (manager.isUpdateOn && manager.isReadyToUpdate) {
-			manager.upgrade();			
+			Thread th = new Thread(new Runnable() {
+
+				@Override
+				public void run() {
+					manager.open();
+				}
+				
+			});
+			th.start();
+			
+			try {
+				Thread.sleep(600);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			manager.upgrade();						
 		}
 
-		//manager.invokeMain(args);
+		manager.invokeMain(args);
 	}
 
 }

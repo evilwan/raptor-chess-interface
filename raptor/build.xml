@@ -105,7 +105,11 @@
 		</copy>
 
 		<jar jarfile="${install.dir}/Raptor.jar" manifest="${projectFiles.dir}/Manifest.txt" basedir="${classes.dir}">
+			<exclude name="raptor/updater/*" />			
 			<include name="**/*" />
+		</jar>
+		<jar jarfile="${install.dir}/updater.jar" manifest="${projectFiles.dir}/Upd-manifest.txt" basedir="${classes.dir}">			
+			<include name="raptor/updater/*" />
 		</jar>
 	</target>
 

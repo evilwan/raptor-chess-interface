@@ -81,6 +81,10 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				getFieldEditorParent()));
 
 		addField(new BooleanFieldEditor(
+				"app-update",
+				local.getString("genP18"), getFieldEditorParent()));
+		
+		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LAUNCHING_LOGIN_DIALOG,
 				local.getString("genP17"), getFieldEditorParent()));
 		
