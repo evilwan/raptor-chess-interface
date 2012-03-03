@@ -72,7 +72,7 @@ public class UpdateManager {
 		try {
 			URLClassLoader u = new URLClassLoader(
 					new URL[] { f.toURI().toURL() });
-			Class c = u.loadClass("raptor.Raptor");
+			Class<?> c = u.loadClass("raptor.Raptor");
 			Method m = c.getMethod("main", new Class[] { args.getClass() });
 			m.setAccessible(true);
 			m.invoke(null, new Object[] { args });

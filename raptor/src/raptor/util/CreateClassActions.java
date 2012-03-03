@@ -34,9 +34,8 @@ public class CreateClassActions {
 	 * @param packageName
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes" })
-	public static Class[] getClasses(String packageName) {
-		List<Class> result = new ArrayList<Class>(50);
+	public static Class<?>[] getClasses(String packageName) {
+		List<Class<?>> result = new ArrayList<Class<?>>(50);
 		String name = packageName;
 		if (!name.startsWith("/")) {
 			name = "/" + name;
@@ -70,9 +69,8 @@ public class CreateClassActions {
 	}
 
 	public static void main(String args[]) throws Exception {
-		@SuppressWarnings("rawtypes")
-		Class[] classes = getClasses("raptor.action.chat");
-		for (@SuppressWarnings("rawtypes") Class clazz : classes) {
+		Class<?>[] classes = getClasses("raptor.action.chat");
+		for (Class<?> clazz : classes) {
 			RaptorAction action = (RaptorAction) clazz.newInstance();
 			Properties properties = RaptorActionFactory.save(action);
 
@@ -87,7 +85,7 @@ public class CreateClassActions {
 		}
 
 		classes = getClasses("raptor.action.game");
-		for (@SuppressWarnings("rawtypes") Class clazz : classes) {
+		for (Class<?> clazz : classes) {
 			RaptorAction action = (RaptorAction) clazz.newInstance();
 			Properties properties = RaptorActionFactory.save(action);
 

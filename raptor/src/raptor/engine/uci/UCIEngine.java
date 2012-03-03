@@ -95,8 +95,7 @@ public class UCIEngine {
 		}
 
 		resetConnectionState();
-		@SuppressWarnings("rawtypes")
-		Future connectionTimeoutFuture = ThreadService.getInstance()
+		Future<?> connectionTimeoutFuture = ThreadService.getInstance()
 				.scheduleOneShot(CONNECTION_TIMEOUT, new Runnable() {
 					public void run() {
 						disconnect();

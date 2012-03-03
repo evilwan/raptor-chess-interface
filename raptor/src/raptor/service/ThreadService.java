@@ -160,8 +160,7 @@ public class ThreadService {
 	 * @return The Future, may return null if there was an error scheduling the
 	 *         Runnable or if execution was vetoed.
 	 */
-	@SuppressWarnings({ "rawtypes" })
-	public Future scheduleOneShot(long delay, Runnable runnable) {
+	public Future<?> scheduleOneShot(long delay, Runnable runnable) {
 		if (!Raptor.getInstance().isDisposed() && !isDisposed) {
 			try {
 				return executor.schedule(new RunnableExceptionDecorator(

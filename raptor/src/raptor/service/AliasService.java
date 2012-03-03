@@ -71,8 +71,7 @@ import raptor.util.RaptorLogger;
 public class AliasService {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(AliasService.class);
 	public static boolean serviceCreated = false;
-	@SuppressWarnings({ "rawtypes" })
-	private static Class[] ALIASES = { AbbreviatedChannelTellAlias.class,
+	private static Class<?>[] ALIASES = { AbbreviatedChannelTellAlias.class,
 			AbbreviatedPersonTellAlias.class, ActivateScriptAlias.class,
 			AddExtendedCensorAlias.class, AddTabAlias.class,AddTagAlias.class,
 			AliasHelpAlias.class, ChannelBotAlias.class, ClearMemosAlias.class,
@@ -107,7 +106,7 @@ public class AliasService {
 	private AliasService() {
 		try {
 			long startTime = System.currentTimeMillis();
-			for (@SuppressWarnings("rawtypes") Class clazz : ALIASES) {
+			for (Class<?> clazz : ALIASES) {
 				aliases.add((RaptorAlias) clazz.newInstance());
 			}
 			Collections.sort(aliases);

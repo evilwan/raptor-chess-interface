@@ -22,13 +22,13 @@ public class RaptorLogger {
 				60000);
 	}
 	
-	public static RaptorLogger getLog(@SuppressWarnings("rawtypes") Class clazz) {
+	public static RaptorLogger getLog(Class<?> clazz) {
 		return new RaptorLogger(clazz);
 	}
 	
 	private Log serfLogger;
 	
-	private RaptorLogger(@SuppressWarnings("rawtypes") Class clazz) {
+	private RaptorLogger(Class<?> clazz) {
 		serfLogger = LogFactory.getLog(clazz);
 	}
 

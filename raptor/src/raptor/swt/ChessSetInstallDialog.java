@@ -112,8 +112,7 @@ public class ChessSetInstallDialog extends Dialog {
 								}
 							});
 
-					@SuppressWarnings("rawtypes")
-					Enumeration entries = zipFile.entries();
+					Enumeration<? extends ZipEntry> entries = zipFile.entries();
 					boolean isValid = true;
 					String invalidEntryName = "";
 					boolean isJinSet = false;
