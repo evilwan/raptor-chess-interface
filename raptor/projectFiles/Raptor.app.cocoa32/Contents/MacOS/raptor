@@ -8,5 +8,5 @@ exec java \
 -Xms40m \
 -Xmx100m \
 -XX:MaxPermSize=128m \
--classpath $BASEDIR:$BASEDIR/Raptor.jar:$BASEDIR/swt/swt.jar:$BASEDIR/common/bsh-2.0b4.jar:$BASEDIR/common/commons-collections-3.2.1.jar:$BASEDIR/common/commons-configuration-1.6.jar:$BASEDIR/common/commons-lang-2.4.jar:$BASEDIR/common/commons-logging-1.1.1.jar:$BASEDIR/common/junit4_4.3.1.jar:$BASEDIR/common/log4j-1.2.15.jar:$BASEDIR/common/org.eclipse.core.commands_3.4.0.I20080509-2000.jar:$BASEDIR/common/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar:$BASEDIR/common/org.eclipse.jface_3.4.2.M20090107-0800.jar:$BASEDIR/common/org.eclipse.jface.text_3.4.2.r342_v20081119-0800.jar:$BASEDIR/common/org.eclipse.osgi_3.4.3.R34x_v20081215-1030.jar:$BASEDIR/common/svgSalamander.jar \
-raptor.Raptor
+-classpath $BASEDIR:$BASEDIR/updater.jar:$BASEDIR/Raptor.jar:$BASEDIR/swt/swt.jar:$BASEDIR/common/bsh-2.0b4.jar:$BASEDIR/common/commons-collections-3.2.1.jar:$BASEDIR/common/commons-configuration-1.6.jar:$BASEDIR/common/commons-lang-2.4.jar:$BASEDIR/common/commons-logging-1.1.1.jar:$BASEDIR/common/junit4_4.3.1.jar:$BASEDIR/common/log4j-1.2.15.jar:$BASEDIR/common/org.eclipse.core.commands_3.4.0.I20080509-2000.jar:$BASEDIR/common/org.eclipse.equinox.common_3.4.0.v20080421-2006.jar:$BASEDIR/common/org.eclipse.jface_3.4.2.M20090107-0800.jar:$BASEDIR/common/org.eclipse.jface.text_3.4.2.r342_v20081119-0800.jar:$BASEDIR/common/org.eclipse.osgi_3.4.3.R34x_v20081215-1030.jar:$BASEDIR/common/svgSalamander.jar \
+raptor.updater.UpdateManager

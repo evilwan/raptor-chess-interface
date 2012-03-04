@@ -3,6 +3,7 @@ package raptor.service;
 import org.eclipse.jface.dialogs.MessageDialog;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.regex.Matcher;
@@ -63,7 +64,7 @@ public class CheckUpdates {
 					
 				});				
 			}			
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

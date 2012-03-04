@@ -224,6 +224,9 @@
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
 		</move>
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+							<fileset file="${install.dir}/Raptor_${version}/updater.jar" />
+		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="777" />
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/raptor" perm="777" />
@@ -286,6 +289,9 @@
 		</move>
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
+		</move>
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+					<fileset file="${install.dir}/Raptor_${version}/updater.jar" />
 		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />
@@ -357,6 +363,9 @@
 		</move>
 		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
 			<fileset file="${install.dir}/Raptor_${version}/Raptor.jar" />
+		</move>
+		<move toDir="${install.dir}/Raptor_${version}/Raptor.app/Contents/MacOS/">
+			<fileset file="${install.dir}/Raptor_${version}/updater.jar" />
 		</move>
 
 		<chmod dir="${install.dir}/Raptor_${version}/Raptor.app" perm="755" />

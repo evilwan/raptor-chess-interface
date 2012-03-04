@@ -277,27 +277,25 @@ public class UpdateManager {
 		final UpdateManager manager = new UpdateManager();
 
 		manager.checkPrefs();
-		if (manager.isUpdateOn && manager.isReadyToUpdate) {
-			manager.upgradeThread = Thread.currentThread();
-			Thread th = new Thread(new Runnable() {
+		if (manager.isUpdateOn && manager.isReadyToUpdate) {			
+			manager.upgradeThread = new Thread(new Runnable() {
 
 				@Override
 				public void run() {
-					manager.open();
+					boolean threadDisposed = false;
+					try {
+						Thread.sleep(600);
+					} catch (InterruptedException e) {
+						threadDisposed = true;
+					}
+					
+					if (!threadDisposed)
+						manager.upgrade();
 				}
 
 			});
-			th.start();
-
-			boolean threadDisposed = false;
-			try {
-				Thread.sleep(600);
-			} catch (InterruptedException e) {
-				threadDisposed = true;
-			}
-			
-			if (!threadDisposed)
-				manager.upgrade();
+			manager.upgradeThread.start();	
+			manager.open();
 		}
 
 		invokeMain(args);
