@@ -29,6 +29,7 @@ import raptor.pref.PreferenceUtils;
 import raptor.pref.fields.LabelButtonFieldEditor;
 import raptor.pref.fields.LabelFieldEditor;
 import raptor.util.FileUtils;
+import raptor.util.OSUtils;
 import raptor.util.RaptorLogger;
 
 public class GeneralPage extends FieldEditorPreferencePage {
@@ -80,9 +81,11 @@ public class GeneralPage extends FieldEditorPreferencePage {
 				local.getString("language"), LANGUAGES,
 				getFieldEditorParent()));
 
-		addField(new BooleanFieldEditor(
-				"app-update",
-				local.getString("genP18"), getFieldEditorParent()));
+		if (!OSUtils.isLikelyOSX()) {
+			addField(new BooleanFieldEditor(
+					"app-update",
+					local.getString("genP18"), getFieldEditorParent()));
+		}
 		
 		addField(new BooleanFieldEditor(
 				PreferenceKeys.APP_IS_LAUNCHING_LOGIN_DIALOG,

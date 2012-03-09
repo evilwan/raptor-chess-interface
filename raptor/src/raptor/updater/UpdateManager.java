@@ -37,6 +37,8 @@ public class UpdateManager {
 	protected static boolean isLikelyLinux = false;
 	protected static boolean isLikelyOSX = false;
 	protected static boolean isLikelyWindows = false;
+	
+	private static String updActionsUrl = "http://raptor-chess-interface.googlecode.com/files/updActions";
 
 	static {
 		String osName = System.getProperty("os.name");
@@ -144,7 +146,7 @@ public class UpdateManager {
 		}
 		try {
 			boolean forVersionSet = false;
-			URL google = new File("test").toURI().toURL();
+			URL google = new URL(updActionsUrl);
 			BufferedReader bin = new BufferedReader(new InputStreamReader(
 					google.openStream()), 1024);
 			String currentLine;
@@ -183,8 +185,6 @@ public class UpdateManager {
 						applyWindows(tempFilename, data[1]);
 					else if (isLikelyLinux)
 						applyLinux(tempFilename, data[1]);
-
-					System.out.println(data[1]);
 				}
 			}
 			bin.close();
@@ -274,30 +274,32 @@ public class UpdateManager {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		final UpdateManager manager = new UpdateManager();
+		if (!isLikelyOSX) {
+			final UpdateManager manager = new UpdateManager();
 
-		manager.checkPrefs();
-		if (manager.isUpdateOn && manager.isReadyToUpdate) {			
-			manager.upgradeThread = new Thread(new Runnable() {
+			manager.checkPrefs();
+			if (manager.isUpdateOn && manager.isReadyToUpdate) {
+				manager.upgradeThread = new Thread(new Runnable() {
 
-				@Override
-				public void run() {
-					boolean threadDisposed = false;
-					try {
-						Thread.sleep(600);
-					} catch (InterruptedException e) {
-						threadDisposed = true;
+					@Override
+					public void run() {
+						boolean threadDisposed = false;
+						try {
+							Thread.sleep(600);
+						} catch (InterruptedException e) {
+							threadDisposed = true;
+						}
+
+						if (!threadDisposed)
+							manager.upgrade();
 					}
-					
-					if (!threadDisposed)
-						manager.upgrade();
-				}
 
-			});
-			manager.upgradeThread.start();	
-			manager.open();
+				});
+				manager.upgradeThread.start();
+				manager.open();
+			}
 		}
-
+		
 		invokeMain(args);
 	}
 

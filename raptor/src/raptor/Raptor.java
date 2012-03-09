@@ -58,6 +58,7 @@ import raptor.swt.RaptorCursorRegistry;
 import raptor.swt.RaptorImageRegistry;
 import raptor.util.BrowserUtils;
 import raptor.util.FileUtils;
+import raptor.util.OSUtils;
 import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 
@@ -157,7 +158,7 @@ public class Raptor implements PreferenceKeys {
 
 			display.timerExec(500, new Runnable() {
 				public void run() {
-					if (!getInstance().getPreferences().getBoolean("ready-to-update")
+					if (!OSUtils.isLikelyOSX() && !getInstance().getPreferences().getBoolean("ready-to-update")
 							&& getInstance().getPreferences().getBoolean("app-update"))
 						CheckUpdates.checkUpdates();
 					else if (getInstance().getPreferences().getBoolean("ready-to-update"))

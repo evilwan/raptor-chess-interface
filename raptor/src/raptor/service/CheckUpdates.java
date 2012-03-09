@@ -2,7 +2,6 @@ package raptor.service;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -14,6 +13,8 @@ import raptor.Raptor;
 public class CheckUpdates {
 	
 	private static int appVersion[] = {0,98,3,0};
+	
+	private static String updUrl = "http://raptor-chess-interface.googlecode.com/files/upd";
 	
 	private static int[] parseVersion(String version) {
 		int t[] = null;
@@ -30,14 +31,16 @@ public class CheckUpdates {
 	}
 
 	public static void checkUpdates() {
-		if (Raptor.getInstance().getPreferences().getBoolean("ready-to-update"))
+		if (Raptor.getInstance().getPreferences().getBoolean("ready-to-update")) {
+			Raptor.getInstance().getPreferences().setValue("ready-to-update", "false");
 			return;
+		}
 		
-		URL google;
+		URL updateUrl;
 		try {
-			google = new File("test1").toURI().toURL();
+			updateUrl = new URL(updUrl);
 			BufferedReader bin = new BufferedReader(new InputStreamReader(
-					google.openStream()), 1024);
+					updateUrl.openStream()), 1024);
 			final String lastVersionLine = bin.readLine();
 			int[] newVersionData = parseVersion(lastVersionLine.substring(9));
 			boolean isNewerVersion = newVersionData[0] > appVersion[0] 
