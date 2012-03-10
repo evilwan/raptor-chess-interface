@@ -38,7 +38,7 @@ public class UpdateManager {
 	protected static boolean isLikelyOSX = false;
 	protected static boolean isLikelyWindows = false;
 	
-	private static String updActionsUrl = "http://raptor-chess-interface.googlecode.com/files/updActions";
+	private static final String updActionsUrl = "http://raptor-chess-interface.googlecode.com/files/updActions";
 
 	static {
 		String osName = System.getProperty("os.name");
@@ -208,10 +208,10 @@ public class UpdateManager {
 		Process p;
 		try {
 			p = Runtime.getRuntime().exec(
-					"gksudo mv " + tempFilename + " " + dest);
+					"gksudo mv \"" + tempFilename + "\" \"" + dest + "\"");
 			if (p.waitFor() != 0) {
 				p = Runtime.getRuntime().exec(
-						"kdesudo mv " + tempFilename + " " + dest);
+						"kdesudo mv \"" + tempFilename + "\" \"" + dest + "\"");
 				p.waitFor();
 			}
 		} catch (Exception e) {
@@ -224,7 +224,7 @@ public class UpdateManager {
 		String[] command = new String[3];
 		command[0] = "cmd";
 		command[1] = "/c";
-		command[2] = "copy " + tempFilename + " " + dest;
+		command[2] = "copy /b /y \"" + tempFilename + "\" \"" + dest + "\"";
 		Process p;
 		try {
 			p = Runtime.getRuntime().exec(command);
@@ -237,7 +237,8 @@ public class UpdateManager {
 	private static void applyOSX(String tempFilename, String dest) {
 		Process p;
 		try {
-			p = Runtime.getRuntime().exec("mv " + tempFilename + " " + dest);
+			p = Runtime.getRuntime().exec(
+					"mv \"" + tempFilename + "\" \"" + dest + "\"");
 			p.waitFor();
 		} catch (Exception e) {
 			e.printStackTrace();

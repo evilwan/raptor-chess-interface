@@ -9,12 +9,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 
 public class CheckUpdates {
+	private static final L10n local = L10n.getInstance();
 	
-	private static int appVersion[] = {0,98,3,0};
+	private static final int appVersion[] = {0,98,3,0};
 	
-	private static String updUrl = "http://raptor-chess-interface.googlecode.com/files/upd";
+	private static final String updUrl = "http://raptor-chess-interface.googlecode.com/files/upd";
 	
 	private static int[] parseVersion(String version) {
 		int t[] = null;
@@ -59,10 +61,12 @@ public class CheckUpdates {
 
 					@Override
 					public void run() {
-						MessageDialog.openInformation(Raptor.getInstance().getDisplay().getActiveShell(), "New version",
-								"Raptor " + lastVersionLine.substring(9) + " is available. Restart to upgrade to it. You " +
-										"can turn off updates on Preferences->General page.");
-						
+						MessageDialog.openInformation(
+								Raptor.getInstance().getDisplay()
+										.getActiveShell(),
+								local.getString("newVersion"),
+								local.getString("newVersAvail",
+										lastVersionLine.substring(9)));
 					}
 					
 				});				
