@@ -135,14 +135,14 @@ public class IcsParser implements GameConstants {
 	 * newly examined games until the moves message comes along. From the moves
 	 * message you can identify the variant and create the game correctly.
 	 */
-	protected Map<String, Style12Message> exaimineGamesWaitingOnMoves = new HashMap<String, Style12Message>();
+	protected Map<String, Style12Message> examineGamesWaitingOnMoves = new HashMap<String, Style12Message>();
 
 	/**
 	 * A map keyed by game id. Used to temporarily store style12 messages from
 	 * newly examined games until the moves message comes along. From the moves
 	 * message you can identify the variant and create the game correctly.
 	 */
-	protected Map<String, B1Message> exaimineB1sWaitingOnMoves = new HashMap<String, B1Message>();
+	protected Map<String, B1Message> examineB1sWaitingOnMoves = new HashMap<String, B1Message>();
 
 	/**
 	 * BICS does'nt support the partner board in G1 messages so you have to
@@ -488,10 +488,10 @@ public class IcsParser implements GameConstants {
 		}
 
 		if (game.isInState(Game.PLAYING_STATE)) {
-			result = connector.getPreferences().getBoolean(
+			result = IcsConnector.getPreferences().getBoolean(
 					PreferenceKeys.BUGHOUSE_PLAYING_OPEN_PARTNER_BOARD);
 		} else if (game.isInState(Game.OBSERVING_STATE)) {
-			result = connector.getPreferences().getBoolean(
+			result = IcsConnector.getPreferences().getBoolean(
 					PreferenceKeys.BUGHOUSE_OBSERVING_OPEN_PARTNER_BOARD);
 		}
 		return result;
@@ -577,10 +577,10 @@ public class IcsParser implements GameConstants {
 					continue;
 				}
 
-				NoLongerExaminingGameMessage noLonerExaminingGameMessage = noLongerExaminingParser
+				NoLongerExaminingGameMessage noLongerExaminingGameMessage = noLongerExaminingParser
 						.parse(line);
-				if (noLonerExaminingGameMessage != null) {
-					process(noLonerExaminingGameMessage,
+				if (noLongerExaminingGameMessage != null) {
+					process(noLongerExaminingGameMessage,
 							connector.getGameService());
                     result.append(line).append(tok.hasMoreTokens() ? "\n" : "");
 					continue;
@@ -641,8 +641,8 @@ public class IcsParser implements GameConstants {
 		}
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
-			if (exaimineGamesWaitingOnMoves.containsKey(message.gameId)) {
-				exaimineB1sWaitingOnMoves.put(message.gameId, message);
+			if (examineGamesWaitingOnMoves.containsKey(message.gameId)) {
+				examineB1sWaitingOnMoves.put(message.gameId, message);
 
 			} else {
 				if (LOG.isInfoEnabled()) {
@@ -726,16 +726,16 @@ public class IcsParser implements GameConstants {
 		Game game = service.getGame(message.gameId);
 		if (game == null) {
 			// Check to see if this was for a newly examined game.
-			Style12Message style12 = exaimineGamesWaitingOnMoves
+			Style12Message style12 = examineGamesWaitingOnMoves
 					.get(message.gameId);
 			if (style12 != null) {
-				exaimineGamesWaitingOnMoves.remove(message.gameId);
+				examineGamesWaitingOnMoves.remove(message.gameId);
 				game = IcsUtils.createExaminedGame(style12, message);
-				B1Message b1Message = exaimineB1sWaitingOnMoves.get(game
+				B1Message b1Message = examineB1sWaitingOnMoves.get(game
 						.getId());
 				if (b1Message != null) {
 					updateGameForB1(game, b1Message);
-					exaimineB1sWaitingOnMoves.remove(game.getId());
+					examineB1sWaitingOnMoves.remove(game.getId());
 				}
 				service.addGame(game);
 				// Respect the flip variable if its set.
@@ -750,7 +750,7 @@ public class IcsParser implements GameConstants {
 						+ message.gameId);
 			}
 		} else {
-			Style12Message style12 = exaimineGamesWaitingOnMoves
+			Style12Message style12 = examineGamesWaitingOnMoves
 					.get(message.gameId);
 			if (style12 != null) {
 				// Both observed games becoming examined games and
@@ -760,14 +760,14 @@ public class IcsParser implements GameConstants {
 				boolean isSetup = game.isInState(Game.SETUP_STATE)
 						&& !game.isInState(Game.OBSERVING_EXAMINED_STATE);
 
-				exaimineGamesWaitingOnMoves.remove(message.gameId);
+				examineGamesWaitingOnMoves.remove(message.gameId);
 				game = IcsUtils.createExaminedGame(style12, message);
-				B1Message b1Message = exaimineB1sWaitingOnMoves.get(game
+				B1Message b1Message = examineB1sWaitingOnMoves.get(game
 						.getId());
 				if (b1Message != null) {
 					updateGameForB1(game, b1Message);
 				}
-				exaimineB1sWaitingOnMoves.remove(game.getId());
+				examineB1sWaitingOnMoves.remove(game.getId());
 
 				service.addGame(game);
 				// Respect the flip variable if its set.
@@ -928,6 +928,32 @@ public class IcsParser implements GameConstants {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * Handles disconnections. Currently removes all active games from the game
+	 * service.
+	 */
+	/*
+	 * This method is kept here so it can reference takebackParser without
+	 * hacks. There is no associated DisconnectMessage because such a message
+	 * (or parser) would currently not be very useful.
+	 */
+	public void processDisconnection(GameService service) {
+		for (Game game : service.getAllActiveGames()) {
+			game.setHeader(PgnHeader.ResultDescription,
+					"Interrupted by disconnection");
+			game.setHeader(PgnHeader.Result,
+					Result.UNDETERMINED.getDescription());
+			game.clearState(Game.ACTIVE_STATE | Game.IS_CLOCK_TICKING_STATE);
+			game.addState(Game.INACTIVE_STATE);
+			service.fireGameInactive(game.getId());
+			service.removeGame(game);
+			takebackParser.clearTakebackMessages(game.getId());
+			if (LOG.isDebugEnabled()) {
+				LOG.debug("Processed removing game: " + game.getId());
+			}
+		}
 	}
 
 	/**
@@ -1249,7 +1275,7 @@ public class IcsParser implements GameConstants {
 
 		if (message.relation == Style12Message.EXAMINING_GAME_RELATION
 				&& !game.isInState(Game.SETUP_STATE)) {
-			exaimineGamesWaitingOnMoves.put(game.getId(), message);
+			examineGamesWaitingOnMoves.put(game.getId(), message);
 			connector.sendMessage("moves " + message.gameId, true,
 					ChatType.MOVES);
 		} else {
@@ -1284,7 +1310,7 @@ public class IcsParser implements GameConstants {
 			// The transition will take place when the moves are received.
 
 			// Send the moves message.
-			exaimineGamesWaitingOnMoves.put(game.getId(), message);
+			examineGamesWaitingOnMoves.put(game.getId(), message);
 			connector.sendMessage("moves " + message.gameId, true,
 					ChatType.MOVES);
 		} else if (entireMessage.contains("- entering examine mode.")
@@ -1297,7 +1323,7 @@ public class IcsParser implements GameConstants {
 			Game examineGame = IcsUtils.createGame(message, entireMessage);
 			if (message.relation == Style12Message.EXAMINING_GAME_RELATION
 					&& !examineGame.isInState(Game.SETUP_STATE)) {
-				exaimineGamesWaitingOnMoves.put(game.getId(), message);
+				examineGamesWaitingOnMoves.put(game.getId(), message);
 				connector.sendMessage("moves " + message.gameId, true,
 						ChatType.MOVES);
 			}
@@ -1314,7 +1340,7 @@ public class IcsParser implements GameConstants {
 			// Add this game to the games waiting on moves.
 			// Send a moves message.
 			// Transition from BSETUP to EXAMINE when moves arrives.
-			exaimineGamesWaitingOnMoves.put(game.getId(), message);
+			examineGamesWaitingOnMoves.put(game.getId(), message);
 			connector.sendMessage("moves " + message.gameId, true,
 					ChatType.MOVES);
 		} else {

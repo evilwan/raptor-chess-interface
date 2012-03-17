@@ -471,6 +471,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					storeTabStates();
 				}
 				closeAllConnectorWindowsItems();
+				context.getParser().processDisconnection(gameService);
 				try {
 					ScriptService.getInstance().removeScriptServiceListener(
 							scriptServiceListener);
@@ -1694,7 +1695,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				}
 				synchronized (connectorListeners) {
 					for (ConnectorListener listener : connectorListeners) {
-						listener.onConnecting();
+						listener.onDisconnect();
 					}
 				}
 			}
