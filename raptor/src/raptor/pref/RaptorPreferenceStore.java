@@ -440,11 +440,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// App settings.		
-		setDefault(APP_NAME, "Raptor .98u3 ("
+		setDefault(APP_NAME, "Raptor .98u3f1 ("
 				+System.getProperty("java.vendor")+" " 
 				+System.getProperty("java.version")+"; "
 				+System.getProperty("os.name")+"; " + L10n.currentLocale.getISO3Language()+")");
-		putValue("app-version", ".98u3");		
+		putValue("app-version", ".98u3f1");		
 		putValue("app-update", "true");
 		
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,
