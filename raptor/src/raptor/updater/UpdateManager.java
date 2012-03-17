@@ -1,9 +1,11 @@
 package raptor.updater;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
@@ -11,6 +13,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
@@ -37,6 +42,13 @@ public class UpdateManager {
 	protected static boolean isLikelyLinux = false;
 	protected static boolean isLikelyOSX = false;
 	protected static boolean isLikelyWindows = false;
+	protected static boolean isLikelyWindowsVistaOrLater;
+	
+	/**
+	 * Upgrade-file-list for Windows. We add all the files to move over to this
+	 * list. See {@link #applyWindows()}.
+	 */
+	private static List<String> windowsUpgradeCommands = null;
 	
 	private static final String updActionsUrl = "http://raptor-chess-interface.googlecode.com/files/updActions";
 
@@ -46,6 +58,8 @@ public class UpdateManager {
 			isLikelyOSX = true;
 		} else if (osName.startsWith("Windows")) {
 			isLikelyWindows = true;
+			isLikelyWindowsVistaOrLater = osName.contains("Vista")
+					|| osName.contains("7") || osName.contains("8");
 		} else {
 			isLikelyLinux = true;
 		}
@@ -182,12 +196,15 @@ public class UpdateManager {
 					if (isLikelyOSX)
 						applyOSX(tempFilename, data[1]);
 					else if (isLikelyWindows)
-						applyWindows(tempFilename, data[1]);
+						addWindows(tempFilename, data[1]);
 					else if (isLikelyLinux)
 						applyLinux(tempFilename, data[1]);
 				}
 			}
 			bin.close();
+			if (isLikelyWindows) {
+				applyWindows();
+			}
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -208,10 +225,10 @@ public class UpdateManager {
 		Process p;
 		try {
 			p = Runtime.getRuntime().exec(
-					"gksudo mv \"" + tempFilename + "\" \"" + dest + "\"");
+					new String[] {"gksudo", "mv", tempFilename, dest});
 			if (p.waitFor() != 0) {
 				p = Runtime.getRuntime().exec(
-						"kdesudo mv \"" + tempFilename + "\" \"" + dest + "\"");
+						new String[] { "kdesudo", "mv", tempFilename, dest });
 				p.waitFor();
 			}
 		} catch (Exception e) {
@@ -220,17 +237,47 @@ public class UpdateManager {
 
 	}
 
-	private static void applyWindows(String tempFilename, String dest) {
-		String[] command = new String[3];
-		command[0] = "cmd";
-		command[1] = "/c";
-		command[2] = "copy /b /y \"" + tempFilename + "\" \"" + dest + "\"";
-		Process p;
-		try {
-			p = Runtime.getRuntime().exec(command);
-			p.waitFor();
-		} catch (Exception e) {
-			e.printStackTrace();
+	private static void addWindows(String tempFilename, String dest) {
+		if (windowsUpgradeCommands == null) {
+			windowsUpgradeCommands = new ArrayList<String>();
+		}
+		windowsUpgradeCommands.add("move /y \"" + tempFilename + "\" \"" + dest
+				+ "\"");
+	}
+	
+	/**
+	 * Write the list of move commands to a batch file, then execute it with
+	 * elevated privileges. This way, we only have to elevate once.
+	 */
+	private static void applyWindows() {
+		if (windowsUpgradeCommands != null) {
+			try {
+				File tmp = File.createTempFile("rap-upd", ".bat");
+				BufferedWriter fout = new BufferedWriter(new FileWriter(tmp));
+				String cd = System.getProperty("user.dir");
+				fout.write("@echo off\r\n");
+				fout.write(cd.substring(0, 2) + "\r\ncd " + cd.substring(2)
+						+ "\r\n");
+				for (String cmd : windowsUpgradeCommands) {
+					fout.write(cmd + "\r\n");
+				}
+				fout.close();
+				
+				Process p;
+				if (isLikelyWindowsVistaOrLater) {
+					p = Runtime.getRuntime().exec(
+							new String[] { "elevate", "-wait", "cmd", "/c",
+									tmp.getAbsolutePath() });
+				} else {
+					p = Runtime.getRuntime().exec(new String[] { "cmd", "/c",
+							tmp.getAbsolutePath() });
+				}
+				p.waitFor();
+				
+				tmp.delete();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -238,7 +285,7 @@ public class UpdateManager {
 		Process p;
 		try {
 			p = Runtime.getRuntime().exec(
-					"mv \"" + tempFilename + "\" \"" + dest + "\"");
+					new String[] { "mv", tempFilename, dest });
 			p.waitFor();
 		} catch (Exception e) {
 			e.printStackTrace();
