@@ -1,5 +1,7 @@
 package raptor.service;
 
+import static raptor.pref.RaptorPreferenceStore.APP_VERSION;
+
 import org.eclipse.jface.dialogs.MessageDialog;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,8 +15,6 @@ import raptor.international.L10n;
 
 public class CheckUpdates {
 	private static final L10n local = L10n.getInstance();
-	
-	private static final int appVersion[] = {0,98,3,0};
 	
 	private static final String updUrl = "http://raptor-chess-interface.googlecode.com/files/upd";
 	
@@ -45,13 +45,13 @@ public class CheckUpdates {
 					updateUrl.openStream()), 1024);
 			final String lastVersionLine = bin.readLine();
 			int[] newVersionData = parseVersion(lastVersionLine.substring(9));
-			boolean isNewerVersion = newVersionData[0] > appVersion[0] 
-					|| newVersionData[1] > appVersion[1]
-							|| newVersionData[2] > appVersion[2]
-									|| newVersionData[3] > appVersion[3];
+			boolean isNewerVersion = newVersionData[0] > APP_VERSION[0] 
+					|| newVersionData[1] > APP_VERSION[1]
+							|| newVersionData[2] > APP_VERSION[2]
+									|| newVersionData[3] > APP_VERSION[3];
 			for (int i = 0; i < 4; i++) {
-				if (appVersion[i] != 0 && newVersionData[i] != 0 
-						&& newVersionData[i] < appVersion[i])
+				if (APP_VERSION[i] != 0 && newVersionData[i] != 0 
+						&& newVersionData[i] < APP_VERSION[i])
 					isNewerVersion = false;
 			}
 			bin.close();
