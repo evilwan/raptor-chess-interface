@@ -68,7 +68,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 	public static final File RAPTOR_PROPERTIES = new File(
 			Raptor.USER_RAPTOR_DIR, "raptor.properties");
-	public static final int[] APP_VERSION = {0, 98, 3, 1};
+	public static final int[] APP_VERSION = {0, 98, 3, 2};
 	protected String defaultMonospacedFontName;
 	protected String defaultFontName;
 	protected int defaultLargeFontSize;
@@ -124,7 +124,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	};
 	
-	protected String getVersion() {
+	public static String getVersion() {
 		return "" + (APP_VERSION[0] == 0 ? "" : APP_VERSION[0])
 				+ "." + APP_VERSION[1]
 				+ (APP_VERSION[2] == 0 ? "" : "u" + APP_VERSION[2])
@@ -448,11 +448,11 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(ACTION_SEPARATOR_SEQUENCE, 400);
 
 		// App settings.		
-		setDefault(APP_NAME, "Raptor " + getVersion() + " ("
+		setDefault(APP_NAME, "Raptor "+getVersion()+" ("
 				+System.getProperty("java.vendor")+" " 
 				+System.getProperty("java.version")+"; "
 				+System.getProperty("os.name")+"; " + L10n.currentLocale.getISO3Language()+")");
-		putValue("app-version", getVersion());		
+		putValue("app-version", getVersion());	
 		putValue("app-update", "true");
 		
 		setDefault(APP_IS_SHOWING_CHESS_PIECE_UNICODE_CHARS,

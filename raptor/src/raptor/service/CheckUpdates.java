@@ -1,7 +1,5 @@
 package raptor.service;
 
-import static raptor.pref.RaptorPreferenceStore.APP_VERSION;
-
 import org.eclipse.jface.dialogs.MessageDialog;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,11 +10,14 @@ import java.util.regex.Pattern;
 
 import raptor.Raptor;
 import raptor.international.L10n;
+import raptor.pref.RaptorPreferenceStore;
 
 public class CheckUpdates {
 	private static final L10n local = L10n.getInstance();
-	
-	private static final String updUrl = "http://raptor-chess-interface.googlecode.com/files/upd";
+
+	private static final int appVersion[] = RaptorPreferenceStore.APP_VERSION;
+
+	private static final String updUrl = "http://dl.dropbox.com/u/46373738/upd";
 	
 	private static int[] parseVersion(String version) {
 		int t[] = null;
@@ -38,6 +39,10 @@ public class CheckUpdates {
 			return;
 		}
 		
+		if (!Raptor.getInstance().getPreferences().getString("app-version")
+				.equals(RaptorPreferenceStore.getVersion()))
+			Raptor.getInstance().getPreferences().setValue("app-version", RaptorPreferenceStore.getVersion());
+		
 		URL updateUrl;
 		try {
 			updateUrl = new URL(updUrl);
@@ -45,15 +50,13 @@ public class CheckUpdates {
 					updateUrl.openStream()), 1024);
 			final String lastVersionLine = bin.readLine();
 			int[] newVersionData = parseVersion(lastVersionLine.substring(9));
-			boolean isNewerVersion = newVersionData[0] > APP_VERSION[0] 
-					|| newVersionData[1] > APP_VERSION[1]
-							|| newVersionData[2] > APP_VERSION[2]
-									|| newVersionData[3] > APP_VERSION[3];
-			for (int i = 0; i < 4; i++) {
-				if (APP_VERSION[i] != 0 && newVersionData[i] != 0 
-						&& newVersionData[i] < APP_VERSION[i])
-					isNewerVersion = false;
-			}
+			boolean isNewerVersion = true;
+	        for (int i = 0; i < 4; i++) {
+	            if (appVersion[i] < newVersionData[i]) {
+	                isNewerVersion = true;
+	                break;
+	            }
+	        }
 			bin.close();
 			if (isNewerVersion) {
 				Raptor.getInstance().getPreferences().setValue("ready-to-update", "true");
