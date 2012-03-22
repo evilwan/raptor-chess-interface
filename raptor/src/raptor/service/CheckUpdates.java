@@ -50,7 +50,7 @@ public class CheckUpdates {
 					updateUrl.openStream()), 1024);
 			final String lastVersionLine = bin.readLine();
 			int[] newVersionData = parseVersion(lastVersionLine.substring(9));
-			boolean isNewerVersion = true;
+			boolean isNewerVersion = false;
 	        for (int i = 0; i < 4; i++) {
 	            if (appVersion[i] < newVersionData[i]) {
 	                isNewerVersion = true;
