@@ -68,7 +68,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	public static final String PREFERENCE_PROPERTIES_FILE = "raptor.properties";
 	public static final File RAPTOR_PROPERTIES = new File(
 			Raptor.USER_RAPTOR_DIR, "raptor.properties");
-	public static final int[] APP_VERSION = {0, 98, 3, 2};
+	public static final int[] APP_VERSION = {0, 98, 3, 3};
 	protected String defaultMonospacedFontName;
 	protected String defaultFontName;
 	protected int defaultLargeFontSize;
