@@ -737,7 +737,8 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 								box.open();
 							} else {
 								boolean foundText = false;
-								searchString = searchString.toUpperCase();
+								String searchStringUpper = searchString
+										.toUpperCase();
 								int start = chatConsole.inputText
 										.getCaretOffset();
 
@@ -745,15 +746,13 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 										.getCharCount()) {
 									start = chatConsole.inputText
 											.getCharCount() - 1;
-								} else if (start - searchString.length() + 1 >= 0) {
+								} else if (start - searchStringUpper.length()
+										+ 1 >= 0) {
 									String text = chatConsole.inputText
-											.getText(
-													start
-															- searchString
-																	.length(),
-													start - 1);
-									if (text.equalsIgnoreCase(searchString)) {
-										start -= searchString.length();
+											.getText(start - searchStringUpper
+													.length(), start - 1);
+									if (text.equalsIgnoreCase(searchStringUpper)) {
+										start -= searchStringUpper.length();
 									}
 								}
 
@@ -769,13 +768,14 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 											.getText(start - charsBack, start)
 											.toUpperCase();
 									int index = stringToSearch
-											.lastIndexOf(searchString);
+											.lastIndexOf(searchStringUpper);
 									if (index != -1) {
 										int textStart = start - charsBack
 												+ index;
 										chatConsole.inputText.setSelection(
 												textStart, textStart
-														+ searchString.length());
+														+ searchStringUpper
+																.length());
 										foundText = true;
 										break;
 									}

@@ -34,7 +34,7 @@ public class SearchAction extends AbstractRaptorAction {
 
 		if (!wasHandled) {
 			Raptor.getInstance().alert(
-					getName() + " is only avalible from ChatConsole sources.");
+					getName() + " is only available from ChatConsole sources.");
 		}
 	}
 }
