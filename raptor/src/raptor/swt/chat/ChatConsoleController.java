@@ -1659,7 +1659,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				&& event.getType() != ChatType.BUGWHO_UNPARTNERED_BUGGERS
 				&& !message.endsWith("(*) indicates system administrator.")) {
 			List<int[]> linkRanges = new ArrayList<int[]>(5);
-
+			
 			// First check http://,https://,www.
 			int startIndex = message.indexOf("http://");
 			if (startIndex == -1) {
@@ -1711,18 +1711,18 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				}
 			}
 
-			// Next check ending with .com,.org,.edu
-			int endIndex = message.indexOf(".com");
-			if (endIndex == -1 || isInRanges(startIndex, linkRanges)) {
-				endIndex = message.indexOf(".org");
-				if (endIndex == -1 || isInRanges(startIndex, linkRanges)) {
-					endIndex = message.indexOf(".edu");
-				}
+			// this string builder is used in order to get the matched domain from getEndIndexOfUrl()
+			StringBuilder dom = new StringBuilder();
+			
+			// Next check ending with .com,.org,.edu...
+			int endIndex = ChatUtils.getEndIndexOfUrl(startIndex, linkRanges, message, dom);			
+			
+			int linkEnd = endIndex + dom.length();
+			if (message.charAt(linkEnd) == '/') {
+				// the link of type code.google.com/p/raptor-chess-interface
+				for (; !Character.isWhitespace(message.charAt(linkEnd)); linkEnd++);
 			}
-			if (endIndex != -1 && isInRanges(startIndex, linkRanges)) {
-				endIndex = -1;
-			}
-			int linkEnd = endIndex + 4;
+			
 			while (endIndex != -1) {
 				startIndex = endIndex--;
 				while (startIndex >= 0) {
@@ -1741,17 +1741,10 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 					linkRanges.add(new int[] { startIndex + 1, linkEnd });
 				}
 
-				endIndex = message.indexOf(".com", linkEnd + 1);
-				if (endIndex == -1 || isInRanges(startIndex, linkRanges)) {
-					endIndex = message.indexOf(".org", linkEnd + 1);
-					if (endIndex == -1 || isInRanges(startIndex, linkRanges)) {
-						endIndex = message.indexOf(".com", linkEnd + 1);
-					}
-				}
-				if (endIndex != -1 && isInRanges(startIndex, linkRanges)) {
-					endIndex = -1;
-				}
-				linkEnd = endIndex + 4;
+				dom = new StringBuilder();
+				endIndex = ChatUtils.getEndIndexOfUrl(startIndex, linkRanges, message, linkEnd+1, dom);	
+				
+				linkEnd = endIndex + dom.length();
 			}
 
 			// add all the ranges that were found.
@@ -1960,18 +1953,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			}
 		}
 		return result;
-	}
-
-	protected boolean isInRanges(int location, List<int[]> ranges) {
-		boolean result = false;
-		for (int[] range : ranges) {
-			if (location >= range[0] && location <= range[1]) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	}
+	}	
 
 	protected boolean isPossibleNewsMessage(String message) {
 		return message.startsWith("Index of news items ")

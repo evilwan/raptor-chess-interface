@@ -14,6 +14,8 @@
 package raptor.swt.chat;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import raptor.util.RaptorLogger;
@@ -68,6 +70,9 @@ public class ChatUtils {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(ChatUtils.class);
 	public static final String whiteSpaceChars = " \r\n\t";
 	protected static L10n local = L10n.getInstance();
+	
+	protected static final Pattern urlPattern = Pattern.compile("[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
+			Pattern.CASE_INSENSITIVE);
 
 	public static boolean isWhiteSpaceChar(char c) {
 		return whiteSpaceChars.indexOf(c) != -1;
@@ -190,6 +195,7 @@ public class ChatUtils {
 
 	public static String getUrl(String text) {
 		String strippedText = text == null ? "" : StringUtils.removeEnd(StringUtils.replaceChars(text, "()'\"<>,", ""),".");
+		
 		if (strippedText.endsWith(";")) {
 			strippedText = strippedText.substring(0,strippedText.length() - 1);
 		}
@@ -198,7 +204,7 @@ public class ChatUtils {
 			
 		} else if ((strippedText.endsWith(".com") || strippedText.endsWith(".org")
 						|| strippedText.endsWith(".gov") || strippedText.endsWith(".edu") || strippedText
-						.startsWith("www."))) {
+						.startsWith("www.")) || urlPattern.matcher(strippedText).matches()) {
 			return "http://" + strippedText;
 		}
 		return null;
@@ -210,7 +216,7 @@ public class ChatUtils {
 	 */
 	public static String getUrl(StyledText text, int position) {
 		String candidateWord = getWord(text, position);
-
+	
 		if (candidateWord != null) {
 			return getUrl(candidateWord);
 		} else {
@@ -658,6 +664,52 @@ public class ChatUtils {
 			}
 		});
 		return result;
+	}
+	
+	private static boolean isInRanges(int location, List<int[]> ranges) {
+		boolean result = false;
+		for (int[] range : ranges) {
+			if (location >= range[0] && location <= range[1]) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	}
+	
+	private static final String[] TOP_LEVEL_DOMAINS = {".com", ".org", ".edu", ".gov", ".uk", ".net", ".ca", ".de", ".jp", ".fr",
+		".ru", ".au", ".us", ".ch", ".it", ".nl", ".se",".no", ".es", ".mil"};
+
+	public static int getEndIndexOfUrl(int startIndex, List<int[]> linkRanges, String message, StringBuilder dom) {		
+		int endIndex = message.indexOf(TOP_LEVEL_DOMAINS[0]);
+		dom.append(TOP_LEVEL_DOMAINS[0]);
+		for (int i = 1; (endIndex == -1 || isInRanges(startIndex, linkRanges))
+				&& i < TOP_LEVEL_DOMAINS.length; i++) {
+			endIndex = message.indexOf(TOP_LEVEL_DOMAINS[i]);
+			dom.delete( 0, dom.length() );
+			dom.append(TOP_LEVEL_DOMAINS[i]);
+		}
+		
+		if (endIndex != -1 && isInRanges(startIndex, linkRanges)) {
+			endIndex = -1;
+		}		
+		return endIndex;
+	}
+	
+	public static int getEndIndexOfUrl(int startIndex, List<int[]> linkRanges, String message, int fromIndex, StringBuilder dom) {
+		int endIndex = message.indexOf(TOP_LEVEL_DOMAINS[0], fromIndex);
+		dom.append(TOP_LEVEL_DOMAINS[0]);
+		for (int i = 1; (endIndex == -1 || isInRanges(startIndex, linkRanges))
+				&& i < TOP_LEVEL_DOMAINS.length; i++) {
+			endIndex = message.indexOf(TOP_LEVEL_DOMAINS[i], fromIndex);
+			dom.delete( 0, dom.length() );
+			dom.append(TOP_LEVEL_DOMAINS[i]);
+		}
+		
+		if (endIndex != -1 && isInRanges(startIndex, linkRanges)) {
+			endIndex = -1;
+		}
+		return endIndex;
 	}
 
 }
