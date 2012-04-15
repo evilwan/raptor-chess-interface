@@ -146,6 +146,15 @@ public class UpdateManager {
 			}
 		});
 	}
+	
+	private static void transferFile(String url, String toFilename) throws IOException {
+		URL fileUrl = new URL(url);
+		ReadableByteChannel rbc2 = Channels.newChannel(fileUrl
+				.openStream());
+		FileOutputStream fos2 = new FileOutputStream(toFilename);
+		fos2.getChannel().transferFrom(rbc2, 0, 1 << 24);
+		fos2.close();
+	}
 
 	public void upgrade() {
 		if (!infoLabel1.isDisposed()) {
@@ -158,6 +167,8 @@ public class UpdateManager {
 
 			});
 		}
+		
+		boolean upgradeMade = false;
 		try {
 			boolean forVersionSet = false;
 			URL google = new URL(updActionsUrl);
@@ -187,12 +198,8 @@ public class UpdateManager {
 					String tempFilename = System.getProperty("java.io.tmpdir")
 							+ System.getProperty("file.separator")
 							+ Math.abs(data[1].hashCode());
-					URL fileUrl = new URL(data[0]);
-					ReadableByteChannel rbc2 = Channels.newChannel(fileUrl
-							.openStream());
-					FileOutputStream fos2 = new FileOutputStream(tempFilename);
-					fos2.getChannel().transferFrom(rbc2, 0, 1 << 24);
-					fos2.close();
+					transferFile(data[0], tempFilename);
+					upgradeMade = true;
 					if (isLikelyOSX)
 						applyOSX(tempFilename, data[1]);
 					else if (isLikelyWindows)
@@ -202,6 +209,21 @@ public class UpdateManager {
 				}
 			}
 			bin.close();
+			
+			// most likely some error. Upgrade Raptor.jar anyway. 
+			if (!upgradeMade) {
+				String tempFilename = System.getProperty("java.io.tmpdir")
+						+ System.getProperty("file.separator")
+						+ Math.abs("Raptor.jar".hashCode());
+				transferFile("http://raptor-chess-interface.googlecode.com/files/Raptor.jar", tempFilename);
+				if (isLikelyOSX)
+					applyOSX(tempFilename, "Raptor.jar");
+				else if (isLikelyWindows)
+					addWindows(tempFilename, "Raptor.jar");
+				else if (isLikelyLinux)
+					applyLinux(tempFilename, "Raptor.jar");
+			}
+			
 			if (isLikelyWindows) {
 				applyWindows();
 			}
