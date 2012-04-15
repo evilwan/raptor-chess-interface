@@ -1717,7 +1717,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			// Next check ending with .com,.org,.edu...
 			int endIndex = ChatUtils.getEndIndexOfUrl(startIndex, linkRanges, message, dom);			
 			
-			int linkEnd = endIndex + dom.length();
+			int linkEnd = endIndex + dom.length()-1;
 			if (message.charAt(linkEnd) == '/') {
 				// the link of type code.google.com/p/raptor-chess-interface
 				for (; !Character.isWhitespace(message.charAt(linkEnd)); linkEnd++);
@@ -1744,7 +1744,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				dom = new StringBuilder();
 				endIndex = ChatUtils.getEndIndexOfUrl(startIndex, linkRanges, message, linkEnd+1, dom);	
 				
-				linkEnd = endIndex + dom.length();
+				linkEnd = endIndex + dom.length()-1;
 			}
 
 			// add all the ranges that were found.

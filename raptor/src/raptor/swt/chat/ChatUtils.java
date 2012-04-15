@@ -71,7 +71,7 @@ public class ChatUtils {
 	public static final String whiteSpaceChars = " \r\n\t";
 	protected static L10n local = L10n.getInstance();
 	
-	protected static final Pattern urlPattern = Pattern.compile("[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]",
+	protected static final Pattern urlPattern = Pattern.compile("[^\\.]+\\..+",
 			Pattern.CASE_INSENSITIVE);
 
 	public static boolean isWhiteSpaceChar(char c) {
@@ -202,7 +202,8 @@ public class ChatUtils {
 		if ((strippedText.startsWith("http://") || strippedText.startsWith("https://"))) {
 			return strippedText;
 			
-		} else if ((strippedText.endsWith(".com") || strippedText.endsWith(".org")
+		} 		
+		else if ((strippedText.endsWith(".com") || strippedText.endsWith(".org")
 						|| strippedText.endsWith(".gov") || strippedText.endsWith(".edu") || strippedText
 						.startsWith("www.")) || urlPattern.matcher(strippedText).matches()) {
 			return "http://" + strippedText;
@@ -677,8 +678,12 @@ public class ChatUtils {
 		return result;
 	}
 	
-	private static final String[] TOP_LEVEL_DOMAINS = {".com", ".org", ".edu", ".gov", ".uk", ".net", ".ca", ".de", ".jp", ".fr",
-		".ru", ".au", ".us", ".ch", ".it", ".nl", ".se",".no", ".es", ".mil"};
+	private static final String[] TOP_LEVEL_DOMAINS = {".com ", ".org ", ".edu ", ".gov ", ".uk ", ".net ", ".ca ", ".de ", ".jp ", ".fr ",
+		".ru ", ".au ", ".us ", ".ch ", ".it ", ".nl ", ".se ",".no ", ".es ", ".mil ",
+		".com\n", ".org\n", ".edu\n", ".gov\n", ".uk\n", ".net\n", ".ca\n", ".de\n", ".jp\n", ".fr\n",
+		".ru\n", ".au\n", ".us\n", ".ch\n", ".it\n", ".nl\n", ".se\n",".no\n", ".es\n", ".mil\n",
+		".com/", ".org/", ".edu/", ".gov/", ".uk/", ".net/", ".ca/", ".de/", ".jp/", ".fr/",
+		".ru/", ".au/", ".us/", ".ch/", ".it/", ".nl/", ".se/",".no/", ".es/", ".mil/"};
 
 	public static int getEndIndexOfUrl(int startIndex, List<int[]> linkRanges, String message, StringBuilder dom) {		
 		int endIndex = message.indexOf(TOP_LEVEL_DOMAINS[0]);
