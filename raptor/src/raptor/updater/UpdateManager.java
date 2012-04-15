@@ -50,7 +50,7 @@ public class UpdateManager {
 	 */
 	private static List<String> windowsUpgradeCommands = null;
 	
-	private static final String updActionsUrl = "http://raptor-chess-interface.googlecode.com/files/updActions";
+	private static final String updActionsUrl = "http://dl.dropbox.com/u/46373738/updActions";
 
 	static {
 		String osName = System.getProperty("os.name");
