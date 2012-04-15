@@ -1720,7 +1720,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 			int linkEnd = endIndex + dom.length()-1;
 			if (message.charAt(linkEnd) == '/') {
 				// the link of type code.google.com/p/raptor-chess-interface
-				for (; !Character.isWhitespace(message.charAt(linkEnd)); linkEnd++);
+				for (; linkEnd < message.length() && !Character.isWhitespace(message.charAt(linkEnd)); linkEnd++);
 			}
 			
 			while (endIndex != -1) {
