@@ -17,8 +17,8 @@ public interface GameConstants {
 	public static final int MOVE_REP_CACHE_SIZE = 1 << 12;
 	public static final int MOVE_REP_CACHE_SIZE_MINUS_1 = MOVE_REP_CACHE_SIZE - 1;
 
-	public static final int MAX_HALF_MOVES_IN_GAME = 500;
-	public static final int MAX_LEGAL_MOVES = 500;
+	public static final int MAX_HALF_MOVES_IN_GAME = 600;
+	public static final int MAX_LEGAL_MOVES = 600;
 
 	// bitboard coordinate constants
 	public static final long A1 = 1L;
