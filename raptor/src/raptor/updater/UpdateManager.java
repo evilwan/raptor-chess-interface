@@ -37,7 +37,7 @@ public class UpdateManager {
 
 	private boolean isUpdateOn = false;
 	private boolean isReadyToUpdate = false;
-	private static String appVersionStr = ".98u3f4";
+	private static String appVersionStr = ".98u3f5";
 
 	protected static boolean isLikelyLinux = false;
 	protected static boolean isLikelyOSX = false;

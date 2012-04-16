@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="Linux_x86_GTK2" />
 
-	<property name="version" value="v98u3f3" />
+	<property name="version" value="v98u3f5" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -123,8 +123,8 @@
 			<fileset dir="projectFiles/Windows">
 				<include name="**/*" />
 				<exclude name="**/*64.exe" />
-				<globmapper from="*32.exe" to="*.exe" />
 			</fileset>
+			<globmapper from="*32.exe" to="*.exe" />
 		</copy>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows32.zip">
@@ -146,8 +146,8 @@
 			<fileset dir="projectFiles/Windows">
 				<include name="**/*" />
 				<exclude name="**/*32.exe" />
-				<globmapper from="*64.exe" to="*.exe" />
 			</fileset>
+			<globmapper from="*64.exe" to="*.exe" />
 		</copy>
 
 		<zip destfile="${uploads.dir}/Raptor_${version}_Windows64.zip">
