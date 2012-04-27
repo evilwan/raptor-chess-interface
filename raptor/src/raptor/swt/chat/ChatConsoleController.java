@@ -478,12 +478,12 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 		if (connector == null) {
 			return local.getString("chatConsCont1");
 		} else if (connector.isConnecting()) {
-			return connector.getShortName() + local.getString("chatConsCont2") + getName() + ")";
+			return /*connector.getShortName() +*/ local.getString("chatConsCont2") + getName() /*+ ")"*/;
 		} else if (connector.isConnected()) {
-			return connector.getShortName() + "(" + getName() + ")";
+			return /*connector.getShortName() + "(" +*/ getName() /*+ ")"*/;
 		} else {
-			return connector.getShortName() + local.getString("chatConsCont3") + getName()
-					+ ")";
+			return /*connector.getShortName() +*/ local.getString("chatConsCont3") + getName()
+					/*+ ")"*/;
 		}
 	}
 

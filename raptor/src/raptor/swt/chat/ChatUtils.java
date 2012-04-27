@@ -71,7 +71,7 @@ public class ChatUtils {
 	public static final String whiteSpaceChars = " \r\n\t";
 	protected static L10n local = L10n.getInstance();
 	
-	protected static final Pattern urlPattern = Pattern.compile("[^\\.]+\\..+",
+	protected static final Pattern urlPattern = Pattern.compile("[\\!\\#\\$\\&\\-\\;\\=\\?\\-\\[\\]\\_a-z\\~]+\\.[^ ]+",
 			Pattern.CASE_INSENSITIVE);
 
 	public static boolean isWhiteSpaceChar(char c) {

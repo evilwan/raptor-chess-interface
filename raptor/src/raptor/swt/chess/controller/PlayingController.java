@@ -494,7 +494,8 @@ public class PlayingController extends ChessBoardController {
 
 	@Override
 	public String getTitle() {
-		return connector.getShortName() + "(Play " + getGame().getId() + ")";
+		return "Play " + getGame().getId();
+				/*connector.getShortName() + "(Play " + getGame().getId() + ")";*/
 	}
 
 	@Override

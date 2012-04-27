@@ -287,8 +287,9 @@ public class ObserveController extends ChessBoardController {
 
 	@Override
 	public String getTitle() {
-		return getConnector().getShortName() + "(Obs " + getGame().getId()
-				+ ")";
+		return "Obs " + getGame().getId();
+				/*getConnector().getShortName() + "(Obs " + getGame().getId()
+				+ ")";*/
 	}
 
 	@Override
