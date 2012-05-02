@@ -17,6 +17,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -60,36 +61,46 @@ public class JavaxSampledSoundPlayer implements SoundPlayer {
 			soundsPlaying.put(pathToSound, true);
 			try {
 				File soundFile = new File(pathToSound);
-				final Clip clip = AudioSystem.getClip();
+				AudioFileFormat inFileFormat = AudioSystem
+						.getAudioFileFormat(soundFile);
+				AudioFileFormat.Type fileType = inFileFormat.getType();
 				final AudioInputStream stream = AudioSystem
 						.getAudioInputStream(soundFile);
-				clip.addLineListener(new LineListener() {
-					public void update(LineEvent arg0) {
-						LineEvent.Type type = arg0.getType();
-						if (type == LineEvent.Type.STOP || type == LineEvent.Type.CLOSE) {
-							try {
-								soundsPlaying.put(pathToSound, false);
-								clip.drain();
-								clip.close();
-							} catch (Throwable t) {
-								t.printStackTrace();
-							}finally {
+				if (AudioSystem.isFileTypeSupported(fileType, stream)) {
+					final Clip clip = AudioSystem.getClip();
+					clip.addLineListener(new LineListener() {
+						public void update(LineEvent arg0) {
+							LineEvent.Type type = arg0.getType();
+							if (type == LineEvent.Type.STOP
+									|| type == LineEvent.Type.CLOSE) {
 								try {
+									soundsPlaying.put(pathToSound, false);
+									clip.drain();
 									clip.close();
-								} catch (Throwable t){t.printStackTrace();}
-								try {
-									stream.close();
-								} catch (Throwable t){t.printStackTrace();}
-								
+								} catch (Throwable t) {
+									t.printStackTrace();
+								} finally {
+									try {
+										clip.close();
+									} catch (Throwable t) {
+										t.printStackTrace();
+									}
+									try {
+										stream.close();
+									} catch (Throwable t) {
+										t.printStackTrace();
+									}
+
+								}
 							}
 						}
-					}
-				});
-				clip.open(stream);
-				clip.start();
+					});
+					clip.open(stream);
+					clip.start();
+				}
 			} catch (Throwable t) {
-				Raptor.getInstance().onError(
-						"Error playing sound " + pathToSound, t);
+				 Raptor.getInstance().onError(
+                         "Error playing sound " + pathToSound, t);
 				soundsPlaying.put(pathToSound, false);
 			}
 		}
