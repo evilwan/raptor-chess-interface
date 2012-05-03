@@ -15,6 +15,6 @@
 	<classpathentry exported="true" kind="lib" path="lib/common/org.eclipse.jface.text_3.4.2.r342_v20081119-0800.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/org.eclipse.osgi_3.4.3.R34x_v20081215-1030.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/common/Chesspresso-lib.jar"/>
-	<classpathentry kind="lib" path="/home/bodia/workspace/raptor/projectFiles/swt/Linux_x86_64_GTK2/swt.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
