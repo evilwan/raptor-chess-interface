@@ -122,7 +122,14 @@
 		<copy todir="${install.dir}">
 			<fileset dir="projectFiles/Windows">
 				<include name="**/*" />
+				<exclude name="**/*32.exe" />
 				<exclude name="**/*64.exe" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${install.dir}">
+			<fileset dir="projectFiles/Windows">
+				<include name="**/*" />
 			</fileset>
 			<globmapper from="*32.exe" to="*.exe" />
 		</copy>
@@ -146,6 +153,13 @@
 			<fileset dir="projectFiles/Windows">
 				<include name="**/*" />
 				<exclude name="**/*32.exe" />
+				<exclude name="**/*64.exe" />
+			</fileset>
+		</copy>
+
+		<copy todir="${install.dir}">
+			<fileset dir="projectFiles/Windows">
+				<include name="**/*" />
 			</fileset>
 			<globmapper from="*64.exe" to="*.exe" />
 		</copy>
