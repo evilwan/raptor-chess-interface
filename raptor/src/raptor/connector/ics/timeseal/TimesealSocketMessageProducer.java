@@ -190,9 +190,9 @@ public class TimesealSocketMessageProducer implements MessageProducer {
 	 */
 	protected void messageLoop() {
 		try {
+			byte[] buffer = new byte[40000];
 			while (isConnected()) {
 				//long start = System.currentTimeMillis();
-				byte[] buffer = new byte[40000];
 				int numRead = socket.getInputStream().read(buffer);
 				if (numRead > 0) {
 					if (LOG.isDebugEnabled()) {
