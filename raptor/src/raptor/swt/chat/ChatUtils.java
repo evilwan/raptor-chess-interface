@@ -535,12 +535,12 @@ public class ChatUtils {
 				websiteLookupItem.setMenu(websiteMenu);
 
 				MenuItem ficsGamesHistory = new MenuItem(websiteMenu, SWT.PUSH);
-				ficsGamesHistory.setText("http://www.ficsgames.com history: "
+				ficsGamesHistory.setText("http://www.ficsgames.org history: "
 						+ person);
 				ficsGamesHistory.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						BrowserUtils
-								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
+								.openUrl("http://www.ficsgames.org/cgi-bin/search.cgi?player="
 										+ person + "&showhistory=showhistory");
 					}
 				});
@@ -551,7 +551,7 @@ public class ChatUtils {
 				ficsGamesStats.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						BrowserUtils
-								.openUrl("http://www.ficsgames.com/cgi-bin/search.cgi?player="
+								.openUrl("http://www.ficsgames.org/cgi-bin/search.cgi?player="
 										+ person + "&showstats=showstats");
 					}
 				});
