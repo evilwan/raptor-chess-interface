@@ -14,6 +14,8 @@
 package raptor.swt.chess.controller;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import raptor.engine.uci.UCIInfo;
 import raptor.engine.uci.info.BestLineFoundInfo;
@@ -29,7 +31,8 @@ public class AutomaticAnalysisController {
 	private static final RaptorLogger LOG = RaptorLogger.getLog(AutomaticAnalysisController.class);
 	protected static L10n local = L10n.getInstance();
 	private InactiveController boardController;
-	private ScoreInfo previousPosScore;
+	private List<ScoreInfo> positionScores = new ArrayList<ScoreInfo>();
+	//private ScoreInfo previousPosScore;
 	private ScoreInfo thisPosScore;
 	private BestLineFoundInfo thisPosBestLine;
 	private boolean isMultiplyBlackScoreByMinus;
@@ -39,10 +42,10 @@ public class AutomaticAnalysisController {
 		this.boardController = boardController;
 	}
 
-	private double asDouble(ScoreInfo score) {
+	public double asDouble(ScoreInfo score) {
 		if (score.getMateInMoves() != 0)
-			return (boardController.getGame().isWhitesMove() || isMultiplyBlackScoreByMinus) ? Integer.MIN_VALUE
-					: Integer.MAX_VALUE;
+			return (boardController.getGame().isWhitesMove() || isMultiplyBlackScoreByMinus) ? Double.MIN_VALUE
+					: Double.MAX_VALUE;
 		else
 			return (boardController.getGame().isWhitesMove() || isMultiplyBlackScoreByMinus) ? score
 				.getValueInCentipawns() / 100.0
@@ -87,7 +90,7 @@ public class AutomaticAnalysisController {
 					try {
 						Thread.sleep(secsPerMove * 1000);
 					} catch (InterruptedException e) {
-					}
+					}					
 					boardController.getBoard().getControl().getDisplay()
 							.syncExec(new Runnable() {
 								@Override
@@ -110,10 +113,13 @@ public class AutomaticAnalysisController {
 										else if (thisPosScore.isUpperBoundScore())
 											score += "--"; 
 									}
+									
+									positionScores.add(thisPosScore);										
 
 									boolean bad = false;
 									String comment = "";
-									if (previousPosScore != null) {
+									if (positionScores.size() >= 2) {
+										ScoreInfo previousPosScore = positionScores.get(positionScores.size()-2);
 										double prevMoveDiff;
 										if (!(ansWhite && ansBlack) && ansWhite) {
 											prevMoveDiff = asDouble(previousPosScore) - asDouble(thisPosScore);
@@ -139,7 +145,7 @@ public class AutomaticAnalysisController {
 											bad = true;
 										}
 										comment = " " + commGenerator
-												.getComment(asDouble(previousPosScore), asDouble(thisPosScore),
+												.getComment(positionScores, thisCont,
 														prevMoveDiff, !boardController
 														.getGame().isWhitesMove(), thisPosBestLine, boardController.getGame());
 										if (comment.equals(" "))
@@ -149,7 +155,6 @@ public class AutomaticAnalysisController {
 									((TextAreaMoveList) boardController
 											.getBoard().getMoveList())
 											.addCommentToMove(ii - 1, score, bad);
-									previousPosScore = thisPosScore;
 								}
 							});
 				}

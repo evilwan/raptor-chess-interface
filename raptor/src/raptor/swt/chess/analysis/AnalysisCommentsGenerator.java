@@ -13,13 +13,18 @@
  */
 package raptor.swt.chess.analysis;
 
+import java.util.List;
+
 import org.apache.commons.lang.ArrayUtils;
 
 import raptor.chess.Game;
 import raptor.chess.GameConstants;
 import raptor.chess.Move;
+import raptor.chess.util.GameUtils;
 import raptor.engine.uci.UCIMove;
 import raptor.engine.uci.info.BestLineFoundInfo;
+import raptor.engine.uci.info.ScoreInfo;
+import raptor.swt.chess.controller.AutomaticAnalysisController;
 
 public class AnalysisCommentsGenerator {
 	boolean doubleBishopFired = false;
@@ -59,7 +64,7 @@ public class AnalysisCommentsGenerator {
 				newGame.rollback();
 				break;
 			}
-		}
+		}		
 		return newGame;
 	}
 	
@@ -312,6 +317,21 @@ public class AnalysisCommentsGenerator {
 			pawnFired = advVector[7];
 	}
 	
+	int pieceMaterialScore(int piece) {
+		if (piece == 0)
+			return 0;
+		
+		if (piece == GameConstants.PAWN)
+			return 1;
+		else if (piece == GameConstants.KNIGHT
+				|| piece == GameConstants.BISHOP)
+			return 3;
+		else if (piece == GameConstants.ROOK)
+			return 5;
+		else
+			return 9;
+	}
+	
 	//I added in simple comments for single and double bishop, rook, knight and a queen advantage. Also a castling advantage and a 'blunder!' comment. I would like to add more.
 	//Sorry for my coding style I am fairly new to Java and I find it hard to write code using your bracketing but I will edit my code back to your format after it is fully finished.
 	
@@ -328,19 +348,57 @@ public class AnalysisCommentsGenerator {
 	
 	//I made these all single if statements with the more urgent comments higher than others. I had problems with it was all one long if else....
 	
-	public String getComment(double previous, double current, double scoreDiff,
+	public String getComment(List<ScoreInfo> positionScores, AutomaticAnalysisController controller, double scoreDiff,
 			boolean isWhite, BestLineFoundInfo thisPosBestLine, Game game) {
+		
+		double previous = controller.asDouble(positionScores.get(positionScores.size()-2));
+		double current = controller.asDouble(positionScores.get(positionScores.size()-1));
+		
+		if (current == Double.MAX_VALUE || current == Double.MIN_VALUE 
+				|| game.isCheckmate())
+			return "";
 		
 		Game extendedGame = extendMoves(thisPosBestLine, game);	
 		
 		if ((isWhite && previous < -2.0 && scoreDiff >= 2.0)
-				|| (!isWhite && previous > 2.0 && scoreDiff >= 2.0))
-			return "Loses the initiative."; //White or black had an advantage by over 2 points, then score changed by at least 2 and hence they lose the initiative 
+				|| (!isWhite && previous > 2.0 && scoreDiff >= 2.0)) {	
+			String result = "Loses the initiative."; //White or black had an advantage by over 2 points, then score changed by at least 2 and hence they lose the initiative
+			if (game.isInCheck())
+				result += " Was not wise make this check.";
+			
+			return result;
+		}
 		
 		if ((isWhite && previous < -2.0 && scoreDiff >= 4.0)
 				|| (!isWhite && previous > 2.0 && scoreDiff >= 4.0))
 			return "Blunder!";
-			
+
+		// forks recognition code
+		if (positionScores.size() >= 3) {
+			double minThSc = controller.asDouble(positionScores
+					.get(positionScores.size() - 3));
+			double minThDiff = Math.abs(minThSc - current);
+			if (game.isInCheck()
+					&& game.getPiece(thisPosBestLine.getMoves()[1]
+							.getEndSquare()) != GameConstants.EMPTY
+					&& ((isWhite && minThSc > -1.0 && minThDiff >= 2.0) || (!isWhite
+							&& minThSc < 1.0 && minThDiff >= 2.0)))
+				return "Nice fork!";
+		}
+		
+		/*System.out.println("This move: " + game.getLastMove().getSan());
+		int materialBefore = GameUtils.getMaterialScore(game);
+		Move lastMove = game.getLastMove();
+		materialBefore += (isWhite ? pieceMaterialScore(lastMove.getCapture()) :
+			-pieceMaterialScore(lastMove.getCapture()));
+		System.out.println("materialBefore: " + materialBefore);
+		System.out.println("materialExtend: " + GameUtils.getMaterialScore(extendedGame));
+		
+		if (((isWhite && current > 2 && GameUtils.getMaterialScore(extendedGame) < materialBefore) 
+				|| (!isWhite && current < -2 && GameUtils.getMaterialScore(extendedGame) > materialBefore) 
+				&& lastMove.isCapture())) {
+			return "SAC";			
+		}*/
 		
 		boolean[] whiteAdvVec = getAdvantageVector(GameConstants.WHITE, game, extendedGame, previous, current, true);
 		boolean[] blackAdvVec = getAdvantageVector(GameConstants.BLACK, game, extendedGame, previous, current, true);
@@ -394,11 +452,6 @@ public class AnalysisCommentsGenerator {
 			}
 		}
 		
- 
-		
-	
-	
-				
 	
 			
 			/*else if (((isWhite && current > 2) || (!isWhite && current < -2)) ) {				
