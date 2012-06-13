@@ -20,6 +20,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.chess.Variant;
 import raptor.service.ThreadService;
 import raptor.util.RaptorLogger;
@@ -68,7 +70,7 @@ public class XboardEngine {
 
 			String currentLine = null;
 			while ((currentLine = in.readLine()) != null) {
-				if (!currentLine.isEmpty()) {
+				if (!StringUtils.isBlank(currentLine)) {
 					if (currentLine.contains("feature")) {
 						if (!processFeatureString(currentLine))
 							return false;

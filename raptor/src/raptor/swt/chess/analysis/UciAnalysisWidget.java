@@ -209,7 +209,7 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 													.isWhitesMove() ? gameMove
 													.getFullMoveCount() + ") " 
 													: "";
-                                            line.append(line.toString().isEmpty() ? ""  //$NON-NLS-2$
+                                            line.append(StringUtils.isBlank(line.toString()) ? ""  //$NON-NLS-2$
                                                     : " ").append(moveNumber).append(san).append(gameClone.isInCheck() ? "+"
                                                     : "").append(gameClone.isCheckmate() ? "#"
                                                     : "");

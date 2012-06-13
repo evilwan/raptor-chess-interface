@@ -573,7 +573,7 @@ public class UCIEngine {
 		} else {
 			StringBuffer movesString = new StringBuffer();
 			for (UCIMove move : moves) {
-                movesString.append(movesString.toString().isEmpty() ? "" : " ").append(move.getValue());
+                movesString.append(StringUtils.isBlank(movesString.toString()) ? "" : " ").append(move.getValue());
 			}
 			send("position fen " + fen + " " + movesString);
 		}

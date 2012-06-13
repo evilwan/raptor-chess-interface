@@ -1,5 +1,6 @@
 package raptor.service;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,10 +26,10 @@ public class CheckUpdates {
 		Matcher m = p.matcher(version);
 		if (m.matches()) {
 			t = new int[4];
-			t[0] = m.group(1).isEmpty() ? 0 : Integer.parseInt(m.group(1));
-			t[1] = m.group(2).isEmpty() ? 0 : Integer.parseInt(m.group(2));
-			t[2] = m.group(3).isEmpty() ? 0 : Integer.parseInt(m.group(3));
-			t[3] = m.group(4).isEmpty() ? 0 : Integer.parseInt(m.group(4));
+			t[0] = StringUtils.isBlank(m.group(1)) ? 0 : Integer.parseInt(m.group(1));
+			t[1] = StringUtils.isBlank(m.group(2)) ? 0 : Integer.parseInt(m.group(2));
+			t[2] = StringUtils.isBlank(m.group(3)) ? 0 : Integer.parseInt(m.group(3));
+			t[3] = StringUtils.isBlank(m.group(4)) ? 0 : Integer.parseInt(m.group(4));
 		}
 		return t;
 	}

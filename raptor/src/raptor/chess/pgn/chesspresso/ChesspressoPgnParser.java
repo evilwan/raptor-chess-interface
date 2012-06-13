@@ -43,19 +43,20 @@ public class ChesspressoPgnParser extends AbstractPgnParser {
 		}		
 		do {
 			for (PgnParserListener listener: listeners) {
-				((ChesspressoPgnProgressListener)listener).
+				((ChesspressoPgnListener)listener).
 				gameParsed(chessprGame, 0);
+				
 			}
 			try {
 				chessprGame = reader.parseGame();
 			} catch (PGNSyntaxError e) {
 				for (PgnParserListener listener: listeners) {
-					((ChesspressoPgnProgressListener)listener).error(e);					
+					((ChesspressoPgnListener)listener).error(e);
 				}
             } catch (RuntimeException e) {
 				for (PgnParserListener listener: listeners) {					
 					PGNSyntaxError er = new PGNSyntaxError(0,e.getMessage(),"",0,"");
-					((ChesspressoPgnProgressListener)listener).error(er);					
+					((ChesspressoPgnListener)listener).error(er);													
 				}
             } catch (IOException e) {
 			}

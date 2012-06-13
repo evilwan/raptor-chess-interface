@@ -13,6 +13,8 @@
  */
 package raptor.chess.pgn;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.chess.Result;
 import raptor.util.RaptorStringTokenizer;
 import raptor.util.RaptorStringUtils;
@@ -118,7 +120,7 @@ public class SimplePgnParser extends AbstractPgnParser {
 			String nextWord = wordTok.nextToken();
 
 			do {
-				if (nextWord == null || nextWord.isEmpty()) {
+				if (nextWord == null || StringUtils.isBlank(nextWord)) {
 					// We have reached the end of the line, read in the next
 					// line.
 					readNextLine();

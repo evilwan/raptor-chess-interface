@@ -303,7 +303,7 @@ public class ClassicGame implements Game {
 				: getCastling(BLACK) == CASTLE_BOTH ? "kq"
 						: getCastling(BLACK) == CASTLE_SHORT ? "k" : "q";
 
-		return whiteCastlingFen.isEmpty() && blackCastlingFen.isEmpty() ? "-"
+		return StringUtils.isBlank(whiteCastlingFen) && StringUtils.isBlank(blackCastlingFen) ? "-"
 				: whiteCastlingFen + blackCastlingFen;
 	}
 

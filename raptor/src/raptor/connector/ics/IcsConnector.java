@@ -1427,7 +1427,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					if (chatConsoleItem.getController() instanceof ChannelController) {
 						ChannelController controller = (ChannelController) chatConsoleItem
 								.getController();
-						preference += (preference.isEmpty() ? "" : "`")
+						preference += (StringUtils.isBlank(preference) ? "" : "`")
 								+ "Channel`"
 								+ controller.getChannel()
 								+ "`"
@@ -1436,7 +1436,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 					} else if (chatConsoleItem.getController() instanceof RegExController) {
 						RegExController controller = (RegExController) chatConsoleItem
 								.getController();
-						preference += (preference.isEmpty() ? "" : "`")
+						preference += (StringUtils.isBlank(preference) ? "" : "`")
 								+ "RegEx`"
 								+ controller.getPattern()
 								+ "`"
@@ -1444,16 +1444,16 @@ public abstract class IcsConnector implements Connector, MessageListener {
 										.getQuadrant(item).toString();
 					}
 				} else if (item instanceof SeekTableWindowItem) {
-					preference += (preference.isEmpty() ? "" : "`")
+					preference += (StringUtils.isBlank(preference) ? "" : "`")
 							+ "SeekTableWindowItem` " + "` ";
 				} else if (item instanceof BugWhoWindowItem) {
-					preference += (preference.isEmpty() ? "" : "`")
+					preference += (StringUtils.isBlank(preference) ? "" : "`")
 							+ "BugWhoWindowItem` " + "` ";
 				} else if (item instanceof BugButtonsWindowItem) {
-					preference += (preference.isEmpty() ? "" : "`")
+					preference += (StringUtils.isBlank(preference) ? "" : "`")
 							+ "BugButtonsWindowItem` " + "` ";
 				} else if (item instanceof GamesWindowItem) {
-					preference += (preference.isEmpty() ? "" : "`")
+					preference += (StringUtils.isBlank(preference) ? "" : "`")
 							+ "GamesWindowItem` ` ";
 				}
 			}

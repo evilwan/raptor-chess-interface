@@ -46,6 +46,7 @@ import raptor.chess.pgn.LenientPgnParserListener;
 import raptor.chess.pgn.PgnParserError;
 import raptor.chess.pgn.PgnUtils;
 import raptor.chess.pgn.StreamingPgnParser;
+import raptor.chess.pgn.chesspresso.ChesspressoPgnListener;
 import raptor.chess.pgn.chesspresso.ChesspressoPgnParser;
 import raptor.international.L10n;
 import raptor.service.ThreadService;
@@ -102,24 +103,7 @@ public class PgnProcessingDialog extends Dialog {
 
 	}
 	
-	public class ChesspressoPgnProgressListener extends LenientPgnParserListener {
-
-		private ArrayList<chesspresso.game.Game> games = new ArrayList<chesspresso.game.Game>();
-		private ArrayList<PGNSyntaxError> errors = new ArrayList<PGNSyntaxError>();
-		
-		
-		public void error(PGNSyntaxError error) {
-			errors.add(error);
-		}
-		
-		@Override
-		public void errorEncountered(PgnParserError error) {
-		}
-
-		@Override
-		public void gameParsed(Game game, int lineNumber) {			
-		}
-		
+	public class ChesspressoPgnProgressListener extends ChesspressoPgnListener {		
 		/**
 		 * Analogous to the inherited method, but instead uses Chesspresso game object 
 		 */
@@ -143,15 +127,7 @@ public class PgnProcessingDialog extends Dialog {
 					});
 				}
 			}
-		}
-		
-		public ArrayList<chesspresso.game.Game> getGames() {
-			return games;
-		}
-		
-		public ArrayList<PGNSyntaxError> getErrors() {
-			return errors;
-		}		
+		}	
 	}
 
 	public static final int MAX_BYTES_IN_FILE = 1048576 * 15;

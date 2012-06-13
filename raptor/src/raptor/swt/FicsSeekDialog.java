@@ -13,6 +13,7 @@
  */
 package raptor.swt;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -277,11 +278,11 @@ public class FicsSeekDialog extends Dialog implements PreferenceKeys {
 				result = "seek " + getValue(minutesCombo, MINUTES) + " ";
 				result += getValue(secondsCombo, INC) + " ";
 
-				if (!getValue(gameTypeCombo, GAME_TYPE).isEmpty()) {
+				if (!StringUtils.isBlank(getValue(gameTypeCombo, GAME_TYPE))) {
 					result += getValue(gameTypeCombo, GAME_TYPE) + " ";
 				}
 
-				if (!getValue(colorCombo, COLOR).isEmpty()) {
+				if (!StringUtils.isBlank(getValue(colorCombo, COLOR))) {
 					result += getValue(colorCombo, COLOR) + " ";
 				}
 				result += ratedButton.getSelection() ? "r " : "u ";

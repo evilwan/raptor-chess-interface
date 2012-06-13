@@ -13,6 +13,7 @@
  */
 package raptor.alias;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 
 import raptor.swt.chat.ChatConsoleController;
@@ -35,7 +36,7 @@ public class AbbreviatedPersonTellAlias extends RaptorAlias {
 					true);
 			String firstWord = tok.nextToken().substring(1);
 
-			if (!firstWord.isEmpty() && !NumberUtils.isDigits(firstWord)) {
+			if (!StringUtils.isBlank(firstWord) && !NumberUtils.isDigits(firstWord)) {
 				return new RaptorAliasResult("tell " + firstWord + " "
 						+ tok.getWhatsLeft(), null);
 			}

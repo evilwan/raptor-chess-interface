@@ -16,6 +16,8 @@ package raptor.problemgen;
 import java.io.FileReader;
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
+
 import raptor.chess.Game;
 import raptor.chess.Move;
 import raptor.chess.MoveList;
@@ -203,7 +205,7 @@ public class ProblemGenerator {
 						+ ") ... "
 						: gameMove.isWhitesMove() ? gameMove.getFullMoveCount()
 								+ ") " : "";
-                line.append(line.toString().isEmpty() ? "" : " ").append(moveNumber).append(san).append(game.isInCheck() ? "+" : "").append(game.isCheckmate() ? "#" : "");
+                line.append(StringUtils.isBlank(line.toString()) ? "" : " ").append(moveNumber).append(san).append(game.isInCheck() ? "+" : "").append(game.isCheckmate() ? "#" : "");
 				isFirstMove = false;
 			} catch (Throwable t) {
 				t.printStackTrace();

@@ -104,7 +104,7 @@ public class BugWhoPParser {
 	}
 
 	private Partnership[] process(String text) {
-		if (text.isEmpty()) {
+		if (StringUtils.isBlank(text)) {
 			return new Partnership[0];
 		}
 		RaptorStringTokenizer tok = new RaptorStringTokenizer(text, " /\n",

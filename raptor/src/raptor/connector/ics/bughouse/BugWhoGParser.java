@@ -80,7 +80,7 @@ public class BugWhoGParser {
 	}
 
 	private BugGame[] process(String text) {
-		if (text.isEmpty()) {
+		if (StringUtils.isBlank(text)) {
 			return new BugGame[0];
 		}
 
