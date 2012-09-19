@@ -1192,7 +1192,7 @@ public abstract class ChatConsoleController implements PreferenceKeys {
 				});
 
 				MenuItem menuItem = new MenuItem(menu, SWT.PUSH);
-				menuItem.setText(local.getString("chatConsCont18") + message + "'");
+				menuItem.setText(local.getString("chatConsCont18e") + message + "'");
 				menuItem.addListener(SWT.Selection, new Listener() {
 					public void handleEvent(Event e) {
 						BrowserUtils.openExternalUrl(url);
