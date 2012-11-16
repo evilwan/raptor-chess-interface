@@ -48,6 +48,10 @@ public class L10n {
 				locale);
 	}
 	
+	public static String getStringS(String key) {
+		return getInstance().getString(key);
+	}
+	
 	public String getString(String key) {
 		return captions.getString(key);
 	}

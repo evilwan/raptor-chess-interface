@@ -59,6 +59,7 @@ public class CheckUpdates {
 	            }
 	        }
 			bin.close();
+			System.out.println("checkUpdates " + isNewerVersion);
 			if (isNewerVersion) {
 				Raptor.getInstance().getPreferences().setValue("ready-to-update", "true");
 				Raptor.getInstance().getDisplay().asyncExec (new Runnable () {

@@ -155,15 +155,22 @@ public class Raptor implements PreferenceKeys {
 							}
 						});
 			}
+			
+			ThreadService.getInstance().run(new Runnable() {
 
-			display.timerExec(500, new Runnable() {
+				@Override
 				public void run() {
 					if (!OSUtils.isLikelyOSX() && !getInstance().getPreferences().getBoolean("ready-to-update")
 							&& getInstance().getPreferences().getBoolean("app-update"))
 						CheckUpdates.checkUpdates();
 					else if (getInstance().getPreferences().getBoolean("ready-to-update"))
 						getInstance().getPreferences().setValue("ready-to-update", "false");
-					
+				}
+				
+			});
+
+			display.timerExec(500, new Runnable() {
+				public void run() {	
 					try {
 						// Launch the home page after a half second it requires
 						// a

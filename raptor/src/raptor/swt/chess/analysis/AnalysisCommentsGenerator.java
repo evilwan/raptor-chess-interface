@@ -23,6 +23,7 @@ import raptor.chess.Move;
 import raptor.engine.uci.UCIMove;
 import raptor.engine.uci.info.BestLineFoundInfo;
 import raptor.engine.uci.info.ScoreInfo;
+import raptor.international.L10n;
 import raptor.swt.chess.controller.AutomaticAnalysisController;
 
 public class AnalysisCommentsGenerator {
@@ -47,7 +48,7 @@ public class AnalysisCommentsGenerator {
 	
 	int lastMaterial = 0;
 	
-	static String[] advToStringTranslate = { "a queen", "double rooks", "a single rook", "double bishops", "a single bishop", "double knights", "a single knight", "over 2 pawns" };
+	static String[] advToStringTranslate = { L10n.getStringS("AnalysisCommentsGenerator_0"), L10n.getStringS("AnalysisCommentsGenerator_1"), L10n.getStringS("AnalysisCommentsGenerator_2"), L10n.getStringS("AnalysisCommentsGenerator_3"), L10n.getStringS("AnalysisCommentsGenerator_4"), L10n.getStringS("AnalysisCommentsGenerator_5"), L10n.getStringS("AnalysisCommentsGenerator_6"), L10n.getStringS("AnalysisCommentsGenerator_7") }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
 	
 	/**
 	 * Apply to the given game first moves from thisPosBestLine as long as every applied move is
@@ -271,7 +272,7 @@ public class AnalysisCommentsGenerator {
 	 * Returns the string with natural language description of each advantage in the given vector.
 	 */
 	static String getAdvantageName(boolean[] advVector) {
-		String result = "";
+		String result = ""; //$NON-NLS-1$
 		int multiplicity = getAdvantageMultiplicity(advVector);
 		
 		if (multiplicity == 1)
@@ -279,11 +280,11 @@ public class AnalysisCommentsGenerator {
 		
 		for (int i = 0; i < advVector.length; i++) {
 			if (advVector[i] && multiplicity >= 3) {
-				result += advToStringTranslate[i]+", ";
+				result += advToStringTranslate[i]+", "; //$NON-NLS-1$
 				multiplicity--;
 			}
 			else if (advVector[i] && multiplicity == 2) {
-				result += advToStringTranslate[i]+" and ";
+				result += advToStringTranslate[i]+L10n.getStringS("AnalysisCommentsGenerator_10"); //$NON-NLS-1$
 				multiplicity--;
 			}
 			else if (advVector[i] && multiplicity == 1) {
@@ -355,22 +356,22 @@ public class AnalysisCommentsGenerator {
 		
 		if (current == Double.MAX_VALUE || current == Double.MIN_VALUE 
 				|| game.isCheckmate())
-			return "";
+			return ""; //$NON-NLS-1$
 		
 		Game extendedGame = extendMoves(thisPosBestLine, game);	
 		
 		if ((isWhite && previous < -2.0 && scoreDiff >= 2.0)
 				|| (!isWhite && previous > 2.0 && scoreDiff >= 2.0)) {	
-			String result = "Loses the initiative."; //White or black had an advantage by over 2 points, then score changed by at least 2 and hence they lose the initiative
+			String result = L10n.getStringS("AnalysisCommentsGenerator_12"); //White or black had an advantage by over 2 points, then score changed by at least 2 and hence they lose the initiative //$NON-NLS-1$
 			if (game.isInCheck())
-				result += " Was not wise make this check.";
+				result += L10n.getStringS("AnalysisCommentsGenerator_13"); //$NON-NLS-1$
 			
 			return result;
 		}
 		
 		if ((isWhite && previous < -2.0 && scoreDiff >= 4.0)
 				|| (!isWhite && previous > 2.0 && scoreDiff >= 4.0))
-			return "Blunder!";
+			return L10n.getStringS("AnalysisCommentsGenerator_14"); //$NON-NLS-1$
 
 		// forks recognition code
 		if (positionScores.size() >= 3) {
@@ -382,7 +383,7 @@ public class AnalysisCommentsGenerator {
 							.getEndSquare()) != GameConstants.EMPTY
 					&& ((isWhite && minThSc > -1.0 && minThDiff >= 2.0) || (!isWhite
 							&& minThSc < 1.0 && minThDiff >= 2.0)))
-				return "Nice fork!";
+				return L10n.getStringS("AnalysisCommentsGenerator_15"); //$NON-NLS-1$
 		}
 		
 		/*System.out.println("This move: " + game.getLastMove().getSan());
@@ -406,26 +407,26 @@ public class AnalysisCommentsGenerator {
 		int blackAdvMultiplicity = getAdvantageMultiplicity(blackAdvVec);
 
 		if (whiteAdvMultiplicity > 0) {
-			String comment = "White has the advantage of ";
+			String comment = L10n.getStringS("AnalysisCommentsGenerator_16"); //$NON-NLS-1$
 			boolean[] blackAdvVecScoreless = getAdvantageVector(GameConstants.BLACK, game, extendedGame, previous, current, false);
 			int blackScorelessMul = getAdvantageMultiplicity(blackAdvVecScoreless);
 			comment += getAdvantageName(whiteAdvVec);
 			if (blackScorelessMul > 0)
-				comment += " versus " + getAdvantageName(blackAdvVecScoreless) + " in black";
+				comment += L10n.getStringS("AnalysisCommentsGenerator_17") + getAdvantageName(blackAdvVecScoreless) + L10n.getStringS("AnalysisCommentsGenerator_18"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			fireAdvantages(whiteAdvVec);
-			return comment+".";
+			return comment+"."; //$NON-NLS-1$
 		}
 		else if (blackAdvMultiplicity > 0) {
-			String comment = "Black has the advantage of ";
+			String comment = L10n.getStringS("AnalysisCommentsGenerator_20"); //$NON-NLS-1$
 			boolean[] whiteAdvVecScoreless = getAdvantageVector(GameConstants.WHITE, game, extendedGame, previous, current, false);
 			int whiteScorelessMul = getAdvantageMultiplicity(whiteAdvVecScoreless);
 			comment += getAdvantageName(blackAdvVec);
 			if (whiteScorelessMul > 0)
-				comment += " versus " + getAdvantageName(whiteAdvVecScoreless) + " in white";
+				comment += L10n.getStringS("AnalysisCommentsGenerator_21") + getAdvantageName(whiteAdvVecScoreless) + L10n.getStringS("AnalysisCommentsGenerator_22"); //$NON-NLS-1$ //$NON-NLS-2$
 
 			fireAdvantages(blackAdvVec);
-			return comment+".";
+			return comment+"."; //$NON-NLS-1$
 		}
 
 
@@ -439,7 +440,7 @@ public class AnalysisCommentsGenerator {
 			
 				
 				whiteCastleFired = true;
-				return "White has the advantage of being able to castle over Black.";
+				return L10n.getStringS("AnalysisCommentsGenerator_24"); //$NON-NLS-1$
 			}
 		}
 		
@@ -447,7 +448,7 @@ public class AnalysisCommentsGenerator {
 			if (!game.canWhiteCastleLong() && !game.canWhiteCastleShort() && (game.canBlackCastleLong() || game.canBlackCastleLong())
 					&& notAlreadyCastled(game, GameConstants.WHITE)) {
 				blackCastleFired = true;
-				return "Black has the advantage of being able to castle over White.";
+				return L10n.getStringS("AnalysisCommentsGenerator_25"); //$NON-NLS-1$
 			}
 		}
 		
@@ -483,7 +484,7 @@ public class AnalysisCommentsGenerator {
 			}*/
 		
 
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 }
 

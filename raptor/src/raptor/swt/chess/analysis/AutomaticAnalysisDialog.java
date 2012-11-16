@@ -27,6 +27,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 
 import raptor.Raptor;
+import raptor.international.L10n;
 import raptor.swt.SWTUtils;
 import raptor.swt.chess.controller.AutomaticAnalysisController;
 import raptor.swt.chess.controller.InactiveController;
@@ -38,7 +39,7 @@ public class AutomaticAnalysisDialog extends Dialog {
 	public AutomaticAnalysisDialog(InactiveController controller) {
 		super(Raptor.getInstance().getWindow().getShell(), SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		this.controller = controller;
-		setText("Automatic Engine Analysis");
+		setText(L10n.getStringS("AutomaticAnalysisDialog_0")); //$NON-NLS-1$
 	}
 	
 	public void open() {
@@ -66,12 +67,12 @@ public class AutomaticAnalysisDialog extends Dialog {
 		Composite composite = new Composite(parent, SWT.NONE);
 		composite.setLayout(new GridLayout(2, false));
 		timePerMove = new Label(composite, SWT.NONE);
-		timePerMove.setText("Time per move (seconds): ");
+		timePerMove.setText(L10n.getStringS("AutomaticAnalysisDialog_1")); //$NON-NLS-1$
 		timeSpinner = new Spinner(composite, SWT.NONE);
 		timeSpinner.setSelection(3);
 		timeSpinner.setMinimum(1);
 		threshold = new Label(composite, SWT.NONE);
-		threshold.setText("Blunder threshold (pawns): ");
+		threshold.setText(L10n.getStringS("AutomaticAnalysisDialog_2")); //$NON-NLS-1$
 		thresholdSpinner = new Spinner(composite, SWT.NONE);
 		thresholdSpinner.setDigits(2);
 		thresholdSpinner.setMinimum(1);
@@ -79,7 +80,7 @@ public class AutomaticAnalysisDialog extends Dialog {
 		thresholdSpinner.setIncrement(1);
 		thresholdSpinner.setSelection(100);
 		firstMove = new Label(composite, SWT.NONE);
-		firstMove.setText("Begin analysis from move: ");
+		firstMove.setText(L10n.getStringS("AutomaticAnalysisDialog_3")); //$NON-NLS-1$
 		firstMoveSpinner = new Spinner(composite, SWT.NONE);
 		firstMoveSpinner.setMinimum(1);
 		int moveSize = (controller.getGame().getMoveList().getSize()%2!=0 ? (controller.getGame().getMoveList().getSize()-1)/2 :
@@ -88,19 +89,19 @@ public class AutomaticAnalysisDialog extends Dialog {
 		firstMoveSpinner.setSelection(moveSize > 11 ? 10 : 1);	
 		
 		playerConf = new Label(composite, SWT.NONE);
-		playerConf.setText("Analyze moves for: ");
+		playerConf.setText(L10n.getStringS("AutomaticAnalysisDialog_4")); //$NON-NLS-1$
 		Composite composite2 = new Composite(composite, SWT.NONE);
 		composite2.setLayout(new GridLayout(3, false));
 		radioBoth = new Button(composite2, SWT.RADIO);
-		radioBoth.setText("Both");
+		radioBoth.setText(L10n.getStringS("AutomaticAnalysisDialog_5")); //$NON-NLS-1$
 		radioBoth.setSelection(true);
 		radioWhite = new Button(composite2, SWT.RADIO);
-		radioWhite.setText("White");
+		radioWhite.setText(L10n.getStringS("white")); //$NON-NLS-1$
 		radioBlack = new Button(composite2, SWT.RADIO);
-		radioBlack.setText("Black");
+		radioBlack.setText(L10n.getStringS("black")); //$NON-NLS-1$
 		
 		start = new Button(composite, SWT.PUSH);
-		start.setText("Start");
+		start.setText(L10n.getStringS("uciAnalW_32")); //$NON-NLS-1$
 		start.addSelectionListener(new SelectionListener()  {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
@@ -117,7 +118,7 @@ public class AutomaticAnalysisDialog extends Dialog {
 
 		});
 		cancel = new Button(composite, SWT.PUSH);
-		cancel.setText("Cancel");
+		cancel.setText(L10n.getStringS("cancel")); //$NON-NLS-1$
 		cancel.addSelectionListener(new SelectionListener()  {
 
 			public void widgetDefaultSelected(SelectionEvent e) {
