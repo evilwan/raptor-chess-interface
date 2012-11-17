@@ -96,9 +96,9 @@ public class AutomaticAnalysisDialog extends Dialog {
 		radioBoth.setText(L10n.getStringS("AutomaticAnalysisDialog_5")); //$NON-NLS-1$
 		radioBoth.setSelection(true);
 		radioWhite = new Button(composite2, SWT.RADIO);
-		radioWhite.setText(L10n.getStringS("white")); //$NON-NLS-1$
+		radioWhite.setText(L10n.getStringS("AutomaticAnalysisDialog_6")); //$NON-NLS-1$
 		radioBlack = new Button(composite2, SWT.RADIO);
-		radioBlack.setText(L10n.getStringS("black")); //$NON-NLS-1$
+		radioBlack.setText(L10n.getStringS("AutomaticAnalysisDialog_7")); //$NON-NLS-1$
 		
 		start = new Button(composite, SWT.PUSH);
 		start.setText(L10n.getStringS("uciAnalW_32")); //$NON-NLS-1$
