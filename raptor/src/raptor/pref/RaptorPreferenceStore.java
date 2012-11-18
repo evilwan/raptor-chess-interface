@@ -763,8 +763,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		setDefault(CHAT_IS_PLAYING_CHAT_ON_PERSON_TELL, true);
 		setDefault(CHAT_IS_SMART_SCROLL_ENABLED, true);
 		setDefault(CHAT_OPEN_CHANNEL_TAB_ON_CHANNEL_TELLS, false);
-		setDefault(CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS, false);
-		setDefault(CHAT_OPEN_PARTNER_TAB_ON_PTELLS, false);
+		setDefault(CHAT_OPEN_PERSON_TAB_ON_PERSON_TELLS, true);
+		setDefault(CHAT_OPEN_PARTNER_TAB_ON_PTELLS, true);
 		setDefault(CHAT_REMOVE_SUB_TAB_MESSAGES_FROM_MAIN_TAB, true);
 		setDefault(CHAT_UNDERLINE_URLS, true);
 		setDefault(CHAT_UNDERLINE_QUOTED_TEXT, true);
