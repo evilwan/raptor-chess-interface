@@ -339,7 +339,7 @@ public class PgnParseResultsWindowItem implements RaptorWindowItem {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (games != null || games.size() == 0) {
+				if (games == null || games.size() == 0) {
 					Raptor.getInstance().alert(local.getString("pgnParseWI20"));
 					return;
 				}

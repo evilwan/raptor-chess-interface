@@ -1095,13 +1095,13 @@ public class UCIEngine {
 		StringBuilder result = new StringBuilder();
 		String token = tok.nextToken();
 		while (!token.equalsIgnoreCase(untilKeyword) && tok.hasMoreTokens()) {
-			result.append((result.equals("") ? "" : " "));
+			result.append((result.toString().equals("") ? "" : " "));
 			result.append(token);
 			token = tok.nextToken();
 		}
 
 		if (!token.equalsIgnoreCase(untilKeyword)) {
-            result.append(result.equals("") ? "" : " ").append(token);
+            result.append(result.toString().equals("") ? "" : " ").append(token);
 			result.append(token);
 		}
 		return result.toString();

@@ -71,7 +71,7 @@ public class ClassicGame implements Game {
 	protected int initialEpSquare = EMPTY_SQUARE;
 	protected int[] moveRepHash = new int[MOVE_REP_CACHE_SIZE];
 	protected MoveList moves = new MoveList();
-	protected long notColorToMoveBB;
+	//protected long notColorToMoveBB;
 	protected long occupiedBB;
 	protected Map<PgnHeader, String> pgnHeaderMap = new HashMap<PgnHeader, String>();
 	protected long[][] pieceBB = new long[2][7];
@@ -144,7 +144,7 @@ public class ClassicGame implements Game {
 		zobristGameHash = 0L;
 		zobristPositionHash = 0L;
 		moveRepHash = new int[MOVE_REP_CACHE_SIZE];
-		notColorToMoveBB = 0L;
+		//notColorToMoveBB = 0L;
 		occupiedBB = 0L;
 		pieceBB = new long[2][7];
 		pieceCounts = new int[2][7];
@@ -403,7 +403,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public long getNotColorToMoveBB() {
-		return notColorToMoveBB;
+		return ~getColorBB(getColorToMove());
 	}
 
 	/**
@@ -1028,7 +1028,7 @@ public class ClassicGame implements Game {
 		System.arraycopy(board, 0, gameToOverwrite.board, 0, board.length);
 		gameToOverwrite.occupiedBB = occupiedBB;
 		gameToOverwrite.emptyBB = emptyBB;
-		gameToOverwrite.notColorToMoveBB = notColorToMoveBB;
+		//gameToOverwrite.notColorToMoveBB = notColorToMoveBB;
 		System.arraycopy(castling, 0, gameToOverwrite.castling, 0,
 				castling.length);
 		gameToOverwrite.initialEpSquare = initialEpSquare;
@@ -1197,7 +1197,7 @@ public class ClassicGame implements Game {
 	 * {@inheritDoc}
 	 */
 	public void setNotColorToMoveBB(long notColorToMoveBB) {
-		this.notColorToMoveBB = notColorToMoveBB;
+		//this.notColorToMoveBB = notColorToMoveBB;
 	}
 
 	/**
@@ -1351,7 +1351,7 @@ public class ClassicGame implements Game {
 
         result.append(getString(new String[]{"emptyBB", "occupiedBB",
                 "notColorToMoveBB", "color[WHITE]", "color[BLACK]"},
-                new long[]{emptyBB, occupiedBB, notColorToMoveBB,
+                new long[]{emptyBB, occupiedBB, getNotColorToMoveBB(),
                         getColorBB(WHITE), getColorBB(BLACK)})).append("\n\n");
 
         result.append(getString(new String[]{"[WHITE][PAWN]",
@@ -1494,7 +1494,7 @@ public class ClassicGame implements Game {
 			int fromSquare = bitscanForward(fromBB);
 
 			long toBB = diagonalMove(fromSquare, emptyBB, occupiedBB)
-					& notColorToMoveBB;
+					& getNotColorToMoveBB();
 
 			while (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
@@ -1583,7 +1583,7 @@ public class ClassicGame implements Game {
 	protected void generatePseudoKingMoves(PriorityMoveList moves) {
 		long fromBB = getPieceBB(colorToMove, KING);
 		int fromSquare = bitscanForward(fromBB);
-		long toBB = kingMove(fromSquare) & notColorToMoveBB;
+		long toBB = kingMove(fromSquare) & getNotColorToMoveBB();
 
 		generatePseudoKingCastlingMoves(fromBB, moves);
 
@@ -1613,7 +1613,7 @@ public class ClassicGame implements Game {
 		while (fromBB != 0) {
 			int fromSquare = bitscanForward(fromBB);
 
-			long toBB = knightMove(fromSquare) & notColorToMoveBB;
+			long toBB = knightMove(fromSquare) & getNotColorToMoveBB();
 
 			while (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
@@ -1801,7 +1801,7 @@ public class ClassicGame implements Game {
 			long toBB = (orthogonalMove(fromSquare, emptyBB,
                     occupiedBB) | diagonalMove(fromSquare, emptyBB,
                     occupiedBB))
-					& notColorToMoveBB;
+					& getNotColorToMoveBB();
 
 			while (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
@@ -1832,7 +1832,7 @@ public class ClassicGame implements Game {
 
 			long toBB = orthogonalMove(fromSquare, emptyBB,
                     occupiedBB)
-					& notColorToMoveBB;
+					& getNotColorToMoveBB();
 
 			while (toBB != 0) {
 				int toSquare = bitscanForward(toBB);
@@ -2354,21 +2354,21 @@ public class ClassicGame implements Game {
 						case BISHOP:
 							resultBB = diagonalMove(fromSquare, emptyBB,
                                     occupiedBB)
-									& notColorToMoveBB & toBB;
+									& getNotColorToMoveBB() & toBB;
 							break;
 						case ROOK:
 							resultBB = orthogonalMove(fromSquare, emptyBB,
                                     occupiedBB)
-									& notColorToMoveBB & toBB;
+									& getNotColorToMoveBB() & toBB;
 							break;
 						case QUEEN:
 							resultBB = orthogonalMove(fromSquare, emptyBB,
                                     occupiedBB)
-									& notColorToMoveBB
+									& getNotColorToMoveBB()
 									& toBB
 									| diagonalMove(fromSquare, emptyBB,
                                     occupiedBB)
-									& notColorToMoveBB & toBB;
+									& getNotColorToMoveBB() & toBB;
 							break;
 						}
 

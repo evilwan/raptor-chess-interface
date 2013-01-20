@@ -266,7 +266,8 @@ public class SanUtils {
 				|| result.isDisambigPieceRankFileStrict || result.isPxStrict
 				|| result.isPMoveStrict || result.isPxPPromotionStrict
 				|| result.isPPromotionStrict || result.isCastleKSideStrict
-				|| result.isCastleQSideStrict;
+				|| result.isCastleQSideStrict
+				|| isValidDropStrict(result.strictSan);
 
 		if (result.isValidStrict) {
 			result.isPawnMove = result.isPxStrict
