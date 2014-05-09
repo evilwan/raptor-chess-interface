@@ -12,7 +12,7 @@
 	  -->
 	<property name="swtEnv" value="Linux_x86_GTK2" />
 
-	<property name="version" value="v98u3f7" />
+	<property name="version" value="v99" />
 	<property name="dist.dir" value="install" />
 	<property name="src.dir" value="src" />
 	<property name="build.dir" value="target" />
@@ -113,36 +113,6 @@
 		</jar>
 	</target>
 
-	<target name="windows32Zip" depends="init" description="Builds the Raptor.zip for Windows 32.">
-		<delete dir="${install.dir}" />
-		<property name="swtEnv" value="Windows32" />
-
-		<antcall target="install" />
-
-		<copy todir="${install.dir}">
-			<fileset dir="projectFiles/Windows">
-				<include name="**/*" />
-				<exclude name="**/*32.exe" />
-				<exclude name="**/*64.exe" />
-			</fileset>
-		</copy>
-		
-		<copy todir="${install.dir}">
-			<fileset dir="projectFiles/Windows">
-				<include name="**/*" />
-			</fileset>
-			<globmapper from="*32.exe" to="*.exe" />
-		</copy>
-
-		<zip destfile="${uploads.dir}/Raptor_${version}_Windows32.zip">
-			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
-				<include name="**/*" />
-				<exclude name="Thumbs.db" />
-				<exclude name=".svn" />
-			</zipfileset>
-		</zip>
-	</target>
-
 	<target name="windows64Zip" depends="init" description="Builds the Raptor.zip for windows64.">
 		<delete dir="${install.dir}" />
 		<property name="swtEnv" value="Windows64" />
@@ -174,23 +144,6 @@
 	</target>
 
 
-	<target name="Linux_x86Zip" depends="init" description="Builds the Raptor.zip for linux x86.">
-		<delete dir="${install.dir}" />
-		<property name="swtEnv" value="Linux_x86_GTK2" />
-
-		<antcall target="install" />
-
-		<copy file="${projectFiles.dir}/raptor" toDir="${install.dir}" />
-
-		<zip destfile="${uploads.dir}/Raptor_${version}_Linux_x86_GTK2.zip">
-			<zipfileset dir="${install.dir}" prefix="Raptor_${version}" dirmode="777" filemode="755">
-				<include name="**/*" />
-				<exclude name="Thumbs.db" />
-				<exclude name=".svn" />
-			</zipfileset>
-		</zip>
-	</target>
-
 	<target name="Linux_x86_64Zip" depends="init" description="Builds the Raptor.zip for linux x86_64.">
 		<delete dir="${install.dir}" />
 		<property name="swtEnv" value="Linux_x86_64_GTK2" />
@@ -207,54 +160,6 @@
 		</zip>
 	</target>
 
-	<target name="osxCarbonDMG" depends="init" description="Builds Raptor dmg for Carbon">
-		<delete dir="${install.dir}" />
-		<delete file="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
-
-		<property name="swtEnv" value="MacCarbon" />
-
-		<antcall target="install" />
-
-		<mkdir dir="${install.dir}/Raptor.app" />
-		<copy todir="${install.dir}/Raptor.app">
-			<fileset dir="projectFiles/Raptor.app.carbon">
-				<include name="**/*" />
-			</fileset>
-		</copy>
-		
-		<move todir="${install.dir}/Raptor.app/Contents/MacOS">
-			<fileset dir="${install.dir}">
-				<include name="**/*" />
-				<exclude name="Raptor.app/" />
-			</fileset>
-		</move>
-
-		<chmod dir="${install.dir}/Raptor.app" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/raptor" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/set" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/set/Chrisdesign" includes="**/*" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/set/Eyes" includes="**/*" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/set/Fantasy" includes="**/*" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/set/Portable" includes="**/*" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/set/Spacial" includes="**/*" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/set/Wiki" includes="**/*" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/sounds" includes="**/*" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/resources/square" includes="**/*" perm="777" />
-		<chmod dir="${install.dir}/Raptor.app/Contents/MacOS/defaultHomeDir" includes="**/*" perm="777" />
-
-		<exec executable="hdiutil">
-			<arg value="create" />
-			<arg value="-srcfolder" />
-			<arg value="${install.dir}/Raptor.app" />
-			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
-		</exec>
-
-		<exec executable="hdiutil">
-			<arg value="internet-enable" />
-			<arg value="-yes" />
-			<arg value="${uploads.dir}/Raptor_${version}_OS_X_Carbon.dmg" />
-		</exec>
-	</target>
 
 	<target name="osxCocoa64DMG" depends="init" description="Builds Raptor dmg for Cocoa64">
 		<delete dir="${install.dir}" />
@@ -355,23 +260,11 @@
 	</target>
 
 	<target name="createUploads" description="Performs a build. Output files are located in target/uploads">
-		<ant antfile="build.xml" target="osxCarbonDMG">
-			<property name="swtEnv" value="MacCarbon" />
-		</ant>
 		<ant antfile="build.xml" target="osxCocoa64DMG">
 			<property name="swtEnv" value="MacCocoa64" />
 		</ant>
-		<ant antfile="build.xml" target="osxCocoa32DMG">
-			<property name="swtEnv" value="MacCocoa32" />
-		</ant>
-		<ant antfile="build.xml" target="windows32Zip">
-			<property name="swtEnv" value="Windows32" />
-		</ant>
 		<ant antfile="build.xml" target="windows64Zip">
 			<property name="swtEnv" value="Windows64" />
-		</ant>
-		<ant antfile="build.xml" target="Linux_x86Zip">
-			<property name="swtEnv" value="Linux_x86_GTK2" />
 		</ant>
 		<ant antfile="build.xml" target="Linux_x86_64Zip">
 			<property name="swtEnv" value="Linux_x86_64_GTK2" />
