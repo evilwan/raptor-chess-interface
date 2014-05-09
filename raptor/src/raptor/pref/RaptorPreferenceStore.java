@@ -70,7 +70,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 			Raptor.USER_RAPTOR_DIR, "raptor.properties");
 	// When changing this field, don't forget to update the values in
 	// raptor.updater.UpdateManager and the buildfile either
-	public static final int[] APP_VERSION = {0, 98, 3, 7};
+	public static final int[] APP_VERSION = {0, 99, 0, 1};
 	protected String defaultMonospacedFontName;
 	protected String defaultFontName;
 	protected int defaultLargeFontSize;

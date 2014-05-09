@@ -37,7 +37,7 @@ public class UpdateManager {
 
 	private boolean isUpdateOn = false;
 	private boolean isReadyToUpdate = false;
-	private static String appVersionStr = ".98u3f7";
+	private static String appVersionStr = ".99";
 
 	protected static boolean isLikelyLinux = false;
 	protected static boolean isLikelyOSX = false;
@@ -344,33 +344,34 @@ public class UpdateManager {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		if (!isLikelyOSX) {
-			final UpdateManager manager = new UpdateManager();
-
-			manager.checkPrefs();
-			if (manager.isUpdateOn && manager.isReadyToUpdate) {
-				manager.upgradeThread = new Thread(new Runnable() {
-
-					@Override
-					public void run() {
-						boolean threadDisposed = false;
-						try {
-							Thread.sleep(600);
-						} catch (InterruptedException e) {
-							threadDisposed = true;
-						}
-
-						if (!threadDisposed)
-							manager.upgrade();
-					}
-
-				});
-				manager.upgradeThread.start();
-				manager.open();
-			}
-		}
-		
-		invokeMain(args);
+//		if (!isLikelyOSX) {
+//			final UpdateManager manager = new UpdateManager();
+//
+//			manager.checkPrefs();
+//			if (manager.isUpdateOn && manager.isReadyToUpdate) {
+//				manager.upgradeThread = new Thread(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						boolean threadDisposed = false;
+//						try {
+//							Thread.sleep(600);
+//						} catch (InterruptedException e) {
+//							threadDisposed = true;
+//						}
+//
+//						if (!threadDisposed)
+//							manager.upgrade();
+//					}
+//
+//				});
+//				manager.upgradeThread.start();
+//				manager.open();
+//			}
+//		}
+//		
+//		invokeMain(args);
+		System.out.println("Update manager is currently disabled until we can check it for security leaks.");
 	}
 
 }

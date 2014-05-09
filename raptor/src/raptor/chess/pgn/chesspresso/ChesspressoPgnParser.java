@@ -2,10 +2,6 @@ package raptor.chess.pgn.chesspresso;
 
 import java.io.FileReader;
 import java.io.IOException;
-import chesspresso.game.Game;
-import chesspresso.move.Move;
-import chesspresso.pgn.PGNReader;
-import chesspresso.pgn.PGNSyntaxError;
 
 import raptor.chess.GameFactory;
 import raptor.chess.Variant;
@@ -14,7 +10,10 @@ import raptor.chess.pgn.Comment;
 import raptor.chess.pgn.PgnHeader;
 import raptor.chess.pgn.PgnParserListener;
 import raptor.chess.pgn.TimeTakenForMove;
-import raptor.swt.PgnProcessingDialog.ChesspressoPgnProgressListener;
+import chesspresso.game.Game;
+import chesspresso.move.Move;
+import chesspresso.pgn.PGNReader;
+import chesspresso.pgn.PGNSyntaxError;
 
 /**
  * PGN parser what act like an interface to Chesspresso's PGNReader

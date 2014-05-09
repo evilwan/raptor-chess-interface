@@ -20,8 +20,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import raptor.util.RaptorLogger;
- 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -37,8 +35,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 
-import chesspresso.pgn.PGNSyntaxError;
-
 import raptor.Raptor;
 import raptor.chess.Game;
 import raptor.chess.pgn.AbstractPgnParser;
@@ -51,6 +47,7 @@ import raptor.chess.pgn.chesspresso.ChesspressoPgnParser;
 import raptor.international.L10n;
 import raptor.service.ThreadService;
 import raptor.swt.chess.PgnParseResultsWindowItem;
+import raptor.util.RaptorLogger;
 import raptor.util.RaptorRunnable;
 
 public class PgnProcessingDialog extends Dialog {
