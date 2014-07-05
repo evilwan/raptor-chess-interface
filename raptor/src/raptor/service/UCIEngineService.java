@@ -202,15 +202,15 @@ public class UCIEngineService {
 		}
 
 		// Set the configured values.
-		for (Entry<Object, Object> key : properties.entrySet()) {
-			String keyString = (String) key.getKey();
+		for (Entry<Object, Object> prop : properties.entrySet()) {
+			String keyString = (String) prop.getKey();
 			if (!keyString.equals("isUCI") && !keyString.equals("processPath")
 					&& !keyString.equals("isDefault")
 					&& !keyString.equals("goAnalysisParams")
 					&& !keyString.equals("userName")
 					&& !keyString.equals("multiplyBlackScoreByMinus1")
 					&& !keyString.equals("parameters")) {
-				engine.setOverrideOption(keyString, String.valueOf(properties.get(key)));
+				engine.setOverrideOption(keyString, String.valueOf(prop.getValue()));
 			}
 		}
 		return engine;

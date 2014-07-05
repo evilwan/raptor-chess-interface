@@ -111,7 +111,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 
 	private static final RaptorLogger LOG = RaptorLogger
 			.getLog(IcsConnector.class);
-	public static final String LOGIN_CHARACTERS_TO_FILTER = "����؞";
+    public static final String LOGIN_CHARACTERS_TO_FILTER = "\uefbf\ubdef\ubfbd\uefbf\ubdef\ubfbd\ud89e\u0001";
 
 	protected BughouseService bughouseService;
 
@@ -1106,7 +1106,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 				try {
 					ignoringChatTypes.remove(ignoreIndex);
 				} catch (ArrayIndexOutOfBoundsException aiobe) {
-					// Eat it there could be a synchronization problem.�
+					// Eat it there could be a synchronization problem.
 				}
 			} else {
 				// It is interesting to note messages are handled sequentially
@@ -1992,7 +1992,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 							if (errorMessageIndex != -1) {
 								String event = drainInboundMessageBuffer(buffer);
 								event = StringUtils.replaceChars(event,
-										"����", "");
+										"\uefbf\ubdef\ubfbd\uefbf\ubdef\ubfbd", "");
 								parseMessage(event);
 							}
 						}

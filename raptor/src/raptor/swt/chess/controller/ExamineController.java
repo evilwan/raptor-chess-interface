@@ -1,5 +1,5 @@
 /**
-� * New BSD License
+ * New BSD License
  * http://www.opensource.org/licenses/bsd-license.php
  * Copyright 2009-2011 RaptorProject (http://code.google.com/p/raptor-chess-interface/)
  * All rights reserved.

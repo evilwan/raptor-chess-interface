@@ -45,7 +45,7 @@ public class GeneralPage extends FieldEditorPreferencePage {
 			{ local.getString("everySec", 8), "" + 8 }, };
 	
 	public static final String[][] LANGUAGES = {
-		{"English", "en"}, {"Italiano", "it"}, {"Українська", "uk"}
+	    {"English", "en"}, {"Italiano", "it"}, {"\ud0a3\ud0ba\ud180\ud0b0\ud197\ud0bd\ud181\ud18c\ud0ba\ud0b0", "uk"}
 	};
 
 	public GeneralPage() {
