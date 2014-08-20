@@ -364,8 +364,9 @@ public class UciAnalysisWidget implements EngineAnalysisWidget {
 		rowLayout.marginWidth = 2;
 		rowLayout.spacing = 0;
 		topLine.setLayout(rowLayout);
-
-		topLine.setLayout(new RowLayout());
+		//
+		// ?????
+		//topLine.setLayout(new RowLayout());
 
 		engineCombo = new Combo(topLine, SWT.DROP_DOWN | SWT.READ_ONLY);
 		engineCombo.addSelectionListener(new SelectionAdapter() {
