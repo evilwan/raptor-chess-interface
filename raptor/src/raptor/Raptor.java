@@ -71,6 +71,7 @@ import raptor.util.RaptorRunnable;
  */
 public class Raptor implements PreferenceKeys {
 
+    private final static String MINIMUM_JAVA_VERSION = "1.6";
 	public static final File DEFAULT_HOME_DIR = new File("defaultHomeDir/");
 	public static final String APP_HOME_DIR = ".raptor/";
 	public static final File USER_RAPTOR_DIR = new File(System
@@ -95,6 +96,16 @@ public class Raptor implements PreferenceKeys {
 		instance = new Raptor();
 		instance.init();		
 	}
+    /**
+     * Print message and stop application: cannot rely on standard
+     * logging and error processing code because the Java version is
+     * too old so those facilities themselves might be using features that are
+     * not supported by the Java version that was detected.
+     */
+    private static void croak(String s) {
+	System.err.println(s);
+	System.exit(1);
+    }
 
 	/**
 	 * Returns the singleton raptor instance.
@@ -109,6 +120,13 @@ public class Raptor implements PreferenceKeys {
 	 * The applications main method. Takes no arguments.
 	 */
 	public static void main(String args[]) {		
+	    //
+	    // Reality check: we really need at least version MINIMUM_JAVA_VERSION
+	    //
+	    if(System.getProperty("java.version").compareTo(MINIMUM_JAVA_VERSION) < 0) {
+		croak("Sorry, you are using Java version " + System.getProperty("java.version") +
+		      " but Raptor needs version " + MINIMUM_JAVA_VERSION + " or later.");
+	    }
 		local = L10n.getInstance();
 		Locale.setDefault(L10n.currentLocale);
 		try {
