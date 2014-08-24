@@ -147,6 +147,33 @@ public class GameService {
 		public void setWhitesMove(boolean isWhitesMove) {
 			this.isWhitesMove = isWhitesMove;
 		}
+	    public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("GameInfo: ");
+		sb.append(getId());
+		sb.append(' ');
+		sb.append(':');
+		sb.append(' ');
+		sb.append(isBeingExamined());
+		sb.append(' ');
+		sb.append('-');
+		sb.append(' ');
+		sb.append(getWhiteElo());
+		sb.append(' ');
+		sb.append(getWhiteName());
+		sb.append(' ');
+		sb.append('-');
+		sb.append(' ');
+		sb.append(getBlackElo());
+		sb.append(' ');
+		sb.append(getBlackName());
+		sb.append(' ');
+		sb.append(isWhitesMove()? 'W':'B');
+		sb.append(' ');
+		sb.append(getMoveNumber());
+		sb.append(' ');
+		return sb.toString();
+	    }
 	}
 
 	/**
