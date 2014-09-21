@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
@@ -131,7 +132,7 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	protected Set<String> gamesToSpeakTellsFrom = new HashSet<String>();
 	protected SeekService seekService;
 	protected boolean isSpeakingAllPersonTells = false;
-	protected List<String> autoCompleteList = new ArrayList<String>(1000);
+    protected TreeMap<String,String> autoCompleteList = new TreeMap<String,String>();
 	protected List<Pattern> patternsToBlock = new ArrayList<Pattern>(20);
 	protected MessageProducer messageProducer;
 
@@ -354,24 +355,38 @@ public abstract class IcsConnector implements Connector, MessageListener {
 	 * @return True if in auto complete, false otherwise.
 	 */
 	public boolean isInAutoComplete(String word) {
-		return autoCompleteList.contains(word.toLowerCase());
+	    synchronized(autoCompleteList) {
+		String lcw = word.toLowerCase();
+		return autoCompleteList.containsKey(lcw);
+	    }
 	}
 
 	public String[] autoComplete(String word) {
 		if (word != null && word.length() > 0) {
-			String lowerCaseWord = word.toLowerCase();
-			List<String> result = new ArrayList<String>(5);
-
-			for (int i = 0; i < autoCompleteList.size(); i++) {
-				if (autoCompleteList.get(i).startsWith(lowerCaseWord)) {
-					result.add(autoCompleteList.get(i));
-				} else if (result.size() > 0) {
-					break;
-				}
+			synchronized(autoCompleteList) {
+			    String lowerCaseWord = word.toLowerCase();
+			    int maxout = 5;
+			    int n = 0;
+			    List<String> result = new ArrayList<String>(maxout);
+			    String w = autoCompleteList.higherKey(lowerCaseWord);
+			    if((w == null) || !w.startsWith(lowerCaseWord)) {
+				//
+				// No matches found
+				//
+				return new String[0];
+			    }
+			    //
+			    // Return up to maxout completions
+			    //
+			    while((n < maxout) && (w != null) && w.startsWith(lowerCaseWord)) {
+				result.add(w);
+				++n;
+				w = autoCompleteList.higherKey(w);
+			    }
+			    return (String[]) result.toArray(new String[0]);
 			}
-			return (String[]) result.toArray(new String[0]);
 		} else {
-			return new String[0];
+		    return new String[0];
 		}
 	}
 
@@ -1475,10 +1490,10 @@ public abstract class IcsConnector implements Connector, MessageListener {
 
 	protected void addToAutoComplete(String word) {
 		final String lowerCaseWord = word.toLowerCase();
-
-		if (!autoCompleteList.contains(lowerCaseWord)) {
-			autoCompleteList.add(lowerCaseWord);
-			Collections.sort(autoCompleteList);
+		synchronized(autoCompleteList) {
+		    if (!autoCompleteList.containsKey(lowerCaseWord)) {
+			autoCompleteList.put(lowerCaseWord, lowerCaseWord);
+		    }
 		}
 	}
 
