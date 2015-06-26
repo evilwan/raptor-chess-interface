@@ -58,7 +58,11 @@ public class ConvertIcons {
 			{ "wrench.png", "73.png" }, { "yellowStar.png", "25.png" } };
 
 	public static void main(String args[]) throws Exception {
-		File largeIcons = new File(Raptor.RESOURCES_DIR + "icons/large/");
+	    //
+	    // Comment out for now: would not work on most system anyway.
+	    //
+	    /*
+	    File largeIcons = new File(Raptor.RESOURCES_DIR + "icons/large/");
 		largeIcons.mkdir();
 
 		File mediumIcons = new File(Raptor.RESOURCES_DIR + "icons/medium/");
@@ -93,6 +97,6 @@ public class ConvertIcons {
 			System.err.println("Processed " + mapping[0]);
 
 		}
-
+	    */
 	}
 }

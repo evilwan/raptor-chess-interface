@@ -14,6 +14,7 @@
 package raptor.pref;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -71,7 +73,8 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	// When changing this field, don't forget to update the values in
 	// raptor.updater.UpdateManager and the buildfile either
 	public static final int[] APP_VERSION = {0, 99, 0, 1};
-	protected String defaultMonospacedFontName;
+    private static String THE_VERSION = null;
+    protected String defaultMonospacedFontName;
 	protected String defaultFontName;
 	protected int defaultLargeFontSize;
 	protected int defaultSmallFontSize;
@@ -79,7 +82,18 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 	protected int defaultTinyFontSize;
 	private boolean isDefFontLoaded; 
 
-	private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
+    /**
+     * Helper method for printing messages.
+     * <p>
+     * The printed message is written to <code>System.out</code> and starts with the current
+     * class name, followed by two dashes, followed by the specified text.
+     * @param s contains the <code>String</code> value to print.
+     */
+    private static void say(String s) {
+	System.out.println("RaptorPreferenceStore -- " + s);
+    }
+
+    private IPropertyChangeListener propertyChangeListener = new IPropertyChangeListener() {
 
 		public void propertyChange(PropertyChangeEvent event) {
 			String key = event.getProperty();
@@ -126,11 +140,29 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 		}
 	};
 	
-	public static String getVersion() {
-		return "" + (APP_VERSION[0] == 0 ? "" : APP_VERSION[0])
+	public static synchronized String getVersion() {
+	    if(THE_VERSION == null) {
+		try {
+		    InputStream is = RaptorPreferenceStore.class.getResourceAsStream("/version.properties");
+		    Properties props = new Properties();
+		    props.load(is);
+		    is.close();
+		    //say("getVersion() -- version properties:");
+		    //props.list(System.out);
+		    THE_VERSION = props.getProperty("version");
+		} catch(Exception e) {
+		    say("getVersion() -- caught: " + e);
+		    e.printStackTrace();
+		    THE_VERSION = "unknown-version";
+		}
+	    }
+	    /*
+	    return "" + (APP_VERSION[0] == 0 ? "" : APP_VERSION[0])
 				+ "." + APP_VERSION[1]
 				+ (APP_VERSION[2] == 0 ? "" : "u" + APP_VERSION[2])
 				+ (APP_VERSION[3] == 0 ? "" : "f" + APP_VERSION[3]);
+	    */
+	    return THE_VERSION;
 	}
 
 	protected void resetChessSetIfDeleted() {
@@ -155,7 +187,7 @@ public class RaptorPreferenceStore extends PreferenceStore implements
 				load(fileIn = new FileInputStream(RAPTOR_PROPERTIES));
 				resetChessSetIfDeleted();
 			} else {
-				RAPTOR_PROPERTIES.getParentFile().mkdir();
+				RAPTOR_PROPERTIES.getParentFile().mkdirs();
 				RAPTOR_PROPERTIES.createNewFile();
 				save(fileOut = new FileOutputStream(RAPTOR_PROPERTIES),
 						"Last saved on " + new Date());

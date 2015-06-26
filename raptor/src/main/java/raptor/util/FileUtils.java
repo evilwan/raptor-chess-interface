@@ -18,7 +18,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import raptor.util.RaptorLogger;
  
@@ -26,130 +32,115 @@ import raptor.util.RaptorLogger;
 import raptor.Raptor;
 
 public class FileUtils {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(FileUtils.class);
-
-	/**
-	 * This code was obtained from:
-	 * http://www.dreamincode.net/code/snippet1443.htm
-	 * 
-	 * This function will copy files or directories from one location to
-	 * another. note that the source and the destination must be mutually
-	 * exclusive. This function can not be used to copy a directory to a sub
-	 * directory of itself. The function will also have problems if the
-	 * destination files already exist.
-	 * 
-	 * @param src
-	 *            -- A File object that represents the source for the copy
-	 * @param dest
-	 *            -- A File object that represents the destination for the copy.
-	 * @throws IOException
-	 *             if unable to copy.
-	 */
-	public static void copyFiles(File src, File dest) throws IOException {
-		if (src.getName().startsWith(".")) {
+    private static final RaptorLogger LOG = RaptorLogger.getLog(FileUtils.class);
+    /**
+     * Everything below this directory in the root dir of the Raptor.jar will be
+     * recursively extracted during program startup (i.e. the "install" phase)
+     */
+    private final static String SRC_RESOURCE_DIR = "resources/";
+    
+    /**
+     * Helper method for printing messages.
+     * <p>
+     * The printed message is written to <code>System.out</code> and starts with the current
+     * class name, followed by two dashes, followed by the specified text.
+     * @param s contains the <code>String</code> value to print.
+     */
+    private static void say(String s) {
+	System.out.println("FileUtils -- " + s);
+    }
+    /**
+     * This function will recursively extract files or directories from "/resources" in the application jar to
+     * specified destination.
+     * 
+     * @param src
+     *            -- A File object that represents the source for the copy
+     * @param dest
+     *            -- A File object that represents the destination for the copy.
+     * @throws IOException
+     *             if unable to copy.
+     */
+    public static void installFiles(String dest) throws IOException {
+	//say("installFiles() -- dest=\"" + dest + "\"");
+	try {
+	    //
+	    // First attempt to create destination directory (if not existing yet)
+	    //
+	    File df = new File(dest);
+	    if(!df.exists()) {
+		if (!df.mkdirs()) {
+		    throw new IOException("installFiles: Could not create directory: "
+					  + df.getAbsolutePath() + ".");
+		}
+		if (LOG.isDebugEnabled()) {
+		    LOG.debug("Created directory " + df.getAbsolutePath());
+		}
+	    }
+	    //
+	    // Get contents of application jar
+	    //
+	    URLClassLoader cl = (URLClassLoader) FileUtils.class.getClassLoader();
+	    //
+	    // Note: getURLs() should return exactly one entry
+	    //
+	    for(URL u : cl.getURLs()) {
+		JarFile jar = new JarFile(new File(u.toURI()));
+		for(Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements(); ) {
+		    JarEntry e = entries.nextElement();
+		    if(e.getName().startsWith(SRC_RESOURCE_DIR) && !e.isDirectory()) {
+			String en = e.getName();
+			//say("installFiles() -- installing e=\"" + en + "\" ...");
+			URL url = new URL("jar", "", "file:" + jar.getName() + "!/" + en);
+			//
+			// Remove "resources/" prefix from name in Jar
+			//
+			//say("installFiles() -- installing \"" + en.substring(SRC_RESOURCE_DIR.length()) + "\" ...");
+			File of = new File(dest, en.substring(SRC_RESOURCE_DIR.length()));
+			if(!of.getParentFile().exists()) {
+			    //say("installFiles() -- creating \"" + of.getParentFile().getAbsolutePath() + "\" ...");
+			    of.getParentFile().mkdirs();
+			    if (LOG.isDebugEnabled()) {
+				LOG.debug("Created " + of.getParentFile().getAbsolutePath());
+			    }
+			}
+			InputStream ifs = url.openStream();
+			FileOutputStream ofs = new FileOutputStream(of);
+			byte[] buf = new byte[4096];
+			int n = 0;
+			while((n = ifs.read(buf)) >= 0) {
+			    ofs.write(buf, 0, n);
+			}
+			ofs.close();
+			ifs.close();
 			if (LOG.isDebugEnabled()) {
-				LOG.debug("Ignoring " + src.getAbsolutePath()
-						+ " because name started with .");
+			    LOG.debug("Installed " + en + " to " + of.getAbsolutePath());
 			}
-			return;
+		    }
 		}
-
-		// Check to ensure that the source is valid...
-		if (!src.exists()) {
-			throw new IOException("copyFiles: Can not find source: "
-					+ src.getAbsolutePath() + ".");
-
-		} else if (!src.canRead()) { // check to ensure we have rights to the
-			// source...
-			throw new IOException("copyFiles: No right to source: "
-					+ src.getAbsolutePath() + ".");
-		}
-
-		// is this a directory copy?
-
-		if (src.isDirectory()) {
-			if (!dest.exists()) { // does the destination already exist?
-				// if not we need to make it exist if possible (note this is
-				// mkdirs not mkdir)
-
-				if (!dest.mkdirs()) {
-					throw new IOException(
-							"copyFiles: Could not create direcotry: "
-									+ dest.getAbsolutePath() + ".");
-				}
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Created directory " + dest.getAbsolutePath());
-				}
-			}
-			// get a listing of files...
-
-			String list[] = src.list();
-
-			// copy all the files in the list.
-			for (String element : list) {
-				File dest1 = new File(dest, element);
-				File src1 = new File(src, element);
-				copyFiles(src1, dest1);
-			}
-
-		} else {
-			// This was not a directory, so lets just copy the file
-
-			FileInputStream fin = null;
-			FileOutputStream fout = null;
-			byte[] buffer = new byte[4096]; // Buffer 4K at a time (you can
-			// change this).
-			int bytesRead;
-
-			try {
-
-				// open the files for input and output
-
-				fin = new FileInputStream(src);
-				fout = new FileOutputStream(dest);
-
-				// while bytesRead indicates a successful read, lets write...
-
-				while ((bytesRead = fin.read(buffer)) >= 0) {
-
-					fout.write(buffer, 0, bytesRead);
-				}
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Copied " + src.getAbsolutePath() + " to "
-							+ dest.getAbsolutePath());
-				}
-
-			} catch (IOException e) { // Error copying file...
-
-				IOException wrapper = new IOException(
-						"copyFiles: Unable to copy file: " +
-
-						src.getAbsolutePath() + "to" + dest.getAbsolutePath()
-								+ ".");
-
-				wrapper.initCause(e);
-				wrapper.setStackTrace(e.getStackTrace());
-				throw wrapper;
-
-			} finally { // Ensure that the files are closed (if they were open).
-
-				if (fin != null) {
-					try {
-						fin.close();
-					} catch (Throwable t) {
-					}
-				}
-
-				if (fout != null) {
-					try {
-						fout.close();
-					} catch (Throwable t) {
-					}
-				}
-			}
-		}
+	    }
+	} catch(Exception ex) {
+	    Raptor.getInstance().onError("Error installing system resources", ex);
 	}
-
+    }
+    public static void makeEmptyFile(String filnam) throws IOException {
+	File f = new File(filnam);
+	String dirnam = f.getParent();
+	File df = new File(dirnam);
+	if(!df.exists()) {
+	    if (!df.mkdirs()) {
+		throw new IOException("installFiles: Could not create directory: "
+				      + df.getAbsolutePath() + ".");
+	    }
+	    if (LOG.isDebugEnabled()) {
+		LOG.debug("Created new directory " + df.getAbsolutePath());
+	    }
+	}
+	f.createNewFile();
+	if (LOG.isDebugEnabled()) {
+	    LOG.debug("Created new empty file " + f.getAbsolutePath());
+	}
+    }
+    
 	/**
 	 * Deletes all files and subdirectories under "dir".
 	 * 

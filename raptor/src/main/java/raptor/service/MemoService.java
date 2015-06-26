@@ -24,6 +24,7 @@ import raptor.Raptor;
 import raptor.chat.ChatEvent;
 import raptor.chat.ChatLogger;
 import raptor.chat.ChatLogger.ChatEventParseListener;
+import raptor.util.FileUtils;
 
 public class MemoService {
 	private static final String MEMOS_FILE = Raptor.USER_RAPTOR_HOME_PATH
@@ -47,7 +48,7 @@ public class MemoService {
 		try {
 			File file = new File(MEMOS_FILE);
 			if (!file.exists()) {
-				file.createNewFile();
+			    FileUtils.makeEmptyFile(file.getAbsolutePath());
 			}
 			memoLogger = new ChatLogger(file.getAbsolutePath(), false);
 		} catch (IOException ioe) {
@@ -101,7 +102,7 @@ public class MemoService {
 			memoLogger.delete();
 			File file = new File(MEMOS_FILE);
 			if (!file.exists()) {
-				file.createNewFile();
+			    FileUtils.makeEmptyFile(file.getAbsolutePath());
 			}
 		} catch (IOException ioe) {
 			throw new RuntimeException("Error creating memos file: "

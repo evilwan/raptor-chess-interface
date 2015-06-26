@@ -31,6 +31,7 @@ import org.apache.commons.lang.StringUtils;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
+import raptor.util.FileUtils;
 import raptor.util.RaptorLogger;
 import raptor.util.RaptorStringTokenizer;
 
@@ -54,7 +55,7 @@ public class UserTagService {
 		try {
 			File file = new File(TAG_FILE);
 			if (!file.exists()) {
-				file.createNewFile();
+			    FileUtils.makeEmptyFile(file.getAbsolutePath());
 			} else {
 				loadFile();
 			}

@@ -15,8 +15,14 @@ package raptor.service;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import raptor.Raptor;
 import raptor.pref.PreferenceKeys;
@@ -30,188 +36,202 @@ import raptor.util.RaptorLogger;
  * A Singleton service that plays sounds.
  */
 public class SoundService {
-	private static final RaptorLogger LOG = RaptorLogger.getLog(SoundService.class);
-	public static boolean serviceCreated = false;
-	private static SoundService singletonInstance;
+    private static final RaptorLogger LOG = RaptorLogger.getLog(SoundService.class);
+    public static boolean serviceCreated = false;
+    private static SoundService singletonInstance;
+    /**
+     * Helper method for printing messages.
+     * <p>
+     * The printed message is written to <code>System.out</code> and starts with the current
+     * class name, followed by two dashes, followed by the specified text.
+     * @param s contains the <code>String</code> value to print.
+     */
+    private static void say(String s) {
+	System.out.println("SoundService -- " + s);
+    }
+    
+    /**
+     * Returns the singleton instance.
+     */
+    public static synchronized SoundService getInstance() {		
+	if (singletonInstance != null)
+	    return singletonInstance;
 
-	/**
-	 * Returns the singleton instance.
-	 */
-	public static synchronized SoundService getInstance() {		
-		if (singletonInstance != null)
-			return singletonInstance;
+	singletonInstance = new SoundService();
+	return singletonInstance;
+    }
 
-		singletonInstance = new SoundService();
-		return singletonInstance;
+    protected String[] bughouseSounds;
+    protected SoundPlayer soundPlayer;
+
+    protected Speech speech = null;
+
+    private SoundService() {
+	init();
+	serviceCreated = true;
+    }
+
+    public void dispose() {
+	// Don't bother closing the clips. You get screeching noises if you do.
+	if (soundPlayer != null) {
+	    soundPlayer.dispose();
 	}
-
-	protected String[] bughouseSounds;
-	protected SoundPlayer soundPlayer;
-
-	protected Speech speech = null;
-
-	private SoundService() {
-		init();
-		serviceCreated = true;
+	if (speech != null) {
+	    speech.dispose();
 	}
+    }
 
-	public void dispose() {
-		// Don't bother closing the clips. You get screeching noises if you do.
-		if (soundPlayer != null) {
-			soundPlayer.dispose();
-		}
-		if (speech != null) {
-			speech.dispose();
-		}
+    public String[] getBughouseSoundKeys() {
+	return bughouseSounds;
+    }
+
+    public void initSoundPlayer() {
+	if (soundPlayer != null) {
+	    try {
+		soundPlayer.dispose();
+	    } catch (Throwable t) {
+	    }
 	}
-
-	public String[] getBughouseSoundKeys() {
-		return bughouseSounds;
+	soundPlayer = SoundUtils.getSoundPlayer();
+	if (soundPlayer != null) {
+	    soundPlayer.init();
+	    LOG.info("Initialized soundPlayer: " + soundPlayer);
+	} else {
+	    LOG.error("There is no sound player currently configured!");
+	    soundPlayer = null;
 	}
+    }
 
-	public void initSoundPlayer() {
-		if (soundPlayer != null) {
-			try {
-				soundPlayer.dispose();
-			} catch (Throwable t) {
-			}
-		}
-		soundPlayer = SoundUtils.getSoundPlayer();
-		if (soundPlayer != null) {
-			soundPlayer.init();
-			LOG.info("Initialized soundPlayer: " + soundPlayer);
-		} else {
-			LOG.error("There is no sound player currently configured!");
-			soundPlayer = null;
-		}
+    public void initSpeech() {
+	try {
+	    speech = SpeechUtils.getSpeech();
+	    if (speech != null) {
+		speech.init();
+		LOG.info("Initialized speech: " + speech);
+	    } else {
+		LOG.info("No speech is currently configured.");
+	    }
+	} catch (Throwable t) {
+	    Raptor.getInstance().onError("Error initializing speech", t);
+	    speech = null;
 	}
+    }
 
-	public void initSpeech() {
-		try {
-			speech = SpeechUtils.getSpeech();
-			if (speech != null) {
-				speech.init();
-				LOG.info("Initialized speech: " + speech);
-			} else {
-				LOG.info("No speech is currently configured.");
-			}
-		} catch (Throwable t) {
-			Raptor.getInstance().onError("Error initializing speech", t);
-			speech = null;
-		}
+    public boolean isSpeechSetup() {
+	return Raptor.getInstance().getPreferences().getBoolean(
+								PreferenceKeys.APP_SOUND_ENABLED)
+	    && speech != null;
+    }
+
+    /**
+     * Plays the specified sound.
+     * 
+     * @param pathToSound
+     *            The fully qualified path to the sound.
+     */
+    public void play(final String pathToSound) {
+	if (Raptor.getInstance().getPreferences().getBoolean(
+							     PreferenceKeys.APP_SOUND_ENABLED)
+	    && soundPlayer != null) {
+	    ThreadService.getInstance().run(new Runnable() {
+		    public void run() {
+			soundPlayer.play(pathToSound);
+		    }
+		});
 	}
+    }
 
-	public boolean isSpeechSetup() {
-		return Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_SOUND_ENABLED)
-				&& speech != null;
+    /**
+     * Specify the name of a file in resources/sounds/bughouse without the .wav
+     * to play the sound i.e. "+".
+     */
+    public void playBughouseSound(final String sound) {
+	if (Raptor.getInstance().getPreferences().getBoolean(
+							     PreferenceKeys.APP_SOUND_ENABLED)
+	    && soundPlayer != null) {
+	    ThreadService.getInstance().run(new Runnable() {
+		    public void run() {
+			soundPlayer.playBughouseSound(sound);
+		    }
+		});
 	}
+    }
 
-	/**
-	 * Plays the specified sound.
-	 * 
-	 * @param pathToSound
-	 *            The fully qualified path to the sound.
-	 */
-	public void play(final String pathToSound) {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_SOUND_ENABLED)
-				&& soundPlayer != null) {
-			ThreadService.getInstance().run(new Runnable() {
-				public void run() {
-					soundPlayer.play(pathToSound);
-				}
-			});
-		}
+    /**
+     * Specify the name of a file in resources/common/sounds without the .wav to
+     * play the sound i.e. "alert".
+     */
+    public void playSound(final String sound) {
+	if (Raptor.getInstance().getPreferences().getBoolean(
+							     PreferenceKeys.APP_SOUND_ENABLED)
+	    && soundPlayer != null) {
+	    ThreadService.getInstance().run(new Runnable() {
+		    public void run() {
+			soundPlayer.playSound(sound);
+		    }
+		});
 	}
+    }
 
-	/**
-	 * Specify the name of a file in resources/sounds/bughouse without the .wav
-	 * to play the sound i.e. "+".
-	 */
-	public void playBughouseSound(final String sound) {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_SOUND_ENABLED)
-				&& soundPlayer != null) {
-			ThreadService.getInstance().run(new Runnable() {
-				public void run() {
-					soundPlayer.playBughouseSound(sound);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Specify the name of a file in resources/common/sounds without the .wav to
-	 * play the sound i.e. "alert".
-	 */
-	public void playSound(final String sound) {
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_SOUND_ENABLED)
-				&& soundPlayer != null) {
-			ThreadService.getInstance().run(new Runnable() {
-				public void run() {
-					soundPlayer.playSound(sound);
-				}
-			});
-		}
-	}
-
-	/**
-	 * Speaks the specified text. Returns true if speech is configured and the
-	 * result was spoken.
-	 */
-	public boolean textToSpeech(String text) {
-		boolean result = false;
-		if (Raptor.getInstance().getPreferences().getBoolean(
-				PreferenceKeys.APP_SOUND_ENABLED)) {
-			if (speech == null
-					&& Raptor.getInstance().getPreferences().contains(
-							PreferenceKeys.SPEECH_PROCESS_NAME)) {
-				initSpeech();
-			}
-			if (speech != null) {
-				speech.speak(text);
-				result = true;
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Spoke " + text);
-				}
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * I have tried caching the Clips. However i ran out of lines. So now i just
-	 * create a new clip each time.
-	 */
-	protected void init() {
-		LOG.info("Initializing sound service.");
-		long startTime = System.currentTimeMillis();
-		try {
-			List<String> bughouseSoundsList = new ArrayList<String>(20);
-			File file = new File(Raptor.RESOURCES_DIR + "sounds/bughouse");
-			File[] files = file.listFiles(new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return name.endsWith(".wav");
-				}
-			});
-			for (File currentFile : files) {
-
-				String key = currentFile.getName();
-				int dotIndex = key.indexOf('.');
-				key = key.substring(0, dotIndex);
-				bughouseSoundsList.add(key);
-			}
-			bughouseSounds = bughouseSoundsList.toArray(new String[0]);
-		} catch (Throwable t) {
-			LOG.error("Error loading sounds", t);
-		}
-
-		initSoundPlayer();
+    /**
+     * Speaks the specified text. Returns true if speech is configured and the
+     * result was spoken.
+     */
+    public boolean textToSpeech(String text) {
+	boolean result = false;
+	if (Raptor.getInstance().getPreferences().getBoolean(
+							     PreferenceKeys.APP_SOUND_ENABLED)) {
+	    if (speech == null
+		&& Raptor.getInstance().getPreferences().contains(
+								  PreferenceKeys.SPEECH_PROCESS_NAME)) {
 		initSpeech();
-
-		LOG.info("Initializing sound service complete: "
-				+ (System.currentTimeMillis() - startTime) + "ms");
+	    }
+	    if (speech != null) {
+		speech.speak(text);
+		result = true;
+		if (LOG.isDebugEnabled()) {
+		    LOG.debug("Spoke " + text);
+		}
+	    }
 	}
+	return result;
+    }
+
+    /**
+     * I have tried caching the Clips. However i ran out of lines. So now i just
+     * create a new clip each time.
+     */
+    protected void init() {
+	LOG.info("Initializing sound service.");
+	long startTime = System.currentTimeMillis();
+	try {
+	    List<String> bughouseSoundsList = new ArrayList<String>(20);
+	    URLClassLoader cl = (URLClassLoader) SoundService.class.getClassLoader();
+	    //
+	    // Note: getURLs() should return exactly one entry
+	    //
+	    for(URL u : cl.getURLs()) {
+		JarFile jar = new JarFile(new File(u.toURI()));
+		for(Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements(); ) {
+		    JarEntry e = entries.nextElement();
+		    String nam = e.getName();
+		    if(nam.startsWith("resources/sounds/bughouse") && nam.endsWith(".wav")) {
+			//say("init() -- loading e=\"" + nam + "\"");
+			int i = nam.lastIndexOf('/');
+			int j = nam.lastIndexOf('.');
+			bughouseSoundsList.add(nam.substring(i + 1, j));
+		    }
+		}
+	    }
+	    bughouseSounds = bughouseSoundsList.toArray(new String[0]);
+	} catch (Throwable t) {
+	    LOG.error("Error loading sounds", t);
+	}
+
+	initSoundPlayer();
+	initSpeech();
+
+	LOG.info("Initializing sound service complete: "
+		 + (System.currentTimeMillis() - startTime) + "ms");
+    }
 }

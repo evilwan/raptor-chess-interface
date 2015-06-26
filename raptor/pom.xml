@@ -4,7 +4,7 @@
 
   <groupId>raptor</groupId>
   <artifactId>raptor</artifactId>
-  <version>0.99.001</version>
+  <version>0.99.004</version>
   <packaging>jar</packaging>
 
   <name>Raptor</name>
@@ -107,7 +107,7 @@
     <dependency>
         <groupId>org.eclipse.swt</groupId>
         <artifactId>${swt.artifactId}</artifactId>
-        <version>4.3.32</version>
+        <version>4.4.2</version>
     </dependency>
   </dependencies>
   <profiles>
@@ -154,6 +154,11 @@
 	  <descriptorRefs>
 	    <descriptorRef>jar-with-dependencies</descriptorRef>
           </descriptorRefs>
+	  <archive>
+            <manifest>
+              <mainClass>raptor.Raptor</mainClass>
+            </manifest>
+          </archive>
         </configuration>
 	<executions>
           <execution>
