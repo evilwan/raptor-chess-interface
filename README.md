@@ -10,5 +10,5 @@ for the releases on how to build them.
 Large binary files (and their history) have been removed from the repository but otherwise, most files and their history are part of the new repository.
 
 ## Fix for MacOSX Yosemite ##
-Yosemite requires a new version of SWT. Release v.99.003 already comes with the latest version in its pre-built Jar.
+Yosemite requires a recent version of SWT. Release v.99.004 already comes with the latest version in its pre-built Jar.
 
