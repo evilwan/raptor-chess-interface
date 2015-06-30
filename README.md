@@ -11,7 +11,7 @@ Large binary files (and their history) have been removed from the repository but
 
 ## Update: Lights out
 
-The original author of the project does not approve of the way I tried to save the project Google Code so I decided to stop all Raptor activity.
+The original author of the project does not approve of the way I tried to save the project from Google Code so I decided to stop all Raptor activity.
 
 So long and thanks for all the fish.
 
