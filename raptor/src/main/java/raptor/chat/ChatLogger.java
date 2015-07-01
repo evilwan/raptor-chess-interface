@@ -179,7 +179,7 @@ public class ChatLogger {
 					writer.write(ChatEventUtils.serializeChatEvent(event)
 							+ "\n");
 				} catch (Throwable t) {
-					LOG.warn("Error occured writihg chat event: ", t);
+					LOG.warn("Error occured writing chat event: ", t);
 				} finally {
 					if (writer != null) {
 						try {
