@@ -9,12 +9,6 @@ for the releases on how to build them.
 
 Large binary files (and their history) have been removed from the repository but otherwise, most files and their history are part of the new repository.
 
-## Update: Lights out
-
-The original author of the project does not approve of the way I tried to save the project from Google Code so I decided to stop all Raptor activity.
-
-So long and thanks for all the fish.
-
 ## More documentation
 Checkout the [wiki](https://github.com/evilwan/raptor-chess-interface/wiki) pages for more information.
 
