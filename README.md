@@ -9,8 +9,12 @@ for the releases on how to build them.
 
 Large binary files (and their history) have been removed from the repository but otherwise, most files and their history are part of the new repository.
 
+Note that all of the history from the original repository is still available, just not through the Github web interface. In order to view the full history it is necessary to create a local clone of the repository and add the "--follow" option to the "git log" command.
+
 ## More documentation
 Checkout the [wiki](https://github.com/evilwan/raptor-chess-interface/wiki) pages for more information.
+
+Even more documentation is available at the original wiki on Google code.
 
 ## Some screenshots
 
