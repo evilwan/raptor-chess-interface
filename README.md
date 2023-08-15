@@ -1,6 +1,12 @@
 # raptor-chess-interface
 Raptor is a cross platform chess interface and pgn viewer for the free internet chess server: [http://www.freechess.org/ FICS].
 
+
+## Notice
+
+Moved to [Codeberg](https://codeberg.org/evilwan/raptor-chess-interface) because of policy changes at Github (see
+[Github notice](https://github.blog/2023-03-09-raising-the-bar-for-software-security-github-2fa-begins-march-13) )
+
 ## Moved from Google Code
 The Raptor repository has been moved from Google Code (http://code.google.com/p/raptor-chess-interface/) to GitHub.
 
